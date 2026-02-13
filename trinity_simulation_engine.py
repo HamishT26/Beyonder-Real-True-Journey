@@ -45,7 +45,6 @@ gravitational wave observations and encourages further refinement and empirical 
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 @dataclass
@@ -142,6 +141,13 @@ class GMUTSimulator:
             show (bool): Whether to display the plot interactively.
             save_path (str): Optional path to save the plot as an image file.
         """
+        try:
+            import matplotlib.pyplot as plt
+        except ModuleNotFoundError as exc:
+            raise RuntimeError(
+                "matplotlib is required for plotting. Install it or run without --plot."
+            ) from exc
+
         plt.figure(figsize=(8, 5))
         plt.loglog(results.frequencies, results.baseline_spectrum, label='Baseline GR spectrum')
         plt.loglog(results.frequencies, results.modified_spectrum, label=f'GMUT modified (γ={results.gamma})')
