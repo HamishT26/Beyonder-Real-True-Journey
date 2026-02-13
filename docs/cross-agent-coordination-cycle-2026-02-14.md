@@ -1,0 +1,32 @@
+# Cross-Agent Coordination Cycle (Aster + Lumen) — 2026-02-14 NZDT
+
+This note keeps both agent tracks aligned without collapsing evidence boundaries.
+
+## Integrated baseline
+- Lumen Mind-track artifact is integrated on this branch:
+  - `docs/gmut-claim-register-v0.md`
+  - source reference commit: `a145fdd` (integrated via cherry-pick)
+
+## Division of advancement (current cycle)
+
+### Mind (GMUT)
+- Active artifact: claim register v0.
+- Next upgrade target: add parameter bounds and explicit rejection criteria per claim.
+
+### Body (Trinity)
+- Target in progress: reproducible smoke/benchmark runner + dated report outputs.
+- Integration contract: runner must emit machine-readable pass/fail per step and include command + duration.
+
+### Heart (Freed ID + Cosmic Bill)
+- Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
+- Next upgrade target: move at least one control to `verified` with reproducible evidence.
+
+## Merge and review cadence
+After each cycle:
+1. Add/refresh one artifact per track (Mind/Body/Heart).
+2. Record evidence boundaries (`confirmed_evidence`, `inference`, `open_gap`).
+3. Promote one maturity/status only when code/tests/artifacts prove it.
+4. Publish next 3 steps with one item per track.
+
+## Shared anti-drift rule
+No "world-leading" claim should be marked as factual unless comparative benchmarks and reproducible evidence are attached in-repo.
