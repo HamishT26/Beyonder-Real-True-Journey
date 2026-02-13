@@ -26,8 +26,9 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
-- In progress this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
-- Next upgrade target: move at least one control to `verified` with reproducible evidence.
+- Added this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
+- Verified this cycle: GOV-005 promoted to `verified` via PASS artifacts in `docs/heart-track-governance-latest.{json,md}`.
+- Next upgrade target: promote GOV-003 (auditability) or GOV-002 (minimum disclosure) to verified.
 
 ## Merge and review cadence
 After each cycle:
