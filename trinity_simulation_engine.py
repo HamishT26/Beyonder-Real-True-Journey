@@ -42,10 +42,13 @@ cosmology codes.  It provides a starting point for exploring how the ψ‑field 
 gravitational wave observations and encourages further refinement and empirical validation.
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Tuple
+from dataclasses import dataclass
 import numpy as np
-import matplotlib.pyplot as plt
+
+try:
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError:  # pragma: no cover - environment dependent
+    plt = None
 
 
 @dataclass
@@ -142,6 +145,9 @@ class GMUTSimulator:
             show (bool): Whether to display the plot interactively.
             save_path (str): Optional path to save the plot as an image file.
         """
+        if plt is None:
+            raise RuntimeError("matplotlib is not installed; rerun without --plot or install matplotlib.")
+
         plt.figure(figsize=(8, 5))
         plt.loglog(results.frequencies, results.baseline_spectrum, label='Baseline GR spectrum')
         plt.loglog(results.frequencies, results.modified_spectrum, label=f'GMUT modified (γ={results.gamma})')
