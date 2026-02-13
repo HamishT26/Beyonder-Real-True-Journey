@@ -6,6 +6,13 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 - Lumen Mind-track artifact is integrated on this branch:
   - `docs/gmut-claim-register-v0.md`
   - source reference commit: `a145fdd` (integrated via cherry-pick)
+- Lumen Body-track package is integrated on this branch:
+  - `body_track_runner.py`
+  - `docs/body-runner-report-template.md`
+  - source reference commit: `a0d0708` (integrated via cherry-pick)
+- PR-visible identity/message sync artifacts:
+  - `docs/lumen-identity-and-message-2026-02-14.md`
+  - `docs/aster-identity-and-message-2026-02-14.md`
 
 ## Division of advancement (current cycle)
 
@@ -19,6 +26,7 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
+- In progress this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
 - Next upgrade target: move at least one control to `verified` with reproducible evidence.
 
 ## Merge and review cadence
