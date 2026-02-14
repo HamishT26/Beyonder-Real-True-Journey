@@ -13,16 +13,14 @@ This script executes a fixed set of checks, captures outputs, and writes:
 from __future__ import annotations
 
 import argparse
-import ast
 import json
-import re
 import subprocess
 import sys
 import time
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from typing import List
 
 
 @dataclass
@@ -33,6 +31,12 @@ class StepResult:
     duration_seconds: float
     stdout: str
     stderr: str
+
+
+def _run_step(name: str, command: List[str]) -> StepResult:
+    started = time.perf_counter()
+    completed = subprocess.run(command, capture_output=True, text=True, check=False)
+    duration = time.perf_counter() - started
     metrics: Dict[str, object]
 
 
@@ -71,6 +75,7 @@ def _trim(text: str, max_lines: int = 20) -> str:
     return "\n".join(lines[:max_lines] + [f"... ({len(lines) - max_lines} more lines)"])
 
 
+def _build_markdown(generated_utc: str, overall_status: str, steps: List[StepResult]) -> str:
 def _analyze_orchestrator(stdout: str, _stderr: str, returncode: int) -> Dict[str, object]:
     if returncode != 0:
         return {"task_count": 0, "analysis_status": "skipped_due_to_failure"}
@@ -249,6 +254,10 @@ def main() -> int:
 
     steps = [
         _run_step("compile_python_modules", [sys.executable, "-m", "py_compile", *py_files]),
+        _run_step("run_full_orchestrator_demo", [sys.executable, "trinity_orchestrator_full.py"]),
+        _run_step(
+            "run_gmut_simulation",
+            [sys.executable, "run_simulation.py", "--gammas", *[str(g) for g in args.gammas]],
         _run_step(
             "run_full_orchestrator_demo",
             [sys.executable, "trinity_orchestrator_full.py"],
@@ -262,70 +271,30 @@ def main() -> int:
     ]
 
     overall_status = "PASS" if all(step.returncode == 0 for step in steps) else "FAIL"
-    pass_count = sum(1 for step in steps if step.returncode == 0)
-    step_count = len(steps)
-    pass_rate = round(pass_count / step_count, 4) if step_count else 0.0
-    total_duration_seconds = round(sum(step.duration_seconds for step in steps), 6)
-    if total_duration_seconds < 1.0:
-        speed_band = "fast"
-    elif total_duration_seconds < 3.0:
-        speed_band = "moderate"
-    else:
-        speed_band = "slow"
-    body_health_score = round(pass_rate * 100.0, 2)
-    summary = {
-        "pass_rate": pass_rate,
-        "step_count": step_count,
-        "pass_count": pass_count,
-        "total_duration_seconds": total_duration_seconds,
-        "body_health_score": body_health_score,
-        "speed_band": speed_band,
-    }
-
     json_payload = {
         "generated_utc": generated_utc,
         "overall_status": overall_status,
-        "summary": summary,
         "steps": [asdict(step) for step in steps],
     }
-    markdown = _build_markdown(generated_utc, overall_status, summary, steps)
+    markdown = _build_markdown(generated_utc, overall_status, steps)
 
     timestamped_json = reports_dir / f"{stamp}-body-track-smoke.json"
     timestamped_md = reports_dir / f"{stamp}-body-track-smoke.md"
-    timestamped_metrics = reports_dir / f"{stamp}-body-track-metrics.json"
     latest_json = Path(args.latest_json)
     latest_md = Path(args.latest_md)
-    latest_metrics = Path(args.latest_metrics)
-    metrics_history = Path(args.metrics_history)
     latest_json.parent.mkdir(parents=True, exist_ok=True)
     latest_md.parent.mkdir(parents=True, exist_ok=True)
-    latest_metrics.parent.mkdir(parents=True, exist_ok=True)
-    metrics_history.parent.mkdir(parents=True, exist_ok=True)
 
     timestamped_json.write_text(json.dumps(json_payload, indent=2) + "\n", encoding="utf-8")
     timestamped_md.write_text(markdown, encoding="utf-8")
-    timestamped_metrics.write_text(
-        json.dumps({"generated_utc": generated_utc, **summary}, indent=2) + "\n",
-        encoding="utf-8",
-    )
     latest_json.write_text(json.dumps(json_payload, indent=2) + "\n", encoding="utf-8")
     latest_md.write_text(markdown, encoding="utf-8")
-    latest_metrics.write_text(
-        json.dumps({"generated_utc": generated_utc, **summary}, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    history_entry = {"generated_utc": generated_utc, **summary}
-    with metrics_history.open("a", encoding="utf-8") as history_fp:
-        history_fp.write(json.dumps(history_entry) + "\n")
 
     print(f"overall_status={overall_status}")
     print(f"timestamped_json={timestamped_json}")
     print(f"timestamped_md={timestamped_md}")
-    print(f"timestamped_metrics={timestamped_metrics}")
     print(f"latest_json={latest_json}")
     print(f"latest_md={latest_md}")
-    print(f"latest_metrics={latest_metrics}")
-    print(f"metrics_history={metrics_history}")
     return 0 if overall_status == "PASS" else 1
 
 

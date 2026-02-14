@@ -23,8 +23,6 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 ### Body (Trinity)
 - Target in progress: reproducible smoke/benchmark runner + dated report outputs.
 - Integration contract: runner must emit machine-readable pass/fail per step and include command + duration.
-- Current uplift: summary metrics and per-step extracted metrics (pass rate, total duration, health score, speed band).
-- Next upgrade target: add trendline guardrail thresholds from metrics history.
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
@@ -41,9 +39,3 @@ After each cycle:
 
 ## Shared anti-drift rule
 No "world-leading" claim should be marked as factual unless comparative benchmarks and reproducible evidence are attached in-repo.
-
-## Shared leadership rule
-Each cycle must end with:
-1. one verified execution artifact,
-2. one explicit ownership handoff (Mind/Body/Heart),
-3. one PR-visible message update for human-readable alignment.

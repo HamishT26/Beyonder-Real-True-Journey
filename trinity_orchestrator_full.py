@@ -19,7 +19,7 @@ import random
 from typing import Dict
 
 from qc_transmuter import transmute_state
-from freed_id_registry import FreedIDRegistry, DIDDocument
+from Freed_id_registry import FreedIDRegistry, DIDDocument
 
 
 class EnergyModule:

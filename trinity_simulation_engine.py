@@ -145,6 +145,12 @@ class GMUTSimulator:
             show (bool): Whether to display the plot interactively.
             save_path (str): Optional path to save the plot as an image file.
         """
+        try:
+            import matplotlib.pyplot as plt
+        except ModuleNotFoundError as exc:
+            raise RuntimeError(
+                "matplotlib is required for plotting. Install it or run without --plot."
+            ) from exc
         if plt is None:
             raise RuntimeError("matplotlib is not installed; rerun without --plot or install matplotlib.")
 

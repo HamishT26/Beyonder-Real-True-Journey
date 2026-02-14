@@ -11,12 +11,6 @@ Use this template for each Body-track validation cycle.
 - runner_version:
 - overall_status: PASS/FAIL
 
-## Summary metrics
-- pass_rate:
-- total_duration_seconds:
-- body_health_score:
-- speed_band:
-
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|
