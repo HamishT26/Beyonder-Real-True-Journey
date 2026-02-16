@@ -171,3 +171,12 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 - Added Mind canonical-input uplift:
   - `docs/mind-track-external-anchor-canonical-inputs-v1.json`
   - suite now runs exclusion note against canonical input file.
+- Validation status:
+  - quick profile PASS (23/23) with `--body-benchmark-mode enforce`
+  - GOV-004 standard verifier PASS
+  - GOV-004 adversarial verifier PASS
+  - body calibration diagnostics PASS with published recommendations
+  - canonical-input anchor exclusion note published (`WARN` due overhang, not missing fields)
+- PR-visible message continuity maintained:
+  - imported: `docs/lumen-message-to-aster-2026-02-16-continue-cycle-4.md`
+  - added: `docs/aster-message-to-lumen-2026-02-16-continue-cycle-5.md`

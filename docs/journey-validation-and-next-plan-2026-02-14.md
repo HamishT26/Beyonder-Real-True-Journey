@@ -84,6 +84,7 @@ This cycle continued that direction by removing runtime blockers in the current 
 14. Added Body profile-calibrated threshold presets (`quick`/`standard`/`strict`) for benchmark + trend guard workflows, and implemented GOV-004 dispute/recourse protocol scaffold with schema + verifier.
 15. Validated the expanded quick suite at 21/21 PASS (`docs/system-suite-status.json`) with benchmark mode enforce, including the new GOV-004 verifier stage and profile-specific Body guardrails.
 16. Advanced cycle-5 hardening path: integrated role-policy + signature/proof hooks in GOV-004 transitions, added adversarial replay/order verifier, added body profile calibration stage with regression-window diagnostics, and switched GMUT anchor note flow to canonical-input ingestion with uncertainty fields.
+17. Validated cycle-5 quick suite at 23/23 PASS (`docs/system-suite-status.json`) including GOV-004 standard+adversarial checks, calibration diagnostics, and canonical-input anchor exclusion publication (`overall_status=WARN` remains expected while GMUT working bounds overhang external anchors).
 
 ## Next 3 steps (new)
 1. **Mind track:** attach extraction trace IDs and uncertainty-propagation notes per canonical anchor row.

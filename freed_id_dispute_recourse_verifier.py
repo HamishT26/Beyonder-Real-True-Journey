@@ -42,6 +42,12 @@ def _proof(proof_id: str, signer_did: str) -> Dict[str, str]:
     }
 
 
+def _as_nonempty_text(value: object) -> str:
+    if isinstance(value, str):
+        return value.strip()
+    return ""
+
+
 def _validate_schema_contract(case_payload: Dict[str, object], schema: Dict[str, object]) -> List[CheckResult]:
     results: List[CheckResult] = []
     required_fields = schema.get("required", [])
@@ -283,14 +289,14 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
             checks.append(_pass("auth_proof_presence", "all transition events include auth_proof_id"))
 
         proof_ids_history = sorted(
-            str(event.get("auth_proof_id", "")).strip()
+            _as_nonempty_text(event.get("auth_proof_id"))
             for event in history
-            if str(event.get("auth_proof_id", "")).strip()
+            if _as_nonempty_text(event.get("auth_proof_id"))
         )
         proof_ids_registry = sorted(
-            str(proof_id).strip()
+            _as_nonempty_text(proof_id)
             for proof_id in case_payload.get("used_auth_proof_ids", [])
-            if str(proof_id).strip()
+            if _as_nonempty_text(proof_id)
         )
         if proof_ids_history == proof_ids_registry and len(proof_ids_registry) == len(set(proof_ids_registry)):
             checks.append(_pass("auth_proof_registry_consistency", f"proof_count={len(proof_ids_registry)}"))
