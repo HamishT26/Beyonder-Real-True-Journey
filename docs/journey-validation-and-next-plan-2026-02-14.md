@@ -79,9 +79,9 @@ This cycle continued that direction by removing runtime blockers in the current 
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
 
 ## Next 3 steps (new)
-1. **Mind track:** attach external comparator references to each externally-testable GMUT claim row.
-2. **Body track:** enforce benchmark guardrail policy in suite orchestration (`run_all_trinity_systems.py`) for optional fail-on-benchmark gating.
-3. **Heart track:** promote GOV-002 (minimum-disclosure/privacy) from draft toward specified/implemented with concrete presentation policy + verifier scaffold.
+1. **Mind track:** add first numeric comparator-fit or exclusion note for GMUT-005 against mapped external anchors.
+2. **Body track:** continue quick-suite benchmark mode calibration (`observe` default, `enforce` for strict runs) and trend monitoring.
+3. **Heart track:** move GOV-002 from implemented toward verified by integrating minimum-disclosure checks into non-fixture credential presentation flow.
 
 ## Recurring "after each completion" loop
 After finishing any step:

@@ -18,10 +18,19 @@ CYCLE_STATUS = "docs/aurelis-cycle-tick-status.json"
 SKILL_INSTALLER_LIST = "/opt/codex/skills/.system/skill-installer/scripts/list-curated-skills.py"
 NETWORK_WARNING_MARKERS = ("403", "forbidden", "tunnel", "timed out", "proxy", "connection")
 PROFILE_HELP = {
-    "standard": "Base suite run; supports optional include-* flags.",
-    "quick": "Continuity-focused subset (integrity + dry-run cycle + OCR snapshot).",
+    "standard": "Base suite run with benchmark enforcement by default.",
+    "quick": "Continuity-focused subset with benchmark observe mode by default.",
     "deep": "Expanded run (standard + version scan + skill install + curated catalog with soft-fail-network).",
 }
+
+
+def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, list[str]]:
+    gammas = ["0.0", "0.01", "0.05"] if quick_mode else ["0.0", "0.02", "0.05"]
+    command = ["python3", "body_track_runner.py", "--gammas", *gammas]
+    if enforce:
+        command.append("--fail-on-benchmark")
+    mode = "enforce" if enforce else "observe"
+    return f"body benchmark guardrail check ({mode})", command
 
 
 def build_commands(
@@ -29,7 +38,7 @@ def build_commands(
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
     quick_mode: bool,
-    include_body_benchmark: bool,
+    body_benchmark_mode: str,
 ) -> list[tuple[str, list[str]]]:
     token_energy_commands: list[tuple[str, list[str]]] = [
         (
@@ -176,16 +185,10 @@ def build_commands(
             ),
             *token_energy_commands,
             (
-                "body benchmark guardrail check",
-                [
-                    "python3",
-                    "body_track_runner.py",
-                    "--gammas",
-                    "0.0",
-                    "0.01",
-                    "0.05",
-                    "--fail-on-benchmark",
-                ],
+                *_body_benchmark_command(
+                    quick_mode=True,
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
             ),
             (
                 "zip memory/data snapshot",
@@ -206,24 +209,18 @@ def build_commands(
                 ],
             ),
         ]
-        if not include_body_benchmark:
-            commands = [item for item in commands if item[0] != "body benchmark guardrail check"]
+        if body_benchmark_mode == "off":
+            commands = [item for item in commands if not item[0].startswith("body benchmark guardrail check")]
         return commands
 
     commands: list[tuple[str, list[str]]] = [
         ("v29 module map generation", ["python3", "scripts/generate_v29_module_map.py"]),
         ("simulation sweep", ["python3", "run_simulation.py", "--gammas", "0.0", "0.02", "0.05", "0.1"]),
         (
-            "body benchmark guardrail check",
-            [
-                "python3",
-                "body_track_runner.py",
-                "--gammas",
-                "0.0",
-                "0.02",
-                "0.05",
-                "--fail-on-benchmark",
-            ],
+            *_body_benchmark_command(
+                quick_mode=False,
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
         (
@@ -349,8 +346,8 @@ def build_commands(
     if include_curated_skill_catalog:
         commands.append(("curated skill catalog snapshot", ["python3", SKILL_INSTALLER_LIST, "--format", "json"]))
 
-    if not include_body_benchmark:
-        commands = [item for item in commands if item[0] != "body benchmark guardrail check"]
+    if body_benchmark_mode == "off":
+        commands = [item for item in commands if not item[0].startswith("body benchmark guardrail check")]
 
     return commands
 
@@ -363,7 +360,7 @@ def render_profile_catalog() -> str:
     return "\n".join(lines)
 
 
-def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, str]:
+def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, str, str]:
     profile = args.profile
     profile_source = "--profile"
 
@@ -378,6 +375,7 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     include_skill_install = args.include_skill_install
     include_curated_skill_catalog = args.include_curated_skill_catalog
     soft_fail_network = args.soft_fail_network
+    body_benchmark_mode = args.body_benchmark_mode
 
     if profile == "deep":
         include_version_scan = True
@@ -390,7 +388,23 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
             "--profile quick cannot be combined with include-* flags; use standard/deep profile for expanded stages."
         )
 
-    return profile, include_version_scan, include_skill_install, include_curated_skill_catalog, soft_fail_network, profile_source
+    if args.skip_body_benchmark:
+        body_benchmark_mode = "off"
+    elif body_benchmark_mode == "auto":
+        body_benchmark_mode = "observe" if profile == "quick" else "enforce"
+
+    if body_benchmark_mode not in {"off", "observe", "enforce"}:
+        raise SystemExit("--body-benchmark-mode must resolve to off/observe/enforce.")
+
+    return (
+        profile,
+        include_version_scan,
+        include_skill_install,
+        include_curated_skill_catalog,
+        soft_fail_network,
+        profile_source,
+        body_benchmark_mode,
+    )
 
 
 def run_command(cmd: list[str], timeout_sec: int) -> tuple[bool, str, bool, float, str, str]:
@@ -506,6 +520,15 @@ def main() -> None:
         help="Skip body_track_runner benchmark guardrail stage.",
     )
     parser.add_argument(
+        "--body-benchmark-mode",
+        choices=("auto", "off", "observe", "enforce"),
+        default="auto",
+        help=(
+            "Benchmark guardrail mode: auto (quick=observe, standard/deep=enforce), "
+            "off, observe, or enforce."
+        ),
+    )
+    parser.add_argument(
         "--status-json",
         default=str(STATUS_JSON.relative_to(ROOT)),
         help="Path to write machine-readable suite status JSON (relative to repo root).",
@@ -534,6 +557,7 @@ def main() -> None:
         include_curated_skill_catalog,
         soft_fail_network,
         profile_source,
+        body_benchmark_mode,
     ) = resolve_profile_settings(args)
 
     effective_achievement_target = args.achievement_target_steps
@@ -545,7 +569,7 @@ def main() -> None:
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
         quick_mode=(profile == "quick"),
-        include_body_benchmark=not args.skip_body_benchmark,
+        body_benchmark_mode=body_benchmark_mode,
     )
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
@@ -565,7 +589,7 @@ def main() -> None:
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
         f"Quick mode: {profile == 'quick'}",
-        f"Include body benchmark: {not args.skip_body_benchmark}",
+        f"Body benchmark mode: {body_benchmark_mode}",
         f"Status JSON path: {status_json_path.relative_to(ROOT)}",
         "",
         "This report runs currently available repo systems and records command outputs.",
@@ -664,7 +688,8 @@ def main() -> None:
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,
             "quick_mode": profile == "quick",
-            "include_body_benchmark": not args.skip_body_benchmark,
+            "body_benchmark_mode": body_benchmark_mode,
+            "include_body_benchmark": body_benchmark_mode != "off",
         },
         "results": suite_results,
     }

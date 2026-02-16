@@ -23,6 +23,20 @@ Statuses:
 
 ---
 
+## External comparator anchors (v1)
+
+This section captures concrete external programs/datasets to bind externally-testable claims to real comparators.
+
+| claim_id | anchor_type | comparator_program_or_dataset | comparator_signal | anchor_status |
+|---|---|---|---|---|
+| GMUT-005 | fifth-force / EP constraint | MICROSCOPE mission EP results | equivalence-principle violation bounds | mapped |
+| GMUT-005 | fifth-force / torsion balance | Eot-Wash torsion-balance measurements | scalar-coupling strength vs range exclusion | mapped |
+| GMUT-005 | solar-system precision constraint | ILRS/APOLLO lunar laser ranging datasets | long-range anomalous-force residual constraints | mapped |
+
+Promotion rule for GMUT-005: do not move beyond `externally_testable` until at least one numeric fit or exclusion comparison is recorded against one mapped anchor.
+
+---
+
 ## Parameter and rejection criteria v1 (working bounds)
 
 Important: these are **engineering guardrails for iterative validation**, not externally confirmed physics constraints.
