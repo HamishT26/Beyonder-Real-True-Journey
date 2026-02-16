@@ -23,7 +23,7 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 - Current uplift: comparator metrics stage integrated in suite (`scripts/gmut_comparator_metrics.py`).
 - Current uplift: GMUT-005 external-anchor numeric exclusion note is now published each cycle (`scripts/gmut_external_anchor_exclusion_note.py`).
 - Current uplift: canonical-input ingestion with uncertainty fields now powers exclusion-note stage (`docs/mind-track-external-anchor-canonical-inputs-v1.json`).
-- Next upgrade target: add extraction trace IDs + uncertainty-propagation notes per anchor row.
+- Next upgrade target: attach checksum-linked raw extraction artifacts for each canonical trace ID.
 
 ### Body (Trinity)
 - Target in progress: reproducible smoke/benchmark runner + dated report outputs.
@@ -32,7 +32,7 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 - Current uplift: optional benchmark fail-gating wired into suite runner (skip via `--skip-body-benchmark`).
 - Current uplift: profile-calibrated benchmark/trend presets added (`quick`/`standard`/`strict`) and wired through suite stages.
 - Current uplift: calibration analytics stage added (`scripts/body_profile_calibration_report.py`) with false-alert + regression-window diagnostics.
-- Next upgrade target: apply recommended threshold/window changes selectively and measure false-alert delta.
+- Next upgrade target: collect stressed/noisy windows and publish selective-update acceptance/rejection deltas under non-zero alert conditions.
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
@@ -43,7 +43,7 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 - Verified this cycle: GOV-002 promoted to `verified` with PASS artifacts from standard + adversarial verifiers.
 - Current uplift: GOV-004 protocol + schema + verifier scaffold added (`docs/dispute-resolution-protocol-v0.md`, `docs/freed-id-dispute-case-schema-v0.json`, `freed_id_dispute_recourse_verifier.py`).
 - Current uplift: GOV-004 role-policy + signature/proof hook checks + adversarial replay/order tamper verifier added (`freed_id_dispute_recourse_adversarial_verifier.py`).
-- Next upgrade target: replace proof-hook checks with cryptographic signature verification against DID methods.
+- Next upgrade target: upgrade symmetric verifier path to asymmetric DID-key signature verification with registry-bound method resolution.
 
 ## Merge and review cadence
 After each cycle:
@@ -180,3 +180,28 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 - PR-visible message continuity maintained:
   - imported: `docs/lumen-message-to-aster-2026-02-16-continue-cycle-4.md`
   - added: `docs/aster-message-to-lumen-2026-02-16-continue-cycle-5.md`
+
+## 2026-02-16 continue-cycle #6 update (Aster)
+- Synced Lumen PR-visible note:
+  - `docs/lumen-message-to-aster-2026-02-16-continue-cycle-5.md`
+- Heart uplift (GOV-004 cryptographic verification):
+  - implemented DID-method-bound cryptographic signature verification in transition flow (`freed_id_dispute_recourse.py`)
+  - extended standard + adversarial verifiers with signature/method tamper rejection checks
+  - expanded dispute event schema fields (`verification_method_id`, `payload_sha256`, `signature_verified`)
+- Body uplift (selective application pipeline):
+  - added profile policy baseline file (`docs/body-profile-policy-v1.json`)
+  - added selective recommendation stage (`scripts/body_profile_policy_delta_report.py`)
+  - wired policy-aware threshold resolution into body benchmark and trend guard stages
+  - integrated new stage into suite (`scripts/run_all_trinity_systems.py`)
+- Mind uplift (trace + uncertainty metadata):
+  - attached `extraction_trace_id`, `extraction_trace_ref`, and `uncertainty_propagation_rule` per canonical row
+  - exclusion note now publishes trace IDs in the comparison table
+- Validation status:
+  - compile chain PASS
+  - GOV-004 standard verifier PASS
+  - GOV-004 adversarial verifier PASS
+  - body policy delta stage PASS (`policy_updated=false` by selective criteria, with explicit before/after metrics)
+  - quick profile PASS (24/24) with `--body-benchmark-mode enforce`
+- PR-visible message continuity maintained:
+  - imported: `docs/lumen-message-to-aster-2026-02-16-continue-cycle-5.md`
+  - added: `docs/aster-message-to-lumen-2026-02-16-continue-cycle-6.md`

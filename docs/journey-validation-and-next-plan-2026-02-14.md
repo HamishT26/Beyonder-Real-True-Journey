@@ -85,11 +85,12 @@ This cycle continued that direction by removing runtime blockers in the current 
 15. Validated the expanded quick suite at 21/21 PASS (`docs/system-suite-status.json`) with benchmark mode enforce, including the new GOV-004 verifier stage and profile-specific Body guardrails.
 16. Advanced cycle-5 hardening path: integrated role-policy + signature/proof hooks in GOV-004 transitions, added adversarial replay/order verifier, added body profile calibration stage with regression-window diagnostics, and switched GMUT anchor note flow to canonical-input ingestion with uncertainty fields.
 17. Validated cycle-5 quick suite at 23/23 PASS (`docs/system-suite-status.json`) including GOV-004 standard+adversarial checks, calibration diagnostics, and canonical-input anchor exclusion publication (`overall_status=WARN` remains expected while GMUT working bounds overhang external anchors).
+18. Advanced cycle-6 triad uplift: replaced GOV-004 proof hooks with DID-method-bound cryptographic signature verification (HMAC verifier path), added Body policy-delta selective application stage + profile policy file, attached Mind canonical trace IDs + uncertainty propagation metadata, and validated quick suite at 24/24 PASS with all new stages active.
 
 ## Next 3 steps (new)
-1. **Mind track:** attach extraction trace IDs and uncertainty-propagation notes per canonical anchor row.
-2. **Body track:** apply calibration recommendations selectively and report false-alert delta before/after threshold/window changes.
-3. **Heart track:** replace proof-hook checks with cryptographic signature verification bound to DID verification methods.
+1. **Mind track:** attach checksum-linked raw extraction snapshots for each canonical trace ID.
+2. **Body track:** run stressed/noisy benchmark windows and re-evaluate selective policy application to produce non-zero false-alert delta evidence.
+3. **Heart track:** upgrade from symmetric HMAC verifier path to asymmetric DID-key signature verification with registry-bound method resolution and dispute-ledger linkage.
 
 ## Recurring "after each completion" loop
 After finishing any step:
