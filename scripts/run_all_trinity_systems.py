@@ -122,6 +122,10 @@ def build_commands(
             ("memory integrity check (strict)", ["python3", "scripts/aurelis_memory_integrity_check.py", "--strict"]),
             ("heart minimum-disclosure verifier", ["python3", "freed_id_minimum_disclosure_verifier.py"]),
             (
+                "heart minimum-disclosure adversarial verifier",
+                ["python3", "freed_id_minimum_disclosure_adversarial_verifier.py"],
+            ),
+            (
                 "continuity cycle tick (dry-run status)",
                 [
                     "python3",
@@ -189,6 +193,15 @@ def build_commands(
                 ],
             ),
             (
+                "mind comparator metrics",
+                [
+                    "python3",
+                    "scripts/gmut_comparator_metrics.py",
+                    "--rejection-threshold",
+                    "0.12",
+                ],
+            ),
+            (
                 "zip memory/data snapshot",
                 [
                     "python3",
@@ -216,6 +229,10 @@ def build_commands(
         ("simulation sweep", ["python3", "run_simulation.py", "--gammas", "0.0", "0.02", "0.05", "0.1"]),
         ("heart minimum-disclosure verifier", ["python3", "freed_id_minimum_disclosure_verifier.py"]),
         (
+            "heart minimum-disclosure adversarial verifier",
+            ["python3", "freed_id_minimum_disclosure_adversarial_verifier.py"],
+        ),
+        (
             "body benchmark guardrail check",
             [
                 "python3",
@@ -225,6 +242,15 @@ def build_commands(
                 "0.02",
                 "0.05",
                 "--fail-on-benchmark",
+            ],
+        ),
+        (
+            "mind comparator metrics",
+            [
+                "python3",
+                "scripts/gmut_comparator_metrics.py",
+                "--rejection-threshold",
+                "0.12",
             ],
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),

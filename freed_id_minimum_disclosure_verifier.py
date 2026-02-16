@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
+from Freed_id_registry import DIDDocument, FreedIDRegistry
 from freed_id_minimum_disclosure import (
     MinimumDisclosurePolicy,
     build_minimum_disclosure_presentation,
@@ -127,6 +128,45 @@ def _run_verification(policy_doc: Path, schema_doc: Path) -> List[CheckResult]:
         checks.append(CheckResult("schema_alignment", "PASS", "presentation contains all required schema keys"))
     else:
         checks.append(CheckResult("schema_alignment", "FAIL", f"missing={missing_from_schema}"))
+
+    # API-path integration check through the registry presentation method
+    registry = FreedIDRegistry()
+    did = registry.register(
+        DIDDocument(
+            did="",
+            controller="did:freed:controller",
+            verification_methods=[{"id": "key-1", "type": "Ed25519", "publicKeyBase58": "GfH2..."}],
+            services=[],
+        )
+    )
+    registry.issue_credential(
+        did,
+        {
+            "age_over_18": True,
+            "residency_country": "NZ",
+            "government_id": "ABC12345",
+            "email": "sample@example.org",
+        },
+    )
+    cred_id = f"{did}#cred-0"
+    api_presentation = registry.build_credential_presentation(
+        did,
+        cred_id,
+        requested_fields=["age_over_18", "government_id", "email"],
+        policy=MinimumDisclosurePolicy(),
+    )
+    api_disclosed = set(api_presentation.get("disclosed_claims", {}).keys())
+    if api_disclosed == {"age_over_18"}:
+        checks.append(CheckResult("registry_api_min_disclosure", "PASS", "sensitive fields filtered via API"))
+    else:
+        checks.append(
+            CheckResult("registry_api_min_disclosure", "FAIL", f"api_disclosed={sorted(api_disclosed)}")
+        )
+
+    valid_api, detail_api = validate_minimum_disclosure_presentation(
+        api_presentation, MinimumDisclosurePolicy()
+    )
+    checks.append(CheckResult("registry_api_presentation_validation", "PASS" if valid_api else "FAIL", detail_api))
 
     return checks
 
