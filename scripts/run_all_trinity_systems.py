@@ -50,11 +50,24 @@ def _body_trend_guard_command(*, quick_mode: bool, enforce: bool) -> tuple[str, 
     return f"body benchmark trend guard ({mode})", command
 
 
+def _body_calibration_command(*, profile_context: str) -> tuple[str, list[str]]:
+    return (
+        "body profile calibration report",
+        [
+            "python3",
+            "scripts/body_profile_calibration_report.py",
+            "--profile-context",
+            profile_context,
+        ],
+    )
+
+
 def build_commands(
     include_skill_install: bool,
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
     quick_mode: bool,
+    profile: str,
     body_benchmark_mode: str,
 ) -> list[tuple[str, list[str]]]:
     token_energy_commands: list[tuple[str, list[str]]] = [
@@ -228,6 +241,13 @@ def build_commands(
                     "freed_id_dispute_recourse_verifier.py",
                 ],
             ),
+            (
+                "dispute/recourse adversarial verifier (GOV-004)",
+                [
+                    "python3",
+                    "freed_id_dispute_recourse_adversarial_verifier.py",
+                ],
+            ),
             *token_energy_commands,
             (
                 *_body_benchmark_command(
@@ -242,6 +262,11 @@ def build_commands(
                 ),
             ),
             (
+                *_body_calibration_command(
+                    profile_context="quick",
+                ),
+            ),
+            (
                 "gmut comparator metrics",
                 [
                     "python3",
@@ -253,6 +278,8 @@ def build_commands(
                 [
                     "python3",
                     "scripts/gmut_external_anchor_exclusion_note.py",
+                    "--anchor-input",
+                    "docs/mind-track-external-anchor-canonical-inputs-v1.json",
                 ],
             ),
             (
@@ -280,6 +307,7 @@ def build_commands(
                 for item in commands
                 if not item[0].startswith("body benchmark guardrail check")
                 and not item[0].startswith("body benchmark trend guard")
+                and not item[0].startswith("body profile calibration report")
             ]
         return commands
 
@@ -299,6 +327,11 @@ def build_commands(
             ),
         ),
         (
+            *_body_calibration_command(
+                profile_context="deep" if profile == "deep" else "standard",
+            ),
+        ),
+        (
             "gmut comparator metrics",
             [
                 "python3",
@@ -310,6 +343,8 @@ def build_commands(
             [
                 "python3",
                 "scripts/gmut_external_anchor_exclusion_note.py",
+                "--anchor-input",
+                "docs/mind-track-external-anchor-canonical-inputs-v1.json",
             ],
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
@@ -379,6 +414,13 @@ def build_commands(
             [
                 "python3",
                 "freed_id_dispute_recourse_verifier.py",
+            ],
+        ),
+        (
+            "dispute/recourse adversarial verifier (GOV-004)",
+            [
+                "python3",
+                "freed_id_dispute_recourse_adversarial_verifier.py",
             ],
         ),
         *token_energy_commands,
@@ -470,6 +512,7 @@ def build_commands(
             for item in commands
             if not item[0].startswith("body benchmark guardrail check")
             and not item[0].startswith("body benchmark trend guard")
+            and not item[0].startswith("body profile calibration report")
         ]
 
     return commands
@@ -692,6 +735,7 @@ def main() -> None:
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
         quick_mode=(profile == "quick"),
+        profile=profile,
         body_benchmark_mode=body_benchmark_mode,
     )
 

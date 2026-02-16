@@ -50,10 +50,23 @@ Any transition not listed above is invalid and must be rejected by the workflow.
    to avoid irreversible dead ends.
 3. Every transition records:
    - actor,
+   - actor_role,
    - from/to status,
    - timestamp (`at_utc`),
    - note and optional evidence references.
 4. Workflow checks must be replayable by automation, not narrative-only claims.
+
+Role policy v0.1:
+- Transition calls can enforce actor-role checks (derived from DID role prefix
+  convention `did:freed:<role>-...`).
+- Unauthorized roles for a valid transition are rejected.
+
+Signature/proof hook policy v0.2:
+- Transition calls can require an `auth_proof` bundle:
+  - `proof_id`, `signer_did`, `signature_ref`, `issued_at_utc`.
+- Transition calls can enforce signer-to-actor binding (`signer_did == actor`).
+- Optional replay guard rejects reused `proof_id` values for a case lifecycle.
+- This is still a scaffold hook and does **not** verify cryptographic signatures yet.
 
 ---
 
@@ -67,6 +80,7 @@ Implementation scaffold:
 
 Verification scaffold:
 - `freed_id_dispute_recourse_verifier.py`
+- `freed_id_dispute_recourse_adversarial_verifier.py`
 
 Verifier outputs:
 - timestamped: `docs/heart-track-runs/*-freedid-dispute-recourse-check.{json,md}`
@@ -76,6 +90,7 @@ Verifier outputs:
 
 ## 5) Known gaps for v1
 
-- Bind dispute transitions to signature/authorization checks (GOV-001 linkage).
+- Replace signature/proof hook checks with cryptographic signature verification
+  tied to DID verification methods (GOV-001 linkage).
 - Add explicit SLA timers for acknowledgement and resolution windows.
-- Add adversarial tests for replay, ordering, and tamper attempts.
+- Add cross-case tamper-evidence linkage for dispute ledgers.

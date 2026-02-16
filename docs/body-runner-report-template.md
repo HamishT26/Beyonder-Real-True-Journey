@@ -37,6 +37,30 @@ Use this template for each Body-track validation cycle.
   - duration_drift_window:
   - health_drop_window:
 
+## Profile calibration
+- overall_status: PASS/WARN
+- history_samples:
+- benchmark_profile_analysis:
+  - profile:
+  - warn_rate:
+  - false_alert_rate:
+  - recommended_thresholds:
+- trend_alert_analysis:
+  - observed_regression_rate:
+  - observed_false_regression_rate:
+  - drift_percentiles:
+    - duration_drift_p90:
+    - health_drop_p90:
+- regression_window_diagnostics:
+  - recommended_window:
+    - window_size:
+    - max_regressions:
+  - evaluated_windows:
+    - window_size:
+    - max_regressions:
+    - alert_rate:
+    - false_alert_rate:
+
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|

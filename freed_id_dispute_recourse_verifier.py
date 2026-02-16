@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from freed_id_dispute_recourse import open_dispute_case, transition_case
+from freed_id_dispute_recourse import open_dispute_case, transition_case, verify_case_history_integrity
 
 
 @dataclass
@@ -31,6 +31,15 @@ def _pass(check: str, detail: str) -> CheckResult:
 
 def _fail(check: str, detail: str) -> CheckResult:
     return CheckResult(check=check, status="FAIL", detail=detail)
+
+
+def _proof(proof_id: str, signer_did: str) -> Dict[str, str]:
+    return {
+        "proof_id": proof_id,
+        "signer_did": signer_did,
+        "signature_ref": f"sig://{proof_id}",
+        "issued_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+    }
 
 
 def _validate_schema_contract(case_payload: Dict[str, object], schema: Dict[str, object]) -> List[CheckResult]:
@@ -55,10 +64,12 @@ def _validate_schema_contract(case_payload: Dict[str, object], schema: Dict[str,
 
     defs = schema.get("$defs", {})
     event_enum = []
+    actor_role_enum = []
     if isinstance(defs, dict):
         event_props = defs.get("dispute_event", {}).get("properties", {})
         if isinstance(event_props, dict):
             event_enum = event_props.get("to_status", {}).get("enum", [])
+            actor_role_enum = event_props.get("actor_role", {}).get("enum", [])
 
     history = case_payload.get("history", [])
     if isinstance(history, list) and history:
@@ -71,8 +82,38 @@ def _validate_schema_contract(case_payload: Dict[str, object], schema: Dict[str,
             results.append(_fail("schema_event_status_enum", f"invalid_to_status={invalid}"))
         else:
             results.append(_pass("schema_event_status_enum", f"history_entries={len(history)}"))
+
+        invalid_roles = [
+            str(event.get("actor_role", ""))
+            for event in history
+            if str(event.get("actor_role", "")) not in actor_role_enum
+        ]
+        if invalid_roles:
+            results.append(_fail("schema_event_actor_role_enum", f"invalid_actor_role={invalid_roles}"))
+        else:
+            results.append(_pass("schema_event_actor_role_enum", f"history_entries={len(history)}"))
+
+        bad_sequences: List[int] = []
+        bad_ids: List[str] = []
+        for idx, event in enumerate(history):
+            if int(event.get("event_seq", -1)) != idx:
+                bad_sequences.append(idx)
+            expected_id = f"{case_payload.get('case_id', 'case')}:event:{idx:04d}"
+            if str(event.get("event_id", "")) != expected_id:
+                bad_ids.append(str(event.get("event_id", "")))
+        if bad_sequences:
+            results.append(_fail("schema_event_sequence", f"bad_indices={bad_sequences}"))
+        else:
+            results.append(_pass("schema_event_sequence", f"history_entries={len(history)}"))
+        if bad_ids:
+            results.append(_fail("schema_event_id_pattern", f"invalid_event_ids={bad_ids[:3]}"))
+        else:
+            results.append(_pass("schema_event_id_pattern", f"history_entries={len(history)}"))
     else:
         results.append(_fail("schema_event_status_enum", "history missing or empty"))
+        results.append(_fail("schema_event_actor_role_enum", "history missing or empty"))
+        results.append(_fail("schema_event_sequence", "history missing or empty"))
+        results.append(_fail("schema_event_id_pattern", "history missing or empty"))
     return results
 
 
@@ -100,9 +141,76 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
     except ValueError:
         checks.append(_pass("reject_invalid_transition", "opened->resolved rejected"))
 
+    try:
+        transition_case(
+            case,
+            to_status="review",
+            actor="did:freed:reviewer-1",
+            note="proof-required transition should fail without auth proof",
+            enforce_actor_policy=True,
+            require_auth_proof=True,
+        )
+        checks.append(_fail("reject_missing_auth_proof", "missing proof opened->review unexpectedly accepted"))
+    except PermissionError:
+        checks.append(_pass("reject_missing_auth_proof", "missing proof opened->review rejected"))
+
+    try:
+        transition_case(
+            case,
+            to_status="review",
+            actor="did:freed:subject-001",
+            note="subject should not be allowed to move opened->review",
+            enforce_actor_policy=True,
+            auth_proof=_proof("proof-unauthorized-subject", "did:freed:subject-001"),
+            require_auth_proof=True,
+            reject_replayed_proof=True,
+        )
+        checks.append(_fail("reject_unauthorized_actor_role", "subject opened->review unexpectedly accepted"))
+    except PermissionError:
+        checks.append(_pass("reject_unauthorized_actor_role", "subject opened->review rejected"))
+
+    try:
+        transition_case(
+            case,
+            to_status="review",
+            actor="did:freed:robot-1",
+            note="unknown actor role should be rejected",
+            enforce_actor_policy=True,
+            auth_proof=_proof("proof-unknown-role", "did:freed:robot-1"),
+            require_auth_proof=True,
+            reject_replayed_proof=True,
+        )
+        checks.append(_fail("reject_unknown_actor_role", "unknown role opened->review unexpectedly accepted"))
+    except PermissionError:
+        checks.append(_pass("reject_unknown_actor_role", "unknown role opened->review rejected"))
+
+    try:
+        transition_case(
+            case,
+            to_status="review",
+            actor="did:freed:reviewer-1",
+            note="mismatched signer should fail",
+            enforce_actor_policy=True,
+            auth_proof=_proof("proof-signer-mismatch", "did:freed:council-1"),
+            require_auth_proof=True,
+            enforce_signer_match=True,
+            reject_replayed_proof=True,
+        )
+        checks.append(_fail("reject_signer_mismatch", "signer mismatch opened->review unexpectedly accepted"))
+    except PermissionError:
+        checks.append(_pass("reject_signer_mismatch", "signer mismatch opened->review rejected"))
+
+    used_proofs: List[str] = []
+
+    def proof_for(actor: str, suffix: str) -> Dict[str, str]:
+        proof_id = f"proof-{suffix}"
+        used_proofs.append(proof_id)
+        return _proof(proof_id, actor)
+
     transition_plan = [
         ("to_review", "review", "did:freed:reviewer-1", "intake accepted"),
         ("to_escalated", "escalated", "did:freed:reviewer-1", "needs council review"),
+        ("reject_replayed_proof", "review", "did:freed:council-1", "replay should fail"),
         ("escalation_back_to_review", "review", "did:freed:council-1", "returned with findings"),
         ("resolve_case", "resolved", "did:freed:reviewer-1", "credential update ordered"),
         ("reopen_case", "reopened", "did:freed:subject-001", "appeal on remediation scope"),
@@ -110,13 +218,46 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         ("close_as_dismissed", "dismissed", "did:freed:reviewer-2", "appeal concluded"),
     ]
     for check_name, to_status, actor, note in transition_plan:
+        if check_name == "reject_replayed_proof":
+            replay_id = used_proofs[-1] if used_proofs else "proof-missing"
+            replay_proof = _proof(replay_id, actor)
+            try:
+                transition_case(
+                    case,
+                    to_status=to_status,
+                    actor=actor,
+                    note=note,
+                    enforce_actor_policy=True,
+                    auth_proof=replay_proof,
+                    require_auth_proof=True,
+                    reject_replayed_proof=True,
+                )
+                checks.append(_fail(check_name, f"replayed proof accepted: {replay_id}"))
+            except PermissionError:
+                checks.append(_pass(check_name, f"replayed proof rejected: {replay_id}"))
+            continue
+
         try:
-            transition_case(case, to_status=to_status, actor=actor, note=note)
+            transition_case(
+                case,
+                to_status=to_status,
+                actor=actor,
+                note=note,
+                enforce_actor_policy=True,
+                auth_proof=proof_for(actor, check_name),
+                require_auth_proof=True,
+                reject_replayed_proof=True,
+            )
             checks.append(_pass(check_name, f"status={case.status}"))
-        except ValueError as exc:
+        except (ValueError, PermissionError) as exc:
             checks.append(_fail(check_name, str(exc)))
 
     case_payload = case.to_dict()
+    chain_ok, chain_errors = verify_case_history_integrity(case)
+    if chain_ok:
+        checks.append(_pass("history_integrity_chain", "event sequence and status chain verified"))
+    else:
+        checks.append(_fail("history_integrity_chain", "; ".join(chain_errors[:3])))
 
     history_len = len(case_payload.get("history", [])) if isinstance(case_payload.get("history"), list) else 0
     if history_len >= 8:
@@ -128,6 +269,41 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         checks.append(_pass("final_status", "dismissed"))
     else:
         checks.append(_fail("final_status", f"status={case_payload.get('status')}"))
+
+    history = case_payload.get("history", [])
+    if isinstance(history, list):
+        missing_auth = [
+            idx
+            for idx, event in enumerate(history[1:], start=1)
+            if not str(event.get("auth_proof_id", "")).strip()
+        ]
+        if missing_auth:
+            checks.append(_fail("auth_proof_presence", f"missing_indices={missing_auth}"))
+        else:
+            checks.append(_pass("auth_proof_presence", "all transition events include auth_proof_id"))
+
+        proof_ids_history = sorted(
+            str(event.get("auth_proof_id", "")).strip()
+            for event in history
+            if str(event.get("auth_proof_id", "")).strip()
+        )
+        proof_ids_registry = sorted(
+            str(proof_id).strip()
+            for proof_id in case_payload.get("used_auth_proof_ids", [])
+            if str(proof_id).strip()
+        )
+        if proof_ids_history == proof_ids_registry and len(proof_ids_registry) == len(set(proof_ids_registry)):
+            checks.append(_pass("auth_proof_registry_consistency", f"proof_count={len(proof_ids_registry)}"))
+        else:
+            checks.append(
+                _fail(
+                    "auth_proof_registry_consistency",
+                    f"history={len(proof_ids_history)} registry={len(proof_ids_registry)}",
+                )
+            )
+    else:
+        checks.append(_fail("auth_proof_presence", "history missing"))
+        checks.append(_fail("auth_proof_registry_consistency", "history missing"))
 
     if schema_path.exists():
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
