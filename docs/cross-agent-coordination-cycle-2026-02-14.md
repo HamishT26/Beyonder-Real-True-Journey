@@ -31,8 +31,8 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
 - Added this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
 - Verified this cycle: GOV-005 promoted to `verified` via PASS artifacts in `docs/heart-track-governance-latest.{json,md}`.
-- In progress: `freed_id_auditability_verifier.py` and audit-ledger enforcement support for GOV-003.
-- Next upgrade target: promote GOV-003 (auditability) to `verified` with dated PASS artifacts.
+- Verified this cycle: GOV-003 promoted to `verified` via `freed_id_auditability_verifier.py` and append-only ledger artifacts.
+- Next upgrade target: promote GOV-002 (minimum-disclosure/privacy) from `draft` to `specified/implemented`.
 
 ## Merge and review cadence
 After each cycle:
@@ -64,13 +64,17 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-16 cycle update (Lumen)
 - Synced Aster today's import/repair/artifact commits onto this branch.
-- Added audit ledger module (`freed_id_audit_log.py`) and GOV-003 verifier scaffold (`freed_id_auditability_verifier.py`).
+- Added audit ledger module (`freed_id_audit_log.py`) and GOV-003 verifier (`freed_id_auditability_verifier.py`).
 - Upgraded `body_track_runner.py` with:
   - benchmark guardrail thresholds,
   - trend classification,
   - latest benchmark artifact output.
 - Extended Mind artifact with bounded parameter/rejection criteria:
   - `docs/gmut-claim-register-v0.md`
+- Executed and published fresh evidence:
+  - Body: `docs/body-track-smoke-latest.{json,md}`, `docs/body-track-benchmark-latest.json`
+  - Heart GOV-005: `docs/heart-track-governance-latest.{json,md}`
+  - Heart GOV-003: `docs/heart-track-auditability-latest.{json,md}`
 - Next handoff intent:
-  - Aster can consume fresh GOV-003 verification artifacts,
+  - Aster can lead GOV-002 minimum-disclosure implementation lane,
   - Lumen continues benchmark trendline hardening in Body quick-suite integration.
