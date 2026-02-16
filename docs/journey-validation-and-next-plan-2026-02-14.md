@@ -88,6 +88,7 @@ This cycle continued that direction by removing runtime blockers in the current 
 18. Added GOV-004 signature-verifier callback checks (standard + adversarial verifiers now enforce signature-reference validation in addition to signer/proof hooks).
 19. Added Body policy-delta analysis (before/after false-alert rates for benchmark profile, trend profile, and regression-window policy) into calibration outputs.
 20. Added canonical-anchor extraction trace IDs + uncertainty-propagation metadata and surfaced these checks in the exclusion-note report.
+21. Added nightly end-of-day handoff generator (`scripts/nightly_handoff_snapshot.py`) and latest handoff artifacts for clean next-day restart.
 
 ## Next 3 steps (new)
 1. **Mind track:** attach source-side extraction artifacts (not only trace IDs) and uncertainty propagation equations per canonical anchor row.
