@@ -79,9 +79,9 @@ This cycle continued that direction by removing runtime blockers in the current 
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
 
 ## Next 3 steps (new)
-1. **Mind track:** extend GMUT claim register with parameter bounds + explicit rejection criteria.
-2. **Body track:** convert smoke-only outputs into benchmark-grade trend metrics with acceptance thresholds.
-3. **Heart track:** promote GOV-003 (auditability) to verified via append-only governance ledger checks.
+1. **Mind track:** attach external comparator dataset references to each externally-testable GMUT claim.
+2. **Body track:** enforce benchmark guardrail outcomes as optional suite gating behavior in quick profile.
+3. **Heart track:** implement GOV-002 minimum-disclosure policy/schema and create verification scaffolding.
 
 ## Recurring "after each completion" loop
 After finishing any step:
