@@ -78,11 +78,13 @@ This cycle continued that direction by removing runtime blockers in the current 
 8. Added reproducible Heart verifier (`freed_id_control_verifier.py`) and promoted GOV-005 to verified with dated evidence artifacts.
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
 10. Added GOV-002 minimum-disclosure policy/schema + verifier scaffold and wired body benchmark fail-gating into suite profiles.
+11. Added GOV-002 API-path enforcement + adversarial vectors/verifier, integrated mind comparator metrics stage, and validated quick suite at 17/17 PASS.
+12. Added optional suite benchmark skip control (`--skip-body-benchmark`) while keeping benchmark fail-gating enabled by default in quick profile.
 
 ## Next 3 steps (new)
-1. **Mind track:** attach explicit fit/error metric and rejection threshold per externally-testable comparator anchor.
+1. **Mind track:** publish first external-anchor numeric exclusion note for GMUT-005.
 2. **Body track:** add profile-specific benchmark threshold presets and regression alert windows.
-3. **Heart track:** integrate GOV-002 minimum-disclosure enforcement into presentation API path with adversarial test vectors.
+3. **Heart track:** implement GOV-004 dispute/recourse protocol with verification scaffold.
 
 ## Recurring "after each completion" loop
 After finishing any step:

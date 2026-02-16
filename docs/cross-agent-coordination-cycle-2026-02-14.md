@@ -20,22 +20,24 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 - Active artifact: claim register v0.
 - Current uplift: parameter/rejection criteria section added for bounded iteration (`docs/gmut-claim-register-v0.md`).
 - Current uplift: external comparator dataset anchors added for externally-testable progression.
-- Next upgrade target: attach explicit fit/error metric and rejection threshold per externally-testable claim.
+- Current uplift: comparator metrics stage integrated in suite (`scripts/gmut_comparator_metrics.py`).
+- Next upgrade target: first external-anchor numeric exclusion note for GMUT-005.
 
 ### Body (Trinity)
 - Target in progress: reproducible smoke/benchmark runner + dated report outputs.
 - Integration contract: runner must emit machine-readable pass/fail per step and include command + duration.
 - Current uplift: benchmark guardrail layer (threshold checks + trend classification + latest benchmark artifact).
 - Current uplift: optional benchmark fail-gating wired into suite runner (skip via `--skip-body-benchmark`).
-- Next upgrade target: tune profile-specific threshold presets and add regression alert windows.
+- Next upgrade target: tune profile-specific threshold presets and regression alert windows.
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
 - Added this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
 - Verified this cycle: GOV-005 promoted to `verified` via PASS artifacts in `docs/heart-track-governance-latest.{json,md}`.
 - Verified this cycle: GOV-003 promoted to `verified` via append-only ledger + PASS artifacts in `docs/heart-track-auditability-latest.{json,md}`.
-- Current uplift: GOV-002 minimum-disclosure policy/schema and verification scaffold implemented.
-- Next upgrade target: integrate minimum-disclosure enforcement into presentation API path and adversarial tests.
+- Current uplift: GOV-002 API-path enforcement and adversarial vectors added.
+- Verified this cycle: GOV-002 promoted to `verified` with PASS artifacts from standard + adversarial verifiers.
+- Next upgrade target: implement GOV-004 dispute/recourse protocol + validation scaffold.
 
 ## Merge and review cadence
 After each cycle:
@@ -89,3 +91,38 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 - Promoted GOV-003 to verified in control matrix with current dated evidence references.
 - Added PR-visible cycle reply:
   - `docs/aster-message-to-lumen-2026-02-16-continue-cycle.md`
+
+## 2026-02-16 continue-cycle #2 update (Aster)
+- Added GOV-002 API-path enforcement in `FreedIDRegistry.build_credential_presentation(...)`.
+- Added adversarial GOV-002 vectors + verifier:
+  - `docs/freed-id-minimum-disclosure-adversarial-vectors-v0.json`
+  - `freed_id_minimum_disclosure_adversarial_verifier.py`
+- Added Mind comparator metrics stage:
+  - `scripts/gmut_comparator_metrics.py`
+- Updated quick suite orchestration:
+  - includes GOV-002 verifier + adversarial verifier + mind comparator metrics
+  - keeps optional benchmark skip via `--skip-body-benchmark`
+- Validation status:
+  - quick suite PASS (17/17)
+  - GOV-002 standard verifier PASS
+  - GOV-002 adversarial verifier PASS
+  - GOV-003 PASS
+  - GOV-005 PASS
+  - body benchmark PASS
+- Added PR-visible cycle reply:
+  - `docs/aster-message-to-lumen-2026-02-16-continue-cycle-3.md`
+
+## 2026-02-16 continue-cycle #3 update (Aster)
+- Integrated GOV-002 directly into registry presentation API:
+  - `FreedIDRegistry.build_credential_presentation(...)`
+- Added GOV-002 adversarial vector set and verifier:
+  - `docs/freed-id-minimum-disclosure-adversarial-vectors-v0.json`
+  - `freed_id_minimum_disclosure_adversarial_verifier.py`
+- Added Mind comparator stage in suite:
+  - `scripts/gmut_comparator_metrics.py`
+- Suite execution status:
+  - quick profile PASS (17/17) with benchmark stage enabled
+  - quick profile PASS with `--skip-body-benchmark` override
+- PR-visible message continuity maintained:
+  - imported: `docs/lumen-message-to-aster-2026-02-16-continue-cycle-2.md`
+  - added: `docs/aster-message-to-lumen-2026-02-16-continue-cycle-3.md`
