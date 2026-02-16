@@ -86,10 +86,11 @@ This cycle continued that direction by removing runtime blockers in the current 
 16. Advanced cycle-5 hardening path: integrated role-policy + signature/proof hooks in GOV-004 transitions, added adversarial replay/order verifier, added body profile calibration stage with regression-window diagnostics, and switched GMUT anchor note flow to canonical-input ingestion with uncertainty fields.
 17. Validated cycle-5 quick suite at 23/23 PASS (`docs/system-suite-status.json`) including GOV-004 standard+adversarial checks, calibration diagnostics, and canonical-input anchor exclusion publication (`overall_status=WARN` remains expected while GMUT working bounds overhang external anchors).
 18. Advanced cycle-6 triad uplift: replaced GOV-004 proof hooks with DID-method-bound cryptographic signature verification (HMAC verifier path), added Body policy-delta selective application stage + profile policy file, attached Mind canonical trace IDs + uncertainty propagation metadata, and validated quick suite at 24/24 PASS with all new stages active.
+19. Advanced cycle-7 closeout uplift: added checksum-linked Mind extraction trace snapshots + validator (`scripts/gmut_anchor_trace_validator.py`), added Body stress-window policy delta simulation (`scripts/body_policy_stress_window_report.py`), integrated both into suite orchestration, and validated quick suite at 26/26 PASS.
 
 ## Next 3 steps (new)
-1. **Mind track:** attach checksum-linked raw extraction snapshots for each canonical trace ID.
-2. **Body track:** run stressed/noisy benchmark windows and re-evaluate selective policy application to produce non-zero false-alert delta evidence.
+1. **Mind track:** extend each trace snapshot with source-side OCR/quote evidence + checksum and publish validator checks for quote linkage.
+2. **Body track:** tune selective-apply acceptance rules using stress-window deltas so recommended thresholds are accepted only when false-alert rate decreases under both live and stress windows.
 3. **Heart track:** upgrade from symmetric HMAC verifier path to asymmetric DID-key signature verification with registry-bound method resolution and dispute-ledger linkage.
 
 ## Recurring "after each completion" loop
