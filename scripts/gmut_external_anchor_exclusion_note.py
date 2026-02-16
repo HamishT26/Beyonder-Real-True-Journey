@@ -31,14 +31,14 @@ def _markdown(generated_utc: str, payload: Dict[str, object]) -> str:
         f"- anchors_with_missing_required_fields: `{payload['anchors_with_missing_required_fields']}`",
         "",
         "## Anchor comparisons",
-        "| claim_id | anchor_id | source_tier | confidence | ext_bound | ext_uncertainty | conservative_bound | gmut_working_bound | overhang_factor | ingestion_status | interpretation |",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|",
+        "| claim_id | anchor_id | source_tier | confidence | ext_bound | ext_uncertainty | conservative_bound | gmut_working_bound | overhang_factor | ingestion_status | extraction_trace_id | interpretation |",
+        "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|",
     ]
     for row in payload["anchors"]:
         lines.append(
             "| {claim_id} | {anchor_id} | {source_tier} | {confidence_level:.3f} | {external_upper_bound:.6e} | "
             "{external_uncertainty_abs:.6e} | {conservative_external_upper_bound:.6e} | {gmut_working_bound:.6e} | "
-            "{overhang_factor:.3e} | {ingestion_status} | {interpretation} |".format(**row)
+            "{overhang_factor:.3e} | {ingestion_status} | {extraction_trace_id} | {interpretation} |".format(**row)
         )
     lines.extend(
         [
@@ -122,6 +122,9 @@ def _evaluate(input_payload: Dict[str, object], comparator_payload: Dict[str, ob
                 "dataset_version_or_release": str(anchor.get("dataset_version_or_release", "")),
                 "bound_units": str(anchor.get("bound_units", "")),
                 "signal_mapping_note": str(anchor.get("signal_mapping_note", "")),
+                "extraction_trace_id": str(anchor.get("extraction_trace_id", "")),
+                "extraction_trace_ref": str(anchor.get("extraction_trace_ref", "")),
+                "uncertainty_propagation_rule": str(anchor.get("uncertainty_propagation_rule", "")),
                 "ingestion_status": ingestion_status,
                 "missing_required_fields": missing_required_fields,
                 "provisional": provisional,

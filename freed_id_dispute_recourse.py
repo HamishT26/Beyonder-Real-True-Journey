@@ -7,9 +7,12 @@ Dispute/recourse workflow scaffold for Freed ID governance control GOV-004.
 
 from __future__ import annotations
 
+import hashlib
+import hmac
+import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, List, Set, Tuple
+from typing import Callable, Dict, List, Set, Tuple
 
 
 ALLOWED_TRANSITIONS: Dict[str, Set[str]] = {
@@ -23,6 +26,7 @@ ALLOWED_TRANSITIONS: Dict[str, Set[str]] = {
 
 ROLE_TOKENS = {"subject", "reviewer", "council", "ombuds", "system", "unknown"}
 REQUIRED_AUTH_PROOF_FIELDS = {"proof_id", "signer_did", "signature_ref", "issued_at_utc"}
+REQUIRED_SIGNATURE_FIELDS = {"verification_method_id", "payload_sha256", "signature_hex"}
 
 # v0.1 role policy: role-prefix checks before cryptographic actor binding is added.
 ALLOWED_ROLES_BY_TRANSITION: Dict[Tuple[str, str], Set[str]] = {
@@ -88,6 +92,138 @@ def _resolve_auth_proof(
     return proof_id, signer_did
 
 
+def _build_transition_payload(
+    case: "DisputeCase",
+    *,
+    event_seq: int,
+    actor: str,
+    to_status: str,
+    note: str,
+) -> str:
+    payload = {
+        "actor": actor,
+        "case_id": case.case_id,
+        "credential_id": case.credential_id,
+        "event_seq": event_seq,
+        "from_status": case.status,
+        "note": note,
+        "subject_did": case.subject_did,
+        "to_status": to_status,
+    }
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+
+def _sha256_hex(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _sign_payload_hmac(payload: str, secret_key_hex: str) -> str:
+    try:
+        secret = bytes.fromhex(secret_key_hex)
+    except ValueError as exc:  # pragma: no cover - defensive
+        raise PermissionError("Invalid secretKeyHex for verification method.") from exc
+    if not secret:
+        raise PermissionError("Empty secretKeyHex for verification method.")
+    return hmac.new(secret, payload.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+def build_hmac_transition_auth_proof(
+    case: "DisputeCase",
+    *,
+    proof_id: str,
+    actor: str,
+    to_status: str,
+    note: str,
+    verification_method_id: str,
+    secret_key_hex: str,
+    signer_did: str | None = None,
+    signature_ref: str | None = None,
+    issued_at_utc: str | None = None,
+    event_seq: int | None = None,
+) -> Dict[str, str]:
+    resolved_signer = signer_did or actor
+    resolved_event_seq = len(case.history) if event_seq is None else event_seq
+    payload = _build_transition_payload(
+        case,
+        event_seq=resolved_event_seq,
+        actor=actor,
+        to_status=to_status,
+        note=note,
+    )
+    payload_sha256 = _sha256_hex(payload)
+    signature_hex = _sign_payload_hmac(payload, secret_key_hex)
+    return {
+        "proof_id": proof_id,
+        "signer_did": resolved_signer,
+        "signature_ref": signature_ref or f"sig://{proof_id}",
+        "issued_at_utc": issued_at_utc or _utc_now(),
+        "verification_method_id": verification_method_id,
+        "payload_sha256": payload_sha256,
+        "signature_hex": signature_hex,
+        "signature_algorithm": "hmac-sha256-v1",
+    }
+
+
+def _verify_transition_signature(
+    case: "DisputeCase",
+    *,
+    event_seq: int,
+    actor: str,
+    signer_did: str,
+    to_status: str,
+    note: str,
+    auth_proof: Dict[str, str] | None,
+    verification_method_resolver: Callable[[str, str], Dict[str, object] | None] | None,
+) -> Tuple[str, str]:
+    if auth_proof is None:
+        raise PermissionError("Missing auth proof for signature verification.")
+    if verification_method_resolver is None:
+        raise PermissionError("Missing verification method resolver.")
+
+    missing = sorted(field for field in REQUIRED_SIGNATURE_FIELDS if not str(auth_proof.get(field, "")).strip())
+    if missing:
+        raise PermissionError(f"Auth proof missing signature fields: {missing}")
+
+    verification_method_id = str(auth_proof["verification_method_id"]).strip()
+    verification_method = verification_method_resolver(signer_did, verification_method_id)
+    if not isinstance(verification_method, dict):
+        raise PermissionError(
+            f"Unknown verification method for signer: signer={signer_did} method={verification_method_id}"
+        )
+
+    method_id = str(verification_method.get("id", "")).strip()
+    if method_id != verification_method_id:
+        raise PermissionError("Verification method id mismatch.")
+    controller = str(verification_method.get("controller", signer_did)).strip()
+    if controller and controller != signer_did:
+        raise PermissionError(f"Verification method controller mismatch: controller={controller} signer={signer_did}")
+
+    method_type = str(verification_method.get("type", "")).strip().lower()
+    if method_type not in {"hmacsha256verificationkey2026", "hmac-sha256-verification-key-2026"}:
+        raise PermissionError(f"Unsupported verification method type: {verification_method.get('type')}")
+    secret_key_hex = str(verification_method.get("secretKeyHex", "")).strip()
+    if not secret_key_hex:
+        raise PermissionError("Verification method missing secretKeyHex.")
+
+    payload = _build_transition_payload(
+        case,
+        event_seq=event_seq,
+        actor=actor,
+        to_status=to_status,
+        note=note,
+    )
+    payload_sha256 = _sha256_hex(payload)
+    claimed_payload_sha = str(auth_proof["payload_sha256"]).strip().lower()
+    if payload_sha256 != claimed_payload_sha:
+        raise PermissionError("Auth proof payload digest mismatch.")
+
+    expected_signature = _sign_payload_hmac(payload, secret_key_hex)
+    provided_signature = str(auth_proof["signature_hex"]).strip().lower()
+    if not hmac.compare_digest(expected_signature, provided_signature):
+        raise PermissionError("Invalid auth proof signature.")
+    return verification_method_id, payload_sha256
+
+
 @dataclass
 class DisputeEvent:
     event_id: str
@@ -100,6 +236,9 @@ class DisputeEvent:
     note: str
     auth_proof_id: str | None = None
     auth_signer_did: str | None = None
+    verification_method_id: str | None = None
+    payload_sha256: str | None = None
+    signature_verified: bool = False
     evidence_refs: List[str] = field(default_factory=list)
 
 
@@ -161,6 +300,9 @@ def open_dispute_case(
             note="case opened",
             auth_proof_id=None,
             auth_signer_did=opened_by,
+            verification_method_id=None,
+            payload_sha256=None,
+            signature_verified=False,
             evidence_refs=list(evidence_refs or []),
         )
     )
@@ -180,6 +322,8 @@ def transition_case(
     require_auth_proof: bool = False,
     enforce_signer_match: bool = True,
     reject_replayed_proof: bool = False,
+    verification_method_resolver: Callable[[str, str], Dict[str, object] | None] | None = None,
+    require_signature_verification: bool = False,
 ) -> DisputeCase:
     allowed = ALLOWED_TRANSITIONS.get(case.status, set())
     if to_status not in allowed:
@@ -202,6 +346,23 @@ def transition_case(
         raise PermissionError(f"Replay auth proof detected: proof_id={proof_id}")
 
     event_seq = len(case.history)
+    verification_method_id: str | None = None
+    payload_sha256: str | None = None
+    signature_verified = False
+    if require_signature_verification:
+        if signer_did is None:
+            raise PermissionError("Signer DID is required for signature verification.")
+        verification_method_id, payload_sha256 = _verify_transition_signature(
+            case,
+            event_seq=event_seq,
+            actor=actor,
+            signer_did=signer_did,
+            to_status=to_status,
+            note=note,
+            auth_proof=auth_proof,
+            verification_method_resolver=verification_method_resolver,
+        )
+        signature_verified = True
 
     event = DisputeEvent(
         event_id=f"{case.case_id}:event:{event_seq:04d}",
@@ -214,6 +375,9 @@ def transition_case(
         note=note,
         auth_proof_id=proof_id,
         auth_signer_did=signer_did,
+        verification_method_id=verification_method_id,
+        payload_sha256=payload_sha256,
+        signature_verified=signature_verified,
         evidence_refs=list(evidence_refs or []),
     )
     case.history.append(event)
@@ -252,6 +416,12 @@ def verify_case_history_integrity(case: DisputeCase) -> Tuple[bool, List[str]]:
             if event.auth_proof_id in seen_proof_ids:
                 errors.append(f"duplicate auth_proof_id in history: {event.auth_proof_id}")
             seen_proof_ids.add(event.auth_proof_id)
+            if not event.signature_verified:
+                errors.append(f"signature_verified=false for proof event at index={index}")
+            if not event.verification_method_id:
+                errors.append(f"missing verification_method_id for proof event at index={index}")
+            if not event.payload_sha256:
+                errors.append(f"missing payload_sha256 for proof event at index={index}")
 
     if case.status != case.history[-1].to_status:
         errors.append(f"case.status mismatch: case.status={case.status} history_last={case.history[-1].to_status}")

@@ -13,7 +13,10 @@ Every anchor row must include:
 3. `confidence_level` (e.g. 0.95),
 4. `external_uncertainty_abs` (absolute uncertainty on bound),
 5. `bound_units`,
-6. `signal_mapping_note` (how external signal maps to GMUT parameter).
+6. `signal_mapping_note` (how external signal maps to GMUT parameter),
+7. `extraction_trace_id` (stable numeric extraction identifier),
+8. `extraction_trace_ref` (trace artifact pointer),
+9. `uncertainty_propagation_rule` (how uncertainty is incorporated in exclusion math).
 
 These fields are tracked in:
 - `docs/mind-track-external-anchor-canonical-inputs-v1.json`
@@ -32,7 +35,12 @@ Current canonical ingestion set v1 now includes:
    - primary citation + release tag + uncertainty metadata included.
 
 Remaining upgrade action:
-- Attach reproducible extraction trace IDs for each numeric bound.
+- Attach raw extraction snapshots/checksum references for each trace ID.
+
+Trace IDs currently attached in v1:
+- `trace-gmut005-microscope-eta-v1`
+- `trace-gmut005-eotwash-bucket-v1`
+- `trace-gmut005-llr-residual-v1`
 
 ---
 

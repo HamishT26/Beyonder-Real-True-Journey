@@ -71,13 +71,14 @@ Published via:
 Current result snapshot (latest):
 - `overall_status`: `WARN`,
 - external-bound rows now carry required confidence + uncertainty fields,
+- canonical rows now include extraction trace IDs + trace references + uncertainty propagation rules,
 - rows are treated as canonical-ingested inputs, but current GMUT working bound
   still overhangs anchors by large factors.
 
 Interpretation:
 - `confirmed_evidence`: note generation is reproducible and machine-readable each cycle.
 - `inference`: numeric overhang suggests parameter tightening is required before any readiness uplift.
-- `open_gap`: add per-anchor numeric extraction trace IDs and uncertainty propagation notes for direct reproducibility.
+- `open_gap`: attach checksum-linked raw extraction snapshots for each trace ID.
 
 ---
 

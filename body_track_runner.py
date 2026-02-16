@@ -44,6 +44,32 @@ BENCHMARK_PROFILES: Dict[str, Dict[str, float]] = {
 }
 
 
+def _load_profile_benchmark_overrides(policy_path: Path) -> Dict[str, Dict[str, float]]:
+    if not policy_path.exists():
+        return {}
+    try:
+        payload = json.loads(policy_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+    profiles = payload.get("benchmark_profiles", {})
+    if not isinstance(profiles, dict):
+        return {}
+
+    normalized: Dict[str, Dict[str, float]] = {}
+    for profile, values in profiles.items():
+        if not isinstance(values, dict):
+            continue
+        try:
+            normalized[str(profile)] = {
+                "min_pass_rate": float(values["min_pass_rate"]),
+                "max_duration_sec": float(values["max_duration_sec"]),
+                "min_health_score": float(values["min_health_score"]),
+            }
+        except (KeyError, TypeError, ValueError):
+            continue
+    return normalized
+
+
 @dataclass
 class StepResult:
     name: str
@@ -175,11 +201,13 @@ def _build_summary(generated_utc: str, stamp: str, steps: List[StepResult]) -> D
 def _resolve_benchmark_thresholds(
     profile: str,
     *,
+    policy_profiles: Optional[Dict[str, Dict[str, float]]],
     min_pass_rate: Optional[float],
     max_duration_sec: Optional[float],
     min_health_score: Optional[float],
 ) -> Dict[str, float]:
-    defaults = BENCHMARK_PROFILES.get(profile, BENCHMARK_PROFILES["standard"])
+    policy_defaults = (policy_profiles or {}).get(profile)
+    defaults = policy_defaults or BENCHMARK_PROFILES.get(profile, BENCHMARK_PROFILES["standard"])
     return {
         "min_pass_rate": float(defaults["min_pass_rate"] if min_pass_rate is None else min_pass_rate),
         "max_duration_sec": float(defaults["max_duration_sec"] if max_duration_sec is None else max_duration_sec),
@@ -375,6 +403,11 @@ def main() -> int:
         help="Path for append-only body metrics history.",
     )
     parser.add_argument(
+        "--profile-policy",
+        default="docs/body-profile-policy-v1.json",
+        help="Optional profile policy JSON for benchmark threshold overrides.",
+    )
+    parser.add_argument(
         "--benchmark-profile",
         choices=("quick", "standard", "strict"),
         default="standard",
@@ -467,8 +500,11 @@ def main() -> int:
     metrics_history.parent.mkdir(parents=True, exist_ok=True)
 
     previous_summary = _load_last_summary(metrics_history)
+    policy_path = Path(args.profile_policy)
+    policy_overrides = _load_profile_benchmark_overrides(policy_path)
     benchmark_thresholds = _resolve_benchmark_thresholds(
         args.benchmark_profile,
+        policy_profiles=policy_overrides,
         min_pass_rate=args.benchmark_min_pass_rate,
         max_duration_sec=args.benchmark_max_duration_sec,
         min_health_score=args.benchmark_min_health_score,
@@ -482,6 +518,8 @@ def main() -> int:
     )
     benchmark["profile"] = args.benchmark_profile
     benchmark["thresholds"] = benchmark_thresholds
+    benchmark["policy_path"] = str(policy_path)
+    benchmark["policy_override_used"] = args.benchmark_profile in policy_overrides
     summary["benchmark_profile"] = args.benchmark_profile
     summary["benchmark_status"] = benchmark["status"]
     summary["benchmark_trend"] = benchmark["trend"]["classification"]

@@ -22,6 +22,7 @@ PROFILE_HELP = {
     "quick": "Continuity-focused subset with benchmark observe mode by default.",
     "deep": "Expanded run (standard + version scan + skill install + curated catalog with soft-fail-network).",
 }
+BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
 
 
 def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, list[str]]:
@@ -34,6 +35,8 @@ def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, li
         *gammas,
         "--benchmark-profile",
         benchmark_profile,
+        "--profile-policy",
+        BODY_PROFILE_POLICY_PATH,
     ]
     if enforce:
         command.append("--fail-on-benchmark")
@@ -43,7 +46,14 @@ def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, li
 
 def _body_trend_guard_command(*, quick_mode: bool, enforce: bool) -> tuple[str, list[str]]:
     trend_profile = "quick" if quick_mode else "standard"
-    command = ["python3", "scripts/body_benchmark_trend_guard.py", "--trend-profile", trend_profile]
+    command = [
+        "python3",
+        "scripts/body_benchmark_trend_guard.py",
+        "--trend-profile",
+        trend_profile,
+        "--profile-policy",
+        BODY_PROFILE_POLICY_PATH,
+    ]
     if enforce:
         command.append("--fail-on-warn")
     mode = "enforce" if enforce else "observe"
@@ -60,6 +70,20 @@ def _body_calibration_command(*, profile_context: str) -> tuple[str, list[str]]:
             profile_context,
         ],
     )
+
+
+def _body_policy_delta_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/body_profile_policy_delta_report.py",
+        "--policy-json",
+        BODY_PROFILE_POLICY_PATH,
+        "--apply",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"body policy delta report ({mode})", command
 
 
 def build_commands(
@@ -267,6 +291,11 @@ def build_commands(
                 ),
             ),
             (
+                *_body_policy_delta_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 "gmut comparator metrics",
                 [
                     "python3",
@@ -308,6 +337,7 @@ def build_commands(
                 if not item[0].startswith("body benchmark guardrail check")
                 and not item[0].startswith("body benchmark trend guard")
                 and not item[0].startswith("body profile calibration report")
+                and not item[0].startswith("body policy delta report")
             ]
         return commands
 
@@ -329,6 +359,11 @@ def build_commands(
         (
             *_body_calibration_command(
                 profile_context="deep" if profile == "deep" else "standard",
+            ),
+        ),
+        (
+            *_body_policy_delta_command(
+                enforce=(body_benchmark_mode == "enforce"),
             ),
         ),
         (
@@ -513,6 +548,7 @@ def build_commands(
             if not item[0].startswith("body benchmark guardrail check")
             and not item[0].startswith("body benchmark trend guard")
             and not item[0].startswith("body profile calibration report")
+            and not item[0].startswith("body policy delta report")
         ]
 
     return commands

@@ -38,6 +38,45 @@ TREND_GUARD_PROFILES: Dict[str, Dict[str, float]] = {
 }
 
 
+def _load_profile_trend_overrides(
+    policy_path: Path,
+) -> Tuple[Dict[str, Dict[str, float]], Dict[str, float]]:
+    if not policy_path.exists():
+        return {}, {}
+    try:
+        payload = json.loads(policy_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}, {}
+
+    trend_profiles_raw = payload.get("trend_profiles", {})
+    trend_profiles: Dict[str, Dict[str, float]] = {}
+    if isinstance(trend_profiles_raw, dict):
+        for profile, values in trend_profiles_raw.items():
+            if not isinstance(values, dict):
+                continue
+            try:
+                trend_profiles[str(profile)] = {
+                    "window_size": float(values["window_size"]),
+                    "max_regressions": float(values["max_regressions"]),
+                    "max_duration_drift": float(values["max_duration_drift"]),
+                    "max_health_drop": float(values["max_health_drop"]),
+                }
+            except (KeyError, TypeError, ValueError):
+                continue
+
+    regression_window_policy: Dict[str, float] = {}
+    window_policy_raw = payload.get("regression_window_policy", {})
+    if isinstance(window_policy_raw, dict):
+        try:
+            regression_window_policy = {
+                "window_size": float(window_policy_raw["window_size"]),
+                "max_regressions": float(window_policy_raw["max_regressions"]),
+            }
+        except (KeyError, TypeError, ValueError):
+            regression_window_policy = {}
+    return trend_profiles, regression_window_policy
+
+
 def _read_json(path: Path) -> Dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -91,15 +130,21 @@ def _check(name: str, ok: bool, detail: str) -> Dict[str, str]:
 def _resolve_guard_thresholds(
     trend_profile: str,
     *,
+    policy_profiles: Dict[str, Dict[str, float]] | None,
+    regression_window_policy: Dict[str, float] | None,
     window_size: int | None,
     max_regressions: int | None,
     max_duration_drift: float | None,
     max_health_drop: float | None,
 ) -> Dict[str, float]:
-    defaults = TREND_GUARD_PROFILES.get(trend_profile, TREND_GUARD_PROFILES["standard"])
+    policy_defaults = (policy_profiles or {}).get(trend_profile)
+    defaults = policy_defaults or TREND_GUARD_PROFILES.get(trend_profile, TREND_GUARD_PROFILES["standard"])
+    window_policy = regression_window_policy or {}
+    default_window_size = float(window_policy.get("window_size", defaults["window_size"]))
+    default_max_regressions = float(window_policy.get("max_regressions", defaults["max_regressions"]))
     return {
-        "window_size": float(defaults["window_size"] if window_size is None else window_size),
-        "max_regressions": float(defaults["max_regressions"] if max_regressions is None else max_regressions),
+        "window_size": float(default_window_size if window_size is None else window_size),
+        "max_regressions": float(default_max_regressions if max_regressions is None else max_regressions),
         "max_duration_drift": float(
             defaults["max_duration_drift"] if max_duration_drift is None else max_duration_drift
         ),
@@ -189,6 +234,11 @@ def main() -> int:
     parser.add_argument("--latest-json", default="docs/body-track-trend-guard-latest.json")
     parser.add_argument("--latest-md", default="docs/body-track-trend-guard-latest.md")
     parser.add_argument("--trend-profile", choices=("quick", "standard", "strict"), default="standard")
+    parser.add_argument(
+        "--profile-policy",
+        default="docs/body-profile-policy-v1.json",
+        help="Optional profile policy JSON for trend threshold overrides.",
+    )
     parser.add_argument("--window-size", type=int, default=None)
     parser.add_argument("--max-regressions", type=int, default=None)
     parser.add_argument("--max-duration-drift", type=float, default=None)
@@ -203,10 +253,13 @@ def main() -> int:
 
     benchmark = _read_json(benchmark_path)
     history = _read_history(history_path)
+    trend_policy_overrides, regression_window_policy = _load_profile_trend_overrides(Path(args.profile_policy))
     generated_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     thresholds = _resolve_guard_thresholds(
         args.trend_profile,
+        policy_profiles=trend_policy_overrides,
+        regression_window_policy=regression_window_policy,
         window_size=args.window_size,
         max_regressions=args.max_regressions,
         max_duration_drift=args.max_duration_drift,
@@ -227,6 +280,8 @@ def main() -> int:
         "overall_status": overall_status,
         "trend_profile": args.trend_profile,
         "thresholds": thresholds,
+        "policy_path": args.profile_policy,
+        "policy_override_used": args.trend_profile in trend_policy_overrides or bool(regression_window_policy),
         "trend_classification": trend,
         "window_size_used": window_len,
         "checks": checks,

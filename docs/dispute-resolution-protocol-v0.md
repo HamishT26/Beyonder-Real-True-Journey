@@ -61,12 +61,17 @@ Role policy v0.1:
   convention `did:freed:<role>-...`).
 - Unauthorized roles for a valid transition are rejected.
 
-Signature/proof hook policy v0.2:
+Signature/proof policy v0.3:
 - Transition calls can require an `auth_proof` bundle:
-  - `proof_id`, `signer_did`, `signature_ref`, `issued_at_utc`.
+  - `proof_id`, `signer_did`, `signature_ref`, `issued_at_utc`,
+  - `verification_method_id`, `payload_sha256`, `signature_hex`.
 - Transition calls can enforce signer-to-actor binding (`signer_did == actor`).
 - Optional replay guard rejects reused `proof_id` values for a case lifecycle.
-- This is still a scaffold hook and does **not** verify cryptographic signatures yet.
+- Transition verification now uses HMAC-SHA256 signature checks bound to DID
+  verification methods (method type `HmacSha256VerificationKey2026`) and
+  transition payload hashing.
+- Event records now include sequence IDs and signature verification markers for
+  tamper detection.
 
 ---
 
@@ -90,7 +95,7 @@ Verifier outputs:
 
 ## 5) Known gaps for v1
 
-- Replace signature/proof hook checks with cryptographic signature verification
-  tied to DID verification methods (GOV-001 linkage).
+- Extend from symmetric HMAC verification to asymmetric DID-key signature
+  verification (e.g. Ed25519/JWS style) with controller authorization checks.
 - Add explicit SLA timers for acknowledgement and resolution windows.
 - Add cross-case tamper-evidence linkage for dispute ledgers.

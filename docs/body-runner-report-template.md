@@ -61,6 +61,26 @@ Use this template for each Body-track validation cycle.
     - alert_rate:
     - false_alert_rate:
 
+## Policy delta application
+- overall_status: PASS/WARN
+- apply_mode:
+- policy_updated:
+- benchmark_deltas:
+  - profile:
+  - before_warn_rate:
+  - after_warn_rate:
+  - before_false_alert_rate:
+  - after_false_alert_rate:
+  - action:
+- regression_window_delta:
+  - before_window:
+  - after_window:
+  - before_alert_rate:
+  - after_alert_rate:
+  - before_false_alert_rate:
+  - after_false_alert_rate:
+  - action:
+
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|
