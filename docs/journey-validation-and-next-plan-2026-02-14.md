@@ -76,11 +76,12 @@ This cycle continued that direction by removing runtime blockers in the current 
 6. Added coordination artifact `docs/cross-agent-coordination-cycle-2026-02-14.md`.
 7. Integrated Body-track runner + report template from Lumen (`body_track_runner.py`, `docs/body-runner-report-template.md`) and refreshed latest smoke outputs.
 8. Added reproducible Heart verifier (`freed_id_control_verifier.py`) and promoted GOV-005 to verified with dated evidence artifacts.
+9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
 
 ## Next 3 steps (new)
-1. **Body track:** add one benchmark-oriented metric per run (beyond smoke PASS/FAIL), with threshold tracking in report artifacts.
-2. **Mind track:** extend GMUT claim register with parameter bounds + explicit rejection criteria.
-3. **Heart track:** promote GOV-003 (auditability) or GOV-002 (minimum disclosure) to verified with reproducible checks/artifacts.
+1. **Mind track:** extend GMUT claim register with parameter bounds + explicit rejection criteria.
+2. **Body track:** convert smoke-only outputs into benchmark-grade trend metrics with acceptance thresholds.
+3. **Heart track:** promote GOV-003 (auditability) to verified via append-only governance ledger checks.
 
 ## Recurring "after each completion" loop
 After finishing any step:
