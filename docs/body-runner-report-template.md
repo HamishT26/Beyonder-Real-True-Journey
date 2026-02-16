@@ -81,6 +81,18 @@ Use this template for each Body-track validation cycle.
   - after_false_alert_rate:
   - action:
 
+## Policy stress-window simulation
+- overall_status: PASS/WARN
+- stressed_samples:
+- non_zero_delta_count:
+- benchmark_stress_deltas:
+  - profile:
+  - false_alert_rate_delta:
+  - warn_rate_delta:
+- regression_window_stress_delta:
+  - false_alert_rate_delta:
+  - alert_rate_delta:
+
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|

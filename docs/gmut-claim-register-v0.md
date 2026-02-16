@@ -64,14 +64,18 @@ Promotion rule for externally-testable claims:
 
 Published via:
 - `scripts/gmut_external_anchor_exclusion_note.py`
+- `scripts/gmut_anchor_trace_validator.py`
 - canonical inputs: `docs/mind-track-external-anchor-canonical-inputs-v1.json`
+- trace manifest: `docs/mind-track-external-anchor-trace-manifest-v1.json`
 - canonical ingestion checklist: `docs/mind-track-external-anchor-ingestion-notes-v0.md`
 - latest artifact: `docs/mind-track-gmut-anchor-exclusion-latest.{json,md}`
+- trace artifact: `docs/mind-track-gmut-trace-validation-latest.{json,md}`
 
 Current result snapshot (latest):
 - `overall_status`: `WARN`,
 - external-bound rows now carry required confidence + uncertainty fields,
 - canonical rows now include extraction trace IDs + trace references + uncertainty propagation rules,
+- checksum-linked trace snapshots are now validated each cycle against a manifest registry,
 - rows are treated as canonical-ingested inputs, but current GMUT working bound
   still overhangs anchors by large factors.
 

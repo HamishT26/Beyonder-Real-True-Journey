@@ -86,6 +86,30 @@ def _body_policy_delta_command(*, enforce: bool) -> tuple[str, list[str]]:
     return f"body policy delta report ({mode})", command
 
 
+def _body_policy_stress_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/body_policy_stress_window_report.py",
+        "--policy-json",
+        BODY_PROFILE_POLICY_PATH,
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"body policy stress-window report ({mode})", command
+
+
+def _mind_trace_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/gmut_anchor_trace_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"gmut anchor trace validation ({mode})", command
+
+
 def build_commands(
     include_skill_install: bool,
     include_version_scan: bool,
@@ -296,6 +320,11 @@ def build_commands(
                 ),
             ),
             (
+                *_body_policy_stress_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 "gmut comparator metrics",
                 [
                     "python3",
@@ -310,6 +339,11 @@ def build_commands(
                     "--anchor-input",
                     "docs/mind-track-external-anchor-canonical-inputs-v1.json",
                 ],
+            ),
+            (
+                *_mind_trace_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
             ),
             (
                 "zip memory/data snapshot",
@@ -338,6 +372,7 @@ def build_commands(
                 and not item[0].startswith("body benchmark trend guard")
                 and not item[0].startswith("body profile calibration report")
                 and not item[0].startswith("body policy delta report")
+                and not item[0].startswith("body policy stress-window report")
             ]
         return commands
 
@@ -367,6 +402,11 @@ def build_commands(
             ),
         ),
         (
+            *_body_policy_stress_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
             "gmut comparator metrics",
             [
                 "python3",
@@ -381,6 +421,11 @@ def build_commands(
                 "--anchor-input",
                 "docs/mind-track-external-anchor-canonical-inputs-v1.json",
             ],
+        ),
+        (
+            *_mind_trace_validation_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
         (
@@ -549,6 +594,7 @@ def build_commands(
             and not item[0].startswith("body benchmark trend guard")
             and not item[0].startswith("body profile calibration report")
             and not item[0].startswith("body policy delta report")
+            and not item[0].startswith("body policy stress-window report")
         ]
 
     return commands
