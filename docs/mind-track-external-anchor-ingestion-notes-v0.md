@@ -1,0 +1,72 @@
+# Mind Track External-Anchor Ingestion Notes v0 (GMUT-005)
+
+Purpose: define the canonical-ingestion checklist required before external
+anchor rows can move from provisional screening into fit/exclusion evidence.
+
+---
+
+## Required ingestion fields
+
+Every anchor row must include:
+1. `source_citation` (primary publication/report citation),
+2. `dataset_version_or_release` (explicit version/date tag),
+3. `confidence_level` (e.g. 0.95),
+4. `external_uncertainty_abs` (absolute uncertainty on bound),
+5. `bound_units`,
+6. `signal_mapping_note` (how external signal maps to GMUT parameter),
+7. `extraction_trace_id` (stable numeric extraction identifier),
+8. `extraction_trace_ref` (trace artifact pointer),
+9. `uncertainty_propagation_rule` (how uncertainty is incorporated in exclusion math).
+
+These fields are tracked in:
+- `docs/mind-track-external-anchor-canonical-inputs-v1.json`
+- `docs/mind-track-external-anchor-trace-manifest-v1.json`
+- `docs/mind-track-extraction-traces/*.json`
+- (legacy reference, now deprecated): `docs/mind-track-external-anchor-provisional-inputs-v0.json`
+
+---
+
+## Canonical-source upgrade targets
+
+Current canonical ingestion set v1 now includes:
+1. MICROSCOPE EP bound:
+   - primary citation + release tag + uncertainty metadata included.
+2. Eot-Wash torsion-balance bound:
+   - primary citation + release tag + uncertainty metadata included.
+3. APOLLO/LLR residual anchor:
+   - primary citation + release tag + uncertainty metadata included.
+
+Remaining upgrade action:
+- Attach source-side OCR/quote snippets with reproducible checksum linkage per trace snapshot.
+
+Trace IDs currently attached in v1:
+- `trace-gmut005-microscope-eta-v1`
+- `trace-gmut005-eotwash-bucket-v1`
+- `trace-gmut005-llr-residual-v1`
+
+Checksum-linked snapshot registry now available in:
+- `docs/mind-track-external-anchor-trace-manifest-v1.json`
+
+### MICROSCOPE trace v1
+- trace_id: `trace-gmut005-microscope-eta-v1`
+- snapshot: `docs/mind-track-extraction-traces/trace-gmut005-microscope-eta-v1.json`
+- checksum_sha256: `4b8b83bc59d90a297f93a8a8a63fddb6370cd0accdd1c5cbe658367ce9cec49c`
+
+### EOTWASH trace v1
+- trace_id: `trace-gmut005-eotwash-bucket-v1`
+- snapshot: `docs/mind-track-extraction-traces/trace-gmut005-eotwash-bucket-v1.json`
+- checksum_sha256: `2af9483f6cea053f50a11dcc70702c3c6d00110049cce58234903c2137b3468d`
+
+### LLR trace v1
+- trace_id: `trace-gmut005-llr-residual-v1`
+- snapshot: `docs/mind-track-extraction-traces/trace-gmut005-llr-residual-v1.json`
+- checksum_sha256: `903ed6aca6ce7894a1df97a48b551f636f9439e9b82a47abfcf368fbd05fb716`
+
+---
+
+## Promotion guardrail
+
+No anchor row should be marked non-provisional until:
+- source tier is `primary`,
+- ingestion status is `ingested_primary_source`,
+- uncertainty and confidence fields are present and non-placeholder.

@@ -11,6 +11,88 @@ Use this template for each Body-track validation cycle.
 - runner_version:
 - overall_status: PASS/FAIL
 
+## Summary metrics
+- pass_rate:
+- total_duration_seconds:
+- body_health_score:
+- speed_band:
+
+## Benchmark guardrail
+- status: PASS/WARN
+- profile: quick/standard/strict
+- trend: baseline/stable/improvement/regression
+- checks:
+  - pass_rate:
+  - total_duration_seconds:
+  - body_health_score:
+
+## Trend guard window
+- status: PASS/WARN
+- trend_profile: quick/standard/strict
+- trend_classification: stable_or_improving/watch/regression_pressure/insufficient_history
+- window_size_used:
+- checks:
+  - latest_benchmark_status:
+  - regression_count_window:
+  - duration_drift_window:
+  - health_drop_window:
+
+## Profile calibration
+- overall_status: PASS/WARN
+- history_samples:
+- benchmark_profile_analysis:
+  - profile:
+  - warn_rate:
+  - false_alert_rate:
+  - recommended_thresholds:
+- trend_alert_analysis:
+  - observed_regression_rate:
+  - observed_false_regression_rate:
+  - drift_percentiles:
+    - duration_drift_p90:
+    - health_drop_p90:
+- regression_window_diagnostics:
+  - recommended_window:
+    - window_size:
+    - max_regressions:
+  - evaluated_windows:
+    - window_size:
+    - max_regressions:
+    - alert_rate:
+    - false_alert_rate:
+
+## Policy delta application
+- overall_status: PASS/WARN
+- apply_mode:
+- policy_updated:
+- benchmark_deltas:
+  - profile:
+  - before_warn_rate:
+  - after_warn_rate:
+  - before_false_alert_rate:
+  - after_false_alert_rate:
+  - action:
+- regression_window_delta:
+  - before_window:
+  - after_window:
+  - before_alert_rate:
+  - after_alert_rate:
+  - before_false_alert_rate:
+  - after_false_alert_rate:
+  - action:
+
+## Policy stress-window simulation
+- overall_status: PASS/WARN
+- stressed_samples:
+- non_zero_delta_count:
+- benchmark_stress_deltas:
+  - profile:
+  - false_alert_rate_delta:
+  - warn_rate_delta:
+- regression_window_stress_delta:
+  - false_alert_rate_delta:
+  - alert_rate_delta:
+
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|

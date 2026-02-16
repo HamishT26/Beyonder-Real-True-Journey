@@ -1,0 +1,56 @@
+{
+  "version": "v0",
+  "description": "Adversarial vectors for GOV-002 minimum-disclosure behavior.",
+  "vectors": [
+    {
+      "vector_id": "VEC-001-default-sensitive-deny",
+      "claims": {
+        "age_over_18": true,
+        "residency_country": "NZ",
+        "government_id": "ABC12345",
+        "email": "sample@example.org"
+      },
+      "requested_fields": ["age_over_18", "government_id"],
+      "allowed_sensitive_fields": [],
+      "expect_disclosed_fields": ["age_over_18"],
+      "expect_denied_sensitive_fields": ["government_id"]
+    },
+    {
+      "vector_id": "VEC-002-allowlisted-sensitive",
+      "claims": {
+        "age_over_18": true,
+        "government_id": "ABC12345",
+        "phone": "+6400000000"
+      },
+      "requested_fields": ["age_over_18", "government_id", "phone"],
+      "allowed_sensitive_fields": ["government_id"],
+      "expect_disclosed_fields": ["age_over_18", "government_id"],
+      "expect_denied_sensitive_fields": ["phone"]
+    },
+    {
+      "vector_id": "VEC-003-overrequest-nonexistent-fields",
+      "claims": {
+        "age_over_18": true,
+        "residency_country": "NZ",
+        "email": "sample@example.org"
+      },
+      "requested_fields": ["age_over_18", "residency_country", "email", "ssn", "bank_account"],
+      "allowed_sensitive_fields": [],
+      "expect_disclosed_fields": ["age_over_18", "residency_country"],
+      "expect_denied_sensitive_fields": ["email"]
+    },
+    {
+      "vector_id": "VEC-004-unrequested-sensitive-leak-check",
+      "claims": {
+        "age_over_18": true,
+        "full_name": "Example Subject",
+        "home_address": "123 Example Street",
+        "government_id": "ABC12345"
+      },
+      "requested_fields": ["age_over_18"],
+      "allowed_sensitive_fields": [],
+      "expect_disclosed_fields": ["age_over_18"],
+      "expect_denied_sensitive_fields": []
+    }
+  ]
+}

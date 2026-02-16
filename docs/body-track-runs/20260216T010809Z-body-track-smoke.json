@@ -1,0 +1,80 @@
+{
+  "generated_utc": "2026-02-16T01:08:09+00:00",
+  "overall_status": "PASS",
+  "summary": {
+    "generated_utc": "2026-02-16T01:08:09+00:00",
+    "stamp": "20260216T010809Z",
+    "total_steps": 3,
+    "passed_steps": 3,
+    "failed_steps": 0,
+    "pass_rate": 1.0,
+    "total_duration_seconds": 0.128429,
+    "body_health_score": 100.0,
+    "speed_band": "fast"
+  },
+  "steps": [
+    {
+      "name": "compile_python_modules",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "py_compile",
+        "Freed_id_registry.py",
+        "freed_id_registry.py",
+        "qc_transmuter.py",
+        "trinity_orchestrator.py",
+        "trinity_orchestrator_full.py",
+        "trinity_simulation_engine.py",
+        "run_simulation.py",
+        "body_track_runner.py"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.034687189996475354,
+      "stdout": "",
+      "stderr": "",
+      "metrics": {}
+    },
+    {
+      "name": "run_full_orchestrator_demo",
+      "command": [
+        "/usr/bin/python3",
+        "trinity_orchestrator_full.py"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.027022230002330616,
+      "stdout": "Registered DID: did:freed:e892ba5606004e8b83cc07053e71bca1\nTask 1 result: {'result': \"classical_output(quantum_features:{'num_states': 2, 'shots': 512, 'dominant_state': 1, 'dominant_probability': 0.5731756426111559, 'entropy_bits': 0.9844940424728346, 'top_states': [{'state': 1, 'probability': 0.5731756426111559}, {'state': 0, 'probability': 0.42682435738884406}], 'empirical_top_states': [{'state': 1, 'count': 293, 'frequency': 0.572265625}, {'state': 0, 'count': 219, 'frequency': 0.427734375}], 'expected_state_index': 0.5731756426111559, 'measurement_histogram': [219, 293]})\", 'quantum_features': {'num_states': 2, 'shots': 512, 'dominant_state': 1, 'dominant_probability': 0.5731756426111559, 'entropy_bits': 0.9844940424728346, 'top_states': [{'state': 1, 'probability': 0.5731756426111559}, {'state': 0, 'probability': 0.42682435738884406}], 'empirical_top_states': [{'state': 1, 'count': 293, 'frequency': 0.572265625}, {'state': 0, 'count': 219, 'frequency': 0.427734375}], 'expected_state_index': 0.5731756426111559, 'measurement_histogram': [219, 293]}, 'waste_energy': 8.567074519635199, 'exotic_energy_generated': 2.378049679756799, 'total_exotic_energy': 2.378049679756799}\nTask 2 result: {'result': \"classical_output(quantum_features:{'num_states': 2, 'shots': 512, 'dominant_state': 0, 'dominant_probability': 0.8113788682877695, 'entropy_bits': 0.6985780462235057, 'top_states': [{'state': 0, 'probability': 0.8113788682877695}, {'state': 1, 'probability': 0.18862113171223044}], 'empirical_top_states': [{'state': 0, 'count': 415, 'frequency': 0.810546875}, {'state': 1, 'count': 97, 'frequency': 0.189453125}], 'expected_state_index': 0.18862113171223044, 'measurement_histogram': [415, 97]})\", 'quantum_features': {'num_states': 2, 'shots': 512, 'dominant_state': 0, 'dominant_probability': 0.8113788682877695, 'entropy_bits': 0.6985780462235057, 'top_states': [{'state': 0, 'probability': 0.8113788682877695}, {'state': 1, 'probability': 0.18862113171223044}], 'empirical_top_states': [{'state': 0, 'count': 415, 'frequency': 0.810546875}, {'state': 1, 'count': 97, 'frequency': 0.189453125}], 'expected_state_index': 0.18862113171223044, 'measurement_histogram': [415, 97]}, 'waste_energy': 7.138138481801525, 'exotic_energy_generated': 1.42542565453435, 'total_exotic_energy': 3.803475334291149}",
+      "stderr": "",
+      "metrics": {
+        "task_count": 2,
+        "avg_exotic_energy_generated": 1.901738,
+        "final_total_exotic_energy": 3.803475
+      }
+    },
+    {
+      "name": "run_gmut_simulation",
+      "command": [
+        "/usr/bin/python3",
+        "run_simulation.py",
+        "--gammas",
+        "0.0",
+        "0.01",
+        "0.05"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.06671985099092126,
+      "stdout": "Gamma=0.0000: energy density ratio = 1.00000\nGamma=0.0100: energy density ratio = 1.00993\nGamma=0.0500: energy density ratio = 1.04964",
+      "stderr": "",
+      "metrics": {
+        "gamma_count": 3,
+        "gamma_ratios": {
+          "0.0000": 1.0,
+          "0.0100": 1.00993,
+          "0.0500": 1.04964
+        },
+        "ratio_min": 1.0,
+        "ratio_max": 1.04964,
+        "ratio_span": 0.04964
+      }
+    }
+  ]
+}

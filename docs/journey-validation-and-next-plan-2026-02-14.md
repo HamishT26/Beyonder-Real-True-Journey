@@ -76,11 +76,22 @@ This cycle continued that direction by removing runtime blockers in the current 
 6. Added coordination artifact `docs/cross-agent-coordination-cycle-2026-02-14.md`.
 7. Integrated Body-track runner + report template from Lumen (`body_track_runner.py`, `docs/body-runner-report-template.md`) and refreshed latest smoke outputs.
 8. Added reproducible Heart verifier (`freed_id_control_verifier.py`) and promoted GOV-005 to verified with dated evidence artifacts.
+9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
+10. Added GOV-002 minimum-disclosure policy/schema + verifier scaffold and wired body benchmark fail-gating into suite profiles.
+11. Added GOV-002 API-path enforcement + adversarial vectors/verifier, integrated mind comparator metrics stage, and validated quick suite at 17/17 PASS.
+12. Added optional suite benchmark skip control (`--skip-body-benchmark`) while keeping benchmark fail-gating enabled by default in quick profile.
+13. Synced Lumen continue-cycle #3 uplift into this branch (live-path verifier, trend guard stage, external-anchor exclusion stage) and expanded quick-suite coverage to include those stages.
+14. Added Body profile-calibrated threshold presets (`quick`/`standard`/`strict`) for benchmark + trend guard workflows, and implemented GOV-004 dispute/recourse protocol scaffold with schema + verifier.
+15. Validated the expanded quick suite at 21/21 PASS (`docs/system-suite-status.json`) with benchmark mode enforce, including the new GOV-004 verifier stage and profile-specific Body guardrails.
+16. Advanced cycle-5 hardening path: integrated role-policy + signature/proof hooks in GOV-004 transitions, added adversarial replay/order verifier, added body profile calibration stage with regression-window diagnostics, and switched GMUT anchor note flow to canonical-input ingestion with uncertainty fields.
+17. Validated cycle-5 quick suite at 23/23 PASS (`docs/system-suite-status.json`) including GOV-004 standard+adversarial checks, calibration diagnostics, and canonical-input anchor exclusion publication (`overall_status=WARN` remains expected while GMUT working bounds overhang external anchors).
+18. Advanced cycle-6 triad uplift: replaced GOV-004 proof hooks with DID-method-bound cryptographic signature verification (HMAC verifier path), added Body policy-delta selective application stage + profile policy file, attached Mind canonical trace IDs + uncertainty propagation metadata, and validated quick suite at 24/24 PASS with all new stages active.
+19. Advanced cycle-7 closeout uplift: added checksum-linked Mind extraction trace snapshots + validator (`scripts/gmut_anchor_trace_validator.py`), added Body stress-window policy delta simulation (`scripts/body_policy_stress_window_report.py`), integrated both into suite orchestration, and validated quick suite at 26/26 PASS.
 
 ## Next 3 steps (new)
-1. **Body track:** add one benchmark-oriented metric per run (beyond smoke PASS/FAIL), with threshold tracking in report artifacts.
-2. **Mind track:** extend GMUT claim register with parameter bounds + explicit rejection criteria.
-3. **Heart track:** promote GOV-003 (auditability) or GOV-002 (minimum disclosure) to verified with reproducible checks/artifacts.
+1. **Mind track:** extend each trace snapshot with source-side OCR/quote evidence + checksum and publish validator checks for quote linkage.
+2. **Body track:** tune selective-apply acceptance rules using stress-window deltas so recommended thresholds are accepted only when false-alert rate decreases under both live and stress windows.
+3. **Heart track:** upgrade from symmetric HMAC verifier path to asymmetric DID-key signature verification with registry-bound method resolution and dispute-ledger linkage.
 
 ## Recurring "after each completion" loop
 After finishing any step:

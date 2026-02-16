@@ -1,0 +1,261 @@
+{
+  "generated_utc": "2026-02-16T06:21:28+00:00",
+  "control_id": "GOV-004",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "check": "open_case",
+      "status": "PASS",
+      "detail": "status=opened"
+    },
+    {
+      "check": "reject_invalid_transition",
+      "status": "PASS",
+      "detail": "opened->resolved rejected"
+    },
+    {
+      "check": "reject_missing_auth_proof",
+      "status": "PASS",
+      "detail": "missing proof opened->review rejected"
+    },
+    {
+      "check": "reject_unauthorized_actor_role",
+      "status": "PASS",
+      "detail": "subject opened->review rejected"
+    },
+    {
+      "check": "reject_unknown_actor_role",
+      "status": "PASS",
+      "detail": "unknown role opened->review rejected"
+    },
+    {
+      "check": "reject_signer_mismatch",
+      "status": "PASS",
+      "detail": "signer mismatch opened->review rejected"
+    },
+    {
+      "check": "to_review",
+      "status": "PASS",
+      "detail": "status=review"
+    },
+    {
+      "check": "to_escalated",
+      "status": "PASS",
+      "detail": "status=escalated"
+    },
+    {
+      "check": "reject_replayed_proof",
+      "status": "PASS",
+      "detail": "replayed proof rejected: proof-to_escalated"
+    },
+    {
+      "check": "escalation_back_to_review",
+      "status": "PASS",
+      "detail": "status=review"
+    },
+    {
+      "check": "resolve_case",
+      "status": "PASS",
+      "detail": "status=resolved"
+    },
+    {
+      "check": "reopen_case",
+      "status": "PASS",
+      "detail": "status=reopened"
+    },
+    {
+      "check": "reopened_to_review",
+      "status": "PASS",
+      "detail": "status=review"
+    },
+    {
+      "check": "close_as_dismissed",
+      "status": "PASS",
+      "detail": "status=dismissed"
+    },
+    {
+      "check": "history_integrity_chain",
+      "status": "PASS",
+      "detail": "event sequence and status chain verified"
+    },
+    {
+      "check": "history_depth",
+      "status": "PASS",
+      "detail": "events=8"
+    },
+    {
+      "check": "final_status",
+      "status": "PASS",
+      "detail": "dismissed"
+    },
+    {
+      "check": "auth_proof_presence",
+      "status": "PASS",
+      "detail": "all transition events include auth_proof_id"
+    },
+    {
+      "check": "auth_proof_registry_consistency",
+      "status": "PASS",
+      "detail": "proof_count=7"
+    },
+    {
+      "check": "schema_required_fields",
+      "status": "PASS",
+      "detail": "all required case fields present"
+    },
+    {
+      "check": "schema_status_enum",
+      "status": "PASS",
+      "detail": "status=dismissed"
+    },
+    {
+      "check": "schema_event_status_enum",
+      "status": "PASS",
+      "detail": "history_entries=8"
+    },
+    {
+      "check": "schema_event_actor_role_enum",
+      "status": "PASS",
+      "detail": "history_entries=8"
+    },
+    {
+      "check": "schema_event_sequence",
+      "status": "PASS",
+      "detail": "history_entries=8"
+    },
+    {
+      "check": "schema_event_id_pattern",
+      "status": "PASS",
+      "detail": "history_entries=8"
+    }
+  ],
+  "final_case": {
+    "case_id": "case-gov004-0001",
+    "subject_did": "did:freed:subject-001",
+    "credential_id": "did:freed:subject-001#cred-0",
+    "reason": "presentation denial dispute",
+    "opened_utc": "2026-02-16T06:21:28+00:00",
+    "opened_by": "did:freed:ombuds-1",
+    "status": "dismissed",
+    "evidence_refs": [
+      "evidence://submission/1"
+    ],
+    "used_auth_proof_ids": [
+      "proof-to_review",
+      "proof-to_escalated",
+      "proof-escalation_back_to_review",
+      "proof-resolve_case",
+      "proof-reopen_case",
+      "proof-reopened_to_review",
+      "proof-close_as_dismissed"
+    ],
+    "history": [
+      {
+        "event_id": "case-gov004-0001:event:0000",
+        "event_seq": 0,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:ombuds-1",
+        "actor_role": "ombuds",
+        "from_status": "none",
+        "to_status": "opened",
+        "note": "case opened",
+        "auth_proof_id": null,
+        "auth_signer_did": "did:freed:ombuds-1",
+        "evidence_refs": [
+          "evidence://submission/1"
+        ]
+      },
+      {
+        "event_id": "case-gov004-0001:event:0001",
+        "event_seq": 1,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:reviewer-1",
+        "actor_role": "reviewer",
+        "from_status": "opened",
+        "to_status": "review",
+        "note": "intake accepted",
+        "auth_proof_id": "proof-to_review",
+        "auth_signer_did": "did:freed:reviewer-1",
+        "evidence_refs": []
+      },
+      {
+        "event_id": "case-gov004-0001:event:0002",
+        "event_seq": 2,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:reviewer-1",
+        "actor_role": "reviewer",
+        "from_status": "review",
+        "to_status": "escalated",
+        "note": "needs council review",
+        "auth_proof_id": "proof-to_escalated",
+        "auth_signer_did": "did:freed:reviewer-1",
+        "evidence_refs": []
+      },
+      {
+        "event_id": "case-gov004-0001:event:0003",
+        "event_seq": 3,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:council-1",
+        "actor_role": "council",
+        "from_status": "escalated",
+        "to_status": "review",
+        "note": "returned with findings",
+        "auth_proof_id": "proof-escalation_back_to_review",
+        "auth_signer_did": "did:freed:council-1",
+        "evidence_refs": []
+      },
+      {
+        "event_id": "case-gov004-0001:event:0004",
+        "event_seq": 4,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:reviewer-1",
+        "actor_role": "reviewer",
+        "from_status": "review",
+        "to_status": "resolved",
+        "note": "credential update ordered",
+        "auth_proof_id": "proof-resolve_case",
+        "auth_signer_did": "did:freed:reviewer-1",
+        "evidence_refs": []
+      },
+      {
+        "event_id": "case-gov004-0001:event:0005",
+        "event_seq": 5,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:subject-001",
+        "actor_role": "subject",
+        "from_status": "resolved",
+        "to_status": "reopened",
+        "note": "appeal on remediation scope",
+        "auth_proof_id": "proof-reopen_case",
+        "auth_signer_did": "did:freed:subject-001",
+        "evidence_refs": []
+      },
+      {
+        "event_id": "case-gov004-0001:event:0006",
+        "event_seq": 6,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:reviewer-2",
+        "actor_role": "reviewer",
+        "from_status": "reopened",
+        "to_status": "review",
+        "note": "appeal accepted",
+        "auth_proof_id": "proof-reopened_to_review",
+        "auth_signer_did": "did:freed:reviewer-2",
+        "evidence_refs": []
+      },
+      {
+        "event_id": "case-gov004-0001:event:0007",
+        "event_seq": 7,
+        "at_utc": "2026-02-16T06:21:28+00:00",
+        "actor": "did:freed:reviewer-2",
+        "actor_role": "reviewer",
+        "from_status": "review",
+        "to_status": "dismissed",
+        "note": "appeal concluded",
+        "auth_proof_id": "proof-close_as_dismissed",
+        "auth_signer_did": "did:freed:reviewer-2",
+        "evidence_refs": []
+      }
+    ]
+  }
+}
