@@ -29,7 +29,7 @@ This section captures concrete external programs/datasets to bind externally-tes
 
 | claim_id | anchor_type | comparator_program_or_dataset | comparator_signal | anchor_status |
 |---|---|---|---|---|
-| GMUT-005 | fifth-force / EP constraint | MICROSCOPE mission EP results | equivalence-principle violation bounds | mapped |
+| GMUT-005 | fifth-force / EP constraint | MICROSCOPE mission EP results | equivalence-principle violation bounds | numeric_provisional |
 | GMUT-005 | fifth-force / torsion balance | Eot-Wash torsion-balance measurements | scalar-coupling strength vs range exclusion | mapped |
 | GMUT-005 | solar-system precision constraint | ILRS/APOLLO lunar laser ranging datasets | long-range anomalous-force residual constraints | mapped |
 
@@ -49,7 +49,20 @@ Current comparator:
 - fit/error metrics: max absolute deviation, mean absolute deviation, RMSE,
 - rejection threshold: `max_abs_deviation <= 0.12` (workflow guardrail; not an external empirical limit).
 
-Next upgrade: add first external-anchor numeric exclusion note (GMUT-005) once anchor-specific data ingestion is available.
+Next upgrade: replace provisional external-bound placeholders with canonical dataset ingestion and uncertainty-aware fitting.
+
+---
+
+## External-anchor numeric exclusion note (v1 provisional)
+
+Structured note generation is now in place:
+- Script: `scripts/gmut_external_anchor_exclusion_note.py`
+- Inputs: `docs/mind-track-external-anchor-provisional-inputs-v0.json` + `docs/mind-track-gmut-comparator-latest.json`
+- Latest outputs:
+  - `docs/mind-track-gmut-anchor-exclusion-latest.json`
+  - `docs/mind-track-gmut-anchor-exclusion-latest.md`
+
+Current interpretation: the scaffold now emits a reproducible numeric comparison per mapped anchor, but any row marked `provisional` remains an open evidence gap until replaced by canonical external data ingestion.
 
 ---
 

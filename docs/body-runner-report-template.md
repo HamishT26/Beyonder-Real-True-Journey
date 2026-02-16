@@ -25,6 +25,16 @@ Use this template for each Body-track validation cycle.
   - total_duration_seconds:
   - body_health_score:
 
+## Trend guard window
+- status: PASS/WARN
+- trend_classification: stable_or_improving/watch/regression_pressure/insufficient_history
+- window_size_used:
+- checks:
+  - latest_benchmark_status:
+  - regression_count_window:
+  - duration_drift_window:
+  - health_drop_window:
+
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|

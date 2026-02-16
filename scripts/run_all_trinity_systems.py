@@ -33,6 +33,14 @@ def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, li
     return f"body benchmark guardrail check ({mode})", command
 
 
+def _body_trend_guard_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = ["python3", "scripts/body_benchmark_trend_guard.py"]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"body benchmark trend guard ({mode})", command
+
+
 def build_commands(
     include_skill_install: bool,
     include_version_scan: bool,
@@ -190,6 +198,20 @@ def build_commands(
                     "freed_id_minimum_disclosure_verifier.py",
                 ],
             ),
+            (
+                "minimum-disclosure live-path verifier (GOV-002)",
+                [
+                    "python3",
+                    "freed_id_minimum_disclosure_live_path_verifier.py",
+                ],
+            ),
+            (
+                "minimum-disclosure adversarial verifier (GOV-002)",
+                [
+                    "python3",
+                    "freed_id_minimum_disclosure_adversarial_verifier.py",
+                ],
+            ),
             *token_energy_commands,
             (
                 *_body_benchmark_command(
@@ -198,10 +220,22 @@ def build_commands(
                 ),
             ),
             (
+                *_body_trend_guard_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 "gmut comparator metrics",
                 [
                     "python3",
                     "scripts/gmut_comparator_metrics.py",
+                ],
+            ),
+            (
+                "gmut external-anchor exclusion note",
+                [
+                    "python3",
+                    "scripts/gmut_external_anchor_exclusion_note.py",
                 ],
             ),
             (
@@ -224,7 +258,12 @@ def build_commands(
             ),
         ]
         if body_benchmark_mode == "off":
-            commands = [item for item in commands if not item[0].startswith("body benchmark guardrail check")]
+            commands = [
+                item
+                for item in commands
+                if not item[0].startswith("body benchmark guardrail check")
+                and not item[0].startswith("body benchmark trend guard")
+            ]
         return commands
 
     commands: list[tuple[str, list[str]]] = [
@@ -237,10 +276,22 @@ def build_commands(
             ),
         ),
         (
+            *_body_trend_guard_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
             "gmut comparator metrics",
             [
                 "python3",
                 "scripts/gmut_comparator_metrics.py",
+            ],
+        ),
+        (
+            "gmut external-anchor exclusion note",
+            [
+                "python3",
+                "scripts/gmut_external_anchor_exclusion_note.py",
             ],
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
@@ -289,6 +340,20 @@ def build_commands(
             [
                 "python3",
                 "freed_id_minimum_disclosure_verifier.py",
+            ],
+        ),
+        (
+            "minimum-disclosure live-path verifier (GOV-002)",
+            [
+                "python3",
+                "freed_id_minimum_disclosure_live_path_verifier.py",
+            ],
+        ),
+        (
+            "minimum-disclosure adversarial verifier (GOV-002)",
+            [
+                "python3",
+                "freed_id_minimum_disclosure_adversarial_verifier.py",
             ],
         ),
         *token_energy_commands,
@@ -375,7 +440,12 @@ def build_commands(
         commands.append(("curated skill catalog snapshot", ["python3", SKILL_INSTALLER_LIST, "--format", "json"]))
 
     if body_benchmark_mode == "off":
-        commands = [item for item in commands if not item[0].startswith("body benchmark guardrail check")]
+        commands = [
+            item
+            for item in commands
+            if not item[0].startswith("body benchmark guardrail check")
+            and not item[0].startswith("body benchmark trend guard")
+        ]
 
     return commands
 

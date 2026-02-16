@@ -6,10 +6,14 @@ Minimal in-memory Freed ID registry implementation.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, Iterable, List, Optional
 import uuid
 
 from freed_id_audit_log import FreedIDAuditLedger
+from freed_id_minimum_disclosure import (
+    MinimumDisclosurePolicy,
+    build_minimum_disclosure_presentation,
+)
 
 
 @dataclass
@@ -121,3 +125,52 @@ class FreedIDRegistry:
         if not doc or doc.revoked:
             return False
         return any(service.get("id") == credential_id for service in doc.services)
+
+    def build_credential_presentation(
+        self,
+        did: str,
+        credential_id: str,
+        requested_fields: Iterable[str],
+        policy: Optional[MinimumDisclosurePolicy] = None,
+    ) -> Dict[str, object]:
+        """
+        Build a minimum-disclosure credential presentation for a DID credential.
+
+        Raises:
+            KeyError: if DID is missing/revoked or credential does not exist.
+        """
+        doc = self._store.get(did)
+        if not doc or doc.revoked:
+            raise KeyError(f"DID {did} does not exist or is revoked")
+
+        credential_claims: Optional[Dict[str, object]] = None
+        for service in doc.services:
+            if service.get("id") == credential_id and service.get("type") == "FreedIDCredential":
+                credential = service.get("credential")
+                if isinstance(credential, dict):
+                    credential_claims = credential
+                break
+
+        if credential_claims is None:
+            raise KeyError(f"Credential {credential_id} does not exist for DID {did}")
+
+        requested = [str(field) for field in requested_fields]
+        active_policy = policy or MinimumDisclosurePolicy()
+        presentation = build_minimum_disclosure_presentation(
+            subject_did=did,
+            credential_id=credential_id,
+            claims=credential_claims,
+            requested_fields=requested,
+            policy=active_policy,
+        )
+        self._audit(
+            "build_presentation",
+            did,
+            {
+                "credential_id": credential_id,
+                "requested_fields": requested,
+                "disclosed_field_count": len(presentation.get("disclosed_claims", {})),
+                "policy_version": active_policy.policy_version,
+            },
+        )
+        return presentation

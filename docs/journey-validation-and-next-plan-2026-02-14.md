@@ -77,11 +77,14 @@ This cycle continued that direction by removing runtime blockers in the current 
 7. Integrated Body-track runner + report template from Lumen (`body_track_runner.py`, `docs/body-runner-report-template.md`) and refreshed latest smoke outputs.
 8. Added reproducible Heart verifier (`freed_id_control_verifier.py`) and promoted GOV-005 to verified with dated evidence artifacts.
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
+10. Added GOV-002 live-path enforcement in registry API (`Freed_id_registry.py::build_credential_presentation`) plus live-path and adversarial verifiers (`freed_id_minimum_disclosure_live_path_verifier.py`, `freed_id_minimum_disclosure_adversarial_verifier.py`).
+11. Added Body trend-window guardrail stage (`scripts/body_benchmark_trend_guard.py`) and suite integration with observe/enforce behavior.
+12. Added first external-anchor numeric exclusion-note scaffold for GMUT-005 (`scripts/gmut_external_anchor_exclusion_note.py`) with reproducible provisional artifacts.
 
 ## Next 3 steps (new)
-1. **Mind track:** bind first external GMUT-005 anchor to a numeric exclusion/fitting record beyond internal baseline metrics.
-2. **Body track:** maintain benchmark mode presets (`quick: observe`, `standard/deep: enforce`) and monitor drift windows across successive runs.
-3. **Heart track:** promote GOV-002 from implemented to verified by connecting minimum-disclosure checks to non-fixture/live credential flow and adversarial cases.
+1. **Mind track:** replace provisional GMUT-005 external-anchor bounds with canonical dataset ingestion and uncertainty-aware fit/exclusion math.
+2. **Body track:** calibrate trend-window thresholds from repeated evidence (rolling 7+ runs) and tighten enforce policy only where false-alert rate is acceptable.
+3. **Heart track:** start GOV-004 dispute/recourse protocol scaffold + verifier path (case lifecycle, IDs, and auditable transitions).
 
 ## Recurring "after each completion" loop
 After finishing any step:
