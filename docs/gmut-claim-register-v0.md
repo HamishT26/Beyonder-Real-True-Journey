@@ -60,24 +60,25 @@ Promotion rule for externally-testable claims:
 
 ---
 
-## GMUT-005 external-anchor numeric exclusion note v1
+## GMUT-005 external-anchor numeric exclusion note v2
 
 Published via:
 - `scripts/gmut_external_anchor_exclusion_note.py`
-- provisional inputs: `docs/mind-track-external-anchor-provisional-inputs-v0.json`
-- ingestion checklist: `docs/mind-track-external-anchor-ingestion-notes-v0.md`
+- canonical inputs: `docs/mind-track-external-anchor-canonical-inputs-v1.json`
+- canonical ingestion checklist: `docs/mind-track-external-anchor-ingestion-notes-v0.md`
 - latest artifact: `docs/mind-track-gmut-anchor-exclusion-latest.{json,md}`
 
 Current result snapshot (latest):
-- `overall_status`: `WARN` (expected for provisional anchor mode),
-- anchors currently tracked: `MICROSCOPE_EP_eta`, `EOTWASH_scalar_range_bucket`, `LLR_long_range_residual`,
-- each row now carries uncertainty + confidence placeholders (`external_uncertainty_abs`, `confidence_level`),
-- overhang remains high while provisional bounds are used.
+- `overall_status`: `WARN`,
+- external-bound rows now carry required confidence + uncertainty fields,
+- canonical rows now include extraction trace IDs + uncertainty propagation metadata,
+- rows are treated as canonical-ingested inputs, but current GMUT working bound
+  still overhangs anchors by large factors.
 
 Interpretation:
 - `confirmed_evidence`: note generation is reproducible and machine-readable each cycle.
 - `inference`: numeric overhang suggests parameter tightening is required before any readiness uplift.
-- `open_gap`: replace secondary placeholders with primary-source canonical ingestion records and reviewed uncertainty metadata.
+- `open_gap`: attach source-side extraction trace artifacts (not just IDs) and propagate uncertainty through parameter-mapping math with reviewable equations.
 
 ---
 

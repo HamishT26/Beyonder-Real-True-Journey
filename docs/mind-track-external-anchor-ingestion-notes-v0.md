@@ -13,21 +13,28 @@ Every anchor row must include:
 3. `confidence_level` (e.g. 0.95),
 4. `external_uncertainty_abs` (absolute uncertainty on bound),
 5. `bound_units`,
-6. `signal_mapping_note` (how external signal maps to GMUT parameter).
+6. `signal_mapping_note` (how external signal maps to GMUT parameter),
+7. `extraction_trace_id` (traceable extraction identifier),
+8. `uncertainty_propagation` (explicit propagation model/formula metadata).
 
 These fields are tracked in:
-- `docs/mind-track-external-anchor-provisional-inputs-v0.json`
+- `docs/mind-track-external-anchor-canonical-inputs-v1.json`
+- (legacy reference, now deprecated): `docs/mind-track-external-anchor-provisional-inputs-v0.json`
 
 ---
 
 ## Canonical-source upgrade targets
 
+Current canonical ingestion set v1 now includes:
 1. MICROSCOPE EP bound:
-   - replace secondary summary link with mission publication/release citation.
+   - primary citation + release tag + uncertainty metadata included.
 2. Eot-Wash torsion-balance bound:
-   - replace placeholder bound bucket with publication-grade exclusion value.
-3. ILRS/APOLLO LLR residual bound:
-   - replace placeholder residual proxy with canonical release value.
+   - primary citation + release tag + uncertainty metadata included.
+3. APOLLO/LLR residual anchor:
+   - primary citation + release tag + uncertainty metadata included.
+
+Remaining upgrade action:
+- Attach reproducible extraction trace IDs for each numeric bound.
 
 ---
 

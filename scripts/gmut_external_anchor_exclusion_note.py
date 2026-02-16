@@ -28,16 +28,19 @@ def _markdown(generated_utc: str, payload: Dict[str, object]) -> str:
         f"- comparator_status: `{payload['comparator_status']}`",
         f"- comparator_max_abs_deviation: `{payload['comparator_max_abs_deviation']}`",
         f"- required_canonical_fields_present: `{payload['required_canonical_fields_present']}`",
+        f"- anchors_with_missing_required_fields: `{payload['anchors_with_missing_required_fields']}`",
+        f"- anchors_with_missing_trace_or_propagation: `{payload['anchors_with_missing_trace_or_propagation']}`",
         "",
         "## Anchor comparisons",
-        "| claim_id | anchor_id | source_tier | confidence | ext_bound | ext_uncertainty | conservative_bound | gmut_working_bound | overhang_factor | ingestion_status | interpretation |",
-        "|---|---|---|---:|---:|---:|---:|---:|---:|---|---|",
+        "| claim_id | anchor_id | extraction_trace_id | uncertainty_model | source_tier | confidence | ext_bound | ext_uncertainty | conservative_bound | gmut_working_bound | overhang_factor | ingestion_status | interpretation |",
+        "|---|---|---|---|---|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for row in payload["anchors"]:
         lines.append(
-            "| {claim_id} | {anchor_id} | {source_tier} | {confidence_level:.3f} | {external_upper_bound:.6e} | "
-            "{external_uncertainty_abs:.6e} | {conservative_external_upper_bound:.6e} | {gmut_working_bound:.6e} | "
-            "{overhang_factor:.3e} | {ingestion_status} | {interpretation} |".format(**row)
+            "| {claim_id} | {anchor_id} | {extraction_trace_id} | {uncertainty_propagation_model} | {source_tier} | "
+            "{confidence_level:.3f} | {external_upper_bound:.6e} | {external_uncertainty_abs:.6e} | "
+            "{conservative_external_upper_bound:.6e} | {gmut_working_bound:.6e} | {overhang_factor:.3e} | "
+            "{ingestion_status} | {interpretation} |".format(**row)
         )
     lines.extend(
         [
@@ -60,7 +63,10 @@ def _evaluate(input_payload: Dict[str, object], comparator_payload: Dict[str, ob
     rows: List[Dict[str, object]] = []
     warn = False
     required_fields = input_payload.get("required_canonical_ingestion_fields", [])
-    required_fields_present = isinstance(required_fields, list) and bool(required_fields)
+    required_fields_list = [str(field) for field in required_fields] if isinstance(required_fields, list) else []
+    required_fields_present = bool(required_fields_list)
+    anchors_with_missing_required_fields = 0
+    anchors_with_missing_trace_or_propagation = 0
     for anchor in anchors:
         if not isinstance(anchor, dict):
             continue
@@ -93,6 +99,20 @@ def _evaluate(input_payload: Dict[str, object], comparator_payload: Dict[str, ob
                 interpretation = "provisionally_within_bound_pending_ingestion"
         if confidence_level <= 0.0 or confidence_level > 1.0:
             warn = True
+        extraction_trace_id = str(anchor.get("extraction_trace_id", "")).strip()
+        uncertainty_propagation = anchor.get("uncertainty_propagation", {})
+        uncertainty_model = ""
+        if isinstance(uncertainty_propagation, dict):
+            uncertainty_model = str(uncertainty_propagation.get("model", "")).strip()
+        if not extraction_trace_id or not uncertainty_model:
+            warn = True
+            anchors_with_missing_trace_or_propagation += 1
+        missing_required_fields = [
+            field for field in required_fields_list if not str(anchor.get(field, "")).strip()
+        ]
+        if missing_required_fields:
+            warn = True
+            anchors_with_missing_required_fields += 1
 
         rows.append(
             {
@@ -114,6 +134,9 @@ def _evaluate(input_payload: Dict[str, object], comparator_payload: Dict[str, ob
                 "bound_units": str(anchor.get("bound_units", "")),
                 "signal_mapping_note": str(anchor.get("signal_mapping_note", "")),
                 "ingestion_status": ingestion_status,
+                "extraction_trace_id": extraction_trace_id,
+                "uncertainty_propagation_model": uncertainty_model or "missing",
+                "missing_required_fields": missing_required_fields,
                 "provisional": provisional,
             }
         )
@@ -124,7 +147,9 @@ def _evaluate(input_payload: Dict[str, object], comparator_payload: Dict[str, ob
         "comparator_status": str(comparator_payload.get("status", "unknown")),
         "comparator_max_abs_deviation": float(comparator_payload.get("max_abs_deviation", 0.0)),
         "required_canonical_fields_present": required_fields_present,
-        "required_canonical_ingestion_fields": required_fields if required_fields_present else [],
+        "required_canonical_ingestion_fields": required_fields_list if required_fields_present else [],
+        "anchors_with_missing_required_fields": anchors_with_missing_required_fields,
+        "anchors_with_missing_trace_or_propagation": anchors_with_missing_trace_or_propagation,
         "anchors": rows,
     }
 
@@ -133,7 +158,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate external-anchor numeric exclusion note for GMUT.")
     parser.add_argument(
         "--anchor-input",
-        default="docs/mind-track-external-anchor-provisional-inputs-v0.json",
+        default="docs/mind-track-external-anchor-canonical-inputs-v1.json",
         help="Input JSON describing external anchor numeric bounds.",
     )
     parser.add_argument(

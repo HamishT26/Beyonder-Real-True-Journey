@@ -83,14 +83,16 @@ This cycle continued that direction by removing runtime blockers in the current 
 13. Synced Lumen continue-cycle #3 uplift into this branch (live-path verifier, trend guard stage, external-anchor exclusion stage) and expanded quick-suite coverage to include those stages.
 14. Added Body profile-calibrated threshold presets (`quick`/`standard`/`strict`) for benchmark + trend guard workflows, and implemented GOV-004 dispute/recourse protocol scaffold with schema + verifier.
 15. Validated the expanded quick suite at 21/21 PASS (`docs/system-suite-status.json`) with benchmark mode enforce, including the new GOV-004 verifier stage and profile-specific Body guardrails.
-16. Added GOV-004 role-policy hardening in workflow/verifier (unauthorized and unknown actor-role transitions are rejected in verification path).
-17. Added Body profile calibration analytics (`scripts/body_profile_calibration_report.py`) to publish false-alert and drift diagnostics from rolling history.
-18. Expanded GMUT-005 anchor input schema with uncertainty/confidence placeholders and canonical-ingestion checklist references.
+16. Advanced cycle-5 hardening path: integrated role-policy + signature/proof hooks in GOV-004 transitions, added adversarial replay/order verifier, added body profile calibration stage with regression-window diagnostics, and switched GMUT anchor note flow to canonical-input ingestion with uncertainty fields.
+17. Validated cycle-5 quick suite at 23/23 PASS (`docs/system-suite-status.json`) including GOV-004 standard+adversarial checks, calibration diagnostics, and canonical-input anchor exclusion publication (`overall_status=WARN` remains expected while GMUT working bounds overhang external anchors).
+18. Added GOV-004 signature-verifier callback checks (standard + adversarial verifiers now enforce signature-reference validation in addition to signer/proof hooks).
+19. Added Body policy-delta analysis (before/after false-alert rates for benchmark profile, trend profile, and regression-window policy) into calibration outputs.
+20. Added canonical-anchor extraction trace IDs + uncertainty-propagation metadata and surfaced these checks in the exclusion-note report.
 
 ## Next 3 steps (new)
-1. **Mind track:** replace secondary placeholder anchor rows with primary-source citations and dataset-versioned ingestion records.
-2. **Body track:** use calibration report outputs to update preset thresholds only when false-alert rates improve across rolling windows.
-3. **Heart track:** add signature-bound actor authorization checks and replay/order adversarial vectors for GOV-004.
+1. **Mind track:** attach source-side extraction artifacts (not only trace IDs) and uncertainty propagation equations per canonical anchor row.
+2. **Body track:** run selective threshold/window policy trials and publish accepted vs rejected recommendation deltas over rolling windows.
+3. **Heart track:** replace callback-level signature checks with DID-method cryptographic verification against registry verification methods.
 
 ## Recurring "after each completion" loop
 After finishing any step:

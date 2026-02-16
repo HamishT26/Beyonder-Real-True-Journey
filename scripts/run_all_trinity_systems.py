@@ -241,6 +241,13 @@ def build_commands(
                     "freed_id_dispute_recourse_verifier.py",
                 ],
             ),
+            (
+                "dispute/recourse adversarial verifier (GOV-004)",
+                [
+                    "python3",
+                    "freed_id_dispute_recourse_adversarial_verifier.py",
+                ],
+            ),
             *token_energy_commands,
             (
                 *_body_benchmark_command(
@@ -271,6 +278,8 @@ def build_commands(
                 [
                     "python3",
                     "scripts/gmut_external_anchor_exclusion_note.py",
+                    "--anchor-input",
+                    "docs/mind-track-external-anchor-canonical-inputs-v1.json",
                 ],
             ),
             (
@@ -334,6 +343,8 @@ def build_commands(
             [
                 "python3",
                 "scripts/gmut_external_anchor_exclusion_note.py",
+                "--anchor-input",
+                "docs/mind-track-external-anchor-canonical-inputs-v1.json",
             ],
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
@@ -403,6 +414,13 @@ def build_commands(
             [
                 "python3",
                 "freed_id_dispute_recourse_verifier.py",
+            ],
+        ),
+        (
+            "dispute/recourse adversarial verifier (GOV-004)",
+            [
+                "python3",
+                "freed_id_dispute_recourse_adversarial_verifier.py",
             ],
         ),
         *token_energy_commands,

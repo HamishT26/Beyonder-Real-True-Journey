@@ -60,8 +60,15 @@ Role policy v0.1:
 - Transition calls can enforce actor-role checks (derived from DID role prefix
   convention `did:freed:<role>-...`).
 - Unauthorized roles for a valid transition are rejected.
-- This is a pre-signature safeguard and does **not** replace cryptographic
-  authorization.
+
+Signature/proof hook policy v0.2:
+- Transition calls can require an `auth_proof` bundle:
+  - `proof_id`, `signer_did`, `signature_ref`, `issued_at_utc`.
+- Transition calls can enforce signer-to-actor binding (`signer_did == actor`).
+- Transition calls can run a `signature_verifier(actor, auth_proof)` callback.
+- Optional replay guard rejects reused `proof_id` values for a case lifecycle.
+- Current verifier stage supports deterministic signature-reference checks; full
+  DID-method cryptographic verification remains a v1 gap.
 
 ---
 
@@ -75,6 +82,7 @@ Implementation scaffold:
 
 Verification scaffold:
 - `freed_id_dispute_recourse_verifier.py`
+- `freed_id_dispute_recourse_adversarial_verifier.py`
 
 Verifier outputs:
 - timestamped: `docs/heart-track-runs/*-freedid-dispute-recourse-check.{json,md}`
@@ -84,6 +92,7 @@ Verifier outputs:
 
 ## 5) Known gaps for v1
 
-- Bind dispute transitions to signature-verified actor authorization (GOV-001 linkage).
+- Replace signature/proof hook checks with cryptographic signature verification
+  tied to DID verification methods (GOV-001 linkage).
 - Add explicit SLA timers for acknowledgement and resolution windows.
-- Add adversarial tests for replay, ordering, and tamper attempts.
+- Add cross-case tamper-evidence linkage for dispute ledgers.

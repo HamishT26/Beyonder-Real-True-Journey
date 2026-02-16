@@ -245,9 +245,74 @@ def _analyze_trend_profiles(
     }
 
 
+def _analyze_regression_windows(
+    rows: List[Dict[str, object]],
+    target_false_alert_rate: float,
+) -> Dict[str, object]:
+    candidate_windows = [3, 5, 7, 9]
+    candidate_max_regressions = [0, 1, 2, 3]
+    if not rows:
+        return {
+            "evaluated_windows": [],
+            "recommended_window": {"window_size": 5, "max_regressions": 1},
+        }
+
+    evaluated: List[Dict[str, object]] = []
+    for window_size in candidate_windows:
+        for max_regressions in candidate_max_regressions:
+            evaluations = 0
+            alerts = 0
+            false_alerts = 0
+            for index in range(window_size - 1, len(rows)):
+                window = rows[index - window_size + 1 : index + 1]
+                evaluations += 1
+                regressions = sum(
+                    1 for row in window if str(row.get("benchmark_trend", "")).lower() == "regression"
+                )
+                alert = regressions > max_regressions
+                if alert:
+                    alerts += 1
+                    window_healthy = all(_run_is_healthy(row) for row in window)
+                    if window_healthy:
+                        false_alerts += 1
+            alert_rate = (alerts / evaluations) if evaluations else 0.0
+            false_alert_rate = (false_alerts / evaluations) if evaluations else 0.0
+            evaluated.append(
+                {
+                    "window_size": window_size,
+                    "max_regressions": max_regressions,
+                    "evaluations": evaluations,
+                    "alert_count": alerts,
+                    "alert_rate": round(alert_rate, 6),
+                    "false_alert_count": false_alerts,
+                    "false_alert_rate": round(false_alert_rate, 6),
+                    "quality": "acceptable" if false_alert_rate <= target_false_alert_rate else "noisy",
+                }
+            )
+
+    ranked = sorted(
+        evaluated,
+        key=lambda item: (
+            float(item["false_alert_rate"]),
+            abs(float(item["alert_rate"]) - 0.2),
+            int(item["window_size"]),
+            int(item["max_regressions"]),
+        ),
+    )
+    recommended = {
+        "window_size": int(ranked[0]["window_size"]) if ranked else 5,
+        "max_regressions": int(ranked[0]["max_regressions"]) if ranked else 1,
+    }
+    return {
+        "evaluated_windows": evaluated,
+        "recommended_window": recommended,
+    }
+
+
 def _recommend_defaults(
     benchmark_profiles: List[Dict[str, object]],
     trend_summary: Dict[str, object],
+    regression_window_diagnostics: Dict[str, object],
 ) -> Dict[str, object]:
     benchmark_sorted = sorted(
         benchmark_profiles,
@@ -266,6 +331,145 @@ def _recommend_defaults(
     return {
         "recommended_benchmark_profile": benchmark_sorted[0]["profile"] if benchmark_sorted else "standard",
         "recommended_trend_profile": trend_sorted[0]["profile"] if trend_sorted else "standard",
+        "recommended_regression_window": regression_window_diagnostics.get(
+            "recommended_window",
+            {"window_size": 5, "max_regressions": 1},
+        ),
+    }
+
+
+def _current_profile_defaults(profile_context: str) -> Dict[str, object]:
+    normalized = profile_context.strip().lower()
+    if normalized == "quick":
+        return {
+            "benchmark_profile": "quick",
+            "trend_profile": "quick",
+            "regression_window": {"window_size": 3, "max_regressions": 1},
+        }
+    return {
+        "benchmark_profile": "standard",
+        "trend_profile": "standard",
+        "regression_window": {"window_size": 5, "max_regressions": 2},
+    }
+
+
+def _lookup_profile_metric(rows: List[Dict[str, object]], profile: str, metric_key: str) -> float:
+    for row in rows:
+        if str(row.get("profile", "")) == profile:
+            return float(row.get(metric_key, 0.0))
+    return 0.0
+
+
+def _lookup_window_false_alert(
+    rows: List[Dict[str, object]],
+    *,
+    window_size: int,
+    max_regressions: int,
+) -> float:
+    for row in rows:
+        if (
+            int(row.get("window_size", -1)) == int(window_size)
+            and int(row.get("max_regressions", -1)) == int(max_regressions)
+        ):
+            return float(row.get("false_alert_rate", 0.0))
+    return 0.0
+
+
+def _build_policy_delta_analysis(
+    *,
+    profile_context: str,
+    benchmark_profiles: List[Dict[str, object]],
+    trend_summary: Dict[str, object],
+    regression_window_diagnostics: Dict[str, object],
+    recommendations: Dict[str, object],
+) -> Dict[str, object]:
+    current = _current_profile_defaults(profile_context)
+    current_benchmark = str(current["benchmark_profile"])
+    current_trend = str(current["trend_profile"])
+    current_window = dict(current["regression_window"])
+
+    recommended_benchmark = str(recommendations.get("recommended_benchmark_profile", current_benchmark))
+    recommended_trend = str(recommendations.get("recommended_trend_profile", current_trend))
+    recommended_window = dict(
+        recommendations.get(
+            "recommended_regression_window",
+            current_window,
+        )
+    )
+
+    current_benchmark_false_alert = _lookup_profile_metric(
+        benchmark_profiles,
+        current_benchmark,
+        "false_alert_rate",
+    )
+    recommended_benchmark_false_alert = _lookup_profile_metric(
+        benchmark_profiles,
+        recommended_benchmark,
+        "false_alert_rate",
+    )
+
+    trend_rows = trend_summary.get("profile_estimates", [])
+    trend_rows_list = trend_rows if isinstance(trend_rows, list) else []
+    current_trend_false_alert = _lookup_profile_metric(
+        trend_rows_list,
+        current_trend,
+        "false_exceed_rate",
+    )
+    recommended_trend_false_alert = _lookup_profile_metric(
+        trend_rows_list,
+        recommended_trend,
+        "false_exceed_rate",
+    )
+
+    window_rows = regression_window_diagnostics.get("evaluated_windows", [])
+    window_rows_list = window_rows if isinstance(window_rows, list) else []
+    current_window_false_alert = _lookup_window_false_alert(
+        window_rows_list,
+        window_size=int(current_window.get("window_size", 5)),
+        max_regressions=int(current_window.get("max_regressions", 1)),
+    )
+    recommended_window_false_alert = _lookup_window_false_alert(
+        window_rows_list,
+        window_size=int(recommended_window.get("window_size", 5)),
+        max_regressions=int(recommended_window.get("max_regressions", 1)),
+    )
+
+    benchmark_delta = round(recommended_benchmark_false_alert - current_benchmark_false_alert, 6)
+    trend_delta = round(recommended_trend_false_alert - current_trend_false_alert, 6)
+    window_delta = round(recommended_window_false_alert - current_window_false_alert, 6)
+    aggregate_delta = round(benchmark_delta + trend_delta + window_delta, 6)
+
+    apply_candidate = (
+        benchmark_delta <= 0.0
+        and trend_delta <= 0.0
+        and window_delta <= 0.0
+        and (benchmark_delta < 0.0 or trend_delta < 0.0 or window_delta < 0.0)
+    )
+
+    return {
+        "current_policy": {
+            "benchmark_profile": current_benchmark,
+            "trend_profile": current_trend,
+            "regression_window": current_window,
+        },
+        "recommended_policy": {
+            "benchmark_profile": recommended_benchmark,
+            "trend_profile": recommended_trend,
+            "regression_window": recommended_window,
+        },
+        "false_alert_before_after": {
+            "benchmark_before": round(current_benchmark_false_alert, 6),
+            "benchmark_after": round(recommended_benchmark_false_alert, 6),
+            "benchmark_delta": benchmark_delta,
+            "trend_before": round(current_trend_false_alert, 6),
+            "trend_after": round(recommended_trend_false_alert, 6),
+            "trend_delta": trend_delta,
+            "window_before": round(current_window_false_alert, 6),
+            "window_after": round(recommended_window_false_alert, 6),
+            "window_delta": window_delta,
+            "aggregate_delta": aggregate_delta,
+        },
+        "apply_recommendation_candidate": apply_candidate,
     }
 
 
@@ -297,9 +501,27 @@ def _build_markdown(payload: Dict[str, object]) -> str:
             json.dumps(payload["trend_alert_analysis"]["drift_percentiles"], indent=2),
             "```",
             "",
+            "## Regression window diagnostics",
+            "| window_size | max_regressions | alert_rate | false_alert_rate | quality |",
+            "|---:|---:|---:|---:|---|",
+        ]
+    )
+    for row in payload["regression_window_diagnostics"]["evaluated_windows"]:
+        lines.append(
+            f"| {row['window_size']} | {row['max_regressions']} | {row['alert_rate']:.3f} | "
+            f"{row['false_alert_rate']:.3f} | {row['quality']} |"
+        )
+    lines.extend(
+        [
+            "",
             "## Recommendations",
             "```json",
             json.dumps(payload["recommendations"], indent=2),
+            "```",
+            "",
+            "## Policy delta analysis (before/after false-alert rates)",
+            "```json",
+            json.dumps(payload["policy_delta_analysis"], indent=2),
             "```",
             "",
         ]
@@ -325,7 +547,15 @@ def main() -> int:
 
     benchmark_profiles = _analyze_benchmark_profiles(history_rows, args.target_false_alert_rate)
     trend_summary = _analyze_trend_profiles(history_rows, args.target_false_alert_rate)
-    recommendations = _recommend_defaults(benchmark_profiles, trend_summary)
+    regression_window_diagnostics = _analyze_regression_windows(history_rows, args.target_false_alert_rate)
+    recommendations = _recommend_defaults(benchmark_profiles, trend_summary, regression_window_diagnostics)
+    policy_delta_analysis = _build_policy_delta_analysis(
+        profile_context=args.profile_context,
+        benchmark_profiles=benchmark_profiles,
+        trend_summary=trend_summary,
+        regression_window_diagnostics=regression_window_diagnostics,
+        recommendations=recommendations,
+    )
 
     status = "PASS"
     if len(history_rows) < max(1, args.minimum_samples):
@@ -333,6 +563,12 @@ def main() -> int:
     if any(item.get("quality") == "noisy" for item in benchmark_profiles):
         status = "WARN"
     if any(item.get("quality") == "noisy" for item in trend_summary.get("profile_estimates", [])):
+        status = "WARN"
+    if any(
+        item.get("quality") == "noisy"
+        for item in regression_window_diagnostics.get("evaluated_windows", [])
+        if int(item.get("window_size", 0)) in {3, 5, 7}
+    ):
         status = "WARN"
 
     payload: Dict[str, object] = {
@@ -343,7 +579,9 @@ def main() -> int:
         "history_samples": len(history_rows),
         "benchmark_profile_analysis": benchmark_profiles,
         "trend_alert_analysis": trend_summary,
+        "regression_window_diagnostics": regression_window_diagnostics,
         "recommendations": recommendations,
+        "policy_delta_analysis": policy_delta_analysis,
     }
 
     reports_dir = Path(args.reports_dir)

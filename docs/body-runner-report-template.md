@@ -48,9 +48,33 @@ Use this template for each Body-track validation cycle.
 - trend_alert_analysis:
   - observed_regression_rate:
   - observed_false_regression_rate:
-  - one_step_drift_percentiles:
+  - drift_percentiles:
     - duration_drift_p90:
     - health_drop_p90:
+- regression_window_diagnostics:
+  - recommended_window:
+    - window_size:
+    - max_regressions:
+  - evaluated_windows:
+    - window_size:
+    - max_regressions:
+    - alert_rate:
+    - false_alert_rate:
+- policy_delta_analysis:
+  - current_policy:
+    - benchmark_profile:
+    - trend_profile:
+    - regression_window:
+  - recommended_policy:
+    - benchmark_profile:
+    - trend_profile:
+    - regression_window:
+  - false_alert_before_after:
+    - benchmark_delta:
+    - trend_delta:
+    - window_delta:
+    - aggregate_delta:
+  - apply_recommendation_candidate:
 
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
