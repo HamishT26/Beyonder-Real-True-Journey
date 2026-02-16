@@ -37,6 +37,22 @@ Promotion rule for GMUT-005: do not move beyond `externally_testable` until at l
 
 ---
 
+## Comparator fit metrics (v0 internal baseline)
+
+To establish repeatable numeric discipline, GMUT simulation runs now emit a comparator metrics artifact:
+- Script: `scripts/gmut_comparator_metrics.py`
+- Latest JSON: `docs/mind-track-gmut-comparator-latest.json`
+- Latest markdown: `docs/mind-track-gmut-comparator-latest.md`
+
+Current comparator:
+- baseline ratio = `1.0` (internal GR baseline in simulation context),
+- fit/error metrics: max absolute deviation, mean absolute deviation, RMSE,
+- rejection threshold: `max_abs_deviation <= 0.12` (workflow guardrail; not an external empirical limit).
+
+Next upgrade: add first external-anchor numeric exclusion note (GMUT-005) once anchor-specific data ingestion is available.
+
+---
+
 ## Parameter and rejection criteria v1 (working bounds)
 
 Important: these are **engineering guardrails for iterative validation**, not externally confirmed physics constraints.

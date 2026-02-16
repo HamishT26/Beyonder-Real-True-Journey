@@ -183,12 +183,26 @@ def build_commands(
                     "docs/quantum-energy-transmutation-report.json",
                 ],
             ),
+            (
+                "minimum-disclosure verifier (GOV-002)",
+                [
+                    "python3",
+                    "freed_id_minimum_disclosure_verifier.py",
+                ],
+            ),
             *token_energy_commands,
             (
                 *_body_benchmark_command(
                     quick_mode=True,
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
+            ),
+            (
+                "gmut comparator metrics",
+                [
+                    "python3",
+                    "scripts/gmut_comparator_metrics.py",
+                ],
             ),
             (
                 "zip memory/data snapshot",
@@ -221,6 +235,13 @@ def build_commands(
                 quick_mode=False,
                 enforce=(body_benchmark_mode == "enforce"),
             ),
+        ),
+        (
+            "gmut comparator metrics",
+            [
+                "python3",
+                "scripts/gmut_comparator_metrics.py",
+            ],
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
         (
@@ -261,6 +282,13 @@ def build_commands(
                 "docs/qcit-coordination-report.json",
                 "--quantum",
                 "docs/quantum-energy-transmutation-report.json",
+            ],
+        ),
+        (
+            "minimum-disclosure verifier (GOV-002)",
+            [
+                "python3",
+                "freed_id_minimum_disclosure_verifier.py",
             ],
         ),
         *token_energy_commands,

@@ -79,9 +79,9 @@ This cycle continued that direction by removing runtime blockers in the current 
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
 
 ## Next 3 steps (new)
-1. **Mind track:** add first numeric comparator-fit or exclusion note for GMUT-005 against mapped external anchors.
-2. **Body track:** continue quick-suite benchmark mode calibration (`observe` default, `enforce` for strict runs) and trend monitoring.
-3. **Heart track:** move GOV-002 from implemented toward verified by integrating minimum-disclosure checks into non-fixture credential presentation flow.
+1. **Mind track:** bind first external GMUT-005 anchor to a numeric exclusion/fitting record beyond internal baseline metrics.
+2. **Body track:** maintain benchmark mode presets (`quick: observe`, `standard/deep: enforce`) and monitor drift windows across successive runs.
+3. **Heart track:** promote GOV-002 from implemented to verified by connecting minimum-disclosure checks to non-fixture/live credential flow and adversarial cases.
 
 ## Recurring "after each completion" loop
 After finishing any step:
