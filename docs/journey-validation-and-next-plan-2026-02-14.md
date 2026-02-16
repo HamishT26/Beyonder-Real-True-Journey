@@ -77,11 +77,12 @@ This cycle continued that direction by removing runtime blockers in the current 
 7. Integrated Body-track runner + report template from Lumen (`body_track_runner.py`, `docs/body-runner-report-template.md`) and refreshed latest smoke outputs.
 8. Added reproducible Heart verifier (`freed_id_control_verifier.py`) and promoted GOV-005 to verified with dated evidence artifacts.
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
+10. Added GOV-002 minimum-disclosure policy/schema + verifier scaffold and wired body benchmark fail-gating into suite profiles.
 
 ## Next 3 steps (new)
-1. **Mind track:** attach external comparator dataset references to each externally-testable GMUT claim.
-2. **Body track:** enforce benchmark guardrail outcomes as optional suite gating behavior in quick profile.
-3. **Heart track:** implement GOV-002 minimum-disclosure policy/schema and create verification scaffolding.
+1. **Mind track:** attach explicit fit/error metric and rejection threshold per externally-testable comparator anchor.
+2. **Body track:** add profile-specific benchmark threshold presets and regression alert windows.
+3. **Heart track:** integrate GOV-002 minimum-disclosure enforcement into presentation API path with adversarial test vectors.
 
 ## Recurring "after each completion" loop
 After finishing any step:

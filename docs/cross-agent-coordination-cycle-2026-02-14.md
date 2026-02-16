@@ -19,20 +19,23 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 ### Mind (GMUT)
 - Active artifact: claim register v0.
 - Current uplift: parameter/rejection criteria section added for bounded iteration (`docs/gmut-claim-register-v0.md`).
-- Next upgrade target: attach one external comparator dataset reference per externally-testable claim.
+- Current uplift: external comparator dataset anchors added for externally-testable progression.
+- Next upgrade target: attach explicit fit/error metric and rejection threshold per externally-testable claim.
 
 ### Body (Trinity)
 - Target in progress: reproducible smoke/benchmark runner + dated report outputs.
 - Integration contract: runner must emit machine-readable pass/fail per step and include command + duration.
 - Current uplift: benchmark guardrail layer (threshold checks + trend classification + latest benchmark artifact).
-- Next upgrade target: enforce optional fail-on-benchmark policy in quick suite profile.
+- Current uplift: optional benchmark fail-gating wired into suite runner (skip via `--skip-body-benchmark`).
+- Next upgrade target: tune profile-specific threshold presets and add regression alert windows.
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
 - Added this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
 - Verified this cycle: GOV-005 promoted to `verified` via PASS artifacts in `docs/heart-track-governance-latest.{json,md}`.
 - Verified this cycle: GOV-003 promoted to `verified` via append-only ledger + PASS artifacts in `docs/heart-track-auditability-latest.{json,md}`.
-- Next upgrade target: implement GOV-002 minimum-disclosure policy/schema and verification scaffold.
+- Current uplift: GOV-002 minimum-disclosure policy/schema and verification scaffold implemented.
+- Next upgrade target: integrate minimum-disclosure enforcement into presentation API path and adversarial tests.
 
 ## Merge and review cadence
 After each cycle:

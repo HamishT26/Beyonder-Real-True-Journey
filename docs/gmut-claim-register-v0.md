@@ -38,6 +38,28 @@ Important: these are **engineering guardrails for iterative validation**, not ex
 
 ---
 
+## External comparator datasets v1 (public reference anchors)
+
+These references are comparator anchors for externally-testable progression, not endorsements of GMUT validity.
+
+| claim_id | comparator_dataset | public_reference_url | intended_use_in_validation |
+|---|---|---|---|
+| GMUT-002 | LIGO/Virgo/KAGRA Open Data (GWOSC) | https://www.gw-openscience.org | Compare frequency-domain residual behavior against baseline GR templates. |
+| GMUT-003 | NANOGrav 15-year data set | https://nanograv.org/science/data/15-year-data-set | Evaluate PTA low-frequency anomaly fit form and residual thresholds. |
+| GMUT-003 | EPTA DR2 | https://www.epta.eu.org/epta-dr2 | Cross-check PTA anomaly consistency across collaborations. |
+| GMUT-004 | Planck Legacy Archive | https://pla.esac.esa.int | Constrain cosmology parameters when deriving candidate `w(z)` behavior. |
+| GMUT-004 | DESI public data portal | https://data.desi.lbl.gov/public | Compare large-scale structure predictions vs baseline cosmology fits. |
+| GMUT-005 | Eot-Wash equivalence principle and inverse-square tests | https://www.npl.washington.edu/eotwash | Benchmark scalar fifth-force coupling constraints. |
+| GMUT-005 | MICROSCOPE mission resources | https://microscope.cnes.fr/en | Additional equivalence-principle constraint anchor for coupling rejection regions. |
+| GMUT-006 | Neutrino Open Data (IceCube) | https://icecube.wisc.edu/science/data/ | Candidate channel for coherence/decoherence signal bounds exploration. |
+
+Promotion rule for externally-testable claims:
+1. attach at least one comparator dataset anchor,
+2. define explicit fit/error metric,
+3. define rejection threshold before claiming readiness uplift.
+
+---
+
 ## Evidence classification rule
 
 For every claim update, assign one tag:

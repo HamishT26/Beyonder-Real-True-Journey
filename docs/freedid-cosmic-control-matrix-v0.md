@@ -15,7 +15,7 @@ Maturity scale:
 | control_id | principle_anchor | control_statement | maturity | evidence_now | verification_test | gap_owner | next_action |
 |---|---|---|---|---|---|---|---|
 | GOV-001 | Self-sovereignty (`freed_id_spec.md`) | DID holders can create and manage identifiers without central unilateral override. | specified | Method flow is documented in DID method section; in-memory registry supports create/update/revoke paths. | Add unit tests proving only controller-signed updates are accepted (stub signatures acceptable in v0). | Aster | Add signature-check interface in registry and negative tests. |
-| GOV-002 | Privacy by design (`freed_id_spec.md`) | Credential presentations must support minimum-disclosure behavior. | draft | Selective disclosure intent is documented; no implementation exists in current code. | Add presentation schema with redaction/selective-field policy and test fixtures. | Aster | Define `presentation_policy.md` and sample credential presentation payloads. |
+| GOV-002 | Privacy by design (`freed_id_spec.md`) | Credential presentations must support minimum-disclosure behavior. | implemented | Added policy + schema docs (`docs/freed-id-minimum-disclosure-policy-v0.md`, `docs/freed-id-minimum-disclosure-schema-v0.json`), implementation module (`freed_id_minimum_disclosure.py`), verifier scaffold (`freed_id_minimum_disclosure_verifier.py`), and latest result artifacts (`docs/heart-track-min-disclosure-latest.{json,md}`). | Run `python3 freed_id_minimum_disclosure_verifier.py` and require PASS for default-sensitive blocking, allowlist behavior, and schema alignment checks. | Aster | Integrate policy enforcement into credential presentation API path and add adversarial test vectors before promoting to verified. |
 | GOV-003 | Transparency and auditability (`freed_id_spec.md`, `Cosmic_bill_of_rights.md`) | Identity and governance actions must emit append-only audit records. | verified | `freed_id_audit_log.py` appends hash-linked audit entries and `freed_id_auditability_verifier.py` produced PASS artifacts in `docs/heart-track-auditability-latest.{json,md}` and `docs/heart-track-runs/20260216T024043Z-freedid-auditability-check.{json,md}`; ledger written to `docs/freed-id-audit-log.jsonl`. | Run `python3 freed_id_auditability_verifier.py` and require PASS across sequence and hash-chain checks. | Aster + Lumen | Convert verifier checks into pytest fixtures for CI gating. |
 | GOV-004 | Right to recourse (`Cosmic_bill_of_rights.md`) | Disputed credential actions must be tracked with case IDs and status transitions. | draft | Dispute resolution is described conceptually; no case workflow artifact exists. | Introduce dispute-case schema and lifecycle states (`opened`, `review`, `resolved`). | Human + Aster | Add `docs/dispute-resolution-protocol-v0.md` and case template. |
 | GOV-005 | Right to safety/security (`Cosmic_bill_of_rights.md`) | Registry operations must reject revoked identities for privileged actions. | verified | `Freed_id_registry.py` blocks credential actions when DID is revoked; `freed_id_control_verifier.py` produced passing artifacts in `docs/heart-track-governance-latest.{json,md}` and `docs/heart-track-runs/20260213T123852Z-freedid-gov-check.{json,md}`. | Run `python3 freed_id_control_verifier.py` and require PASS across all checks. | Aster | Add pytest conversion for the same checks once a full test harness is standardized. |
@@ -26,12 +26,12 @@ Maturity scale:
 
 ## Current maturity snapshot
 
-- `draft`: 2 controls (GOV-002, GOV-004)
+- `draft`: 1 control (GOV-004)
 - `specified`: 2 controls (GOV-001, GOV-006)
-- `implemented`: 1 control (GOV-007)
+- `implemented`: 2 controls (GOV-002, GOV-007)
 - `verified`: 2 controls (GOV-003, GOV-005)
 
-Interpretation: Heart track now has two verification-grade controls; next major gap is moving GOV-002 (minimum-disclosure privacy behavior) from draft to verified.
+Interpretation: Heart track now has two verification-grade controls and an implemented GOV-002 privacy scaffold; next major gap is production-grade enforcement and adversarial validation to promote GOV-002 to verified.
 
 ---
 

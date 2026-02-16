@@ -29,6 +29,7 @@ def build_commands(
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
     quick_mode: bool,
+    include_body_benchmark: bool,
 ) -> list[tuple[str, list[str]]]:
     token_energy_commands: list[tuple[str, list[str]]] = [
         (
@@ -119,6 +120,7 @@ def build_commands(
     if quick_mode:
         commands: list[tuple[str, list[str]]] = [
             ("memory integrity check (strict)", ["python3", "scripts/aurelis_memory_integrity_check.py", "--strict"]),
+            ("heart minimum-disclosure verifier", ["python3", "freed_id_minimum_disclosure_verifier.py"]),
             (
                 "continuity cycle tick (dry-run status)",
                 [
@@ -175,6 +177,18 @@ def build_commands(
             ),
             *token_energy_commands,
             (
+                "body benchmark guardrail check",
+                [
+                    "python3",
+                    "body_track_runner.py",
+                    "--gammas",
+                    "0.0",
+                    "0.01",
+                    "0.05",
+                    "--fail-on-benchmark",
+                ],
+            ),
+            (
                 "zip memory/data snapshot",
                 [
                     "python3",
@@ -193,11 +207,26 @@ def build_commands(
                 ],
             ),
         ]
+        if not include_body_benchmark:
+            commands = [item for item in commands if item[0] != "body benchmark guardrail check"]
         return commands
 
     commands: list[tuple[str, list[str]]] = [
         ("v29 module map generation", ["python3", "scripts/generate_v29_module_map.py"]),
         ("simulation sweep", ["python3", "run_simulation.py", "--gammas", "0.0", "0.02", "0.05", "0.1"]),
+        ("heart minimum-disclosure verifier", ["python3", "freed_id_minimum_disclosure_verifier.py"]),
+        (
+            "body benchmark guardrail check",
+            [
+                "python3",
+                "body_track_runner.py",
+                "--gammas",
+                "0.0",
+                "0.02",
+                "0.05",
+                "--fail-on-benchmark",
+            ],
+        ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
         (
             "vector transmutation",
@@ -321,6 +350,9 @@ def build_commands(
 
     if include_curated_skill_catalog:
         commands.append(("curated skill catalog snapshot", ["python3", SKILL_INSTALLER_LIST, "--format", "json"]))
+
+    if not include_body_benchmark:
+        commands = [item for item in commands if item[0] != "body benchmark guardrail check"]
 
     return commands
 
@@ -471,6 +503,11 @@ def main() -> None:
         help="Print available execution profiles and exit.",
     )
     parser.add_argument(
+        "--skip-body-benchmark",
+        action="store_true",
+        help="Skip body_track_runner benchmark guardrail stage.",
+    )
+    parser.add_argument(
         "--status-json",
         default=str(STATUS_JSON.relative_to(ROOT)),
         help="Path to write machine-readable suite status JSON (relative to repo root).",
@@ -510,6 +547,7 @@ def main() -> None:
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
         quick_mode=(profile == "quick"),
+        include_body_benchmark=not args.skip_body_benchmark,
     )
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
@@ -529,6 +567,7 @@ def main() -> None:
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
         f"Quick mode: {profile == 'quick'}",
+        f"Include body benchmark: {not args.skip_body_benchmark}",
         f"Status JSON path: {status_json_path.relative_to(ROOT)}",
         "",
         "This report runs currently available repo systems and records command outputs.",
@@ -627,6 +666,7 @@ def main() -> None:
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,
             "quick_mode": profile == "quick",
+            "include_body_benchmark": not args.skip_body_benchmark,
         },
         "results": suite_results,
     }
