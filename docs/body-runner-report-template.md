@@ -11,6 +11,20 @@ Use this template for each Body-track validation cycle.
 - runner_version:
 - overall_status: PASS/FAIL
 
+## Summary metrics
+- pass_rate:
+- total_duration_seconds:
+- body_health_score:
+- speed_band:
+
+## Benchmark guardrail
+- status: PASS/WARN
+- trend: baseline/stable/improvement/regression
+- checks:
+  - pass_rate:
+  - total_duration_seconds:
+  - body_health_score:
+
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |
 |---|---|---:|---:|---|---|
