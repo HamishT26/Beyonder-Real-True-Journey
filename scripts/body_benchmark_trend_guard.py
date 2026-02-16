@@ -16,6 +16,28 @@ from statistics import median
 from typing import Dict, List, Tuple
 
 
+TREND_GUARD_PROFILES: Dict[str, Dict[str, float]] = {
+    "quick": {
+        "window_size": 3.0,
+        "max_regressions": 1.0,
+        "max_duration_drift": 0.25,
+        "max_health_drop": 2.5,
+    },
+    "standard": {
+        "window_size": 5.0,
+        "max_regressions": 2.0,
+        "max_duration_drift": 0.2,
+        "max_health_drop": 2.0,
+    },
+    "strict": {
+        "window_size": 7.0,
+        "max_regressions": 1.0,
+        "max_duration_drift": 0.12,
+        "max_health_drop": 1.0,
+    },
+}
+
+
 def _read_json(path: Path) -> Dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -44,8 +66,14 @@ def _build_markdown(generated_utc: str, payload: Dict[str, object]) -> str:
         "",
         f"- generated_utc: `{generated_utc}`",
         f"- overall_status: **{payload['overall_status']}**",
+        f"- trend_profile: `{payload.get('trend_profile', 'standard')}`",
         f"- trend_classification: `{payload['trend_classification']}`",
         f"- window_size_used: `{payload['window_size_used']}`",
+        "",
+        "## Thresholds",
+        "```json",
+        json.dumps(payload.get("thresholds", {}), indent=2),
+        "```",
         "",
         "## Checks",
         "| check | status | detail |",
@@ -58,6 +86,25 @@ def _build_markdown(generated_utc: str, payload: Dict[str, object]) -> str:
 
 def _check(name: str, ok: bool, detail: str) -> Dict[str, str]:
     return {"check": name, "status": "PASS" if ok else "WARN", "detail": detail}
+
+
+def _resolve_guard_thresholds(
+    trend_profile: str,
+    *,
+    window_size: int | None,
+    max_regressions: int | None,
+    max_duration_drift: float | None,
+    max_health_drop: float | None,
+) -> Dict[str, float]:
+    defaults = TREND_GUARD_PROFILES.get(trend_profile, TREND_GUARD_PROFILES["standard"])
+    return {
+        "window_size": float(defaults["window_size"] if window_size is None else window_size),
+        "max_regressions": float(defaults["max_regressions"] if max_regressions is None else max_regressions),
+        "max_duration_drift": float(
+            defaults["max_duration_drift"] if max_duration_drift is None else max_duration_drift
+        ),
+        "max_health_drop": float(defaults["max_health_drop"] if max_health_drop is None else max_health_drop),
+    }
 
 
 def _evaluate(
@@ -141,10 +188,11 @@ def main() -> int:
     parser.add_argument("--reports-dir", default="docs/body-track-runs")
     parser.add_argument("--latest-json", default="docs/body-track-trend-guard-latest.json")
     parser.add_argument("--latest-md", default="docs/body-track-trend-guard-latest.md")
-    parser.add_argument("--window-size", type=int, default=5)
-    parser.add_argument("--max-regressions", type=int, default=2)
-    parser.add_argument("--max-duration-drift", type=float, default=0.2)
-    parser.add_argument("--max-health-drop", type=float, default=2.0)
+    parser.add_argument("--trend-profile", choices=("quick", "standard", "strict"), default="standard")
+    parser.add_argument("--window-size", type=int, default=None)
+    parser.add_argument("--max-regressions", type=int, default=None)
+    parser.add_argument("--max-duration-drift", type=float, default=None)
+    parser.add_argument("--max-health-drop", type=float, default=None)
     parser.add_argument("--fail-on-warn", action="store_true")
     args = parser.parse_args()
 
@@ -157,19 +205,28 @@ def main() -> int:
     history = _read_history(history_path)
     generated_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    thresholds = _resolve_guard_thresholds(
+        args.trend_profile,
+        window_size=args.window_size,
+        max_regressions=args.max_regressions,
+        max_duration_drift=args.max_duration_drift,
+        max_health_drop=args.max_health_drop,
+    )
 
     overall_status, trend, checks, window_len = _evaluate(
         benchmark=benchmark,
         history=history,
-        window_size=max(1, args.window_size),
-        max_regressions=max(0, args.max_regressions),
-        max_duration_drift=max(0.0, args.max_duration_drift),
-        max_health_drop=max(0.0, args.max_health_drop),
+        window_size=max(1, int(thresholds["window_size"])),
+        max_regressions=max(0, int(thresholds["max_regressions"])),
+        max_duration_drift=max(0.0, float(thresholds["max_duration_drift"])),
+        max_health_drop=max(0.0, float(thresholds["max_health_drop"])),
     )
 
     payload: Dict[str, object] = {
         "generated_utc": generated_utc,
         "overall_status": overall_status,
+        "trend_profile": args.trend_profile,
+        "thresholds": thresholds,
         "trend_classification": trend,
         "window_size_used": window_len,
         "checks": checks,

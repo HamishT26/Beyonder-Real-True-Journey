@@ -25,6 +25,25 @@ from pathlib import Path
 from typing import Callable, Dict, List, Optional
 
 
+BENCHMARK_PROFILES: Dict[str, Dict[str, float]] = {
+    "quick": {
+        "min_pass_rate": 1.0,
+        "max_duration_sec": 1.5,
+        "min_health_score": 94.0,
+    },
+    "standard": {
+        "min_pass_rate": 1.0,
+        "max_duration_sec": 1.0,
+        "min_health_score": 95.0,
+    },
+    "strict": {
+        "min_pass_rate": 1.0,
+        "max_duration_sec": 0.8,
+        "min_health_score": 97.0,
+    },
+}
+
+
 @dataclass
 class StepResult:
     name: str
@@ -153,6 +172,21 @@ def _build_summary(generated_utc: str, stamp: str, steps: List[StepResult]) -> D
     }
 
 
+def _resolve_benchmark_thresholds(
+    profile: str,
+    *,
+    min_pass_rate: Optional[float],
+    max_duration_sec: Optional[float],
+    min_health_score: Optional[float],
+) -> Dict[str, float]:
+    defaults = BENCHMARK_PROFILES.get(profile, BENCHMARK_PROFILES["standard"])
+    return {
+        "min_pass_rate": float(defaults["min_pass_rate"] if min_pass_rate is None else min_pass_rate),
+        "max_duration_sec": float(defaults["max_duration_sec"] if max_duration_sec is None else max_duration_sec),
+        "min_health_score": float(defaults["min_health_score"] if min_health_score is None else min_health_score),
+    }
+
+
 def _load_last_summary(history_path: Path) -> Optional[Dict[str, object]]:
     if not history_path.exists():
         return None
@@ -252,7 +286,13 @@ def _build_markdown(
         "",
         "## Benchmark guardrail",
         f"- status: **{benchmark['status']}**",
+        f"- profile: `{benchmark.get('profile', 'standard')}`",
         f"- trend: `{benchmark['trend']['classification']}`",
+        "```json",
+        json.dumps(benchmark.get("thresholds", {}), indent=2),
+        "```",
+        "",
+        "### check_results",
         "```json",
         json.dumps(benchmark["checks"], indent=2),
         "```",
@@ -335,22 +375,28 @@ def main() -> int:
         help="Path for append-only body metrics history.",
     )
     parser.add_argument(
+        "--benchmark-profile",
+        choices=("quick", "standard", "strict"),
+        default="standard",
+        help="Threshold preset for benchmark guardrail checks.",
+    )
+    parser.add_argument(
         "--benchmark-min-pass-rate",
         type=float,
-        default=1.0,
-        help="Minimum pass_rate benchmark threshold.",
+        default=None,
+        help="Override minimum pass_rate benchmark threshold.",
     )
     parser.add_argument(
         "--benchmark-max-duration-sec",
         type=float,
-        default=1.0,
-        help="Maximum total_duration_seconds benchmark threshold.",
+        default=None,
+        help="Override maximum total_duration_seconds benchmark threshold.",
     )
     parser.add_argument(
         "--benchmark-min-health-score",
         type=float,
-        default=95.0,
-        help="Minimum body_health_score benchmark threshold.",
+        default=None,
+        help="Override minimum body_health_score benchmark threshold.",
     )
     parser.add_argument(
         "--latest-benchmark",
@@ -421,13 +467,22 @@ def main() -> int:
     metrics_history.parent.mkdir(parents=True, exist_ok=True)
 
     previous_summary = _load_last_summary(metrics_history)
-    benchmark = _evaluate_benchmark(
-        summary=summary,
-        previous=previous_summary,
+    benchmark_thresholds = _resolve_benchmark_thresholds(
+        args.benchmark_profile,
         min_pass_rate=args.benchmark_min_pass_rate,
         max_duration_sec=args.benchmark_max_duration_sec,
         min_health_score=args.benchmark_min_health_score,
     )
+    benchmark = _evaluate_benchmark(
+        summary=summary,
+        previous=previous_summary,
+        min_pass_rate=benchmark_thresholds["min_pass_rate"],
+        max_duration_sec=benchmark_thresholds["max_duration_sec"],
+        min_health_score=benchmark_thresholds["min_health_score"],
+    )
+    benchmark["profile"] = args.benchmark_profile
+    benchmark["thresholds"] = benchmark_thresholds
+    summary["benchmark_profile"] = args.benchmark_profile
     summary["benchmark_status"] = benchmark["status"]
     summary["benchmark_trend"] = benchmark["trend"]["classification"]
 

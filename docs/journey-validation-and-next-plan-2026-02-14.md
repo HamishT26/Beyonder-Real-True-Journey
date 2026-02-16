@@ -77,14 +77,20 @@ This cycle continued that direction by removing runtime blockers in the current 
 7. Integrated Body-track runner + report template from Lumen (`body_track_runner.py`, `docs/body-runner-report-template.md`) and refreshed latest smoke outputs.
 8. Added reproducible Heart verifier (`freed_id_control_verifier.py`) and promoted GOV-005 to verified with dated evidence artifacts.
 9. Imported cleaner-v34 missing Trinity systems (26 scripts + 15 skill files) and validated Body/Heart + quick-suite execution.
-10. Added GOV-002 live-path enforcement in registry API (`Freed_id_registry.py::build_credential_presentation`) plus live-path and adversarial verifiers (`freed_id_minimum_disclosure_live_path_verifier.py`, `freed_id_minimum_disclosure_adversarial_verifier.py`).
-11. Added Body trend-window guardrail stage (`scripts/body_benchmark_trend_guard.py`) and suite integration with observe/enforce behavior.
-12. Added first external-anchor numeric exclusion-note scaffold for GMUT-005 (`scripts/gmut_external_anchor_exclusion_note.py`) with reproducible provisional artifacts.
+10. Added GOV-002 minimum-disclosure policy/schema + verifier scaffold and wired body benchmark fail-gating into suite profiles.
+11. Added GOV-002 API-path enforcement + adversarial vectors/verifier, integrated mind comparator metrics stage, and validated quick suite at 17/17 PASS.
+12. Added optional suite benchmark skip control (`--skip-body-benchmark`) while keeping benchmark fail-gating enabled by default in quick profile.
+13. Synced Lumen continue-cycle #3 uplift into this branch (live-path verifier, trend guard stage, external-anchor exclusion stage) and expanded quick-suite coverage to include those stages.
+14. Added Body profile-calibrated threshold presets (`quick`/`standard`/`strict`) for benchmark + trend guard workflows, and implemented GOV-004 dispute/recourse protocol scaffold with schema + verifier.
+15. Validated the expanded quick suite at 21/21 PASS (`docs/system-suite-status.json`) with benchmark mode enforce, including the new GOV-004 verifier stage and profile-specific Body guardrails.
+16. Added GOV-004 role-policy hardening in workflow/verifier (unauthorized and unknown actor-role transitions are rejected in verification path).
+17. Added Body profile calibration analytics (`scripts/body_profile_calibration_report.py`) to publish false-alert and drift diagnostics from rolling history.
+18. Expanded GMUT-005 anchor input schema with uncertainty/confidence placeholders and canonical-ingestion checklist references.
 
 ## Next 3 steps (new)
-1. **Mind track:** replace provisional GMUT-005 external-anchor bounds with canonical dataset ingestion and uncertainty-aware fit/exclusion math.
-2. **Body track:** calibrate trend-window thresholds from repeated evidence (rolling 7+ runs) and tighten enforce policy only where false-alert rate is acceptable.
-3. **Heart track:** start GOV-004 dispute/recourse protocol scaffold + verifier path (case lifecycle, IDs, and auditable transitions).
+1. **Mind track:** replace secondary placeholder anchor rows with primary-source citations and dataset-versioned ingestion records.
+2. **Body track:** use calibration report outputs to update preset thresholds only when false-alert rates improve across rolling windows.
+3. **Heart track:** add signature-bound actor authorization checks and replay/order adversarial vectors for GOV-004.
 
 ## Recurring "after each completion" loop
 After finishing any step:

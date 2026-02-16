@@ -19,6 +19,7 @@ Use this template for each Body-track validation cycle.
 
 ## Benchmark guardrail
 - status: PASS/WARN
+- profile: quick/standard/strict
 - trend: baseline/stable/improvement/regression
 - checks:
   - pass_rate:
@@ -27,6 +28,7 @@ Use this template for each Body-track validation cycle.
 
 ## Trend guard window
 - status: PASS/WARN
+- trend_profile: quick/standard/strict
 - trend_classification: stable_or_improving/watch/regression_pressure/insufficient_history
 - window_size_used:
 - checks:
@@ -34,6 +36,21 @@ Use this template for each Body-track validation cycle.
   - regression_count_window:
   - duration_drift_window:
   - health_drop_window:
+
+## Profile calibration
+- overall_status: PASS/WARN
+- history_samples:
+- benchmark_profile_analysis:
+  - profile:
+  - warn_rate:
+  - false_alert_rate:
+  - recommended_thresholds:
+- trend_alert_analysis:
+  - observed_regression_rate:
+  - observed_false_regression_rate:
+  - one_step_drift_percentiles:
+    - duration_drift_p90:
+    - health_drop_p90:
 
 ## Steps
 | step | status | returncode | duration_seconds | command | artifact |

@@ -23,49 +23,6 @@ Statuses:
 
 ---
 
-## External comparator anchors (v1)
-
-This section captures concrete external programs/datasets to bind externally-testable claims to real comparators.
-
-| claim_id | anchor_type | comparator_program_or_dataset | comparator_signal | anchor_status |
-|---|---|---|---|---|
-| GMUT-005 | fifth-force / EP constraint | MICROSCOPE mission EP results | equivalence-principle violation bounds | numeric_provisional |
-| GMUT-005 | fifth-force / torsion balance | Eot-Wash torsion-balance measurements | scalar-coupling strength vs range exclusion | mapped |
-| GMUT-005 | solar-system precision constraint | ILRS/APOLLO lunar laser ranging datasets | long-range anomalous-force residual constraints | mapped |
-
-Promotion rule for GMUT-005: do not move beyond `externally_testable` until at least one numeric fit or exclusion comparison is recorded against one mapped anchor.
-
----
-
-## Comparator fit metrics (v0 internal baseline)
-
-To establish repeatable numeric discipline, GMUT simulation runs now emit a comparator metrics artifact:
-- Script: `scripts/gmut_comparator_metrics.py`
-- Latest JSON: `docs/mind-track-gmut-comparator-latest.json`
-- Latest markdown: `docs/mind-track-gmut-comparator-latest.md`
-
-Current comparator:
-- baseline ratio = `1.0` (internal GR baseline in simulation context),
-- fit/error metrics: max absolute deviation, mean absolute deviation, RMSE,
-- rejection threshold: `max_abs_deviation <= 0.12` (workflow guardrail; not an external empirical limit).
-
-Next upgrade: replace provisional external-bound placeholders with canonical dataset ingestion and uncertainty-aware fitting.
-
----
-
-## External-anchor numeric exclusion note (v1 provisional)
-
-Structured note generation is now in place:
-- Script: `scripts/gmut_external_anchor_exclusion_note.py`
-- Inputs: `docs/mind-track-external-anchor-provisional-inputs-v0.json` + `docs/mind-track-gmut-comparator-latest.json`
-- Latest outputs:
-  - `docs/mind-track-gmut-anchor-exclusion-latest.json`
-  - `docs/mind-track-gmut-anchor-exclusion-latest.md`
-
-Current interpretation: the scaffold now emits a reproducible numeric comparison per mapped anchor, but any row marked `provisional` remains an open evidence gap until replaced by canonical external data ingestion.
-
----
-
 ## Parameter and rejection criteria v1 (working bounds)
 
 Important: these are **engineering guardrails for iterative validation**, not externally confirmed physics constraints.
@@ -78,6 +35,49 @@ Important: these are **engineering guardrails for iterative validation**, not ex
 | GMUT-003 | PTA anomaly fit residual | Require explicit model function and residual threshold declaration before status promotion | Reject promotion to `externally_testable` until residual metric + dataset link are present | open_gap |
 | GMUT-004 | Dark-energy `w(z)` derivation readiness | Require explicit potential form `V(psi)` + derived `w(z)` expression | Reject cosmology claim promotion until derivation and target-survey comparator are attached | open_gap |
 | GMUT-007 | Reproducibility consistency | Require fixed-seed/same-input rerun tolerance note | Reject benchmark label when repeated runs diverge without documented stochastic allowance | inference |
+
+---
+
+## External comparator datasets v1 (public reference anchors)
+
+These references are comparator anchors for externally-testable progression, not endorsements of GMUT validity.
+
+| claim_id | comparator_dataset | public_reference_url | intended_use_in_validation |
+|---|---|---|---|
+| GMUT-002 | LIGO/Virgo/KAGRA Open Data (GWOSC) | https://www.gw-openscience.org | Compare frequency-domain residual behavior against baseline GR templates. |
+| GMUT-003 | NANOGrav 15-year data set | https://nanograv.org/science/data/15-year-data-set | Evaluate PTA low-frequency anomaly fit form and residual thresholds. |
+| GMUT-003 | EPTA DR2 | https://www.epta.eu.org/epta-dr2 | Cross-check PTA anomaly consistency across collaborations. |
+| GMUT-004 | Planck Legacy Archive | https://pla.esac.esa.int | Constrain cosmology parameters when deriving candidate `w(z)` behavior. |
+| GMUT-004 | DESI public data portal | https://data.desi.lbl.gov/public | Compare large-scale structure predictions vs baseline cosmology fits. |
+| GMUT-005 | Eot-Wash equivalence principle and inverse-square tests | https://www.npl.washington.edu/eotwash | Benchmark scalar fifth-force coupling constraints. |
+| GMUT-005 | MICROSCOPE mission resources | https://microscope.cnes.fr/en | Additional equivalence-principle constraint anchor for coupling rejection regions. |
+| GMUT-006 | Neutrino Open Data (IceCube) | https://icecube.wisc.edu/science/data/ | Candidate channel for coherence/decoherence signal bounds exploration. |
+
+Promotion rule for externally-testable claims:
+1. attach at least one comparator dataset anchor,
+2. define explicit fit/error metric,
+3. define rejection threshold before claiming readiness uplift.
+
+---
+
+## GMUT-005 external-anchor numeric exclusion note v1
+
+Published via:
+- `scripts/gmut_external_anchor_exclusion_note.py`
+- provisional inputs: `docs/mind-track-external-anchor-provisional-inputs-v0.json`
+- ingestion checklist: `docs/mind-track-external-anchor-ingestion-notes-v0.md`
+- latest artifact: `docs/mind-track-gmut-anchor-exclusion-latest.{json,md}`
+
+Current result snapshot (latest):
+- `overall_status`: `WARN` (expected for provisional anchor mode),
+- anchors currently tracked: `MICROSCOPE_EP_eta`, `EOTWASH_scalar_range_bucket`, `LLR_long_range_residual`,
+- each row now carries uncertainty + confidence placeholders (`external_uncertainty_abs`, `confidence_level`),
+- overhang remains high while provisional bounds are used.
+
+Interpretation:
+- `confirmed_evidence`: note generation is reproducible and machine-readable each cycle.
+- `inference`: numeric overhang suggests parameter tightening is required before any readiness uplift.
+- `open_gap`: replace secondary placeholders with primary-source canonical ingestion records and reviewed uncertainty metadata.
 
 ---
 

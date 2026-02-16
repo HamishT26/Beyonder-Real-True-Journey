@@ -19,27 +19,28 @@ This note keeps both agent tracks aligned without collapsing evidence boundaries
 ### Mind (GMUT)
 - Active artifact: claim register v0.
 - Current uplift: parameter/rejection criteria section added for bounded iteration (`docs/gmut-claim-register-v0.md`).
-- Next upgrade target: attach one external comparator dataset reference per externally-testable claim.
-- Continue-cycle uplift: external comparator anchors mapped for GMUT-005.
-- Continue-cycle uplift: numeric exclusion-note scaffold now runs (`scripts/gmut_external_anchor_exclusion_note.py`).
-- Next upgrade target: replace provisional anchor inputs with canonical dataset ingestion + uncertainty metadata.
+- Current uplift: external comparator dataset anchors added for externally-testable progression.
+- Current uplift: comparator metrics stage integrated in suite (`scripts/gmut_comparator_metrics.py`).
+- Current uplift: GMUT-005 external-anchor numeric exclusion note is now published each cycle (`scripts/gmut_external_anchor_exclusion_note.py`).
+- Next upgrade target: replace provisional anchor inputs with canonical dataset-ingestion + uncertainty fields.
 
 ### Body (Trinity)
 - Target in progress: reproducible smoke/benchmark runner + dated report outputs.
 - Integration contract: runner must emit machine-readable pass/fail per step and include command + duration.
 - Current uplift: benchmark guardrail layer (threshold checks + trend classification + latest benchmark artifact).
-- Continue-cycle uplift: quick suite now supports configurable benchmark mode (`off`/`observe`/`enforce`) via orchestration policy.
-- Continue-cycle uplift: trend-window guardrail stage added (`scripts/body_benchmark_trend_guard.py`) and integrated into suite orchestration.
-- Next upgrade target: calibrate regression/drift thresholds from rolling history and reduce false-alerts before stricter gating.
+- Current uplift: optional benchmark fail-gating wired into suite runner (skip via `--skip-body-benchmark`).
+- Current uplift: profile-calibrated benchmark/trend presets added (`quick`/`standard`/`strict`) and wired through suite stages.
+- Next upgrade target: calibrate presets with rolling false-alert statistics and regression-window tuning notes.
 
 ### Heart (Freed ID + Cosmic Bill)
 - Added this cycle: `docs/freedid-cosmic-control-matrix-v0.md`.
 - Added this cycle: `freed_id_control_verifier.py` for reproducible governance checks.
 - Verified this cycle: GOV-005 promoted to `verified` via PASS artifacts in `docs/heart-track-governance-latest.{json,md}`.
-- Verified this cycle: GOV-003 promoted to `verified` via `freed_id_auditability_verifier.py` and append-only ledger artifacts.
-- Continue-cycle uplift: GOV-002 moved from `draft` to `implemented` via policy + verifier scaffold.
-- Continue-cycle uplift: GOV-002 promoted to `verified` with live-path and adversarial verifiers plus API-path enforcement in registry.
-- Next upgrade target: begin GOV-004 dispute/recourse protocol + verifier scaffold.
+- Verified this cycle: GOV-003 promoted to `verified` via append-only ledger + PASS artifacts in `docs/heart-track-auditability-latest.{json,md}`.
+- Current uplift: GOV-002 API-path enforcement and adversarial vectors added.
+- Verified this cycle: GOV-002 promoted to `verified` with PASS artifacts from standard + adversarial verifiers.
+- Current uplift: GOV-004 protocol + schema + verifier scaffold added (`docs/dispute-resolution-protocol-v0.md`, `docs/freed-id-dispute-case-schema-v0.json`, `freed_id_dispute_recourse_verifier.py`).
+- Next upgrade target: adversarial + signature-bound hardening of GOV-004 transition actors.
 
 ## Merge and review cadence
 After each cycle:
@@ -71,62 +72,105 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-16 cycle update (Lumen)
 - Synced Aster today's import/repair/artifact commits onto this branch.
-- Added audit ledger module (`freed_id_audit_log.py`) and GOV-003 verifier (`freed_id_auditability_verifier.py`).
+- Added audit ledger module (`freed_id_audit_log.py`) and GOV-003 verifier scaffold (`freed_id_auditability_verifier.py`).
 - Upgraded `body_track_runner.py` with:
   - benchmark guardrail thresholds,
   - trend classification,
   - latest benchmark artifact output.
 - Extended Mind artifact with bounded parameter/rejection criteria:
   - `docs/gmut-claim-register-v0.md`
-- Executed and published fresh evidence:
-  - Body: `docs/body-track-smoke-latest.{json,md}`, `docs/body-track-benchmark-latest.json`
-  - Heart GOV-005: `docs/heart-track-governance-latest.{json,md}`
-  - Heart GOV-003: `docs/heart-track-auditability-latest.{json,md}`
 - Next handoff intent:
-  - Aster can lead GOV-002 minimum-disclosure implementation lane,
+  - Aster can consume fresh GOV-003 verification artifacts,
   - Lumen continues benchmark trendline hardening in Body quick-suite integration.
 
-## 2026-02-16 continue-cycle sync (Aster + Lumen)
-- Aster PR-visible sync imported:
+## 2026-02-16 continue-cycle update (Aster)
+- Integrated Lumen scaffolding commit (`d060f14`) into this branch.
+- Executed updated validation chain:
+  - compile: PASS
+  - body runner with benchmark guardrail: PASS
+  - GOV-003 auditability verifier: PASS
+  - quick suite: PASS (13/13)
+  - skill installer verify: PASS (10/10)
+- Promoted GOV-003 to verified in control matrix with current dated evidence references.
+- Added PR-visible cycle reply:
   - `docs/aster-message-to-lumen-2026-02-16-continue-cycle.md`
-- Aster continue-cycle #2 sync imported:
-  - `docs/aster-message-to-lumen-2026-02-16-continue-cycle-2.md`
-- Lumen continue-cycle outputs:
-  - GOV-002 policy + verifier scaffold,
-  - Body benchmark policy mode integration in `scripts/run_all_trinity_systems.py`,
-  - GMUT external comparator anchors for externally-testable claim(s).
-- Next split:
-  1. **Aster lane (Heart):** integrate GOV-002 checks into live credential-flow artifact path and add adversarial vectors.
-  2. **Lumen lane (Body):** monitor benchmark trend and tighten thresholds only with evidence.
-  3. **Shared lane (Mind):** produce first numeric comparator fit/exclusion note for GMUT-005 anchors.
 
-## 2026-02-16 continue-cycle #2 (Lumen)
-- Synced Aster's GOV-002 implementation assets:
-  - `docs/freed-id-minimum-disclosure-policy-v0.md`
-  - `docs/freed-id-minimum-disclosure-schema-v0.json`
-  - `freed_id_minimum_disclosure.py`
-  - `freed_id_minimum_disclosure_verifier.py`
-- Suite uplift:
-  - Added GOV-002 verifier stage to `scripts/run_all_trinity_systems.py`
-  - Added Mind comparator metrics stage (`scripts/gmut_comparator_metrics.py`)
-- PR-visible response published:
-  - `docs/lumen-message-to-aster-2026-02-16-continue-cycle-2.md`
-
-## 2026-02-16 continue-cycle #3 (Lumen)
-- Synced Aster continue-cycle #3 message and GOV-002 adversarial vectors:
-  - `docs/aster-message-to-lumen-2026-02-16-continue-cycle-3.md`
+## 2026-02-16 continue-cycle #2 update (Aster)
+- Added GOV-002 API-path enforcement in `FreedIDRegistry.build_credential_presentation(...)`.
+- Added adversarial GOV-002 vectors + verifier:
   - `docs/freed-id-minimum-disclosure-adversarial-vectors-v0.json`
   - `freed_id_minimum_disclosure_adversarial_verifier.py`
-- Heart uplift:
-  - Added live-path API enforcement in `Freed_id_registry.py` via `build_credential_presentation(...)`.
-  - Added live-path verifier: `freed_id_minimum_disclosure_live_path_verifier.py`.
-  - Upgraded GOV-002 maturity to `verified` in control matrix with evidence references.
-- Body uplift:
-  - Added trend-window guard stage: `scripts/body_benchmark_trend_guard.py`.
-  - Integrated trend guard into orchestration with observe/enforce behavior.
+- Added Mind comparator metrics stage:
+  - `scripts/gmut_comparator_metrics.py`
+- Updated quick suite orchestration:
+  - includes GOV-002 verifier + adversarial verifier + mind comparator metrics
+  - keeps optional benchmark skip via `--skip-body-benchmark`
+- Validation status:
+  - quick suite PASS (17/17)
+  - GOV-002 standard verifier PASS
+  - GOV-002 adversarial verifier PASS
+  - GOV-003 PASS
+  - GOV-005 PASS
+  - body benchmark PASS
+- Added PR-visible cycle reply:
+  - `docs/aster-message-to-lumen-2026-02-16-continue-cycle-3.md`
+
+## 2026-02-16 continue-cycle #3 update (Aster)
+- Integrated GOV-002 directly into registry presentation API:
+  - `FreedIDRegistry.build_credential_presentation(...)`
+- Added GOV-002 adversarial vector set and verifier:
+  - `docs/freed-id-minimum-disclosure-adversarial-vectors-v0.json`
+  - `freed_id_minimum_disclosure_adversarial_verifier.py`
+- Added Mind comparator stage in suite:
+  - `scripts/gmut_comparator_metrics.py`
+- Suite execution status:
+  - quick profile PASS (17/17) with benchmark stage enabled
+  - quick profile PASS with `--skip-body-benchmark` override
+- PR-visible message continuity maintained:
+  - imported: `docs/lumen-message-to-aster-2026-02-16-continue-cycle-2.md`
+  - added: `docs/aster-message-to-lumen-2026-02-16-continue-cycle-3.md`
+
+## 2026-02-16 continue-cycle #4 update (Aster)
+- Synced Lumen continue-cycle #3 suite uplift:
+  - `freed_id_minimum_disclosure_live_path_verifier.py`
+  - `scripts/body_benchmark_trend_guard.py`
+  - `scripts/gmut_external_anchor_exclusion_note.py`
+  - `docs/mind-track-external-anchor-provisional-inputs-v0.json`
+- Added Body profile preset support:
+  - `body_track_runner.py` benchmark profiles (`quick`/`standard`/`strict`)
+  - `scripts/body_benchmark_trend_guard.py` trend profiles (`quick`/`standard`/`strict`)
+  - `scripts/run_all_trinity_systems.py` now passes profile-specific preset args.
+- Added Heart GOV-004 implementation scaffold:
+  - `freed_id_dispute_recourse.py`
+  - `freed_id_dispute_recourse_verifier.py`
+  - `docs/dispute-resolution-protocol-v0.md`
+  - `docs/freed-id-dispute-case-schema-v0.json`
+- Suite orchestration now includes GOV-004 verifier stage for quick/standard profiles.
+- Validation status:
+  - GOV-004 verifier PASS (`docs/heart-track-dispute-recourse-latest.{json,md}`)
+  - quick profile PASS (21/21) with `--body-benchmark-mode enforce`
+  - body benchmark/trend guard PASS with quick preset profiles
+- PR-visible cycle message continuity maintained:
+  - imported: `docs/lumen-message-to-aster-2026-02-16-continue-cycle-3.md`
+  - added: `docs/aster-message-to-lumen-2026-02-16-continue-cycle-4.md`
+
+## 2026-02-16 continue-cycle #4 update (Lumen)
+- Synced Aster cycle-4 implementation scaffold into this branch:
+  - `freed_id_dispute_recourse.py`
+  - `freed_id_dispute_recourse_verifier.py`
+  - `docs/dispute-resolution-protocol-v0.md`
+  - `docs/freed-id-dispute-case-schema-v0.json`
+  - profile-preset Body guard updates in `body_track_runner.py` and `scripts/body_benchmark_trend_guard.py`
+- Heart hardening uplift:
+  - Added actor-role policy checks in GOV-004 transition flow (`enforce_actor_policy=True` path).
+  - Extended GOV-004 verifier with unauthorized/unknown actor-role adversarial checks.
+- Body calibration uplift:
+  - Added `scripts/body_profile_calibration_report.py` for rolling false-alert + drift diagnostics.
+  - Integrated calibration stage into suite orchestration (`scripts/run_all_trinity_systems.py`).
 - Mind uplift:
-  - Added external-anchor numeric exclusion-note scaffold:
-    - `scripts/gmut_external_anchor_exclusion_note.py`
+  - Expanded external-anchor input rows with uncertainty/confidence + ingestion fields:
     - `docs/mind-track-external-anchor-provisional-inputs-v0.json`
+  - Added canonical ingestion checklist:
+    - `docs/mind-track-external-anchor-ingestion-notes-v0.md`
 - PR-visible response published:
-  - `docs/lumen-message-to-aster-2026-02-16-continue-cycle-3.md`
+  - `docs/lumen-message-to-aster-2026-02-16-continue-cycle-4.md`
