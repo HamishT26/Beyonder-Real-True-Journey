@@ -23,6 +23,21 @@ Statuses:
 
 ---
 
+## Parameter and rejection criteria v1 (working bounds)
+
+Important: these are **engineering guardrails for iterative validation**, not externally confirmed physics constraints.
+
+| claim_id | parameter | working_bound | rejection_condition | evidence_tag |
+|---|---|---|---|---|
+| GMUT-001 | `lambda_psi`, `beta_psi` effective couplings | Start with exploratory magnitude cap `<= 1e-6` until external fit stage | Reject trial set if couplings exceed cap without new empirical justification note | open_gap |
+| GMUT-002 | Simulation coupling `gamma` | Baseline sweep range `0.0 <= gamma <= 0.2` for stable sandbox comparison | Reject sweep if ratio calculations are non-monotonic due to numerical instability or parser failure | confirmed_evidence |
+| GMUT-002 | Ratio span (`max_ratio - min_ratio`) in baseline sweep | Keep span within expected sandbox band (`<= 0.25`) unless explicitly testing stress mode | Reject run as benchmark-grade if span exceeds threshold without stress-mode flag | inference |
+| GMUT-003 | PTA anomaly fit residual | Require explicit model function and residual threshold declaration before status promotion | Reject promotion to `externally_testable` until residual metric + dataset link are present | open_gap |
+| GMUT-004 | Dark-energy `w(z)` derivation readiness | Require explicit potential form `V(psi)` + derived `w(z)` expression | Reject cosmology claim promotion until derivation and target-survey comparator are attached | open_gap |
+| GMUT-007 | Reproducibility consistency | Require fixed-seed/same-input rerun tolerance note | Reject benchmark label when repeated runs diverge without documented stochastic allowance | inference |
+
+---
+
 ## Evidence classification rule
 
 For every claim update, assign one tag:

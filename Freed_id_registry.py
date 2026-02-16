@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 import uuid
 
+from freed_id_audit_log import FreedIDAuditLedger
+
 
 @dataclass
 class DIDDocument:
@@ -34,8 +36,16 @@ class DIDDocument:
 class FreedIDRegistry:
     """A simple in-memory registry for Freed ID DID Documents."""
 
-    def __init__(self) -> None:
+    def __init__(self, audit_ledger_path: Optional[str] = None) -> None:
         self._store: Dict[str, DIDDocument] = {}
+        self._audit_ledger = (
+            FreedIDAuditLedger(audit_ledger_path) if audit_ledger_path else None
+        )
+
+    def _audit(self, action: str, did: str, details: Optional[Dict[str, object]] = None) -> None:
+        if self._audit_ledger is None:
+            return
+        self._audit_ledger.append(action=action, did=did, details=details or {})
 
     def _generate_did(self) -> str:
         return f"did:freed:{uuid.uuid4().hex}"
@@ -46,6 +56,15 @@ class FreedIDRegistry:
             raise ValueError(f"DID {did} already exists and is active")
         doc.did = did
         self._store[did] = doc
+        self._audit(
+            "register",
+            did,
+            {
+                "controller": doc.controller,
+                "verification_method_count": len(doc.verification_methods),
+                "service_count": len(doc.services),
+            },
+        )
         return did
 
     def resolve(self, did: str) -> Optional[DIDDocument]:
@@ -57,12 +76,21 @@ class FreedIDRegistry:
         if did != new_doc.did:
             raise ValueError("DID mismatch in update")
         self._store[did] = new_doc
+        self._audit(
+            "update",
+            did,
+            {
+                "verification_method_count": len(new_doc.verification_methods),
+                "service_count": len(new_doc.services),
+            },
+        )
 
     def revoke(self, did: str) -> None:
         doc = self._store.get(did)
         if not doc:
             raise KeyError(f"DID {did} does not exist")
         doc.revoked = True
+        self._audit("revoke", did, {"revoked": True})
 
     def list_active(self) -> List[str]:
         return [did for did, doc in self._store.items() if not doc.revoked]
@@ -71,12 +99,21 @@ class FreedIDRegistry:
         doc = self._store.get(did)
         if not doc or doc.revoked:
             raise KeyError(f"DID {did} does not exist or is revoked")
+        credential_id = f"{did}#cred-{len(doc.services)}"
         doc.services.append(
             {
-                "id": f"{did}#cred-{len(doc.services)}",
+                "id": credential_id,
                 "type": "FreedIDCredential",
                 "credential": credential,
             }
+        )
+        self._audit(
+            "issue_credential",
+            did,
+            {
+                "credential_id": credential_id,
+                "credential_keys": sorted(str(key) for key in credential.keys()),
+            },
         )
 
     def verify_credential(self, did: str, credential_id: str) -> bool:
