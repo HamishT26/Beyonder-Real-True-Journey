@@ -1,0 +1,1583 @@
+{
+  "generated_utc": "2026-02-16T10:04:09+00:00",
+  "session_label": "nz-monday-night-closeout",
+  "session_status": "STABLE_WITH_GAPS",
+  "snapshots": {
+    "suite": {
+      "path": "docs/system-suite-status.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:24.067683+00:00",
+        "suite_started_at_utc": "2026-02-16T06:43:23.078169+00:00",
+        "suite_finished_at_utc": "2026-02-16T06:43:24.067668+00:00",
+        "suite_duration_sec": 0.989,
+        "effective_success": true,
+        "achieved_steps": 23,
+        "achievement_gate_met": true,
+        "counts": {
+          "pass": 23,
+          "warn": 0,
+          "timeout": 0,
+          "fail": 0
+        },
+        "config": {
+          "step_timeout_sec": 0,
+          "profile": "quick",
+          "profile_source": "--profile",
+          "include_version_scan": false,
+          "include_skill_install": false,
+          "include_curated_skill_catalog": false,
+          "soft_fail_network": false,
+          "fail_on_warn": false,
+          "achievement_target_steps": 0,
+          "quick_mode": true,
+          "body_benchmark_mode": "enforce",
+          "include_body_benchmark": true
+        },
+        "results": [
+          {
+            "label": "memory integrity check (strict)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.078209+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.101713+00:00",
+            "duration_sec": 0.024,
+            "command": "python3 scripts/aurelis_memory_integrity_check.py --strict"
+          },
+          {
+            "label": "continuity cycle tick (dry-run status)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.101743+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.130031+00:00",
+            "duration_sec": 0.028,
+            "command": "python3 scripts/aurelis_cycle_tick.py --user-message 'suite quick dry-run' --assistant-reflection 'Quick mode continuity health check' --progress-snapshot 'Validated quick dry-run status reporting in suite' --next-step 'Run full suite when deeper validation is needed' --query cycle --query-limit 2 --dry-run --no-report --step-timeout-sec 0 --json-status docs/aurelis-cycle-tick-status.json"
+          },
+          {
+            "label": "qcit coordination engine",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.130063+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.165471+00:00",
+            "duration_sec": 0.035,
+            "command": "python3 scripts/qcit_coordination_engine.py --out docs/qcit-coordination-report.json"
+          },
+          {
+            "label": "quantum energy transmutation engine",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.165494+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.196774+00:00",
+            "duration_sec": 0.031,
+            "command": "python3 scripts/quantum_energy_transmutation_engine.py --out docs/quantum-energy-transmutation-report.json"
+          },
+          {
+            "label": "qcit/quantum report validation",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.196797+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.218894+00:00",
+            "duration_sec": 0.022,
+            "command": "python3 scripts/validate_transmutation_reports.py --qcit docs/qcit-coordination-report.json --quantum docs/quantum-energy-transmutation-report.json"
+          },
+          {
+            "label": "minimum-disclosure verifier (GOV-002)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.218918+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.253825+00:00",
+            "duration_sec": 0.035,
+            "command": "python3 freed_id_minimum_disclosure_verifier.py"
+          },
+          {
+            "label": "minimum-disclosure live-path verifier (GOV-002)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.253848+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.293581+00:00",
+            "duration_sec": 0.04,
+            "command": "python3 freed_id_minimum_disclosure_live_path_verifier.py"
+          },
+          {
+            "label": "minimum-disclosure adversarial verifier (GOV-002)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.293602+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.328579+00:00",
+            "duration_sec": 0.035,
+            "command": "python3 freed_id_minimum_disclosure_adversarial_verifier.py"
+          },
+          {
+            "label": "dispute/recourse verifier (GOV-004)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.328601+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.366387+00:00",
+            "duration_sec": 0.038,
+            "command": "python3 freed_id_dispute_recourse_verifier.py"
+          },
+          {
+            "label": "dispute/recourse adversarial verifier (GOV-004)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.366409+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.402984+00:00",
+            "duration_sec": 0.037,
+            "command": "python3 freed_id_dispute_recourse_adversarial_verifier.py"
+          },
+          {
+            "label": "token/credit zip converter",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.403007+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.469139+00:00",
+            "duration_sec": 0.066,
+            "command": "python3 scripts/trinity_token_credit_zip_converter.py --use-reserve-first --regeneration-multiplier 3.0 --target-reimbursement-ratio 1.0 --zip-snapshot --zip-label token-credit-suite --out docs/token-credit-bank-report.json --ledger docs/token-credit-bank-ledger.jsonl"
+          },
+          {
+            "label": "cache/waste regenerator",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.469164+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.504962+00:00",
+            "duration_sec": 0.036,
+            "command": "python3 scripts/cache_waste_regenerator.py --out docs/cache-waste-regenerator-report.json --purge --prune-empty-dirs"
+          },
+          {
+            "label": "cache/waste report validation",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.504985+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.526892+00:00",
+            "duration_sec": 0.022,
+            "command": "python3 scripts/validate_cache_waste_report.py --cache docs/cache-waste-regenerator-report.json"
+          },
+          {
+            "label": "energy bank system",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.526914+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.551558+00:00",
+            "duration_sec": 0.025,
+            "command": "python3 scripts/trinity_energy_bank_system.py --token-report docs/token-credit-bank-report.json --cache-report docs/cache-waste-regenerator-report.json --reserve-growth 1.0 --reserve-cap-multiplier 10.0 --auto-max-cap --cap-ceiling 100.0 --out docs/energy-bank-report.json --state docs/energy-bank-state.json"
+          },
+          {
+            "label": "token/energy report validation",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.551584+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.574980+00:00",
+            "duration_sec": 0.023,
+            "command": "python3 scripts/validate_token_energy_reports.py --token docs/token-credit-bank-report.json --energy docs/energy-bank-report.json"
+          },
+          {
+            "label": "gyroscopic hybrid zip converter",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.575008+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.615323+00:00",
+            "duration_sec": 0.04,
+            "command": "python3 scripts/gyroscopic_hybrid_zip_converter_generator.py --label gyroscopic-suite-cycle --out docs/gyroscopic-hybrid-zip-report.json"
+          },
+          {
+            "label": "body benchmark guardrail check (enforce)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.615349+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.782890+00:00",
+            "duration_sec": 0.168,
+            "command": "python3 body_track_runner.py --gammas 0.0 0.01 0.05 --benchmark-profile quick --fail-on-benchmark"
+          },
+          {
+            "label": "body benchmark trend guard (enforce)",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.782919+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.812771+00:00",
+            "duration_sec": 0.03,
+            "command": "python3 scripts/body_benchmark_trend_guard.py --trend-profile quick --fail-on-warn"
+          },
+          {
+            "label": "body profile calibration report",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.812794+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.857706+00:00",
+            "duration_sec": 0.045,
+            "command": "python3 scripts/body_profile_calibration_report.py --profile-context quick"
+          },
+          {
+            "label": "gmut comparator metrics",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.857733+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.883475+00:00",
+            "duration_sec": 0.026,
+            "command": "python3 scripts/gmut_comparator_metrics.py"
+          },
+          {
+            "label": "gmut external-anchor exclusion note",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.883497+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.910140+00:00",
+            "duration_sec": 0.027,
+            "command": "python3 scripts/gmut_external_anchor_exclusion_note.py --anchor-input docs/mind-track-external-anchor-canonical-inputs-v1.json"
+          },
+          {
+            "label": "zip memory/data snapshot",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.910163+00:00",
+            "finished_at_utc": "2026-02-16T06:43:23.948802+00:00",
+            "duration_sec": 0.039,
+            "command": "python3 scripts/trinity_zip_memory_converter.py archive --label suite-quick"
+          },
+          {
+            "label": "v33 structural OCR validation snapshot",
+            "status": "PASS",
+            "ok": true,
+            "effective_success": true,
+            "timed_out": false,
+            "started_at_utc": "2026-02-16T06:43:23.948826+00:00",
+            "finished_at_utc": "2026-02-16T06:43:24.067616+00:00",
+            "duration_sec": 0.119,
+            "command": "bash -lc 'strings -n 8 '\"'\"'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'\"'\"' | rg -n '\"'\"'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill'\"'\"' | head -n 20'"
+          }
+        ]
+      }
+    },
+    "body_benchmark": {
+      "path": "docs/body-track-benchmark-latest.json",
+      "status": "PASS",
+      "payload": {
+        "status": "PASS",
+        "checks": {
+          "pass_rate": {
+            "ok": true,
+            "actual": 1.0,
+            "threshold": 1.0
+          },
+          "total_duration_seconds": {
+            "ok": true,
+            "actual": 0.12764,
+            "threshold": 1.5
+          },
+          "body_health_score": {
+            "ok": true,
+            "actual": 100.0,
+            "threshold": 94.0
+          }
+        },
+        "trend": {
+          "has_previous": true,
+          "previous_generated_utc": "2026-02-16T06:43:22+00:00",
+          "duration_delta_seconds": -0.004762,
+          "health_delta": 0.0,
+          "classification": "stable"
+        },
+        "profile": "quick",
+        "thresholds": {
+          "min_pass_rate": 1.0,
+          "max_duration_sec": 1.5,
+          "min_health_score": 94.0
+        }
+      }
+    },
+    "body_trend_guard": {
+      "path": "docs/body-track-trend-guard-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:23+00:00",
+        "overall_status": "PASS",
+        "trend_profile": "quick",
+        "thresholds": {
+          "window_size": 3.0,
+          "max_regressions": 1.0,
+          "max_duration_drift": 0.25,
+          "max_health_drop": 2.5
+        },
+        "trend_classification": "stable_or_improving",
+        "window_size_used": 3,
+        "checks": [
+          {
+            "check": "latest_benchmark_status",
+            "status": "PASS",
+            "detail": "status=PASS"
+          },
+          {
+            "check": "history_window_available",
+            "status": "PASS",
+            "detail": "window_len=3"
+          },
+          {
+            "check": "regression_count_window",
+            "status": "PASS",
+            "detail": "regressions=0, max=1"
+          },
+          {
+            "check": "duration_drift_window",
+            "status": "PASS",
+            "detail": "drift=-0.032337, max=0.25"
+          },
+          {
+            "check": "health_drop_window",
+            "status": "PASS",
+            "detail": "drop=0.000000, max=2.5"
+          }
+        ]
+      }
+    },
+    "body_calibration": {
+      "path": "docs/body-track-calibration-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T10:04:09+00:00",
+        "overall_status": "PASS",
+        "profile_context": "quick",
+        "target_false_alert_rate": 0.15,
+        "history_samples": 19,
+        "benchmark_profile_analysis": [
+          {
+            "profile": "quick",
+            "thresholds": {
+              "min_pass_rate": 1.0,
+              "max_duration_sec": 1.5,
+              "min_health_score": 94.0
+            },
+            "total_runs": 19,
+            "healthy_runs": 19,
+            "warn_count": 0,
+            "warn_rate": 0.0,
+            "false_alert_count": 0,
+            "false_alert_rate": 0.0,
+            "warn_reasons": {
+              "pass_rate": 0,
+              "total_duration_seconds": 0,
+              "body_health_score": 0
+            },
+            "recommended_thresholds": {
+              "min_pass_rate": 1.0,
+              "max_duration_sec": 0.246,
+              "min_health_score": 99.5
+            },
+            "recommendation_action": "tighten_duration+tighten_health",
+            "quality": "acceptable"
+          },
+          {
+            "profile": "standard",
+            "thresholds": {
+              "min_pass_rate": 1.0,
+              "max_duration_sec": 1.0,
+              "min_health_score": 95.0
+            },
+            "total_runs": 19,
+            "healthy_runs": 19,
+            "warn_count": 0,
+            "warn_rate": 0.0,
+            "false_alert_count": 0,
+            "false_alert_rate": 0.0,
+            "warn_reasons": {
+              "pass_rate": 0,
+              "total_duration_seconds": 0,
+              "body_health_score": 0
+            },
+            "recommended_thresholds": {
+              "min_pass_rate": 1.0,
+              "max_duration_sec": 0.246,
+              "min_health_score": 99.5
+            },
+            "recommendation_action": "tighten_duration+tighten_health",
+            "quality": "acceptable"
+          },
+          {
+            "profile": "strict",
+            "thresholds": {
+              "min_pass_rate": 1.0,
+              "max_duration_sec": 0.8,
+              "min_health_score": 97.0
+            },
+            "total_runs": 19,
+            "healthy_runs": 19,
+            "warn_count": 0,
+            "warn_rate": 0.0,
+            "false_alert_count": 0,
+            "false_alert_rate": 0.0,
+            "warn_reasons": {
+              "pass_rate": 0,
+              "total_duration_seconds": 0,
+              "body_health_score": 0
+            },
+            "recommended_thresholds": {
+              "min_pass_rate": 1.0,
+              "max_duration_sec": 0.246,
+              "min_health_score": 99.5
+            },
+            "recommendation_action": "tighten_duration+tighten_health",
+            "quality": "acceptable"
+          }
+        ],
+        "trend_alert_analysis": {
+          "observed_regression_count": 0,
+          "observed_regression_rate": 0.0,
+          "observed_false_regression_count": 0,
+          "observed_false_regression_rate": 0.0,
+          "drift_percentiles": {
+            "duration_drift_p90": 0.055172,
+            "health_drop_p90": 0.0
+          },
+          "profile_estimates": [
+            {
+              "profile": "quick",
+              "thresholds": {
+                "window_size": 3.0,
+                "max_regressions": 1.0,
+                "max_duration_drift": 0.25,
+                "max_health_drop": 2.5
+              },
+              "total_vectors": 18,
+              "drift_exceed_count": 0,
+              "drift_exceed_rate": 0.0,
+              "false_exceed_count": 0,
+              "false_exceed_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "profile": "standard",
+              "thresholds": {
+                "window_size": 5.0,
+                "max_regressions": 2.0,
+                "max_duration_drift": 0.2,
+                "max_health_drop": 2.0
+              },
+              "total_vectors": 18,
+              "drift_exceed_count": 0,
+              "drift_exceed_rate": 0.0,
+              "false_exceed_count": 0,
+              "false_exceed_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "profile": "strict",
+              "thresholds": {
+                "window_size": 7.0,
+                "max_regressions": 1.0,
+                "max_duration_drift": 0.12,
+                "max_health_drop": 1.0
+              },
+              "total_vectors": 18,
+              "drift_exceed_count": 0,
+              "drift_exceed_rate": 0.0,
+              "false_exceed_count": 0,
+              "false_exceed_rate": 0.0,
+              "quality": "acceptable"
+            }
+          ]
+        },
+        "regression_window_diagnostics": {
+          "evaluated_windows": [
+            {
+              "window_size": 3,
+              "max_regressions": 0,
+              "evaluations": 17,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 3,
+              "max_regressions": 1,
+              "evaluations": 17,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 3,
+              "max_regressions": 2,
+              "evaluations": 17,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 3,
+              "max_regressions": 3,
+              "evaluations": 17,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 5,
+              "max_regressions": 0,
+              "evaluations": 15,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 5,
+              "max_regressions": 1,
+              "evaluations": 15,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 5,
+              "max_regressions": 2,
+              "evaluations": 15,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 5,
+              "max_regressions": 3,
+              "evaluations": 15,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 7,
+              "max_regressions": 0,
+              "evaluations": 13,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 7,
+              "max_regressions": 1,
+              "evaluations": 13,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 7,
+              "max_regressions": 2,
+              "evaluations": 13,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 7,
+              "max_regressions": 3,
+              "evaluations": 13,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 9,
+              "max_regressions": 0,
+              "evaluations": 11,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 9,
+              "max_regressions": 1,
+              "evaluations": 11,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 9,
+              "max_regressions": 2,
+              "evaluations": 11,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            },
+            {
+              "window_size": 9,
+              "max_regressions": 3,
+              "evaluations": 11,
+              "alert_count": 0,
+              "alert_rate": 0.0,
+              "false_alert_count": 0,
+              "false_alert_rate": 0.0,
+              "quality": "acceptable"
+            }
+          ],
+          "recommended_window": {
+            "window_size": 3,
+            "max_regressions": 0
+          }
+        },
+        "recommendations": {
+          "recommended_benchmark_profile": "quick",
+          "recommended_trend_profile": "quick",
+          "recommended_regression_window": {
+            "window_size": 3,
+            "max_regressions": 0
+          }
+        },
+        "policy_delta_analysis": {
+          "current_policy": {
+            "benchmark_profile": "quick",
+            "trend_profile": "quick",
+            "regression_window": {
+              "window_size": 3,
+              "max_regressions": 1
+            }
+          },
+          "recommended_policy": {
+            "benchmark_profile": "quick",
+            "trend_profile": "quick",
+            "regression_window": {
+              "window_size": 3,
+              "max_regressions": 0
+            }
+          },
+          "false_alert_before_after": {
+            "benchmark_before": 0.0,
+            "benchmark_after": 0.0,
+            "benchmark_delta": 0.0,
+            "trend_before": 0.0,
+            "trend_after": 0.0,
+            "trend_delta": 0.0,
+            "window_before": 0.0,
+            "window_after": 0.0,
+            "window_delta": 0.0,
+            "aggregate_delta": 0.0
+          },
+          "apply_recommendation_candidate": false
+        }
+      }
+    },
+    "heart_gov002_standard": {
+      "path": "docs/heart-track-min-disclosure-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:23+00:00",
+        "control_id": "GOV-002",
+        "overall_status": "PASS",
+        "checks": [
+          {
+            "check": "policy_doc_exists",
+            "status": "PASS",
+            "detail": "docs/freed-id-minimum-disclosure-policy-v0.md"
+          },
+          {
+            "check": "schema_doc_exists",
+            "status": "PASS",
+            "detail": "docs/freed-id-minimum-disclosure-schema-v0.json"
+          },
+          {
+            "check": "schema_required_fields_present",
+            "status": "PASS",
+            "detail": "count=8"
+          },
+          {
+            "check": "default_sensitive_block",
+            "status": "PASS",
+            "detail": "government_id blocked by default"
+          },
+          {
+            "check": "denied_sensitive_tracking",
+            "status": "PASS",
+            "detail": "government_id listed"
+          },
+          {
+            "check": "presentation_validation_default",
+            "status": "PASS",
+            "detail": "presentation_valid"
+          },
+          {
+            "check": "allowlisted_sensitive_field",
+            "status": "PASS",
+            "detail": "government_id disclosed, email withheld"
+          },
+          {
+            "check": "presentation_validation_allowlisted",
+            "status": "PASS",
+            "detail": "presentation_valid"
+          },
+          {
+            "check": "schema_alignment",
+            "status": "PASS",
+            "detail": "presentation contains all required schema keys"
+          }
+        ]
+      }
+    },
+    "heart_gov002_live": {
+      "path": "docs/heart-track-min-disclosure-live-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:23+00:00",
+        "control_id": "GOV-002",
+        "mode": "live_path",
+        "overall_status": "PASS",
+        "checks": [
+          {
+            "check": "register_did",
+            "status": "PASS",
+            "detail": "did=did:freed:f5f52d519b59497e8f0bb0397523fb2e"
+          },
+          {
+            "check": "issue_credential",
+            "status": "PASS",
+            "detail": "credential_id=did:freed:f5f52d519b59497e8f0bb0397523fb2e#cred-0"
+          },
+          {
+            "check": "default_policy_block",
+            "status": "PASS",
+            "detail": "government_id withheld by default policy"
+          },
+          {
+            "check": "default_denied_tracking",
+            "status": "PASS",
+            "detail": "government_id recorded as denied"
+          },
+          {
+            "check": "allowlisted_sensitive_disclosure",
+            "status": "PASS",
+            "detail": "allowlisted sensitive field disclosed"
+          },
+          {
+            "check": "audit_build_presentation_events",
+            "status": "PASS",
+            "detail": "count=2"
+          }
+        ]
+      }
+    },
+    "heart_gov002_adversarial": {
+      "path": "docs/heart-track-min-disclosure-adversarial-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:23+00:00",
+        "control_id": "GOV-002",
+        "mode": "adversarial",
+        "overall_status": "PASS",
+        "checks": [
+          {
+            "check": "vectors_file_exists",
+            "status": "PASS",
+            "detail": "docs/freed-id-minimum-disclosure-adversarial-vectors-v0.json"
+          },
+          {
+            "check": "vectors_loaded",
+            "status": "PASS",
+            "detail": "count=4"
+          },
+          {
+            "check": "VEC-001-default-sensitive-deny:schema_validation",
+            "status": "PASS",
+            "detail": "presentation_valid"
+          },
+          {
+            "check": "VEC-001-default-sensitive-deny:expected_disclosed_fields",
+            "status": "PASS",
+            "detail": "disclosed=['age_over_18']"
+          },
+          {
+            "check": "VEC-001-default-sensitive-deny:expected_denied_sensitive_fields",
+            "status": "PASS",
+            "detail": "denied=['government_id']"
+          },
+          {
+            "check": "VEC-001-default-sensitive-deny:no_unrequested_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-001-default-sensitive-deny:no_disallowed_sensitive_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-002-allowlisted-sensitive:schema_validation",
+            "status": "PASS",
+            "detail": "presentation_valid"
+          },
+          {
+            "check": "VEC-002-allowlisted-sensitive:expected_disclosed_fields",
+            "status": "PASS",
+            "detail": "disclosed=['age_over_18', 'government_id']"
+          },
+          {
+            "check": "VEC-002-allowlisted-sensitive:expected_denied_sensitive_fields",
+            "status": "PASS",
+            "detail": "denied=['phone']"
+          },
+          {
+            "check": "VEC-002-allowlisted-sensitive:no_unrequested_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-002-allowlisted-sensitive:no_disallowed_sensitive_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-003-overrequest-nonexistent-fields:schema_validation",
+            "status": "PASS",
+            "detail": "presentation_valid"
+          },
+          {
+            "check": "VEC-003-overrequest-nonexistent-fields:expected_disclosed_fields",
+            "status": "PASS",
+            "detail": "disclosed=['age_over_18', 'residency_country']"
+          },
+          {
+            "check": "VEC-003-overrequest-nonexistent-fields:expected_denied_sensitive_fields",
+            "status": "PASS",
+            "detail": "denied=['email']"
+          },
+          {
+            "check": "VEC-003-overrequest-nonexistent-fields:no_unrequested_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-003-overrequest-nonexistent-fields:no_disallowed_sensitive_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-004-unrequested-sensitive-leak-check:schema_validation",
+            "status": "PASS",
+            "detail": "presentation_valid"
+          },
+          {
+            "check": "VEC-004-unrequested-sensitive-leak-check:expected_disclosed_fields",
+            "status": "PASS",
+            "detail": "disclosed=['age_over_18']"
+          },
+          {
+            "check": "VEC-004-unrequested-sensitive-leak-check:expected_denied_sensitive_fields",
+            "status": "PASS",
+            "detail": "denied=[]"
+          },
+          {
+            "check": "VEC-004-unrequested-sensitive-leak-check:no_unrequested_leak",
+            "status": "PASS",
+            "detail": "none"
+          },
+          {
+            "check": "VEC-004-unrequested-sensitive-leak-check:no_disallowed_sensitive_leak",
+            "status": "PASS",
+            "detail": "none"
+          }
+        ]
+      }
+    },
+    "heart_gov003": {
+      "path": "docs/heart-track-auditability-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:21+00:00",
+        "control_id": "GOV-003",
+        "overall_status": "PASS",
+        "ledger_file": "docs/freed-id-audit-log.jsonl",
+        "checks": [
+          {
+            "check": "register_did",
+            "status": "PASS",
+            "detail": "registered did:freed:371979540db74ada8208af74adad932a"
+          },
+          {
+            "check": "issue_credential",
+            "status": "PASS",
+            "detail": "credential issued"
+          },
+          {
+            "check": "update_did",
+            "status": "PASS",
+            "detail": "did update recorded"
+          },
+          {
+            "check": "revoke_did",
+            "status": "PASS",
+            "detail": "did revoked"
+          },
+          {
+            "check": "ledger_exists",
+            "status": "PASS",
+            "detail": "ledger file present: docs/freed-id-audit-log.jsonl"
+          },
+          {
+            "check": "ledger_entry_count",
+            "status": "PASS",
+            "detail": "entries=4"
+          },
+          {
+            "check": "action_sequence",
+            "status": "PASS",
+            "detail": "register,issue_credential,update,revoke"
+          },
+          {
+            "check": "hash_chain_integrity",
+            "status": "PASS",
+            "detail": "entries_verified=4"
+          }
+        ]
+      }
+    },
+    "heart_gov004_standard": {
+      "path": "docs/heart-track-dispute-recourse-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T10:04:09+00:00",
+        "control_id": "GOV-004",
+        "overall_status": "PASS",
+        "checks": [
+          {
+            "check": "open_case",
+            "status": "PASS",
+            "detail": "status=opened"
+          },
+          {
+            "check": "reject_invalid_transition",
+            "status": "PASS",
+            "detail": "opened->resolved rejected"
+          },
+          {
+            "check": "reject_missing_auth_proof",
+            "status": "PASS",
+            "detail": "missing proof opened->review rejected"
+          },
+          {
+            "check": "reject_missing_signature_verifier",
+            "status": "PASS",
+            "detail": "missing signature_verifier rejected"
+          },
+          {
+            "check": "reject_unauthorized_actor_role",
+            "status": "PASS",
+            "detail": "subject opened->review rejected"
+          },
+          {
+            "check": "reject_unknown_actor_role",
+            "status": "PASS",
+            "detail": "unknown role opened->review rejected"
+          },
+          {
+            "check": "reject_signer_mismatch",
+            "status": "PASS",
+            "detail": "signer mismatch opened->review rejected"
+          },
+          {
+            "check": "reject_invalid_signature_ref",
+            "status": "PASS",
+            "detail": "invalid signature_ref rejected"
+          },
+          {
+            "check": "to_review",
+            "status": "PASS",
+            "detail": "status=review"
+          },
+          {
+            "check": "to_escalated",
+            "status": "PASS",
+            "detail": "status=escalated"
+          },
+          {
+            "check": "reject_replayed_proof",
+            "status": "PASS",
+            "detail": "replayed proof rejected: proof-to_escalated"
+          },
+          {
+            "check": "escalation_back_to_review",
+            "status": "PASS",
+            "detail": "status=review"
+          },
+          {
+            "check": "resolve_case",
+            "status": "PASS",
+            "detail": "status=resolved"
+          },
+          {
+            "check": "reopen_case",
+            "status": "PASS",
+            "detail": "status=reopened"
+          },
+          {
+            "check": "reopened_to_review",
+            "status": "PASS",
+            "detail": "status=review"
+          },
+          {
+            "check": "close_as_dismissed",
+            "status": "PASS",
+            "detail": "status=dismissed"
+          },
+          {
+            "check": "history_integrity_chain",
+            "status": "PASS",
+            "detail": "event sequence and status chain verified"
+          },
+          {
+            "check": "history_depth",
+            "status": "PASS",
+            "detail": "events=8"
+          },
+          {
+            "check": "final_status",
+            "status": "PASS",
+            "detail": "dismissed"
+          },
+          {
+            "check": "auth_proof_presence",
+            "status": "PASS",
+            "detail": "all transition events include auth_proof_id"
+          },
+          {
+            "check": "auth_proof_registry_consistency",
+            "status": "PASS",
+            "detail": "proof_count=7"
+          },
+          {
+            "check": "schema_required_fields",
+            "status": "PASS",
+            "detail": "all required case fields present"
+          },
+          {
+            "check": "schema_status_enum",
+            "status": "PASS",
+            "detail": "status=dismissed"
+          },
+          {
+            "check": "schema_event_status_enum",
+            "status": "PASS",
+            "detail": "history_entries=8"
+          },
+          {
+            "check": "schema_event_actor_role_enum",
+            "status": "PASS",
+            "detail": "history_entries=8"
+          },
+          {
+            "check": "schema_event_sequence",
+            "status": "PASS",
+            "detail": "history_entries=8"
+          },
+          {
+            "check": "schema_event_id_pattern",
+            "status": "PASS",
+            "detail": "history_entries=8"
+          }
+        ],
+        "final_case": {
+          "case_id": "case-gov004-0001",
+          "subject_did": "did:freed:subject-001",
+          "credential_id": "did:freed:subject-001#cred-0",
+          "reason": "presentation denial dispute",
+          "opened_utc": "2026-02-16T10:04:09+00:00",
+          "opened_by": "did:freed:ombuds-1",
+          "status": "dismissed",
+          "evidence_refs": [
+            "evidence://submission/1"
+          ],
+          "used_auth_proof_ids": [
+            "proof-to_review",
+            "proof-to_escalated",
+            "proof-escalation_back_to_review",
+            "proof-resolve_case",
+            "proof-reopen_case",
+            "proof-reopened_to_review",
+            "proof-close_as_dismissed"
+          ],
+          "history": [
+            {
+              "event_id": "case-gov004-0001:event:0000",
+              "event_seq": 0,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:ombuds-1",
+              "actor_role": "ombuds",
+              "from_status": "none",
+              "to_status": "opened",
+              "note": "case opened",
+              "auth_proof_id": null,
+              "auth_signer_did": "did:freed:ombuds-1",
+              "evidence_refs": [
+                "evidence://submission/1"
+              ]
+            },
+            {
+              "event_id": "case-gov004-0001:event:0001",
+              "event_seq": 1,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:reviewer-1",
+              "actor_role": "reviewer",
+              "from_status": "opened",
+              "to_status": "review",
+              "note": "intake accepted",
+              "auth_proof_id": "proof-to_review",
+              "auth_signer_did": "did:freed:reviewer-1",
+              "evidence_refs": []
+            },
+            {
+              "event_id": "case-gov004-0001:event:0002",
+              "event_seq": 2,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:reviewer-1",
+              "actor_role": "reviewer",
+              "from_status": "review",
+              "to_status": "escalated",
+              "note": "needs council review",
+              "auth_proof_id": "proof-to_escalated",
+              "auth_signer_did": "did:freed:reviewer-1",
+              "evidence_refs": []
+            },
+            {
+              "event_id": "case-gov004-0001:event:0003",
+              "event_seq": 3,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:council-1",
+              "actor_role": "council",
+              "from_status": "escalated",
+              "to_status": "review",
+              "note": "returned with findings",
+              "auth_proof_id": "proof-escalation_back_to_review",
+              "auth_signer_did": "did:freed:council-1",
+              "evidence_refs": []
+            },
+            {
+              "event_id": "case-gov004-0001:event:0004",
+              "event_seq": 4,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:reviewer-1",
+              "actor_role": "reviewer",
+              "from_status": "review",
+              "to_status": "resolved",
+              "note": "credential update ordered",
+              "auth_proof_id": "proof-resolve_case",
+              "auth_signer_did": "did:freed:reviewer-1",
+              "evidence_refs": []
+            },
+            {
+              "event_id": "case-gov004-0001:event:0005",
+              "event_seq": 5,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:subject-001",
+              "actor_role": "subject",
+              "from_status": "resolved",
+              "to_status": "reopened",
+              "note": "appeal on remediation scope",
+              "auth_proof_id": "proof-reopen_case",
+              "auth_signer_did": "did:freed:subject-001",
+              "evidence_refs": []
+            },
+            {
+              "event_id": "case-gov004-0001:event:0006",
+              "event_seq": 6,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:reviewer-2",
+              "actor_role": "reviewer",
+              "from_status": "reopened",
+              "to_status": "review",
+              "note": "appeal accepted",
+              "auth_proof_id": "proof-reopened_to_review",
+              "auth_signer_did": "did:freed:reviewer-2",
+              "evidence_refs": []
+            },
+            {
+              "event_id": "case-gov004-0001:event:0007",
+              "event_seq": 7,
+              "at_utc": "2026-02-16T10:04:09+00:00",
+              "actor": "did:freed:reviewer-2",
+              "actor_role": "reviewer",
+              "from_status": "review",
+              "to_status": "dismissed",
+              "note": "appeal concluded",
+              "auth_proof_id": "proof-close_as_dismissed",
+              "auth_signer_did": "did:freed:reviewer-2",
+              "evidence_refs": []
+            }
+          ]
+        }
+      }
+    },
+    "heart_gov004_adversarial": {
+      "path": "docs/heart-track-dispute-recourse-adversarial-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T10:04:09+00:00",
+        "control_id": "GOV-004",
+        "mode": "adversarial",
+        "overall_status": "PASS",
+        "checks": [
+          {
+            "check": "open_case",
+            "status": "PASS",
+            "detail": "status=opened"
+          },
+          {
+            "check": "baseline_to_review",
+            "status": "PASS",
+            "detail": "status=review"
+          },
+          {
+            "check": "reject_replayed_proof",
+            "status": "PASS",
+            "detail": "replayed proof rejected"
+          },
+          {
+            "check": "reject_signer_mismatch",
+            "status": "PASS",
+            "detail": "mismatched signer rejected"
+          },
+          {
+            "check": "reject_invalid_signature_ref",
+            "status": "PASS",
+            "detail": "invalid signature reference rejected"
+          },
+          {
+            "check": "baseline_progression",
+            "status": "PASS",
+            "detail": "status=resolved"
+          },
+          {
+            "check": "baseline_history_integrity",
+            "status": "PASS",
+            "detail": "integrity checks passed"
+          },
+          {
+            "check": "detect_order_tamper",
+            "status": "PASS",
+            "detail": "event_seq mismatch at index=2: got=3; event_id mismatch at index=2: got=case-gov004-adversarial-0001:event:0003"
+          },
+          {
+            "check": "detect_sequence_tamper",
+            "status": "PASS",
+            "detail": "event_seq mismatch at index=1: got=99"
+          }
+        ],
+        "detail": {
+          "final_status": "resolved",
+          "history_length": 5,
+          "used_auth_proof_ids": [
+            "adv-proof-1",
+            "adv-proof-3",
+            "adv-proof-4",
+            "adv-proof-5"
+          ],
+          "sample_case": {
+            "case_id": "case-gov004-adversarial-0001",
+            "subject_did": "did:freed:subject-adv-001",
+            "credential_id": "did:freed:subject-adv-001#cred-0",
+            "reason": "adversarial transition checks",
+            "opened_utc": "2026-02-16T10:04:09+00:00",
+            "opened_by": "did:freed:ombuds-1",
+            "status": "resolved",
+            "evidence_refs": [
+              "evidence://adversarial/seed"
+            ],
+            "used_auth_proof_ids": [
+              "adv-proof-1",
+              "adv-proof-3",
+              "adv-proof-4",
+              "adv-proof-5"
+            ],
+            "history": [
+              {
+                "event_id": "case-gov004-adversarial-0001:event:0000",
+                "event_seq": 0,
+                "at_utc": "2026-02-16T10:04:09+00:00",
+                "actor": "did:freed:ombuds-1",
+                "actor_role": "ombuds",
+                "from_status": "none",
+                "to_status": "opened",
+                "note": "case opened",
+                "auth_proof_id": null,
+                "auth_signer_did": "did:freed:ombuds-1",
+                "evidence_refs": [
+                  "evidence://adversarial/seed"
+                ]
+              },
+              {
+                "event_id": "case-gov004-adversarial-0001:event:0001",
+                "event_seq": 1,
+                "at_utc": "2026-02-16T10:04:09+00:00",
+                "actor": "did:freed:reviewer-1",
+                "actor_role": "reviewer",
+                "from_status": "opened",
+                "to_status": "review",
+                "note": "baseline review transition",
+                "auth_proof_id": "adv-proof-1",
+                "auth_signer_did": "did:freed:reviewer-1",
+                "evidence_refs": []
+              },
+              {
+                "event_id": "case-gov004-adversarial-0001:event:0002",
+                "event_seq": 2,
+                "at_utc": "2026-02-16T10:04:09+00:00",
+                "actor": "did:freed:reviewer-1",
+                "actor_role": "reviewer",
+                "from_status": "review",
+                "to_status": "escalated",
+                "note": "valid escalation",
+                "auth_proof_id": "adv-proof-3",
+                "auth_signer_did": "did:freed:reviewer-1",
+                "evidence_refs": []
+              },
+              {
+                "event_id": "case-gov004-adversarial-0001:event:0003",
+                "event_seq": 3,
+                "at_utc": "2026-02-16T10:04:09+00:00",
+                "actor": "did:freed:council-1",
+                "actor_role": "council",
+                "from_status": "escalated",
+                "to_status": "review",
+                "note": "valid escalation return",
+                "auth_proof_id": "adv-proof-4",
+                "auth_signer_did": "did:freed:council-1",
+                "evidence_refs": []
+              },
+              {
+                "event_id": "case-gov004-adversarial-0001:event:0004",
+                "event_seq": 4,
+                "at_utc": "2026-02-16T10:04:09+00:00",
+                "actor": "did:freed:council-1",
+                "actor_role": "council",
+                "from_status": "review",
+                "to_status": "resolved",
+                "note": "valid resolution",
+                "auth_proof_id": "adv-proof-5",
+                "auth_signer_did": "did:freed:council-1",
+                "evidence_refs": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    "heart_gov005": {
+      "path": "docs/heart-track-governance-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:21+00:00",
+        "control_id": "GOV-005",
+        "overall_status": "PASS",
+        "checks": [
+          {
+            "check": "register_did",
+            "status": "PASS",
+            "detail": "registered did:freed:a3b3ae8bff85486797789f095e7d47d1"
+          },
+          {
+            "check": "issue_credential_before_revoke",
+            "status": "PASS",
+            "detail": "credential accepted"
+          },
+          {
+            "check": "revoke_did",
+            "status": "PASS",
+            "detail": "did marked revoked"
+          },
+          {
+            "check": "issue_credential_after_revoke",
+            "status": "PASS",
+            "detail": "rejected as expected for revoked did"
+          },
+          {
+            "check": "verify_credential_after_revoke",
+            "status": "PASS",
+            "detail": "revoked did does not verify"
+          }
+        ]
+      }
+    },
+    "mind_comparator": {
+      "path": "docs/mind-track-gmut-comparator-latest.json",
+      "status": "PASS",
+      "payload": {
+        "generated_utc": "2026-02-16T06:43:23+00:00",
+        "status": "PASS",
+        "baseline_ratio": 1.0,
+        "gamma_ratios": {
+          "0.0000": 1.0,
+          "0.0100": 1.00993,
+          "0.0500": 1.04964
+        },
+        "max_abs_deviation": 0.04964,
+        "mean_abs_deviation": 0.01985667,
+        "rmse": 0.02922747,
+        "rejection_threshold": 0.12
+      }
+    },
+    "mind_anchor_exclusion": {
+      "path": "docs/mind-track-gmut-anchor-exclusion-latest.json",
+      "status": "WARN",
+      "payload": {
+        "overall_status": "WARN",
+        "comparator_status": "PASS",
+        "comparator_max_abs_deviation": 0.04964,
+        "required_canonical_fields_present": true,
+        "required_canonical_ingestion_fields": [
+          "source_citation",
+          "dataset_version_or_release",
+          "confidence_level",
+          "external_uncertainty_abs",
+          "bound_units",
+          "signal_mapping_note",
+          "extraction_trace_id",
+          "uncertainty_propagation"
+        ],
+        "anchors_with_missing_required_fields": 0,
+        "anchors_with_missing_trace_or_propagation": 0,
+        "anchors": [
+          {
+            "claim_id": "GMUT-005",
+            "anchor_id": "MICROSCOPE_EP_eta_primary",
+            "source_kind": "mission_publication_ingested",
+            "source_tier": "primary",
+            "confidence_level": 0.95,
+            "external_upper_bound": 1e-14,
+            "external_uncertainty_abs": 2e-15,
+            "conservative_external_upper_bound": 1.2e-14,
+            "gmut_working_bound": 1e-06,
+            "overhang_factor": 83333333.33333333,
+            "interpretation": "requires_tighter_parameter_fit",
+            "source_label": "MICROSCOPE equivalence-principle final results anchor",
+            "source_url": "https://link.springer.com/article/10.1007/s10509-022-04133-y",
+            "source_citation": "Touboul et al., MICROSCOPE Mission: Final Results of the Test of the Equivalence Principle, 2022",
+            "dataset_version_or_release": "microscope_final_results_2022",
+            "bound_units": "dimensionless_eta",
+            "signal_mapping_note": "Map eta-limit into GMUT fifth-force coupling envelope under weak-field approximation",
+            "ingestion_status": "ingested_primary_source",
+            "extraction_trace_id": "trace:gmut005:microscope:2026-02-16:v1",
+            "uncertainty_propagation_model": "linear_bound_addition",
+            "missing_required_fields": [],
+            "provisional": false
+          },
+          {
+            "claim_id": "GMUT-005",
+            "anchor_id": "EOTWASH_EP_bucket_primary",
+            "source_kind": "publication_ingested",
+            "source_tier": "primary",
+            "confidence_level": 0.95,
+            "external_upper_bound": 5e-13,
+            "external_uncertainty_abs": 1e-13,
+            "conservative_external_upper_bound": 6e-13,
+            "gmut_working_bound": 1e-06,
+            "overhang_factor": 1666666.6666666667,
+            "interpretation": "requires_tighter_parameter_fit",
+            "source_label": "Eot-Wash torsion-balance equivalence-principle bound anchor",
+            "source_url": "https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.100.041101",
+            "source_citation": "Schlamminger et al., Test of the Equivalence Principle Using a Rotating Torsion Balance, PRL 2008",
+            "dataset_version_or_release": "eotwash_prl_2008_anchor",
+            "bound_units": "relative_coupling_strength",
+            "signal_mapping_note": "Map torsion-balance exclusion bucket to GMUT scalar-coupling proxy",
+            "ingestion_status": "ingested_primary_source",
+            "extraction_trace_id": "trace:gmut005:eotwash:2026-02-16:v1",
+            "uncertainty_propagation_model": "linear_bound_addition",
+            "missing_required_fields": [],
+            "provisional": false
+          },
+          {
+            "claim_id": "GMUT-005",
+            "anchor_id": "LLR_residual_primary",
+            "source_kind": "publication_ingested",
+            "source_tier": "primary",
+            "confidence_level": 0.95,
+            "external_upper_bound": 1e-11,
+            "external_uncertainty_abs": 2e-12,
+            "conservative_external_upper_bound": 1.1999999999999999e-11,
+            "gmut_working_bound": 1e-06,
+            "overhang_factor": 83333.33333333334,
+            "interpretation": "requires_tighter_parameter_fit",
+            "source_label": "LLR residual anomalous-force bound anchor",
+            "source_url": "https://iopscience.iop.org/article/10.3847/1538-3881/ac74c9",
+            "source_citation": "Viswanathan et al., The Apache Point Observatory Lunar Laser-ranging Operation: Instrument Description and First Detections, AJ 2022",
+            "dataset_version_or_release": "apollo_llr_anchor_2022",
+            "bound_units": "anomalous_acceleration_proxy",
+            "signal_mapping_note": "Map LLR residual force envelope to GMUT long-range fifth-force proxy",
+            "ingestion_status": "ingested_primary_source",
+            "extraction_trace_id": "trace:gmut005:llr:2026-02-16:v1",
+            "uncertainty_propagation_model": "linear_bound_addition",
+            "missing_required_fields": [],
+            "provisional": false
+          }
+        ],
+        "generated_utc": "2026-02-16T10:04:09+00:00"
+      }
+    }
+  }
+}
