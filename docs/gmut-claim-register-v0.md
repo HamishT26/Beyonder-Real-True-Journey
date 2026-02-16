@@ -60,6 +60,26 @@ Promotion rule for externally-testable claims:
 
 ---
 
+## GMUT-005 external-anchor numeric exclusion note v1
+
+Published via:
+- `scripts/gmut_external_anchor_exclusion_note.py`
+- provisional inputs: `docs/mind-track-external-anchor-provisional-inputs-v0.json`
+- latest artifact: `docs/mind-track-gmut-anchor-exclusion-latest.{json,md}`
+
+Current result snapshot (latest):
+- `overall_status`: `WARN` (expected for provisional anchor mode),
+- external bound anchor (placeholder): `1e-14`,
+- current working GMUT bound: `1e-6`,
+- overhang factor: `1e8`.
+
+Interpretation:
+- `confirmed_evidence`: note generation is reproducible and machine-readable each cycle.
+- `inference`: numeric overhang suggests parameter tightening is required before any readiness uplift.
+- `open_gap`: replace provisional anchor inputs with canonical dataset ingestion notes + uncertainty handling.
+
+---
+
 ## Evidence classification rule
 
 For every claim update, assign one tag:

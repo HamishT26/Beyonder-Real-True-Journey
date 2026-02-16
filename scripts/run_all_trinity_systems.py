@@ -26,15 +26,24 @@ PROFILE_HELP = {
 
 def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, list[str]]:
     gammas = ["0.0", "0.01", "0.05"] if quick_mode else ["0.0", "0.02", "0.05"]
-    command = ["python3", "body_track_runner.py", "--gammas", *gammas]
+    benchmark_profile = "quick" if quick_mode else "standard"
+    command = [
+        "python3",
+        "body_track_runner.py",
+        "--gammas",
+        *gammas,
+        "--benchmark-profile",
+        benchmark_profile,
+    ]
     if enforce:
         command.append("--fail-on-benchmark")
     mode = "enforce" if enforce else "observe"
     return f"body benchmark guardrail check ({mode})", command
 
 
-def _body_trend_guard_command(*, enforce: bool) -> tuple[str, list[str]]:
-    command = ["python3", "scripts/body_benchmark_trend_guard.py"]
+def _body_trend_guard_command(*, quick_mode: bool, enforce: bool) -> tuple[str, list[str]]:
+    trend_profile = "quick" if quick_mode else "standard"
+    command = ["python3", "scripts/body_benchmark_trend_guard.py", "--trend-profile", trend_profile]
     if enforce:
         command.append("--fail-on-warn")
     mode = "enforce" if enforce else "observe"
@@ -212,6 +221,13 @@ def build_commands(
                     "freed_id_minimum_disclosure_adversarial_verifier.py",
                 ],
             ),
+            (
+                "dispute/recourse verifier (GOV-004)",
+                [
+                    "python3",
+                    "freed_id_dispute_recourse_verifier.py",
+                ],
+            ),
             *token_energy_commands,
             (
                 *_body_benchmark_command(
@@ -221,6 +237,7 @@ def build_commands(
             ),
             (
                 *_body_trend_guard_command(
+                    quick_mode=True,
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -277,6 +294,7 @@ def build_commands(
         ),
         (
             *_body_trend_guard_command(
+                quick_mode=False,
                 enforce=(body_benchmark_mode == "enforce"),
             ),
         ),
@@ -354,6 +372,13 @@ def build_commands(
             [
                 "python3",
                 "freed_id_minimum_disclosure_adversarial_verifier.py",
+            ],
+        ),
+        (
+            "dispute/recourse verifier (GOV-004)",
+            [
+                "python3",
+                "freed_id_dispute_recourse_verifier.py",
             ],
         ),
         *token_energy_commands,

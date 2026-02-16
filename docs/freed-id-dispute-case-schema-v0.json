@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beyonder.example/schemas/freed-id-dispute-case-v0.json",
+  "title": "Freed ID Dispute Case v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "subject_did",
+    "credential_id",
+    "reason",
+    "opened_utc",
+    "opened_by",
+    "status",
+    "evidence_refs",
+    "history"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "subject_did": {
+      "type": "string",
+      "pattern": "^did:freed:"
+    },
+    "credential_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 5
+    },
+    "opened_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "opened_by": {
+      "type": "string",
+      "minLength": 5
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "opened",
+        "review",
+        "escalated",
+        "resolved",
+        "dismissed",
+        "reopened"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "history": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/dispute_event"
+      }
+    }
+  },
+  "$defs": {
+    "dispute_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "at_utc",
+        "actor",
+        "from_status",
+        "to_status",
+        "note",
+        "evidence_refs"
+      ],
+      "properties": {
+        "at_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 3
+        },
+        "from_status": {
+          "type": "string",
+          "enum": [
+            "none",
+            "opened",
+            "review",
+            "escalated",
+            "resolved",
+            "dismissed",
+            "reopened"
+          ]
+        },
+        "to_status": {
+          "type": "string",
+          "enum": [
+            "opened",
+            "review",
+            "escalated",
+            "resolved",
+            "dismissed",
+            "reopened"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 3
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

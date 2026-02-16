@@ -80,11 +80,13 @@ This cycle continued that direction by removing runtime blockers in the current 
 10. Added GOV-002 minimum-disclosure policy/schema + verifier scaffold and wired body benchmark fail-gating into suite profiles.
 11. Added GOV-002 API-path enforcement + adversarial vectors/verifier, integrated mind comparator metrics stage, and validated quick suite at 17/17 PASS.
 12. Added optional suite benchmark skip control (`--skip-body-benchmark`) while keeping benchmark fail-gating enabled by default in quick profile.
+13. Synced Lumen continue-cycle #3 uplift into this branch (live-path verifier, trend guard stage, external-anchor exclusion stage) and expanded quick-suite coverage to include those stages.
+14. Added Body profile-calibrated threshold presets (`quick`/`standard`/`strict`) for benchmark + trend guard workflows, and implemented GOV-004 dispute/recourse protocol scaffold with schema + verifier.
 
 ## Next 3 steps (new)
-1. **Mind track:** publish first external-anchor numeric exclusion note for GMUT-005.
-2. **Body track:** add profile-specific benchmark threshold presets and regression alert windows.
-3. **Heart track:** implement GOV-004 dispute/recourse protocol with verification scaffold.
+1. **Mind track:** replace provisional external-anchor inputs with canonical dataset ingestion notes and uncertainty fields for GMUT-005.
+2. **Body track:** calibrate profile presets against rolling history and publish false-alert/regression-window diagnostics.
+3. **Heart track:** harden GOV-004 with signature-bound actor authorization and adversarial replay/order tests.
 
 ## Recurring "after each completion" loop
 After finishing any step:

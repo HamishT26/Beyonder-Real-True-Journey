@@ -19,6 +19,7 @@ Use this template for each Body-track validation cycle.
 
 ## Benchmark guardrail
 - status: PASS/WARN
+- profile: quick/standard/strict
 - trend: baseline/stable/improvement/regression
 - checks:
   - pass_rate:
@@ -27,6 +28,7 @@ Use this template for each Body-track validation cycle.
 
 ## Trend guard window
 - status: PASS/WARN
+- trend_profile: quick/standard/strict
 - trend_classification: stable_or_improving/watch/regression_pressure/insufficient_history
 - window_size_used:
 - checks:
