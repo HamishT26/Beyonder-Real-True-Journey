@@ -1,0 +1,116 @@
+{
+  "generated_utc": "2026-02-16T06:43:22+00:00",
+  "overall_status": "PASS",
+  "summary": {
+    "generated_utc": "2026-02-16T06:43:22+00:00",
+    "stamp": "20260216T064322Z",
+    "total_steps": 3,
+    "passed_steps": 3,
+    "failed_steps": 0,
+    "pass_rate": 1.0,
+    "total_duration_seconds": 0.132402,
+    "body_health_score": 100.0,
+    "speed_band": "fast",
+    "benchmark_profile": "quick",
+    "benchmark_status": "PASS",
+    "benchmark_trend": "stable"
+  },
+  "steps": [
+    {
+      "name": "compile_python_modules",
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "py_compile",
+        "Freed_id_registry.py",
+        "freed_id_registry.py",
+        "qc_transmuter.py",
+        "trinity_orchestrator.py",
+        "trinity_orchestrator_full.py",
+        "trinity_simulation_engine.py",
+        "run_simulation.py",
+        "body_track_runner.py"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.030392585991648957,
+      "stdout": "",
+      "stderr": "",
+      "metrics": {}
+    },
+    {
+      "name": "run_full_orchestrator_demo",
+      "command": [
+        "/usr/bin/python3",
+        "trinity_orchestrator_full.py"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.03347848399425857,
+      "stdout": "Registered DID: did:freed:8f7441d81fa6489faf9fecb1d7ddb630\nTask 1 result: {'result': \"classical_output(quantum_features:{'num_states': 2, 'shots': 512, 'dominant_state': 1, 'dominant_probability': 0.7765439923276538, 'entropy_bits': 0.7664280500582521, 'top_states': [{'state': 1, 'probability': 0.7765439923276538}, {'state': 0, 'probability': 0.2234560076723461}], 'empirical_top_states': [{'state': 1, 'count': 398, 'frequency': 0.77734375}, {'state': 0, 'count': 114, 'frequency': 0.22265625}], 'expected_state_index': 0.7765439923276538, 'measurement_histogram': [114, 398]})\", 'quantum_features': {'num_states': 2, 'shots': 512, 'dominant_state': 1, 'dominant_probability': 0.7765439923276538, 'entropy_bits': 0.7664280500582521, 'top_states': [{'state': 1, 'probability': 0.7765439923276538}, {'state': 0, 'probability': 0.2234560076723461}], 'empirical_top_states': [{'state': 1, 'count': 398, 'frequency': 0.77734375}, {'state': 0, 'count': 114, 'frequency': 0.22265625}], 'expected_state_index': 0.7765439923276538, 'measurement_histogram': [114, 398]}, 'waste_energy': 7.482917013622188, 'exotic_energy_generated': 1.6552780090814585, 'total_exotic_energy': 1.6552780090814585}\nTask 2 result: {'result': \"classical_output(quantum_features:{'num_states': 2, 'shots': 512, 'dominant_state': 0, 'dominant_probability': 0.516360381887845, 'entropy_bits': 0.9992275525732807, 'top_states': [{'state': 0, 'probability': 0.516360381887845}, {'state': 1, 'probability': 0.48363961811215483}], 'empirical_top_states': [{'state': 0, 'count': 264, 'frequency': 0.515625}, {'state': 1, 'count': 248, 'frequency': 0.484375}], 'expected_state_index': 0.48363961811215483, 'measurement_histogram': [264, 248]})\", 'quantum_features': {'num_states': 2, 'shots': 512, 'dominant_state': 0, 'dominant_probability': 0.516360381887845, 'entropy_bits': 0.9992275525732807, 'top_states': [{'state': 0, 'probability': 0.516360381887845}, {'state': 1, 'probability': 0.48363961811215483}], 'empirical_top_states': [{'state': 0, 'count': 264, 'frequency': 0.515625}, {'state': 1, 'count': 248, 'frequency': 0.484375}], 'expected_state_index': 0.48363961811215483, 'measurement_histogram': [264, 248]}, 'waste_energy': 7.05181959953525, 'exotic_energy_generated': 1.3678797330234997, 'total_exotic_energy': 3.0231577421049582}",
+      "stderr": "",
+      "metrics": {
+        "task_count": 2,
+        "avg_exotic_energy_generated": 1.511579,
+        "final_total_exotic_energy": 3.023158
+      }
+    },
+    {
+      "name": "run_gmut_simulation",
+      "command": [
+        "/usr/bin/python3",
+        "run_simulation.py",
+        "--gammas",
+        "0.0",
+        "0.01",
+        "0.05"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.06853099199361168,
+      "stdout": "Gamma=0.0000: energy density ratio = 1.00000\nGamma=0.0100: energy density ratio = 1.00993\nGamma=0.0500: energy density ratio = 1.04964",
+      "stderr": "",
+      "metrics": {
+        "gamma_count": 3,
+        "gamma_ratios": {
+          "0.0000": 1.0,
+          "0.0100": 1.00993,
+          "0.0500": 1.04964
+        },
+        "ratio_min": 1.0,
+        "ratio_max": 1.04964,
+        "ratio_span": 0.04964
+      }
+    }
+  ],
+  "benchmark": {
+    "status": "PASS",
+    "checks": {
+      "pass_rate": {
+        "ok": true,
+        "actual": 1.0,
+        "threshold": 1.0
+      },
+      "total_duration_seconds": {
+        "ok": true,
+        "actual": 0.132402,
+        "threshold": 1.5
+      },
+      "body_health_score": {
+        "ok": true,
+        "actual": 100.0,
+        "threshold": 94.0
+      }
+    },
+    "trend": {
+      "has_previous": true,
+      "previous_generated_utc": "2026-02-16T06:43:21+00:00",
+      "duration_delta_seconds": -0.05515,
+      "health_delta": 0.0,
+      "classification": "stable"
+    },
+    "profile": "quick",
+    "thresholds": {
+      "min_pass_rate": 1.0,
+      "max_duration_sec": 1.5,
+      "min_health_score": 94.0
+    }
+  }
+}
