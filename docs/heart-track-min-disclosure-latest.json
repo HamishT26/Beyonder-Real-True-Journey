@@ -1,0 +1,50 @@
+{
+  "overall_status": "PASS",
+  "required_fields": [
+    "subject_did",
+    "age_over_18",
+    "residency_status"
+  ],
+  "forbidden_fields": [
+    "full_name",
+    "date_of_birth",
+    "national_id",
+    "email"
+  ],
+  "checks": [
+    {
+      "check": "required_fields_present",
+      "status": "PASS",
+      "detail": "all required fields disclosed"
+    },
+    {
+      "check": "forbidden_fields_absent",
+      "status": "PASS",
+      "detail": "no forbidden fields disclosed"
+    },
+    {
+      "check": "no_unrequested_extras",
+      "status": "PASS",
+      "detail": "no extra claims disclosed"
+    },
+    {
+      "check": "proof_commitment_binding",
+      "status": "PASS",
+      "detail": "source commitment matches"
+    }
+  ],
+  "presentation_sample": {
+    "purpose": "age_residency_eligibility",
+    "disclosed_claims": {
+      "subject_did": "did:freed:holder:abc123",
+      "age_over_18": true,
+      "residency_status": "resident"
+    },
+    "proof": {
+      "scheme": "commitment-v0",
+      "source_credential_sha256": "0c3d4aaf4944c588244ca83362f4cca9d08bc8953a179ea5988f4138380d4bc7"
+    }
+  },
+  "generated_utc": "2026-02-16T03:18:53+00:00",
+  "control_id": "GOV-002"
+}
