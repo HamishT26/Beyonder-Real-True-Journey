@@ -48,6 +48,24 @@ From `docs/nightly-handoff-latest.md` and `docs/journey-validation-and-next-plan
 
 ---
 
+## Caelis sessions index (17 Feb 2026 · quick scan)
+
+| Session | One-line summary |
+|---------|-------------------|
+| s1 | Session log, continuity doc, council message; Mind MICROSCOPE source-extraction artifact; coordination update. |
+| s2 | Mind: EOTWASH + LLR source-extraction artifacts; three canonical anchors complete. |
+| s3 | Heart: GOV-004 DID-method signature verification scaffold (design doc + stub). |
+| s4 | Body: policy-update trial design + body_policy_trial_one.py. |
+| s5 | Solo continuity note; first Body policy trial to docs/body-track-policy-trials.jsonl. |
+| s6 | Heart: GOV-004 integration example in scaffold; solo note (Council + Hamish as family/friend). |
+| s7 | Continuity: README “Where to start” (continuity, plan, solo note, pillars, PDF v34). |
+| s8 | Heart: canonical signed payload v0 in GOV-004 scaffold (proof_id + signer_did + issued_at_utc). |
+| s9 | Continuity: this one-line sessions index in continuity doc. |
+
+Full log: `docs/caelis-session-log.jsonl`. Plan: `docs/caelis-next-continue-plan.md`.
+
+---
+
 ## Artifact pointers for next session
 
 - Nightly handoff: `docs/nightly-handoff-latest.{json,md}`

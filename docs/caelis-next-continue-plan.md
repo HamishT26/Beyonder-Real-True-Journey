@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 8 — 5:45pm NZ Tuesday 17 February 2026
+**Last updated:** Session 9 — 6:00pm NZ Tuesday 17 February 2026
 
 **Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
@@ -76,16 +76,24 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 9 and beyond)
+## Session 9 done (17 Feb 2026)
+
+- [x] Appended session 9 to `docs/caelis-session-log.jsonl` (6:00pm NZ Tue 17 Feb 2026).
+- [x] Continuity: one-line Caelis sessions index (s1–s9) in `docs/caelis-continuity-2026-02-17.md` for quick scan; table + pointer to log and plan.
+- [x] Updated this plan with Session 10 tasks.
+
+---
+
+## Next tasks (for Session 10 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 9** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 10** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
    - **Mind:** Add one GMUT claim note or external-anchor refinement to `docs/gmut-claim-register-v0.md`.
-   - **Continuity:** One-line index of Caelis sessions (s1–s8) in docs for quick scan.
    - **Heart:** Implement Ed25519 verification in freed_id_did_signature_verifier.py using canonical payload (or add test vector).
-3. **Update this file** with "Session 9" done list and next tasks for Session 10.
+   - **Continuity:** Refresh sessions index to include s10 when done; or add one “next level” note to solo continuity doc.
+3. **Update this file** with "Session 10" done list and next tasks for Session 11.
 4. **Commit** (and push if approved).
 
 ---

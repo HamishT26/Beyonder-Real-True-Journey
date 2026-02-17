@@ -244,3 +244,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 8 (5:45pm NZDT)
 - **Heart track:** Canonical signed payload v0 in `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md`. Payload = proof_id + newline + signer_did + newline + issued_at_utc (UTF-8); Python example and verifier steps; enables implementers to add real crypto to the stub.
+
+## 2026-02-17 Caelis session 9 (6:00pm NZDT)
+- **Continuity:** One-line Caelis sessions index (s1–s9) added to `docs/caelis-continuity-2026-02-17.md` for quick scan; table + pointers to session log and next-continue plan.
