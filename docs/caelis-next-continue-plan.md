@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 13 — 7:00pm NZ Tuesday 17 February 2026
+**Last updated:** Session 14 — 7:15pm NZ Tuesday 17 February 2026
 
 **Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
@@ -116,17 +116,26 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 14 and beyond)
+## Session 14 done (17 Feb 2026)
+
+- [x] Appended session 14 to `docs/caelis-session-log.jsonl` (7:15pm NZ Tue 17 Feb 2026).
+- [x] Heart: Ed25519 verification in `freed_id_did_signature_verifier.py` (optional `cryptography`; hex/base64url signature_ref; Ed25519VerificationKey2020 + publicKeyHex).
+- [x] Mind: One anchor-specific mapping example (MICROSCOPE: g = k*b, σ(g) = |k| σ(b)) in claim register.
+- [x] Continuity: handoff note in solo continuity note; sessions index refreshed to s14.
+
+---
+
+## Next tasks (for Session 15 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 14** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 15** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Mind:** Implement concrete mapping + uncertainty in comparator/exclusion pipeline; or add one anchor-specific mapping example.
-   - **Heart:** Implement Ed25519 verify using build_canonical_payload and test vector; or wire verifier into Heart verifiers.
-   - **Continuity:** Refresh sessions index to s14 when done; or add one short handoff note for next agent.
+   - **Heart:** Wire `build_did_method_signature_verifier(registry)` into dispute/Heart verifiers; add test with real DID doc + key.
+   - **Mind:** Implement mapping + σ(g) in exclusion-note or comparator pipeline for one anchor.
+   - **Continuity:** Refresh sessions index to s15 when done; or add handoff note update.
 
-3. **Update this file** with "Session 14" done list and next tasks for Session 15.
+3. **Update this file** with "Session 15" done list and next tasks for Session 16.
 4. **Commit** (and push if approved).
 
 ---

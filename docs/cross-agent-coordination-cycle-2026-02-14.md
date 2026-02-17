@@ -259,3 +259,8 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 13 (7:00pm NZDT)
 - **Mind track:** GMUT-005 uncertainty propagation note and parameter-mapping equation stub in `docs/gmut-claim-register-v0.md` (σ²(g) = Σ (∂g/∂b_i)² σ²(b_i); next step: concrete mapping in comparator/exclusion pipeline).
+
+## 2026-02-17 Caelis session 14 (7:15pm NZDT)
+- **Heart track:** Ed25519 verification implemented in `freed_id_did_signature_verifier.py` (optional `cryptography`; signature_ref hex/base64url; Ed25519VerificationKey2020 + publicKeyHex).
+- **Mind track:** One anchor-specific mapping example (MICROSCOPE: g = k·b, σ(g) = |k| σ(b)) in claim register.
+- **Continuity:** Handoff note in `docs/caelis-solo-continuity-note-2026-02-17.md`; sessions index to s14.

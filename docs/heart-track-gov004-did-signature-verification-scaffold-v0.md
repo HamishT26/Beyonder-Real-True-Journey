@@ -118,8 +118,8 @@ Implementers may use the following deterministic payload and (when crypto is add
 
 ## Implementation status (scaffold)
 
-- **Done:** Design doc (this file); stub module that resolves the DID via registry; integration example; **canonical signed payload format (v0)**; **Ed25519 test vector v0** (payload hex + verifier contract); **canonical payload builder** in `freed_id_did_signature_verifier.build_canonical_payload`.
-- **TODO:** Implement verification of `signature_ref` over the canonical payload using `verification_methods` (e.g. Ed25519); add tests that pass real signatures and fail on invalid ones; wire into Heart verifiers and require PASS when DID-method verifier is used.
+- **Done:** Design doc (this file); stub module that resolves the DID via registry; integration example; **canonical signed payload format (v0)**; **Ed25519 test vector v0** (payload hex + verifier contract); **canonical payload builder** in `freed_id_did_signature_verifier.build_canonical_payload`; **Ed25519 verification** in `freed_id_did_signature_verifier` (optional `cryptography`; supports Ed25519VerificationKey2020 + publicKeyHex; signature_ref as hex or base64url).
+- **TODO:** Add tests that pass real signatures and fail on invalid ones; wire into Heart verifiers and require PASS when DID-method verifier is used.
 
 ---
 

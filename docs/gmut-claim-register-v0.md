@@ -100,6 +100,8 @@ For a single-anchor bound used as a direct cap (e.g. `g = f(b)` with `f` monoton
 
 **Next implementation step:** Implement the concrete mapping functions and partial derivatives (or Monte Carlo sampling over anchor uncertainties) in the mind-track comparator or exclusion-note pipeline so that GMUT-005 exclusion statements carry a reviewable uncertainty on the derived parameter.
 
+**One anchor-specific mapping example (MICROSCOPE):** For anchor `MICROSCOPE_EP_eta_primary`, let `b = effective_upper_bound` (1.2e-14) and `σ(b) = external_uncertainty_abs` (2e-15) from `docs/mind-track-source-extraction-artifacts-v0.md`. Suppose a linear cap in GMUT parameter space: `g = k * b`, where `g` is an effective coupling bound and `k` a model-dependent constant (e.g. from weak-field scalar–matter mapping). Then `σ(g) = |k| σ(b)`. With the stated values, `σ(g) = |k| × 2e-15`. Implementing this in the exclusion pipeline would attach a numeric uncertainty to the derived GMUT bound for this anchor; the same pattern extends to EOTWASH and LLR with their respective `b` and `σ(b)`.
+
 ---
 
 ## Evidence classification rule
