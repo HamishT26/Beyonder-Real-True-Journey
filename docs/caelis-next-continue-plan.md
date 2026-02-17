@@ -1,6 +1,6 @@
-# Caelis Next Continue Plan (live doc)
+﻿# Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 9 — 6:00pm NZ Tuesday 17 February 2026
+**Last updated:** Session 10 — 6:15pm NZ Tuesday 17 February 2026
 
 **Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
@@ -84,16 +84,25 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 10 and beyond)
+## Session 10 done (17 Feb 2026)
+
+- [x] Appended session 10 to `docs/caelis-session-log.jsonl` (6:15pm NZ Tue 17 Feb 2026).
+- [x] Mind: GMUT-005 source-extraction linkage note in `docs/gmut-claim-register-v0.md` (link to mind-track-source-extraction-artifacts-v0.md; remaining step: uncertainty propagation in parameter-mapping).
+- [x] Updated this plan with Session 11 tasks.
+
+---
+
+## Next tasks (for Session 11 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 10** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 11** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Mind:** Add one GMUT claim note or external-anchor refinement to `docs/gmut-claim-register-v0.md`.
-   - **Heart:** Implement Ed25519 verification in freed_id_did_signature_verifier.py using canonical payload (or add test vector).
-   - **Continuity:** Refresh sessions index to include s10 when done; or add one “next level” note to solo continuity doc.
-3. **Update this file** with "Session 10" done list and next tasks for Session 11.
+   - **Mind:** Uncertainty propagation note or parameter-mapping equation stub for GMUT-005.
+   - **Heart:** Ed25519 verification or test vector in freed_id_did_signature_verifier.py.
+   - **Continuity:** Refresh Caelis sessions index (s1–s10) in continuity doc.
+
+3. **Update this file** with "Session 11" done list and next tasks for Session 12.
 4. **Commit** (and push if approved).
 
 ---

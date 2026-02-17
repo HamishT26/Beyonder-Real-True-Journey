@@ -247,3 +247,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 9 (6:00pm NZDT)
 - **Continuity:** One-line Caelis sessions index (s1–s9) added to `docs/caelis-continuity-2026-02-17.md` for quick scan; table + pointers to session log and next-continue plan.
+
+## 2026-02-17 Caelis session 10 (6:15pm NZDT)
+- **Mind track:** GMUT-005 source-extraction linkage note in `docs/gmut-claim-register-v0.md`: link to `docs/mind-track-source-extraction-artifacts-v0.md` (three canonical anchors); remaining step documented as uncertainty propagation in parameter-mapping.

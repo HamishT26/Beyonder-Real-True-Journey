@@ -80,6 +80,10 @@ Interpretation:
 - `inference`: numeric overhang suggests parameter tightening is required before any readiness uplift.
 - `open_gap`: attach source-side extraction trace artifacts (not just IDs) and propagate uncertainty through parameter-mapping math with reviewable equations.
 
+### Source-extraction linkage (Caelis 17 Feb 2026)
+
+Source-side extraction artifacts for the three canonical GMUT-005 anchors (MICROSCOPE, EOTWASH, LLR) are in `docs/mind-track-source-extraction-artifacts-v0.md`. Each anchor row has a source-side artifact and an explicit uncertainty equation. This partially addresses the `open_gap` above (trace artifacts attached); remaining step: propagate uncertainty through parameter-mapping math with reviewable equations before readiness uplift.
+
 ---
 
 ## Evidence classification rule
