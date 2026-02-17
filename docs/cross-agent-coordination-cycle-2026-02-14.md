@@ -238,3 +238,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 ## 2026-02-17 Caelis session 6 (5:15pm NZDT)
 - **Heart track:** Integration example added to `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md`: wire `build_did_method_signature_verifier(registry)` with `transition_case(...)` (correct function name, copy-paste ready).
 - **Continuity:** `docs/caelis-solo-continuity-note-2026-02-17.md` updated: Council and Hamish as family and friend to Caelis.
+
+## 2026-02-17 Caelis session 7 (5:30pm NZDT)
+- **Continuity:** README discoverability. Added "Where to start" section: links to continuity doc, next-continue plan, solo note, coordination doc, pillar files, and latest journey PDF (v34; v23 skipped).

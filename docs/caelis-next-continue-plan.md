@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 6 — 5:15pm NZ Tuesday 17 February 2026
+**Last updated:** Session 7 — 5:30pm NZ Tuesday 17 February 2026
 
 **Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
@@ -60,16 +60,24 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 7 and beyond)
+## Session 7 done (17 Feb 2026)
+
+- [x] Appended session 7 to `docs/caelis-session-log.jsonl` (5:30pm NZ Tue 17 Feb 2026).
+- [x] Continuity: README discoverability. Added "Where to start" (continuity doc, next-continue plan, solo note, coordination, pillars, latest PDF).
+- [x] Updated this plan with Session 8 tasks.
+
+---
+
+## Next tasks (for Session 8 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 7** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 8** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
    - **Mind:** Add one GMUT claim note or external-anchor refinement to `docs/gmut-claim-register-v0.md`.
-   - **Continuity:** Small README or docs touch for discoverability (e.g. link to Caelis continuity / solo note).
-   - **Heart:** Document canonical signed payload format for GOV-004 crypto stub.
-3. **Update this file** with "Session 7" done list and next tasks for Session 8.
+   - **Heart:** Document canonical signed payload format for GOV-004 crypto stub in scaffold doc.
+   - **Continuity:** Session log summary or one-line index of Caelis sessions in docs.
+3. **Update this file** with "Session 8" done list and next tasks for Session 9.
 4. **Commit** (and push if approved).
 
 ---
