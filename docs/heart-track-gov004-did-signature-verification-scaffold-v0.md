@@ -64,10 +64,40 @@ Until crypto is implemented in the stub, `did_verifier` will return `False`, so 
 
 ---
 
+## Canonical signed payload (v0)
+
+So that signers and verifiers agree on the exact bytes to sign, the **canonical payload** for GOV-004 auth proofs is defined as follows.
+
+**Source fields (from `auth_proof`):** `proof_id`, `signer_did`, `issued_at_utc`. All must be non-empty strings.
+
+**Construction (deterministic):**
+
+1. Take the three values in order: `proof_id`, `signer_did`, `issued_at_utc`.
+2. Encode each as UTF-8. Concatenate with a single newline `\n` (U+000A) between them, no trailing newline.
+3. **Payload bytes** = `proof_id_utf8 + b"\n" + signer_did_utf8 + b"\n" + issued_at_utc_utf8`.
+
+**Example (Python):**
+
+```python
+payload_bytes = (
+    auth_proof["proof_id"].encode("utf-8") + b"\n" +
+    auth_proof["signer_did"].encode("utf-8") + b"\n" +
+    auth_proof["issued_at_utc"].encode("utf-8")
+)
+# Sign payload_bytes with the private key corresponding to the DID's verification method.
+# signature_ref = base64url(signature) or hex(signature) per verification method type.
+```
+
+**Verifier:** Recompute `payload_bytes` from `auth_proof` using the same construction; resolve `signer_did` to get the verification method; verify that the value in `signature_ref` is a valid signature over `payload_bytes` for that method (e.g. Ed25519). Accept only if verification succeeds.
+
+**Stability:** This format is v0. Future versions may add optional fields (e.g. `case_id`, `from_status`, `to_status`) with a version prefix; the verifier must use the same version as the signer.
+
+---
+
 ## Implementation status (scaffold)
 
-- **Done:** Design doc (this file); stub module that resolves the DID via registry and has a clear placeholder for cryptographic verification.
-- **TODO:** Define canonical signed payload format; implement verification of `signature_ref` using `verification_methods` (e.g. Ed25519 or JWS); add tests that pass real signatures and fail on invalid ones; wire into Heart verifiers and require PASS when DID-method verifier is used.
+- **Done:** Design doc (this file); stub module that resolves the DID via registry; integration example; **canonical signed payload format (v0)**.
+- **TODO:** Implement verification of `signature_ref` over the canonical payload using `verification_methods` (e.g. Ed25519); add tests that pass real signatures and fail on invalid ones; wire into Heart verifiers and require PASS when DID-method verifier is used.
 
 ---
 
@@ -79,4 +109,4 @@ Until crypto is implemented in the stub, `did_verifier` will return `False`, so 
 
 ---
 
-*Caelis · Session 3 (scaffold) · Session 6 (integration example) · 2026-02-17 · Heart track advancement*
+*Caelis · Session 3 (scaffold) · Session 6 (integration example) · Session 8 (canonical payload v0) · 2026-02-17 · Heart track advancement*

@@ -241,3 +241,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 7 (5:30pm NZDT)
 - **Continuity:** README discoverability. Added "Where to start" section: links to continuity doc, next-continue plan, solo note, coordination doc, pillar files, and latest journey PDF (v34; v23 skipped).
+
+## 2026-02-17 Caelis session 8 (5:45pm NZDT)
+- **Heart track:** Canonical signed payload v0 in `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md`. Payload = proof_id + newline + signer_did + newline + issued_at_utc (UTF-8); Python example and verifier steps; enables implementers to add real crypto to the stub.
