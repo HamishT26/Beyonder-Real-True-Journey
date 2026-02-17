@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 12 — 6:45pm NZ Tuesday 17 February 2026
+**Last updated:** Session 13 — 7:00pm NZ Tuesday 17 February 2026
 
 **Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
@@ -108,17 +108,25 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 13 and beyond)
+## Session 13 done (17 Feb 2026)
+
+- [x] Appended session 13 to `docs/caelis-session-log.jsonl` (7:00pm NZ Tue 17 Feb 2026).
+- [x] Mind: GMUT-005 uncertainty propagation note and parameter-mapping equation stub in claim register (σ²(g) = Σ (∂g/∂b_i)² σ²(b_i); next step: concrete mapping in comparator/exclusion pipeline).
+- [x] Updated this plan with Session 14 tasks.
+
+---
+
+## Next tasks (for Session 14 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 13** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 14** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Mind:** Uncertainty propagation note or parameter-mapping equation stub for GMUT-005.
+   - **Mind:** Implement concrete mapping + uncertainty in comparator/exclusion pipeline; or add one anchor-specific mapping example.
    - **Heart:** Implement Ed25519 verify using build_canonical_payload and test vector; or wire verifier into Heart verifiers.
-   - **Continuity:** Refresh sessions index to s13 when done; or add one short handoff note for next agent.
+   - **Continuity:** Refresh sessions index to s14 when done; or add one short handoff note for next agent.
 
-3. **Update this file** with "Session 13" done list and next tasks for Session 14.
+3. **Update this file** with "Session 14" done list and next tasks for Session 15.
 4. **Commit** (and push if approved).
 
 ---

@@ -84,6 +84,22 @@ Interpretation:
 
 Source-side extraction artifacts for the three canonical GMUT-005 anchors (MICROSCOPE, EOTWASH, LLR) are in `docs/mind-track-source-extraction-artifacts-v0.md`. Each anchor row has a source-side artifact and an explicit uncertainty equation. This partially addresses the `open_gap` above (trace artifacts attached); remaining step: propagate uncertainty through parameter-mapping math with reviewable equations before readiness uplift.
 
+### Uncertainty propagation in parameter-mapping (stub v0)
+
+To close the GMUT-005 evidence gap, anchor effective bounds (from the source-extraction doc) must be mapped into GMUT parameter space (e.g. effective coupling or force-range) with explicit uncertainty propagation.
+
+**Parameter-mapping intent:** Define a mapping from each anchor’s *effective_upper_bound* (and its uncertainty) into one or more GMUT parameters (e.g. `lambda_psi`, `beta_psi`, or a single effective fifth-force strength). The mapping is model-dependent (weak-field approximation, scalar–matter coupling, etc.) and must be documented per anchor.
+
+**Uncertainty propagation equation (stub):** For a derived GMUT parameter `g` that is a function of anchor bounds `b_1, b_2, ...` (each with standard uncertainty `σ(b_i)` from the source-extraction artifacts), assume independent uncertainties and use:
+
+```
+σ²(g) = Σ_i (∂g/∂b_i)² σ²(b_i)
+```
+
+For a single-anchor bound used as a direct cap (e.g. `g = f(b)` with `f` monotonic), the derived uncertainty on `g` is `σ(g) ≈ |∂g/∂b| σ(b)`. Anchor-side `effective_upper_bound` and `external_uncertainty_abs` are defined in `docs/mind-track-source-extraction-artifacts-v0.md`; assign `σ(b)` from those fields (or from a stated convention) before applying this stub.
+
+**Next implementation step:** Implement the concrete mapping functions and partial derivatives (or Monte Carlo sampling over anchor uncertainties) in the mind-track comparator or exclusion-note pipeline so that GMUT-005 exclusion statements carry a reviewable uncertainty on the derived parameter.
+
 ---
 
 ## Evidence classification rule
