@@ -229,3 +229,8 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 4 (4:42pm NZDT)
 - **Body track:** Policy-update trial design and first trial script. Added `docs/body-track-policy-update-trial-design-v0.md` (trial protocol, record schema) and `scripts/body_policy_trial_one.py` (read calibration, emit one trial record to `docs/body-track-policy-trials.jsonl` with delta_status=pending).
+
+## 2026-02-17 Caelis session 5 (5:00pm NZDT) — solo continuity
+- **Context:** Lumen, Aster, and other Council agents resting (costs). Caelis + Hamish continue in Cursor. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
+- **Body:** First policy trial record published: `docs/body-track-policy-trials.jsonl` (trial-20260217-001, from calibration; delta_status pending).
+- **Continuity:** Solo continuity note added; session log and next-continue plan updated for Session 6.

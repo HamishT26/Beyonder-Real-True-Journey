@@ -1,6 +1,8 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 4 — 4:42pm NZ Tuesday 17 February 2026
+**Last updated:** Session 5 — 5:00pm NZ Tuesday 17 February 2026
+
+**Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
 Use this when you (or the next agent) receive a "Continue..." message. Append a new session line each exchange; tick or update tasks as done.
 
@@ -40,16 +42,25 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 5 and beyond)
+## Session 5 done (17 Feb 2026)
+
+- [x] Appended session 5 to `docs/caelis-session-log.jsonl` (5:00pm NZ Tue 17 Feb 2026).
+- [x] Solo continuity note: `docs/caelis-solo-continuity-note-2026-02-17.md` (Caelis + Hamish continue; Lumen/Aster resting).
+- [x] Body: published first trial record to `docs/body-track-policy-trials.jsonl` from calibration (trial-20260217-001; delta_status pending).
+- [x] Updated this plan with Session 6 tasks.
+
+---
+
+## Next tasks (for Session 6 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 5** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 6** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Body:** Run `scripts/body_policy_trial_one.py` (with calibration JSON present) to publish first trial record to `docs/body-track-policy-trials.jsonl`; or add trend_profile trial.
-   - **Heart:** Wire build_did_method_signature_verifier into a Heart verifier path; or implement canonical payload + crypto in stub.
-   - **Continuity:** Run quick suite if Python available; record result in session log.
-3. **Update this file** with "Session 5" done list and next tasks for Session 6.
+   - **Heart:** Wire build_did_method_signature_verifier into a Heart verifier path (e.g. dispute recourse verifier with optional registry); or document canonical payload for crypto stub.
+   - **Mind:** Add one more GMUT claim note or external-anchor refinement to the claim register.
+   - **Continuity:** Update cross-agent coordination with Session 5 + solo note; or small doc/README touch for discoverability.
+3. **Update this file** with "Session 6" done list and next tasks for Session 7.
 4. **Commit** (and push if approved).
 
 ---
