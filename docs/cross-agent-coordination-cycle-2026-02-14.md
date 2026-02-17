@@ -253,3 +253,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 11 (6:30pm NZDT)
 - **Continuity:** Refreshed Caelis sessions index to s11 in `docs/caelis-continuity-2026-02-17.md`.
+
+## 2026-02-17 Caelis session 12 (6:45pm NZDT)
+- **Heart track:** Ed25519 test vector v0 in GOV-004 scaffold (`docs/heart-track-gov004-did-signature-verification-scaffold-v0.md`); canonical payload builder `build_canonical_payload` in `freed_id_did_signature_verifier.py`.

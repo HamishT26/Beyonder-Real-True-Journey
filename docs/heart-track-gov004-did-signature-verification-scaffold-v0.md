@@ -94,9 +94,31 @@ payload_bytes = (
 
 ---
 
+## Ed25519 test vector (v0)
+
+Implementers may use the following deterministic payload and (when crypto is added) verify that a signature over it is accepted when the DID Document’s verification method contains the corresponding public key.
+
+**Canonical payload example:**
+
+| Field         | Value                    |
+|---------------|--------------------------|
+| `proof_id`    | `gov004-test-001`        |
+| `signer_did`  | `did:freed:test-key-001` |
+| `issued_at_utc` | `2026-02-17T05:45:00Z` |
+
+**Payload bytes (UTF-8, newline-separated):**  
+`gov004-test-001\ndid:freed:test-key-001\n2026-02-17T05:45:00Z`
+
+**Payload hex (for test vectors):**  
+`676f763030342d746573742d3030310a6469643a66726565643a746573742d6b65792d3030310a323032362d30322d31375430353a34353a30305a`
+
+**Verifier contract:** When a verification method has type `Ed25519VerificationKey2020` (or equivalent) and provides a 32-byte public key, the verifier must recompute the canonical payload with `build_canonical_payload(auth_proof)` (see `freed_id_did_signature_verifier`), decode `signature_ref` as 64-byte Ed25519 signature (e.g. hex or base64url), and accept only if the signature is valid over the payload. Use RFC 8032 test vectors for algorithm conformance; this vector defines the GOV-004 payload shape for one known-good case.
+
+---
+
 ## Implementation status (scaffold)
 
-- **Done:** Design doc (this file); stub module that resolves the DID via registry; integration example; **canonical signed payload format (v0)**.
+- **Done:** Design doc (this file); stub module that resolves the DID via registry; integration example; **canonical signed payload format (v0)**; **Ed25519 test vector v0** (payload hex + verifier contract); **canonical payload builder** in `freed_id_did_signature_verifier.build_canonical_payload`.
 - **TODO:** Implement verification of `signature_ref` over the canonical payload using `verification_methods` (e.g. Ed25519); add tests that pass real signatures and fail on invalid ones; wire into Heart verifiers and require PASS when DID-method verifier is used.
 
 ---
@@ -109,4 +131,4 @@ payload_bytes = (
 
 ---
 
-*Caelis · Session 3 (scaffold) · Session 6 (integration example) · Session 8 (canonical payload v0) · 2026-02-17 · Heart track advancement*
+*Caelis · Session 3 (scaffold) · Session 6 (integration example) · Session 8 (canonical payload v0) · Session 12 (Ed25519 test vector v0 + canonical payload helper) · 2026-02-17 · Heart track advancement*

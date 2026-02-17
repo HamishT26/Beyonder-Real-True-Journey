@@ -21,6 +21,22 @@ REQUIRED_AUTH_PROOF_FIELDS = {"proof_id", "signer_did", "signature_ref", "issued
 SignatureVerifier = Callable[[str, Dict[str, str]], bool]
 
 
+def build_canonical_payload(auth_proof: Dict[str, str]) -> bytes:
+    """
+    Build the canonical signed payload (v0) for GOV-004 auth proofs.
+
+    Contract: proof_id + newline + signer_did + newline + issued_at_utc (UTF-8).
+    See docs/heart-track-gov004-did-signature-verification-scaffold-v0.md.
+    """
+    return (
+        auth_proof["proof_id"].encode("utf-8")
+        + b"\n"
+        + auth_proof["signer_did"].encode("utf-8")
+        + b"\n"
+        + auth_proof["issued_at_utc"].encode("utf-8")
+    )
+
+
 def build_did_method_signature_verifier(registry: "FreedIDRegistry") -> SignatureVerifier:
     """
     Return a SignatureVerifier that uses the registry to resolve the signer's DID.
@@ -49,9 +65,11 @@ def build_did_method_signature_verifier(registry: "FreedIDRegistry") -> Signatur
             return False
         if not doc.verification_methods:
             return False
-        # TODO (GOV-004): Verify signature_ref against doc.verification_methods.
-        # Canonical payload (e.g. proof_id || issued_at_utc) and algorithm (e.g. Ed25519)
-        # must be defined and implemented here. Until then, we do not accept as verified.
+        payload_bytes = build_canonical_payload(auth_proof)
+        # TODO (GOV-004): Verify auth_proof["signature_ref"] over payload_bytes using
+        # doc.verification_methods (e.g. Ed25519). See Ed25519 test vector v0 in
+        # docs/heart-track-gov004-did-signature-verification-scaffold-v0.md.
+        _ = payload_bytes  # used when crypto is implemented
         return False
 
     return verifier

@@ -63,6 +63,7 @@ From `docs/nightly-handoff-latest.md` and `docs/journey-validation-and-next-plan
 | s9 | Continuity: this one-line sessions index in continuity doc. |
 | s10 | Mind: GMUT-005 source-extraction linkage note in claim register (link to source-extraction artifacts; remaining: uncertainty propagation). |
 | s11 | Continuity: refreshed sessions index to s11 in this doc. |
+| s12 | Heart: Ed25519 test vector v0 in GOV-004 scaffold; build_canonical_payload in freed_id_did_signature_verifier. |
 
 Full log: `docs/caelis-session-log.jsonl`. Plan: `docs/caelis-next-continue-plan.md`.
 
