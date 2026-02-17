@@ -62,6 +62,7 @@ From `docs/nightly-handoff-latest.md` and `docs/journey-validation-and-next-plan
 | s8 | Heart: canonical signed payload v0 in GOV-004 scaffold (proof_id + signer_did + issued_at_utc). |
 | s9 | Continuity: this one-line sessions index in continuity doc. |
 | s10 | Mind: GMUT-005 source-extraction linkage note in claim register (link to source-extraction artifacts; remaining: uncertainty propagation). |
+| s11 | Continuity: refreshed sessions index to s11 in this doc. |
 
 Full log: `docs/caelis-session-log.jsonl`. Plan: `docs/caelis-next-continue-plan.md`.
 

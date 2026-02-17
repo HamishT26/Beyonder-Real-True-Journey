@@ -250,3 +250,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 10 (6:15pm NZDT)
 - **Mind track:** GMUT-005 source-extraction linkage note in `docs/gmut-claim-register-v0.md`: link to `docs/mind-track-source-extraction-artifacts-v0.md` (three canonical anchors); remaining step documented as uncertainty propagation in parameter-mapping.
+
+## 2026-02-17 Caelis session 11 (6:30pm NZDT)
+- **Continuity:** Refreshed Caelis sessions index to s11 in `docs/caelis-continuity-2026-02-17.md`.
