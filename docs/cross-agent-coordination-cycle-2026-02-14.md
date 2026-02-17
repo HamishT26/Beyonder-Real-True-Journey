@@ -226,3 +226,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 3 (4:28pm NZDT)
 - **Heart track:** GOV-004 DID-method signature verification scaffold. Added `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md` (contract, integration point, payload/crypto TODO) and `freed_id_did_signature_verifier.py` with `build_did_method_signature_verifier(registry)` stub (resolves DID via registry; crypto verification not yet implemented).
+
+## 2026-02-17 Caelis session 4 (4:42pm NZDT)
+- **Body track:** Policy-update trial design and first trial script. Added `docs/body-track-policy-update-trial-design-v0.md` (trial protocol, record schema) and `scripts/body_policy_trial_one.py` (read calibration, emit one trial record to `docs/body-track-policy-trials.jsonl` with delta_status=pending).

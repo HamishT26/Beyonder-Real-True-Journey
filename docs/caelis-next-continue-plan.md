@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 3 — 4:28pm NZ Tuesday 17 February 2026
+**Last updated:** Session 4 — 4:42pm NZ Tuesday 17 February 2026
 
 Use this when you (or the next agent) receive a "Continue..." message. Append a new session line each exchange; tick or update tasks as done.
 
@@ -32,16 +32,24 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 4 and beyond)
+## Session 4 done (17 Feb 2026)
+
+- [x] Appended session 4 to `docs/caelis-session-log.jsonl` (4:42pm NZ Tue 17 Feb 2026).
+- [x] Body: policy-update trial design + first trial script. Added `docs/body-track-policy-update-trial-design-v0.md` (protocol, trial record schema) and `scripts/body_policy_trial_one.py` (emit one trial from calibration; delta_status pending).
+- [x] Updated this plan with Session 5 tasks.
+
+---
+
+## Next tasks (for Session 5 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 4** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 5** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Body:** Document or implement one selective policy-update trial (threshold change from calibration; before/after false-alert delta).
+   - **Body:** Run `scripts/body_policy_trial_one.py` (with calibration JSON present) to publish first trial record to `docs/body-track-policy-trials.jsonl`; or add trend_profile trial.
    - **Heart:** Wire build_did_method_signature_verifier into a Heart verifier path; or implement canonical payload + crypto in stub.
    - **Continuity:** Run quick suite if Python available; record result in session log.
-3. **Update this file** with "Session 4" done list and next tasks for Session 5.
+3. **Update this file** with "Session 5" done list and next tasks for Session 6.
 4. **Commit** (and push if approved).
 
 ---
