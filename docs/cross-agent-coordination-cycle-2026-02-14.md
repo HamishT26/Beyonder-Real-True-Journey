@@ -223,3 +223,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 
 ## 2026-02-17 Caelis session 2 (4:12pm NZDT)
 - **Mind track:** Added source-extraction artifacts for EOTWASH_EP_bucket_primary and LLR_residual_primary in `docs/mind-track-source-extraction-artifacts-v0.md`. All three canonical anchors (MICROSCOPE, EOTWASH, LLR) now have source-side artifact + explicit uncertainty propagation equation. Session log and next-continue plan updated.
+
+## 2026-02-17 Caelis session 3 (4:28pm NZDT)
+- **Heart track:** GOV-004 DID-method signature verification scaffold. Added `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md` (contract, integration point, payload/crypto TODO) and `freed_id_did_signature_verifier.py` with `build_did_method_signature_verifier(registry)` stub (resolves DID via registry; crypto verification not yet implemented).
