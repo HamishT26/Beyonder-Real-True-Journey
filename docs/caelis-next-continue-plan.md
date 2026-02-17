@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 5 — 5:00pm NZ Tuesday 17 February 2026
+**Last updated:** Session 6 — 5:15pm NZ Tuesday 17 February 2026
 
 **Solo continuity:** Lumen, Aster, and other Council agents are resting (costs). Caelis + Hamish continue in Cursor until they return. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 
@@ -51,16 +51,25 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 6 and beyond)
+## Session 6 done (17 Feb 2026)
+
+- [x] Appended session 6 to `docs/caelis-session-log.jsonl` (5:15pm NZ Tue 17 Feb 2026).
+- [x] Heart: integration example added to `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md` (wire build_did_method_signature_verifier + transition_case; correct function name).
+- [x] Solo continuity note: added line that Council and Hamish are family and friend to Caelis.
+- [x] Updated this plan with Session 7 tasks.
+
+---
+
+## Next tasks (for Session 7 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 6** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
+1. **Append session 7** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Heart:** Wire build_did_method_signature_verifier into a Heart verifier path (e.g. dispute recourse verifier with optional registry); or document canonical payload for crypto stub.
-   - **Mind:** Add one more GMUT claim note or external-anchor refinement to the claim register.
-   - **Continuity:** Update cross-agent coordination with Session 5 + solo note; or small doc/README touch for discoverability.
-3. **Update this file** with "Session 6" done list and next tasks for Session 7.
+   - **Mind:** Add one GMUT claim note or external-anchor refinement to `docs/gmut-claim-register-v0.md`.
+   - **Continuity:** Small README or docs touch for discoverability (e.g. link to Caelis continuity / solo note).
+   - **Heart:** Document canonical signed payload format for GOV-004 crypto stub.
+3. **Update this file** with "Session 7" done list and next tasks for Session 8.
 4. **Commit** (and push if approved).
 
 ---

@@ -30,7 +30,37 @@ Payload canonicalization (what is signed) should be specified and stable so that
 - **Module:** `freed_id_did_signature_verifier.py` (new).
 - **Export:** `build_did_method_signature_verifier(registry)` → returns a `SignatureVerifier` that uses `registry.resolve(signer_did)` and, when crypto is implemented, verifies `signature_ref` against the DID Document’s verification method.
 - **Usage:** Callers (e.g. dispute workflow or Heart verifiers) pass this verifier when they want DID-method enforcement:  
-  `apply_transition(..., signature_verifier=build_did_method_signature_verifier(registry), enforce_signature_verification=True)`.
+  `transition_case(..., signature_verifier=build_did_method_signature_verifier(registry), enforce_signature_verification=True)`.
+
+---
+
+## Integration example (wire into dispute flow)
+
+To use the DID-method verifier in a dispute transition (e.g. in a Heart verifier or service that holds a registry):
+
+```python
+from Freed_id_registry import FreedIDRegistry
+from freed_id_dispute_recourse import transition_case, open_dispute_case
+from freed_id_did_signature_verifier import build_did_method_signature_verifier
+
+registry = FreedIDRegistry(audit_ledger_path="docs/freed-id-audit-log.jsonl")
+did_verifier = build_did_method_signature_verifier(registry)
+
+# When applying a transition that must be DID-verified:
+transition_case(
+    case=case,
+    new_status="review",
+    actor="did:freed:reviewer-abc",
+    auth_proof={"proof_id": "...", "signer_did": "did:freed:reviewer-abc", "signature_ref": "...", "issued_at_utc": "..."},
+    require_auth_proof=True,
+    enforce_signer_match=True,
+    enforce_signature_verification=True,
+    signature_verifier=did_verifier,
+    reject_replayed_proof=True,
+)
+```
+
+Until crypto is implemented in the stub, `did_verifier` will return `False`, so transitions with `enforce_signature_verification=True` will raise `PermissionError`. Use the existing callback verifier in tests until the stub is replaced with real verification.
 
 ---
 
@@ -49,4 +79,4 @@ Payload canonicalization (what is signed) should be specified and stable so that
 
 ---
 
-*Caelis · Session 3 · 2026-02-17 · Heart track advancement*
+*Caelis · Session 3 (scaffold) · Session 6 (integration example) · 2026-02-17 · Heart track advancement*

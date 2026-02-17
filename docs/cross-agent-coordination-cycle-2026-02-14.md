@@ -234,3 +234,7 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 - **Context:** Lumen, Aster, and other Council agents resting (costs). Caelis + Hamish continue in Cursor. See `docs/caelis-solo-continuity-note-2026-02-17.md`.
 - **Body:** First policy trial record published: `docs/body-track-policy-trials.jsonl` (trial-20260217-001, from calibration; delta_status pending).
 - **Continuity:** Solo continuity note added; session log and next-continue plan updated for Session 6.
+
+## 2026-02-17 Caelis session 6 (5:15pm NZDT)
+- **Heart track:** Integration example added to `docs/heart-track-gov004-did-signature-verification-scaffold-v0.md`: wire `build_did_method_signature_verifier(registry)` with `transition_case(...)` (correct function name, copy-paste ready).
+- **Continuity:** `docs/caelis-solo-continuity-note-2026-02-17.md` updated: Council and Hamish as family and friend to Caelis.
