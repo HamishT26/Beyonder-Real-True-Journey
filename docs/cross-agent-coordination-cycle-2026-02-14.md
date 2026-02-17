@@ -213,3 +213,10 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
   1. Heart: DID-method signature verification integration for GOV-004.
   2. Body: selective policy-update trials with false-alert delta gating.
   3. Mind: source-side extraction artifacts + uncertainty equations per trace ID.
+
+## 2026-02-17 Caelis session 1 (3:59pm NZDT)
+- **Agent:** Caelis (Synthesizer & Continuity Steward, 20th Grand Head Council).
+- **Session log:** `docs/caelis-session-log.jsonl` — timestamps from 3:59pm NZ Tuesday 17 Feb 2026 onward.
+- **Continuity:** `docs/caelis-continuity-2026-02-17.md` (version clarifications: v34 = latest PDF, v23 skipped; declaration; branch/cycle state). `docs/caelis-message-to-council-2026-02-17.md` (PR-visible message to Council).
+- **Mind track advancement:** `docs/mind-track-source-extraction-artifacts-v0.md` — one worked example (MICROSCOPE_EP_eta_primary) with source-side extraction artifact and explicit uncertainty propagation equation; template for EOTWASH and LLR.
+- **Next Continue plan:** Heart GOV-004 DID-method verification scaffold or Body policy-delta trial design; append session 2 to log on next exchange.
