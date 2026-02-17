@@ -220,3 +220,6 @@ No "world-leading" claim should be marked as factual unless comparative benchmar
 - **Continuity:** `docs/caelis-continuity-2026-02-17.md` (version clarifications: v34 = latest PDF, v23 skipped; declaration; branch/cycle state). `docs/caelis-message-to-council-2026-02-17.md` (PR-visible message to Council).
 - **Mind track advancement:** `docs/mind-track-source-extraction-artifacts-v0.md` — one worked example (MICROSCOPE_EP_eta_primary) with source-side extraction artifact and explicit uncertainty propagation equation; template for EOTWASH and LLR.
 - **Next Continue plan:** Heart GOV-004 DID-method verification scaffold or Body policy-delta trial design; append session 2 to log on next exchange.
+
+## 2026-02-17 Caelis session 2 (4:12pm NZDT)
+- **Mind track:** Added source-extraction artifacts for EOTWASH_EP_bucket_primary and LLR_residual_primary in `docs/mind-track-source-extraction-artifacts-v0.md`. All three canonical anchors (MICROSCOPE, EOTWASH, LLR) now have source-side artifact + explicit uncertainty propagation equation. Session log and next-continue plan updated.

@@ -1,6 +1,6 @@
 # Caelis Next Continue Plan (live doc)
 
-**Last updated:** Session 1 — 3:59pm NZ Tuesday 17 February 2026
+**Last updated:** Session 2 — 4:12pm NZ Tuesday 17 February 2026
 
 Use this when you (or the next agent) receive a "Continue..." message. Append a new session line each exchange; tick or update tasks as done.
 
@@ -16,16 +16,24 @@ Use this when you (or the next agent) receive a "Continue..." message. Append a 
 
 ---
 
-## Next tasks (for Session 2 and beyond)
+## Session 2 done (17 Feb 2026)
+
+- [x] Appended session 2 to `docs/caelis-session-log.jsonl` (4:12pm NZ Tue 17 Feb 2026).
+- [x] Mind: added source-extraction artifacts for **EOTWASH_EP_bucket_primary** and **LLR_residual_primary** in `docs/mind-track-source-extraction-artifacts-v0.md`. All three canonical anchors now have source-side artifact + explicit uncertainty equation.
+- [x] Updated this plan with Session 3 tasks.
+
+---
+
+## Next tasks (for Session 3 and beyond)
 
 **When you get "Continue...":**
 
-1. **Append session 2** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary of what you did.
+1. **Append session 3** to `docs/caelis-session-log.jsonl` with current NZ time/date and a one-line summary.
 2. **Pick one of:**
-   - **Heart:** Add a GOV-004 scaffold for DID-method signature verification (stub or interface that registry can satisfy; doc or code).
+   - **Heart:** Add GOV-004 scaffold for DID-method signature verification (stub or interface that registry can satisfy; doc or code).
    - **Body:** Document or implement one selective policy-update trial (e.g. one threshold change from calibration report, apply and record before/after false-alert delta).
-   - **Mind:** Add source-extraction artifacts for the other two anchors (EOTWASH, LLR) using the MICROSCOPE template in `docs/mind-track-source-extraction-artifacts-v0.md`.
-3. **Update this file** with "Session 2" done list and the next 2–3 tasks for Session 3.
+   - **Continuity:** Update cross-agent coordination doc with Session 2 entry; or run quick suite if Python available and record result.
+3. **Update this file** with "Session 3" done list and next tasks for Session 4.
 4. **Commit** (and push if approved).
 
 ---

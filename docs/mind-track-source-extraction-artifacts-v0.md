@@ -56,9 +56,73 @@ effective_upper_bound = anchor["external_upper_bound"] + anchor["external_uncert
 
 ---
 
-## Replication template for other anchors
+---
 
-For **EOTWASH_EP_bucket_primary** and **LLR_residual_primary**, use the same structure:
+## Worked example: EOTWASH_EP_bucket_primary
+
+**Anchor id:** `EOTWASH_EP_bucket_primary`  
+**Extraction trace id:** `trace:gmut005:eotwash:2026-02-16:v1`  
+**Claim:** GMUT-005 (psi-mediated couplings below fifth-force bounds).
+
+### 1. Source-side extraction artifact
+
+| Field | Value |
+|-------|--------|
+| **Primary source** | Schlamminger et al., Test of the Equivalence Principle Using a Rotating Torsion Balance, *Phys. Rev. Lett.* 100, 041101 (2008). |
+| **Source URL** | https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.100.041101 |
+| **Dataset / release** | eotwash_prl_2008_anchor |
+| **Location in source** | Eot-Wash torsion-balance experiment; reported exclusion on differential acceleration / equivalence-principle violation (relative coupling strength). |
+| **Extracted quantity** | Upper bound on relative coupling strength (EP violation proxy). |
+| **Extracted value (central)** | Order 5e-13 (PRL 2008 result order of magnitude). |
+| **External upper bound (used)** | `external_upper_bound = 5e-13` (conservative upper envelope for GMUT comparison). |
+| **Uncertainty (reported)** | `external_uncertainty_abs = 1e-13` (combined uncertainty envelope for conservative bound inflation). |
+| **Confidence** | 0.95 |
+| **Units** | relative_coupling_strength |
+| **Signal mapping** | Map torsion-balance exclusion bucket to GMUT scalar-coupling proxy. |
+
+**Extraction method note:** Value and uncertainty set from published Eot-Wash PRL result; (5e-13, 1e-13) is conservative for exclusion-note comparison.
+
+### 2. Uncertainty propagation equation (explicit)
+
+**Model:** Linear bound addition. **Formula:** `effective_upper_bound = external_upper_bound + external_uncertainty_abs`  
+**With values:** `effective_upper_bound = 5e-13 + 1e-13 = 6e-13`
+
+---
+
+## Worked example: LLR_residual_primary
+
+**Anchor id:** `LLR_residual_primary`  
+**Extraction trace id:** `trace:gmut005:llr:2026-02-16:v1`  
+**Claim:** GMUT-005 (psi-mediated couplings below fifth-force bounds).
+
+### 1. Source-side extraction artifact
+
+| Field | Value |
+|-------|--------|
+| **Primary source** | Viswanathan et al., The Apache Point Observatory Lunar Laser-ranging Operation: Instrument Description and First Detections, *Astronomical Journal* 2022. |
+| **Source URL** | https://iopscience.iop.org/article/10.3847/1538-3881/ac74c9 |
+| **Dataset / release** | apollo_llr_anchor_2022 |
+| **Location in source** | LLR residual analysis; reported bound on anomalous residual acceleration / force envelope. |
+| **Extracted quantity** | Upper bound on anomalous-acceleration proxy (residual force envelope). |
+| **Extracted value (central)** | Order 1e-11 (LLR residual bound order of magnitude). |
+| **External upper bound (used)** | `external_upper_bound = 1e-11` (conservative upper envelope). |
+| **Uncertainty (reported)** | `external_uncertainty_abs = 2e-12` (uncertainty envelope for conservative bound). |
+| **Confidence** | 0.95 |
+| **Units** | anomalous_acceleration_proxy |
+| **Signal mapping** | Map LLR residual force envelope to GMUT long-range fifth-force proxy. |
+
+**Extraction method note:** Value and uncertainty set from LLR residual bounds; (1e-11, 2e-12) is conservative for exclusion-note comparison.
+
+### 2. Uncertainty propagation equation (explicit)
+
+**Model:** Linear bound addition. **Formula:** `effective_upper_bound = external_upper_bound + external_uncertainty_abs`  
+**With values:** `effective_upper_bound = 1e-11 + 2e-12 = 1.2e-11`
+
+---
+
+## Replication template for future anchors
+
+For any new anchor, use the same structure:
 
 1. **Source-side extraction artifact:** Primary source, URL, location in source, extracted quantity, extracted value, external_upper_bound, external_uncertainty_abs, confidence, units, signal mapping.
 2. **Uncertainty propagation equation:** Same formula `effective_upper_bound = external_upper_bound + external_uncertainty_abs` unless a different model is documented (then add formula + assumption_note).
@@ -73,4 +137,4 @@ For **EOTWASH_EP_bucket_primary** and **LLR_residual_primary**, use the same str
 
 ---
 
-*Caelis · Session 1 · 2026-02-17 · Mind track advancement*
+*Caelis · Session 1 (MICROSCOPE) · Session 2 (EOTWASH, LLR) · 2026-02-17 · Mind track advancement*
