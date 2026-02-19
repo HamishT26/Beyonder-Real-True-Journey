@@ -1,0 +1,167 @@
+{
+  "timestamp": "2026-02-19T03:10:53.672221Z",
+  "overall_success": true,
+  "stages": [
+    {
+      "name": "snapshot",
+      "success": true,
+      "metrics": {
+        "root": "/mnt/data",
+        "file_count": 33,
+        "original_size": 130388,
+        "compressed_size": 58639,
+        "reclaimed_bytes": 71749,
+        "reuse_ratio": 0.5502730312605455,
+        "archive_path": "snapshots/snapshot.zip",
+        "duration_ms": 79.24867899998844
+      },
+      "logs": [
+        "Starting stage snapshot",
+        "Stage snapshot completed successfully"
+      ]
+    },
+    {
+      "name": "cache_waste",
+      "success": true,
+      "metrics": {
+        "dry_run": false,
+        "roots": [
+          "/mnt/data"
+        ],
+        "waste_items": 9,
+        "removed": 2,
+        "reclaimed_bytes": 45865,
+        "reclaimed_tokens": 0.9173,
+        "reclaimed_credits": 0.45865,
+        "reclaimed_energy": 0.045865,
+        "duration_ms": 9.247328000014932
+      },
+      "logs": [
+        "Starting stage cache_waste",
+        "Stage cache_waste completed successfully"
+      ]
+    },
+    {
+      "name": "orchestrator",
+      "success": true,
+      "metrics": {
+        "did": "did:freed:ebefa2c145834ea08f19b83bbb67920c",
+        "credential_id": "did:freed:ebefa2c145834ea08f19b83bbb67920c#cred-1",
+        "task_count": 2,
+        "results": [
+          {
+            "result": "classical_output(quantum_features:{'shots': 512, 'n_states': 2, 'topk_histogram': {'1': 384, '0': 128}, 'feature_vector': {'n_states': 2, 'p_max': 0.7707035924296757, 'argmax': 1, 'entropy_bits': 0.7767827661201008, 'effective_dimension': 1.5466447886666332, 'topk_prob_mass': 1.0}})",
+            "quantum_features": {
+              "shots": 512,
+              "n_states": 2,
+              "topk_histogram": {
+                "1": 384,
+                "0": 128
+              },
+              "feature_vector": {
+                "n_states": 2,
+                "p_max": 0.7707035924296757,
+                "argmax": 1,
+                "entropy_bits": 0.7767827661201008,
+                "effective_dimension": 1.5466447886666332,
+                "topk_prob_mass": 1.0
+              }
+            },
+            "waste_energy": 8.984563693546384,
+            "exotic_energy_generated": 2.656375795697589,
+            "total_exotic_energy": 2.656375795697589
+          },
+          {
+            "result": "classical_output(quantum_features:{'shots': 512, 'n_states': 2, 'topk_histogram': {'1': 233, '0': 279}, 'feature_vector': {'n_states': 2, 'p_max': 0.5017070022879794, 'argmax': 1, 'entropy_bits': 0.9999915923701248, 'effective_dimension': 1.9999766894172046, 'topk_prob_mass': 1.0000000000000002}})",
+            "quantum_features": {
+              "shots": 512,
+              "n_states": 2,
+              "topk_histogram": {
+                "1": 233,
+                "0": 279
+              },
+              "feature_vector": {
+                "n_states": 2,
+                "p_max": 0.5017070022879794,
+                "argmax": 1,
+                "entropy_bits": 0.9999915923701248,
+                "effective_dimension": 1.9999766894172046,
+                "topk_prob_mass": 1.0000000000000002
+              }
+            },
+            "waste_energy": 8.302233622229005,
+            "exotic_energy_generated": 2.2014890814860038,
+            "total_exotic_energy": 4.857864877183593
+          }
+        ],
+        "duration_ms": 53.42480399997385
+      },
+      "logs": [
+        "Starting stage orchestrator",
+        "Stage orchestrator completed successfully"
+      ]
+    },
+    {
+      "name": "simulation",
+      "success": true,
+      "metrics": {
+        "gamma": 0.03,
+        "num_points": 50,
+        "freq_min_hz": 0.001,
+        "freq_max_hz": 100.0,
+        "energy_density_ratio": 1.0297839217570595,
+        "sample": [
+          {
+            "f_hz": 0.001,
+            "baseline": 1.0000000000000001e-20,
+            "modified": 1.0299700149950014e-20
+          },
+          {
+            "f_hz": 0.008286427728546842,
+            "baseline": 1.4563484775012447e-22,
+            "modified": 1.4996783898994456e-22
+          },
+          {
+            "f_hz": 0.08685113737513529,
+            "baseline": 1.3257113655901083e-24,
+            "modified": 1.362174270477563e-24
+          },
+          {
+            "f_hz": 0.9102981779915218,
+            "baseline": 1.2067926406393288e-26,
+            "modified": 1.2213611941069049e-26
+          },
+          {
+            "f_hz": 9.540954763499943,
+            "baseline": 1.0985411419875575e-28,
+            "modified": 1.098543509834223e-28
+          },
+          {
+            "f_hz": 100.0,
+            "baseline": 1e-30,
+            "modified": 1e-30
+          }
+        ],
+        "duration_ms": 3297.7635360000477
+      },
+      "logs": [
+        "Starting stage simulation",
+        "Stage simulation completed successfully"
+      ]
+    },
+    {
+      "name": "freed_id",
+      "success": true,
+      "metrics": {
+        "did": "did:freed:runner",
+        "credential_id": "did:freed:runner#cred-1",
+        "verified": true,
+        "duration_ms": 0.046750000024076144
+      },
+      "logs": [
+        "Starting stage freed_id",
+        "Stage freed_id completed successfully"
+      ]
+    }
+  ]
+}
