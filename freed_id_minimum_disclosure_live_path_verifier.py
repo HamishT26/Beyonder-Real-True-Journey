@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
-from Freed_id_registry import DIDDocument, FreedIDRegistry
+from freed_id_registry import DIDDocument, FreedIDRegistry
 from freed_id_minimum_disclosure import MinimumDisclosurePolicy
 
 

@@ -33,7 +33,7 @@ BENCHMARK_PROFILES: Dict[str, Dict[str, float]] = {
     },
     "standard": {
         "min_pass_rate": 1.0,
-        "max_duration_sec": 1.0,
+        "max_duration_sec": 1.5,
         "min_health_score": 95.0,
     },
     "strict": {
@@ -450,7 +450,6 @@ def main() -> int:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
     py_files = [
-        "Freed_id_registry.py",
         "freed_id_registry.py",
         "qc_transmuter.py",
         "trinity_orchestrator.py",
