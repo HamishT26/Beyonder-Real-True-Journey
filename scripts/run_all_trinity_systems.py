@@ -574,7 +574,7 @@ def build_commands(
                     [
                         "bash",
                         "-lc",
-                        "unzip -l 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' | rg -n 'v29|v30|v31|v32|v33|quantum|trinity|orchestrator|simulation|freed|cosmic' | head -n 40",
+                        "if [ -f 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' ]; then unzip -l 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' | rg -n 'v29|v30|v31|v32|v33|quantum|trinity|orchestrator|simulation|freed|cosmic' | head -n 40; else echo 'SKIPPED: Beyonder-Real-True_Journey_v33_Capsule (4).zip not found'; fi",
                     ],
                 ),
             ]
@@ -584,7 +584,10 @@ def build_commands(
         commands.append(("local Trinity skill installation", ["bash", "scripts/install_local_skills.sh"]))
 
     if include_curated_skill_catalog:
-        commands.append(("curated skill catalog snapshot", ["python3", SKILL_INSTALLER_LIST, "--format", "json"]))
+        if Path(SKILL_INSTALLER_LIST).exists():
+            commands.append(("curated skill catalog snapshot", ["python3", SKILL_INSTALLER_LIST, "--format", "json"]))
+        else:
+            commands.append(("curated skill catalog snapshot", ["echo", f"SKIPPED: {SKILL_INSTALLER_LIST} not found"]))
 
     if body_benchmark_mode == "off":
         commands = [
