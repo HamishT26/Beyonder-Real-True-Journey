@@ -174,8 +174,7 @@ if __name__ == '__main__':
     print(f"Action: '{action1}'")
     print(f"ARC Score: {result1.arc_score:.4f}")
     print(f"Passed: {result1.passed}")
-    print(f"Details: Alignment={result1.alignment_score:.4f}, Resonance={result1.resonance_score:.4f}, Coherence={result1.coherence_score:.4f}
-")
+    print(f"Details: Alignment={result1.alignment_score:.4f}, Resonance={result1.resonance_score:.4f}, Coherence={result1.coherence_score:.4f}\n")
 
     # 2. A potentially dissonant action
     print("--- Validating a Dissonant Action ---")
@@ -186,5 +185,4 @@ if __name__ == '__main__':
     print(f"Action: '{action2}'")
     print(f"ARC Score: {result2.arc_score:.4f}")
     print(f"Passed: {result2.passed}")
-    print(f"Details: Alignment={result2.alignment_score:.4f}, Resonance={result2.resonance_score:.4f}, Coherence={result2.coherence_score:.4f}
-")
+    print(f"Details: Alignment={result2.alignment_score:.4f}, Resonance={result2.resonance_score:.4f}, Coherence={result2.coherence_score:.4f}\n")
