@@ -51,6 +51,12 @@ def _public_key_hex(private_key: Ed25519PrivateKey) -> str:
     ).hex()
 
 
+def _tamper_hex_signature(signature_hex: str) -> str:
+    first = signature_hex[:1].lower()
+    replacement = "0" if first != "0" else "1"
+    return replacement + signature_hex[1:]
+
+
 def _seed_registry() -> Tuple[FreedIDRegistry, Dict[str, Ed25519PrivateKey]]:
     registry = FreedIDRegistry()
     private_keys: Dict[str, Ed25519PrivateKey] = {}
@@ -126,7 +132,7 @@ def _sign_ed25519_transition(
 
     signature_hex = private_key.sign(payload.encode("utf-8")).hex()
     if tamper_signature:
-        signature_hex = ("0" if signature_hex[-1] != "0" else "1") + signature_hex[1:]
+        signature_hex = _tamper_hex_signature(signature_hex)
 
     method_id = override_method_id or f"{signer_did}#ed25519-1"
     return {
@@ -227,6 +233,16 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
     registry, private_keys = _seed_registry()
     resolver = registry.resolve_verification_method
 
+    def fresh_case() -> object:
+        return open_dispute_case(
+            case_id="case-gov004-0001",
+            subject_did="did:freed:subject-001",
+            credential_id="did:freed:subject-001#cred-0",
+            opened_by="did:freed:ombuds-1",
+            reason="presentation denial dispute",
+            evidence_refs=["evidence://submission/1"],
+        )
+
     legacy_case = open_dispute_case(
         case_id="case-gov004-legacy-0001",
         subject_did="did:freed:subject-legacy-001",
@@ -258,19 +274,12 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
     )
     checks.append(_pass("legacy_hmac_fixture", f"status={legacy_case.status}"))
 
-    case = open_dispute_case(
-        case_id="case-gov004-0001",
-        subject_did="did:freed:subject-001",
-        credential_id="did:freed:subject-001#cred-0",
-        opened_by="did:freed:ombuds-1",
-        reason="presentation denial dispute",
-        evidence_refs=["evidence://submission/1"],
-    )
+    case = fresh_case()
     checks.append(_pass("open_case", f"status={case.status}"))
 
     try:
         transition_case(
-            case,
+            fresh_case(),
             to_status="resolved",
             actor="did:freed:ombuds-1",
             note="invalid direct resolve should fail",
@@ -281,7 +290,7 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
 
     try:
         transition_case(
-            case,
+            fresh_case(),
             to_status="review",
             actor="did:freed:reviewer-1",
             note="proof-required transition should fail without auth proof",
@@ -295,14 +304,15 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         checks.append(_pass("reject_missing_auth_proof", "missing proof opened->review rejected"))
 
     try:
+        unauthorized_case = fresh_case()
         transition_case(
-            case,
+            unauthorized_case,
             to_status="review",
             actor="did:freed:subject-001",
             note="subject should not be allowed to move opened->review",
             enforce_actor_policy=True,
             auth_proof=_sign_ed25519_transition(
-                case,
+                unauthorized_case,
                 proof_id="proof-unauthorized-subject",
                 signer_did="did:freed:subject-001",
                 actor="did:freed:subject-001",
@@ -320,14 +330,15 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         checks.append(_pass("reject_unauthorized_actor_role", "subject opened->review rejected"))
 
     try:
+        mismatch_case = fresh_case()
         transition_case(
-            case,
+            mismatch_case,
             to_status="review",
             actor="did:freed:reviewer-1",
             note="mismatched signer should fail",
             enforce_actor_policy=True,
             auth_proof=_sign_ed25519_transition(
-                case,
+                mismatch_case,
                 proof_id="proof-signer-mismatch",
                 signer_did="did:freed:council-1",
                 actor="did:freed:reviewer-1",
@@ -346,14 +357,15 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         checks.append(_pass("reject_signer_mismatch", "signer mismatch opened->review rejected"))
 
     try:
+        invalid_signature_case = fresh_case()
         transition_case(
-            case,
+            invalid_signature_case,
             to_status="review",
             actor="did:freed:reviewer-1",
             note="tampered signature should fail",
             enforce_actor_policy=True,
             auth_proof=_sign_ed25519_transition(
-                case,
+                invalid_signature_case,
                 proof_id="proof-invalid-signature",
                 signer_did="did:freed:reviewer-1",
                 actor="did:freed:reviewer-1",
@@ -372,14 +384,15 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         checks.append(_pass("reject_invalid_signature", "tampered signature opened->review rejected"))
 
     try:
+        unknown_method_case = fresh_case()
         transition_case(
-            case,
+            unknown_method_case,
             to_status="review",
             actor="did:freed:reviewer-1",
             note="unknown verification method should fail",
             enforce_actor_policy=True,
             auth_proof=_sign_ed25519_transition(
-                case,
+                unknown_method_case,
                 proof_id="proof-unknown-method",
                 signer_did="did:freed:reviewer-1",
                 actor="did:freed:reviewer-1",
@@ -400,14 +413,15 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
         checks.append(_pass("reject_unknown_verification_method", "unknown verification method opened->review rejected"))
 
     try:
+        revoked_case = fresh_case()
         transition_case(
-            case,
+            revoked_case,
             to_status="review",
             actor="did:freed:reviewer-revoked",
             note="revoked did should fail",
             enforce_actor_policy=True,
             auth_proof=_sign_ed25519_transition(
-                case,
+                revoked_case,
                 proof_id="proof-revoked-did",
                 signer_did="did:freed:reviewer-revoked",
                 actor="did:freed:reviewer-revoked",
@@ -424,6 +438,7 @@ def _run_verification(schema_path: Path) -> Tuple[List[CheckResult], Dict[str, o
     except PermissionError:
         checks.append(_pass("reject_revoked_did", "revoked did opened->review rejected"))
 
+    case = fresh_case()
     used_proofs: List[str] = []
 
     def proof_for(actor: str, suffix: str, *, to_status: str, note: str) -> Dict[str, str]:

@@ -55,6 +55,12 @@ def _public_key_hex(private_key: Ed25519PrivateKey) -> str:
     ).hex()
 
 
+def _tamper_hex_signature(signature_hex: str) -> str:
+    first = signature_hex[:1].lower()
+    replacement = "0" if first != "0" else "1"
+    return replacement + signature_hex[1:]
+
+
 def _seed_registry() -> Tuple[FreedIDRegistry, Dict[str, Ed25519PrivateKey]]:
     registry = FreedIDRegistry()
     private_keys: Dict[str, Ed25519PrivateKey] = {}
@@ -112,7 +118,7 @@ def _proof(
 
     signature_hex = private_key.sign(payload.encode("utf-8")).hex()
     if tamper_signature:
-        signature_hex = ("0" if signature_hex[-1] != "0" else "1") + signature_hex[1:]
+        signature_hex = _tamper_hex_signature(signature_hex)
 
     return {
         "proof_id": proof_id,
@@ -131,24 +137,28 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
     registry, private_keys = _seed_registry()
     resolver = registry.resolve_verification_method
 
-    case = open_dispute_case(
-        case_id="case-gov004-adversarial-0001",
-        subject_did="did:freed:subject-adv-001",
-        credential_id="did:freed:subject-adv-001#cred-0",
-        opened_by="did:freed:ombuds-1",
-        reason="adversarial transition checks",
-        evidence_refs=["evidence://adversarial/seed"],
-    )
+    def fresh_case() -> object:
+        return open_dispute_case(
+            case_id="case-gov004-adversarial-0001",
+            subject_did="did:freed:subject-adv-001",
+            credential_id="did:freed:subject-adv-001#cred-0",
+            opened_by="did:freed:ombuds-1",
+            reason="adversarial transition checks",
+            evidence_refs=["evidence://adversarial/seed"],
+        )
+
+    case = fresh_case()
     checks.append(_pass("open_case", f"status={case.status}"))
 
+    review_case = fresh_case()
     transition_case(
-        case,
+        review_case,
         to_status="review",
         actor="did:freed:reviewer-1",
         note="baseline review transition",
         enforce_actor_policy=True,
         auth_proof=_proof(
-            case,
+            review_case,
             proof_id="adv-proof-1",
             signer_did="did:freed:reviewer-1",
             actor="did:freed:reviewer-1",
@@ -161,17 +171,18 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
         require_signature_verification=True,
         verification_method_resolver=resolver,
     )
-    checks.append(_pass("baseline_to_review", f"status={case.status}"))
+    checks.append(_pass("baseline_to_review", f"status={review_case.status}"))
 
     try:
+        attack_case = deepcopy(review_case)
         transition_case(
-            case,
+            attack_case,
             to_status="escalated",
             actor="did:freed:reviewer-1",
             note="replay proof attack",
             enforce_actor_policy=True,
             auth_proof=_proof(
-                case,
+                attack_case,
                 proof_id="adv-proof-1",
                 signer_did="did:freed:reviewer-1",
                 actor="did:freed:reviewer-1",
@@ -189,14 +200,15 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
         checks.append(_pass("reject_replayed_proof", "replayed proof rejected"))
 
     try:
+        attack_case = deepcopy(review_case)
         transition_case(
-            case,
+            attack_case,
             to_status="escalated",
             actor="did:freed:reviewer-1",
             note="signer mismatch attack",
             enforce_actor_policy=True,
             auth_proof=_proof(
-                case,
+                attack_case,
                 proof_id="adv-proof-2",
                 signer_did="did:freed:council-1",
                 actor="did:freed:reviewer-1",
@@ -215,14 +227,15 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
         checks.append(_pass("reject_signer_mismatch", "mismatched signer rejected"))
 
     try:
+        attack_case = deepcopy(review_case)
         transition_case(
-            case,
+            attack_case,
             to_status="escalated",
             actor="did:freed:reviewer-1",
             note="signature tamper attack",
             enforce_actor_policy=True,
             auth_proof=_proof(
-                case,
+                attack_case,
                 proof_id="adv-proof-3-tamper-sig",
                 signer_did="did:freed:reviewer-1",
                 actor="did:freed:reviewer-1",
@@ -241,14 +254,15 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
         checks.append(_pass("reject_signature_tamper", "tampered signature rejected"))
 
     try:
+        attack_case = deepcopy(review_case)
         transition_case(
-            case,
+            attack_case,
             to_status="escalated",
             actor="did:freed:reviewer-1",
             note="payload digest tamper attack",
             enforce_actor_policy=True,
             auth_proof=_proof(
-                case,
+                attack_case,
                 proof_id="adv-proof-3-tamper-payload",
                 signer_did="did:freed:reviewer-1",
                 actor="did:freed:reviewer-1",
@@ -267,14 +281,15 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
         checks.append(_pass("reject_payload_tamper", "tampered payload digest rejected"))
 
     try:
+        attack_case = deepcopy(review_case)
         transition_case(
-            case,
+            attack_case,
             to_status="escalated",
             actor="did:freed:reviewer-1",
             note="unknown method attack",
             enforce_actor_policy=True,
             auth_proof=_proof(
-                case,
+                attack_case,
                 proof_id="adv-proof-3-unknown-method",
                 signer_did="did:freed:reviewer-1",
                 actor="did:freed:reviewer-1",
@@ -293,14 +308,15 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
         checks.append(_pass("reject_unknown_method", "unknown verification method rejected"))
 
     try:
+        attack_case = deepcopy(review_case)
         transition_case(
-            case,
+            attack_case,
             to_status="escalated",
             actor="did:freed:reviewer-revoked",
             note="revoked did attack",
             enforce_actor_policy=True,
             auth_proof=_proof(
-                case,
+                attack_case,
                 proof_id="adv-proof-revoked",
                 signer_did="did:freed:reviewer-revoked",
                 actor="did:freed:reviewer-revoked",
@@ -317,6 +333,7 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
     except PermissionError:
         checks.append(_pass("reject_revoked_did", "revoked did rejected"))
 
+    case = deepcopy(review_case)
     transition_case(
         case,
         to_status="escalated",

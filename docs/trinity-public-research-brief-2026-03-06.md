@@ -61,6 +61,11 @@ This brief integrates current public sources into the Trinity evidence framework
 - Which Freed ID artifacts should be mapped first to DID Core and VC Data Model 2.0 semantics: DID document resolution, verification methods, credentials, or presentations?
 - What is the next clean NZ public-law bridge artifact: a rights-to-control appendix, a Treaty context note, or a control matrix covering both NZ and global standards?
 
+## Supplemental expansion lane
+
+- Broader world-theory, scripture, AI-system, OS, and governance comparisons can be added as a later supplemental corpus once the standards-first registry and validator cadence remain stable.
+- Use that lane for reflection, resonance, and comparative imagination. Do not use it to override the verified public-source layer or the deterministic suite evidence boundary.
+
 ## Sources used for this brief
 
 - Mind:

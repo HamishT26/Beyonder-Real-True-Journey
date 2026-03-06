@@ -1,12 +1,13 @@
 # Grand Unified Narrative Brief
 
-Generated (UTC): 2026-03-06T00:00:00Z
+Generated (UTC): 2026-03-06T03:35:00Z
 
 ## 1) Current state summary
 
 - The repo now holds the journey corpus through `v38 (Aura)`, with both PDF and extracted text available for the newest continuity input.
-- The operational baseline on `main` remains strong: the March 5 system-suite artifacts report a 35-step all-pass run across Mind, Body, and Heart.
+- The operational baseline on `main` remains strong: the March 6 standard system-suite artifacts report a 33-step all-pass run across Mind, Body, and Heart, now including cached public research validation and a public signal board.
 - Heart governance has now been advanced from a purely HMAC-centered verification path to a registry-backed DID-method asymmetric verification path for GOV-004, while retaining a legacy HMAC fixture for backward compatibility.
+- The repo now also carries a standards-first public research layer: a capability audit, a cached source registry, an offline validator, and a public signal board that sit beside the runtime suite instead of inside live-network execution.
 
 ## 2) Arc of progression
 
@@ -28,17 +29,19 @@ The most important continuity band is now `v34-v38`: operational engine, standar
 - Body already has benchmark, trend, calibration, and stress-window evidence, which is enough to reject unsupported policy changes rather than guessing.
 - Heart now has reproducible GOV-002, GOV-003, GOV-004, and GOV-005 artifacts, and GOV-004 has a working DID-method asymmetric verification path.
 - v38 provides a coherent continuity bridge from the earlier records to the present codebase without blurring verified state and aspiration.
+- The capability audit now makes the current operating boundary explicit: public plus local sources are available, while MCP-backed context and credentialed API integrations are not.
 
 ### Gaps
 
 - GMUT still lacks a parameter fit that closes the large overhang against the current fifth-force anchors.
 - Trinity OS still lacks external benchmark evidence against broader contemporary agent-system baselines.
 - Freed ID remains a strong normative and technical proposal, but not yet a legally or institutionally adopted governance standard.
-- The Windows environment needed local toolchain repair before validation could run cleanly; that gap is now partly reduced but not entirely erased.
+- The broader comparative field the user has invited in, including scripture and wider theory/governance traditions, still needs to remain a supplemental layer until the standards-first corpus is stable enough to carry it cleanly.
 
 ## 4) Immediate roadmap
 
 - Keep Mind focused on the current anchor workflow and publish standards-first comparative posture before any claim uplift.
 - Keep Body on the current policy file until both live-window and stress-window evidence support a real reduction in false-alert behavior.
-- Keep Heart on the DID-method verification path and continue extending registry-bound method resolution and governance comparison evidence.
+- Keep Heart on the DID-method verification path and continue extending registry-bound method resolution plus the NZ-and-global governance bridge.
+- Keep the cached public-source corpus refreshed through the offline validator and public signal board, while leaving runtime readiness authority with the deterministic suite and mandala scoreboard.
 - Treat v38 as the latest continuity source, not as a claim-promotion source.
