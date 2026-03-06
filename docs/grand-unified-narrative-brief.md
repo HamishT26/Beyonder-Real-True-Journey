@@ -1,6 +1,6 @@
 # Grand Unified Narrative Brief
 
-Generated (UTC): 2026-03-06T05:04:00Z
+Generated (UTC): 2026-03-07T00:00:00Z
 
 ## 1) Current state summary
 
@@ -8,6 +8,7 @@ Generated (UTC): 2026-03-06T05:04:00Z
 - The operational baseline on `main` remains strong: the March 6 standard system-suite artifacts now report a 38-step all-pass run across Mind, Body, and Heart, with the new cached API manifest validation, three pillar API boards, and the API constellation board integrated into the deterministic path.
 - Heart governance has now been advanced from a purely HMAC-centered verification path to a registry-backed DID-method asymmetric verification path for GOV-004, while retaining a legacy HMAC fixture for backward compatibility.
 - The repo now also carries a standards-first public intelligence layer: a capability audit, a curated public-source registry, a live-refresh public API cache, offline validators, per-pillar signal boards, an API constellation board, and a supplemental reflection board that remain separate from the default offline runtime path.
+- The suite now includes a manifest-driven mammoth expansion lane with 30 executable systems (10 Mind, 10 Body, 10 Heart), plus manifest/result validators and constellation gates that feed into the mandala scoreboard.
 
 ## 2) Arc of progression
 
@@ -45,5 +46,11 @@ The most important continuity band is now `v34-v38`: operational engine, standar
 - Keep Mind focused on the current anchor workflow and publish standards-first comparative posture before any claim uplift.
 - Keep Body on the current policy file until both live-window and stress-window evidence support a real reduction in false-alert behavior.
 - Keep Heart on the DID-method verification path and continue extending registry-bound method resolution plus the NZ-and-global governance bridge.
-- Keep the cached public-source corpus refreshed through the offline validator and public signal board, and keep the new public API refreshers opt-in while leaving runtime readiness authority with the deterministic suite and mandala scoreboard.
+- Keep the cached public-source corpus refreshed through the offline validator and public signal board, with live refresh on by default for `standard`/`deep` and explicit `--offline-only` available for deterministic cache-only runs.
 - Treat v38 as the latest continuity source, not as a claim-promotion source.
+
+## 5) Expansion-phase evidence boundary
+
+- Expansion outputs are valid when both `docs/trinity-expansion-manifest-validation-latest.json` and `docs/trinity-expansion-result-validation-latest.json` are PASS.
+- Mind, Body, and Heart expansion constellation artifacts are now included as first-class gates in `scripts/trinity_mandala_scoreboard.py`.
+- Expansion records are context and candidate signals; they remain non-authoritative until manually promoted into curated standards-first comparison artifacts.

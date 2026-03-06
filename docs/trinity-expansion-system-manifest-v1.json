@@ -1,0 +1,536 @@
+{
+  "version": "v1",
+  "generated_utc": "2026-03-07T00:00:00Z",
+  "description": "Mammoth expansion manifest for 30 executable Trinity systems.",
+  "systems": [
+    {
+      "system_id": "mind_claim_evidence_partition",
+      "pillar": "mind",
+      "script": "scripts/mind_claim_evidence_partition.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-claim-evidence-partition-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-public-source-registry-v1.json",
+        "docs/mind-track-gmut-comparator-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_falsification_backlog_builder",
+      "pillar": "mind",
+      "script": "scripts/mind_falsification_backlog_builder.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-falsification-backlog-builder-latest.json"
+      ],
+      "depends_on": [
+        "mind_claim_evidence_partition",
+        "docs/mind-track-gmut-anchor-exclusion-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_anchor_stability_guard",
+      "pillar": "mind",
+      "script": "scripts/mind_anchor_stability_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-anchor-stability-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/mind-track-gmut-anchor-exclusion-latest.json",
+        "docs/mind-track-gmut-trace-validation-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_comparator_regression_guard",
+      "pillar": "mind",
+      "script": "scripts/mind_comparator_regression_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-comparator-regression-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/mind-track-gmut-comparator-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_trace_link_drift_check",
+      "pillar": "mind",
+      "script": "scripts/mind_trace_link_drift_check.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-trace-link-drift-check-latest.json"
+      ],
+      "depends_on": [
+        "docs/mind-track-external-anchor-canonical-inputs-v1.json",
+        "docs/mind-track-gmut-trace-validation-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_theory_signal_refresh_crossref",
+      "pillar": "mind",
+      "script": "scripts/mind_theory_signal_refresh_crossref.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-theory-signal-refresh-crossref-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-api-query-pack-v1.json"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "mind_theory_signal_refresh_semanticscholar",
+      "pillar": "mind",
+      "script": "scripts/mind_theory_signal_refresh_semanticscholar.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-theory-signal-refresh-semanticscholar-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-api-query-pack-v1.json"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "mind_theory_signal_merge",
+      "pillar": "mind",
+      "script": "scripts/mind_theory_signal_merge.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-theory-signal-merge-latest.json"
+      ],
+      "depends_on": [
+        "mind_theory_signal_refresh_crossref",
+        "mind_theory_signal_refresh_semanticscholar"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_theory_signal_quality_gate",
+      "pillar": "mind",
+      "script": "scripts/mind_theory_signal_quality_gate.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-theory-signal-quality-gate-latest.json"
+      ],
+      "depends_on": [
+        "mind_theory_signal_merge"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "mind_theory_constellation_board",
+      "pillar": "mind",
+      "script": "scripts/mind_theory_constellation_board.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/mind-theory-constellation-board-latest.json"
+      ],
+      "depends_on": [
+        "mind_theory_signal_quality_gate",
+        "mind_claim_evidence_partition"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_pipeline_determinism_replay",
+      "pillar": "body",
+      "script": "scripts/body_pipeline_determinism_replay.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-pipeline-determinism-replay-latest.json"
+      ],
+      "depends_on": [
+        "docs/system-suite-status.json",
+        "docs/body-track-smoke-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_resource_envelope_guard",
+      "pillar": "body",
+      "script": "scripts/body_resource_envelope_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-resource-envelope-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/system-suite-status.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_latency_budget_guard",
+      "pillar": "body",
+      "script": "scripts/body_latency_budget_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-latency-budget-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/body-track-smoke-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_config_drift_guard",
+      "pillar": "body",
+      "script": "scripts/body_config_drift_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-config-drift-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/body-profile-policy-v1.json",
+        "docs/trinity-api-source-manifest-v1.json",
+        "docs/trinity-expansion-system-manifest-v1.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_failure_injection_pack",
+      "pillar": "body",
+      "script": "scripts/body_failure_injection_pack.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-failure-injection-pack-latest.json"
+      ],
+      "depends_on": [
+        "docs/body-track-policy-stress-latest.json",
+        "docs/body-track-trend-guard-latest.json"
+      ],
+      "timeout_sec": 90
+    },
+    {
+      "system_id": "body_recovery_time_guard",
+      "pillar": "body",
+      "script": "scripts/body_recovery_time_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-recovery-time-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/body-track-policy-stress-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_runtime_connectivity_probe",
+      "pillar": "body",
+      "script": "scripts/body_runtime_connectivity_probe.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-runtime-connectivity-probe-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-api-source-manifest-v1.json"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "body_dependency_health_refresh",
+      "pillar": "body",
+      "script": "scripts/body_dependency_health_refresh.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-dependency-health-refresh-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-api-query-pack-v1.json"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "body_compute_signal_merge",
+      "pillar": "body",
+      "script": "scripts/body_compute_signal_merge.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-compute-signal-merge-latest.json"
+      ],
+      "depends_on": [
+        "body_runtime_connectivity_probe",
+        "body_dependency_health_refresh"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "body_compute_signal_quality_gate",
+      "pillar": "body",
+      "script": "scripts/body_compute_signal_quality_gate.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/body-compute-signal-quality-gate-latest.json"
+      ],
+      "depends_on": [
+        "body_compute_signal_merge"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "heart_governance_signal_refresh_worldbank_oecd",
+      "pillar": "heart",
+      "script": "scripts/heart_governance_signal_refresh_worldbank_oecd.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-governance-signal-refresh-worldbank-oecd-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-api-query-pack-v1.json"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "heart_governance_signal_refresh_data_govt_nz",
+      "pillar": "heart",
+      "script": "scripts/heart_governance_signal_refresh_data_govt_nz.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-governance-signal-refresh-data-govt-nz-latest.json"
+      ],
+      "depends_on": [
+        "docs/trinity-api-query-pack-v1.json"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "heart_governance_signal_refresh_standards_docs",
+      "pillar": "heart",
+      "script": "scripts/heart_governance_signal_refresh_standards_docs.py",
+      "mode": "live",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-governance-signal-refresh-standards-docs-latest.json"
+      ],
+      "depends_on": [
+        "docs/comparative-validation-grid-v1.md"
+      ],
+      "timeout_sec": 120
+    },
+    {
+      "system_id": "heart_did_method_conformance_suite",
+      "pillar": "heart",
+      "script": "scripts/heart_did_method_conformance_suite.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-did-method-conformance-suite-latest.json"
+      ],
+      "depends_on": [
+        "docs/heart-track-governance-latest.json",
+        "freed_id_did_signature_verifier.py"
+      ],
+      "timeout_sec": 90
+    },
+    {
+      "system_id": "heart_signature_chain_consistency",
+      "pillar": "heart",
+      "script": "scripts/heart_signature_chain_consistency.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-signature-chain-consistency-latest.json"
+      ],
+      "depends_on": [
+        "docs/heart-track-governance-latest.json",
+        "docs/heart-track-min-disclosure-latest.json",
+        "docs/heart-track-dispute-recourse-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "heart_revocation_replay_guard",
+      "pillar": "heart",
+      "script": "scripts/heart_revocation_replay_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-revocation-replay-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/heart-track-governance-latest.json",
+        "docs/heart-track-min-disclosure-adversarial-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "heart_recourse_sla_guard",
+      "pillar": "heart",
+      "script": "scripts/heart_recourse_sla_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-recourse-sla-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/heart-track-dispute-recourse-latest.json",
+        "docs/heart-track-dispute-recourse-adversarial-latest.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "heart_alignment_gap_guard",
+      "pillar": "heart",
+      "script": "scripts/heart_alignment_gap_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-alignment-gap-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/comparative-validation-grid-v1.md",
+        "docs/trinity-public-research-brief-2026-03-06.md"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "heart_policy_exception_register_guard",
+      "pillar": "heart",
+      "script": "scripts/heart_policy_exception_register_guard.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-policy-exception-register-guard-latest.json"
+      ],
+      "depends_on": [
+        "docs/heart-policy-exception-register-v1.json"
+      ],
+      "timeout_sec": 60
+    },
+    {
+      "system_id": "heart_governance_constellation_board",
+      "pillar": "heart",
+      "script": "scripts/heart_governance_constellation_board.py",
+      "mode": "offline",
+      "profiles": [
+        "standard",
+        "deep"
+      ],
+      "outputs": [
+        "docs/trinity-expansion/heart-governance-constellation-board-latest.json"
+      ],
+      "depends_on": [
+        "heart_recourse_sla_guard",
+        "heart_alignment_gap_guard",
+        "heart_did_method_conformance_suite"
+      ],
+      "timeout_sec": 60
+    }
+  ]
+}

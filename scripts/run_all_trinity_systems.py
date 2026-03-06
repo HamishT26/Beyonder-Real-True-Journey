@@ -22,9 +22,10 @@ NETWORK_WARNING_MARKERS = ("403", "forbidden", "tunnel", "timed out", "proxy", "
 PROFILE_HELP = {
     "standard": "Base suite run with benchmark enforcement by default.",
     "quick": "Continuity-focused subset with benchmark observe mode by default.",
-    "deep": "Expanded run (standard + version scan + skill install + curated catalog with soft-fail-network).",
+    "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v1.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -191,11 +192,67 @@ def _api_constellation_board_command(*, enforce: bool) -> tuple[str, list[str]]:
     return f"trinity api constellation board ({mode})", command
 
 
+def _expansion_manifest_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_expansion_manifest_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity expansion manifest validation ({mode})", command
+
+
+def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_expansion_result_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity expansion result validation ({mode})", command
+
+
+def _load_expansion_system_commands(
+    *,
+    profile: str,
+    enforce: bool,
+    offline_only: bool,
+) -> list[tuple[str, list[str]]]:
+    manifest_path = ROOT / TRINITY_EXPANSION_MANIFEST_PATH
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    systems = manifest.get("systems", [])
+    if not isinstance(systems, list):
+        return []
+
+    commands: list[tuple[str, list[str]]] = []
+    for entry in systems:
+        if not isinstance(entry, dict):
+            continue
+        profiles = entry.get("profiles", [])
+        if not isinstance(profiles, list) or profile not in {str(value) for value in profiles}:
+            continue
+        system_id = str(entry.get("system_id") or "").strip()
+        script = str(entry.get("script") or "").strip()
+        mode = str(entry.get("mode") or "offline").strip().lower()
+        if not system_id or not script:
+            continue
+        command = ["python3", script]
+        if enforce:
+            command.append("--fail-on-warn")
+        if offline_only and mode == "live":
+            command.append("--offline-only")
+        commands.append((f"expansion: {system_id} ({mode})", command))
+    return commands
+
+
 def build_commands(
     include_skill_install: bool,
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
     include_public_api_refresh: bool,
+    offline_only: bool,
     quick_mode: bool,
     profile: str,
     body_benchmark_mode: str,
@@ -289,9 +346,50 @@ def build_commands(
     api_refresh_commands: list[tuple[str, list[str]]] = []
     if include_public_api_refresh:
         api_refresh_commands = [
-            ("mind theory api refresh", ["python3", "scripts/mind_theory_signal_refresh.py"]),
-            ("body compute api refresh", ["python3", "scripts/body_compute_signal_refresh.py"]),
-            ("heart governance api refresh", ["python3", "scripts/heart_governance_signal_refresh.py"]),
+            (
+                "mind theory api refresh",
+                [
+                    "python3",
+                    "scripts/mind_theory_signal_refresh.py",
+                    *(["--offline-only"] if offline_only else []),
+                ],
+            ),
+            (
+                "body compute api refresh",
+                [
+                    "python3",
+                    "scripts/body_compute_signal_refresh.py",
+                    *(["--offline-only"] if offline_only else []),
+                ],
+            ),
+            (
+                "heart governance api refresh",
+                [
+                    "python3",
+                    "scripts/heart_governance_signal_refresh.py",
+                    *(["--offline-only"] if offline_only else []),
+                ],
+            ),
+        ]
+
+    expansion_commands: list[tuple[str, list[str]]] = []
+    if not quick_mode:
+        expansion_commands = [
+            (
+                *_expansion_manifest_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            *_load_expansion_system_commands(
+                profile=profile,
+                enforce=(body_benchmark_mode == "enforce"),
+                offline_only=offline_only,
+            ),
+            (
+                *_expansion_result_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
         ]
 
     if quick_mode:
@@ -461,6 +559,7 @@ def build_commands(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
+            *expansion_commands,
             (
                 *_public_research_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
@@ -587,6 +686,7 @@ def build_commands(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
         ),
+        *expansion_commands,
         (
             *_public_research_validation_command(
                 enforce=(body_benchmark_mode == "enforce"),
@@ -794,7 +894,7 @@ def render_profile_catalog() -> str:
     return "\n".join(lines)
 
 
-def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, str, str]:
+def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, str, str]:
     profile = args.profile
     profile_source = "--profile"
 
@@ -808,7 +908,8 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     include_version_scan = args.include_version_scan
     include_skill_install = args.include_skill_install
     include_curated_skill_catalog = args.include_curated_skill_catalog
-    include_public_api_refresh = args.include_public_api_refresh
+    offline_only = args.offline_only
+    include_public_api_refresh = False
     soft_fail_network = args.soft_fail_network
     body_benchmark_mode = args.body_benchmark_mode
 
@@ -817,6 +918,14 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install = True
         include_curated_skill_catalog = True
         soft_fail_network = True
+
+    # Live API refresh is default for standard/deep unless explicitly offline-only.
+    if profile in {"standard", "deep"}:
+        include_public_api_refresh = True
+    if args.include_public_api_refresh:
+        include_public_api_refresh = True
+    if offline_only:
+        include_public_api_refresh = False
 
     if profile == "quick" and (include_version_scan or include_skill_install or include_curated_skill_catalog):
         raise SystemExit(
@@ -837,6 +946,7 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install,
         include_curated_skill_catalog,
         include_public_api_refresh,
+        offline_only,
         soft_fail_network,
         profile_source,
         body_benchmark_mode,
@@ -939,7 +1049,12 @@ def main() -> None:
     parser.add_argument(
         "--include-public-api-refresh",
         action="store_true",
-        help="Run live public API refreshers before the cached Trinity API boards.",
+        help="Deprecated compatibility alias; standard/deep already include live API refresh by default.",
+    )
+    parser.add_argument(
+        "--offline-only",
+        action="store_true",
+        help="Disable all live network refresh steps and force cache-only expansion/API execution.",
     )
     parser.add_argument(
         "--soft-fail-network",
@@ -1009,6 +1124,7 @@ def main() -> None:
         include_skill_install,
         include_curated_skill_catalog,
         include_public_api_refresh,
+        offline_only,
         soft_fail_network,
         profile_source,
         body_benchmark_mode,
@@ -1023,10 +1139,19 @@ def main() -> None:
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
         include_public_api_refresh=include_public_api_refresh,
+        offline_only=offline_only,
         quick_mode=(profile == "quick"),
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
     )
+    if offline_only:
+        live_network_mode = "offline_only"
+    elif profile in {"standard", "deep"}:
+        live_network_mode = "live_default"
+    elif include_public_api_refresh:
+        live_network_mode = "live_opt_in"
+    else:
+        live_network_mode = "offline_default"
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
     suite_start_ts = time.monotonic()
@@ -1042,6 +1167,8 @@ def main() -> None:
         f"Include skill install: {include_skill_install}",
         f"Include curated skill catalog: {include_curated_skill_catalog}",
         f"Include public api refresh: {include_public_api_refresh}",
+        f"Offline only: {offline_only}",
+        f"Live network mode: {live_network_mode}",
         f"Soft-fail network: {soft_fail_network}",
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
@@ -1093,6 +1220,9 @@ def main() -> None:
     warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
     timeout_count = sum(1 for item in suite_results if item["status"] == "TIMEOUT")
     fail_count = sum(1 for item in suite_results if item["status"] == "FAIL")
+    expansion_results = [item for item in suite_results if str(item.get("label", "")).startswith("expansion: ")]
+    expansion_total = len(expansion_results)
+    expansion_passed = sum(1 for item in expansion_results if item["status"] == "PASS")
     effective_success = all(bool(item["effective_success"]) for item in suite_results)
     if args.fail_on_warn and warn_count > 0:
         effective_success = False
@@ -1113,6 +1243,8 @@ def main() -> None:
     lines.append(f"- WARN: **{warn_count}**")
     lines.append(f"- TIMEOUT: **{timeout_count}**")
     lines.append(f"- FAIL: **{fail_count}**")
+    lines.append(f"- Expansion systems total: **{expansion_total}**")
+    lines.append(f"- Expansion systems passed: **{expansion_passed}**")
     lines.append(f"- Achieved steps: **{achieved_steps}**")
     lines.append(f"- Achievement gate met: **{achievement_gate_met}**")
     lines.append(f"- Suite started: `{suite_started_at}`")
@@ -1134,6 +1266,8 @@ def main() -> None:
             "timeout": timeout_count,
             "fail": fail_count,
         },
+        "expansion_systems_total": expansion_total,
+        "expansion_systems_passed": expansion_passed,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
@@ -1142,6 +1276,8 @@ def main() -> None:
             "include_skill_install": include_skill_install,
             "include_curated_skill_catalog": include_curated_skill_catalog,
             "include_public_api_refresh": include_public_api_refresh,
+            "offline_only": offline_only,
+            "live_network_mode": live_network_mode,
             "soft_fail_network": soft_fail_network,
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,

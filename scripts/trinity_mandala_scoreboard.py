@@ -227,6 +227,7 @@ def main() -> int:
             _artifact_status("Anchor exclusion note", "docs/mind-track-gmut-anchor-exclusion-latest.json"),
             _artifact_status("Anchor trace validation", "docs/mind-track-gmut-trace-validation-latest.json"),
             _artifact_status("Mind API signal board", "docs/mind-theory-signal-board-latest.json"),
+            _artifact_status("Mind expansion constellation", "docs/trinity-expansion/mind-theory-constellation-board-latest.json"),
         ],
     )
     body = _pillar_status(
@@ -248,10 +249,26 @@ def main() -> int:
             _artifact_status("Dispute recourse", "docs/heart-track-dispute-recourse-latest.json"),
             _artifact_status("Dispute recourse adversarial", "docs/heart-track-dispute-recourse-adversarial-latest.json"),
             _artifact_status("Heart API signal board", "docs/heart-governance-signal-board-latest.json"),
+            _artifact_status("Heart expansion constellation", "docs/trinity-expansion/heart-governance-constellation-board-latest.json"),
         ],
+    )
+    body["artifacts"].append(
+        asdict(_artifact_status("Body expansion constellation", "docs/trinity-expansion/body-compute-signal-quality-gate-latest.json"))
+    )
+    body["watch_items"] = [row["label"] for row in body["artifacts"] if row["status"] != "PASS"]
+    body["status"] = "PASS"
+    for row in body["artifacts"]:
+        if _severity(row["status"]) > _severity(body["status"]):
+            body["status"] = row["status"]
+    body["next_action"] = (
+        "Body pillar currently clear; keep it under the standard suite cadence."
+        if not body["watch_items"]
+        else f"Re-run and inspect: {', '.join(body['watch_items'])}."
     )
     context_blocks = [
         asdict(_artifact_status("API constellation board", "docs/trinity-api-constellation-board-latest.json")),
+        asdict(_artifact_status("Expansion manifest validation", "docs/trinity-expansion-manifest-validation-latest.json")),
+        asdict(_artifact_status("Expansion result validation", "docs/trinity-expansion-result-validation-latest.json")),
     ]
 
     hybrid_status = "PASS"

@@ -1,0 +1,116 @@
+{
+  "generated_utc": "2026-03-06T13:02:07+00:00",
+  "overall_status": "PASS",
+  "manifest_path": "docs/trinity-api-source-manifest-v1.json",
+  "query_pack_path": "docs/trinity-api-query-pack-v1.json",
+  "api_count": 7,
+  "checks": [
+    {
+      "name": "manifest_header",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "name": "api_schema",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "name": "query_pack",
+      "status": "PASS",
+      "detail": "ok"
+    },
+    {
+      "name": "cache_target_coverage",
+      "status": "PASS",
+      "detail": "ok"
+    }
+  ],
+  "apis": [
+    {
+      "api_id": "arxiv",
+      "pillar": "mind",
+      "base_url": "https://export.arxiv.org/api/query",
+      "auth_mode": "public_unauthenticated",
+      "format": "atom+xml",
+      "refresh_script": "scripts/mind_theory_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/mind-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Use small result windows and refresh on demand only."
+    },
+    {
+      "api_id": "openalex",
+      "pillar": "mind",
+      "base_url": "https://api.openalex.org/works",
+      "auth_mode": "public_unauthenticated",
+      "format": "json",
+      "refresh_script": "scripts/mind_theory_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/mind-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Keep query count low and use cached outputs in the suite."
+    },
+    {
+      "api_id": "crossref",
+      "pillar": "body",
+      "base_url": "https://api.crossref.org/works",
+      "auth_mode": "public_unauthenticated",
+      "format": "json",
+      "refresh_script": "scripts/body_compute_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/body-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Prefer a few focused metadata lookups over broad crawling."
+    },
+    {
+      "api_id": "github",
+      "pillar": "body",
+      "base_url": "https://api.github.com",
+      "auth_mode": "public_unauthenticated",
+      "format": "json",
+      "refresh_script": "scripts/body_compute_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/body-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Unauthenticated rate limits are low, so keep watchlists and search windows narrow."
+    },
+    {
+      "api_id": "worldbank",
+      "pillar": "heart",
+      "base_url": "https://api.worldbank.org/v2",
+      "auth_mode": "public_unauthenticated",
+      "format": "json",
+      "refresh_script": "scripts/heart_governance_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/heart-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Use a small fixed indicator set for governance context."
+    },
+    {
+      "api_id": "oecd",
+      "pillar": "heart",
+      "base_url": "https://sdmx.oecd.org/public/rest/dataflow/all/all/latest",
+      "auth_mode": "public_unauthenticated",
+      "format": "sdmx+xml",
+      "refresh_script": "scripts/heart_governance_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/heart-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Query the public dataflow catalog only and filter locally by keyword."
+    },
+    {
+      "api_id": "data_govt_nz",
+      "pillar": "heart",
+      "base_url": "https://catalogue.data.govt.nz/api/3/action/package_search",
+      "auth_mode": "public_unauthenticated",
+      "format": "json",
+      "refresh_script": "scripts/heart_governance_signal_refresh.py",
+      "cache_artifact": "docs/trinity-api-cache/heart-signals-latest.json",
+      "refresh_window_days": 30,
+      "enabled_by_default": false,
+      "rate_limit_note": "Use targeted package searches around NZ public-law and data-governance context."
+    }
+  ],
+  "effective_success": true
+}

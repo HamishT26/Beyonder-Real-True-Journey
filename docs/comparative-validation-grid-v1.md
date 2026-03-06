@@ -28,3 +28,12 @@ The Body lane remains standards-first. The current record does not justify chang
 ## Supplemental lane
 
 Additional theory traditions, scripture comparators, advanced OS paradigms, and broader governance frames may still be useful as a later reflection layer. The repo now carries a dedicated supplemental reflection registry and board for that purpose. They remain supplemental until the standards-first corpus and deterministic evidence pack stay green under the normal suite cadence.
+
+## Expansion phase note (2026-03-07)
+
+- The mammoth expansion layer is now integrated as 30 executable systems (10 Mind, 10 Body, 10 Heart) with manifest-driven orchestration and schema-backed output validation.
+- Expansion outputs are first-class gates in the mandala path through:
+  - `docs/trinity-expansion/mind-theory-constellation-board-latest.json`
+  - `docs/trinity-expansion/body-compute-signal-quality-gate-latest.json`
+  - `docs/trinity-expansion/heart-governance-constellation-board-latest.json`
+- Comparison language must remain PASS-backed. Expansion records can generate candidates, but they do not auto-upgrade GMUT, Body readiness, or governance legal-force claims without explicit manual promotion.
