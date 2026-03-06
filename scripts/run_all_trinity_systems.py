@@ -114,6 +114,28 @@ def _mind_trace_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     return f"gmut anchor trace validation ({mode})", command
 
 
+def _public_research_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/validate_trinity_public_research.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity public research validation ({mode})", command
+
+
+def _public_signal_board_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_public_signal_board.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity public signal board ({mode})", command
+
+
 def build_commands(
     include_skill_install: bool,
     include_version_scan: bool,
@@ -350,12 +372,22 @@ def build_commands(
                 ),
             ),
             (
+                *_public_research_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 "trinity mandala scoreboard",
                 [
                     "python3",
                     "scripts/trinity_mandala_scoreboard.py",
                     "--fail-on-warn",
                 ],
+            ),
+            (
+                *_public_signal_board_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
             ),
             (
                 "zip memory/data snapshot",
@@ -436,6 +468,11 @@ def build_commands(
         ),
         (
             *_mind_trace_validation_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
+            *_public_research_validation_command(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
         ),
@@ -522,6 +559,11 @@ def build_commands(
                 "python3",
                 "freed_id_dispute_recourse_adversarial_verifier.py",
             ],
+        ),
+        (
+            *_public_signal_board_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
         ),
         *token_energy_commands,
         ("memory integrity check (strict)", ["python3", "scripts/aurelis_memory_integrity_check.py", "--strict"]),
