@@ -43,27 +43,30 @@ gravitational wave observations and encourages further refinement and empirical 
 """
 
 from dataclasses import dataclass
-import numpy as np
-
-try:
-    import matplotlib.pyplot as plt
-except ModuleNotFoundError:  # pragma: no cover - environment dependent
-    plt = None
+import math
+from typing import Sequence
 
 
 @dataclass
 class SimulationResults:
-    frequencies: np.ndarray
-    baseline_spectrum: np.ndarray
-    modified_spectrum: np.ndarray
+    frequencies: list[float]
+    baseline_spectrum: list[float]
+    modified_spectrum: list[float]
     gamma: float
 
     def energy_density_ratio(self) -> float:
         """Return the ratio of total energy densities between modified and baseline spectra."""
         # Integrate over frequency (simple trapezoidal approximation)
-        baseline_int = np.trapz(self.baseline_spectrum, self.frequencies)
-        modified_int = np.trapz(self.modified_spectrum, self.frequencies)
+        baseline_int = _trapezoid_integral(self.baseline_spectrum, self.frequencies)
+        modified_int = _trapezoid_integral(self.modified_spectrum, self.frequencies)
         return modified_int / baseline_int if baseline_int != 0 else np.inf
+
+
+def _trapezoid_integral(values: Sequence[float], coordinates: Sequence[float]) -> float:
+    total = 0.0
+    for left, right, x0, x1 in zip(values, values[1:], coordinates, coordinates[1:]):
+        total += ((left + right) * 0.5) * (x1 - x0)
+    return total
 
 
 class GMUTSimulator:
@@ -82,7 +85,7 @@ class GMUTSimulator:
         self.freq_max = freq_max
         self.num_points = num_points
 
-    def baseline_spectrum(self, freqs: np.ndarray) -> np.ndarray:
+    def baseline_spectrum(self, freqs: Sequence[float]) -> list[float]:
         """
         Define a baseline stochastic gravitational‑wave background spectrum.
 
@@ -97,9 +100,9 @@ class GMUTSimulator:
         # Normalisation factor roughly representing a reference strain amplitude
         A0 = 1e-26
         # Spectral slope (scale‑invariant slope of -2)
-        return A0 * (freqs / 1.0)**(-2)
+        return [A0 * (freq / 1.0) ** (-2) for freq in freqs]
 
-    def psi_modification_factor(self, freqs: np.ndarray, gamma: float) -> np.ndarray:
+    def psi_modification_factor(self, freqs: Sequence[float], gamma: float) -> list[float]:
         """
         Compute a ψ‑field modification factor for the spectrum.
 
@@ -115,7 +118,7 @@ class GMUTSimulator:
         """
         # Avoid division by zero by adding a small epsilon
         eps = 1e-12
-        return 1.0 + gamma * np.exp(-freqs / (1.0 + eps))
+        return [1.0 + gamma * math.exp(-freq / (1.0 + eps)) for freq in freqs]
 
     def run_simulation(self, gamma: float = 0.01) -> SimulationResults:
         """
@@ -127,14 +130,23 @@ class GMUTSimulator:
         Returns:
             SimulationResults: Object containing simulation data and helper functions.
         """
-        freqs = np.logspace(np.log10(self.freq_min), np.log10(self.freq_max), self.num_points)
+        freqs = self._logspace(self.freq_min, self.freq_max, self.num_points)
         base = self.baseline_spectrum(freqs)
         mod_factor = self.psi_modification_factor(freqs, gamma)
-        modified = base * mod_factor
+        modified = [baseline * factor for baseline, factor in zip(base, mod_factor)]
         return SimulationResults(frequencies=freqs,
                                 baseline_spectrum=base,
                                 modified_spectrum=modified,
                                 gamma=gamma)
+
+    @staticmethod
+    def _logspace(start: float, stop: float, num_points: int) -> list[float]:
+        if num_points <= 1:
+            return [start]
+        start_log = math.log10(start)
+        stop_log = math.log10(stop)
+        step = (stop_log - start_log) / (num_points - 1)
+        return [10 ** (start_log + step * index) for index in range(num_points)]
 
     def plot_results(self, results: SimulationResults, show: bool = True, save_path: str = None) -> None:
         """
@@ -151,8 +163,6 @@ class GMUTSimulator:
             raise RuntimeError(
                 "matplotlib is required for plotting. Install it or run without --plot."
             ) from exc
-        if plt is None:
-            raise RuntimeError("matplotlib is not installed; rerun without --plot or install matplotlib.")
 
         plt.figure(figsize=(8, 5))
         plt.loglog(results.frequencies, results.baseline_spectrum, label='Baseline GR spectrum')

@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import shlex
+import shutil
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -23,6 +25,8 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog with soft-fail-network).",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
+PYTHON_BIN = sys.executable
+BASH_BIN = shutil.which("bash")
 
 
 def _body_benchmark_command(*, quick_mode: bool, enforce: bool) -> tuple[str, list[str]]:
@@ -659,11 +663,23 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
 
 
 def run_command(cmd: list[str], timeout_sec: int) -> tuple[bool, str, bool, float, str, str]:
+    normalized_cmd = list(cmd)
+    if normalized_cmd and normalized_cmd[0] == "python3":
+        normalized_cmd[0] = PYTHON_BIN
+    elif normalized_cmd and normalized_cmd[0] == "bash":
+        if BASH_BIN:
+            normalized_cmd[0] = BASH_BIN
+        else:
+            normalized_cmd = [
+                PYTHON_BIN,
+                "-c",
+                "print('SKIPPED: bash-dependent suite stage unavailable on this platform')",
+            ]
     started_at = datetime.now(timezone.utc).isoformat()
     start_ts = time.monotonic()
     try:
         proc = subprocess.run(
-            cmd,
+            normalized_cmd,
             cwd=ROOT,
             capture_output=True,
             text=True,

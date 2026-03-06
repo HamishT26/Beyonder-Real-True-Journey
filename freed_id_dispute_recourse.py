@@ -14,6 +14,8 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Callable, Dict, List, Set, Tuple
 
+from freed_id_did_signature_verifier import verify_ed25519_signature_ref
+
 
 ALLOWED_TRANSITIONS: Dict[str, Set[str]] = {
     "opened": {"review", "dismissed"},
@@ -117,6 +119,31 @@ def _sha256_hex(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def build_transition_payload(
+    case: "DisputeCase",
+    *,
+    event_seq: int,
+    actor: str,
+    to_status: str,
+    note: str,
+) -> str:
+    """Public wrapper so verifiers can sign the exact payload used in transition checks."""
+
+    return _build_transition_payload(
+        case,
+        event_seq=event_seq,
+        actor=actor,
+        to_status=to_status,
+        note=note,
+    )
+
+
+def sha256_hex(text: str) -> str:
+    """Public wrapper so verifiers can publish the exact payload digest used in auth proofs."""
+
+    return _sha256_hex(text)
+
+
 def _sign_payload_hmac(payload: str, secret_key_hex: str) -> str:
     try:
         secret = bytes.fromhex(secret_key_hex)
@@ -198,13 +225,6 @@ def _verify_transition_signature(
     if controller and controller != signer_did:
         raise PermissionError(f"Verification method controller mismatch: controller={controller} signer={signer_did}")
 
-    method_type = str(verification_method.get("type", "")).strip().lower()
-    if method_type not in {"hmacsha256verificationkey2026", "hmac-sha256-verification-key-2026"}:
-        raise PermissionError(f"Unsupported verification method type: {verification_method.get('type')}")
-    secret_key_hex = str(verification_method.get("secretKeyHex", "")).strip()
-    if not secret_key_hex:
-        raise PermissionError("Verification method missing secretKeyHex.")
-
     payload = _build_transition_payload(
         case,
         event_seq=event_seq,
@@ -217,10 +237,27 @@ def _verify_transition_signature(
     if payload_sha256 != claimed_payload_sha:
         raise PermissionError("Auth proof payload digest mismatch.")
 
-    expected_signature = _sign_payload_hmac(payload, secret_key_hex)
-    provided_signature = str(auth_proof["signature_hex"]).strip().lower()
-    if not hmac.compare_digest(expected_signature, provided_signature):
-        raise PermissionError("Invalid auth proof signature.")
+    method_type = str(verification_method.get("type", "")).strip()
+    method_type_normalized = method_type.lower()
+    provided_signature = str(auth_proof.get("signature_hex") or auth_proof.get("signature_ref") or "").strip()
+    if not provided_signature:
+        raise PermissionError("Auth proof signature value is missing.")
+
+    if method_type_normalized in {"hmacsha256verificationkey2026", "hmac-sha256-verification-key-2026"}:
+        secret_key_hex = str(verification_method.get("secretKeyHex", "")).strip()
+        if not secret_key_hex:
+            raise PermissionError("Verification method missing secretKeyHex.")
+        expected_signature = _sign_payload_hmac(payload, secret_key_hex)
+        if not hmac.compare_digest(expected_signature, provided_signature.lower()):
+            raise PermissionError("Invalid auth proof signature.")
+    elif method_type in {"Ed25519VerificationKey2020", "Ed25519VerificationKey2018"}:
+        public_key_hex = str(verification_method.get("publicKeyHex", "")).strip()
+        if not public_key_hex:
+            raise PermissionError("Verification method missing publicKeyHex.")
+        if not verify_ed25519_signature_ref(payload.encode("utf-8"), provided_signature, public_key_hex):
+            raise PermissionError("Invalid auth proof signature.")
+    else:
+        raise PermissionError(f"Unsupported verification method type: {verification_method.get('type')}")
     return verification_method_id, payload_sha256
 
 

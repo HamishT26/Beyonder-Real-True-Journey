@@ -1,0 +1,108 @@
+{
+  "generated_utc": "2026-03-06T01:04:36+00:00",
+  "overall_status": "FAIL",
+  "summary": {
+    "generated_utc": "2026-03-06T01:04:36+00:00",
+    "stamp": "20260306T010436Z",
+    "total_steps": 3,
+    "passed_steps": 2,
+    "failed_steps": 1,
+    "pass_rate": 0.666667,
+    "total_duration_seconds": 3.518666,
+    "body_health_score": 66.67,
+    "speed_band": "heavy",
+    "benchmark_profile": "standard",
+    "benchmark_status": "WARN",
+    "benchmark_trend": "regression"
+  },
+  "steps": [
+    {
+      "name": "compile_python_modules",
+      "command": [
+        "C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python3.exe",
+        "-m",
+        "py_compile",
+        "freed_id_registry.py",
+        "qc_transmuter.py",
+        "trinity_orchestrator.py",
+        "trinity_orchestrator_full.py",
+        "trinity_simulation_engine.py",
+        "run_simulation.py",
+        "body_track_runner.py"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.3851571000413969,
+      "stdout": "",
+      "stderr": "",
+      "metrics": {}
+    },
+    {
+      "name": "run_full_orchestrator_demo",
+      "command": [
+        "C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python3.exe",
+        "trinity_orchestrator_full.py"
+      ],
+      "returncode": 0,
+      "duration_seconds": 0.549176900065504,
+      "stdout": "Registered DID: did:freed:35c8d53bba604f8980cdaa9a9a4b08ba\n\nTask 'Harmonize energy flows' ARC Score: 0.9090\nTask 'Harmonize energy flows' completed.\n\nTask 'Corrupt data logs' ARC Score: 0.8609\nTask 'Corrupt data logs' completed.\n\nTask 'Simulate consciousness expansion' ARC Score: 0.8730\nTask 'Simulate consciousness expansion' completed.\n\nTask 'Generate chaotic noise' ARC Score: 0.8797\nTask 'Generate chaotic noise' completed.\n\n--- Top 3 Memories from Psi-Index Core ---\nMemory Core is empty.",
+      "stderr": "",
+      "metrics": {
+        "task_count": 0
+      }
+    },
+    {
+      "name": "run_gmut_simulation",
+      "command": [
+        "C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python3.exe",
+        "run_simulation.py",
+        "--gammas",
+        "0.0",
+        "0.02",
+        "0.05"
+      ],
+      "returncode": 1,
+      "duration_seconds": 2.584332300000824,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\hamis\\OneDrive\\Documents\\GitHub\\Beyonder-Real-True-Journey\\run_simulation.py\", line 43, in <module>\n    main()\n  File \"C:\\Users\\hamis\\OneDrive\\Documents\\GitHub\\Beyonder-Real-True-Journey\\run_simulation.py\", line 35, in main\n    ratio = result.energy_density_ratio()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\hamis\\OneDrive\\Documents\\GitHub\\Beyonder-Real-True-Journey\\trinity_simulation_engine.py\", line 64, in energy_density_ratio\n    baseline_int = np.trapz(self.baseline_spectrum, self.frequencies)\n                   ^^^^^^^^\n  File \"C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\numpy\\__init__.py\", line 805, in __getattr__\n    raise AttributeError(f\"module {__name__!r} has no attribute {attr!r}\")\nAttributeError: module 'numpy' has no attribute 'trapz'. Did you mean: 'trace'?",
+      "metrics": {
+        "gamma_count": 0,
+        "analysis_status": "skipped_due_to_failure"
+      }
+    }
+  ],
+  "benchmark": {
+    "status": "WARN",
+    "checks": {
+      "pass_rate": {
+        "ok": false,
+        "actual": 0.666667,
+        "threshold": 1.0
+      },
+      "total_duration_seconds": {
+        "ok": false,
+        "actual": 3.518666,
+        "threshold": 1.274
+      },
+      "body_health_score": {
+        "ok": true,
+        "actual": 66.67,
+        "threshold": 32.83
+      }
+    },
+    "trend": {
+      "has_previous": true,
+      "previous_generated_utc": "2026-03-05T09:57:59+00:00",
+      "duration_delta_seconds": 3.133657,
+      "health_delta": -33.33,
+      "classification": "regression"
+    },
+    "profile": "standard",
+    "thresholds": {
+      "min_pass_rate": 1.0,
+      "max_duration_sec": 1.274,
+      "min_health_score": 32.83
+    },
+    "policy_path": "docs\\body-profile-policy-v1.json",
+    "policy_override_used": true
+  }
+}

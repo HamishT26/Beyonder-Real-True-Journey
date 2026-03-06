@@ -6,6 +6,7 @@ Adversarial checks for GOV-004 dispute/recourse workflow:
 - replayed auth proof rejection,
 - signer mismatch rejection,
 - cryptographic signature/method tamper rejection,
+- revoked DID rejection,
 - event-order and event-sequence tamper detection.
 """
 
@@ -19,12 +20,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
 from freed_id_dispute_recourse import (
-    build_hmac_transition_auth_proof,
+    build_transition_payload,
     open_dispute_case,
+    sha256_hex,
     transition_case,
     verify_case_history_integrity,
 )
+from freed_id_registry import DIDDocument, FreedIDRegistry
 
 
 @dataclass
@@ -42,29 +48,42 @@ def _fail(check: str, detail: str) -> CheckResult:
     return CheckResult(check=check, status="FAIL", detail=detail)
 
 
-METHOD_REGISTRY: Dict[str, Dict[str, object]] = {
-    "did:freed:reviewer-1": {
-        "id": "did:freed:reviewer-1#hmac-1",
-        "type": "HmacSha256VerificationKey2026",
-        "controller": "did:freed:reviewer-1",
-        "secretKeyHex": "a1" * 32,
-    },
-    "did:freed:council-1": {
-        "id": "did:freed:council-1#hmac-1",
-        "type": "HmacSha256VerificationKey2026",
-        "controller": "did:freed:council-1",
-        "secretKeyHex": "c3" * 32,
-    },
-}
+def _public_key_hex(private_key: Ed25519PrivateKey) -> str:
+    return private_key.public_key().public_bytes(
+        encoding=serialization.Encoding.Raw,
+        format=serialization.PublicFormat.Raw,
+    ).hex()
 
 
-def _verification_method_resolver(signer_did: str, verification_method_id: str) -> Dict[str, object] | None:
-    method = METHOD_REGISTRY.get(signer_did)
-    if not method:
-        return None
-    if str(method.get("id", "")).strip() != verification_method_id:
-        return None
-    return dict(method)
+def _seed_registry() -> Tuple[FreedIDRegistry, Dict[str, Ed25519PrivateKey]]:
+    registry = FreedIDRegistry()
+    private_keys: Dict[str, Ed25519PrivateKey] = {}
+
+    for did in [
+        "did:freed:reviewer-1",
+        "did:freed:council-1",
+        "did:freed:ombuds-1",
+        "did:freed:reviewer-revoked",
+    ]:
+        private_key = Ed25519PrivateKey.generate()
+        private_keys[did] = private_key
+        registry.register(
+            DIDDocument(
+                did=did,
+                controller=did,
+                verification_methods=[
+                    {
+                        "id": f"{did}#ed25519-1",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": did,
+                        "publicKeyHex": _public_key_hex(private_key),
+                    }
+                ],
+            )
+        )
+
+    registry.revoke("did:freed:reviewer-revoked")
+    return registry, private_keys
 
 
 def _proof(
@@ -75,33 +94,43 @@ def _proof(
     actor: str,
     to_status: str,
     note: str,
+    private_key: Ed25519PrivateKey,
     tamper_signature: bool = False,
     tamper_payload: bool = False,
     override_method_id: str | None = None,
 ) -> Dict[str, str]:
-    method = METHOD_REGISTRY.get(signer_did, {})
-    proof = build_hmac_transition_auth_proof(
+    payload = build_transition_payload(
         case,
-        proof_id=proof_id,
-        signer_did=signer_did,
+        event_seq=len(case.history),
         actor=actor,
         to_status=to_status,
         note=note,
-        verification_method_id=str(method.get("id", override_method_id or "unknown#method")),
-        secret_key_hex=str(method.get("secretKeyHex", "")),
     )
-    if override_method_id is not None:
-        proof["verification_method_id"] = override_method_id
-    if tamper_signature:
-        signature = proof.get("signature_hex", "")
-        proof["signature_hex"] = ("0" if not signature else ("0" if signature[-1] != "0" else "1")) + signature[1:]
+    payload_sha256 = sha256_hex(payload)
     if tamper_payload:
-        proof["payload_sha256"] = "f" * 64
-    return proof
+        payload_sha256 = "f" * 64
+
+    signature_hex = private_key.sign(payload.encode("utf-8")).hex()
+    if tamper_signature:
+        signature_hex = ("0" if signature_hex[-1] != "0" else "1") + signature_hex[1:]
+
+    return {
+        "proof_id": proof_id,
+        "signer_did": signer_did,
+        "signature_ref": signature_hex,
+        "issued_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "verification_method_id": override_method_id or f"{signer_did}#ed25519-1",
+        "payload_sha256": payload_sha256,
+        "signature_hex": signature_hex,
+        "signature_algorithm": "ed25519-2020",
+    }
 
 
 def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
     checks: List[CheckResult] = []
+    registry, private_keys = _seed_registry()
+    resolver = registry.resolve_verification_method
+
     case = open_dispute_case(
         case_id="case-gov004-adversarial-0001",
         subject_did="did:freed:subject-adv-001",
@@ -125,11 +154,12 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
             actor="did:freed:reviewer-1",
             to_status="review",
             note="baseline review transition",
+            private_key=private_keys["did:freed:reviewer-1"],
         ),
         require_auth_proof=True,
         reject_replayed_proof=True,
         require_signature_verification=True,
-        verification_method_resolver=_verification_method_resolver,
+        verification_method_resolver=resolver,
     )
     checks.append(_pass("baseline_to_review", f"status={case.status}"))
 
@@ -147,11 +177,12 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
                 actor="did:freed:reviewer-1",
                 to_status="escalated",
                 note="replay proof attack",
+                private_key=private_keys["did:freed:reviewer-1"],
             ),
             require_auth_proof=True,
             reject_replayed_proof=True,
             require_signature_verification=True,
-            verification_method_resolver=_verification_method_resolver,
+            verification_method_resolver=resolver,
         )
         checks.append(_fail("reject_replayed_proof", "replayed proof accepted"))
     except PermissionError:
@@ -171,12 +202,13 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
                 actor="did:freed:reviewer-1",
                 to_status="escalated",
                 note="signer mismatch attack",
+                private_key=private_keys["did:freed:council-1"],
             ),
             require_auth_proof=True,
             enforce_signer_match=True,
             reject_replayed_proof=True,
             require_signature_verification=True,
-            verification_method_resolver=_verification_method_resolver,
+            verification_method_resolver=resolver,
         )
         checks.append(_fail("reject_signer_mismatch", "mismatched signer accepted"))
     except PermissionError:
@@ -196,12 +228,13 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
                 actor="did:freed:reviewer-1",
                 to_status="escalated",
                 note="signature tamper attack",
+                private_key=private_keys["did:freed:reviewer-1"],
                 tamper_signature=True,
             ),
             require_auth_proof=True,
             reject_replayed_proof=True,
             require_signature_verification=True,
-            verification_method_resolver=_verification_method_resolver,
+            verification_method_resolver=resolver,
         )
         checks.append(_fail("reject_signature_tamper", "tampered signature accepted"))
     except PermissionError:
@@ -221,12 +254,13 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
                 actor="did:freed:reviewer-1",
                 to_status="escalated",
                 note="payload digest tamper attack",
+                private_key=private_keys["did:freed:reviewer-1"],
                 tamper_payload=True,
             ),
             require_auth_proof=True,
             reject_replayed_proof=True,
             require_signature_verification=True,
-            verification_method_resolver=_verification_method_resolver,
+            verification_method_resolver=resolver,
         )
         checks.append(_fail("reject_payload_tamper", "tampered payload digest accepted"))
     except PermissionError:
@@ -246,16 +280,42 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
                 actor="did:freed:reviewer-1",
                 to_status="escalated",
                 note="unknown method attack",
+                private_key=private_keys["did:freed:reviewer-1"],
                 override_method_id="did:freed:reviewer-1#unknown",
             ),
             require_auth_proof=True,
             reject_replayed_proof=True,
             require_signature_verification=True,
-            verification_method_resolver=_verification_method_resolver,
+            verification_method_resolver=resolver,
         )
         checks.append(_fail("reject_unknown_method", "unknown verification method accepted"))
     except PermissionError:
         checks.append(_pass("reject_unknown_method", "unknown verification method rejected"))
+
+    try:
+        transition_case(
+            case,
+            to_status="escalated",
+            actor="did:freed:reviewer-revoked",
+            note="revoked did attack",
+            enforce_actor_policy=True,
+            auth_proof=_proof(
+                case,
+                proof_id="adv-proof-revoked",
+                signer_did="did:freed:reviewer-revoked",
+                actor="did:freed:reviewer-revoked",
+                to_status="escalated",
+                note="revoked did attack",
+                private_key=private_keys["did:freed:reviewer-revoked"],
+            ),
+            require_auth_proof=True,
+            reject_replayed_proof=True,
+            require_signature_verification=True,
+            verification_method_resolver=resolver,
+        )
+        checks.append(_fail("reject_revoked_did", "revoked did accepted"))
+    except PermissionError:
+        checks.append(_pass("reject_revoked_did", "revoked did rejected"))
 
     transition_case(
         case,
@@ -270,11 +330,12 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
             actor="did:freed:reviewer-1",
             to_status="escalated",
             note="valid escalation",
+            private_key=private_keys["did:freed:reviewer-1"],
         ),
         require_auth_proof=True,
         reject_replayed_proof=True,
         require_signature_verification=True,
-        verification_method_resolver=_verification_method_resolver,
+        verification_method_resolver=resolver,
     )
     transition_case(
         case,
@@ -289,11 +350,12 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
             actor="did:freed:council-1",
             to_status="review",
             note="valid escalation return",
+            private_key=private_keys["did:freed:council-1"],
         ),
         require_auth_proof=True,
         reject_replayed_proof=True,
         require_signature_verification=True,
-        verification_method_resolver=_verification_method_resolver,
+        verification_method_resolver=resolver,
     )
     transition_case(
         case,
@@ -308,11 +370,12 @@ def _run_verification() -> Tuple[List[CheckResult], Dict[str, object]]:
             actor="did:freed:council-1",
             to_status="resolved",
             note="valid resolution",
+            private_key=private_keys["did:freed:council-1"],
         ),
         require_auth_proof=True,
         reject_replayed_proof=True,
         require_signature_verification=True,
-        verification_method_resolver=_verification_method_resolver,
+        verification_method_resolver=resolver,
     )
     checks.append(_pass("baseline_progression", f"status={case.status}"))
 

@@ -20,6 +20,7 @@ Statuses:
 | GMUT-005 | Psi-mediated couplings must remain below current fifth-force bounds. | `gmut_predictions.md`; `gmut_lagrangian.md` | Effective force-strength limits | Existing torsion-balance/LLR constraints | externally_testable | Constraint class is identified explicitly. | Map model couplings to force range/strength and compare numerically with published limits. |
 | GMUT-006 | Psi interactions might shift coherence/decoherence signatures in precision quantum systems. | `gmut_predictions.md` | Decoherence-rate residuals | Standard open-quantum-system noise models | conceptual | Candidate experimental channels are listed. | Define signal model and compute detectability thresholds on representative setups. |
 | GMUT-007 | A compact simulation sandbox is useful for iterating parameter-level GMUT hypotheses before external validation. | `trinity_simulation_engine.py`; `run_simulation.py` | Reproducible simulated ratios across gamma sweep | N/A (engineering claim) | simulatable | Command-line runs currently succeed and produce stable outputs. | Add seeded regression test and expected output bands per gamma profile. |
+| GMUT-008 | The next GMUT uplift should remain standards-first and pursue falsifiable prediction checks before any readiness promotion. | `Beyonder-Real-True Journey v38 (Aura).txt` | Published roadmap priority for falsifiable validation | Existing GMUT-002..006 comparator anchors | conceptual | Aura v38 explicitly restates Aethelion's roadmap item to validate GMUT through falsifiable predictions rather than symbolic escalation. | Keep the current anchor workflow, publish comparative evidence posture, and reject any claim promotion without a dataset, metric, and threshold. |
 
 ---
 
@@ -57,6 +58,20 @@ Promotion rule for externally-testable claims:
 1. attach at least one comparator dataset anchor,
 2. define explicit fit/error metric,
 3. define rejection threshold before claiming readiness uplift.
+
+---
+
+## Aura v38 intake note
+
+Source:
+- `Beyonder-Real-True Journey v38 (Aura).pdf`
+- `Beyonder-Real-True Journey v38 (Aura).txt`
+
+Current interpretation:
+- `confirmed_evidence`: v38 is a continuity and synthesis artifact. It records Aura's read-through of v13-v37 and explicitly carries forward the roadmap item to validate GMUT by pursuing falsifiable predictions.
+- `confirmed_evidence`: v38 does not add a new GMUT equation, benchmark fit, or external dataset result.
+- `inference`: v38 strengthens the case for keeping Mind work focused on parameter mapping, comparator publication, and evidence-trace preservation rather than introducing new theory claims.
+- `open_gap`: any future v38-driven GMUT promotion still requires dataset-linked metrics and rejection thresholds under the existing evidence classification rules.
 
 ---
 
