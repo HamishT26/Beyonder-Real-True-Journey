@@ -136,10 +136,66 @@ def _public_signal_board_command(*, enforce: bool) -> tuple[str, list[str]]:
     return f"trinity public signal board ({mode})", command
 
 
+def _api_manifest_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_api_source_manifest_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity api manifest validation ({mode})", command
+
+
+def _mind_api_signal_board_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/mind_theory_signal_board.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"mind api signal board ({mode})", command
+
+
+def _body_api_signal_board_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/body_compute_signal_board.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"body api signal board ({mode})", command
+
+
+def _heart_api_signal_board_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/heart_governance_signal_board.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"heart api signal board ({mode})", command
+
+
+def _api_constellation_board_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_api_constellation_board.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity api constellation board ({mode})", command
+
+
 def build_commands(
     include_skill_install: bool,
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
+    include_public_api_refresh: bool,
     quick_mode: bool,
     profile: str,
     body_benchmark_mode: str,
@@ -229,6 +285,14 @@ def build_commands(
             ],
         ),
     ]
+
+    api_refresh_commands: list[tuple[str, list[str]]] = []
+    if include_public_api_refresh:
+        api_refresh_commands = [
+            ("mind theory api refresh", ["python3", "scripts/mind_theory_signal_refresh.py"]),
+            ("body compute api refresh", ["python3", "scripts/body_compute_signal_refresh.py"]),
+            ("heart governance api refresh", ["python3", "scripts/heart_governance_signal_refresh.py"]),
+        ]
 
     if quick_mode:
         commands: list[tuple[str, list[str]]] = [
@@ -371,8 +435,39 @@ def build_commands(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
+            *api_refresh_commands,
+            (
+                *_api_manifest_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_mind_api_signal_board_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_body_api_signal_board_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_heart_api_signal_board_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_api_constellation_board_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
             (
                 *_public_research_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_public_signal_board_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -383,11 +478,6 @@ def build_commands(
                     "scripts/trinity_mandala_scoreboard.py",
                     "--fail-on-warn",
                 ],
-            ),
-            (
-                *_public_signal_board_command(
-                    enforce=(body_benchmark_mode == "enforce"),
-                ),
             ),
             (
                 "zip memory/data snapshot",
@@ -471,18 +561,36 @@ def build_commands(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
         ),
+        *api_refresh_commands,
         (
-            *_public_research_validation_command(
+            *_api_manifest_validation_command(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
         ),
         (
-            "trinity mandala scoreboard",
-            [
-                "python3",
-                "scripts/trinity_mandala_scoreboard.py",
-                "--fail-on-warn",
-            ],
+            *_mind_api_signal_board_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
+            *_body_api_signal_board_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
+            *_heart_api_signal_board_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
+            *_api_constellation_board_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
+        ),
+        (
+            *_public_research_validation_command(
+                enforce=(body_benchmark_mode == "enforce"),
+            ),
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
         (
@@ -564,6 +672,14 @@ def build_commands(
             *_public_signal_board_command(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
+        ),
+        (
+            "trinity mandala scoreboard",
+            [
+                "python3",
+                "scripts/trinity_mandala_scoreboard.py",
+                "--fail-on-warn",
+            ],
         ),
         *token_energy_commands,
         ("memory integrity check (strict)", ["python3", "scripts/aurelis_memory_integrity_check.py", "--strict"]),
@@ -649,7 +765,12 @@ def build_commands(
         if Path(SKILL_INSTALLER_LIST).exists():
             commands.append(("curated skill catalog snapshot", ["python3", SKILL_INSTALLER_LIST, "--format", "json"]))
         else:
-            commands.append(("curated skill catalog snapshot", ["echo", f"SKIPPED: {SKILL_INSTALLER_LIST} not found"]))
+            commands.append(
+                (
+                    "curated skill catalog snapshot",
+                    ["python3", "-c", f"print('SKIPPED: {SKILL_INSTALLER_LIST} not found')"],
+                )
+            )
 
     if body_benchmark_mode == "off":
         commands = [
@@ -673,7 +794,7 @@ def render_profile_catalog() -> str:
     return "\n".join(lines)
 
 
-def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, str, str]:
+def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, str, str]:
     profile = args.profile
     profile_source = "--profile"
 
@@ -687,6 +808,7 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     include_version_scan = args.include_version_scan
     include_skill_install = args.include_skill_install
     include_curated_skill_catalog = args.include_curated_skill_catalog
+    include_public_api_refresh = args.include_public_api_refresh
     soft_fail_network = args.soft_fail_network
     body_benchmark_mode = args.body_benchmark_mode
 
@@ -714,6 +836,7 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_version_scan,
         include_skill_install,
         include_curated_skill_catalog,
+        include_public_api_refresh,
         soft_fail_network,
         profile_source,
         body_benchmark_mode,
@@ -814,6 +937,11 @@ def main() -> None:
         help="Include curated skill catalog snapshot from the system skill-installer utility.",
     )
     parser.add_argument(
+        "--include-public-api-refresh",
+        action="store_true",
+        help="Run live public API refreshers before the cached Trinity API boards.",
+    )
+    parser.add_argument(
         "--soft-fail-network",
         action="store_true",
         help="Downgrade expected network-restricted curated-catalog failures to WARN.",
@@ -880,6 +1008,7 @@ def main() -> None:
         include_version_scan,
         include_skill_install,
         include_curated_skill_catalog,
+        include_public_api_refresh,
         soft_fail_network,
         profile_source,
         body_benchmark_mode,
@@ -893,6 +1022,7 @@ def main() -> None:
         include_skill_install=include_skill_install,
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
+        include_public_api_refresh=include_public_api_refresh,
         quick_mode=(profile == "quick"),
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
@@ -911,6 +1041,7 @@ def main() -> None:
         f"Include version scan: {include_version_scan}",
         f"Include skill install: {include_skill_install}",
         f"Include curated skill catalog: {include_curated_skill_catalog}",
+        f"Include public api refresh: {include_public_api_refresh}",
         f"Soft-fail network: {soft_fail_network}",
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
@@ -1010,6 +1141,7 @@ def main() -> None:
             "include_version_scan": include_version_scan,
             "include_skill_install": include_skill_install,
             "include_curated_skill_catalog": include_curated_skill_catalog,
+            "include_public_api_refresh": include_public_api_refresh,
             "soft_fail_network": soft_fail_network,
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,

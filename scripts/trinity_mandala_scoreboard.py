@@ -83,6 +83,26 @@ def _extract_detail(payload: dict[str, object]) -> str:
     if trend:
         return f"trend={trend}"
 
+    if "freshness_status" in payload or "source_count" in payload:
+        parts: list[str] = []
+        freshness_status = payload.get("freshness_status")
+        if freshness_status:
+            parts.append(f"freshness_status={freshness_status}")
+        source_count = payload.get("source_count")
+        if source_count is not None:
+            parts.append(f"source_count={source_count}")
+        apis_checked = payload.get("apis_checked")
+        if isinstance(apis_checked, list):
+            parts.append(f"apis={len(apis_checked)}")
+        if parts:
+            return ", ".join(parts)
+
+    manifest_status = payload.get("manifest_validation_status")
+    if manifest_status:
+        promotion_candidates = payload.get("promotion_candidates")
+        candidate_count = len(promotion_candidates) if isinstance(promotion_candidates, list) else 0
+        return f"manifest_validation_status={manifest_status}, promotion_candidates={candidate_count}"
+
     gamma_ratios = payload.get("gamma_ratios")
     if isinstance(gamma_ratios, dict):
         return f"gamma_ratios={len(gamma_ratios)}"
@@ -163,6 +183,19 @@ def _build_markdown(payload: dict[str, object]) -> str:
     lines.extend(
         [
             "",
+            "## Context blocks",
+            "| label | status | detail | path |",
+            "|---|---|---|---|",
+        ]
+    )
+    for block in payload.get("context_blocks", []):
+        lines.append(
+            f"| {block['label']} | {block['status']} | {block['detail']} | `{block['path']}` |"
+        )
+
+    lines.extend(
+        [
+            "",
             "## Evidence boundary",
             f"- verified_state: {payload['evidence_boundary']['verified_state']}",
             f"- watch_state: {payload['evidence_boundary']['watch_state']}",
@@ -193,6 +226,7 @@ def main() -> int:
             _artifact_status("GMUT comparator", "docs/mind-track-gmut-comparator-latest.json"),
             _artifact_status("Anchor exclusion note", "docs/mind-track-gmut-anchor-exclusion-latest.json"),
             _artifact_status("Anchor trace validation", "docs/mind-track-gmut-trace-validation-latest.json"),
+            _artifact_status("Mind API signal board", "docs/mind-theory-signal-board-latest.json"),
         ],
     )
     body = _pillar_status(
@@ -202,6 +236,7 @@ def main() -> int:
             _artifact_status("Benchmark guardrail", "docs/body-track-benchmark-latest.json"),
             _artifact_status("Trend guard", "docs/body-track-trend-guard-latest.json"),
             _artifact_status("Stress window", "docs/body-track-policy-stress-latest.json"),
+            _artifact_status("Body API signal board", "docs/body-compute-signal-board-latest.json"),
         ],
     )
     heart = _pillar_status(
@@ -212,13 +247,20 @@ def main() -> int:
             _artifact_status("Minimum disclosure live path", "docs/heart-track-min-disclosure-live-latest.json"),
             _artifact_status("Dispute recourse", "docs/heart-track-dispute-recourse-latest.json"),
             _artifact_status("Dispute recourse adversarial", "docs/heart-track-dispute-recourse-adversarial-latest.json"),
+            _artifact_status("Heart API signal board", "docs/heart-governance-signal-board-latest.json"),
         ],
     )
+    context_blocks = [
+        asdict(_artifact_status("API constellation board", "docs/trinity-api-constellation-board-latest.json")),
+    ]
 
     hybrid_status = "PASS"
     for pillar in (mind, body, heart):
         if _severity(pillar["status"]) > _severity(hybrid_status):
             hybrid_status = str(pillar["status"])
+    for block in context_blocks:
+        if _severity(str(block["status"])) > _severity(hybrid_status):
+            hybrid_status = str(block["status"])
 
     payload = {
         "generated_utc": generated_utc,
@@ -230,6 +272,7 @@ def main() -> int:
             "body": body,
             "heart": heart,
         },
+        "context_blocks": context_blocks,
         "evidence_boundary": {
             "verified_state": "Latest suite and pillar artifacts are the current operational evidence boundary.",
             "watch_state": "Promote only PASS-backed states; treat WARN/FAIL artifacts as live investigation targets.",

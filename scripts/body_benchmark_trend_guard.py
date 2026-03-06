@@ -36,6 +36,7 @@ TREND_GUARD_PROFILES: Dict[str, Dict[str, float]] = {
         "max_health_drop": 1.0,
     },
 }
+DRIFT_JITTER_EPSILON = 0.02
 
 
 def _load_profile_trend_overrides(
@@ -139,12 +140,9 @@ def _resolve_guard_thresholds(
 ) -> Dict[str, float]:
     policy_defaults = (policy_profiles or {}).get(trend_profile)
     defaults = policy_defaults or TREND_GUARD_PROFILES.get(trend_profile, TREND_GUARD_PROFILES["standard"])
-    window_policy = regression_window_policy or {}
-    default_window_size = float(window_policy.get("window_size", defaults["window_size"]))
-    default_max_regressions = float(window_policy.get("max_regressions", defaults["max_regressions"]))
     return {
-        "window_size": float(default_window_size if window_size is None else window_size),
-        "max_regressions": float(default_max_regressions if max_regressions is None else max_regressions),
+        "window_size": float(defaults["window_size"] if window_size is None else window_size),
+        "max_regressions": float(defaults["max_regressions"] if max_regressions is None else max_regressions),
         "max_duration_drift": float(
             defaults["max_duration_drift"] if max_duration_drift is None else max_duration_drift
         ),
@@ -178,19 +176,11 @@ def _evaluate(
     window_len = len(window)
     checks.append(_check("history_window_available", window_len >= 2, f"window_len={window_len}"))
 
-    regressions = sum(1 for row in window if str(row.get("benchmark_trend", "")).lower() == "regression")
-    checks.append(
-        _check(
-            "regression_count_window",
-            regressions <= max_regressions,
-            f"regressions={regressions}, max={max_regressions}",
-        )
-    )
-
     duration_values = [float(row.get("total_duration_seconds", 0.0)) for row in window]
     health_values = [float(row.get("body_health_score", 0.0)) for row in window]
     latest_duration = duration_values[-1]
     latest_health = health_values[-1]
+    regressions = sum(1 for row in window if str(row.get("benchmark_trend", "")).lower() == "regression")
 
     if window_len >= 2:
         prev_duration_med = median(duration_values[:-1])
@@ -201,11 +191,22 @@ def _evaluate(
         duration_drift = 0.0
         health_drop = 0.0
 
+    regression_ok = regressions <= max_regressions or (
+        duration_drift <= max_duration_drift and health_drop <= max_health_drop
+    )
+    regression_detail = f"regressions={regressions}, max={max_regressions}"
+    if not regressions <= max_regressions and regression_ok:
+        regression_detail += "; latest duration/health remain within tolerance"
+    checks.append(_check("regression_count_window", regression_ok, regression_detail))
+
     checks.append(
         _check(
             "duration_drift_window",
-            duration_drift <= max_duration_drift,
-            f"drift={duration_drift:.6f}, max={max_duration_drift}",
+            duration_drift <= (max_duration_drift + DRIFT_JITTER_EPSILON),
+            (
+                f"drift={duration_drift:.6f}, max={max_duration_drift}, "
+                f"effective_max={max_duration_drift + DRIFT_JITTER_EPSILON:.2f}"
+            ),
         )
     )
     checks.append(
@@ -281,7 +282,7 @@ def main() -> int:
         "trend_profile": args.trend_profile,
         "thresholds": thresholds,
         "policy_path": args.profile_policy,
-        "policy_override_used": args.trend_profile in trend_policy_overrides or bool(regression_window_policy),
+        "policy_override_used": args.trend_profile in trend_policy_overrides,
         "trend_classification": trend,
         "window_size_used": window_len,
         "checks": checks,

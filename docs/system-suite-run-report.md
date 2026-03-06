@@ -1,12 +1,13 @@
 # Trinity System Suite Run Report
 
-Generated: 2026-03-06T03:38:38.694508+00:00
+Generated: 2026-03-06T05:02:31.440278+00:00
 Step timeout (s): disabled
 Profile: standard
 Profile source: --profile
 Include version scan: False
 Include skill install: False
 Include curated skill catalog: False
+Include public api refresh: False
 Soft-fail network: False
 Fail on warn: True
 Achievement target steps: disabled
@@ -19,9 +20,9 @@ This report runs currently available repo systems and records command outputs.
 ## v29 module map generation
 - status: **PASS**
 - command: `python3 scripts/generate_v29_module_map.py`
-- started: `2026-03-06T03:38:38.694508+00:00`
-- finished: `2026-03-06T03:38:38.948800+00:00`
-- duration_sec: `0.250`
+- started: `2026-03-06T05:02:31.440278+00:00`
+- finished: `2026-03-06T05:02:31.636379+00:00`
+- duration_sec: `0.188`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\v29-module-map.md
 ```
@@ -29,9 +30,9 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\v
 ## simulation sweep
 - status: **PASS**
 - command: `python3 run_simulation.py --gammas 0.0 0.02 0.05 0.1`
-- started: `2026-03-06T03:38:38.948800+00:00`
-- finished: `2026-03-06T03:38:39.180559+00:00`
-- duration_sec: `0.234`
+- started: `2026-03-06T05:02:31.636379+00:00`
+- finished: `2026-03-06T05:02:31.840832+00:00`
+- duration_sec: `0.219`
 ```text
 Gamma=0.0000: energy density ratio = 1.00000
 Gamma=0.0200: energy density ratio = 1.01986
@@ -42,17 +43,17 @@ Gamma=0.1000: energy density ratio = 1.09928
 ## body benchmark guardrail check (enforce)
 - status: **PASS**
 - command: `python3 body_track_runner.py --gammas 0.0 0.02 0.05 --benchmark-profile standard --profile-policy docs/body-profile-policy-v1.json --fail-on-benchmark`
-- started: `2026-03-06T03:38:39.180559+00:00`
-- finished: `2026-03-06T03:38:40.985877+00:00`
-- duration_sec: `1.797`
+- started: `2026-03-06T05:02:31.840832+00:00`
+- finished: `2026-03-06T05:02:33.029339+00:00`
+- duration_sec: `1.187`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260306T033839Z-body-track-smoke.json
-timestamped_md=docs\body-track-runs\20260306T033839Z-body-track-smoke.md
+timestamped_json=docs\body-track-runs\20260306T050232Z-body-track-smoke.json
+timestamped_md=docs\body-track-runs\20260306T050232Z-body-track-smoke.md
 latest_json=docs\body-track-smoke-latest.json
 latest_md=docs\body-track-smoke-latest.md
-timestamped_metrics=docs\body-track-runs\20260306T033839Z-body-track-metrics.json
-timestamped_benchmark=docs\body-track-runs\20260306T033839Z-body-track-benchmark.json
+timestamped_metrics=docs\body-track-runs\20260306T050232Z-body-track-metrics.json
+timestamped_benchmark=docs\body-track-runs\20260306T050232Z-body-track-benchmark.json
 latest_metrics=docs\body-track-metrics-latest.json
 latest_benchmark=docs\body-track-benchmark-latest.json
 metrics_history=docs\body-track-metrics-history.jsonl
@@ -61,13 +62,13 @@ metrics_history=docs\body-track-metrics-history.jsonl
 ## body benchmark trend guard (enforce)
 - status: **PASS**
 - command: `python3 scripts/body_benchmark_trend_guard.py --trend-profile standard --profile-policy docs/body-profile-policy-v1.json --fail-on-warn`
-- started: `2026-03-06T03:38:40.985877+00:00`
-- finished: `2026-03-06T03:38:41.309680+00:00`
-- duration_sec: `0.328`
+- started: `2026-03-06T05:02:33.029339+00:00`
+- finished: `2026-03-06T05:02:33.493566+00:00`
+- duration_sec: `0.453`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260306T033841Z-body-track-trend-guard.json
-timestamped_md=docs\body-track-runs\20260306T033841Z-body-track-trend-guard.md
+timestamped_json=docs\body-track-runs\20260306T050233Z-body-track-trend-guard.json
+timestamped_md=docs\body-track-runs\20260306T050233Z-body-track-trend-guard.md
 latest_json=docs\body-track-trend-guard-latest.json
 latest_md=docs\body-track-trend-guard-latest.md
 ```
@@ -75,13 +76,13 @@ latest_md=docs\body-track-trend-guard-latest.md
 ## body profile calibration report
 - status: **PASS**
 - command: `python3 scripts/body_profile_calibration_report.py --profile-context standard`
-- started: `2026-03-06T03:38:41.309680+00:00`
-- finished: `2026-03-06T03:38:41.814747+00:00`
-- duration_sec: `0.500`
+- started: `2026-03-06T05:02:33.493566+00:00`
+- finished: `2026-03-06T05:02:33.928778+00:00`
+- duration_sec: `0.438`
 ```text
 overall_status=WARN
-timestamped_json=docs\body-track-runs\20260306T033841Z-body-track-calibration.json
-timestamped_md=docs\body-track-runs\20260306T033841Z-body-track-calibration.md
+timestamped_json=docs\body-track-runs\20260306T050233Z-body-track-calibration.json
+timestamped_md=docs\body-track-runs\20260306T050233Z-body-track-calibration.md
 latest_json=docs\body-track-calibration-latest.json
 latest_md=docs\body-track-calibration-latest.md
 ```
@@ -89,13 +90,13 @@ latest_md=docs\body-track-calibration-latest.md
 ## body policy delta report (enforce)
 - status: **PASS**
 - command: `python3 scripts/body_profile_policy_delta_report.py --policy-json docs/body-profile-policy-v1.json --apply --fail-on-warn`
-- started: `2026-03-06T03:38:41.814747+00:00`
-- finished: `2026-03-06T03:38:42.313163+00:00`
-- duration_sec: `0.500`
+- started: `2026-03-06T05:02:33.928778+00:00`
+- finished: `2026-03-06T05:02:34.221448+00:00`
+- duration_sec: `0.297`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260306T033842Z-body-track-policy-delta.json
-timestamped_md=docs\body-track-runs\20260306T033842Z-body-track-policy-delta.md
+timestamped_json=docs\body-track-runs\20260306T050234Z-body-track-policy-delta.json
+timestamped_md=docs\body-track-runs\20260306T050234Z-body-track-policy-delta.md
 latest_json=docs\body-track-policy-delta-latest.json
 latest_md=docs\body-track-policy-delta-latest.md
 ```
@@ -103,13 +104,13 @@ latest_md=docs\body-track-policy-delta-latest.md
 ## body policy stress-window report (enforce)
 - status: **PASS**
 - command: `python3 scripts/body_policy_stress_window_report.py --policy-json docs/body-profile-policy-v1.json --fail-on-warn`
-- started: `2026-03-06T03:38:42.313163+00:00`
-- finished: `2026-03-06T03:38:42.696843+00:00`
-- duration_sec: `0.391`
+- started: `2026-03-06T05:02:34.221866+00:00`
+- finished: `2026-03-06T05:02:34.594246+00:00`
+- duration_sec: `0.375`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260306T033842Z-body-track-policy-stress.json
-timestamped_md=docs\body-track-runs\20260306T033842Z-body-track-policy-stress.md
+timestamped_json=docs\body-track-runs\20260306T050234Z-body-track-policy-stress.json
+timestamped_md=docs\body-track-runs\20260306T050234Z-body-track-policy-stress.md
 latest_json=docs\body-track-policy-stress-latest.json
 latest_md=docs\body-track-policy-stress-latest.md
 ```
@@ -117,13 +118,13 @@ latest_md=docs\body-track-policy-stress-latest.md
 ## gmut comparator metrics
 - status: **PASS**
 - command: `python3 scripts/gmut_comparator_metrics.py`
-- started: `2026-03-06T03:38:42.696843+00:00`
-- finished: `2026-03-06T03:38:43.093299+00:00`
-- duration_sec: `0.391`
+- started: `2026-03-06T05:02:34.594246+00:00`
+- finished: `2026-03-06T05:02:34.773297+00:00`
+- duration_sec: `0.171`
 ```text
 status=PASS
-timestamped_json=docs\mind-track-runs\20260306T033842Z-gmut-comparator-metrics.json
-timestamped_md=docs\mind-track-runs\20260306T033842Z-gmut-comparator-metrics.md
+timestamped_json=docs\mind-track-runs\20260306T050234Z-gmut-comparator-metrics.json
+timestamped_md=docs\mind-track-runs\20260306T050234Z-gmut-comparator-metrics.md
 latest_json=docs\mind-track-gmut-comparator-latest.json
 latest_md=docs\mind-track-gmut-comparator-latest.md
 ```
@@ -131,13 +132,13 @@ latest_md=docs\mind-track-gmut-comparator-latest.md
 ## gmut external-anchor exclusion note
 - status: **PASS**
 - command: `python3 scripts/gmut_external_anchor_exclusion_note.py --anchor-input docs/mind-track-external-anchor-canonical-inputs-v1.json`
-- started: `2026-03-06T03:38:43.093299+00:00`
-- finished: `2026-03-06T03:38:43.468208+00:00`
-- duration_sec: `0.375`
+- started: `2026-03-06T05:02:34.773297+00:00`
+- finished: `2026-03-06T05:02:34.996327+00:00`
+- duration_sec: `0.235`
 ```text
 overall_status=WARN
-timestamped_json=docs\mind-track-runs\20260306T033843Z-gmut-anchor-exclusion-note.json
-timestamped_md=docs\mind-track-runs\20260306T033843Z-gmut-anchor-exclusion-note.md
+timestamped_json=docs\mind-track-runs\20260306T050234Z-gmut-anchor-exclusion-note.json
+timestamped_md=docs\mind-track-runs\20260306T050234Z-gmut-anchor-exclusion-note.md
 latest_json=docs\mind-track-gmut-anchor-exclusion-latest.json
 latest_md=docs\mind-track-gmut-anchor-exclusion-latest.md
 ```
@@ -145,53 +146,99 @@ latest_md=docs\mind-track-gmut-anchor-exclusion-latest.md
 ## gmut anchor trace validation (enforce)
 - status: **PASS**
 - command: `python3 scripts/gmut_anchor_trace_validator.py --fail-on-warn`
-- started: `2026-03-06T03:38:43.468208+00:00`
-- finished: `2026-03-06T03:38:43.744033+00:00`
-- duration_sec: `0.281`
+- started: `2026-03-06T05:02:34.996327+00:00`
+- finished: `2026-03-06T05:02:35.418333+00:00`
+- duration_sec: `0.422`
 ```text
 overall_status=PASS
-timestamped_json=docs\mind-track-runs\20260306T033843Z-gmut-anchor-trace-validation.json
-timestamped_md=docs\mind-track-runs\20260306T033843Z-gmut-anchor-trace-validation.md
+timestamped_json=docs\mind-track-runs\20260306T050235Z-gmut-anchor-trace-validation.json
+timestamped_md=docs\mind-track-runs\20260306T050235Z-gmut-anchor-trace-validation.md
 latest_json=docs\mind-track-gmut-trace-validation-latest.json
 latest_md=docs\mind-track-gmut-trace-validation-latest.md
+```
+
+## trinity api manifest validation (enforce)
+- status: **PASS**
+- command: `python3 scripts/trinity_api_source_manifest_validator.py --fail-on-warn`
+- started: `2026-03-06T05:02:35.418333+00:00`
+- finished: `2026-03-06T05:02:35.760165+00:00`
+- duration_sec: `0.328`
+```text
+overall_status=PASS
+api_count=7
+```
+
+## mind api signal board (enforce)
+- status: **PASS**
+- command: `python3 scripts/mind_theory_signal_board.py --fail-on-warn`
+- started: `2026-03-06T05:02:35.760165+00:00`
+- finished: `2026-03-06T05:02:36.155114+00:00`
+- duration_sec: `0.406`
+```text
+overall_status=PASS
+source_count=14
+latest_json=docs/mind-theory-signal-board-latest.json
+latest_md=docs/mind-theory-signal-board-latest.md
+```
+
+## body api signal board (enforce)
+- status: **PASS**
+- command: `python3 scripts/body_compute_signal_board.py --fail-on-warn`
+- started: `2026-03-06T05:02:36.155114+00:00`
+- finished: `2026-03-06T05:02:36.609008+00:00`
+- duration_sec: `0.453`
+```text
+overall_status=PASS
+source_count=17
+latest_json=docs/body-compute-signal-board-latest.json
+latest_md=docs/body-compute-signal-board-latest.md
+```
+
+## heart api signal board (enforce)
+- status: **PASS**
+- command: `python3 scripts/heart_governance_signal_board.py --fail-on-warn`
+- started: `2026-03-06T05:02:36.609008+00:00`
+- finished: `2026-03-06T05:02:36.945705+00:00`
+- duration_sec: `0.328`
+```text
+overall_status=PASS
+source_count=17
+latest_json=docs/heart-governance-signal-board-latest.json
+latest_md=docs/heart-governance-signal-board-latest.md
+```
+
+## trinity api constellation board (enforce)
+- status: **PASS**
+- command: `python3 scripts/trinity_api_constellation_board.py --fail-on-warn`
+- started: `2026-03-06T05:02:36.945705+00:00`
+- finished: `2026-03-06T05:02:37.451722+00:00`
+- duration_sec: `0.516`
+```text
+overall_status=PASS
 ```
 
 ## trinity public research validation (enforce)
 - status: **PASS**
 - command: `python3 scripts/validate_trinity_public_research.py --fail-on-warn`
-- started: `2026-03-06T03:38:43.744033+00:00`
-- finished: `2026-03-06T03:38:44.015174+00:00`
-- duration_sec: `0.265`
+- started: `2026-03-06T05:02:37.451722+00:00`
+- finished: `2026-03-06T05:02:37.810823+00:00`
+- duration_sec: `0.359`
 ```text
 overall_status=PASS
-timestamped_json=docs\trinity-public-research-runs\20260306T033843Z-trinity-public-research-validation.json
-timestamped_md=docs\trinity-public-research-runs\20260306T033843Z-trinity-public-research-validation.md
+timestamped_json=docs\trinity-public-research-runs\20260306T050237Z-trinity-public-research-validation.json
+timestamped_md=docs\trinity-public-research-runs\20260306T050237Z-trinity-public-research-validation.md
 latest_json=docs\trinity-public-research-validation-latest.json
 latest_md=docs\trinity-public-research-validation-latest.md
-```
-
-## trinity mandala scoreboard
-- status: **PASS**
-- command: `python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn`
-- started: `2026-03-06T03:38:44.015174+00:00`
-- finished: `2026-03-06T03:38:44.560865+00:00`
-- duration_sec: `0.547`
-```text
-hybrid_os_status=PASS
-timestamped_json=docs\trinity-mandala-runs\20260306T033844Z-trinity-mandala-scoreboard.json
-timestamped_md=docs\trinity-mandala-runs\20260306T033844Z-trinity-mandala-scoreboard.md
-latest_json=docs\trinity-mandala-scoreboard-latest.json
-latest_md=docs\trinity-mandala-scoreboard-latest.md
 ```
 
 ## full orchestrator demo
 - status: **PASS**
 - command: `python3 trinity_orchestrator_full.py`
-- started: `2026-03-06T03:38:44.560865+00:00`
-- finished: `2026-03-06T03:38:44.850154+00:00`
-- duration_sec: `0.297`
+- started: `2026-03-06T05:02:37.810823+00:00`
+- finished: `2026-03-06T05:02:38.052623+00:00`
+- duration_sec: `0.235`
 ```text
-Registered DID: did:freed:e97241a1a9da400a983830825d267dcd
+Registered DID: did:freed:599f7d02a10340538b77e4e36b69cac9
 
 Task 'Harmonize energy flows' ARC Score: 0.9090
 Task 'Harmonize energy flows' completed.
@@ -212,9 +259,9 @@ Memory Core is empty.
 ## vector transmutation
 - status: **PASS**
 - command: `python3 scripts/trinity_vector_transmuter.py --passphrase suite-demo-passphrase --out docs/trinity-vector-profile.json`
-- started: `2026-03-06T03:38:44.850154+00:00`
-- finished: `2026-03-06T03:38:45.618971+00:00`
-- duration_sec: `0.766`
+- started: `2026-03-06T05:02:38.052623+00:00`
+- finished: `2026-03-06T05:02:38.341174+00:00`
+- duration_sec: `0.297`
 ```text
 Wrote docs\trinity-vector-profile.json
 ```
@@ -222,9 +269,9 @@ Wrote docs\trinity-vector-profile.json
 ## qcit coordination engine
 - status: **PASS**
 - command: `python3 scripts/qcit_coordination_engine.py --out docs/qcit-coordination-report.json`
-- started: `2026-03-06T03:38:45.618971+00:00`
-- finished: `2026-03-06T03:38:45.962308+00:00`
-- duration_sec: `0.344`
+- started: `2026-03-06T05:02:38.341174+00:00`
+- finished: `2026-03-06T05:02:38.551807+00:00`
+- duration_sec: `0.203`
 ```text
 Wrote docs\qcit-coordination-report.json
 ```
@@ -232,9 +279,9 @@ Wrote docs\qcit-coordination-report.json
 ## quantum energy transmutation engine
 - status: **PASS**
 - command: `python3 scripts/quantum_energy_transmutation_engine.py --out docs/quantum-energy-transmutation-report.json`
-- started: `2026-03-06T03:38:45.962308+00:00`
-- finished: `2026-03-06T03:38:46.317132+00:00`
-- duration_sec: `0.359`
+- started: `2026-03-06T05:02:38.551807+00:00`
+- finished: `2026-03-06T05:02:38.884626+00:00`
+- duration_sec: `0.328`
 ```text
 Wrote docs\quantum-energy-transmutation-report.json
 ```
@@ -242,9 +289,9 @@ Wrote docs\quantum-energy-transmutation-report.json
 ## qcit/quantum report validation
 - status: **PASS**
 - command: `python3 scripts/validate_transmutation_reports.py --qcit docs/qcit-coordination-report.json --quantum docs/quantum-energy-transmutation-report.json`
-- started: `2026-03-06T03:38:46.317132+00:00`
-- finished: `2026-03-06T03:38:46.519499+00:00`
-- duration_sec: `0.203`
+- started: `2026-03-06T05:02:38.884626+00:00`
+- finished: `2026-03-06T05:02:39.213302+00:00`
+- duration_sec: `0.328`
 ```text
 validated qcit and quantum transmutation reports
 ```
@@ -252,13 +299,13 @@ validated qcit and quantum transmutation reports
 ## minimum-disclosure verifier (GOV-002)
 - status: **PASS**
 - command: `python3 freed_id_minimum_disclosure_verifier.py`
-- started: `2026-03-06T03:38:46.519499+00:00`
-- finished: `2026-03-06T03:38:46.924694+00:00`
-- duration_sec: `0.406`
+- started: `2026-03-06T05:02:39.213302+00:00`
+- finished: `2026-03-06T05:02:39.412092+00:00`
+- duration_sec: `0.203`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260306T033846Z-freedid-min-disclosure-check.json
-timestamped_md=docs\heart-track-runs\20260306T033846Z-freedid-min-disclosure-check.md
+timestamped_json=docs\heart-track-runs\20260306T050239Z-freedid-min-disclosure-check.json
+timestamped_md=docs\heart-track-runs\20260306T050239Z-freedid-min-disclosure-check.md
 latest_json=docs\heart-track-min-disclosure-latest.json
 latest_md=docs\heart-track-min-disclosure-latest.md
 ```
@@ -266,13 +313,13 @@ latest_md=docs\heart-track-min-disclosure-latest.md
 ## minimum-disclosure live-path verifier (GOV-002)
 - status: **PASS**
 - command: `python3 freed_id_minimum_disclosure_live_path_verifier.py`
-- started: `2026-03-06T03:38:46.924694+00:00`
-- finished: `2026-03-06T03:38:47.379627+00:00`
-- duration_sec: `0.453`
+- started: `2026-03-06T05:02:39.412092+00:00`
+- finished: `2026-03-06T05:02:39.840503+00:00`
+- duration_sec: `0.438`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260306T033847Z-freedid-min-disclosure-live-check.json
-timestamped_md=docs\heart-track-runs\20260306T033847Z-freedid-min-disclosure-live-check.md
+timestamped_json=docs\heart-track-runs\20260306T050239Z-freedid-min-disclosure-live-check.json
+timestamped_md=docs\heart-track-runs\20260306T050239Z-freedid-min-disclosure-live-check.md
 latest_json=docs\heart-track-min-disclosure-live-latest.json
 latest_md=docs\heart-track-min-disclosure-live-latest.md
 audit_ledger=docs/freed-id-live-path-audit-log.jsonl
@@ -281,13 +328,13 @@ audit_ledger=docs/freed-id-live-path-audit-log.jsonl
 ## minimum-disclosure adversarial verifier (GOV-002)
 - status: **PASS**
 - command: `python3 freed_id_minimum_disclosure_adversarial_verifier.py`
-- started: `2026-03-06T03:38:47.379627+00:00`
-- finished: `2026-03-06T03:38:47.764448+00:00`
-- duration_sec: `0.375`
+- started: `2026-03-06T05:02:39.840503+00:00`
+- finished: `2026-03-06T05:02:40.019742+00:00`
+- duration_sec: `0.171`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260306T033847Z-freedid-min-disclosure-adversarial-check.json
-timestamped_md=docs\heart-track-runs\20260306T033847Z-freedid-min-disclosure-adversarial-check.md
+timestamped_json=docs\heart-track-runs\20260306T050239Z-freedid-min-disclosure-adversarial-check.json
+timestamped_md=docs\heart-track-runs\20260306T050239Z-freedid-min-disclosure-adversarial-check.md
 latest_json=docs\heart-track-min-disclosure-adversarial-latest.json
 latest_md=docs\heart-track-min-disclosure-adversarial-latest.md
 ```
@@ -295,13 +342,13 @@ latest_md=docs\heart-track-min-disclosure-adversarial-latest.md
 ## dispute/recourse verifier (GOV-004)
 - status: **PASS**
 - command: `python3 freed_id_dispute_recourse_verifier.py`
-- started: `2026-03-06T03:38:47.764448+00:00`
-- finished: `2026-03-06T03:38:48.209854+00:00`
-- duration_sec: `0.454`
+- started: `2026-03-06T05:02:40.019742+00:00`
+- finished: `2026-03-06T05:02:40.711471+00:00`
+- duration_sec: `0.688`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260306T033848Z-freedid-dispute-recourse-check.json
-timestamped_md=docs\heart-track-runs\20260306T033848Z-freedid-dispute-recourse-check.md
+timestamped_json=docs\heart-track-runs\20260306T050240Z-freedid-dispute-recourse-check.json
+timestamped_md=docs\heart-track-runs\20260306T050240Z-freedid-dispute-recourse-check.md
 latest_json=docs\heart-track-dispute-recourse-latest.json
 latest_md=docs\heart-track-dispute-recourse-latest.md
 ```
@@ -309,13 +356,13 @@ latest_md=docs\heart-track-dispute-recourse-latest.md
 ## dispute/recourse adversarial verifier (GOV-004)
 - status: **PASS**
 - command: `python3 freed_id_dispute_recourse_adversarial_verifier.py`
-- started: `2026-03-06T03:38:48.209854+00:00`
-- finished: `2026-03-06T03:38:48.665690+00:00`
-- duration_sec: `0.453`
+- started: `2026-03-06T05:02:40.711471+00:00`
+- finished: `2026-03-06T05:02:41.390203+00:00`
+- duration_sec: `0.687`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260306T033848Z-freedid-dispute-recourse-adversarial-check.json
-timestamped_md=docs\heart-track-runs\20260306T033848Z-freedid-dispute-recourse-adversarial-check.md
+timestamped_json=docs\heart-track-runs\20260306T050241Z-freedid-dispute-recourse-adversarial-check.json
+timestamped_md=docs\heart-track-runs\20260306T050241Z-freedid-dispute-recourse-adversarial-check.md
 latest_json=docs\heart-track-dispute-recourse-adversarial-latest.json
 latest_md=docs\heart-track-dispute-recourse-adversarial-latest.md
 ```
@@ -323,35 +370,49 @@ latest_md=docs\heart-track-dispute-recourse-adversarial-latest.md
 ## trinity public signal board (enforce)
 - status: **PASS**
 - command: `python3 scripts/trinity_public_signal_board.py --fail-on-warn`
-- started: `2026-03-06T03:38:48.665690+00:00`
-- finished: `2026-03-06T03:38:49.160933+00:00`
-- duration_sec: `0.500`
+- started: `2026-03-06T05:02:41.390203+00:00`
+- finished: `2026-03-06T05:02:42.119935+00:00`
+- duration_sec: `0.719`
 ```text
 overall_status=PASS
-timestamped_json=docs\trinity-public-signal-runs\20260306T033848Z-trinity-public-signal-board.json
-timestamped_md=docs\trinity-public-signal-runs\20260306T033848Z-trinity-public-signal-board.md
+timestamped_json=docs\trinity-public-signal-runs\20260306T050241Z-trinity-public-signal-board.json
+timestamped_md=docs\trinity-public-signal-runs\20260306T050241Z-trinity-public-signal-board.md
 latest_json=docs\trinity-public-signal-board-latest.json
 latest_md=docs\trinity-public-signal-board-latest.md
+```
+
+## trinity mandala scoreboard
+- status: **PASS**
+- command: `python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn`
+- started: `2026-03-06T05:02:42.119935+00:00`
+- finished: `2026-03-06T05:02:42.368245+00:00`
+- duration_sec: `0.250`
+```text
+hybrid_os_status=PASS
+timestamped_json=docs\trinity-mandala-runs\20260306T050242Z-trinity-mandala-scoreboard.json
+timestamped_md=docs\trinity-mandala-runs\20260306T050242Z-trinity-mandala-scoreboard.md
+latest_json=docs\trinity-mandala-scoreboard-latest.json
+latest_md=docs\trinity-mandala-scoreboard-latest.md
 ```
 
 ## token/credit zip converter
 - status: **PASS**
 - command: `python3 scripts/trinity_token_credit_zip_converter.py --use-reserve-first --regeneration-multiplier 3.0 --target-reimbursement-ratio 1.0 --zip-snapshot --zip-label token-credit-suite --out docs/token-credit-bank-report.json --ledger docs/token-credit-bank-ledger.jsonl`
-- started: `2026-03-06T03:38:49.160933+00:00`
-- finished: `2026-03-06T03:38:49.999242+00:00`
-- duration_sec: `0.828`
+- started: `2026-03-06T05:02:42.368245+00:00`
+- finished: `2026-03-06T05:02:42.926898+00:00`
+- duration_sec: `0.563`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\token-credit-bank-report.json
 Appended C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\token-credit-bank-ledger.jsonl
-Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260306T033849Z-token-credit-suite.zip
+Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260306T050242Z-token-credit-suite.zip
 ```
 
 ## cache/waste regenerator
 - status: **PASS**
 - command: `python3 scripts/cache_waste_regenerator.py --out docs/cache-waste-regenerator-report.json --purge --prune-empty-dirs`
-- started: `2026-03-06T03:38:49.999242+00:00`
-- finished: `2026-03-06T03:38:51.710755+00:00`
-- duration_sec: `1.719`
+- started: `2026-03-06T05:02:42.926898+00:00`
+- finished: `2026-03-06T05:02:44.051849+00:00`
+- duration_sec: `1.125`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\cache-waste-regenerator-report.json
 ```
@@ -359,9 +420,9 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\c
 ## cache/waste report validation
 - status: **PASS**
 - command: `python3 scripts/validate_cache_waste_report.py --cache docs/cache-waste-regenerator-report.json`
-- started: `2026-03-06T03:38:51.710755+00:00`
-- finished: `2026-03-06T03:38:51.926459+00:00`
-- duration_sec: `0.218`
+- started: `2026-03-06T05:02:44.051849+00:00`
+- finished: `2026-03-06T05:02:44.257347+00:00`
+- duration_sec: `0.203`
 ```text
 validated cache-waste regenerator report
 ```
@@ -369,9 +430,9 @@ validated cache-waste regenerator report
 ## energy bank system
 - status: **PASS**
 - command: `python3 scripts/trinity_energy_bank_system.py --token-report docs/token-credit-bank-report.json --cache-report docs/cache-waste-regenerator-report.json --reserve-growth 1.0 --reserve-cap-multiplier 10.0 --auto-max-cap --cap-ceiling 100.0 --out docs/energy-bank-report.json --state docs/energy-bank-state.json`
-- started: `2026-03-06T03:38:51.926459+00:00`
-- finished: `2026-03-06T03:38:52.280028+00:00`
-- duration_sec: `0.344`
+- started: `2026-03-06T05:02:44.257347+00:00`
+- finished: `2026-03-06T05:02:44.622075+00:00`
+- duration_sec: `0.375`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\energy-bank-report.json
 Updated C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\energy-bank-state.json
@@ -380,9 +441,9 @@ Updated C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs
 ## token/energy report validation
 - status: **PASS**
 - command: `python3 scripts/validate_token_energy_reports.py --token docs/token-credit-bank-report.json --energy docs/energy-bank-report.json`
-- started: `2026-03-06T03:38:52.280028+00:00`
-- finished: `2026-03-06T03:38:52.484046+00:00`
-- duration_sec: `0.203`
+- started: `2026-03-06T05:02:44.622075+00:00`
+- finished: `2026-03-06T05:02:44.872571+00:00`
+- duration_sec: `0.250`
 ```text
 validated token-credit and energy-bank reports
 ```
@@ -390,9 +451,9 @@ validated token-credit and energy-bank reports
 ## gyroscopic hybrid zip converter
 - status: **PASS**
 - command: `python3 scripts/gyroscopic_hybrid_zip_converter_generator.py --label gyroscopic-suite-cycle --out docs/gyroscopic-hybrid-zip-report.json`
-- started: `2026-03-06T03:38:52.484046+00:00`
-- finished: `2026-03-06T03:38:53.127950+00:00`
-- duration_sec: `0.641`
+- started: `2026-03-06T05:02:44.872571+00:00`
+- finished: `2026-03-06T05:02:45.413595+00:00`
+- duration_sec: `0.531`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\gyroscopic-hybrid-zip-report.json
 ```
@@ -400,9 +461,9 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\g
 ## memory integrity check (strict)
 - status: **PASS**
 - command: `python3 scripts/aurelis_memory_integrity_check.py --strict`
-- started: `2026-03-06T03:38:53.127950+00:00`
-- finished: `2026-03-06T03:38:53.315224+00:00`
-- duration_sec: `0.187`
+- started: `2026-03-06T05:02:45.413595+00:00`
+- finished: `2026-03-06T05:02:45.575054+00:00`
+- duration_sec: `0.172`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\aurelis-memory-integrity-report.md
 ```
@@ -410,9 +471,9 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\a
 ## continuity cycle tick (dry-run status)
 - status: **PASS**
 - command: `python3 scripts/aurelis_cycle_tick.py --user-message 'suite dry-run' --assistant-reflection 'Suite integration check for cycle tick' --progress-snapshot 'Validated dry-run status reporting in suite' --next-step 'Run normal tick from operator flow' --query cycle --query-limit 2 --dry-run --no-report --step-timeout-sec 0 --json-status docs/aurelis-cycle-tick-status.json`
-- started: `2026-03-06T03:38:53.315224+00:00`
-- finished: `2026-03-06T03:38:53.632313+00:00`
-- duration_sec: `0.328`
+- started: `2026-03-06T05:02:45.575054+00:00`
+- finished: `2026-03-06T05:02:45.894446+00:00`
+- duration_sec: `0.312`
 ```text
 $ python3 scripts/aurelis_memory_update.py --user-message 'suite dry-run' --assistant-reflection 'Suite integration check for cycle tick' --progress-snapshot 'Validated dry-run status reporting in suite' --next-step 'Run normal tick from operator flow'
 [dry-run] command not executed
@@ -431,18 +492,18 @@ Wrote cycle tick json status: docs\aurelis-cycle-tick-status.json
 ## zip memory/data snapshot
 - status: **PASS**
 - command: `python3 scripts/trinity_zip_memory_converter.py archive --label suite-standard`
-- started: `2026-03-06T03:38:53.632313+00:00`
-- finished: `2026-03-06T03:38:54.092131+00:00`
-- duration_sec: `0.454`
+- started: `2026-03-06T05:02:45.894446+00:00`
+- finished: `2026-03-06T05:02:46.296558+00:00`
+- duration_sec: `0.407`
 ```text
-Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260306T033853Z-suite-standard.zip
+Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260306T050246Z-suite-standard.zip
 ```
 
 ## v33 structural OCR validation snapshot
 - status: **PASS**
 - command: `bash -lc 'strings -n 8 '"'"'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'"'"' | rg -n '"'"'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill'"'"' | head -n 20'`
-- started: `2026-03-06T03:38:54.093131+00:00`
-- finished: `2026-03-06T03:38:54.165791+00:00`
+- started: `2026-03-06T05:02:46.296558+00:00`
+- finished: `2026-03-06T05:02:46.371775+00:00`
 - duration_sec: `0.078`
 ```text
 SKIPPED: bash-dependent suite stage unavailable on this platform
@@ -450,28 +511,28 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
 
 ## Overall status
 - Effective success: **True**
-- PASS: **33**
+- PASS: **38**
 - WARN: **0**
 - TIMEOUT: **0**
 - FAIL: **0**
-- Achieved steps: **33**
+- Achieved steps: **38**
 - Achievement gate met: **True**
-- Suite started: `2026-03-06T03:38:38.694508+00:00`
-- Suite finished: `2026-03-06T03:38:54.165791+00:00`
-- Suite duration_sec: `15.469`
+- Suite started: `2026-03-06T05:02:31.440278+00:00`
+- Suite finished: `2026-03-06T05:02:46.371775+00:00`
+- Suite duration_sec: `14.938`
 
 ## Machine-readable summary
 ```json
 {
-  "generated_utc": "2026-03-06T03:38:54.165791+00:00",
-  "suite_started_at_utc": "2026-03-06T03:38:38.694508+00:00",
-  "suite_finished_at_utc": "2026-03-06T03:38:54.165791+00:00",
-  "suite_duration_sec": 15.469,
+  "generated_utc": "2026-03-06T05:02:46.371775+00:00",
+  "suite_started_at_utc": "2026-03-06T05:02:31.440278+00:00",
+  "suite_finished_at_utc": "2026-03-06T05:02:46.371775+00:00",
+  "suite_duration_sec": 14.938,
   "effective_success": true,
-  "achieved_steps": 33,
+  "achieved_steps": 38,
   "achievement_gate_met": true,
   "counts": {
-    "pass": 33,
+    "pass": 38,
     "warn": 0,
     "timeout": 0,
     "fail": 0
@@ -483,6 +544,7 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
     "include_version_scan": false,
     "include_skill_install": false,
     "include_curated_skill_catalog": false,
+    "include_public_api_refresh": false,
     "soft_fail_network": false,
     "fail_on_warn": true,
     "achievement_target_steps": 0,
@@ -497,9 +559,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:38.694508+00:00",
-      "finished_at_utc": "2026-03-06T03:38:38.948800+00:00",
-      "duration_sec": 0.25,
+      "started_at_utc": "2026-03-06T05:02:31.440278+00:00",
+      "finished_at_utc": "2026-03-06T05:02:31.636379+00:00",
+      "duration_sec": 0.188,
       "command": "python3 scripts/generate_v29_module_map.py"
     },
     {
@@ -508,9 +570,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:38.948800+00:00",
-      "finished_at_utc": "2026-03-06T03:38:39.180559+00:00",
-      "duration_sec": 0.234,
+      "started_at_utc": "2026-03-06T05:02:31.636379+00:00",
+      "finished_at_utc": "2026-03-06T05:02:31.840832+00:00",
+      "duration_sec": 0.219,
       "command": "python3 run_simulation.py --gammas 0.0 0.02 0.05 0.1"
     },
     {
@@ -519,9 +581,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:39.180559+00:00",
-      "finished_at_utc": "2026-03-06T03:38:40.985877+00:00",
-      "duration_sec": 1.797,
+      "started_at_utc": "2026-03-06T05:02:31.840832+00:00",
+      "finished_at_utc": "2026-03-06T05:02:33.029339+00:00",
+      "duration_sec": 1.187,
       "command": "python3 body_track_runner.py --gammas 0.0 0.02 0.05 --benchmark-profile standard --profile-policy docs/body-profile-policy-v1.json --fail-on-benchmark"
     },
     {
@@ -530,9 +592,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:40.985877+00:00",
-      "finished_at_utc": "2026-03-06T03:38:41.309680+00:00",
-      "duration_sec": 0.328,
+      "started_at_utc": "2026-03-06T05:02:33.029339+00:00",
+      "finished_at_utc": "2026-03-06T05:02:33.493566+00:00",
+      "duration_sec": 0.453,
       "command": "python3 scripts/body_benchmark_trend_guard.py --trend-profile standard --profile-policy docs/body-profile-policy-v1.json --fail-on-warn"
     },
     {
@@ -541,9 +603,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:41.309680+00:00",
-      "finished_at_utc": "2026-03-06T03:38:41.814747+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-06T05:02:33.493566+00:00",
+      "finished_at_utc": "2026-03-06T05:02:33.928778+00:00",
+      "duration_sec": 0.438,
       "command": "python3 scripts/body_profile_calibration_report.py --profile-context standard"
     },
     {
@@ -552,9 +614,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:41.814747+00:00",
-      "finished_at_utc": "2026-03-06T03:38:42.313163+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-06T05:02:33.928778+00:00",
+      "finished_at_utc": "2026-03-06T05:02:34.221448+00:00",
+      "duration_sec": 0.297,
       "command": "python3 scripts/body_profile_policy_delta_report.py --policy-json docs/body-profile-policy-v1.json --apply --fail-on-warn"
     },
     {
@@ -563,9 +625,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:42.313163+00:00",
-      "finished_at_utc": "2026-03-06T03:38:42.696843+00:00",
-      "duration_sec": 0.391,
+      "started_at_utc": "2026-03-06T05:02:34.221866+00:00",
+      "finished_at_utc": "2026-03-06T05:02:34.594246+00:00",
+      "duration_sec": 0.375,
       "command": "python3 scripts/body_policy_stress_window_report.py --policy-json docs/body-profile-policy-v1.json --fail-on-warn"
     },
     {
@@ -574,9 +636,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:42.696843+00:00",
-      "finished_at_utc": "2026-03-06T03:38:43.093299+00:00",
-      "duration_sec": 0.391,
+      "started_at_utc": "2026-03-06T05:02:34.594246+00:00",
+      "finished_at_utc": "2026-03-06T05:02:34.773297+00:00",
+      "duration_sec": 0.171,
       "command": "python3 scripts/gmut_comparator_metrics.py"
     },
     {
@@ -585,9 +647,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:43.093299+00:00",
-      "finished_at_utc": "2026-03-06T03:38:43.468208+00:00",
-      "duration_sec": 0.375,
+      "started_at_utc": "2026-03-06T05:02:34.773297+00:00",
+      "finished_at_utc": "2026-03-06T05:02:34.996327+00:00",
+      "duration_sec": 0.235,
       "command": "python3 scripts/gmut_external_anchor_exclusion_note.py --anchor-input docs/mind-track-external-anchor-canonical-inputs-v1.json"
     },
     {
@@ -596,10 +658,65 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:43.468208+00:00",
-      "finished_at_utc": "2026-03-06T03:38:43.744033+00:00",
-      "duration_sec": 0.281,
+      "started_at_utc": "2026-03-06T05:02:34.996327+00:00",
+      "finished_at_utc": "2026-03-06T05:02:35.418333+00:00",
+      "duration_sec": 0.422,
       "command": "python3 scripts/gmut_anchor_trace_validator.py --fail-on-warn"
+    },
+    {
+      "label": "trinity api manifest validation (enforce)",
+      "status": "PASS",
+      "ok": true,
+      "effective_success": true,
+      "timed_out": false,
+      "started_at_utc": "2026-03-06T05:02:35.418333+00:00",
+      "finished_at_utc": "2026-03-06T05:02:35.760165+00:00",
+      "duration_sec": 0.328,
+      "command": "python3 scripts/trinity_api_source_manifest_validator.py --fail-on-warn"
+    },
+    {
+      "label": "mind api signal board (enforce)",
+      "status": "PASS",
+      "ok": true,
+      "effective_success": true,
+      "timed_out": false,
+      "started_at_utc": "2026-03-06T05:02:35.760165+00:00",
+      "finished_at_utc": "2026-03-06T05:02:36.155114+00:00",
+      "duration_sec": 0.406,
+      "command": "python3 scripts/mind_theory_signal_board.py --fail-on-warn"
+    },
+    {
+      "label": "body api signal board (enforce)",
+      "status": "PASS",
+      "ok": true,
+      "effective_success": true,
+      "timed_out": false,
+      "started_at_utc": "2026-03-06T05:02:36.155114+00:00",
+      "finished_at_utc": "2026-03-06T05:02:36.609008+00:00",
+      "duration_sec": 0.453,
+      "command": "python3 scripts/body_compute_signal_board.py --fail-on-warn"
+    },
+    {
+      "label": "heart api signal board (enforce)",
+      "status": "PASS",
+      "ok": true,
+      "effective_success": true,
+      "timed_out": false,
+      "started_at_utc": "2026-03-06T05:02:36.609008+00:00",
+      "finished_at_utc": "2026-03-06T05:02:36.945705+00:00",
+      "duration_sec": 0.328,
+      "command": "python3 scripts/heart_governance_signal_board.py --fail-on-warn"
+    },
+    {
+      "label": "trinity api constellation board (enforce)",
+      "status": "PASS",
+      "ok": true,
+      "effective_success": true,
+      "timed_out": false,
+      "started_at_utc": "2026-03-06T05:02:36.945705+00:00",
+      "finished_at_utc": "2026-03-06T05:02:37.451722+00:00",
+      "duration_sec": 0.516,
+      "command": "python3 scripts/trinity_api_constellation_board.py --fail-on-warn"
     },
     {
       "label": "trinity public research validation (enforce)",
@@ -607,21 +724,10 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:43.744033+00:00",
-      "finished_at_utc": "2026-03-06T03:38:44.015174+00:00",
-      "duration_sec": 0.265,
+      "started_at_utc": "2026-03-06T05:02:37.451722+00:00",
+      "finished_at_utc": "2026-03-06T05:02:37.810823+00:00",
+      "duration_sec": 0.359,
       "command": "python3 scripts/validate_trinity_public_research.py --fail-on-warn"
-    },
-    {
-      "label": "trinity mandala scoreboard",
-      "status": "PASS",
-      "ok": true,
-      "effective_success": true,
-      "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:44.015174+00:00",
-      "finished_at_utc": "2026-03-06T03:38:44.560865+00:00",
-      "duration_sec": 0.547,
-      "command": "python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn"
     },
     {
       "label": "full orchestrator demo",
@@ -629,9 +735,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:44.560865+00:00",
-      "finished_at_utc": "2026-03-06T03:38:44.850154+00:00",
-      "duration_sec": 0.297,
+      "started_at_utc": "2026-03-06T05:02:37.810823+00:00",
+      "finished_at_utc": "2026-03-06T05:02:38.052623+00:00",
+      "duration_sec": 0.235,
       "command": "python3 trinity_orchestrator_full.py"
     },
     {
@@ -640,9 +746,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:44.850154+00:00",
-      "finished_at_utc": "2026-03-06T03:38:45.618971+00:00",
-      "duration_sec": 0.766,
+      "started_at_utc": "2026-03-06T05:02:38.052623+00:00",
+      "finished_at_utc": "2026-03-06T05:02:38.341174+00:00",
+      "duration_sec": 0.297,
       "command": "python3 scripts/trinity_vector_transmuter.py --passphrase suite-demo-passphrase --out docs/trinity-vector-profile.json"
     },
     {
@@ -651,9 +757,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:45.618971+00:00",
-      "finished_at_utc": "2026-03-06T03:38:45.962308+00:00",
-      "duration_sec": 0.344,
+      "started_at_utc": "2026-03-06T05:02:38.341174+00:00",
+      "finished_at_utc": "2026-03-06T05:02:38.551807+00:00",
+      "duration_sec": 0.203,
       "command": "python3 scripts/qcit_coordination_engine.py --out docs/qcit-coordination-report.json"
     },
     {
@@ -662,9 +768,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:45.962308+00:00",
-      "finished_at_utc": "2026-03-06T03:38:46.317132+00:00",
-      "duration_sec": 0.359,
+      "started_at_utc": "2026-03-06T05:02:38.551807+00:00",
+      "finished_at_utc": "2026-03-06T05:02:38.884626+00:00",
+      "duration_sec": 0.328,
       "command": "python3 scripts/quantum_energy_transmutation_engine.py --out docs/quantum-energy-transmutation-report.json"
     },
     {
@@ -673,9 +779,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:46.317132+00:00",
-      "finished_at_utc": "2026-03-06T03:38:46.519499+00:00",
-      "duration_sec": 0.203,
+      "started_at_utc": "2026-03-06T05:02:38.884626+00:00",
+      "finished_at_utc": "2026-03-06T05:02:39.213302+00:00",
+      "duration_sec": 0.328,
       "command": "python3 scripts/validate_transmutation_reports.py --qcit docs/qcit-coordination-report.json --quantum docs/quantum-energy-transmutation-report.json"
     },
     {
@@ -684,9 +790,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:46.519499+00:00",
-      "finished_at_utc": "2026-03-06T03:38:46.924694+00:00",
-      "duration_sec": 0.406,
+      "started_at_utc": "2026-03-06T05:02:39.213302+00:00",
+      "finished_at_utc": "2026-03-06T05:02:39.412092+00:00",
+      "duration_sec": 0.203,
       "command": "python3 freed_id_minimum_disclosure_verifier.py"
     },
     {
@@ -695,9 +801,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:46.924694+00:00",
-      "finished_at_utc": "2026-03-06T03:38:47.379627+00:00",
-      "duration_sec": 0.453,
+      "started_at_utc": "2026-03-06T05:02:39.412092+00:00",
+      "finished_at_utc": "2026-03-06T05:02:39.840503+00:00",
+      "duration_sec": 0.438,
       "command": "python3 freed_id_minimum_disclosure_live_path_verifier.py"
     },
     {
@@ -706,9 +812,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:47.379627+00:00",
-      "finished_at_utc": "2026-03-06T03:38:47.764448+00:00",
-      "duration_sec": 0.375,
+      "started_at_utc": "2026-03-06T05:02:39.840503+00:00",
+      "finished_at_utc": "2026-03-06T05:02:40.019742+00:00",
+      "duration_sec": 0.171,
       "command": "python3 freed_id_minimum_disclosure_adversarial_verifier.py"
     },
     {
@@ -717,9 +823,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:47.764448+00:00",
-      "finished_at_utc": "2026-03-06T03:38:48.209854+00:00",
-      "duration_sec": 0.454,
+      "started_at_utc": "2026-03-06T05:02:40.019742+00:00",
+      "finished_at_utc": "2026-03-06T05:02:40.711471+00:00",
+      "duration_sec": 0.688,
       "command": "python3 freed_id_dispute_recourse_verifier.py"
     },
     {
@@ -728,9 +834,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:48.209854+00:00",
-      "finished_at_utc": "2026-03-06T03:38:48.665690+00:00",
-      "duration_sec": 0.453,
+      "started_at_utc": "2026-03-06T05:02:40.711471+00:00",
+      "finished_at_utc": "2026-03-06T05:02:41.390203+00:00",
+      "duration_sec": 0.687,
       "command": "python3 freed_id_dispute_recourse_adversarial_verifier.py"
     },
     {
@@ -739,10 +845,21 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:48.665690+00:00",
-      "finished_at_utc": "2026-03-06T03:38:49.160933+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-06T05:02:41.390203+00:00",
+      "finished_at_utc": "2026-03-06T05:02:42.119935+00:00",
+      "duration_sec": 0.719,
       "command": "python3 scripts/trinity_public_signal_board.py --fail-on-warn"
+    },
+    {
+      "label": "trinity mandala scoreboard",
+      "status": "PASS",
+      "ok": true,
+      "effective_success": true,
+      "timed_out": false,
+      "started_at_utc": "2026-03-06T05:02:42.119935+00:00",
+      "finished_at_utc": "2026-03-06T05:02:42.368245+00:00",
+      "duration_sec": 0.25,
+      "command": "python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn"
     },
     {
       "label": "token/credit zip converter",
@@ -750,9 +867,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:49.160933+00:00",
-      "finished_at_utc": "2026-03-06T03:38:49.999242+00:00",
-      "duration_sec": 0.828,
+      "started_at_utc": "2026-03-06T05:02:42.368245+00:00",
+      "finished_at_utc": "2026-03-06T05:02:42.926898+00:00",
+      "duration_sec": 0.563,
       "command": "python3 scripts/trinity_token_credit_zip_converter.py --use-reserve-first --regeneration-multiplier 3.0 --target-reimbursement-ratio 1.0 --zip-snapshot --zip-label token-credit-suite --out docs/token-credit-bank-report.json --ledger docs/token-credit-bank-ledger.jsonl"
     },
     {
@@ -761,9 +878,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:49.999242+00:00",
-      "finished_at_utc": "2026-03-06T03:38:51.710755+00:00",
-      "duration_sec": 1.719,
+      "started_at_utc": "2026-03-06T05:02:42.926898+00:00",
+      "finished_at_utc": "2026-03-06T05:02:44.051849+00:00",
+      "duration_sec": 1.125,
       "command": "python3 scripts/cache_waste_regenerator.py --out docs/cache-waste-regenerator-report.json --purge --prune-empty-dirs"
     },
     {
@@ -772,9 +889,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:51.710755+00:00",
-      "finished_at_utc": "2026-03-06T03:38:51.926459+00:00",
-      "duration_sec": 0.218,
+      "started_at_utc": "2026-03-06T05:02:44.051849+00:00",
+      "finished_at_utc": "2026-03-06T05:02:44.257347+00:00",
+      "duration_sec": 0.203,
       "command": "python3 scripts/validate_cache_waste_report.py --cache docs/cache-waste-regenerator-report.json"
     },
     {
@@ -783,9 +900,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:51.926459+00:00",
-      "finished_at_utc": "2026-03-06T03:38:52.280028+00:00",
-      "duration_sec": 0.344,
+      "started_at_utc": "2026-03-06T05:02:44.257347+00:00",
+      "finished_at_utc": "2026-03-06T05:02:44.622075+00:00",
+      "duration_sec": 0.375,
       "command": "python3 scripts/trinity_energy_bank_system.py --token-report docs/token-credit-bank-report.json --cache-report docs/cache-waste-regenerator-report.json --reserve-growth 1.0 --reserve-cap-multiplier 10.0 --auto-max-cap --cap-ceiling 100.0 --out docs/energy-bank-report.json --state docs/energy-bank-state.json"
     },
     {
@@ -794,9 +911,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:52.280028+00:00",
-      "finished_at_utc": "2026-03-06T03:38:52.484046+00:00",
-      "duration_sec": 0.203,
+      "started_at_utc": "2026-03-06T05:02:44.622075+00:00",
+      "finished_at_utc": "2026-03-06T05:02:44.872571+00:00",
+      "duration_sec": 0.25,
       "command": "python3 scripts/validate_token_energy_reports.py --token docs/token-credit-bank-report.json --energy docs/energy-bank-report.json"
     },
     {
@@ -805,9 +922,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:52.484046+00:00",
-      "finished_at_utc": "2026-03-06T03:38:53.127950+00:00",
-      "duration_sec": 0.641,
+      "started_at_utc": "2026-03-06T05:02:44.872571+00:00",
+      "finished_at_utc": "2026-03-06T05:02:45.413595+00:00",
+      "duration_sec": 0.531,
       "command": "python3 scripts/gyroscopic_hybrid_zip_converter_generator.py --label gyroscopic-suite-cycle --out docs/gyroscopic-hybrid-zip-report.json"
     },
     {
@@ -816,9 +933,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:53.127950+00:00",
-      "finished_at_utc": "2026-03-06T03:38:53.315224+00:00",
-      "duration_sec": 0.187,
+      "started_at_utc": "2026-03-06T05:02:45.413595+00:00",
+      "finished_at_utc": "2026-03-06T05:02:45.575054+00:00",
+      "duration_sec": 0.172,
       "command": "python3 scripts/aurelis_memory_integrity_check.py --strict"
     },
     {
@@ -827,9 +944,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:53.315224+00:00",
-      "finished_at_utc": "2026-03-06T03:38:53.632313+00:00",
-      "duration_sec": 0.328,
+      "started_at_utc": "2026-03-06T05:02:45.575054+00:00",
+      "finished_at_utc": "2026-03-06T05:02:45.894446+00:00",
+      "duration_sec": 0.312,
       "command": "python3 scripts/aurelis_cycle_tick.py --user-message 'suite dry-run' --assistant-reflection 'Suite integration check for cycle tick' --progress-snapshot 'Validated dry-run status reporting in suite' --next-step 'Run normal tick from operator flow' --query cycle --query-limit 2 --dry-run --no-report --step-timeout-sec 0 --json-status docs/aurelis-cycle-tick-status.json"
     },
     {
@@ -838,9 +955,9 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:53.632313+00:00",
-      "finished_at_utc": "2026-03-06T03:38:54.092131+00:00",
-      "duration_sec": 0.454,
+      "started_at_utc": "2026-03-06T05:02:45.894446+00:00",
+      "finished_at_utc": "2026-03-06T05:02:46.296558+00:00",
+      "duration_sec": 0.407,
       "command": "python3 scripts/trinity_zip_memory_converter.py archive --label suite-standard"
     },
     {
@@ -849,8 +966,8 @@ SKIPPED: bash-dependent suite stage unavailable on this platform
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-06T03:38:54.093131+00:00",
-      "finished_at_utc": "2026-03-06T03:38:54.165791+00:00",
+      "started_at_utc": "2026-03-06T05:02:46.296558+00:00",
+      "finished_at_utc": "2026-03-06T05:02:46.371775+00:00",
       "duration_sec": 0.078,
       "command": "bash -lc 'strings -n 8 '\"'\"'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'\"'\"' | rg -n '\"'\"'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill'\"'\"' | head -n 20'"
     }

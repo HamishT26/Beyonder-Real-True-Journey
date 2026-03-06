@@ -1,13 +1,13 @@
 # Grand Unified Narrative Brief
 
-Generated (UTC): 2026-03-06T03:35:00Z
+Generated (UTC): 2026-03-06T05:04:00Z
 
 ## 1) Current state summary
 
 - The repo now holds the journey corpus through `v38 (Aura)`, with both PDF and extracted text available for the newest continuity input.
-- The operational baseline on `main` remains strong: the March 6 standard system-suite artifacts report a 33-step all-pass run across Mind, Body, and Heart, now including cached public research validation and a public signal board.
+- The operational baseline on `main` remains strong: the March 6 standard system-suite artifacts now report a 38-step all-pass run across Mind, Body, and Heart, with the new cached API manifest validation, three pillar API boards, and the API constellation board integrated into the deterministic path.
 - Heart governance has now been advanced from a purely HMAC-centered verification path to a registry-backed DID-method asymmetric verification path for GOV-004, while retaining a legacy HMAC fixture for backward compatibility.
-- The repo now also carries a standards-first public research layer: a capability audit, a cached source registry, an offline validator, and a public signal board that sit beside the runtime suite instead of inside live-network execution.
+- The repo now also carries a standards-first public intelligence layer: a capability audit, a curated public-source registry, a live-refresh public API cache, offline validators, per-pillar signal boards, an API constellation board, and a supplemental reflection board that remain separate from the default offline runtime path.
 
 ## 2) Arc of progression
 
@@ -30,6 +30,7 @@ The most important continuity band is now `v34-v38`: operational engine, standar
 - Heart now has reproducible GOV-002, GOV-003, GOV-004, and GOV-005 artifacts, and GOV-004 has a working DID-method asymmetric verification path.
 - v38 provides a coherent continuity bridge from the earlier records to the present codebase without blurring verified state and aspiration.
 - The capability audit now makes the current operating boundary explicit: public plus local sources are available, while MCP-backed context and credentialed API integrations are not.
+- The repo-local skill surface now includes dedicated Mind, Body, Heart, suite-orchestration, and supplemental-reflection skills for the new API signal layer.
 
 ### Gaps
 
@@ -37,11 +38,12 @@ The most important continuity band is now `v34-v38`: operational engine, standar
 - Trinity OS still lacks external benchmark evidence against broader contemporary agent-system baselines.
 - Freed ID remains a strong normative and technical proposal, but not yet a legally or institutionally adopted governance standard.
 - The broader comparative field the user has invited in, including scripture and wider theory/governance traditions, still needs to remain a supplemental layer until the standards-first corpus is stable enough to carry it cleanly.
+- The new API signal layer is intentionally context-bearing rather than proof-bearing, so it still depends on careful manual promotion into the curated registry before it changes comparison language.
 
 ## 4) Immediate roadmap
 
 - Keep Mind focused on the current anchor workflow and publish standards-first comparative posture before any claim uplift.
 - Keep Body on the current policy file until both live-window and stress-window evidence support a real reduction in false-alert behavior.
 - Keep Heart on the DID-method verification path and continue extending registry-bound method resolution plus the NZ-and-global governance bridge.
-- Keep the cached public-source corpus refreshed through the offline validator and public signal board, while leaving runtime readiness authority with the deterministic suite and mandala scoreboard.
+- Keep the cached public-source corpus refreshed through the offline validator and public signal board, and keep the new public API refreshers opt-in while leaving runtime readiness authority with the deterministic suite and mandala scoreboard.
 - Treat v38 as the latest continuity source, not as a claim-promotion source.
