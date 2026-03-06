@@ -350,6 +350,14 @@ def build_commands(
                 ),
             ),
             (
+                "trinity mandala scoreboard",
+                [
+                    "python3",
+                    "scripts/trinity_mandala_scoreboard.py",
+                    "--fail-on-warn",
+                ],
+            ),
+            (
                 "zip memory/data snapshot",
                 [
                     "python3",
@@ -430,6 +438,14 @@ def build_commands(
             *_mind_trace_validation_command(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
+        ),
+        (
+            "trinity mandala scoreboard",
+            [
+                "python3",
+                "scripts/trinity_mandala_scoreboard.py",
+                "--fail-on-warn",
+            ],
         ),
         ("full orchestrator demo", ["python3", "trinity_orchestrator_full.py"]),
         (
