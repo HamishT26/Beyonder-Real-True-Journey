@@ -31,9 +31,13 @@ Additional theory traditions, scripture comparators, advanced OS paradigms, and 
 
 ## Expansion phase note (2026-03-07)
 
-- The mammoth expansion layer is now integrated as 30 executable systems (10 Mind, 10 Body, 10 Heart) with manifest-driven orchestration and schema-backed output validation.
+- The expansion layer is now integrated as 80 manifest-backed executable systems across Mind, Body, Heart, and cross-Trinity hardening/orchestration tracks, with schema-backed output validation.
+- The latest stored suite snapshot is PASS with `120 PASS / 0 WARN / 0 FAIL`, `80/80` expansion systems green, and `offline_only` recorded as the current continuity mode.
 - Expansion outputs are first-class gates in the mandala path through:
-  - `docs/trinity-expansion/mind-theory-constellation-board-latest.json`
-  - `docs/trinity-expansion/body-compute-signal-quality-gate-latest.json`
-  - `docs/trinity-expansion/heart-governance-constellation-board-latest.json`
+  - `docs/trinity-expansion/trinity-release-gate-board-latest.json`
+  - `docs/trinity-expansion/mind-theory-readiness-gate-latest.json`
+  - `docs/trinity-expansion/body-compute-readiness-gate-latest.json`
+  - `docs/trinity-expansion/heart-governance-readiness-gate-latest.json`
+  - `docs/trinity-expansion/trinity-supercycle-gate-latest.json`
+- The capability surface audit keeps the evidence boundary explicit: `gpt-5.4` is configured, repo-local skills are present, public/local sources are available, and credentialed API or MCP-dependent pathways remain outside the current proof surface.
 - Comparison language must remain PASS-backed. Expansion records can generate candidates, but they do not auto-upgrade GMUT, Body readiness, or governance legal-force claims without explicit manual promotion.
