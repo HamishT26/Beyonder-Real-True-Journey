@@ -25,7 +25,7 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v1.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v2.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 

@@ -10,9 +10,12 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-ALLOWED_PILLARS = {"mind", "body", "heart"}
+ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep"}
+ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5"}
+ALLOWED_TRACKS = {"mind_theory", "body_compute", "heart_governance", "trinity_hardening", "trinity_memory_orchestration"}
+ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate"}
 
 
 def _repo_path(path_str: str) -> Path:
@@ -52,8 +55,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v1.json")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v1.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v2.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v2.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-manifest-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-manifest-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-expansion-manifest-validation-latest.md")
@@ -84,7 +87,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{row_label} must be an object")
             continue
-        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec"):
+        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts"):
             if field not in entry:
                 failures.append(f"{row_label} missing field: {field}")
         system_id = str(entry.get("system_id") or "").strip()
@@ -102,6 +105,18 @@ def main() -> int:
         mode = str(entry.get("mode") or "").strip()
         if mode not in ALLOWED_MODES:
             failures.append(f"{system_id or row_label} invalid mode: {mode}")
+
+        wave = str(entry.get("wave") or "").strip()
+        if wave not in ALLOWED_WAVES:
+            failures.append(f"{system_id or row_label} invalid wave: {wave}")
+
+        track = str(entry.get("track") or "").strip()
+        if track not in ALLOWED_TRACKS:
+            failures.append(f"{system_id or row_label} invalid track: {track}")
+
+        gate_level = str(entry.get("gate_level") or "").strip()
+        if gate_level not in ALLOWED_GATE_LEVELS:
+            failures.append(f"{system_id or row_label} invalid gate_level: {gate_level}")
 
         profiles = entry.get("profiles", [])
         if not isinstance(profiles, list) or not profiles:
@@ -138,6 +153,22 @@ def main() -> int:
         depends_on = entry.get("depends_on", [])
         if not isinstance(depends_on, list):
             failures.append(f"{system_id or row_label} depends_on must be a list")
+
+        cache_artifacts = entry.get("cache_artifacts", [])
+        if not isinstance(cache_artifacts, list):
+            failures.append(f"{system_id or row_label} cache_artifacts must be a list")
+            cache_artifacts = []
+        if mode == "live" and not cache_artifacts:
+            failures.append(f"{system_id or row_label} live entries require cache_artifacts")
+        for cache_path in cache_artifacts:
+            text = str(cache_path).strip()
+            if not text:
+                failures.append(f"{system_id or row_label} has empty cache_artifact path")
+                continue
+            try:
+                _repo_path(text)
+            except Exception:
+                failures.append(f"{system_id or row_label} invalid cache_artifact path: {text}")
 
         timeout_sec = entry.get("timeout_sec")
         if not isinstance(timeout_sec, int) or timeout_sec <= 0:

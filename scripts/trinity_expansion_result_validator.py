@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-ALLOWED_PILLARS = {"mind", "body", "heart"}
+ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_STATUS = {"PASS", "WARN", "FAIL", "TIMEOUT"}
 ALLOWED_CHECK_STATUS = {"PASS", "WARN", "FAIL"}
 
@@ -53,7 +53,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate Trinity expansion latest artifacts.")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v1.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v2.json")
     parser.add_argument("--schema", default="docs/trinity-expansion-result-schema-v1.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-result-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-result-validation-latest.json")
