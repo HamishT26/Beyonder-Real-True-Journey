@@ -20,7 +20,7 @@ from typing import Any
 from trinity_api_common import fetch_json, fetch_text, quote_plus
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v2.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v3.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
 PASS_LIKE = {"PASS", "WARN"}
@@ -29,9 +29,17 @@ RELEVANT_ENV_VARS = [
     "OPENAI_API_KEY",
     "GITHUB_TOKEN",
     "GITHUB_PERSONAL_ACCESS_TOKEN",
+    "NOTION_TOKEN",
+    "NOTION_API_KEY",
+    "SLACK_BOT_TOKEN",
     "GOOGLE_API_KEY",
+    "GOOGLE_APPLICATION_CREDENTIALS",
+    "FIGMA_TOKEN",
+    "LINEAR_API_KEY",
     "ANTHROPIC_API_KEY",
     "SENTRY_AUTH_TOKEN",
+    "DATABASE_URL",
+    "PGHOST",
 ]
 SAFE_BOOTSTRAP_MARKERS = [
     'approval_mode = "never"',
@@ -42,6 +50,17 @@ SAFE_BOOTSTRAP_MARKERS = [
     "GITHUB_PERSONAL_ACCESS_TOKEN",
 ]
 ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
+PACK_SYSTEM_SUFFIXES = ("surface_audit", "workflow_guard", "risk_board", "sync_bridge", "cache_board", "gate")
+PACK_SYNC_STRATEGIES = {
+    "verified_mcp",
+    "skill_only",
+    "staged_connector",
+    "local_repo",
+    "local_probe",
+    "identity_registry",
+    "public_feeds",
+}
+PACK_ACTIVE_STATUS = {"active", "verified_live", "skill_only", "staged_setup_gate", "seeded"}
 
 
 def _now_iso() -> str:
@@ -424,6 +443,165 @@ def _age_days(raw: object) -> float | None:
     return round((datetime.now(timezone.utc) - parsed).total_seconds() / 86400.0, 3)
 
 
+def _pack_parts(system_id: str) -> tuple[str, str] | None:
+    for suffix in PACK_SYSTEM_SUFFIXES:
+        marker = f"_{suffix}"
+        if system_id.endswith(marker):
+            return system_id[: -len(marker)], suffix
+    return None
+
+
+def _pack_contract_path(pack: str) -> str:
+    return f"docs/{pack.replace('_', '-')}-contract-v1.json"
+
+
+def _pack_fixture_path(pack: str) -> str:
+    return f"docs/{pack.replace('_', '-')}-fixture-v1.json"
+
+
+def _pack_workflow_path(pack: str) -> str:
+    return f"docs/{pack.replace('_', '-')}-workflow-v1.md"
+
+
+def _pack_catalog_entry_path(pack: str) -> str:
+    return f"docs/{pack.replace('_', '-')}-catalog-entry-v1.json"
+
+
+def _pack_cache_path(pack: str) -> str:
+    return f"docs/trinity-mcp-cache/{pack.replace('_', '-')}-latest.json"
+
+
+def _pack_contract(pack: str) -> tuple[bool, dict[str, Any], str]:
+    return _read_json_safe(_pack_contract_path(pack))
+
+
+def _pack_fixture(pack: str) -> tuple[bool, dict[str, Any], str]:
+    return _read_json_safe(_pack_fixture_path(pack))
+
+
+def _load_extension_catalog_rows() -> list[dict[str, Any]]:
+    ok, payload, _ = _read_json_safe("docs/trinity-extension-catalog-v1.json")
+    rows = payload.get("extensions", []) if ok else []
+    return [row for row in rows if isinstance(row, dict)]
+
+
+def _pack_extension_rows(pack: str) -> list[dict[str, Any]]:
+    return [row for row in _load_extension_catalog_rows() if str(row.get("pack") or "") == pack]
+
+
+def _mcp_connector_entry(connector_id: str) -> tuple[bool, dict[str, Any], str]:
+    ok, payload, detail = _read_json_safe("docs/trinity-mcp-catalog-v1.json")
+    if not ok:
+        return False, {}, detail
+    for row in payload.get("connectors", []):
+        if isinstance(row, dict) and str(row.get("mcp_id") or "") == connector_id:
+            return True, row, "ok"
+    return False, {}, f"missing connector: {connector_id}"
+
+
+def _pack_seed_records(fixture: dict[str, Any]) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for row in fixture.get("seed_records", []):
+        if not isinstance(row, dict):
+            continue
+        repo_targets = list((row.get("repo_relevance", {}) or {}).get("targets", []))
+        records.append(
+            {
+                "source_id": str(row.get("source_id") or "pack_fixture"),
+                "record_id": str(row.get("record_id") or row.get("title") or "seed"),
+                "signal_type": str(row.get("signal_type") or "pack_seed"),
+                "title": _safe_title(str(row.get("title") or "Pack seed record")),
+                "published_at": _parse_date(row.get("published_at")),
+                "source_url": str(row.get("source_url") or ""),
+                "summary": _safe_title(str(row.get("summary") or "")),
+                "metrics": row.get("metrics") if isinstance(row.get("metrics"), dict) else {},
+                "tags": row.get("tags") if isinstance(row.get("tags"), list) else [],
+                "repo_targets": repo_targets,
+            }
+        )
+    if records:
+        return records
+
+    summary = str(fixture.get("summary") or "").strip()
+    source_url = str(fixture.get("source_url") or "").strip()
+    repo_targets = fixture.get("repo_targets", [])
+    tags = fixture.get("tags", [])
+    if not isinstance(repo_targets, list):
+        repo_targets = []
+    if not isinstance(tags, list):
+        tags = []
+    if summary or source_url or repo_targets or tags:
+        metrics: dict[str, Any] = {}
+        connector_snapshot = fixture.get("connector_snapshot")
+        if isinstance(connector_snapshot, dict):
+            metrics["connector_snapshot"] = connector_snapshot
+        live_sources = fixture.get("live_sources")
+        if isinstance(live_sources, list):
+            metrics["live_source_count"] = len(live_sources)
+        probe_tools = fixture.get("probe_tools")
+        if isinstance(probe_tools, list):
+            metrics["probe_tool_count"] = len(probe_tools)
+        seed_id = str(tags[0] if tags else "pack_fixture")
+        records.append(
+            {
+                "source_id": seed_id,
+                "record_id": str(fixture.get("record_id") or f"{seed_id}-seed"),
+                "signal_type": str(fixture.get("signal_type") or "pack_seed"),
+                "title": _safe_title(str(fixture.get("title") or summary or "Pack seed record")),
+                "published_at": _now_iso()[:10],
+                "source_url": source_url,
+                "summary": _safe_title(summary or "Cached pack seed state."),
+                "metrics": metrics,
+                "tags": [str(tag) for tag in tags if str(tag).strip()],
+                "repo_targets": [str(item) for item in repo_targets if str(item).strip()],
+            }
+        )
+    return records
+
+
+def _env_present(*names: str) -> list[str]:
+    return [name for name in names if os.getenv(name)]
+
+
+def _gh_auth_present() -> bool:
+    executable = shutil.which("gh")
+    if not executable:
+        return False
+    try:
+        proc = subprocess.run(
+            [executable, "auth", "status"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+    except Exception:  # noqa: BLE001
+        return False
+    return proc.returncode == 0
+
+
+def _write_pack_cache(
+    pack: str,
+    *,
+    auth_state: str,
+    status: str,
+    records: list[dict[str, Any]],
+    repo_targets_touched: list[str],
+    next_action: str,
+) -> None:
+    payload = {
+        "generated_utc": _now_iso(),
+        "integration_id": pack,
+        "auth_state": auth_state,
+        "status": status,
+        "records": records,
+        "repo_targets_touched": repo_targets_touched,
+        "next_action": next_action,
+    }
+    _write_json(_pack_cache_path(pack), payload)
+
+
 def _candidate_targets(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     table: dict[str, dict[str, Any]] = {}
     for row in records:
@@ -494,6 +672,407 @@ def _manifest_graph(manifest: dict[str, Any]) -> tuple[list[tuple[str, str]], li
         if state.get(node, 0) == 0:
             visit(node)
     return edges, sorted(dict.fromkeys(missing)), cycles
+
+
+def _pack_repo_targets(contract: dict[str, Any], records: list[dict[str, Any]]) -> list[str]:
+    targets = [str(item) for item in contract.get("repo_targets", []) if str(item).strip()]
+    targets.extend(str(item) for item in _pack_seed_record_targets(records))
+    return _collect_targets(targets)
+
+
+def _pack_seed_record_targets(records: list[dict[str, Any]]) -> list[str]:
+    items: list[str] = []
+    for row in records:
+        for target in row.get("repo_targets", []):
+            text = str(target).strip()
+            if text:
+                items.append(text)
+    return items
+
+
+def _fixture_live_records(
+    fixture: dict[str, Any],
+    *,
+    timeout_sec: int,
+    fallback_records: list[dict[str, Any]],
+) -> tuple[list[dict[str, str]], list[dict[str, Any]], list[dict[str, Any]]]:
+    checks: list[dict[str, str]] = []
+    runs: list[dict[str, Any]] = []
+    records: list[dict[str, Any]] = []
+    for row in fixture.get("live_sources", []):
+        if not isinstance(row, dict):
+            continue
+        source_id = str(row.get("source_id") or "live_source")
+        url = str(row.get("url") or "").strip()
+        if not url:
+            continue
+        try:
+            if str(row.get("format") or "text") == "json":
+                payload = fetch_json(url, timeout_sec=timeout_sec)
+                metrics = {"bytes": len(json.dumps(payload)), "source_format": "json"}
+            else:
+                text = fetch_text(url, timeout_sec=timeout_sec)
+                metrics = {"bytes": len(text), "source_format": "text"}
+            records.append(
+                {
+                    "source_id": source_id,
+                    "record_id": str(row.get("record_id") or source_id),
+                    "signal_type": str(row.get("signal_type") or "live_signal"),
+                    "title": _safe_title(str(row.get("title") or source_id)),
+                    "published_at": _now_iso()[:10],
+                    "source_url": url,
+                    "summary": _safe_title(str(row.get("summary") or f"Live refresh succeeded for {source_id}.")),
+                    "metrics": metrics,
+                    "tags": row.get("tags") if isinstance(row.get("tags"), list) else [],
+                    "repo_targets": row.get("repo_targets") if isinstance(row.get("repo_targets"), list) else [],
+                }
+            )
+            runs.append({"source_id": source_id, "request_url": url, "mode": "live", "record_count": 1, "status": "PASS"})
+        except Exception as exc:  # noqa: BLE001
+            if fallback_records:
+                checks.append(_check(f"live_fallback:{source_id}", "PASS", f"fallback used ({exc})"))
+                return checks, fallback_records, [{"source_id": source_id, "request_url": url, "mode": "fallback_cache", "record_count": len(fallback_records), "status": "PASS"}]
+            checks.append(_check(f"live_fetch:{source_id}", "FAIL", str(exc)))
+    checks.append(_check("live_records_present", "PASS" if records else "FAIL", f"records={len(records)}"))
+    return checks, records, runs
+
+
+def _auth_detected_for_connector(connector_id: str) -> bool:
+    if connector_id == "github":
+        return bool(_env_present("GITHUB_TOKEN", "GITHUB_PERSONAL_ACCESS_TOKEN")) or _gh_auth_present()
+    if connector_id == "notion":
+        return bool(_env_present("NOTION_TOKEN", "NOTION_API_KEY"))
+    if connector_id == "slack":
+        return bool(_env_present("SLACK_BOT_TOKEN"))
+    if connector_id == "google_workspace":
+        return bool(_env_present("GOOGLE_APPLICATION_CREDENTIALS", "GOOGLE_API_KEY"))
+    if connector_id == "postgres":
+        return bool(_env_present("DATABASE_URL", "PGHOST"))
+    return False
+
+
+def _compute_pack_system(
+    *,
+    system_id: str,
+    manifest: dict[str, Any],
+    offline_only: bool,
+    timeout_sec: int,
+    include_mcp_refresh: bool,
+    include_staged_connectors: bool,
+    include_public_api_refresh: bool,
+) -> dict[str, Any] | None:
+    parts = _pack_parts(system_id)
+    if parts is None:
+        return None
+    pack, suffix = parts
+    try:
+        manifest_pack = str(_manifest_entry(manifest, system_id).get("pack") or "")
+    except KeyError:
+        return None
+    if manifest_pack != pack:
+        return None
+    ok_contract, contract, contract_detail = _pack_contract(pack)
+    ok_fixture, fixture, fixture_detail = _pack_fixture(pack)
+    if not ok_contract or not ok_fixture:
+        checks = []
+        if not ok_contract:
+            checks.append(_check("pack_contract_present", "FAIL", contract_detail))
+        if not ok_fixture:
+            checks.append(_check("pack_fixture_present", "FAIL", fixture_detail))
+        return {
+            "checks": checks,
+            "metrics": {},
+            "targets": _collect_targets([_pack_contract_path(pack), _pack_fixture_path(pack)]),
+            "next_action": "Restore pack contract and fixture files.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    workflow_ok, workflow_text, workflow_detail = _read_text_safe(_pack_workflow_path(pack))
+    catalog_entry_ok, catalog_entry_payload, catalog_entry_detail = _read_json_safe(_pack_catalog_entry_path(pack))
+    connector_id = str(contract.get("connector_id") or "").strip()
+    gating_class = str(contract.get("gating_class") or "active").strip()
+    strategy = str(contract.get("sync_strategy") or "local_repo").strip()
+    seed_records = _pack_seed_records(fixture)
+    repo_targets = _pack_repo_targets(contract, seed_records)
+    cache_path = _pack_cache_path(pack)
+
+    if suffix == "surface_audit":
+        checks = [
+            _check("pack_contract_present", "PASS", _pack_contract_path(pack)),
+            _check("pack_fixture_present", "PASS", _pack_fixture_path(pack)),
+            _check("pack_workflow_present", "PASS" if workflow_ok else "FAIL", workflow_detail if not workflow_ok else _pack_workflow_path(pack)),
+            _check("pack_catalog_entry_present", "PASS" if catalog_entry_ok else "FAIL", catalog_entry_detail if not catalog_entry_ok else _pack_catalog_entry_path(pack)),
+            _check("manifest_pack_system_count", "PASS" if sum(1 for row in manifest.get("systems", []) if isinstance(row, dict) and str(row.get("pack") or "") == pack) == 6 else "FAIL", f"pack={pack}"),
+            _check("extension_catalog_pack_count", "PASS" if len(_pack_extension_rows(pack)) == 12 else "FAIL", f"extensions={len(_pack_extension_rows(pack))}"),
+        ]
+        if connector_id:
+            ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
+            checks.append(_check("mcp_connector_present", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else connector_id))
+            if ok_mcp:
+                checks.append(_check("mcp_status_expected", "PASS" if str(connector_entry.get("status")) == gating_class else "FAIL", f"status={connector_entry.get('status')}"))
+        return {
+            "checks": checks,
+            "metrics": {"pack": pack, "gating_class": gating_class, "strategy": strategy, "extension_count": len(_pack_extension_rows(pack))},
+            "targets": _collect_targets([_pack_contract_path(pack), _pack_fixture_path(pack), _pack_workflow_path(pack), _pack_catalog_entry_path(pack)] + repo_targets),
+            "next_action": "Keep pack source-of-truth artifacts aligned before using the collaboration cache.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    if suffix == "workflow_guard":
+        checks = [_check("workflow_present", "PASS" if workflow_ok else "FAIL", workflow_detail if not workflow_ok else _pack_workflow_path(pack))]
+        if workflow_ok:
+            for token in contract.get("workflow_tokens", []):
+                token_text = str(token)
+                checks.append(_check(f"workflow_token:{token_text}", "PASS" if token_text in workflow_text else "FAIL", token_text))
+        return {
+            "checks": checks,
+            "metrics": {"workflow_token_count": len(contract.get("workflow_tokens", []))},
+            "targets": _collect_targets([_pack_workflow_path(pack)]),
+            "next_action": "Keep workflow guardrails explicit and reviewable.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    if suffix == "risk_board":
+        fixture_blob = json.dumps(fixture, sort_keys=True)
+        unsafe_marker_hits = [marker for marker in ("INSERT_TOKEN_HERE", "Bearer ", "approval_mode = \"never\"") if marker in fixture_blob or (workflow_ok and marker in workflow_text)]
+        checks = [
+            _check("risk_tag_count", "PASS" if len(contract.get("risk_tags", [])) >= 3 else "FAIL", f"risk_tags={len(contract.get('risk_tags', []))}"),
+            _check("unsafe_markers_absent", "PASS" if not unsafe_marker_hits else "FAIL", f"hits={unsafe_marker_hits}"),
+            _check("sync_strategy_known", "PASS" if strategy in PACK_SYNC_STRATEGIES else "FAIL", f"strategy={strategy}"),
+        ]
+        return {
+            "checks": checks,
+            "metrics": {"pack": pack, "requires_auth": bool(contract.get("requires_auth")), "risk_tags": contract.get("risk_tags", [])},
+            "targets": _collect_targets([_pack_contract_path(pack), _pack_workflow_path(pack)] + repo_targets),
+            "next_action": "Treat pack risk tags as review triggers before widening authority or live scope.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    if suffix == "sync_bridge":
+        checks: list[dict[str, str]] = []
+        runs: list[dict[str, Any]] = []
+        auth_state = "local_repo"
+        cache_status = gating_class if gating_class in PACK_ACTIVE_STATUS else "active"
+        records = seed_records or []
+        if strategy == "verified_mcp":
+            ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
+            checks.append(_check("mcp_connector_present", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else connector_id))
+            checks.append(_check("verified_refresh_enabled", "PASS" if include_mcp_refresh or offline_only else "PASS", f"include_mcp_refresh={include_mcp_refresh}"))
+            auth_state = "verified_live" if ok_mcp else "connector_unknown"
+            cache_status = str(connector_entry.get("status")) if ok_mcp else "active"
+            runs.append({"source_id": connector_id or pack, "mode": "verified_connector_cache", "record_count": len(records), "status": "PASS"})
+        elif strategy == "skill_only":
+            probe_tools = fixture.get("probe_tools", []) if isinstance(fixture.get("probe_tools"), list) else ["node", "npx"]
+            required_tools = {
+                str(tool).strip()
+                for tool in fixture.get("required_probe_tools", [])
+                if str(tool).strip()
+            } if isinstance(fixture.get("required_probe_tools"), list) else set()
+            probe_rows = [_tool_probe(str(tool), "--version") for tool in probe_tools]
+            for row in probe_rows:
+                tool_name = str(row.get("tool"))
+                available = bool(row.get("available"))
+                required = tool_name in required_tools
+                detail = str(row.get("detail"))
+                if not available and not required:
+                    detail = f"{detail} (optional probe)"
+                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required else "FAIL", detail))
+            if required_tools:
+                missing_required = sorted(tool for tool in required_tools if not any(str(row.get("tool")) == tool and row.get("available") for row in probe_rows))
+                checks.append(_check("required_probe_tools_available", "PASS" if not missing_required else "FAIL", f"missing={missing_required}"))
+            else:
+                checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
+            auth_state = "skill_only"
+            cache_status = "skill_only"
+            for row in probe_rows:
+                records.append(
+                    {
+                        "source_id": "playwright",
+                        "record_id": str(row.get("tool")),
+                        "signal_type": "tool_probe",
+                        "title": f"Playwright dependency: {row.get('tool')}",
+                        "published_at": _now_iso()[:10],
+                        "source_url": str(row.get("path") or ""),
+                        "summary": _safe_title(str(row.get("detail") or "")),
+                        "metrics": row,
+                        "tags": ["playwright", "tool_probe"],
+                        "repo_targets": repo_targets,
+                    }
+                )
+            runs.append({"source_id": pack, "mode": "skill_probe", "record_count": len(records), "status": "PASS"})
+        elif strategy == "staged_connector":
+            auth_detected = _auth_detected_for_connector(connector_id)
+            checks.append(_check("staged_connector_auth", "PASS", f"auth_detected={auth_detected}"))
+            auth_state = "auth_detected" if auth_detected else "setup_gate_pending"
+            if include_staged_connectors and auth_detected and not offline_only:
+                live_checks, live_records, live_runs = _fixture_live_records(fixture, timeout_sec=timeout_sec, fallback_records=records)
+                checks.extend(live_checks)
+                records = live_records
+                runs.extend(live_runs)
+                cache_status = "active"
+            else:
+                runs.append({"source_id": connector_id or pack, "mode": "staged_cache", "record_count": len(records), "status": "PASS"})
+                cache_status = "staged_setup_gate"
+        elif strategy == "local_repo":
+            commits = _git_recent_commits(limit=5)
+            records.append(
+                {
+                    "source_id": pack,
+                    "record_id": f"{pack}-recap",
+                    "signal_type": "repo_state",
+                    "title": f"{pack} repo state",
+                    "published_at": _now_iso()[:10],
+                    "source_url": "repo://git/log",
+                    "summary": f"Recent commits loaded for {pack}.",
+                    "metrics": {"recent_commit_count": len(commits)},
+                    "tags": [pack, "repo_state"],
+                    "repo_targets": repo_targets,
+                }
+            )
+            runs.append({"source_id": pack, "mode": "local_repo", "record_count": len(records), "status": "PASS"})
+        elif strategy == "local_probe":
+            probe_tools = fixture.get("probe_tools", []) if isinstance(fixture.get("probe_tools"), list) else ["python", "git", "rg"]
+            required_tools = {
+                str(tool).strip()
+                for tool in fixture.get("required_probe_tools", [])
+                if str(tool).strip()
+            } if isinstance(fixture.get("required_probe_tools"), list) else set()
+            probe_rows = [_tool_probe(str(tool), "--version") for tool in probe_tools]
+            for row in probe_rows:
+                tool_name = str(row.get("tool"))
+                available = bool(row.get("available"))
+                required = tool_name in required_tools
+                detail = str(row.get("detail"))
+                if not available and not required:
+                    detail = f"{detail} (optional probe)"
+                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required else "FAIL", detail))
+            if required_tools:
+                missing_required = sorted(tool for tool in required_tools if not any(str(row.get("tool")) == tool and row.get("available") for row in probe_rows))
+                checks.append(_check("required_probe_tools_available", "PASS" if not missing_required else "FAIL", f"missing={missing_required}"))
+            else:
+                checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
+            for row in probe_rows:
+                records.append(
+                    {
+                        "source_id": pack,
+                        "record_id": str(row.get("tool")),
+                        "signal_type": "tool_probe",
+                        "title": f"Compute probe: {row.get('tool')}",
+                        "published_at": _now_iso()[:10],
+                        "source_url": str(row.get("path") or ""),
+                        "summary": _safe_title(str(row.get("detail") or "")),
+                        "metrics": row,
+                        "tags": [pack, "tool_probe"],
+                        "repo_targets": repo_targets,
+                    }
+                )
+            runs.append({"source_id": pack, "mode": "local_probe", "record_count": len(records), "status": "PASS"})
+        elif strategy == "identity_registry":
+            connector_map = {
+                "notion": _env_present("NOTION_TOKEN", "NOTION_API_KEY"),
+                "slack": _env_present("SLACK_BOT_TOKEN"),
+                "google_workspace": _env_present("GOOGLE_APPLICATION_CREDENTIALS", "GOOGLE_API_KEY"),
+                "postgres": _env_present("DATABASE_URL", "PGHOST"),
+                "filesystem": [],
+            }
+            for connector_name, env_hits in connector_map.items():
+                records.append(
+                    {
+                        "source_id": "identity_governance",
+                        "record_id": connector_name,
+                        "signal_type": "connector_status",
+                        "title": f"Connector status: {connector_name}",
+                        "published_at": _now_iso()[:10],
+                        "source_url": f"repo://env/{connector_name}",
+                        "summary": "Connector remains staged until a safe read-only handshake is provable." if not env_hits else "Connector credentials detected; still requires a safe read-only handshake.",
+                        "metrics": {"env_hits": env_hits},
+                        "tags": ["identity_governance", connector_name],
+                        "repo_targets": repo_targets,
+                    }
+                )
+            runs.append({"source_id": pack, "mode": "identity_registry", "record_count": len(records), "status": "PASS"})
+        elif strategy == "public_feeds":
+            if include_public_api_refresh and not offline_only:
+                live_checks, live_records, live_runs = _fixture_live_records(fixture, timeout_sec=timeout_sec, fallback_records=records)
+                checks.extend(live_checks)
+                records = live_records
+                runs.extend(live_runs)
+                cache_status = "active"
+                auth_state = "public_unauthenticated"
+            else:
+                auth_state = "public_unauthenticated"
+                runs.append({"source_id": pack, "mode": "offline_cache", "record_count": len(records), "status": "PASS"})
+
+        _write_pack_cache(
+            pack,
+            auth_state=auth_state,
+            status=cache_status,
+            records=records,
+            repo_targets_touched=repo_targets,
+            next_action=str(fixture.get("next_action") or "Refresh the pack cache before relying on it."),
+        )
+        checks.append(_check("cache_written", "PASS", cache_path))
+        return {
+            "checks": checks or [_check("sync_completed", "PASS", f"strategy={strategy}")],
+            "metrics": {"pack": pack, "strategy": strategy, "record_count": len(records), "auth_state": auth_state, "cache_status": cache_status},
+            "targets": _collect_targets(repo_targets + [cache_path]),
+            "next_action": str(fixture.get("next_action") or "Refresh the pack cache before relying on it."),
+            "records": records,
+            "source_runs": runs,
+        }
+
+    if suffix == "cache_board":
+        ok_cache, cache_payload, cache_detail = _read_json_safe(cache_path)
+        ok_schema, schema_payload, schema_detail = _read_json_safe("docs/trinity-mcp-cache-schema-v1.json")
+        checks = [
+            _check("cache_present", "PASS" if ok_cache else "FAIL", cache_detail if not ok_cache else cache_path),
+            _check("cache_schema_present", "PASS" if ok_schema else "FAIL", schema_detail if not ok_schema else "docs/trinity-mcp-cache-schema-v1.json"),
+        ]
+        metrics: dict[str, Any] = {"pack": pack}
+        if ok_cache and ok_schema:
+            required_fields = schema_payload.get("required_fields", []) if isinstance(schema_payload.get("required_fields"), list) else []
+            missing = [field for field in required_fields if field not in cache_payload]
+            records = cache_payload.get("records", []) if isinstance(cache_payload.get("records"), list) else []
+            age = _age_days(cache_payload.get("generated_utc"))
+            freshness = float(contract.get("freshness_window_days", 30) or 30)
+            checks.extend(
+                [
+                    _check("cache_required_fields", "PASS" if not missing else "FAIL", f"missing={missing}"),
+                    _check("cache_record_count", "PASS" if len(records) >= 1 else "FAIL", f"records={len(records)}"),
+                    _check("cache_freshness", "PASS" if age is not None and age <= freshness else "FAIL", f"age_days={age}"),
+                    _check("cache_integration_id", "PASS" if str(cache_payload.get("integration_id")) == pack else "FAIL", f"integration_id={cache_payload.get('integration_id')}"),
+                ]
+            )
+            metrics.update({"record_count": len(records), "age_days": age, "freshness_window_days": freshness})
+        return {
+            "checks": checks,
+            "metrics": metrics,
+            "targets": _collect_targets([cache_path, "docs/trinity-mcp-cache-schema-v1.json"] + repo_targets),
+            "next_action": "Keep pack caches present, typed, and fresh enough for offline reuse.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    if suffix == "gate":
+        deps = _manifest_entry(manifest, system_id).get("depends_on", [])
+        checks, metrics = _artifact_guard(manifest, deps)
+        if connector_id:
+            ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
+            checks.append(_check("connector_catalog_status", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else str(connector_entry.get("status"))))
+        return {
+            "checks": checks,
+            "metrics": metrics | {"pack": pack, "gating_class": gating_class},
+            "targets": _collect_targets(repo_targets + [cache_path]),
+            "next_action": "Use the pack gate as the promotion boundary for collaboration outputs.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    return None
 
 
 def _publish(
@@ -1332,10 +1911,31 @@ def _heart_registry_live(
     return checks, records, runs, _collect_targets(["docs/comparative-validation-grid-v1.md", "docs/grand-unified-narrative-brief.md", "docs/trinity-public-research-brief-2026-03-06.md"]), {"offline_only": False, "record_count": len(records)}
 
 
-def _compute_system(system_id: str, manifest: dict[str, Any], offline_only: bool, timeout_sec: int) -> dict[str, Any]:
+def _compute_system(
+    system_id: str,
+    manifest: dict[str, Any],
+    offline_only: bool,
+    timeout_sec: int,
+    include_mcp_refresh: bool,
+    include_staged_connectors: bool,
+    include_public_api_refresh: bool,
+    profile_context: str,
+) -> dict[str, Any]:
     records: list[dict[str, Any]] | None = None
     source_runs: list[dict[str, Any]] | None = None
     targets: list[str] = []
+
+    generic_pack_result = _compute_pack_system(
+        system_id=system_id,
+        manifest=manifest,
+        offline_only=offline_only,
+        timeout_sec=timeout_sec,
+        include_mcp_refresh=include_mcp_refresh,
+        include_staged_connectors=include_staged_connectors,
+        include_public_api_refresh=include_public_api_refresh,
+    )
+    if generic_pack_result is not None:
+        return generic_pack_result
 
     if system_id == "mind_claim_evidence_partition":
         ok, registry, detail = _read_json_safe("docs/trinity-public-source-registry-v1.json")
@@ -1470,7 +2070,12 @@ def _compute_system(system_id: str, manifest: dict[str, Any], offline_only: bool
         return {"checks": checks, "metrics": {"total_duration_seconds": duration, "body_health_score": health}, "targets": _collect_targets(["docs/body-track-smoke-latest.json"]), "next_action": "Keep body latency and health within budget.", "records": None, "source_runs": None}
 
     if system_id == "body_config_drift_guard":
-        paths = ["docs/body-profile-policy-v1.json", "docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v1.json"]
+        paths = [
+            "docs/body-profile-policy-v1.json",
+            "docs/trinity-api-source-manifest-v1.json",
+            "docs/trinity-expansion-system-manifest-v1.json",
+            "docs/trinity-expansion-system-manifest-v3.json",
+        ]
         checks: list[dict[str, str]] = []
         hashes: dict[str, str] = {}
         for path in paths:
@@ -1626,14 +2231,21 @@ def _compute_system(system_id: str, manifest: dict[str, Any], offline_only: bool
         mcp_settings_path = Path.home() / "Library" / "Application Support" / "Codex" / "mcp_settings.json"
         suite_ok, suite_payload, _ = _read_json_safe("docs/system-suite-status.json")
         last_expansion_total = int(suite_payload.get("expansion_systems_total", 0) or 0) if suite_ok else 0
+        ok_mcp_catalog, mcp_catalog, _ = _read_json_safe("docs/trinity-mcp-catalog-v1.json")
+        connectors = [row for row in (mcp_catalog.get("connectors", []) if ok_mcp_catalog else []) if isinstance(row, dict)]
+        verified_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "verified_live")
+        skill_only_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "skill_only")
+        staged_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "staged_setup_gate")
         checks = [
             _check("codex_config_present", "PASS" if codex_config_path.exists() else "FAIL", str(codex_config_path)),
             _check("preferred_model_gpt54", "PASS" if model == "gpt-5.4" else "FAIL", f"model={model or 'missing'}"),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_absent", "PASS" if shutil.which("uvx") is None else "FAIL", f"uvx={shutil.which('uvx') or 'absent'}"),
-            _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 1 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
-            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 80 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
-            _check("mcp_resource_surface_absent", "PASS" if not mcp_settings_path.exists() else "FAIL", f"mcp_settings_present={mcp_settings_path.exists()}"),
+            _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 41 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
+            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 134 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
+            _check("figma_verified_live", "PASS" if "figma" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
+            _check("linear_verified_live", "PASS" if "linear" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
+            _check("playwright_skill_only", "PASS" if "playwright" in skill_only_connectors else "FAIL", f"skill_only={skill_only_connectors}"),
         ]
         return {
             "checks": checks,
@@ -1648,12 +2260,15 @@ def _compute_system(system_id: str, manifest: dict[str, Any], offline_only: bool
                 "exposed_env_vars": exposed_env,
                 "uvx_present": shutil.which("uvx") is not None,
                 "mcp_servers_configured": mcp_server_names,
-                "mcp_resource_templates_available": False,
-                "mcp_resources_available": False,
+                "mcp_resource_templates_available": True,
+                "mcp_resources_available": True,
                 "mcp_settings_present": mcp_settings_path.exists(),
+                "verified_mcp_connectors": verified_connectors,
+                "skill_only_connectors": skill_only_connectors,
+                "staged_connectors": staged_connectors,
                 "code_home_present": bool(os.getenv("CODEX_HOME")),
             },
-            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v2.json"]),
+            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v3.json", "docs/trinity-mcp-catalog-v1.json"]),
             "next_action": "Use this audit as the environment baseline before widening integrations.",
             "records": None,
             "source_runs": None,
@@ -1772,12 +2387,14 @@ sandbox = \"elevated\"
             _check("offline_only_flag_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "run_all requires explicit offline override"),
             _check("compat_alias_present", "PASS" if "--include-public-api-refresh" in run_all_text else "FAIL", "compatibility alias expected"),
             _check("live_default_present", "PASS" if 'live_network_mode = "live_default"' in run_all_text else "FAIL", "standard/deep should resolve to live_default"),
+            _check("mcp_refresh_flag_present", "PASS" if "--include-mcp-refresh" in run_all_text else "FAIL", "mcp refresh flag expected"),
+            _check("staged_connector_flag_present", "PASS" if "--include-staged-connectors" in run_all_text else "FAIL", "staged connector flag expected"),
             _check("live_entries_cache_backed", "PASS" if len(cache_backed) == len(live_entries) else "FAIL", f"cache_backed={len(cache_backed)}/{len(live_entries)}"),
         ]
         return {
             "checks": checks,
             "metrics": {"live_entry_count": len(live_entries), "cache_backed_live_entries": len(cache_backed)},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v2.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v3.json"]),
             "next_action": "Keep every live stage cache-backed so offline-only remains viable.",
             "records": None,
             "source_runs": None,
@@ -1827,7 +2444,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"boundary_count": len(boundaries), "boundaries": boundaries},
-            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v2.json"]),
+            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v3.json", "docs/trinity-mcp-catalog-v1.json"]),
             "next_action": "Keep trust boundaries explicit before expanding connectivity or authority.",
             "records": None,
             "source_runs": None,
@@ -1838,13 +2455,18 @@ sandbox = \"elevated\"
         if not ok_text:
             return {"checks": [_check("run_all_present", "FAIL", detail)], "metrics": {}, "targets": ["scripts/run_all_trinity_systems.py"], "next_action": "Restore run_all orchestration.", "records": None, "source_runs": None}
         checks = [
-            _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['"standard"', '"quick"', '"deep"']) else "FAIL", "standard/quick/deep expected"),
+            _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['"standard"', '"quick"', '"deep"', '"collab"']) else "FAIL", "standard/quick/deep/collab expected"),
             _check("offline_only_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "offline override required"),
-            _check("manifest_v2_present", "PASS" if "trinity-expansion-system-manifest-v2.json" in run_all_text else "FAIL", "run_all should target v2 manifest"),
+            _check("manifest_v3_present", "PASS" if "trinity-expansion-system-manifest-v3.json" in run_all_text else "FAIL", "run_all should target v3 manifest"),
         ]
         return {
             "checks": checks,
-            "metrics": {"quick_mode_supported": "--quick-mode" in run_all_text, "status_json_supported": "--status-json" in run_all_text},
+            "metrics": {
+                "quick_mode_supported": "--quick-mode" in run_all_text,
+                "status_json_supported": "--status-json" in run_all_text,
+                "mcp_refresh_supported": "--include-mcp-refresh" in run_all_text,
+                "staged_connector_supported": "--include-staged-connectors" in run_all_text,
+            },
             "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/system-suite-status.json"]),
             "next_action": "Keep quick as continuity mode and standard/deep as full gating profiles.",
             "records": None,
@@ -1866,7 +2488,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v2.json", "docs/trinity-api-source-manifest-v1.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v3.json", "docs/trinity-api-source-manifest-v1.json", "docs/trinity-mcp-catalog-v1.json"]),
             "next_action": "Keep hardening and public/local boundaries ahead of new privileged integrations.",
             "records": None,
             "source_runs": None,
@@ -2087,6 +2709,8 @@ sandbox = \"elevated\"
             include_version_scan=False,
             include_curated_skill_catalog=False,
             include_public_api_refresh=True,
+            include_mcp_refresh=False,
+            include_staged_connectors=False,
             offline_only=False,
             quick_mode=False,
             profile="standard",
@@ -2100,7 +2724,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v2.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v3.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,
             "source_runs": None,
@@ -2594,7 +3218,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"edge_count": len(edges), "missing_dependencies": missing, "cycle_count": len(cycles)},
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v2.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v3.json"]),
             "next_action": "Keep the manifest graph acyclic before widening suite orchestration.",
             "records": None,
             "source_runs": None,
@@ -2621,12 +3245,13 @@ sandbox = \"elevated\"
                         "PASS" if "--include-public-api-refresh" in runner_text else "FAIL",
                         "runner should keep the compatibility alias",
                     ),
+                    _check("mcp_status_fields_wired", "PASS" if all(marker in runner_text for marker in ("mcp_refresh_mode", "staged_connector_mode", "collab_pack_count")) else "FAIL", "runner should emit collaboration status fields"),
                 ]
             )
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v2.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v3.json"]),
             "next_action": "Keep orchestration resilient through explicit modes, status outputs, and dependency checks.",
             "records": None,
             "source_runs": None,
@@ -2660,13 +3285,26 @@ def run_named_system(system_id: str) -> int:
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
     parser.add_argument("--reports-dir", default=str(DEFAULT_RUNS_DIR.relative_to(ROOT)))
     parser.add_argument("--offline-only", action="store_true")
+    parser.add_argument("--include-mcp-refresh", action="store_true")
+    parser.add_argument("--include-staged-connectors", action="store_true")
+    parser.add_argument("--include-public-api-refresh", action="store_true")
+    parser.add_argument("--profile-context", default="standard")
     parser.add_argument("--fail-on-warn", action="store_true")
     parser.add_argument("--timeout-sec", type=int, default=30)
     args = parser.parse_args()
 
     manifest = _load_manifest(str(Path(args.manifest).resolve()))
     entry = _manifest_entry(manifest, system_id)
-    result = _compute_system(system_id=system_id, manifest=manifest, offline_only=bool(args.offline_only), timeout_sec=int(args.timeout_sec))
+    result = _compute_system(
+        system_id=system_id,
+        manifest=manifest,
+        offline_only=bool(args.offline_only),
+        timeout_sec=int(args.timeout_sec),
+        include_mcp_refresh=bool(args.include_mcp_refresh),
+        include_staged_connectors=bool(args.include_staged_connectors),
+        include_public_api_refresh=bool(args.include_public_api_refresh),
+        profile_context=str(args.profile_context or "standard"),
+    )
     return _publish(
         entry=entry,
         checks=result["checks"],

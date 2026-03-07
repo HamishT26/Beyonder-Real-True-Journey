@@ -12,10 +12,23 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
-ALLOWED_PROFILES = {"standard", "deep"}
-ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5"}
-ALLOWED_TRACKS = {"mind_theory", "body_compute", "heart_governance", "trinity_hardening", "trinity_memory_orchestration"}
-ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate"}
+ALLOWED_PROFILES = {"standard", "deep", "collab"}
+ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5", "wave6", "wave7", "wave8", "wave9", "wave10", "wave11", "wave12", "wave13", "wave14"}
+ALLOWED_TRACKS = {
+    "mind_theory",
+    "body_compute",
+    "heart_governance",
+    "trinity_hardening",
+    "trinity_memory_orchestration",
+    "mcp_collaboration",
+    "connector_ops",
+    "continuity_ops",
+    "release_ops",
+    "compute_ecosystem",
+    "identity_governance",
+    "public_intelligence",
+}
+ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate", "pack_gate"}
 
 
 def _repo_path(path_str: str) -> Path:
@@ -55,8 +68,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v2.json")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v2.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v3.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v3.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-manifest-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-manifest-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-expansion-manifest-validation-latest.md")
@@ -87,7 +100,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{row_label} must be an object")
             continue
-        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts"):
+        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts", "pack"):
             if field not in entry:
                 failures.append(f"{row_label} missing field: {field}")
         system_id = str(entry.get("system_id") or "").strip()
@@ -117,6 +130,10 @@ def main() -> int:
         gate_level = str(entry.get("gate_level") or "").strip()
         if gate_level not in ALLOWED_GATE_LEVELS:
             failures.append(f"{system_id or row_label} invalid gate_level: {gate_level}")
+
+        pack = str(entry.get("pack") or "").strip()
+        if not pack:
+            failures.append(f"{system_id or row_label} missing pack")
 
         profiles = entry.get("profiles", [])
         if not isinstance(profiles, list) or not profiles:

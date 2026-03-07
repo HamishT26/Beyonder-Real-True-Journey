@@ -23,9 +23,10 @@ PROFILE_HELP = {
     "standard": "Base suite run with benchmark enforcement by default.",
     "quick": "Continuity-focused subset with benchmark observe mode by default.",
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
+    "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v2.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v3.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -203,6 +204,17 @@ def _expansion_manifest_validation_command(*, enforce: bool) -> tuple[str, list[
     return f"trinity expansion manifest validation ({mode})", command
 
 
+def _extension_catalog_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_extension_catalog_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity extension catalog validation ({mode})", command
+
+
 def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
@@ -219,6 +231,9 @@ def _load_expansion_system_commands(
     profile: str,
     enforce: bool,
     offline_only: bool,
+    include_public_api_refresh: bool,
+    include_mcp_refresh: bool,
+    include_staged_connectors: bool,
 ) -> list[tuple[str, list[str]]]:
     manifest_path = ROOT / TRINITY_EXPANSION_MANIFEST_PATH
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -236,13 +251,31 @@ def _load_expansion_system_commands(
         system_id = str(entry.get("system_id") or "").strip()
         script = str(entry.get("script") or "").strip()
         mode = str(entry.get("mode") or "offline").strip().lower()
+        pack = str(entry.get("pack") or "").strip()
         if not system_id or not script:
             continue
         command = ["python3", script]
         if enforce:
             command.append("--fail-on-warn")
-        if offline_only and mode == "live":
-            command.append("--offline-only")
+        if include_public_api_refresh:
+            command.append("--include-public-api-refresh")
+        if include_mcp_refresh:
+            command.append("--include-mcp-refresh")
+        if include_staged_connectors:
+            command.append("--include-staged-connectors")
+        command.extend(["--profile-context", profile])
+        if mode == "live":
+            live_disabled = offline_only
+            if pack in {"figma_collab", "linear_collab"} and not include_mcp_refresh:
+                live_disabled = True
+            elif pack == "github_devflow" and not include_staged_connectors:
+                live_disabled = True
+            elif pack == "public_intelligence" and not include_public_api_refresh:
+                live_disabled = True
+            elif pack not in {"figma_collab", "linear_collab", "github_devflow", "public_intelligence"} and not include_public_api_refresh:
+                live_disabled = True
+            if live_disabled:
+                command.append("--offline-only")
         commands.append((f"expansion: {system_id} ({mode})", command))
     return commands
 
@@ -252,6 +285,8 @@ def build_commands(
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
     include_public_api_refresh: bool,
+    include_mcp_refresh: bool,
+    include_staged_connectors: bool,
     offline_only: bool,
     quick_mode: bool,
     profile: str,
@@ -376,6 +411,11 @@ def build_commands(
     if not quick_mode:
         expansion_commands = [
             (
+                *_extension_catalog_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 *_expansion_manifest_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
@@ -384,6 +424,9 @@ def build_commands(
                 profile=profile,
                 enforce=(body_benchmark_mode == "enforce"),
                 offline_only=offline_only,
+                include_public_api_refresh=include_public_api_refresh,
+                include_mcp_refresh=include_mcp_refresh,
+                include_staged_connectors=include_staged_connectors,
             ),
             (
                 *_expansion_result_validation_command(
@@ -888,13 +931,13 @@ def build_commands(
 
 def render_profile_catalog() -> str:
     lines = ["Available suite profiles (default: deep):"]
-    for name in ("standard", "quick", "deep"):
+    for name in ("standard", "quick", "deep", "collab"):
         lines.append(f"- {name}: {PROFILE_HELP[name]}")
     lines.append("- --quick-mode: legacy alias for --profile quick")
     return "\n".join(lines)
 
 
-def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, str, str]:
+def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, bool, str, str]:
     profile = args.profile
     profile_source = "--profile"
 
@@ -910,6 +953,8 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     include_curated_skill_catalog = args.include_curated_skill_catalog
     offline_only = args.offline_only
     include_public_api_refresh = False
+    include_mcp_refresh = False
+    include_staged_connectors = bool(args.include_staged_connectors)
     soft_fail_network = args.soft_fail_network
     body_benchmark_mode = args.body_benchmark_mode
 
@@ -918,14 +963,20 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install = True
         include_curated_skill_catalog = True
         soft_fail_network = True
+    if profile == "collab":
+        include_mcp_refresh = True
 
     # Live API refresh is default for standard/deep unless explicitly offline-only.
-    if profile in {"standard", "deep"}:
+    if profile in {"standard", "deep", "collab"}:
         include_public_api_refresh = True
     if args.include_public_api_refresh:
         include_public_api_refresh = True
+    if args.include_mcp_refresh:
+        include_mcp_refresh = True
     if offline_only:
         include_public_api_refresh = False
+        include_mcp_refresh = False
+        include_staged_connectors = False
 
     if profile == "quick" and (include_version_scan or include_skill_install or include_curated_skill_catalog):
         raise SystemExit(
@@ -946,6 +997,8 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install,
         include_curated_skill_catalog,
         include_public_api_refresh,
+        include_mcp_refresh,
+        include_staged_connectors,
         offline_only,
         soft_fail_network,
         profile_source,
@@ -1024,10 +1077,10 @@ def main() -> None:
     )
     parser.add_argument(
         "--profile",
-        choices=("standard", "quick", "deep"),
+        choices=("standard", "quick", "deep", "collab"),
         default="deep",
         help=(
-            "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), "
+            "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), collab (standard + verified MCP refresh), "
             "deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
         ),
     )
@@ -1050,6 +1103,16 @@ def main() -> None:
         "--include-public-api-refresh",
         action="store_true",
         help="Deprecated compatibility alias; standard/deep already include live API refresh by default.",
+    )
+    parser.add_argument(
+        "--include-mcp-refresh",
+        action="store_true",
+        help="Enable verified-live MCP collaboration refresh for eligible pack systems.",
+    )
+    parser.add_argument(
+        "--include-staged-connectors",
+        action="store_true",
+        help="Attempt staged connector live refresh only after setup-gate detection passes.",
     )
     parser.add_argument(
         "--offline-only",
@@ -1124,6 +1187,8 @@ def main() -> None:
         include_skill_install,
         include_curated_skill_catalog,
         include_public_api_refresh,
+        include_mcp_refresh,
+        include_staged_connectors,
         offline_only,
         soft_fail_network,
         profile_source,
@@ -1139,19 +1204,42 @@ def main() -> None:
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
         include_public_api_refresh=include_public_api_refresh,
+        include_mcp_refresh=include_mcp_refresh,
+        include_staged_connectors=include_staged_connectors,
         offline_only=offline_only,
         quick_mode=(profile == "quick"),
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
     )
+    mcp_catalog_path = ROOT / "docs" / "trinity-mcp-catalog-v1.json"
+    verified_mcp_connectors: list[str] = []
+    if mcp_catalog_path.exists():
+        try:
+            mcp_payload = json.loads(mcp_catalog_path.read_text(encoding="utf-8"))
+            connector_rows = mcp_payload.get("connectors", [])
+            if isinstance(connector_rows, list):
+                verified_mcp_connectors = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and str(row.get("status")) == "verified_live"
+                )
+        except json.JSONDecodeError:
+            verified_mcp_connectors = []
     if offline_only:
         live_network_mode = "offline_only"
-    elif profile in {"standard", "deep"}:
+    elif profile in {"standard", "deep", "collab"}:
         live_network_mode = "live_default"
     elif include_public_api_refresh:
         live_network_mode = "live_opt_in"
     else:
         live_network_mode = "offline_default"
+    if offline_only:
+        mcp_refresh_mode = "offline_only"
+        staged_connector_mode = "offline_only"
+    else:
+        mcp_refresh_mode = "verified_live" if include_mcp_refresh else "disabled"
+        staged_connector_mode = "setup_gate_attempted" if include_staged_connectors else "staged_only"
+    collab_pack_count = 9
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
     suite_start_ts = time.monotonic()
@@ -1167,8 +1255,12 @@ def main() -> None:
         f"Include skill install: {include_skill_install}",
         f"Include curated skill catalog: {include_curated_skill_catalog}",
         f"Include public api refresh: {include_public_api_refresh}",
+        f"Include mcp refresh: {include_mcp_refresh}",
+        f"Include staged connectors: {include_staged_connectors}",
         f"Offline only: {offline_only}",
         f"Live network mode: {live_network_mode}",
+        f"MCP refresh mode: {mcp_refresh_mode}",
+        f"Staged connector mode: {staged_connector_mode}",
         f"Soft-fail network: {soft_fail_network}",
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
@@ -1245,6 +1337,7 @@ def main() -> None:
     lines.append(f"- FAIL: **{fail_count}**")
     lines.append(f"- Expansion systems total: **{expansion_total}**")
     lines.append(f"- Expansion systems passed: **{expansion_passed}**")
+    lines.append(f"- Collab pack count: **{collab_pack_count}**")
     lines.append(f"- Achieved steps: **{achieved_steps}**")
     lines.append(f"- Achievement gate met: **{achievement_gate_met}**")
     lines.append(f"- Suite started: `{suite_started_at}`")
@@ -1268,6 +1361,8 @@ def main() -> None:
         },
         "expansion_systems_total": expansion_total,
         "expansion_systems_passed": expansion_passed,
+        "collab_pack_count": collab_pack_count,
+        "verified_mcp_connectors": verified_mcp_connectors,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
@@ -1276,8 +1371,12 @@ def main() -> None:
             "include_skill_install": include_skill_install,
             "include_curated_skill_catalog": include_curated_skill_catalog,
             "include_public_api_refresh": include_public_api_refresh,
+            "include_mcp_refresh": include_mcp_refresh,
+            "include_staged_connectors": include_staged_connectors,
             "offline_only": offline_only,
             "live_network_mode": live_network_mode,
+            "mcp_refresh_mode": mcp_refresh_mode,
+            "staged_connector_mode": staged_connector_mode,
             "soft_fail_network": soft_fail_network,
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,

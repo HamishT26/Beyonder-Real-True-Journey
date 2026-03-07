@@ -1,0 +1,40 @@
+{
+  "pack": "github_devflow",
+  "display_name": "GitHub Devflow",
+  "pillar": "trinity",
+  "wave": "wave9",
+  "track": "connector_ops",
+  "connector_id": "github",
+  "requires_auth": true,
+  "gating_class": "staged_setup_gate",
+  "sync_strategy": "staged_connector",
+  "freshness_window_days": 30,
+  "cache_artifact": "docs/trinity-mcp-cache/github-devflow-latest.json",
+  "workflow_tokens": [
+    "offline-safe by default",
+    "no secrets in repo",
+    "staged connector gate",
+    "read-only handshake first"
+  ],
+  "risk_tags": [
+    "token exposure",
+    "remote mutation",
+    "branch drift"
+  ],
+  "repo_targets": [
+    "docs/trinity-mcp-catalog-v1.json",
+    "docs/trinity-mandala-scoreboard-latest.json"
+  ],
+  "skill_names": [
+    "github-devflow-operations",
+    "github-devflow-integration"
+  ],
+  "system_ids": [
+    "github_devflow_surface_audit",
+    "github_devflow_workflow_guard",
+    "github_devflow_risk_board",
+    "github_devflow_sync_bridge",
+    "github_devflow_cache_board",
+    "github_devflow_gate"
+  ]
+}

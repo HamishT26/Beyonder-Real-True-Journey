@@ -258,11 +258,21 @@ def main() -> int:
     )
     context_blocks = [
         asdict(_artifact_status("API constellation board", "docs/trinity-api-constellation-board-latest.json")),
+        asdict(_artifact_status("Extension catalog validation", "docs/trinity-extension-catalog-validation-latest.json")),
         asdict(_artifact_status("Expansion manifest validation", "docs/trinity-expansion-manifest-validation-latest.json")),
         asdict(_artifact_status("Expansion result validation", "docs/trinity-expansion-result-validation-latest.json")),
         asdict(_artifact_status("Capability surface audit", "docs/trinity-expansion/trinity-capability-surface-audit-latest.json")),
         asdict(_artifact_status("Hardening release gate", "docs/trinity-expansion/trinity-release-gate-board-latest.json")),
         asdict(_artifact_status("Trinity supercycle gate", "docs/trinity-expansion/trinity-supercycle-gate-latest.json")),
+        asdict(_artifact_status("Figma collaboration gate", "docs/trinity-expansion/figma-collab-gate-latest.json")),
+        asdict(_artifact_status("Linear collaboration gate", "docs/trinity-expansion/linear-collab-gate-latest.json")),
+        asdict(_artifact_status("Playwright ops gate", "docs/trinity-expansion/playwright-ops-gate-latest.json")),
+        asdict(_artifact_status("GitHub devflow gate", "docs/trinity-expansion/github-devflow-gate-latest.json")),
+        asdict(_artifact_status("Memory continuity gate", "docs/trinity-expansion/memory-continuity-gate-latest.json")),
+        asdict(_artifact_status("Operator release gate", "docs/trinity-expansion/operator-release-gate-latest.json")),
+        asdict(_artifact_status("Compute hardware gate", "docs/trinity-expansion/compute-hardware-gate-latest.json")),
+        asdict(_artifact_status("Identity governance gate", "docs/trinity-expansion/identity-governance-gate-latest.json")),
+        asdict(_artifact_status("Public intelligence gate", "docs/trinity-expansion/public-intelligence-gate-latest.json")),
     ]
 
     hybrid_status = "PASS"
