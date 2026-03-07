@@ -24,9 +24,11 @@ PROFILE_HELP = {
     "quick": "Continuity-focused subset with benchmark observe mode by default.",
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
     "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
+    "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v3.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v4.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v2.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -226,6 +228,28 @@ def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[st
     return f"trinity expansion result validation ({mode})", command
 
 
+def _materialization_ledger_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_materialization_ledger_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity materialization ledger validation ({mode})", command
+
+
+def _os_runtime_reference_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_os_runtime_reference_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity os runtime reference validation ({mode})", command
+
+
 def _load_expansion_system_commands(
     *,
     profile: str,
@@ -234,6 +258,7 @@ def _load_expansion_system_commands(
     include_public_api_refresh: bool,
     include_mcp_refresh: bool,
     include_staged_connectors: bool,
+    include_live_writes: bool,
 ) -> list[tuple[str, list[str]]]:
     manifest_path = ROOT / TRINITY_EXPANSION_MANIFEST_PATH
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -263,6 +288,8 @@ def _load_expansion_system_commands(
             command.append("--include-mcp-refresh")
         if include_staged_connectors:
             command.append("--include-staged-connectors")
+        if include_live_writes:
+            command.append("--include-live-writes")
         command.extend(["--profile-context", profile])
         if mode == "live":
             live_disabled = offline_only
@@ -287,6 +314,7 @@ def build_commands(
     include_public_api_refresh: bool,
     include_mcp_refresh: bool,
     include_staged_connectors: bool,
+    include_live_writes: bool,
     offline_only: bool,
     quick_mode: bool,
     profile: str,
@@ -427,9 +455,20 @@ def build_commands(
                 include_public_api_refresh=include_public_api_refresh,
                 include_mcp_refresh=include_mcp_refresh,
                 include_staged_connectors=include_staged_connectors,
+                include_live_writes=include_live_writes,
             ),
             (
                 *_expansion_result_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_materialization_ledger_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_os_runtime_reference_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -931,13 +970,13 @@ def build_commands(
 
 def render_profile_catalog() -> str:
     lines = ["Available suite profiles (default: deep):"]
-    for name in ("standard", "quick", "deep", "collab"):
+    for name in ("standard", "quick", "deep", "collab", "materialize"):
         lines.append(f"- {name}: {PROFILE_HELP[name]}")
     lines.append("- --quick-mode: legacy alias for --profile quick")
     return "\n".join(lines)
 
 
-def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, bool, str, str]:
+def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, bool, bool, str, str]:
     profile = args.profile
     profile_source = "--profile"
 
@@ -955,6 +994,7 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     include_public_api_refresh = False
     include_mcp_refresh = False
     include_staged_connectors = bool(args.include_staged_connectors)
+    include_live_writes = False
     soft_fail_network = args.soft_fail_network
     body_benchmark_mode = args.body_benchmark_mode
 
@@ -963,20 +1003,26 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install = True
         include_curated_skill_catalog = True
         soft_fail_network = True
-    if profile == "collab":
+    if profile in {"collab", "materialize"}:
         include_mcp_refresh = True
+    if profile == "materialize":
+        include_staged_connectors = True
+        include_live_writes = True
 
     # Live API refresh is default for standard/deep unless explicitly offline-only.
-    if profile in {"standard", "deep", "collab"}:
+    if profile in {"standard", "deep", "collab", "materialize"}:
         include_public_api_refresh = True
     if args.include_public_api_refresh:
         include_public_api_refresh = True
     if args.include_mcp_refresh:
         include_mcp_refresh = True
+    if args.include_live_writes:
+        include_live_writes = True
     if offline_only:
         include_public_api_refresh = False
         include_mcp_refresh = False
         include_staged_connectors = False
+        include_live_writes = False
 
     if profile == "quick" and (include_version_scan or include_skill_install or include_curated_skill_catalog):
         raise SystemExit(
@@ -999,6 +1045,7 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_public_api_refresh,
         include_mcp_refresh,
         include_staged_connectors,
+        include_live_writes,
         offline_only,
         soft_fail_network,
         profile_source,
@@ -1077,11 +1124,11 @@ def main() -> None:
     )
     parser.add_argument(
         "--profile",
-        choices=("standard", "quick", "deep", "collab"),
+        choices=("standard", "quick", "deep", "collab", "materialize"),
         default="deep",
         help=(
             "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), collab (standard + verified MCP refresh), "
-            "deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
+            "materialize (standard + disposable staging write tracers), deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
         ),
     )
     parser.add_argument(
@@ -1113,6 +1160,11 @@ def main() -> None:
         "--include-staged-connectors",
         action="store_true",
         help="Attempt staged connector live refresh only after setup-gate detection passes.",
+    )
+    parser.add_argument(
+        "--include-live-writes",
+        action="store_true",
+        help="Enable disposable staging write tracers; materialize profile turns this on automatically unless offline-only is set.",
     )
     parser.add_argument(
         "--offline-only",
@@ -1189,6 +1241,7 @@ def main() -> None:
         include_public_api_refresh,
         include_mcp_refresh,
         include_staged_connectors,
+        include_live_writes,
         offline_only,
         soft_fail_network,
         profile_source,
@@ -1206,13 +1259,17 @@ def main() -> None:
         include_public_api_refresh=include_public_api_refresh,
         include_mcp_refresh=include_mcp_refresh,
         include_staged_connectors=include_staged_connectors,
+        include_live_writes=include_live_writes,
         offline_only=offline_only,
         quick_mode=(profile == "quick"),
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
     )
-    mcp_catalog_path = ROOT / "docs" / "trinity-mcp-catalog-v1.json"
+    mcp_catalog_path = ROOT / TRINITY_MCP_CATALOG_PATH
     verified_mcp_connectors: list[str] = []
+    eligible_live_write_connectors: list[str] = []
+    promoted_live_write_connectors: list[str] = []
+    blocked_promotions: list[str] = []
     if mcp_catalog_path.exists():
         try:
             mcp_payload = json.loads(mcp_catalog_path.read_text(encoding="utf-8"))
@@ -1221,13 +1278,31 @@ def main() -> None:
                 verified_mcp_connectors = sorted(
                     str(row.get("mcp_id"))
                     for row in connector_rows
-                    if isinstance(row, dict) and str(row.get("status")) == "verified_live"
+                    if isinstance(row, dict) and bool(row.get("live_read_enabled"))
+                )
+                eligible_live_write_connectors = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and "write" in str(row.get("desired_state") or "")
+                )
+                promoted_live_write_connectors = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and bool(row.get("live_write_enabled"))
+                )
+                blocked_promotions = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and "write" in str(row.get("desired_state") or "") and not bool(row.get("live_write_enabled"))
                 )
         except json.JSONDecodeError:
             verified_mcp_connectors = []
+            eligible_live_write_connectors = []
+            promoted_live_write_connectors = []
+            blocked_promotions = []
     if offline_only:
         live_network_mode = "offline_only"
-    elif profile in {"standard", "deep", "collab"}:
+    elif profile in {"standard", "deep", "collab", "materialize"}:
         live_network_mode = "live_default"
     elif include_public_api_refresh:
         live_network_mode = "live_opt_in"
@@ -1240,6 +1315,13 @@ def main() -> None:
         mcp_refresh_mode = "verified_live" if include_mcp_refresh else "disabled"
         staged_connector_mode = "setup_gate_attempted" if include_staged_connectors else "staged_only"
     collab_pack_count = 9
+    materialization_pack_count = 6
+    if offline_only:
+        active_materialization_mode = "offline_only"
+    elif include_live_writes:
+        active_materialization_mode = "disposable_staging"
+    else:
+        active_materialization_mode = "read_only"
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
     suite_start_ts = time.monotonic()
@@ -1257,10 +1339,12 @@ def main() -> None:
         f"Include public api refresh: {include_public_api_refresh}",
         f"Include mcp refresh: {include_mcp_refresh}",
         f"Include staged connectors: {include_staged_connectors}",
+        f"Include live writes: {include_live_writes}",
         f"Offline only: {offline_only}",
         f"Live network mode: {live_network_mode}",
         f"MCP refresh mode: {mcp_refresh_mode}",
         f"Staged connector mode: {staged_connector_mode}",
+        f"Active materialization mode: {active_materialization_mode}",
         f"Soft-fail network: {soft_fail_network}",
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
@@ -1338,6 +1422,10 @@ def main() -> None:
     lines.append(f"- Expansion systems total: **{expansion_total}**")
     lines.append(f"- Expansion systems passed: **{expansion_passed}**")
     lines.append(f"- Collab pack count: **{collab_pack_count}**")
+    lines.append(f"- Materialization pack count: **{materialization_pack_count}**")
+    lines.append(f"- Eligible live write connectors: **{', '.join(eligible_live_write_connectors) if eligible_live_write_connectors else '-'}**")
+    lines.append(f"- Promoted live write connectors: **{', '.join(promoted_live_write_connectors) if promoted_live_write_connectors else '-'}**")
+    lines.append(f"- Blocked promotions: **{', '.join(blocked_promotions) if blocked_promotions else '-'}**")
     lines.append(f"- Achieved steps: **{achieved_steps}**")
     lines.append(f"- Achievement gate met: **{achievement_gate_met}**")
     lines.append(f"- Suite started: `{suite_started_at}`")
@@ -1362,7 +1450,14 @@ def main() -> None:
         "expansion_systems_total": expansion_total,
         "expansion_systems_passed": expansion_passed,
         "collab_pack_count": collab_pack_count,
+        "materialization_pack_count": materialization_pack_count,
         "verified_mcp_connectors": verified_mcp_connectors,
+        "eligible_live_write_connectors": eligible_live_write_connectors,
+        "promoted_live_write_connectors": promoted_live_write_connectors,
+        "blocked_promotions": blocked_promotions,
+        "active_materialization_mode": active_materialization_mode,
+        "mcp_refresh_mode": mcp_refresh_mode,
+        "staged_connector_mode": staged_connector_mode,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
@@ -1373,10 +1468,12 @@ def main() -> None:
             "include_public_api_refresh": include_public_api_refresh,
             "include_mcp_refresh": include_mcp_refresh,
             "include_staged_connectors": include_staged_connectors,
+            "include_live_writes": include_live_writes,
             "offline_only": offline_only,
             "live_network_mode": live_network_mode,
             "mcp_refresh_mode": mcp_refresh_mode,
             "staged_connector_mode": staged_connector_mode,
+            "active_materialization_mode": active_materialization_mode,
             "soft_fail_network": soft_fail_network,
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,

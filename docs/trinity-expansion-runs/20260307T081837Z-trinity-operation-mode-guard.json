@@ -1,0 +1,41 @@
+{
+  "generated_utc": "2026-03-07T08:18:37+00:00",
+  "system_id": "trinity_operation_mode_guard",
+  "pillar": "trinity",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "profile_modes_present",
+      "status": "PASS",
+      "detail": "standard/quick/deep/collab/materialize expected"
+    },
+    {
+      "name": "offline_only_present",
+      "status": "PASS",
+      "detail": "offline override required"
+    },
+    {
+      "name": "manifest_v4_present",
+      "status": "PASS",
+      "detail": "run_all should target v4 manifest"
+    },
+    {
+      "name": "live_write_flag_present",
+      "status": "PASS",
+      "detail": "materialize profile requires explicit write tracer flag support"
+    }
+  ],
+  "metrics": {
+    "quick_mode_supported": true,
+    "status_json_supported": true,
+    "mcp_refresh_supported": true,
+    "staged_connector_supported": true,
+    "live_writes_supported": true
+  },
+  "repo_targets_touched": [
+    "docs/system-suite-status.json",
+    "scripts/run_all_trinity_systems.py"
+  ],
+  "next_action": "Keep quick as continuity mode and standard/deep as full gating profiles.",
+  "effective_success": true
+}

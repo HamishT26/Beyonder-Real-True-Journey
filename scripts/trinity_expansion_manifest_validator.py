@@ -12,8 +12,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
-ALLOWED_PROFILES = {"standard", "deep", "collab"}
-ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5", "wave6", "wave7", "wave8", "wave9", "wave10", "wave11", "wave12", "wave13", "wave14"}
+ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}
+ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5", "wave6", "wave7", "wave8", "wave9", "wave10", "wave11", "wave12", "wave13", "wave14", "wave15", "wave16", "wave17", "wave18", "wave19", "wave20"}
 ALLOWED_TRACKS = {
     "mind_theory",
     "body_compute",
@@ -27,6 +27,9 @@ ALLOWED_TRACKS = {
     "compute_ecosystem",
     "identity_governance",
     "public_intelligence",
+    "active_materialization",
+    "os_runtime",
+    "wetware_readiness",
 }
 ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate", "pack_gate"}
 
@@ -68,8 +71,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v3.json")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v3.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v4.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v4.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-manifest-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-manifest-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-expansion-manifest-validation-latest.md")
@@ -93,6 +96,8 @@ def main() -> int:
     if not isinstance(systems, list):
         failures.append("manifest.systems must be a list")
         systems = []
+    if isinstance(systems, list) and len(systems) != 170:
+        failures.append(f"manifest expected 170 systems, found {len(systems)}")
 
     seen_ids: set[str] = set()
     for index, entry in enumerate(systems):

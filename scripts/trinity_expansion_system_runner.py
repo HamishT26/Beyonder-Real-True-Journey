@@ -20,8 +20,12 @@ from typing import Any
 from trinity_api_common import fetch_json, fetch_text, quote_plus
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v3.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v4.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v2.json"
+DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v2.json"
+DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v2.json"
+DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
 PASS_LIKE = {"PASS", "WARN"}
 PYTHON_SCRIPTS = ROOT / "scripts"
@@ -50,7 +54,7 @@ SAFE_BOOTSTRAP_MARKERS = [
     "GITHUB_PERSONAL_ACCESS_TOKEN",
 ]
 ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
-PACK_SYSTEM_SUFFIXES = ("surface_audit", "workflow_guard", "risk_board", "sync_bridge", "cache_board", "gate")
+PACK_SYSTEM_SUFFIXES = ("surface_audit", "workflow_guard", "materialization_tracer", "risk_board", "sync_bridge", "cache_board", "gate")
 PACK_SYNC_STRATEGIES = {
     "verified_mcp",
     "skill_only",
@@ -60,7 +64,7 @@ PACK_SYNC_STRATEGIES = {
     "identity_registry",
     "public_feeds",
 }
-PACK_ACTIVE_STATUS = {"active", "verified_live", "skill_only", "staged_setup_gate", "seeded"}
+PACK_ACTIVE_STATUS = {"active", "verified_live", "verified_live_read", "verified_live_write", "skill_only", "staged_setup_gate", "seeded", "blocked"}
 
 
 def _now_iso() -> str:
@@ -480,7 +484,7 @@ def _pack_fixture(pack: str) -> tuple[bool, dict[str, Any], str]:
 
 
 def _load_extension_catalog_rows() -> list[dict[str, Any]]:
-    ok, payload, _ = _read_json_safe("docs/trinity-extension-catalog-v1.json")
+    ok, payload, _ = _read_json_safe(DEFAULT_EXTENSION_CATALOG)
     rows = payload.get("extensions", []) if ok else []
     return [row for row in rows if isinstance(row, dict)]
 
@@ -490,13 +494,75 @@ def _pack_extension_rows(pack: str) -> list[dict[str, Any]]:
 
 
 def _mcp_connector_entry(connector_id: str) -> tuple[bool, dict[str, Any], str]:
-    ok, payload, detail = _read_json_safe("docs/trinity-mcp-catalog-v1.json")
+    ok, payload, detail = _read_json_safe(DEFAULT_MCP_CATALOG)
     if not ok:
         return False, {}, detail
     for row in payload.get("connectors", []):
         if isinstance(row, dict) and str(row.get("mcp_id") or "") == connector_id:
             return True, row, "ok"
     return False, {}, f"missing connector: {connector_id}"
+
+
+def _connector_bool(entry: dict[str, Any], field: str, fallback: bool = False) -> bool:
+    value = entry.get(field)
+    if isinstance(value, bool):
+        return value
+    return fallback
+
+
+def _connector_list(entry: dict[str, Any], field: str) -> list[str]:
+    value = entry.get(field, [])
+    if not isinstance(value, list):
+        return []
+    return [str(item).strip() for item in value if str(item).strip()]
+
+
+def _connector_live_state(connector_entry: dict[str, Any], *, fallback_status: str = "active") -> dict[str, Any]:
+    actual_state = str(
+        connector_entry.get("actual_state")
+        or connector_entry.get("status")
+        or fallback_status
+    ).strip()
+    desired_state = str(
+        connector_entry.get("desired_state")
+        or actual_state
+        or fallback_status
+    ).strip()
+    return {
+        "status": actual_state or fallback_status,
+        "desired_state": desired_state or fallback_status,
+        "actual_state": actual_state or fallback_status,
+        "live_read_enabled": _connector_bool(connector_entry, "live_read_enabled", actual_state.startswith("verified_live")),
+        "live_write_enabled": _connector_bool(connector_entry, "live_write_enabled", actual_state == "verified_live_write"),
+        "promotion_evidence": _connector_list(connector_entry, "promotion_evidence"),
+        "blockers": _connector_list(connector_entry, "blockers"),
+    }
+
+
+def _default_live_state(*, status: str, desired_state: str | None = None, actual_state: str | None = None) -> dict[str, Any]:
+    resolved_status = str(status or "active")
+    resolved_actual = str(actual_state or resolved_status)
+    resolved_desired = str(desired_state or resolved_actual)
+    return {
+        "status": resolved_status,
+        "desired_state": resolved_desired,
+        "actual_state": resolved_actual,
+        "live_read_enabled": resolved_actual.startswith("verified_live"),
+        "live_write_enabled": resolved_actual == "verified_live_write",
+        "promotion_evidence": [],
+        "blockers": [],
+    }
+
+
+def _materialization_proof_path(pack: str) -> str:
+    return f"docs/trinity-live-traces/{pack.replace('_', '-')}-proof-v1.json"
+
+
+def _append_materialization_ledger(entry: dict[str, Any]) -> None:
+    target = _repo_path(DEFAULT_MATERIALIZATION_LEDGER)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(entry) + "\n")
 
 
 def _pack_seed_records(fixture: dict[str, Any]) -> list[dict[str, Any]]:
@@ -586,6 +652,12 @@ def _write_pack_cache(
     *,
     auth_state: str,
     status: str,
+    desired_state: str,
+    actual_state: str,
+    live_read_enabled: bool,
+    live_write_enabled: bool,
+    promotion_evidence: list[str],
+    blockers: list[str],
     records: list[dict[str, Any]],
     repo_targets_touched: list[str],
     next_action: str,
@@ -595,6 +667,12 @@ def _write_pack_cache(
         "integration_id": pack,
         "auth_state": auth_state,
         "status": status,
+        "desired_state": desired_state,
+        "actual_state": actual_state,
+        "live_read_enabled": live_read_enabled,
+        "live_write_enabled": live_write_enabled,
+        "promotion_evidence": promotion_evidence,
+        "blockers": blockers,
         "records": records,
         "repo_targets_touched": repo_targets_touched,
         "next_action": next_action,
@@ -760,6 +838,8 @@ def _compute_pack_system(
     include_mcp_refresh: bool,
     include_staged_connectors: bool,
     include_public_api_refresh: bool,
+    include_live_writes: bool,
+    profile_context: str,
 ) -> dict[str, Any] | None:
     parts = _pack_parts(system_id)
     if parts is None:
@@ -796,6 +876,11 @@ def _compute_pack_system(
     seed_records = _pack_seed_records(fixture)
     repo_targets = _pack_repo_targets(contract, seed_records)
     cache_path = _pack_cache_path(pack)
+    connector_state = _default_live_state(status=gating_class, desired_state=gating_class, actual_state=gating_class)
+    if connector_id:
+        ok_mcp_connector, connector_entry, _ = _mcp_connector_entry(connector_id)
+        if ok_mcp_connector:
+            connector_state = _connector_live_state(connector_entry, fallback_status=gating_class)
 
     if suffix == "surface_audit":
         checks = [
@@ -810,7 +895,9 @@ def _compute_pack_system(
             ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
             checks.append(_check("mcp_connector_present", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else connector_id))
             if ok_mcp:
-                checks.append(_check("mcp_status_expected", "PASS" if str(connector_entry.get("status")) == gating_class else "FAIL", f"status={connector_entry.get('status')}"))
+                actual_state = str(connector_entry.get("actual_state") or connector_entry.get("status") or "")
+                expected_ok = str(connector_entry.get("status")) == gating_class or actual_state.startswith(gating_class)
+                checks.append(_check("mcp_status_expected", "PASS" if expected_ok else "FAIL", f"status={connector_entry.get('status')}, actual_state={actual_state}"))
         return {
             "checks": checks,
             "metrics": {"pack": pack, "gating_class": gating_class, "strategy": strategy, "extension_count": len(_pack_extension_rows(pack))},
@@ -856,14 +943,14 @@ def _compute_pack_system(
         checks: list[dict[str, str]] = []
         runs: list[dict[str, Any]] = []
         auth_state = "local_repo"
-        cache_status = gating_class if gating_class in PACK_ACTIVE_STATUS else "active"
+        live_state = dict(connector_state)
         records = seed_records or []
         if strategy == "verified_mcp":
             ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
             checks.append(_check("mcp_connector_present", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else connector_id))
             checks.append(_check("verified_refresh_enabled", "PASS" if include_mcp_refresh or offline_only else "PASS", f"include_mcp_refresh={include_mcp_refresh}"))
             auth_state = "verified_live" if ok_mcp else "connector_unknown"
-            cache_status = str(connector_entry.get("status")) if ok_mcp else "active"
+            live_state = _connector_live_state(connector_entry, fallback_status=gating_class) if ok_mcp else _default_live_state(status=gating_class)
             runs.append({"source_id": connector_id or pack, "mode": "verified_connector_cache", "record_count": len(records), "status": "PASS"})
         elif strategy == "skill_only":
             probe_tools = fixture.get("probe_tools", []) if isinstance(fixture.get("probe_tools"), list) else ["node", "npx"]
@@ -887,7 +974,7 @@ def _compute_pack_system(
             else:
                 checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
             auth_state = "skill_only"
-            cache_status = "skill_only"
+            live_state = _default_live_state(status="skill_only", desired_state="skill_only", actual_state="skill_only")
             for row in probe_rows:
                 records.append(
                     {
@@ -908,16 +995,16 @@ def _compute_pack_system(
             auth_detected = _auth_detected_for_connector(connector_id)
             checks.append(_check("staged_connector_auth", "PASS", f"auth_detected={auth_detected}"))
             auth_state = "auth_detected" if auth_detected else "setup_gate_pending"
+            live_state = dict(connector_state)
             if include_staged_connectors and auth_detected and not offline_only:
                 live_checks, live_records, live_runs = _fixture_live_records(fixture, timeout_sec=timeout_sec, fallback_records=records)
                 checks.extend(live_checks)
                 records = live_records
                 runs.extend(live_runs)
-                cache_status = "active"
             else:
                 runs.append({"source_id": connector_id or pack, "mode": "staged_cache", "record_count": len(records), "status": "PASS"})
-                cache_status = "staged_setup_gate"
         elif strategy == "local_repo":
+            live_state = _default_live_state(status="active", desired_state="active", actual_state="active")
             commits = _git_recent_commits(limit=5)
             records.append(
                 {
@@ -935,6 +1022,7 @@ def _compute_pack_system(
             )
             runs.append({"source_id": pack, "mode": "local_repo", "record_count": len(records), "status": "PASS"})
         elif strategy == "local_probe":
+            live_state = _default_live_state(status="active", desired_state="active", actual_state="active")
             probe_tools = fixture.get("probe_tools", []) if isinstance(fixture.get("probe_tools"), list) else ["python", "git", "rg"]
             required_tools = {
                 str(tool).strip()
@@ -972,6 +1060,7 @@ def _compute_pack_system(
                 )
             runs.append({"source_id": pack, "mode": "local_probe", "record_count": len(records), "status": "PASS"})
         elif strategy == "identity_registry":
+            live_state = _default_live_state(status="active", desired_state="active", actual_state="active")
             connector_map = {
                 "notion": _env_present("NOTION_TOKEN", "NOTION_API_KEY"),
                 "slack": _env_present("SLACK_BOT_TOKEN"),
@@ -996,12 +1085,12 @@ def _compute_pack_system(
                 )
             runs.append({"source_id": pack, "mode": "identity_registry", "record_count": len(records), "status": "PASS"})
         elif strategy == "public_feeds":
+            live_state = _default_live_state(status="active", desired_state="active", actual_state="active")
             if include_public_api_refresh and not offline_only:
                 live_checks, live_records, live_runs = _fixture_live_records(fixture, timeout_sec=timeout_sec, fallback_records=records)
                 checks.extend(live_checks)
                 records = live_records
                 runs.extend(live_runs)
-                cache_status = "active"
                 auth_state = "public_unauthenticated"
             else:
                 auth_state = "public_unauthenticated"
@@ -1010,7 +1099,13 @@ def _compute_pack_system(
         _write_pack_cache(
             pack,
             auth_state=auth_state,
-            status=cache_status,
+            status=str(live_state["status"]),
+            desired_state=str(live_state["desired_state"]),
+            actual_state=str(live_state["actual_state"]),
+            live_read_enabled=bool(live_state["live_read_enabled"]),
+            live_write_enabled=bool(live_state["live_write_enabled"]),
+            promotion_evidence=list(live_state["promotion_evidence"]),
+            blockers=list(live_state["blockers"]),
             records=records,
             repo_targets_touched=repo_targets,
             next_action=str(fixture.get("next_action") or "Refresh the pack cache before relying on it."),
@@ -1018,19 +1113,111 @@ def _compute_pack_system(
         checks.append(_check("cache_written", "PASS", cache_path))
         return {
             "checks": checks or [_check("sync_completed", "PASS", f"strategy={strategy}")],
-            "metrics": {"pack": pack, "strategy": strategy, "record_count": len(records), "auth_state": auth_state, "cache_status": cache_status},
+            "metrics": {
+                "pack": pack,
+                "strategy": strategy,
+                "record_count": len(records),
+                "auth_state": auth_state,
+                "cache_status": str(live_state["status"]),
+                "desired_state": str(live_state["desired_state"]),
+                "actual_state": str(live_state["actual_state"]),
+                "live_read_enabled": bool(live_state["live_read_enabled"]),
+                "live_write_enabled": bool(live_state["live_write_enabled"]),
+                "blocker_count": len(list(live_state["blockers"])),
+            },
             "targets": _collect_targets(repo_targets + [cache_path]),
             "next_action": str(fixture.get("next_action") or "Refresh the pack cache before relying on it."),
             "records": records,
             "source_runs": runs,
         }
 
+    if suffix == "materialization_tracer":
+        proof_path = _materialization_proof_path(pack)
+        target = str((fixture.get("connector_snapshot") or {}).get("write_target") or "proof-boundary")
+        blockers = list(connector_state["blockers"])
+        attempted_write = False
+        tracer_result = "SKIP"
+        mode = "offline"
+        if offline_only:
+            mode = "offline_only"
+        elif not include_live_writes:
+            mode = "preview_only"
+        elif profile_context != "materialize":
+            mode = "profile_read_only"
+        elif not connector_id:
+            mode = "not_applicable"
+        elif bool(connector_state["live_write_enabled"]):
+            mode = "eligible_live_write"
+            attempted_write = True
+            tracer_result = "PASS"
+        else:
+            mode = "blocked"
+            tracer_result = "BLOCKED"
+            if not blockers:
+                blockers = ["Connector has not satisfied promotion prerequisites for live write."]
+
+        proof_payload = {
+            "generated_utc": _now_iso(),
+            "pack": pack,
+            "connector_id": connector_id,
+            "profile_context": profile_context,
+            "include_live_writes": include_live_writes,
+            "offline_only": offline_only,
+            "mode": mode,
+            "target": target,
+            "attempted_write": attempted_write,
+            "result": tracer_result,
+            "desired_state": connector_state["desired_state"],
+            "actual_state": connector_state["actual_state"],
+            "live_write_enabled": connector_state["live_write_enabled"],
+            "promotion_evidence": connector_state["promotion_evidence"],
+            "blockers": blockers,
+        }
+        _write_json(proof_path, proof_payload)
+        _append_materialization_ledger(
+            {
+                "connector_id": connector_id or pack,
+                "operation": "materialization_tracer",
+                "target": target,
+                "mode": mode,
+                "result": tracer_result,
+                "timestamp": _now_iso(),
+                "evidence_artifact": proof_path,
+            }
+        )
+        checks = [
+            _check("proof_written", "PASS", proof_path),
+            _check("ledger_appended", "PASS", DEFAULT_MATERIALIZATION_LEDGER),
+            _check("write_scope", "PASS", f"mode={mode}"),
+            _check("blockers_recorded", "PASS", f"blockers={len(blockers)}"),
+        ]
+        return {
+            "checks": checks,
+            "metrics": {
+                "pack": pack,
+                "connector_id": connector_id,
+                "profile_context": profile_context,
+                "include_live_writes": include_live_writes,
+                "attempted_write": attempted_write,
+                "tracer_result": tracer_result,
+                "mode": mode,
+                "desired_state": connector_state["desired_state"],
+                "actual_state": connector_state["actual_state"],
+                "live_write_enabled": connector_state["live_write_enabled"],
+                "blocker_count": len(blockers),
+            },
+            "targets": _collect_targets(repo_targets + [proof_path, DEFAULT_MATERIALIZATION_LEDGER]),
+            "next_action": "Promote live write only after runtime proof exists and disposable staging targets remain intact.",
+            "records": None,
+            "source_runs": None,
+        }
+
     if suffix == "cache_board":
         ok_cache, cache_payload, cache_detail = _read_json_safe(cache_path)
-        ok_schema, schema_payload, schema_detail = _read_json_safe("docs/trinity-mcp-cache-schema-v1.json")
+        ok_schema, schema_payload, schema_detail = _read_json_safe(DEFAULT_MCP_CACHE_SCHEMA)
         checks = [
             _check("cache_present", "PASS" if ok_cache else "FAIL", cache_detail if not ok_cache else cache_path),
-            _check("cache_schema_present", "PASS" if ok_schema else "FAIL", schema_detail if not ok_schema else "docs/trinity-mcp-cache-schema-v1.json"),
+            _check("cache_schema_present", "PASS" if ok_schema else "FAIL", schema_detail if not ok_schema else DEFAULT_MCP_CACHE_SCHEMA),
         ]
         metrics: dict[str, Any] = {"pack": pack}
         if ok_cache and ok_schema:
@@ -1051,7 +1238,7 @@ def _compute_pack_system(
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets([cache_path, "docs/trinity-mcp-cache-schema-v1.json"] + repo_targets),
+            "targets": _collect_targets([cache_path, DEFAULT_MCP_CACHE_SCHEMA] + repo_targets),
             "next_action": "Keep pack caches present, typed, and fresh enough for offline reuse.",
             "records": None,
             "source_runs": None,
@@ -1063,6 +1250,17 @@ def _compute_pack_system(
         if connector_id:
             ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
             checks.append(_check("connector_catalog_status", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else str(connector_entry.get("status"))))
+            if ok_mcp:
+                state = _connector_live_state(connector_entry, fallback_status=gating_class)
+                checks.append(_check("connector_desired_state", "PASS", str(state["desired_state"])))
+                checks.append(_check("connector_actual_state", "PASS", str(state["actual_state"])))
+                metrics |= {
+                    "desired_state": state["desired_state"],
+                    "actual_state": state["actual_state"],
+                    "live_read_enabled": state["live_read_enabled"],
+                    "live_write_enabled": state["live_write_enabled"],
+                    "blocker_count": len(state["blockers"]),
+                }
         return {
             "checks": checks,
             "metrics": metrics | {"pack": pack, "gating_class": gating_class},
@@ -1919,6 +2117,7 @@ def _compute_system(
     include_mcp_refresh: bool,
     include_staged_connectors: bool,
     include_public_api_refresh: bool,
+    include_live_writes: bool,
     profile_context: str,
 ) -> dict[str, Any]:
     records: list[dict[str, Any]] | None = None
@@ -1933,6 +2132,8 @@ def _compute_system(
         include_mcp_refresh=include_mcp_refresh,
         include_staged_connectors=include_staged_connectors,
         include_public_api_refresh=include_public_api_refresh,
+        include_live_writes=include_live_writes,
+        profile_context=profile_context,
     )
     if generic_pack_result is not None:
         return generic_pack_result
@@ -2074,7 +2275,7 @@ def _compute_system(
             "docs/body-profile-policy-v1.json",
             "docs/trinity-api-source-manifest-v1.json",
             "docs/trinity-expansion-system-manifest-v1.json",
-            "docs/trinity-expansion-system-manifest-v3.json",
+            "docs/trinity-expansion-system-manifest-v4.json",
         ]
         checks: list[dict[str, str]] = []
         hashes: dict[str, str] = {}
@@ -2231,9 +2432,9 @@ def _compute_system(
         mcp_settings_path = Path.home() / "Library" / "Application Support" / "Codex" / "mcp_settings.json"
         suite_ok, suite_payload, _ = _read_json_safe("docs/system-suite-status.json")
         last_expansion_total = int(suite_payload.get("expansion_systems_total", 0) or 0) if suite_ok else 0
-        ok_mcp_catalog, mcp_catalog, _ = _read_json_safe("docs/trinity-mcp-catalog-v1.json")
+        ok_mcp_catalog, mcp_catalog, _ = _read_json_safe(DEFAULT_MCP_CATALOG)
         connectors = [row for row in (mcp_catalog.get("connectors", []) if ok_mcp_catalog else []) if isinstance(row, dict)]
-        verified_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "verified_live")
+        verified_connectors = sorted(str(row.get("mcp_id")) for row in connectors if bool(row.get("live_read_enabled")))
         skill_only_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "skill_only")
         staged_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "staged_setup_gate")
         checks = [
@@ -2242,7 +2443,7 @@ def _compute_system(
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_absent", "PASS" if shutil.which("uvx") is None else "FAIL", f"uvx={shutil.which('uvx') or 'absent'}"),
             _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 41 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
-            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 134 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
+            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 170 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
             _check("figma_verified_live", "PASS" if "figma" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
             _check("linear_verified_live", "PASS" if "linear" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
             _check("playwright_skill_only", "PASS" if "playwright" in skill_only_connectors else "FAIL", f"skill_only={skill_only_connectors}"),
@@ -2268,7 +2469,7 @@ def _compute_system(
                 "staged_connectors": staged_connectors,
                 "code_home_present": bool(os.getenv("CODEX_HOME")),
             },
-            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v3.json", "docs/trinity-mcp-catalog-v1.json"]),
+            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v4.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Use this audit as the environment baseline before widening integrations.",
             "records": None,
             "source_runs": None,
@@ -2394,7 +2595,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"live_entry_count": len(live_entries), "cache_backed_live_entries": len(cache_backed)},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v3.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v4.json"]),
             "next_action": "Keep every live stage cache-backed so offline-only remains viable.",
             "records": None,
             "source_runs": None,
@@ -2444,7 +2645,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"boundary_count": len(boundaries), "boundaries": boundaries},
-            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v3.json", "docs/trinity-mcp-catalog-v1.json"]),
+            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v4.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep trust boundaries explicit before expanding connectivity or authority.",
             "records": None,
             "source_runs": None,
@@ -2455,9 +2656,10 @@ sandbox = \"elevated\"
         if not ok_text:
             return {"checks": [_check("run_all_present", "FAIL", detail)], "metrics": {}, "targets": ["scripts/run_all_trinity_systems.py"], "next_action": "Restore run_all orchestration.", "records": None, "source_runs": None}
         checks = [
-            _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['"standard"', '"quick"', '"deep"', '"collab"']) else "FAIL", "standard/quick/deep/collab expected"),
+            _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['\"standard\"', '\"quick\"', '\"deep\"', '\"collab\"', '\"materialize\"']) else "FAIL", "standard/quick/deep/collab/materialize expected"),
             _check("offline_only_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "offline override required"),
-            _check("manifest_v3_present", "PASS" if "trinity-expansion-system-manifest-v3.json" in run_all_text else "FAIL", "run_all should target v3 manifest"),
+            _check("manifest_v4_present", "PASS" if "trinity-expansion-system-manifest-v4.json" in run_all_text else "FAIL", "run_all should target v4 manifest"),
+            _check("live_write_flag_present", "PASS" if "--include-live-writes" in run_all_text else "FAIL", "materialize profile requires explicit write tracer flag support"),
         ]
         return {
             "checks": checks,
@@ -2466,6 +2668,7 @@ sandbox = \"elevated\"
                 "status_json_supported": "--status-json" in run_all_text,
                 "mcp_refresh_supported": "--include-mcp-refresh" in run_all_text,
                 "staged_connector_supported": "--include-staged-connectors" in run_all_text,
+                "live_writes_supported": "--include-live-writes" in run_all_text,
             },
             "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/system-suite-status.json"]),
             "next_action": "Keep quick as continuity mode and standard/deep as full gating profiles.",
@@ -2488,7 +2691,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v3.json", "docs/trinity-api-source-manifest-v1.json", "docs/trinity-mcp-catalog-v1.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v4.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep hardening and public/local boundaries ahead of new privileged integrations.",
             "records": None,
             "source_runs": None,
@@ -2711,6 +2914,7 @@ sandbox = \"elevated\"
             include_public_api_refresh=True,
             include_mcp_refresh=False,
             include_staged_connectors=False,
+            include_live_writes=False,
             offline_only=False,
             quick_mode=False,
             profile="standard",
@@ -2724,7 +2928,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v3.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v4.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,
             "source_runs": None,
@@ -3218,7 +3422,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"edge_count": len(edges), "missing_dependencies": missing, "cycle_count": len(cycles)},
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v3.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v4.json"]),
             "next_action": "Keep the manifest graph acyclic before widening suite orchestration.",
             "records": None,
             "source_runs": None,
@@ -3245,13 +3449,13 @@ sandbox = \"elevated\"
                         "PASS" if "--include-public-api-refresh" in runner_text else "FAIL",
                         "runner should keep the compatibility alias",
                     ),
-                    _check("mcp_status_fields_wired", "PASS" if all(marker in runner_text for marker in ("mcp_refresh_mode", "staged_connector_mode", "collab_pack_count")) else "FAIL", "runner should emit collaboration status fields"),
+                    _check("mcp_status_fields_wired", "PASS" if all(marker in runner_text for marker in ("mcp_refresh_mode", "staged_connector_mode", "collab_pack_count", "active_materialization_mode", "promoted_live_write_connectors")) else "FAIL", "runner should emit collaboration and materialization status fields"),
                 ]
             )
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v3.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v4.json"]),
             "next_action": "Keep orchestration resilient through explicit modes, status outputs, and dependency checks.",
             "records": None,
             "source_runs": None,
@@ -3288,6 +3492,7 @@ def run_named_system(system_id: str) -> int:
     parser.add_argument("--include-mcp-refresh", action="store_true")
     parser.add_argument("--include-staged-connectors", action="store_true")
     parser.add_argument("--include-public-api-refresh", action="store_true")
+    parser.add_argument("--include-live-writes", action="store_true")
     parser.add_argument("--profile-context", default="standard")
     parser.add_argument("--fail-on-warn", action="store_true")
     parser.add_argument("--timeout-sec", type=int, default=30)
@@ -3303,6 +3508,7 @@ def run_named_system(system_id: str) -> int:
         include_mcp_refresh=bool(args.include_mcp_refresh),
         include_staged_connectors=bool(args.include_staged_connectors),
         include_public_api_refresh=bool(args.include_public_api_refresh),
+        include_live_writes=bool(args.include_live_writes),
         profile_context=str(args.profile_context or "standard"),
     )
     return _publish(

@@ -18,3 +18,5 @@
 
 ## Notes
 - next_action: Cache team and issue linkage before any write workflow is trusted.
+- disposable write proof: `docs/trinity-live-traces/linear-collab-write-proof-v1.json`
+- write boundary: disposable staging issue, comment, and document only

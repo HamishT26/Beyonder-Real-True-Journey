@@ -1,0 +1,73 @@
+{
+  "generated_utc": "2026-03-07T08:23:03+00:00",
+  "system_id": "github_materialization_sync_bridge",
+  "pillar": "trinity",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "staged_connector_auth",
+      "status": "PASS",
+      "detail": "auth_detected=False"
+    },
+    {
+      "name": "cache_written",
+      "status": "PASS",
+      "detail": "docs/trinity-mcp-cache/github-materialization-latest.json"
+    }
+  ],
+  "metrics": {
+    "pack": "github_materialization",
+    "strategy": "staged_connector",
+    "record_count": 1,
+    "auth_state": "setup_gate_pending",
+    "cache_status": "staged_setup_gate",
+    "desired_state": "verified_live_write",
+    "actual_state": "staged_setup_gate",
+    "live_read_enabled": false,
+    "live_write_enabled": false,
+    "blocker_count": 2
+  },
+  "repo_targets_touched": [
+    "docs/system-suite-status.json",
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-mcp-cache/github-materialization-latest.json",
+    "docs/trinity-mcp-catalog-v2.json"
+  ],
+  "next_action": "Keep GitHub staged until auth, tool surface, read handshake, and disposable write tracer all pass.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "github",
+      "record_id": "github-seed",
+      "signal_type": "pack_seed",
+      "title": "GitHub materialization stays staged until auth, tool surface, safe read handshake, and disposable write tracer all pass.",
+      "published_at": "2026-03-07",
+      "source_url": "https://api.github.com/repos/HamishT26/Beyonder-Real-True-Journey",
+      "summary": "GitHub materialization stays staged until auth, tool surface, safe read handshake, and disposable write tracer all pass.",
+      "metrics": {
+        "connector_snapshot": {
+          "tool_surface": "public_rest_plus_optional_auth",
+          "write_target": "disposable branch + docs/trinity-live-test.md",
+          "branch_policy": "never target main"
+        }
+      },
+      "tags": [
+        "github",
+        "materialization",
+        "staged_setup_gate"
+      ],
+      "repo_targets": [
+        "docs/trinity-mcp-catalog-v2.json",
+        "docs/trinity-materialization-ledger.jsonl"
+      ]
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "github",
+      "mode": "staged_cache",
+      "record_count": 1,
+      "status": "PASS"
+    }
+  ]
+}

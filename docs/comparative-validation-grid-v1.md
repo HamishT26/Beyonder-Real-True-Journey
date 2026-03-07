@@ -29,10 +29,10 @@ The Body lane remains standards-first. The current record does not justify chang
 
 Additional theory traditions, scripture comparators, advanced OS paradigms, and broader governance frames may still be useful as a later reflection layer. The repo now carries a dedicated supplemental reflection registry and board for that purpose. They remain supplemental until the standards-first corpus and deterministic evidence pack stay green under the normal suite cadence.
 
-## Expansion phase note (2026-03-07)
+## Active materialization note (2026-03-07)
 
-- The expansion layer is now integrated as `134` manifest-backed executable systems across the legacy Mind/Body/Heart/hardening tracks plus `9` collaboration packs, with schema-backed output validation and a `108`-entry extension catalog covering systems, skills, and pack artifacts.
-- The current validation matrix is green for `standard`, `deep`, `standard --offline-only`, `collab --include-mcp-refresh`, and `standard --include-staged-connectors`. The latest stored standard snapshot is `178 PASS / 0 WARN / 0 FAIL` with `134/134` expansion systems green.
+- The expansion layer is now integrated as `170` manifest-backed executable systems: the earlier `134`-system surface plus `6` materialization and runtime packs (`36` additional systems), with a `180`-entry extension catalog and a v2 MCP catalog that separates desired state, actual state, and write-promotion evidence.
+- The current validation matrix is green for `standard`, `deep`, `standard --offline-only`, `collab --include-mcp-refresh`, and `materialize`. The latest stored materialize snapshot is `216 PASS / 0 WARN / 0 FAIL` with `170/170` expansion systems green.
 - Expansion and collaboration outputs are first-class gates in the mandala path through:
   - `docs/trinity-expansion/trinity-release-gate-board-latest.json`
   - `docs/trinity-expansion/mind-theory-readiness-gate-latest.json`
@@ -49,5 +49,12 @@ Additional theory traditions, scripture comparators, advanced OS paradigms, and 
   - `docs/trinity-expansion/compute-hardware-gate-latest.json`
   - `docs/trinity-expansion/identity-governance-gate-latest.json`
   - `docs/trinity-expansion/public-intelligence-gate-latest.json`
-- The capability surface audit keeps the evidence boundary explicit: `gpt-5.4` is configured, `41` repo-local skills are present, `Figma` and `Linear` are verified live, `Playwright` remains skill-only, and `GitHub`, `Filesystem`, `Notion`, `Slack`, `Google Workspace`, and `Postgres` remain staged behind setup gates with no exposed private credentials in repo state.
+- The active-materialization lane now adds six more gate boards:
+  - `docs/trinity-expansion/github-materialization-gate-latest.json`
+  - `docs/trinity-expansion/filesystem-materialization-gate-latest.json`
+  - `docs/trinity-expansion/notion-materialization-gate-latest.json`
+  - `docs/trinity-expansion/postgres-materialization-gate-latest.json`
+  - `docs/trinity-expansion/os-runtime-fabric-gate-latest.json`
+  - `docs/trinity-expansion/wetware-device-readiness-gate-latest.json`
+- The capability surface audit keeps the evidence boundary explicit: `gpt-5.4` is configured, `53` repo-local skills are present, `Figma` remains verified live-read, `Linear` is now verified live-write via `docs/trinity-live-traces/linear-collab-write-proof-v1.json`, `Playwright` remains skill-only, and `GitHub`, `Filesystem`, `Notion`, `Slack`, `Google Workspace`, and `Postgres` remain staged behind setup gates with no exposed private credentials in repo state.
 - Comparison language must remain PASS-backed. Expansion records can generate candidates, but they do not auto-upgrade GMUT, Body readiness, or governance legal-force claims without explicit manual promotion.

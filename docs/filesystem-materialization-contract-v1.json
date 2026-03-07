@@ -1,0 +1,40 @@
+{
+  "pack": "filesystem_materialization",
+  "display_name": "Filesystem Materialization",
+  "pillar": "trinity",
+  "wave": "wave16",
+  "track": "active_materialization",
+  "connector_id": "filesystem",
+  "requires_auth": true,
+  "gating_class": "staged_setup_gate",
+  "sync_strategy": "staged_connector",
+  "freshness_window_days": 30,
+  "cache_artifact": "docs/trinity-mcp-cache/filesystem-materialization-latest.json",
+  "workflow_tokens": [
+    "materialize profile only",
+    "scoped connector required",
+    "local shell is not mcp promotion",
+    "write tracer must stay disposable"
+  ],
+  "risk_tags": [
+    "scope overreach",
+    "filesystem mutation",
+    "connector confusion"
+  ],
+  "repo_targets": [
+    "docs/trinity-mcp-catalog-v2.json",
+    "docs/trinity-materialization-ledger.jsonl"
+  ],
+  "skill_names": [
+    "filesystem-materialization-operations",
+    "filesystem-materialization-integration"
+  ],
+  "system_ids": [
+    "filesystem_materialization_surface_audit",
+    "filesystem_materialization_sync_bridge",
+    "filesystem_materialization_materialization_tracer",
+    "filesystem_materialization_cache_board",
+    "filesystem_materialization_risk_board",
+    "filesystem_materialization_gate"
+  ]
+}

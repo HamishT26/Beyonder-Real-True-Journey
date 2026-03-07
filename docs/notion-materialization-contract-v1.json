@@ -1,0 +1,40 @@
+{
+  "pack": "notion_materialization",
+  "display_name": "Notion Materialization",
+  "pillar": "heart",
+  "wave": "wave17",
+  "track": "active_materialization",
+  "connector_id": "notion",
+  "requires_auth": true,
+  "gating_class": "staged_setup_gate",
+  "sync_strategy": "staged_connector",
+  "freshness_window_days": 30,
+  "cache_artifact": "docs/trinity-mcp-cache/notion-materialization-latest.json",
+  "workflow_tokens": [
+    "materialize profile only",
+    "token and read handshake first",
+    "disposable staging page only",
+    "no secrets in repo"
+  ],
+  "risk_tags": [
+    "token exposure",
+    "workspace mutation",
+    "knowledge drift"
+  ],
+  "repo_targets": [
+    "docs/trinity-mcp-catalog-v2.json",
+    "docs/trinity-materialization-ledger.jsonl"
+  ],
+  "skill_names": [
+    "notion-materialization-operations",
+    "notion-materialization-integration"
+  ],
+  "system_ids": [
+    "notion_materialization_surface_audit",
+    "notion_materialization_sync_bridge",
+    "notion_materialization_materialization_tracer",
+    "notion_materialization_cache_board",
+    "notion_materialization_risk_board",
+    "notion_materialization_gate"
+  ]
+}

@@ -273,6 +273,14 @@ def main() -> int:
         asdict(_artifact_status("Compute hardware gate", "docs/trinity-expansion/compute-hardware-gate-latest.json")),
         asdict(_artifact_status("Identity governance gate", "docs/trinity-expansion/identity-governance-gate-latest.json")),
         asdict(_artifact_status("Public intelligence gate", "docs/trinity-expansion/public-intelligence-gate-latest.json")),
+        asdict(_artifact_status("GitHub materialization gate", "docs/trinity-expansion/github-materialization-gate-latest.json")),
+        asdict(_artifact_status("Filesystem materialization gate", "docs/trinity-expansion/filesystem-materialization-gate-latest.json")),
+        asdict(_artifact_status("Notion materialization gate", "docs/trinity-expansion/notion-materialization-gate-latest.json")),
+        asdict(_artifact_status("Postgres materialization gate", "docs/trinity-expansion/postgres-materialization-gate-latest.json")),
+        asdict(_artifact_status("OS runtime fabric gate", "docs/trinity-expansion/os-runtime-fabric-gate-latest.json")),
+        asdict(_artifact_status("Wetware device readiness gate", "docs/trinity-expansion/wetware-device-readiness-gate-latest.json")),
+        asdict(_artifact_status("Materialization ledger validation", "docs/trinity-materialization-ledger-validation-latest.json")),
+        asdict(_artifact_status("OS runtime reference validation", "docs/trinity-os-runtime-reference-validation-latest.json")),
     ]
 
     hybrid_status = "PASS"

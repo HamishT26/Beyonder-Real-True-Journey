@@ -11,8 +11,8 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_EXTENSION_KINDS = {"system", "skill", "artifact"}
-ALLOWED_EXTENSION_STATUS = {"active", "verified_live", "skill_only", "staged_setup_gate"}
-ALLOWED_MCP_STATUS = {"verified_live", "staged_setup_gate", "skill_only", "future_candidate", "absent"}
+ALLOWED_EXTENSION_STATUS = {"active", "verified_live", "verified_live_read", "verified_live_write", "skill_only", "staged_setup_gate"}
+ALLOWED_MCP_STATUS = {"verified_live", "verified_live_read", "verified_live_write", "staged_setup_gate", "skill_only", "future_candidate", "absent"}
 
 
 def _repo_path(path_str: str) -> Path:
@@ -47,9 +47,9 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity extension and MCP catalogs.")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v3.json")
-    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v1.json")
-    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v1.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v4.json")
+    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v2.json")
+    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v2.json")
     parser.add_argument("--reports-dir", default="docs/trinity-extension-catalog-runs")
     parser.add_argument("--latest-json", default="docs/trinity-extension-catalog-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-extension-catalog-validation-latest.md")
@@ -80,6 +80,8 @@ def main() -> int:
     if not isinstance(extension_rows, list):
         failures.append("extension catalog extensions must be a list")
         extension_rows = []
+    if isinstance(extension_rows, list) and len(extension_rows) != 180:
+        failures.append(f"extension catalog expected 180 entries, found {len(extension_rows)}")
 
     extension_ids: set[str] = set()
     pack_counts: dict[str, dict[str, int]] = {}
@@ -134,7 +136,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{label} must be an object")
             continue
-        for field in ("mcp_id", "status", "cache_artifact", "setup_gate"):
+        for field in ("mcp_id", "status", "cache_artifact", "setup_gate", "desired_state", "actual_state", "live_read_enabled", "live_write_enabled", "promotion_evidence", "blockers"):
             if field not in entry:
                 failures.append(f"{label} missing field: {field}")
         connector_id = str(entry.get("mcp_id") or "").strip()
@@ -147,6 +149,16 @@ def main() -> int:
             seen_connectors.add(connector_id)
         if status not in ALLOWED_MCP_STATUS:
             failures.append(f"{connector_id or label} invalid mcp status: {status}")
+        if not isinstance(entry.get("live_read_enabled"), bool):
+            failures.append(f"{connector_id or label} live_read_enabled must be boolean")
+        if not isinstance(entry.get("live_write_enabled"), bool):
+            failures.append(f"{connector_id or label} live_write_enabled must be boolean")
+        if not isinstance(entry.get("promotion_evidence"), list):
+            failures.append(f"{connector_id or label} promotion_evidence must be a list")
+        if not isinstance(entry.get("blockers"), list):
+            failures.append(f"{connector_id or label} blockers must be a list")
+        if bool(entry.get("live_write_enabled")) and not entry.get("promotion_evidence"):
+            failures.append(f"{connector_id or label} live_write_enabled requires promotion_evidence")
 
     payload = {
         "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
