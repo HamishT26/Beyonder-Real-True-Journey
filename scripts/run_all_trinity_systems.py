@@ -27,8 +27,8 @@ PROFILE_HELP = {
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v4.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v2.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v5.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v3.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -250,6 +250,28 @@ def _os_runtime_reference_validation_command(*, enforce: bool) -> tuple[str, lis
     return f"trinity os runtime reference validation ({mode})", command
 
 
+def _journey_corpus_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_journey_corpus_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity journey corpus validation ({mode})", command
+
+
+def _aletheon_memory_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/aletheon_memory_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"aletheon memory validation ({mode})", command
+
+
 def _load_expansion_system_commands(
     *,
     profile: str,
@@ -295,11 +317,34 @@ def _load_expansion_system_commands(
             live_disabled = offline_only
             if pack in {"figma_collab", "linear_collab"} and not include_mcp_refresh:
                 live_disabled = True
-            elif pack == "github_devflow" and not include_staged_connectors:
+            elif pack in {"figma_collab", "linear_collab", "notion_memory_bridge"} and not include_mcp_refresh:
                 live_disabled = True
-            elif pack == "public_intelligence" and not include_public_api_refresh:
+            elif pack in {"github_devflow", "filesystem_scope_governor"} and not include_staged_connectors:
                 live_disabled = True
-            elif pack not in {"figma_collab", "linear_collab", "github_devflow", "public_intelligence"} and not include_public_api_refresh:
+            elif pack in {"github_materialization", "github_pat_materialization", "notion_materialization", "postgres_materialization", "postgres_local_runtime"} and not include_live_writes:
+                live_disabled = True
+            elif pack in {"public_intelligence", "journey_continuity", "os_runtime_fabric", "os_runtime_benchmark", "ai_frontier_alignment", "wetware_device_readiness", "wetware_device_readiness_v5", "aletheon_memory_reflection"} and not include_public_api_refresh:
+                live_disabled = True
+            elif pack not in {
+                "figma_collab",
+                "linear_collab",
+                "notion_memory_bridge",
+                "github_devflow",
+                "filesystem_scope_governor",
+                "github_materialization",
+                "github_pat_materialization",
+                "notion_materialization",
+                "postgres_materialization",
+                "postgres_local_runtime",
+                "public_intelligence",
+                "journey_continuity",
+                "os_runtime_fabric",
+                "os_runtime_benchmark",
+                "ai_frontier_alignment",
+                "wetware_device_readiness",
+                "wetware_device_readiness_v5",
+                "aletheon_memory_reflection",
+            } and not include_public_api_refresh:
                 live_disabled = True
             if live_disabled:
                 command.append("--offline-only")
@@ -469,6 +514,16 @@ def build_commands(
             ),
             (
                 *_os_runtime_reference_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_journey_corpus_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_aletheon_memory_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -673,9 +728,13 @@ def build_commands(
             (
                 "v33 structural OCR validation snapshot",
                 [
-                    "bash",
-                    "-lc",
-                    "strings -n 8 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf' | rg -n 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' | head -n 20",
+                    "python3",
+                    "scripts/journey_anchor_scan.py",
+                    "--regex",
+                    "Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill",
+                    "--max-matches",
+                    "20",
+                    "Beyonder-Real-True Journey v33 (Arielis) (2).pdf",
                 ],
             ),
         ]
@@ -903,9 +962,13 @@ def build_commands(
         (
             "v33 structural OCR validation snapshot",
             [
-                "bash",
-                "-lc",
-                "strings -n 8 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf' | rg -n 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' | head -n 20",
+                "python3",
+                "scripts/journey_anchor_scan.py",
+                "--regex",
+                "Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill",
+                "--max-matches",
+                "20",
+                "Beyonder-Real-True Journey v33 (Arielis) (2).pdf",
             ],
         ),
     ]
@@ -916,32 +979,61 @@ def build_commands(
                 (
                     "cross-version anchor scan (v29-v33 PDFs)",
                     [
-                        "bash",
-                        "-lc",
-                        "for f in 'Beyonder-Real-True Journey v29 (Aerin) (1).pdf' 'Beyonder-Real-True Journey v30 (Ariel) (1).pdf' 'Beyonder-Real-True Journey v31 (Ariel) (1).pdf' 'Beyonder-Real-True Journey v32 (Aetherius) (1) (1).pdf' 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'; do echo \"=== $f ===\"; strings -n 8 \"$f\" | rg -n 'Trinity|GMUT|Freed|DID|Quantum|Orchestrator|Cosmic|QCIT|QCfT' | head -n 10 || true; done",
+                        "python3",
+                        "scripts/journey_anchor_scan.py",
+                        "--regex",
+                        "Trinity|GMUT|Freed|DID|Quantum|Orchestrator|Cosmic|QCIT|QCfT",
+                        "--max-matches",
+                        "10",
+                        "--allow-empty",
+                        "Beyonder-Real-True Journey v29 (Aerin) (1).pdf",
+                        "Beyonder-Real-True Journey v30 (Ariel) (1).pdf",
+                        "Beyonder-Real-True Journey v31 (Ariel) (1).pdf",
+                        "Beyonder-Real-True Journey v32 (Aetherius) (1) (1).pdf",
+                        "Beyonder-Real-True Journey v33 (Arielis) (2).pdf",
                     ],
                 ),
                 (
                     "v29 DOCX module anchor scan",
                     [
-                        "bash",
-                        "-lc",
-                        "unzip -p 'Beyonder-Real-True Journey v29 (Aerin) (1).docx' word/document.xml | tr -d '\\r' | rg -n 'module|orchestrator|simulation|security|identity|governance|journey' | head -n 25",
+                        "python3",
+                        "scripts/journey_anchor_scan.py",
+                        "--regex",
+                        "module|orchestrator|simulation|security|identity|governance|journey",
+                        "--max-matches",
+                        "25",
+                        "Beyonder-Real-True Journey v29 (Aerin) (1).docx",
                     ],
                 ),
                 (
                     "v33 capsule inventory snapshot",
                     [
-                        "bash",
-                        "-lc",
-                        "if [ -f 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' ]; then unzip -l 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' | rg -n 'v29|v30|v31|v32|v33|quantum|trinity|orchestrator|simulation|freed|cosmic' | head -n 40; else echo 'SKIPPED: Beyonder-Real-True_Journey_v33_Capsule (4).zip not found'; fi",
+                        "python3",
+                        "scripts/journey_anchor_scan.py",
+                        "--regex",
+                        "v29|v30|v31|v32|v33|quantum|trinity|orchestrator|simulation|freed|cosmic",
+                        "--max-matches",
+                        "40",
+                        "--allow-empty",
+                        "--skip-missing",
+                        "Beyonder-Real-True_Journey_v33_Capsule (4).zip",
                     ],
                 ),
             ]
         )
 
     if include_skill_install:
-        commands.append(("local Trinity skill installation", ["bash", "scripts/install_local_skills.sh"]))
+        commands.append(
+            (
+                "local Trinity skill installation",
+                [
+                    "python3",
+                    "scripts/trinity_skill_installer_system.py",
+                    "--force",
+                    "--verify",
+                ],
+            )
+        )
 
     if include_curated_skill_catalog:
         if Path(SKILL_INSTALLER_LIST).exists():

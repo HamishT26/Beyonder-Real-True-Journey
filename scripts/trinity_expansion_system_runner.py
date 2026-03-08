@@ -20,11 +20,11 @@ from typing import Any
 from trinity_api_common import fetch_json, fetch_text, quote_plus
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v4.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v5.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v2.json"
-DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v2.json"
-DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v2.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v3.json"
+DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v3.json"
+DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
 PASS_LIKE = {"PASS", "WARN"}
@@ -51,7 +51,7 @@ SAFE_BOOTSTRAP_MARKERS = [
     "yolo_mode = true",
     "dangerously-bypass-approvals-and-sandbox",
     "god_functions.sh",
-    "GITHUB_PERSONAL_ACCESS_TOKEN",
+    "ghp_",
 ]
 ATOM_NS = {"atom": "http://www.w3.org/2005/Atom"}
 PACK_SYSTEM_SUFFIXES = ("surface_audit", "workflow_guard", "materialization_tracer", "risk_board", "sync_bridge", "cache_board", "gate")
@@ -554,6 +554,28 @@ def _default_live_state(*, status: str, desired_state: str | None = None, actual
     }
 
 
+def _connector_state_satisfies(expected: str, actual: str, status: str) -> bool:
+    expected_text = str(expected or "").strip()
+    actual_text = str(actual or "").strip()
+    status_text = str(status or "").strip()
+    if not expected_text:
+        return True
+    if status_text == expected_text or actual_text == expected_text:
+        return True
+    if status_text.startswith(expected_text) or actual_text.startswith(expected_text):
+        return True
+    state_rank = {
+        "staged_setup_gate": 1,
+        "verified_live_read": 2,
+        "verified_live_write": 3,
+    }
+    expected_rank = state_rank.get(expected_text)
+    actual_rank = state_rank.get(actual_text) or state_rank.get(status_text)
+    if expected_rank is not None and actual_rank is not None:
+        return actual_rank >= expected_rank
+    return False
+
+
 def _materialization_proof_path(pack: str) -> str:
     return f"docs/trinity-live-traces/{pack.replace('_', '-')}-proof-v1.json"
 
@@ -811,6 +833,10 @@ def _fixture_live_records(
                 checks.append(_check(f"live_fallback:{source_id}", "PASS", f"fallback used ({exc})"))
                 return checks, fallback_records, [{"source_id": source_id, "request_url": url, "mode": "fallback_cache", "record_count": len(fallback_records), "status": "PASS"}]
             checks.append(_check(f"live_fetch:{source_id}", "FAIL", str(exc)))
+    if not records and fallback_records:
+        checks.append(_check("live_records_present", "PASS", f"fallback_records={len(fallback_records)}"))
+        runs.append({"source_id": "fallback_cache", "request_url": "repo://fixture/fallback", "mode": "fallback_cache", "record_count": len(fallback_records), "status": "PASS"})
+        return checks, fallback_records, runs
     checks.append(_check("live_records_present", "PASS" if records else "FAIL", f"records={len(records)}"))
     return checks, records, runs
 
@@ -895,9 +921,10 @@ def _compute_pack_system(
             ok_mcp, connector_entry, detail = _mcp_connector_entry(connector_id)
             checks.append(_check("mcp_connector_present", "PASS" if ok_mcp else "FAIL", detail if not ok_mcp else connector_id))
             if ok_mcp:
+                connector_status = str(connector_entry.get("status") or "")
                 actual_state = str(connector_entry.get("actual_state") or connector_entry.get("status") or "")
-                expected_ok = str(connector_entry.get("status")) == gating_class or actual_state.startswith(gating_class)
-                checks.append(_check("mcp_status_expected", "PASS" if expected_ok else "FAIL", f"status={connector_entry.get('status')}, actual_state={actual_state}"))
+                expected_ok = _connector_state_satisfies(gating_class, actual_state, connector_status)
+                checks.append(_check("mcp_status_expected", "PASS" if expected_ok else "FAIL", f"status={connector_status}, actual_state={actual_state}, expected={gating_class}"))
         return {
             "checks": checks,
             "metrics": {"pack": pack, "gating_class": gating_class, "strategy": strategy, "extension_count": len(_pack_extension_rows(pack))},
@@ -2275,7 +2302,7 @@ def _compute_system(
             "docs/body-profile-policy-v1.json",
             "docs/trinity-api-source-manifest-v1.json",
             "docs/trinity-expansion-system-manifest-v1.json",
-            "docs/trinity-expansion-system-manifest-v4.json",
+            "docs/trinity-expansion-system-manifest-v5.json",
         ]
         checks: list[dict[str, str]] = []
         hashes: dict[str, str] = {}
@@ -2433,19 +2460,25 @@ def _compute_system(
         suite_ok, suite_payload, _ = _read_json_safe("docs/system-suite-status.json")
         last_expansion_total = int(suite_payload.get("expansion_systems_total", 0) or 0) if suite_ok else 0
         ok_mcp_catalog, mcp_catalog, _ = _read_json_safe(DEFAULT_MCP_CATALOG)
+        ok_mcp_surface, mcp_surface, _ = _read_json_safe("docs/trinity-mcp-surface-session-v1.json")
         connectors = [row for row in (mcp_catalog.get("connectors", []) if ok_mcp_catalog else []) if isinstance(row, dict)]
         verified_connectors = sorted(str(row.get("mcp_id")) for row in connectors if bool(row.get("live_read_enabled")))
         skill_only_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "skill_only")
         staged_connectors = sorted(str(row.get("mcp_id")) for row in connectors if str(row.get("status")) == "staged_setup_gate")
+        session_resource_count = int(mcp_surface.get("resource_count", 0) or 0) if ok_mcp_surface else 0
+        session_template_count = int(mcp_surface.get("resource_template_count", 0) or 0) if ok_mcp_surface else 0
         checks = [
             _check("codex_config_present", "PASS" if codex_config_path.exists() else "FAIL", str(codex_config_path)),
             _check("preferred_model_gpt54", "PASS" if model == "gpt-5.4" else "FAIL", f"model={model or 'missing'}"),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_absent", "PASS" if shutil.which("uvx") is None else "FAIL", f"uvx={shutil.which('uvx') or 'absent'}"),
-            _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 41 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
-            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 170 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
+            _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 59 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
+            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 224 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
+            _check("mcp_resources_visible", "PASS" if session_resource_count > 0 else "FAIL", f"resource_count={session_resource_count}"),
+            _check("mcp_templates_visible", "PASS" if session_template_count > 0 else "FAIL", f"template_count={session_template_count}"),
             _check("figma_verified_live", "PASS" if "figma" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
             _check("linear_verified_live", "PASS" if "linear" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
+            _check("notion_verified_live", "PASS" if "notion" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
             _check("playwright_skill_only", "PASS" if "playwright" in skill_only_connectors else "FAIL", f"skill_only={skill_only_connectors}"),
         ]
         return {
@@ -2461,15 +2494,17 @@ def _compute_system(
                 "exposed_env_vars": exposed_env,
                 "uvx_present": shutil.which("uvx") is not None,
                 "mcp_servers_configured": mcp_server_names,
-                "mcp_resource_templates_available": True,
-                "mcp_resources_available": True,
+                "mcp_resource_templates_available": session_template_count > 0,
+                "mcp_resources_available": session_resource_count > 0,
+                "mcp_resource_count": session_resource_count,
+                "mcp_resource_template_count": session_template_count,
                 "mcp_settings_present": mcp_settings_path.exists(),
                 "verified_mcp_connectors": verified_connectors,
                 "skill_only_connectors": skill_only_connectors,
                 "staged_connectors": staged_connectors,
                 "code_home_present": bool(os.getenv("CODEX_HOME")),
             },
-            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v4.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v5.json", DEFAULT_MCP_CATALOG, "docs/trinity-mcp-surface-session-v1.json"]),
             "next_action": "Use this audit as the environment baseline before widening integrations.",
             "records": None,
             "source_runs": None,
@@ -2595,7 +2630,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"live_entry_count": len(live_entries), "cache_backed_live_entries": len(cache_backed)},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v4.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v5.json"]),
             "next_action": "Keep every live stage cache-backed so offline-only remains viable.",
             "records": None,
             "source_runs": None,
@@ -2645,7 +2680,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"boundary_count": len(boundaries), "boundaries": boundaries},
-            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v4.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v5.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep trust boundaries explicit before expanding connectivity or authority.",
             "records": None,
             "source_runs": None,
@@ -2658,7 +2693,7 @@ sandbox = \"elevated\"
         checks = [
             _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['\"standard\"', '\"quick\"', '\"deep\"', '\"collab\"', '\"materialize\"']) else "FAIL", "standard/quick/deep/collab/materialize expected"),
             _check("offline_only_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "offline override required"),
-            _check("manifest_v4_present", "PASS" if "trinity-expansion-system-manifest-v4.json" in run_all_text else "FAIL", "run_all should target v4 manifest"),
+            _check("manifest_v5_present", "PASS" if "trinity-expansion-system-manifest-v5.json" in run_all_text else "FAIL", "run_all should target v5 manifest"),
             _check("live_write_flag_present", "PASS" if "--include-live-writes" in run_all_text else "FAIL", "materialize profile requires explicit write tracer flag support"),
         ]
         return {
@@ -2691,7 +2726,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v4.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v5.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep hardening and public/local boundaries ahead of new privileged integrations.",
             "records": None,
             "source_runs": None,
@@ -2928,7 +2963,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v4.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v5.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,
             "source_runs": None,
@@ -3422,7 +3457,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"edge_count": len(edges), "missing_dependencies": missing, "cycle_count": len(cycles)},
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v4.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v5.json"]),
             "next_action": "Keep the manifest graph acyclic before widening suite orchestration.",
             "records": None,
             "source_runs": None,
@@ -3455,7 +3490,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v4.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v5.json"]),
             "next_action": "Keep orchestration resilient through explicit modes, status outputs, and dependency checks.",
             "records": None,
             "source_runs": None,

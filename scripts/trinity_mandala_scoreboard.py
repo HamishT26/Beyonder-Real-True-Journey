@@ -279,8 +279,19 @@ def main() -> int:
         asdict(_artifact_status("Postgres materialization gate", "docs/trinity-expansion/postgres-materialization-gate-latest.json")),
         asdict(_artifact_status("OS runtime fabric gate", "docs/trinity-expansion/os-runtime-fabric-gate-latest.json")),
         asdict(_artifact_status("Wetware device readiness gate", "docs/trinity-expansion/wetware-device-readiness-gate-latest.json")),
+        asdict(_artifact_status("Journey continuity gate", "docs/trinity-expansion/journey-continuity-gate-latest.json")),
+        asdict(_artifact_status("GitHub PAT materialization gate", "docs/trinity-expansion/github-pat-materialization-gate-latest.json")),
+        asdict(_artifact_status("Notion memory bridge gate", "docs/trinity-expansion/notion-memory-bridge-gate-latest.json")),
+        asdict(_artifact_status("Postgres local runtime gate", "docs/trinity-expansion/postgres-local-runtime-gate-latest.json")),
+        asdict(_artifact_status("Filesystem scope governor gate", "docs/trinity-expansion/filesystem-scope-governor-gate-latest.json")),
+        asdict(_artifact_status("OS runtime benchmark gate", "docs/trinity-expansion/os-runtime-benchmark-gate-latest.json")),
+        asdict(_artifact_status("AI frontier alignment gate", "docs/trinity-expansion/ai-frontier-alignment-gate-latest.json")),
+        asdict(_artifact_status("Aletheon memory reflection gate", "docs/trinity-expansion/aletheon-memory-reflection-gate-latest.json")),
+        asdict(_artifact_status("Wetware device readiness v5 gate", "docs/trinity-expansion/wetware-device-readiness-v5-gate-latest.json")),
         asdict(_artifact_status("Materialization ledger validation", "docs/trinity-materialization-ledger-validation-latest.json")),
         asdict(_artifact_status("OS runtime reference validation", "docs/trinity-os-runtime-reference-validation-latest.json")),
+        asdict(_artifact_status("Journey corpus validation", "docs/trinity-journey-corpus-validation-latest.json")),
+        asdict(_artifact_status("Aletheon memory validation", "docs/aletheon-memory-validation-latest.json")),
     ]
 
     hybrid_status = "PASS"

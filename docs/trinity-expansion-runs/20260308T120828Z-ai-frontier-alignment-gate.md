@@ -1,0 +1,30 @@
+# Trinity Expansion Result: ai_frontier_alignment_gate
+
+- generated_utc: `2026-03-08T12:08:28+00:00`
+- pillar: `mind`
+- overall_status: **FAIL**
+- effective_success: `False`
+
+## Checks
+| name | status | detail |
+|---|---|---|
+| dependency:docs/trinity-expansion/ai-frontier-alignment-surface-audit-latest.json | PASS | status=PASS |
+| dependency:docs/trinity-expansion/ai-frontier-alignment-sync-bridge-latest.json | FAIL | status=FAIL |
+| dependency:docs/trinity-expansion/ai-frontier-alignment-materialization-tracer-latest.json | PASS | status=PASS |
+| dependency:docs/trinity-expansion/ai-frontier-alignment-cache-board-latest.json | FAIL | status=FAIL |
+| dependency:docs/trinity-expansion/ai-frontier-alignment-risk-board-latest.json | PASS | status=PASS |
+
+## Metrics
+```json
+{
+  "dependencies_checked": 5,
+  "gating_class": "active",
+  "pack": "ai_frontier_alignment",
+  "pass_like_dependencies": 3
+}
+```
+
+## Repo targets touched
+- `docs/trinity-materialization-ledger.jsonl`
+- `docs/trinity-mcp-cache/ai-frontier-alignment-latest.json`
+- `docs/trinity-mcp-catalog-v3.json`

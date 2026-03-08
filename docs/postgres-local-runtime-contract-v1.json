@@ -1,0 +1,40 @@
+{
+  "pack": "postgres_local_runtime",
+  "display_name": "Postgres Local Runtime",
+  "pillar": "body",
+  "wave": "wave24",
+  "track": "active_materialization",
+  "connector_id": "postgres",
+  "requires_auth": true,
+  "gating_class": "verified_live_write",
+  "sync_strategy": "local_probe",
+  "freshness_window_days": 30,
+  "cache_artifact": "docs/trinity-mcp-cache/postgres-local-runtime-latest.json",
+  "workflow_tokens": [
+    "postgres local runtime pack",
+    "evidence boundary explicit",
+    "cache backed by default",
+    "proof before promotion"
+  ],
+  "risk_tags": [
+    "drift",
+    "overclaim",
+    "surface mismatch"
+  ],
+  "repo_targets": [
+    "docs/trinity-mcp-catalog-v3.json",
+    "docs/trinity-materialization-ledger.jsonl"
+  ],
+  "skill_names": [
+    "postgres-local-runtime-operations",
+    "postgres-local-runtime-integration"
+  ],
+  "system_ids": [
+    "postgres_local_runtime_surface_audit",
+    "postgres_local_runtime_sync_bridge",
+    "postgres_local_runtime_materialization_tracer",
+    "postgres_local_runtime_cache_board",
+    "postgres_local_runtime_risk_board",
+    "postgres_local_runtime_gate"
+  ]
+}
