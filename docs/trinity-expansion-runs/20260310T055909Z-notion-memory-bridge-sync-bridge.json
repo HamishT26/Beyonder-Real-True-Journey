@@ -1,0 +1,70 @@
+{
+  "generated_utc": "2026-03-10T05:59:09+00:00",
+  "system_id": "notion_memory_bridge_sync_bridge",
+  "pillar": "heart",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "mcp_connector_present",
+      "status": "PASS",
+      "detail": "notion"
+    },
+    {
+      "name": "verified_refresh_enabled",
+      "status": "PASS",
+      "detail": "include_mcp_refresh=False"
+    },
+    {
+      "name": "cache_written",
+      "status": "PASS",
+      "detail": "docs/trinity-mcp-cache/notion-memory-bridge-latest.json"
+    }
+  ],
+  "metrics": {
+    "pack": "notion_memory_bridge",
+    "strategy": "verified_mcp",
+    "record_count": 1,
+    "auth_state": "verified_live",
+    "cache_status": "verified_live_write",
+    "desired_state": "verified_live_write",
+    "actual_state": "verified_live_write",
+    "live_read_enabled": true,
+    "live_write_enabled": true,
+    "blocker_count": 0
+  },
+  "repo_targets_touched": [
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-mcp-cache/notion-memory-bridge-latest.json",
+    "docs/trinity-mcp-catalog-v3.json"
+  ],
+  "next_action": "Use notion_memory_bridge only through proof-backed outputs.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "notion_memory_bridge",
+      "record_id": "notion_memory_bridge-seed",
+      "signal_type": "pack_seed",
+      "title": "Notion Memory Bridge",
+      "published_at": "2026-03-08",
+      "source_url": "repo://docs/notion-memory-bridge-fixture-v1.json",
+      "summary": "Seed cache record for Notion Memory Bridge.",
+      "metrics": {
+        "gating_class": "verified_live_write",
+        "strategy": "verified_mcp"
+      },
+      "tags": [
+        "notion_memory_bridge",
+        "seed"
+      ],
+      "repo_targets": []
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "notion",
+      "mode": "verified_connector_cache",
+      "record_count": 1,
+      "status": "PASS"
+    }
+  ]
+}

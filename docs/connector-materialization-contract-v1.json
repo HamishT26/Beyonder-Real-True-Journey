@@ -1,0 +1,46 @@
+{
+  "pack": "connector_materialization",
+  "display_name": "Connector Materialization",
+  "pillar": "trinity",
+  "wave": "wave33",
+  "track": "active_materialization",
+  "connector_id": "",
+  "requires_auth": true,
+  "gating_class": "active",
+  "sync_strategy": "local_repo",
+  "freshness_window_days": 7,
+  "activation_group": "connector_hardening",
+  "continuity_band": "v5-v6",
+  "workflow_tokens": [
+    "fresh read proof",
+    "fresh write proof",
+    "rollback-safe target",
+    "no main writes"
+  ],
+  "risk_tags": [
+    "external write",
+    "credential drift",
+    "proof mismatch"
+  ],
+  "repo_targets": [
+    "docs/trinity-mcp-catalog-v4.json",
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-live-traces"
+  ],
+  "skill_names": [
+    "connector-materialization-operations",
+    "connector-materialization-integration"
+  ],
+  "system_ids": [
+    "connector_materialization_surface_audit",
+    "connector_materialization_sync_bridge",
+    "connector_materialization_materialization_tracer",
+    "connector_materialization_cache_board",
+    "connector_materialization_risk_board",
+    "connector_materialization_gate"
+  ],
+  "autonomy_class": "write_proof",
+  "live_dependency": "github+linear+notion+postgres",
+  "mirror_target": "repo_plus_connectors",
+  "history_scope": "v5-v6"
+}

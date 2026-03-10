@@ -1,0 +1,37 @@
+{
+  "version": "v1",
+  "generated_utc": "2026-03-10T05:00:00+00:00",
+  "database": "trinity_v5",
+  "schema": "v6_code_knowledge",
+  "tables": [
+    {
+      "name": "files",
+      "columns": ["path", "extension", "size_bytes", "sha256", "pack_hint", "updated_utc"]
+    },
+    {
+      "name": "symbols",
+      "columns": ["path", "symbol_name", "symbol_kind", "signature", "line_start", "line_end"]
+    },
+    {
+      "name": "dependencies",
+      "columns": ["path", "dependency", "dependency_kind", "source_line"]
+    },
+    {
+      "name": "manifest_entries",
+      "columns": ["system_id", "pack", "pillar", "mode", "profiles_json", "activation_group", "continuity_band"]
+    },
+    {
+      "name": "connector_states",
+      "columns": ["connector_id", "desired_state", "actual_state", "live_read_enabled", "live_write_enabled", "last_verified_utc"]
+    },
+    {
+      "name": "continuity_anchors",
+      "columns": ["version", "agent_name", "source_file", "evidence_state", "modules_json", "next_reconciliation_target"]
+    }
+  ],
+  "ingest_rules": {
+    "include_extensions": [".py", ".md", ".json", ".toml", ".yaml", ".yml", ".txt"],
+    "exclude_prefixes": [".git/", "docs/trinity-expansion-runs/", "docs/*-runs/", "__pycache__/"],
+    "signature_strategy": "python_ast_then_regex_fallback"
+  }
+}
