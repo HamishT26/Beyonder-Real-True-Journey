@@ -1,0 +1,125 @@
+{
+  "version": "v2",
+  "generated_utc": "2026-03-10T11:50:22+00:00",
+  "default_materialize_level": "l2_persistent_dev",
+  "levels": [
+    {
+      "level_id": "l1_disposable_staging",
+      "desired_state": "available",
+      "actual_state": "available",
+      "write_scope": "temporary branches, pages, documents, and schemas only",
+      "target_class": "disposable_staging",
+      "promotion_requirements": [
+        "verified live-write connector",
+        "temporary target",
+        "rollback note"
+      ],
+      "rollback_requirements": [
+        "delete temp target",
+        "re-run validator"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json",
+        "docs/trinity-live-traces/linear-collab-write-proof-v1.json"
+      ]
+    },
+    {
+      "level_id": "l2_persistent_dev",
+      "desired_state": "default_live",
+      "actual_state": "persistent_dev",
+      "write_scope": "persistent development scopes only",
+      "target_class": "persistent_dev",
+      "promotion_requirements": [
+        "persistent dev target registry",
+        "rollback scope per connector",
+        "proof-backed live-write connectors"
+      ],
+      "rollback_requirements": [
+        "revert dev branch",
+        "archive dev notion rows",
+        "close dev linear items",
+        "drop dev postgres schema"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-persistent-dev-targets-v2.json",
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json",
+        "docs/trinity-live-traces/notion-memory-bridge-proof-v1.json",
+        "docs/trinity-live-traces/postgres-local-runtime-proof-v1.json"
+      ]
+    },
+    {
+      "level_id": "l3_uat_preprod",
+      "desired_state": "proof_gate",
+      "actual_state": "readiness_only",
+      "write_scope": "isolated UAT mirrors only",
+      "target_class": "uat_preprod",
+      "promotion_requirements": [
+        "isolated mirror",
+        "replay harness",
+        "rollback proof",
+        "connector-safe UAT scope"
+      ],
+      "rollback_requirements": [
+        "reset isolated mirror",
+        "restore replay inputs"
+      ],
+      "blockers": [
+        "No isolated UAT mirrors are proven in-session.",
+        "Materialize/dbt toolchain is not discoverable on this machine."
+      ],
+      "proof_artifacts": [
+        "docs/trinity-uat-preprod-targets-v2.json"
+      ]
+    },
+    {
+      "level_id": "l4_standard_prod",
+      "desired_state": "proof_gate",
+      "actual_state": "readiness_only",
+      "write_scope": "protected production targets only",
+      "target_class": "standard_prod",
+      "promotion_requirements": [
+        "protected production target",
+        "change window",
+        "rollback proof",
+        "operator boundary"
+      ],
+      "rollback_requirements": [
+        "documented production rollback",
+        "operator sign-off"
+      ],
+      "blockers": [
+        "No protected production target proof is present.",
+        "Materialize/dbt toolchain is not discoverable on this machine."
+      ],
+      "proof_artifacts": [
+        "docs/trinity-standard-production-targets-v2.json"
+      ]
+    },
+    {
+      "level_id": "l5_ha_prod",
+      "desired_state": "proof_gate",
+      "actual_state": "readiness_only",
+      "write_scope": "HA production replicas only",
+      "target_class": "ha_prod",
+      "promotion_requirements": [
+        "replica support",
+        "failover proof",
+        "consistency proof",
+        "zero-downtime rollback"
+      ],
+      "rollback_requirements": [
+        "failover reversal",
+        "replica rollback plan"
+      ],
+      "blockers": [
+        "No HA runtime proof is present.",
+        "Materialize/dbt toolchain is not discoverable on this machine."
+      ],
+      "proof_artifacts": [
+        "docs/trinity-ha-production-targets-v2.json"
+      ]
+    }
+  ]
+}
