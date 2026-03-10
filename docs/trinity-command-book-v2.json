@@ -1,0 +1,2649 @@
+{
+  "version": "v2",
+  "generated_utc": "2026-03-10T11:50:22+00:00",
+  "description": "V8 governed command book with ladder, council, and autonomy coverage.",
+  "commands": [
+    {
+      "command_id": "suite_run_standard",
+      "intent": "Run the standard Trinity suite.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo clean enough to run"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile standard --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_run_deep",
+      "intent": "Run the deep Trinity suite.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo clean enough to run"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile deep --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_run_collab",
+      "intent": "Run collaboration-safe live reads only.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "figma|linear|notion",
+      "preconditions": [
+        "verified live-read connectors"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile collab --include-mcp-refresh --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "Re-run without --include-mcp-refresh.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_run_materialize_l1",
+      "intent": "Run materialize at disposable staging.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "github|linear|notion|postgres",
+      "preconditions": [
+        "profile materialize"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l1_disposable_staging --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json",
+        "docs/trinity-materialization-ledger.jsonl"
+      ],
+      "rollback": "Discard disposable staging targets.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "suite_run_materialize_l2",
+      "intent": "Run materialize at persistent dev.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "github|linear|notion|postgres",
+      "preconditions": [
+        "persistent dev scopes defined"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l2_persistent_dev --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json",
+        "docs/trinity-materialization-ledger.jsonl"
+      ],
+      "rollback": "Use persistent dev rollback scopes only.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "suite_validate_manifest",
+      "intent": "Validate the v7 manifest.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "manifest exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_manifest_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-expansion-manifest-validation-latest.json"
+      ],
+      "rollback": "Fix manifest and rerun.",
+      "source_of_truth": "scripts/trinity_expansion_manifest_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_validate_extensions",
+      "intent": "Validate the v7 extension catalog.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "extension catalog exists"
+      ],
+      "command_template": "python scripts/trinity_extension_catalog_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-extension-catalog-validation-latest.json"
+      ],
+      "rollback": "Fix extension catalog and rerun.",
+      "source_of_truth": "scripts/trinity_extension_catalog_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_validate_command_book",
+      "intent": "Validate the command system.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "command book exists"
+      ],
+      "command_template": "python scripts/trinity_command_book_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-command-book-validation-latest.json"
+      ],
+      "rollback": "Fix command entries and rerun.",
+      "source_of_truth": "scripts/trinity_command_book_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_validate_ladder",
+      "intent": "Validate the materialization ladder.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "ladder registry exists"
+      ],
+      "command_template": "python scripts/trinity_materialization_ladder_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ladder-validation-latest.json"
+      ],
+      "rollback": "Fix ladder entries and rerun.",
+      "source_of_truth": "scripts/trinity_materialization_ladder_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "suite_render_scoreboard",
+      "intent": "Render the mandala scoreboard.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "validators green"
+      ],
+      "command_template": "python scripts/trinity_mandala_scoreboard.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-mandala-scoreboard-latest.json"
+      ],
+      "rollback": "Fix failing context blocks and rerun.",
+      "source_of_truth": "scripts/trinity_mandala_scoreboard.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_github_read_proof",
+      "intent": "Refresh GitHub live-read proof.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "github",
+      "preconditions": [
+        "git remote available"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id github_pat_materialization_sync_bridge --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/github-pat-materialization-latest.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_github_write_proof",
+      "intent": "Run GitHub write tracer in approved scope.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "github",
+      "preconditions": [
+        "persistent dev level or disposable staging"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id github_pat_materialization_materialization_tracer --include-live-writes --profile-context materialize",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json"
+      ],
+      "rollback": "Revert disposable branch or persistent dev branch.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_notion_read_proof",
+      "intent": "Refresh Notion read bridge.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "notion",
+      "preconditions": [
+        "live notion workspace"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id notion_memory_bridge_sync_bridge --include-mcp-refresh --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/notion-memory-bridge-latest.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_notion_write_proof",
+      "intent": "Run Notion write tracer in approved scope.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "notion",
+      "preconditions": [
+        "persistent dev level or disposable staging"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id notion_memory_bridge_materialization_tracer --include-live-writes --profile-context materialize",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/notion-memory-bridge-proof-v1.json"
+      ],
+      "rollback": "Use Notion staging area only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_linear_read_proof",
+      "intent": "Refresh Linear collaboration bridge.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "linear",
+      "preconditions": [
+        "linear connector live"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id linear_collab_sync_bridge --include-mcp-refresh --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/linear-collab-latest.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_linear_write_proof",
+      "intent": "Run Linear write tracer in approved scope.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "linear",
+      "preconditions": [
+        "persistent dev level or disposable staging"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id linear_collab_materialization_tracer --include-live-writes --profile-context materialize",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/linear-collab-proof-v1.json"
+      ],
+      "rollback": "Use staging issue/document targets only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_postgres_read_proof",
+      "intent": "Refresh Postgres local runtime bridge.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "postgres",
+      "preconditions": [
+        "docker postgres running"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id postgres_local_runtime_sync_bridge --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/postgres-local-runtime-latest.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_postgres_write_proof",
+      "intent": "Run Postgres write tracer in approved scope.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "postgres",
+      "preconditions": [
+        "docker postgres running"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id postgres_local_runtime_materialization_tracer --include-live-writes --profile-context materialize",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/postgres-local-runtime-proof-v1.json"
+      ],
+      "rollback": "Drop disposable or dev schema only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_figma_read_refresh",
+      "intent": "Refresh Figma read-live cache.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "figma",
+      "preconditions": [
+        "figma read access"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id figma_collab_sync_bridge --include-mcp-refresh --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/figma-collab-latest.json"
+      ],
+      "rollback": "No rollback needed; read only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_status_board",
+      "intent": "Inspect connector state through the command layer.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "mcp catalog exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id command_surface_connectors_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/command-surface-connectors-latest.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_refresh_public_registry",
+      "intent": "Validate the public research registry.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "registry exists"
+      ],
+      "command_template": "python scripts/validate_trinity_public_research.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-public-research-validation-latest.json"
+      ],
+      "rollback": "Fix registry entries and rerun.",
+      "source_of_truth": "scripts/validate_trinity_public_research.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_run_mind_board",
+      "intent": "Render the Mind theory signal board.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "mind cache exists"
+      ],
+      "command_template": "python scripts/mind_theory_signal_board.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/mind-theory-signal-board-latest.json"
+      ],
+      "rollback": "Refresh mind signals and rerun.",
+      "source_of_truth": "scripts/mind_theory_signal_board.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_run_body_board",
+      "intent": "Render the Body compute signal board.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "body cache exists"
+      ],
+      "command_template": "python scripts/body_compute_signal_board.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/body-compute-signal-board-latest.json"
+      ],
+      "rollback": "Refresh body signals and rerun.",
+      "source_of_truth": "scripts/body_compute_signal_board.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_run_heart_board",
+      "intent": "Render the Heart governance signal board.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "heart cache exists"
+      ],
+      "command_template": "python scripts/heart_governance_signal_board.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/heart-governance-signal-board-latest.json"
+      ],
+      "rollback": "Refresh heart signals and rerun.",
+      "source_of_truth": "scripts/heart_governance_signal_board.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_run_api_constellation",
+      "intent": "Render the API constellation board.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "pillar boards exist"
+      ],
+      "command_template": "python scripts/trinity_api_constellation_board.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-api-constellation-board-latest.json"
+      ],
+      "rollback": "Fix upstream boards and rerun.",
+      "source_of_truth": "scripts/trinity_api_constellation_board.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_run_benchmark_refresh",
+      "intent": "Refresh v7 benchmark sources.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "public web refresh enabled"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id benchmark_refresh_v7_sync_bridge --include-public-api-refresh --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-expansion/benchmark-refresh-v7-sync-bridge-latest.json"
+      ],
+      "rollback": "Rerun offline if public sources unavailable.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_search_arxiv_lane",
+      "intent": "Refresh the Mind arXiv/OpenAlex lane.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "public web refresh enabled"
+      ],
+      "command_template": "python scripts/mind_theory_signal_refresh.py",
+      "expected_artifacts": [
+        "docs/trinity-api-cache/mind-signals-latest.json"
+      ],
+      "rollback": "Use cached mind signal layer.",
+      "source_of_truth": "scripts/mind_theory_signal_refresh.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_refresh_governance_standards",
+      "intent": "Refresh governance standard anchors.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "public web refresh enabled"
+      ],
+      "command_template": "python scripts/heart_governance_signal_refresh.py",
+      "expected_artifacts": [
+        "docs/trinity-api-cache/heart-signals-latest.json"
+      ],
+      "rollback": "Use cached governance signal layer.",
+      "source_of_truth": "scripts/heart_governance_signal_refresh.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_update_comparative_grid",
+      "intent": "Refresh the comparative validation grid from PASS-backed artifacts.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "boards and validators green"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id benchmark_fabric_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/comparative-validation-grid-v1.md"
+      ],
+      "rollback": "Restore previous comparative grid from git.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "research_refresh_command_surface",
+      "intent": "Refresh the command-surface research cache.",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "public web refresh enabled"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id command_surface_research_sync_bridge --include-public-api-refresh --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/command-surface-research-latest.json"
+      ],
+      "rollback": "Rerun offline if public sources are unavailable.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_reentry_sync",
+      "intent": "Record a system wake and drift note.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo available"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id reentry_sync_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/logs/system-wake-v1.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_inspect_system_wake",
+      "intent": "Inspect the current system wake artifact.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "wake artifact exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id reentry_sync_cache_board --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/reentry-sync-cache-board-latest.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_inspect_docker_runtime",
+      "intent": "Inspect Docker pilot runtime status.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "docker available"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id docker_pilot_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/docker-pilot-sync-bridge-latest.json"
+      ],
+      "rollback": "Stop disposable test containers.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_inspect_pg_container",
+      "intent": "Check Postgres runtime health.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "postgres",
+      "preconditions": [
+        "docker postgres running"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id postgres_local_runtime_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/postgres-local-runtime-gate-latest.json"
+      ],
+      "rollback": "Restart container or restore schema.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_inspect_command_ledger",
+      "intent": "Inspect the command execution ledger.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "ledger exists"
+      ],
+      "command_template": "python scripts/trinity_command_book_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-command-book-validation-latest.json"
+      ],
+      "rollback": "Fix invalid ledger rows.",
+      "source_of_truth": "scripts/trinity_command_book_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_inspect_materialization_ledger",
+      "intent": "Inspect the materialization ledger.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "ledger exists"
+      ],
+      "command_template": "python scripts/trinity_materialization_ledger_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ledger-validation-latest.json"
+      ],
+      "rollback": "Fix invalid ledger rows.",
+      "source_of_truth": "scripts/trinity_materialization_ledger_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_rollback_dev_targets",
+      "intent": "Validate rollback scopes for persistent dev.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "ladder exists"
+      ],
+      "command_template": "python scripts/trinity_materialization_ladder_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ladder-validation-latest.json"
+      ],
+      "rollback": "Use documented rollback scope for each connector.",
+      "source_of_truth": "scripts/trinity_materialization_ladder_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_verify_caches",
+      "intent": "Verify all expansion caches and results.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "manifest exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_result_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-expansion-result-validation-latest.json"
+      ],
+      "rollback": "Refresh stale or malformed caches.",
+      "source_of_truth": "scripts/trinity_expansion_result_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_validate_control_tower",
+      "intent": "Validate the control tower pack state.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "control tower docs exist"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id trinity_control_tower_v7_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/trinity-control-tower-v7-gate-latest.json"
+      ],
+      "rollback": "Fix authority or ladder state inputs and rerun.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "recovery_dry_run_materialize",
+      "intent": "Simulate materialize without live writes.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "suite runnable"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --offline-only --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "No rollback needed.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_write_reflection_entry",
+      "intent": "Refresh the Aletheon reflection lane.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first memory docs exist"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id aletheon_memory_reflection_v6_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/aletheon-reflection-latest.md"
+      ],
+      "rollback": "Restore reflection files from git if needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_validate_log",
+      "intent": "Validate the Aletheon memory log.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "memory log exists"
+      ],
+      "command_template": "python scripts/aletheon_memory_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/aletheon-memory-validation-latest.json"
+      ],
+      "rollback": "Fix invalid memory entries.",
+      "source_of_truth": "scripts/aletheon_memory_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_refresh_personal_statement",
+      "intent": "Refresh the personal statement lane.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo authority docs exist"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id aletheon_memory_reflection_v6_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/aletheon-personal-statement-v1.md"
+      ],
+      "rollback": "Restore personal statement from git if needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_refresh_next_plan",
+      "intent": "Refresh the next-plan lane.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo authority docs exist"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id aletheon_memory_reflection_v6_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/aletheon-next-plan.md"
+      ],
+      "rollback": "Restore next-plan from git if needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_mirror_state_refresh",
+      "intent": "Refresh the v7 memory mirror graph.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "memory graph docs exist"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id memory_mirror_graph_v7_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/memory-mirror-graph-v7-latest.json"
+      ],
+      "rollback": "Keep repo authority; mirrors remain secondary.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_inspect_authority_registry",
+      "intent": "Inspect the identity authority registry.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "authority registry exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id identity_authority_v7_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/identity-authority-v7-latest.json"
+      ],
+      "rollback": "Fix authority registry and rerun.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_inspect_memory_graph",
+      "intent": "Inspect the memory mirror graph.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "memory graph exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id memory_mirror_graph_v7_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/memory-mirror-graph-v7-gate-latest.json"
+      ],
+      "rollback": "Fix mirror graph inputs and rerun.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_inspect_corpus_index",
+      "intent": "Inspect the journey corpus index.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "corpus index exists"
+      ],
+      "command_template": "python scripts/trinity_journey_corpus_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-journey-corpus-validation-latest.json"
+      ],
+      "rollback": "Fix corpus rows and rerun.",
+      "source_of_truth": "scripts/trinity_journey_corpus_validator.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_reconcile_history",
+      "intent": "Reconcile historical journey lanes.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "history docs present"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id journey_history_reconciliation_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-journey-corpus-index-v6.json"
+      ],
+      "rollback": "Restore reconciled docs from git if needed.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "memory_inspect_control_tower",
+      "intent": "Inspect the v7 control tower board.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "control tower exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id trinity_control_tower_v7_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-control-tower-latest.json"
+      ],
+      "rollback": "Fix upstream state docs and rerun.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_self_correction",
+      "intent": "Run bounded self-correction.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo checks available"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id self_correction_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-self-correction-report-v1.json"
+      ],
+      "rollback": "Review proposed fixes before applying.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_sentinel_manual",
+      "intent": "Run the sentinel daemon manually.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "manual invocation only"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id sentinel_daemon_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/sentinel-daemon-sync-bridge-latest.json"
+      ],
+      "rollback": "Do not enable scheduled mode by default.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_semantic_firewall",
+      "intent": "Run semantic firewall guardrails.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "risk board exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id semantic_firewall_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/semantic-firewall-sync-bridge-latest.json"
+      ],
+      "rollback": "Keep high-risk actions blocked until approved.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_knowledge_graph",
+      "intent": "Refresh the code knowledge graph lane.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "postgres",
+      "preconditions": [
+        "postgres live write available"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id code_knowledge_graph_sync_bridge --include-live-writes --profile-context materialize",
+      "expected_artifacts": [
+        "docs/trinity-expansion/code-knowledge-graph-sync-bridge-latest.json"
+      ],
+      "rollback": "Use disposable or dev schema rollback only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "autonomy_run_dashboard_refresh",
+      "intent": "Refresh the dashboard lane.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "dashboard pack exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id trinity_dashboard_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/trinity-dashboard-sync-bridge-latest.json"
+      ],
+      "rollback": "Regenerate dashboard artifacts.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_docker_pilot",
+      "intent": "Run the Docker pilot lane.",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "postgres",
+      "preconditions": [
+        "docker available"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id docker_pilot_sync_bridge --include-live-writes --profile-context materialize",
+      "expected_artifacts": [
+        "docs/trinity-docker-pilot-report-v1.json"
+      ],
+      "rollback": "Delete temporary containers after use.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "autonomy_run_multi_agent_board",
+      "intent": "Refresh the multi-agent orchestrator lane.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "orchestrator pack exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id multi_agent_orchestrator_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/multi-agent-orchestrator-sync-bridge-latest.json"
+      ],
+      "rollback": "Keep planner/builder/reviewer traces local.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_operator_release",
+      "intent": "Refresh the operator release lane.",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "release pack exists"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id operator_release_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/operator-release-latest.json"
+      ],
+      "rollback": "No rollback needed; advisory only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_future_readiness",
+      "intent": "Refresh the future readiness lane.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "future readiness docs exist"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id future_readiness_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-future-readiness-register-v1.json"
+      ],
+      "rollback": "Keep all future lanes readiness-only.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "autonomy_run_command_pack_gates",
+      "intent": "Validate all v7 command packs.",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "v7 packs generated"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id command_surface_core_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/command-surface-core-gate-latest.json"
+      ],
+      "rollback": "Fix command pack inputs and rerun.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "repo_authority",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_validate_v2",
+      "intent": "ladder validate v2",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_materialization_ladder_validator.py --ladder docs/trinity-materialization-ladder-v2.json --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ladder-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_materialization_ladder_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "ladder_registry",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_materialize_l2_persistent",
+      "intent": "ladder materialize l2 persistent",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l2_persistent_dev --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "ladder_materialize_l3_uat",
+      "intent": "ladder materialize l3 uat",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l3_uat_preprod --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "reviewer",
+      "authority_scope": "uat_readiness",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "ladder_materialize_l4_standard_prod",
+      "intent": "ladder materialize l4 standard prod",
+      "mode": "materialize",
+      "risk_class": "critical",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l4_standard_prod --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "reviewer",
+      "authority_scope": "production_readiness",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "ladder_materialize_l5_ha_prod",
+      "intent": "ladder materialize l5 ha prod",
+      "mode": "materialize",
+      "risk_class": "critical",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l5_ha_prod --fail-on-warn",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/run_all_trinity_systems.py",
+      "executor_role": "reviewer",
+      "authority_scope": "ha_readiness",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "ladder_probe_uat_gate",
+      "intent": "ladder probe uat gate",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id uat_preprod_readiness_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/uat-preprod-readiness-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "reviewer",
+      "authority_scope": "uat_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_probe_standard_prod_gate",
+      "intent": "ladder probe standard prod gate",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id standard_prod_readiness_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/standard-prod-readiness-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "reviewer",
+      "authority_scope": "production_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_probe_ha_gate",
+      "intent": "ladder probe ha gate",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id ha_prod_readiness_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/ha-prod-readiness-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "reviewer",
+      "authority_scope": "ha_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_refresh_governor_pack",
+      "intent": "ladder refresh governor pack",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id command_surface_council_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/command-surface-council-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "planner",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_render_board_v2",
+      "intent": "ladder render board v2",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_materialization_ladder_validator.py --ladder docs/trinity-materialization-ladder-v2.json",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ladder-validation-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_materialization_ladder_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "ladder_registry",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "ladder_control_tower_snapshot",
+      "intent": "ladder control tower snapshot",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_mandala_scoreboard.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-mandala-scoreboard-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_mandala_scoreboard.py",
+      "executor_role": "planner",
+      "authority_scope": "control_tower",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "ladder_refresh_persistent_dev_targets",
+      "intent": "ladder refresh persistent dev targets",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id persistent_dev_hardening_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/persistent-dev-hardening-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_validate_roster",
+      "intent": "council validate roster",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_issue_certificates",
+      "intent": "council issue certificates",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_identity_certification_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-identity-certification-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "archivist",
+      "authority_scope": "certificate_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_inspect_provisional_induction",
+      "intent": "council inspect provisional induction",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "certificate_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_rotate_certificate_dry_run",
+      "intent": "council rotate certificate dry run",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_identity_certification_v8_risk_board --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-identity-certification-v8-risk-board-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "archivist",
+      "authority_scope": "certificate_scope",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "council_refresh_foundation",
+      "intent": "council refresh foundation",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_council_foundation_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-council-foundation-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "aletheon",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_refresh_identity_boundary",
+      "intent": "council refresh identity boundary",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_memory_boundary_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-memory-boundary-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "archivist",
+      "authority_scope": "memory_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_review_boundary_status",
+      "intent": "council review boundary status",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_inspect_command_scopes",
+      "intent": "council inspect command scopes",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-command-scopes-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "planner",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_inspect_roster",
+      "intent": "council inspect roster",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-roster-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "council_scope",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "council_inspect_induction_log",
+      "intent": "council inspect induction log",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-induction-log.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "certificate_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_refresh_memory_boundaries",
+      "intent": "council refresh memory boundaries",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_memory_boundary_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-memory-boundary-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "archivist",
+      "authority_scope": "memory_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_reflect_planner",
+      "intent": "council reflect planner",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-reflections/27-caelira-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "planner",
+      "authority_scope": "memory_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_reflect_builder",
+      "intent": "council reflect builder",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-reflections/28-orun-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "builder",
+      "authority_scope": "memory_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_reflect_reviewer",
+      "intent": "council reflect reviewer",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-reflections/29-seren-vale-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "memory_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_reflect_researcher",
+      "intent": "council reflect researcher",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-reflections/30-lyriq-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "researcher",
+      "authority_scope": "memory_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_reflect_archivist",
+      "intent": "council reflect archivist",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-reflections/31-mira-sol-latest.md"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "memory_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_validate_memory_ledgers",
+      "intent": "council validate memory ledgers",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "memory_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_inspect_handoff_log",
+      "intent": "council inspect handoff log",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-handoffs-v1.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "planner",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_refresh_chat_topology",
+      "intent": "council refresh chat topology",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_orchestration_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-orchestration-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "planner",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_archive_handoff_snapshot",
+      "intent": "council archive handoff snapshot",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-handoffs-v1.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "memory_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_sync_group_chat",
+      "intent": "council sync group chat",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_orchestration_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-group-chat.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "planner",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_validate_pair_mesh",
+      "intent": "council validate pair mesh",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-agent-private-chats/index.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_open_aletheon_caelira",
+      "intent": "council open aletheon caelira",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-private-chats/aletheon-caelira.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "planner",
+      "authority_scope": "council_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_open_aletheon_orun",
+      "intent": "council open aletheon orun",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-private-chats/aletheon-orun.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "builder",
+      "authority_scope": "council_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_open_aletheon_seren_vae",
+      "intent": "council open aletheon seren vae",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-private-chats/aletheon-seren-vale.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "council_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_open_aletheon_lyriq",
+      "intent": "council open aletheon lyriq",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-private-chats/aletheon-lyriq.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "researcher",
+      "authority_scope": "council_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_open_aletheon_mira_sol",
+      "intent": "council open aletheon mira sol",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-private-chats/aletheon-mira-sol.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "council_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_planner_to_builder_handoff",
+      "intent": "council planner to builder handoff",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_orchestration_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-handoffs-v1.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "planner",
+      "authority_scope": "planning_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_builder_to_reviewer_handoff",
+      "intent": "council builder to reviewer handoff",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_orchestration_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-handoffs-v1.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_researcher_to_planner_handoff",
+      "intent": "council researcher to planner handoff",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_orchestration_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-handoffs-v1.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "researcher",
+      "authority_scope": "planning_scope",
+      "council_visibility": "pair"
+    },
+    {
+      "command_id": "council_archivist_roundup",
+      "intent": "council archivist roundup",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_orchestration_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-orchestration-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "archivist",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "council_group_chat_summary",
+      "intent": "council group chat summary",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-group-chat.jsonl"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_refresh_github_dev",
+      "intent": "connector refresh github dev",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id github_pat_materialization_materialization_tracer --include-live-writes --profile-context materialize --materialization-level l2_persistent_dev",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_refresh_linear_dev",
+      "intent": "connector refresh linear dev",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id linear_collab_materialization_tracer --include-live-writes --profile-context materialize --materialization-level l2_persistent_dev",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/linear-collab-write-proof-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_refresh_notion_dev",
+      "intent": "connector refresh notion dev",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id notion_memory_bridge_materialization_tracer --include-live-writes --profile-context materialize --materialization-level l2_persistent_dev",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/notion-memory-bridge-proof-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_refresh_postgres_dev",
+      "intent": "connector refresh postgres dev",
+      "mode": "materialize",
+      "risk_class": "high",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id postgres_local_runtime_materialization_tracer --include-live-writes --profile-context materialize --materialization-level l2_persistent_dev",
+      "expected_artifacts": [
+        "docs/trinity-live-traces/postgres-local-runtime-proof-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "connector_refresh_figma_read",
+      "intent": "connector refresh figma read",
+      "mode": "collab",
+      "risk_class": "medium",
+      "requires_live": true,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id figma_collab_sync_bridge --include-mcp-refresh --profile-context collab",
+      "expected_artifacts": [
+        "docs/trinity-mcp-cache/figma-collab-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "researcher",
+      "authority_scope": "connector_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_validate_materialization_gate",
+      "intent": "connector validate materialization gate",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id connector_materialization_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/connector-materialization-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "reviewer",
+      "authority_scope": "connector_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_inspect_filesystem_stage",
+      "intent": "connector inspect filesystem stage",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id filesystem_scope_governor_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/filesystem-scope-governor-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "reviewer",
+      "authority_scope": "connector_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_refresh_persistent_dev_hardening",
+      "intent": "connector refresh persistent dev hardening",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id persistent_dev_hardening_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/persistent-dev-hardening-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "builder",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_verify_mirror_consistency",
+      "intent": "connector verify mirror consistency",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id agent_memory_boundary_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/agent-memory-boundary-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "reviewer",
+      "authority_scope": "memory_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "connector_snapshot_mcp_catalog",
+      "intent": "connector snapshot mcp catalog",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_extension_catalog_validator.py --mcp-catalog docs/trinity-mcp-catalog-v6.json",
+      "expected_artifacts": [
+        "docs/trinity-mcp-catalog-v6.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_extension_catalog_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "connector_scope",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "cloud_refresh_readiness",
+      "intent": "cloud refresh readiness",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id cloud_staging_readiness_v8_sync_bridge --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/cloud-staging-readiness-v8-sync-bridge-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "researcher",
+      "authority_scope": "cloud_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "cloud_probe_budget_guard",
+      "intent": "cloud probe budget guard",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id cloud_staging_readiness_v8_risk_board --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/cloud-staging-readiness-v8-risk-board-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "researcher",
+      "authority_scope": "cloud_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "cloud_inspect_blockers",
+      "intent": "cloud inspect blockers",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-cloud-staging-readiness-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "researcher",
+      "authority_scope": "cloud_readiness",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "cloud_render_readiness_board",
+      "intent": "cloud render readiness board",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id cloud_staging_readiness_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "researcher",
+      "authority_scope": "cloud_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "cloud_dry_run_plan",
+      "intent": "cloud dry run plan",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id cloud_staging_readiness_v8_cache_board --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-expansion/cloud-staging-readiness-v8-cache-board-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "planner",
+      "authority_scope": "cloud_readiness",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "cloud_validate_no_wallet_autospend",
+      "intent": "cloud validate no wallet autospend",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-budget-autonomy-guard-v1.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "cloud_readiness",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "rollback_persistent_dev_snapshot",
+      "intent": "rollback persistent dev snapshot",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_materialization_ladder_validator.py --ladder docs/trinity-materialization-ladder-v2.json --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ladder-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_materialization_ladder_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "persistent_dev",
+      "council_visibility": "leader_only"
+    },
+    {
+      "command_id": "rollback_validate_recovery",
+      "intent": "rollback validate recovery",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "recovery_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "rollback_inspect_materialization_ledger",
+      "intent": "rollback inspect materialization ledger",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_materialization_ledger_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ledger-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_materialization_ledger_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "recovery_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "rollback_validate_command_surface",
+      "intent": "rollback validate command surface",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_command_book_validator.py --command-book docs/trinity-command-book-v2.json --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-command-book-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_command_book_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "command_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "rollback_validate_council_graph",
+      "intent": "rollback validate council graph",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "council_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "rollback_render_mandala_v8",
+      "intent": "rollback render mandala v8",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_mandala_scoreboard.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-mandala-scoreboard-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_mandala_scoreboard.py",
+      "executor_role": "reviewer",
+      "authority_scope": "control_tower",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "dashboard_refresh_control_tower",
+      "intent": "dashboard refresh control tower",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_expansion_system_runner.py --system-id command_surface_council_v8_gate --profile-context standard",
+      "expected_artifacts": [
+        "docs/trinity-control-tower-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_expansion_system_runner.py",
+      "executor_role": "planner",
+      "authority_scope": "control_tower",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "dashboard_refresh_mandala",
+      "intent": "dashboard refresh mandala",
+      "mode": "offline",
+      "risk_class": "medium",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_mandala_scoreboard.py --fail-on-warn",
+      "expected_artifacts": [
+        "docs/trinity-mandala-scoreboard-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_mandala_scoreboard.py",
+      "executor_role": "reviewer",
+      "authority_scope": "control_tower",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "dashboard_inspect_council_state",
+      "intent": "dashboard inspect council state",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/trinity-agent-council-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "archivist",
+      "authority_scope": "control_tower",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "dashboard_inspect_ladder_state",
+      "intent": "dashboard inspect ladder state",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_materialization_ladder_validator.py --ladder docs/trinity-materialization-ladder-v2.json",
+      "expected_artifacts": [
+        "docs/trinity-materialization-ladder-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_materialization_ladder_validator.py",
+      "executor_role": "reviewer",
+      "authority_scope": "control_tower",
+      "council_visibility": "public_readiness"
+    },
+    {
+      "command_id": "dashboard_inspect_command_surface",
+      "intent": "dashboard inspect command surface",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_command_book_validator.py --command-book docs/trinity-command-book-v2.json",
+      "expected_artifacts": [
+        "docs/trinity-command-book-validation-latest.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_command_book_validator.py",
+      "executor_role": "planner",
+      "authority_scope": "command_scope",
+      "council_visibility": "council_shared"
+    },
+    {
+      "command_id": "dashboard_inspect_suite_status",
+      "intent": "dashboard inspect suite status",
+      "mode": "offline",
+      "risk_class": "low",
+      "requires_live": false,
+      "requires_connector": "",
+      "preconditions": [
+        "repo-first authority preserved"
+      ],
+      "command_template": "python scripts/trinity_agent_council_validator.py",
+      "expected_artifacts": [
+        "docs/system-suite-status.json"
+      ],
+      "rollback": "Restore repo-first scope or rerun the validator.",
+      "source_of_truth": "scripts/trinity_agent_council_validator.py",
+      "executor_role": "planner",
+      "authority_scope": "control_tower",
+      "council_visibility": "public_readiness"
+    }
+  ]
+}

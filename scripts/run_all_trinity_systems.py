@@ -27,8 +27,8 @@ PROFILE_HELP = {
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v7.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v5.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v8.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v6.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -226,6 +226,17 @@ def _command_book_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
         command.append("--fail-on-warn")
     mode = "enforce" if enforce else "observe"
     return f"trinity command book validation ({mode})", command
+
+
+def _agent_council_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_agent_council_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity agent council validation ({mode})", command
 
 
 def _materialization_ladder_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
@@ -519,6 +530,11 @@ def build_commands(
             ),
             (
                 *_command_book_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_agent_council_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -1433,6 +1449,30 @@ def main() -> None:
             eligible_live_write_connectors = []
             promoted_live_write_connectors = []
             blocked_promotions = []
+    manifest_pack_count = 0
+    materialization_pack_count = 0
+    manifest_path = ROOT / TRINITY_EXPANSION_MANIFEST_PATH
+    if manifest_path.exists():
+        try:
+            manifest_payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+            system_rows = manifest_payload.get("systems", [])
+            if isinstance(system_rows, list):
+                pack_names = {
+                    str(row.get("pack"))
+                    for row in system_rows
+                    if isinstance(row, dict) and str(row.get("pack") or "").strip()
+                }
+                manifest_pack_count = len(pack_names)
+                materialization_pack_count = len(
+                    {
+                        str(row.get("pack"))
+                        for row in system_rows
+                        if isinstance(row, dict) and str(row.get("track") or "") == "materialization_ladder"
+                    }
+                )
+        except json.JSONDecodeError:
+            manifest_pack_count = 0
+            materialization_pack_count = 0
     if offline_only:
         live_network_mode = "offline_only"
     elif include_public_api_refresh or include_mcp_refresh or include_live_writes:
@@ -1445,8 +1485,7 @@ def main() -> None:
     else:
         mcp_refresh_mode = "verified_live" if include_mcp_refresh else "disabled"
         staged_connector_mode = "setup_gate_attempted" if include_staged_connectors else "staged_only"
-    collab_pack_count = 13
-    materialization_pack_count = 11
+    collab_pack_count = manifest_pack_count
     if offline_only:
         active_materialization_mode = "offline_only"
     elif include_live_writes:
@@ -1551,7 +1590,11 @@ def main() -> None:
 
     suite_finished_at = datetime.now(timezone.utc).isoformat()
     suite_duration_sec = time.monotonic() - suite_start_ts
-    current_session_surface = _read_status_value("docs/logs/system-wake-v1.json", "current_session_surface", {})
+    current_session_surface = _read_status_value(
+        "docs/logs/system-wake-v2.json",
+        "current_session_surface",
+        _read_status_value("docs/logs/system-wake-v1.json", "current_session_surface", {}),
+    )
     connector_hardening_state = _read_status_value("docs/trinity-expansion/connector-materialization-gate-latest.json", "overall_status", "FAIL")
     autonomy_mode = "bounded_manual" if profile != "materialize" else "bounded_materialize"
     knowledge_graph_state = _read_status_value("docs/trinity-expansion/code-knowledge-graph-gate-latest.json", "overall_status", "FAIL")
@@ -1559,11 +1602,20 @@ def main() -> None:
     future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
     materialization_level_desired = args.materialization_level
     materialization_level_actual = _read_status_value("docs/trinity-control-tower-latest.json", "materialization_level_actual", "readiness_only")
-    persistent_targets = _read_status_value("docs/trinity-persistent-dev-targets-v1.json", "targets", [])
+    persistent_targets = _read_status_value("docs/trinity-persistent-dev-targets-v2.json", "targets", _read_status_value("docs/trinity-persistent-dev-targets-v1.json", "targets", []))
     persistent_target_count = len(persistent_targets) if isinstance(persistent_targets, list) else 0
     command_surface_state = _read_status_value("docs/trinity-command-book-validation-latest.json", "overall_status", "FAIL")
     identity_authority_state = _read_status_value("docs/trinity-expansion/identity-authority-v7-gate-latest.json", "overall_status", "FAIL")
     memory_mirror_state = _read_status_value("docs/trinity-memory-mirror-state-v1.json", "divergence_status", "FAIL")
+    council_state = _read_status_value("docs/trinity-agent-council-validation-latest.json", "overall_status", "FAIL")
+    provisional_agent_count = int(_read_status_value("docs/trinity-agent-council-validation-latest.json", "provisional_agent_count", 0) or 0)
+    duo_chat_count = int(_read_status_value("docs/trinity-agent-council-validation-latest.json", "duo_chat_count", 0) or 0)
+    group_chat_state = "PASS" if (ROOT / "docs" / "trinity-agent-council-group-chat.jsonl").exists() else "FAIL"
+    late_step_autonomy_state = _read_status_value(
+        "docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json",
+        "overall_status",
+        _read_status_value("docs/trinity-control-tower-latest.json", "late_step_autonomy_state", "FAIL"),
+    )
 
     lines.append("## Overall status")
     lines.append(f"- Effective success: **{effective_success}**")
@@ -1579,8 +1631,13 @@ def main() -> None:
     lines.append(f"- Materialization level actual: **{materialization_level_actual}**")
     lines.append(f"- Persistent target count: **{persistent_target_count}**")
     lines.append(f"- Command surface state: **{command_surface_state}**")
+    lines.append(f"- Council state: **{council_state}**")
+    lines.append(f"- Provisional agent count: **{provisional_agent_count}**")
+    lines.append(f"- Group chat state: **{group_chat_state}**")
+    lines.append(f"- Duo chat count: **{duo_chat_count}**")
     lines.append(f"- Identity authority state: **{identity_authority_state}**")
     lines.append(f"- Memory mirror state: **{memory_mirror_state}**")
+    lines.append(f"- Late-step autonomy state: **{late_step_autonomy_state}**")
     lines.append(f"- Eligible live write connectors: **{', '.join(eligible_live_write_connectors) if eligible_live_write_connectors else '-'}**")
     lines.append(f"- Promoted live write connectors: **{', '.join(promoted_live_write_connectors) if promoted_live_write_connectors else '-'}**")
     lines.append(f"- Blocked promotions: **{', '.join(blocked_promotions) if blocked_promotions else '-'}**")
@@ -1626,8 +1683,13 @@ def main() -> None:
         "materialization_level_actual": materialization_level_actual,
         "persistent_target_count": persistent_target_count,
         "command_surface_state": command_surface_state,
+        "council_state": council_state,
+        "provisional_agent_count": provisional_agent_count,
+        "group_chat_state": group_chat_state,
+        "duo_chat_count": duo_chat_count,
         "identity_authority_state": identity_authority_state,
         "memory_mirror_state": memory_mirror_state,
+        "late_step_autonomy_state": late_step_autonomy_state,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
