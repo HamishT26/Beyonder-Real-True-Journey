@@ -1,6 +1,5 @@
 # Aletheon Next Plan
 
-1. Reconcile continuity.
-2. Activate reachable connectors by proof.
-3. Mirror validated memory outward.
-4. Keep staged boundaries explicit.
+1. Keep v6 orchestration green on the manifest-backed surface.
+2. Refresh connector proofs in disposable scope only.
+3. Expand benchmark and knowledge-graph utility without weakening the standard suite.

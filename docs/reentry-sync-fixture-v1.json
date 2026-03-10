@@ -1,0 +1,29 @@
+{
+  "title": "Re-entry Sync",
+  "summary": "Capture system wake state, current session surface, docker and Postgres health, and drift from the last stored proof.",
+  "source_url": "repo://docs/system-suite-status.json",
+  "record_id": "reentry_sync-seed",
+  "signal_type": "pack_seed",
+  "tags": [
+    "reentry_sync",
+    "v6",
+    "wake"
+  ],
+  "repo_targets": [
+    "docs/system-suite-status.json",
+    "docs/trinity-mcp-catalog-v4.json",
+    "docs/logs/system-wake-v1.json",
+    "docs/v6-session-surface-drift-note.md"
+  ],
+  "next_action": "Use reentry_sync only through proof-backed outputs.",
+  "connector_snapshot": {
+    "write_target": "docs/logs/system-wake-v1.json",
+    "continuity_band": "v5-v6",
+    "activation_group": "continuity_reentry"
+  },
+  "probe_tools": [
+    "python",
+    "git",
+    "rg"
+  ]
+}

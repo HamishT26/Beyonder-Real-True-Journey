@@ -27,8 +27,8 @@ PROFILE_HELP = {
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v5.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v3.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v6.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v4.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -302,6 +302,8 @@ def _load_expansion_system_commands(
         if not system_id or not script:
             continue
         command = ["python3", script]
+        if script == "scripts/trinity_expansion_system_runner.py":
+            command.extend(["--system-id", system_id])
         if enforce:
             command.append("--fail-on-warn")
         if include_public_api_refresh:
@@ -321,9 +323,9 @@ def _load_expansion_system_commands(
                 live_disabled = True
             elif pack in {"github_devflow", "filesystem_scope_governor"} and not include_staged_connectors:
                 live_disabled = True
-            elif pack in {"github_materialization", "github_pat_materialization", "notion_materialization", "postgres_materialization", "postgres_local_runtime"} and not include_live_writes:
+            elif pack in {"github_materialization", "github_pat_materialization", "notion_materialization", "postgres_materialization", "postgres_local_runtime", "code_knowledge_graph", "docker_pilot"} and not include_live_writes:
                 live_disabled = True
-            elif pack in {"public_intelligence", "journey_continuity", "os_runtime_fabric", "os_runtime_benchmark", "ai_frontier_alignment", "wetware_device_readiness", "wetware_device_readiness_v5", "aletheon_memory_reflection"} and not include_public_api_refresh:
+            elif pack in {"public_intelligence", "journey_continuity", "os_runtime_fabric", "os_runtime_benchmark", "ai_frontier_alignment", "wetware_device_readiness", "wetware_device_readiness_v5", "aletheon_memory_reflection", "public_web_weaver"} and not include_public_api_refresh:
                 live_disabled = True
             elif pack not in {
                 "figma_collab",
@@ -344,6 +346,7 @@ def _load_expansion_system_commands(
                 "wetware_device_readiness",
                 "wetware_device_readiness_v5",
                 "aletheon_memory_reflection",
+                "public_web_weaver",
             } and not include_public_api_refresh:
                 live_disabled = True
             if live_disabled:
@@ -1095,15 +1098,9 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install = True
         include_curated_skill_catalog = True
         soft_fail_network = True
-    if profile in {"collab", "materialize"}:
-        include_mcp_refresh = True
     if profile == "materialize":
         include_staged_connectors = True
         include_live_writes = True
-
-    # Live API refresh is default for standard/deep unless explicitly offline-only.
-    if profile in {"standard", "deep", "collab", "materialize"}:
-        include_public_api_refresh = True
     if args.include_public_api_refresh:
         include_public_api_refresh = True
     if args.include_mcp_refresh:
@@ -1394,9 +1391,7 @@ def main() -> None:
             blocked_promotions = []
     if offline_only:
         live_network_mode = "offline_only"
-    elif profile in {"standard", "deep", "collab", "materialize"}:
-        live_network_mode = "live_default"
-    elif include_public_api_refresh:
+    elif include_public_api_refresh or include_mcp_refresh or include_live_writes:
         live_network_mode = "live_opt_in"
     else:
         live_network_mode = "offline_default"
@@ -1414,6 +1409,13 @@ def main() -> None:
         active_materialization_mode = "disposable_staging"
     else:
         active_materialization_mode = "read_only"
+
+    def _read_status_value(path_str: str, key: str, fallback: object) -> object:
+        try:
+            payload = json.loads((ROOT / path_str).read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001
+            return fallback
+        return payload.get(key, fallback) if isinstance(payload, dict) else fallback
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
     suite_start_ts = time.monotonic()
@@ -1525,6 +1527,13 @@ def main() -> None:
     lines.append(f"- Suite duration_sec: `{suite_duration_sec:.3f}`")
     lines.append("")
 
+    current_session_surface = _read_status_value("docs/logs/system-wake-v1.json", "current_session_surface", {})
+    connector_hardening_state = _read_status_value("docs/trinity-expansion/connector-materialization-gate-latest.json", "overall_status", "FAIL")
+    autonomy_mode = "bounded_manual" if profile != "materialize" else "bounded_materialize"
+    knowledge_graph_state = _read_status_value("docs/trinity-expansion/code-knowledge-graph-gate-latest.json", "overall_status", "FAIL")
+    dashboard_state = _read_status_value("docs/trinity-expansion/trinity-dashboard-gate-latest.json", "overall_status", "FAIL")
+    future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
+
     status_payload = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "suite_started_at_utc": suite_started_at,
@@ -1550,6 +1559,12 @@ def main() -> None:
         "active_materialization_mode": active_materialization_mode,
         "mcp_refresh_mode": mcp_refresh_mode,
         "staged_connector_mode": staged_connector_mode,
+        "current_session_surface": current_session_surface,
+        "connector_hardening_state": connector_hardening_state,
+        "autonomy_mode": autonomy_mode,
+        "knowledge_graph_state": knowledge_graph_state,
+        "dashboard_state": dashboard_state,
+        "future_readiness_state": future_readiness_state,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the v5 Beyonder journey corpus index."""
+"""Validate the v6 Beyonder journey corpus index."""
 
 from __future__ import annotations
 
@@ -70,8 +70,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/beyonder-journey-corpus-v13-v38.json")
-    parser.add_argument("--corpus", default="docs/beyonder-journey-corpus-v13-v38.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-journey-corpus-index-v6.json")
+    parser.add_argument("--corpus", default="docs/trinity-journey-corpus-index-v6.json")
     parser.add_argument("--reports-dir", default="docs/trinity-journey-corpus-runs")
     parser.add_argument("--latest-json", default="docs/trinity-journey-corpus-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-journey-corpus-validation-latest.md")

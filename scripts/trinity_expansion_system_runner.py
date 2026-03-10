@@ -18,12 +18,13 @@ from pathlib import Path
 from typing import Any
 
 from trinity_api_common import fetch_json, fetch_text, quote_plus
+from trinity_v6_support import run_v6_system
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v5.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v6.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v3.json"
-DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v3.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v4.json"
+DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v4.json"
 DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
@@ -2151,6 +2152,20 @@ def _compute_system(
     source_runs: list[dict[str, Any]] | None = None
     targets: list[str] = []
 
+    v6_result = run_v6_system(
+        system_id=system_id,
+        manifest=manifest,
+        offline_only=offline_only,
+        timeout_sec=timeout_sec,
+        include_mcp_refresh=include_mcp_refresh,
+        include_staged_connectors=include_staged_connectors,
+        include_public_api_refresh=include_public_api_refresh,
+        include_live_writes=include_live_writes,
+        profile_context=profile_context,
+    )
+    if v6_result is not None:
+        return v6_result
+
     generic_pack_result = _compute_pack_system(
         system_id=system_id,
         manifest=manifest,
@@ -2302,7 +2317,7 @@ def _compute_system(
             "docs/body-profile-policy-v1.json",
             "docs/trinity-api-source-manifest-v1.json",
             "docs/trinity-expansion-system-manifest-v1.json",
-            "docs/trinity-expansion-system-manifest-v5.json",
+            "docs/trinity-expansion-system-manifest-v6.json",
         ]
         checks: list[dict[str, str]] = []
         hashes: dict[str, str] = {}
@@ -2473,7 +2488,11 @@ def _compute_system(
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_absent", "PASS" if shutil.which("uvx") is None else "FAIL", f"uvx={shutil.which('uvx') or 'absent'}"),
             _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 59 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
-            _check("manifest_system_count", "PASS" if len(manifest.get("systems", [])) == 224 else "FAIL", f"systems={len(manifest.get('systems', []))}"),
+            _check(
+                "manifest_system_count",
+                "PASS" if len(manifest.get("systems", [])) >= max(last_expansion_total, 224) else "FAIL",
+                f"systems={len(manifest.get('systems', []))}",
+            ),
             _check("mcp_resources_visible", "PASS" if session_resource_count > 0 else "FAIL", f"resource_count={session_resource_count}"),
             _check("mcp_templates_visible", "PASS" if session_template_count > 0 else "FAIL", f"template_count={session_template_count}"),
             _check("figma_verified_live", "PASS" if "figma" in verified_connectors else "FAIL", f"verified={verified_connectors}"),
@@ -2504,7 +2523,7 @@ def _compute_system(
                 "staged_connectors": staged_connectors,
                 "code_home_present": bool(os.getenv("CODEX_HOME")),
             },
-            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v5.json", DEFAULT_MCP_CATALOG, "docs/trinity-mcp-surface-session-v1.json"]),
+            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v6.json", DEFAULT_MCP_CATALOG, "docs/trinity-mcp-surface-session-v1.json"]),
             "next_action": "Use this audit as the environment baseline before widening integrations.",
             "records": None,
             "source_runs": None,
@@ -2622,7 +2641,7 @@ sandbox = \"elevated\"
         checks = [
             _check("offline_only_flag_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "run_all requires explicit offline override"),
             _check("compat_alias_present", "PASS" if "--include-public-api-refresh" in run_all_text else "FAIL", "compatibility alias expected"),
-            _check("live_default_present", "PASS" if 'live_network_mode = "live_default"' in run_all_text else "FAIL", "standard/deep should resolve to live_default"),
+            _check("offline_safe_default_present", "PASS" if "include_public_api_refresh = False" in run_all_text else "FAIL", "standard and deep should remain offline-safe by default"),
             _check("mcp_refresh_flag_present", "PASS" if "--include-mcp-refresh" in run_all_text else "FAIL", "mcp refresh flag expected"),
             _check("staged_connector_flag_present", "PASS" if "--include-staged-connectors" in run_all_text else "FAIL", "staged connector flag expected"),
             _check("live_entries_cache_backed", "PASS" if len(cache_backed) == len(live_entries) else "FAIL", f"cache_backed={len(cache_backed)}/{len(live_entries)}"),
@@ -2630,7 +2649,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"live_entry_count": len(live_entries), "cache_backed_live_entries": len(cache_backed)},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v5.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v6.json"]),
             "next_action": "Keep every live stage cache-backed so offline-only remains viable.",
             "records": None,
             "source_runs": None,
@@ -2680,7 +2699,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"boundary_count": len(boundaries), "boundaries": boundaries},
-            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v5.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v6.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep trust boundaries explicit before expanding connectivity or authority.",
             "records": None,
             "source_runs": None,
@@ -2693,7 +2712,7 @@ sandbox = \"elevated\"
         checks = [
             _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['\"standard\"', '\"quick\"', '\"deep\"', '\"collab\"', '\"materialize\"']) else "FAIL", "standard/quick/deep/collab/materialize expected"),
             _check("offline_only_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "offline override required"),
-            _check("manifest_v5_present", "PASS" if "trinity-expansion-system-manifest-v5.json" in run_all_text else "FAIL", "run_all should target v5 manifest"),
+            _check("manifest_v6_present", "PASS" if "trinity-expansion-system-manifest-v6.json" in run_all_text else "FAIL", "run_all should target v6 manifest"),
             _check("live_write_flag_present", "PASS" if "--include-live-writes" in run_all_text else "FAIL", "materialize profile requires explicit write tracer flag support"),
         ]
         return {
@@ -2726,7 +2745,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v5.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v6.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep hardening and public/local boundaries ahead of new privileged integrations.",
             "records": None,
             "source_runs": None,
@@ -2963,7 +2982,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v5.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v6.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,
             "source_runs": None,
@@ -3457,7 +3476,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"edge_count": len(edges), "missing_dependencies": missing, "cycle_count": len(cycles)},
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v5.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v6.json"]),
             "next_action": "Keep the manifest graph acyclic before widening suite orchestration.",
             "records": None,
             "source_runs": None,
@@ -3490,7 +3509,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v5.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v6.json"]),
             "next_action": "Keep orchestration resilient through explicit modes, status outputs, and dependency checks.",
             "records": None,
             "source_runs": None,
@@ -3519,7 +3538,7 @@ sandbox = \"elevated\"
     raise KeyError(f"unimplemented system handler: {system_id}")
 
 
-def run_named_system(system_id: str) -> int:
+def run_named_system(system_id: str, argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=f"Run Trinity expansion system: {system_id}")
     parser.add_argument("--manifest", default=str(DEFAULT_MANIFEST))
     parser.add_argument("--reports-dir", default=str(DEFAULT_RUNS_DIR.relative_to(ROOT)))
@@ -3531,7 +3550,7 @@ def run_named_system(system_id: str) -> int:
     parser.add_argument("--profile-context", default="standard")
     parser.add_argument("--fail-on-warn", action="store_true")
     parser.add_argument("--timeout-sec", type=int, default=30)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     manifest = _load_manifest(str(Path(args.manifest).resolve()))
     entry = _manifest_entry(manifest, system_id)
@@ -3557,3 +3576,14 @@ def run_named_system(system_id: str) -> int:
         fail_on_warn=bool(args.fail_on_warn),
         runs_dir=str(args.reports_dir),
     )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Run a Trinity expansion system by id.")
+    parser.add_argument("--system-id", required=True)
+    args, remaining = parser.parse_known_args()
+    return run_named_system(str(args.system_id), remaining)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

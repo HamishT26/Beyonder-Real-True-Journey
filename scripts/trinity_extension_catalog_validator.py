@@ -47,9 +47,9 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity extension and MCP catalogs.")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v5.json")
-    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v3.json")
-    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v3.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v6.json")
+    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v4.json")
+    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v4.json")
     parser.add_argument("--reports-dir", default="docs/trinity-extension-catalog-runs")
     parser.add_argument("--latest-json", default="docs/trinity-extension-catalog-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-extension-catalog-validation-latest.md")
@@ -80,8 +80,8 @@ def main() -> int:
     if not isinstance(extension_rows, list):
         failures.append("extension catalog extensions must be a list")
         extension_rows = []
-    if isinstance(extension_rows, list) and len(extension_rows) != 288:
-        failures.append(f"extension catalog expected 288 entries, found {len(extension_rows)}")
+    if isinstance(extension_rows, list) and len(extension_rows) != 468:
+        failures.append(f"extension catalog expected 468 entries, found {len(extension_rows)}")
 
     extension_ids: set[str] = set()
     pack_counts: dict[str, dict[str, int]] = {}
@@ -90,7 +90,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{label} must be an object")
             continue
-        for field in ("extension_id", "extension_kind", "pack", "status", "source_of_truth"):
+        for field in ("extension_id", "extension_kind", "pack", "status", "source_of_truth", "live_dependency", "history_scope", "mirror_target", "autonomy_class"):
             if field not in entry:
                 failures.append(f"{label} missing field: {field}")
         extension_id = str(entry.get("extension_id") or "").strip()

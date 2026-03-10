@@ -292,6 +292,21 @@ def main() -> int:
         asdict(_artifact_status("OS runtime reference validation", "docs/trinity-os-runtime-reference-validation-latest.json")),
         asdict(_artifact_status("Journey corpus validation", "docs/trinity-journey-corpus-validation-latest.json")),
         asdict(_artifact_status("Aletheon memory validation", "docs/aletheon-memory-validation-latest.json")),
+        asdict(_artifact_status("Re-entry sync gate", "docs/trinity-expansion/reentry-sync-gate-latest.json")),
+        asdict(_artifact_status("Journey history reconciliation gate", "docs/trinity-expansion/journey-history-reconciliation-gate-latest.json")),
+        asdict(_artifact_status("Benchmark fabric gate", "docs/trinity-expansion/benchmark-fabric-gate-latest.json")),
+        asdict(_artifact_status("Connector materialization gate", "docs/trinity-expansion/connector-materialization-gate-latest.json")),
+        asdict(_artifact_status("Code knowledge graph gate", "docs/trinity-expansion/code-knowledge-graph-gate-latest.json")),
+        asdict(_artifact_status("Self correction gate", "docs/trinity-expansion/self-correction-gate-latest.json")),
+        asdict(_artifact_status("Docker pilot gate", "docs/trinity-expansion/docker-pilot-gate-latest.json")),
+        asdict(_artifact_status("Sentinel daemon gate", "docs/trinity-expansion/sentinel-daemon-gate-latest.json")),
+        asdict(_artifact_status("Public web weaver gate", "docs/trinity-expansion/public-web-weaver-gate-latest.json")),
+        asdict(_artifact_status("Trinity dashboard gate", "docs/trinity-expansion/trinity-dashboard-gate-latest.json")),
+        asdict(_artifact_status("Multi-agent orchestrator gate", "docs/trinity-expansion/multi-agent-orchestrator-gate-latest.json")),
+        asdict(_artifact_status("Semantic firewall gate", "docs/trinity-expansion/semantic-firewall-gate-latest.json")),
+        asdict(_artifact_status("Aletheon memory reflection v6 gate", "docs/trinity-expansion/aletheon-memory-reflection-v6-gate-latest.json")),
+        asdict(_artifact_status("Wetware device readiness v6 gate", "docs/trinity-expansion/wetware-device-readiness-v6-gate-latest.json")),
+        asdict(_artifact_status("Future readiness gate", "docs/trinity-expansion/future-readiness-gate-latest.json")),
     ]
 
     hybrid_status = "PASS"

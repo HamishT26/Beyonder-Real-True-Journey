@@ -1,0 +1,47 @@
+{
+  "pack": "reentry_sync",
+  "display_name": "Re-entry Sync",
+  "pillar": "trinity",
+  "wave": "wave30",
+  "track": "continuity_ops",
+  "connector_id": "",
+  "requires_auth": false,
+  "gating_class": "active",
+  "sync_strategy": "local_repo",
+  "freshness_window_days": 30,
+  "activation_group": "continuity_reentry",
+  "continuity_band": "v5-v6",
+  "workflow_tokens": [
+    "system wake",
+    "session-surface drift",
+    "docker health",
+    "proof before promotion"
+  ],
+  "risk_tags": [
+    "wake drift",
+    "surface mismatch",
+    "stale proof"
+  ],
+  "repo_targets": [
+    "docs/system-suite-status.json",
+    "docs/trinity-mcp-catalog-v4.json",
+    "docs/logs/system-wake-v1.json",
+    "docs/v6-session-surface-drift-note.md"
+  ],
+  "skill_names": [
+    "reentry-sync-operations",
+    "reentry-sync-integration"
+  ],
+  "system_ids": [
+    "reentry_sync_surface_audit",
+    "reentry_sync_sync_bridge",
+    "reentry_sync_materialization_tracer",
+    "reentry_sync_cache_board",
+    "reentry_sync_risk_board",
+    "reentry_sync_gate"
+  ],
+  "autonomy_class": "manual",
+  "live_dependency": "none",
+  "mirror_target": "repo_only",
+  "history_scope": "v5-v6"
+}

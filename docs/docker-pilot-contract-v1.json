@@ -1,0 +1,45 @@
+{
+  "pack": "docker_pilot",
+  "display_name": "Docker Pilot",
+  "pillar": "body",
+  "wave": "wave36",
+  "track": "compute_ecosystem",
+  "connector_id": "",
+  "requires_auth": true,
+  "gating_class": "active",
+  "sync_strategy": "local_probe",
+  "freshness_window_days": 7,
+  "activation_group": "runtime_orchestration",
+  "continuity_band": "v6",
+  "workflow_tokens": [
+    "docker probe",
+    "disposable runtime",
+    "cleanup required",
+    "audit log"
+  ],
+  "risk_tags": [
+    "orphaned container",
+    "resource leak",
+    "environment drift"
+  ],
+  "repo_targets": [
+    "docs/trinity-docker-pilot-report-v1.json",
+    "docs/trinity-materialization-ledger.jsonl"
+  ],
+  "skill_names": [
+    "docker-pilot-operations",
+    "docker-pilot-integration"
+  ],
+  "system_ids": [
+    "docker_pilot_surface_audit",
+    "docker_pilot_sync_bridge",
+    "docker_pilot_materialization_tracer",
+    "docker_pilot_cache_board",
+    "docker_pilot_risk_board",
+    "docker_pilot_gate"
+  ],
+  "autonomy_class": "bounded_write",
+  "live_dependency": "docker",
+  "mirror_target": "repo_only",
+  "history_scope": "v6"
+}
