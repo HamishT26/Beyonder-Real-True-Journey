@@ -1,0 +1,46 @@
+{
+  "pack": "materialization_ladder_governor",
+  "display_name": "Materialization Ladder Governor",
+  "pillar": "trinity",
+  "wave": "wave49",
+  "track": "materialization_ladder",
+  "connector_id": "",
+  "requires_auth": false,
+  "gating_class": "active",
+  "sync_strategy": "local_probe",
+  "freshness_window_days": 30,
+  "activation_group": "materialization_ladder",
+  "continuity_band": "v7",
+  "autonomy_class": "bounded_write",
+  "live_dependency": "docker+git+connector_proofs",
+  "mirror_target": "repo_only",
+  "history_scope": "v7",
+  "summary": "Control level promotion from disposable staging through persistent dev to readiness-only production lanes.",
+  "workflow_tokens": [
+    "ladder registry",
+    "proof-gated promotion",
+    "rollback required",
+    "readiness only above l2 until proven"
+  ],
+  "risk_tags": [
+    "false promotion",
+    "missing rollback",
+    "tooling gap"
+  ],
+  "repo_targets": [
+    "docs/trinity-materialization-ladder-v1.json",
+    "docs/trinity-materialization-ladder-board-latest.json"
+  ],
+  "skill_names": [
+    "materialization-ladder-governor-operations",
+    "materialization-ladder-governor-integration"
+  ],
+  "system_ids": [
+    "materialization_ladder_governor_surface_audit",
+    "materialization_ladder_governor_sync_bridge",
+    "materialization_ladder_governor_materialization_tracer",
+    "materialization_ladder_governor_cache_board",
+    "materialization_ladder_governor_risk_board",
+    "materialization_ladder_governor_gate"
+  ]
+}
