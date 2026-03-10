@@ -1,0 +1,100 @@
+{
+  "version": "v1",
+  "generated_utc": "2026-03-10T08:48:04+00:00",
+  "default_materialize_level": "l2_persistent_dev",
+  "levels": [
+    {
+      "level_id": "l1_disposable_staging",
+      "desired_state": "available",
+      "actual_state": "available",
+      "write_scope": "disposable staging only",
+      "target_class": "temporary branch/page/schema",
+      "promotion_requirements": [
+        "existing live-write connector",
+        "disposable target"
+      ],
+      "rollback_requirements": [
+        "discard temporary target"
+      ],
+      "blockers": []
+    },
+    {
+      "level_id": "l2_persistent_dev",
+      "desired_state": "default",
+      "actual_state": "persistent_dev",
+      "write_scope": "persistent dev scopes only",
+      "target_class": "branch/dev db/dev notion/dev linear",
+      "promotion_requirements": [
+        "persistent scope registry",
+        "rollback scope",
+        "proof-backed connector"
+      ],
+      "rollback_requirements": [
+        "branch revert",
+        "schema rollback",
+        "staging page cleanup"
+      ],
+      "blockers": []
+    },
+    {
+      "level_id": "l3_uat_preprod",
+      "desired_state": "readiness",
+      "actual_state": "readiness_only",
+      "write_scope": "isolated preprod mirrors only",
+      "target_class": "uat mirror",
+      "promotion_requirements": [
+        "isolated target",
+        "replay harness",
+        "rollback proof",
+        "tool surface"
+      ],
+      "rollback_requirements": [
+        "mirror reset"
+      ],
+      "blockers": [
+        "No proven isolated UAT targets.",
+        "Materialize/dbt tool surface not proven."
+      ]
+    },
+    {
+      "level_id": "l4_standard_prod",
+      "desired_state": "readiness",
+      "actual_state": "readiness_only",
+      "write_scope": "protected production targets",
+      "target_class": "production",
+      "promotion_requirements": [
+        "protected target",
+        "change window",
+        "rollback proof",
+        "operator approval"
+      ],
+      "rollback_requirements": [
+        "production rollback plan"
+      ],
+      "blockers": [
+        "No protected production target proof.",
+        "Materialize/dbt tool surface not proven."
+      ]
+    },
+    {
+      "level_id": "l5_ha_prod",
+      "desired_state": "readiness",
+      "actual_state": "readiness_only",
+      "write_scope": "ha production replicas",
+      "target_class": "high_availability",
+      "promotion_requirements": [
+        "replica support",
+        "failover proof",
+        "consistency proof",
+        "zero-downtime rollback"
+      ],
+      "rollback_requirements": [
+        "failover and rollback runbook"
+      ],
+      "blockers": [
+        "No HA runtime proof.",
+        "Materialize/dbt tool surface not proven."
+      ]
+    }
+  ]
+}

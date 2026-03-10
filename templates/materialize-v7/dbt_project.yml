@@ -1,0 +1,13 @@
+models:
+  trinity_materialize_v7:
+    staging:
+      +materialized: view
+      +cluster: dev_cluster
+    intermediate:
+      +materialized: view
+      +cluster: uat_cluster
+    marts:
+      +materialized: materializedview
+      +cluster: prod_cluster
+      +index:
+        - columns: [user_id]
