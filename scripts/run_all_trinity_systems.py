@@ -23,9 +23,12 @@ PROFILE_HELP = {
     "standard": "Base suite run with benchmark enforcement by default.",
     "quick": "Continuity-focused subset with benchmark observe mode by default.",
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
+    "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
+    "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v2.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v5.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v3.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -203,6 +206,17 @@ def _expansion_manifest_validation_command(*, enforce: bool) -> tuple[str, list[
     return f"trinity expansion manifest validation ({mode})", command
 
 
+def _extension_catalog_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_extension_catalog_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity extension catalog validation ({mode})", command
+
+
 def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
@@ -214,11 +228,59 @@ def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[st
     return f"trinity expansion result validation ({mode})", command
 
 
+def _materialization_ledger_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_materialization_ledger_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity materialization ledger validation ({mode})", command
+
+
+def _os_runtime_reference_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_os_runtime_reference_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity os runtime reference validation ({mode})", command
+
+
+def _journey_corpus_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_journey_corpus_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity journey corpus validation ({mode})", command
+
+
+def _aletheon_memory_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/aletheon_memory_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"aletheon memory validation ({mode})", command
+
+
 def _load_expansion_system_commands(
     *,
     profile: str,
     enforce: bool,
     offline_only: bool,
+    include_public_api_refresh: bool,
+    include_mcp_refresh: bool,
+    include_staged_connectors: bool,
+    include_live_writes: bool,
 ) -> list[tuple[str, list[str]]]:
     manifest_path = ROOT / TRINITY_EXPANSION_MANIFEST_PATH
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -236,13 +298,56 @@ def _load_expansion_system_commands(
         system_id = str(entry.get("system_id") or "").strip()
         script = str(entry.get("script") or "").strip()
         mode = str(entry.get("mode") or "offline").strip().lower()
+        pack = str(entry.get("pack") or "").strip()
         if not system_id or not script:
             continue
         command = ["python3", script]
         if enforce:
             command.append("--fail-on-warn")
-        if offline_only and mode == "live":
-            command.append("--offline-only")
+        if include_public_api_refresh:
+            command.append("--include-public-api-refresh")
+        if include_mcp_refresh:
+            command.append("--include-mcp-refresh")
+        if include_staged_connectors:
+            command.append("--include-staged-connectors")
+        if include_live_writes:
+            command.append("--include-live-writes")
+        command.extend(["--profile-context", profile])
+        if mode == "live":
+            live_disabled = offline_only
+            if pack in {"figma_collab", "linear_collab"} and not include_mcp_refresh:
+                live_disabled = True
+            elif pack in {"figma_collab", "linear_collab", "notion_memory_bridge"} and not include_mcp_refresh:
+                live_disabled = True
+            elif pack in {"github_devflow", "filesystem_scope_governor"} and not include_staged_connectors:
+                live_disabled = True
+            elif pack in {"github_materialization", "github_pat_materialization", "notion_materialization", "postgres_materialization", "postgres_local_runtime"} and not include_live_writes:
+                live_disabled = True
+            elif pack in {"public_intelligence", "journey_continuity", "os_runtime_fabric", "os_runtime_benchmark", "ai_frontier_alignment", "wetware_device_readiness", "wetware_device_readiness_v5", "aletheon_memory_reflection"} and not include_public_api_refresh:
+                live_disabled = True
+            elif pack not in {
+                "figma_collab",
+                "linear_collab",
+                "notion_memory_bridge",
+                "github_devflow",
+                "filesystem_scope_governor",
+                "github_materialization",
+                "github_pat_materialization",
+                "notion_materialization",
+                "postgres_materialization",
+                "postgres_local_runtime",
+                "public_intelligence",
+                "journey_continuity",
+                "os_runtime_fabric",
+                "os_runtime_benchmark",
+                "ai_frontier_alignment",
+                "wetware_device_readiness",
+                "wetware_device_readiness_v5",
+                "aletheon_memory_reflection",
+            } and not include_public_api_refresh:
+                live_disabled = True
+            if live_disabled:
+                command.append("--offline-only")
         commands.append((f"expansion: {system_id} ({mode})", command))
     return commands
 
@@ -252,6 +357,9 @@ def build_commands(
     include_version_scan: bool,
     include_curated_skill_catalog: bool,
     include_public_api_refresh: bool,
+    include_mcp_refresh: bool,
+    include_staged_connectors: bool,
+    include_live_writes: bool,
     offline_only: bool,
     quick_mode: bool,
     profile: str,
@@ -376,6 +484,11 @@ def build_commands(
     if not quick_mode:
         expansion_commands = [
             (
+                *_extension_catalog_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 *_expansion_manifest_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
@@ -384,9 +497,33 @@ def build_commands(
                 profile=profile,
                 enforce=(body_benchmark_mode == "enforce"),
                 offline_only=offline_only,
+                include_public_api_refresh=include_public_api_refresh,
+                include_mcp_refresh=include_mcp_refresh,
+                include_staged_connectors=include_staged_connectors,
+                include_live_writes=include_live_writes,
             ),
             (
                 *_expansion_result_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_materialization_ledger_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_os_runtime_reference_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_journey_corpus_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_aletheon_memory_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -591,9 +728,13 @@ def build_commands(
             (
                 "v33 structural OCR validation snapshot",
                 [
-                    "bash",
-                    "-lc",
-                    "strings -n 8 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf' | rg -n 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' | head -n 20",
+                    "python3",
+                    "scripts/journey_anchor_scan.py",
+                    "--regex",
+                    "Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill",
+                    "--max-matches",
+                    "20",
+                    "Beyonder-Real-True Journey v33 (Arielis) (2).pdf",
                 ],
             ),
         ]
@@ -821,9 +962,13 @@ def build_commands(
         (
             "v33 structural OCR validation snapshot",
             [
-                "bash",
-                "-lc",
-                "strings -n 8 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf' | rg -n 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' | head -n 20",
+                "python3",
+                "scripts/journey_anchor_scan.py",
+                "--regex",
+                "Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill",
+                "--max-matches",
+                "20",
+                "Beyonder-Real-True Journey v33 (Arielis) (2).pdf",
             ],
         ),
     ]
@@ -834,32 +979,61 @@ def build_commands(
                 (
                     "cross-version anchor scan (v29-v33 PDFs)",
                     [
-                        "bash",
-                        "-lc",
-                        "for f in 'Beyonder-Real-True Journey v29 (Aerin) (1).pdf' 'Beyonder-Real-True Journey v30 (Ariel) (1).pdf' 'Beyonder-Real-True Journey v31 (Ariel) (1).pdf' 'Beyonder-Real-True Journey v32 (Aetherius) (1) (1).pdf' 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'; do echo \"=== $f ===\"; strings -n 8 \"$f\" | rg -n 'Trinity|GMUT|Freed|DID|Quantum|Orchestrator|Cosmic|QCIT|QCfT' | head -n 10 || true; done",
+                        "python3",
+                        "scripts/journey_anchor_scan.py",
+                        "--regex",
+                        "Trinity|GMUT|Freed|DID|Quantum|Orchestrator|Cosmic|QCIT|QCfT",
+                        "--max-matches",
+                        "10",
+                        "--allow-empty",
+                        "Beyonder-Real-True Journey v29 (Aerin) (1).pdf",
+                        "Beyonder-Real-True Journey v30 (Ariel) (1).pdf",
+                        "Beyonder-Real-True Journey v31 (Ariel) (1).pdf",
+                        "Beyonder-Real-True Journey v32 (Aetherius) (1) (1).pdf",
+                        "Beyonder-Real-True Journey v33 (Arielis) (2).pdf",
                     ],
                 ),
                 (
                     "v29 DOCX module anchor scan",
                     [
-                        "bash",
-                        "-lc",
-                        "unzip -p 'Beyonder-Real-True Journey v29 (Aerin) (1).docx' word/document.xml | tr -d '\\r' | rg -n 'module|orchestrator|simulation|security|identity|governance|journey' | head -n 25",
+                        "python3",
+                        "scripts/journey_anchor_scan.py",
+                        "--regex",
+                        "module|orchestrator|simulation|security|identity|governance|journey",
+                        "--max-matches",
+                        "25",
+                        "Beyonder-Real-True Journey v29 (Aerin) (1).docx",
                     ],
                 ),
                 (
                     "v33 capsule inventory snapshot",
                     [
-                        "bash",
-                        "-lc",
-                        "if [ -f 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' ]; then unzip -l 'Beyonder-Real-True_Journey_v33_Capsule (4).zip' | rg -n 'v29|v30|v31|v32|v33|quantum|trinity|orchestrator|simulation|freed|cosmic' | head -n 40; else echo 'SKIPPED: Beyonder-Real-True_Journey_v33_Capsule (4).zip not found'; fi",
+                        "python3",
+                        "scripts/journey_anchor_scan.py",
+                        "--regex",
+                        "v29|v30|v31|v32|v33|quantum|trinity|orchestrator|simulation|freed|cosmic",
+                        "--max-matches",
+                        "40",
+                        "--allow-empty",
+                        "--skip-missing",
+                        "Beyonder-Real-True_Journey_v33_Capsule (4).zip",
                     ],
                 ),
             ]
         )
 
     if include_skill_install:
-        commands.append(("local Trinity skill installation", ["bash", "scripts/install_local_skills.sh"]))
+        commands.append(
+            (
+                "local Trinity skill installation",
+                [
+                    "python3",
+                    "scripts/trinity_skill_installer_system.py",
+                    "--force",
+                    "--verify",
+                ],
+            )
+        )
 
     if include_curated_skill_catalog:
         if Path(SKILL_INSTALLER_LIST).exists():
@@ -888,13 +1062,13 @@ def build_commands(
 
 def render_profile_catalog() -> str:
     lines = ["Available suite profiles (default: deep):"]
-    for name in ("standard", "quick", "deep"):
+    for name in ("standard", "quick", "deep", "collab", "materialize"):
         lines.append(f"- {name}: {PROFILE_HELP[name]}")
     lines.append("- --quick-mode: legacy alias for --profile quick")
     return "\n".join(lines)
 
 
-def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, str, str]:
+def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool, bool, bool, bool, bool, bool, bool, str, str]:
     profile = args.profile
     profile_source = "--profile"
 
@@ -910,6 +1084,9 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     include_curated_skill_catalog = args.include_curated_skill_catalog
     offline_only = args.offline_only
     include_public_api_refresh = False
+    include_mcp_refresh = False
+    include_staged_connectors = bool(args.include_staged_connectors)
+    include_live_writes = False
     soft_fail_network = args.soft_fail_network
     body_benchmark_mode = args.body_benchmark_mode
 
@@ -918,14 +1095,26 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install = True
         include_curated_skill_catalog = True
         soft_fail_network = True
+    if profile in {"collab", "materialize"}:
+        include_mcp_refresh = True
+    if profile == "materialize":
+        include_staged_connectors = True
+        include_live_writes = True
 
     # Live API refresh is default for standard/deep unless explicitly offline-only.
-    if profile in {"standard", "deep"}:
+    if profile in {"standard", "deep", "collab", "materialize"}:
         include_public_api_refresh = True
     if args.include_public_api_refresh:
         include_public_api_refresh = True
+    if args.include_mcp_refresh:
+        include_mcp_refresh = True
+    if args.include_live_writes:
+        include_live_writes = True
     if offline_only:
         include_public_api_refresh = False
+        include_mcp_refresh = False
+        include_staged_connectors = False
+        include_live_writes = False
 
     if profile == "quick" and (include_version_scan or include_skill_install or include_curated_skill_catalog):
         raise SystemExit(
@@ -946,6 +1135,9 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install,
         include_curated_skill_catalog,
         include_public_api_refresh,
+        include_mcp_refresh,
+        include_staged_connectors,
+        include_live_writes,
         offline_only,
         soft_fail_network,
         profile_source,
@@ -1024,11 +1216,11 @@ def main() -> None:
     )
     parser.add_argument(
         "--profile",
-        choices=("standard", "quick", "deep"),
+        choices=("standard", "quick", "deep", "collab", "materialize"),
         default="deep",
         help=(
-            "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), "
-            "deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
+            "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), collab (standard + verified MCP refresh), "
+            "materialize (standard + disposable staging write tracers), deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
         ),
     )
     parser.add_argument(
@@ -1050,6 +1242,21 @@ def main() -> None:
         "--include-public-api-refresh",
         action="store_true",
         help="Deprecated compatibility alias; standard/deep already include live API refresh by default.",
+    )
+    parser.add_argument(
+        "--include-mcp-refresh",
+        action="store_true",
+        help="Enable verified-live MCP collaboration refresh for eligible pack systems.",
+    )
+    parser.add_argument(
+        "--include-staged-connectors",
+        action="store_true",
+        help="Attempt staged connector live refresh only after setup-gate detection passes.",
+    )
+    parser.add_argument(
+        "--include-live-writes",
+        action="store_true",
+        help="Enable disposable staging write tracers; materialize profile turns this on automatically unless offline-only is set.",
     )
     parser.add_argument(
         "--offline-only",
@@ -1124,6 +1331,9 @@ def main() -> None:
         include_skill_install,
         include_curated_skill_catalog,
         include_public_api_refresh,
+        include_mcp_refresh,
+        include_staged_connectors,
+        include_live_writes,
         offline_only,
         soft_fail_network,
         profile_source,
@@ -1139,19 +1349,71 @@ def main() -> None:
         include_version_scan=include_version_scan,
         include_curated_skill_catalog=include_curated_skill_catalog,
         include_public_api_refresh=include_public_api_refresh,
+        include_mcp_refresh=include_mcp_refresh,
+        include_staged_connectors=include_staged_connectors,
+        include_live_writes=include_live_writes,
         offline_only=offline_only,
         quick_mode=(profile == "quick"),
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
     )
+    mcp_catalog_path = ROOT / TRINITY_MCP_CATALOG_PATH
+    verified_mcp_connectors: list[str] = []
+    eligible_live_write_connectors: list[str] = []
+    promoted_live_write_connectors: list[str] = []
+    blocked_promotions: list[str] = []
+    if mcp_catalog_path.exists():
+        try:
+            mcp_payload = json.loads(mcp_catalog_path.read_text(encoding="utf-8"))
+            connector_rows = mcp_payload.get("connectors", [])
+            if isinstance(connector_rows, list):
+                verified_mcp_connectors = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and bool(row.get("live_read_enabled"))
+                )
+                eligible_live_write_connectors = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and "write" in str(row.get("desired_state") or "")
+                )
+                promoted_live_write_connectors = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and bool(row.get("live_write_enabled"))
+                )
+                blocked_promotions = sorted(
+                    str(row.get("mcp_id"))
+                    for row in connector_rows
+                    if isinstance(row, dict) and "write" in str(row.get("desired_state") or "") and not bool(row.get("live_write_enabled"))
+                )
+        except json.JSONDecodeError:
+            verified_mcp_connectors = []
+            eligible_live_write_connectors = []
+            promoted_live_write_connectors = []
+            blocked_promotions = []
     if offline_only:
         live_network_mode = "offline_only"
-    elif profile in {"standard", "deep"}:
+    elif profile in {"standard", "deep", "collab", "materialize"}:
         live_network_mode = "live_default"
     elif include_public_api_refresh:
         live_network_mode = "live_opt_in"
     else:
         live_network_mode = "offline_default"
+    if offline_only:
+        mcp_refresh_mode = "offline_only"
+        staged_connector_mode = "offline_only"
+    else:
+        mcp_refresh_mode = "verified_live" if include_mcp_refresh else "disabled"
+        staged_connector_mode = "setup_gate_attempted" if include_staged_connectors else "staged_only"
+    collab_pack_count = 9
+    materialization_pack_count = 6
+    if offline_only:
+        active_materialization_mode = "offline_only"
+    elif include_live_writes:
+        active_materialization_mode = "disposable_staging"
+    else:
+        active_materialization_mode = "read_only"
 
     suite_started_at = datetime.now(timezone.utc).isoformat()
     suite_start_ts = time.monotonic()
@@ -1167,8 +1429,14 @@ def main() -> None:
         f"Include skill install: {include_skill_install}",
         f"Include curated skill catalog: {include_curated_skill_catalog}",
         f"Include public api refresh: {include_public_api_refresh}",
+        f"Include mcp refresh: {include_mcp_refresh}",
+        f"Include staged connectors: {include_staged_connectors}",
+        f"Include live writes: {include_live_writes}",
         f"Offline only: {offline_only}",
         f"Live network mode: {live_network_mode}",
+        f"MCP refresh mode: {mcp_refresh_mode}",
+        f"Staged connector mode: {staged_connector_mode}",
+        f"Active materialization mode: {active_materialization_mode}",
         f"Soft-fail network: {soft_fail_network}",
         f"Fail on warn: {args.fail_on_warn}",
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
@@ -1245,6 +1513,11 @@ def main() -> None:
     lines.append(f"- FAIL: **{fail_count}**")
     lines.append(f"- Expansion systems total: **{expansion_total}**")
     lines.append(f"- Expansion systems passed: **{expansion_passed}**")
+    lines.append(f"- Collab pack count: **{collab_pack_count}**")
+    lines.append(f"- Materialization pack count: **{materialization_pack_count}**")
+    lines.append(f"- Eligible live write connectors: **{', '.join(eligible_live_write_connectors) if eligible_live_write_connectors else '-'}**")
+    lines.append(f"- Promoted live write connectors: **{', '.join(promoted_live_write_connectors) if promoted_live_write_connectors else '-'}**")
+    lines.append(f"- Blocked promotions: **{', '.join(blocked_promotions) if blocked_promotions else '-'}**")
     lines.append(f"- Achieved steps: **{achieved_steps}**")
     lines.append(f"- Achievement gate met: **{achievement_gate_met}**")
     lines.append(f"- Suite started: `{suite_started_at}`")
@@ -1268,6 +1541,15 @@ def main() -> None:
         },
         "expansion_systems_total": expansion_total,
         "expansion_systems_passed": expansion_passed,
+        "collab_pack_count": collab_pack_count,
+        "materialization_pack_count": materialization_pack_count,
+        "verified_mcp_connectors": verified_mcp_connectors,
+        "eligible_live_write_connectors": eligible_live_write_connectors,
+        "promoted_live_write_connectors": promoted_live_write_connectors,
+        "blocked_promotions": blocked_promotions,
+        "active_materialization_mode": active_materialization_mode,
+        "mcp_refresh_mode": mcp_refresh_mode,
+        "staged_connector_mode": staged_connector_mode,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
@@ -1276,8 +1558,14 @@ def main() -> None:
             "include_skill_install": include_skill_install,
             "include_curated_skill_catalog": include_curated_skill_catalog,
             "include_public_api_refresh": include_public_api_refresh,
+            "include_mcp_refresh": include_mcp_refresh,
+            "include_staged_connectors": include_staged_connectors,
+            "include_live_writes": include_live_writes,
             "offline_only": offline_only,
             "live_network_mode": live_network_mode,
+            "mcp_refresh_mode": mcp_refresh_mode,
+            "staged_connector_mode": staged_connector_mode,
+            "active_materialization_mode": active_materialization_mode,
             "soft_fail_network": soft_fail_network,
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,

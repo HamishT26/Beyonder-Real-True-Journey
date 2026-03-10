@@ -1,0 +1,72 @@
+{
+  "generated_utc": "2026-03-07T08:36:02+00:00",
+  "system_id": "notion_materialization_sync_bridge",
+  "pillar": "heart",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "staged_connector_auth",
+      "status": "PASS",
+      "detail": "auth_detected=False"
+    },
+    {
+      "name": "cache_written",
+      "status": "PASS",
+      "detail": "docs/trinity-mcp-cache/notion-materialization-latest.json"
+    }
+  ],
+  "metrics": {
+    "pack": "notion_materialization",
+    "strategy": "staged_connector",
+    "record_count": 1,
+    "auth_state": "setup_gate_pending",
+    "cache_status": "staged_setup_gate",
+    "desired_state": "verified_live_write",
+    "actual_state": "staged_setup_gate",
+    "live_read_enabled": false,
+    "live_write_enabled": false,
+    "blocker_count": 2
+  },
+  "repo_targets_touched": [
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-mcp-cache/notion-materialization-latest.json",
+    "docs/trinity-mcp-catalog-v2.json"
+  ],
+  "next_action": "Keep Notion staged until token, read handshake, and disposable tracer all pass.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "notion",
+      "record_id": "notion-seed",
+      "signal_type": "pack_seed",
+      "title": "Notion materialization remains staged until token, safe read handshake, and disposable page or database tracer all pass.",
+      "published_at": "2026-03-07",
+      "source_url": "https://www.notion.so/help/guides/what-is-notion",
+      "summary": "Notion materialization remains staged until token, safe read handshake, and disposable page or database tracer all pass.",
+      "metrics": {
+        "connector_snapshot": {
+          "tool_surface": "connector_setup_gate",
+          "write_target": "disposable staging page/database",
+          "auth_state": "token_required"
+        }
+      },
+      "tags": [
+        "notion",
+        "materialization",
+        "staged_setup_gate"
+      ],
+      "repo_targets": [
+        "docs/trinity-mcp-catalog-v2.json",
+        "docs/trinity-materialization-ledger.jsonl"
+      ]
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "notion",
+      "mode": "staged_cache",
+      "record_count": 1,
+      "status": "PASS"
+    }
+  ]
+}

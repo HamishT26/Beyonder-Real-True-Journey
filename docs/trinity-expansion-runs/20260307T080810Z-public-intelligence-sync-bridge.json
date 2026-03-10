@@ -1,0 +1,197 @@
+{
+  "generated_utc": "2026-03-07T08:08:10+00:00",
+  "system_id": "public_intelligence_sync_bridge",
+  "pillar": "trinity",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "live_records_present",
+      "status": "PASS",
+      "detail": "records=6"
+    },
+    {
+      "name": "cache_written",
+      "status": "PASS",
+      "detail": "docs/trinity-mcp-cache/public-intelligence-latest.json"
+    }
+  ],
+  "metrics": {
+    "pack": "public_intelligence",
+    "strategy": "public_feeds",
+    "record_count": 6,
+    "auth_state": "public_unauthenticated",
+    "cache_status": "active",
+    "desired_state": "active",
+    "actual_state": "active",
+    "live_read_enabled": false,
+    "live_write_enabled": false,
+    "blocker_count": 0
+  },
+  "repo_targets_touched": [
+    "docs/system-suite-status.json",
+    "docs/trinity-mandala-scoreboard-latest.json",
+    "docs/trinity-mcp-cache/public-intelligence-latest.json"
+  ],
+  "next_action": "Refresh public feeds on demand and promote only manually reviewed records into curated docs.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "semanticscholar",
+      "record_id": "semantic-scholar",
+      "signal_type": "public_signal",
+      "title": "Semantic Scholar signal",
+      "published_at": "2026-03-07",
+      "source_url": "https://api.semanticscholar.org/graph/v1/paper/search?query=agentic%20systems&limit=2&fields=title,url,year,citationCount",
+      "summary": "Semantic Scholar context refresh.",
+      "metrics": {
+        "bytes": 616,
+        "source_format": "json"
+      },
+      "tags": [
+        "semantic_scholar"
+      ],
+      "repo_targets": [
+        "docs/comparative-validation-grid-v1.md"
+      ]
+    },
+    {
+      "source_id": "paperswithcode",
+      "record_id": "papers-with-code",
+      "signal_type": "public_signal",
+      "title": "Papers with Code signal",
+      "published_at": "2026-03-07",
+      "source_url": "https://paperswithcode.com/search?q=agentic+systems",
+      "summary": "Papers with Code context refresh.",
+      "metrics": {
+        "bytes": 1452482,
+        "source_format": "text"
+      },
+      "tags": [
+        "papers_with_code"
+      ],
+      "repo_targets": [
+        "docs/comparative-validation-grid-v1.md"
+      ]
+    },
+    {
+      "source_id": "huggingface_hub",
+      "record_id": "hugging-face-hub",
+      "signal_type": "public_signal",
+      "title": "Hugging Face Hub signal",
+      "published_at": "2026-03-07",
+      "source_url": "https://huggingface.co/api/models?search=agentic&limit=2",
+      "summary": "Hugging Face Hub model context refresh.",
+      "metrics": {
+        "bytes": 1245,
+        "source_format": "json"
+      },
+      "tags": [
+        "hugging_face"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    },
+    {
+      "source_id": "pypi",
+      "record_id": "pypi-openai",
+      "signal_type": "public_signal",
+      "title": "PyPI package signal",
+      "published_at": "2026-03-07",
+      "source_url": "https://pypi.org/pypi/openai/json",
+      "summary": "PyPI package context refresh.",
+      "metrics": {
+        "bytes": 551486,
+        "source_format": "json"
+      },
+      "tags": [
+        "pypi"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    },
+    {
+      "source_id": "npm",
+      "record_id": "npm-openai",
+      "signal_type": "public_signal",
+      "title": "npm package signal",
+      "published_at": "2026-03-07",
+      "source_url": "https://registry.npmjs.org/openai",
+      "summary": "npm package context refresh.",
+      "metrics": {
+        "bytes": 4865870,
+        "source_format": "json"
+      },
+      "tags": [
+        "npm"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    },
+    {
+      "source_id": "docker_hub",
+      "record_id": "docker-python",
+      "signal_type": "public_signal",
+      "title": "Docker Hub image signal",
+      "published_at": "2026-03-07",
+      "source_url": "https://hub.docker.com/v2/repositories/library/python",
+      "summary": "Docker Hub image context refresh.",
+      "metrics": {
+        "bytes": 22518,
+        "source_format": "json"
+      },
+      "tags": [
+        "docker_hub"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "semanticscholar",
+      "request_url": "https://api.semanticscholar.org/graph/v1/paper/search?query=agentic%20systems&limit=2&fields=title,url,year,citationCount",
+      "mode": "live",
+      "record_count": 1,
+      "status": "PASS"
+    },
+    {
+      "source_id": "paperswithcode",
+      "request_url": "https://paperswithcode.com/search?q=agentic+systems",
+      "mode": "live",
+      "record_count": 1,
+      "status": "PASS"
+    },
+    {
+      "source_id": "huggingface_hub",
+      "request_url": "https://huggingface.co/api/models?search=agentic&limit=2",
+      "mode": "live",
+      "record_count": 1,
+      "status": "PASS"
+    },
+    {
+      "source_id": "pypi",
+      "request_url": "https://pypi.org/pypi/openai/json",
+      "mode": "live",
+      "record_count": 1,
+      "status": "PASS"
+    },
+    {
+      "source_id": "npm",
+      "request_url": "https://registry.npmjs.org/openai",
+      "mode": "live",
+      "record_count": 1,
+      "status": "PASS"
+    },
+    {
+      "source_id": "docker_hub",
+      "request_url": "https://hub.docker.com/v2/repositories/library/python",
+      "mode": "live",
+      "record_count": 1,
+      "status": "PASS"
+    }
+  ]
+}

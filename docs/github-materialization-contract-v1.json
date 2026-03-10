@@ -1,0 +1,41 @@
+{
+  "pack": "github_materialization",
+  "display_name": "GitHub Materialization",
+  "pillar": "trinity",
+  "wave": "wave15",
+  "track": "active_materialization",
+  "connector_id": "github",
+  "requires_auth": true,
+  "gating_class": "staged_setup_gate",
+  "sync_strategy": "staged_connector",
+  "freshness_window_days": 30,
+  "cache_artifact": "docs/trinity-mcp-cache/github-materialization-latest.json",
+  "workflow_tokens": [
+    "materialize profile only",
+    "disposable branch tracer",
+    "read handshake before write",
+    "never target main"
+  ],
+  "risk_tags": [
+    "token exposure",
+    "branch mutation",
+    "repo drift"
+  ],
+  "repo_targets": [
+    "docs/trinity-mcp-catalog-v2.json",
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/system-suite-status.json"
+  ],
+  "skill_names": [
+    "github-materialization-operations",
+    "github-materialization-integration"
+  ],
+  "system_ids": [
+    "github_materialization_surface_audit",
+    "github_materialization_sync_bridge",
+    "github_materialization_materialization_tracer",
+    "github_materialization_cache_board",
+    "github_materialization_risk_board",
+    "github_materialization_gate"
+  ]
+}

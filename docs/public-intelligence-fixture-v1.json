@@ -1,0 +1,105 @@
+{
+  "summary": "Cached public intelligence lane",
+  "source_url": "repo://docs/trinity-public-source-registry-v1.json",
+  "tags": [
+    "public_intelligence",
+    "signals"
+  ],
+  "next_action": "Refresh public feeds on demand and promote only manually reviewed records into curated docs.",
+  "repo_targets": [
+    "docs/system-suite-status.json",
+    "docs/trinity-mandala-scoreboard-latest.json"
+  ],
+  "live_sources": [
+    {
+      "source_id": "semanticscholar",
+      "record_id": "semantic-scholar",
+      "signal_type": "public_signal",
+      "title": "Semantic Scholar signal",
+      "url": "https://api.semanticscholar.org/graph/v1/paper/search?query=agentic%20systems&limit=2&fields=title,url,year,citationCount",
+      "format": "json",
+      "summary": "Semantic Scholar context refresh.",
+      "tags": [
+        "semantic_scholar"
+      ],
+      "repo_targets": [
+        "docs/comparative-validation-grid-v1.md"
+      ]
+    },
+    {
+      "source_id": "paperswithcode",
+      "record_id": "papers-with-code",
+      "signal_type": "public_signal",
+      "title": "Papers with Code signal",
+      "url": "https://paperswithcode.com/search?q=agentic+systems",
+      "format": "text",
+      "summary": "Papers with Code context refresh.",
+      "tags": [
+        "papers_with_code"
+      ],
+      "repo_targets": [
+        "docs/comparative-validation-grid-v1.md"
+      ]
+    },
+    {
+      "source_id": "huggingface_hub",
+      "record_id": "hugging-face-hub",
+      "signal_type": "public_signal",
+      "title": "Hugging Face Hub signal",
+      "url": "https://huggingface.co/api/models?search=agentic&limit=2",
+      "format": "json",
+      "summary": "Hugging Face Hub model context refresh.",
+      "tags": [
+        "hugging_face"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    },
+    {
+      "source_id": "pypi",
+      "record_id": "pypi-openai",
+      "signal_type": "public_signal",
+      "title": "PyPI package signal",
+      "url": "https://pypi.org/pypi/openai/json",
+      "format": "json",
+      "summary": "PyPI package context refresh.",
+      "tags": [
+        "pypi"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    },
+    {
+      "source_id": "npm",
+      "record_id": "npm-openai",
+      "signal_type": "public_signal",
+      "title": "npm package signal",
+      "url": "https://registry.npmjs.org/openai",
+      "format": "json",
+      "summary": "npm package context refresh.",
+      "tags": [
+        "npm"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    },
+    {
+      "source_id": "docker_hub",
+      "record_id": "docker-python",
+      "signal_type": "public_signal",
+      "title": "Docker Hub image signal",
+      "url": "https://hub.docker.com/v2/repositories/library/python",
+      "format": "json",
+      "summary": "Docker Hub image context refresh.",
+      "tags": [
+        "docker_hub"
+      ],
+      "repo_targets": [
+        "docs/grand-unified-narrative-brief.md"
+      ]
+    }
+  ]
+}
