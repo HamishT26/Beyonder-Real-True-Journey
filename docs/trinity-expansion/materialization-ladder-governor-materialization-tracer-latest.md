@@ -1,6 +1,6 @@
 # Trinity Expansion Result: materialization_ladder_governor_materialization_tracer
 
-- generated_utc: `2026-03-10T12:53:19+00:00`
+- generated_utc: `2026-03-10T09:32:58+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -23,7 +23,7 @@
   "desired_state": "active",
   "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
   "mode": "not_applicable",
   "pack": "materialization_ladder_governor",
   "profile_context": "materialize",

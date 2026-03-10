@@ -1,8 +1,7 @@
 # Trinity Control Tower
 
+- command_surface_state: `PASS`
 - materialization_level_desired: `l2_persistent_dev`
 - materialization_level_actual: `persistent_dev`
-- provisional_agent_count: `5`
-- duo_chat_count: `15`
-- council_state: `PASS`
-- cloud_readiness_state: `PASS`
+- identity_authority_state: `PASS`
+- memory_mirror_state: `PASS`

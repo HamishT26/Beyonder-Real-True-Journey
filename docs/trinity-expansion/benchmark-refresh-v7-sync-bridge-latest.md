@@ -1,6 +1,6 @@
 # Trinity Expansion Result: benchmark_refresh_v7_sync_bridge
 
-- generated_utc: `2026-03-10T12:53:53+00:00`
+- generated_utc: `2026-03-10T09:33:30+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

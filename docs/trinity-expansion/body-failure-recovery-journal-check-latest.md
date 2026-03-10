@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_failure_recovery_journal_check
 
-- generated_utc: `2026-03-10T12:48:51+00:00`
+- generated_utc: `2026-03-10T09:29:13+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,15 +8,15 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| ledger_rows_present | PASS | rows=114 |
+| ledger_rows_present | PASS | rows=105 |
 | stress_artifact_present | PASS | status=present |
 | stress_status | PASS | status=PASS |
 
 ## Metrics
 ```json
 {
-  "ledger_rows": 114,
-  "stress_history_samples": 136
+  "ledger_rows": 105,
+  "stress_history_samples": 127
 }
 ```
 

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_capability_surface_audit
 
-- generated_utc: `2026-03-10T12:48:38+00:00`
+- generated_utc: `2026-03-10T09:29:00+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -12,8 +12,8 @@
 | preferred_model_gpt54 | PASS | model=gpt-5.4 |
 | credential_env_absent | PASS | exposed=[] |
 | uvx_absent | PASS | uvx=absent |
-| repo_skill_inventory_present | PASS | repo_skills=150 |
-| manifest_system_count | PASS | systems=458 |
+| repo_skill_inventory_present | PASS | repo_skills=128 |
+| manifest_system_count | PASS | systems=392 |
 | mcp_resources_visible | PASS | resource_count=24 |
 | mcp_templates_visible | PASS | template_count=3 |
 | figma_verified_live | PASS | verified=['figma', 'github', 'linear', 'notion', 'postgres'] |
@@ -28,9 +28,9 @@
   "configured_model": "gpt-5.4",
   "configured_reasoning_effort": "xhigh",
   "exposed_env_vars": [],
-  "last_recorded_suite_expansion_total": 458,
-  "local_codex_skill_count": 185,
-  "manifest_system_count": 458,
+  "last_recorded_suite_expansion_total": 392,
+  "local_codex_skill_count": 163,
+  "manifest_system_count": 392,
   "mcp_resource_count": 24,
   "mcp_resource_template_count": 3,
   "mcp_resource_templates_available": true,
@@ -43,8 +43,8 @@
     "playwright"
   ],
   "mcp_settings_present": false,
-  "repo_local_skill_count": 150,
-  "repo_python_scripts": 287,
+  "repo_local_skill_count": 128,
+  "repo_python_scripts": 285,
   "skill_only_connectors": [
     "playwright"
   ],
@@ -66,6 +66,6 @@
 
 ## Repo targets touched
 - `docs/system-suite-status.json`
-- `docs/trinity-expansion-system-manifest-v8.json`
-- `docs/trinity-mcp-catalog-v6.json`
+- `docs/trinity-expansion-system-manifest-v7.json`
+- `docs/trinity-mcp-catalog-v5.json`
 - `docs/trinity-mcp-surface-session-v1.json`

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_operation_mode_guard
 
-- generated_utc: `2026-03-10T12:48:41+00:00`
+- generated_utc: `2026-03-10T09:29:04+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,7 +10,7 @@
 |---|---|---|
 | profile_modes_present | PASS | standard/quick/deep/collab/materialize expected |
 | offline_only_present | PASS | offline override required |
-| manifest_default_present | PASS | run_all should target v8 manifest |
+| manifest_v7_present | PASS | run_all should target v7 manifest |
 | live_write_flag_present | PASS | materialize profile requires explicit write tracer flag support |
 
 ## Metrics

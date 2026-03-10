@@ -1,6 +1,6 @@
 # Trinity Expansion Result: filesystem_scope_governor_materialization_tracer
 
-- generated_utc: `2026-03-10T12:50:22+00:00`
+- generated_utc: `2026-03-10T09:30:31+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -23,7 +23,7 @@
   "desired_state": "verified_live_write",
   "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
   "mode": "blocked",
   "pack": "filesystem_scope_governor",
   "profile_context": "materialize",

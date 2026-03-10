@@ -1,6 +1,6 @@
 # Trinity Expansion Result: filesystem_materialization_materialization_tracer
 
-- generated_utc: `2026-03-10T12:49:48+00:00`
+- generated_utc: `2026-03-10T09:30:03+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -23,7 +23,7 @@
   "desired_state": "verified_live_write",
   "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
   "mode": "offline_only",
   "pack": "filesystem_materialization",
   "profile_context": "materialize",

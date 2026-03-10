@@ -1,6 +1,6 @@
 # Trinity Expansion Result: code_knowledge_graph_materialization_tracer
 
-- generated_utc: `2026-03-10T12:51:50+00:00`
+- generated_utc: `2026-03-10T09:31:50+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,7 +10,7 @@
 |---|---|---|
 | proof_written | PASS | docs/trinity-live-traces/code-knowledge-graph-proof-v1.json |
 | ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=l5_ha_prod |
+| write_scope | PASS | mode=l2_persistent_dev |
 | blockers_recorded | PASS | blockers=0 |
 
 ## Metrics
@@ -23,8 +23,8 @@
   "desired_state": "verified_live_write",
   "include_live_writes": true,
   "live_write_enabled": true,
-  "materialization_level": "l5_ha_prod",
-  "mode": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
+  "mode": "l2_persistent_dev",
   "pack": "code_knowledge_graph",
   "profile_context": "materialize",
   "tracer_result": "PASS"

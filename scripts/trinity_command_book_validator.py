@@ -22,13 +22,8 @@ REQUIRED_FIELDS = {
     "expected_artifacts",
     "rollback",
     "source_of_truth",
-    "executor_role",
-    "authority_scope",
-    "council_visibility",
 }
 ALLOWED_RISK = {"low", "medium", "high", "critical"}
-ALLOWED_EXECUTOR = {"aletheon", "planner", "builder", "reviewer", "researcher", "archivist"}
-ALLOWED_VISIBILITY = {"leader_only", "pair", "council_shared", "public_readiness"}
 
 
 def _repo_path(path_str: str) -> Path:
@@ -66,7 +61,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity command book.")
-    parser.add_argument("--command-book", default="docs/trinity-command-book-v2.json")
+    parser.add_argument("--command-book", default="docs/trinity-command-book-v1.json")
     parser.add_argument("--execution-ledger", default="docs/trinity-command-execution-ledger.jsonl")
     parser.add_argument("--reports-dir", default="docs/trinity-command-book-runs")
     parser.add_argument("--latest-json", default="docs/trinity-command-book-validation-latest.json")
@@ -81,8 +76,8 @@ def main() -> int:
     if not isinstance(commands, list):
         failures.append("commands must be a list")
         commands = []
-    if len(commands) != 132:
-        failures.append(f"expected 132 commands, found {len(commands)}")
+    if len(commands) != 60:
+        failures.append(f"expected 60 commands, found {len(commands)}")
 
     seen: set[str] = set()
     for index, row in enumerate(commands):
@@ -102,12 +97,6 @@ def main() -> int:
             seen.add(command_id)
         if str(row.get("risk_class") or "") not in ALLOWED_RISK:
             failures.append(f"{command_id or label} invalid risk_class")
-        if str(row.get("executor_role") or "") not in ALLOWED_EXECUTOR:
-            failures.append(f"{command_id or label} invalid executor_role")
-        if str(row.get("council_visibility") or "") not in ALLOWED_VISIBILITY:
-            failures.append(f"{command_id or label} invalid council_visibility")
-        if not str(row.get("authority_scope") or "").strip():
-            failures.append(f"{command_id or label} authority_scope must be non-empty")
         if not isinstance(row.get("requires_live"), bool):
             failures.append(f"{command_id or label} requires_live must be boolean")
         if not isinstance(row.get("preconditions"), list):
@@ -127,13 +116,6 @@ def main() -> int:
                     failures.append(f"{command_id or label} missing source_of_truth: {source}")
             except Exception:
                 failures.append(f"{command_id or label} invalid source_of_truth: {source}")
-        template = str(row.get("command_template") or "").strip().split()
-        if len(template) >= 2 and template[0].startswith("python") and template[1].startswith("scripts/"):
-            try:
-                if not _repo_path(template[1]).exists():
-                    failures.append(f"{command_id or label} points to missing script: {template[1]}")
-            except Exception:
-                failures.append(f"{command_id or label} invalid script path in command_template: {template[1]}")
 
     ledger_path = _repo_path(args.execution_ledger)
     if not ledger_path.exists():

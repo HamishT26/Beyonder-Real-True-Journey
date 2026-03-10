@@ -322,18 +322,6 @@ def main() -> int:
         asdict(_artifact_status("Memory mirror graph v7 gate", "docs/trinity-expansion/memory-mirror-graph-v7-gate-latest.json")),
         asdict(_artifact_status("Trinity control tower v7 gate", "docs/trinity-expansion/trinity-control-tower-v7-gate-latest.json")),
         asdict(_artifact_status("Benchmark refresh v7 gate", "docs/trinity-expansion/benchmark-refresh-v7-gate-latest.json")),
-        asdict(_artifact_status("Agent council validation", "docs/trinity-agent-council-validation-latest.json")),
-        asdict(_artifact_status("Persistent dev hardening v8 gate", "docs/trinity-expansion/persistent-dev-hardening-v8-gate-latest.json")),
-        asdict(_artifact_status("UAT pre-prod readiness v8 gate", "docs/trinity-expansion/uat-preprod-readiness-v8-gate-latest.json")),
-        asdict(_artifact_status("Standard production readiness v8 gate", "docs/trinity-expansion/standard-prod-readiness-v8-gate-latest.json")),
-        asdict(_artifact_status("HA production readiness v8 gate", "docs/trinity-expansion/ha-prod-readiness-v8-gate-latest.json")),
-        asdict(_artifact_status("Command surface council v8 gate", "docs/trinity-expansion/command-surface-council-v8-gate-latest.json")),
-        asdict(_artifact_status("Agent council foundation v8 gate", "docs/trinity-expansion/agent-council-foundation-v8-gate-latest.json")),
-        asdict(_artifact_status("Agent identity certification v8 gate", "docs/trinity-expansion/agent-identity-certification-v8-gate-latest.json")),
-        asdict(_artifact_status("Agent memory boundary v8 gate", "docs/trinity-expansion/agent-memory-boundary-v8-gate-latest.json")),
-        asdict(_artifact_status("Agent orchestration v8 gate", "docs/trinity-expansion/agent-orchestration-v8-gate-latest.json")),
-        asdict(_artifact_status("Junior partner planning v8 gate", "docs/trinity-expansion/junior-partner-planning-v8-gate-latest.json")),
-        asdict(_artifact_status("Cloud staging readiness v8 gate", "docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 

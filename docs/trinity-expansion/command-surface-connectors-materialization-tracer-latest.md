@@ -1,6 +1,6 @@
 # Trinity Expansion Result: command_surface_connectors_materialization_tracer
 
-- generated_utc: `2026-03-10T12:53:05+00:00`
+- generated_utc: `2026-03-10T09:32:46+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -23,7 +23,7 @@
   "desired_state": "active",
   "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
   "mode": "not_applicable",
   "pack": "command_surface_connectors",
   "profile_context": "materialize",

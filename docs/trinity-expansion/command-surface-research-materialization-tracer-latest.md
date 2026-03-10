@@ -1,6 +1,6 @@
 # Trinity Expansion Result: command_surface_research_materialization_tracer
 
-- generated_utc: `2026-03-10T12:53:10+00:00`
+- generated_utc: `2026-03-10T09:32:50+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -23,7 +23,7 @@
   "desired_state": "active",
   "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
   "mode": "not_applicable",
   "pack": "command_surface_research",
   "profile_context": "materialize",

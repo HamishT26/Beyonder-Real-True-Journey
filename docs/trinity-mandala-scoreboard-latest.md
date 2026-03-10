@@ -1,6 +1,6 @@
 # Trinity Mandala Scoreboard
 
-- generated_utc: `2026-03-10T12:56:04+00:00`
+- generated_utc: `2026-03-10T09:33:41+00:00`
 - hybrid_os_status: **PASS**
 - suite_status: `PASS`
 
@@ -20,7 +20,7 @@
 | mind | Mind API signal board | PASS | freshness_status=PASS, source_count=14, apis=2 | `docs/mind-theory-signal-board-latest.json` |
 | mind | Mind expansion constellation | PASS | checks=9/9 | `docs/trinity-expansion/mind-theory-constellation-board-latest.json` |
 | mind | Mind readiness gate | PASS | checks=10/10 | `docs/trinity-expansion/mind-theory-readiness-gate-latest.json` |
-| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=1.102833, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
+| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=0.88917, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
 | body | Benchmark guardrail | PASS | status extracted | `docs/body-track-benchmark-latest.json` |
 | body | Trend guard | PASS | trend=stable_or_improving | `docs/body-track-trend-guard-latest.json` |
 | body | Stress window | PASS | status extracted | `docs/body-track-policy-stress-latest.json` |
@@ -104,18 +104,6 @@
 | Memory mirror graph v7 gate | PASS | checks=5/5 | `docs/trinity-expansion/memory-mirror-graph-v7-gate-latest.json` |
 | Trinity control tower v7 gate | PASS | checks=5/5 | `docs/trinity-expansion/trinity-control-tower-v7-gate-latest.json` |
 | Benchmark refresh v7 gate | PASS | checks=5/5 | `docs/trinity-expansion/benchmark-refresh-v7-gate-latest.json` |
-| Agent council validation | PASS | status extracted | `docs/trinity-agent-council-validation-latest.json` |
-| Persistent dev hardening v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/persistent-dev-hardening-v8-gate-latest.json` |
-| UAT pre-prod readiness v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/uat-preprod-readiness-v8-gate-latest.json` |
-| Standard production readiness v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/standard-prod-readiness-v8-gate-latest.json` |
-| HA production readiness v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/ha-prod-readiness-v8-gate-latest.json` |
-| Command surface council v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/command-surface-council-v8-gate-latest.json` |
-| Agent council foundation v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/agent-council-foundation-v8-gate-latest.json` |
-| Agent identity certification v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/agent-identity-certification-v8-gate-latest.json` |
-| Agent memory boundary v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/agent-memory-boundary-v8-gate-latest.json` |
-| Agent orchestration v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/agent-orchestration-v8-gate-latest.json` |
-| Junior partner planning v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/junior-partner-planning-v8-gate-latest.json` |
-| Cloud staging readiness v8 gate | PASS | checks=5/5 | `docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json` |
 | Trinity control tower board | PASS | status extracted | `docs/trinity-control-tower-latest.json` |
 
 ## Evidence boundary

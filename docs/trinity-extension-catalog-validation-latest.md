@@ -1,8 +1,8 @@
 # Trinity Extension Catalog Validation
 
-- generated_utc: `2026-03-10T12:48:17+00:00`
+- generated_utc: `2026-03-10T09:28:41+00:00`
 - overall_status: **PASS**
-- extension_count: `756`
+- extension_count: `624`
 
 ## Failures
 - none

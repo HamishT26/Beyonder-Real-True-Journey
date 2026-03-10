@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_recovery_time_guard
 
-- generated_utc: `2026-03-10T12:48:29+00:00`
+- generated_utc: `2026-03-10T09:28:51+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

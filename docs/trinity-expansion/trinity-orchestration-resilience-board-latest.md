@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_orchestration_resilience_board
 
-- generated_utc: `2026-03-10T12:49:11+00:00`
+- generated_utc: `2026-03-10T09:29:29+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -26,5 +26,5 @@
 ```
 
 ## Repo targets touched
-- `docs/trinity-expansion-system-manifest-v8.json`
+- `docs/trinity-expansion-system-manifest-v7.json`
 - `scripts/run_all_trinity_systems.py`

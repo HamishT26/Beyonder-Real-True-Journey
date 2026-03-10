@@ -1,6 +1,6 @@
 # Body Benchmark Trend Guard Report
 
-- generated_utc: `2026-03-10T12:48:13+00:00`
+- generated_utc: `2026-03-10T09:28:36+00:00`
 - overall_status: **PASS**
 - trend_profile: `standard`
 - trend_classification: `stable_or_improving`
@@ -11,7 +11,7 @@
 {
   "window_size": 5.0,
   "max_regressions": 2.0,
-  "max_duration_drift": 2.3,
+  "max_duration_drift": 0.8,
   "max_health_drop": 2.0
 }
 ```
@@ -21,6 +21,6 @@
 |---|---|---|
 | latest_benchmark_status | PASS | status=PASS |
 | history_window_available | PASS | window_len=5 |
-| regression_count_window | PASS | regressions=1, max=2 |
-| duration_drift_window | PASS | drift=0.069465, max=2.3, effective_max=2.32 |
+| regression_count_window | PASS | regressions=2, max=2 |
+| duration_drift_window | PASS | drift=-0.232020, max=0.8, effective_max=0.82 |
 | health_drop_window | PASS | drop=0.000000, max=2.0 |

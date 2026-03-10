@@ -19,7 +19,6 @@ REQUIRED_FIELDS = {
     "promotion_requirements",
     "rollback_requirements",
     "blockers",
-    "proof_artifacts",
 }
 EXPECTED_LEVELS = [
     "l1_disposable_staging",
@@ -65,7 +64,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity materialization ladder.")
-    parser.add_argument("--ladder", default="docs/trinity-materialization-ladder-v2.json")
+    parser.add_argument("--ladder", default="docs/trinity-materialization-ladder-v1.json")
     parser.add_argument("--reports-dir", default="docs/trinity-materialization-ladder-runs")
     parser.add_argument("--latest-json", default="docs/trinity-materialization-ladder-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-materialization-ladder-validation-latest.md")
@@ -95,19 +94,15 @@ def main() -> int:
             failures.append(f"{label} missing fields: {missing}")
         level_id = str(row.get("level_id") or "").strip()
         seen.append(level_id)
-        for field in ("promotion_requirements", "rollback_requirements", "blockers", "proof_artifacts"):
+        for field in ("promotion_requirements", "rollback_requirements", "blockers"):
             if not isinstance(row.get(field), list):
                 failures.append(f"{level_id or label} {field} must be a list")
     if seen != EXPECTED_LEVELS:
         failures.append(f"unexpected level ordering: {seen}")
     for level_id in ("l3_uat_preprod", "l4_standard_prod", "l5_ha_prod"):
         row = next((item for item in levels if isinstance(item, dict) and item.get("level_id") == level_id), {})
-        actual_state = str(row.get("actual_state") or "")
-        proofs = row.get("proof_artifacts", [])
-        if actual_state == "readiness_only":
-            continue
-        if not proofs:
-            failures.append(f"{level_id} live promotion requires proof_artifacts")
+        if str(row.get("actual_state") or "") != "readiness_only":
+            failures.append(f"{level_id} actual_state must remain readiness_only until proven")
 
     result = {
         "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),

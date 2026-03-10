@@ -1,6 +1,6 @@
 # Trinity Expansion Result: compute_hardware_sync_bridge
 
-- generated_utc: `2026-03-10T12:49:36+00:00`
+- generated_utc: `2026-03-10T09:29:50+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

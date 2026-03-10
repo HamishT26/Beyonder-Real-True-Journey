@@ -1,17 +1,17 @@
 # Body Profile Policy Delta Report
 
-- generated_utc: `2026-03-10T12:48:14+00:00`
+- generated_utc: `2026-03-10T09:28:37+00:00`
 - overall_status: **PASS**
 - apply_mode: `True`
 - policy_updated: `False`
-- history_samples: `136`
+- history_samples: `127`
 
 ## Benchmark profile deltas
 | profile | before_warn | after_warn | before_false_alert | after_false_alert | action |
 |---|---:|---:|---:|---:|---|
-| quick | 0.088 | 0.103 | 0.039 | 0.054 | keep |
-| standard | 0.088 | 0.103 | 0.039 | 0.054 | keep |
-| strict | 0.088 | 0.103 | 0.039 | 0.054 | keep |
+| quick | 0.094 | 0.110 | 0.042 | 0.058 | keep |
+| standard | 0.094 | 0.110 | 0.042 | 0.058 | keep |
+| strict | 0.094 | 0.110 | 0.042 | 0.058 | keep |
 
 ## Regression window delta
 | window_before | window_after | before_alert_rate | after_alert_rate | before_false_alert_rate | after_false_alert_rate | action |
