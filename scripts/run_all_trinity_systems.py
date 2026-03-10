@@ -27,8 +27,8 @@ PROFILE_HELP = {
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v6.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v4.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v7.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v5.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -217,6 +217,28 @@ def _extension_catalog_validation_command(*, enforce: bool) -> tuple[str, list[s
     return f"trinity extension catalog validation ({mode})", command
 
 
+def _command_book_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_command_book_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity command book validation ({mode})", command
+
+
+def _materialization_ladder_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_materialization_ladder_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity materialization ladder validation ({mode})", command
+
+
 def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
@@ -281,6 +303,7 @@ def _load_expansion_system_commands(
     include_mcp_refresh: bool,
     include_staged_connectors: bool,
     include_live_writes: bool,
+    materialization_level: str,
 ) -> list[tuple[str, list[str]]]:
     manifest_path = ROOT / TRINITY_EXPANSION_MANIFEST_PATH
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -314,6 +337,8 @@ def _load_expansion_system_commands(
             command.append("--include-staged-connectors")
         if include_live_writes:
             command.append("--include-live-writes")
+        if materialization_level:
+            command.extend(["--materialization-level", materialization_level])
         command.extend(["--profile-context", profile])
         if mode == "live":
             live_disabled = offline_only
@@ -367,6 +392,7 @@ def build_commands(
     quick_mode: bool,
     profile: str,
     body_benchmark_mode: str,
+    materialization_level: str,
 ) -> list[tuple[str, list[str]]]:
     token_energy_commands: list[tuple[str, list[str]]] = [
         (
@@ -492,6 +518,16 @@ def build_commands(
                 ),
             ),
             (
+                *_command_book_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_materialization_ladder_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
                 *_expansion_manifest_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
@@ -504,6 +540,7 @@ def build_commands(
                 include_mcp_refresh=include_mcp_refresh,
                 include_staged_connectors=include_staged_connectors,
                 include_live_writes=include_live_writes,
+                materialization_level=materialization_level,
             ),
             (
                 *_expansion_result_validation_command(
@@ -1256,6 +1293,12 @@ def main() -> None:
         help="Enable disposable staging write tracers; materialize profile turns this on automatically unless offline-only is set.",
     )
     parser.add_argument(
+        "--materialization-level",
+        choices=("l1_disposable_staging", "l2_persistent_dev", "l3_uat_preprod", "l4_standard_prod", "l5_ha_prod"),
+        default="l2_persistent_dev",
+        help="Desired materialization level for materialize profile runs.",
+    )
+    parser.add_argument(
         "--offline-only",
         action="store_true",
         help="Disable all live network refresh steps and force cache-only expansion/API execution.",
@@ -1353,6 +1396,7 @@ def main() -> None:
         quick_mode=(profile == "quick"),
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
+        materialization_level=args.materialization_level,
     )
     mcp_catalog_path = ROOT / TRINITY_MCP_CATALOG_PATH
     verified_mcp_connectors: list[str] = []
@@ -1401,12 +1445,12 @@ def main() -> None:
     else:
         mcp_refresh_mode = "verified_live" if include_mcp_refresh else "disabled"
         staged_connector_mode = "setup_gate_attempted" if include_staged_connectors else "staged_only"
-    collab_pack_count = 9
-    materialization_pack_count = 6
+    collab_pack_count = 13
+    materialization_pack_count = 11
     if offline_only:
         active_materialization_mode = "offline_only"
     elif include_live_writes:
-        active_materialization_mode = "disposable_staging"
+        active_materialization_mode = args.materialization_level
     else:
         active_materialization_mode = "read_only"
 
@@ -1434,6 +1478,7 @@ def main() -> None:
         f"Include mcp refresh: {include_mcp_refresh}",
         f"Include staged connectors: {include_staged_connectors}",
         f"Include live writes: {include_live_writes}",
+        f"Materialization level desired: {args.materialization_level}",
         f"Offline only: {offline_only}",
         f"Live network mode: {live_network_mode}",
         f"MCP refresh mode: {mcp_refresh_mode}",
@@ -1506,6 +1551,19 @@ def main() -> None:
 
     suite_finished_at = datetime.now(timezone.utc).isoformat()
     suite_duration_sec = time.monotonic() - suite_start_ts
+    current_session_surface = _read_status_value("docs/logs/system-wake-v1.json", "current_session_surface", {})
+    connector_hardening_state = _read_status_value("docs/trinity-expansion/connector-materialization-gate-latest.json", "overall_status", "FAIL")
+    autonomy_mode = "bounded_manual" if profile != "materialize" else "bounded_materialize"
+    knowledge_graph_state = _read_status_value("docs/trinity-expansion/code-knowledge-graph-gate-latest.json", "overall_status", "FAIL")
+    dashboard_state = _read_status_value("docs/trinity-expansion/trinity-dashboard-gate-latest.json", "overall_status", "FAIL")
+    future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
+    materialization_level_desired = args.materialization_level
+    materialization_level_actual = _read_status_value("docs/trinity-control-tower-latest.json", "materialization_level_actual", "readiness_only")
+    persistent_targets = _read_status_value("docs/trinity-persistent-dev-targets-v1.json", "targets", [])
+    persistent_target_count = len(persistent_targets) if isinstance(persistent_targets, list) else 0
+    command_surface_state = _read_status_value("docs/trinity-command-book-validation-latest.json", "overall_status", "FAIL")
+    identity_authority_state = _read_status_value("docs/trinity-expansion/identity-authority-v7-gate-latest.json", "overall_status", "FAIL")
+    memory_mirror_state = _read_status_value("docs/trinity-memory-mirror-state-v1.json", "divergence_status", "FAIL")
 
     lines.append("## Overall status")
     lines.append(f"- Effective success: **{effective_success}**")
@@ -1517,6 +1575,12 @@ def main() -> None:
     lines.append(f"- Expansion systems passed: **{expansion_passed}**")
     lines.append(f"- Collab pack count: **{collab_pack_count}**")
     lines.append(f"- Materialization pack count: **{materialization_pack_count}**")
+    lines.append(f"- Materialization level desired: **{materialization_level_desired}**")
+    lines.append(f"- Materialization level actual: **{materialization_level_actual}**")
+    lines.append(f"- Persistent target count: **{persistent_target_count}**")
+    lines.append(f"- Command surface state: **{command_surface_state}**")
+    lines.append(f"- Identity authority state: **{identity_authority_state}**")
+    lines.append(f"- Memory mirror state: **{memory_mirror_state}**")
     lines.append(f"- Eligible live write connectors: **{', '.join(eligible_live_write_connectors) if eligible_live_write_connectors else '-'}**")
     lines.append(f"- Promoted live write connectors: **{', '.join(promoted_live_write_connectors) if promoted_live_write_connectors else '-'}**")
     lines.append(f"- Blocked promotions: **{', '.join(blocked_promotions) if blocked_promotions else '-'}**")
@@ -1526,13 +1590,6 @@ def main() -> None:
     lines.append(f"- Suite finished: `{suite_finished_at}`")
     lines.append(f"- Suite duration_sec: `{suite_duration_sec:.3f}`")
     lines.append("")
-
-    current_session_surface = _read_status_value("docs/logs/system-wake-v1.json", "current_session_surface", {})
-    connector_hardening_state = _read_status_value("docs/trinity-expansion/connector-materialization-gate-latest.json", "overall_status", "FAIL")
-    autonomy_mode = "bounded_manual" if profile != "materialize" else "bounded_materialize"
-    knowledge_graph_state = _read_status_value("docs/trinity-expansion/code-knowledge-graph-gate-latest.json", "overall_status", "FAIL")
-    dashboard_state = _read_status_value("docs/trinity-expansion/trinity-dashboard-gate-latest.json", "overall_status", "FAIL")
-    future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
 
     status_payload = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
@@ -1565,6 +1622,12 @@ def main() -> None:
         "knowledge_graph_state": knowledge_graph_state,
         "dashboard_state": dashboard_state,
         "future_readiness_state": future_readiness_state,
+        "materialization_level_desired": materialization_level_desired,
+        "materialization_level_actual": materialization_level_actual,
+        "persistent_target_count": persistent_target_count,
+        "command_surface_state": command_surface_state,
+        "identity_authority_state": identity_authority_state,
+        "memory_mirror_state": memory_mirror_state,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
@@ -1581,6 +1644,7 @@ def main() -> None:
             "mcp_refresh_mode": mcp_refresh_mode,
             "staged_connector_mode": staged_connector_mode,
             "active_materialization_mode": active_materialization_mode,
+            "materialization_level": args.materialization_level,
             "soft_fail_network": soft_fail_network,
             "fail_on_warn": args.fail_on_warn,
             "achievement_target_steps": effective_achievement_target,

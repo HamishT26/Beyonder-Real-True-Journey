@@ -307,6 +307,22 @@ def main() -> int:
         asdict(_artifact_status("Aletheon memory reflection v6 gate", "docs/trinity-expansion/aletheon-memory-reflection-v6-gate-latest.json")),
         asdict(_artifact_status("Wetware device readiness v6 gate", "docs/trinity-expansion/wetware-device-readiness-v6-gate-latest.json")),
         asdict(_artifact_status("Future readiness gate", "docs/trinity-expansion/future-readiness-gate-latest.json")),
+        asdict(_artifact_status("Command book validation", "docs/trinity-command-book-validation-latest.json")),
+        asdict(_artifact_status("Materialization ladder validation", "docs/trinity-materialization-ladder-validation-latest.json")),
+        asdict(_artifact_status("Command surface core gate", "docs/trinity-expansion/command-surface-core-gate-latest.json")),
+        asdict(_artifact_status("Command surface connectors gate", "docs/trinity-expansion/command-surface-connectors-gate-latest.json")),
+        asdict(_artifact_status("Command surface research gate", "docs/trinity-expansion/command-surface-research-gate-latest.json")),
+        asdict(_artifact_status("Command surface autonomy gate", "docs/trinity-expansion/command-surface-autonomy-gate-latest.json")),
+        asdict(_artifact_status("Materialization ladder governor gate", "docs/trinity-expansion/materialization-ladder-governor-gate-latest.json")),
+        asdict(_artifact_status("Persistent dev fabric gate", "docs/trinity-expansion/persistent-dev-fabric-gate-latest.json")),
+        asdict(_artifact_status("UAT pre-prod fabric gate", "docs/trinity-expansion/uat-preprod-fabric-gate-latest.json")),
+        asdict(_artifact_status("Standard production fabric gate", "docs/trinity-expansion/standard-production-fabric-gate-latest.json")),
+        asdict(_artifact_status("HA production fabric gate", "docs/trinity-expansion/ha-production-fabric-gate-latest.json")),
+        asdict(_artifact_status("Identity authority v7 gate", "docs/trinity-expansion/identity-authority-v7-gate-latest.json")),
+        asdict(_artifact_status("Memory mirror graph v7 gate", "docs/trinity-expansion/memory-mirror-graph-v7-gate-latest.json")),
+        asdict(_artifact_status("Trinity control tower v7 gate", "docs/trinity-expansion/trinity-control-tower-v7-gate-latest.json")),
+        asdict(_artifact_status("Benchmark refresh v7 gate", "docs/trinity-expansion/benchmark-refresh-v7-gate-latest.json")),
+        asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 
     hybrid_status = "PASS"

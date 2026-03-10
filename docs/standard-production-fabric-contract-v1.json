@@ -1,0 +1,46 @@
+{
+  "pack": "standard_production_fabric",
+  "display_name": "Standard Production Fabric",
+  "pillar": "body",
+  "wave": "wave52",
+  "track": "materialization_ladder",
+  "connector_id": "",
+  "requires_auth": false,
+  "gating_class": "active",
+  "sync_strategy": "local_repo",
+  "freshness_window_days": 30,
+  "activation_group": "materialization_ladder",
+  "continuity_band": "v7",
+  "autonomy_class": "read_only",
+  "live_dependency": "protected_prod_targets",
+  "mirror_target": "repo_only",
+  "history_scope": "v7",
+  "summary": "Define change-window, rollback, and approval contracts for standard production without asserting live status prematurely.",
+  "workflow_tokens": [
+    "prod contracts",
+    "protected target",
+    "change window",
+    "rollback mandatory"
+  ],
+  "risk_tags": [
+    "prod overclaim",
+    "missing isolation",
+    "approval drift"
+  ],
+  "repo_targets": [
+    "docs/trinity-standard-production-targets-v1.json",
+    "docs/trinity-materialization-ladder-v1.json"
+  ],
+  "skill_names": [
+    "standard-production-fabric-operations",
+    "standard-production-fabric-integration"
+  ],
+  "system_ids": [
+    "standard_production_fabric_surface_audit",
+    "standard_production_fabric_sync_bridge",
+    "standard_production_fabric_materialization_tracer",
+    "standard_production_fabric_cache_board",
+    "standard_production_fabric_risk_board",
+    "standard_production_fabric_gate"
+  ]
+}

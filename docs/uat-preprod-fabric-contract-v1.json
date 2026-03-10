@@ -1,0 +1,46 @@
+{
+  "pack": "uat_preprod_fabric",
+  "display_name": "UAT Pre-Prod Fabric",
+  "pillar": "body",
+  "wave": "wave51",
+  "track": "materialization_ladder",
+  "connector_id": "",
+  "requires_auth": false,
+  "gating_class": "active",
+  "sync_strategy": "local_repo",
+  "freshness_window_days": 30,
+  "activation_group": "materialization_ladder",
+  "continuity_band": "v7",
+  "autonomy_class": "read_only",
+  "live_dependency": "isolated_uat_targets",
+  "mirror_target": "repo_only",
+  "history_scope": "v7",
+  "summary": "Record pre-production mirror requirements, replay checks, and rollback rules without claiming live promotion yet.",
+  "workflow_tokens": [
+    "uat mirror",
+    "latency budget",
+    "full-shape test data",
+    "rollback proof"
+  ],
+  "risk_tags": [
+    "uat not isolated",
+    "readiness inflation",
+    "missing replay"
+  ],
+  "repo_targets": [
+    "docs/trinity-uat-preprod-targets-v1.json",
+    "docs/trinity-materialization-ladder-v1.json"
+  ],
+  "skill_names": [
+    "uat-preprod-fabric-operations",
+    "uat-preprod-fabric-integration"
+  ],
+  "system_ids": [
+    "uat_preprod_fabric_surface_audit",
+    "uat_preprod_fabric_sync_bridge",
+    "uat_preprod_fabric_materialization_tracer",
+    "uat_preprod_fabric_cache_board",
+    "uat_preprod_fabric_risk_board",
+    "uat_preprod_fabric_gate"
+  ]
+}
