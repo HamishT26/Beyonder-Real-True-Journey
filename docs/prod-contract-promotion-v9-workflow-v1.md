@@ -1,0 +1,11 @@
+# Prod Contract Promotion V9 Workflow
+
+- pack: `prod_contract_promotion_v9`
+- track: `materialization_ladder`
+- council_scope: `leader_only`
+- autonomy_track: `synthetic_mesh`
+- authority_scope: `synthetic_prod_scope`
+
+- repo-first
+- proof before promotion
+- no direct writes to main

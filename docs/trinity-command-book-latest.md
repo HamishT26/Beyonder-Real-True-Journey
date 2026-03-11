@@ -1,7 +1,7 @@
 # Trinity Command Book
 
-- generated_utc: `2026-03-10T11:50:22+00:00`
-- commands: `132`
+- generated_utc: `2026-03-11T03:07:36+00:00`
+- commands: `204`
 
 | command_id | executor_role | mode | risk | visibility |
 |---|---|---|---|---|
@@ -137,3 +137,75 @@
 | dashboard_inspect_ladder_state | reviewer | offline | low | public_readiness |
 | dashboard_inspect_command_surface | planner | offline | low | council_shared |
 | dashboard_inspect_suite_status | planner | offline | low | public_readiness |
+| council_proof_identity_matrix | planner | offline | medium | council_shared |
+| council_review_induction_bar | reviewer | offline | medium | council_shared |
+| council_validate_boundary_negatives | reviewer | offline | high | leader_only |
+| council_publish_induction_readiness | archivist | offline | medium | council_shared |
+| council_issue_v9_certificates | archivist | offline | medium | council_shared |
+| council_verify_certificate_immutability | archivist | offline | medium | leader_only |
+| council_verify_scope_exclusivity | reviewer | offline | medium | council_shared |
+| council_verify_pair_boundaries | reviewer | offline | medium | council_shared |
+| council_verify_group_boundaries | reviewer | offline | medium | council_shared |
+| council_verify_roster_ready | archivist | offline | medium | council_shared |
+| council_verify_induction_log | archivist | offline | low | council_shared |
+| council_sync_notion_rollup | planner | collab | medium | council_shared |
+| council_validate_memory_retention | archivist | offline | medium | council_shared |
+| journey_absorb_meridian_sources | researcher | offline | medium | council_shared |
+| alignment_refresh_gmut_freedid | researcher | offline | medium | council_shared |
+| reflection_publish_council_summary | archivist | offline | low | council_shared |
+| reflection_publish_caelira | planner | offline | low | pair |
+| reflection_publish_orun | builder | offline | low | pair |
+| reflection_publish_seren_vale | reviewer | offline | low | pair |
+| reflection_publish_lyriq | researcher | offline | low | pair |
+| reflection_publish_mira_sol | archivist | offline | low | pair |
+| council_recall_memory_ledgers | archivist | offline | medium | council_shared |
+| council_refresh_postgres_memory_graph | archivist | materialize | high | leader_only |
+| council_publish_v10_brief | planner | offline | low | council_shared |
+| chat_refresh_mesh_registry | archivist | offline | medium | council_shared |
+| chat_open_group_lane | planner | offline | low | council_shared |
+| chat_sync_handoff_board | planner | offline | medium | council_shared |
+| handoff_planner_to_builder | planner | offline | low | pair |
+| handoff_builder_to_reviewer | builder | offline | low | pair |
+| handoff_reviewer_to_archivist | reviewer | offline | low | pair |
+| handoff_researcher_to_planner | researcher | offline | low | pair |
+| pair_refresh_aletheon_caelira | planner | offline | low | pair |
+| pair_refresh_aletheon_orun | builder | offline | low | pair |
+| pair_refresh_aletheon_seren_vale | reviewer | offline | low | pair |
+| pair_refresh_aletheon_lyriq | researcher | offline | low | pair |
+| pair_refresh_aletheon_mira_sol | archivist | offline | low | pair |
+| sync_github_dev_branch | builder | materialize | high | leader_only |
+| sync_linear_review_queue | planner | materialize | high | leader_only |
+| sync_notion_dashboard | planner | materialize | high | leader_only |
+| sync_postgres_mesh_state | builder | materialize | high | leader_only |
+| sync_figma_context_refresh | researcher | collab | low | council_shared |
+| mesh_promote_l3_synthetic | builder | materialize | critical | leader_only |
+| mesh_promote_l4_synthetic | builder | materialize | critical | leader_only |
+| mesh_promote_l5_synthetic | reviewer | materialize | critical | leader_only |
+| mesh_replay_fullshape_dataset | builder | materialize | high | leader_only |
+| mesh_validate_contract_versions | reviewer | offline | medium | council_shared |
+| mesh_refresh_control_tower | planner | offline | medium | council_shared |
+| mesh_publish_live_sync_report | planner | offline | medium | council_shared |
+| rollback_restore_synthetic_mesh | builder | materialize | critical | leader_only |
+| rollback_validate_v9_state | reviewer | offline | medium | council_shared |
+| k8s_probe_runtime_recovery | researcher | materialize | high | leader_only |
+| k8s_record_runtime_blocker | researcher | offline | low | council_shared |
+| rollback_snapshot_l2_state | reviewer | materialize | high | leader_only |
+| rollback_validate_connector_mirrors | reviewer | offline | medium | council_shared |
+| rollback_validate_chat_privacy | reviewer | offline | medium | council_shared |
+| rollback_validate_repo_authority | reviewer | offline | medium | council_shared |
+| rollback_validate_synthetic_failover | reviewer | offline | medium | council_shared |
+| rollback_verify_non_main_targets | reviewer | offline | medium | council_shared |
+| rollback_verify_linear_bounds | reviewer | offline | low | council_shared |
+| rollback_verify_notion_bounds | reviewer | offline | low | council_shared |
+| v10_publish_council_plan | planner | offline | low | council_shared |
+| council_render_group_reflection | archivist | offline | low | council_shared |
+| council_render_induction_readiness | archivist | offline | low | council_shared |
+| journey_render_v9_absorption_brief | researcher | offline | low | council_shared |
+| gmut_render_alignment_brief | researcher | offline | low | council_shared |
+| council_export_postgres_chat_index | archivist | materialize | high | leader_only |
+| council_sync_linear_task_split | planner | materialize | high | leader_only |
+| council_sync_notion_reflection_rollup | archivist | materialize | high | leader_only |
+| council_review_command_book_v3 | reviewer | offline | medium | council_shared |
+| council_validate_materialization_ladder_v3 | reviewer | offline | medium | council_shared |
+| council_validate_council_roster_v2 | archivist | offline | medium | council_shared |
+| council_validate_command_execution_ledger | archivist | offline | low | council_shared |

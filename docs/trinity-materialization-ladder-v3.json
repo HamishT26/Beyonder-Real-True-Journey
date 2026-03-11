@@ -1,0 +1,130 @@
+{
+  "version": "v3",
+  "generated_utc": "2026-03-11T03:07:36+00:00",
+  "default_materialize_level": "l2_persistent_dev",
+  "levels": [
+    {
+      "level_id": "l1_disposable_staging",
+      "desired_state": "available",
+      "actual_state": "available",
+      "write_scope": "temporary branches, pages, documents, and schemas only",
+      "target_class": "disposable_staging",
+      "promotion_requirements": [
+        "verified live-write connector",
+        "temporary target",
+        "rollback note"
+      ],
+      "rollback_requirements": [
+        "delete temp target",
+        "re-run validator"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json",
+        "docs/trinity-live-traces/linear-collab-write-proof-v1.json"
+      ],
+      "proof_mode": "direct_live",
+      "simulation_scope": "temporary_scopes"
+    },
+    {
+      "level_id": "l2_persistent_dev",
+      "desired_state": "default_live",
+      "actual_state": "persistent_dev",
+      "write_scope": "persistent development scopes only",
+      "target_class": "persistent_dev",
+      "promotion_requirements": [
+        "persistent dev target registry",
+        "rollback scope per connector",
+        "proof-backed live-write connectors"
+      ],
+      "rollback_requirements": [
+        "revert dev branch",
+        "archive dev notion rows",
+        "close dev linear items",
+        "drop dev postgres schema"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-persistent-dev-targets-v3.json",
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json",
+        "docs/trinity-live-traces/notion-memory-bridge-proof-v1.json",
+        "docs/trinity-live-traces/postgres-local-runtime-proof-v1.json"
+      ],
+      "proof_mode": "direct_live",
+      "simulation_scope": "persistent_dev"
+    },
+    {
+      "level_id": "l3_uat_preprod",
+      "desired_state": "proof_gate",
+      "actual_state": "synthetic_local_mesh",
+      "write_scope": "isolated synthetic UAT mirrors only",
+      "target_class": "uat_preprod",
+      "promotion_requirements": [
+        "isolated synthetic mirror",
+        "replay harness",
+        "rollback proof",
+        "connector-safe UAT scope"
+      ],
+      "rollback_requirements": [
+        "reset synthetic mirror",
+        "restore replay inputs"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-uat-mesh-simulation-v1.json",
+        "docs/trinity-synthetic-mesh-schema-contract-v1.json"
+      ],
+      "proof_mode": "synthetic_local",
+      "simulation_scope": "synthetic_local_mesh"
+    },
+    {
+      "level_id": "l4_standard_prod",
+      "desired_state": "proof_gate",
+      "actual_state": "synthetic_local_prod",
+      "write_scope": "isolated synthetic production contracts only",
+      "target_class": "standard_prod",
+      "promotion_requirements": [
+        "versioned contract promotion",
+        "rollback proof",
+        "operator boundary",
+        "synthetic-local only"
+      ],
+      "rollback_requirements": [
+        "restore prior contract set",
+        "reverse contract promotion"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-prod-contract-promotion-v1.json",
+        "docs/trinity-synthetic-mesh-schema-contract-v1.json"
+      ],
+      "proof_mode": "synthetic_local",
+      "simulation_scope": "synthetic_local_prod"
+    },
+    {
+      "level_id": "l5_ha_prod",
+      "desired_state": "proof_gate",
+      "actual_state": "synthetic_local_ha",
+      "write_scope": "isolated synthetic HA twins only",
+      "target_class": "ha_prod",
+      "promotion_requirements": [
+        "twin-schema cutover",
+        "failover proof",
+        "consistency proof",
+        "rollback proof"
+      ],
+      "rollback_requirements": [
+        "failover reversal",
+        "restore prior synthetic production twin"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-ha-failover-drill-v1.json",
+        "docs/trinity-synthetic-mesh-schema-contract-v1.json",
+        "docs/trinity-k8s-runtime-recovery-v1.json"
+      ],
+      "proof_mode": "synthetic_local",
+      "simulation_scope": "synthetic_local_ha"
+    }
+  ]
+}

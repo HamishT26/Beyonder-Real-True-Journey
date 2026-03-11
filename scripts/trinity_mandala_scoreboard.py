@@ -334,6 +334,19 @@ def main() -> int:
         asdict(_artifact_status("Agent orchestration v8 gate", "docs/trinity-expansion/agent-orchestration-v8-gate-latest.json")),
         asdict(_artifact_status("Junior partner planning v8 gate", "docs/trinity-expansion/junior-partner-planning-v8-gate-latest.json")),
         asdict(_artifact_status("Cloud staging readiness v8 gate", "docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json")),
+        asdict(_artifact_status("Council identity consistency v9 gate", "docs/trinity-expansion/council-identity-consistency-v9-gate-latest.json")),
+        asdict(_artifact_status("Council memory retention v9 gate", "docs/trinity-expansion/council-memory-retention-v9-gate-latest.json")),
+        asdict(_artifact_status("Council induction governor v9 gate", "docs/trinity-expansion/council-induction-governor-v9-gate-latest.json")),
+        asdict(_artifact_status("Council live sync v9 gate", "docs/trinity-expansion/council-live-sync-v9-gate-latest.json")),
+        asdict(_artifact_status("Council chat mesh v9 gate", "docs/trinity-expansion/council-chat-mesh-v9-gate-latest.json")),
+        asdict(_artifact_status("UAT mesh simulation v9 gate", "docs/trinity-expansion/uat-mesh-simulation-v9-gate-latest.json")),
+        asdict(_artifact_status("Prod contract promotion v9 gate", "docs/trinity-expansion/prod-contract-promotion-v9-gate-latest.json")),
+        asdict(_artifact_status("HA failover drill v9 gate", "docs/trinity-expansion/ha-failover-drill-v9-gate-latest.json")),
+        asdict(_artifact_status("K8s runtime recovery v9 gate", "docs/trinity-expansion/k8s-runtime-recovery-v9-gate-latest.json")),
+        asdict(_artifact_status("Journey absorption v9 gate", "docs/trinity-expansion/journey-absorption-v9-gate-latest.json")),
+        asdict(_artifact_status("GMUT Freed ID alignment v9 gate", "docs/trinity-expansion/gmut-freedid-alignment-v9-gate-latest.json")),
+        asdict(_artifact_status("Agent induction readiness v9", "docs/trinity-agent-induction-readiness-v1.json")),
+        asdict(_artifact_status("Council live sync report v9", "docs/trinity-council-live-sync-report-v1.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 
@@ -347,6 +360,7 @@ def main() -> int:
 
     payload = {
         "generated_utc": generated_utc,
+        "overall_status": hybrid_status,
         "hybrid_os_status": hybrid_status,
         "suite_status": suite_status,
         "suite_detail": _extract_detail(suite_payload),

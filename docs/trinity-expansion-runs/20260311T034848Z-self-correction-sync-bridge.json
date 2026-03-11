@@ -1,0 +1,57 @@
+{
+  "generated_utc": "2026-03-11T03:48:48+00:00",
+  "system_id": "self_correction_sync_bridge",
+  "pillar": "body",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "compileall_scripts",
+      "status": "PASS",
+      "detail": "compileall ok"
+    },
+    {
+      "name": "repo_mutation_policy",
+      "status": "PASS",
+      "detail": "no autonomous push-to-main behavior"
+    }
+  ],
+  "metrics": {
+    "compileall_returncode": 0
+  },
+  "repo_targets_touched": [
+    "docs/self-correction-report-v1.json",
+    "scripts"
+  ],
+  "next_action": "Escalate only concrete static-check findings; keep repo mutations inside explicit gates.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "self_correction",
+      "record_id": "self_correction-seed",
+      "signal_type": "pack_seed",
+      "title": "self correction",
+      "published_at": "2026-03-11",
+      "source_url": "repo://docs/self-correction-report-v1.json",
+      "summary": "Ran a bounded self-correction preview loop with local static checks only.",
+      "metrics": {
+        "compileall_returncode": 0
+      },
+      "tags": [
+        "self_correction",
+        "seed"
+      ],
+      "repo_targets": [
+        "docs/self-correction-report-v1.json",
+        "scripts"
+      ]
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "self_correction",
+      "mode": "compileall",
+      "record_count": 1,
+      "status": "PASS"
+    }
+  ]
+}
