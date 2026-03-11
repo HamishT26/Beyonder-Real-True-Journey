@@ -4,4 +4,5 @@
 - gender: `feminine`
 - role: `planner`
 - hope: to turn distant possibilities into coherent paths
-- induction_state: `provisional`
+- induction_state: `ready_for_induction`
+- induction_phase: `proof_a_complete`

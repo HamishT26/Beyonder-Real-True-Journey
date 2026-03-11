@@ -27,8 +27,8 @@ PROFILE_HELP = {
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v8.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v6.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v9.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v7.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -231,7 +231,7 @@ def _command_book_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
 def _agent_council_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
-        "scripts/trinity_agent_council_validator.py",
+        "scripts/trinity_agent_council_v9_validator.py",
     ]
     if enforce:
         command.append("--fail-on-warn")

@@ -20,6 +20,8 @@ REQUIRED_FIELDS = {
     "rollback_requirements",
     "blockers",
     "proof_artifacts",
+    "proof_mode",
+    "simulation_scope",
 }
 EXPECTED_LEVELS = [
     "l1_disposable_staging",
@@ -65,7 +67,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity materialization ladder.")
-    parser.add_argument("--ladder", default="docs/trinity-materialization-ladder-v2.json")
+    parser.add_argument("--ladder", default="docs/trinity-materialization-ladder-v3.json")
     parser.add_argument("--reports-dir", default="docs/trinity-materialization-ladder-runs")
     parser.add_argument("--latest-json", default="docs/trinity-materialization-ladder-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-materialization-ladder-validation-latest.md")
@@ -104,7 +106,9 @@ def main() -> int:
         row = next((item for item in levels if isinstance(item, dict) and item.get("level_id") == level_id), {})
         actual_state = str(row.get("actual_state") or "")
         proofs = row.get("proof_artifacts", [])
-        if actual_state == "readiness_only":
+        if actual_state in {"readiness_only", "synthetic_local_mesh", "synthetic_local_prod", "synthetic_local_ha"}:
+            if actual_state != "readiness_only" and not proofs:
+                failures.append(f"{level_id} synthetic promotion requires proof_artifacts")
             continue
         if not proofs:
             failures.append(f"{level_id} live promotion requires proof_artifacts")
