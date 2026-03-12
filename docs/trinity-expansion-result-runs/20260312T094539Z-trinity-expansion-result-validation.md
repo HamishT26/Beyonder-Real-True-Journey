@@ -1,0 +1,70 @@
+# Trinity Expansion Result Validation
+
+- generated_utc: `2026-03-12T09:45:39+00:00`
+- overall_status: **FAIL**
+- systems_checked: `656`
+
+## Failures
+- google_drive_mcp_activation_v11_surface_audit: missing output docs/trinity-expansion/google-drive-mcp-activation-v11-surface-audit-latest.json
+- google_drive_mcp_activation_v11_sync_bridge: missing output docs/trinity-expansion/google-drive-mcp-activation-v11-sync-bridge-latest.json
+- google_drive_mcp_activation_v11_materialization_tracer: missing output docs/trinity-expansion/google-drive-mcp-activation-v11-materialization-tracer-latest.json
+- google_drive_mcp_activation_v11_cache_board: missing output docs/trinity-expansion/google-drive-mcp-activation-v11-cache-board-latest.json
+- google_drive_mcp_activation_v11_risk_board: missing output docs/trinity-expansion/google-drive-mcp-activation-v11-risk-board-latest.json
+- google_drive_mcp_activation_v11_gate: missing output docs/trinity-expansion/google-drive-mcp-activation-v11-gate-latest.json
+- cloud_memory_bank_v11_surface_audit: missing output docs/trinity-expansion/cloud-memory-bank-v11-surface-audit-latest.json
+- cloud_memory_bank_v11_sync_bridge: missing output docs/trinity-expansion/cloud-memory-bank-v11-sync-bridge-latest.json
+- cloud_memory_bank_v11_materialization_tracer: missing output docs/trinity-expansion/cloud-memory-bank-v11-materialization-tracer-latest.json
+- cloud_memory_bank_v11_cache_board: missing output docs/trinity-expansion/cloud-memory-bank-v11-cache-board-latest.json
+- cloud_memory_bank_v11_risk_board: missing output docs/trinity-expansion/cloud-memory-bank-v11-risk-board-latest.json
+- cloud_memory_bank_v11_gate: missing output docs/trinity-expansion/cloud-memory-bank-v11-gate-latest.json
+- docker_storage_ops_v11_surface_audit: missing output docs/trinity-expansion/docker-storage-ops-v11-surface-audit-latest.json
+- docker_storage_ops_v11_sync_bridge: missing output docs/trinity-expansion/docker-storage-ops-v11-sync-bridge-latest.json
+- docker_storage_ops_v11_materialization_tracer: missing output docs/trinity-expansion/docker-storage-ops-v11-materialization-tracer-latest.json
+- docker_storage_ops_v11_cache_board: missing output docs/trinity-expansion/docker-storage-ops-v11-cache-board-latest.json
+- docker_storage_ops_v11_risk_board: missing output docs/trinity-expansion/docker-storage-ops-v11-risk-board-latest.json
+- docker_storage_ops_v11_gate: missing output docs/trinity-expansion/docker-storage-ops-v11-gate-latest.json
+- deep_materialize_regression_v11_surface_audit: missing output docs/trinity-expansion/deep-materialize-regression-v11-surface-audit-latest.json
+- deep_materialize_regression_v11_sync_bridge: missing output docs/trinity-expansion/deep-materialize-regression-v11-sync-bridge-latest.json
+- deep_materialize_regression_v11_materialization_tracer: missing output docs/trinity-expansion/deep-materialize-regression-v11-materialization-tracer-latest.json
+- deep_materialize_regression_v11_cache_board: missing output docs/trinity-expansion/deep-materialize-regression-v11-cache-board-latest.json
+- deep_materialize_regression_v11_risk_board: missing output docs/trinity-expansion/deep-materialize-regression-v11-risk-board-latest.json
+- deep_materialize_regression_v11_gate: missing output docs/trinity-expansion/deep-materialize-regression-v11-gate-latest.json
+- synthetic_mesh_ops_v11_surface_audit: missing output docs/trinity-expansion/synthetic-mesh-ops-v11-surface-audit-latest.json
+- synthetic_mesh_ops_v11_sync_bridge: missing output docs/trinity-expansion/synthetic-mesh-ops-v11-sync-bridge-latest.json
+- synthetic_mesh_ops_v11_materialization_tracer: missing output docs/trinity-expansion/synthetic-mesh-ops-v11-materialization-tracer-latest.json
+- synthetic_mesh_ops_v11_cache_board: missing output docs/trinity-expansion/synthetic-mesh-ops-v11-cache-board-latest.json
+- synthetic_mesh_ops_v11_risk_board: missing output docs/trinity-expansion/synthetic-mesh-ops-v11-risk-board-latest.json
+- synthetic_mesh_ops_v11_gate: missing output docs/trinity-expansion/synthetic-mesh-ops-v11-gate-latest.json
+- gmut_research_fabric_v11_surface_audit: missing output docs/trinity-expansion/gmut-research-fabric-v11-surface-audit-latest.json
+- gmut_research_fabric_v11_sync_bridge: missing output docs/trinity-expansion/gmut-research-fabric-v11-sync-bridge-latest.json
+- gmut_research_fabric_v11_materialization_tracer: missing output docs/trinity-expansion/gmut-research-fabric-v11-materialization-tracer-latest.json
+- gmut_research_fabric_v11_cache_board: missing output docs/trinity-expansion/gmut-research-fabric-v11-cache-board-latest.json
+- gmut_research_fabric_v11_risk_board: missing output docs/trinity-expansion/gmut-research-fabric-v11-risk-board-latest.json
+- gmut_research_fabric_v11_gate: missing output docs/trinity-expansion/gmut-research-fabric-v11-gate-latest.json
+- freedid_governance_fabric_v11_surface_audit: missing output docs/trinity-expansion/freedid-governance-fabric-v11-surface-audit-latest.json
+- freedid_governance_fabric_v11_sync_bridge: missing output docs/trinity-expansion/freedid-governance-fabric-v11-sync-bridge-latest.json
+- freedid_governance_fabric_v11_materialization_tracer: missing output docs/trinity-expansion/freedid-governance-fabric-v11-materialization-tracer-latest.json
+- freedid_governance_fabric_v11_cache_board: missing output docs/trinity-expansion/freedid-governance-fabric-v11-cache-board-latest.json
+- freedid_governance_fabric_v11_risk_board: missing output docs/trinity-expansion/freedid-governance-fabric-v11-risk-board-latest.json
+- freedid_governance_fabric_v11_gate: missing output docs/trinity-expansion/freedid-governance-fabric-v11-gate-latest.json
+- trinity_control_tower_v11_surface_audit: missing output docs/trinity-expansion/trinity-control-tower-v11-surface-audit-latest.json
+- trinity_control_tower_v11_sync_bridge: missing output docs/trinity-expansion/trinity-control-tower-v11-sync-bridge-latest.json
+- trinity_control_tower_v11_materialization_tracer: missing output docs/trinity-expansion/trinity-control-tower-v11-materialization-tracer-latest.json
+- trinity_control_tower_v11_cache_board: missing output docs/trinity-expansion/trinity-control-tower-v11-cache-board-latest.json
+- trinity_control_tower_v11_risk_board: missing output docs/trinity-expansion/trinity-control-tower-v11-risk-board-latest.json
+- trinity_control_tower_v11_gate: missing output docs/trinity-expansion/trinity-control-tower-v11-gate-latest.json
+- new_project_workbench_v11_surface_audit: missing output docs/trinity-expansion/new-project-workbench-v11-surface-audit-latest.json
+- new_project_workbench_v11_sync_bridge: missing output docs/trinity-expansion/new-project-workbench-v11-sync-bridge-latest.json
+- new_project_workbench_v11_materialization_tracer: missing output docs/trinity-expansion/new-project-workbench-v11-materialization-tracer-latest.json
+- new_project_workbench_v11_cache_board: missing output docs/trinity-expansion/new-project-workbench-v11-cache-board-latest.json
+- new_project_workbench_v11_risk_board: missing output docs/trinity-expansion/new-project-workbench-v11-risk-board-latest.json
+- new_project_workbench_v11_gate: missing output docs/trinity-expansion/new-project-workbench-v11-gate-latest.json
+- v12_roadmap_v11_surface_audit: missing output docs/trinity-expansion/v12-roadmap-v11-surface-audit-latest.json
+- v12_roadmap_v11_sync_bridge: missing output docs/trinity-expansion/v12-roadmap-v11-sync-bridge-latest.json
+- v12_roadmap_v11_materialization_tracer: missing output docs/trinity-expansion/v12-roadmap-v11-materialization-tracer-latest.json
+- v12_roadmap_v11_cache_board: missing output docs/trinity-expansion/v12-roadmap-v11-cache-board-latest.json
+- v12_roadmap_v11_risk_board: missing output docs/trinity-expansion/v12-roadmap-v11-risk-board-latest.json
+- v12_roadmap_v11_gate: missing output docs/trinity-expansion/v12-roadmap-v11-gate-latest.json
+
+## Warnings
+- none

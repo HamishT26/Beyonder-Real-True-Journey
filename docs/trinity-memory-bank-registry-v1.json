@@ -1,0 +1,115 @@
+{
+  "generated_utc": "2026-03-12T07:04:35+00:00",
+  "overall_status": "PASS",
+  "authority_model": "repo_first",
+  "storage_pressure": {
+    "free_gib": 1.5,
+    "total_gib": 116.97,
+    "archive_bytes": 99777,
+    "archive_megabytes": 0.1
+  },
+  "latest_snapshot": {
+    "archive": "docs/memory-archives/20260312T070412Z-v10-memory-bank.zip",
+    "index": "docs/memory-archives/index.jsonl",
+    "source_count": 14,
+    "label": "20260312T070412Z-v10-memory-bank"
+  },
+  "memory_banks": [
+    {
+      "surface": "repo",
+      "status": "authoritative",
+      "capacity_class": "local_git",
+      "notes": "Primary source for certificates, ledgers, reflections, commands, and official council state.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "docs/memory-archives/20260312T070412Z-v10-memory-bank.zip",
+      "proof_state": "repo_first_authority",
+      "blockers": []
+    },
+    {
+      "surface": "github",
+      "status": "live_mirror",
+      "capacity_class": "remote_git",
+      "notes": "Branch-scoped remote backup and collaboration surface. Never overrides repo authority.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "015c4d018093d9ed39d1621c1f90b48326dc9d71",
+      "proof_state": "remote_reachable",
+      "blockers": []
+    },
+    {
+      "surface": "postgres",
+      "status": "live_query_store",
+      "capacity_class": "docker_volume",
+      "notes": "Operational state, synthetic mesh, chat indexes, and queryable summaries.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "trinity-v5-pg-proof",
+      "proof_state": "postgres_ready",
+      "blockers": []
+    },
+    {
+      "surface": "docker",
+      "status": "live_runtime_storage",
+      "capacity_class": "local_container_volume",
+      "notes": "Runtime substrate for Postgres and bounded simulations.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "trinity-v5-pg-proof:/trinity-memory-bank/20260312T070412Z-v10-memory-bank.zip",
+      "proof_state": "docker_ready",
+      "blockers": []
+    },
+    {
+      "surface": "notion",
+      "status": "bounded_mirror",
+      "capacity_class": "cloud_workspace",
+      "notes": "Summary, dashboard, and reflection mirror only.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "summary_only",
+      "proof_state": "bounded_mirror_only",
+      "blockers": []
+    },
+    {
+      "surface": "linear",
+      "status": "bounded_action_mirror",
+      "capacity_class": "cloud_workspace",
+      "notes": "Actionable work mirror only.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "actionable_items_only",
+      "proof_state": "bounded_action_only",
+      "blockers": []
+    },
+    {
+      "surface": "new_project_workbench",
+      "status": "local_read_surface",
+      "capacity_class": "local_folder",
+      "notes": "Workbench dashboard and operator shell. Not authoritative.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": true,
+      "latest_artifact": "C:\\Users\\hamis\\OneDrive\\Documents\\New project\\memory-bank\\latest-sync-summary.json",
+      "proof_state": "workbench_read_only",
+      "blockers": []
+    },
+    {
+      "surface": "google_drive",
+      "status": "future_candidate",
+      "capacity_class": "cloud_archive",
+      "notes": "Deferred until bounded auth, privacy, and sync proof are available.",
+      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "reachable": false,
+      "latest_artifact": "",
+      "proof_state": "drive_not_connected",
+      "blockers": [
+        "google drive auth not configured"
+      ]
+    }
+  ],
+  "official_sources": {
+    "google_drive_api": "https://developers.google.com/drive/api/reference/rest/v3/files/create",
+    "google_drive_uploads": "https://developers.google.com/drive/api/guides/manage-uploads",
+    "docker_volumes": "https://docs.docker.com/engine/storage/volumes/",
+    "git_bundle": "https://git-scm.com/docs/git-bundle"
+  }
+}

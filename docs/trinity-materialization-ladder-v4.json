@@ -1,0 +1,142 @@
+{
+  "version": "v4",
+  "generated_utc": "2026-03-12T05:06:15+00:00",
+  "default_materialize_level": "l2_persistent_dev",
+  "levels": [
+    {
+      "level_id": "l1_disposable_staging",
+      "desired_state": "available",
+      "actual_state": "available",
+      "write_scope": "temporary branches, pages, documents, and schemas only",
+      "target_class": "disposable_staging",
+      "promotion_requirements": [
+        "verified live-write connector",
+        "temporary target",
+        "rollback note"
+      ],
+      "rollback_requirements": [
+        "delete temp target",
+        "re-run validator"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json",
+        "docs/trinity-live-traces/linear-collab-write-proof-v1.json"
+      ],
+      "proof_mode": "direct_live",
+      "simulation_scope": "temporary_scopes",
+      "promotion_drill": "bounded_disposable_write",
+      "rollback_drill": "delete_disposable_targets",
+      "environment_class": "local_disposable"
+    },
+    {
+      "level_id": "l2_persistent_dev",
+      "desired_state": "default_live",
+      "actual_state": "persistent_dev",
+      "write_scope": "persistent development scopes only",
+      "target_class": "persistent_dev",
+      "promotion_requirements": [
+        "persistent dev target registry",
+        "rollback scope per connector",
+        "proof-backed live-write connectors"
+      ],
+      "rollback_requirements": [
+        "revert dev branch",
+        "archive dev notion rows",
+        "close dev linear items",
+        "drop dev postgres schema"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-persistent-dev-ops-v1.json",
+        "docs/trinity-memory-bank-registry-v1.json"
+      ],
+      "proof_mode": "direct_live",
+      "simulation_scope": "persistent_dev",
+      "promotion_drill": "bounded_persistent_dev_refresh",
+      "rollback_drill": "restore_persistent_dev_snapshot",
+      "environment_class": "local_persistent_dev"
+    },
+    {
+      "level_id": "l3_uat_preprod",
+      "desired_state": "proof_gate",
+      "actual_state": "synthetic_local_mesh",
+      "write_scope": "isolated synthetic UAT mirrors only",
+      "target_class": "uat_preprod",
+      "promotion_requirements": [
+        "isolated synthetic mirror",
+        "replay harness",
+        "rollback proof",
+        "connector-safe UAT scope"
+      ],
+      "rollback_requirements": [
+        "reset synthetic mirror",
+        "restore replay inputs"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-synthetic-mesh-hardening-v1.json",
+        "docs/trinity-k8s-dev-probe-v1.json"
+      ],
+      "proof_mode": "synthetic_local",
+      "simulation_scope": "synthetic_local_mesh",
+      "promotion_drill": "synthetic_l3_replay_and_promotion",
+      "rollback_drill": "synthetic_l3_restore",
+      "environment_class": "synthetic_local"
+    },
+    {
+      "level_id": "l4_standard_prod",
+      "desired_state": "proof_gate",
+      "actual_state": "synthetic_local_prod",
+      "write_scope": "isolated synthetic production contracts only",
+      "target_class": "standard_prod",
+      "promotion_requirements": [
+        "versioned contract promotion",
+        "rollback proof",
+        "operator boundary",
+        "synthetic-local only"
+      ],
+      "rollback_requirements": [
+        "restore prior contract set",
+        "reverse contract promotion"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-synthetic-mesh-hardening-v1.json",
+        "docs/trinity-k8s-dev-probe-v1.json"
+      ],
+      "proof_mode": "synthetic_local",
+      "simulation_scope": "synthetic_local_prod",
+      "promotion_drill": "synthetic_l4_contract_promotion",
+      "rollback_drill": "synthetic_l4_contract_restore",
+      "environment_class": "synthetic_local"
+    },
+    {
+      "level_id": "l5_ha_prod",
+      "desired_state": "proof_gate",
+      "actual_state": "synthetic_local_ha",
+      "write_scope": "isolated synthetic HA twins only",
+      "target_class": "ha_prod",
+      "promotion_requirements": [
+        "twin-schema cutover",
+        "failover proof",
+        "consistency proof",
+        "rollback proof"
+      ],
+      "rollback_requirements": [
+        "failover reversal",
+        "restore prior synthetic production twin"
+      ],
+      "blockers": [],
+      "proof_artifacts": [
+        "docs/trinity-synthetic-mesh-hardening-v1.json",
+        "docs/trinity-k8s-dev-probe-v1.json"
+      ],
+      "proof_mode": "synthetic_local",
+      "simulation_scope": "synthetic_local_ha",
+      "promotion_drill": "synthetic_l5_failover_drill",
+      "rollback_drill": "synthetic_l5_twin_restore",
+      "environment_class": "synthetic_local"
+    }
+  ]
+}
