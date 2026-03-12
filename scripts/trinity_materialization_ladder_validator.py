@@ -22,6 +22,9 @@ REQUIRED_FIELDS = {
     "proof_artifacts",
     "proof_mode",
     "simulation_scope",
+    "promotion_drill",
+    "rollback_drill",
+    "environment_class",
 }
 EXPECTED_LEVELS = [
     "l1_disposable_staging",
@@ -67,7 +70,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity materialization ladder.")
-    parser.add_argument("--ladder", default="docs/trinity-materialization-ladder-v3.json")
+    parser.add_argument("--ladder", default="docs/trinity-materialization-ladder-v4.json")
     parser.add_argument("--reports-dir", default="docs/trinity-materialization-ladder-runs")
     parser.add_argument("--latest-json", default="docs/trinity-materialization-ladder-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-materialization-ladder-validation-latest.md")

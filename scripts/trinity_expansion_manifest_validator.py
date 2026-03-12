@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}
-ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5", "wave6", "wave7", "wave8", "wave9", "wave10", "wave11", "wave12", "wave13", "wave14", "wave15", "wave16", "wave17", "wave18", "wave19", "wave20", "wave21", "wave22", "wave23", "wave24", "wave25", "wave26", "wave27", "wave28", "wave29", "wave30", "wave31", "wave32", "wave33", "wave34", "wave35", "wave36", "wave37", "wave38", "wave39", "wave40", "wave41", "wave42", "wave43", "wave44", "wave45", "wave46", "wave47", "wave48", "wave49", "wave50", "wave51", "wave52", "wave53", "wave54", "wave55", "wave56", "wave57", "wave58", "wave59", "wave60", "wave61", "wave62", "wave63", "wave64", "wave65", "wave66", "wave67", "wave68", "wave69", "wave70", "wave71", "wave72", "wave73", "wave74", "wave75", "wave76", "wave77", "wave78", "wave79"}
+ALLOWED_WAVES = {"legacy", "wave1", "wave2", "wave3", "wave4", "wave5", "wave6", "wave7", "wave8", "wave9", "wave10", "wave11", "wave12", "wave13", "wave14", "wave15", "wave16", "wave17", "wave18", "wave19", "wave20", "wave21", "wave22", "wave23", "wave24", "wave25", "wave26", "wave27", "wave28", "wave29", "wave30", "wave31", "wave32", "wave33", "wave34", "wave35", "wave36", "wave37", "wave38", "wave39", "wave40", "wave41", "wave42", "wave43", "wave44", "wave45", "wave46", "wave47", "wave48", "wave49", "wave50", "wave51", "wave52", "wave53", "wave54", "wave55", "wave56", "wave57", "wave58", "wave59", "wave60", "wave61", "wave62", "wave63", "wave64", "wave65", "wave66", "wave67", "wave68", "wave69", "wave70", "wave71", "wave72", "wave73", "wave74", "wave75", "wave76", "wave77", "wave78", "wave79", "wave80", "wave81", "wave82", "wave83", "wave84", "wave85", "wave86", "wave87", "wave88", "wave89", "wave90", "wave91", "wave92", "wave93", "wave94", "wave95", "wave96", "wave97", "wave98", "wave99", "wave100", "wave101"}
 ALLOWED_TRACKS = {
     "mind_theory",
     "body_compute",
@@ -38,6 +38,9 @@ ALLOWED_TRACKS = {
     "council_orchestration",
     "council_identity",
     "autonomy_late_step",
+    "council_induction",
+    "control_tower",
+    "workbench_surface",
 }
 ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate", "pack_gate"}
 
@@ -79,8 +82,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v9.json")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v9.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v11.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v11.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-manifest-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-manifest-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-expansion-manifest-validation-latest.md")
@@ -104,8 +107,8 @@ def main() -> int:
     if not isinstance(systems, list):
         failures.append("manifest.systems must be a list")
         systems = []
-    if isinstance(systems, list) and len(systems) != 524:
-        failures.append(f"manifest expected 524 systems, found {len(systems)}")
+    if isinstance(systems, list) and len(systems) != 656:
+        failures.append(f"manifest expected 656 systems, found {len(systems)}")
 
     seen_ids: set[str] = set()
     for index, entry in enumerate(systems):
@@ -113,7 +116,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{row_label} must be an object")
             continue
-        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts", "pack", "phase", "activation_group", "continuity_band", "materialization_level", "authority_scope", "command_surface", "council_scope", "provisional_induction", "autonomy_track", "sync_surface", "induction_phase", "mesh_proof_mode"):
+        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts", "pack", "phase", "activation_group", "continuity_band", "materialization_level", "authority_scope", "command_surface", "council_scope", "provisional_induction", "autonomy_track", "sync_surface", "induction_phase", "mesh_proof_mode", "proof_pass", "official_induction", "workbench_surface", "storage_surface", "cloud_archive_state", "continuity_posture"):
             if field not in entry:
                 failures.append(f"{row_label} missing field: {field}")
         system_id = str(entry.get("system_id") or "").strip()

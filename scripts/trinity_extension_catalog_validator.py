@@ -47,9 +47,9 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity extension and MCP catalogs.")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v9.json")
-    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v7.json")
-    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v7.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v11.json")
+    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v9.json")
+    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v9.json")
     parser.add_argument("--reports-dir", default="docs/trinity-extension-catalog-runs")
     parser.add_argument("--latest-json", default="docs/trinity-extension-catalog-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-extension-catalog-validation-latest.md")
@@ -80,8 +80,8 @@ def main() -> int:
     if not isinstance(extension_rows, list):
         failures.append("extension catalog extensions must be a list")
         extension_rows = []
-    if isinstance(extension_rows, list) and len(extension_rows) != 888:
-        failures.append(f"extension catalog expected 888 entries, found {len(extension_rows)}")
+    if isinstance(extension_rows, list) and len(extension_rows) != 1152:
+        failures.append(f"extension catalog expected 1152 entries, found {len(extension_rows)}")
 
     extension_ids: set[str] = set()
     pack_counts: dict[str, dict[str, int]] = {}
@@ -90,7 +90,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{label} must be an object")
             continue
-        for field in ("extension_id", "extension_kind", "pack", "status", "source_of_truth", "live_dependency", "history_scope", "mirror_target", "autonomy_class", "command_surface", "materialization_dependency", "authority_class", "executor_role", "authority_scope", "induction_dependency", "mirror_surface", "privacy_class", "synthetic_mesh_dependency"):
+        for field in ("extension_id", "extension_kind", "pack", "status", "source_of_truth", "live_dependency", "history_scope", "mirror_target", "autonomy_class", "command_surface", "materialization_dependency", "authority_class", "executor_role", "authority_scope", "induction_dependency", "mirror_surface", "privacy_class", "synthetic_mesh_dependency", "authority_surface", "workbench_dependency", "induction_effect", "storage_dependency", "archive_scope", "workbench_surface"):
             if field not in entry:
                 failures.append(f"{label} missing field: {field}")
         extension_id = str(entry.get("extension_id") or "").strip()
@@ -136,7 +136,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{label} must be an object")
             continue
-        for field in ("mcp_id", "status", "cache_artifact", "setup_gate", "desired_state", "actual_state", "live_read_enabled", "live_write_enabled", "promotion_evidence", "blockers", "activation_path", "workspace_target", "proof_target", "last_verified_utc", "ladder_eligibility", "persistent_scope", "prod_scope", "rollback_scope", "uat_scope", "prod_proof_state", "ha_proof_state", "cloud_staging_scope"):
+        for field in ("mcp_id", "status", "cache_artifact", "setup_gate", "desired_state", "actual_state", "live_read_enabled", "live_write_enabled", "promotion_evidence", "blockers", "activation_path", "workspace_target", "proof_target", "last_verified_utc", "ladder_eligibility", "persistent_scope", "prod_scope", "rollback_scope", "uat_scope", "prod_proof_state", "ha_proof_state", "cloud_staging_scope", "archive_only", "oauth_bootstrap_state", "docker_volume_state", "fallback_mode"):
             if field not in entry:
                 failures.append(f"{label} missing field: {field}")
         connector_id = str(entry.get("mcp_id") or "").strip()
@@ -157,9 +157,11 @@ def main() -> int:
             failures.append(f"{connector_id or label} promotion_evidence must be a list")
         if not isinstance(entry.get("blockers"), list):
             failures.append(f"{connector_id or label} blockers must be a list")
-        for text_field in ("activation_path", "workspace_target", "proof_target", "last_verified_utc", "ladder_eligibility", "persistent_scope", "prod_scope", "rollback_scope", "uat_scope", "prod_proof_state", "ha_proof_state", "cloud_staging_scope"):
+        for text_field in ("activation_path", "workspace_target", "proof_target", "last_verified_utc", "ladder_eligibility", "persistent_scope", "prod_scope", "rollback_scope", "uat_scope", "prod_proof_state", "ha_proof_state", "cloud_staging_scope", "oauth_bootstrap_state", "docker_volume_state", "fallback_mode"):
             if not isinstance(entry.get(text_field), str):
                 failures.append(f"{connector_id or label} {text_field} must be a string")
+        if not isinstance(entry.get("archive_only"), bool):
+            failures.append(f"{connector_id or label} archive_only must be boolean")
         if bool(entry.get("live_write_enabled")) and not entry.get("promotion_evidence"):
             failures.append(f"{connector_id or label} live_write_enabled requires promotion_evidence")
 
