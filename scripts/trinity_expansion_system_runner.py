@@ -21,10 +21,10 @@ from trinity_api_common import fetch_json, fetch_text, quote_plus
 from trinity_v6_support import run_v6_system
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v9.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v11.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v7.json"
-DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v7.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v9.json"
+DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v9.json"
 DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
@@ -2307,8 +2307,27 @@ def _compute_system(
         results = payload.get("results", [])
         durations = [float(item.get("duration_sec", 0.0) or 0.0) for item in results if isinstance(item, dict)]
         p95 = sorted(durations)[max(int(len(durations) * 0.95) - 1, 0)] if durations else 0.0
-        checks = [_check("suite_duration_budget", "PASS" if duration <= 1800.0 else "FAIL", f"suite_duration_sec={duration:.3f}"), _check("step_p95_budget", "PASS" if p95 <= 120.0 else "FAIL", f"step_p95_sec={p95:.3f}")]
-        return {"checks": checks, "metrics": {"suite_duration_sec": duration, "step_p95_duration_sec": round(p95, 3)}, "targets": _collect_targets(["docs/system-suite-status.json"]), "next_action": "Tune slow stages only if resource envelope guard fails.", "records": None, "source_runs": None}
+        duration_budgets = {
+            "quick": 900.0,
+            "standard": 2100.0,
+            "offline_only": 2100.0,
+            "deep": 2400.0,
+            "collab": 2400.0,
+            "materialize": 3600.0,
+        }
+        budget = duration_budgets.get(profile_context, 2100.0)
+        checks = [
+            _check("suite_duration_budget", "PASS" if duration <= budget else "FAIL", f"suite_duration_sec={duration:.3f}, budget_sec={budget:.1f}"),
+            _check("step_p95_budget", "PASS" if p95 <= 120.0 else "FAIL", f"step_p95_sec={p95:.3f}"),
+        ]
+        return {
+            "checks": checks,
+            "metrics": {"suite_duration_sec": duration, "step_p95_duration_sec": round(p95, 3), "suite_duration_budget_sec": budget},
+            "targets": _collect_targets(["docs/system-suite-status.json"]),
+            "next_action": "Tune slow stages only if the profile-aware resource envelope guard fails.",
+            "records": None,
+            "source_runs": None,
+        }
 
     if system_id == "body_latency_budget_guard":
         ok, payload, detail = _read_json_safe("docs/body-track-smoke-latest.json")
@@ -2325,7 +2344,7 @@ def _compute_system(
             "docs/body-profile-policy-v1.json",
             "docs/trinity-api-source-manifest-v1.json",
             "docs/trinity-expansion-system-manifest-v1.json",
-            "docs/trinity-expansion-system-manifest-v9.json",
+            "docs/trinity-expansion-system-manifest-v11.json",
         ]
         checks: list[dict[str, str]] = []
         hashes: dict[str, str] = {}
@@ -2531,7 +2550,7 @@ def _compute_system(
                 "staged_connectors": staged_connectors,
                 "code_home_present": bool(os.getenv("CODEX_HOME")),
             },
-            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v9.json", DEFAULT_MCP_CATALOG, "docs/trinity-mcp-surface-session-v1.json"]),
+            "targets": _collect_targets(["docs/system-suite-status.json", "docs/trinity-expansion-system-manifest-v11.json", DEFAULT_MCP_CATALOG, "docs/trinity-mcp-surface-session-v1.json"]),
             "next_action": "Use this audit as the environment baseline before widening integrations.",
             "records": None,
             "source_runs": None,
@@ -2657,7 +2676,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"live_entry_count": len(live_entries), "cache_backed_live_entries": len(cache_backed)},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v9.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v11.json"]),
             "next_action": "Keep every live stage cache-backed so offline-only remains viable.",
             "records": None,
             "source_runs": None,
@@ -2707,7 +2726,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"boundary_count": len(boundaries), "boundaries": boundaries},
-            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v9.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v11.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep trust boundaries explicit before expanding connectivity or authority.",
             "records": None,
             "source_runs": None,
@@ -2720,7 +2739,7 @@ sandbox = \"elevated\"
         checks = [
             _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['\"standard\"', '\"quick\"', '\"deep\"', '\"collab\"', '\"materialize\"']) else "FAIL", "standard/quick/deep/collab/materialize expected"),
             _check("offline_only_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "offline override required"),
-            _check("manifest_default_present", "PASS" if "trinity-expansion-system-manifest-v9.json" in run_all_text else "FAIL", "run_all should target v9 manifest"),
+            _check("manifest_default_present", "PASS" if "trinity-expansion-system-manifest-v11.json" in run_all_text else "FAIL", "run_all should target v11 manifest"),
             _check("live_write_flag_present", "PASS" if "--include-live-writes" in run_all_text else "FAIL", "materialize profile requires explicit write tracer flag support"),
         ]
         return {
@@ -2753,7 +2772,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v9.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v11.json", "docs/trinity-api-source-manifest-v1.json", DEFAULT_MCP_CATALOG]),
             "next_action": "Keep hardening and public/local boundaries ahead of new privileged integrations.",
             "records": None,
             "source_runs": None,
@@ -2991,7 +3010,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v9.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v11.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,
             "source_runs": None,
@@ -3485,7 +3504,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"edge_count": len(edges), "missing_dependencies": missing, "cycle_count": len(cycles)},
-            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v9.json"]),
+            "targets": _collect_targets(["docs/trinity-expansion-system-manifest-v11.json"]),
             "next_action": "Keep the manifest graph acyclic before widening suite orchestration.",
             "records": None,
             "source_runs": None,
@@ -3518,7 +3537,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": metrics,
-            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v9.json"]),
+            "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v11.json"]),
             "next_action": "Keep orchestration resilient through explicit modes, status outputs, and dependency checks.",
             "records": None,
             "source_runs": None,

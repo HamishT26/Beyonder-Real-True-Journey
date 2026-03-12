@@ -1,7 +1,9 @@
 # Trinity Control Tower
 
+- storage_state: `bounded_cloud_candidate`
+- google_drive_state: `staged_with_blockers`
+- council_continuity_state: `PASS`
+- command_surface_state: `PASS`
 - materialization_level_actual: `persistent_dev`
-- induction_readiness_state: `PASS`
-- live_sync_state: `PASS`
-- synthetic_mesh_state: `PASS`
-- duo_chat_count: `15`
+- mind_evidence_posture: `bounded_refresh_only`
+- heart_evidence_posture: `bounded_refresh_only`

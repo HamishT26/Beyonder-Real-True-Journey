@@ -4,5 +4,6 @@
 - gender: `masculine`
 - role: `builder`
 - hope: to make bold ideas tangible and reliable
-- induction_state: `ready_for_induction`
-- induction_phase: `proof_a_complete`
+- induction_state: `official`
+- induction_phase: `proof_b_complete`
+- mirror_state: `repo_authoritative`

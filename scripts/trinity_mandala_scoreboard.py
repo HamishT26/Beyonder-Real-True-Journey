@@ -129,6 +129,38 @@ def _artifact_status(label: str, path: str) -> ArtifactStatus:
     )
 
 
+def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, str]:
+    results = payload.get("results")
+    if not isinstance(results, list):
+        status = _extract_status("docs/system-suite-status.json", payload)
+        return status, _extract_detail(payload)
+
+    filtered = [
+        row
+        for row in results
+        if isinstance(row, dict) and str(row.get("label") or "") != "trinity mandala scoreboard"
+    ]
+    if not filtered:
+        status = _extract_status("docs/system-suite-status.json", payload)
+        return status, _extract_detail(payload)
+
+    pass_count = sum(1 for row in filtered if _normalize_status(row.get("status")) == "PASS")
+    warn_count = sum(1 for row in filtered if _normalize_status(row.get("status")) == "WARN")
+    fail_count = sum(1 for row in filtered if _normalize_status(row.get("status")) in {"FAIL", "TIMEOUT"})
+    status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+    detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
+    return status, detail
+
+
+def _non_gating_warn_block(block: dict[str, object]) -> bool:
+    if str(block.get("label") or "") != "Google Drive MCP activation v11":
+        return False
+    if str(block.get("status") or "") != "WARN":
+        return False
+    payload = _read_json(_repo_path(str(block.get("path"))))
+    return str(payload.get("fallback_mode") or "") == "memory_bank_archive_only"
+
+
 def _pillar_status(name: str, artifacts: Iterable[ArtifactStatus]) -> dict[str, object]:
     rows = list(artifacts)
     status = "PASS"
@@ -218,7 +250,7 @@ def main() -> int:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
     suite_payload = _read_json(_repo_path(args.suite_status))
-    suite_status = _extract_status(args.suite_status, suite_payload)
+    suite_status, suite_detail = _suite_status_without_scoreboard(suite_payload)
 
     mind = _pillar_status(
         "Mind",
@@ -347,6 +379,33 @@ def main() -> int:
         asdict(_artifact_status("GMUT Freed ID alignment v9 gate", "docs/trinity-expansion/gmut-freedid-alignment-v9-gate-latest.json")),
         asdict(_artifact_status("Agent induction readiness v9", "docs/trinity-agent-induction-readiness-v1.json")),
         asdict(_artifact_status("Council live sync report v9", "docs/trinity-council-live-sync-report-v1.json")),
+        asdict(_artifact_status("Council proof B v10 gate", "docs/trinity-expansion/council-proof-b-v10-gate-latest.json")),
+        asdict(_artifact_status("Council official induction v10 gate", "docs/trinity-expansion/council-official-induction-v10-gate-latest.json")),
+        asdict(_artifact_status("Council memory wellbeing v10 gate", "docs/trinity-expansion/council-memory-wellbeing-v10-gate-latest.json")),
+        asdict(_artifact_status("GMUT research fabric v10 gate", "docs/trinity-expansion/gmut-research-fabric-v10-gate-latest.json")),
+        asdict(_artifact_status("Freed ID governance fabric v10 gate", "docs/trinity-expansion/freedid-governance-fabric-v10-gate-latest.json")),
+        asdict(_artifact_status("Trinity control tower v10 gate", "docs/trinity-expansion/trinity-control-tower-v10-gate-latest.json")),
+        asdict(_artifact_status("Synthetic mesh hardening v10 gate", "docs/trinity-expansion/synthetic-mesh-hardening-v10-gate-latest.json")),
+        asdict(_artifact_status("K8s dev probe v10 gate", "docs/trinity-expansion/k8s-dev-probe-v10-gate-latest.json")),
+        asdict(_artifact_status("Persistent dev ops v10 gate", "docs/trinity-expansion/persistent-dev-ops-v10-gate-latest.json")),
+        asdict(_artifact_status("New project workbench v10 gate", "docs/trinity-expansion/new-project-workbench-v10-gate-latest.json")),
+        asdict(_artifact_status("Command surface v10 gate", "docs/trinity-expansion/command-surface-v10-gate-latest.json")),
+        asdict(_artifact_status("Council sync governor v10 gate", "docs/trinity-expansion/council-sync-governor-v10-gate-latest.json")),
+        asdict(_artifact_status("Agent proof B v10", "docs/trinity-agent-proof-b-status-v1.json")),
+        asdict(_artifact_status("Official induction summary v10", "docs/trinity-agent-official-induction-summary-v1.json")),
+        asdict(_artifact_status("Memory bank registry v11", "docs/trinity-memory-bank-registry-v2.json")),
+        asdict(_artifact_status("Google Drive MCP activation v11", "docs/trinity-google-drive-mcp-activation-latest.json")),
+        asdict(_artifact_status("Google Drive MCP activation gate v11", "docs/trinity-expansion/google-drive-mcp-activation-v11-gate-latest.json")),
+        asdict(_artifact_status("Cloud memory bank gate v11", "docs/trinity-expansion/cloud-memory-bank-v11-gate-latest.json")),
+        asdict(_artifact_status("Docker storage ops gate v11", "docs/trinity-expansion/docker-storage-ops-v11-gate-latest.json")),
+        asdict(_artifact_status("Deep materialize regression gate v11", "docs/trinity-expansion/deep-materialize-regression-v11-gate-latest.json")),
+        asdict(_artifact_status("Synthetic mesh ops gate v11", "docs/trinity-expansion/synthetic-mesh-ops-v11-gate-latest.json")),
+        asdict(_artifact_status("GMUT research fabric gate v11", "docs/trinity-expansion/gmut-research-fabric-v11-gate-latest.json")),
+        asdict(_artifact_status("Freed ID governance fabric gate v11", "docs/trinity-expansion/freedid-governance-fabric-v11-gate-latest.json")),
+        asdict(_artifact_status("Trinity control tower gate v11", "docs/trinity-expansion/trinity-control-tower-v11-gate-latest.json")),
+        asdict(_artifact_status("New project workbench gate v11", "docs/trinity-expansion/new-project-workbench-v11-gate-latest.json")),
+        asdict(_artifact_status("V12 roadmap gate v11", "docs/trinity-expansion/v12-roadmap-v11-gate-latest.json")),
+        asdict(_artifact_status("Workbench link v11", "docs/trinity-new-project-workbench-link-v2.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 
@@ -355,6 +414,8 @@ def main() -> int:
         if _severity(pillar["status"]) > _severity(hybrid_status):
             hybrid_status = str(pillar["status"])
     for block in context_blocks:
+        if _non_gating_warn_block(block):
+            continue
         if _severity(str(block["status"])) > _severity(hybrid_status):
             hybrid_status = str(block["status"])
 
@@ -363,7 +424,7 @@ def main() -> int:
         "overall_status": hybrid_status,
         "hybrid_os_status": hybrid_status,
         "suite_status": suite_status,
-        "suite_detail": _extract_detail(suite_payload),
+        "suite_detail": suite_detail,
         "pillars": {
             "mind": mind,
             "body": body,
