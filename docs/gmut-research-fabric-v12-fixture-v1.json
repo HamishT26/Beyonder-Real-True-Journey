@@ -1,0 +1,84 @@
+{
+  "summary": "Refresh GMUT comparison language from research-primary and official sources while converting open questions into falsification tasks.",
+  "source_url": "repo://docs/comparative-validation-grid-v1.md",
+  "repo_targets": [
+    "docs/comparative-validation-grid-v1.md",
+    "docs/grand-unified-narrative-brief.md",
+    "docs/v12-gmut-research-brief.md"
+  ],
+  "tags": [
+    "gmut_research_fabric_v12",
+    "v12",
+    "mind_theory"
+  ],
+  "connector_snapshot": {
+    "connector_id": "repo",
+    "write_target": "docs/comparative-validation-grid-v1.md"
+  },
+  "sync_strategy": "public_feeds",
+  "next_action": "Convert strong open questions into falsification tasks instead of narrative upgrades.",
+  "probe_tools": [],
+  "required_probe_tools": [],
+  "workflow_tokens": [
+    "public_research",
+    "public_feeds",
+    "alignment_scope"
+  ],
+  "risk_tags": [
+    "mind_theory",
+    "public_research",
+    "bounded_scope"
+  ],
+  "freshness_window_days": 30,
+  "live_sources": [
+    {
+      "source_id": "cern_quantum_gravity",
+      "url": "https://home.cern/events/testing-quantum-gravity-quantum-technologies",
+      "title": "CERN Testing Quantum Gravity",
+      "summary": "Official institute anchor for testability over narrative closure.",
+      "tags": [
+        "mind",
+        "official_secondary",
+        "testability"
+      ],
+      "repo_targets": [
+        "docs/v12-gmut-research-brief.md",
+        "docs/comparative-validation-grid-v1.md"
+      ]
+    },
+    {
+      "source_id": "openalex_api",
+      "url": "https://api.openalex.org/works?search=quantum+gravity&per-page=1",
+      "title": "OpenAlex quantum gravity signal",
+      "summary": "Public research-primary signal for current theory activity.",
+      "format": "json",
+      "tags": [
+        "mind",
+        "research_primary",
+        "openalex"
+      ],
+      "repo_targets": [
+        "docs/v12-gmut-research-brief.md",
+        "docs/trinity-public-source-registry-v1.json"
+      ]
+    },
+    {
+      "source_id": "arxiv_api",
+      "url": "https://export.arxiv.org/api/query?search_query=all:quantum+gravity&start=0&max_results=1",
+      "title": "arXiv quantum gravity signal",
+      "summary": "Research-primary recency signal for current theory comparison.",
+      "tags": [
+        "mind",
+        "research_primary",
+        "arxiv"
+      ],
+      "repo_targets": [
+        "docs/v12-gmut-research-brief.md",
+        "docs/trinity-public-source-registry-v1.json"
+      ]
+    }
+  ],
+  "cleanup_class": "research_cache",
+  "retention_scope": "mind_research",
+  "research_surface": "public_only"
+}

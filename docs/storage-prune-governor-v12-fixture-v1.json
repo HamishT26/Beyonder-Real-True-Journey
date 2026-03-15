@@ -1,0 +1,43 @@
+{
+  "summary": "Apply the balanced retention policy and prune stale generated artifacts without touching authoritative records.",
+  "source_url": "repo://docs/trinity-retention-policy-v1.json",
+  "repo_targets": [
+    "docs/trinity-retention-policy-v1.json",
+    "docs/trinity-storage-prune-latest.json",
+    "docs/trinity-storage-prune-latest.md"
+  ],
+  "tags": [
+    "storage_prune_governor_v12",
+    "v12",
+    "continuity_ops"
+  ],
+  "connector_snapshot": {
+    "connector_id": "repo",
+    "write_target": "docs/trinity-retention-policy-v1.json"
+  },
+  "sync_strategy": "local_probe",
+  "next_action": "Apply the balanced prune policy, then rebuild latest authoritative summaries.",
+  "probe_tools": [
+    "python",
+    "git",
+    "docker"
+  ],
+  "required_probe_tools": [
+    "python"
+  ],
+  "workflow_tokens": [
+    "cleanup_runtime",
+    "authoritative_preserving",
+    "retention_policy"
+  ],
+  "risk_tags": [
+    "cleanup",
+    "retention",
+    "repo_authority"
+  ],
+  "freshness_window_days": 7,
+  "live_sources": [],
+  "cleanup_class": "balanced_prune",
+  "retention_scope": "generated_history",
+  "research_surface": "none"
+}

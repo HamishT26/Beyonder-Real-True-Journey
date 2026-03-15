@@ -1,7 +1,7 @@
 # Trinity Command Book
 
-- generated_utc: `2026-03-12T10:43:46+00:00`
-- commands: `348`
+- generated_utc: `2026-03-14T07:37:36+00:00`
+- commands: `420`
 
 | command_id | executor_role | mode | risk | visibility |
 |---|---|---|---|---|
@@ -353,3 +353,75 @@
 | research_ops_06 | researcher | offline | medium | council_shared |
 | research_ops_07 | researcher | offline | medium | council_shared |
 | research_ops_08 | researcher | offline | medium | council_shared |
+| apply_storage_prune_v12 | archivist | offline | medium | leader_only |
+| validate_storage_prune_v12 | reviewer | offline | medium | council_shared |
+| refresh_memory_bank_v12 | archivist | offline | medium | council_shared |
+| validate_memory_bank_v12 | reviewer | offline | medium | council_shared |
+| hold_google_drive_v12 | reviewer | offline | low | leader_only |
+| refresh_docker_truth_v12 | builder | offline | medium | leader_only |
+| run_deep_v12 | planner | offline | high | leader_only |
+| run_collab_v12 | planner | collab | high | leader_only |
+| run_offline_v12 | planner | offline | medium | council_shared |
+| run_materialize_l2_v12 | builder | materialize | high | leader_only |
+| run_materialize_l3_v12 | builder | materialize | high | leader_only |
+| run_materialize_l4_v12 | reviewer | materialize | critical | leader_only |
+| run_materialize_l5_v12 | reviewer | materialize | critical | leader_only |
+| refresh_public_sources_v12 | researcher | offline | medium | council_shared |
+| validate_public_research_v12 | reviewer | offline | medium | council_shared |
+| refresh_public_signal_board_v12 | reviewer | offline | medium | council_shared |
+| refresh_gmut_v12 | researcher | offline | medium | council_shared |
+| refresh_freedid_v12 | researcher | offline | medium | council_shared |
+| refresh_control_tower_v12 | planner | offline | medium | council_shared |
+| refresh_council_continuity_v12 | archivist | offline | medium | council_shared |
+| refresh_journey_absorption_v12 | archivist | offline | medium | council_shared |
+| validate_api_book_v12 | reviewer | offline | medium | council_shared |
+| refresh_api_book_v12 | planner | offline | low | council_shared |
+| list_api_surfaces_v12 | planner | offline | low | council_shared |
+| show_memory_bank_api_v12 | archivist | offline | low | council_shared |
+| run_memory_bank_status_v12 | archivist | offline | low | council_shared |
+| run_public_research_status_v12 | researcher | offline | low | council_shared |
+| run_github_status_v12 | planner | offline | low | leader_only |
+| run_docker_status_v12 | builder | offline | low | leader_only |
+| run_postgres_status_v12 | builder | offline | low | leader_only |
+| publish_v13_v12 | planner | offline | low | council_shared |
+| v12_prune_ops_01 | archivist | offline | medium | council_shared |
+| v12_prune_ops_02 | archivist | offline | medium | council_shared |
+| v12_prune_ops_03 | archivist | offline | medium | council_shared |
+| v12_prune_ops_04 | archivist | offline | medium | council_shared |
+| v12_prune_ops_05 | archivist | offline | medium | council_shared |
+| v12_prune_ops_06 | archivist | offline | medium | council_shared |
+| v12_prune_ops_07 | archivist | offline | medium | council_shared |
+| v12_prune_ops_08 | archivist | offline | medium | council_shared |
+| v12_runtime_ops_01 | builder | offline | medium | leader_only |
+| v12_runtime_ops_02 | builder | offline | medium | leader_only |
+| v12_runtime_ops_03 | builder | offline | medium | leader_only |
+| v12_runtime_ops_04 | builder | offline | medium | leader_only |
+| v12_runtime_ops_05 | builder | offline | medium | leader_only |
+| v12_runtime_ops_06 | builder | offline | medium | leader_only |
+| v12_runtime_ops_07 | builder | offline | medium | leader_only |
+| v12_runtime_ops_08 | builder | offline | medium | leader_only |
+| v12_council_ops_01 | archivist | offline | medium | council_shared |
+| v12_council_ops_02 | archivist | offline | medium | council_shared |
+| v12_council_ops_03 | archivist | offline | medium | council_shared |
+| v12_council_ops_04 | archivist | offline | medium | council_shared |
+| v12_council_ops_05 | archivist | offline | medium | council_shared |
+| v12_council_ops_06 | archivist | offline | medium | council_shared |
+| v12_council_ops_07 | archivist | offline | medium | council_shared |
+| v12_council_ops_08 | archivist | offline | medium | council_shared |
+| v12_research_ops_01 | researcher | offline | medium | council_shared |
+| v12_research_ops_02 | researcher | offline | medium | council_shared |
+| v12_research_ops_03 | researcher | offline | medium | council_shared |
+| v12_research_ops_04 | researcher | offline | medium | council_shared |
+| v12_research_ops_05 | researcher | offline | medium | council_shared |
+| v12_research_ops_06 | researcher | offline | medium | council_shared |
+| v12_research_ops_07 | researcher | offline | medium | council_shared |
+| v12_research_ops_08 | researcher | offline | medium | council_shared |
+| v12_control_ops_01 | planner | offline | medium | council_shared |
+| v12_control_ops_02 | planner | offline | medium | council_shared |
+| v12_control_ops_03 | planner | offline | medium | council_shared |
+| v12_control_ops_04 | planner | offline | medium | council_shared |
+| v12_control_ops_05 | planner | offline | medium | council_shared |
+| v12_control_ops_06 | planner | offline | medium | council_shared |
+| v12_control_ops_07 | planner | offline | medium | council_shared |
+| v12_control_ops_08 | planner | offline | medium | council_shared |
+| v12_api_ops_01 | planner | offline | low | council_shared |

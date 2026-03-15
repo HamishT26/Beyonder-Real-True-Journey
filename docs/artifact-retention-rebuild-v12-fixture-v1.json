@@ -1,0 +1,37 @@
+{
+  "summary": "Rebuild latest authoritative snapshots after prune so the repo remains complete and readable.",
+  "source_url": "repo://docs/system-suite-status.json",
+  "repo_targets": [
+    "docs/system-suite-status.json",
+    "docs/system-suite-run-report.md",
+    "docs/trinity-storage-posture-summary-v12.json"
+  ],
+  "tags": [
+    "artifact_retention_rebuild_v12",
+    "v12",
+    "continuity_ops"
+  ],
+  "connector_snapshot": {
+    "connector_id": "repo",
+    "write_target": "docs/system-suite-status.json"
+  },
+  "sync_strategy": "local_repo",
+  "next_action": "Regenerate latest authoritative snapshots after prune.",
+  "probe_tools": [],
+  "required_probe_tools": [],
+  "workflow_tokens": [
+    "cleanup_runtime",
+    "local_repo",
+    "storage_scope"
+  ],
+  "risk_tags": [
+    "continuity_ops",
+    "cleanup_runtime",
+    "bounded_scope"
+  ],
+  "freshness_window_days": 7,
+  "live_sources": [],
+  "cleanup_class": "snapshot_rebuild",
+  "retention_scope": "authoritative_latest",
+  "research_surface": "none"
+}

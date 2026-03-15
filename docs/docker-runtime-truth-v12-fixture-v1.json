@@ -1,0 +1,43 @@
+{
+  "summary": "Record Docker and Postgres runtime truth carefully so storage mirror posture reflects actual health rather than assumptions.",
+  "source_url": "repo://docs/trinity-memory-bank-registry-v3.json",
+  "repo_targets": [
+    "docs/trinity-memory-bank-registry-v3.json",
+    "docs/trinity-storage-posture-summary-v12.json",
+    "docs/system-suite-status.json"
+  ],
+  "tags": [
+    "docker_runtime_truth_v12",
+    "v12",
+    "compute_ecosystem"
+  ],
+  "connector_snapshot": {
+    "connector_id": "repo",
+    "write_target": "docs/trinity-memory-bank-registry-v3.json"
+  },
+  "sync_strategy": "local_probe",
+  "next_action": "Keep Docker and Postgres truth aligned with actual runtime health.",
+  "probe_tools": [
+    "docker",
+    "python",
+    "git"
+  ],
+  "required_probe_tools": [
+    "python"
+  ],
+  "workflow_tokens": [
+    "storage_runtime",
+    "local_probe",
+    "runtime_storage_scope"
+  ],
+  "risk_tags": [
+    "compute_ecosystem",
+    "storage_runtime",
+    "bounded_scope"
+  ],
+  "freshness_window_days": 7,
+  "live_sources": [],
+  "cleanup_class": "runtime_truth",
+  "retention_scope": "runtime_state",
+  "research_surface": "none"
+}

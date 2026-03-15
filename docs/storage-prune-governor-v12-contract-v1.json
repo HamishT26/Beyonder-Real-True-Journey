@@ -1,0 +1,68 @@
+{
+  "pack": "storage_prune_governor_v12",
+  "display_name": "Storage Prune Governor V12",
+  "pillar": "trinity",
+  "wave": "wave102",
+  "track": "continuity_ops",
+  "activation_group": "cleanup_runtime",
+  "summary": "Apply the balanced retention policy and prune stale generated artifacts without touching authoritative records.",
+  "repo_targets": [
+    "docs/trinity-retention-policy-v1.json",
+    "docs/trinity-storage-prune-latest.json",
+    "docs/trinity-storage-prune-latest.md"
+  ],
+  "council_scope": "leader_only",
+  "autonomy_track": "storage_prune",
+  "executor_role": "archivist",
+  "authority_scope": "storage_scope",
+  "induction_dependency": "v12_roadmap_v11",
+  "sync_strategy": "local_probe",
+  "autonomy_class": "manual",
+  "live_dependency": "retention_policy",
+  "mirror_target": "repo_only",
+  "continuity_band": "v12",
+  "history_scope": "v12",
+  "gating_class": "active",
+  "provisional_induction": false,
+  "requires_auth": false,
+  "connector_id": "",
+  "sync_mode": "offline",
+  "probe_tools": [
+    "python",
+    "git",
+    "docker"
+  ],
+  "required_probe_tools": [
+    "python"
+  ],
+  "workflow_tokens": [
+    "cleanup_runtime",
+    "authoritative_preserving",
+    "retention_policy"
+  ],
+  "risk_tags": [
+    "cleanup",
+    "retention",
+    "repo_authority"
+  ],
+  "freshness_window_days": 7,
+  "workbench_surface": "repo",
+  "storage_surface": "repo_authority",
+  "cloud_archive_state": "candidate",
+  "continuity_posture": "official_council_stable",
+  "skill_names": [
+    "storage-prune-governor-v12-operations",
+    "storage-prune-governor-v12-integration"
+  ],
+  "system_ids": [
+    "storage_prune_governor_v12_surface_audit",
+    "storage_prune_governor_v12_sync_bridge",
+    "storage_prune_governor_v12_materialization_tracer",
+    "storage_prune_governor_v12_cache_board",
+    "storage_prune_governor_v12_risk_board",
+    "storage_prune_governor_v12_gate"
+  ],
+  "cleanup_class": "balanced_prune",
+  "retention_scope": "generated_history",
+  "research_surface": "none"
+}

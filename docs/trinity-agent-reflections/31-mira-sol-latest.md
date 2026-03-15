@@ -6,4 +6,4 @@
 - wellbeing_state: `stable`
 - mirror_status: `repo_authoritative`
 
-Mira Sol remains continuous and distinct through the v11 storage and research transition.
+Mira Sol remains distinct and stable through the v12 storage-prune and public-research shift.

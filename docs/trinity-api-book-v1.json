@@ -1,0 +1,275 @@
+{
+  "generated_utc": "2026-03-14T07:37:38+00:00",
+  "version": "v1",
+  "overall_status": "PASS",
+  "authority_model": "repo_first",
+  "description": "Governed Trinity API book of trusted public and operational surfaces with bounded usage patterns.",
+  "apis": [
+    {
+      "api_id": "crossref",
+      "surface": "public_research",
+      "purpose": "Ground theory and publication signals with bounded public metadata lookups.",
+      "trust_class": "research_primary",
+      "auth_posture": "public_no_auth",
+      "mode": "public_read",
+      "usage_pattern": "doi_and_bibliographic_search",
+      "source_of_truth": "docs/trinity-public-source-registry-v1.json",
+      "quick_call": "https://api.crossref.org/works?query.bibliographic=<term>&rows=3",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py show crossref",
+      "expected_artifacts": [
+        "docs/trinity-public-source-registry-v1.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Fall back to the public source registry and cached public research artifacts when live calls are skipped.",
+      "notes": "Use to ground current theory and publication signals without converting them into readiness claims."
+    },
+    {
+      "api_id": "openalex",
+      "surface": "public_research",
+      "purpose": "Pull bounded recency and citation-context signals from a public academic index.",
+      "trust_class": "research_primary",
+      "auth_posture": "public_no_auth",
+      "mode": "public_read",
+      "usage_pattern": "works_search",
+      "source_of_truth": "docs/trinity-public-source-registry-v1.json",
+      "quick_call": "https://api.openalex.org/works?search=<term>&per-page=3",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py show openalex",
+      "expected_artifacts": [
+        "docs/trinity-public-source-registry-v1.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Use cached public research artifacts and explicit open-gap notes if live refresh is skipped.",
+      "notes": "Use for recency and citation-context signals only."
+    },
+    {
+      "api_id": "arxiv",
+      "surface": "public_research",
+      "purpose": "Pull bounded preprint signals without promoting them to readiness claims.",
+      "trust_class": "research_primary",
+      "auth_posture": "public_no_auth",
+      "mode": "public_read",
+      "usage_pattern": "atom_feed_query",
+      "source_of_truth": "docs/trinity-public-source-registry-v1.json",
+      "quick_call": "https://export.arxiv.org/api/query?search_query=all:<term>&start=0&max_results=3",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py show arxiv",
+      "expected_artifacts": [
+        "docs/trinity-public-source-registry-v1.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Use cached research notes and keep preprint-derived claims in inference or open-gap only.",
+      "notes": "Use as a public preprint signal with explicit evidence boundaries."
+    },
+    {
+      "api_id": "semanticscholar",
+      "surface": "public_research",
+      "purpose": "Pull bounded theory-context graph signals from a public research API.",
+      "trust_class": "research_primary",
+      "auth_posture": "public_no_auth",
+      "mode": "public_read",
+      "usage_pattern": "graph_search",
+      "source_of_truth": "docs/trinity-api-query-pack-v1.json",
+      "quick_call": "https://api.semanticscholar.org/graph/v1/paper/search?query=<term>&limit=3",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py show semanticscholar",
+      "expected_artifacts": [
+        "docs/trinity-api-query-pack-v1.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Fall back to Crossref/OpenAlex cached traces when live graph queries are skipped.",
+      "notes": "Use as a bounded theory-context signal source."
+    },
+    {
+      "api_id": "github_remote",
+      "surface": "operational",
+      "purpose": "Check branch-scoped remote mirror reachability and collaboration posture.",
+      "trust_class": "verified_live_write",
+      "auth_posture": "git_remote_auth",
+      "mode": "bounded_write",
+      "usage_pattern": "git_remote_branch_scoped",
+      "source_of_truth": "docs/trinity-mcp-catalog-v10.json",
+      "quick_call": "git fetch origin && git push origin HEAD:<branch>",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py github-status",
+      "expected_artifacts": [
+        "docs/system-suite-status.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Keep the repo authoritative and continue local work if the remote is unavailable.",
+      "notes": "Never write directly to main; branch-scoped only."
+    },
+    {
+      "api_id": "linear",
+      "surface": "operational",
+      "purpose": "Mirror actionable work into Linear without changing repo authority.",
+      "trust_class": "verified_live_write",
+      "auth_posture": "mcp_workspace_auth",
+      "mode": "bounded_write",
+      "usage_pattern": "issue_project_summary_mirror",
+      "source_of_truth": "docs/trinity-mcp-catalog-v10.json",
+      "quick_call": "Linear MCP tools",
+      "wrapper_type": "policy",
+      "wrapper_target": "docs/trinity-mcp-catalog-v10.json",
+      "expected_artifacts": [
+        "docs/trinity-mcp-catalog-v10.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Keep the work in repo-first artifacts if Linear is unavailable in the current session.",
+      "notes": "Use for actionable work mirrors only."
+    },
+    {
+      "api_id": "notion",
+      "surface": "operational",
+      "purpose": "Mirror summaries and dashboards into Notion without changing repo authority.",
+      "trust_class": "verified_live_write",
+      "auth_posture": "mcp_workspace_auth",
+      "mode": "bounded_write",
+      "usage_pattern": "summary_and_dashboard_mirror",
+      "source_of_truth": "docs/trinity-mcp-catalog-v10.json",
+      "quick_call": "Notion MCP tools",
+      "wrapper_type": "policy",
+      "wrapper_target": "docs/trinity-mcp-catalog-v10.json",
+      "expected_artifacts": [
+        "docs/trinity-mcp-catalog-v10.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Keep summaries in repo-first markdown and JSON artifacts if Notion is unavailable.",
+      "notes": "Repo remains authoritative; Notion is a bounded mirror."
+    },
+    {
+      "api_id": "postgres",
+      "surface": "runtime_query",
+      "purpose": "Check runtime/query posture for the local synthetic mesh and summary store.",
+      "trust_class": "verified_live_write",
+      "auth_posture": "local_docker_runtime",
+      "mode": "bounded_write",
+      "usage_pattern": "synthetic_mesh_and_query_state",
+      "source_of_truth": "docs/trinity-mcp-catalog-v10.json",
+      "quick_call": "docker exec trinity-v5-pg-proof psql -U postgres",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py postgres-status",
+      "expected_artifacts": [
+        "docs/trinity-memory-bank-registry-v3.json",
+        "docs/trinity-storage-posture-summary-v12.json"
+      ],
+      "fallback_behavior": "Treat Postgres as blocked and continue repo-first if the local runtime is unavailable.",
+      "notes": "Use for runtime/query state and synthetic mesh, not authority."
+    },
+    {
+      "api_id": "google_drive",
+      "surface": "archive_candidate",
+      "purpose": "Record the deferred archive target without attempting activation in v12.",
+      "trust_class": "operator_hold",
+      "auth_posture": "operator_hold_no_auth",
+      "mode": "deferred",
+      "usage_pattern": "bounded_archive_mirror",
+      "source_of_truth": "docs/trinity-mcp-catalog-v10.json",
+      "quick_call": "deferred_by_operator",
+      "wrapper_type": "policy",
+      "wrapper_target": "docs/trinity-google-drive-sync-policy-v1.json",
+      "expected_artifacts": [
+        "docs/trinity-google-drive-sync-policy-v1.json",
+        "docs/trinity-memory-bank-registry-v3.json"
+      ],
+      "fallback_behavior": "Keep all archive posture local and repo-first until the operator lifts the hold.",
+      "notes": "Explicitly on hold for v12."
+    },
+    {
+      "api_id": "docker",
+      "surface": "runtime_ops",
+      "purpose": "Check bounded local runtime truth and container health.",
+      "trust_class": "local_probe",
+      "auth_posture": "local_cli_runtime",
+      "mode": "local_runtime",
+      "usage_pattern": "container_health_and_copy",
+      "source_of_truth": "docs/trinity-storage-posture-summary-v12.json",
+      "quick_call": "docker ps --format \"{{.Names}}`t{{.Status}}`t{{.Image}}\"",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py docker-status",
+      "expected_artifacts": [
+        "docs/trinity-storage-posture-summary-v12.json",
+        "docs/trinity-memory-bank-registry-v3.json"
+      ],
+      "fallback_behavior": "Mark Docker as blocked and continue repo-first if the CLI or daemon is unavailable.",
+      "notes": "Use for local runtime truth and bounded simulations."
+    },
+    {
+      "api_id": "memory_bank",
+      "surface": "operator_recovery",
+      "purpose": "Summarize current memory-bank authority and mirror posture in one low-pressure command.",
+      "trust_class": "repo_authoritative",
+      "auth_posture": "local_file_read",
+      "mode": "read_only",
+      "usage_pattern": "memory_bank_summary",
+      "source_of_truth": "docs/trinity-memory-bank-registry-v3.json",
+      "quick_call": "python scripts/trinity_api_shortcuts.py memory-bank-status",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py memory-bank-status",
+      "expected_artifacts": [
+        "docs/trinity-memory-bank-registry-v3.json",
+        "docs/trinity-memory-bank-sync-latest.json"
+      ],
+      "fallback_behavior": "Read the registry directly if the helper script is unavailable.",
+      "notes": "Use when the laptop is under pressure and we need one concise storage posture view."
+    },
+    {
+      "api_id": "public_research_refresh",
+      "surface": "operator_recovery",
+      "purpose": "Summarize the current public research validation and signal-board posture.",
+      "trust_class": "public_signal_helper",
+      "auth_posture": "local_file_read",
+      "mode": "read_only",
+      "usage_pattern": "public_research_status",
+      "source_of_truth": "docs/trinity-public-source-registry-v1.json",
+      "quick_call": "python scripts/trinity_api_shortcuts.py public-research-status",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py public-research-status",
+      "expected_artifacts": [
+        "docs/trinity-public-research-validation-latest.json",
+        "docs/trinity-public-signal-board-latest.json"
+      ],
+      "fallback_behavior": "Fall back to the latest public research validation and signal-board artifacts directly.",
+      "notes": "Use to check public-source research posture without forcing a live refresh."
+    },
+    {
+      "api_id": "w3c_did_core",
+      "surface": "public_standard",
+      "purpose": "Anchor DID governance comparisons against the current public standard.",
+      "trust_class": "official_primary",
+      "auth_posture": "public_no_auth",
+      "mode": "public_read",
+      "usage_pattern": "standards_anchor",
+      "source_of_truth": "docs/trinity-public-source-registry-v1.json",
+      "quick_call": "https://www.w3.org/TR/did-core/",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py show w3c_did_core",
+      "expected_artifacts": [
+        "docs/trinity-public-source-registry-v1.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Use the cached public source registry and governance briefs if live browsing is skipped.",
+      "notes": "Primary governance anchor for DID claims."
+    },
+    {
+      "api_id": "w3c_vc_data_model",
+      "surface": "public_standard",
+      "purpose": "Anchor verifiable credential comparisons against the current public standard.",
+      "trust_class": "official_primary",
+      "auth_posture": "public_no_auth",
+      "mode": "public_read",
+      "usage_pattern": "standards_anchor",
+      "source_of_truth": "docs/trinity-public-source-registry-v1.json",
+      "quick_call": "https://www.w3.org/TR/vc-data-model-2.0/",
+      "wrapper_type": "script",
+      "wrapper_target": "scripts/trinity_api_shortcuts.py show w3c_vc_data_model",
+      "expected_artifacts": [
+        "docs/trinity-public-source-registry-v1.json",
+        "docs/trinity-api-book-v1.json"
+      ],
+      "fallback_behavior": "Use the cached public source registry and governance briefs if live browsing is skipped.",
+      "notes": "Primary governance anchor for verifiable credentials claims."
+    }
+  ]
+}

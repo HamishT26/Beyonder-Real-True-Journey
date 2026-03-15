@@ -25,10 +25,11 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
     "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
+    "recover": "Low-pressure recovery profile that validates v12 structure, continuity, storage truth, and scoreboard state.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v11.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v9.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v12.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v10.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -228,6 +229,28 @@ def _command_book_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     return f"trinity command book validation ({mode})", command
 
 
+def _api_book_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_api_book_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity api book validation ({mode})", command
+
+
+def _memory_bank_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/trinity_memory_bank_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"trinity memory bank validation ({mode})", command
+
+
 def _agent_council_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
@@ -405,6 +428,123 @@ def build_commands(
     body_benchmark_mode: str,
     materialization_level: str,
 ) -> list[tuple[str, list[str]]]:
+    if profile == "recover":
+        enforce = True
+        recover_gate_ids = [
+            "storage_prune_governor_v12_surface_audit",
+            "storage_prune_governor_v12_gate",
+            "artifact_retention_rebuild_v12_surface_audit",
+            "artifact_retention_rebuild_v12_gate",
+            "docker_runtime_truth_v12_surface_audit",
+            "docker_runtime_truth_v12_gate",
+            "google_drive_hold_guard_v12_surface_audit",
+            "google_drive_hold_guard_v12_gate",
+            "council_continuity_wellbeing_v12_surface_audit",
+            "council_continuity_wellbeing_v12_gate",
+            "journey_log_absorption_v12_surface_audit",
+            "journey_log_absorption_v12_gate",
+            "public_source_refresh_v12_surface_audit",
+            "public_source_refresh_v12_gate",
+            "gmut_research_fabric_v12_surface_audit",
+            "gmut_research_fabric_v12_gate",
+            "freedid_governance_fabric_v12_surface_audit",
+            "freedid_governance_fabric_v12_gate",
+            "trinity_control_tower_v12_surface_audit",
+            "trinity_control_tower_v12_gate",
+            "api_surface_book_v12_sync_bridge",
+            "api_surface_book_v12_surface_audit",
+            "api_surface_book_v12_gate",
+        ]
+
+        commands: list[tuple[str, list[str]]] = [
+            (
+                *_extension_catalog_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_command_book_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_api_book_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_agent_council_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_materialization_ladder_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_expansion_manifest_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_memory_bank_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                "trinity storage prune dry-run",
+                [
+                    "python3",
+                    "scripts/trinity_storage_retention.py",
+                    "--keep-stamps",
+                    "2",
+                    "--keep-archives",
+                    "3",
+                    "--dry-run",
+                ],
+            ),
+            (
+                *_api_manifest_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_public_research_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_public_signal_board_command(
+                    enforce=enforce,
+                ),
+            ),
+        ]
+        for system_id in recover_gate_ids:
+            command = [
+                "python3",
+                "scripts/trinity_expansion_system_runner.py",
+                "--system-id",
+                system_id,
+                "--profile-context",
+                "recover",
+                "--offline-only",
+            ]
+            if enforce:
+                command.append("--fail-on-warn")
+            commands.append((f"expansion: {system_id} (offline)", command))
+        commands.append(
+            (
+                "trinity mandala scoreboard",
+                [
+                    "python3",
+                    "scripts/trinity_mandala_scoreboard.py",
+                    "--fail-on-warn",
+                ],
+            )
+        )
+        return commands
+
     token_energy_commands: list[tuple[str, list[str]]] = [
         (
             "token/credit zip converter",
@@ -530,6 +670,11 @@ def build_commands(
             ),
             (
                 *_command_book_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_api_book_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -1118,7 +1263,7 @@ def build_commands(
 
 def render_profile_catalog() -> str:
     lines = ["Available suite profiles (default: deep):"]
-    for name in ("standard", "quick", "deep", "collab", "materialize"):
+    for name in ("standard", "quick", "deep", "collab", "materialize", "recover"):
         lines.append(f"- {name}: {PROFILE_HELP[name]}")
     lines.append("- --quick-mode: legacy alias for --profile quick")
     return "\n".join(lines)
@@ -1151,6 +1296,15 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
         include_skill_install = True
         include_curated_skill_catalog = True
         soft_fail_network = True
+    if profile == "recover":
+        include_version_scan = False
+        include_skill_install = False
+        include_curated_skill_catalog = False
+        include_public_api_refresh = False
+        include_mcp_refresh = False
+        include_staged_connectors = False
+        include_live_writes = False
+        soft_fail_network = False
     if profile == "materialize":
         include_staged_connectors = True
         include_live_writes = True
@@ -1174,7 +1328,10 @@ def resolve_profile_settings(args: argparse.Namespace) -> tuple[str, bool, bool,
     if args.skip_body_benchmark:
         body_benchmark_mode = "off"
     elif body_benchmark_mode == "auto":
-        body_benchmark_mode = "observe" if profile == "quick" else "enforce"
+        if profile == "recover":
+            body_benchmark_mode = "off"
+        else:
+            body_benchmark_mode = "observe" if profile == "quick" else "enforce"
 
     if body_benchmark_mode not in {"off", "observe", "enforce"}:
         raise SystemExit("--body-benchmark-mode must resolve to off/observe/enforce.")
@@ -1256,6 +1413,142 @@ def classify_status(
     return "FAIL", False
 
 
+def _read_json_file(path: Path) -> dict[str, object]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_resume_commands(
+    status_path: Path,
+    *,
+    failed_only: bool,
+    current_fail_on_warn: bool,
+) -> tuple[list[tuple[str, list[str]]], int, list[dict[str, object]]]:
+    payload = _read_json_file(status_path)
+    rows = payload.get("results", [])
+    if not isinstance(rows, list):
+        raise SystemExit(f"resume status file has no results list: {status_path}")
+
+    prior_fail_on_warn = bool(
+        isinstance(payload.get("config"), dict) and payload["config"].get("fail_on_warn")
+    )
+    selected: list[tuple[str, list[str]]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        label = str(row.get("label") or "").strip()
+        command_str = str(row.get("command") or "").strip()
+        status = _normalize_status_token(row.get("status"))
+        if failed_only:
+            unresolved = status in {"FAIL", "TIMEOUT"} or (
+                status == "WARN" and (prior_fail_on_warn or current_fail_on_warn)
+            )
+            if not unresolved:
+                continue
+        if not label or not command_str:
+            raise SystemExit(f"resume status row missing label/command in {status_path}")
+        selected.append((label, shlex.split(command_str)))
+    baseline_rows = [row for row in rows if isinstance(row, dict)]
+    return selected, len(selected), baseline_rows
+
+
+def _normalize_status_token(raw: object) -> str:
+    text = str(raw or "").strip().upper()
+    if text in {"PASS", "WARN", "FAIL", "TIMEOUT"}:
+        return text
+    return "FAIL"
+
+
+def _dirty_tree_state() -> dict[str, object]:
+    def _count_lines(args: list[str]) -> tuple[int, bool]:
+        try:
+            proc = subprocess.run(
+                args,
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=45,
+            )
+        except subprocess.TimeoutExpired:
+            return 0, False
+        if proc.returncode != 0:
+            return 0, False
+        count = len([line for line in proc.stdout.splitlines() if line.strip()])
+        return count, True
+
+    staged, staged_ok = _count_lines(["git", "diff", "--cached", "--name-only"])
+    unstaged, unstaged_ok = _count_lines(["git", "diff", "--name-only"])
+    untracked, untracked_ok = _count_lines(["git", "ls-files", "--others", "--exclude-standard"])
+    available = staged_ok and unstaged_ok and untracked_ok
+    dirty = any((staged, unstaged, untracked)) if available else None
+    return {
+        "available": available,
+        "staged_count": staged,
+        "unstaged_count": unstaged,
+        "untracked_count": untracked,
+        "dirty": dirty,
+    }
+
+
+def _storage_prune_delta_mb() -> float:
+    path = ROOT / "docs" / "trinity-storage-prune-latest.json"
+    if not path.exists():
+        return 0.0
+    try:
+        payload = _read_json_file(path)
+    except Exception:  # noqa: BLE001
+        return 0.0
+    return float(payload.get("reclaimed_mb", 0.0) or 0.0)
+
+
+def _merge_resume_results(
+    baseline_rows: list[dict[str, object]],
+    resumed_rows: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    replacement_map = {
+        str(row.get("label") or "").strip(): row
+        for row in resumed_rows
+        if isinstance(row, dict) and str(row.get("label") or "").strip()
+    }
+    merged: list[dict[str, object]] = []
+    seen: set[str] = set()
+    for row in baseline_rows:
+        label = str(row.get("label") or "").strip()
+        if label and label in replacement_map:
+            merged.append(replacement_map[label])
+            seen.add(label)
+        else:
+            merged.append(row)
+            if label:
+                seen.add(label)
+    for row in resumed_rows:
+        label = str(row.get("label") or "").strip()
+        if label and label not in seen:
+            merged.append(row)
+            seen.add(label)
+    return merged
+
+
+def _write_interim_suite_status(path: Path, suite_results: list[dict[str, object]]) -> None:
+    pass_count = sum(1 for item in suite_results if item["status"] == "PASS")
+    warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
+    timeout_count = sum(1 for item in suite_results if item["status"] == "TIMEOUT")
+    fail_count = sum(1 for item in suite_results if item["status"] == "FAIL")
+    payload = {
+        "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "effective_success": all(bool(item["effective_success"]) for item in suite_results),
+        "counts": {
+            "pass": pass_count,
+            "warn": warn_count,
+            "timeout": timeout_count,
+            "fail": fail_count,
+        },
+        "results": suite_results,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run all available Trinity systems")
     parser.add_argument(
@@ -1266,11 +1559,12 @@ def main() -> None:
     )
     parser.add_argument(
         "--profile",
-        choices=("standard", "quick", "deep", "collab", "materialize"),
+        choices=("standard", "quick", "deep", "collab", "materialize", "recover"),
         default="deep",
         help=(
             "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), collab (standard + verified MCP refresh), "
-            "materialize (standard + disposable staging write tracers), deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
+            "materialize (standard + disposable staging write tracers), recover (low-pressure validators + v12 recovery gates), "
+            "deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
         ),
     )
     parser.add_argument(
@@ -1364,6 +1658,16 @@ def main() -> None:
         default=str(STATUS_JSON.relative_to(ROOT)),
         help="Path to write machine-readable suite status JSON (relative to repo root).",
     )
+    parser.add_argument(
+        "--resume-failed-only",
+        action="store_true",
+        help="Replay only failed or timed-out steps from a prior suite status file.",
+    )
+    parser.add_argument(
+        "--resume-from-status",
+        default="",
+        help="Replay commands from a specific prior suite status JSON (relative to repo root unless absolute).",
+    )
     args = parser.parse_args()
 
     if args.list_profiles:
@@ -1380,6 +1684,17 @@ def main() -> None:
         status_json_path.relative_to(ROOT)
     except ValueError as exc:
         raise SystemExit("--status-json must remain within repository root") from exc
+
+    resume_status_path: Path | None = None
+    if args.resume_from_status:
+        candidate = Path(args.resume_from_status)
+        resume_status_path = candidate if candidate.is_absolute() else (ROOT / candidate).resolve()
+        if not resume_status_path.exists():
+            raise SystemExit(f"--resume-from-status not found: {resume_status_path}")
+    elif args.resume_failed_only:
+        resume_status_path = status_json_path if status_json_path.exists() else STATUS_JSON
+        if not resume_status_path.exists():
+            raise SystemExit("no suite status file available for --resume-failed-only")
 
     (
         profile,
@@ -1414,6 +1729,23 @@ def main() -> None:
         body_benchmark_mode=body_benchmark_mode,
         materialization_level=args.materialization_level,
     )
+    resumed_step_count = 0
+    recovery_parent_run = ""
+    recovery_mode = "disabled"
+    resume_baseline_results: list[dict[str, object]] = []
+    if resume_status_path is not None:
+        commands, resumed_step_count, resume_baseline_results = _load_resume_commands(
+            resume_status_path,
+            failed_only=args.resume_failed_only,
+            current_fail_on_warn=args.fail_on_warn,
+        )
+        try:
+            recovery_parent_run = str(resume_status_path.relative_to(ROOT)).replace("\\", "/")
+        except ValueError:
+            recovery_parent_run = str(resume_status_path)
+        recovery_mode = "resume_failed_only" if args.resume_failed_only else "resume_from_status"
+    elif profile == "recover":
+        recovery_mode = "recover_profile"
     mcp_catalog_path = ROOT / TRINITY_MCP_CATALOG_PATH
     verified_mcp_connectors: list[str] = []
     eligible_live_write_connectors: list[str] = []
@@ -1537,7 +1869,16 @@ def main() -> None:
     suite_results: list[dict[str, object]] = []
 
     for label, cmd in commands:
-        ok, output, timed_out, duration_sec, started_at, finished_at = run_command(cmd, args.step_timeout_sec)
+        effective_cmd = list(cmd)
+        if label == "trinity mandala scoreboard":
+            interim_results = suite_results
+            if resume_baseline_results:
+                interim_results = _merge_resume_results(resume_baseline_results, suite_results)
+            _write_interim_suite_status(status_json_path, interim_results)
+            status_arg = str(status_json_path.relative_to(ROOT)).replace("\\", "/")
+            if "--suite-status" not in effective_cmd:
+                effective_cmd.extend(["--suite-status", status_arg])
+        ok, output, timed_out, duration_sec, started_at, finished_at = run_command(effective_cmd, args.step_timeout_sec)
         status, counted_success = classify_status(
             label=label,
             ok=ok,
@@ -1545,7 +1886,7 @@ def main() -> None:
             output=output,
             soft_fail_network=soft_fail_network,
         )
-        command_str = shlex.join(cmd)
+        command_str = shlex.join(effective_cmd)
         suite_results.append(
             {
                 "label": label,
@@ -1569,6 +1910,9 @@ def main() -> None:
         lines.append(output[:8000])
         lines.append("```")
         lines.append("")
+
+    if resume_baseline_results:
+        suite_results = _merge_resume_results(resume_baseline_results, suite_results)
 
     pass_count = sum(1 for item in suite_results if item["status"] == "PASS")
     warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
@@ -1595,6 +1939,8 @@ def main() -> None:
         "current_session_surface",
         _read_status_value("docs/logs/system-wake-v1.json", "current_session_surface", {}),
     )
+    dirty_tree_state = _dirty_tree_state()
+    storage_prune_delta_mb = _storage_prune_delta_mb()
     connector_hardening_state = _read_status_value("docs/trinity-expansion/connector-materialization-gate-latest.json", "overall_status", "FAIL")
     autonomy_mode = "bounded_manual" if profile != "materialize" else "bounded_materialize"
     knowledge_graph_state = _read_status_value("docs/trinity-expansion/code-knowledge-graph-gate-latest.json", "overall_status", "FAIL")
@@ -1690,6 +2036,11 @@ def main() -> None:
         "identity_authority_state": identity_authority_state,
         "memory_mirror_state": memory_mirror_state,
         "late_step_autonomy_state": late_step_autonomy_state,
+        "recovery_parent_run": recovery_parent_run,
+        "recovery_mode": recovery_mode,
+        "dirty_tree_state": dirty_tree_state,
+        "storage_prune_delta_mb": round(storage_prune_delta_mb, 2),
+        "resumed_step_count": resumed_step_count,
         "config": {
             "step_timeout_sec": args.step_timeout_sec,
             "profile": profile,
@@ -1713,6 +2064,8 @@ def main() -> None:
             "quick_mode": profile == "quick",
             "body_benchmark_mode": body_benchmark_mode,
             "include_body_benchmark": body_benchmark_mode != "off",
+            "resume_failed_only": args.resume_failed_only,
+            "resume_from_status": recovery_parent_run,
         },
         "results": suite_results,
     }

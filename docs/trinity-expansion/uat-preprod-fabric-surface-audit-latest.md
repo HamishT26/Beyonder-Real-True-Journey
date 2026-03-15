@@ -1,34 +1,11 @@
-# Trinity Expansion Result: uat_preprod_fabric_surface_audit
-
-- generated_utc: `2026-03-12T12:31:22+00:00`
-- pillar: `body`
-- overall_status: **PASS**
-- effective_success: `True`
-
-## Checks
-| name | status | detail |
-|---|---|---|
-| pack_contract_present | PASS | docs/uat-preprod-fabric-contract-v1.json |
-| pack_fixture_present | PASS | docs/uat-preprod-fabric-fixture-v1.json |
-| pack_workflow_present | PASS | docs/uat-preprod-fabric-workflow-v1.md |
-| pack_catalog_entry_present | PASS | docs/uat-preprod-fabric-catalog-entry-v1.json |
-| manifest_pack_system_count | PASS | pack=uat_preprod_fabric |
-| extension_catalog_pack_count | PASS | extensions=12 |
-
-## Metrics
-```json
-{
-  "extension_count": 12,
-  "gating_class": "active",
-  "pack": "uat_preprod_fabric",
-  "strategy": "local_repo"
-}
-```
-
-## Repo targets touched
-- `docs/trinity-materialization-ladder-v1.json`
-- `docs/trinity-uat-preprod-targets-v1.json`
-- `docs/uat-preprod-fabric-catalog-entry-v1.json`
-- `docs/uat-preprod-fabric-contract-v1.json`
-- `docs/uat-preprod-fabric-fixture-v1.json`
-- `docs/uat-preprod-fabric-workflow-v1.md`
+sh_reporter.cc:129] Crash handler launched and ready.
+[8344:14844:0315/162013.884:VERBOSE1:chrome\updater\crash_client.cc:108] Found 0 completed crash reports
+[8344:14844:0315/162013.884:VERBOSE1:chrome\updater\crash_client.cc:132] Found 0 pending crash reports
+[8344:14844:0315/162013.884:VERBOSE2:chrome\updater\usage_stats_permissions_win.cc:77] usage stats enabled by app {06a8089e-0b65-445d-b5c4-10b0d1b540f2}
+[8344:14844:0315/162013.886:VERBOSE1:chrome\updater\updater.cc:106] Crash reporting initialized.
+[8344:14844:0315/162013.888:VERBOSE1:chrome\updater\updater.cc:156] IsUserAdmin: 0, IsUserNonElevatedAdmin: 1, IsUACOn: 1, IsElevatedWithUACOn: 0, LUA: 1
+[8344:14844:0315/162013.888:VERBOSE2:chrome\updater\app\app_server.cc:59] ModeCheck
+[8344:14844:0315/162013.890:VERBOSE2:chrome\updater\prefs.cc:89] CreateGlobalPrefsInternal
+[8344:14844:0315/162013.890:VERBOSE1:chrome\updater\prefs.cc:137] UpdaterPrefsImpl (global): C:\Users\hamis\AppData\Local\Google\GoogleUpdater
+[8344:14844:0315/162013.890:VERBOSE2:chrome\updater\app\app_server.cc:72] This version: 147.0.7703.0, active version: 147.0.7703.0
+[8344:14844:0315/162

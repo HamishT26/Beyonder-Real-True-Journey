@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-REGISTRY_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v2.json"
+REGISTRY_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v3.json"
 REPORT_PATH = ROOT / "docs" / "trinity-memory-bank-sync-latest.json"
 OUTPUT_JSON = ROOT / "docs" / "trinity-memory-bank-validation-latest.json"
 OUTPUT_MD = ROOT / "docs" / "trinity-memory-bank-validation-latest.md"
@@ -101,6 +101,20 @@ def main() -> int:
         for field in ("retention_class", "archive_upload_state", "cloud_capacity_class", "last_archive_verified_utc"):
             if field not in row:
                 errors.append(f"{row.get('surface', 'unknown')} missing {field}")
+    for field in ("retained_snapshot_count", "prune_policy_applied_at", "storage_pressure_class"):
+        if field not in registry:
+            errors.append(f"registry missing {field}")
+    storage_pressure = registry.get("storage_pressure", {}) if isinstance(registry, dict) else {}
+    if isinstance(storage_pressure, dict):
+        free_gib = float(storage_pressure.get("free_gib", 0.0) or 0.0)
+        if free_gib < 2:
+            warnings.append(f"local free space critically low: {free_gib} GiB")
+        elif free_gib < 10:
+            warnings.append(f"local free space in watch band: {free_gib} GiB")
+    if int(registry.get("retained_snapshot_count", 0) or 0) < 1:
+        errors.append("at least one retained memory-bank snapshot is required")
+    if not str(registry.get("prune_policy_applied_at") or "").strip():
+        warnings.append("prune_policy_applied_at is empty; latest prune may not have been rerun yet")
 
     status = "PASS"
     if errors:

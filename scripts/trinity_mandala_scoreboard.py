@@ -120,7 +120,10 @@ def _artifact_status(label: str, path: str) -> ArtifactStatus:
     file_path = _repo_path(path)
     if not file_path.exists():
         return ArtifactStatus(label=label, path=path, status="FAIL", detail="missing artifact")
-    payload = _read_json(file_path)
+    try:
+        payload = _read_json(file_path)
+    except Exception as exc:  # noqa: BLE001
+        return ArtifactStatus(label=label, path=path, status="FAIL", detail=f"invalid_json={exc}")
     return ArtifactStatus(
         label=label,
         path=path,
@@ -153,12 +156,13 @@ def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, s
 
 
 def _non_gating_warn_block(block: dict[str, object]) -> bool:
-    if str(block.get("label") or "") != "Google Drive MCP activation v11":
+    label = str(block.get("label") or "")
+    if label not in {"Google Drive MCP activation v11", "Google Drive hold guard v12"}:
         return False
     if str(block.get("status") or "") != "WARN":
         return False
     payload = _read_json(_repo_path(str(block.get("path"))))
-    return str(payload.get("fallback_mode") or "") == "memory_bank_archive_only"
+    return str(payload.get("fallback_mode") or "") in {"memory_bank_archive_only", "operator_hold"} or bool(payload.get("operator_hold"))
 
 
 def _pillar_status(name: str, artifacts: Iterable[ArtifactStatus]) -> dict[str, object]:
@@ -406,6 +410,21 @@ def main() -> int:
         asdict(_artifact_status("New project workbench gate v11", "docs/trinity-expansion/new-project-workbench-v11-gate-latest.json")),
         asdict(_artifact_status("V12 roadmap gate v11", "docs/trinity-expansion/v12-roadmap-v11-gate-latest.json")),
         asdict(_artifact_status("Workbench link v11", "docs/trinity-new-project-workbench-link-v2.json")),
+        asdict(_artifact_status("Memory bank registry v12", "docs/trinity-memory-bank-registry-v3.json")),
+        asdict(_artifact_status("Storage prune governor gate v12", "docs/trinity-expansion/storage-prune-governor-v12-gate-latest.json")),
+        asdict(_artifact_status("Artifact retention rebuild gate v12", "docs/trinity-expansion/artifact-retention-rebuild-v12-gate-latest.json")),
+        asdict(_artifact_status("Docker runtime truth gate v12", "docs/trinity-expansion/docker-runtime-truth-v12-gate-latest.json")),
+        asdict(_artifact_status("Google Drive hold guard v12", "docs/trinity-expansion/google-drive-hold-guard-v12-gate-latest.json")),
+        asdict(_artifact_status("Council continuity wellbeing gate v12", "docs/trinity-expansion/council-continuity-wellbeing-v12-gate-latest.json")),
+        asdict(_artifact_status("Journey log absorption gate v12", "docs/trinity-expansion/journey-log-absorption-v12-gate-latest.json")),
+        asdict(_artifact_status("Public source refresh gate v12", "docs/trinity-expansion/public-source-refresh-v12-gate-latest.json")),
+        asdict(_artifact_status("GMUT research fabric gate v12", "docs/trinity-expansion/gmut-research-fabric-v12-gate-latest.json")),
+        asdict(_artifact_status("Freed ID governance fabric gate v12", "docs/trinity-expansion/freedid-governance-fabric-v12-gate-latest.json")),
+        asdict(_artifact_status("Trinity control tower gate v12", "docs/trinity-expansion/trinity-control-tower-v12-gate-latest.json")),
+        asdict(_artifact_status("API surface book gate v12", "docs/trinity-expansion/api-surface-book-v12-gate-latest.json")),
+        asdict(_artifact_status("Storage posture summary v12", "docs/trinity-storage-posture-summary-v12.json")),
+        asdict(_artifact_status("API book validation v12", "docs/trinity-api-book-validation-latest.json")),
+        asdict(_artifact_status("Workbench link v12", "docs/trinity-new-project-workbench-link-v3.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 
@@ -419,10 +438,14 @@ def main() -> int:
         if _severity(str(block["status"])) > _severity(hybrid_status):
             hybrid_status = str(block["status"])
 
+    overall_status = hybrid_status
+    if _severity(suite_status) > _severity(overall_status):
+        overall_status = suite_status
+
     payload = {
         "generated_utc": generated_utc,
-        "overall_status": hybrid_status,
-        "hybrid_os_status": hybrid_status,
+        "overall_status": overall_status,
+        "hybrid_os_status": overall_status,
         "suite_status": suite_status,
         "suite_detail": suite_detail,
         "pillars": {
@@ -454,13 +477,13 @@ def main() -> int:
     latest_json.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     latest_md.write_text(markdown, encoding="utf-8")
 
-    print(f"hybrid_os_status={hybrid_status}")
+    print(f"hybrid_os_status={overall_status}")
     print(f"timestamped_json={timestamped_json.relative_to(ROOT)}")
     print(f"timestamped_md={timestamped_md.relative_to(ROOT)}")
     print(f"latest_json={latest_json.relative_to(ROOT)}")
     print(f"latest_md={latest_md.relative_to(ROOT)}")
 
-    if args.fail_on_warn and hybrid_status != "PASS":
+    if args.fail_on_warn and overall_status != "PASS":
         return 1
     return 0
 
