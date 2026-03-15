@@ -1,9 +1,10 @@
 # Trinity Control Tower
 
-- storage_state: `bounded_cloud_candidate`
-- google_drive_state: `staged_with_blockers`
+- storage_state: `balanced_prune_ready`
+- google_drive_state: `deferred_by_operator`
 - council_continuity_state: `PASS`
 - command_surface_state: `PASS`
+- api_surface_state: `PASS`
 - materialization_level_actual: `persistent_dev`
-- mind_evidence_posture: `bounded_refresh_only`
-- heart_evidence_posture: `bounded_refresh_only`
+- mind_evidence_posture: `public_refresh_bounded`
+- heart_evidence_posture: `public_refresh_bounded`

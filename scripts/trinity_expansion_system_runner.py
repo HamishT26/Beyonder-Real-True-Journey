@@ -21,10 +21,10 @@ from trinity_api_common import fetch_json, fetch_text, quote_plus
 from trinity_v6_support import run_v6_system
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v11.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v12.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v9.json"
-DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v9.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v10.json"
+DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v10.json"
 DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
@@ -564,6 +564,8 @@ def _connector_state_satisfies(expected: str, actual: str, status: str) -> bool:
     status_text = str(status or "").strip()
     if not expected_text:
         return True
+    if actual_text == "operator_hold":
+        return status_text == "staged_setup_gate"
     if status_text == expected_text or actual_text == expected_text:
         return True
     if status_text.startswith(expected_text) or actual_text.startswith(expected_text):
@@ -2726,7 +2728,7 @@ sandbox = \"elevated\"
         return {
             "checks": checks,
             "metrics": {"boundary_count": len(boundaries), "boundaries": boundaries},
-            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", "docs/trinity-expansion-system-manifest-v11.json", DEFAULT_MCP_CATALOG]),
+            "targets": _collect_targets(["docs/trinity-api-source-manifest-v1.json", DEFAULT_MANIFEST.relative_to(ROOT).as_posix(), DEFAULT_MCP_CATALOG]),
             "next_action": "Keep trust boundaries explicit before expanding connectivity or authority.",
             "records": None,
             "source_runs": None,
@@ -2739,7 +2741,7 @@ sandbox = \"elevated\"
         checks = [
             _check("profile_modes_present", "PASS" if all(token in run_all_text for token in ['\"standard\"', '\"quick\"', '\"deep\"', '\"collab\"', '\"materialize\"']) else "FAIL", "standard/quick/deep/collab/materialize expected"),
             _check("offline_only_present", "PASS" if "--offline-only" in run_all_text else "FAIL", "offline override required"),
-            _check("manifest_default_present", "PASS" if "trinity-expansion-system-manifest-v11.json" in run_all_text else "FAIL", "run_all should target v11 manifest"),
+            _check("manifest_default_present", "PASS" if DEFAULT_MANIFEST.relative_to(ROOT).as_posix() in run_all_text else "FAIL", f"run_all should target {DEFAULT_MANIFEST.relative_to(ROOT).as_posix()}"),
             _check("live_write_flag_present", "PASS" if "--include-live-writes" in run_all_text else "FAIL", "materialize profile requires explicit write tracer flag support"),
         ]
         return {

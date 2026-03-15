@@ -25,12 +25,13 @@ from trinity_zip_memory_converter import DEFAULT_ARCHIVE_DIR, DEFAULT_INDEX, arc
 
 ROOT = Path(__file__).resolve().parent.parent
 WORKBENCH_ROOT = Path(r"C:\Users\hamis\OneDrive\Documents\New project")
-REGISTRY_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v2.json"
+REGISTRY_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v3.json"
 REPORT_JSON_PATH = ROOT / "docs" / "trinity-memory-bank-sync-latest.json"
 REPORT_MD_PATH = ROOT / "docs" / "trinity-memory-bank-sync-latest.md"
-PLAYBOOK_PATH = ROOT / "docs" / "trinity-memory-bank-playbook-v2.md"
+PLAYBOOK_PATH = ROOT / "docs" / "trinity-memory-bank-playbook-v3.md"
 DRIVE_LEDGER_PATH = ROOT / "docs" / "trinity-drive-archive-ledger.jsonl"
 WORKBENCH_MIRROR_PATH = WORKBENCH_ROOT / "memory-bank" / "latest-sync-summary.json"
+GOOGLE_POLICY_PATH = ROOT / "docs" / "trinity-google-drive-sync-policy-v1.json"
 
 ARCHIVE_SOURCES = [
     "docs/system-suite-status.json",
@@ -103,6 +104,16 @@ def write_text(path: Path, content: str) -> None:
 
 def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def google_drive_operator_hold() -> bool:
+    if not GOOGLE_POLICY_PATH.exists():
+        return False
+    try:
+        payload = load_json(GOOGLE_POLICY_PATH)
+    except Exception:  # pragma: no cover - defensive
+        return False
+    return bool(payload.get("operator_hold"))
 
 
 def probe_git() -> dict[str, Any]:
@@ -199,15 +210,27 @@ def build_registry(
     drive_result: dict[str, Any],
     upload_attempted: bool,
     docker_copy: dict[str, Any],
+    operator_hold: bool,
 ) -> dict[str, Any]:
     disk = shutil.disk_usage(ROOT)
     free_gib = round(disk.free / (1024**3), 2)
     total_gib = round(disk.total / (1024**3), 2)
     archive_bytes = archive_path.stat().st_size if archive_path.exists() else 0
+    prune_report_path = ROOT / "docs" / "trinity-storage-prune-latest.json"
+    prune_applied_at = ""
+    if prune_report_path.exists():
+        try:
+            prune_applied_at = str(load_json(prune_report_path).get("generated_utc") or "")
+        except Exception:  # noqa: BLE001
+            prune_applied_at = ""
     drive_status = "staged_with_blockers"
     drive_notes = "Deferred until bounded auth, privacy, and sync proof are available."
     drive_blockers = ["google drive auth not configured"]
-    if upload_attempted and drive_result.get("uploaded"):
+    if operator_hold:
+        drive_status = "staged_with_blockers"
+        drive_notes = "Deferred by operator for v12."
+        drive_blockers = ["google drive activation deferred by operator"]
+    elif upload_attempted and drive_result.get("uploaded"):
         drive_status = "live_archive_mirror"
         drive_notes = "Bounded archive uploaded via explicit Google Drive token flow."
         drive_blockers = []
@@ -219,7 +242,10 @@ def build_registry(
     overall_status = "PASS" if git_state["reachable"] else "WARN"
     registry = {
         "generated_utc": now_iso(),
-        "version": "v2",
+        "version": "v3",
+        "retained_snapshot_count": min(len(list((ROOT / "docs" / "memory-archives").glob("*.zip"))), 3),
+        "prune_policy_applied_at": prune_applied_at,
+        "storage_pressure_class": "watch" if free_gib < 10 else "healthy",
         "overall_status": overall_status,
         "authority_model": "repo_first",
         "storage_pressure": {
@@ -269,7 +295,7 @@ def build_registry(
                 "surface": "postgres",
                 "status": "live_query_store" if docker_state["postgres_ready"] else "blocked",
                 "capacity_class": "docker_volume",
-                "notes": "Operational state, synthetic mesh, chat indexes, and queryable summaries.",
+                "notes": "Operational state, synthetic mesh, chat indexes, and queryable summaries. Runtime truth follows direct local probes rather than broader suite pass state.",
                 "live_checked_at": now_iso(),
                 "reachable": docker_state["postgres_ready"],
                 "latest_artifact": "trinity-v5-pg-proof",
@@ -284,7 +310,7 @@ def build_registry(
                 "surface": "docker",
                 "status": "live_runtime_storage" if docker_state["docker_available"] else "blocked",
                 "capacity_class": "local_container_volume",
-                "notes": "Runtime substrate for Postgres and bounded simulations.",
+                "notes": "Runtime substrate for Postgres and bounded simulations. Runtime truth follows direct local probes rather than broader suite pass state.",
                 "live_checked_at": now_iso(),
                 "reachable": docker_state["docker_available"],
                 "latest_artifact": docker_copy.get("target", ""),
@@ -348,10 +374,10 @@ def build_registry(
                 "live_checked_at": now_iso(),
                 "reachable": bool(drive_result.get("uploaded")),
                 "latest_artifact": drive_result.get("file_id", ""),
-                "proof_state": "drive_uploaded" if drive_result.get("uploaded") else "drive_not_connected",
+                "proof_state": "operator_hold" if operator_hold else ("drive_uploaded" if drive_result.get("uploaded") else "drive_not_connected"),
                 "blockers": drive_blockers,
                 "retention_class": "archive_only",
-                "archive_upload_state": "uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if upload_attempted else "staged"),
+                "archive_upload_state": "deferred_by_operator" if operator_hold else ("uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if upload_attempted else "staged")),
                 "cloud_capacity_class": "cloud_archive",
                 "last_archive_verified_utc": now_iso() if drive_result.get("uploaded") else "",
             },
@@ -402,12 +428,15 @@ def main() -> int:
     archive_path = create_archive(args.label, ARCHIVE_SOURCES, DEFAULT_ARCHIVE_DIR, DEFAULT_INDEX)
     git_state = probe_git()
     docker_state = probe_docker()
+    operator_hold = google_drive_operator_hold()
     drive_token = os.getenv("GOOGLE_DRIVE_ACCESS_TOKEN", "").strip()
     drive_folder_id = os.getenv("GOOGLE_DRIVE_FOLDER_ID", "").strip()
 
     drive_result: dict[str, Any] = {"uploaded": False, "blockers": []}
     if args.upload_google_drive:
-        if not drive_token:
+        if operator_hold:
+            drive_result["blockers"] = ["google drive activation deferred by operator"]
+        elif not drive_token:
             drive_result["blockers"] = ["GOOGLE_DRIVE_ACCESS_TOKEN not set"]
         else:
             try:
@@ -442,6 +471,7 @@ def main() -> int:
         drive_result=drive_result,
         upload_attempted=args.upload_google_drive,
         docker_copy=docker_copy,
+        operator_hold=operator_hold,
     )
     write_json(REGISTRY_PATH, registry)
 
@@ -467,7 +497,7 @@ def main() -> int:
                 "timestamp": now_iso(),
                 "archive_path": path_to_repo_string(archive_path),
                 "target_surface": "google_drive",
-                "result": "uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if args.upload_google_drive else "staged"),
+                "result": "operator_hold" if operator_hold else ("uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if args.upload_google_drive else "staged")),
                 "bytes": archive_path.stat().st_size if archive_path.exists() else 0,
                 "rollback_state": "delete archive object" if drive_result.get("uploaded") else "no remote archive written",
             }
@@ -481,7 +511,7 @@ def main() -> int:
         "- Repo remains authoritative for certificates, ledgers, reflections, commands, and official state.\n"
         "- GitHub is the current proven off-device mirror surface.\n"
         "- Docker/Postgres are bounded runtime mirrors, not authority.\n"
-        "- Google Drive is archive-only and bounded even when upload is available.\n\n"
+        "- Google Drive is deferred in v12 unless the operator explicitly lifts the hold.\n\n"
         "## Official references\n"
         f"- Google Drive files.create: {OFFICIAL_SOURCES['google_drive_api']}\n"
         f"- Google Drive uploads guide: {OFFICIAL_SOURCES['google_drive_uploads']}\n"

@@ -1,38 +1,5 @@
-# Trinity Expansion Result: benchmark_refresh_v7_materialization_tracer
-
-- generated_utc: `2026-03-12T12:31:50+00:00`
-- pillar: `trinity`
-- overall_status: **PASS**
-- effective_success: `True`
-
-## Checks
-| name | status | detail |
-|---|---|---|
-| proof_written | PASS | docs/trinity-live-traces/benchmark-refresh-v7-proof-v1.json |
-| ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=not_applicable |
-| blockers_recorded | PASS | blockers=0 |
-
-## Metrics
-```json
-{
-  "actual_state": "active",
-  "attempted_write": false,
-  "blocker_count": 0,
-  "connector_id": "",
-  "desired_state": "active",
-  "include_live_writes": true,
-  "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
-  "mode": "not_applicable",
-  "pack": "benchmark_refresh_v7",
-  "profile_context": "materialize",
-  "tracer_result": "SKIP"
-}
-```
-
-## Repo targets touched
-- `docs/trinity-benchmark-refresh-v7-board-latest.json`
-- `docs/trinity-benchmark-registry-v1.json`
-- `docs/trinity-live-traces/benchmark-refresh-v7-proof-v1.json`
-- `docs/trinity-materialization-ledger.jsonl`
+ available: 833M, total: 11752M, phys: 4G
+[1300:16800:0315/005538.521:VERBOSE2:chrome\updater\event_history.cc:231] Emitted a UPDATER_PROCESS START event to the history log
+[15456:15212:0315/005619.549:VERBOSE1:chrome\updater\updater.cc:432] Version: 147.0.7703.0, opt, x86_64, command line: C:\Users\hamis\AppData\Local\Google\GoogleUpdater\147.0.7703.0\updater.exe --crash-handler --database=C:\Users\hamis\AppData\Local\Google\GoogleUpdater\147.0.7703.0\Crashpad --url=https://clients2.google.com/cr/report --annotation=prod=Update4 --annotation=ver=147.0.7703.0 --attachment=C:\Users\hamis\AppData\Local\Google\GoogleUpdater\updater.log --attachment=C:\Users\hamis\AppData\Local\Google\GoogleUpdater\updater_history.jsonl --initial-client-data=0x28c,0x290,0x294,0x268,0x298,0x7ff7c19b4274,0x7ff7c19b4280,0x7ff7c19b4290
+[15456:15212:0315/005619.869:VERBOSE1:chrome\updater\updater.cc:435] OS version: 10.0.26200.8037, arch: x86_64, System uptime (seconds): 47066, parent pid: 1300
+[15456:15212:0315/005620.453:VERBOSE1:chrome\updater\updater.cc:444] Parent process command line: "C:\Users\hamis\AppData\Local\Google\GoogleUpdater\147.0.7703.0\u
