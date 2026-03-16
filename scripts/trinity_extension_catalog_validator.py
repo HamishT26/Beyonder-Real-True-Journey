@@ -47,9 +47,9 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity extension and MCP catalogs.")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v12.json")
-    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v10.json")
-    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v10.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v13.json")
+    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v11.json")
+    parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v11.json")
     parser.add_argument("--reports-dir", default="docs/trinity-extension-catalog-runs")
     parser.add_argument("--latest-json", default="docs/trinity-extension-catalog-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-extension-catalog-validation-latest.md")
@@ -80,8 +80,8 @@ def main() -> int:
     if not isinstance(extension_rows, list):
         failures.append("extension catalog extensions must be a list")
         extension_rows = []
-    if isinstance(extension_rows, list) and len(extension_rows) != 1284:
-        failures.append(f"extension catalog expected 1284 entries, found {len(extension_rows)}")
+    if isinstance(extension_rows, list) and len(extension_rows) != 1392:
+        failures.append(f"extension catalog expected 1392 entries, found {len(extension_rows)}")
 
     extension_ids: set[str] = set()
     pack_counts: dict[str, dict[str, int]] = {}
@@ -90,7 +90,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{label} must be an object")
             continue
-        for field in ("extension_id", "extension_kind", "pack", "status", "source_of_truth", "live_dependency", "history_scope", "mirror_target", "autonomy_class", "command_surface", "materialization_dependency", "authority_class", "executor_role", "authority_scope", "induction_dependency", "mirror_surface", "privacy_class", "synthetic_mesh_dependency", "authority_surface", "workbench_dependency", "induction_effect", "storage_dependency", "archive_scope", "workbench_surface", "retention_dependency", "public_source_only", "continuity_scope"):
+        for field in ("extension_id", "extension_kind", "pack", "status", "source_of_truth", "live_dependency", "history_scope", "mirror_target", "autonomy_class", "command_surface", "materialization_dependency", "authority_class", "executor_role", "authority_scope", "induction_dependency", "mirror_surface", "privacy_class", "synthetic_mesh_dependency", "authority_surface", "workbench_dependency", "induction_effect", "storage_dependency", "archive_scope", "workbench_surface", "retention_dependency", "public_source_only", "continuity_scope", "historical_reconstruction", "supplemental_only", "api_surface_binding"):
             if field not in entry:
                 failures.append(f"{label} missing field: {field}")
         extension_id = str(entry.get("extension_id") or "").strip()

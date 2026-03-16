@@ -43,7 +43,13 @@ def _tracked_paths() -> set[Path]:
         line = line.strip()
         if not line:
             continue
-        paths.add((ROOT / line).resolve())
+        candidate = ROOT / line
+        try:
+            paths.add(candidate.resolve())
+        except OSError:
+            # Keep unreadable tracked paths from collapsing the recycler. We
+            # only need enough fidelity to avoid purging known tracked paths.
+            paths.add(candidate)
     return paths
 
 def _collect(paths_or_globs: list[str]) -> list[Path]:

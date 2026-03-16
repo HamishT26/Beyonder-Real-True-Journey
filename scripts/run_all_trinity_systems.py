@@ -25,11 +25,11 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
     "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
-    "recover": "Low-pressure recovery profile that validates v12 structure, continuity, storage truth, and scoreboard state.",
+    "recover": "Low-pressure recovery profile that validates v13 canon, continuity, reconstruction, storage truth, and scoreboard state.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v12.json"
-TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v10.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v13.json"
+TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v11.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
 
@@ -240,6 +240,28 @@ def _api_book_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     return f"trinity api book validation ({mode})", command
 
 
+def _gmut_canon_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/grand_mandala_canon_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"gmut canon validation ({mode})", command
+
+
+def _legacy_reconstruction_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/legacy_reconstruction_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"legacy reconstruction validation ({mode})", command
+
+
 def _memory_bank_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
@@ -431,29 +453,25 @@ def build_commands(
     if profile == "recover":
         enforce = True
         recover_gate_ids = [
-            "storage_prune_governor_v12_surface_audit",
-            "storage_prune_governor_v12_gate",
-            "artifact_retention_rebuild_v12_surface_audit",
-            "artifact_retention_rebuild_v12_gate",
-            "docker_runtime_truth_v12_surface_audit",
-            "docker_runtime_truth_v12_gate",
-            "google_drive_hold_guard_v12_surface_audit",
-            "google_drive_hold_guard_v12_gate",
-            "council_continuity_wellbeing_v12_surface_audit",
-            "council_continuity_wellbeing_v12_gate",
-            "journey_log_absorption_v12_surface_audit",
-            "journey_log_absorption_v12_gate",
-            "public_source_refresh_v12_surface_audit",
-            "public_source_refresh_v12_gate",
-            "gmut_research_fabric_v12_surface_audit",
-            "gmut_research_fabric_v12_gate",
-            "freedid_governance_fabric_v12_surface_audit",
-            "freedid_governance_fabric_v12_gate",
-            "trinity_control_tower_v12_surface_audit",
-            "trinity_control_tower_v12_gate",
-            "api_surface_book_v12_sync_bridge",
-            "api_surface_book_v12_surface_audit",
-            "api_surface_book_v12_gate",
+            "canonical_gmut_latex_v13_surface_audit",
+            "canonical_gmut_latex_v13_gate",
+            "mind_falsification_matrix_v13_surface_audit",
+            "mind_falsification_matrix_v13_gate",
+            "public_source_refresh_v13_surface_audit",
+            "public_source_refresh_v13_gate",
+            "heart_governance_alignment_v13_surface_audit",
+            "heart_governance_alignment_v13_gate",
+            "supplemental_reflection_bridge_v13_surface_audit",
+            "supplemental_reflection_bridge_v13_gate",
+            "legacy_module_inventory_v13_surface_audit",
+            "legacy_module_inventory_v13_gate",
+            "kairotic_body_reconstruction_v13_surface_audit",
+            "kairotic_body_reconstruction_v13_gate",
+            "api_surface_book_v13_sync_bridge",
+            "api_surface_book_v13_surface_audit",
+            "api_surface_book_v13_gate",
+            "trinity_control_tower_v13_surface_audit",
+            "trinity_control_tower_v13_gate",
         ]
 
         commands: list[tuple[str, list[str]]] = [
@@ -516,6 +534,16 @@ def build_commands(
             ),
             (
                 *_public_signal_board_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_gmut_canon_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_legacy_reconstruction_validation_command(
                     enforce=enforce,
                 ),
             ),
@@ -663,6 +691,22 @@ def build_commands(
     expansion_commands: list[tuple[str, list[str]]] = []
     if not quick_mode:
         expansion_commands = [
+            ("legacy analysis report v13", ["python3", "scripts/analysis_report.py"]),
+            ("legacy council registry v13", ["python3", "scripts/council_registry.py"]),
+            ("legacy semantic arc validator v13", ["python3", "scripts/semantic_arc_validator.py"]),
+            ("legacy kairotic detector v13", ["python3", "scripts/kairotic_detector.py"]),
+            ("legacy psi index memory core v13", ["python3", "scripts/psi_index_memory_core.py"]),
+            ("legacy trinity hybrid adapter v13", ["python3", "scripts/trinity_hybrid_adapter.py"]),
+            (
+                *_gmut_canon_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_legacy_reconstruction_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
             (
                 *_extension_catalog_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
@@ -1563,7 +1607,7 @@ def main() -> None:
         default="deep",
         help=(
             "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), collab (standard + verified MCP refresh), "
-            "materialize (standard + disposable staging write tracers), recover (low-pressure validators + v12 recovery gates), "
+            "materialize (standard + disposable staging write tracers), recover (low-pressure validators + v13 recovery gates), "
             "deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
         ),
     )

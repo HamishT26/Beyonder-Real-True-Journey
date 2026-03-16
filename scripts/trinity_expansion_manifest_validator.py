@@ -41,6 +41,9 @@ ALLOWED_TRACKS = {
     "council_induction",
     "control_tower",
     "workbench_surface",
+    "reflection_scope",
+    "public_intelligence",
+    "os_runtime",
 }
 ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate", "pack_gate"}
 
@@ -82,8 +85,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v12.json")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v12.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v13.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v13.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-manifest-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-manifest-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-expansion-manifest-validation-latest.md")
@@ -107,8 +110,8 @@ def main() -> int:
     if not isinstance(systems, list):
         failures.append("manifest.systems must be a list")
         systems = []
-    if isinstance(systems, list) and len(systems) != 722:
-        failures.append(f"manifest expected 722 systems, found {len(systems)}")
+    if isinstance(systems, list) and len(systems) != 776:
+        failures.append(f"manifest expected 776 systems, found {len(systems)}")
 
     seen_ids: set[str] = set()
     for index, entry in enumerate(systems):
@@ -116,7 +119,7 @@ def main() -> int:
         if not isinstance(entry, dict):
             failures.append(f"{row_label} must be an object")
             continue
-        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts", "pack", "phase", "activation_group", "continuity_band", "materialization_level", "authority_scope", "command_surface", "council_scope", "provisional_induction", "autonomy_track", "sync_surface", "induction_phase", "mesh_proof_mode", "proof_pass", "official_induction", "workbench_surface", "storage_surface", "cloud_archive_state", "continuity_posture", "cleanup_class", "retention_scope", "research_surface"):
+        for field in ("system_id", "pillar", "script", "mode", "profiles", "outputs", "depends_on", "timeout_sec", "wave", "track", "gate_level", "cache_artifacts", "pack", "phase", "activation_group", "continuity_band", "materialization_level", "authority_scope", "command_surface", "council_scope", "provisional_induction", "autonomy_track", "sync_surface", "induction_phase", "mesh_proof_mode", "proof_pass", "official_induction", "workbench_surface", "storage_surface", "cloud_archive_state", "continuity_posture", "cleanup_class", "retention_scope", "research_surface", "canon_surface", "historical_source_band", "evidence_posture"):
             if field not in entry:
                 failures.append(f"{row_label} missing field: {field}")
         system_id = str(entry.get("system_id") or "").strip()

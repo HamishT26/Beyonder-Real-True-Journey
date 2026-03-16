@@ -425,6 +425,18 @@ def main() -> int:
         asdict(_artifact_status("Storage posture summary v12", "docs/trinity-storage-posture-summary-v12.json")),
         asdict(_artifact_status("API book validation v12", "docs/trinity-api-book-validation-latest.json")),
         asdict(_artifact_status("Workbench link v12", "docs/trinity-new-project-workbench-link-v3.json")),
+        asdict(_artifact_status("Canonical GMUT gate v13", "docs/trinity-expansion/canonical-gmut-latex-v13-gate-latest.json")),
+        asdict(_artifact_status("Mind falsification matrix gate v13", "docs/trinity-expansion/mind-falsification-matrix-v13-gate-latest.json")),
+        asdict(_artifact_status("Public source refresh gate v13", "docs/trinity-expansion/public-source-refresh-v13-gate-latest.json")),
+        asdict(_artifact_status("Heart governance alignment gate v13", "docs/trinity-expansion/heart-governance-alignment-v13-gate-latest.json")),
+        asdict(_artifact_status("Supplemental reflection bridge gate v13", "docs/trinity-expansion/supplemental-reflection-bridge-v13-gate-latest.json")),
+        asdict(_artifact_status("Legacy module inventory gate v13", "docs/trinity-expansion/legacy-module-inventory-v13-gate-latest.json")),
+        asdict(_artifact_status("Kairotic body reconstruction gate v13", "docs/trinity-expansion/kairotic-body-reconstruction-v13-gate-latest.json")),
+        asdict(_artifact_status("API surface book gate v13", "docs/trinity-expansion/api-surface-book-v13-gate-latest.json")),
+        asdict(_artifact_status("Trinity control tower gate v13", "docs/trinity-expansion/trinity-control-tower-v13-gate-latest.json")),
+        asdict(_artifact_status("GMUT canon validation v13", "docs/v13-gmut-canon-validation-latest.json")),
+        asdict(_artifact_status("Legacy reconstruction validation v13", "docs/v13-legacy-reconstruction-validation-latest.json")),
+        asdict(_artifact_status("V13 verdict", "docs/v13-trinity-verdict-v1.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 
