@@ -1,61 +1,8 @@
-# Comparative Validation Grid v1
+# Comparative Validation Grid
 
-This grid compares the three Beyonder pillars against concrete mainstream paradigms and standards. It keeps current evidence posture separate from future verification work.
-
-| Pillar | Internal claim or system state | Comparator paradigms or standards | Validation criteria | Current evidence posture | Next verification step |
-| --- | --- | --- | --- | --- | --- |
-| Mind / GMUT | GMUT is a unified-reality hypothesis with explicit falsifiability intent, a claim register, and active external-anchor screening | String Theory; Loop Quantum Gravity; recent 2026 arXiv theory and quantum-gravity papers; current API-promoted testability signals such as Planck-scale gravitational-wave observables; CERN quantum-gravity testability signals; current fifth-force and precision-gravity anchors already referenced in-repo | Publish a parameter mapping, fit/error metric, uncertainty propagation, rejection threshold against anchor datasets, and a clear separation between active theory context and empirical support | Reproducible comparator and trace artifacts exist, the public-source corpus is current, and the new Mind API layer adds live promotion candidates without changing evidence posture; no public theory source closes the repo's present external-anchor overhang | Tighten the GMUT-005 mapping and publish a standards-first comparator note that links each claim to a dataset, metric, rejection rule, and prospective test class |
-| Body / Trinity OS | Trinity OS is a modular intelligence architecture with orchestration, validation, memory, suite-based quality control, a separate cached research layer, a collaboration/MCP layer with explicit proof boundaries, branch/page/schema-scoped materialization proofs, and a fixed public compute watchlist | Modular LLM-agent stacks; public engineering baselines such as `torvalds/linux`, `microsoft/autogen`, and `Qiskit/qiskit`; neuro-symbolic AI framing from `v32`; reproducibility and risk-management disciplines such as the [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework); current IBM, Google Quantum AI, and Quantinuum technical roadmaps | Demonstrate reproducible subsystem behavior, suite stability, documented guardrails, offline research validation, connector-boundary clarity, proof-backed collaboration/materialization paths, and a clear comparison between architectural claims and measured behavior | Repo evidence is strong for orchestration, validation discipline, collaboration-gate hygiene, and proof-bounded activation for GitHub/Notion/Postgres/Linear; the public technology corpus now includes a cached repo watchlist plus Crossref metadata for advisory maturity/risk context; there is still no external benchmark pack showing superiority over broader agent architectures or broader SaaS interoperability | Keep comparisons standards-first: publish architecture maturity, reproducibility, risk-control evidence, and connector-boundary proofs before pursuing broader external benchmark or interoperability claims |
-| Heart / Freed ID + Cosmic Bill | Freed ID is a rights-oriented identity and recourse system with minimum disclosure, auditability, control verification, dispute handling, DID-method verification, and an explicit NZ-plus-global comparison bridge | NZ public-law context from the Ministry of Justice, Treaty of Waitangi Act 1975, and Waitangi Tribunal signals; World Bank rule-of-law context; current NZ open-data Treaty-context datasets; [W3C DID Core](https://www.w3.org/TR/did-core/); [W3C VC Data Model 2.0](https://www.w3.org/TR/vc-data-model-2.0/); [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework); [OECD AI Principles](https://oecd.ai/en/ai-principles); [UDHR](https://www.un.org/en/about-us/universal-declaration-of-human-rights); [EU AI Act](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) | Show standards alignment for DID docs and verification methods, rights-preserving disclosure, auditability, recourse, NZ public-law awareness, measured governance context, and governance process evidence | Repo evidence is strong for prototype controls and verification artifacts, and the governance lane now has both a balanced NZ-plus-global standards bridge and cached public-governance context signals; adoption, interoperability, and legal-force evidence are still absent | Publish a control-to-standard mapping with an explicit NZ-plus-global bridge, keep measured governance context separate from legal-force claims, and continue extending registry-bound DID-method verification for GOV-004 and adjacent controls |
-
-## Governance alignment detail
-
-| Standard | Alignment in repo | Gap | Next implementation proof |
-| --- | --- | --- | --- |
-| NZ public-law context | The Heart lane now explicitly tracks the Ministry of Justice update on the Treaty Principles Bill, the Treaty of Waitangi Act 1975, and Waitangi Tribunal process signals as living governance context | No dedicated appendix yet maps repo controls and rights language to NZ public-law process boundaries | Add a short NZ public-law bridge note that states what the repo aligns with normatively and what remains outside legal adoption |
-| Waitangi Tribunal process context | The repo's recourse framing resonates with process, remedy, and institutional review themes better than with abstract doctrine alone | No Tribunal-specific process-to-control mapping exists, and there is no institutional uptake evidence | Add a recourse/process appendix showing how dispute artifacts relate to review, remedy, and evidence retention |
-| [W3C DID Core](https://www.w3.org/TR/did-core/) | `freed_id_registry.py` now resolves DID documents and verification methods in a DID-like structure | No production DID method publication or interoperability test pack yet | Add documented method-resolution examples and compatibility notes for registry-bound verification methods |
-| [W3C VC Data Model 2.0](https://www.w3.org/TR/vc-data-model-2.0/) | Minimum-disclosure presentation flow exists and is audited in GOV-002 artifacts | Credential model is still a simplified in-repo structure, not a full VC data model implementation | Add an explicit mapping from current credential/presentation records to VC fields and proof semantics |
-| [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework) | Trinity suite discipline already emphasizes measurement, guardrails, and failure visibility | Governance, measurement, and external reporting are not yet packaged as RMF-aligned evidence | Publish a Trinity control matrix that maps current suite stages to govern / map / measure / manage functions |
-| [OECD AI Principles](https://oecd.ai/en/ai-principles) | Freed ID and Cosmic Bill framing emphasize human-centered rights and accountability | No formal policy package yet ties those principles to executable controls | Expand the governance matrix with explicit principle-to-control links |
-| [UDHR](https://www.un.org/en/about-us/universal-declaration-of-human-rights) | The repo's rights framing and recourse posture align with dignity, agency, and remedy language | No legal interpretation or institutional adoption evidence | Add a rights-to-control appendix showing which artifacts support privacy, remedy, and due process goals |
-| [EU AI Act](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) | Current suite discipline and disclosure / audit controls provide a starting point for compliance-oriented thinking | No risk-classification, provider/deployer role split, or formal conformity evidence exists | Publish a gap table showing which AI Act obligations are currently unsupported and which controls partially align |
-
-## Body policy
-
-The Body lane remains standards-first. The current record does not justify changing policy thresholds merely because a live calibration suggests a better profile. Stress-window evidence must agree before a change is accepted.
-
-## Supplemental lane
-
-Additional theory traditions, scripture comparators, advanced OS paradigms, and broader governance frames may still be useful as a later reflection layer. The repo now carries a dedicated supplemental reflection registry and board for that purpose. They remain supplemental until the standards-first corpus and deterministic evidence pack stay green under the normal suite cadence.
-
-## Active materialization note (2026-03-08)
-
-- The expansion layer is now integrated as `224` manifest-backed executable systems with a `288`-entry extension catalog and a v3 MCP catalog that separates desired state, actual state, activation path, workspace target, proof target, and write-promotion evidence.
-- The current validation matrix is green for `standard`, `deep`, `standard --offline-only`, `collab --include-mcp-refresh`, and `materialize --include-live-writes`. The latest stored materialize snapshot is `272 PASS / 0 WARN / 0 FAIL` with `224/224` expansion systems green.
-- Expansion and collaboration outputs are first-class gates in the mandala path through:
-  - `docs/trinity-expansion/trinity-release-gate-board-latest.json`
-  - `docs/trinity-expansion/mind-theory-readiness-gate-latest.json`
-  - `docs/trinity-expansion/body-compute-readiness-gate-latest.json`
-  - `docs/trinity-expansion/heart-governance-readiness-gate-latest.json`
-  - `docs/trinity-expansion/trinity-supercycle-gate-latest.json`
-- The collaboration-gate layer now also includes:
-  - `docs/trinity-expansion/figma-collab-gate-latest.json`
-  - `docs/trinity-expansion/linear-collab-gate-latest.json`
-  - `docs/trinity-expansion/playwright-ops-gate-latest.json`
-  - `docs/trinity-expansion/github-devflow-gate-latest.json`
-  - `docs/trinity-expansion/memory-continuity-gate-latest.json`
-  - `docs/trinity-expansion/operator-release-gate-latest.json`
-  - `docs/trinity-expansion/compute-hardware-gate-latest.json`
-  - `docs/trinity-expansion/identity-governance-gate-latest.json`
-  - `docs/trinity-expansion/public-intelligence-gate-latest.json`
-- The active-materialization lane now adds six more gate boards:
-  - `docs/trinity-expansion/github-materialization-gate-latest.json`
-  - `docs/trinity-expansion/filesystem-materialization-gate-latest.json`
-  - `docs/trinity-expansion/notion-materialization-gate-latest.json`
-  - `docs/trinity-expansion/postgres-materialization-gate-latest.json`
-  - `docs/trinity-expansion/os-runtime-fabric-gate-latest.json`
-  - `docs/trinity-expansion/wetware-device-readiness-gate-latest.json`
-- The v5 history-live layer now adds nine more gate boards and supporting source-of-truth artifacts for journey continuity, GitHub PAT materialization, Notion memory bridging, Postgres local runtime, filesystem scope governance, OS runtime benchmarking, AI frontier alignment, Aletheon memory reflection, and wetware device readiness.
-- The capability surface audit keeps the evidence boundary explicit: `gpt-5.4` is configured, `71` repo-local skills are present, MCP resources/templates are visible in-session, `Figma` remains verified live-read, `Linear`, `GitHub`, `Notion`, and `Postgres` are verified live-write through proof-backed disposable targets, `Playwright` remains skill-only, and `Filesystem`, `Slack`, and `Google Workspace` remain staged with no private secrets committed to repo state.
-- Comparison language must remain PASS-backed. Expansion records can generate candidates, but they do not auto-upgrade GMUT, Body readiness, or governance legal-force claims without explicit manual promotion.
+| pillar | current Trinity posture | bounded comparator set | Alignment in repo | Gap | Next implementation proof | classification |
+|---|---|---|---|---|---|---|
+| Mind | Canonical GMUT LaTeX plus repo-backed validators | arXiv, Crossref, OpenAlex, official research anchors | Canon surface, registry, falsification matrix, validator coverage | External empirical establishment remains open | Tie each non-standard term to an observable or comparator stress test | comparative_promise |
+| Body | Repo-proven Trinity suite and bounded reconstruction pilots | OpenAI, NVIDIA, Google Quantum AI, IBM, Quantinuum | Full suite proof plus six bounded reconstruction pilots | No external vendor-parity or ASI proof | Keep standards-first comparator refresh and validate pilot module promotion criteria | repo_proven_strength |
+| Heart | Repo-backed Freed ID and governance artifacts | W3C DID Core, VC Data Model 2.0, NIST AI RMF, OECD AI Principles, EU AI Act, NZ public-law context, World Bank governance context | Repo governance artifacts remain explicit and traceable | Universal legal force and adoption remain open | Maintain standards-first gap tracking with explicit recourse and alignment fields | comparative_promise |
+| Trinity Mandala | Coherent repo-backed integration across Mind, Body, and Heart | combined comparison across the active bounded sets | Control tower, verdict, council continuity, and suite proof remain aligned | Combined external establishment remains open | Preserve evidence-tagged verdicts and only promote PASS-backed states | comparative_promise |

@@ -1,10 +1,10 @@
 # Trinity Control Tower
 
-- storage_state: `balanced_prune_ready`
-- google_drive_state: `deferred_by_operator`
+- suite_state: `v12_green_baseline_pending_v13_validation`
 - council_continuity_state: `PASS`
-- command_surface_state: `PASS`
 - api_surface_state: `PASS`
-- materialization_level_actual: `persistent_dev`
-- mind_evidence_posture: `public_refresh_bounded`
-- heart_evidence_posture: `public_refresh_bounded`
+- gmut_canon_state: `PASS`
+- public_research_state: `PASS`
+- legacy_reconstruction_state: `PASS`
+- storage_state: `repo_first`
+- google_drive_state: `operator_hold`

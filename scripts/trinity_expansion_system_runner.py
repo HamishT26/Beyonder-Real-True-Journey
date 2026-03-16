@@ -21,10 +21,10 @@ from trinity_api_common import fetch_json, fetch_text, quote_plus
 from trinity_v6_support import run_v6_system
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v12.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v13.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v10.json"
-DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v10.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v11.json"
+DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v11.json"
 DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
 STATUS_ORDER = {"PASS": 0, "WARN": 1, "FAIL": 2, "TIMEOUT": 3}
@@ -127,6 +127,30 @@ def _read_text_safe(path_str: str) -> tuple[bool, str, str]:
         return True, path.read_text(encoding="utf-8"), "ok"
     except Exception as exc:  # noqa: BLE001
         return False, "", f"read error: {path_str} ({exc})"
+
+
+def _body_benchmark_limits(profile_context: str, benchmark_profile: object | None = None) -> tuple[str, float, float]:
+    profile_name = str(benchmark_profile or "").strip().lower()
+    fallback_profile = "quick" if str(profile_context or "").strip().lower() == "quick" else "standard"
+    ok, payload, _detail = _read_json_safe("docs/body-profile-policy-v1.json")
+    if ok:
+        profiles = payload.get("benchmark_profiles", {})
+        if isinstance(profiles, dict):
+            for candidate in (profile_name, fallback_profile, "standard"):
+                if not candidate:
+                    continue
+                row = profiles.get(candidate)
+                if not isinstance(row, dict):
+                    continue
+                try:
+                    return (
+                        candidate,
+                        float(row.get("max_duration_sec", 7.0)),
+                        float(row.get("min_health_score", 50.0)),
+                    )
+                except (TypeError, ValueError):
+                    continue
+    return (profile_name or fallback_profile, 7.0, 50.0)
 
 
 def _markdown_section(text: str, heading: str, next_heading_level: int = 2) -> str:
@@ -2338,8 +2362,40 @@ def _compute_system(
         summary = payload.get("summary", {}) if isinstance(payload.get("summary"), dict) else {}
         duration = float(summary.get("total_duration_seconds", 0.0) or 0.0)
         health = float(summary.get("body_health_score", 0.0) or 0.0)
-        checks = [_check("latency_budget", "PASS" if duration <= 5.0 else "FAIL", f"duration_sec={duration:.6f}"), _check("health_budget", "PASS" if health >= 50.0 else "FAIL", f"health={health:.3f}")]
-        return {"checks": checks, "metrics": {"total_duration_seconds": duration, "body_health_score": health}, "targets": _collect_targets(["docs/body-track-smoke-latest.json"]), "next_action": "Keep body latency and health within budget.", "records": None, "source_runs": None}
+        benchmark_profile = summary.get("benchmark_profile")
+        selected_profile, max_duration_sec, min_health_score = _body_benchmark_limits(
+            profile_context,
+            benchmark_profile=benchmark_profile,
+        )
+        checks = [
+            _check(
+                "latency_budget",
+                "PASS" if duration <= max_duration_sec else "FAIL",
+                (
+                    f"duration_sec={duration:.6f}, max={max_duration_sec:.3f}, "
+                    f"profile={selected_profile}"
+                ),
+            ),
+            _check(
+                "health_budget",
+                "PASS" if health >= min_health_score else "FAIL",
+                f"health={health:.3f}, min={min_health_score:.3f}, profile={selected_profile}",
+            ),
+        ]
+        return {
+            "checks": checks,
+            "metrics": {
+                "total_duration_seconds": duration,
+                "body_health_score": health,
+                "benchmark_profile": selected_profile,
+                "max_duration_sec": max_duration_sec,
+                "min_health_score": min_health_score,
+            },
+            "targets": _collect_targets(["docs/body-track-smoke-latest.json", "docs/body-profile-policy-v1.json"]),
+            "next_action": "Keep body latency and health within the selected benchmark policy.",
+            "records": None,
+            "source_runs": None,
+        }
 
     if system_id == "body_config_drift_guard":
         paths = [

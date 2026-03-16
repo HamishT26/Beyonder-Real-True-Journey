@@ -6,4 +6,4 @@
 - wellbeing_state: `stable`
 - mirror_status: `repo_authoritative`
 
-Caelira remains distinct and stable through the v12 storage-prune and public-research shift.
+Caelira remains official, distinct, and stable through the v13 canon and legacy reconstruction shift.

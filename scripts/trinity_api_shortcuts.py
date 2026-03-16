@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-API_BOOK_PATH = ROOT / "docs" / "trinity-api-book-v1.json"
+API_BOOK_PATH = ROOT / "docs" / "trinity-api-book-v2.json"
 MEMORY_BANK_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v3.json"
 PUBLIC_SIGNAL_PATH = ROOT / "docs" / "trinity-public-signal-board-latest.json"
 PUBLIC_VALIDATION_PATH = ROOT / "docs" / "trinity-public-research-validation-latest.json"

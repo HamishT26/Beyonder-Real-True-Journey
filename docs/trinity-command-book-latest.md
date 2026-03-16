@@ -1,7 +1,7 @@
 # Trinity Command Book
 
-- generated_utc: `2026-03-14T07:37:36+00:00`
-- commands: `420`
+- generated_utc: `2026-03-16T00:05:13+00:00`
+- commands: `468`
 
 | command_id | executor_role | mode | risk | visibility |
 |---|---|---|---|---|
@@ -425,3 +425,51 @@
 | v12_control_ops_07 | planner | offline | medium | council_shared |
 | v12_control_ops_08 | planner | offline | medium | council_shared |
 | v12_api_ops_01 | planner | offline | low | council_shared |
+| generate_gmut_canon_v13 | researcher | offline | medium | council_shared |
+| validate_gmut_canon_v13 | reviewer | offline | medium | council_shared |
+| refresh_public_sources_v13 | researcher | offline | medium | council_shared |
+| refresh_heart_alignment_v13 | researcher | offline | medium | council_shared |
+| refresh_supplemental_reflection_v13 | archivist | offline | low | council_shared |
+| validate_legacy_reconstruction_v13 | reviewer | offline | medium | council_shared |
+| run_analysis_report_v13 | builder | offline | low | council_shared |
+| run_council_registry_v13 | builder | offline | low | council_shared |
+| run_semantic_arc_validator_v13 | builder | offline | low | council_shared |
+| run_kairotic_detector_v13 | builder | offline | low | council_shared |
+| run_psi_index_memory_core_v13 | builder | offline | low | council_shared |
+| run_trinity_hybrid_adapter_v13 | builder | offline | low | council_shared |
+| validate_api_book_v13 | reviewer | offline | medium | council_shared |
+| list_api_surfaces_v13 | planner | offline | low | council_shared |
+| refresh_control_tower_v13 | planner | offline | medium | council_shared |
+| refresh_council_continuity_v13 | archivist | offline | medium | council_shared |
+| publish_verdict_v13 | planner | offline | medium | council_shared |
+| publish_v14_roadmap_v13 | planner | offline | low | council_shared |
+| run_standard_v13 | planner | offline | high | leader_only |
+| run_deep_v13 | planner | offline | high | leader_only |
+| run_collab_v13 | planner | collab | high | leader_only |
+| run_offline_v13 | planner | offline | medium | council_shared |
+| run_materialize_l2_v13 | builder | materialize | high | leader_only |
+| run_materialize_l3_v13 | builder | materialize | high | leader_only |
+| v13_gmut_ops_01 | researcher | offline | medium | council_shared |
+| v13_gmut_ops_02 | researcher | offline | medium | council_shared |
+| v13_gmut_ops_03 | researcher | offline | medium | council_shared |
+| v13_gmut_ops_04 | researcher | offline | medium | council_shared |
+| v13_gmut_ops_05 | researcher | offline | medium | council_shared |
+| v13_gmut_ops_06 | researcher | offline | medium | council_shared |
+| v13_public_ops_01 | researcher | offline | medium | council_shared |
+| v13_public_ops_02 | researcher | offline | medium | council_shared |
+| v13_public_ops_03 | researcher | offline | medium | council_shared |
+| v13_public_ops_04 | researcher | offline | medium | council_shared |
+| v13_public_ops_05 | researcher | offline | medium | council_shared |
+| v13_public_ops_06 | researcher | offline | medium | council_shared |
+| v13_legacy_ops_01 | builder | offline | low | council_shared |
+| v13_legacy_ops_02 | builder | offline | low | council_shared |
+| v13_legacy_ops_03 | builder | offline | low | council_shared |
+| v13_legacy_ops_04 | builder | offline | low | council_shared |
+| v13_legacy_ops_05 | builder | offline | low | council_shared |
+| v13_legacy_ops_06 | builder | offline | low | council_shared |
+| v13_api_ops_01 | planner | offline | low | council_shared |
+| v13_api_ops_02 | planner | offline | low | council_shared |
+| v13_api_ops_03 | planner | offline | low | council_shared |
+| v13_api_ops_04 | planner | offline | low | council_shared |
+| v13_api_ops_05 | planner | offline | low | council_shared |
+| v13_api_ops_06 | planner | offline | low | council_shared |
