@@ -47,8 +47,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity extension and MCP catalogs.")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v13.json")
-    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v11.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v14.json")
+    parser.add_argument("--extension-catalog", default="docs/trinity-extension-catalog-v12.json")
     parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v11.json")
     parser.add_argument("--reports-dir", default="docs/trinity-extension-catalog-runs")
     parser.add_argument("--latest-json", default="docs/trinity-extension-catalog-validation-latest.json")
@@ -80,8 +80,8 @@ def main() -> int:
     if not isinstance(extension_rows, list):
         failures.append("extension catalog extensions must be a list")
         extension_rows = []
-    if isinstance(extension_rows, list) and len(extension_rows) != 1392:
-        failures.append(f"extension catalog expected 1392 entries, found {len(extension_rows)}")
+    if isinstance(extension_rows, list) and len(extension_rows) != 1512:
+        failures.append(f"extension catalog expected 1512 entries, found {len(extension_rows)}")
 
     extension_ids: set[str] = set()
     pack_counts: dict[str, dict[str, int]] = {}

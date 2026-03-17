@@ -10,10 +10,15 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-API_BOOK_PATH = ROOT / "docs" / "trinity-api-book-v2.json"
+API_BOOK_PATH = ROOT / "docs" / "trinity-api-book-v3.json"
 MEMORY_BANK_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v3.json"
 PUBLIC_SIGNAL_PATH = ROOT / "docs" / "trinity-public-signal-board-latest.json"
 PUBLIC_VALIDATION_PATH = ROOT / "docs" / "trinity-public-research-validation-latest.json"
+CONTROL_TOWER_PATH = ROOT / "docs" / "trinity-control-tower-latest.json"
+COUNCIL_ROSTER_PATH = ROOT / "docs" / "trinity-agent-council-roster-v4.json"
+SUBAGENT_REGISTRY_PATH = ROOT / "docs" / "trinity-subagent-registry-v1.json"
+INSTANCE_REGISTRY_PATH = ROOT / "docs" / "trinity-instance-registry-v1.json"
+CODEX_ADAPTER_PATH = ROOT / "docs" / "trinity-codex-subagent-adapter-v1.json"
 
 
 def load_json(path: Path) -> dict[str, object]:
@@ -122,6 +127,66 @@ def cmd_public_research_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_control_tower_status(args: argparse.Namespace) -> int:
+    payload = load_json(CONTROL_TOWER_PATH)
+    if args.json:
+        print_json(payload)
+    else:
+        print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_council_roster_status(args: argparse.Namespace) -> int:
+    payload = load_json(COUNCIL_ROSTER_PATH)
+    agents = [row for row in payload.get("agents", []) if isinstance(row, dict)]
+    summary = {
+        "generated_utc": payload.get("generated_utc"),
+        "official_agent_count": len(agents),
+        "agents": [
+            {
+                "slot_number": row.get("slot_number"),
+                "display_name": row.get("display_name"),
+                "role": row.get("role"),
+                "agent_class": row.get("agent_class"),
+                "official_after_proof": row.get("official_after_proof"),
+            }
+            for row in agents
+        ],
+    }
+    if args.json:
+        print_json(summary)
+    else:
+        print(json.dumps(summary, indent=2))
+    return 0
+
+
+def cmd_subagent_status(args: argparse.Namespace) -> int:
+    payload = load_json(SUBAGENT_REGISTRY_PATH)
+    if args.json:
+        print_json(payload)
+    else:
+        print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_multi_instance_status(args: argparse.Namespace) -> int:
+    payload = load_json(INSTANCE_REGISTRY_PATH)
+    if args.json:
+        print_json(payload)
+    else:
+        print(json.dumps(payload, indent=2))
+    return 0
+
+
+def cmd_codex_adapter_status(args: argparse.Namespace) -> int:
+    payload = load_json(CODEX_ADAPTER_PATH)
+    if args.json:
+        print_json(payload)
+    else:
+        print(json.dumps(payload, indent=2))
+    return 0
+
+
 def cmd_github_status(args: argparse.Namespace) -> int:
     branch = run_capture(["git", "branch", "--show-current"])
     remote = run_capture(["git", "ls-remote", "origin", "HEAD"], timeout=30)
@@ -194,6 +259,26 @@ def build_parser() -> argparse.ArgumentParser:
     public_parser = subparsers.add_parser("public-research-status", help="Summarize public research validation posture.")
     public_parser.add_argument("--json", action="store_true")
     public_parser.set_defaults(func=cmd_public_research_status)
+
+    control_tower_parser = subparsers.add_parser("control-tower-status", help="Summarize the current Trinity control tower.")
+    control_tower_parser.add_argument("--json", action="store_true")
+    control_tower_parser.set_defaults(func=cmd_control_tower_status)
+
+    roster_parser = subparsers.add_parser("council-roster-status", help="Summarize the current council roster.")
+    roster_parser.add_argument("--json", action="store_true")
+    roster_parser.set_defaults(func=cmd_council_roster_status)
+
+    subagent_parser = subparsers.add_parser("subagent-status", help="Summarize the v14 subagent registry.")
+    subagent_parser.add_argument("--json", action="store_true")
+    subagent_parser.set_defaults(func=cmd_subagent_status)
+
+    multi_instance_parser = subparsers.add_parser("multi-instance-status", help="Summarize the bounded local multi-instance registry.")
+    multi_instance_parser.add_argument("--json", action="store_true")
+    multi_instance_parser.set_defaults(func=cmd_multi_instance_status)
+
+    codex_adapter_parser = subparsers.add_parser("codex-adapter-status", help="Summarize the repo-first Codex subagent adapter.")
+    codex_adapter_parser.add_argument("--json", action="store_true")
+    codex_adapter_parser.set_defaults(func=cmd_codex_adapter_status)
 
     github_parser = subparsers.add_parser("github-status", help="Check current branch and remote reachability.")
     github_parser.add_argument("--json", action="store_true")
