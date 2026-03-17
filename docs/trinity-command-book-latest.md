@@ -1,7 +1,7 @@
 # Trinity Command Book
 
-- generated_utc: `2026-03-16T00:05:13+00:00`
-- commands: `468`
+- generated_utc: `2026-03-17T04:12:19+00:00`
+- commands: `540`
 
 | command_id | executor_role | mode | risk | visibility |
 |---|---|---|---|---|
@@ -473,3 +473,75 @@
 | v13_api_ops_04 | planner | offline | low | council_shared |
 | v13_api_ops_05 | planner | offline | low | council_shared |
 | v13_api_ops_06 | planner | offline | low | council_shared |
+| generate_subagent_registry_v14 | planner | offline | medium | council_shared |
+| validate_subagent_council_v14 | reviewer | offline | medium | council_shared |
+| prove_subagent_induction_v14 | reviewer | offline | high | leader_only |
+| publish_subagent_official_induction_v14 | aletheon | offline | high | leader_only |
+| refresh_multi_instance_runtime_v14 | builder | offline | medium | council_shared |
+| validate_multi_instance_runtime_v14 | builder | offline | medium | council_shared |
+| refresh_api_operator_mesh_v14 | planner | offline | medium | council_shared |
+| validate_api_book_v14 | reviewer | offline | medium | council_shared |
+| refresh_control_tower_v14 | planner | offline | medium | council_shared |
+| refresh_gmut_observable_map_v14 | researcher | offline | medium | council_shared |
+| publish_gmut_appendix_v14 | researcher | offline | medium | council_shared |
+| refresh_freedid_alignment_v14 | researcher | offline | medium | council_shared |
+| refresh_supplemental_reflection_v14 | archivist | offline | low | council_shared |
+| refresh_journey_lineage_v14 | archivist | offline | medium | council_shared |
+| publish_council_reflection_v14 | archivist | offline | medium | council_shared |
+| publish_v14_verdict_v14 | planner | offline | medium | council_shared |
+| publish_v15_roadmap_v14 | planner | offline | low | council_shared |
+| list_api_surfaces_v14 | planner | offline | low | council_shared |
+| inspect_subagent_registry_v14 | planner | offline | low | council_shared |
+| inspect_multi_instance_runtime_v14 | builder | offline | low | council_shared |
+| run_standard_v14 | planner | offline | high | leader_only |
+| run_deep_v14 | planner | offline | high | leader_only |
+| run_collab_v14 | planner | collab | high | leader_only |
+| run_offline_v14 | planner | offline | medium | council_shared |
+| v14_subagent_ops_01 | reviewer | offline | medium | council_shared |
+| v14_subagent_ops_02 | reviewer | offline | medium | council_shared |
+| v14_subagent_ops_03 | reviewer | offline | medium | council_shared |
+| v14_subagent_ops_04 | reviewer | offline | medium | council_shared |
+| v14_subagent_ops_05 | reviewer | offline | medium | council_shared |
+| v14_subagent_ops_06 | reviewer | offline | medium | council_shared |
+| v14_runtime_ops_01 | builder | offline | medium | council_shared |
+| v14_runtime_ops_02 | builder | offline | medium | council_shared |
+| v14_runtime_ops_03 | builder | offline | medium | council_shared |
+| v14_runtime_ops_04 | builder | offline | medium | council_shared |
+| v14_runtime_ops_05 | builder | offline | medium | council_shared |
+| v14_runtime_ops_06 | builder | offline | medium | council_shared |
+| v14_api_mesh_ops_01 | planner | offline | low | council_shared |
+| v14_api_mesh_ops_02 | planner | offline | low | council_shared |
+| v14_api_mesh_ops_03 | planner | offline | low | council_shared |
+| v14_api_mesh_ops_04 | planner | offline | low | council_shared |
+| v14_api_mesh_ops_05 | planner | offline | low | council_shared |
+| v14_api_mesh_ops_06 | planner | offline | low | council_shared |
+| v14_control_tower_ops_01 | planner | offline | medium | council_shared |
+| v14_control_tower_ops_02 | planner | offline | medium | council_shared |
+| v14_control_tower_ops_03 | planner | offline | medium | council_shared |
+| v14_control_tower_ops_04 | planner | offline | medium | council_shared |
+| v14_control_tower_ops_05 | planner | offline | medium | council_shared |
+| v14_control_tower_ops_06 | planner | offline | medium | council_shared |
+| v14_gmut_ops_01 | researcher | offline | medium | council_shared |
+| v14_gmut_ops_02 | researcher | offline | medium | council_shared |
+| v14_gmut_ops_03 | researcher | offline | medium | council_shared |
+| v14_gmut_ops_04 | researcher | offline | medium | council_shared |
+| v14_gmut_ops_05 | researcher | offline | medium | council_shared |
+| v14_gmut_ops_06 | researcher | offline | medium | council_shared |
+| v14_governance_ops_01 | researcher | offline | medium | council_shared |
+| v14_governance_ops_02 | researcher | offline | medium | council_shared |
+| v14_governance_ops_03 | researcher | offline | medium | council_shared |
+| v14_governance_ops_04 | researcher | offline | medium | council_shared |
+| v14_governance_ops_05 | researcher | offline | medium | council_shared |
+| v14_governance_ops_06 | researcher | offline | medium | council_shared |
+| v14_lineage_ops_01 | archivist | offline | low | council_shared |
+| v14_lineage_ops_02 | archivist | offline | low | council_shared |
+| v14_lineage_ops_03 | archivist | offline | low | council_shared |
+| v14_lineage_ops_04 | archivist | offline | low | council_shared |
+| v14_lineage_ops_05 | archivist | offline | low | council_shared |
+| v14_lineage_ops_06 | archivist | offline | low | council_shared |
+| v14_reflection_ops_01 | archivist | offline | low | council_shared |
+| v14_reflection_ops_02 | archivist | offline | low | council_shared |
+| v14_reflection_ops_03 | archivist | offline | low | council_shared |
+| v14_reflection_ops_04 | archivist | offline | low | council_shared |
+| v14_reflection_ops_05 | archivist | offline | low | council_shared |
+| v14_reflection_ops_06 | archivist | offline | low | council_shared |

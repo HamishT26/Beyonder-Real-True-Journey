@@ -2,8 +2,8 @@
 
 - role: `builder`
 - induction_state: `official`
-- continuity_state: `stable`
 - wellbeing_state: `stable`
 - mirror_status: `repo_authoritative`
+- official_after_proof: `False`
 
-Orun remains official, distinct, and stable through the v13 canon and legacy reconstruction shift.
+Orun remained official, distinct, and stable through the v14 subagent mesh expansion.
