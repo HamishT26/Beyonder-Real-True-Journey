@@ -25,10 +25,10 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
     "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
-    "recover": "Low-pressure recovery profile that validates v13 canon, continuity, reconstruction, storage truth, and scoreboard state.",
+    "recover": "Low-pressure recovery profile that validates the v14 subagent mesh, canon, continuity, storage truth, and scoreboard state.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v13.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v14.json"
 TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v11.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
@@ -276,7 +276,7 @@ def _memory_bank_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
 def _agent_council_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
-        "scripts/trinity_agent_council_v10_validator.py",
+        "scripts/trinity_agent_council_v14_validator.py",
     ]
     if enforce:
         command.append("--fail-on-warn")
@@ -452,26 +452,30 @@ def build_commands(
 ) -> list[tuple[str, list[str]]]:
     if profile == "recover":
         enforce = True
+        recover_pack_ids = [
+            "subagent_council_foundation_v14",
+            "subagent_identity_certification_v14",
+            "subagent_induction_proof_v14",
+            "multi_instance_runtime_v14",
+            "api_operator_mesh_v14",
+            "trinity_control_tower_v14",
+            "gmut_observable_mapping_v14",
+            "freedid_governance_alignment_v14",
+            "journey_lineage_inventory_v14",
+            "council_reflection_validation_v14",
+        ]
+        recover_suffixes = (
+            "surface_audit",
+            "sync_bridge",
+            "materialization_tracer",
+            "cache_board",
+            "risk_board",
+            "gate",
+        )
         recover_gate_ids = [
-            "canonical_gmut_latex_v13_surface_audit",
-            "canonical_gmut_latex_v13_gate",
-            "mind_falsification_matrix_v13_surface_audit",
-            "mind_falsification_matrix_v13_gate",
-            "public_source_refresh_v13_surface_audit",
-            "public_source_refresh_v13_gate",
-            "heart_governance_alignment_v13_surface_audit",
-            "heart_governance_alignment_v13_gate",
-            "supplemental_reflection_bridge_v13_surface_audit",
-            "supplemental_reflection_bridge_v13_gate",
-            "legacy_module_inventory_v13_surface_audit",
-            "legacy_module_inventory_v13_gate",
-            "kairotic_body_reconstruction_v13_surface_audit",
-            "kairotic_body_reconstruction_v13_gate",
-            "api_surface_book_v13_sync_bridge",
-            "api_surface_book_v13_surface_audit",
-            "api_surface_book_v13_gate",
-            "trinity_control_tower_v13_surface_audit",
-            "trinity_control_tower_v13_gate",
+            f"{pack_id}_{suffix}"
+            for pack_id in recover_pack_ids
+            for suffix in recover_suffixes
         ]
 
         commands: list[tuple[str, list[str]]] = [
@@ -691,12 +695,12 @@ def build_commands(
     expansion_commands: list[tuple[str, list[str]]] = []
     if not quick_mode:
         expansion_commands = [
-            ("legacy analysis report v13", ["python3", "scripts/analysis_report.py"]),
-            ("legacy council registry v13", ["python3", "scripts/council_registry.py"]),
-            ("legacy semantic arc validator v13", ["python3", "scripts/semantic_arc_validator.py"]),
-            ("legacy kairotic detector v13", ["python3", "scripts/kairotic_detector.py"]),
-            ("legacy psi index memory core v13", ["python3", "scripts/psi_index_memory_core.py"]),
-            ("legacy trinity hybrid adapter v13", ["python3", "scripts/trinity_hybrid_adapter.py"]),
+            ("legacy analysis report v14", ["python3", "scripts/analysis_report.py"]),
+            ("legacy council registry v14", ["python3", "scripts/council_registry.py"]),
+            ("legacy semantic arc validator v14", ["python3", "scripts/semantic_arc_validator.py"]),
+            ("legacy kairotic detector v14", ["python3", "scripts/kairotic_detector.py"]),
+            ("legacy psi index memory core v14", ["python3", "scripts/psi_index_memory_core.py"]),
+            ("legacy trinity hybrid adapter v14", ["python3", "scripts/trinity_hybrid_adapter.py"]),
             (
                 *_gmut_canon_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
@@ -1607,7 +1611,7 @@ def main() -> None:
         default="deep",
         help=(
             "Execution profile: deep (default expanded run), standard (base stages), quick (continuity-focused subset), collab (standard + verified MCP refresh), "
-            "materialize (standard + disposable staging write tracers), recover (low-pressure validators + v13 recovery gates), "
+            "materialize (standard + disposable staging write tracers), recover (low-pressure validators + v14 recovery gates), "
             "deep (standard + version scan + skill install + curated catalog + soft-fail-network)."
         ),
     )

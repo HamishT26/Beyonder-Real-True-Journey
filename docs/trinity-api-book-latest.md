@@ -1,7 +1,7 @@
 # Trinity API Book
 
-- generated_utc: `2026-03-16T00:05:13+00:00`
-- apis: `26`
+- generated_utc: `2026-03-17T04:12:19+00:00`
+- apis: `34`
 
 | api_id | surface | trust_class | auth_posture | wrapper |
 |---|---|---|---|---|
@@ -31,3 +31,11 @@
 | eu_ai_act_v13 | public_standard | official_primary | public_no_auth | `scripts/trinity_api_shortcuts.py show eu_ai_act_v13` |
 | nz_justice_treaty_context_v13 | public_standard | official_primary | public_no_auth | `scripts/trinity_api_shortcuts.py show nz_justice_treaty_context_v13` |
 | world_bank_governance_v13 | public_standard | official_primary | public_no_auth | `scripts/trinity_api_shortcuts.py show world_bank_governance_v13` |
+| openai_codex_intro_v14 | public_vendor | official_primary | public_no_auth | `scripts/trinity_api_shortcuts.py show openai_codex_intro_v14` |
+| openai_codex_help_v14 | public_vendor | official_primary | public_no_auth | `scripts/trinity_api_shortcuts.py show openai_codex_help_v14` |
+| codex_subagent_adapter_v14 | repo_operator | repo_authoritative | repo_only | `scripts/trinity_api_shortcuts.py codex-adapter-status --json` |
+| control_tower_v14 | repo_operator | repo_authoritative | repo_only | `scripts/trinity_api_shortcuts.py control-tower-status --json` |
+| council_roster_v14 | repo_operator | repo_authoritative | repo_only | `scripts/trinity_api_shortcuts.py council-roster-status --json` |
+| subagent_registry_v14 | repo_operator | repo_authoritative | repo_only | `scripts/trinity_api_shortcuts.py subagent-status --json` |
+| multi_instance_registry_v14 | repo_operator | repo_authoritative | repo_only | `scripts/trinity_api_shortcuts.py multi-instance-status --json` |
+| v14_verdict_v14 | repo_operator | repo_authoritative | repo_only | `scripts/trinity_api_shortcuts.py show v14_verdict_v14` |

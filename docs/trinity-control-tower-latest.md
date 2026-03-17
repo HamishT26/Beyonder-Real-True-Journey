@@ -1,10 +1,17 @@
 # Trinity Control Tower
 
-- suite_state: `v12_green_baseline_pending_v13_validation`
+- overall_status: `PASS`
+- suite_state: `PASS`
+- suite_summary: `893 PASS / 0 WARN / 0 FAIL`
 - council_continuity_state: `PASS`
+- subagent_mesh_state: `PASS`
 - api_surface_state: `PASS`
 - gmut_canon_state: `PASS`
 - public_research_state: `PASS`
 - legacy_reconstruction_state: `PASS`
-- storage_state: `repo_first`
+- storage_state: `PASS`
 - google_drive_state: `operator_hold`
+- materialization_level_actual: `readiness_only`
+- late_step_autonomy_state: `bounded_repo_first`
+- command_surface_state: `PASS`
+- multi_instance_state: `bounded_local_mesh`
