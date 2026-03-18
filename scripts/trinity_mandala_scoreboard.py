@@ -439,6 +439,9 @@ def main() -> int:
         asdict(_artifact_status("Council reflection validation gate v14", "docs/trinity-expansion/council-reflection-validation-v14-gate-latest.json")),
         asdict(_artifact_status("V15 mesh proof", "docs/trinity-agent-mesh-proof-v1.json")),
         asdict(_artifact_status("V16 verdict", "docs/v16-trinity-verdict-v1.json")),
+        asdict(_artifact_status("V17 runtime session validation", "docs/v17-runtime-session-validation-latest.json")),
+        asdict(_artifact_status("V17 external establishment validation", "docs/v17-external-establishment-validation-latest.json")),
+        asdict(_artifact_status("V17 standards bridge validation", "docs/v17-standards-bridge-validation-latest.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 

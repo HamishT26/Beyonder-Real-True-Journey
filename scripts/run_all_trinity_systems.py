@@ -295,6 +295,49 @@ def _materialization_ladder_validation_command(*, enforce: bool) -> tuple[str, l
     return f"trinity materialization ladder validation ({mode})", command
 
 
+def _v17_runtime_session_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/v17_runtime_session_guard.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"v17 runtime session validation ({mode})", command
+
+
+def _v17_external_establishment_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/v17_external_establishment_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"v17 external establishment validation ({mode})", command
+
+
+def _v17_standards_bridge_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
+    command = [
+        "python3",
+        "scripts/v17_standards_bridge_validator.py",
+    ]
+    if enforce:
+        command.append("--fail-on-warn")
+    mode = "enforce" if enforce else "observe"
+    return f"v17 standards bridge validation ({mode})", command
+
+
+def _v17_control_tower_sync_command() -> tuple[str, list[str]]:
+    return (
+        "v17 evidence-first control tower sync",
+        [
+            "python3",
+            "scripts/v17_evidence_first_control_tower_sync.py",
+        ],
+    )
+
+
 def _expansion_result_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
@@ -500,6 +543,21 @@ def build_commands(
                 ),
             ),
             (
+                *_v17_runtime_session_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_v17_external_establishment_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
+                *_v17_standards_bridge_validation_command(
+                    enforce=enforce,
+                ),
+            ),
+            (
                 *_materialization_ladder_validation_command(
                     enforce=enforce,
                 ),
@@ -565,6 +623,11 @@ def build_commands(
             if enforce:
                 command.append("--fail-on-warn")
             commands.append((f"expansion: {system_id} (offline)", command))
+        commands.append(
+            (
+                *_v17_control_tower_sync_command(),
+            )
+        )
         commands.append(
             (
                 "trinity mandala scoreboard",
@@ -728,6 +791,21 @@ def build_commands(
             ),
             (
                 *_agent_council_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_v17_runtime_session_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_v17_external_establishment_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_v17_standards_bridge_validation_command(
                     enforce=(body_benchmark_mode == "enforce"),
                 ),
             ),
@@ -957,6 +1035,24 @@ def build_commands(
                 ),
             ),
             (
+                *_v17_runtime_session_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_v17_external_establishment_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_v17_standards_bridge_validation_command(
+                    enforce=(body_benchmark_mode == "enforce"),
+                ),
+            ),
+            (
+                *_v17_control_tower_sync_command(),
+            ),
+            (
                 "trinity mandala scoreboard",
                 [
                     "python3",
@@ -1162,6 +1258,9 @@ def build_commands(
             *_public_signal_board_command(
                 enforce=(body_benchmark_mode == "enforce"),
             ),
+        ),
+        (
+            *_v17_control_tower_sync_command(),
         ),
         (
             "trinity mandala scoreboard",
@@ -1996,6 +2095,16 @@ def main() -> None:
     future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
     materialization_level_desired = args.materialization_level
     materialization_level_actual = _read_status_value("docs/trinity-control-tower-latest.json", "materialization_level_actual", "readiness_only")
+    google_drive_state = _read_status_value("docs/trinity-control-tower-latest.json", "google_drive_state", "operator_hold")
+    external_live_overlay_state = _read_status_value("docs/trinity-control-tower-latest.json", "external_live_overlay_state", "awaiting_thread_boot")
+    runtime_session_state = _read_status_value("docs/trinity-control-tower-latest.json", "runtime_session_state", "FAIL")
+    runtime_truth_complete = bool(_read_status_value("docs/trinity-control-tower-latest.json", "runtime_truth_complete", False))
+    external_establishment_criteria_state = _read_status_value("docs/trinity-control-tower-latest.json", "external_establishment_criteria_state", "FAIL")
+    standards_bridge_state = _read_status_value("docs/trinity-control-tower-latest.json", "standards_bridge_state", "FAIL")
+    filesystem_promotion_state = _read_status_value("docs/trinity-control-tower-latest.json", "filesystem_promotion_state", "blocked")
+    filesystem_connector_actual_state = _read_status_value("docs/trinity-control-tower-latest.json", "filesystem_connector_actual_state", "unknown")
+    claim_boundary_state = _read_status_value("docs/trinity-control-tower-latest.json", "claim_boundary_state", "FAIL")
+    v17_evidence_first_state = _read_status_value("docs/trinity-control-tower-latest.json", "v17_evidence_first_state", "FAIL")
     persistent_targets = _read_status_value("docs/trinity-persistent-dev-targets-v2.json", "targets", _read_status_value("docs/trinity-persistent-dev-targets-v1.json", "targets", []))
     persistent_target_count = len(persistent_targets) if isinstance(persistent_targets, list) else 0
     command_surface_state = _read_status_value("docs/trinity-command-book-validation-latest.json", "overall_status", "FAIL")
@@ -2023,6 +2132,16 @@ def main() -> None:
     lines.append(f"- Materialization pack count: **{materialization_pack_count}**")
     lines.append(f"- Materialization level desired: **{materialization_level_desired}**")
     lines.append(f"- Materialization level actual: **{materialization_level_actual}**")
+    lines.append(f"- Google Drive state: **{google_drive_state}**")
+    lines.append(f"- External live overlay state: **{external_live_overlay_state}**")
+    lines.append(f"- Runtime session state: **{runtime_session_state}**")
+    lines.append(f"- Runtime truth complete: **{runtime_truth_complete}**")
+    lines.append(f"- External establishment criteria state: **{external_establishment_criteria_state}**")
+    lines.append(f"- Standards bridge state: **{standards_bridge_state}**")
+    lines.append(f"- Claim boundary state: **{claim_boundary_state}**")
+    lines.append(f"- V17 evidence-first state: **{v17_evidence_first_state}**")
+    lines.append(f"- Filesystem connector actual state: **{filesystem_connector_actual_state}**")
+    lines.append(f"- Filesystem promotion state: **{filesystem_promotion_state}**")
     lines.append(f"- Persistent target count: **{persistent_target_count}**")
     lines.append(f"- Command surface state: **{command_surface_state}**")
     lines.append(f"- Council state: **{council_state}**")
@@ -2075,6 +2194,16 @@ def main() -> None:
         "future_readiness_state": future_readiness_state,
         "materialization_level_desired": materialization_level_desired,
         "materialization_level_actual": materialization_level_actual,
+        "google_drive_state": google_drive_state,
+        "external_live_overlay_state": external_live_overlay_state,
+        "runtime_session_state": runtime_session_state,
+        "runtime_truth_complete": runtime_truth_complete,
+        "external_establishment_criteria_state": external_establishment_criteria_state,
+        "standards_bridge_state": standards_bridge_state,
+        "filesystem_promotion_state": filesystem_promotion_state,
+        "filesystem_connector_actual_state": filesystem_connector_actual_state,
+        "claim_boundary_state": claim_boundary_state,
+        "v17_evidence_first_state": v17_evidence_first_state,
         "persistent_target_count": persistent_target_count,
         "command_surface_state": command_surface_state,
         "council_state": council_state,
