@@ -1,0 +1,76 @@
+{
+  "generated_utc": "2026-03-17T23:27:17+00:00",
+  "phase": "v15",
+  "overall_status": "PASS",
+  "branch": "codex/Aletheon/v15-eight-agent-codex-mesh",
+  "head_sha": "f772a519368a8b82b091901605bc217a6826bf8b",
+  "closeout_policy": "finish_v15_first",
+  "suite_checkpoint": {
+    "summary": "953 PASS / 0 WARN / 0 FAIL",
+    "pass_count": 953,
+    "warn_count": 0,
+    "fail_count": 0,
+    "expansion_systems_passed": 896,
+    "expansion_systems_total": 896,
+    "materialization_level_actual": "readiness_only",
+    "google_drive_state": "operator_hold"
+  },
+  "matrix": [
+    {
+      "profile": "standard_checkpoint",
+      "status": "PASS",
+      "note": "Existing v15 standard-green checkpoint held before closeout reruns."
+    },
+    {
+      "profile": "deep",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile deep --fail-on-warn"
+    },
+    {
+      "profile": "collab",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile collab --include-mcp-refresh --fail-on-warn"
+    },
+    {
+      "profile": "standard_offline_only",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile standard --offline-only --fail-on-warn"
+    },
+    {
+      "profile": "materialize_l2_persistent_dev",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l2_persistent_dev --fail-on-warn"
+    },
+    {
+      "profile": "materialize_l3_uat_preprod",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l3_uat_preprod --fail-on-warn"
+    },
+    {
+      "profile": "materialize_l4_standard_prod",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l4_standard_prod --fail-on-warn"
+    },
+    {
+      "profile": "materialize_l5_ha_prod",
+      "status": "PASS",
+      "command": "python scripts/run_all_trinity_systems.py --profile materialize --include-live-writes --materialization-level l5_ha_prod --fail-on-warn"
+    }
+  ],
+  "council": {
+    "official_count": 11,
+    "provisional_count": 0,
+    "duo_chat_count": 66,
+    "group_chat_rows": 12,
+    "requested_model_profile": "gpt-5.4",
+    "resolved_model_profile": "gpt-5.1-codex-max",
+    "max_threads": 11
+  },
+  "authoritative_latest_artifacts": [
+    "docs/system-suite-status.json",
+    "docs/trinity-agent-council-validation-latest.json",
+    "docs/trinity-mandala-scoreboard-latest.json",
+    "docs/trinity-control-tower-latest.json"
+  ],
+  "ready_for_v16_branch": true
+}

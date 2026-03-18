@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-BOOK_PATH = ROOT / "docs" / "trinity-api-book-v3.json"
+BOOK_PATH = ROOT / "docs" / "trinity-api-book-v5.json"
 LEDGER_PATH = ROOT / "docs" / "trinity-api-usage-ledger.jsonl"
 OUTPUT_JSON = ROOT / "docs" / "trinity-api-book-validation-latest.json"
 OUTPUT_MD = ROOT / "docs" / "trinity-api-book-validation-latest.md"
@@ -36,6 +36,9 @@ REQUIRED_FIELDS = {
     "surface_kind",
     "cache_ttl_class",
     "operator_gate",
+    "codex_support_level",
+    "model_support_class",
+    "delegation_surface",
 }
 
 
@@ -78,8 +81,8 @@ def main() -> int:
     if not isinstance(apis, list):
         failures.append("apis must be a list")
         apis = []
-    if len(apis) != 34:
-        failures.append(f"expected 34 api entries, found {len(apis)}")
+    if len(apis) != 48:
+        failures.append(f"expected 48 api entries, found {len(apis)}")
 
     seen: set[str] = set()
     for index, row in enumerate(apis):

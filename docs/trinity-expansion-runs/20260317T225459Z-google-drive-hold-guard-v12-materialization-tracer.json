@@ -1,0 +1,51 @@
+{
+  "generated_utc": "2026-03-17T22:54:59+00:00",
+  "system_id": "google_drive_hold_guard_v12_materialization_tracer",
+  "pillar": "trinity",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "proof_written",
+      "status": "PASS",
+      "detail": "docs/trinity-live-traces/google-drive-hold-guard-v12-proof-v1.json"
+    },
+    {
+      "name": "ledger_appended",
+      "status": "PASS",
+      "detail": "docs/trinity-materialization-ledger.jsonl"
+    },
+    {
+      "name": "write_scope",
+      "status": "PASS",
+      "detail": "mode=blocked"
+    },
+    {
+      "name": "blockers_recorded",
+      "status": "PASS",
+      "detail": "blockers=1"
+    }
+  ],
+  "metrics": {
+    "pack": "google_drive_hold_guard_v12",
+    "connector_id": "google_drive",
+    "profile_context": "materialize",
+    "include_live_writes": true,
+    "attempted_write": false,
+    "tracer_result": "BLOCKED",
+    "mode": "blocked",
+    "materialization_level": "l4_standard_prod",
+    "desired_state": "deferred_archive_target",
+    "actual_state": "operator_hold",
+    "live_write_enabled": false,
+    "blocker_count": 1
+  },
+  "repo_targets_touched": [
+    "docs/trinity-google-drive-sync-policy-v1.json",
+    "docs/trinity-live-traces/google-drive-hold-guard-v12-proof-v1.json",
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-mcp-catalog-v10.json",
+    "docs/trinity-memory-bank-registry-v3.json"
+  ],
+  "next_action": "Promote live write only after runtime proof exists and disposable staging targets remain intact.",
+  "effective_success": true
+}

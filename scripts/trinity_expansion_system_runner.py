@@ -21,9 +21,9 @@ from trinity_api_common import fetch_json, fetch_text, quote_plus
 from trinity_v6_support import run_v6_system
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v14.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v16.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v12.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v14.json"
 DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v11.json"
 DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"

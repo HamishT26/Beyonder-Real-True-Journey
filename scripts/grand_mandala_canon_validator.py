@@ -50,8 +50,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the canonical GMUT surface.")
     parser.add_argument("--tex", default="latex/grand_mandala.tex")
     parser.add_argument("--registry", default="docs/grand-mandala-equation-registry-v1.json")
-    parser.add_argument("--latest-json", default="docs/v14-gmut-canon-validation-latest.json")
-    parser.add_argument("--latest-md", default="docs/v14-gmut-canon-validation-latest.md")
+    parser.add_argument("--latest-json", default="docs/v15-gmut-canon-validation-latest.json")
+    parser.add_argument("--latest-md", default="docs/v15-gmut-canon-validation-latest.md")
     parser.add_argument("--fail-on-warn", action="store_true")
     args = parser.parse_args()
 
