@@ -30,6 +30,9 @@ REQUIRED_FIELDS = {
     "subagent_target",
     "proof_required",
     "adapter_scope",
+    "agent_owner",
+    "delegation_safe",
+    "fallback_mode",
 }
 ALLOWED_RISK = {"low", "medium", "high", "critical"}
 ALLOWED_EXECUTOR = {"aletheon", "planner", "builder", "reviewer", "researcher", "archivist", "mind_keeper", "body_weaver", "heart_steward"}
@@ -71,7 +74,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity command book.")
-    parser.add_argument("--command-book", default="docs/trinity-command-book-v8.json")
+    parser.add_argument("--command-book", default="docs/trinity-command-book-v10.json")
     parser.add_argument("--execution-ledger", default="docs/trinity-command-execution-ledger.jsonl")
     parser.add_argument("--reports-dir", default="docs/trinity-command-book-runs")
     parser.add_argument("--latest-json", default="docs/trinity-command-book-validation-latest.json")
@@ -86,8 +89,8 @@ def main() -> int:
     if not isinstance(commands, list):
         failures.append("commands must be a list")
         commands = []
-    if len(commands) != 540:
-        failures.append(f"expected 540 commands, found {len(commands)}")
+    if len(commands) != 648:
+        failures.append(f"expected 648 commands, found {len(commands)}")
 
     seen: set[str] = set()
     for index, row in enumerate(commands):
@@ -119,6 +122,8 @@ def main() -> int:
             failures.append(f"{command_id or label} resume_safe must be boolean")
         if not isinstance(row.get("proof_required"), bool):
             failures.append(f"{command_id or label} proof_required must be boolean")
+        if not isinstance(row.get("delegation_safe"), bool):
+            failures.append(f"{command_id or label} delegation_safe must be boolean")
         if not isinstance(row.get("preconditions"), list):
             failures.append(f"{command_id or label} preconditions must be a list")
         if not isinstance(row.get("expected_artifacts"), list) or not row.get("expected_artifacts"):
@@ -129,6 +134,10 @@ def main() -> int:
             failures.append(f"{command_id or label} empty rollback")
         if not str(row.get("adapter_scope") or "").strip():
             failures.append(f"{command_id or label} adapter_scope must be non-empty")
+        if not str(row.get("agent_owner") or "").strip():
+            failures.append(f"{command_id or label} agent_owner must be non-empty")
+        if not str(row.get("fallback_mode") or "").strip():
+            failures.append(f"{command_id or label} fallback_mode must be non-empty")
         source = str(row.get("source_of_truth") or "").strip()
         if not source:
             failures.append(f"{command_id or label} empty source_of_truth")

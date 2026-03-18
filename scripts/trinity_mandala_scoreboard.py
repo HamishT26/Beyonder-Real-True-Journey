@@ -133,26 +133,17 @@ def _artifact_status(label: str, path: str) -> ArtifactStatus:
 
 
 def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, str]:
-    results = payload.get("results")
-    if not isinstance(results, list):
-        status = _extract_status("docs/system-suite-status.json", payload)
-        return status, _extract_detail(payload)
+    counts = payload.get("counts")
+    if isinstance(counts, dict):
+        pass_count = int(counts.get("pass", 0) or 0)
+        warn_count = int(counts.get("warn", 0) or 0)
+        fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
+        status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+        detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
+        return status, detail
 
-    filtered = [
-        row
-        for row in results
-        if isinstance(row, dict) and str(row.get("label") or "") != "trinity mandala scoreboard"
-    ]
-    if not filtered:
-        status = _extract_status("docs/system-suite-status.json", payload)
-        return status, _extract_detail(payload)
-
-    pass_count = sum(1 for row in filtered if _normalize_status(row.get("status")) == "PASS")
-    warn_count = sum(1 for row in filtered if _normalize_status(row.get("status")) == "WARN")
-    fail_count = sum(1 for row in filtered if _normalize_status(row.get("status")) in {"FAIL", "TIMEOUT"})
-    status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
-    detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
-    return status, detail
+    status = _extract_status("docs/system-suite-status.json", payload)
+    return status, _extract_detail(payload)
 
 
 def _non_gating_warn_block(block: dict[str, object]) -> bool:
@@ -434,8 +425,8 @@ def main() -> int:
         asdict(_artifact_status("Kairotic body reconstruction gate v13", "docs/trinity-expansion/kairotic-body-reconstruction-v13-gate-latest.json")),
         asdict(_artifact_status("API surface book gate v13", "docs/trinity-expansion/api-surface-book-v13-gate-latest.json")),
         asdict(_artifact_status("Trinity control tower gate v13", "docs/trinity-expansion/trinity-control-tower-v13-gate-latest.json")),
-        asdict(_artifact_status("GMUT canon validation v14", "docs/v14-gmut-canon-validation-latest.json")),
-        asdict(_artifact_status("Legacy reconstruction validation v14", "docs/v14-legacy-reconstruction-validation-latest.json")),
+        asdict(_artifact_status("GMUT canon validation v15", "docs/v15-gmut-canon-validation-latest.json")),
+        asdict(_artifact_status("Legacy reconstruction validation v15", "docs/v15-legacy-reconstruction-validation-latest.json")),
         asdict(_artifact_status("Subagent council foundation gate v14", "docs/trinity-expansion/subagent-council-foundation-v14-gate-latest.json")),
         asdict(_artifact_status("Subagent identity certification gate v14", "docs/trinity-expansion/subagent-identity-certification-v14-gate-latest.json")),
         asdict(_artifact_status("Subagent induction proof gate v14", "docs/trinity-expansion/subagent-induction-proof-v14-gate-latest.json")),
@@ -446,7 +437,8 @@ def main() -> int:
         asdict(_artifact_status("Freed ID governance alignment gate v14", "docs/trinity-expansion/freedid-governance-alignment-v14-gate-latest.json")),
         asdict(_artifact_status("Journey lineage inventory gate v14", "docs/trinity-expansion/journey-lineage-inventory-v14-gate-latest.json")),
         asdict(_artifact_status("Council reflection validation gate v14", "docs/trinity-expansion/council-reflection-validation-v14-gate-latest.json")),
-        asdict(_artifact_status("V14 verdict", "docs/v14-trinity-verdict-v1.json")),
+        asdict(_artifact_status("V15 mesh proof", "docs/trinity-agent-mesh-proof-v1.json")),
+        asdict(_artifact_status("V16 verdict", "docs/v16-trinity-verdict-v1.json")),
         asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
     ]
 

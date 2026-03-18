@@ -45,8 +45,8 @@ def _markdown(payload: dict[str, object]) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the active legacy reconstruction lane.")
     parser.add_argument("--legacy-map", default="docs/v29-v38-legacy-reconstruction-map-v1.json")
-    parser.add_argument("--latest-json", default="docs/v14-legacy-reconstruction-validation-latest.json")
-    parser.add_argument("--latest-md", default="docs/v14-legacy-reconstruction-validation-latest.md")
+    parser.add_argument("--latest-json", default="docs/v15-legacy-reconstruction-validation-latest.json")
+    parser.add_argument("--latest-md", default="docs/v15-legacy-reconstruction-validation-latest.md")
     parser.add_argument("--fail-on-warn", action="store_true")
     args = parser.parse_args()
 

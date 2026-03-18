@@ -25,10 +25,10 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
     "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
-    "recover": "Low-pressure recovery profile that validates the v14 subagent mesh, canon, continuity, storage truth, and scoreboard state.",
+    "recover": "Low-pressure recovery profile that validates the v16 council mesh, canon, continuity, storage truth, and scoreboard state.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v14.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v16.json"
 TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v11.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
@@ -276,7 +276,7 @@ def _memory_bank_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
 def _agent_council_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
-        "scripts/trinity_agent_council_v14_validator.py",
+        "scripts/trinity_agent_council_v16_validator.py",
     ]
     if enforce:
         command.append("--fail-on-warn")
@@ -2004,7 +2004,7 @@ def main() -> None:
     council_state = _read_status_value("docs/trinity-agent-council-validation-latest.json", "overall_status", "FAIL")
     provisional_agent_count = int(_read_status_value("docs/trinity-agent-council-validation-latest.json", "provisional_agent_count", 0) or 0)
     duo_chat_count = int(_read_status_value("docs/trinity-agent-council-validation-latest.json", "duo_chat_count", 0) or 0)
-    group_chat_state = "PASS" if (ROOT / "docs" / "trinity-agent-council-group-chat.jsonl").exists() else "FAIL"
+    group_chat_state = "PASS" if (ROOT / "docs" / "trinity-agent-council-group-chat-v5.jsonl").exists() else "FAIL"
     late_step_autonomy_state = _read_status_value(
         "docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json",
         "overall_status",
