@@ -10,13 +10,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-API_BOOK_PATH = ROOT / "docs" / "trinity-api-book-v5.json"
+API_BOOK_PATH = ROOT / "docs" / "trinity-api-book-v6.json"
 MEMORY_BANK_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v3.json"
 PUBLIC_SIGNAL_PATH = ROOT / "docs" / "trinity-public-signal-board-latest.json"
 PUBLIC_VALIDATION_PATH = ROOT / "docs" / "trinity-public-research-validation-latest.json"
 CONTROL_TOWER_PATH = ROOT / "docs" / "trinity-control-tower-latest.json"
-COUNCIL_ROSTER_PATH = ROOT / "docs" / "trinity-agent-council-roster-v6.json"
-SUBAGENT_REGISTRY_PATH = ROOT / "docs" / "trinity-subagent-registry-v3.json"
+COUNCIL_ROSTER_PATH = ROOT / "docs" / "trinity-agent-council-roster-v7.json"
+SUBAGENT_REGISTRY_PATH = ROOT / "docs" / "trinity-subagent-registry-v4.json"
 INSTANCE_REGISTRY_PATH = ROOT / "docs" / "trinity-instance-registry-v1.json"
 CODEX_ADAPTER_PATH = ROOT / "docs" / "trinity-codex-subagent-adapter-v1.json"
 AGENT_MESH_PATH = ROOT / "docs" / "trinity-codex-agent-mesh-v1.json"
@@ -278,7 +278,7 @@ def build_parser() -> argparse.ArgumentParser:
     roster_parser.add_argument("--json", action="store_true")
     roster_parser.set_defaults(func=cmd_council_roster_status)
 
-    subagent_parser = subparsers.add_parser("subagent-status", help="Summarize the v16 subagent registry.")
+    subagent_parser = subparsers.add_parser("subagent-status", help="Summarize the v17 subagent registry.")
     subagent_parser.add_argument("--json", action="store_true")
     subagent_parser.set_defaults(func=cmd_subagent_status)
 

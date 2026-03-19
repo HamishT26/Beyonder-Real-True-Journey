@@ -1,0 +1,157 @@
+{
+  "generated_utc": "2026-03-19T13:34:18Z",
+  "overall_status": "PASS",
+  "phase": "v18_omega",
+  "authority_model": "repo_first",
+  "source_branch": "codex/Aletheon/v17-evidence-first-closeout",
+  "head_sha": "f3c793bb0dc6e7489b8a9b7be8dd9eccf2e731ba",
+  "checkpoint_anchor_commit": "e45da1dd2dd184c4e3fd218ece27b8f29589f8f6",
+  "bootstrap_anchor_commit": "468b96d90bc2785be19854b44c62217a47afc800",
+  "inherits_from": {
+    "beta_pack_path": "docs/v18-beta-continuity-pack-v1.md",
+    "beta_policy_path": "docs/v18-beta-handoff-policy-v1.json",
+    "continuity_prompt_path": "docs/v17-continuity-prompt-v1.md",
+    "phase_operations_guide_path": "docs/v17-phase-operations-guide-v1.md"
+  },
+  "current_shared_truth": {
+    "summary": "1052 PASS / 0 WARN / 0 FAIL",
+    "expansion_systems_passed": 986,
+    "expansion_systems_total": 986,
+    "primary_blocker": "",
+    "primary_blocker_detail": "Recovered from stale artifact drift; body_resource_envelope_guard now passes at suite_duration_sec=2425.344 against budget_sec=3000.0.",
+    "downstream_fail": "",
+    "quick_lane_summary": "38 PASS / 0 WARN / 0 FAIL",
+    "checkpoint_class": "shared_full_suite_authority",
+    "shared_latest_eligible": true
+  },
+  "omega_execution_rule": {
+    "mode": "resume_without_new_phase_decisions",
+    "omega_owner": "Aletheon",
+    "selected_resume_lane_required": true,
+    "stop_on_unclear_or_unsafe_boundary": true,
+    "required_residual_packaging": true,
+    "write_governance": "orun_gated",
+    "trace_logs_required": true,
+    "rollback_notes_required": true
+  },
+  "selected_resume_lane": {
+    "lane": "runtime_probe",
+    "lane_owner": "Aletheon",
+    "entry_condition": "Start only from the recovered shared_latest repo state.",
+    "first_step": "Probe whether runtime-truth fields can be promoted from direct evidence across the runtime session log, runtime truth board, and runtime model resolution surfaces.",
+    "fallback_step": "If runtime truth remains unauditable, preserve awaiting_thread_boot and stop cleanly instead of forcing live-overlay promotion.",
+    "stop_condition": "Stop before any mutation that would rely on inference, destructive cleanup, cloud context use, or filesystem promotion."
+  },
+  "shared_latest_outcome_rule": {
+    "if_still_blocked": {
+      "closeout_status": "BLOCKED",
+      "promotion_rule": "no_shared_latest_promotion",
+      "packaging_rule": "package_blocker_truth_and_residuals"
+    },
+    "if_recovered": {
+      "closeout_status": "PASS",
+      "promotion_rule": "promote_only_if_full_suite_matrix_is_green",
+      "packaging_rule": "package_recovery_evidence_and_post_recovery_residuals"
+    }
+  },
+  "runtime_truth_policy": {
+    "requested_model_order": [
+      "GPT-5.4",
+      "GPT-5.3-Codex",
+      "GPT-5.3-Codex-Spark",
+      "GPT-5.1-Codex-Max"
+    ],
+    "required_runtime_fields": [
+      "requested_model",
+      "offered_model",
+      "selected_model",
+      "resolved_model",
+      "runtime_surface",
+      "requested_reasoning_effort"
+    ],
+    "runtime_truth_inference_allowed": false
+  },
+  "connected_ops_scope": {
+    "repo_edits": "allowed_orun_gated",
+    "docker_lifecycle": "allowed_orun_gated",
+    "kubernetes_local_only": "allowed_orun_gated",
+    "linear_updates": "append_only_or_reversible_orun_gated",
+    "notion_updates": "append_only_or_reversible_orun_gated",
+    "github_updates": "repo_first_orun_gated",
+    "destructive_cleanup": "disallowed_without_explicit_orun_override"
+  },
+  "runtime_surface_snapshot": {
+    "docker": {
+      "context": "desktop-linux",
+      "engine_access": "partial",
+      "container_name": "trinity-v5-pg-proof",
+      "container_id": "d30135a19d2b81d41466a4930e45ef8f526a5c6517a22fb1ff8cdaca58e24a57",
+      "status": "running",
+      "host_port": "55432",
+      "host_port_reachable": true,
+      "exec_probe": "timed_out"
+    },
+    "kubernetes": {
+      "current_context": "docker-desktop",
+      "scope": "local_only",
+      "cloud_contexts_allowed": false
+    }
+  },
+  "overlay_agents": [
+    {
+      "slot_number": 27,
+      "display_name": "Caelira",
+      "omega_role": "mind_comparator"
+    },
+    {
+      "slot_number": 28,
+      "display_name": "Orun",
+      "omega_role": "root_coordinator"
+    },
+    {
+      "slot_number": 29,
+      "display_name": "Seren Vale",
+      "omega_role": "freedid_compliance"
+    },
+    {
+      "slot_number": 30,
+      "display_name": "Lyriq",
+      "omega_role": "body_runtime_docker_k8s"
+    },
+    {
+      "slot_number": 31,
+      "display_name": "Mira Sol",
+      "omega_role": "continuity_and_handoff_packaging"
+    }
+  ],
+  "honesty_boundaries": {
+    "unsupported_model_names_disallowed": [
+      "gpt-5.4-xhigh"
+    ],
+    "toml_not_equal_to_app_registration": true,
+    "gmail_browser_phone_laptop_out_of_scope_without_repo_workflow": true,
+    "google_drive_state": "operator_hold",
+    "filesystem_promotion_state": "blocked",
+    "materialization_level_actual": "readiness_only"
+  },
+  "required_handoff_outputs": [
+    "docs/v18-omega-closeout-summary-v1.json",
+    "docs/v18-omega-continuity-pack-v1.md",
+    "docs/v18-omega-handoff-policy-v1.json",
+    "docs/v17-runtime-session-log-latest.json"
+  ],
+  "source_artifacts_checked": [
+    "docs/system-suite-status.json",
+    "docs/trinity-expansion/body-resource-envelope-guard-latest.json",
+    "docs/trinity-control-tower-latest.json",
+    "docs/trinity-mandala-scoreboard-latest.json",
+    "docs/v17-closeout-summary-v1.json",
+    "docs/v17-runtime-session-log-latest.json",
+    "docs/v17-runtime-truth-resolution-board-v1.json",
+    "docs/trinity-runtime-model-resolution-v1.json",
+    "docs/v17-runtime-session-validation-latest.json",
+    "docs/v17-external-establishment-validation-latest.json",
+    "docs/v17-standards-bridge-validation-latest.json",
+    "docs/trinity-agent-council-validation-latest.json"
+  ]
+}

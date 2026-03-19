@@ -1,0 +1,33 @@
+# Trinity Expansion Result: public_source_refresh_v12_sync_bridge
+
+- generated_utc: `2026-03-18T08:19:45+00:00`
+- pillar: `trinity`
+- overall_status: **PASS**
+- effective_success: `True`
+
+## Checks
+| name | status | detail |
+|---|---|---|
+| cache_written | PASS | docs/trinity-mcp-cache/public-source-refresh-v12-latest.json |
+
+## Metrics
+```json
+{
+  "actual_state": "active",
+  "auth_state": "public_unauthenticated",
+  "blocker_count": 0,
+  "cache_status": "active",
+  "desired_state": "active",
+  "live_read_enabled": false,
+  "live_write_enabled": false,
+  "pack": "public_source_refresh_v12",
+  "record_count": 1,
+  "strategy": "public_feeds"
+}
+```
+
+## Repo targets touched
+- `docs/comparative-validation-grid-v1.md`
+- `docs/trinity-mcp-cache/public-source-refresh-v12-latest.json`
+- `docs/trinity-public-research-brief-2026-03-13.md`
+- `docs/trinity-public-source-registry-v1.json`

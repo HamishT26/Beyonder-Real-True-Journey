@@ -74,7 +74,7 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the Trinity command book.")
-    parser.add_argument("--command-book", default="docs/trinity-command-book-v10.json")
+    parser.add_argument("--command-book", default="docs/trinity-command-book-v11.json")
     parser.add_argument("--execution-ledger", default="docs/trinity-command-execution-ledger.jsonl")
     parser.add_argument("--reports-dir", default="docs/trinity-command-book-runs")
     parser.add_argument("--latest-json", default="docs/trinity-command-book-validation-latest.json")
@@ -89,8 +89,8 @@ def main() -> int:
     if not isinstance(commands, list):
         failures.append("commands must be a list")
         commands = []
-    if len(commands) != 648:
-        failures.append(f"expected 648 commands, found {len(commands)}")
+    if len(commands) != 684:
+        failures.append(f"expected 684 commands, found {len(commands)}")
 
     seen: set[str] = set()
     for index, row in enumerate(commands):

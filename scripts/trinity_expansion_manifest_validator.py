@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}
-ALLOWED_WAVES = {"legacy"} | {f"wave{i}" for i in range(1, 150)}
+ALLOWED_WAVES = {"legacy"} | {f"wave{i}" for i in range(1, 300)}
 ALLOWED_TRACKS = {
     "mind_theory",
     "body_compute",
@@ -85,8 +85,8 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v16.json")
-    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v16.json")
+    parser = argparse.ArgumentParser(description="Validate docs/trinity-expansion-system-manifest-v17.json")
+    parser.add_argument("--manifest", default="docs/trinity-expansion-system-manifest-v17.json")
     parser.add_argument("--reports-dir", default="docs/trinity-expansion-manifest-runs")
     parser.add_argument("--latest-json", default="docs/trinity-expansion-manifest-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-expansion-manifest-validation-latest.md")
@@ -110,8 +110,8 @@ def main() -> int:
     if not isinstance(systems, list):
         failures.append("manifest.systems must be a list")
         systems = []
-    if isinstance(systems, list) and len(systems) != 950:
-        failures.append(f"manifest expected 950 systems, found {len(systems)}")
+    if isinstance(systems, list) and len(systems) != 986:
+        failures.append(f"manifest expected 986 systems, found {len(systems)}")
 
     seen_ids: set[str] = set()
     for index, entry in enumerate(systems):

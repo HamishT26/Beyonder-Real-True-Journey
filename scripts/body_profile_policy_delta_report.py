@@ -153,6 +153,14 @@ def _default_policy() -> Dict[str, object]:
         "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "source": "auto-default",
         "benchmark_profiles": {name: dict(values) for name, values in BENCHMARK_PROFILES.items()},
+        "resource_envelope_profiles": {
+            "quick": {"suite_duration_budget_sec": 900.0},
+            "standard": {"suite_duration_budget_sec": 2400.0},
+            "offline_only": {"suite_duration_budget_sec": 2400.0},
+            "deep": {"suite_duration_budget_sec": 3000.0},
+            "collab": {"suite_duration_budget_sec": 2400.0},
+            "materialize": {"suite_duration_budget_sec": 3600.0},
+        },
         "trend_profiles": _load_trend_profiles(),
         "regression_window_policy": {"window_size": 5, "max_regressions": 2},
     }
@@ -166,6 +174,8 @@ def _load_policy(path: Path) -> Dict[str, object]:
     baseline.update(payload)
     if not isinstance(baseline.get("benchmark_profiles"), dict):
         baseline["benchmark_profiles"] = _default_policy()["benchmark_profiles"]
+    if not isinstance(baseline.get("resource_envelope_profiles"), dict):
+        baseline["resource_envelope_profiles"] = _default_policy()["resource_envelope_profiles"]
     if not isinstance(baseline.get("trend_profiles"), dict):
         baseline["trend_profiles"] = _default_policy()["trend_profiles"]
     if not isinstance(baseline.get("regression_window_policy"), dict):
