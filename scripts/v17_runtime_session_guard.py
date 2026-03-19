@@ -74,7 +74,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate the v17 runtime-session guard.")
     parser.add_argument("--schema", default="docs/v17-runtime-session-schema-v1.json")
     parser.add_argument("--session-log", default="docs/v17-runtime-session-log-latest.json")
-    parser.add_argument("--control-tower", default="docs/trinity-control-tower-latest.json")
+    parser.add_argument("--control-tower", default="docs/v17-evidence-first-control-tower-latest.json")
     parser.add_argument("--handoff", default="docs/v15-external-agent-handoff-v1.json")
     parser.add_argument("--runtime-resolution", default="docs/trinity-runtime-model-resolution-v1.json")
     parser.add_argument("--latest-json", default="docs/v17-runtime-session-validation-latest.json")

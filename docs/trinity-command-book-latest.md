@@ -1,7 +1,7 @@
 # Trinity Command Book
 
-- generated_utc: `2026-03-18T03:37:35+00:00`
-- commands: `648`
+- generated_utc: `2026-03-19T00:37:47+00:00`
+- commands: `684`
 
 | command_id | executor_role | mode | risk | visibility |
 |---|---|---|---|---|
@@ -653,3 +653,39 @@
 | v16_overlay_all_council_01 | planner | offline | medium | council_shared |
 | v16_overlay_all_council_02 | planner | offline | medium | council_shared |
 | v16_overlay_all_council_03 | planner | offline | medium | council_shared |
+| refresh_baseline_restore_governor_v17 | planner | offline | medium | council_shared |
+| validate_baseline_restore_governor_v17 | reviewer | offline | medium | council_shared |
+| publish_baseline_restore_governor_v17 | archivist | offline | low | council_shared |
+| refresh_runtime_truth_resolution_v17 | planner | offline | medium | council_shared |
+| validate_runtime_truth_resolution_v17 | reviewer | offline | medium | council_shared |
+| publish_runtime_truth_resolution_v17 | archivist | offline | low | council_shared |
+| refresh_mind_evidence_refresh_v17 | planner | offline | medium | council_shared |
+| validate_mind_evidence_refresh_v17 | reviewer | offline | medium | council_shared |
+| publish_mind_evidence_refresh_v17 | archivist | offline | low | council_shared |
+| refresh_body_runtime_readiness_v17 | planner | offline | medium | council_shared |
+| validate_body_runtime_readiness_v17 | reviewer | offline | medium | council_shared |
+| publish_body_runtime_readiness_v17 | archivist | offline | low | council_shared |
+| refresh_heart_standards_alignment_v17 | planner | offline | medium | council_shared |
+| validate_heart_standards_alignment_v17 | reviewer | offline | medium | council_shared |
+| publish_heart_standards_alignment_v17 | archivist | offline | low | council_shared |
+| refresh_phase_operations_guide_v17 | planner | offline | medium | council_shared |
+| validate_phase_operations_guide_v17 | reviewer | offline | medium | council_shared |
+| publish_phase_operations_guide_v17 | archivist | offline | low | council_shared |
+| v17_overlay_27_caelira_01 | planner | offline | medium | council_shared |
+| v17_overlay_27_caelira_02 | planner | offline | medium | council_shared |
+| v17_overlay_27_caelira_03 | planner | offline | medium | council_shared |
+| v17_overlay_28_orun_01 | planner | offline | medium | council_shared |
+| v17_overlay_28_orun_02 | planner | offline | medium | council_shared |
+| v17_overlay_28_orun_03 | planner | offline | medium | council_shared |
+| v17_overlay_29_seren_vale_01 | planner | offline | medium | council_shared |
+| v17_overlay_29_seren_vale_02 | planner | offline | medium | council_shared |
+| v17_overlay_29_seren_vale_03 | planner | offline | medium | council_shared |
+| v17_overlay_30_lyriq_01 | planner | offline | medium | council_shared |
+| v17_overlay_30_lyriq_02 | planner | offline | medium | council_shared |
+| v17_overlay_30_lyriq_03 | planner | offline | medium | council_shared |
+| v17_overlay_31_mira_sol_01 | planner | offline | medium | council_shared |
+| v17_overlay_31_mira_sol_02 | planner | offline | medium | council_shared |
+| v17_overlay_31_mira_sol_03 | planner | offline | medium | council_shared |
+| v17_overlay_all_council_01 | planner | offline | medium | council_shared |
+| v17_overlay_all_council_02 | planner | offline | medium | council_shared |
+| v17_overlay_all_council_03 | planner | offline | medium | council_shared |

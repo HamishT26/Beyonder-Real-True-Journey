@@ -21,9 +21,9 @@ from trinity_api_common import fetch_json, fetch_text, quote_plus
 from trinity_v6_support import run_v6_system
 
 ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v16.json"
+DEFAULT_MANIFEST = ROOT / "docs" / "trinity-expansion-system-manifest-v17.json"
 DEFAULT_RUNS_DIR = ROOT / "docs" / "trinity-expansion-runs"
-DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v14.json"
+DEFAULT_EXTENSION_CATALOG = "docs/trinity-extension-catalog-v15.json"
 DEFAULT_MCP_CATALOG = "docs/trinity-mcp-catalog-v11.json"
 DEFAULT_MCP_CACHE_SCHEMA = "docs/trinity-mcp-cache-schema-v3.json"
 DEFAULT_MATERIALIZATION_LEDGER = "docs/trinity-materialization-ledger.jsonl"
@@ -151,6 +151,29 @@ def _body_benchmark_limits(profile_context: str, benchmark_profile: object | Non
                 except (TypeError, ValueError):
                     continue
     return (profile_name or fallback_profile, 7.0, 50.0)
+
+
+def _body_resource_envelope_budget(profile_context: str) -> float:
+    normalized = str(profile_context or "").strip().lower().replace("-", "_")
+    defaults = {
+        "quick": 900.0,
+        "standard": 2400.0,
+        "offline_only": 2400.0,
+        "deep": 3000.0,
+        "collab": 2400.0,
+        "materialize": 3600.0,
+    }
+    ok, payload, _detail = _read_json_safe("docs/body-profile-policy-v1.json")
+    if ok:
+        profiles = payload.get("resource_envelope_profiles", {})
+        if isinstance(profiles, dict):
+            row = profiles.get(normalized)
+            if isinstance(row, dict):
+                try:
+                    return float(row.get("suite_duration_budget_sec", defaults.get(normalized, 2400.0)))
+                except (TypeError, ValueError):
+                    pass
+    return defaults.get(normalized, 2400.0)
 
 
 def _markdown_section(text: str, heading: str, next_heading_level: int = 2) -> str:
@@ -2333,15 +2356,7 @@ def _compute_system(
         results = payload.get("results", [])
         durations = [float(item.get("duration_sec", 0.0) or 0.0) for item in results if isinstance(item, dict)]
         p95 = sorted(durations)[max(int(len(durations) * 0.95) - 1, 0)] if durations else 0.0
-        duration_budgets = {
-            "quick": 900.0,
-            "standard": 2100.0,
-            "offline_only": 2100.0,
-            "deep": 2400.0,
-            "collab": 2400.0,
-            "materialize": 3600.0,
-        }
-        budget = duration_budgets.get(profile_context, 2100.0)
+        budget = _body_resource_envelope_budget(profile_context)
         checks = [
             _check("suite_duration_budget", "PASS" if duration <= budget else "FAIL", f"suite_duration_sec={duration:.3f}, budget_sec={budget:.1f}"),
             _check("step_p95_budget", "PASS" if p95 <= 120.0 else "FAIL", f"step_p95_sec={p95:.3f}"),

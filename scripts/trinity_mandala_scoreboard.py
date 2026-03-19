@@ -133,7 +133,34 @@ def _artifact_status(label: str, path: str) -> ArtifactStatus:
 
 
 def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, str]:
+    checkpoint_class = str(payload.get("checkpoint_class") or "")
+    results = payload.get("results")
     counts = payload.get("counts")
+
+    if checkpoint_class == "shared_full_suite_authority" and isinstance(counts, dict):
+        pass_count = int(counts.get("pass", 0) or 0)
+        warn_count = int(counts.get("warn", 0) or 0)
+        fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
+        status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+        detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
+        return status, detail
+
+    if isinstance(results, list):
+        filtered = [
+            row
+            for row in results
+            if isinstance(row, dict) and str(row.get("label") or "") != "trinity mandala scoreboard"
+        ]
+        if filtered:
+            pass_count = sum(1 for row in filtered if str(row.get("status") or "") == "PASS")
+            warn_count = sum(1 for row in filtered if str(row.get("status") or "") == "WARN")
+            fail_count = sum(
+                1 for row in filtered if str(row.get("status") or "") in {"FAIL", "TIMEOUT"}
+            )
+            status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+            detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
+            return status, detail
+
     if isinstance(counts, dict):
         pass_count = int(counts.get("pass", 0) or 0)
         warn_count = int(counts.get("warn", 0) or 0)
@@ -183,6 +210,8 @@ def _build_markdown(payload: dict[str, object]) -> str:
         f"- generated_utc: `{payload['generated_utc']}`",
         f"- hybrid_os_status: **{payload['hybrid_os_status']}**",
         f"- suite_status: `{payload['suite_status']}`",
+        f"- checkpoint_class: `{payload['checkpoint_class']}`",
+        f"- shared_latest_eligible: `{payload['shared_latest_eligible']}`",
         "",
         "## Pillar summary",
         "| pillar | status | watch_items | next_action |",
@@ -238,6 +267,8 @@ def main() -> int:
     parser.add_argument("--latest-json", default="docs/trinity-mandala-scoreboard-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-mandala-scoreboard-latest.md")
     parser.add_argument("--suite-status", default="docs/system-suite-status.json")
+    parser.add_argument("--control-tower-path", default="docs/trinity-control-tower-latest.json")
+    parser.add_argument("--checkpoint-class", default="shared_full_suite_authority")
     parser.add_argument("--fail-on-warn", action="store_true")
     args = parser.parse_args()
 
@@ -438,11 +469,12 @@ def main() -> int:
         asdict(_artifact_status("Journey lineage inventory gate v14", "docs/trinity-expansion/journey-lineage-inventory-v14-gate-latest.json")),
         asdict(_artifact_status("Council reflection validation gate v14", "docs/trinity-expansion/council-reflection-validation-v14-gate-latest.json")),
         asdict(_artifact_status("V15 mesh proof", "docs/trinity-agent-mesh-proof-v1.json")),
-        asdict(_artifact_status("V16 verdict", "docs/v16-trinity-verdict-v1.json")),
+        asdict(_artifact_status("V17 baseline state", "docs/v17-baseline-state-v1.json")),
+        asdict(_artifact_status("V17 closeout summary", "docs/v17-closeout-summary-v1.json")),
         asdict(_artifact_status("V17 runtime session validation", "docs/v17-runtime-session-validation-latest.json")),
         asdict(_artifact_status("V17 external establishment validation", "docs/v17-external-establishment-validation-latest.json")),
         asdict(_artifact_status("V17 standards bridge validation", "docs/v17-standards-bridge-validation-latest.json")),
-        asdict(_artifact_status("Trinity control tower board", "docs/trinity-control-tower-latest.json")),
+        asdict(_artifact_status("Trinity control tower board", args.control_tower_path)),
     ]
 
     hybrid_status = "PASS"
@@ -465,6 +497,10 @@ def main() -> int:
         "hybrid_os_status": overall_status,
         "suite_status": suite_status,
         "suite_detail": suite_detail,
+        "checkpoint_class": args.checkpoint_class,
+        "shared_latest_eligible": args.checkpoint_class == "shared_full_suite_authority",
+        "control_tower_path": args.control_tower_path,
+        "suite_status_path": args.suite_status,
         "pillars": {
             "mind": mind,
             "body": body,

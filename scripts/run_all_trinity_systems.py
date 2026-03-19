@@ -14,8 +14,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REPORT = ROOT / "docs" / "system-suite-run-report.md"
-STATUS_JSON = ROOT / "docs" / "system-suite-status.json"
+SHARED_REPORT = ROOT / "docs" / "system-suite-run-report.md"
+SHARED_STATUS_JSON = ROOT / "docs" / "system-suite-status.json"
+V17_QUICK_REPORT = ROOT / "docs" / "v17-system-suite-run-report-latest.md"
+V17_QUICK_STATUS_JSON = ROOT / "docs" / "v17-system-suite-status-latest.json"
+SHARED_CONTROL_TOWER_JSON = ROOT / "docs" / "trinity-control-tower-latest.json"
+V17_CONTROL_TOWER_JSON = ROOT / "docs" / "v17-evidence-first-control-tower-latest.json"
+V17_CONTROL_TOWER_MD = ROOT / "docs" / "v17-evidence-first-control-tower-latest.md"
+SHARED_SCOREBOARD_JSON = ROOT / "docs" / "trinity-mandala-scoreboard-latest.json"
+SHARED_SCOREBOARD_MD = ROOT / "docs" / "trinity-mandala-scoreboard-latest.md"
+V17_SCOREBOARD_JSON = ROOT / "docs" / "v17-mandala-scoreboard-latest.json"
+V17_SCOREBOARD_MD = ROOT / "docs" / "v17-mandala-scoreboard-latest.md"
 CYCLE_STATUS = "docs/aurelis-cycle-tick-status.json"
 SKILL_INSTALLER_LIST = "/opt/codex/skills/.system/skill-installer/scripts/list-curated-skills.py"
 NETWORK_WARNING_MARKERS = ("403", "forbidden", "tunnel", "timed out", "proxy", "connection")
@@ -25,10 +34,10 @@ PROFILE_HELP = {
     "deep": "Expanded run (standard + version scan + skill install + curated catalog + expansion systems).",
     "collab": "Standard profile plus verified MCP collaboration refresh and collaboration pack reporting.",
     "materialize": "Standard profile plus materialization tracers and disposable staging proof generation.",
-    "recover": "Low-pressure recovery profile that validates the v16 council mesh, canon, continuity, storage truth, and scoreboard state.",
+    "recover": "Low-pressure recovery profile that validates the v17 council mesh, canon, continuity, storage truth, and scoreboard state.",
 }
 BODY_PROFILE_POLICY_PATH = "docs/body-profile-policy-v1.json"
-TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v16.json"
+TRINITY_EXPANSION_MANIFEST_PATH = "docs/trinity-expansion-system-manifest-v17.json"
 TRINITY_MCP_CATALOG_PATH = "docs/trinity-mcp-catalog-v11.json"
 PYTHON_BIN = sys.executable
 BASH_BIN = shutil.which("bash")
@@ -276,7 +285,7 @@ def _memory_bank_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
 def _agent_council_validation_command(*, enforce: bool) -> tuple[str, list[str]]:
     command = [
         "python3",
-        "scripts/trinity_agent_council_v16_validator.py",
+        "scripts/trinity_agent_council_v17_validator.py",
     ]
     if enforce:
         command.append("--fail-on-warn")
@@ -1676,13 +1685,21 @@ def _merge_resume_results(
     return merged
 
 
-def _write_interim_suite_status(path: Path, suite_results: list[dict[str, object]]) -> None:
+def _write_interim_suite_status(
+    path: Path,
+    suite_results: list[dict[str, object]],
+    *,
+    checkpoint_class: str,
+    shared_latest_eligible: bool,
+) -> None:
     pass_count = sum(1 for item in suite_results if item["status"] == "PASS")
     warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
     timeout_count = sum(1 for item in suite_results if item["status"] == "TIMEOUT")
     fail_count = sum(1 for item in suite_results if item["status"] == "FAIL")
     payload = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
+        "checkpoint_class": checkpoint_class,
+        "shared_latest_eligible": shared_latest_eligible,
         "effective_success": all(bool(item["effective_success"]) for item in suite_results),
         "counts": {
             "pass": pass_count,
@@ -1800,9 +1817,10 @@ def main() -> None:
             "off, observe, or enforce."
         ),
     )
+    default_status_arg = str(SHARED_STATUS_JSON.relative_to(ROOT))
     parser.add_argument(
         "--status-json",
-        default=str(STATUS_JSON.relative_to(ROOT)),
+        default=default_status_arg,
         help="Path to write machine-readable suite status JSON (relative to repo root).",
     )
     parser.add_argument(
@@ -1826,22 +1844,7 @@ def main() -> None:
     if args.achievement_target_steps < 0:
         raise SystemExit("--achievement-target-steps must be >= 0")
 
-    status_json_path = (ROOT / args.status_json).resolve()
-    try:
-        status_json_path.relative_to(ROOT)
-    except ValueError as exc:
-        raise SystemExit("--status-json must remain within repository root") from exc
-
     resume_status_path: Path | None = None
-    if args.resume_from_status:
-        candidate = Path(args.resume_from_status)
-        resume_status_path = candidate if candidate.is_absolute() else (ROOT / candidate).resolve()
-        if not resume_status_path.exists():
-            raise SystemExit(f"--resume-from-status not found: {resume_status_path}")
-    elif args.resume_failed_only:
-        resume_status_path = status_json_path if status_json_path.exists() else STATUS_JSON
-        if not resume_status_path.exists():
-            raise SystemExit("no suite status file available for --resume-failed-only")
 
     (
         profile,
@@ -1857,6 +1860,45 @@ def main() -> None:
         profile_source,
         body_benchmark_mode,
     ) = resolve_profile_settings(args)
+
+    default_status_requested = args.status_json == default_status_arg
+    if default_status_requested and profile == "quick":
+        status_json_path = V17_QUICK_STATUS_JSON
+    else:
+        status_json_path = (ROOT / args.status_json).resolve()
+    try:
+        status_json_path.relative_to(ROOT)
+    except ValueError as exc:
+        raise SystemExit("--status-json must remain within repository root") from exc
+
+    if profile == "quick":
+        report_path = V17_QUICK_REPORT
+        control_tower_json_path = V17_CONTROL_TOWER_JSON
+        control_tower_md_path = V17_CONTROL_TOWER_MD
+        scoreboard_latest_json = V17_SCOREBOARD_JSON
+        scoreboard_latest_md = V17_SCOREBOARD_MD
+        checkpoint_class = "v17_evidence_first_quick_lane"
+        shared_latest_eligible = False
+        latest_surface_scope = "v17_specific_latest"
+    else:
+        report_path = SHARED_REPORT
+        control_tower_json_path = SHARED_CONTROL_TOWER_JSON
+        control_tower_md_path = ROOT / "docs" / "trinity-control-tower-latest.md"
+        scoreboard_latest_json = SHARED_SCOREBOARD_JSON
+        scoreboard_latest_md = SHARED_SCOREBOARD_MD
+        checkpoint_class = "shared_full_suite_authority"
+        shared_latest_eligible = True
+        latest_surface_scope = "shared_latest"
+
+    if args.resume_from_status:
+        candidate = Path(args.resume_from_status)
+        resume_status_path = candidate if candidate.is_absolute() else (ROOT / candidate).resolve()
+        if not resume_status_path.exists():
+            raise SystemExit(f"--resume-from-status not found: {resume_status_path}")
+    elif args.resume_failed_only:
+        resume_status_path = status_json_path if status_json_path.exists() else SHARED_STATUS_JSON
+        if not resume_status_path.exists():
+            raise SystemExit("no suite status file available for --resume-failed-only")
 
     effective_achievement_target = args.achievement_target_steps
     if effective_achievement_target == 0 and profile == "deep":
@@ -2007,7 +2049,11 @@ def main() -> None:
         f"Achievement target steps: {effective_achievement_target if effective_achievement_target > 0 else 'disabled'}",
         f"Quick mode: {profile == 'quick'}",
         f"Body benchmark mode: {body_benchmark_mode}",
+        f"Report path: {report_path.relative_to(ROOT)}",
         f"Status JSON path: {status_json_path.relative_to(ROOT)}",
+        f"Checkpoint class: {checkpoint_class}",
+        f"Shared latest eligible: {shared_latest_eligible}",
+        f"Latest surface scope: {latest_surface_scope}",
         "",
         "This report runs currently available repo systems and records command outputs.",
         "",
@@ -2021,10 +2067,33 @@ def main() -> None:
             interim_results = suite_results
             if resume_baseline_results:
                 interim_results = _merge_resume_results(resume_baseline_results, suite_results)
-            _write_interim_suite_status(status_json_path, interim_results)
+            _write_interim_suite_status(
+                status_json_path,
+                interim_results,
+                checkpoint_class=checkpoint_class,
+                shared_latest_eligible=shared_latest_eligible,
+            )
             status_arg = str(status_json_path.relative_to(ROOT)).replace("\\", "/")
             if "--suite-status" not in effective_cmd:
                 effective_cmd.extend(["--suite-status", status_arg])
+            if "--latest-json" not in effective_cmd:
+                effective_cmd.extend(["--latest-json", str(scoreboard_latest_json.relative_to(ROOT)).replace("\\", "/")])
+            if "--latest-md" not in effective_cmd:
+                effective_cmd.extend(["--latest-md", str(scoreboard_latest_md.relative_to(ROOT)).replace("\\", "/")])
+            if "--control-tower-path" not in effective_cmd:
+                effective_cmd.extend(["--control-tower-path", str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/")])
+            if "--checkpoint-class" not in effective_cmd:
+                effective_cmd.extend(["--checkpoint-class", checkpoint_class])
+        if label == "v17 evidence-first control tower sync":
+            status_arg = str(status_json_path.relative_to(ROOT)).replace("\\", "/")
+            if "--suite-status" not in effective_cmd:
+                effective_cmd.extend(["--suite-status", status_arg])
+            if "--control-tower-json" not in effective_cmd:
+                effective_cmd.extend(["--control-tower-json", str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/")])
+            if "--control-tower-md" not in effective_cmd:
+                effective_cmd.extend(["--control-tower-md", str(control_tower_md_path.relative_to(ROOT)).replace("\\", "/")])
+            if "--checkpoint-class" not in effective_cmd:
+                effective_cmd.extend(["--checkpoint-class", checkpoint_class])
         ok, output, timed_out, duration_sec, started_at, finished_at = run_command(effective_cmd, args.step_timeout_sec)
         status, counted_success = classify_status(
             label=label,
@@ -2094,17 +2163,18 @@ def main() -> None:
     dashboard_state = _read_status_value("docs/trinity-expansion/trinity-dashboard-gate-latest.json", "overall_status", "FAIL")
     future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
     materialization_level_desired = args.materialization_level
-    materialization_level_actual = _read_status_value("docs/trinity-control-tower-latest.json", "materialization_level_actual", "readiness_only")
-    google_drive_state = _read_status_value("docs/trinity-control-tower-latest.json", "google_drive_state", "operator_hold")
-    external_live_overlay_state = _read_status_value("docs/trinity-control-tower-latest.json", "external_live_overlay_state", "awaiting_thread_boot")
-    runtime_session_state = _read_status_value("docs/trinity-control-tower-latest.json", "runtime_session_state", "FAIL")
-    runtime_truth_complete = bool(_read_status_value("docs/trinity-control-tower-latest.json", "runtime_truth_complete", False))
-    external_establishment_criteria_state = _read_status_value("docs/trinity-control-tower-latest.json", "external_establishment_criteria_state", "FAIL")
-    standards_bridge_state = _read_status_value("docs/trinity-control-tower-latest.json", "standards_bridge_state", "FAIL")
-    filesystem_promotion_state = _read_status_value("docs/trinity-control-tower-latest.json", "filesystem_promotion_state", "blocked")
-    filesystem_connector_actual_state = _read_status_value("docs/trinity-control-tower-latest.json", "filesystem_connector_actual_state", "unknown")
-    claim_boundary_state = _read_status_value("docs/trinity-control-tower-latest.json", "claim_boundary_state", "FAIL")
-    v17_evidence_first_state = _read_status_value("docs/trinity-control-tower-latest.json", "v17_evidence_first_state", "FAIL")
+    control_tower_status_path = str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/")
+    materialization_level_actual = _read_status_value(control_tower_status_path, "materialization_level_actual", "readiness_only")
+    google_drive_state = _read_status_value(control_tower_status_path, "google_drive_state", "operator_hold")
+    external_live_overlay_state = _read_status_value(control_tower_status_path, "external_live_overlay_state", "awaiting_thread_boot")
+    runtime_session_state = _read_status_value(control_tower_status_path, "runtime_session_state", "FAIL")
+    runtime_truth_complete = bool(_read_status_value(control_tower_status_path, "runtime_truth_complete", False))
+    external_establishment_criteria_state = _read_status_value(control_tower_status_path, "external_establishment_criteria_state", "FAIL")
+    standards_bridge_state = _read_status_value(control_tower_status_path, "standards_bridge_state", "FAIL")
+    filesystem_promotion_state = _read_status_value(control_tower_status_path, "filesystem_promotion_state", "blocked")
+    filesystem_connector_actual_state = _read_status_value(control_tower_status_path, "filesystem_connector_actual_state", "unknown")
+    claim_boundary_state = _read_status_value(control_tower_status_path, "claim_boundary_state", "FAIL")
+    v17_evidence_first_state = _read_status_value(control_tower_status_path, "v17_evidence_first_state", "FAIL")
     persistent_targets = _read_status_value("docs/trinity-persistent-dev-targets-v2.json", "targets", _read_status_value("docs/trinity-persistent-dev-targets-v1.json", "targets", []))
     persistent_target_count = len(persistent_targets) if isinstance(persistent_targets, list) else 0
     command_surface_state = _read_status_value("docs/trinity-command-book-validation-latest.json", "overall_status", "FAIL")
@@ -2117,7 +2187,7 @@ def main() -> None:
     late_step_autonomy_state = _read_status_value(
         "docs/trinity-expansion/cloud-staging-readiness-v8-gate-latest.json",
         "overall_status",
-        _read_status_value("docs/trinity-control-tower-latest.json", "late_step_autonomy_state", "FAIL"),
+        _read_status_value(control_tower_status_path, "late_step_autonomy_state", "FAIL"),
     )
 
     lines.append("## Overall status")
@@ -2175,6 +2245,9 @@ def main() -> None:
             "timeout": timeout_count,
             "fail": fail_count,
         },
+        "checkpoint_class": checkpoint_class,
+        "shared_latest_eligible": shared_latest_eligible,
+        "latest_surface_scope": latest_surface_scope,
         "expansion_systems_total": expansion_total,
         "expansion_systems_passed": expansion_passed,
         "collab_pack_count": collab_pack_count,
@@ -2253,10 +2326,68 @@ def main() -> None:
     lines.append("```")
     lines.append("")
 
-    REPORT.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     status_json_path.parent.mkdir(parents=True, exist_ok=True)
     status_json_path.write_text(json.dumps(status_payload, indent=2) + "\n", encoding="utf-8")
-    print(f"Wrote {REPORT}")
+
+    sync_refresh_cmd = [
+        "python3",
+        "scripts/v17_evidence_first_control_tower_sync.py",
+        "--suite-status",
+        str(status_json_path.relative_to(ROOT)).replace("\\", "/"),
+        "--control-tower-json",
+        str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/"),
+        "--control-tower-md",
+        str(control_tower_md_path.relative_to(ROOT)).replace("\\", "/"),
+        "--checkpoint-class",
+        checkpoint_class,
+    ]
+    scoreboard_refresh_cmd = [
+        "python3",
+        "scripts/trinity_mandala_scoreboard.py",
+        "--suite-status",
+        str(status_json_path.relative_to(ROOT)).replace("\\", "/"),
+        "--latest-json",
+        str(scoreboard_latest_json.relative_to(ROOT)).replace("\\", "/"),
+        "--latest-md",
+        str(scoreboard_latest_md.relative_to(ROOT)).replace("\\", "/"),
+        "--control-tower-path",
+        str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/"),
+        "--checkpoint-class",
+        checkpoint_class,
+    ]
+    if args.fail_on_warn:
+        scoreboard_refresh_cmd.append("--fail-on-warn")
+
+    sync_ok, sync_output, sync_timed_out, _, _, _ = run_command(sync_refresh_cmd, args.step_timeout_sec)
+    sync_status, _ = classify_status(
+        label="final control tower refresh",
+        ok=sync_ok,
+        timed_out=sync_timed_out,
+        output=sync_output,
+        soft_fail_network=soft_fail_network,
+    )
+    if sync_status not in {"PASS", "WARN"} or (args.fail_on_warn and sync_status == "WARN"):
+        print(sync_output, file=sys.stderr)
+        raise SystemExit(1)
+
+    scoreboard_ok, scoreboard_output, scoreboard_timed_out, _, _, _ = run_command(
+        scoreboard_refresh_cmd,
+        args.step_timeout_sec,
+    )
+    scoreboard_status, _ = classify_status(
+        label="final scoreboard refresh",
+        ok=scoreboard_ok,
+        timed_out=scoreboard_timed_out,
+        output=scoreboard_output,
+        soft_fail_network=soft_fail_network,
+    )
+    if scoreboard_status not in {"PASS", "WARN"} or (args.fail_on_warn and scoreboard_status == "WARN"):
+        print(scoreboard_output, file=sys.stderr)
+        raise SystemExit(1)
+
+    print(f"Wrote {report_path}")
     print(f"Wrote {status_json_path}")
 
     if effective_success:

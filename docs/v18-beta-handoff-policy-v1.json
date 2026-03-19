@@ -1,0 +1,112 @@
+{
+  "generated_utc": "2026-03-19T08:23:49Z",
+  "overall_status": "PASS",
+  "phase": "v18_beta",
+  "authority_model": "repo_first",
+  "source_branch": "codex/Aletheon/v17-evidence-first-closeout",
+  "v17_blocked_state": {
+    "summary": "1050 PASS / 0 WARN / 2 FAIL",
+    "expansion_systems_passed": 985,
+    "expansion_systems_total": 986,
+    "primary_blocker": "body_resource_envelope_guard",
+    "primary_blocker_detail": "suite_duration_sec=3160.453, budget_sec=3000.0",
+    "downstream_fail": "trinity mandala scoreboard",
+    "shared_latest_checkpoint_class": "shared_full_suite_authority",
+    "quick_lane_summary": "38 PASS / 0 WARN / 0 FAIL"
+  },
+  "beta_execution_rule": {
+    "mode": "bounded_partial_completion_only",
+    "omega_owner": "Aletheon",
+    "stop_on_unclear_or_unsafe_boundary": true,
+    "required_residual_packaging": true,
+    "write_governance": "orun_gated",
+    "trace_logs_required": true,
+    "rollback_notes_required": true
+  },
+  "runtime_truth_policy": {
+    "requested_model_order": [
+      "GPT-5.4",
+      "GPT-5.3-Codex",
+      "GPT-5.3-Codex-Spark",
+      "GPT-5.1-Codex-Max"
+    ],
+    "required_runtime_fields": [
+      "requested_model",
+      "offered_model",
+      "selected_model",
+      "resolved_model",
+      "runtime_surface",
+      "requested_reasoning_effort"
+    ],
+    "runtime_truth_inference_allowed": false
+  },
+  "connected_ops_scope": {
+    "repo_edits": "allowed_orun_gated",
+    "docker_lifecycle": "allowed_orun_gated",
+    "kubernetes_local_only": "allowed_orun_gated",
+    "linear_updates": "append_only_or_reversible_orun_gated",
+    "notion_updates": "append_only_or_reversible_orun_gated",
+    "github_updates": "repo_first_orun_gated",
+    "destructive_cleanup": "disallowed_without_explicit_orun_override"
+  },
+  "runtime_surface_snapshot": {
+    "docker": {
+      "context": "desktop-linux",
+      "engine_access": "partial",
+      "container_name": "trinity-v5-pg-proof",
+      "container_id": "d30135a19d2b81d41466a4930e45ef8f526a5c6517a22fb1ff8cdaca58e24a57",
+      "status": "running",
+      "host_port": "55432",
+      "host_port_reachable": true,
+      "exec_probe": "timed_out",
+      "lyriq_downgrade_rule": "if exec remains unstable, switch from mutation to diagnosis"
+    },
+    "kubernetes": {
+      "current_context": "docker-desktop",
+      "scope": "local_only",
+      "cloud_contexts_allowed": false
+    }
+  },
+  "overlay_agents": [
+    {
+      "slot_number": 28,
+      "display_name": "Orun",
+      "beta_role": "root_coordinator",
+      "write_authority": "final_gate"
+    },
+    {
+      "slot_number": 27,
+      "display_name": "Caelira",
+      "beta_role": "mind_comparator",
+      "write_authority": "repo_only_unless_orun_gates_live_write"
+    },
+    {
+      "slot_number": 29,
+      "display_name": "Seren Vale",
+      "beta_role": "freedid_compliance",
+      "write_authority": "append_only_governance_unless_orun_gates_live_write"
+    },
+    {
+      "slot_number": 30,
+      "display_name": "Lyriq",
+      "beta_role": "body_runtime_docker_k8s",
+      "write_authority": "local_runtime_only_unless_orun_gates_live_write"
+    },
+    {
+      "slot_number": 31,
+      "display_name": "Mira Sol",
+      "beta_role": "continuity_and_handoff_packaging",
+      "write_authority": "packaging_and_trace_updates_unless_orun_gates_live_write"
+    }
+  ],
+  "honesty_boundaries": {
+    "unsupported_model_names_disallowed": [
+      "gpt-5.4-xhigh"
+    ],
+    "toml_not_equal_to_app_registration": true,
+    "gmail_browser_phone_laptop_out_of_scope_without_repo_workflow": true,
+    "google_drive_state": "operator_hold",
+    "filesystem_promotion_state": "blocked",
+    "materialization_level_actual": "readiness_only"
+  }
+}

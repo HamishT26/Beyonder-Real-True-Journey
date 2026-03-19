@@ -45,17 +45,29 @@ def _markdown(payload: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _suite_summary(payload: dict[str, Any]) -> tuple[str, str]:
+    counts = payload.get("counts", {}) if isinstance(payload.get("counts"), dict) else {}
+    pass_count = int(counts.get("pass", 0) or 0)
+    warn_count = int(counts.get("warn", 0) or 0)
+    fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
+    summary = f"{pass_count} PASS / {warn_count} WARN / {fail_count} FAIL"
+    state = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+    return state, summary
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Sync the v17 evidence-first state into the control tower.")
-    parser.add_argument("--control-tower-json", default="docs/trinity-control-tower-latest.json")
-    parser.add_argument("--control-tower-md", default="docs/trinity-control-tower-latest.md")
+    parser.add_argument("--control-tower-json", default="docs/v17-evidence-first-control-tower-latest.json")
+    parser.add_argument("--control-tower-md", default="docs/v17-evidence-first-control-tower-latest.md")
     parser.add_argument("--runtime-validation", default="docs/v17-runtime-session-validation-latest.json")
     parser.add_argument("--runtime-log", default="docs/v17-runtime-session-log-latest.json")
     parser.add_argument("--criteria-validation", default="docs/v17-external-establishment-validation-latest.json")
     parser.add_argument("--standards-validation", default="docs/v17-standards-bridge-validation-latest.json")
+    parser.add_argument("--suite-status", default="docs/v17-system-suite-status-latest.json")
     parser.add_argument("--filesystem-gate", default="docs/trinity-expansion/filesystem-scope-governor-gate-latest.json")
     parser.add_argument("--mcp-catalog", default="docs/trinity-mcp-catalog-v11.json")
     parser.add_argument("--reports-dir", default="docs/v17-control-tower-runs")
+    parser.add_argument("--checkpoint-class", default="v17_evidence_first_quick_lane")
     args = parser.parse_args()
 
     control = _read_json(args.control_tower_json)
@@ -63,6 +75,7 @@ def main() -> int:
     runtime_log = _read_json(args.runtime_log)
     criteria_validation = _read_json(args.criteria_validation)
     standards_validation = _read_json(args.standards_validation)
+    suite_status = _read_json(args.suite_status)
     filesystem_gate = _read_json(args.filesystem_gate)
     mcp_catalog = _read_json(args.mcp_catalog)
 
@@ -87,6 +100,11 @@ def main() -> int:
     )
 
     control["generated_utc"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    suite_state, suite_summary = _suite_summary(suite_status)
+    control["suite_state"] = suite_state
+    control["suite_summary"] = suite_summary
+    control["checkpoint_class"] = args.checkpoint_class
+    control["shared_latest_eligible"] = args.checkpoint_class == "shared_full_suite_authority"
     control["runtime_session_state"] = str(runtime_validation.get("overall_status") or "FAIL")
     control["runtime_session_overlay_state"] = overlay_state
     control["runtime_truth_complete"] = runtime_truth_complete
@@ -106,7 +124,11 @@ def main() -> int:
         filesystem_gate.get("overall_status"),
     )
     control["external_live_overlay_state"] = overlay_state
-    control["overall_status"] = _worst_status(control.get("overall_status"), control["v17_evidence_first_state"])
+    control["overall_status"] = _worst_status(
+        control.get("suite_state"),
+        control.get("council_continuity_state"),
+        control["v17_evidence_first_state"],
+    )
 
     control_json = _repo_path(args.control_tower_json)
     control_md = _repo_path(args.control_tower_md)
