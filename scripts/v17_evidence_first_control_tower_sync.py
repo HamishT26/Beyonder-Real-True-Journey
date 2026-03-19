@@ -46,6 +46,23 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def _suite_summary(payload: dict[str, Any]) -> tuple[str, str]:
+    results = payload.get("results")
+    if isinstance(results, list):
+        filtered = [
+            row
+            for row in results
+            if isinstance(row, dict) and str(row.get("label") or "") != "trinity mandala scoreboard"
+        ]
+        if filtered:
+            pass_count = sum(1 for row in filtered if str(row.get("status") or "") == "PASS")
+            warn_count = sum(1 for row in filtered if str(row.get("status") or "") == "WARN")
+            fail_count = sum(
+                1 for row in filtered if str(row.get("status") or "") in {"FAIL", "TIMEOUT"}
+            )
+            summary = f"{pass_count} PASS / {warn_count} WARN / {fail_count} FAIL"
+            state = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+            return state, summary
+
     counts = payload.get("counts", {}) if isinstance(payload.get("counts"), dict) else {}
     pass_count = int(counts.get("pass", 0) or 0)
     warn_count = int(counts.get("warn", 0) or 0)

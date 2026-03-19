@@ -1,6 +1,6 @@
 # Trinity Command Book
 
-- generated_utc: `2026-03-19T00:37:47+00:00`
+- generated_utc: `2026-03-19T13:31:05+00:00`
 - commands: `684`
 
 | command_id | executor_role | mode | risk | visibility |

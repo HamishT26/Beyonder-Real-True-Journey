@@ -1691,6 +1691,9 @@ def _write_interim_suite_status(
     *,
     checkpoint_class: str,
     shared_latest_eligible: bool,
+    suite_started_at_utc: str | None = None,
+    suite_finished_at_utc: str | None = None,
+    suite_duration_sec: float | None = None,
 ) -> None:
     pass_count = sum(1 for item in suite_results if item["status"] == "PASS")
     warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
@@ -1709,8 +1712,84 @@ def _write_interim_suite_status(
         },
         "results": suite_results,
     }
+    if suite_started_at_utc is not None:
+        payload["suite_started_at_utc"] = suite_started_at_utc
+    if suite_finished_at_utc is not None:
+        payload["suite_finished_at_utc"] = suite_finished_at_utc
+    if suite_duration_sec is not None:
+        payload["suite_duration_sec"] = round(suite_duration_sec, 3)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def _replace_suite_result(
+    suite_results: list[dict[str, object]],
+    label: str,
+    row: dict[str, object],
+) -> None:
+    for index, existing in enumerate(suite_results):
+        if str(existing.get("label") or "") == label:
+            suite_results[index] = row
+            return
+    suite_results.append(row)
+
+
+def _run_post_suite_refresh(
+    *,
+    label: str,
+    base_command: list[str],
+    args: argparse.Namespace,
+    soft_fail_network: bool,
+    status_json_path: Path,
+    control_tower_json_path: Path,
+    control_tower_md_path: Path,
+    scoreboard_latest_json: Path,
+    scoreboard_latest_md: Path,
+    checkpoint_class: str,
+) -> tuple[dict[str, object], str]:
+    effective_cmd = list(base_command)
+    if label == "v17 evidence-first control tower sync":
+        status_arg = str(status_json_path.relative_to(ROOT)).replace("\\", "/")
+        if "--suite-status" not in effective_cmd:
+            effective_cmd.extend(["--suite-status", status_arg])
+        if "--control-tower-json" not in effective_cmd:
+            effective_cmd.extend(["--control-tower-json", str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/")])
+        if "--control-tower-md" not in effective_cmd:
+            effective_cmd.extend(["--control-tower-md", str(control_tower_md_path.relative_to(ROOT)).replace("\\", "/")])
+        if "--checkpoint-class" not in effective_cmd:
+            effective_cmd.extend(["--checkpoint-class", checkpoint_class])
+    if label == "trinity mandala scoreboard":
+        status_arg = str(status_json_path.relative_to(ROOT)).replace("\\", "/")
+        if "--suite-status" not in effective_cmd:
+            effective_cmd.extend(["--suite-status", status_arg])
+        if "--latest-json" not in effective_cmd:
+            effective_cmd.extend(["--latest-json", str(scoreboard_latest_json.relative_to(ROOT)).replace("\\", "/")])
+        if "--latest-md" not in effective_cmd:
+            effective_cmd.extend(["--latest-md", str(scoreboard_latest_md.relative_to(ROOT)).replace("\\", "/")])
+        if "--control-tower-path" not in effective_cmd:
+            effective_cmd.extend(["--control-tower-path", str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/")])
+        if "--checkpoint-class" not in effective_cmd:
+            effective_cmd.extend(["--checkpoint-class", checkpoint_class])
+    ok, output, timed_out, duration_sec, started_at, finished_at = run_command(effective_cmd, args.step_timeout_sec)
+    status, counted_success = classify_status(
+        label=label,
+        ok=ok,
+        timed_out=timed_out,
+        output=output,
+        soft_fail_network=soft_fail_network,
+    )
+    row = {
+        "label": label,
+        "status": status,
+        "ok": ok,
+        "effective_success": counted_success,
+        "timed_out": timed_out,
+        "started_at_utc": started_at,
+        "finished_at_utc": finished_at,
+        "duration_sec": round(duration_sec, 3),
+        "command": shlex.join(effective_cmd),
+    }
+    return row, output[:8000]
 
 
 def main() -> None:
@@ -1935,6 +2014,7 @@ def main() -> None:
         recovery_mode = "resume_failed_only" if args.resume_failed_only else "resume_from_status"
     elif profile == "recover":
         recovery_mode = "recover_profile"
+    original_commands = {label: list(cmd) for label, cmd in commands}
     mcp_catalog_path = ROOT / TRINITY_MCP_CATALOG_PATH
     verified_mcp_connectors: list[str] = []
     eligible_live_write_connectors: list[str] = []
@@ -2130,6 +2210,61 @@ def main() -> None:
     if resume_baseline_results:
         suite_results = _merge_resume_results(resume_baseline_results, suite_results)
 
+    frozen_suite_finished_at = datetime.now(timezone.utc).isoformat()
+    frozen_suite_duration_sec = time.monotonic() - suite_start_ts
+
+    _write_interim_suite_status(
+        status_json_path,
+        suite_results,
+        checkpoint_class=checkpoint_class,
+        shared_latest_eligible=shared_latest_eligible,
+        suite_started_at_utc=suite_started_at,
+        suite_finished_at_utc=frozen_suite_finished_at,
+        suite_duration_sec=frozen_suite_duration_sec,
+    )
+
+    post_suite_refresh_labels = [
+        "expansion: body_resource_envelope_guard (offline)",
+        "v17 evidence-first control tower sync",
+        "trinity mandala scoreboard",
+    ]
+    for refresh_label in post_suite_refresh_labels:
+        base_command = original_commands.get(refresh_label)
+        if not base_command:
+            continue
+        refreshed_row, refreshed_output = _run_post_suite_refresh(
+            label=refresh_label,
+            base_command=base_command,
+            args=args,
+            soft_fail_network=soft_fail_network,
+            status_json_path=status_json_path,
+            control_tower_json_path=control_tower_json_path,
+            control_tower_md_path=control_tower_md_path,
+            scoreboard_latest_json=scoreboard_latest_json,
+            scoreboard_latest_md=scoreboard_latest_md,
+            checkpoint_class=checkpoint_class,
+        )
+        _replace_suite_result(suite_results, refresh_label, refreshed_row)
+        lines.append(f"## {refresh_label} (post-run refresh)")
+        lines.append(f"- status: **{refreshed_row['status']}**")
+        lines.append(f"- command: `{refreshed_row['command']}`")
+        lines.append(f"- started: `{refreshed_row['started_at_utc']}`")
+        lines.append(f"- finished: `{refreshed_row['finished_at_utc']}`")
+        lines.append(f"- duration_sec: `{refreshed_row['duration_sec']}`")
+        lines.append("```text")
+        lines.append(refreshed_output)
+        lines.append("```")
+        lines.append("")
+        _write_interim_suite_status(
+            status_json_path,
+            suite_results,
+            checkpoint_class=checkpoint_class,
+            shared_latest_eligible=shared_latest_eligible,
+            suite_started_at_utc=suite_started_at,
+            suite_finished_at_utc=frozen_suite_finished_at,
+            suite_duration_sec=frozen_suite_duration_sec,
+        )
+
     pass_count = sum(1 for item in suite_results if item["status"] == "PASS")
     warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
     timeout_count = sum(1 for item in suite_results if item["status"] == "TIMEOUT")
@@ -2148,8 +2283,8 @@ def main() -> None:
     if not achievement_gate_met:
         effective_success = False
 
-    suite_finished_at = datetime.now(timezone.utc).isoformat()
-    suite_duration_sec = time.monotonic() - suite_start_ts
+    suite_finished_at = frozen_suite_finished_at
+    suite_duration_sec = frozen_suite_duration_sec
     current_session_surface = _read_status_value(
         "docs/logs/system-wake-v2.json",
         "current_session_surface",

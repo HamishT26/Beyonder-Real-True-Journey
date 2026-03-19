@@ -133,17 +133,7 @@ def _artifact_status(label: str, path: str) -> ArtifactStatus:
 
 
 def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, str]:
-    checkpoint_class = str(payload.get("checkpoint_class") or "")
     results = payload.get("results")
-    counts = payload.get("counts")
-
-    if checkpoint_class == "shared_full_suite_authority" and isinstance(counts, dict):
-        pass_count = int(counts.get("pass", 0) or 0)
-        warn_count = int(counts.get("warn", 0) or 0)
-        fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
-        status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
-        detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
-        return status, detail
 
     if isinstance(results, list):
         filtered = [
@@ -161,6 +151,7 @@ def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, s
             detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
             return status, detail
 
+    counts = payload.get("counts")
     if isinstance(counts, dict):
         pass_count = int(counts.get("pass", 0) or 0)
         warn_count = int(counts.get("warn", 0) or 0)

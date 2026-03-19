@@ -124,6 +124,34 @@ def _summary_from_status(status_payload: dict[str, Any]) -> str:
     return f"{int(counts.get('pass', 0) or 0)} PASS / {int(counts.get('warn', 0) or 0)} WARN / {int(counts.get('fail', 0) or 0)} FAIL"
 
 
+def _shared_suite_surface_from_status(
+    status_payload: dict[str, Any],
+    *,
+    quick_lane_summary: str,
+) -> dict[str, Any]:
+    fail_rows = [
+        row
+        for row in status_payload.get("results", [])
+        if isinstance(row, dict) and str(row.get("status") or "") in {"FAIL", "TIMEOUT"}
+    ]
+    primary_blocker = str(fail_rows[0].get("label") or "") if fail_rows else ""
+    primary_blocker_detail = ""
+    downstream_fail = ""
+    if fail_rows:
+        primary_blocker_detail = str(fail_rows[0].get("command") or "")
+        if len(fail_rows) > 1:
+            downstream_fail = str(fail_rows[1].get("label") or "")
+    return {
+        "summary": _summary_from_status(status_payload),
+        "expansion_systems_passed": status_payload.get("expansion_systems_passed"),
+        "expansion_systems_total": status_payload.get("expansion_systems_total"),
+        "primary_blocker": primary_blocker,
+        "primary_blocker_detail": primary_blocker_detail,
+        "downstream_fail": downstream_fail,
+        "quick_lane_summary": quick_lane_summary,
+    }
+
+
 def build_commands(old_book: dict[str, Any]) -> dict[str, Any]:
     commands = replace_refs(deepcopy([row for row in old_book.get("commands", []) if isinstance(row, dict)]))
     commands = v15.augment_rows(commands, {"latest_surface_scope": "shared_latest", "runtime_truth_gate": "repo_logged_only", "continuity_stage": "continuity_history"})
@@ -333,6 +361,7 @@ def main() -> int:
     runtime_log = _load(RUNTIME_LOG)
     criteria_board = _load(CRITERIA_BOARD)
     existing_model_resolution = _load(MODEL_RESOLUTION)
+    quick_status_payload = _load(ROOT / "docs" / "v17-system-suite-status-latest.json")
 
     manifest = replace_refs(deepcopy(old_manifest))
     manifest["version"] = "v17"
@@ -423,6 +452,10 @@ def main() -> int:
     model_resolution["bootstrap_anchor_commit"] = BOOTSTRAP_COMMIT
     model_resolution["phase_guide_path"] = "docs/v17-phase-operations-guide-v1.md"
     model_resolution["runtime_truth_board"] = "docs/v17-runtime-truth-resolution-board-v1.json"
+    model_resolution["current_shared_suite_surface"] = _shared_suite_surface_from_status(
+        status_payload,
+        quick_lane_summary=_summary_from_status(quick_status_payload),
+    )
     model_resolution["external_overlay_agents"] = []
     roster_by_slot = {int(row.get("slot_number", 0) or 0): row for row in roster.get("agents", []) if isinstance(row, dict)}
     runtime_log_by_slot = {int(row.get("slot_number", 0) or 0): row for row in runtime_log.get("overlay_agents", []) if isinstance(row, dict)}

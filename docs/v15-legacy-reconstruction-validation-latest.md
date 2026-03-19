@@ -1,6 +1,6 @@
 # Legacy Reconstruction Validation
 
-- generated_utc: `2026-03-19T07:31:34+00:00`
+- generated_utc: `2026-03-19T12:34:29+00:00`
 - overall_status: **PASS**
 - reconstructed_modules: `6`
 
