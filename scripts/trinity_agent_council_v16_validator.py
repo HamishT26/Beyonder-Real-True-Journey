@@ -57,6 +57,9 @@ def _markdown(payload: dict[str, Any]) -> str:
             f"- generated_utc: `{payload['generated_utc']}`",
             f"- overall_status: **{payload['overall_status']}**",
             f"- official_count: `{payload['official_count']}`",
+            f"- deployed_main_agent_count: `{payload['deployed_main_agent_count']}`",
+            f"- official_undeployed_identity_count: `{payload['official_undeployed_identity_count']}`",
+            f"- shadow_clone_active_count: `{payload['shadow_clone_active_count']}`",
             f"- duo_chat_count: `{payload['duo_chat_count']}`",
             f"- group_chat_rows: `{payload['group_chat_rows']}`",
             f"- requested_model_profile: `{payload['requested_model_profile']}`",
@@ -82,6 +85,7 @@ def main() -> int:
     parser.add_argument("--subagent-registry", default="docs/trinity-subagent-registry-v3.json")
     parser.add_argument("--proof-json", default="docs/trinity-agent-mesh-proof-v1.json")
     parser.add_argument("--codex-config", default=".codex/config.toml")
+    parser.add_argument("--runtime-session-log", default="")
     parser.add_argument("--reports-dir", default="docs/trinity-agent-council-runs")
     parser.add_argument("--latest-json", default="docs/trinity-agent-council-validation-latest.json")
     parser.add_argument("--latest-md", default="docs/trinity-agent-council-validation-latest.md")
@@ -97,6 +101,13 @@ def main() -> int:
     subagent_registry = _read_json(args.subagent_registry)
     proof_payload = _read_json(args.proof_json)
     group_rows = _read_jsonl(args.group_chat)
+    runtime_session_log: dict[str, Any] = {}
+    if str(args.runtime_session_log or "").strip():
+        runtime_log_path = _repo_path(args.runtime_session_log)
+        if runtime_log_path.exists():
+            runtime_session_log = _read_json(args.runtime_session_log)
+        else:
+            warnings.append(f"runtime session log not found: {args.runtime_session_log}")
 
     codex_config_path = _repo_path(args.codex_config)
     if not codex_config_path.exists():
@@ -326,10 +337,38 @@ def main() -> int:
     if int(proof_payload.get("official_agent_count", 0) or 0) != EXPECTED_AGENT_COUNT:
         failures.append(f"mesh proof official_agent_count must be {EXPECTED_AGENT_COUNT}")
 
+    council_lead = roster_payload.get("council_lead", {})
+    deployed_main_agents: list[str] = []
+    if isinstance(council_lead, dict) and str(council_lead.get("deployment_state") or "") == "deployed_main_agent":
+        lead_name = str(council_lead.get("display_name") or "")
+        if lead_name:
+            deployed_main_agents.append(lead_name)
+
+    official_undeployed_identities = [
+        str(row.get("display_name") or "")
+        for row in agents
+        if isinstance(row, dict) and str(row.get("deployment_state") or "") == "official_undeployed_identity"
+    ]
+    deployed_main_agents.extend(
+        str(row.get("display_name") or "")
+        for row in agents
+        if isinstance(row, dict)
+        and str(row.get("deployment_state") or "") == "deployed_main_agent"
+        and str(row.get("display_name") or "").strip()
+    )
+    shadow_clone_sessions = runtime_session_log.get("shadow_clone_sessions", [])
+    shadow_clone_active_count = len(shadow_clone_sessions) if isinstance(shadow_clone_sessions, list) else 0
+
     payload = {
         "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "overall_status": _status(failures, warnings),
         "official_count": sum(1 for row in agents if isinstance(row, dict) and row.get("official_induction") is True),
+        "deployed_main_agents": deployed_main_agents,
+        "deployed_main_agent_count": len(deployed_main_agents),
+        "official_undeployed_identities": official_undeployed_identities,
+        "official_undeployed_identity_count": len(official_undeployed_identities),
+        "shadow_clone_active_count": shadow_clone_active_count,
+        "shadow_clone_policy_path": str(roster_payload.get("shadow_clone_policy_path") or ""),
         "provisional_agent_count": 0,
         "duo_chat_count": len(pair_channels),
         "group_chat_rows": len(group_rows),

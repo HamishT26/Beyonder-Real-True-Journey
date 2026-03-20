@@ -133,6 +133,15 @@ def _artifact_status(label: str, path: str) -> ArtifactStatus:
 
 
 def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, str]:
+    counts = payload.get("counts")
+    if isinstance(counts, dict) and counts:
+        pass_count = int(counts.get("pass", 0) or 0)
+        warn_count = int(counts.get("warn", 0) or 0)
+        fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
+        status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+        detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
+        return status, detail
+
     results = payload.get("results")
 
     if isinstance(results, list):
@@ -150,15 +159,6 @@ def _suite_status_without_scoreboard(payload: dict[str, object]) -> tuple[str, s
             status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
             detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
             return status, detail
-
-    counts = payload.get("counts")
-    if isinstance(counts, dict):
-        pass_count = int(counts.get("pass", 0) or 0)
-        warn_count = int(counts.get("warn", 0) or 0)
-        fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
-        status = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
-        detail = f"pass={pass_count}, warn={warn_count}, fail={fail_count}"
-        return status, detail
 
     status = _extract_status("docs/system-suite-status.json", payload)
     return status, _extract_detail(payload)

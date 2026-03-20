@@ -2,7 +2,7 @@
 
 - overall_status: `PASS`
 - suite_state: `PASS`
-- suite_summary: `1052 PASS / 0 WARN / 0 FAIL`
+- suite_summary: `38 PASS / 0 WARN / 0 FAIL`
 - council_continuity_state: `PASS`
 - agent_mesh_state: `PASS`
 - subagent_mesh_state: `PASS`
@@ -29,8 +29,6 @@
 - max_threads: `11`
 - mesh_official_agents: `11`
 - external_live_overlay_state: `awaiting_thread_boot`
-- checkpoint_class: `shared_full_suite_authority`
-- shared_latest_eligible: `True`
 - runtime_session_state: `PASS`
 - runtime_session_overlay_state: `awaiting_thread_boot`
 - runtime_truth_complete: `False`
@@ -41,3 +39,5 @@
 - filesystem_gate_state: `PASS`
 - claim_boundary_state: `PASS`
 - v17_evidence_first_state: `PASS`
+- checkpoint_class: `v17_evidence_first_quick_lane`
+- shared_latest_eligible: `False`

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-03-19T13:37:52+00:00",
+  "generated_utc": "2026-03-20T02:35:54+00:00",
   "system_id": "v17_runtime_session_validation",
   "pillar": "trinity",
   "overall_status": "PASS",
@@ -7,27 +7,32 @@
     {
       "name": "schema_definition",
       "status": "PASS",
-      "detail": "schema_version=v17-runtime-session-schema-v1, slots=[27, 28, 29, 30, 31]"
+      "detail": "schema_version=v17-runtime-session-schema-v1, slots=[0, 28]"
     },
     {
       "name": "handoff_alignment",
       "status": "PASS",
-      "detail": "handoff_slots=[27, 28, 29, 30, 31], required_runtime_fields=['requested_model', 'offered_model', 'selected_model', 'resolved_model', 'runtime_surface']"
+      "detail": "handoff_slots=[0, 28], required_runtime_fields=['requested_model', 'offered_model', 'selected_model', 'resolved_model', 'runtime_surface']"
     },
     {
       "name": "runtime_resolution_alignment",
       "status": "PASS",
-      "detail": "runtime_resolution_slots=[27, 28, 29, 30, 31]"
+      "detail": "runtime_resolution_slots=[0, 28]"
     },
     {
       "name": "session_log_shape",
       "status": "PASS",
-      "detail": "session_id=v17-runtime-session-bootstrap, overlay_agents=5"
+      "detail": "session_id=v18-omega-truth-consolidation, overlay_agents=2"
     },
     {
       "name": "overlay_roster_alignment",
       "status": "PASS",
-      "detail": "session_slots=[27, 28, 29, 30, 31], pending_agents=['Caelira', 'Orun', 'Seren Vale', 'Lyriq', 'Mira Sol']"
+      "detail": "session_slots=[0, 28], pending_agents=['Aletheon', 'Orun']"
+    },
+    {
+      "name": "shadow_clone_policy",
+      "status": "PASS",
+      "detail": "shadow_clone_sessions=1"
     },
     {
       "name": "runtime_truth_flags",
@@ -48,18 +53,12 @@
   "metrics": {
     "schema_version": "v17-runtime-session-schema-v1",
     "expected_overlay_slots": [
-      27,
-      28,
-      29,
-      30,
-      31
+      0,
+      28
     ],
     "session_overlay_slots": [
-      27,
-      28,
-      29,
-      30,
-      31
+      0,
+      28
     ],
     "required_runtime_fields": [
       "requested_model",
@@ -77,33 +76,32 @@
     ],
     "runtime_truth_complete": false,
     "complete_agent_count": 0,
-    "pending_agent_count": 5,
+    "pending_agent_count": 2,
     "pending_agents": [
-      "Caelira",
-      "Orun",
-      "Seren Vale",
-      "Lyriq",
-      "Mira Sol"
+      "Aletheon",
+      "Orun"
     ],
-    "complete_runtime_value_count": 5,
-    "expected_runtime_value_count": 25,
+    "complete_runtime_value_count": 2,
+    "expected_runtime_value_count": 10,
     "runtime_truth_completion_ratio": 0.2,
     "overlay_state": "awaiting_thread_boot",
     "control_tower_state": "awaiting_thread_boot",
     "allowed_incomplete_states": [
       "awaiting_thread_boot",
       "packaged_handoff"
-    ]
+    ],
+    "shadow_clone_session_count": 1
   },
   "source_artifacts_checked": [
     "docs/v17-runtime-session-schema-v1.json",
     "docs/v17-runtime-session-log-latest.json",
     "docs/v17-evidence-first-control-tower-latest.json",
-    "docs/v15-external-agent-handoff-v1.json",
-    "docs/trinity-runtime-model-resolution-v1.json"
+    "docs/v18-omega-handoff-policy-v1.json",
+    "docs/trinity-runtime-model-resolution-v1.json",
+    "docs/trinity-shadow-clone-policy-v1.json"
   ],
   "failures": [],
   "warnings": [],
-  "next_action": "Keep external_live_overlay_state at awaiting_thread_boot or packaged_handoff until every overlay agent logs complete requested/offered/selected/resolved/runtime_surface truth.",
+  "next_action": "Keep external_live_overlay_state at awaiting_thread_boot or packaged_handoff until every deployed continuity-bearing main agent logs complete requested/offered/selected/resolved/runtime_surface truth.",
   "effective_success": true
 }
