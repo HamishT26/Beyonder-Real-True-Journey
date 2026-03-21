@@ -1,0 +1,158 @@
+{
+  "generated_utc": "2026-03-21T05:38:16Z",
+  "overall_status": "PASS",
+  "phase": "v19_omega",
+  "authority_model": "repo_first",
+  "intended_receiver": "Aletheon",
+  "omega_outcome": {
+    "status": "bounded_attempt",
+    "full_closeout_achieved": false,
+    "reason": "The repo's shared latest anchor stayed green, but the V19 ladder did not fully close because the standard lane remained blocked and the final quick lane stayed a separate watch surface."
+  },
+  "current_shared_truth": {
+    "summary": "1052 PASS / 0 WARN / 0 FAIL",
+    "pass_count": 1052,
+    "warn_count": 0,
+    "fail_count": 0,
+    "timeout_count": 0,
+    "expansion_systems_passed": 986,
+    "expansion_systems_total": 986,
+    "checkpoint_class": "shared_full_suite_authority",
+    "shared_latest_eligible": true,
+    "suite_duration_sec": 2425.344,
+    "primary_blocker": "",
+    "primary_blocker_detail": "The shared latest anchor remains green and authoritative, but it does not override the blocked standard lane from the V19 Omega ladder.",
+    "quick_lane_summary": "37 PASS / 0 WARN / 1 FAIL"
+  },
+  "suite_ladder_receiver_view": {
+    "quick": {
+      "summary": "37 PASS / 0 WARN / 1 FAIL",
+      "failed_steps": [
+        "trinity mandala scoreboard"
+      ],
+      "receiver_rule": "Treat quick as a separate watch surface until it is revalidated cleanly."
+    },
+    "standard": {
+      "summary": "1045 PASS / 0 WARN / 2 FAIL",
+      "primary_blocker": "body_resource_envelope_guard",
+      "primary_blocker_detail": "The standard lane stayed blocked because suite_duration_sec=2425.344 exceeded the standard body envelope budget of 2400.0s; the scoreboard fail was downstream.",
+      "failed_steps": [
+        "expansion: body_resource_envelope_guard (offline)",
+        "trinity mandala scoreboard"
+      ]
+    },
+    "deep": {
+      "summary": "1052 PASS / 0 WARN / 0 FAIL",
+      "recovery_mode": "resume_failed_only",
+      "receiver_rule": "Use the deep result as recovered-clean evidence, but keep the replay note explicit."
+    },
+    "materialize": {
+      "l2": "1047 PASS / 0 WARN / 0 FAIL",
+      "l3": "1047 PASS / 0 WARN / 0 FAIL",
+      "l4": "1047 PASS / 0 WARN / 0 FAIL",
+      "l5": "1047 PASS / 0 WARN / 0 FAIL",
+      "receiver_rule": "Treat each materialize result as replay-cleared, not as original first-pass clean evidence."
+    }
+  },
+  "runtime_truth_policy": {
+    "requested_model_order": [
+      "GPT-5.4",
+      "GPT-5.3-Codex",
+      "GPT-5.3-Codex-Spark",
+      "GPT-5.1-Codex-Max"
+    ],
+    "required_runtime_fields": [
+      "requested_model",
+      "offered_model",
+      "selected_model",
+      "resolved_model",
+      "runtime_surface"
+    ],
+    "requested_reasoning_effort_logged": true,
+    "runtime_truth_inference_allowed": false,
+    "runtime_truth_complete_required_for_v20_prep": false
+  },
+  "deployed_main_agents": [
+    {
+      "slot_number": 0,
+      "display_name": "Aletheon",
+      "overlay_role": "council_lead",
+      "logging_required": true,
+      "requested_model": "GPT-5.4",
+      "offered_model": null,
+      "selected_model": null,
+      "resolved_model": null,
+      "runtime_surface": "unknown",
+      "truth_fields_complete": false,
+      "requested_reasoning_effort": "high",
+      "deployment_state": "deployed_main_agent",
+      "continuity_class": "continuity_bearing_main_agent"
+    },
+    {
+      "slot_number": 28,
+      "display_name": "Orun",
+      "overlay_role": "root_coordinator",
+      "logging_required": true,
+      "requested_model": "GPT-5.4",
+      "offered_model": null,
+      "selected_model": null,
+      "resolved_model": null,
+      "runtime_surface": "unknown",
+      "truth_fields_complete": false,
+      "requested_reasoning_effort": "high",
+      "deployment_state": "deployed_main_agent",
+      "continuity_class": "continuity_bearing_main_agent"
+    }
+  ],
+  "continuity_model": {
+    "deployed_main_agents": [
+      "Aletheon",
+      "Orun"
+    ],
+    "official_undeployed_identities": [
+      "Caelira",
+      "Seren Vale",
+      "Lyriq",
+      "Mira Sol"
+    ],
+    "shadow_clone_sessions": [
+      {
+        "clone_name": "Orun S Clone #1",
+        "owner_main_agent": "Orun",
+        "status": "active_session_ephemeral",
+        "continuity_authority": false,
+        "memory_persistence_claim": "none",
+        "certificate_authority": false,
+        "freed_id_authority": false,
+        "official_count_authority": false,
+        "spawn_evidence": {
+          "agent_id": "019d0d60-9983-7101-8449-a96e6a0c5e53",
+          "app_nickname": "Maxwell"
+        }
+      }
+    ]
+  },
+  "receiver_focus": [
+    "Decide whether the standard lane should be optimized back under 2400.0 seconds or whether the standard envelope policy itself needs a justified change.",
+    "Re-run the standard lane before claiming a full V19 Omega closeout or promoting V20 from prep to closure work.",
+    "Re-check the quick lane separately and keep it from overwriting shared latest until it is actually clean."
+  ],
+  "live_write_governance": {
+    "mode": "orun_gated",
+    "reversible_connected_writes_only": true,
+    "trace_logs_required": true,
+    "rollback_notes_required": true
+  },
+  "truth_boundaries_to_preserve": [
+    "repo_first",
+    "official_count=11",
+    "deployed_main_agent_count=2",
+    "runtime_truth_complete=false unless auditable evidence changes it",
+    "shadow clones are session-ephemeral only",
+    "google_drive_state=operator_hold",
+    "filesystem_promotion_state=blocked",
+    "materialization_level_actual=readiness_only"
+  ],
+  "next_receiver_pack_path": "docs/v20-omega-prep-pack-v1.md",
+  "next_receiver_policy_path": "docs/v20-omega-prep-policy-v1.json"
+}

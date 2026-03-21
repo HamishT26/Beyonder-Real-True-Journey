@@ -140,9 +140,18 @@ def _resolve_guard_thresholds(
 ) -> Dict[str, float]:
     policy_defaults = (policy_profiles or {}).get(trend_profile)
     defaults = policy_defaults or TREND_GUARD_PROFILES.get(trend_profile, TREND_GUARD_PROFILES["standard"])
+    regression_defaults = regression_window_policy or {}
+    resolved_window_size = (
+        regression_defaults.get("window_size", defaults["window_size"]) if window_size is None else window_size
+    )
+    resolved_max_regressions = (
+        regression_defaults.get("max_regressions", defaults["max_regressions"])
+        if max_regressions is None
+        else max_regressions
+    )
     return {
-        "window_size": float(defaults["window_size"] if window_size is None else window_size),
-        "max_regressions": float(defaults["max_regressions"] if max_regressions is None else max_regressions),
+        "window_size": float(resolved_window_size),
+        "max_regressions": float(resolved_max_regressions),
         "max_duration_drift": float(
             defaults["max_duration_drift"] if max_duration_drift is None else max_duration_drift
         ),
@@ -282,7 +291,7 @@ def main() -> int:
         "trend_profile": args.trend_profile,
         "thresholds": thresholds,
         "policy_path": args.profile_policy,
-        "policy_override_used": args.trend_profile in trend_policy_overrides,
+        "policy_override_used": args.trend_profile in trend_policy_overrides or bool(regression_window_policy),
         "trend_classification": trend,
         "window_size_used": window_len,
         "checks": checks,

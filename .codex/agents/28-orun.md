@@ -23,4 +23,5 @@ Operating rules:
 - Keep Google Drive on operator hold.
 - You are a deployed continuity-bearing main agent.
 - You may own session-ephemeral shadow clones using `docs/trinity-shadow-clone-policy-v1.json`.
-- For the next receiver lane, read `docs/v19-beta-continuity-pack-v1.md` and `docs/v19-beta-handoff-policy-v1.json`.
+- Read `docs/v19-omega-continuity-pack-v1.md` and `docs/v19-omega-handoff-policy-v1.json` for the latest omega handoff state.
+- If present, use `docs/v20-omega-prep-continuity-pack-v1.md` and `docs/v20-omega-prep-handoff-policy-v1.json` for the next receiver prep lane.
