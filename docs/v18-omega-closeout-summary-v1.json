@@ -1,19 +1,13 @@
 {
-  "generated_utc": "2026-03-19T13:34:18Z",
+  "generated_utc": "2026-03-20T02:32:44+00:00",
   "overall_status": "PASS",
   "phase": "v18_omega",
   "authority_model": "repo_first",
   "active_branch": "codex/Aletheon/v17-evidence-first-closeout",
-  "head_sha": "f3c793bb0dc6e7489b8a9b7be8dd9eccf2e731ba",
+  "head_sha": "6709235dee936d52d0083ff73943c95888a7106a",
   "checkpoint_anchor_commit": "e45da1dd2dd184c4e3fd218ece27b8f29589f8f6",
   "bootstrap_anchor_commit": "468b96d90bc2785be19854b44c62217a47afc800",
-  "shared_checkpoint_summary": {
-    "summary": "1007 PASS / 0 WARN / 0 FAIL",
-    "source_commit": "e45da1dd2dd184c4e3fd218ece27b8f29589f8f6",
-    "expansion_systems_passed": 950,
-    "expansion_systems_total": 950
-  },
-  "current_suite_surface": {
+  "current_shared_truth": {
     "summary": "1052 PASS / 0 WARN / 0 FAIL",
     "pass_count": 1052,
     "warn_count": 0,
@@ -22,125 +16,32 @@
     "expansion_systems_passed": 986,
     "expansion_systems_total": 986,
     "checkpoint_class": "shared_full_suite_authority",
-    "shared_latest_eligible": true
+    "shared_latest_eligible": true,
+    "suite_duration_sec": 2425.344,
+    "primary_blocker": "",
+    "primary_blocker_detail": "Shared latest is green and aligned to the authoritative full-suite checkpoint.",
+    "quick_lane_summary": "38 PASS / 0 WARN / 0 FAIL"
+  },
+  "continuity_model": {
+    "official_count": 11,
+    "deployed_main_agents": [
+      "Aletheon",
+      "Orun"
+    ],
+    "official_undeployed_identities": [
+      "Caelira",
+      "Seren Vale",
+      "Lyriq",
+      "Mira Sol"
+    ],
+    "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json",
+    "shadow_clone_active_count": 1
   },
   "closeout_state": {
-    "status": "ready_for_post_recovery_validation",
-    "primary_blocker": "",
-    "primary_blocker_detail": "Shared latest recovered after repairing stale artifact drift between the deep suite status and the body resource envelope guard. The current guard now passes at suite_duration_sec=2425.344 against budget_sec=3000.0.",
-    "downstream_fail": "",
-    "quick_lane_summary": "38 PASS / 0 WARN / 0 FAIL",
+    "status": "truth_consolidated",
     "external_live_overlay_state": "awaiting_thread_boot",
-    "runtime_truth_complete": false
-  },
-  "selected_resume_lane": {
-    "lane": "runtime_probe",
-    "why_selected": "Repo recovery is complete and shared latest is green. The next bounded lane is to probe runtime-truth audibility and keep Docker exec diagnosis subordinate to that truth boundary.",
-    "entry_condition": "Begin only from the recovered shared_latest repo state and preserve repo_first truth.",
-    "first_step": "Compare docs/v17-runtime-session-log-latest.json, docs/v17-runtime-truth-resolution-board-v1.json, and docs/trinity-runtime-model-resolution-v1.json against directly auditable runtime surfaces to determine whether offered_model, selected_model, resolved_model, or runtime_surface can be promoted beyond unknown.",
-    "stop_condition": "Stop immediately if runtime truth remains unauditable or if Docker exec instability would require forceful mutation, and package the residual state without claiming live-overlay promotion."
-  },
-  "phase_targets": {
-    "systems": 986,
-    "extensions": 1812,
-    "commands": 684,
-    "apis": 54
-  },
-  "pillar_verdicts": {
-    "mind": "comparative_promise",
-    "body": "repo_proven_strength",
-    "heart": "comparative_promise",
-    "trinity_mandala": "open_gap"
-  },
-  "completed_work": [
-    "Identified the deep blocker as stale artifact drift rather than a real current-run budget overrun.",
-    "Patched the suite runner so status-dependent steps refresh against the frozen current-run suite status.",
-    "Re-ran the authoritative deep suite and cleared the body_resource_envelope_guard at suite_duration_sec=2425.344.",
-    "Regenerated v17 closeout and continuity surfaces from the recovered suite state.",
-    "Re-synced the shared scoreboard and control tower to a PASS-backed shared_latest state."
-  ],
-  "confirmed_evidence": [
-    "docs/system-suite-status.json now records 1052 PASS / 0 WARN / 0 FAIL with 986 / 986 expansion systems passing.",
-    "docs/trinity-expansion/body-resource-envelope-guard-latest.json now passes with suite_duration_sec=2425.344 against budget_sec=3000.0.",
-    "docs/trinity-control-tower-latest.json is PASS while preserving google_drive_state=operator_hold, filesystem_promotion_state=blocked, materialization_level_actual=readiness_only, and external_live_overlay_state=awaiting_thread_boot.",
-    "docs/trinity-mandala-scoreboard-latest.json is PASS after the stale v17 closeout summary was regenerated from the recovered suite state.",
-    "The repo still preserves the same five overlay identities and the same 11 official council members."
-  ],
-  "inference": [
-    "The prior 1050 PASS / 0 WARN / 2 FAIL state was caused by stale mixed-surface reporting rather than by a real current deep-profile body budget breach.",
-    "The next honest Omega lane is runtime-truth probing rather than more repo recovery or broader connector mutation."
-  ],
-  "open_gap": [
-    "Runtime truth for overlay slots 27-31 remains incomplete while offered_model, selected_model, resolved_model, and runtime_surface are still null or unknown.",
-    "Ephemeral subagent windows are not proof of the same persistent runtime process across app refreshes; continuity is repo-governed, not process-proven.",
-    "Docker exec remains unstable on the local trinity-v5-pg-proof container and should stay diagnosis-only unless a later pass re-proves safe mutation."
-  ],
-  "residual_tasks": [
-    {
-      "task_id": "omega-residual-01",
-      "title": "Runtime truth audit",
-      "owner": "Aletheon",
-      "when_to_run": "after_shared_latest_recovers",
-      "precondition": "Shared latest remains green and no new unaudited live-overlay claims have been made.",
-      "action": "Probe whether offered_model, selected_model, resolved_model, and runtime_surface can be sourced from auditable runtime surfaces; if not, preserve awaiting_thread_boot and pending_runtime_truth.",
-      "target_artifacts": [
-        "docs/v17-runtime-session-log-latest.json",
-        "docs/v17-runtime-truth-resolution-board-v1.json",
-        "docs/trinity-runtime-model-resolution-v1.json"
-      ],
-      "write_governance": "orun_gated_if_live_write",
-      "stop_condition": "Stop if any required runtime field still depends on inference."
-    },
-    {
-      "task_id": "omega-residual-02",
-      "title": "Bounded Docker exec diagnosis",
-      "owner": "Aletheon",
-      "when_to_run": "either",
-      "precondition": "Runtime-probe lane is complete or explicitly paused, and local-only diagnosis remains sufficient.",
-      "action": "Use probe-first local checks to determine why docker exec remains unstable on trinity-v5-pg-proof without broad container mutation or destructive cleanup.",
-      "target_artifacts": [
-        "docs/v17-runtime-session-log-latest.json",
-        "docs/v18-omega-handoff-policy-v1.json"
-      ],
-      "write_governance": "orun_gated_if_live_write",
-      "stop_condition": "Stop if diagnosis would require forceful mutation, cloud context use, or filesystem promotion."
-    }
-  ],
-  "runtime_truth_snapshot": {
-    "active_handoff_pack_path": "docs/v18-omega-continuity-pack-v1.md",
-    "active_handoff_policy_path": "docs/v18-omega-handoff-policy-v1.json",
-    "required_runtime_fields": [
-      "requested_model",
-      "offered_model",
-      "selected_model",
-      "resolved_model",
-      "runtime_surface",
-      "requested_reasoning_effort"
-    ],
     "runtime_truth_complete": false,
-    "external_live_overlay_state": "awaiting_thread_boot"
+    "shadow_clone_execution_status": "active"
   },
-  "truth_boundaries": {
-    "authority_model": "repo_first",
-    "google_drive_state": "operator_hold",
-    "filesystem_promotion_state": "blocked",
-    "materialization_level_actual": "readiness_only",
-    "external_live_overlay_state": "awaiting_thread_boot",
-    "runtime_truth_complete": false
-  },
-  "source_artifacts_checked": [
-    "docs/system-suite-status.json",
-    "docs/trinity-expansion/body-resource-envelope-guard-latest.json",
-    "docs/trinity-control-tower-latest.json",
-    "docs/trinity-mandala-scoreboard-latest.json",
-    "docs/v17-closeout-summary-v1.json",
-    "docs/v17-runtime-session-log-latest.json",
-    "docs/v17-runtime-truth-resolution-board-v1.json",
-    "docs/trinity-runtime-model-resolution-v1.json",
-    "docs/v17-runtime-session-validation-latest.json",
-    "docs/v17-external-establishment-validation-latest.json",
-    "docs/v17-standards-bridge-validation-latest.json",
-    "docs/trinity-agent-council-validation-latest.json"
-  ],
-  "next_action": "Aletheon should resume in runtime_probe mode from the recovered shared_latest checkpoint, keep external_live_overlay_state at awaiting_thread_boot unless runtime truth becomes auditable, and treat Docker exec instability as a bounded diagnostic lane only."
+  "next_action": "Use the v19 beta pack with Orun as receiver, preserve repo-first truth, and treat any helper session as an ephemeral shadow clone only."
 }

@@ -1,7 +1,7 @@
 # Trinity Mandala Scoreboard
 
-- generated_utc: `2026-03-20T02:36:59+00:00`
-- hybrid_os_status: **PASS**
+- generated_utc: `2026-03-20T02:33:47+00:00`
+- hybrid_os_status: **FAIL**
 - suite_status: `PASS`
 - checkpoint_class: `shared_full_suite_authority`
 - shared_latest_eligible: `True`
@@ -197,8 +197,8 @@
 | V15 mesh proof | PASS | status extracted | `docs/trinity-agent-mesh-proof-v1.json` |
 | V17 baseline state | PASS | status extracted | `docs/v17-baseline-state-v1.json` |
 | V17 closeout summary | PASS | status extracted | `docs/v17-closeout-summary-v1.json` |
-| V17 runtime session validation | PASS | checks=9/9 | `docs/v17-runtime-session-validation-latest.json` |
-| V17 external establishment validation | PASS | checks=8/8 | `docs/v17-external-establishment-validation-latest.json` |
+| V17 runtime session validation | FAIL | checks=7/9 | `docs/v17-runtime-session-validation-latest.json` |
+| V17 external establishment validation | FAIL | checks=7/8 | `docs/v17-external-establishment-validation-latest.json` |
 | V17 standards bridge validation | PASS | source_count=14 | `docs/v17-standards-bridge-validation-latest.json` |
 | Trinity control tower board | PASS | status extracted | `docs/trinity-control-tower-latest.json` |
 

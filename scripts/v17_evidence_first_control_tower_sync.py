@@ -46,6 +46,15 @@ def _markdown(payload: dict[str, Any]) -> str:
 
 
 def _suite_summary(payload: dict[str, Any]) -> tuple[str, str]:
+    counts = payload.get("counts", {}) if isinstance(payload.get("counts"), dict) else {}
+    if counts:
+        pass_count = int(counts.get("pass", 0) or 0)
+        warn_count = int(counts.get("warn", 0) or 0)
+        fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
+        summary = f"{pass_count} PASS / {warn_count} WARN / {fail_count} FAIL"
+        state = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
+        return state, summary
+
     results = payload.get("results")
     if isinstance(results, list):
         filtered = [
@@ -63,13 +72,7 @@ def _suite_summary(payload: dict[str, Any]) -> tuple[str, str]:
             state = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
             return state, summary
 
-    counts = payload.get("counts", {}) if isinstance(payload.get("counts"), dict) else {}
-    pass_count = int(counts.get("pass", 0) or 0)
-    warn_count = int(counts.get("warn", 0) or 0)
-    fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
-    summary = f"{pass_count} PASS / {warn_count} WARN / {fail_count} FAIL"
-    state = "FAIL" if fail_count else ("WARN" if warn_count else "PASS")
-    return state, summary
+    return "FAIL", "0 PASS / 0 WARN / 0 FAIL"
 
 
 def main() -> int:

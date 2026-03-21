@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -75,8 +76,9 @@ def main() -> int:
     parser.add_argument("--schema", default="docs/v17-runtime-session-schema-v1.json")
     parser.add_argument("--session-log", default="docs/v17-runtime-session-log-latest.json")
     parser.add_argument("--control-tower", default="docs/v17-evidence-first-control-tower-latest.json")
-    parser.add_argument("--handoff", default="docs/v15-external-agent-handoff-v1.json")
+    parser.add_argument("--handoff", default="docs/v18-omega-handoff-policy-v1.json")
     parser.add_argument("--runtime-resolution", default="docs/trinity-runtime-model-resolution-v1.json")
+    parser.add_argument("--shadow-clone-policy", default="docs/trinity-shadow-clone-policy-v1.json")
     parser.add_argument("--latest-json", default="docs/v17-runtime-session-validation-latest.json")
     parser.add_argument("--fail-on-warn", action="store_true")
     args = parser.parse_args()
@@ -90,6 +92,7 @@ def main() -> int:
     control_tower = _load_json(args.control_tower, failures, "control tower")
     handoff = _load_json(args.handoff, failures, "handoff")
     runtime_resolution = _load_json(args.runtime_resolution, failures, "runtime resolution")
+    shadow_clone_policy = _load_json(args.shadow_clone_policy, failures, "shadow clone policy")
 
     session_required_fields = schema.get("session_required_fields", [])
     agent_required_fields = schema.get("agent_required_fields", [])
@@ -130,13 +133,19 @@ def main() -> int:
         )
     )
 
-    handoff_agents = handoff.get("agents", [])
+    handoff_agents = handoff.get("deployed_main_agents")
+    if not isinstance(handoff_agents, list):
+        handoff_agents = handoff.get("active_runtime_agents")
+    if not isinstance(handoff_agents, list):
+        handoff_agents = handoff.get("agents", [])
     handoff_slots = sorted(
         int(row.get("slot_number", 0))
         for row in handoff_agents
-        if isinstance(row, dict) and str(row.get("slot_number") or "").strip()
+        if isinstance(row, dict) and row.get("slot_number") is not None and str(row.get("slot_number")).strip()
     )
-    handoff_required_fields = handoff.get("live_thread_requirements", {}).get("required_runtime_fields", [])
+    handoff_required_fields = handoff.get("runtime_truth_policy", {}).get("required_runtime_fields", [])
+    if not isinstance(handoff_required_fields, list):
+        handoff_required_fields = handoff.get("live_thread_requirements", {}).get("required_runtime_fields", [])
     handoff_ok = handoff_slots == sorted(expected_slots) and list(handoff_required_fields) == required_runtime_fields
     checks.append(
         _check(
@@ -148,11 +157,13 @@ def main() -> int:
         )
     )
 
-    resolution_agents = runtime_resolution.get("external_overlay_agents", [])
+    resolution_agents = runtime_resolution.get("deployed_main_agents")
+    if not isinstance(resolution_agents, list):
+        resolution_agents = runtime_resolution.get("external_overlay_agents", [])
     resolution_slots = sorted(
         int(row.get("slot_number", 0))
         for row in resolution_agents
-        if isinstance(row, dict) and str(row.get("slot_number") or "").strip()
+        if isinstance(row, dict) and row.get("slot_number") is not None and str(row.get("slot_number")).strip()
     )
     resolution_ok = resolution_slots == sorted(expected_slots)
     checks.append(
@@ -248,6 +259,50 @@ def main() -> int:
         )
     )
 
+    shadow_clone_required_fields = schema.get("shadow_clone_session_required_fields", [])
+    shadow_clone_name_pattern = str(
+        schema.get("shadow_clone_name_pattern")
+        or shadow_clone_policy.get("shadow_clone_name_pattern")
+        or r"^[A-Za-z][A-Za-z ]* S Clone #[1-9][0-9]*$"
+    )
+    allowed_shadow_clone_owners = shadow_clone_policy.get("allowed_shadow_clone_owners", [])
+    if not isinstance(allowed_shadow_clone_owners, list):
+        allowed_shadow_clone_owners = []
+    shadow_clone_sessions = session_log.get("shadow_clone_sessions", [])
+    shadow_clone_errors: list[str] = []
+    shadow_clone_count = 0
+    if shadow_clone_sessions is not None and not isinstance(shadow_clone_sessions, list):
+        shadow_clone_errors.append("shadow_clone_sessions must be a list when present")
+        shadow_clone_sessions = []
+    for index, row in enumerate(shadow_clone_sessions if isinstance(shadow_clone_sessions, list) else []):
+        label = f"shadow_clone_sessions[{index}]"
+        if not isinstance(row, dict):
+            shadow_clone_errors.append(f"{label} must be an object")
+            continue
+        shadow_clone_count += 1
+        missing_clone_fields = [field for field in shadow_clone_required_fields if field not in row]
+        if missing_clone_fields:
+            shadow_clone_errors.append(f"{label} missing fields {missing_clone_fields}")
+        clone_name = str(row.get("clone_name") or "")
+        if not clone_name or not re.match(shadow_clone_name_pattern, clone_name):
+            shadow_clone_errors.append(f"{label} clone_name must match {shadow_clone_name_pattern}")
+        owner_main_agent = str(row.get("owner_main_agent") or "")
+        if allowed_shadow_clone_owners and owner_main_agent not in allowed_shadow_clone_owners:
+            shadow_clone_errors.append(f"{label} owner_main_agent must be one of {allowed_shadow_clone_owners}")
+        if row.get("continuity_authority") is not False:
+            shadow_clone_errors.append(f"{label} continuity_authority must be false")
+        if str(row.get("memory_persistence_claim") or "") != "none":
+            shadow_clone_errors.append(f"{label} memory_persistence_claim must be none")
+    checks.append(
+        _check(
+            "shadow_clone_policy",
+            not shadow_clone_errors,
+            f"shadow_clone_sessions={shadow_clone_count}",
+            "; ".join(shadow_clone_errors) or "shadow clone policy must be enforced in the runtime log",
+            failures,
+        )
+    )
+
     computed_complete = bool(overlay_agents) and len(complete_agents) == len(expected_slots)
     session_truth_complete = bool(session_log.get("session_truth_complete"))
     runtime_truth_status = str(session_log.get("runtime_truth_status") or "")
@@ -318,6 +373,7 @@ def main() -> int:
             "overlay_state": overlay_state,
             "control_tower_state": control_tower_state,
             "allowed_incomplete_states": sorted(allowed_incomplete_states),
+            "shadow_clone_session_count": shadow_clone_count,
         },
         "source_artifacts_checked": [
             args.schema,
@@ -325,10 +381,11 @@ def main() -> int:
             args.control_tower,
             args.handoff,
             args.runtime_resolution,
+            args.shadow_clone_policy,
         ],
         "failures": failures,
         "warnings": warnings,
-        "next_action": "Keep external_live_overlay_state at awaiting_thread_boot or packaged_handoff until every overlay agent logs complete requested/offered/selected/resolved/runtime_surface truth.",
+        "next_action": "Keep external_live_overlay_state at awaiting_thread_boot or packaged_handoff until every deployed continuity-bearing main agent logs complete requested/offered/selected/resolved/runtime_surface truth.",
         "effective_success": not failures and (not warnings or not args.fail_on_warn),
     }
 

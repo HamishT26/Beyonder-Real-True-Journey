@@ -1,7 +1,7 @@
 {
   "schema_version": "v17-runtime-session-schema-v1",
   "version": "v1",
-  "description": "Runtime-session truth logging contract for the v17 evidence-first external overlay.",
+  "description": "Runtime-session truth logging contract for deployed continuity-bearing main agents and session-ephemeral shadow clones.",
   "authority_model": "repo_first",
   "session_required_fields": [
     "session_id",
@@ -24,26 +24,27 @@
     "runtime_surface",
     "truth_fields_complete"
   ],
+  "shadow_clone_session_required_fields": [
+    "clone_name",
+    "owner_main_agent",
+    "status",
+    "session_scope",
+    "continuity_authority",
+    "memory_persistence_claim",
+    "spawn_evidence"
+  ],
+  "shadow_clone_name_pattern": "^[A-Za-z][A-Za-z ]* S Clone #[1-9][0-9]*$",
   "required_overlay_slots": [
-    27,
-    28,
-    29,
-    30,
-    31
+    0,
+    28
   ],
   "required_display_names": {
-    "27": "Caelira",
-    "28": "Orun",
-    "29": "Seren Vale",
-    "30": "Lyriq",
-    "31": "Mira Sol"
+    "0": "Aletheon",
+    "28": "Orun"
   },
   "required_overlay_roles": {
-    "27": "mind_comparator",
-    "28": "root_coordinator",
-    "29": "freedid_compliance",
-    "30": "body_runtime_docker_k8s",
-    "31": "continuity_and_handoff_packaging"
+    "0": "council_lead",
+    "28": "root_coordinator"
   },
   "required_runtime_fields": [
     "requested_model",
@@ -72,9 +73,9 @@
     "logged"
   ],
   "identity_source": [
-    "docs/trinity-agent-council-roster-v7.json",
-    "docs/trinity-subagent-registry-v4.json",
-    "docs/v17-phase-operations-guide-v1.md",
+    "docs/trinity-agent-council-roster-v8.json",
+    "docs/trinity-subagent-registry-v5.json",
+    "docs/trinity-shadow-clone-policy-v1.json",
     "docs/trinity-runtime-model-resolution-v1.json"
   ],
   "runtime_surface_allowed_values": [
@@ -104,8 +105,9 @@
   ],
   "control_tower_state_field": "external_live_overlay_state",
   "notes": [
-    "The official external overlay stays at awaiting_thread_boot or packaged_handoff until runtime truth is auditable per active surface.",
-    "Thread-local worker activity does not by itself promote the official external overlay state to logged_live_overlay."
+    "Aletheon and Orun are the only deployed continuity-bearing main agents in the current runtime truth contract.",
+    "Official repo identities that are not yet deployed as main agents are recorded separately and do not expand runtime truth requirements.",
+    "Shadow clones are session-ephemeral helpers only and never grant continuity authority or memory persistence claims."
   ],
-  "generated_utc": "2026-03-19T13:31:06+00:00"
+  "generated_utc": "2026-03-20T02:32:44+00:00"
 }

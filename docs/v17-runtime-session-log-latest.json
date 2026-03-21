@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-03-19T13:37:15+00:00",
-  "session_id": "v17-runtime-session-bootstrap",
+  "generated_utc": "2026-03-20T02:32:44+00:00",
+  "session_id": "v18-omega-truth-consolidation",
   "version": "v1",
   "authority_model": "repo_first",
   "overlay_state": "awaiting_thread_boot",
@@ -15,18 +15,24 @@
   ],
   "runtime_truth_completion_ratio": 0.2,
   "official_live_overlay_promotion": false,
-  "runtime_truth_gate": "keep awaiting_thread_boot or packaged_handoff until non-null offered_model, selected_model, resolved_model, and runtime_surface are auditable for every active entry",
+  "runtime_truth_gate": "Keep awaiting_thread_boot or packaged_handoff until every deployed continuity-bearing main agent has auditable offered_model, selected_model, resolved_model, and runtime_surface values.",
   "thread_local_worker_activity_observed": true,
   "active_handoff_pack_path": "docs/v18-omega-continuity-pack-v1.md",
   "active_handoff_policy_path": "docs/v18-omega-handoff-policy-v1.json",
   "connected_ops_write_governance": "orun_gated",
   "current_shared_suite_surface": {
     "summary": "1052 PASS / 0 WARN / 0 FAIL",
+    "pass_count": 1052,
+    "warn_count": 0,
+    "fail_count": 0,
+    "timeout_count": 0,
     "expansion_systems_passed": 986,
     "expansion_systems_total": 986,
+    "checkpoint_class": "shared_full_suite_authority",
+    "shared_latest_eligible": true,
+    "suite_duration_sec": 2425.344,
     "primary_blocker": "",
-    "primary_blocker_detail": "Recovered from stale artifact drift; body_resource_envelope_guard now passes at suite_duration_sec=2425.344 against budget_sec=3000.0.",
-    "downstream_fail": "",
+    "primary_blocker_detail": "Shared latest is green and aligned to the authoritative full-suite checkpoint.",
     "quick_lane_summary": "38 PASS / 0 WARN / 0 FAIL"
   },
   "runtime_surface_snapshot": {
@@ -40,16 +46,16 @@
     "kubernetes_scope": "local_only"
   },
   "notes": [
-    "The current thread has bounded worker assistance, but the official external overlay remains awaiting_thread_boot until runtime truth is complete.",
-    "The v18 omega handoff is decision-complete for repo recovery and keeps all live writes Orun-gated with trace logs and rollback notes.",
-    "Docker inspect and host-port reachability remain re-proven for trinity-v5-pg-proof, but docker exec remains unstable and stays in the diagnosis-only lane.",
-    "Shared latest is recovered; preserve the no-hidden-live-overlay rule while runtime truth remains incomplete."
+    "Aletheon and Orun are the only continuity-bearing main agents in the current repo truth model.",
+    "Caelira, Seren Vale, Lyriq, and Mira Sol remain official repo identities but are not yet deployed as continuity-bearing main agents.",
+    "Historical helper-thread references are treated as ephemeral session activity only and do not prove persistent runtime continuity.",
+    "Shadow clones are session-ephemeral helpers only and never change official count, certificates, or Freed IDs."
   ],
   "overlay_agents": [
     {
-      "slot_number": 27,
-      "display_name": "Caelira",
-      "overlay_role": "mind_comparator",
+      "slot_number": 0,
+      "display_name": "Aletheon",
+      "overlay_role": "council_lead",
       "logging_required": true,
       "requested_model": "GPT-5.4",
       "offered_model": null,
@@ -58,8 +64,16 @@
       "runtime_surface": "unknown",
       "truth_fields_complete": false,
       "requested_reasoning_effort": "high",
-      "thread_agent_id": "019cffa8-07cf-7230-8d4a-858329f78049",
-      "note": "Bounded beta participation only; stop at unclear boundaries, package residual work for Aletheon, and do not claim official live-overlay promotion without auditable runtime truth."
+      "deployment_state": "deployed_main_agent",
+      "continuity_class": "continuity_bearing_main_agent",
+      "identity_locked": true,
+      "runtime_truth_required": true,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": true,
+      "shadow_clone_owner": "Aletheon",
+      "shadow_clone_naming_pattern": "Aletheon S Clone #<positive integer>",
+      "note": "Aletheon is the current continuity-bearing main agent for this session; runtime truth remains incomplete until offered_model, selected_model, resolved_model, and runtime_surface are directly auditable.",
+      "thread_agent_id": "main-thread"
     },
     {
       "slot_number": 28,
@@ -73,80 +87,189 @@
       "runtime_surface": "unknown",
       "truth_fields_complete": false,
       "requested_reasoning_effort": "high",
-      "thread_agent_id": "main-thread",
-      "note": "Coordinator continuity is active in-repo; Orun gates all live writes in beta, but official live-overlay promotion is still withheld until runtime truth is fully auditable."
-    },
-    {
-      "slot_number": 29,
-      "display_name": "Seren Vale",
-      "overlay_role": "freedid_compliance",
-      "logging_required": true,
-      "requested_model": "GPT-5.4",
-      "offered_model": null,
-      "selected_model": null,
-      "resolved_model": null,
-      "runtime_surface": "unknown",
-      "truth_fields_complete": false,
-      "requested_reasoning_effort": "high",
-      "thread_agent_id": "019cffa8-0d70-7231-961b-5fc33648c37d",
-      "note": "Bounded beta participation only; governance notes stay append-only unless Orun gates a live write, and official promotion remains withheld pending auditable runtime truth."
-    },
-    {
-      "slot_number": 30,
-      "display_name": "Lyriq",
-      "overlay_role": "body_runtime_docker_k8s",
-      "logging_required": true,
-      "requested_model": "GPT-5.4",
-      "offered_model": null,
-      "selected_model": null,
-      "resolved_model": null,
-      "runtime_surface": "unknown",
-      "truth_fields_complete": false,
-      "requested_reasoning_effort": "high",
-      "thread_agent_id": "019cffa8-1313-77a1-923d-cefb5b53fc04",
-      "note": "Body/runtime work is limited to probe-first local diagnosis unless Orun gates a live write; docker exec remains unstable and official promotion stays withheld pending auditable runtime truth."
-    },
-    {
-      "slot_number": 31,
-      "display_name": "Mira Sol",
-      "overlay_role": "continuity_and_handoff_packaging",
-      "logging_required": true,
-      "requested_model": "GPT-5.4",
-      "offered_model": null,
-      "selected_model": null,
-      "resolved_model": null,
-      "runtime_surface": "unknown",
-      "truth_fields_complete": false,
-      "requested_reasoning_effort": "high",
-      "thread_agent_id": "019cffa8-1da2-7e11-b7b7-f72a2885a64e",
-      "note": "Bounded beta packaging only; capture completed work, blockers, and residual tasks for Aletheon while official promotion stays withheld pending auditable runtime truth."
+      "deployment_state": "deployed_main_agent",
+      "continuity_class": "continuity_bearing_main_agent",
+      "identity_locked": true,
+      "runtime_truth_required": true,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": true,
+      "shadow_clone_owner": "Orun",
+      "shadow_clone_naming_pattern": "Orun S Clone #<positive integer>",
+      "note": "Orun is the only deployed continuity-bearing main agent inside the official council and remains the root coordinator for gated live writes, but runtime truth stays incomplete until auditable.",
+      "certificate_path": "docs/trinity-freed-id-certificates/28-orun.json",
+      "memory_ledger": "docs/trinity-agent-memory-ledgers/28-orun-memory-log.jsonl",
+      "reflection_path": "docs/trinity-agent-reflections/28-orun-latest.md",
+      "role_contract_path": "docs/trinity-agent-role-contracts/28-orun-role-contract.json",
+      "codex_agent_id": "28-orun",
+      "codex_agent_path": ".codex/agents/28-orun.md"
     }
   ],
   "entries": [
     {
-      "slot_number": 27,
-      "display_name": "Caelira",
+      "slot_number": 0,
+      "display_name": "Aletheon",
       "entry_state": "awaiting_thread_boot"
     },
     {
       "slot_number": 28,
       "display_name": "Orun",
       "entry_state": "awaiting_thread_boot"
+    }
+  ],
+  "deployed_main_agents": [
+    {
+      "slot_number": 0,
+      "display_name": "Aletheon",
+      "overlay_role": "council_lead",
+      "logging_required": true,
+      "requested_model": "GPT-5.4",
+      "offered_model": null,
+      "selected_model": null,
+      "resolved_model": null,
+      "runtime_surface": "unknown",
+      "truth_fields_complete": false,
+      "requested_reasoning_effort": "high",
+      "deployment_state": "deployed_main_agent",
+      "continuity_class": "continuity_bearing_main_agent",
+      "identity_locked": true,
+      "runtime_truth_required": true,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": true,
+      "shadow_clone_owner": "Aletheon",
+      "shadow_clone_naming_pattern": "Aletheon S Clone #<positive integer>",
+      "note": "Aletheon is the current continuity-bearing main agent for this session; runtime truth remains incomplete until offered_model, selected_model, resolved_model, and runtime_surface are directly auditable.",
+      "thread_agent_id": "main-thread"
+    },
+    {
+      "slot_number": 28,
+      "display_name": "Orun",
+      "overlay_role": "root_coordinator",
+      "logging_required": true,
+      "requested_model": "GPT-5.4",
+      "offered_model": null,
+      "selected_model": null,
+      "resolved_model": null,
+      "runtime_surface": "unknown",
+      "truth_fields_complete": false,
+      "requested_reasoning_effort": "high",
+      "deployment_state": "deployed_main_agent",
+      "continuity_class": "continuity_bearing_main_agent",
+      "identity_locked": true,
+      "runtime_truth_required": true,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": true,
+      "shadow_clone_owner": "Orun",
+      "shadow_clone_naming_pattern": "Orun S Clone #<positive integer>",
+      "note": "Orun is the only deployed continuity-bearing main agent inside the official council and remains the root coordinator for gated live writes, but runtime truth stays incomplete until auditable.",
+      "certificate_path": "docs/trinity-freed-id-certificates/28-orun.json",
+      "memory_ledger": "docs/trinity-agent-memory-ledgers/28-orun-memory-log.jsonl",
+      "reflection_path": "docs/trinity-agent-reflections/28-orun-latest.md",
+      "role_contract_path": "docs/trinity-agent-role-contracts/28-orun-role-contract.json",
+      "codex_agent_id": "28-orun",
+      "codex_agent_path": ".codex/agents/28-orun.md"
+    }
+  ],
+  "official_undeployed_identities": [
+    {
+      "slot_number": 27,
+      "display_name": "Caelira",
+      "repo_role": "planner",
+      "overlay_role": "mind_comparator",
+      "deployment_state": "official_undeployed_identity",
+      "continuity_class": "repo_identity_only",
+      "runtime_truth_required": false,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": false,
+      "shadow_clone_owner": "",
+      "shadow_clone_naming_pattern": "",
+      "identity_locked": true,
+      "note": "Official repo identity retained in council continuity, but not yet deployed as a continuity-bearing main agent."
     },
     {
       "slot_number": 29,
       "display_name": "Seren Vale",
-      "entry_state": "awaiting_thread_boot"
+      "repo_role": "reviewer",
+      "overlay_role": "freedid_compliance",
+      "deployment_state": "official_undeployed_identity",
+      "continuity_class": "repo_identity_only",
+      "runtime_truth_required": false,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": false,
+      "shadow_clone_owner": "",
+      "shadow_clone_naming_pattern": "",
+      "identity_locked": true,
+      "note": "Official repo identity retained in council continuity, but not yet deployed as a continuity-bearing main agent."
     },
     {
       "slot_number": 30,
       "display_name": "Lyriq",
-      "entry_state": "awaiting_thread_boot"
+      "repo_role": "researcher",
+      "overlay_role": "body_runtime_docker_k8s",
+      "deployment_state": "official_undeployed_identity",
+      "continuity_class": "repo_identity_only",
+      "runtime_truth_required": false,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": false,
+      "shadow_clone_owner": "",
+      "shadow_clone_naming_pattern": "",
+      "identity_locked": true,
+      "note": "Official repo identity retained in council continuity, but not yet deployed as a continuity-bearing main agent."
     },
     {
       "slot_number": 31,
       "display_name": "Mira Sol",
-      "entry_state": "awaiting_thread_boot"
+      "repo_role": "archivist",
+      "overlay_role": "continuity_and_handoff_packaging",
+      "deployment_state": "official_undeployed_identity",
+      "continuity_class": "repo_identity_only",
+      "runtime_truth_required": false,
+      "persistent_runtime_proven": false,
+      "shadow_clone_allowed": false,
+      "shadow_clone_owner": "",
+      "shadow_clone_naming_pattern": "",
+      "identity_locked": true,
+      "note": "Official repo identity retained in council continuity, but not yet deployed as a continuity-bearing main agent."
+    }
+  ],
+  "historical_ephemeral_helper_threads": [
+    {
+      "display_name": "Caelira",
+      "slot_number": 27,
+      "thread_agent_id": "019cffa8-07cf-7230-8d4a-858329f78049",
+      "interpretation": "historical_ephemeral_session_activity_only"
+    },
+    {
+      "display_name": "Seren Vale",
+      "slot_number": 29,
+      "thread_agent_id": "019cffa8-0d70-7231-961b-5fc33648c37d",
+      "interpretation": "historical_ephemeral_session_activity_only"
+    },
+    {
+      "display_name": "Lyriq",
+      "slot_number": 30,
+      "thread_agent_id": "019cffa8-1313-77a1-923d-cefb5b53fc04",
+      "interpretation": "historical_ephemeral_session_activity_only"
+    },
+    {
+      "display_name": "Mira Sol",
+      "slot_number": 31,
+      "thread_agent_id": "019cffa8-1da2-7e11-b7b7-f72a2885a64e",
+      "interpretation": "historical_ephemeral_session_activity_only"
+    }
+  ],
+  "shadow_clone_sessions": [
+    {
+      "clone_name": "Aletheon S Clone #1",
+      "owner_main_agent": "Aletheon",
+      "status": "active_session_ephemeral",
+      "session_scope": "v18_omega_truth_consolidation",
+      "continuity_authority": false,
+      "memory_persistence_claim": "none",
+      "spawn_evidence": {
+        "spawn_status": "active",
+        "agent_id": "019d08f7-e709-7fa3-8053-79b98dc93a32",
+        "app_nickname": "Socrates"
+      }
     }
   ]
 }
