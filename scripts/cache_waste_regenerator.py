@@ -33,24 +33,28 @@ def _repo_path(p: str) -> Path:
 
 
 
-def _tracked_paths() -> set[Path]:
+def _is_tracked_path(path: Path) -> bool:
     try:
-        out = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True)
+        rel = path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return False
+    command = ["git", "ls-files", "--error-unmatch", "--", rel]
+    if path.is_dir():
+        command = ["git", "ls-files", "--", rel]
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=10,
+        )
     except Exception:
-        return set()
-    paths: set[Path] = set()
-    for line in out.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        candidate = ROOT / line
-        try:
-            paths.add(candidate.resolve())
-        except OSError:
-            # Keep unreadable tracked paths from collapsing the recycler. We
-            # only need enough fidelity to avoid purging known tracked paths.
-            paths.add(candidate)
-    return paths
+        return False
+    if path.is_dir():
+        return bool((proc.stdout or "").strip())
+    return proc.returncode == 0
 
 def _collect(paths_or_globs: list[str]) -> list[Path]:
     out: list[Path] = []
@@ -118,7 +122,6 @@ def main() -> None:
     targets = args.path or DEFAULT_PATTERNS
     entries = _collect(targets)
 
-    tracked_paths = _tracked_paths()
     reclaimed_bytes = 0
     purged_bytes = 0
     purged_count = 0
@@ -129,7 +132,7 @@ def main() -> None:
         if size <= 0:
             continue
         reclaimed_bytes += size
-        is_tracked = p in tracked_paths
+        is_tracked = _is_tracked_path(p)
         row = {
             "path": p.relative_to(ROOT).as_posix(),
             "bytes": size,

@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
+EXPECTED_SYSTEM_COUNT = 998
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}
@@ -110,8 +111,8 @@ def main() -> int:
     if not isinstance(systems, list):
         failures.append("manifest.systems must be a list")
         systems = []
-    if isinstance(systems, list) and len(systems) != 986:
-        failures.append(f"manifest expected 986 systems, found {len(systems)}")
+    if isinstance(systems, list) and len(systems) != EXPECTED_SYSTEM_COUNT:
+        failures.append(f"manifest expected {EXPECTED_SYSTEM_COUNT} systems, found {len(systems)}")
 
     seen_ids: set[str] = set()
     for index, entry in enumerate(systems):

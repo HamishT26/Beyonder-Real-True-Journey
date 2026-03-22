@@ -166,14 +166,14 @@ def _git_remote_ok() -> bool:
 
 def _docker_ps(names_only: bool = False) -> list[str]:
     format_string = "{{.Names}}" if names_only else "{{.Names}}\t{{.Status}}\t{{.Image}}"
-    code, stdout, _ = _run(["docker", "ps", "--format", format_string], timeout=30)
+    code, stdout, _ = _run(["docker", "ps", "--format", format_string], timeout=10)
     if code != 0:
         return []
     return [line for line in stdout.splitlines() if line.strip()]
 
 
 def _docker_pg_ready(container: str, database: str = "trinity_v5") -> tuple[bool, str]:
-    code, stdout, stderr = _run(["docker", "exec", container, "pg_isready", "-U", "postgres", "-d", database], timeout=30)
+    code, stdout, stderr = _run(["docker", "exec", container, "pg_isready", "-U", "postgres", "-d", database], timeout=10)
     detail = stdout or stderr or "pg_isready completed"
     if code == 0:
         return True, detail
@@ -1481,10 +1481,38 @@ def _semantic_firewall() -> dict[str, Any]:
         "unsafe_config": 'approval_mode = "never"',
     }
     hits: list[dict[str, Any]] = []
-    for path in ROOT.rglob("*"):
-        if not path.is_file():
-            continue
+    grep_command = [
+        "git",
+        "grep",
+        "-l",
+        "-F",
+    ]
+    for token in patterns.values():
+        grep_command.extend(["-e", token])
+    grep_command.extend(["--", "*.py", "*.sh", "*.ps1", "*.toml", "*.yaml", "*.yml"])
+    candidate_paths: list[Path] = []
+    code, stdout, _stderr = _run(grep_command, timeout=20)
+    if code in {0, 1}:
+        for raw in stdout.splitlines():
+            raw = raw.strip()
+            if not raw:
+                continue
+            try:
+                candidate_paths.append(_repo_path(raw))
+            except Exception:
+                continue
+    else:
+        for path in ROOT.rglob("*"):
+            if not path.is_file():
+                continue
+            candidate_paths.append(path)
+
+    seen_paths: set[str] = set()
+    for path in candidate_paths:
         rel = _normal_rel(path)
+        if rel in seen_paths:
+            continue
+        seen_paths.add(rel)
         if rel.startswith(".git/") or rel.startswith("docs/") or "/__pycache__/" in rel or rel.startswith("docs/trinity-expansion-runs/"):
             continue
         if path.suffix.lower() not in {".py", ".sh", ".ps1", ".toml", ".yaml", ".yml"}:
