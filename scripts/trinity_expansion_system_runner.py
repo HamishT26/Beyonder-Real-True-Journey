@@ -1452,6 +1452,101 @@ def _artifact_guard(manifest: dict[str, Any], dependencies: list[str]) -> tuple[
     return checks, metrics
 
 
+def _format_runner_command(raw_command: list[object], *, profile_context: str, materialization_level: str) -> list[str]:
+    supported_profile_context = str(profile_context or "standard")
+    if supported_profile_context not in {"quick", "standard", "deep", "mixed"}:
+        supported_profile_context = "standard"
+    substitutions = {
+        "profile_context": str(profile_context or "standard"),
+        "benchmark_profile_context": supported_profile_context,
+        "materialization_level": str(materialization_level or "l2_persistent_dev"),
+    }
+    return [str(item).format(**substitutions) for item in raw_command]
+
+
+def _command_passthrough_system(
+    entry: dict[str, Any],
+    *,
+    profile_context: str,
+    materialization_level: str,
+    timeout_sec: int,
+) -> dict[str, Any]:
+    raw_command = entry.get("runner_command", [])
+    if not isinstance(raw_command, list) or not raw_command:
+        return {
+            "checks": [_check("runner_command_present", "FAIL", "runner_command must be a non-empty list")],
+            "metrics": {},
+            "targets": [str(path) for path in entry.get("outputs", []) if str(path).strip()],
+            "next_action": "Add runner_command metadata for this passthrough system.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    command = _format_runner_command(
+        raw_command,
+        profile_context=profile_context,
+        materialization_level=materialization_level,
+    )
+    command_timeout = max(int(entry.get("timeout_sec") or timeout_sec or 30), int(timeout_sec or 30))
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=command_timeout,
+            check=False,
+        )
+        output_detail = (proc.stdout or proc.stderr or "").strip().splitlines()
+        detail = output_detail[0] if output_detail else f"returncode={proc.returncode}"
+        checks = [_check("runner_command_exit", "PASS" if proc.returncode == 0 else "FAIL", detail)]
+        metrics: dict[str, Any] = {
+            "runner_command": command,
+            "returncode": proc.returncode,
+            "timeout_sec": command_timeout,
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "checks": [_check("runner_command_exit", "TIMEOUT", f"timeout_sec={command_timeout}")],
+            "metrics": {"runner_command": command, "timeout_sec": command_timeout},
+            "targets": _collect_targets(
+                [str(path) for path in entry.get("outputs", []) if str(path).strip()],
+                [str(path) for path in entry.get("runner_targets", []) if str(path).strip()],
+            ),
+            "next_action": "Increase command efficiency or raise timeout with evidence.",
+            "records": None,
+            "source_runs": None,
+        }
+
+    validation_output = str(entry.get("runner_success_json") or "").strip()
+    if not validation_output:
+        candidate_output = str((entry.get("outputs") or [""])[0] or "").strip()
+        candidate_path = ROOT / candidate_output if candidate_output else None
+        if candidate_output.endswith(".json") and candidate_path and candidate_path.exists():
+            validation_output = candidate_output
+    if validation_output.endswith(".json"):
+        ok, payload, detail = _read_json_safe(validation_output)
+        if ok:
+            status = _payload_status(payload)
+            checks.append(_check("output_status", _status_not_fail(status), f"path={validation_output}, status={status}"))
+            metrics["output_status"] = status
+        else:
+            checks.append(_check("output_status", "FAIL", detail))
+
+    targets = _collect_targets(
+        [str(path) for path in entry.get("outputs", []) if str(path).strip()],
+        [str(path) for path in entry.get("runner_targets", []) if str(path).strip()],
+    )
+    return {
+        "checks": checks,
+        "metrics": metrics,
+        "targets": targets,
+        "next_action": "Keep passthrough system outputs green and repo-backed.",
+        "records": None,
+        "source_runs": None,
+    }
+
+
 def _mind_crossref(offline_only: bool, timeout_sec: int) -> tuple[list[dict[str, str]], list[dict[str, Any]], list[dict[str, Any]], list[str], dict[str, Any]]:
     checks: list[dict[str, str]] = []
     runs: list[dict[str, Any]] = []
@@ -2207,6 +2302,7 @@ def _compute_system(
     records: list[dict[str, Any]] | None = None
     source_runs: list[dict[str, Any]] | None = None
     targets: list[str] = []
+    entry = _manifest_entry(manifest, system_id)
 
     v6_result = run_v6_system(
         system_id=system_id,
@@ -2236,6 +2332,14 @@ def _compute_system(
     )
     if generic_pack_result is not None:
         return generic_pack_result
+
+    if str(entry.get("runner_mode") or "").strip() == "passthrough_command":
+        return _command_passthrough_system(
+            entry,
+            profile_context=profile_context,
+            materialization_level=materialization_level,
+            timeout_sec=timeout_sec,
+        )
 
     if system_id == "mind_claim_evidence_partition":
         ok, registry, detail = _read_json_safe("docs/trinity-public-source-registry-v1.json")

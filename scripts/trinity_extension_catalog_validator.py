@@ -10,9 +10,14 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
+EXPECTED_EXTENSION_COUNT = 1872
 ALLOWED_EXTENSION_KINDS = {"system", "skill", "artifact"}
 ALLOWED_EXTENSION_STATUS = {"active", "verified_live", "verified_live_read", "verified_live_write", "skill_only", "staged_setup_gate"}
 ALLOWED_MCP_STATUS = {"verified_live", "verified_live_read", "verified_live_write", "staged_setup_gate", "skill_only", "future_candidate", "absent"}
+PACK_LAYOUT_RULES = {
+    "standard_pack_v17": {"system": 6, "skill": 2, "artifact": 4, "manifest_systems": 6},
+    "balanced_wave_bucket_v20": {"system": 3, "skill": 0, "artifact": 12, "manifest_systems": 3},
+}
 
 
 def _repo_path(path_str: str) -> Path:
@@ -80,11 +85,12 @@ def main() -> int:
     if not isinstance(extension_rows, list):
         failures.append("extension catalog extensions must be a list")
         extension_rows = []
-    if isinstance(extension_rows, list) and len(extension_rows) != 1812:
-        failures.append(f"extension catalog expected 1812 entries, found {len(extension_rows)}")
+    if isinstance(extension_rows, list) and len(extension_rows) != EXPECTED_EXTENSION_COUNT:
+        failures.append(f"extension catalog expected {EXPECTED_EXTENSION_COUNT} entries, found {len(extension_rows)}")
 
     extension_ids: set[str] = set()
     pack_counts: dict[str, dict[str, int]] = {}
+    pack_layouts: dict[str, str] = {}
     for index, entry in enumerate(extension_rows):
         label = f"extensions[{index}]"
         if not isinstance(entry, dict):
@@ -108,6 +114,14 @@ def main() -> int:
         if status not in ALLOWED_EXTENSION_STATUS:
             failures.append(f"{extension_id or label} invalid status: {status}")
         if pack:
+            layout = str(entry.get("pack_layout") or "standard_pack_v17").strip()
+            if layout not in PACK_LAYOUT_RULES:
+                failures.append(f"{pack} invalid pack_layout: {layout}")
+            existing_layout = pack_layouts.get(pack)
+            if existing_layout and existing_layout != layout:
+                failures.append(f"{pack} has conflicting pack_layout values: {existing_layout} vs {layout}")
+            else:
+                pack_layouts[pack] = layout
             bucket = pack_counts.setdefault(pack, {"system": 0, "skill": 0, "artifact": 0})
             if kind in bucket:
                 bucket[kind] += 1
@@ -117,14 +131,16 @@ def main() -> int:
     for pack, counts in pack_counts.items():
         if pack.startswith("legacy_"):
             continue
-        if counts.get("system") != 6:
-            failures.append(f"{pack} expected 6 systems, found {counts.get('system')}")
-        if counts.get("skill") != 2:
-            failures.append(f"{pack} expected 2 skills, found {counts.get('skill')}")
-        if counts.get("artifact") != 4:
-            failures.append(f"{pack} expected 4 artifacts, found {counts.get('artifact')}")
-        if manifest_by_pack.get(pack, 0) != 6:
-            failures.append(f"{pack} expected 6 manifest systems, found {manifest_by_pack.get(pack, 0)}")
+        layout = pack_layouts.get(pack, "standard_pack_v17")
+        expected = PACK_LAYOUT_RULES[layout]
+        if counts.get("system") != expected["system"]:
+            failures.append(f"{pack} expected {expected['system']} systems, found {counts.get('system')}")
+        if counts.get("skill") != expected["skill"]:
+            failures.append(f"{pack} expected {expected['skill']} skills, found {counts.get('skill')}")
+        if counts.get("artifact") != expected["artifact"]:
+            failures.append(f"{pack} expected {expected['artifact']} artifacts, found {counts.get('artifact')}")
+        if manifest_by_pack.get(pack, 0) != expected["manifest_systems"]:
+            failures.append(f"{pack} expected {expected['manifest_systems']} manifest systems, found {manifest_by_pack.get(pack, 0)}")
 
     connector_rows = mcp_catalog.get("connectors", [])
     if not isinstance(connector_rows, list):

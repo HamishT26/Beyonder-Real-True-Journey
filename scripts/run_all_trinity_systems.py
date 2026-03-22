@@ -428,12 +428,16 @@ def _load_expansion_system_commands(
             continue
         system_id = str(entry.get("system_id") or "").strip()
         script = str(entry.get("script") or "").strip()
+        runner_mode = str(entry.get("runner_mode") or "").strip().lower()
         mode = str(entry.get("mode") or "offline").strip().lower()
         pack = str(entry.get("pack") or "").strip()
         if not system_id or not script:
             continue
-        command = ["python3", script]
-        if script == "scripts/trinity_expansion_system_runner.py":
+        resolved_script = script
+        if runner_mode == "passthrough_command":
+            resolved_script = "scripts/trinity_expansion_system_runner.py"
+        command = ["python3", resolved_script]
+        if resolved_script == "scripts/trinity_expansion_system_runner.py":
             command.extend(["--system-id", system_id])
         if enforce:
             command.append("--fail-on-warn")

@@ -1,0 +1,91 @@
+{
+  "generated_utc": "2026-03-22T19:40:19+00:00",
+  "system_id": "code_knowledge_graph_sync_bridge",
+  "pillar": "body",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "repo_file_inventory",
+      "status": "PASS",
+      "detail": "files=8449"
+    },
+    {
+      "name": "symbol_inventory",
+      "status": "PASS",
+      "detail": "symbols=857"
+    },
+    {
+      "name": "dependency_inventory",
+      "status": "PASS",
+      "detail": "dependencies=717"
+    },
+    {
+      "name": "postgres_ready",
+      "status": "PASS",
+      "detail": "/var/run/postgresql:5432 - accepting connections"
+    },
+    {
+      "name": "knowledge_graph_write_mode",
+      "status": "PASS",
+      "detail": "read_only_cached_summary"
+    }
+  ],
+  "metrics": {
+    "generated_utc": "2026-03-22T19:40:19+00:00",
+    "profile_context": "materialize",
+    "write_mode": false,
+    "file_count": 8449,
+    "symbol_count": 857,
+    "dependency_count": 717,
+    "manifest_entry_count": 656,
+    "connector_state_count": 10,
+    "continuity_anchor_count": 13,
+    "sql_summary": {
+      "schema_loaded": false,
+      "rows_written": {}
+    },
+    "postgres_ready": true,
+    "postgres_runtime_detail": "/var/run/postgresql:5432 - accepting connections"
+  },
+  "repo_targets_touched": [
+    "docs/trinity-code-knowledge-graph-contract-v1.json",
+    "docs/trinity-code-knowledge-graph-summary-v1.json",
+    "docs/trinity-live-traces/code-knowledge-graph-proof-v1.json"
+  ],
+  "next_action": "Use materialize mode for schema population; keep standard and deep on the cached summary path.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "code_knowledge_graph",
+      "record_id": "code_knowledge_graph-seed",
+      "signal_type": "pack_seed",
+      "title": "code knowledge graph",
+      "published_at": "2026-03-22",
+      "source_url": "repo://docs/trinity-code-knowledge-graph-summary-v1.json",
+      "summary": "Reused the cached code-knowledge graph summary for non-materialize profiles.",
+      "metrics": {
+        "file_count": 8449,
+        "symbol_count": 857,
+        "dependency_count": 717,
+        "write_mode": false,
+        "postgres_ready": true
+      },
+      "tags": [
+        "code_knowledge_graph",
+        "seed"
+      ],
+      "repo_targets": [
+        "docs/trinity-code-knowledge-graph-contract-v1.json",
+        "docs/trinity-code-knowledge-graph-summary-v1.json"
+      ]
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "code_knowledge_graph",
+      "mode": "cached_summary",
+      "record_count": 1,
+      "status": "PASS"
+    }
+  ]
+}
