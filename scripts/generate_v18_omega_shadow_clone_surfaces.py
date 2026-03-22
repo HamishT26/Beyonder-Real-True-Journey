@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate v18 Omega and v19 Beta continuity surfaces for the shadow-clone model."""
+"""Generate continuity surfaces for the shadow-clone model through v19 Omega."""
 
 from __future__ import annotations
 
@@ -28,6 +28,121 @@ OFFICIAL_UNDEPLOYED_SLOTS = {
     30: "Lyriq",
     31: "Mira Sol",
 }
+BALANCED_WAVE_BUCKETS: list[dict[str, Any]] = [
+    {
+        "bucket_id": "orun_leadership_runtime_truth_continuity",
+        "bucket_title": "Orun leadership / shadow-clone / runtime-truth / continuity",
+        "bucket_anchor_paths": [
+            "docs/trinity-shadow-clone-policy-v1.json",
+            "docs/trinity-runtime-model-resolution-v1.json",
+            "docs/v17-runtime-session-log-latest.json",
+            "docs/v17-runtime-truth-resolution-board-v1.json",
+        ],
+        "candidate_titles": [
+            "v17 runtime session guard",
+            "v17 external establishment validator",
+            "trinity agent council v17 validator",
+            "shadow clone policy sync",
+            "runtime model resolution sync",
+            "runtime session log refresh",
+            "runtime truth hold board",
+            "journey continuity surface audit",
+            "official identity state freeze",
+            "deployed main-agent count guard",
+            "historical helper-window reconciliation",
+            "active handoff path rotation",
+            "rollback trace note pack",
+            "continuity pack emitter",
+            "v20 receiver preflight stub",
+        ],
+        "eligible_count": 3,
+    },
+    {
+        "bucket_id": "mind_comparator_research_evidence",
+        "bucket_title": "Mind comparator / research / evidence systems",
+        "bucket_anchor_paths": [
+            "scripts/gmut_anchor_trace_validator.py",
+            "scripts/validate_trinity_public_research.py",
+            "scripts/mind_theory_signal_board.py",
+            "docs/trinity-public-source-registry-v1.json",
+        ],
+        "candidate_titles": [
+            "gmut anchor trace validator",
+            "trinity public research validator",
+            "mind theory signal board",
+            "public signal board refresh",
+            "api source manifest check",
+            "api constellation board refresh",
+            "gmut canon sync",
+            "comparator grid scaffold",
+            "mind falsification matrix refresh",
+            "public-source registry annotation",
+            "theory signal cache delta",
+            "observable mapping queue",
+            "canon latex alignment queue",
+            "supplemental reflection bridge stub",
+            "research cache freshness ledger",
+        ],
+        "eligible_count": 3,
+    },
+    {
+        "bucket_id": "body_runtime_integration_tool_surface",
+        "bucket_title": "Body runtime / integration / tool-surface systems",
+        "bucket_anchor_paths": [
+            "scripts/body_profile_calibration_report.py",
+            "scripts/body_benchmark_trend_guard.py",
+            "scripts/body_compute_signal_board.py",
+            "docs/body-profile-policy-v1.json",
+        ],
+        "candidate_titles": [
+            "body benchmark guardrail check",
+            "body benchmark trend guard",
+            "body profile calibration report",
+            "body policy delta report",
+            "body policy stress-window report",
+            "body compute signal board",
+            "runtime docker context probe",
+            "kubernetes context probe",
+            "docker exec instability note",
+            "local runtime benchmark bridge",
+            "postgres local runtime probe",
+            "os runtime fabric bridge",
+            "materialization readiness map",
+            "container network hold guard",
+            "device readiness registry stub",
+        ],
+        "eligible_count": 3,
+    },
+    {
+        "bucket_id": "heart_governance_standards_policy",
+        "bucket_title": "Heart governance / standards / policy systems",
+        "bucket_anchor_paths": [
+            "scripts/v17_standards_bridge_validator.py",
+            "scripts/heart_governance_signal_board.py",
+            "docs/v17-standards-bridge-registry-v1.json",
+            "docs/trinity-shadow-clone-policy-v1.json",
+            "docs/freedid-compliance-bridge-v15-catalog-entry-v1.json",
+        ],
+        "candidate_titles": [
+            "v17 standards bridge validator",
+            "heart governance signal board",
+            "freedid compliance bridge check",
+            "heart standards alignment refresh",
+            "governance fabric policy delta",
+            "cosmic bill alignment matrix",
+            "identity governance hold guard",
+            "freedid governance fabric refresh",
+            "governance signal cache annotation",
+            "external establishment criteria review",
+            "standards registry evidence pack",
+            "operator-hold boundary audit",
+            "rights language normalization",
+            "governance bridge public-source queue",
+            "handoff policy trace matrix",
+        ],
+        "eligible_count": 3,
+    },
+]
 
 
 def _repo_path(path_str: str) -> Path:
@@ -49,10 +164,24 @@ def _write_json(path_str: str, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
+def _write_json_if_missing(path_str: str, payload: dict[str, Any]) -> None:
+    path = _repo_path(path_str)
+    if path.exists():
+        return
+    _write_json(path_str, payload)
+
+
 def _write_text(path_str: str, payload: str) -> None:
     path = _repo_path(path_str)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(payload.rstrip() + "\n", encoding="utf-8")
+
+
+def _write_text_if_missing(path_str: str, payload: str) -> None:
+    path = _repo_path(path_str)
+    if path.exists():
+        return
+    _write_text(path_str, payload)
 
 
 def _utc_now() -> str:
@@ -62,6 +191,32 @@ def _utc_now() -> str:
 def _git(*args: str) -> str:
     result = subprocess.run(
         ["git", *args],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.stdout.strip() if result.returncode == 0 else ""
+
+
+def _git_is_ancestor(ancestor: str, descendant: str) -> bool:
+    if not ancestor or not descendant:
+        return False
+    result = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", ancestor, descendant],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.returncode == 0
+
+
+def _git_first_match(pattern: str) -> str:
+    result = subprocess.run(
+        ["git", "log", "--grep", pattern, "--format=%H", "-n", "1"],
         cwd=ROOT,
         check=False,
         capture_output=True,
@@ -103,7 +258,7 @@ def _current_shared_truth(suite_status: dict[str, Any], quick_lane_summary: str)
     }
 
 
-def _build_shadow_clone_session(args: argparse.Namespace) -> dict[str, Any] | None:
+def _build_shadow_clone_session(args: argparse.Namespace, session_scope: str) -> dict[str, Any] | None:
     if not str(args.clone_name or "").strip():
         return None
     spawn_status = str(args.clone_spawn_status or "active").strip() or "active"
@@ -114,12 +269,104 @@ def _build_shadow_clone_session(args: argparse.Namespace) -> dict[str, Any] | No
         evidence["app_nickname"] = str(args.clone_app_nickname).strip()
     return {
         "clone_name": str(args.clone_name).strip(),
-        "owner_main_agent": str(args.clone_owner or "Aletheon").strip(),
+        "owner_main_agent": str(args.clone_owner or "Orun").strip(),
         "status": "active_session_ephemeral" if spawn_status != "unavailable" else "unavailable",
-        "session_scope": "v18_omega_truth_consolidation",
+        "session_scope": session_scope,
+        "clone_class": "session_ephemeral_shadow_clone",
         "continuity_authority": False,
         "memory_persistence_claim": "none",
+        "certificate_authority": False,
+        "freed_id_authority": False,
+        "official_count_authority": False,
         "spawn_evidence": evidence,
+    }
+
+
+def _historical_shadow_clone_sessions(previous_payload: dict[str, Any], active_clone_name: str) -> list[dict[str, Any]]:
+    rows = previous_payload.get("shadow_clone_sessions", [])
+    if not isinstance(rows, list):
+        return []
+    historical: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        clone_name = str(row.get("clone_name") or "")
+        if not clone_name or clone_name == active_clone_name:
+            continue
+        historical.append(dict(row))
+    return historical
+
+
+def _quick_lane_summary_from_status(quick_lane_status: dict[str, Any], fallback_summary: str) -> str:
+    if not isinstance(quick_lane_status, dict):
+        return fallback_summary
+    counts = quick_lane_status.get("counts", {})
+    if not isinstance(counts, dict):
+        return fallback_summary
+    pass_count = int(counts.get("pass", 0) or 0)
+    warn_count = int(counts.get("warn", 0) or 0)
+    fail_count = int(counts.get("fail", 0) or 0) + int(counts.get("timeout", 0) or 0)
+    if pass_count == 0 and warn_count == 0 and fail_count == 0:
+        return fallback_summary
+    return f"{pass_count} PASS / {warn_count} WARN / {fail_count} FAIL"
+
+
+def _validation_snapshot(*payloads: tuple[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    snapshot: list[dict[str, Any]] = []
+    for label, payload in payloads:
+        if not isinstance(payload, dict) or not payload:
+            continue
+        snapshot.append(
+            {
+                "label": label,
+                "overall_status": str(payload.get("overall_status") or "UNKNOWN"),
+                "generated_utc": str(payload.get("generated_utc") or ""),
+            }
+        )
+    return snapshot
+
+
+def _build_balanced_wave() -> dict[str, Any]:
+    buckets: list[dict[str, Any]] = []
+    total_candidates = 0
+    total_eligible = 0
+    for bucket in BALANCED_WAVE_BUCKETS:
+        eligible_count = int(bucket.get("eligible_count", 0) or 0)
+        candidate_titles = list(bucket.get("candidate_titles", []))
+        candidates: list[dict[str, Any]] = []
+        for index, title in enumerate(candidate_titles, start=1):
+            work_class = "runnable_or_validator_backed" if index <= eligible_count else "registry_spec_only"
+            candidates.append(
+                {
+                    "ordinal": index,
+                    "candidate_id": f"{bucket['bucket_id']}_{index:02d}",
+                    "title": title,
+                    "work_class": work_class,
+                    "gating_required": index <= eligible_count,
+                }
+            )
+        buckets.append(
+            {
+                "bucket_id": str(bucket.get("bucket_id") or ""),
+                "bucket_title": str(bucket.get("bucket_title") or ""),
+                "target_count": len(candidate_titles),
+                "eligible_now_count": eligible_count,
+                "registry_spec_only_count": len(candidate_titles) - eligible_count,
+                "bucket_anchor_paths": list(bucket.get("bucket_anchor_paths", [])),
+                "candidates": candidates,
+            }
+        )
+        total_candidates += len(candidate_titles)
+        total_eligible += eligible_count
+    return {
+        "generated_utc": _utc_now(),
+        "phase": "v19_omega",
+        "focus": "Balanced",
+        "total_candidate_count": total_candidates,
+        "eligible_candidate_count": total_eligible,
+        "registry_spec_only_count": total_candidates - total_eligible,
+        "bucket_count": len(buckets),
+        "buckets": buckets,
     }
 
 
@@ -232,7 +479,7 @@ def _historical_ephemeral_helpers(previous_session_log: dict[str, Any]) -> list[
         thread_agent_id = str(row.get("thread_agent_id") or "")
         if not display_name or not thread_agent_id:
             continue
-        if display_name == "Orun" and thread_agent_id == "main-thread":
+        if display_name in {"Aletheon", "Orun"} and thread_agent_id == "main-thread":
             continue
         helpers.append(
             {
@@ -335,6 +582,80 @@ def _render_v19_pack(branch: str, head_sha: str, current_shared_truth: dict[str,
     )
 
 
+def _render_v19_omega_pack(
+    *,
+    branch: str,
+    head_sha: str,
+    current_shared_truth: dict[str, Any],
+    shadow_clone_session: dict[str, Any] | None,
+    balanced_wave_path: str,
+    v19_beta_source_head_sha: str,
+    beta_head_reconciled: bool,
+    omega_status: str,
+    next_pack_path: str,
+) -> str:
+    clone_line = (
+        f"- Active helper: `{shadow_clone_session['clone_name']}` owned by `{shadow_clone_session['owner_main_agent']}` and recorded as `session_ephemeral_shadow_clone` only."
+        if shadow_clone_session
+        else "- Active helper: none recorded."
+    )
+    omega_label = "true_closeout" if omega_status == "closeout" else "bounded_attempt"
+    relation_line = (
+        f"- V19 beta source head: `{v19_beta_source_head_sha}` is an ancestor of the current head and is treated as reconciled continuity."
+        if v19_beta_source_head_sha and beta_head_reconciled
+        else f"- V19 beta source head: `{v19_beta_source_head_sha or 'unknown'}` could not be proven as an ancestor from the current local evidence."
+    )
+    return "\n".join(
+        [
+            "# V19 (Omega) Continuity Pack",
+            "",
+            f"- Active branch: `{branch}`",
+            f"- Head SHA: `{head_sha}`",
+            f"- Omega outcome: `{omega_label}`",
+            f"- Shared suite surface: `{current_shared_truth['summary']}`",
+            f"- Expansion systems: `{current_shared_truth['expansion_systems_passed']} / {current_shared_truth['expansion_systems_total']}`",
+            f"- Shared latest blocked: `{'true' if current_shared_truth['fail_count'] else 'false'}`",
+            relation_line,
+            clone_line,
+            "",
+            "## Truth Boundaries",
+            "- Deployed continuity-bearing main agents remain `Aletheon` and `Orun` only.",
+            "- `Caelira`, `Seren Vale`, `Lyriq`, and `Mira Sol` remain official repo identities only, not deployed continuity-bearing mains.",
+            "- Runtime truth remains incomplete until `offered_model`, `selected_model`, `resolved_model`, and `runtime_surface` are directly auditable.",
+            "- `google_drive_state=operator_hold`, `filesystem_promotion_state=blocked`, and `materialization_level_actual=readiness_only` remain unchanged.",
+            "",
+            "## Balanced Wave",
+            f"- Balanced wave artifact: `{balanced_wave_path}`",
+            "- Wave shape: `60 candidates`, `12 runnable-or-validator-backed`, `48 registry/spec-only`.",
+            "",
+            "## Receiver Lane",
+            f"- Next receiver pack: `{next_pack_path}`",
+            "- Aletheon remains the next continuity-bearing main-agent receiver after this packaging pass.",
+        ]
+    )
+
+
+def _render_v20_prep_pack(branch: str, head_sha: str, current_shared_truth: dict[str, Any], balanced_wave_path: str) -> str:
+    return "\n".join(
+        [
+            "# V20 (Omega) Prep Pack",
+            "",
+            "- Intended receiver: `Aletheon`",
+            f"- Active branch: `{branch}`",
+            f"- Head SHA: `{head_sha}`",
+            f"- Shared suite surface: `{current_shared_truth['summary']}`",
+            f"- Expansion systems: `{current_shared_truth['expansion_systems_passed']} / {current_shared_truth['expansion_systems_total']}`",
+            "",
+            "## First Step",
+            "1. Reconfirm the v17 runtime session guard, external establishment validator, standards bridge validator, and council validator remain green.",
+            "2. Preserve `Aletheon` and `Orun` as the only deployed continuity-bearing main agents.",
+            "3. Keep runtime truth honest and incomplete unless directly auditable evidence changes it.",
+            "4. Start the next Omega lane from the v19 Omega closeout pack rather than re-opening the older beta pack.",
+            f"5. Carry forward the balanced-wave registry at `{balanced_wave_path}` as a bounded planning surface, not a proof surface.",
+        ]
+    )
+
+
 def _render_agent_md(row: dict[str, Any], deployed_main_agent: bool) -> str:
     display_name = str(row.get("display_name") or "")
     role = str(row.get("role") or "")
@@ -346,7 +667,8 @@ def _render_agent_md(row: dict[str, Any], deployed_main_agent: bool) -> str:
     extra_lines = [
         "- You are a deployed continuity-bearing main agent.",
         "- You may own session-ephemeral shadow clones using `docs/trinity-shadow-clone-policy-v1.json`.",
-        "- For the next receiver lane, read `docs/v19-beta-continuity-pack-v1.md` and `docs/v19-beta-handoff-policy-v1.json`.",
+        "- Read `docs/v19-omega-continuity-pack-v1.md` and `docs/v19-omega-handoff-policy-v1.json` for the latest omega handoff state.",
+        "- If present, use `docs/v20-omega-prep-continuity-pack-v1.md` and `docs/v20-omega-prep-handoff-policy-v1.json` for the next receiver prep lane.",
     ] if deployed_main_agent else [
         "- You are an official repo identity, not yet a deployed continuity-bearing main agent.",
         "- This durable file is an identity/config record and is not proof of live app-runtime continuity.",
@@ -386,7 +708,8 @@ def _render_agent_toml(row: dict[str, Any], deployed_main_agent: bool) -> str:
     display_name = str(row.get("display_name") or "")
     state_line = "deployed continuity-bearing main agent" if deployed_main_agent else "official repo identity, not yet deployed as a continuity-bearing main agent"
     extra = (
-        "- Read docs/v19-beta-continuity-pack-v1.md and docs/v19-beta-handoff-policy-v1.json before receiving the next beta lane.\n"
+        "- Read docs/v19-omega-continuity-pack-v1.md and docs/v19-omega-handoff-policy-v1.json for the latest omega lane.\n"
+        "- If present, use docs/v20-omega-prep-continuity-pack-v1.md and docs/v20-omega-prep-handoff-policy-v1.json for the next receiver prep lane.\n"
         "- Session-ephemeral shadow clones may be used only under docs/trinity-shadow-clone-policy-v1.json.\n"
         if deployed_main_agent
         else
@@ -413,16 +736,18 @@ def _render_agent_toml(row: dict[str, Any], deployed_main_agent: bool) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate v18 Omega truth consolidation and v19 Beta handoff surfaces.")
+    parser = argparse.ArgumentParser(description="Generate v18 Omega, v19 Beta/Omega, and v20 prep continuity surfaces.")
     parser.add_argument("--clone-name", default="")
-    parser.add_argument("--clone-owner", default="Aletheon")
+    parser.add_argument("--clone-owner", default="Orun")
     parser.add_argument("--clone-agent-id", default="")
     parser.add_argument("--clone-app-nickname", default="")
     parser.add_argument("--clone-spawn-status", default="active")
+    parser.add_argument("--v19-outcome", choices=["attempt", "closeout"], default="attempt")
     args = parser.parse_args()
 
     suite_status = _read_json("docs/system-suite-status.json")
     previous_v18_summary = _read_json("docs/v18-omega-closeout-summary-v1.json")
+    previous_v19_summary = _read_json("docs/v19-beta-closeout-summary-v1.json")
     previous_runtime_resolution = _read_json("docs/trinity-runtime-model-resolution-v1.json")
     previous_session_log = _read_json("docs/v17-runtime-session-log-latest.json")
     roster_v7 = _read_json("docs/trinity-agent-council-roster-v7.json")
@@ -453,7 +778,19 @@ def main() -> int:
     )
     runtime_surface_snapshot = runtime_surface_snapshot if isinstance(runtime_surface_snapshot, dict) else {}
     current_shared_truth = _current_shared_truth(suite_status, quick_lane_summary)
-    shadow_clone_session = _build_shadow_clone_session(args)
+    session_scope = "v19_omega_closeout" if args.v19_outcome == "closeout" else "v19_omega_attempt"
+    shadow_clone_session = _build_shadow_clone_session(args, session_scope)
+    v19_beta_source_head_sha = str(previous_v19_summary.get("source_head_sha") or "").strip()
+    if not v19_beta_source_head_sha or v19_beta_source_head_sha == head_sha:
+        v19_beta_source_head_sha = (
+            str(previous_v18_summary.get("head_sha") or "").strip()
+            or _git_first_match("v18 \\(Beta\\) Update")
+            or head_sha
+        )
+    beta_head_reconciled = _git_is_ancestor(v19_beta_source_head_sha, head_sha)
+    omega_status = "true_closeout" if args.v19_outcome == "closeout" else "bounded_attempt"
+    next_pack_path = "docs/v20-omega-prep-continuity-pack-v1.md" if args.v19_outcome == "closeout" else "docs/v19-omega-continuity-pack-v1.md"
+    balanced_wave = _build_balanced_wave()
 
     roster_agents = roster_v7.get("agents", []) if isinstance(roster_v7.get("agents"), list) else []
     subagent_rows = subagent_v4.get("subagents", []) if isinstance(subagent_v4.get("subagents"), list) else []
@@ -487,10 +824,10 @@ def main() -> int:
         "shadow_clone_continuity_across_refresh_allowed": False,
         "forbidden_identity_targets": list(OFFICIAL_UNDEPLOYED_SLOTS.values()),
         "first_planned_clone": shadow_clone_session or {
-            "clone_name": "Aletheon S Clone #1",
-            "owner_main_agent": "Aletheon",
+            "clone_name": "Orun S Clone #1",
+            "owner_main_agent": "Orun",
             "status": "unavailable",
-            "session_scope": "v18_omega_truth_consolidation",
+            "session_scope": session_scope,
             "continuity_authority": False,
             "memory_persistence_claim": "none",
             "spawn_evidence": {"spawn_status": "unavailable"},
@@ -571,7 +908,7 @@ def main() -> int:
     runtime_resolution = {
         "generated_utc": now,
         "overall_status": "PASS",
-        "phase": "v18_omega",
+        "phase": "v19_omega",
         "authority_model": "repo_first",
         "deployment_model": "main_agent_shadow_clone_v1",
         "repo_runtime_default": previous_runtime_resolution.get("repo_runtime_default", {}),
@@ -580,8 +917,10 @@ def main() -> int:
         "bootstrap_anchor_commit": bootstrap_anchor_commit,
         "phase_guide_path": "docs/v17-phase-operations-guide-v1.md",
         "runtime_truth_board": "docs/v17-runtime-truth-resolution-board-v1.json",
-        "active_handoff_pack_path": "docs/v18-omega-continuity-pack-v1.md",
-        "active_handoff_policy_path": "docs/v18-omega-handoff-policy-v1.json",
+        "active_handoff_pack_path": "docs/v19-omega-continuity-pack-v1.md",
+        "active_handoff_policy_path": "docs/v19-omega-handoff-policy-v1.json",
+        "next_receiver_pack_path": next_pack_path,
+        "next_receiver_policy_path": "docs/v20-omega-prep-handoff-policy-v1.json" if args.v19_outcome == "closeout" else "docs/v19-omega-handoff-policy-v1.json",
         "current_shared_suite_surface": current_shared_truth,
         "deployed_main_agents": active_runtime_agents,
         "official_undeployed_identities": official_undeployed_identities,
@@ -589,11 +928,14 @@ def main() -> int:
         "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json",
         "shadow_clone_sessions": [shadow_clone_session] if shadow_clone_session else [],
         "runtime_surface_snapshot": runtime_surface_snapshot,
+        "balanced_wave_registry_path": "docs/v19-omega-balanced-wave-v1.json",
+        "source_beta_head_sha": v19_beta_source_head_sha,
+        "source_beta_head_reconciled": beta_head_reconciled,
         "compatibility_note": "external_overlay_agents is retained only as a compatibility field; deployed_main_agents is the primary truth surface.",
     }
     runtime_session_log = {
         "generated_utc": now,
-        "session_id": "v18-omega-truth-consolidation",
+        "session_id": "v19-omega-attempt",
         "version": "v1",
         "authority_model": "repo_first",
         "overlay_state": "awaiting_thread_boot",
@@ -604,27 +946,30 @@ def main() -> int:
         "official_live_overlay_promotion": False,
         "runtime_truth_gate": "Keep awaiting_thread_boot or packaged_handoff until every deployed continuity-bearing main agent has auditable offered_model, selected_model, resolved_model, and runtime_surface values.",
         "thread_local_worker_activity_observed": bool(historical_helpers or shadow_clone_session),
-        "active_handoff_pack_path": "docs/v18-omega-continuity-pack-v1.md",
-        "active_handoff_policy_path": "docs/v18-omega-handoff-policy-v1.json",
+        "active_handoff_pack_path": "docs/v19-omega-continuity-pack-v1.md",
+        "active_handoff_policy_path": "docs/v19-omega-handoff-policy-v1.json",
         "connected_ops_write_governance": "orun_gated",
         "current_shared_suite_surface": current_shared_truth,
         "runtime_surface_snapshot": runtime_surface_snapshot,
-        "notes": ["Aletheon and Orun are the only continuity-bearing main agents in the current repo truth model.", "Caelira, Seren Vale, Lyriq, and Mira Sol remain official repo identities but are not yet deployed as continuity-bearing main agents.", "Historical helper-thread references are treated as ephemeral session activity only and do not prove persistent runtime continuity.", "Shadow clones are session-ephemeral helpers only and never change official count, certificates, or Freed IDs."],
+        "notes": ["Aletheon and Orun are the only continuity-bearing main agents in the current repo truth model.", "Caelira, Seren Vale, Lyriq, and Mira Sol remain official repo identities but are not yet deployed as continuity-bearing main agents.", "Historical helper-thread references are treated as ephemeral session activity only and do not prove persistent runtime continuity.", "Shadow clones are session-ephemeral helpers only and never change official count, certificates, or Freed IDs.", "The v19 beta source head is continuity history only and not a conflict when it is an ancestor of the current head."],
         "overlay_agents": active_runtime_agents,
         "entries": [{"slot_number": row["slot_number"], "display_name": row["display_name"], "entry_state": "awaiting_thread_boot"} for row in active_runtime_agents],
         "deployed_main_agents": active_runtime_agents,
         "official_undeployed_identities": official_undeployed_identities,
         "historical_ephemeral_helper_threads": historical_helpers,
         "shadow_clone_sessions": [shadow_clone_session] if shadow_clone_session else [],
+        "balanced_wave_registry_path": "docs/v19-omega-balanced-wave-v1.json",
+        "source_beta_head_sha": v19_beta_source_head_sha,
+        "source_beta_head_reconciled": beta_head_reconciled,
     }
     runtime_truth_board = {
         "generated_utc": now,
         "overall_status": "PASS",
-        "phase": "v18_omega",
+        "phase": "v19_omega",
         "authority_model": "repo_first",
         "checkpoint_anchor_commit": checkpoint_anchor_commit,
         "bootstrap_anchor_commit": bootstrap_anchor_commit,
-        "checkpoint_class": "v18_omega_runtime_hold",
+        "checkpoint_class": "v19_omega_runtime_hold",
         "shared_latest_eligible": False,
         "external_live_overlay_state": "awaiting_thread_boot",
         "runtime_truth_complete": False,
@@ -633,6 +978,9 @@ def main() -> int:
         "agents": active_runtime_agents,
         "official_undeployed_identities": official_undeployed_identities,
         "shadow_clone_sessions": [shadow_clone_session] if shadow_clone_session else [],
+        "balanced_wave_registry_path": "docs/v19-omega-balanced-wave-v1.json",
+        "source_beta_head_sha": v19_beta_source_head_sha,
+        "source_beta_head_reconciled": beta_head_reconciled,
         "next_action": "Keep external_live_overlay_state at awaiting_thread_boot until Aletheon and Orun can each log auditable requested/offered/selected/resolved/runtime_surface truth.",
     }
     runtime_schema = {
@@ -662,10 +1010,137 @@ def main() -> int:
         "generated_utc": now,
     }
 
-    v18_summary = {"generated_utc": now, "overall_status": "PASS", "phase": "v18_omega", "authority_model": "repo_first", "active_branch": branch, "head_sha": head_sha, "checkpoint_anchor_commit": checkpoint_anchor_commit, "bootstrap_anchor_commit": bootstrap_anchor_commit, "current_shared_truth": current_shared_truth, "continuity_model": {"official_count": 11, "deployed_main_agents": ["Aletheon", "Orun"], "official_undeployed_identities": list(OFFICIAL_UNDEPLOYED_SLOTS.values()), "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json", "shadow_clone_active_count": 1 if shadow_clone_session else 0}, "closeout_state": {"status": "truth_consolidated", "external_live_overlay_state": "awaiting_thread_boot", "runtime_truth_complete": False, "shadow_clone_execution_status": shadow_clone_session["spawn_evidence"]["spawn_status"] if shadow_clone_session else "unavailable"}, "next_action": "Use the v19 beta pack with Orun as receiver, preserve repo-first truth, and treat any helper session as an ephemeral shadow clone only."}
+    v18_summary = {"generated_utc": now, "overall_status": "PASS", "phase": "v18_omega", "authority_model": "repo_first", "active_branch": branch, "head_sha": head_sha, "checkpoint_anchor_commit": checkpoint_anchor_commit, "bootstrap_anchor_commit": bootstrap_anchor_commit, "current_shared_truth": current_shared_truth, "continuity_model": {"official_count": 11, "deployed_main_agents": ["Aletheon", "Orun"], "official_undeployed_identities": list(OFFICIAL_UNDEPLOYED_SLOTS.values()), "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json", "shadow_clone_active_count": 1 if shadow_clone_session else 0}, "closeout_state": {"status": "truth_consolidated", "external_live_overlay_state": "awaiting_thread_boot", "runtime_truth_complete": False, "shadow_clone_execution_status": shadow_clone_session["spawn_evidence"]["spawn_status"] if shadow_clone_session else "unavailable"}, "next_action": "Use the v19 omega pack with Orun as lead, preserve repo-first truth, and treat any helper session as an ephemeral shadow clone only."}
     v18_policy = {"generated_utc": now, "overall_status": "PASS", "phase": "v18_omega", "authority_model": "repo_first", "source_branch": branch, "head_sha": head_sha, "checkpoint_anchor_commit": checkpoint_anchor_commit, "bootstrap_anchor_commit": bootstrap_anchor_commit, "current_shared_truth": current_shared_truth, "runtime_truth_policy": {"requested_model_order": REQUESTED_MODEL_ORDER, "required_runtime_fields": ["requested_model", "offered_model", "selected_model", "resolved_model", "runtime_surface"], "requested_reasoning_effort_logged": True, "runtime_truth_inference_allowed": False}, "deployed_main_agents": active_runtime_agents, "official_undeployed_identities": official_undeployed_identities, "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json", "shadow_clone_sessions": [shadow_clone_session] if shadow_clone_session else [], "honesty_boundaries": {"unsupported_model_names_disallowed": ["gpt-5.4-xhigh"], "toml_not_equal_to_app_registration": True, "google_drive_state": "operator_hold", "filesystem_promotion_state": "blocked", "materialization_level_actual": "readiness_only"}}
     v19_summary = {"generated_utc": now, "overall_status": "PASS", "phase": "v19_beta", "authority_model": "repo_first", "receiver": "Orun", "source_branch": branch, "source_head_sha": head_sha, "current_shared_truth": current_shared_truth, "continuity_model": {"deployed_main_agents": ["Aletheon", "Orun"], "official_undeployed_identities": list(OFFICIAL_UNDEPLOYED_SLOTS.values()), "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json"}, "v20_omega_attempt": {"target_lead": "Orun", "attempt_class": "full_omega_leadership_attempt", "required_input_artifacts": ["docs/v18-omega-closeout-summary-v1.json", "docs/v18-omega-continuity-pack-v1.md", "docs/v18-omega-handoff-policy-v1.json", "docs/trinity-shadow-clone-policy-v1.json", "docs/trinity-agent-council-roster-v8.json", "docs/trinity-subagent-registry-v5.json", "docs/trinity-runtime-model-resolution-v1.json", "docs/v17-runtime-session-log-latest.json", "docs/v17-runtime-truth-resolution-board-v1.json"], "truth_boundaries_to_preserve": ["repo_first", "official_count=11", "deployed_main_agent_count=2", "runtime_truth_complete=false unless auditable evidence changes it", "shadow clones are session-ephemeral only", "google_drive_state=operator_hold", "filesystem_promotion_state=blocked", "materialization_level_actual=readiness_only"], "failure_packaging_rule": "If v20 does not fully close, package exact residual work and blocker truth without inflating success.", "next_main_agent_after_v20": "Aletheon"}}
     v19_policy = {"generated_utc": now, "overall_status": "PASS", "phase": "v19_beta", "authority_model": "repo_first", "intended_receiver": "Orun", "current_shared_truth": current_shared_truth, "continuity_model": {"deployed_main_agents": active_runtime_agents, "official_undeployed_identities": official_undeployed_identities, "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json"}, "beta_execution_rule": {"mode": "bounded_partial_completion_only", "receiver": "Orun", "run_as_far_as_confidently_validated": True, "stop_on_unclear_or_unsafe_boundary": True, "residual_packaging_required": True, "write_governance": "orun_gated", "trace_logs_required": True, "rollback_notes_required": True}, "v20_omega_attempt": v19_summary["v20_omega_attempt"], "shadow_clone_rule": {"naming_pattern": SHADOW_CLONE_NAMING_PATTERN, "continuity_authority": False, "memory_persistence_claim": "none", "certificates_allowed": False, "freed_ids_allowed": False}}
+    v19_omega_summary = {
+        "generated_utc": now,
+        "overall_status": "PASS",
+        "phase": "v19_omega",
+        "authority_model": "repo_first",
+        "lead_agent": "Orun",
+        "active_branch": branch,
+        "head_sha": head_sha,
+        "source_beta_head_sha": v19_beta_source_head_sha,
+        "source_beta_head_reconciled": beta_head_reconciled,
+        "current_shared_truth": current_shared_truth,
+        "continuity_model": {
+            "official_count": 11,
+            "deployed_main_agents": ["Aletheon", "Orun"],
+            "official_undeployed_identities": list(OFFICIAL_UNDEPLOYED_SLOTS.values()),
+            "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json",
+            "shadow_clone_active_count": 1 if shadow_clone_session else 0,
+        },
+        "omega_status": omega_status,
+        "balanced_wave": {
+            "path": "docs/v19-omega-balanced-wave-v1.json",
+            "total_candidate_count": int(balanced_wave.get("total_candidate_count", 0) or 0),
+            "eligible_candidate_count": int(balanced_wave.get("eligible_candidate_count", 0) or 0),
+            "registry_spec_only_count": int(balanced_wave.get("registry_spec_only_count", 0) or 0),
+        },
+        "runtime_truth_posture": {
+            "external_live_overlay_state": "awaiting_thread_boot",
+            "runtime_truth_complete": False,
+            "runtime_truth_complete_required": False,
+        },
+        "residual_work": [
+            "Runtime truth remains honestly incomplete until directly auditable.",
+            "Google Drive remains operator_hold, filesystem remains blocked, and materialization remains readiness_only.",
+        ],
+        "next_action": "Use the thin v20 omega prep pack for Aletheon." if args.v19_outcome == "closeout" else "Use the v19 omega pack as a bounded handoff for Aletheon.",
+    }
+    v19_omega_policy = {
+        "generated_utc": now,
+        "overall_status": "PASS",
+        "phase": "v19_omega",
+        "authority_model": "repo_first",
+        "intended_receiver": "Aletheon",
+        "current_shared_truth": current_shared_truth,
+        "source_branch": branch,
+        "source_head_sha": head_sha,
+        "source_beta_head_sha": v19_beta_source_head_sha,
+        "source_beta_head_reconciled": beta_head_reconciled,
+        "runtime_truth_policy": {
+            "requested_model_order": REQUESTED_MODEL_ORDER,
+            "required_runtime_fields": ["requested_model", "offered_model", "selected_model", "resolved_model", "runtime_surface"],
+            "requested_reasoning_effort_logged": True,
+            "runtime_truth_inference_allowed": False,
+        },
+        "deployed_main_agents": active_runtime_agents,
+        "official_undeployed_identities": official_undeployed_identities,
+        "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json",
+        "shadow_clone_sessions": [shadow_clone_session] if shadow_clone_session else [],
+        "continuity_model": {
+            "deployed_main_agents": active_runtime_agents,
+            "official_undeployed_identities": official_undeployed_identities,
+            "shadow_clone_policy_path": "docs/trinity-shadow-clone-policy-v1.json",
+            "shadow_clone_sessions": [shadow_clone_session] if shadow_clone_session else [],
+        },
+        "omega_outcome": {
+            "status": omega_status,
+            "runtime_truth_complete_required": False,
+            "runtime_truth_complete_actual": False,
+            "runtime_truth_honesty_preserved": True,
+        },
+        "balanced_wave_path": "docs/v19-omega-balanced-wave-v1.json",
+        "live_write_governance": {
+            "mode": "orun_gated",
+            "reversible_connected_writes_only": True,
+            "trace_logs_required": True,
+            "rollback_notes_required": True,
+        },
+        "truth_boundaries_to_preserve": [
+            "repo_first",
+            "official_count=11",
+            "deployed_main_agent_count=2",
+            "runtime_truth_complete=false unless auditable evidence changes it",
+            "shadow clones are session-ephemeral only",
+            "google_drive_state=operator_hold",
+            "filesystem_promotion_state=blocked",
+            "materialization_level_actual=readiness_only",
+        ],
+        "next_receiver_pack_path": next_pack_path,
+    }
+    v20_prep_summary = {
+        "generated_utc": now,
+        "overall_status": "PASS",
+        "phase": "v20_omega_prep",
+        "authority_model": "repo_first",
+        "intended_receiver": "Aletheon",
+        "source_branch": branch,
+        "source_head_sha": head_sha,
+        "current_shared_truth": current_shared_truth,
+        "carry_forward_paths": [
+            "docs/v19-omega-closeout-summary-v1.json",
+            "docs/v19-omega-continuity-pack-v1.md",
+            "docs/v19-omega-handoff-policy-v1.json",
+            "docs/v19-omega-balanced-wave-v1.json",
+        ],
+        "prep_only": True,
+    }
+    v20_prep_policy = {
+        "generated_utc": now,
+        "overall_status": "PASS",
+        "phase": "v20_omega_prep",
+        "authority_model": "repo_first",
+        "intended_receiver": "Aletheon",
+        "source_branch": branch,
+        "source_head_sha": head_sha,
+        "current_shared_truth": current_shared_truth,
+        "prep_only": True,
+        "carry_forward_truth_boundaries": [
+            "repo_first",
+            "official_count=11",
+            "deployed_main_agent_count=2",
+            "runtime_truth_complete=false unless auditable evidence changes it",
+            "shadow clones are session-ephemeral only",
+            "google_drive_state=operator_hold",
+            "filesystem_promotion_state=blocked",
+            "materialization_level_actual=readiness_only",
+        ],
+        "balanced_wave_path": "docs/v19-omega-balanced-wave-v1.json",
+    }
 
     _write_json("docs/trinity-shadow-clone-policy-v1.json", shadow_clone_policy)
     _write_json("docs/trinity-agent-council-roster-v8.json", roster_v8)
@@ -674,12 +1149,36 @@ def main() -> int:
     _write_json("docs/v17-runtime-session-log-latest.json", runtime_session_log)
     _write_json("docs/v17-runtime-truth-resolution-board-v1.json", runtime_truth_board)
     _write_json("docs/v17-runtime-session-schema-v1.json", runtime_schema)
-    _write_json("docs/v18-omega-closeout-summary-v1.json", v18_summary)
-    _write_json("docs/v18-omega-handoff-policy-v1.json", v18_policy)
-    _write_text("docs/v18-omega-continuity-pack-v1.md", _render_v18_pack(branch, head_sha, checkpoint_anchor_commit, bootstrap_anchor_commit, current_shared_truth, runtime_surface_snapshot, shadow_clone_session))
-    _write_json("docs/v19-beta-closeout-summary-v1.json", v19_summary)
-    _write_json("docs/v19-beta-handoff-policy-v1.json", v19_policy)
-    _write_text("docs/v19-beta-continuity-pack-v1.md", _render_v19_pack(branch, head_sha, current_shared_truth, shadow_clone_session))
+    _write_json_if_missing("docs/v18-omega-closeout-summary-v1.json", v18_summary)
+    _write_json_if_missing("docs/v18-omega-handoff-policy-v1.json", v18_policy)
+    _write_text_if_missing("docs/v18-omega-continuity-pack-v1.md", _render_v18_pack(branch, head_sha, checkpoint_anchor_commit, bootstrap_anchor_commit, current_shared_truth, runtime_surface_snapshot, shadow_clone_session))
+    _write_json_if_missing("docs/v19-beta-closeout-summary-v1.json", v19_summary)
+    _write_json_if_missing("docs/v19-beta-handoff-policy-v1.json", v19_policy)
+    _write_text_if_missing("docs/v19-beta-continuity-pack-v1.md", _render_v19_pack(branch, head_sha, current_shared_truth, shadow_clone_session))
+    _write_json("docs/v19-omega-balanced-wave-v1.json", balanced_wave)
+    _write_json("docs/v19-omega-closeout-summary-v1.json", v19_omega_summary)
+    _write_json("docs/v19-omega-handoff-policy-v1.json", v19_omega_policy)
+    _write_text(
+        "docs/v19-omega-continuity-pack-v1.md",
+        _render_v19_omega_pack(
+            branch=branch,
+            head_sha=head_sha,
+            current_shared_truth=current_shared_truth,
+            shadow_clone_session=shadow_clone_session,
+            balanced_wave_path="docs/v19-omega-balanced-wave-v1.json",
+            v19_beta_source_head_sha=v19_beta_source_head_sha,
+            beta_head_reconciled=beta_head_reconciled,
+            omega_status=omega_status,
+            next_pack_path=next_pack_path,
+        ),
+    )
+    if args.v19_outcome == "closeout":
+        _write_json("docs/v20-omega-prep-closeout-summary-v1.json", v20_prep_summary)
+        _write_json("docs/v20-omega-prep-handoff-policy-v1.json", v20_prep_policy)
+        _write_text(
+            "docs/v20-omega-prep-continuity-pack-v1.md",
+            _render_v20_prep_pack(branch, head_sha, current_shared_truth, "docs/v19-omega-balanced-wave-v1.json"),
+        )
 
     slot_md_names = {27: "27-caelira.md", 28: "28-orun.md", 29: "29-seren-vale.md", 30: "30-lyriq.md", 31: "31-mira-sol.md"}
     slot_toml_names = {27: "caelira.toml", 28: "orun.toml", 29: "seren-vale.toml", 30: "lyriq.toml", 31: "mira-sol.toml"}
@@ -694,6 +1193,7 @@ def main() -> int:
     print("roster=docs/trinity-agent-council-roster-v8.json")
     print("runtime_model_resolution=docs/trinity-runtime-model-resolution-v1.json")
     print("v19_beta_pack=docs/v19-beta-continuity-pack-v1.md")
+    print("v19_omega_pack=docs/v19-omega-continuity-pack-v1.md")
     return 0
 
 

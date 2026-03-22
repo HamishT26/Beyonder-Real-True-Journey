@@ -3,7 +3,7 @@
 ## Continue From
 - Repo path: `C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey`
 - Active branch: `codex/Aletheon/v17-evidence-first-closeout`
-- Head SHA: `6709235dee936d52d0083ff73943c95888a7106a`
+- Head SHA: `41d2bf33bc29f35d4e7de02cf0a1bf37e6add678`
 - Shared checkpoint anchor: `e45da1dd2dd184c4e3fd218ece27b8f29589f8f6`
 - Bootstrap anchor: `468b96d90bc2785be19854b44c62217a47afc800`
 
@@ -20,7 +20,7 @@
 - Deployed continuity-bearing main agents: `Aletheon`, `Orun`
 - Official repo identities not yet deployed as continuity-bearing main agents: `Caelira`, `Seren Vale`, `Lyriq`, `Mira Sol`
 - Ephemeral helper class: `session_ephemeral_shadow_clone` only
-- Planned helper clone attempt: `Aletheon S Clone #1` owned by `Aletheon` with spawn status `active`
+- Planned helper clone attempt: `Orun S Clone #1` owned by `Orun` with spawn status `active`
 
 ## Runtime Surface Snapshot
 - Docker context: `desktop-linux`

@@ -1,7 +1,7 @@
 # V6 Session Surface Drift Note
 
-- generated_utc: `2026-03-19T12:42:14+00:00`
-- profile_context: `deep`
+- generated_utc: `2026-03-21T04:35:45+00:00`
+- profile_context: `materialize`
 - git_remote_live: `True`
 - docker_container_running: `True`
 - postgres_ready: `True`

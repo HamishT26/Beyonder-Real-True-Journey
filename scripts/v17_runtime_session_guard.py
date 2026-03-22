@@ -76,7 +76,7 @@ def main() -> int:
     parser.add_argument("--schema", default="docs/v17-runtime-session-schema-v1.json")
     parser.add_argument("--session-log", default="docs/v17-runtime-session-log-latest.json")
     parser.add_argument("--control-tower", default="docs/v17-evidence-first-control-tower-latest.json")
-    parser.add_argument("--handoff", default="docs/v18-omega-handoff-policy-v1.json")
+    parser.add_argument("--handoff", default="docs/v19-omega-handoff-policy-v1.json")
     parser.add_argument("--runtime-resolution", default="docs/trinity-runtime-model-resolution-v1.json")
     parser.add_argument("--shadow-clone-policy", default="docs/trinity-shadow-clone-policy-v1.json")
     parser.add_argument("--latest-json", default="docs/v17-runtime-session-validation-latest.json")
