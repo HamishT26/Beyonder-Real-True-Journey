@@ -2499,7 +2499,10 @@ def main() -> None:
     if args.fail_on_warn:
         scoreboard_refresh_cmd.append("--fail-on-warn")
 
-    sync_ok, sync_output, sync_timed_out, _, _, _ = run_command(sync_refresh_cmd, args.step_timeout_sec)
+    sync_ok, sync_output, sync_timed_out, sync_duration_sec, sync_started_at, sync_finished_at = run_command(
+        sync_refresh_cmd,
+        args.step_timeout_sec,
+    )
     sync_status, _ = classify_status(
         label="final control tower refresh",
         ok=sync_ok,
@@ -2511,7 +2514,19 @@ def main() -> None:
         print(sync_output, file=sys.stderr)
         raise SystemExit(1)
 
-    scoreboard_ok, scoreboard_output, scoreboard_timed_out, _, _, _ = run_command(
+    sync_refresh_row = {
+        "label": "v17 evidence-first control tower sync",
+        "status": sync_status,
+        "ok": sync_ok,
+        "effective_success": sync_status == "PASS",
+        "timed_out": sync_timed_out,
+        "started_at_utc": sync_started_at,
+        "finished_at_utc": sync_finished_at,
+        "duration_sec": round(sync_duration_sec, 3),
+        "command": shlex.join(sync_refresh_cmd),
+    }
+
+    scoreboard_ok, scoreboard_output, scoreboard_timed_out, scoreboard_duration_sec, scoreboard_started_at, scoreboard_finished_at = run_command(
         scoreboard_refresh_cmd,
         args.step_timeout_sec,
     )
@@ -2525,6 +2540,94 @@ def main() -> None:
     if scoreboard_status not in {"PASS", "WARN"} or (args.fail_on_warn and scoreboard_status == "WARN"):
         print(scoreboard_output, file=sys.stderr)
         raise SystemExit(1)
+
+    scoreboard_refresh_row = {
+        "label": "trinity mandala scoreboard",
+        "status": scoreboard_status,
+        "ok": scoreboard_ok,
+        "effective_success": scoreboard_status == "PASS",
+        "timed_out": scoreboard_timed_out,
+        "started_at_utc": scoreboard_started_at,
+        "finished_at_utc": scoreboard_finished_at,
+        "duration_sec": round(scoreboard_duration_sec, 3),
+        "command": shlex.join(scoreboard_refresh_cmd),
+    }
+
+    _replace_suite_result(suite_results, "v17 evidence-first control tower sync", sync_refresh_row)
+    _replace_suite_result(suite_results, "trinity mandala scoreboard", scoreboard_refresh_row)
+
+    pass_count = sum(1 for item in suite_results if item["status"] == "PASS")
+    warn_count = sum(1 for item in suite_results if item["status"] == "WARN")
+    timeout_count = sum(1 for item in suite_results if item["status"] == "TIMEOUT")
+    fail_count = sum(1 for item in suite_results if item["status"] == "FAIL")
+    achieved_steps = sum(1 for item in suite_results if bool(item["effective_success"]))
+    effective_success = all(bool(item["effective_success"]) for item in suite_results)
+    if args.fail_on_warn and warn_count > 0:
+        effective_success = False
+    if not achievement_gate_met:
+        effective_success = False
+
+    control_tower_status_path = str(control_tower_json_path.relative_to(ROOT)).replace("\\", "/")
+    status_payload["generated_utc"] = datetime.now(timezone.utc).isoformat()
+    status_payload["effective_success"] = effective_success
+    status_payload["achieved_steps"] = achieved_steps
+    status_payload["counts"] = {
+        "pass": pass_count,
+        "warn": warn_count,
+        "timeout": timeout_count,
+        "fail": fail_count,
+    }
+    status_payload["materialization_level_actual"] = _read_status_value(control_tower_status_path, "materialization_level_actual", "readiness_only")
+    status_payload["google_drive_state"] = _read_status_value(control_tower_status_path, "google_drive_state", "operator_hold")
+    status_payload["external_live_overlay_state"] = _read_status_value(control_tower_status_path, "external_live_overlay_state", "awaiting_thread_boot")
+    status_payload["runtime_session_state"] = _read_status_value(control_tower_status_path, "runtime_session_state", "FAIL")
+    status_payload["runtime_truth_complete"] = bool(_read_status_value(control_tower_status_path, "runtime_truth_complete", False))
+    status_payload["external_establishment_criteria_state"] = _read_status_value(control_tower_status_path, "external_establishment_criteria_state", "FAIL")
+    status_payload["standards_bridge_state"] = _read_status_value(control_tower_status_path, "standards_bridge_state", "FAIL")
+    status_payload["filesystem_promotion_state"] = _read_status_value(control_tower_status_path, "filesystem_promotion_state", "blocked")
+    status_payload["filesystem_connector_actual_state"] = _read_status_value(control_tower_status_path, "filesystem_connector_actual_state", "unknown")
+    status_payload["claim_boundary_state"] = _read_status_value(control_tower_status_path, "claim_boundary_state", "FAIL")
+    status_payload["v17_evidence_first_state"] = _read_status_value(control_tower_status_path, "v17_evidence_first_state", "FAIL")
+    status_payload["results"] = suite_results
+
+    lines.extend(
+        [
+            "## Final control tower refresh",
+            f"- status: **{sync_refresh_row['status']}**",
+            f"- command: `{sync_refresh_row['command']}`",
+            f"- started: `{sync_refresh_row['started_at_utc']}`",
+            f"- finished: `{sync_refresh_row['finished_at_utc']}`",
+            f"- duration_sec: `{sync_refresh_row['duration_sec']}`",
+            "```text",
+            sync_output[:8000],
+            "```",
+            "",
+            "## Final scoreboard refresh",
+            f"- status: **{scoreboard_refresh_row['status']}**",
+            f"- command: `{scoreboard_refresh_row['command']}`",
+            f"- started: `{scoreboard_refresh_row['started_at_utc']}`",
+            f"- finished: `{scoreboard_refresh_row['finished_at_utc']}`",
+            f"- duration_sec: `{scoreboard_refresh_row['duration_sec']}`",
+            "```text",
+            scoreboard_output[:8000],
+            "```",
+            "",
+            "## Final status reconciliation",
+            f"- Effective success: **{effective_success}**",
+            f"- PASS: **{pass_count}**",
+            f"- WARN: **{warn_count}**",
+            f"- TIMEOUT: **{timeout_count}**",
+            f"- FAIL: **{fail_count}**",
+            "",
+            "## Final machine-readable summary",
+            "```json",
+            json.dumps(status_payload, indent=2),
+            "```",
+            "",
+        ]
+    )
+    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    status_json_path.write_text(json.dumps(status_payload, indent=2) + "\n", encoding="utf-8")
 
     print(f"Wrote {report_path}")
     print(f"Wrote {status_json_path}")
