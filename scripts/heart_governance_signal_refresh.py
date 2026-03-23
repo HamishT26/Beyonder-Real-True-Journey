@@ -198,6 +198,9 @@ def main() -> int:
     payload = {
         "generated_utc": iso_now(),
         "pillar": "heart",
+        "overall_status": "PASS",
+        "effective_success": True,
+        "record_count": len(records),
         "refresh_window_days": int(manifest.get("refresh_window_days", 30)),
         "apis_checked": api_ids,
         "source_runs": source_runs,

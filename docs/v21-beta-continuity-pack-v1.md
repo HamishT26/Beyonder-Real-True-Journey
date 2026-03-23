@@ -2,7 +2,7 @@
 
 - Receiver: `Orun`
 - Source branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Source head SHA: `85b888c6098c9b82dc0bb581b2f3ad1168c3e0c0`
+- Source head SHA: `f2fc3480b5c30a813dfc600ac17be0ea0ffe56d2`
 - Starting shared latest anchor: `1064 PASS / 0 WARN / 0 FAIL`
 - Expansion systems: `998 / 998`
 

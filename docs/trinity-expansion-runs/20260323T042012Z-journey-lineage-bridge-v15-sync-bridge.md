@@ -1,0 +1,33 @@
+# Trinity Expansion Result: journey_lineage_bridge_v15_sync_bridge
+
+- generated_utc: `2026-03-23T04:20:12+00:00`
+- pillar: `body`
+- overall_status: **PASS**
+- effective_success: `True`
+
+## Checks
+| name | status | detail |
+|---|---|---|
+| cache_written | PASS | docs/trinity-mcp-cache/journey-lineage-bridge-v15-latest.json |
+
+## Metrics
+```json
+{
+  "actual_state": "active",
+  "auth_state": "local_repo",
+  "blocker_count": 0,
+  "cache_status": "active",
+  "desired_state": "active",
+  "live_read_enabled": false,
+  "live_write_enabled": false,
+  "pack": "journey_lineage_bridge_v15",
+  "record_count": 2,
+  "strategy": "local_repo"
+}
+```
+
+## Repo targets touched
+- `docs/trinity-mcp-cache/journey-lineage-bridge-v15-latest.json`
+- `docs/v15-trinity-verdict-v1.json`
+- `docs/v29-v38-legacy-reconstruction-map-v1.json`
+- `docs/version-module-inventory-v2.json`

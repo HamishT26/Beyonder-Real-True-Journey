@@ -1,7 +1,7 @@
-﻿# V20 (Omega) Continuity Pack
+# V20 (Omega) Continuity Pack
 
 - Active branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Head SHA: `85b888c6098c9b82dc0bb581b2f3ad1168c3e0c0`
+- Head SHA: `f2fc3480b5c30a813dfc600ac17be0ea0ffe56d2`
 - Omega outcome: `full_closeout`
 - Shared latest anchor: `1064 PASS / 0 WARN / 0 FAIL`
 - Expansion systems at the shared latest anchor: `998 / 998`
@@ -32,6 +32,6 @@
 
 ## Receiver Lane
 - Next receiver: `Orun`
-- V21 Beta pack: `docs/v21-beta-continuity-pack-v1.md`
-- V21 Beta policy: `docs/v21-beta-handoff-policy-v1.json`
-- Active helper now: `Aletheon S Clone #1`, recorded as session-ephemeral only.
+- V21 Omega pack: `docs/v21-omega-continuity-pack-v1.md`
+- V21 Omega policy: `docs/v21-omega-handoff-policy-v1.json`
+- Historical active helper for v20 truth: `Aletheon S Clone #1`, recorded as session-ephemeral only.
