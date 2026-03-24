@@ -26,6 +26,9 @@ REQUIRED_SURFACES = {
     "google_drive",
 }
 
+STORAGE_PRESSURE_CRITICAL_FREE_GIB = 2.0
+STORAGE_PRESSURE_WATCH_FREE_GIB = 4.0
+
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -107,9 +110,9 @@ def main() -> int:
     storage_pressure = registry.get("storage_pressure", {}) if isinstance(registry, dict) else {}
     if isinstance(storage_pressure, dict):
         free_gib = float(storage_pressure.get("free_gib", 0.0) or 0.0)
-        if free_gib < 2:
+        if free_gib < STORAGE_PRESSURE_CRITICAL_FREE_GIB:
             warnings.append(f"local free space critically low: {free_gib} GiB")
-        elif free_gib < 10:
+        elif free_gib < STORAGE_PRESSURE_WATCH_FREE_GIB:
             warnings.append(f"local free space in watch band: {free_gib} GiB")
     if int(registry.get("retained_snapshot_count", 0) or 0) < 1:
         errors.append("at least one retained memory-bank snapshot is required")

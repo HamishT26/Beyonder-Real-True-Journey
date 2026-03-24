@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_capability_surface_audit
 
-- generated_utc: `2026-03-23T05:20:25+00:00`
+- generated_utc: `2026-03-24T05:53:34+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -13,7 +13,7 @@
 | credential_env_absent | PASS | exposed=[] |
 | uvx_absent | PASS | uvx=absent |
 | repo_skill_inventory_present | PASS | repo_skills=326 |
-| manifest_system_count | PASS | systems=1022 |
+| manifest_system_count | PASS | systems=1046 |
 | mcp_resources_visible | PASS | resource_count=24 |
 | mcp_templates_visible | PASS | template_count=3 |
 | figma_verified_live | PASS | verified=['figma', 'github', 'linear', 'notion', 'postgres'] |
@@ -30,7 +30,7 @@
   "exposed_env_vars": [],
   "last_recorded_suite_expansion_total": 1022,
   "local_codex_skill_count": 361,
-  "manifest_system_count": 1022,
+  "manifest_system_count": 1046,
   "mcp_resource_count": 24,
   "mcp_resource_template_count": 3,
   "mcp_resource_templates_available": true,

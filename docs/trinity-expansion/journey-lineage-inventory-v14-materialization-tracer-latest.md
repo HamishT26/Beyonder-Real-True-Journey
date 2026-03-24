@@ -1,6 +1,6 @@
 # Trinity Expansion Result: journey_lineage_inventory_v14_materialization_tracer
 
-- generated_utc: `2026-03-23T05:38:24+00:00`
+- generated_utc: `2026-03-24T06:14:09+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
