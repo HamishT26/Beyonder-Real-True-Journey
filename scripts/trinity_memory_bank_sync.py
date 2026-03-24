@@ -57,6 +57,8 @@ OFFICIAL_SOURCES = {
     "git_bundle": "https://git-scm.com/docs/git-bundle",
 }
 
+STORAGE_PRESSURE_WATCH_FREE_GIB = 4.0
+
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
@@ -245,7 +247,7 @@ def build_registry(
         "version": "v3",
         "retained_snapshot_count": min(len(list((ROOT / "docs" / "memory-archives").glob("*.zip"))), 3),
         "prune_policy_applied_at": prune_applied_at,
-        "storage_pressure_class": "watch" if free_gib < 10 else "healthy",
+        "storage_pressure_class": "watch" if free_gib < STORAGE_PRESSURE_WATCH_FREE_GIB else "healthy",
         "overall_status": overall_status,
         "authority_model": "repo_first",
         "storage_pressure": {

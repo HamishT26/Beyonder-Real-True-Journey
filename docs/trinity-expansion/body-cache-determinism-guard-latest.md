@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_cache_determinism_guard
 
-- generated_utc: `2026-03-23T05:20:49+00:00`
+- generated_utc: `2026-03-24T05:54:00+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,9 +8,9 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| cache_order_or_timestamp:docs/trinity-api-cache/mind-signals-latest.json | PASS | records=14 generated_utc=2026-03-23T05:16:16+00:00 |
-| cache_order_or_timestamp:docs/trinity-api-cache/body-signals-latest.json | PASS | records=17 generated_utc=2026-03-23T05:16:06+00:00 |
-| cache_order_or_timestamp:docs/trinity-api-cache/heart-signals-latest.json | PASS | records=17 generated_utc=2026-03-23T05:16:34+00:00 |
+| cache_order_or_timestamp:docs/trinity-api-cache/mind-signals-latest.json | PASS | records=14 generated_utc=2026-03-24T05:48:32+00:00 |
+| cache_order_or_timestamp:docs/trinity-api-cache/body-signals-latest.json | PASS | records=17 generated_utc=2026-03-24T05:48:19+00:00 |
+| cache_order_or_timestamp:docs/trinity-api-cache/heart-signals-latest.json | PASS | records=17 generated_utc=2026-03-24T05:48:45+00:00 |
 
 ## Metrics
 ```json

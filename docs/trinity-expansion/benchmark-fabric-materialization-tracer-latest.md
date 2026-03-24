@@ -1,6 +1,6 @@
 # Trinity Expansion Result: benchmark_fabric_materialization_tracer
 
-- generated_utc: `2026-03-23T05:24:31+00:00`
+- generated_utc: `2026-03-24T05:58:17+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

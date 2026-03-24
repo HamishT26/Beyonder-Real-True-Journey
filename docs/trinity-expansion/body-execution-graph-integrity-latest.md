@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_execution_graph_integrity
 
-- generated_utc: `2026-03-23T05:20:48+00:00`
+- generated_utc: `2026-03-24T05:53:59+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,14 +8,14 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| standard_expansion_count | PASS | labels=1022 |
-| expansion_labels_unique | PASS | unique=1022 |
+| standard_expansion_count | PASS | labels=1046 |
+| expansion_labels_unique | PASS | unique=1046 |
 
 ## Metrics
 ```json
 {
-  "manifest_system_count": 1022,
-  "standard_expansion_labels": 1022
+  "manifest_system_count": 1046,
+  "standard_expansion_labels": 1046
 }
 ```
 
