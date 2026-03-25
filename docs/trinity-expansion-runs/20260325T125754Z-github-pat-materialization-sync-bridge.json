@@ -1,0 +1,80 @@
+{
+  "generated_utc": "2026-03-25T12:57:54+00:00",
+  "system_id": "github_pat_materialization_sync_bridge",
+  "pillar": "trinity",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "cache_written",
+      "status": "PASS",
+      "detail": "docs/trinity-mcp-cache/github-pat-materialization-latest.json"
+    }
+  ],
+  "metrics": {
+    "pack": "github_pat_materialization",
+    "strategy": "local_repo",
+    "record_count": 2,
+    "auth_state": "local_repo",
+    "cache_status": "active",
+    "desired_state": "active",
+    "actual_state": "active",
+    "live_read_enabled": false,
+    "live_write_enabled": false,
+    "blocker_count": 0
+  },
+  "repo_targets_touched": [
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-mcp-cache/github-pat-materialization-latest.json",
+    "docs/trinity-mcp-catalog-v3.json"
+  ],
+  "next_action": "Use github_pat_materialization only through proof-backed outputs.",
+  "effective_success": true,
+  "records": [
+    {
+      "source_id": "github_pat_materialization",
+      "record_id": "github_pat_materialization-seed",
+      "signal_type": "pack_seed",
+      "title": "GitHub PAT Materialization",
+      "published_at": "2026-03-08",
+      "source_url": "repo://docs/github-pat-materialization-fixture-v1.json",
+      "summary": "Seed cache record for GitHub PAT Materialization.",
+      "metrics": {
+        "gating_class": "verified_live_write",
+        "strategy": "local_repo"
+      },
+      "tags": [
+        "github_pat_materialization",
+        "seed"
+      ],
+      "repo_targets": []
+    },
+    {
+      "source_id": "github_pat_materialization",
+      "record_id": "github_pat_materialization-recap",
+      "signal_type": "repo_state",
+      "title": "github_pat_materialization repo state",
+      "published_at": "2026-03-25",
+      "source_url": "repo://git/log",
+      "summary": "Recent commits loaded for github_pat_materialization.",
+      "metrics": {
+        "recent_commit_count": 5
+      },
+      "tags": [
+        "github_pat_materialization",
+        "repo_state"
+      ],
+      "repo_targets": [
+        "docs/trinity-materialization-ledger.jsonl",
+        "docs/trinity-mcp-catalog-v3.json"
+      ]
+    }
+  ],
+  "source_runs": [
+    {
+      "source_id": "github_pat_materialization",
+      "mode": "local_repo",
+      "record_count": 2,
+      "status": "PASS"
+    }
+  ]
+}

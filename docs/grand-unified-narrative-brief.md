@@ -1,6 +1,6 @@
 # Grand Unified Narrative Brief
 
-Generated (UTC): 2026-03-24T06:21:13.013733+00:00
+Generated (UTC): 2026-03-25T15:16:10.095785+00:00
 
 ## 1) Current state summary
 - Trinity Hybrid OS now includes strict guardrails across cache, token/credit, and energy-bank projections.

@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-EXPECTED_EXTENSION_COUNT = 2112
+EXPECTED_EXTENSION_COUNT = 2232
 ALLOWED_EXTENSION_KINDS = {"system", "skill", "artifact"}
 ALLOWED_EXTENSION_STATUS = {"active", "verified_live", "verified_live_read", "verified_live_write", "skill_only", "staged_setup_gate"}
 ALLOWED_MCP_STATUS = {"verified_live", "verified_live_read", "verified_live_write", "staged_setup_gate", "skill_only", "future_candidate", "absent"}
@@ -19,6 +19,7 @@ PACK_LAYOUT_RULES = {
     "balanced_wave_bucket_v20": {"system": 3, "skill": 0, "artifact": 12, "manifest_systems": 3},
     "balanced_wave_bucket_v21": {"system": 6, "skill": 0, "artifact": 24, "manifest_systems": 6},
     "balanced_wave_bucket_v22": {"system": 6, "skill": 0, "artifact": 24, "manifest_systems": 6},
+    "balanced_wave_bucket_v23": {"system": 6, "skill": 0, "artifact": 24, "manifest_systems": 6},
 }
 
 
