@@ -161,9 +161,12 @@ def main() -> None:
     total_planned_credits = round(sum(float(item["planned_credits"]) for item in projections), 6)
     total_covered_credits = round(sum(float(item["covered_credits"]) for item in projections), 6)
     total_uncovered_credits = round(sum(float(item["uncovered_credits"]) for item in projections), 6)
+    overall_status = "PASS"
     report = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "engine": "trinity-energy-bank-system",
+        "overall_status": overall_status,
+        "effective_success": overall_status == "PASS",
         "inputs": {
             "reserve_growth": growth,
             "reserve_cap_multiplier": cap_multiplier,

@@ -1,11 +1,10 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Wrapper for aletheon_memory_reflection_surface_audit. """
 
 from __future__ import annotations
 
-from trinity_expansion_system_runner import run_named_system
+from trinity_expansion_system_runner import main
 
 
 if __name__ == '__main__':
-    raise SystemExit(run_named_system("aletheon_memory_reflection_surface_audit"))
-
+    raise SystemExit(main(default_system_id='aletheon_memory_reflection_surface_audit'))

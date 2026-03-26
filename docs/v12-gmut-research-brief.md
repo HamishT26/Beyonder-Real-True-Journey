@@ -1,7 +1,5 @@
 # V12 GMUT Research Brief
 
-Canonical note: the active v13 equation and Lagrangian canon now lives in [latex/grand_mandala.tex](/Users/hamis/OneDrive/Documents/GitHub/Beyonder-Real-True-Journey/latex/grand_mandala.tex). This v12 brief remains supporting context only.
-
 ## Evidence posture
 - confirmed_evidence: repo-backed GMUT comparison artifacts remain authoritative.
 - inference: public and research-primary sources refine comparator language and suggest new falsification tasks.

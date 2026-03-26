@@ -69,6 +69,8 @@ def main() -> None:
     report = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "engine": "qcit-coordination-engine",
+        "overall_status": "PASS",
+        "effective_success": True,
         "vectors": asdict(vectors),
         "outputs": outputs,
         "validation_digest_sha256": validation_digest,

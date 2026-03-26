@@ -11,13 +11,21 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 ROOT = Path(__file__).resolve().parent.parent
 STATE_PATH = ROOT / "docs" / "aurelis-nz-clock-state.json"
 SESSIONS_PATH = ROOT / "docs" / "aurelis-nz-clock-sessions.jsonl"
 
-NZ = ZoneInfo("Pacific/Auckland")
+try:
+    NZ = ZoneInfo("Pacific/Auckland")
+except ZoneInfoNotFoundError:
+    # Windows Python environments can lack the IANA tz database. Fall back to
+    # the machine's configured local timezone so the clock remains usable in NZ
+    # sessions instead of failing hard at import time.
+    NZ = datetime.now().astimezone().tzinfo
+    if NZ is None:
+        NZ = timezone.utc
 FMT = "%Y-%m-%d %H:%M"
 
 
@@ -37,7 +45,13 @@ def load_state() -> ClockState | None:
     if not STATE_PATH.exists():
         return None
     data = json.loads(STATE_PATH.read_text())
-    return ClockState(**data)
+    if not isinstance(data, dict):
+        return None
+    required = {"session_name", "session_start_nzdt", "session_start_utc", "last_updated_utc"}
+    if not required.issubset(data):
+        return None
+    filtered = {key: data[key] for key in required}
+    return ClockState(**filtered)
 
 
 def save_state(state: ClockState) -> None:

@@ -1,16 +1,16 @@
 {
   "version": "v3",
-  "generated_utc": "2026-03-08T11:36:30+00:00",
+  "generated_utc": "2026-03-25T21:00:28+00:00",
   "connectors": [
     {
       "mcp_id": "figma",
-      "status": "verified_live_read",
+      "status": "verified_live",
       "auth_class": "session_mcp_verified",
       "interaction_mode": "verified_live_design_context",
       "tool_surface": "desktop_mcp_tool",
       "cache_artifact": "docs/trinity-mcp-cache/figma-collab-latest.json",
       "setup_gate": "docs/trinity-expansion/figma-collab-gate-latest.json",
-      "notes": "Verified in-session via whoami. The current seat remains View, so write actions stay disabled.",
+      "notes": "Verified in-session via whoami.",
       "desired_state": "verified_live_read",
       "actual_state": "verified_live_read",
       "live_read_enabled": true,
@@ -22,7 +22,7 @@
       "activation_path": "desktop_mcp_tool",
       "workspace_target": "Hamish Thomson's team",
       "proof_target": "seat verification",
-      "last_verified_utc": "2026-03-08T11:10:44+00:00"
+      "last_verified_utc": "2026-03-25T21:00:28+00:00"
     },
     {
       "mcp_id": "linear",
@@ -32,7 +32,7 @@
       "tool_surface": "desktop_mcp_tool",
       "cache_artifact": "docs/trinity-mcp-cache/linear-collab-latest.json",
       "setup_gate": "docs/trinity-expansion/linear-collab-gate-latest.json",
-      "notes": "Verified in-session via user and team reads plus a disposable staging write proof.",
+      "notes": "Verified in-session via user and team reads.",
       "desired_state": "verified_live_write",
       "actual_state": "verified_live_write",
       "live_read_enabled": true,
@@ -44,7 +44,7 @@
       "activation_path": "desktop_mcp_tool",
       "workspace_target": "Beyonder-Real-True Journey",
       "proof_target": "project issue/document flow",
-      "last_verified_utc": "2026-03-08T11:10:44+00:00"
+      "last_verified_utc": "2026-03-25T21:00:28+00:00"
     },
     {
       "mcp_id": "playwright",
@@ -70,25 +70,26 @@
     },
     {
       "mcp_id": "github",
-      "status": "verified_live_write",
-      "auth_class": "git_remote_credential_store",
-      "interaction_mode": "verified_live_repo_branch_flow",
-      "tool_surface": "git_https_remote",
-      "cache_artifact": "docs/trinity-mcp-cache/github-pat-materialization-latest.json",
-      "setup_gate": "docs/trinity-expansion/github-pat-materialization-gate-latest.json",
-      "notes": "Verified via git HTTPS read handshake and branch-scoped push using the existing local credential path.",
+      "status": "staged_setup_gate",
+      "auth_class": "token_or_gh_cli",
+      "interaction_mode": "staged_repo_sync",
+      "tool_surface": "public_rest_plus_optional_auth",
+      "cache_artifact": "docs/trinity-mcp-cache/github-devflow-latest.json",
+      "setup_gate": "docs/trinity-expansion/github-devflow-gate-latest.json",
+      "notes": "Public REST is available; auth remains staged.",
       "desired_state": "verified_live_write",
-      "actual_state": "verified_live_write",
-      "live_read_enabled": true,
-      "live_write_enabled": true,
-      "promotion_evidence": [
-        "docs/trinity-live-traces/github-pat-materialization-proof-v1.json"
+      "actual_state": "staged_setup_gate",
+      "live_read_enabled": false,
+      "live_write_enabled": false,
+      "promotion_evidence": [],
+      "blockers": [
+        "No GitHub token or gh auth is exposed on this machine.",
+        "No disposable tracer proof exists yet."
       ],
-      "blockers": [],
       "activation_path": "git_https_remote",
       "workspace_target": "HamishT26/Beyonder-Real-True-Journey",
-      "proof_target": "refs/heads/codex/Aletheon/v5-github-activation-proof-20260308T1127Z",
-      "last_verified_utc": "2026-03-08T11:27:30+00:00"
+      "proof_target": "remote feature branch",
+      "last_verified_utc": ""
     },
     {
       "mcp_id": "filesystem",
@@ -98,7 +99,7 @@
       "tool_surface": "connector_setup_gate",
       "cache_artifact": "docs/trinity-mcp-cache/identity-governance-latest.json",
       "setup_gate": "docs/trinity-expansion/identity-governance-gate-latest.json",
-      "notes": "No distinct scoped connector surface is exposed; local shell access alone does not count as connector promotion.",
+      "notes": "No verified read-only connector surface is exposed.",
       "desired_state": "verified_live_write",
       "actual_state": "staged_setup_gate",
       "live_read_enabled": false,
@@ -114,25 +115,26 @@
     },
     {
       "mcp_id": "notion",
-      "status": "verified_live_write",
-      "auth_class": "session_mcp_verified",
-      "interaction_mode": "verified_live_page_database_flow",
-      "tool_surface": "desktop_mcp_tool",
-      "cache_artifact": "docs/trinity-mcp-cache/notion-memory-bridge-latest.json",
-      "setup_gate": "docs/trinity-expansion/notion-memory-bridge-gate-latest.json",
-      "notes": "Verified in-session through creation and read-back of a v5 root page, structured database, and seeded entries.",
+      "status": "staged_setup_gate",
+      "auth_class": "token_setup_gate",
+      "interaction_mode": "staged_workspace_capture",
+      "tool_surface": "connector_setup_gate",
+      "cache_artifact": "docs/trinity-mcp-cache/identity-governance-latest.json",
+      "setup_gate": "docs/trinity-expansion/identity-governance-gate-latest.json",
+      "notes": "No token or live connector surface is exposed.",
       "desired_state": "verified_live_write",
-      "actual_state": "verified_live_write",
-      "live_read_enabled": true,
-      "live_write_enabled": true,
-      "promotion_evidence": [
-        "docs/trinity-live-traces/notion-memory-bridge-proof-v1.json"
+      "actual_state": "staged_setup_gate",
+      "live_read_enabled": false,
+      "live_write_enabled": false,
+      "promotion_evidence": [],
+      "blockers": [
+        "No Notion token is exposed.",
+        "No safe read handshake is available."
       ],
-      "blockers": [],
       "activation_path": "desktop_mcp_tool",
-      "workspace_target": "Hamish Thomson's Space HQ",
+      "workspace_target": "Hamish Thomson\u2019s Space HQ",
       "proof_target": "root page + database",
-      "last_verified_utc": "2026-03-08T11:31:41+00:00"
+      "last_verified_utc": ""
     },
     {
       "mcp_id": "slack",
@@ -180,25 +182,26 @@
     },
     {
       "mcp_id": "postgres",
-      "status": "verified_live_write",
-      "auth_class": "docker_local_runtime",
-      "interaction_mode": "verified_live_database_schema_flow",
-      "tool_surface": "docker_local",
-      "cache_artifact": "docs/trinity-mcp-cache/postgres-local-runtime-latest.json",
-      "setup_gate": "docs/trinity-expansion/postgres-local-runtime-gate-latest.json",
-      "notes": "Verified through a Docker-local Postgres container with read handshake, disposable schema write proof, and cleanup.",
+      "status": "staged_setup_gate",
+      "auth_class": "dsn_setup_gate",
+      "interaction_mode": "staged_database_bridge",
+      "tool_surface": "connector_setup_gate",
+      "cache_artifact": "docs/trinity-mcp-cache/identity-governance-latest.json",
+      "setup_gate": "docs/trinity-expansion/identity-governance-gate-latest.json",
+      "notes": "No DSN or verified connector surface is exposed.",
       "desired_state": "verified_live_write",
-      "actual_state": "verified_live_write",
-      "live_read_enabled": true,
-      "live_write_enabled": true,
-      "promotion_evidence": [
-        "docs/trinity-live-traces/postgres-local-runtime-proof-v1.json"
+      "actual_state": "staged_setup_gate",
+      "live_read_enabled": false,
+      "live_write_enabled": false,
+      "promotion_evidence": [],
+      "blockers": [
+        "No Postgres DSN is exposed.",
+        "No disposable schema tracer proof exists yet."
       ],
-      "blockers": [],
       "activation_path": "docker_local",
       "workspace_target": "docker_local/trinity_v5",
       "proof_target": "local container + proof schema",
-      "last_verified_utc": "2026-03-08T11:36:30+00:00"
+      "last_verified_utc": ""
     }
   ]
 }
