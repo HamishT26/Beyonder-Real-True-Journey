@@ -112,9 +112,12 @@ def main() -> None:
     token_delta = round(total_tokens_covered - tokens_used_float, 6)
     credit_delta = round(total_credits_covered - float(args.credits_used), 6)
 
+    overall_status = "PASS" if token_delta >= 0 and credit_delta >= 0 else "FAIL"
     report = {
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "engine": "trinity-token-credit-zip-converter",
+        "overall_status": overall_status,
+        "effective_success": overall_status == "PASS",
         "inputs": {
             "tokens_used": args.tokens_used,
             "credits_used": args.credits_used,

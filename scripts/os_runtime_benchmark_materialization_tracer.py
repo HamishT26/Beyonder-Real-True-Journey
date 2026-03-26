@@ -1,11 +1,10 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Wrapper for os_runtime_benchmark_materialization_tracer. """
 
 from __future__ import annotations
 
-from trinity_expansion_system_runner import run_named_system
+from trinity_expansion_system_runner import main
 
 
 if __name__ == '__main__':
-    raise SystemExit(run_named_system("os_runtime_benchmark_materialization_tracer"))
-
+    raise SystemExit(main(default_system_id='os_runtime_benchmark_materialization_tracer'))

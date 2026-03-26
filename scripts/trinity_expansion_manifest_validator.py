@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-EXPECTED_SYSTEM_COUNT = 1070
+EXPECTED_SYSTEM_COUNT = 1094
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}

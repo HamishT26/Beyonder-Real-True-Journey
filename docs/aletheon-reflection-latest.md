@@ -1,6 +1,6 @@
 # Aletheon Reflection
 
-- updated_utc: `2026-03-25T14:51:59+00:00`
+- updated_utc: `2026-03-26T04:08:44+00:00`
 - current posture: V6 begins by reconnecting history, connector proof, benchmark discipline, and bounded autonomy.
 - strongest insight: the repo is now large enough that orchestration drift matters as much as feature growth.
 - current caution: live connectors are valuable, but only when every promotion remains reversible and evidenced.

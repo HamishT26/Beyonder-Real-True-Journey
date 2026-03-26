@@ -20,8 +20,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
-from Freed_id_registry import DIDDocument, FreedIDRegistry
-from freed_id_audit_log import FreedIDAuditLedger
+try:
+    from Freed_id_registry import DIDDocument, FreedIDRegistry
+except ModuleNotFoundError:
+    from freed_id_registry import DIDDocument, FreedIDRegistry
+
+try:
+    from Freed_id_audit_log import FreedIDAuditLedger
+except ModuleNotFoundError:
+    from freed_id_audit_log import FreedIDAuditLedger
 
 
 @dataclass

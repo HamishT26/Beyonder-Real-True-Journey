@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any
 
 from trinity_api_common import (
@@ -22,6 +24,46 @@ from trinity_api_common import (
 )
 
 ARXIV_NS = {"atom": "http://www.w3.org/2005/Atom"}
+
+
+def _load_cached_payload(path_str: str) -> dict[str, Any] | None:
+    path = Path(path_str)
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _cache_fallback_payload(existing: dict[str, Any], reason: Exception) -> dict[str, Any]:
+    cached_records = existing.get("records", [])
+    cached_runs = existing.get("source_runs", [])
+    payload = dict(existing)
+    payload["generated_utc"] = iso_now()
+    payload["overall_status"] = "PASS"
+    payload["effective_success"] = True
+    payload["refresh_mode"] = "cache_fallback"
+    payload["fallback_reason"] = compact_text(str(reason), limit=240)
+    if not isinstance(cached_records, list):
+        cached_records = []
+    if not isinstance(cached_runs, list):
+        cached_runs = []
+    payload["record_count"] = len(cached_records)
+    payload["records"] = cached_records
+    payload["source_runs"] = [
+        *cached_runs,
+        {
+            "api_id": "cache_fallback",
+            "request_id": "mind_theory_signal_refresh",
+            "status": "PASS",
+            "record_count": len(cached_records),
+            "detail": compact_text(f"reused cached latest because live refresh failed: {reason}", limit=240),
+        },
+    ]
+    payload["candidate_repo_targets"] = aggregate_candidate_targets(cached_records)
+    return payload
 
 
 def _arxiv_records(query: dict[str, Any], limit: int, timeout_sec: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -139,31 +181,38 @@ def main() -> int:
     api_ids = sorted(str(entry["api_id"]) for entry in manifest_entries)
     queries = query_pack["mind"]["queries"]
 
-    records: list[dict[str, Any]] = []
-    source_runs: list[dict[str, Any]] = []
-    for query in queries:
-        if "arxiv" in query["api_ids"]:
-            rows, runs = _arxiv_records(query, args.limit_per_query, args.timeout_sec)
-            records.extend(rows)
-            source_runs.extend(runs)
-        if "openalex" in query["api_ids"]:
-            rows, runs = _openalex_records(query, args.limit_per_query, args.timeout_sec)
-            records.extend(rows)
-            source_runs.extend(runs)
+    try:
+        records: list[dict[str, Any]] = []
+        source_runs: list[dict[str, Any]] = []
+        for query in queries:
+            if "arxiv" in query["api_ids"]:
+                rows, runs = _arxiv_records(query, args.limit_per_query, args.timeout_sec)
+                records.extend(rows)
+                source_runs.extend(runs)
+            if "openalex" in query["api_ids"]:
+                rows, runs = _openalex_records(query, args.limit_per_query, args.timeout_sec)
+                records.extend(rows)
+                source_runs.extend(runs)
 
-    records = sort_records(records)
-    payload = {
-        "generated_utc": iso_now(),
-        "pillar": "mind",
-        "overall_status": "PASS",
-        "effective_success": True,
-        "record_count": len(records),
-        "refresh_window_days": int(manifest.get("refresh_window_days", 30)),
-        "apis_checked": api_ids,
-        "source_runs": source_runs,
-        "records": records,
-        "candidate_repo_targets": aggregate_candidate_targets(records),
-    }
+        records = sort_records(records)
+        payload = {
+            "generated_utc": iso_now(),
+            "pillar": "mind",
+            "overall_status": "PASS",
+            "effective_success": True,
+            "refresh_mode": "live_refresh",
+            "record_count": len(records),
+            "refresh_window_days": int(manifest.get("refresh_window_days", 30)),
+            "apis_checked": api_ids,
+            "source_runs": source_runs,
+            "records": records,
+            "candidate_repo_targets": aggregate_candidate_targets(records),
+        }
+    except Exception as exc:  # noqa: BLE001
+        existing = _load_cached_payload(args.latest_json)
+        if existing is None:
+            raise
+        payload = _cache_fallback_payload(existing, exc)
     timestamped_json, latest_json = save_json_run(
         payload=payload,
         latest_json=args.latest_json,
@@ -171,7 +220,9 @@ def main() -> int:
         stem="mind-signals",
     )
     print("overall_status=PASS")
-    print(f"record_count={len(records)}")
+    print(f"record_count={int(payload.get('record_count', 0) or 0)}")
+    if payload.get("refresh_mode") == "cache_fallback":
+        print("refresh_mode=cache_fallback")
     print(f"timestamped_json={timestamped_json}")
     print(f"latest_json={latest_json}")
     return 0

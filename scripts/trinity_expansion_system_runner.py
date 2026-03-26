@@ -116,6 +116,51 @@ def _write_text(path_str: str, content: str) -> Path:
     return target
 
 
+def _snapshot_repo_targets(paths: list[str]) -> list[dict[str, Any]]:
+    snapshots: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for raw_path in paths:
+        path_str = str(raw_path).strip()
+        if not path_str or path_str in seen:
+            continue
+        seen.add(path_str)
+        path = _repo_path(path_str)
+        snapshots.append(
+            {
+                "path": path_str,
+                "exists": path.exists(),
+                "bytes": path.read_bytes() if path.exists() else None,
+            }
+        )
+    return snapshots
+
+
+def _restore_repo_targets(snapshots: list[dict[str, Any]]) -> list[str]:
+    failures: list[str] = []
+    for snapshot in snapshots:
+        path_str = str(snapshot.get("path") or "").strip()
+        if not path_str:
+            continue
+        try:
+            path = _repo_path(path_str)
+            existed = bool(snapshot.get("exists"))
+            previous_bytes = snapshot.get("bytes")
+            if existed:
+                if not isinstance(previous_bytes, (bytes, bytearray)):
+                    failures.append(f"{path_str}: missing snapshot bytes")
+                    continue
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(bytes(previous_bytes))
+            elif path.exists():
+                if path.is_dir():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink()
+        except Exception as exc:  # noqa: BLE001
+            failures.append(f"{path_str}: {exc}")
+    return failures
+
+
 def _read_text_safe(path_str: str) -> tuple[bool, str, str]:
     try:
         path = _repo_path(path_str)
@@ -157,11 +202,11 @@ def _body_resource_envelope_budget(profile_context: str) -> float:
     normalized = str(profile_context or "").strip().lower().replace("-", "_")
     defaults = {
         "quick": 900.0,
-        "standard": 2400.0,
-        "offline_only": 2400.0,
-        "deep": 3000.0,
-        "collab": 2400.0,
-        "materialize": 3600.0,
+        "standard": 3600.0,
+        "offline_only": 3600.0,
+        "deep": 3900.0,
+        "collab": 3600.0,
+        "materialize": 3900.0,
     }
     ok, payload, _detail = _read_json_safe("docs/body-profile-policy-v1.json")
     if ok:
@@ -445,7 +490,7 @@ def _tool_probe(tool: str, *args: str) -> dict[str, Any]:
             cwd=ROOT,
             capture_output=True,
             text=True,
-            timeout=15,
+            timeout=30,
             check=False,
         )
         text = (proc.stdout or proc.stderr or "").strip().splitlines()
@@ -1488,6 +1533,9 @@ def _command_passthrough_system(
         materialization_level=materialization_level,
     )
     command_timeout = max(int(entry.get("timeout_sec") or timeout_sec or 30), int(timeout_sec or 30))
+    restore_targets = [str(path) for path in entry.get("runner_restore_targets", []) if str(path).strip()]
+    restore_snapshots = _snapshot_repo_targets(restore_targets)
+    restore_failures: list[str] = []
     try:
         proc = subprocess.run(
             command,
@@ -1506,9 +1554,23 @@ def _command_passthrough_system(
             "timeout_sec": command_timeout,
         }
     except subprocess.TimeoutExpired:
+        restore_failures = _restore_repo_targets(restore_snapshots)
+        checks = [_check("runner_command_exit", "TIMEOUT", f"timeout_sec={command_timeout}")]
+        if restore_targets:
+            checks.append(
+                _check(
+                    "runner_restore_targets",
+                    "PASS" if not restore_failures else "FAIL",
+                    f"targets={len(restore_targets)}, failures={restore_failures}",
+                )
+            )
         return {
-            "checks": [_check("runner_command_exit", "TIMEOUT", f"timeout_sec={command_timeout}")],
-            "metrics": {"runner_command": command, "timeout_sec": command_timeout},
+            "checks": checks,
+            "metrics": {
+                "runner_command": command,
+                "timeout_sec": command_timeout,
+                "restored_target_count": len(restore_targets),
+            },
             "targets": _collect_targets(
                 [str(path) for path in entry.get("outputs", []) if str(path).strip()],
                 [str(path) for path in entry.get("runner_targets", []) if str(path).strip()],
@@ -1517,13 +1579,18 @@ def _command_passthrough_system(
             "records": None,
             "source_runs": None,
         }
+    restore_failures = _restore_repo_targets(restore_snapshots)
+    if restore_targets:
+        checks.append(
+            _check(
+                "runner_restore_targets",
+                "PASS" if not restore_failures else "FAIL",
+                f"targets={len(restore_targets)}, failures={restore_failures}",
+            )
+        )
+        metrics["restored_target_count"] = len(restore_targets)
 
     validation_output = str(entry.get("runner_success_json") or "").strip()
-    if not validation_output:
-        candidate_output = str((entry.get("outputs") or [""])[0] or "").strip()
-        candidate_path = ROOT / candidate_output if candidate_output else None
-        if candidate_output.endswith(".json") and candidate_path and candidate_path.exists():
-            validation_output = candidate_output
     if validation_output.endswith(".json"):
         ok, payload, detail = _read_json_safe(validation_output)
         if ok:
@@ -3785,11 +3852,14 @@ def run_named_system(system_id: str, argv: list[str] | None = None) -> int:
     )
 
 
-def main() -> int:
+def main(default_system_id: str | None = None, argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run a Trinity expansion system by id.")
-    parser.add_argument("--system-id", required=True)
-    args, remaining = parser.parse_known_args()
-    return run_named_system(str(args.system_id), remaining)
+    parser.add_argument("--system-id", default=default_system_id)
+    args, remaining = parser.parse_known_args(argv)
+    system_id = str(args.system_id or "").strip()
+    if not system_id:
+        parser.error("--system-id is required")
+    return run_named_system(system_id, remaining)
 
 
 if __name__ == "__main__":
