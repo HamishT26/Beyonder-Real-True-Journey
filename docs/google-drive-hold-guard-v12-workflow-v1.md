@@ -1,12 +1,6 @@
-# Google Drive Hold Guard V12 Workflow
+# Google Drive Guard Workflow v12
 
-- activation_group: `cloud_archive_hold`
-- authority_scope: `cloud_archive_scope`
-- council_scope: `leader_only`
-- sync_strategy: `local_repo`
-- cleanup_class: `operator_hold`
-- retention_scope: `deferred_archive`
-- research_surface: `none`
-- repo remains authoritative.
-- Google Drive stays explicitly deferred in v12.
-- Public-source refresh can refine comparison language, but not raise readiness by itself.
+- Keep the repo authoritative at all times.
+- Use Google Drive only as a bounded working mirror for non-authoritative artifacts.
+- Require explicit write/read-back proof before promoting any Drive write path beyond read-verified status.
+- Never store secrets, raw duo chats, repo-authority overrides, or exclusive canonical records in Drive.

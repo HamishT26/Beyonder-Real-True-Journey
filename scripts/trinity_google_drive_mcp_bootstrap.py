@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bootstrap the bounded Google Drive MCP path for Trinity v11."""
+"""Bootstrap the bounded Google Drive working-mirror path for Trinity v11."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ DEFAULT_SOURCE = Path.home() / "Downloads" / "gcp-oauth.keys.json"
 DOCKER_VOLUME = "mcp-gdrive"
 ACTIVATION_JSON = ROOT / "docs" / "trinity-google-drive-mcp-activation-latest.json"
 ACTIVATION_MD = ROOT / "docs" / "trinity-google-drive-mcp-activation-latest.md"
-MCP_CATALOG = ROOT / "docs" / "trinity-mcp-catalog-v9.json"
+MCP_CATALOG = ROOT / "docs" / "trinity-mcp-catalog-v11.json"
 
 
 def now_iso() -> str:
@@ -111,18 +111,24 @@ def update_catalog(overall_status: str, oauth_seeded: bool, volume_state: str, c
         return
     for row in connectors:
         if isinstance(row, dict) and str(row.get("mcp_id")) == "google_drive":
-            row["status"] = "staged_setup_gate" if blockers else "verified_live"
-            row["actual_state"] = "staged_setup_gate" if blockers else "bounded_archive_mirror"
-            row["live_read_enabled"] = False
+            row["status"] = "staged_setup_gate" if blockers else "verified_live_read"
+            row["desired_state"] = "bounded_working_mirror"
+            row["actual_state"] = "staged_setup_gate" if blockers else "verified_live_read"
+            row["interaction_mode"] = "hybrid_working_mirror"
+            row["tool_surface"] = "direct_app_connector"
+            row["connector_class"] = "app_connector"
+            row["live_read_enabled"] = not blockers
             row["live_write_enabled"] = False
-            row["archive_only"] = True
+            row["archive_only"] = False
+            row["persistent_scope"] = "non_authoritative_working_mirror"
+            row["cloud_staging_scope"] = "bounded_working_mirror"
             row["oauth_bootstrap_state"] = "seeded" if oauth_seeded else "missing"
             row["docker_volume_state"] = volume_state
-            row["fallback_mode"] = "memory_bank_archive_only"
+            row["fallback_mode"] = "bounded_working_mirror"
             row["blockers"] = blockers
             row["last_verified_utc"] = now_iso()
             row["promotion_evidence"] = [] if blockers else [str(ACTIVATION_JSON.relative_to(ROOT)).replace("\\", "/")]
-            row["notes"] = "Docker-first Google Drive MCP path bootstrapped locally." if not blockers else "Docker-first Google Drive MCP path seeded locally, but auth/bootstrap still blocked."
+            row["notes"] = "Hybrid Google Drive working-mirror path bootstrapped locally." if not blockers else "Hybrid Google Drive working-mirror path seeded locally, but auth/bootstrap still blocked."
     payload["generated_utc"] = now_iso()
     write_json(MCP_CATALOG, payload)
 
@@ -163,7 +169,7 @@ def main() -> int:
         if not config_ok:
             blockers.append(f"config update error: {config_state}")
 
-    blockers.append("interactive OAuth bootstrap still required to complete Drive auth")
+    blockers.append("interactive OAuth bootstrap still required to complete bounded working-mirror auth")
     overall_status = "WARN" if blockers else "PASS"
     payload = {
         "generated_utc": now_iso(),
@@ -179,7 +185,7 @@ def main() -> int:
         "docker_image_state": image_state if image_ok else "error",
         "config_entry_state": config_state if config_ok else "pending",
         "auth_bootstrap_state": "pending_interactive_oauth",
-        "fallback_mode": "memory_bank_archive_only",
+        "fallback_mode": "bounded_working_mirror",
         "blockers": blockers,
     }
     write_json(ACTIVATION_JSON, payload)
@@ -196,7 +202,7 @@ def main() -> int:
                 f"- docker_image_state: `{image_state if image_ok else 'error'}`",
                 f"- config_entry_state: `{config_state if config_ok else 'pending'}`",
                 "- auth_bootstrap_state: `pending_interactive_oauth`",
-                "- fallback_mode: `memory_bank_archive_only`",
+                "- fallback_mode: `bounded_working_mirror`",
                 "",
                 "## Blockers",
                 *[f"- {item}" for item in blockers],

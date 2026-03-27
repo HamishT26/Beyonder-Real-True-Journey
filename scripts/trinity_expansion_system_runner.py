@@ -664,8 +664,9 @@ def _connector_state_satisfies(expected: str, actual: str, status: str) -> bool:
         return True
     state_rank = {
         "staged_setup_gate": 1,
-        "verified_live_read": 2,
-        "verified_live_write": 3,
+        "bounded_working_mirror": 2,
+        "verified_live_read": 3,
+        "verified_live_write": 4,
     }
     expected_rank = state_rank.get(expected_text)
     actual_rank = state_rank.get(actual_text) or state_rank.get(status_text)

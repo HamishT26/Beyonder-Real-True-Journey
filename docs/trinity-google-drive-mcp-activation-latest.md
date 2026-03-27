@@ -1,9 +1,7 @@
-# Trinity Google Drive MCP Activation
+# Trinity Google Drive Activation
 
 - overall_status: `WARN`
-- docker_first_path: `true`
-- oauth_secret_seeded: `false`
-- docker_volume_state: `pending_bootstrap`
-- config_entry_state: `pending_update`
-- auth_bootstrap_state: `pending`
-- fallback_mode: `memory_bank_archive_only`
+- auth_bootstrap_state: `read_verified_write_pending`
+- fallback_mode: `bounded_working_mirror`
+- live_read_proof: `https://drive.google.com/file/d/1H-mTo3cASIXkVYl8hytyarGLI-7-T6-T`
+- blockers: explicit write/read-back proof is still pending; working-folder placement was not cleanly proven tonight.

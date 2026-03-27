@@ -3,8 +3,8 @@
 
 This helper keeps the repo authoritative while producing compact snapshot
 artifacts and capability reports for remote or semi-remote storage surfaces.
-It intentionally treats Google Drive as opt-in and reports blocked auth rather
-than pretending cloud archival is available.
+Google Drive may act as a bounded working mirror for non-authoritative
+artifacts, but it never overrides repo-first truth.
 """
 
 from __future__ import annotations
@@ -108,14 +108,19 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def google_drive_operator_hold() -> bool:
-    if not GOOGLE_POLICY_PATH.exists():
-        return False
-    try:
-        payload = load_json(GOOGLE_POLICY_PATH)
-    except Exception:  # pragma: no cover - defensive
-        return False
-    return bool(payload.get("operator_hold"))
+def google_drive_policy() -> dict[str, Any]:
+    payload: dict[str, Any] = {}
+    if GOOGLE_POLICY_PATH.exists():
+        try:
+            payload = load_json(GOOGLE_POLICY_PATH)
+        except Exception:  # pragma: no cover - defensive
+            payload = {}
+    drive_role = str(payload.get("drive_role") or "deferred_archive_target").strip() or "deferred_archive_target"
+    operator_hold = bool(payload.get("operator_hold"))
+    payload["drive_role"] = drive_role
+    payload["operator_hold"] = operator_hold
+    payload["activation_disabled_reason"] = str(payload.get("activation_disabled_reason") or "").strip()
+    return payload
 
 
 def probe_git() -> dict[str, Any]:
@@ -212,7 +217,7 @@ def build_registry(
     drive_result: dict[str, Any],
     upload_attempted: bool,
     docker_copy: dict[str, Any],
-    operator_hold: bool,
+    drive_policy: dict[str, Any],
 ) -> dict[str, Any]:
     disk = shutil.disk_usage(ROOT)
     free_gib = round(disk.free / (1024**3), 2)
@@ -225,21 +230,62 @@ def build_registry(
             prune_applied_at = str(load_json(prune_report_path).get("generated_utc") or "")
         except Exception:  # noqa: BLE001
             prune_applied_at = ""
+    operator_hold = bool(drive_policy.get("operator_hold"))
+    drive_role = str(drive_policy.get("drive_role") or "deferred_archive_target")
     drive_status = "staged_with_blockers"
     drive_notes = "Deferred until bounded auth, privacy, and sync proof are available."
     drive_blockers = ["google drive auth not configured"]
+    drive_reachable = bool(drive_result.get("uploaded"))
+    drive_latest_artifact = str(drive_result.get("file_id") or "")
+    drive_proof_state = "drive_not_connected"
+    drive_retention_class = "archive_only"
+    drive_upload_state = "staged"
+    drive_capacity_class = "cloud_archive"
+    drive_last_verified = ""
     if operator_hold:
         drive_status = "staged_with_blockers"
-        drive_notes = "Deferred by operator for v12."
+        drive_notes = (
+            str(drive_policy.get("activation_disabled_reason") or "").strip()
+            or "Google Drive remains operator-held until a bounded working-mirror proof is completed."
+        )
         drive_blockers = ["google drive activation deferred by operator"]
+        drive_proof_state = "operator_hold"
+        drive_upload_state = "deferred_by_operator"
+    elif drive_role == "bounded_working_mirror":
+        drive_capacity_class = "cloud_workspace"
+        drive_retention_class = "working_mirror"
+        if upload_attempted and drive_result.get("uploaded"):
+            drive_status = "bounded_working_mirror"
+            drive_notes = "Bounded non-authoritative working mirror verified via explicit Google Drive artifact upload."
+            drive_blockers = []
+            drive_proof_state = "working_mirror_verified"
+            drive_upload_state = "uploaded"
+            drive_last_verified = now_iso()
+        elif upload_attempted:
+            drive_status = "auth_blocked"
+            drive_notes = "Bounded working-mirror proof was attempted, but Google Drive auth or upload did not pass cleanly."
+            drive_blockers = drive_result.get("blockers", drive_blockers)
+            drive_proof_state = "working_mirror_attempt_blocked"
+            drive_upload_state = "attempted_blocked"
+        else:
+            drive_status = "auth_blocked"
+            drive_notes = "Bounded working-mirror policy is active, but explicit write/read-back proof is still required before live promotion."
+            drive_blockers = ["bounded working-mirror proof not yet completed"]
+            drive_proof_state = "working_mirror_proof_pending"
+            drive_upload_state = "proof_pending"
     elif upload_attempted and drive_result.get("uploaded"):
         drive_status = "live_archive_mirror"
         drive_notes = "Bounded archive uploaded via explicit Google Drive token flow."
         drive_blockers = []
+        drive_proof_state = "drive_uploaded"
+        drive_upload_state = "uploaded"
+        drive_last_verified = now_iso()
     elif upload_attempted:
         drive_status = "staged_with_blockers"
         drive_notes = "Upload requested, but Google Drive auth or upload handshake did not pass."
         drive_blockers = drive_result.get("blockers", drive_blockers)
+        drive_proof_state = "drive_not_connected"
+        drive_upload_state = "attempted_blocked"
 
     overall_status = "PASS" if git_state["reachable"] else "WARN"
     registry = {
@@ -371,17 +417,17 @@ def build_registry(
             {
                 "surface": "google_drive",
                 "status": drive_status,
-                "capacity_class": "cloud_archive",
+                "capacity_class": drive_capacity_class,
                 "notes": drive_notes,
                 "live_checked_at": now_iso(),
-                "reachable": bool(drive_result.get("uploaded")),
-                "latest_artifact": drive_result.get("file_id", ""),
-                "proof_state": "operator_hold" if operator_hold else ("drive_uploaded" if drive_result.get("uploaded") else "drive_not_connected"),
+                "reachable": drive_reachable,
+                "latest_artifact": drive_latest_artifact,
+                "proof_state": drive_proof_state,
                 "blockers": drive_blockers,
-                "retention_class": "archive_only",
-                "archive_upload_state": "deferred_by_operator" if operator_hold else ("uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if upload_attempted else "staged")),
-                "cloud_capacity_class": "cloud_archive",
-                "last_archive_verified_utc": now_iso() if drive_result.get("uploaded") else "",
+                "retention_class": drive_retention_class,
+                "archive_upload_state": drive_upload_state,
+                "cloud_capacity_class": drive_capacity_class,
+                "last_archive_verified_utc": drive_last_verified,
             },
         ],
         "official_sources": OFFICIAL_SOURCES,
@@ -412,7 +458,7 @@ def render_report_md(report: dict[str, Any]) -> str:
             "## Notes",
             "- Repo remains the authority source.",
             "- GitHub is the current off-device path that is verifiably reachable today.",
-            "- Google Drive stays archive-only and never overrides repo authority.",
+            "- Google Drive may act as a bounded working mirror for non-authoritative artifacts, but it never overrides repo authority.",
             "- Docker/Postgres remain bounded runtime mirrors, not remote archive truth.",
         ]
     )
@@ -430,7 +476,8 @@ def main() -> int:
     archive_path = create_archive(args.label, ARCHIVE_SOURCES, DEFAULT_ARCHIVE_DIR, DEFAULT_INDEX)
     git_state = probe_git()
     docker_state = probe_docker()
-    operator_hold = google_drive_operator_hold()
+    drive_policy = google_drive_policy()
+    operator_hold = bool(drive_policy.get("operator_hold"))
     drive_token = os.getenv("GOOGLE_DRIVE_ACCESS_TOKEN", "").strip()
     drive_folder_id = os.getenv("GOOGLE_DRIVE_FOLDER_ID", "").strip()
 
@@ -473,7 +520,7 @@ def main() -> int:
         drive_result=drive_result,
         upload_attempted=args.upload_google_drive,
         docker_copy=docker_copy,
-        operator_hold=operator_hold,
+        drive_policy=drive_policy,
     )
     write_json(REGISTRY_PATH, registry)
 
@@ -499,9 +546,17 @@ def main() -> int:
                 "timestamp": now_iso(),
                 "archive_path": path_to_repo_string(archive_path),
                 "target_surface": "google_drive",
-                "result": "operator_hold" if operator_hold else ("uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if args.upload_google_drive else "staged")),
+                "result": (
+                    "operator_hold"
+                    if operator_hold
+                    else (
+                        "working_mirror_uploaded"
+                        if str(drive_policy.get("drive_role") or "") == "bounded_working_mirror" and drive_result.get("uploaded")
+                        else ("uploaded" if drive_result.get("uploaded") else ("attempted_blocked" if args.upload_google_drive else "staged"))
+                    )
+                ),
                 "bytes": archive_path.stat().st_size if archive_path.exists() else 0,
-                "rollback_state": "delete archive object" if drive_result.get("uploaded") else "no remote archive written",
+                "rollback_state": "delete bounded mirror artifact" if drive_result.get("uploaded") else "no remote archive written",
             }
         ],
     )
@@ -513,7 +568,7 @@ def main() -> int:
         "- Repo remains authoritative for certificates, ledgers, reflections, commands, and official state.\n"
         "- GitHub is the current proven off-device mirror surface.\n"
         "- Docker/Postgres are bounded runtime mirrors, not authority.\n"
-        "- Google Drive is deferred in v12 unless the operator explicitly lifts the hold.\n\n"
+        "- Google Drive may be used as a bounded working mirror for non-authoritative artifacts only; it never overrides repo authority.\n\n"
         "## Official references\n"
         f"- Google Drive files.create: {OFFICIAL_SOURCES['google_drive_api']}\n"
         f"- Google Drive uploads guide: {OFFICIAL_SOURCES['google_drive_uploads']}\n"

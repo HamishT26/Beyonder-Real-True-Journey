@@ -1,0 +1,33 @@
+{
+  "generated_utc": "2026-03-27T16:41:24Z",
+  "overall_status": "PASS",
+  "phase": "v26_beta",
+  "authority_model": "repo_first",
+  "current_shell": "powershell",
+  "linux_switch_recommended_now": false,
+  "readiness_state": "wsl_readiness_only",
+  "current_wsl_inventory": [
+    {
+      "name": "docker-desktop",
+      "state": "Running",
+      "version": 2,
+      "general_purpose": false
+    }
+  ],
+  "blocking_gaps": [
+    "No general-purpose WSL distro is installed and validated for repo work.",
+    "Repo mount behavior and line-ending policy under WSL are not yet proven.",
+    "Python, Node, Git, Docker, and kubectl parity under a general-purpose Linux distro are not yet proven.",
+    "npx is not currently available from the live shell."
+  ],
+  "recommendation": {
+    "keep_current_shell": "powershell",
+    "reason": "Windows PowerShell is the currently proven execution surface for this repo and v26 should treat Linux as readiness-only until a real WSL distro is installed and validated."
+  },
+  "required_v26_checks": [
+    "Install and register a general-purpose WSL distro such as Ubuntu.",
+    "Verify repo access and path behavior from inside that distro.",
+    "Verify Python, Git, Node, and Docker CLI parity from inside that distro.",
+    "Run bounded smoke checks before deciding on a shell migration."
+  ]
+}

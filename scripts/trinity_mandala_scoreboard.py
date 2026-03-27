@@ -171,7 +171,12 @@ def _non_gating_warn_block(block: dict[str, object]) -> bool:
     if str(block.get("status") or "") != "WARN":
         return False
     payload = _read_json(_repo_path(str(block.get("path"))))
-    return str(payload.get("fallback_mode") or "") in {"memory_bank_archive_only", "operator_hold"} or bool(payload.get("operator_hold"))
+    return (
+        str(payload.get("fallback_mode") or "") in {"memory_bank_archive_only", "operator_hold", "bounded_working_mirror"}
+        or bool(payload.get("operator_hold"))
+        or str(payload.get("drive_role") or "") == "bounded_working_mirror"
+        or str(payload.get("archive_policy_state") or "") == "bounded_working_mirror"
+    )
 
 
 def _pillar_status(name: str, artifacts: Iterable[ArtifactStatus]) -> dict[str, object]:

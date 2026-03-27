@@ -1,6 +1,6 @@
 {
   "version": "v11",
-  "generated_utc": "2026-03-26T04:42:55+00:00",
+  "generated_utc": "2026-03-27T16:28:11Z",
   "connectors": [
     {
       "mcp_id": "figma",
@@ -337,40 +337,44 @@
     },
     {
       "mcp_id": "google_drive",
-      "status": "staged_setup_gate",
-      "auth_class": "oauth_json_local_secret",
-      "interaction_mode": "deferred_archive_target",
-      "tool_surface": "disabled_by_operator",
+      "status": "verified_live_read",
+      "auth_class": "operator_connected_plugin_oauth",
+      "interaction_mode": "hybrid_working_mirror",
+      "tool_surface": "direct_app_connector",
       "cache_artifact": "docs/trinity-google-drive-mcp-activation-latest.json",
       "setup_gate": "docs/google-drive-hold-guard-v12-contract-v1.json",
-      "notes": "Google Drive remains explicitly deferred in v15; no bootstrap or upload claims are active.",
-      "desired_state": "deferred_archive_target",
-      "actual_state": "operator_hold",
-      "live_read_enabled": false,
+      "notes": "Google Drive policy is repo-first bounded working mirror. Live read/search proof landed; explicit write/read-back promotion is still pending.",
+      "desired_state": "bounded_working_mirror",
+      "actual_state": "verified_live_read",
+      "live_read_enabled": true,
       "live_write_enabled": false,
-      "promotion_evidence": [],
-      "blockers": [
-        "Google Drive activation is explicitly on hold for v15."
+      "promotion_evidence": [
+        "docs/v25-omega-closeout-summary-v1.json"
       ],
-      "activation_path": "deferred_by_operator",
-      "workspace_target": "google_drive_archive_folder",
-      "proof_target": "none_v15",
-      "last_verified_utc": "2026-03-26T04:42:07+00:00",
-      "ladder_eligibility": "not_applicable",
-      "persistent_scope": "none",
-      "prod_scope": "none",
-      "rollback_scope": "not_applicable",
-      "uat_scope": "not_applicable",
-      "prod_proof_state": "operator_hold",
-      "ha_proof_state": "operator_hold",
-      "cloud_staging_scope": "deferred_archive_only",
-      "archive_only": true,
-      "oauth_bootstrap_state": "disabled_by_operator",
-      "docker_volume_state": "not_requested",
-      "fallback_mode": "operator_hold",
-      "operator_hold": true,
-      "activation_disabled_reason": "Google Drive remains explicitly deferred in v15.",
-      "archive_policy_state": "deferred_archive_target"
+      "blockers": [
+        "explicit Google Drive write/read-back proof is still pending",
+        "Project Vision working-folder placement was not cleanly proven from tonight's connector lane"
+      ],
+      "activation_path": "hybrid_app_connector",
+      "workspace_target": "google_drive_project_vision_working_folder",
+      "proof_target": "bounded_working_mirror_disposable_artifact",
+      "last_verified_utc": "2026-03-27T16:28:11Z",
+      "ladder_eligibility": "l2_persistent_dev",
+      "persistent_scope": "non_authoritative_working_mirror",
+      "prod_scope": "not_authoritative",
+      "rollback_scope": "delete bounded working-mirror artifact",
+      "uat_scope": "bounded_connector_alpha",
+      "prod_proof_state": "write_proof_pending",
+      "ha_proof_state": "design_only",
+      "cloud_staging_scope": "bounded_working_mirror",
+      "archive_only": false,
+      "oauth_bootstrap_state": "connected_read_verified",
+      "docker_volume_state": "not_required",
+      "fallback_mode": "bounded_working_mirror",
+      "operator_hold": false,
+      "activation_disabled_reason": "",
+      "archive_policy_state": "bounded_working_mirror",
+      "connector_class": "app_connector"
     }
   ]
 }
