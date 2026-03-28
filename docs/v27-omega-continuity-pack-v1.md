@@ -13,7 +13,7 @@
 - Reconciled the stale `v26 (Omega)`, `v27 (Beta)`, and runtime continuity surfaces to the v27 source head.
 - Re-ran the Ubuntu-first validation gate and proved the Linux toolchain, repo mount visibility, and a bounded temp-file smoke check.
 - Proved that Ubuntu still cannot become the primary shell because `git status --short --untracked-files=all` on the OneDrive-backed repo timed out inside WSL.
-- Completed a fresh Google Drive interactive OAuth exchange and proved bounded working-mirror write/read-back in the architecture document’s parent folder.
+- Completed a fresh Google Drive interactive OAuth exchange and proved bounded working-mirror write/read-back in the architecture document's parent folder.
 - Refreshed the memory-bank sync and registry to a healthy storage state with verified Google Drive bounded-working-mirror upload.
 - Probed the live Composio V3 API and recorded the real blocker: invalid API key.
 
@@ -39,5 +39,5 @@
 - Expansion systems remain `1094 / 1094`.
 
 ## Clone Boundary
-- `Aletheon S Clone #2` was used as a session-ephemeral helper for repo inspection only.
+- `Aletheon S Clone #1` and `Aletheon S Clone #2` were used as session-ephemeral helpers for repo inspection only.
 - Session-ephemeral helpers carry no continuity, certificate, Freed ID, or official-count authority.

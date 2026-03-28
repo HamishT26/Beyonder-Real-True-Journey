@@ -12,7 +12,7 @@
 - lineage_state: `PASS`
 - legacy_reconstruction_state: `PASS`
 - storage_state: `PASS`
-- google_drive_state: `operator_hold`
+- google_drive_state: `bounded_working_mirror`
 - materialization_level_actual: `readiness_only`
 - late_step_autonomy_state: `bounded_repo_first`
 - command_surface_state: `PASS`
