@@ -3,14 +3,14 @@
 - Lead: `Aletheon`
 - Intended receiver: `Aletheon`
 - Source branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Source head SHA: `19bf8fcb029ee28871a19795d97e31446d7a42cf`
+- Source head SHA: `709833a3d217f18be4dafc32c0e349bcd0b30978`
 - Authority model: `repo_first`
 - Shared latest anchor remains the `v24 (Omega)` full-suite checkpoint at `1155 PASS / 0 WARN / 0 FAIL`
 - Expansion systems remain unchanged at `1094 / 1094`
 - Operational board note: control tower and scoreboard remain self-excluding at `1154`, while `docs/system-suite-status.json` remains the authoritative shared latest anchor
 
 ## What V25 Actually Achieved
-- Reconciled the stale `v24 (Omega)`, `v25 (Beta)`, and runtime continuity surfaces to the current shared branch head.
+- Reconciled the stale `v24 (Omega)`, `v25 (Beta)`, and runtime continuity surfaces to the shared branch head that v26 inherited.
 - Advanced Google Drive policy from hold-only language to `bounded_working_mirror` for non-authoritative artifacts only.
 - Standardized the active control plane as `hybrid_app_mcp_runtime`.
 - Captured a bounded `Omega-Sync Alpha` proof set from local Docker and Git truth, plus an existing live Drive architecture artifact.
@@ -22,7 +22,7 @@
 - Verified Composio toolkits: none re-proven in this session
 - Google Drive is bounded working mirror for architectural and exported artifacts only; it is not an authority surface.
 - Explicit Google Drive write/read-back proof is still pending.
-- Notion page publication was not re-proven in this session.
+- Notion page publication was not re-proven in the v25 lane.
 
 ## Omega-Sync Alpha
 - Docker health and bounded recent logs were captured locally.

@@ -1,12 +1,19 @@
 {
-  "generated_utc": "2026-03-27T16:41:24Z",
-  "overall_status": "PASS",
-  "phase": "v26_beta",
+  "generated_utc": "2026-03-28T11:50:19Z",
+  "overall_status": "WARN",
+  "phase": "v26_omega",
   "authority_model": "repo_first",
   "current_shell": "powershell",
   "linux_switch_recommended_now": false,
-  "readiness_state": "wsl_readiness_only",
+  "readiness_state": "ubuntu_installed_probe_blocked",
   "current_wsl_inventory": [
+    {
+      "name": "Ubuntu",
+      "state": "Installed",
+      "version": 2,
+      "general_purpose": true,
+      "launch_noninteractive": true
+    },
     {
       "name": "docker-desktop",
       "state": "Running",
@@ -14,20 +21,32 @@
       "general_purpose": false
     }
   ],
+  "probe_results": {
+    "ubuntu_echo_probe": "pass",
+    "ubuntu_root_probe": "pass",
+    "repo_mount_visibility": "pass",
+    "git_probe": "timed_out",
+    "python3_probe": "pass",
+    "docker_probe": "pass",
+    "kubectl_probe": "pass",
+    "npm_probe": "pass",
+    "node_probe": "missing",
+    "systemd_user_session": "warning"
+  },
   "blocking_gaps": [
-    "No general-purpose WSL distro is installed and validated for repo work.",
-    "Repo mount behavior and line-ending policy under WSL are not yet proven.",
-    "Python, Node, Git, Docker, and kubectl parity under a general-purpose Linux distro are not yet proven.",
-    "npx is not currently available from the live shell."
+    "Ubuntu launches noninteractively, but WSL still reports systemd user-session startup warnings for both the default user and root probes.",
+    "The repo mount is visible under /mnt/c, but bounded git operations against the OneDrive-backed repo timed out from inside Ubuntu.",
+    "python3, git, docker, kubectl, and npm are present in Ubuntu, but node/nodejs was not available in PATH during the probe lane.",
+    "Line-ending and sustained repo-write behavior remain unproven from the Ubuntu lane, so PowerShell stays primary."
   ],
   "recommendation": {
     "keep_current_shell": "powershell",
-    "reason": "Windows PowerShell is the currently proven execution surface for this repo and v26 should treat Linux as readiness-only until a real WSL distro is installed and validated."
+    "reason": "Windows PowerShell remains the only fully proven execution surface for this repo. Ubuntu is installed and partially validated, but repo git behavior and Node parity are not yet good enough to promote it as the primary shell."
   },
   "required_v26_checks": [
-    "Install and register a general-purpose WSL distro such as Ubuntu.",
-    "Verify repo access and path behavior from inside that distro.",
-    "Verify Python, Git, Node, and Docker CLI parity from inside that distro.",
-    "Run bounded smoke checks before deciding on a shell migration."
+    "Resolve the Ubuntu repo-probe timeout against the OneDrive-mounted repository.",
+    "Install or expose node/nodejs in Ubuntu PATH if Linux is meant to replace the current shell for repo work.",
+    "Re-run bounded repo read and write smoke checks from inside Ubuntu after the toolchain gap is fixed.",
+    "Keep PowerShell as the truthful active shell until those checks pass."
   ]
 }

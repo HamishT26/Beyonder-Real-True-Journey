@@ -1,20 +1,27 @@
 {
-  "generated_utc": "2026-03-27T16:28:11Z",
+  "generated_utc": "2026-03-28T11:50:19Z",
   "overall_status": "WARN",
   "docker_first_path": false,
-  "auth_bootstrap_state": "read_verified_write_pending",
-  "config_entry_state": "plugin_read_verified",
-  "docker_volume_state": "not_required",
+  "auth_bootstrap_state": "refresh_token_invalid_grant",
+  "config_entry_state": "local_secret_source_verified",
+  "docker_volume_state": "empty_token_cache",
   "fallback_mode": "bounded_working_mirror",
   "archive_policy_state": "bounded_working_mirror",
   "blockers": [
-    "explicit Google Drive write/read-back proof is still pending",
-    "Project Vision working-folder placement was not cleanly proven from tonight's connector lane"
+    "Google OAuth refresh-token exchange returned invalid_grant, so bounded write/read-back proof is still blocked.",
+    "The mcp-gdrive Docker volume did not contain a reusable token cache for the working-mirror lane.",
+    "Project Vision working-folder placement is still not proven because the write lane never cleared auth."
   ],
   "read_proof": {
     "title": "trinity_os_architecture.md",
     "id": "1H-mTo3cASIXkVYl8hytyarGLI-7-T6-T",
     "url": "https://drive.google.com/file/d/1H-mTo3cASIXkVYl8hytyarGLI-7-T6-T",
     "proof_type": "live_search_read"
+  },
+  "write_probe": {
+    "attempted": true,
+    "outcome": "blocked",
+    "oauth_error": "invalid_grant",
+    "oauth_error_description": "Token has been expired or revoked."
   }
 }

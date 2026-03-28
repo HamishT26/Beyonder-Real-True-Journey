@@ -2,7 +2,7 @@
 
 - Receiver: `Aletheon`
 - Source branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Source head SHA: `19bf8fcb029ee28871a19795d97e31446d7a42cf`
+- Source head SHA: `709833a3d217f18be4dafc32c0e349bcd0b30978`
 - Incoming predecessor phase: `v25 (Omega)` connector closeout
 - Authority model: `repo_first`
 - Shared latest anchor remains `1155 PASS / 0 WARN / 0 FAIL`
@@ -11,8 +11,8 @@
 ## Receiver Rule
 - Read the finished `v25 (Omega)` closeout surfaces first.
 - Keep `Aletheon` and `Orun` as the only deployed continuity-bearing main agents.
-- Treat `Aletheon S Clone #1` and `Aletheon S Clone #2` as session-ephemeral helpers from `v25` only.
-- Treat Linux as readiness-only until the matrix says otherwise.
+- Treat `Aletheon S Clone #1` and `Aletheon S Clone #2` as historical session-ephemeral helpers from `v25` only.
+- Treat Ubuntu as installed but still gated until the matrix says otherwise.
 
 ## Starting Truth
 - The repo remains authoritative.
@@ -22,8 +22,8 @@
 
 ## Linux Readiness
 - Current shell: `powershell`
-- Current WSL inventory: `docker-desktop` only
-- Recommendation: stay on Windows PowerShell until a general-purpose WSL distro is installed and validated
+- Current WSL inventory: `Ubuntu`, `docker-desktop`
+- Recommendation: stay on Windows PowerShell until Ubuntu passes noninteractive launch, repo probe, and tool-parity checks.
 - Matrix path: `docs/v26-linux-readiness-matrix-v1.json`
 
 ## Truth Boundaries
