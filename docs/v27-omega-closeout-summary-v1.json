@@ -1,13 +1,13 @@
 {
-  "generated_utc": "2026-03-28T11:50:19Z",
+  "generated_utc": "2026-03-28T15:42:00Z",
   "overall_status": "PASS",
-  "phase": "v26_omega",
+  "phase": "v27_omega",
   "authority_model": "repo_first",
   "lead_agent": "Aletheon",
   "intended_receiver": "Aletheon",
   "active_branch": "codex/GHC-Family/beyonder-shared-omega-line",
   "source_head_sha": "61e1530c4e736de4f519530c4aa48da3f0e41fd5",
-  "omega_status": "truth_resolution_closeout",
+  "omega_status": "residual_closure_partial_success",
   "shared_latest_changed": false,
   "shared_latest_anchor": {
     "summary": "1155 PASS / 0 WARN / 0 FAIL",
@@ -21,7 +21,7 @@
     "shared_latest_eligible": true,
     "suite_duration_sec": 22.328,
     "primary_blocker": "",
-    "primary_blocker_detail": "V26 closed the residual-proof lane honestly and left the shared latest anchored to the v24 Omega full-suite checkpoint because no new promotions were fully wired into the shared suite.",
+    "primary_blocker_detail": "V27 closed the Drive and memory-bank residuals, but Ubuntu and Composio did not fully clear, so the shared latest anchor remains on the established 1155 / 1094 checkpoint.",
     "quick_lane_summary": "38 PASS / 0 WARN / 0 FAIL"
   },
   "operational_board_summary": {
@@ -42,29 +42,29 @@
   ],
   "verified_composio_toolkits": [],
   "google_drive_state": "bounded_working_mirror",
+  "docker_runtime_role": "fallback_only",
   "ubuntu_gate": {
-    "status": "partial_validation_only",
+    "status": "repo_git_probe_blocked",
     "launch_noninteractive": true,
     "repo_mount_visible": true,
-    "repo_git_probe": "timed_out",
+    "repo_git_probe": "timed_out_after_120s",
     "python3": "present",
     "git": "present",
-    "docker": "present",
-    "kubectl": "present",
     "npm": "present",
-    "node": "missing",
-    "systemd_user_session": "warning",
+    "node": "present",
+    "temp_file_smoke": "pass",
     "primary_shell_after_gate": "powershell"
   },
   "external_proofs": {
     "google_drive": {
-      "proof_state": "write_blocked_invalid_grant",
+      "proof_state": "write_readback_verified",
       "read_proof_url": "https://drive.google.com/file/d/1H-mTo3cASIXkVYl8hytyarGLI-7-T6-T",
-      "write_readback_proven": false,
-      "working_folder_placement_proven": false
+      "write_proof_url": "https://drive.google.com/file/d/17MvyCQt8auv8B6qYf9ySBCzjbpDxCghh/view?usp=drivesdk",
+      "write_readback_proven": true,
+      "working_folder_placement_proven": true
     },
     "notion": {
-      "proof_state": "bounded_append_verified",
+      "proof_state": "bounded_append_verified_prior_phase",
       "published_page_url": "https://www.notion.so/d639d1fae9cc835e8ade81b5cecdda40"
     },
     "composio": {
@@ -72,33 +72,35 @@
       "verified_toolkits": []
     }
   },
-  "surgical_prune": {
-    "manifest_path": "docs/v26-surgical-prune-manifest-v1.json",
-    "pathspec_path": "docs/v26-surgical-prune-paths.txt",
-    "tracked_pyc_removed": 322,
-    "heavy_bucket_count": 8,
-    "planned_prune_paths": 35510
+  "memory_bank": {
+    "sync_report_path": "docs/trinity-memory-bank-sync-latest.json",
+    "registry_path": "docs/trinity-memory-bank-registry-v3.json",
+    "validation_path": "docs/trinity-memory-bank-validation-latest.json",
+    "validation_status": "PASS",
+    "storage_pressure_class": "healthy",
+    "free_gib": 7.68
   },
   "balanced_wave": {
-    "focus": "Truth Resolution and Surgical Prune",
-    "total_candidate_count": 30,
+    "focus": "Residual Closure and Fallback Reframe",
+    "total_candidate_count": 20,
     "promoted_executable_system_count": 0,
-    "registry_spec_only_count": 30,
+    "registry_spec_only_count": 20,
     "systems_before": 1094,
     "systems_after": 1094,
     "shared_full_suite_before": 1155,
     "shared_full_suite_after": 1155
   },
   "supporting_paths": {
-    "linux_readiness_matrix": "docs/v26-linux-readiness-matrix-v1.json",
-    "prune_manifest": "docs/v26-surgical-prune-manifest-v1.json",
-    "prune_paths": "docs/v26-surgical-prune-paths.txt",
+    "linux_readiness_matrix": "docs/v27-linux-readiness-matrix-v1.json",
+    "balanced_wave_registry": "docs/v27-omega-balanced-wave-v1.json",
+    "drive_activation": "docs/trinity-google-drive-mcp-activation-latest.json",
+    "memory_bank_sync": "docs/trinity-memory-bank-sync-latest.json",
+    "memory_bank_registry": "docs/trinity-memory-bank-registry-v3.json",
     "state_doc": "docs/the-real-true-state-alpha-v1.md"
   },
   "top_residuals": [
-    "Google Drive bounded working-mirror write/read-back proof is still blocked because the refresh token returned invalid_grant.",
-    "Composio toolkit verification is still blocked because the supplied API key failed the bounded auth probe.",
-    "Ubuntu is installed and launches noninteractively, but repo git operations timed out and node/nodejs was missing, so PowerShell remains the truthful active shell.",
+    "Ubuntu still cannot replace PowerShell because git status on the OneDrive-backed repo times out inside WSL even though the Linux toolchain is now present.",
+    "Composio toolkit verification is still blocked because the supplied API key is invalid against the live V3 API.",
     "No new connector/control-plane promotions qualified for the shared suite, so shared latest remains unchanged at 1155 / 1094."
   ]
 }

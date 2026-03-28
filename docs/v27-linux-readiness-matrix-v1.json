@@ -1,0 +1,54 @@
+{
+  "generated_utc": "2026-03-28T15:51:55+00:00",
+  "overall_status": "WARN",
+  "phase": "v27_omega",
+  "authority_model": "repo_first",
+  "docker_runtime_role": "fallback_only",
+  "current_shell": "powershell",
+  "linux_switch_recommended_now": false,
+  "readiness_state": "ubuntu_probe_blocked",
+  "current_wsl_inventory": [
+    {
+      "name": "Ubuntu",
+      "state": "Stopped",
+      "version": 2
+    },
+    {
+      "name": "docker-desktop",
+      "state": "Stopped",
+      "version": 2
+    }
+  ],
+  "probe_results": {
+    "ubuntu_launch_noninteractive": "timed_out",
+    "repo_mount_visibility": "timed_out",
+    "node_probe": "pass",
+    "npm_probe": "pass",
+    "python3_probe": "pass",
+    "git_probe": "pass",
+    "repo_git_status_probe": "timed_out",
+    "tempfile_smoke_probe": "fail"
+  },
+  "probe_details": {
+    "node_stdout": "v18.19.1",
+    "npm_stdout": "11.11.1",
+    "python3_stdout": "Python 3.12.3",
+    "git_stdout": "git version 2.43.0",
+    "launch_stdout": "",
+    "mount_stdout": "",
+    "repo_git_status_stdout": "",
+    "repo_git_status_stderr": "command timed out after 45 seconds",
+    "tempfile_smoke_stdout": "",
+    "tempfile_smoke_stderr": "bash: line 1: : No such file or directory"
+  },
+  "blocking_gaps": [
+    "Ubuntu did not launch noninteractively from PowerShell.",
+    "The repo mount under /mnt/c is not readable from Ubuntu.",
+    "Bounded git status timed out against the OneDrive-mounted repo inside Ubuntu.",
+    "Temp-file smoke check failed inside Ubuntu: bash: line 1: : No such file or directory"
+  ],
+  "recommendation": {
+    "keep_current_shell": "powershell",
+    "reason": "PowerShell remains primary because Ubuntu still has at least one bounded parity blocker."
+  }
+}

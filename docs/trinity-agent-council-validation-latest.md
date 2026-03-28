@@ -1,11 +1,11 @@
 # Trinity Agent Council Validation
 
-- generated_utc: `2026-03-28T12:22:10+00:00`
+- generated_utc: `2026-03-28T15:48:11+00:00`
 - overall_status: **PASS**
 - official_count: `11`
 - deployed_main_agent_count: `2`
 - official_undeployed_identity_count: `4`
-- shadow_clone_active_count: `2`
+- shadow_clone_active_count: `3`
 - duo_chat_count: `66`
 - group_chat_rows: `12`
 - requested_model_profile: `gpt-5.4`
