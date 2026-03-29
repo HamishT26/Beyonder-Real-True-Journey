@@ -1,9 +1,6 @@
-# Google Drive MCP Activation V11 Workflow
+# Google Drive Activation Workflow v11
 
-- activation_group: `cloud_archive`
-- authority_scope: `cloud_archive_scope`
-- council_scope: `leader_only`
-- sync_strategy: `local_probe`
-- repo remains authoritative.
-- Google Drive stays archive-only even when live.
-- Deep and collab remain write-free by default.
+- Prefer the connected app/plugin read surface for Drive discovery.
+- Treat write paths as bounded working-mirror operations only.
+- Record clean write/read-back proof before any live-write promotion.
+- Keep the repo authoritative even after Drive connectivity is available.

@@ -1,5 +1,5 @@
 {
-  "summary": "Keep Google Drive explicitly deferred by operator for v12 and prevent bootstrap or archive claims from being treated as active.",
+  "summary": "Guard repo-first authority while allowing Google Drive as a bounded non-authoritative working mirror.",
   "source_url": "repo://docs/trinity-mcp-catalog-v10.json",
   "repo_targets": [
     "docs/trinity-mcp-catalog-v10.json",
@@ -16,7 +16,7 @@
     "write_target": "docs/trinity-mcp-catalog-v10.json"
   },
   "sync_strategy": "local_repo",
-  "next_action": "Keep Google Drive explicitly deferred in v12 registries and commands.",
+  "next_action": "Keep explicit write/read-back proof pending; do not elevate Drive above repo authority.",
   "probe_tools": [],
   "required_probe_tools": [],
   "workflow_tokens": [
@@ -31,7 +31,7 @@
   ],
   "freshness_window_days": 7,
   "live_sources": [],
-  "cleanup_class": "operator_hold",
-  "retention_scope": "deferred_archive",
+  "cleanup_class": "repo_first_working_mirror_guard",
+  "retention_scope": "bounded_working_mirror",
   "research_surface": "none"
 }

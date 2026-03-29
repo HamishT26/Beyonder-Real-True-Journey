@@ -2021,6 +2021,8 @@ def main() -> None:
     original_commands = {label: list(cmd) for label, cmd in commands}
     mcp_catalog_path = ROOT / TRINITY_MCP_CATALOG_PATH
     verified_mcp_connectors: list[str] = []
+    verified_app_connectors: list[str] = []
+    verified_composio_toolkits: list[str] = []
     eligible_live_write_connectors: list[str] = []
     promoted_live_write_connectors: list[str] = []
     blocked_promotions: list[str] = []
@@ -2029,11 +2031,38 @@ def main() -> None:
             mcp_payload = json.loads(mcp_catalog_path.read_text(encoding="utf-8"))
             connector_rows = mcp_payload.get("connectors", [])
             if isinstance(connector_rows, list):
-                verified_mcp_connectors = sorted(
-                    str(row.get("mcp_id"))
-                    for row in connector_rows
-                    if isinstance(row, dict) and bool(row.get("live_read_enabled"))
-                )
+                def _connector_class(row: dict[str, object]) -> str:
+                    explicit = str(row.get("connector_class") or "").strip().lower()
+                    if explicit:
+                        return explicit
+                    tool_surface = str(row.get("tool_surface") or "").strip().lower()
+                    if tool_surface in {"desktop_mcp_tool", "docker_local"}:
+                        return "direct_mcp"
+                    if tool_surface in {"composio_toolkit", "composio_bridge"}:
+                        return "composio_toolkit"
+                    if tool_surface in {"git_https_remote", "connector_setup_gate", "docker_run_mcp_gdrive"}:
+                        return "app_connector"
+                    if tool_surface in {"local_skill_cli"}:
+                        return "runtime_surface"
+                    return "app_connector"
+
+                for row in connector_rows:
+                    if not isinstance(row, dict):
+                        continue
+                    connector_id = str(row.get("mcp_id") or "").strip()
+                    if not connector_id or not bool(row.get("live_read_enabled")):
+                        continue
+                    connector_class = _connector_class(row)
+                    if connector_class in {"direct_mcp", "runtime_surface"}:
+                        verified_mcp_connectors.append(connector_id)
+                    elif connector_class == "composio_toolkit":
+                        verified_composio_toolkits.append(connector_id)
+                    else:
+                        verified_app_connectors.append(connector_id)
+
+                verified_mcp_connectors = sorted(dict.fromkeys(verified_mcp_connectors))
+                verified_app_connectors = sorted(dict.fromkeys(verified_app_connectors))
+                verified_composio_toolkits = sorted(dict.fromkeys(verified_composio_toolkits))
                 eligible_live_write_connectors = sorted(
                     str(row.get("mcp_id"))
                     for row in connector_rows
@@ -2051,6 +2080,8 @@ def main() -> None:
                 )
         except json.JSONDecodeError:
             verified_mcp_connectors = []
+            verified_app_connectors = []
+            verified_composio_toolkits = []
             eligible_live_write_connectors = []
             promoted_live_write_connectors = []
             blocked_promotions = []
@@ -2298,6 +2329,7 @@ def main() -> None:
     storage_prune_delta_mb = _storage_prune_delta_mb()
     connector_hardening_state = _read_status_value("docs/trinity-expansion/connector-materialization-gate-latest.json", "overall_status", "FAIL")
     autonomy_mode = "bounded_manual" if profile != "materialize" else "bounded_materialize"
+    control_plane_mode = "hybrid_app_mcp_runtime"
     knowledge_graph_state = _read_status_value("docs/trinity-expansion/code-knowledge-graph-gate-latest.json", "overall_status", "FAIL")
     dashboard_state = _read_status_value("docs/trinity-expansion/trinity-dashboard-gate-latest.json", "overall_status", "FAIL")
     future_readiness_state = _read_status_value("docs/trinity-expansion/future-readiness-gate-latest.json", "overall_status", "FAIL")
@@ -2363,6 +2395,10 @@ def main() -> None:
     lines.append(f"- Eligible live write connectors: **{', '.join(eligible_live_write_connectors) if eligible_live_write_connectors else '-'}**")
     lines.append(f"- Promoted live write connectors: **{', '.join(promoted_live_write_connectors) if promoted_live_write_connectors else '-'}**")
     lines.append(f"- Blocked promotions: **{', '.join(blocked_promotions) if blocked_promotions else '-'}**")
+    lines.append(f"- Control plane mode: **{control_plane_mode}**")
+    lines.append(f"- Verified MCP connectors: **{', '.join(verified_mcp_connectors) if verified_mcp_connectors else '-'}**")
+    lines.append(f"- Verified app connectors: **{', '.join(verified_app_connectors) if verified_app_connectors else '-'}**")
+    lines.append(f"- Verified Composio toolkits: **{', '.join(verified_composio_toolkits) if verified_composio_toolkits else '-'}**")
     lines.append(f"- Achieved steps: **{achieved_steps}**")
     lines.append(f"- Achievement gate met: **{achievement_gate_met}**")
     lines.append(f"- Suite started: `{suite_started_at}`")
@@ -2391,7 +2427,10 @@ def main() -> None:
         "expansion_systems_passed": expansion_passed,
         "collab_pack_count": collab_pack_count,
         "materialization_pack_count": materialization_pack_count,
+        "control_plane_mode": control_plane_mode,
         "verified_mcp_connectors": verified_mcp_connectors,
+        "verified_app_connectors": verified_app_connectors,
+        "verified_composio_toolkits": verified_composio_toolkits,
         "eligible_live_write_connectors": eligible_live_write_connectors,
         "promoted_live_write_connectors": promoted_live_write_connectors,
         "blocked_promotions": blocked_promotions,

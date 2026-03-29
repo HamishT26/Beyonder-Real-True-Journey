@@ -5,7 +5,7 @@
   "wave": "wave105",
   "track": "connector_ops",
   "activation_group": "cloud_archive_hold",
-  "summary": "Keep Google Drive explicitly deferred by operator for v12 and prevent bootstrap or archive claims from being treated as active.",
+  "summary": "Guard repo-first authority while allowing Google Drive as a bounded non-authoritative working mirror.",
   "repo_targets": [
     "docs/trinity-mcp-catalog-v10.json",
     "docs/trinity-memory-bank-registry-v3.json",
@@ -18,7 +18,7 @@
   "induction_dependency": "docker_runtime_truth_v12",
   "sync_strategy": "local_repo",
   "autonomy_class": "manual",
-  "live_dependency": "operator_hold",
+  "live_dependency": "bounded_working_mirror",
   "mirror_target": "repo_only",
   "continuity_band": "v12",
   "history_scope": "v12",
@@ -56,9 +56,10 @@
     "google_drive_hold_guard_v12_risk_board",
     "google_drive_hold_guard_v12_gate"
   ],
-  "cleanup_class": "operator_hold",
-  "retention_scope": "deferred_archive",
+  "cleanup_class": "repo_first_working_mirror_guard",
+  "retention_scope": "bounded_working_mirror",
   "research_surface": "none",
-  "operator_hold": true,
-  "activation_disabled_reason": "Google Drive is deferred by operator for v12."
+  "operator_hold": false,
+  "activation_disabled_reason": "",
+  "next_action": "Keep explicit write/read-back proof pending; do not elevate Drive above repo authority."
 }

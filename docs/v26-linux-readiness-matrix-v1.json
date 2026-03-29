@@ -1,0 +1,52 @@
+{
+  "generated_utc": "2026-03-28T11:50:19Z",
+  "overall_status": "WARN",
+  "phase": "v26_omega",
+  "authority_model": "repo_first",
+  "current_shell": "powershell",
+  "linux_switch_recommended_now": false,
+  "readiness_state": "ubuntu_installed_probe_blocked",
+  "current_wsl_inventory": [
+    {
+      "name": "Ubuntu",
+      "state": "Installed",
+      "version": 2,
+      "general_purpose": true,
+      "launch_noninteractive": true
+    },
+    {
+      "name": "docker-desktop",
+      "state": "Running",
+      "version": 2,
+      "general_purpose": false
+    }
+  ],
+  "probe_results": {
+    "ubuntu_echo_probe": "pass",
+    "ubuntu_root_probe": "pass",
+    "repo_mount_visibility": "pass",
+    "git_probe": "timed_out",
+    "python3_probe": "pass",
+    "docker_probe": "pass",
+    "kubectl_probe": "pass",
+    "npm_probe": "pass",
+    "node_probe": "missing",
+    "systemd_user_session": "warning"
+  },
+  "blocking_gaps": [
+    "Ubuntu launches noninteractively, but WSL still reports systemd user-session startup warnings for both the default user and root probes.",
+    "The repo mount is visible under /mnt/c, but bounded git operations against the OneDrive-backed repo timed out from inside Ubuntu.",
+    "python3, git, docker, kubectl, and npm are present in Ubuntu, but node/nodejs was not available in PATH during the probe lane.",
+    "Line-ending and sustained repo-write behavior remain unproven from the Ubuntu lane, so PowerShell stays primary."
+  ],
+  "recommendation": {
+    "keep_current_shell": "powershell",
+    "reason": "Windows PowerShell remains the only fully proven execution surface for this repo. Ubuntu is installed and partially validated, but repo git behavior and Node parity are not yet good enough to promote it as the primary shell."
+  },
+  "required_v26_checks": [
+    "Resolve the Ubuntu repo-probe timeout against the OneDrive-mounted repository.",
+    "Install or expose node/nodejs in Ubuntu PATH if Linux is meant to replace the current shell for repo work.",
+    "Re-run bounded repo read and write smoke checks from inside Ubuntu after the toolchain gap is fixed.",
+    "Keep PowerShell as the truthful active shell until those checks pass."
+  ]
+}

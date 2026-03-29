@@ -96,7 +96,7 @@ def main() -> int:
         warnings.append("github mirror is currently unreachable")
 
     drive_row = next((row for row in banks if isinstance(row, dict) and row.get("surface") == "google_drive"), None)
-    if drive_row and drive_row.get("status") not in {"staged_with_blockers", "auth_blocked", "live_archive_mirror", "bounded_archive_mirror"}:
+    if drive_row and drive_row.get("status") not in {"staged_with_blockers", "auth_blocked", "live_archive_mirror", "bounded_archive_mirror", "bounded_working_mirror"}:
         errors.append("google_drive status is invalid for bounded memory-bank flow")
     for row in banks:
         if not isinstance(row, dict):

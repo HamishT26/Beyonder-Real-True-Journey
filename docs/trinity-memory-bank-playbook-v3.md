@@ -3,7 +3,7 @@
 - Repo remains authoritative for certificates, ledgers, reflections, commands, and official state.
 - GitHub is the current proven off-device mirror surface.
 - Docker/Postgres are bounded runtime mirrors, not authority.
-- Google Drive is deferred in v12 unless the operator explicitly lifts the hold.
+- Google Drive may be used as a bounded working mirror for non-authoritative artifacts only; it never overrides repo authority.
 
 ## Official references
 - Google Drive files.create: https://developers.google.com/drive/api/reference/rest/v3/files/create

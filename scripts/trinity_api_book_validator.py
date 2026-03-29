@@ -131,8 +131,12 @@ def main() -> int:
             failures.append(f"{api_id or label} auth_posture empty")
         if not str(row.get("fallback_behavior") or "").strip():
             failures.append(f"{api_id or label} fallback_behavior empty")
-        if str(row.get("trust_class") or "") == "operator_hold" and str(row.get("mode") or "") != "deferred":
+        trust_class = str(row.get("trust_class") or "")
+        mode = str(row.get("mode") or "")
+        if trust_class == "operator_hold" and mode != "deferred":
             failures.append(f"{api_id or label} operator_hold entries must use deferred mode")
+        if trust_class == "bounded_working_mirror" and mode not in {"bounded_working_mirror", "mirror_only"}:
+            failures.append(f"{api_id or label} bounded_working_mirror entries must use bounded_working_mirror or mirror_only mode")
 
     if LEDGER_PATH.exists():
         for index, line in enumerate(LEDGER_PATH.read_text(encoding="utf-8").splitlines()):
