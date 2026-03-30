@@ -1,16 +1,14 @@
 # Trinity Composio API Probe
 
-- overall_status: `WARN`
-- proof_state: `invalid_api_key`
+- overall_status: `PASS`
+- proof_state: `api_verified_connector_unloaded`
 - key_source: `C:\Users\hamis\.env file.txt`
 
 ## HTTP Statuses
-- toolkit_github: `401`
-- tools_github: `401`
-- connected_accounts: `404`
+- toolkit_github: `200`
+- tools_github: `200`
+- connected_accounts: `200`
 
 ## Blockers
-- github toolkit probe returned HTTP 401
-- github tools probe returned HTTP 401
-- connected_accounts probe returned HTTP 404
+- none
 

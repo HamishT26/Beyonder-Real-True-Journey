@@ -2,7 +2,7 @@
 
 - Receiver: `Aletheon`
 - Source branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Source head SHA: `61e1530c4e736de4f519530c4aa48da3f0e41fd5`
+- Source head SHA: `663007f348dd171be8aa6dfa01cec9092c8d21e4`
 - Incoming predecessor phase: `v27 (Omega)` residual-closure partial success
 - Authority model: `repo_first`
 - Shared latest anchor remains `1155 PASS / 0 WARN / 0 FAIL`

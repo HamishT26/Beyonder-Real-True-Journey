@@ -6,7 +6,6 @@ from __future__ import annotations
 import json
 import os
 import urllib.error
-import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -18,6 +17,7 @@ OUTPUT_JSON = ROOT / "docs" / "trinity-composio-api-probe-latest.json"
 OUTPUT_MD = ROOT / "docs" / "trinity-composio-api-probe-latest.md"
 OUTPUT_TRACE = ROOT / "docs" / "trinity-live-traces" / "composio-api-proof-v1.json"
 BASE_URL = "https://backend.composio.dev/api/v3"
+TOOLKIT_SLUG = "github"
 
 
 def now_iso() -> str:
@@ -44,36 +44,124 @@ def api_key_and_source() -> tuple[str, str]:
     env_key = os.environ.get("COMPOSIO_API_KEY", "").strip()
     if env_key:
         return env_key, "process_env"
-    env_file = DEFAULT_ENV_FILE
-    file_values = load_env(env_file)
+    file_values = load_env(DEFAULT_ENV_FILE)
     file_key = file_values.get("COMPOSIO_API_KEY", "").strip()
     if file_key:
-        return file_key, str(env_file)
+        return file_key, str(DEFAULT_ENV_FILE)
     return "", "missing"
 
 
-def request_json(path: str, api_key: str) -> tuple[int, Any]:
+def _parse_body(body_text: str) -> Any:
+    body = (body_text or "").strip()
+    if not body:
+        return {}
+    try:
+        return json.loads(body)
+    except json.JSONDecodeError:
+        return {"raw_body": body}
+
+
+def request_body(path: str, api_key: str) -> dict[str, Any]:
     url = f"{BASE_URL}{path}"
     req = urllib.request.Request(
         url,
         headers={
             "x-api-key": api_key,
             "accept": "application/json",
-            "user-agent": "codex-trinity-v27/1.0",
+            "user-agent": "codex-trinity-v28/1.0",
         },
         method="GET",
     )
     try:
         with urllib.request.urlopen(req, timeout=20) as resp:
-            body = resp.read().decode("utf-8")
-            return resp.status, json.loads(body) if body else {}
+            body_text = resp.read().decode("utf-8", errors="replace")
+            return {
+                "status": resp.status,
+                "content_type": resp.headers.get("content-type", ""),
+                "body_text": body_text,
+                "parsed": _parse_body(body_text),
+            }
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8")
-        try:
-            payload = json.loads(body) if body else {}
-        except json.JSONDecodeError:
-            payload = {"raw_body": body}
-        return exc.code, payload
+        body_text = exc.read().decode("utf-8", errors="replace")
+        return {
+            "status": exc.code,
+            "content_type": exc.headers.get("content-type", "") if exc.headers else "",
+            "body_text": body_text,
+            "parsed": _parse_body(body_text),
+        }
+    except urllib.error.URLError as exc:
+        return {
+            "status": 0,
+            "content_type": "",
+            "body_text": "",
+            "parsed": {"error": str(exc)},
+        }
+
+
+def _stringify(value: Any) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, str):
+        return value
+    return str(value)
+
+
+def _iter_candidate_lists(payload: Any) -> list[list[Any]]:
+    lists: list[list[Any]] = []
+    if isinstance(payload, list):
+        lists.append(payload)
+        return lists
+    if not isinstance(payload, dict):
+        return lists
+
+    for key in ("items", "results", "data", "toolkits", "tools", "accounts", "connected_accounts"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            lists.append(value)
+        elif isinstance(value, dict):
+            lists.extend(_iter_candidate_lists(value))
+
+    for value in payload.values():
+        if isinstance(value, dict):
+            lists.extend(_iter_candidate_lists(value))
+    return lists
+
+
+def sample_labels(payload: Any, limit: int = 10) -> list[str]:
+    labels: list[str] = []
+    seen: set[str] = set()
+
+    def add(candidate: Any) -> None:
+        label = _stringify(candidate).strip()
+        if not label or label in seen:
+            return
+        seen.add(label)
+        labels.append(label)
+
+    for candidate_list in _iter_candidate_lists(payload):
+        for item in candidate_list:
+            if len(labels) >= limit:
+                return labels
+            if isinstance(item, str):
+                add(item)
+                continue
+            if isinstance(item, dict):
+                for key in ("slug", "name", "toolkit_slug", "toolkit", "id"):
+                    value = item.get(key)
+                    if isinstance(value, str) and value:
+                        add(value)
+                        break
+                else:
+                    add(item.get("slug") or item.get("name") or item.get("id"))
+            else:
+                add(item)
+    return labels
+
+
+def first_list_count(payload: Any) -> int | None:
+    for candidate_list in _iter_candidate_lists(payload):
+        return len(candidate_list)
+    return None
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -98,6 +186,7 @@ def main() -> int:
             "toolkit_visibility_sample": [],
             "connected_account_count": None,
             "http_statuses": {},
+            "response_content_types": {},
             "blockers": ["COMPOSIO_API_KEY is missing from process env and the local runtime env file."],
             "notes": [
                 "The probe verifies the Composio v3 API directly with x-api-key auth.",
@@ -118,30 +207,29 @@ def main() -> int:
         print(json.dumps({"overall_status": payload["overall_status"], "proof_state": payload["proof_state"]}))
         return 1
 
-    toolkit_status, toolkit_payload = request_json("/toolkits/github", api_key)
-    tools_status, tools_payload = request_json("/tools?" + urllib.parse.urlencode({"toolkit": "github", "limit": 10}), api_key)
-    accounts_status, accounts_payload = request_json("/connectedAccounts?" + urllib.parse.urlencode({"limit": 10}), api_key)
+    toolkit_response = request_body(f"/toolkits/{TOOLKIT_SLUG}", api_key)
+    tools_response = request_body("/tools", api_key)
+    accounts_response = request_body("/connected_accounts", api_key)
 
-    toolkit_names: list[str] = []
-    if isinstance(tools_payload, dict):
-        items = tools_payload.get("items") or tools_payload.get("results") or []
-        if isinstance(items, list):
-            for item in items[:10]:
-                if isinstance(item, dict):
-                    name = item.get("slug") or item.get("name")
-                    if isinstance(name, str) and name:
-                        toolkit_names.append(name)
+    toolkit_status = int(toolkit_response["status"])
+    tools_status = int(tools_response["status"])
+    accounts_status = int(accounts_response["status"])
 
-    connected_count = None
-    if isinstance(accounts_payload, dict):
-        items = accounts_payload.get("items") or accounts_payload.get("results")
-        if isinstance(items, list):
-            connected_count = len(items)
+    toolkit_payload = toolkit_response["parsed"]
+    tools_payload = tools_response["parsed"]
+    accounts_payload = accounts_response["parsed"]
 
-    if 401 in {toolkit_status, tools_status, accounts_status}:
+    toolkit_names = sample_labels(tools_payload, limit=10)
+    if not toolkit_names:
+        toolkit_names = sample_labels(toolkit_payload, limit=10)
+
+    connected_count = first_list_count(accounts_payload)
+
+    statuses = {toolkit_status, tools_status, accounts_status}
+    if 401 in statuses or 403 in statuses:
         proof_state = "invalid_api_key"
         overall_status = "WARN"
-    elif toolkit_status == 200 and tools_status == 200:
+    elif toolkit_status == 200 and tools_status == 200 and accounts_status == 200:
         proof_state = "api_verified_connector_unloaded"
         overall_status = "PASS"
     else:
@@ -161,6 +249,11 @@ def main() -> int:
             "tools_github": tools_status,
             "connected_accounts": accounts_status,
         },
+        "response_content_types": {
+            "toolkit_github": toolkit_response.get("content_type", ""),
+            "tools_github": tools_response.get("content_type", ""),
+            "connected_accounts": accounts_response.get("content_type", ""),
+        },
         "blockers": [],
         "notes": [
             "The probe verifies the Composio v3 API directly with x-api-key auth.",
@@ -168,13 +261,7 @@ def main() -> int:
         ],
     }
 
-    if proof_state == "invalid_api_key":
-        payload["blockers"] = [
-            f"github toolkit probe returned HTTP {toolkit_status}",
-            f"github tools probe returned HTTP {tools_status}",
-            f"connected_accounts probe returned HTTP {accounts_status}",
-        ]
-    elif proof_state == "api_blocked":
+    if proof_state in {"invalid_api_key", "api_blocked"}:
         payload["blockers"] = [
             f"github toolkit probe returned HTTP {toolkit_status}",
             f"github tools probe returned HTTP {tools_status}",
