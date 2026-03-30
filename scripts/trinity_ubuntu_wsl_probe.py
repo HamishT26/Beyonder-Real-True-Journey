@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Probe Ubuntu WSL readiness for Trinity v27."""
+"""Probe Ubuntu WSL readiness for Trinity v28."""
 
 from __future__ import annotations
 
@@ -10,9 +10,10 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_JSON = ROOT / "docs" / "v27-linux-readiness-matrix-v1.json"
-OUTPUT_MD = ROOT / "docs" / "v27-linux-readiness-matrix-v1.md"
+OUTPUT_JSON = ROOT / "docs" / "v28-linux-readiness-matrix-v1.json"
+OUTPUT_MD = ROOT / "docs" / "v28-linux-readiness-matrix-v1.md"
 REPO_MOUNT = "/mnt/c/Users/hamis/OneDrive/Documents/GitHub/Beyonder-Real-True-Journey"
+REPO_WINDOWS = "C:/Users/hamis/OneDrive/Documents/GitHub/Beyonder-Real-True-Journey"
 
 
 def now_iso() -> str:
@@ -103,16 +104,39 @@ def main() -> int:
     npm_probe = run_wsl(["npm", "-v"], timeout=20)
     python_probe = run_wsl(["python3", "--version"], timeout=20)
     git_probe = run_wsl(["git", "--version"], timeout=20)
-    repo_git_probe = run_wsl(
+    native_repo_git_probe = run_wsl(
         ["git", "status", "--short", "--untracked-files=all"],
         timeout=120,
         linux_cwd=REPO_MOUNT,
     )
+    bridge_repo_git_probe = subprocess.CompletedProcess(
+        args=["wsl.exe", "-d", "Ubuntu", "--", "cmd.exe", "/c", "git", "-C", REPO_WINDOWS, "status", "--short", "--untracked-files=all"],
+        returncode=125,
+        stdout="",
+        stderr="bridge_not_required",
+    )
+    if native_repo_git_probe.returncode != 0:
+        bridge_repo_git_probe = run_wsl(
+            ["cmd.exe", "/c", "git", "-C", REPO_WINDOWS, "status", "--short", "--untracked-files=all"],
+            timeout=120,
+        )
+    diagnostic_repo_git_probe = subprocess.CompletedProcess(
+        args=["wsl.exe", "-d", "Ubuntu", "--cd", REPO_MOUNT, "git", "status", "-uno", "--short"],
+        returncode=125,
+        stdout="",
+        stderr="diagnostic_not_required",
+    )
+    if native_repo_git_probe.returncode != 0 and bridge_repo_git_probe.returncode != 0:
+        diagnostic_repo_git_probe = run_wsl(
+            ["git", "status", "-uno", "--short"],
+            timeout=60,
+            linux_cwd=REPO_MOUNT,
+        )
     temp_probe = run_wsl(
         [
             "python3",
             "-c",
-            "from pathlib import Path; p=Path('/tmp/v27-smoke.txt'); p.write_text('v27 smoke\\n'); print(p.read_text().strip()); p.unlink()",
+            "from pathlib import Path; p=Path('/tmp/v28-smoke.txt'); p.write_text('v28 smoke\\n'); print(p.read_text().strip()); p.unlink()",
         ],
         timeout=20,
     )
@@ -133,25 +157,48 @@ def main() -> int:
         blocking_gaps.append("python3 is not available in Ubuntu PATH.")
     if git_probe.returncode != 0:
         blocking_gaps.append("git is not available in Ubuntu PATH.")
-    if repo_git_probe.returncode == 124:
-        blocking_gaps.append("Bounded git status timed out against the OneDrive-mounted repo inside Ubuntu.")
-    elif repo_git_probe.returncode != 0:
-        detail = repo_git_probe.stderr.strip() or repo_git_probe.stdout.strip() or "unknown error"
-        blocking_gaps.append(f"Bounded git status failed inside Ubuntu: {detail}")
+    repo_status_driver = "none"
+    repo_status_mode = "none"
+    if native_repo_git_probe.returncode == 0:
+        repo_status_driver = "native_linux_full"
+        repo_status_mode = "full_untracked_scan"
+    elif bridge_repo_git_probe.returncode == 0:
+        repo_status_driver = "windows_git_bridge_full"
+        repo_status_mode = "full_untracked_scan"
+    else:
+        if native_repo_git_probe.returncode == 124:
+            blocking_gaps.append("Native Linux git status timed out against the OneDrive-mounted repo inside Ubuntu.")
+        elif native_repo_git_probe.returncode != 0:
+            detail = native_repo_git_probe.stderr.strip() or native_repo_git_probe.stdout.strip() or "unknown error"
+            blocking_gaps.append(f"Native Linux git status failed inside Ubuntu: {detail}")
+        if bridge_repo_git_probe.returncode == 124:
+            blocking_gaps.append("Windows git bridge timed out from inside Ubuntu.")
+        elif bridge_repo_git_probe.returncode != 125:
+            detail = bridge_repo_git_probe.stderr.strip() or bridge_repo_git_probe.stdout.strip() or "unknown error"
+            blocking_gaps.append(f"Windows git bridge failed from inside Ubuntu: {detail}")
+        if diagnostic_repo_git_probe.returncode == 0:
+            repo_status_driver = "diagnostic_native_uno"
+            repo_status_mode = "diagnostic_untracked_disabled"
+        elif diagnostic_repo_git_probe.returncode not in {0, 125}:
+            detail = diagnostic_repo_git_probe.stderr.strip() or diagnostic_repo_git_probe.stdout.strip() or "unknown error"
+            blocking_gaps.append(f"Diagnostic git status -uno failed inside Ubuntu: {detail}")
     if temp_probe.returncode != 0:
         detail = temp_probe.stderr.strip() or temp_probe.stdout.strip() or "unknown error"
         blocking_gaps.append(f"Temp-file smoke check failed inside Ubuntu: {detail}")
 
-    pass_gate = not blocking_gaps
+    full_repo_status_pass = repo_status_driver in {"native_linux_full", "windows_git_bridge_full"}
+    pass_gate = not blocking_gaps and full_repo_status_pass
     payload = {
         "generated_utc": now_iso(),
         "overall_status": "PASS" if pass_gate else "WARN",
-        "phase": "v27_omega",
+        "phase": "v28_omega",
         "authority_model": "repo_first",
         "docker_runtime_role": "fallback_only",
         "current_shell": "ubuntu" if pass_gate else "powershell",
         "linux_switch_recommended_now": pass_gate,
         "readiness_state": "ubuntu_validated_primary" if pass_gate else "ubuntu_probe_blocked",
+        "repo_status_driver": repo_status_driver,
+        "repo_status_mode": repo_status_mode,
         "current_wsl_inventory": inventory,
         "probe_results": {
             "ubuntu_launch_noninteractive": "pass" if launch_ok else status_for(launch_probe),
@@ -160,7 +207,10 @@ def main() -> int:
             "npm_probe": status_for(npm_probe),
             "python3_probe": status_for(python_probe),
             "git_probe": status_for(git_probe),
-            "repo_git_status_probe": status_for(repo_git_probe),
+            "repo_git_status_probe": "pass" if full_repo_status_pass else "fail",
+            "repo_git_status_native_full": status_for(native_repo_git_probe),
+            "repo_git_status_windows_bridge_full": "not_required" if bridge_repo_git_probe.returncode == 125 else status_for(bridge_repo_git_probe),
+            "repo_git_status_diagnostic_uno": "not_required" if diagnostic_repo_git_probe.returncode == 125 else status_for(diagnostic_repo_git_probe),
             "tempfile_smoke_probe": status_for(temp_probe),
             "docker_probe": "fallback_only_not_required",
             "kubectl_probe": "fallback_only_not_required",
@@ -181,8 +231,27 @@ def main() -> int:
             "npm_stdout": npm_probe.stdout.strip(),
             "python3_stdout": python_probe.stdout.strip(),
             "git_stdout": git_probe.stdout.strip(),
-            "repo_git_status_stdout": repo_git_probe.stdout.strip(),
-            "repo_git_status_stderr": repo_git_probe.stderr.strip(),
+            "repo_git_status_stdout": (
+                native_repo_git_probe.stdout.strip()
+                if repo_status_driver == "native_linux_full"
+                else bridge_repo_git_probe.stdout.strip()
+                if repo_status_driver == "windows_git_bridge_full"
+                else ""
+            ),
+            "repo_git_status_stderr": (
+                native_repo_git_probe.stderr.strip()
+                if repo_status_driver == "native_linux_full"
+                else bridge_repo_git_probe.stderr.strip()
+                if repo_status_driver == "windows_git_bridge_full"
+                else diagnostic_repo_git_probe.stderr.strip()
+            ),
+            "repo_git_status_driver": repo_status_driver,
+            "native_repo_git_status_stdout": native_repo_git_probe.stdout.strip(),
+            "native_repo_git_status_stderr": native_repo_git_probe.stderr.strip(),
+            "windows_bridge_repo_git_status_stdout": "" if bridge_repo_git_probe.returncode == 125 else bridge_repo_git_probe.stdout.strip(),
+            "windows_bridge_repo_git_status_stderr": "" if bridge_repo_git_probe.returncode == 125 else bridge_repo_git_probe.stderr.strip(),
+            "diagnostic_repo_git_status_stdout": "" if diagnostic_repo_git_probe.returncode == 125 else diagnostic_repo_git_probe.stdout.strip(),
+            "diagnostic_repo_git_status_stderr": "" if diagnostic_repo_git_probe.returncode == 125 else diagnostic_repo_git_probe.stderr.strip(),
             "tempfile_smoke_stdout": temp_probe.stdout.strip(),
             "tempfile_smoke_stderr": temp_probe.stderr.strip(),
         },
@@ -190,7 +259,7 @@ def main() -> int:
         "recommendation": {
             "keep_current_shell": "ubuntu" if pass_gate else "powershell",
             "reason": (
-                "Ubuntu met the bounded v27 toolchain and repo-parity gate."
+                "Ubuntu met the bounded v28 toolchain and repo-parity gate."
                 if pass_gate
                 else "PowerShell remains primary because Ubuntu still has at least one bounded parity blocker."
             ),
@@ -202,12 +271,14 @@ def main() -> int:
         OUTPUT_MD,
         "\n".join(
             [
-                "# V27 Linux Readiness Matrix",
+                "# V28 Linux Readiness Matrix",
                 "",
                 f"- overall_status: `{payload['overall_status']}`",
                 f"- current_shell: `{payload['current_shell']}`",
                 f"- readiness_state: `{payload['readiness_state']}`",
                 f"- docker_runtime_role: `{payload['docker_runtime_role']}`",
+                f"- repo_status_driver: `{payload['repo_status_driver']}`",
+                f"- repo_status_mode: `{payload['repo_status_mode']}`",
                 "",
                 "## Probe Results",
                 *[

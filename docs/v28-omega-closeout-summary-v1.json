@@ -1,13 +1,13 @@
 {
-    "generated_utc":  "2026-03-28T15:42:00Z",
+    "generated_utc":  "2026-03-30T23:02:53Z",
     "overall_status":  "PASS",
-    "phase":  "v27_omega",
+    "phase":  "v28_omega",
     "authority_model":  "repo_first",
     "lead_agent":  "Aletheon",
-    "intended_receiver":  "Aletheon",
+    "intended_receiver":  "Orun",
     "active_branch":  "codex/GHC-Family/beyonder-shared-omega-line",
     "source_head_sha":  "663007f348dd171be8aa6dfa01cec9092c8d21e4",
-    "omega_status":  "residual_closure_partial_success",
+    "omega_status":  "hybrid_promotion_and_fluid_pilot_success",
     "shared_latest_changed":  false,
     "shared_latest_anchor":  {
                                  "summary":  "1155 PASS / 0 WARN / 0 FAIL",
@@ -21,7 +21,7 @@
                                  "shared_latest_eligible":  true,
                                  "suite_duration_sec":  22.328,
                                  "primary_blocker":  "",
-                                 "primary_blocker_detail":  "V27 closed the Drive and memory-bank residuals, but Ubuntu and Composio did not fully clear, so the shared latest anchor remains on the established 1155 / 1094 checkpoint.",
+                                 "primary_blocker_detail":  "V28 cleared the Ubuntu hybrid promotion gate, verified Composio at the V3 API layer, and completed the bounded fluid pilot without changing the authoritative shared-latest anchor.",
                                  "quick_lane_summary":  "38 PASS / 0 WARN / 0 FAIL"
                              },
     "operational_board_summary":  {
@@ -45,19 +45,20 @@
                                    ],
     "google_drive_state":  "bounded_working_mirror",
     "docker_runtime_role":  "fallback_only",
-    "current_shell":  "powershell",
-    "readiness_state":  "ubuntu_probe_blocked",
+    "current_shell":  "ubuntu",
+    "readiness_state":  "ubuntu_validated_primary",
     "ubuntu_gate":  {
-                        "status":  "repo_git_probe_blocked",
+                        "status":  "hybrid_full_status_verified",
                         "launch_noninteractive":  true,
                         "repo_mount_visible":  true,
-                        "repo_git_probe":  "timed_out_after_120s",
+                        "repo_status_driver":  "windows_git_bridge_full",
+                        "repo_status_mode":  "full_untracked_scan",
                         "python3":  "present",
                         "git":  "present",
                         "npm":  "present",
                         "node":  "present",
                         "temp_file_smoke":  "pass",
-                        "primary_shell_after_gate":  "powershell"
+                        "primary_shell_after_gate":  "ubuntu"
                     },
     "external_proofs":  {
                             "google_drive":  {
@@ -73,7 +74,7 @@
                                            "published_page_url":  "https://www.notion.so/d639d1fae9cc835e8ade81b5cecdda40"
                                        },
                             "composio":  {
-                                             "proof_state":  "invalid_api_key",
+                                             "proof_state":  "api_verified_connector_unloaded",
                                              "proof_report_path":  "docs/trinity-composio-api-probe-latest.json",
                                              "verified_toolkits":  [
 
@@ -85,11 +86,29 @@
                         "registry_path":  "docs/trinity-memory-bank-registry-v3.json",
                         "validation_path":  "docs/trinity-memory-bank-validation-latest.json",
                         "validation_status":  "PASS",
-                        "storage_pressure_class":  "healthy",
-                        "free_gib":  7.41
+                        "storage_pressure_class":  "healthy"
                     },
+    "fluid_lab_state":  {
+                            "status":  "pass",
+                            "report_path":  "docs/trinity-expansion/v28-fluid-lab-pilot-latest.json",
+                            "discovery_completed":  true,
+                            "suite_completed":  true,
+                            "suite_summary":  {
+                                                  "PASS":  15,
+                                                  "WARN":  1,
+                                                  "FAIL":  0,
+                                                  "SKIP":  0
+                                              },
+                            "safety_violation_free":  true,
+                            "follow_up_category":  "code_generation",
+                            "package_install_targets_deferred":  [
+                                                                     "rg",
+                                                                     "fd",
+                                                                     "jq"
+                                                                 ]
+                        },
     "balanced_wave":  {
-                          "focus":  "Residual Closure and Fallback Reframe",
+                          "focus":  "Hybrid Ubuntu Promotion and Bounded Fluid Pilot",
                           "total_candidate_count":  20,
                           "promoted_executable_system_count":  0,
                           "registry_spec_only_count":  20,
@@ -99,16 +118,18 @@
                           "shared_full_suite_after":  1155
                       },
     "supporting_paths":  {
-                             "linux_readiness_matrix":  "docs/v27-linux-readiness-matrix-v1.json",
-                             "balanced_wave_registry":  "docs/v27-omega-balanced-wave-v1.json",
+                             "linux_readiness_matrix":  "docs/v28-linux-readiness-matrix-v1.json",
+                             "balanced_wave_registry":  "docs/v28-omega-balanced-wave-v1.json",
+                             "composio_probe":  "docs/trinity-composio-api-probe-latest.json",
+                             "fluid_lab_pilot":  "docs/trinity-expansion/v28-fluid-lab-pilot-latest.json",
                              "drive_activation":  "docs/trinity-google-drive-mcp-activation-latest.json",
                              "memory_bank_sync":  "docs/trinity-memory-bank-sync-latest.json",
                              "memory_bank_registry":  "docs/trinity-memory-bank-registry-v3.json",
                              "state_doc":  "docs/the-real-true-state-alpha-v1.md"
                          },
     "top_residuals":  [
-                          "Ubuntu still cannot replace PowerShell because git status on the OneDrive-backed repo times out inside WSL even though the Linux toolchain is now present.",
-                          "Composio toolkit verification is still blocked because the supplied API key is invalid against the live V3 API.",
-                          "No new connector/control-plane promotions qualified for the shared suite, so shared latest remains unchanged at 1155 / 1094."
+                          "Composio is verified at the V3 API layer only; no live in-session toolkit materialization is claimed in v28.",
+                          "The fluid pilot remains outside the shared suite and defers optional rg, fd-find, and jq package installs to a later approved package lane.",
+                          "Docker and Kubernetes remain fallback_only and were intentionally excluded from the active v28 success path."
                       ]
 }
