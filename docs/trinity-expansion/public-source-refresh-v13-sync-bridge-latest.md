@@ -1,6 +1,6 @@
 # Trinity Expansion Result: public_source_refresh_v13_sync_bridge
 
-- generated_utc: `2026-03-31T03:50:16+00:00`
+- generated_utc: `2026-03-31T14:22:39+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_records_present | PASS | records=3 |
 | cache_written | PASS | docs/trinity-mcp-cache/public-source-refresh-v13-latest.json |
 
 ## Metrics
@@ -22,7 +21,7 @@
   "live_read_enabled": false,
   "live_write_enabled": false,
   "pack": "public_source_refresh_v13",
-  "record_count": 3,
+  "record_count": 1,
   "strategy": "public_feeds"
 }
 ```

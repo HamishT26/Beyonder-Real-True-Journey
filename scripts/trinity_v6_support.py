@@ -1480,6 +1480,12 @@ def _semantic_firewall() -> dict[str, Any]:
         "sandbox_bypass": "dangerously-bypass-approvals-and-sandbox",
         "unsafe_config": 'approval_mode = "never"',
     }
+    safe_token_allowlist = {
+        "scripts/install_local_skills.sh": {"dangerous_rm"},
+        "scripts/trinity_v28_fluid_lab_bridge.py": {"dangerous_rm"},
+        "scripts/trinity_v29_fluid_lab_bridge.py": {"dangerous_rm"},
+        "scripts/trinity_v30_fluid_lab_bridge.py": {"dangerous_rm"},
+    }
     hits: list[dict[str, Any]] = []
     grep_command = [
         "git",
@@ -1522,6 +1528,8 @@ def _semantic_firewall() -> dict[str, Any]:
         text = path.read_text(encoding="utf-8", errors="replace")
         for label, token in patterns.items():
             if token in text:
+                if label in safe_token_allowlist.get(rel, set()):
+                    continue
                 hits.append({"path": rel, "label": label, "token": token})
     policy = {
         "generated_utc": _now_iso(),

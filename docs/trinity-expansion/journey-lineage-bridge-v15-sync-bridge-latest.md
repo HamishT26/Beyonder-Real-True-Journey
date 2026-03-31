@@ -1,6 +1,6 @@
 # Trinity Expansion Result: journey_lineage_bridge_v15_sync_bridge
 
-- generated_utc: `2026-03-31T03:53:23+00:00`
+- generated_utc: `2026-03-31T14:24:47+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

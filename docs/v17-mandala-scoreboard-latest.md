@@ -1,7 +1,7 @@
 # Trinity Mandala Scoreboard
 
-- generated_utc: `2026-03-31T00:36:31+00:00`
-- hybrid_os_status: **FAIL**
+- generated_utc: `2026-03-31T12:13:48+00:00`
+- hybrid_os_status: **PASS**
 - suite_status: `PASS`
 - checkpoint_class: `v17_evidence_first_quick_lane`
 - shared_latest_eligible: `False`
@@ -22,7 +22,7 @@
 | mind | Mind API signal board | PASS | freshness_status=PASS, source_count=14, apis=2 | `docs/mind-theory-signal-board-latest.json` |
 | mind | Mind expansion constellation | PASS | checks=9/9 | `docs/trinity-expansion/mind-theory-constellation-board-latest.json` |
 | mind | Mind readiness gate | PASS | checks=10/10 | `docs/trinity-expansion/mind-theory-readiness-gate-latest.json` |
-| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=1.647412, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
+| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=1.212812, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
 | body | Benchmark guardrail | PASS | status extracted | `docs/body-track-benchmark-latest.json` |
 | body | Trend guard | PASS | trend=stable_or_improving | `docs/body-track-trend-guard-latest.json` |
 | body | Stress window | PASS | status extracted | `docs/body-track-policy-stress-latest.json` |
@@ -42,7 +42,7 @@
 | label | status | detail | path |
 |---|---|---|---|
 | API constellation board | PASS | manifest_validation_status=PASS, promotion_candidates=4 | `docs/trinity-api-constellation-board-latest.json` |
-| Extension catalog validation | FAIL | status extracted | `docs/trinity-extension-catalog-validation-latest.json` |
+| Extension catalog validation | PASS | status extracted | `docs/trinity-extension-catalog-validation-latest.json` |
 | Expansion manifest validation | PASS | status extracted | `docs/trinity-expansion-manifest-validation-latest.json` |
 | Expansion result validation | PASS | status extracted | `docs/trinity-expansion-result-validation-latest.json` |
 | Capability surface audit | PASS | checks=12/12 | `docs/trinity-expansion/trinity-capability-surface-audit-latest.json` |

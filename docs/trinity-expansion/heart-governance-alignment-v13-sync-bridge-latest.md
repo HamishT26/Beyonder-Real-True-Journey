@@ -1,6 +1,6 @@
 # Trinity Expansion Result: heart_governance_alignment_v13_sync_bridge
 
-- generated_utc: `2026-03-31T03:50:27+00:00`
+- generated_utc: `2026-03-31T14:22:44+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_fallback:nz_treaty_context | PASS | fallback used (HTTP Error 404: Not Found) |
 | cache_written | PASS | docs/trinity-mcp-cache/heart-governance-alignment-v13-latest.json |
 
 ## Metrics

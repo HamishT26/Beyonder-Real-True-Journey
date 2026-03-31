@@ -1,6 +1,6 @@
 # Trinity Expansion Result: os_runtime_fabric_materialization_tracer
 
-- generated_utc: `2026-03-31T03:39:21+00:00`
+- generated_utc: `2026-03-31T14:14:20+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,7 +10,7 @@
 |---|---|---|
 | proof_written | PASS | docs/trinity-live-traces/os-runtime-fabric-proof-v1.json |
 | ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=not_applicable |
+| write_scope | PASS | mode=offline_only |
 | blockers_recorded | PASS | blockers=0 |
 
 ## Metrics
@@ -24,7 +24,7 @@
   "include_live_writes": true,
   "live_write_enabled": false,
   "materialization_level": "l5_ha_prod",
-  "mode": "not_applicable",
+  "mode": "offline_only",
   "pack": "os_runtime_fabric",
   "profile_context": "materialize",
   "tracer_result": "SKIP"

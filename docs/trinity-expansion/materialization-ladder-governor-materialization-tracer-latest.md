@@ -1,6 +1,6 @@
 # Trinity Expansion Result: materialization_ladder_governor_materialization_tracer
 
-- generated_utc: `2026-03-31T03:43:00+00:00`
+- generated_utc: `2026-03-31T14:16:59+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

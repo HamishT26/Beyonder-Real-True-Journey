@@ -1,14 +1,9 @@
 {
-  "generated_utc": "2026-03-31T03:42:47+00:00",
+  "generated_utc": "2026-03-31T14:16:49+00:00",
   "system_id": "command_surface_research_sync_bridge",
   "pillar": "mind",
   "overall_status": "PASS",
   "checks": [
-    {
-      "name": "live_records_present",
-      "status": "PASS",
-      "detail": "records=3"
-    },
     {
       "name": "cache_written",
       "status": "PASS",
@@ -18,7 +13,7 @@
   "metrics": {
     "pack": "command_surface_research",
     "strategy": "public_feeds",
-    "record_count": 3,
+    "record_count": 1,
     "auth_state": "public_unauthenticated",
     "cache_status": "active",
     "desired_state": "active",
@@ -36,70 +31,35 @@
   "effective_success": true,
   "records": [
     {
-      "source_id": "materialize_docs",
-      "record_id": "materialize_docs",
-      "signal_type": "live_signal",
-      "title": "materialize_docs",
+      "source_id": "command_surface_research",
+      "record_id": "command_surface_research-seed",
+      "signal_type": "pack_seed",
+      "title": "Back research and benchmark commands with official documentation and cached refresh boundaries.",
       "published_at": "2026-03-31",
-      "source_url": "https://materialize.com/docs/",
-      "summary": "Live refresh succeeded for materialize_docs.",
+      "source_url": "repo://docs/trinity-command-book-v1.json",
+      "summary": "Back research and benchmark commands with official documentation and cached refresh boundaries.",
       "metrics": {
-        "bytes": 154320,
-        "source_format": "text"
+        "connector_snapshot": {
+          "connector_id": "",
+          "write_target": "docs/trinity-command-book-v1.json"
+        },
+        "live_source_count": 3,
+        "probe_tool_count": 0
       },
-      "tags": [],
-      "repo_targets": []
-    },
-    {
-      "source_id": "dbt_docs",
-      "record_id": "dbt_docs",
-      "signal_type": "live_signal",
-      "title": "dbt_docs",
-      "published_at": "2026-03-31",
-      "source_url": "https://docs.getdbt.com/docs/introduction",
-      "summary": "Live refresh succeeded for dbt_docs.",
-      "metrics": {
-        "bytes": 55709,
-        "source_format": "text"
-      },
-      "tags": [],
-      "repo_targets": []
-    },
-    {
-      "source_id": "nist_ai_rmf",
-      "record_id": "nist_ai_rmf",
-      "signal_type": "live_signal",
-      "title": "nist_ai_rmf",
-      "published_at": "2026-03-31",
-      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
-      "summary": "Live refresh succeeded for nist_ai_rmf.",
-      "metrics": {
-        "bytes": 90282,
-        "source_format": "text"
-      },
-      "tags": [],
-      "repo_targets": []
+      "tags": [
+        "command_surface_research",
+        "v7"
+      ],
+      "repo_targets": [
+        "docs/trinity-command-book-v1.json",
+        "docs/trinity-benchmark-registry-v1.json"
+      ]
     }
   ],
   "source_runs": [
     {
-      "source_id": "materialize_docs",
-      "request_url": "https://materialize.com/docs/",
-      "mode": "live",
-      "record_count": 1,
-      "status": "PASS"
-    },
-    {
-      "source_id": "dbt_docs",
-      "request_url": "https://docs.getdbt.com/docs/introduction",
-      "mode": "live",
-      "record_count": 1,
-      "status": "PASS"
-    },
-    {
-      "source_id": "nist_ai_rmf",
-      "request_url": "https://www.nist.gov/itl/ai-risk-management-framework",
-      "mode": "live",
+      "source_id": "command_surface_research",
+      "mode": "offline_cache",
       "record_count": 1,
       "status": "PASS"
     }

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: freedid_compliance_bridge_v15_sync_bridge
 
-- generated_utc: `2026-03-31T03:53:15+00:00`
+- generated_utc: `2026-03-31T14:24:41+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_records_present | PASS | fallback_records=1 |
 | cache_written | PASS | docs/trinity-mcp-cache/freedid-compliance-bridge-v15-latest.json |
 
 ## Metrics

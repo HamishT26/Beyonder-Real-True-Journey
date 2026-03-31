@@ -1,10 +1,10 @@
 # Trinity Memory Bank Sync
 
-- generated_utc: `2026-03-31T04:01:18+00:00`
+- generated_utc: `2026-03-31T13:04:03+00:00`
 - overall_status: `PASS`
-- archive: `docs/memory-archives/20260331T040114Z-v29-materialize-l5-memory-bank.zip`
+- archive: `docs/memory-archives/20260331T130400Z-v30-memory-bank.zip`
 - archive_mb: `0.18`
-- free_gib: `5.98`
+- free_gib: `3.54`
 
 ## Surfaces
 - `repo`: status=`authoritative`, reachable=`True`, proof_state=`repo_first_authority`, blockers=`none`

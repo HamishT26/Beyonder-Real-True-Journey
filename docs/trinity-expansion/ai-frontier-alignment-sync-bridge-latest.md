@@ -1,6 +1,6 @@
 # Trinity Expansion Result: ai_frontier_alignment_sync_bridge
 
-- generated_utc: `2026-03-31T03:40:07+00:00`
+- generated_utc: `2026-03-31T14:14:53+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_records_present | PASS | fallback_records=1 |
 | cache_written | PASS | docs/trinity-mcp-cache/ai-frontier-alignment-latest.json |
 
 ## Metrics

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: baseline_restore_governor_v17_gate
 
-- generated_utc: `2026-03-31T03:54:44+00:00`
+- generated_utc: `2026-03-31T14:25:45+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

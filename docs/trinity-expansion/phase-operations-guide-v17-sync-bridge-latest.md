@@ -1,6 +1,6 @@
 # Trinity Expansion Result: phase_operations_guide_v17_sync_bridge
 
-- generated_utc: `2026-03-31T03:55:16+00:00`
+- generated_utc: `2026-03-31T14:26:07+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

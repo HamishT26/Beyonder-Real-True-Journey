@@ -1,6 +1,6 @@
 # Trinity Expansion Result: freedid_governance_fabric_v12_sync_bridge
 
-- generated_utc: `2026-03-31T03:49:35+00:00`
+- generated_utc: `2026-03-31T14:22:16+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_records_present | PASS | records=3 |
 | cache_written | PASS | docs/trinity-mcp-cache/freedid-governance-fabric-v12-latest.json |
 
 ## Metrics
@@ -22,7 +21,7 @@
   "live_read_enabled": false,
   "live_write_enabled": false,
   "pack": "freedid_governance_fabric_v12",
-  "record_count": 3,
+  "record_count": 1,
   "strategy": "public_feeds"
 }
 ```

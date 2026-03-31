@@ -1,6 +1,6 @@
 # Trinity System Suite Run Report
 
-Generated: 2026-03-31T00:35:41.188661+00:00
+Generated: 2026-03-31T12:13:17.373265+00:00
 Step timeout (s): disabled
 Profile: quick
 Profile source: --profile
@@ -23,7 +23,7 @@ Achievement target steps: disabled
 Quick mode: True
 Body benchmark mode: observe
 Report path: docs\v17-system-suite-run-report-latest.md
-Status JSON path: docs\v29-quick-suite-status.json
+Status JSON path: docs\v30-quick-suite-status.json
 Checkpoint class: v17_evidence_first_quick_lane
 Shared latest eligible: False
 Latest surface scope: v17_specific_latest
@@ -33,9 +33,9 @@ This report runs currently available repo systems and records command outputs.
 ## memory integrity check (strict)
 - status: **PASS**
 - command: `python3 scripts/aurelis_memory_integrity_check.py --strict`
-- started: `2026-03-31T00:35:41.188661+00:00`
-- finished: `2026-03-31T00:35:41.496943+00:00`
-- duration_sec: `0.296`
+- started: `2026-03-31T12:13:17.373265+00:00`
+- finished: `2026-03-31T12:13:18.217460+00:00`
+- duration_sec: `0.843`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\aurelis-memory-integrity-report.md
 ```
@@ -43,9 +43,9 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\a
 ## continuity cycle tick (dry-run status)
 - status: **PASS**
 - command: `python3 scripts/aurelis_cycle_tick.py --user-message 'suite quick dry-run' --assistant-reflection 'Quick mode continuity health check' --progress-snapshot 'Validated quick dry-run status reporting in suite' --next-step 'Run full suite when deeper validation is needed' --query cycle --query-limit 2 --dry-run --no-report --step-timeout-sec 0 --json-status docs/aurelis-cycle-tick-status.json`
-- started: `2026-03-31T00:35:41.496943+00:00`
-- finished: `2026-03-31T00:35:41.839158+00:00`
-- duration_sec: `0.344`
+- started: `2026-03-31T12:13:18.219648+00:00`
+- finished: `2026-03-31T12:13:18.484301+00:00`
+- duration_sec: `0.266`
 ```text
 $ python3 scripts/aurelis_memory_update.py --user-message 'suite quick dry-run' --assistant-reflection 'Quick mode continuity health check' --progress-snapshot 'Validated quick dry-run status reporting in suite' --next-step 'Run full suite when deeper validation is needed'
 [dry-run] command not executed
@@ -64,9 +64,9 @@ Wrote cycle tick json status: docs\aurelis-cycle-tick-status.json
 ## qcit coordination engine
 - status: **PASS**
 - command: `python3 scripts/qcit_coordination_engine.py --out docs/qcit-coordination-report.json`
-- started: `2026-03-31T00:35:41.839158+00:00`
-- finished: `2026-03-31T00:35:42.436966+00:00`
-- duration_sec: `0.610`
+- started: `2026-03-31T12:13:18.484301+00:00`
+- finished: `2026-03-31T12:13:18.840871+00:00`
+- duration_sec: `0.359`
 ```text
 Wrote docs\qcit-coordination-report.json
 ```
@@ -74,9 +74,9 @@ Wrote docs\qcit-coordination-report.json
 ## quantum energy transmutation engine
 - status: **PASS**
 - command: `python3 scripts/quantum_energy_transmutation_engine.py --out docs/quantum-energy-transmutation-report.json`
-- started: `2026-03-31T00:35:42.436966+00:00`
-- finished: `2026-03-31T00:35:43.306189+00:00`
-- duration_sec: `0.859`
+- started: `2026-03-31T12:13:18.840871+00:00`
+- finished: `2026-03-31T12:13:19.238514+00:00`
+- duration_sec: `0.391`
 ```text
 Wrote docs\quantum-energy-transmutation-report.json
 ```
@@ -84,9 +84,9 @@ Wrote docs\quantum-energy-transmutation-report.json
 ## qcit/quantum report validation
 - status: **PASS**
 - command: `python3 scripts/validate_transmutation_reports.py --qcit docs/qcit-coordination-report.json --quantum docs/quantum-energy-transmutation-report.json`
-- started: `2026-03-31T00:35:43.306189+00:00`
-- finished: `2026-03-31T00:35:43.809572+00:00`
-- duration_sec: `0.516`
+- started: `2026-03-31T12:13:19.238514+00:00`
+- finished: `2026-03-31T12:13:19.554837+00:00`
+- duration_sec: `0.312`
 ```text
 validated qcit and quantum transmutation reports
 ```
@@ -94,13 +94,13 @@ validated qcit and quantum transmutation reports
 ## minimum-disclosure verifier (GOV-002)
 - status: **PASS**
 - command: `python3 freed_id_minimum_disclosure_verifier.py`
-- started: `2026-03-31T00:35:43.809572+00:00`
-- finished: `2026-03-31T00:35:44.525164+00:00`
-- duration_sec: `0.703`
+- started: `2026-03-31T12:13:19.554837+00:00`
+- finished: `2026-03-31T12:13:21.089279+00:00`
+- duration_sec: `1.532`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260331T003544Z-freedid-min-disclosure-check.json
-timestamped_md=docs\heart-track-runs\20260331T003544Z-freedid-min-disclosure-check.md
+timestamped_json=docs\heart-track-runs\20260331T121320Z-freedid-min-disclosure-check.json
+timestamped_md=docs\heart-track-runs\20260331T121320Z-freedid-min-disclosure-check.md
 latest_json=docs\heart-track-min-disclosure-latest.json
 latest_md=docs\heart-track-min-disclosure-latest.md
 ```
@@ -108,13 +108,13 @@ latest_md=docs\heart-track-min-disclosure-latest.md
 ## minimum-disclosure live-path verifier (GOV-002)
 - status: **PASS**
 - command: `python3 freed_id_minimum_disclosure_live_path_verifier.py`
-- started: `2026-03-31T00:35:44.525164+00:00`
-- finished: `2026-03-31T00:35:45.180375+00:00`
-- duration_sec: `0.656`
+- started: `2026-03-31T12:13:21.089279+00:00`
+- finished: `2026-03-31T12:13:21.661229+00:00`
+- duration_sec: `0.578`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260331T003544Z-freedid-min-disclosure-live-check.json
-timestamped_md=docs\heart-track-runs\20260331T003544Z-freedid-min-disclosure-live-check.md
+timestamped_json=docs\heart-track-runs\20260331T121321Z-freedid-min-disclosure-live-check.json
+timestamped_md=docs\heart-track-runs\20260331T121321Z-freedid-min-disclosure-live-check.md
 latest_json=docs\heart-track-min-disclosure-live-latest.json
 latest_md=docs\heart-track-min-disclosure-live-latest.md
 audit_ledger=docs/freed-id-live-path-audit-log.jsonl
@@ -123,13 +123,13 @@ audit_ledger=docs/freed-id-live-path-audit-log.jsonl
 ## minimum-disclosure adversarial verifier (GOV-002)
 - status: **PASS**
 - command: `python3 freed_id_minimum_disclosure_adversarial_verifier.py`
-- started: `2026-03-31T00:35:45.180375+00:00`
-- finished: `2026-03-31T00:35:45.740038+00:00`
-- duration_sec: `0.546`
+- started: `2026-03-31T12:13:21.661229+00:00`
+- finished: `2026-03-31T12:13:22.157392+00:00`
+- duration_sec: `0.500`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260331T003545Z-freedid-min-disclosure-adversarial-check.json
-timestamped_md=docs\heart-track-runs\20260331T003545Z-freedid-min-disclosure-adversarial-check.md
+timestamped_json=docs\heart-track-runs\20260331T121322Z-freedid-min-disclosure-adversarial-check.json
+timestamped_md=docs\heart-track-runs\20260331T121322Z-freedid-min-disclosure-adversarial-check.md
 latest_json=docs\heart-track-min-disclosure-adversarial-latest.json
 latest_md=docs\heart-track-min-disclosure-adversarial-latest.md
 ```
@@ -137,13 +137,13 @@ latest_md=docs\heart-track-min-disclosure-adversarial-latest.md
 ## dispute/recourse verifier (GOV-004)
 - status: **PASS**
 - command: `python3 freed_id_dispute_recourse_verifier.py`
-- started: `2026-03-31T00:35:45.740038+00:00`
-- finished: `2026-03-31T00:35:48.371141+00:00`
-- duration_sec: `2.625`
+- started: `2026-03-31T12:13:22.157392+00:00`
+- finished: `2026-03-31T12:13:24.148347+00:00`
+- duration_sec: `1.984`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260331T003547Z-freedid-dispute-recourse-check.json
-timestamped_md=docs\heart-track-runs\20260331T003547Z-freedid-dispute-recourse-check.md
+timestamped_json=docs\heart-track-runs\20260331T121323Z-freedid-dispute-recourse-check.json
+timestamped_md=docs\heart-track-runs\20260331T121323Z-freedid-dispute-recourse-check.md
 latest_json=docs\heart-track-dispute-recourse-latest.json
 latest_md=docs\heart-track-dispute-recourse-latest.md
 ```
@@ -151,13 +151,13 @@ latest_md=docs\heart-track-dispute-recourse-latest.md
 ## dispute/recourse adversarial verifier (GOV-004)
 - status: **PASS**
 - command: `python3 freed_id_dispute_recourse_adversarial_verifier.py`
-- started: `2026-03-31T00:35:48.371141+00:00`
-- finished: `2026-03-31T00:35:49.980951+00:00`
-- duration_sec: `1.610`
+- started: `2026-03-31T12:13:24.148347+00:00`
+- finished: `2026-03-31T12:13:24.742709+00:00`
+- duration_sec: `0.594`
 ```text
 overall_status=PASS
-timestamped_json=docs\heart-track-runs\20260331T003549Z-freedid-dispute-recourse-adversarial-check.json
-timestamped_md=docs\heart-track-runs\20260331T003549Z-freedid-dispute-recourse-adversarial-check.md
+timestamped_json=docs\heart-track-runs\20260331T121324Z-freedid-dispute-recourse-adversarial-check.json
+timestamped_md=docs\heart-track-runs\20260331T121324Z-freedid-dispute-recourse-adversarial-check.md
 latest_json=docs\heart-track-dispute-recourse-adversarial-latest.json
 latest_md=docs\heart-track-dispute-recourse-adversarial-latest.md
 ```
@@ -165,21 +165,21 @@ latest_md=docs\heart-track-dispute-recourse-adversarial-latest.md
 ## token/credit zip converter
 - status: **PASS**
 - command: `python3 scripts/trinity_token_credit_zip_converter.py --use-reserve-first --regeneration-multiplier 3.0 --target-reimbursement-ratio 1.0 --zip-snapshot --zip-label token-credit-suite --out docs/token-credit-bank-report.json --ledger docs/token-credit-bank-ledger.jsonl`
-- started: `2026-03-31T00:35:49.980951+00:00`
-- finished: `2026-03-31T00:35:55.727958+00:00`
-- duration_sec: `5.750`
+- started: `2026-03-31T12:13:24.742709+00:00`
+- finished: `2026-03-31T12:13:27.614337+00:00`
+- duration_sec: `2.875`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\token-credit-bank-report.json
 Appended C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\token-credit-bank-ledger.jsonl
-Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260331T003555Z-token-credit-suite.zip
+Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260331T121326Z-token-credit-suite.zip
 ```
 
 ## cache/waste regenerator
 - status: **PASS**
 - command: `python3 scripts/cache_waste_regenerator.py --out docs/cache-waste-regenerator-report.json --purge --prune-empty-dirs`
-- started: `2026-03-31T00:35:55.727958+00:00`
-- finished: `2026-03-31T00:35:57.060692+00:00`
-- duration_sec: `1.344`
+- started: `2026-03-31T12:13:27.618167+00:00`
+- finished: `2026-03-31T12:13:28.422968+00:00`
+- duration_sec: `0.812`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\cache-waste-regenerator-report.json
 ```
@@ -187,9 +187,9 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\c
 ## cache/waste report validation
 - status: **PASS**
 - command: `python3 scripts/validate_cache_waste_report.py --cache docs/cache-waste-regenerator-report.json`
-- started: `2026-03-31T00:35:57.060692+00:00`
-- finished: `2026-03-31T00:35:57.455738+00:00`
-- duration_sec: `0.390`
+- started: `2026-03-31T12:13:28.422968+00:00`
+- finished: `2026-03-31T12:13:28.672020+00:00`
+- duration_sec: `0.250`
 ```text
 validated cache-waste regenerator report
 ```
@@ -197,9 +197,9 @@ validated cache-waste regenerator report
 ## energy bank system
 - status: **PASS**
 - command: `python3 scripts/trinity_energy_bank_system.py --token-report docs/token-credit-bank-report.json --cache-report docs/cache-waste-regenerator-report.json --reserve-growth 1.0 --reserve-cap-multiplier 10.0 --auto-max-cap --cap-ceiling 100.0 --out docs/energy-bank-report.json --state docs/energy-bank-state.json`
-- started: `2026-03-31T00:35:57.455738+00:00`
-- finished: `2026-03-31T00:35:57.762609+00:00`
-- duration_sec: `0.297`
+- started: `2026-03-31T12:13:28.672020+00:00`
+- finished: `2026-03-31T12:13:28.922118+00:00`
+- duration_sec: `0.250`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\energy-bank-report.json
 Updated C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\energy-bank-state.json
@@ -208,9 +208,9 @@ Updated C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs
 ## token/energy report validation
 - status: **PASS**
 - command: `python3 scripts/validate_token_energy_reports.py --token docs/token-credit-bank-report.json --energy docs/energy-bank-report.json`
-- started: `2026-03-31T00:35:57.762609+00:00`
-- finished: `2026-03-31T00:35:58.260678+00:00`
-- duration_sec: `0.500`
+- started: `2026-03-31T12:13:28.922118+00:00`
+- finished: `2026-03-31T12:13:29.162307+00:00`
+- duration_sec: `0.235`
 ```text
 validated token-credit and energy-bank reports
 ```
@@ -218,9 +218,9 @@ validated token-credit and energy-bank reports
 ## gyroscopic hybrid zip converter
 - status: **PASS**
 - command: `python3 scripts/gyroscopic_hybrid_zip_converter_generator.py --label gyroscopic-suite-cycle --out docs/gyroscopic-hybrid-zip-report.json`
-- started: `2026-03-31T00:35:58.260678+00:00`
-- finished: `2026-03-31T00:35:59.276452+00:00`
-- duration_sec: `1.016`
+- started: `2026-03-31T12:13:29.162307+00:00`
+- finished: `2026-03-31T12:13:29.774392+00:00`
+- duration_sec: `0.609`
 ```text
 Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\gyroscopic-hybrid-zip-report.json
 ```
@@ -228,17 +228,17 @@ Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\g
 ## body benchmark guardrail check (observe)
 - status: **PASS**
 - command: `python3 body_track_runner.py --gammas 0.0 0.01 0.05 --benchmark-profile quick --profile-policy docs/body-profile-policy-v1.json`
-- started: `2026-03-31T00:35:59.276452+00:00`
-- finished: `2026-03-31T00:36:01.469859+00:00`
-- duration_sec: `2.203`
+- started: `2026-03-31T12:13:29.774392+00:00`
+- finished: `2026-03-31T12:13:31.386456+00:00`
+- duration_sec: `1.610`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260331T003559Z-body-track-smoke.json
-timestamped_md=docs\body-track-runs\20260331T003559Z-body-track-smoke.md
+timestamped_json=docs\body-track-runs\20260331T121330Z-body-track-smoke.json
+timestamped_md=docs\body-track-runs\20260331T121330Z-body-track-smoke.md
 latest_json=docs\body-track-smoke-latest.json
 latest_md=docs\body-track-smoke-latest.md
-timestamped_metrics=docs\body-track-runs\20260331T003559Z-body-track-metrics.json
-timestamped_benchmark=docs\body-track-runs\20260331T003559Z-body-track-benchmark.json
+timestamped_metrics=docs\body-track-runs\20260331T121330Z-body-track-metrics.json
+timestamped_benchmark=docs\body-track-runs\20260331T121330Z-body-track-benchmark.json
 latest_metrics=docs\body-track-metrics-latest.json
 latest_benchmark=docs\body-track-benchmark-latest.json
 metrics_history=docs\body-track-metrics-history.jsonl
@@ -247,13 +247,13 @@ metrics_history=docs\body-track-metrics-history.jsonl
 ## body benchmark trend guard (observe)
 - status: **PASS**
 - command: `python3 scripts/body_benchmark_trend_guard.py --trend-profile quick --profile-policy docs/body-profile-policy-v1.json`
-- started: `2026-03-31T00:36:01.469859+00:00`
-- finished: `2026-03-31T00:36:03.878338+00:00`
-- duration_sec: `2.406`
+- started: `2026-03-31T12:13:31.386456+00:00`
+- finished: `2026-03-31T12:13:31.995032+00:00`
+- duration_sec: `0.609`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260331T003603Z-body-track-trend-guard.json
-timestamped_md=docs\body-track-runs\20260331T003603Z-body-track-trend-guard.md
+timestamped_json=docs\body-track-runs\20260331T121331Z-body-track-trend-guard.json
+timestamped_md=docs\body-track-runs\20260331T121331Z-body-track-trend-guard.md
 latest_json=docs\body-track-trend-guard-latest.json
 latest_md=docs\body-track-trend-guard-latest.md
 ```
@@ -261,13 +261,13 @@ latest_md=docs\body-track-trend-guard-latest.md
 ## body profile calibration report
 - status: **PASS**
 - command: `python3 scripts/body_profile_calibration_report.py --profile-context quick`
-- started: `2026-03-31T00:36:03.878338+00:00`
-- finished: `2026-03-31T00:36:04.621984+00:00`
-- duration_sec: `0.734`
+- started: `2026-03-31T12:13:31.995032+00:00`
+- finished: `2026-03-31T12:13:32.362204+00:00`
+- duration_sec: `0.375`
 ```text
 overall_status=WARN
-timestamped_json=docs\body-track-runs\20260331T003604Z-body-track-calibration.json
-timestamped_md=docs\body-track-runs\20260331T003604Z-body-track-calibration.md
+timestamped_json=docs\body-track-runs\20260331T121332Z-body-track-calibration.json
+timestamped_md=docs\body-track-runs\20260331T121332Z-body-track-calibration.md
 latest_json=docs\body-track-calibration-latest.json
 latest_md=docs\body-track-calibration-latest.md
 ```
@@ -275,13 +275,13 @@ latest_md=docs\body-track-calibration-latest.md
 ## body policy delta report (observe)
 - status: **PASS**
 - command: `python3 scripts/body_profile_policy_delta_report.py --policy-json docs/body-profile-policy-v1.json --apply`
-- started: `2026-03-31T00:36:04.621984+00:00`
-- finished: `2026-03-31T00:36:05.286811+00:00`
-- duration_sec: `0.672`
+- started: `2026-03-31T12:13:32.362204+00:00`
+- finished: `2026-03-31T12:13:32.770327+00:00`
+- duration_sec: `0.406`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260331T003605Z-body-track-policy-delta.json
-timestamped_md=docs\body-track-runs\20260331T003605Z-body-track-policy-delta.md
+timestamped_json=docs\body-track-runs\20260331T121332Z-body-track-policy-delta.json
+timestamped_md=docs\body-track-runs\20260331T121332Z-body-track-policy-delta.md
 latest_json=docs\body-track-policy-delta-latest.json
 latest_md=docs\body-track-policy-delta-latest.md
 ```
@@ -289,13 +289,13 @@ latest_md=docs\body-track-policy-delta-latest.md
 ## body policy stress-window report (observe)
 - status: **PASS**
 - command: `python3 scripts/body_policy_stress_window_report.py --policy-json docs/body-profile-policy-v1.json`
-- started: `2026-03-31T00:36:05.286811+00:00`
-- finished: `2026-03-31T00:36:05.780787+00:00`
-- duration_sec: `0.500`
+- started: `2026-03-31T12:13:32.770327+00:00`
+- finished: `2026-03-31T12:13:33.088353+00:00`
+- duration_sec: `0.313`
 ```text
 overall_status=PASS
-timestamped_json=docs\body-track-runs\20260331T003605Z-body-track-policy-stress.json
-timestamped_md=docs\body-track-runs\20260331T003605Z-body-track-policy-stress.md
+timestamped_json=docs\body-track-runs\20260331T121333Z-body-track-policy-stress.json
+timestamped_md=docs\body-track-runs\20260331T121333Z-body-track-policy-stress.md
 latest_json=docs\body-track-policy-stress-latest.json
 latest_md=docs\body-track-policy-stress-latest.md
 ```
@@ -303,13 +303,13 @@ latest_md=docs\body-track-policy-stress-latest.md
 ## gmut comparator metrics
 - status: **PASS**
 - command: `python3 scripts/gmut_comparator_metrics.py`
-- started: `2026-03-31T00:36:05.780787+00:00`
-- finished: `2026-03-31T00:36:06.239192+00:00`
-- duration_sec: `0.453`
+- started: `2026-03-31T12:13:33.088353+00:00`
+- finished: `2026-03-31T12:13:33.320426+00:00`
+- duration_sec: `0.234`
 ```text
 status=PASS
-timestamped_json=docs\mind-track-runs\20260331T003606Z-gmut-comparator-metrics.json
-timestamped_md=docs\mind-track-runs\20260331T003606Z-gmut-comparator-metrics.md
+timestamped_json=docs\mind-track-runs\20260331T121333Z-gmut-comparator-metrics.json
+timestamped_md=docs\mind-track-runs\20260331T121333Z-gmut-comparator-metrics.md
 latest_json=docs\mind-track-gmut-comparator-latest.json
 latest_md=docs\mind-track-gmut-comparator-latest.md
 ```
@@ -317,13 +317,13 @@ latest_md=docs\mind-track-gmut-comparator-latest.md
 ## gmut external-anchor exclusion note
 - status: **PASS**
 - command: `python3 scripts/gmut_external_anchor_exclusion_note.py --anchor-input docs/mind-track-external-anchor-canonical-inputs-v1.json`
-- started: `2026-03-31T00:36:06.239192+00:00`
-- finished: `2026-03-31T00:36:06.694802+00:00`
-- duration_sec: `0.454`
+- started: `2026-03-31T12:13:33.320426+00:00`
+- finished: `2026-03-31T12:13:33.757329+00:00`
+- duration_sec: `0.438`
 ```text
 overall_status=WARN
-timestamped_json=docs\mind-track-runs\20260331T003606Z-gmut-anchor-exclusion-note.json
-timestamped_md=docs\mind-track-runs\20260331T003606Z-gmut-anchor-exclusion-note.md
+timestamped_json=docs\mind-track-runs\20260331T121333Z-gmut-anchor-exclusion-note.json
+timestamped_md=docs\mind-track-runs\20260331T121333Z-gmut-anchor-exclusion-note.md
 latest_json=docs\mind-track-gmut-anchor-exclusion-latest.json
 latest_md=docs\mind-track-gmut-anchor-exclusion-latest.md
 ```
@@ -331,13 +331,13 @@ latest_md=docs\mind-track-gmut-anchor-exclusion-latest.md
 ## gmut anchor trace validation (observe)
 - status: **PASS**
 - command: `python3 scripts/gmut_anchor_trace_validator.py`
-- started: `2026-03-31T00:36:06.694802+00:00`
-- finished: `2026-03-31T00:36:07.289232+00:00`
-- duration_sec: `0.593`
+- started: `2026-03-31T12:13:33.757329+00:00`
+- finished: `2026-03-31T12:13:34.277854+00:00`
+- duration_sec: `0.531`
 ```text
 overall_status=PASS
-timestamped_json=docs\mind-track-runs\20260331T003607Z-gmut-anchor-trace-validation.json
-timestamped_md=docs\mind-track-runs\20260331T003607Z-gmut-anchor-trace-validation.md
+timestamped_json=docs\mind-track-runs\20260331T121334Z-gmut-anchor-trace-validation.json
+timestamped_md=docs\mind-track-runs\20260331T121334Z-gmut-anchor-trace-validation.md
 latest_json=docs\mind-track-gmut-trace-validation-latest.json
 latest_md=docs\mind-track-gmut-trace-validation-latest.md
 ```
@@ -345,9 +345,9 @@ latest_md=docs\mind-track-gmut-trace-validation-latest.md
 ## trinity api manifest validation (observe)
 - status: **PASS**
 - command: `python3 scripts/trinity_api_source_manifest_validator.py`
-- started: `2026-03-31T00:36:07.289232+00:00`
-- finished: `2026-03-31T00:36:08.254343+00:00`
-- duration_sec: `0.969`
+- started: `2026-03-31T12:13:34.277854+00:00`
+- finished: `2026-03-31T12:13:35.205829+00:00`
+- duration_sec: `0.922`
 ```text
 overall_status=PASS
 api_count=7
@@ -356,9 +356,9 @@ api_count=7
 ## mind api signal board (observe)
 - status: **PASS**
 - command: `python3 scripts/mind_theory_signal_board.py`
-- started: `2026-03-31T00:36:08.254343+00:00`
-- finished: `2026-03-31T00:36:09.076494+00:00`
-- duration_sec: `0.828`
+- started: `2026-03-31T12:13:35.205829+00:00`
+- finished: `2026-03-31T12:13:35.680261+00:00`
+- duration_sec: `0.468`
 ```text
 overall_status=PASS
 source_count=14
@@ -369,9 +369,9 @@ latest_md=docs/mind-theory-signal-board-latest.md
 ## body api signal board (observe)
 - status: **PASS**
 - command: `python3 scripts/body_compute_signal_board.py`
-- started: `2026-03-31T00:36:09.076494+00:00`
-- finished: `2026-03-31T00:36:09.813106+00:00`
-- duration_sec: `0.735`
+- started: `2026-03-31T12:13:35.684471+00:00`
+- finished: `2026-03-31T12:13:36.145398+00:00`
+- duration_sec: `0.453`
 ```text
 overall_status=PASS
 source_count=17
@@ -382,9 +382,9 @@ latest_md=docs/body-compute-signal-board-latest.md
 ## heart api signal board (observe)
 - status: **PASS**
 - command: `python3 scripts/heart_governance_signal_board.py`
-- started: `2026-03-31T00:36:09.813106+00:00`
-- finished: `2026-03-31T00:36:10.725712+00:00`
-- duration_sec: `0.906`
+- started: `2026-03-31T12:13:36.145398+00:00`
+- finished: `2026-03-31T12:13:36.562997+00:00`
+- duration_sec: `0.422`
 ```text
 overall_status=PASS
 source_count=17
@@ -395,9 +395,9 @@ latest_md=docs/heart-governance-signal-board-latest.md
 ## trinity api constellation board (observe)
 - status: **PASS**
 - command: `python3 scripts/trinity_api_constellation_board.py`
-- started: `2026-03-31T00:36:10.725712+00:00`
-- finished: `2026-03-31T00:36:11.540970+00:00`
-- duration_sec: `0.812`
+- started: `2026-03-31T12:13:36.562997+00:00`
+- finished: `2026-03-31T12:13:37.092042+00:00`
+- duration_sec: `0.531`
 ```text
 overall_status=PASS
 ```
@@ -405,13 +405,13 @@ overall_status=PASS
 ## trinity public research validation (observe)
 - status: **PASS**
 - command: `python3 scripts/validate_trinity_public_research.py`
-- started: `2026-03-31T00:36:11.540970+00:00`
-- finished: `2026-03-31T00:36:12.170920+00:00`
-- duration_sec: `0.641`
+- started: `2026-03-31T12:13:37.092042+00:00`
+- finished: `2026-03-31T12:13:37.591157+00:00`
+- duration_sec: `0.500`
 ```text
 overall_status=PASS
-timestamped_json=docs\trinity-public-research-runs\20260331T003611Z-trinity-public-research-validation.json
-timestamped_md=docs\trinity-public-research-runs\20260331T003611Z-trinity-public-research-validation.md
+timestamped_json=docs\trinity-public-research-runs\20260331T121337Z-trinity-public-research-validation.json
+timestamped_md=docs\trinity-public-research-runs\20260331T121337Z-trinity-public-research-validation.md
 latest_json=docs\trinity-public-research-validation-latest.json
 latest_md=docs\trinity-public-research-validation-latest.md
 ```
@@ -419,13 +419,13 @@ latest_md=docs\trinity-public-research-validation-latest.md
 ## trinity public signal board (observe)
 - status: **PASS**
 - command: `python3 scripts/trinity_public_signal_board.py`
-- started: `2026-03-31T00:36:12.170920+00:00`
-- finished: `2026-03-31T00:36:12.874171+00:00`
-- duration_sec: `0.703`
+- started: `2026-03-31T12:13:37.591157+00:00`
+- finished: `2026-03-31T12:13:38.047430+00:00`
+- duration_sec: `0.453`
 ```text
 overall_status=PASS
-timestamped_json=docs\trinity-public-signal-runs\20260331T003612Z-trinity-public-signal-board.json
-timestamped_md=docs\trinity-public-signal-runs\20260331T003612Z-trinity-public-signal-board.md
+timestamped_json=docs\trinity-public-signal-runs\20260331T121337Z-trinity-public-signal-board.json
+timestamped_md=docs\trinity-public-signal-runs\20260331T121337Z-trinity-public-signal-board.md
 latest_json=docs\trinity-public-signal-board-latest.json
 latest_md=docs\trinity-public-signal-board-latest.md
 ```
@@ -433,9 +433,9 @@ latest_md=docs\trinity-public-signal-board-latest.md
 ## v17 runtime session validation (observe)
 - status: **PASS**
 - command: `python3 scripts/v17_runtime_session_guard.py`
-- started: `2026-03-31T00:36:12.874171+00:00`
-- finished: `2026-03-31T00:36:13.439185+00:00`
-- duration_sec: `0.563`
+- started: `2026-03-31T12:13:38.051623+00:00`
+- finished: `2026-03-31T12:13:38.469155+00:00`
+- duration_sec: `0.422`
 ```text
 overall_status=PASS
 runtime_truth_complete=False
@@ -445,9 +445,9 @@ latest_json=docs\v17-runtime-session-validation-latest.json
 ## v17 external establishment validation (observe)
 - status: **PASS**
 - command: `python3 scripts/v17_external_establishment_validator.py`
-- started: `2026-03-31T00:36:13.439185+00:00`
-- finished: `2026-03-31T00:36:14.363730+00:00`
-- duration_sec: `0.921`
+- started: `2026-03-31T12:13:38.469155+00:00`
+- finished: `2026-03-31T12:13:38.803582+00:00`
+- duration_sec: `0.328`
 ```text
 overall_status=PASS
 runtime_truth_complete=False
@@ -457,9 +457,9 @@ latest_json=docs\v17-external-establishment-validation-latest.json
 ## v17 standards bridge validation (observe)
 - status: **PASS**
 - command: `python3 scripts/v17_standards_bridge_validator.py`
-- started: `2026-03-31T00:36:14.363730+00:00`
-- finished: `2026-03-31T00:36:15.021393+00:00`
-- duration_sec: `0.657`
+- started: `2026-03-31T12:13:38.803582+00:00`
+- finished: `2026-03-31T12:13:39.072291+00:00`
+- duration_sec: `0.266`
 ```text
 overall_status=PASS
 effective_success=True
@@ -469,10 +469,10 @@ latest_md=docs\v17-standards-bridge-validation-latest.md
 
 ## v17 evidence-first control tower sync
 - status: **FAIL**
-- command: `python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v29-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane`
-- started: `2026-03-31T00:36:15.023625+00:00`
-- finished: `2026-03-31T00:36:15.629932+00:00`
-- duration_sec: `0.609`
+- command: `python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v30-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane`
+- started: `2026-03-31T12:13:39.072291+00:00`
+- finished: `2026-03-31T12:13:39.443266+00:00`
+- duration_sec: `0.375`
 ```text
 Traceback (most recent call last):
   File "C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\scripts\v17_evidence_first_control_tower_sync.py", line 169, in <module>
@@ -490,19 +490,19 @@ Traceback (most recent call last):
   File "C:\Users\hamis\AppData\Local\Programs\Python\Python312\Lib\pathlib.py", line 1013, in open
     return io.open(self, mode, buffering, encoding, errors, newline)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\hamis\\OneDrive\\Documents\\GitHub\\Beyonder-Real-True-Journey\\docs\\v29-quick-suite-status.json'
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\hamis\\OneDrive\\Documents\\GitHub\\Beyonder-Real-True-Journey\\docs\\v30-quick-suite-status.json'
 ```
 
 ## trinity mandala scoreboard
 - status: **FAIL**
-- command: `python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn --suite-status docs/v29-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane`
-- started: `2026-03-31T00:36:15.641280+00:00`
-- finished: `2026-03-31T00:36:18.937724+00:00`
-- duration_sec: `3.297`
+- command: `python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn --suite-status docs/v30-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane`
+- started: `2026-03-31T12:13:39.445990+00:00`
+- finished: `2026-03-31T12:13:43.594710+00:00`
+- duration_sec: `4.156`
 ```text
 hybrid_os_status=FAIL
-timestamped_json=docs\trinity-mandala-runs\20260331T003616Z-trinity-mandala-scoreboard.json
-timestamped_md=docs\trinity-mandala-runs\20260331T003616Z-trinity-mandala-scoreboard.md
+timestamped_json=docs\trinity-mandala-runs\20260331T121339Z-trinity-mandala-scoreboard.json
+timestamped_md=docs\trinity-mandala-runs\20260331T121339Z-trinity-mandala-scoreboard.md
 latest_json=docs\v17-mandala-scoreboard-latest.json
 latest_md=docs\v17-mandala-scoreboard-latest.md
 ```
@@ -510,19 +510,19 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
 ## zip memory/data snapshot
 - status: **PASS**
 - command: `python3 scripts/trinity_zip_memory_converter.py archive --label suite-quick`
-- started: `2026-03-31T00:36:18.937724+00:00`
-- finished: `2026-03-31T00:36:20.109634+00:00`
-- duration_sec: `1.171`
+- started: `2026-03-31T12:13:43.594710+00:00`
+- finished: `2026-03-31T12:13:44.204180+00:00`
+- duration_sec: `0.610`
 ```text
-Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260331T003619Z-suite-quick.zip
+Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives\20260331T121343Z-suite-quick.zip
 ```
 
 ## v33 structural OCR validation snapshot
 - status: **PASS**
 - command: `python3 scripts/journey_anchor_scan.py --regex 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' --max-matches 20 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'`
-- started: `2026-03-31T00:36:20.109634+00:00`
-- finished: `2026-03-31T00:36:20.595207+00:00`
-- duration_sec: `0.485`
+- started: `2026-03-31T12:13:44.204180+00:00`
+- finished: `2026-03-31T12:13:44.541051+00:00`
+- duration_sec: `0.328`
 ```text
 Beyonder-Real-True Journey v33 (Arielis) (2).pdf:23: Claim a “Freed ID,” legal authority, or independent continuity
 Beyonder-Real-True Journey v33 (Arielis) (2).pdf:56: Physics metaphors (quantum fields, holography, unification)
@@ -548,10 +548,10 @@ Beyonder-Real-True Journey v33 (Arielis) (2).pdf:428: So: your Freed ID Certific
 
 ## v17 evidence-first control tower sync (post-run refresh)
 - status: **PASS**
-- command: `python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v29-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane`
-- started: `2026-03-31T00:36:20.603334+00:00`
-- finished: `2026-03-31T00:36:21.768892+00:00`
-- duration_sec: `1.172`
+- command: `python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v30-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane`
+- started: `2026-03-31T12:13:44.541051+00:00`
+- finished: `2026-03-31T12:13:44.822458+00:00`
+- duration_sec: `0.281`
 ```text
 overall_status=FAIL
 control_tower_json=docs\v17-evidence-first-control-tower-latest.json
@@ -560,14 +560,14 @@ control_tower_md=docs\v17-evidence-first-control-tower-latest.md
 
 ## trinity mandala scoreboard (post-run refresh)
 - status: **FAIL**
-- command: `python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn --suite-status docs/v29-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane`
-- started: `2026-03-31T00:36:21.774744+00:00`
-- finished: `2026-03-31T00:36:24.189187+00:00`
-- duration_sec: `2.422`
+- command: `python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn --suite-status docs/v30-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane`
+- started: `2026-03-31T12:13:44.826519+00:00`
+- finished: `2026-03-31T12:13:45.387187+00:00`
+- duration_sec: `0.562`
 ```text
 hybrid_os_status=FAIL
-timestamped_json=docs\trinity-mandala-runs\20260331T003622Z-trinity-mandala-scoreboard.json
-timestamped_md=docs\trinity-mandala-runs\20260331T003622Z-trinity-mandala-scoreboard.md
+timestamped_json=docs\trinity-mandala-runs\20260331T121345Z-trinity-mandala-scoreboard.json
+timestamped_md=docs\trinity-mandala-runs\20260331T121345Z-trinity-mandala-scoreboard.md
 latest_json=docs\v17-mandala-scoreboard-latest.json
 latest_md=docs\v17-mandala-scoreboard-latest.md
 ```
@@ -584,7 +584,7 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
 - Materialization pack count: **18**
 - Materialization level desired: **l2_persistent_dev**
 - Materialization level actual: **readiness_only**
-- Google Drive state: **operator_hold**
+- Google Drive state: **bounded_working_mirror**
 - External live overlay state: **awaiting_thread_boot**
 - Runtime session state: **PASS**
 - Runtime truth complete: **False**
@@ -604,25 +604,25 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
 - Memory mirror state: **PASS**
 - Late-step autonomy state: **PASS**
 - Eligible live write connectors: **filesystem, github, linear, notion, postgres**
-- Promoted live write connectors: **github, google_drive, linear, notion, postgres**
+- Promoted live write connectors: **github, linear, notion, postgres**
 - Blocked promotions: **filesystem**
 - Control plane mode: **hybrid_app_mcp_runtime**
 - Verified MCP connectors: **figma, linear, notion, postgres**
-- Verified app connectors: **github, google_drive**
+- Verified app connectors: **github**
 - Verified Composio toolkits: **-**
 - Achieved steps: **37**
 - Achievement gate met: **True**
-- Suite started: `2026-03-31T00:35:41.188661+00:00`
-- Suite finished: `2026-03-31T00:36:20.597220+00:00`
-- Suite duration_sec: `39.406`
+- Suite started: `2026-03-31T12:13:17.373265+00:00`
+- Suite finished: `2026-03-31T12:13:44.541051+00:00`
+- Suite duration_sec: `27.156`
 
 ## Machine-readable summary
 ```json
 {
-  "generated_utc": "2026-03-31T00:36:29.995743+00:00",
-  "suite_started_at_utc": "2026-03-31T00:35:41.188661+00:00",
-  "suite_finished_at_utc": "2026-03-31T00:36:20.597220+00:00",
-  "suite_duration_sec": 39.406,
+  "generated_utc": "2026-03-31T12:13:47.801738+00:00",
+  "suite_started_at_utc": "2026-03-31T12:13:17.373265+00:00",
+  "suite_finished_at_utc": "2026-03-31T12:13:44.541051+00:00",
+  "suite_duration_sec": 27.156,
   "effective_success": false,
   "achieved_steps": 37,
   "achievement_gate_met": true,
@@ -647,8 +647,7 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
     "postgres"
   ],
   "verified_app_connectors": [
-    "github",
-    "google_drive"
+    "github"
   ],
   "verified_composio_toolkits": [],
   "eligible_live_write_connectors": [
@@ -660,7 +659,6 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
   ],
   "promoted_live_write_connectors": [
     "github",
-    "google_drive",
     "linear",
     "notion",
     "postgres"
@@ -687,7 +685,7 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
   "future_readiness_state": "PASS",
   "materialization_level_desired": "l2_persistent_dev",
   "materialization_level_actual": "readiness_only",
-  "google_drive_state": "operator_hold",
+  "google_drive_state": "bounded_working_mirror",
   "external_live_overlay_state": "awaiting_thread_boot",
   "runtime_session_state": "PASS",
   "runtime_truth_complete": false,
@@ -711,11 +709,11 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
   "dirty_tree_state": {
     "available": true,
     "staged_count": 0,
-    "unstaged_count": 90,
-    "untracked_count": 82,
+    "unstaged_count": 16288,
+    "untracked_count": 39,
     "dirty": true
   },
-  "storage_prune_delta_mb": 59.41,
+  "storage_prune_delta_mb": 44.24,
   "resumed_step_count": 0,
   "config": {
     "step_timeout_sec": 0,
@@ -750,9 +748,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:41.188661+00:00",
-      "finished_at_utc": "2026-03-31T00:35:41.496943+00:00",
-      "duration_sec": 0.296,
+      "started_at_utc": "2026-03-31T12:13:17.373265+00:00",
+      "finished_at_utc": "2026-03-31T12:13:18.217460+00:00",
+      "duration_sec": 0.843,
       "command": "python3 scripts/aurelis_memory_integrity_check.py --strict"
     },
     {
@@ -761,9 +759,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:41.496943+00:00",
-      "finished_at_utc": "2026-03-31T00:35:41.839158+00:00",
-      "duration_sec": 0.344,
+      "started_at_utc": "2026-03-31T12:13:18.219648+00:00",
+      "finished_at_utc": "2026-03-31T12:13:18.484301+00:00",
+      "duration_sec": 0.266,
       "command": "python3 scripts/aurelis_cycle_tick.py --user-message 'suite quick dry-run' --assistant-reflection 'Quick mode continuity health check' --progress-snapshot 'Validated quick dry-run status reporting in suite' --next-step 'Run full suite when deeper validation is needed' --query cycle --query-limit 2 --dry-run --no-report --step-timeout-sec 0 --json-status docs/aurelis-cycle-tick-status.json"
     },
     {
@@ -772,9 +770,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:41.839158+00:00",
-      "finished_at_utc": "2026-03-31T00:35:42.436966+00:00",
-      "duration_sec": 0.61,
+      "started_at_utc": "2026-03-31T12:13:18.484301+00:00",
+      "finished_at_utc": "2026-03-31T12:13:18.840871+00:00",
+      "duration_sec": 0.359,
       "command": "python3 scripts/qcit_coordination_engine.py --out docs/qcit-coordination-report.json"
     },
     {
@@ -783,9 +781,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:42.436966+00:00",
-      "finished_at_utc": "2026-03-31T00:35:43.306189+00:00",
-      "duration_sec": 0.859,
+      "started_at_utc": "2026-03-31T12:13:18.840871+00:00",
+      "finished_at_utc": "2026-03-31T12:13:19.238514+00:00",
+      "duration_sec": 0.391,
       "command": "python3 scripts/quantum_energy_transmutation_engine.py --out docs/quantum-energy-transmutation-report.json"
     },
     {
@@ -794,9 +792,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:43.306189+00:00",
-      "finished_at_utc": "2026-03-31T00:35:43.809572+00:00",
-      "duration_sec": 0.516,
+      "started_at_utc": "2026-03-31T12:13:19.238514+00:00",
+      "finished_at_utc": "2026-03-31T12:13:19.554837+00:00",
+      "duration_sec": 0.312,
       "command": "python3 scripts/validate_transmutation_reports.py --qcit docs/qcit-coordination-report.json --quantum docs/quantum-energy-transmutation-report.json"
     },
     {
@@ -805,9 +803,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:43.809572+00:00",
-      "finished_at_utc": "2026-03-31T00:35:44.525164+00:00",
-      "duration_sec": 0.703,
+      "started_at_utc": "2026-03-31T12:13:19.554837+00:00",
+      "finished_at_utc": "2026-03-31T12:13:21.089279+00:00",
+      "duration_sec": 1.532,
       "command": "python3 freed_id_minimum_disclosure_verifier.py"
     },
     {
@@ -816,9 +814,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:44.525164+00:00",
-      "finished_at_utc": "2026-03-31T00:35:45.180375+00:00",
-      "duration_sec": 0.656,
+      "started_at_utc": "2026-03-31T12:13:21.089279+00:00",
+      "finished_at_utc": "2026-03-31T12:13:21.661229+00:00",
+      "duration_sec": 0.578,
       "command": "python3 freed_id_minimum_disclosure_live_path_verifier.py"
     },
     {
@@ -827,9 +825,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:45.180375+00:00",
-      "finished_at_utc": "2026-03-31T00:35:45.740038+00:00",
-      "duration_sec": 0.546,
+      "started_at_utc": "2026-03-31T12:13:21.661229+00:00",
+      "finished_at_utc": "2026-03-31T12:13:22.157392+00:00",
+      "duration_sec": 0.5,
       "command": "python3 freed_id_minimum_disclosure_adversarial_verifier.py"
     },
     {
@@ -838,9 +836,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:45.740038+00:00",
-      "finished_at_utc": "2026-03-31T00:35:48.371141+00:00",
-      "duration_sec": 2.625,
+      "started_at_utc": "2026-03-31T12:13:22.157392+00:00",
+      "finished_at_utc": "2026-03-31T12:13:24.148347+00:00",
+      "duration_sec": 1.984,
       "command": "python3 freed_id_dispute_recourse_verifier.py"
     },
     {
@@ -849,9 +847,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:48.371141+00:00",
-      "finished_at_utc": "2026-03-31T00:35:49.980951+00:00",
-      "duration_sec": 1.61,
+      "started_at_utc": "2026-03-31T12:13:24.148347+00:00",
+      "finished_at_utc": "2026-03-31T12:13:24.742709+00:00",
+      "duration_sec": 0.594,
       "command": "python3 freed_id_dispute_recourse_adversarial_verifier.py"
     },
     {
@@ -860,9 +858,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:49.980951+00:00",
-      "finished_at_utc": "2026-03-31T00:35:55.727958+00:00",
-      "duration_sec": 5.75,
+      "started_at_utc": "2026-03-31T12:13:24.742709+00:00",
+      "finished_at_utc": "2026-03-31T12:13:27.614337+00:00",
+      "duration_sec": 2.875,
       "command": "python3 scripts/trinity_token_credit_zip_converter.py --use-reserve-first --regeneration-multiplier 3.0 --target-reimbursement-ratio 1.0 --zip-snapshot --zip-label token-credit-suite --out docs/token-credit-bank-report.json --ledger docs/token-credit-bank-ledger.jsonl"
     },
     {
@@ -871,9 +869,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:55.727958+00:00",
-      "finished_at_utc": "2026-03-31T00:35:57.060692+00:00",
-      "duration_sec": 1.344,
+      "started_at_utc": "2026-03-31T12:13:27.618167+00:00",
+      "finished_at_utc": "2026-03-31T12:13:28.422968+00:00",
+      "duration_sec": 0.812,
       "command": "python3 scripts/cache_waste_regenerator.py --out docs/cache-waste-regenerator-report.json --purge --prune-empty-dirs"
     },
     {
@@ -882,9 +880,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:57.060692+00:00",
-      "finished_at_utc": "2026-03-31T00:35:57.455738+00:00",
-      "duration_sec": 0.39,
+      "started_at_utc": "2026-03-31T12:13:28.422968+00:00",
+      "finished_at_utc": "2026-03-31T12:13:28.672020+00:00",
+      "duration_sec": 0.25,
       "command": "python3 scripts/validate_cache_waste_report.py --cache docs/cache-waste-regenerator-report.json"
     },
     {
@@ -893,9 +891,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:57.455738+00:00",
-      "finished_at_utc": "2026-03-31T00:35:57.762609+00:00",
-      "duration_sec": 0.297,
+      "started_at_utc": "2026-03-31T12:13:28.672020+00:00",
+      "finished_at_utc": "2026-03-31T12:13:28.922118+00:00",
+      "duration_sec": 0.25,
       "command": "python3 scripts/trinity_energy_bank_system.py --token-report docs/token-credit-bank-report.json --cache-report docs/cache-waste-regenerator-report.json --reserve-growth 1.0 --reserve-cap-multiplier 10.0 --auto-max-cap --cap-ceiling 100.0 --out docs/energy-bank-report.json --state docs/energy-bank-state.json"
     },
     {
@@ -904,9 +902,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:57.762609+00:00",
-      "finished_at_utc": "2026-03-31T00:35:58.260678+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-31T12:13:28.922118+00:00",
+      "finished_at_utc": "2026-03-31T12:13:29.162307+00:00",
+      "duration_sec": 0.235,
       "command": "python3 scripts/validate_token_energy_reports.py --token docs/token-credit-bank-report.json --energy docs/energy-bank-report.json"
     },
     {
@@ -915,9 +913,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:58.260678+00:00",
-      "finished_at_utc": "2026-03-31T00:35:59.276452+00:00",
-      "duration_sec": 1.016,
+      "started_at_utc": "2026-03-31T12:13:29.162307+00:00",
+      "finished_at_utc": "2026-03-31T12:13:29.774392+00:00",
+      "duration_sec": 0.609,
       "command": "python3 scripts/gyroscopic_hybrid_zip_converter_generator.py --label gyroscopic-suite-cycle --out docs/gyroscopic-hybrid-zip-report.json"
     },
     {
@@ -926,9 +924,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:59.276452+00:00",
-      "finished_at_utc": "2026-03-31T00:36:01.469859+00:00",
-      "duration_sec": 2.203,
+      "started_at_utc": "2026-03-31T12:13:29.774392+00:00",
+      "finished_at_utc": "2026-03-31T12:13:31.386456+00:00",
+      "duration_sec": 1.61,
       "command": "python3 body_track_runner.py --gammas 0.0 0.01 0.05 --benchmark-profile quick --profile-policy docs/body-profile-policy-v1.json"
     },
     {
@@ -937,9 +935,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:01.469859+00:00",
-      "finished_at_utc": "2026-03-31T00:36:03.878338+00:00",
-      "duration_sec": 2.406,
+      "started_at_utc": "2026-03-31T12:13:31.386456+00:00",
+      "finished_at_utc": "2026-03-31T12:13:31.995032+00:00",
+      "duration_sec": 0.609,
       "command": "python3 scripts/body_benchmark_trend_guard.py --trend-profile quick --profile-policy docs/body-profile-policy-v1.json"
     },
     {
@@ -948,9 +946,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:03.878338+00:00",
-      "finished_at_utc": "2026-03-31T00:36:04.621984+00:00",
-      "duration_sec": 0.734,
+      "started_at_utc": "2026-03-31T12:13:31.995032+00:00",
+      "finished_at_utc": "2026-03-31T12:13:32.362204+00:00",
+      "duration_sec": 0.375,
       "command": "python3 scripts/body_profile_calibration_report.py --profile-context quick"
     },
     {
@@ -959,9 +957,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:04.621984+00:00",
-      "finished_at_utc": "2026-03-31T00:36:05.286811+00:00",
-      "duration_sec": 0.672,
+      "started_at_utc": "2026-03-31T12:13:32.362204+00:00",
+      "finished_at_utc": "2026-03-31T12:13:32.770327+00:00",
+      "duration_sec": 0.406,
       "command": "python3 scripts/body_profile_policy_delta_report.py --policy-json docs/body-profile-policy-v1.json --apply"
     },
     {
@@ -970,9 +968,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:05.286811+00:00",
-      "finished_at_utc": "2026-03-31T00:36:05.780787+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-31T12:13:32.770327+00:00",
+      "finished_at_utc": "2026-03-31T12:13:33.088353+00:00",
+      "duration_sec": 0.313,
       "command": "python3 scripts/body_policy_stress_window_report.py --policy-json docs/body-profile-policy-v1.json"
     },
     {
@@ -981,9 +979,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:05.780787+00:00",
-      "finished_at_utc": "2026-03-31T00:36:06.239192+00:00",
-      "duration_sec": 0.453,
+      "started_at_utc": "2026-03-31T12:13:33.088353+00:00",
+      "finished_at_utc": "2026-03-31T12:13:33.320426+00:00",
+      "duration_sec": 0.234,
       "command": "python3 scripts/gmut_comparator_metrics.py"
     },
     {
@@ -992,9 +990,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:06.239192+00:00",
-      "finished_at_utc": "2026-03-31T00:36:06.694802+00:00",
-      "duration_sec": 0.454,
+      "started_at_utc": "2026-03-31T12:13:33.320426+00:00",
+      "finished_at_utc": "2026-03-31T12:13:33.757329+00:00",
+      "duration_sec": 0.438,
       "command": "python3 scripts/gmut_external_anchor_exclusion_note.py --anchor-input docs/mind-track-external-anchor-canonical-inputs-v1.json"
     },
     {
@@ -1003,9 +1001,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:06.694802+00:00",
-      "finished_at_utc": "2026-03-31T00:36:07.289232+00:00",
-      "duration_sec": 0.593,
+      "started_at_utc": "2026-03-31T12:13:33.757329+00:00",
+      "finished_at_utc": "2026-03-31T12:13:34.277854+00:00",
+      "duration_sec": 0.531,
       "command": "python3 scripts/gmut_anchor_trace_validator.py"
     },
     {
@@ -1014,9 +1012,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:07.289232+00:00",
-      "finished_at_utc": "2026-03-31T00:36:08.254343+00:00",
-      "duration_sec": 0.969,
+      "started_at_utc": "2026-03-31T12:13:34.277854+00:00",
+      "finished_at_utc": "2026-03-31T12:13:35.205829+00:00",
+      "duration_sec": 0.922,
       "command": "python3 scripts/trinity_api_source_manifest_validator.py"
     },
     {
@@ -1025,9 +1023,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:08.254343+00:00",
-      "finished_at_utc": "2026-03-31T00:36:09.076494+00:00",
-      "duration_sec": 0.828,
+      "started_at_utc": "2026-03-31T12:13:35.205829+00:00",
+      "finished_at_utc": "2026-03-31T12:13:35.680261+00:00",
+      "duration_sec": 0.468,
       "command": "python3 scripts/mind_theory_signal_board.py"
     },
     {
@@ -1036,9 +1034,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:09.076494+00:00",
-      "finished_at_utc": "2026-03-31T00:36:09.813106+00:00",
-      "duration_sec": 0.735,
+      "started_at_utc": "2026-03-31T12:13:35.684471+00:00",
+      "finished_at_utc": "2026-03-31T12:13:36.145398+00:00",
+      "duration_sec": 0.453,
       "command": "python3 scripts/body_compute_signal_board.py"
     },
     {
@@ -1047,9 +1045,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:09.813106+00:00",
-      "finished_at_utc": "2026-03-31T00:36:10.725712+00:00",
-      "duration_sec": 0.906,
+      "started_at_utc": "2026-03-31T12:13:36.145398+00:00",
+      "finished_at_utc": "2026-03-31T12:13:36.562997+00:00",
+      "duration_sec": 0.422,
       "command": "python3 scripts/heart_governance_signal_board.py"
     },
     {
@@ -1058,9 +1056,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:10.725712+00:00",
-      "finished_at_utc": "2026-03-31T00:36:11.540970+00:00",
-      "duration_sec": 0.812,
+      "started_at_utc": "2026-03-31T12:13:36.562997+00:00",
+      "finished_at_utc": "2026-03-31T12:13:37.092042+00:00",
+      "duration_sec": 0.531,
       "command": "python3 scripts/trinity_api_constellation_board.py"
     },
     {
@@ -1069,9 +1067,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:11.540970+00:00",
-      "finished_at_utc": "2026-03-31T00:36:12.170920+00:00",
-      "duration_sec": 0.641,
+      "started_at_utc": "2026-03-31T12:13:37.092042+00:00",
+      "finished_at_utc": "2026-03-31T12:13:37.591157+00:00",
+      "duration_sec": 0.5,
       "command": "python3 scripts/validate_trinity_public_research.py"
     },
     {
@@ -1080,9 +1078,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:12.170920+00:00",
-      "finished_at_utc": "2026-03-31T00:36:12.874171+00:00",
-      "duration_sec": 0.703,
+      "started_at_utc": "2026-03-31T12:13:37.591157+00:00",
+      "finished_at_utc": "2026-03-31T12:13:38.047430+00:00",
+      "duration_sec": 0.453,
       "command": "python3 scripts/trinity_public_signal_board.py"
     },
     {
@@ -1091,9 +1089,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:12.874171+00:00",
-      "finished_at_utc": "2026-03-31T00:36:13.439185+00:00",
-      "duration_sec": 0.563,
+      "started_at_utc": "2026-03-31T12:13:38.051623+00:00",
+      "finished_at_utc": "2026-03-31T12:13:38.469155+00:00",
+      "duration_sec": 0.422,
       "command": "python3 scripts/v17_runtime_session_guard.py"
     },
     {
@@ -1102,9 +1100,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:13.439185+00:00",
-      "finished_at_utc": "2026-03-31T00:36:14.363730+00:00",
-      "duration_sec": 0.921,
+      "started_at_utc": "2026-03-31T12:13:38.469155+00:00",
+      "finished_at_utc": "2026-03-31T12:13:38.803582+00:00",
+      "duration_sec": 0.328,
       "command": "python3 scripts/v17_external_establishment_validator.py"
     },
     {
@@ -1113,9 +1111,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:14.363730+00:00",
-      "finished_at_utc": "2026-03-31T00:36:15.021393+00:00",
-      "duration_sec": 0.657,
+      "started_at_utc": "2026-03-31T12:13:38.803582+00:00",
+      "finished_at_utc": "2026-03-31T12:13:39.072291+00:00",
+      "duration_sec": 0.266,
       "command": "python3 scripts/v17_standards_bridge_validator.py"
     },
     {
@@ -1124,10 +1122,10 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:20.603334+00:00",
-      "finished_at_utc": "2026-03-31T00:36:21.768892+00:00",
-      "duration_sec": 1.172,
-      "command": "python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v29-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane"
+      "started_at_utc": "2026-03-31T12:13:44.541051+00:00",
+      "finished_at_utc": "2026-03-31T12:13:44.822458+00:00",
+      "duration_sec": 0.281,
+      "command": "python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v30-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane"
     },
     {
       "label": "trinity mandala scoreboard",
@@ -1135,10 +1133,10 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": false,
       "effective_success": false,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:21.774744+00:00",
-      "finished_at_utc": "2026-03-31T00:36:24.189187+00:00",
-      "duration_sec": 2.422,
-      "command": "python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn --suite-status docs/v29-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane"
+      "started_at_utc": "2026-03-31T12:13:44.826519+00:00",
+      "finished_at_utc": "2026-03-31T12:13:45.387187+00:00",
+      "duration_sec": 0.562,
+      "command": "python3 scripts/trinity_mandala_scoreboard.py --fail-on-warn --suite-status docs/v30-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane"
     },
     {
       "label": "zip memory/data snapshot",
@@ -1146,9 +1144,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:18.937724+00:00",
-      "finished_at_utc": "2026-03-31T00:36:20.109634+00:00",
-      "duration_sec": 1.171,
+      "started_at_utc": "2026-03-31T12:13:43.594710+00:00",
+      "finished_at_utc": "2026-03-31T12:13:44.204180+00:00",
+      "duration_sec": 0.61,
       "command": "python3 scripts/trinity_zip_memory_converter.py archive --label suite-quick"
     },
     {
@@ -1157,9 +1155,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:20.109634+00:00",
-      "finished_at_utc": "2026-03-31T00:36:20.595207+00:00",
-      "duration_sec": 0.485,
+      "started_at_utc": "2026-03-31T12:13:44.204180+00:00",
+      "finished_at_utc": "2026-03-31T12:13:44.541051+00:00",
+      "duration_sec": 0.328,
       "command": "python3 scripts/journey_anchor_scan.py --regex 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' --max-matches 20 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'"
     }
   ]
@@ -1168,10 +1166,10 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
 
 ## Final control tower refresh
 - status: **PASS**
-- command: `python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v29-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane`
-- started: `2026-03-31T00:36:30.010335+00:00`
-- finished: `2026-03-31T00:36:30.544862+00:00`
-- duration_sec: `0.547`
+- command: `python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v30-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane`
+- started: `2026-03-31T12:13:47.805827+00:00`
+- finished: `2026-03-31T12:13:48.036137+00:00`
+- duration_sec: `0.235`
 ```text
 overall_status=PASS
 control_tower_json=docs\v17-evidence-first-control-tower-latest.json
@@ -1180,14 +1178,14 @@ control_tower_md=docs\v17-evidence-first-control-tower-latest.md
 
 ## Final scoreboard refresh
 - status: **PASS**
-- command: `python3 scripts/trinity_mandala_scoreboard.py --suite-status docs/v29-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane`
-- started: `2026-03-31T00:36:30.544862+00:00`
-- finished: `2026-03-31T00:36:31.970972+00:00`
-- duration_sec: `1.422`
+- command: `python3 scripts/trinity_mandala_scoreboard.py --suite-status docs/v30-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane`
+- started: `2026-03-31T12:13:48.036137+00:00`
+- finished: `2026-03-31T12:13:48.585686+00:00`
+- duration_sec: `0.547`
 ```text
-hybrid_os_status=FAIL
-timestamped_json=docs\trinity-mandala-runs\20260331T003631Z-trinity-mandala-scoreboard.json
-timestamped_md=docs\trinity-mandala-runs\20260331T003631Z-trinity-mandala-scoreboard.md
+hybrid_os_status=PASS
+timestamped_json=docs\trinity-mandala-runs\20260331T121348Z-trinity-mandala-scoreboard.json
+timestamped_md=docs\trinity-mandala-runs\20260331T121348Z-trinity-mandala-scoreboard.md
 latest_json=docs\v17-mandala-scoreboard-latest.json
 latest_md=docs\v17-mandala-scoreboard-latest.md
 ```
@@ -1202,10 +1200,10 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
 ## Final machine-readable summary
 ```json
 {
-  "generated_utc": "2026-03-31T00:36:31.972992+00:00",
-  "suite_started_at_utc": "2026-03-31T00:35:41.188661+00:00",
-  "suite_finished_at_utc": "2026-03-31T00:36:20.597220+00:00",
-  "suite_duration_sec": 39.406,
+  "generated_utc": "2026-03-31T12:13:48.587545+00:00",
+  "suite_started_at_utc": "2026-03-31T12:13:17.373265+00:00",
+  "suite_finished_at_utc": "2026-03-31T12:13:44.541051+00:00",
+  "suite_duration_sec": 27.156,
   "effective_success": true,
   "achieved_steps": 38,
   "achievement_gate_met": true,
@@ -1230,8 +1228,7 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
     "postgres"
   ],
   "verified_app_connectors": [
-    "github",
-    "google_drive"
+    "github"
   ],
   "verified_composio_toolkits": [],
   "eligible_live_write_connectors": [
@@ -1243,7 +1240,6 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
   ],
   "promoted_live_write_connectors": [
     "github",
-    "google_drive",
     "linear",
     "notion",
     "postgres"
@@ -1270,7 +1266,7 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
   "future_readiness_state": "PASS",
   "materialization_level_desired": "l2_persistent_dev",
   "materialization_level_actual": "readiness_only",
-  "google_drive_state": "operator_hold",
+  "google_drive_state": "bounded_working_mirror",
   "external_live_overlay_state": "awaiting_thread_boot",
   "runtime_session_state": "PASS",
   "runtime_truth_complete": false,
@@ -1294,11 +1290,11 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
   "dirty_tree_state": {
     "available": true,
     "staged_count": 0,
-    "unstaged_count": 90,
-    "untracked_count": 82,
+    "unstaged_count": 16288,
+    "untracked_count": 39,
     "dirty": true
   },
-  "storage_prune_delta_mb": 59.41,
+  "storage_prune_delta_mb": 44.24,
   "resumed_step_count": 0,
   "config": {
     "step_timeout_sec": 0,
@@ -1333,9 +1329,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:41.188661+00:00",
-      "finished_at_utc": "2026-03-31T00:35:41.496943+00:00",
-      "duration_sec": 0.296,
+      "started_at_utc": "2026-03-31T12:13:17.373265+00:00",
+      "finished_at_utc": "2026-03-31T12:13:18.217460+00:00",
+      "duration_sec": 0.843,
       "command": "python3 scripts/aurelis_memory_integrity_check.py --strict"
     },
     {
@@ -1344,9 +1340,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:41.496943+00:00",
-      "finished_at_utc": "2026-03-31T00:35:41.839158+00:00",
-      "duration_sec": 0.344,
+      "started_at_utc": "2026-03-31T12:13:18.219648+00:00",
+      "finished_at_utc": "2026-03-31T12:13:18.484301+00:00",
+      "duration_sec": 0.266,
       "command": "python3 scripts/aurelis_cycle_tick.py --user-message 'suite quick dry-run' --assistant-reflection 'Quick mode continuity health check' --progress-snapshot 'Validated quick dry-run status reporting in suite' --next-step 'Run full suite when deeper validation is needed' --query cycle --query-limit 2 --dry-run --no-report --step-timeout-sec 0 --json-status docs/aurelis-cycle-tick-status.json"
     },
     {
@@ -1355,9 +1351,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:41.839158+00:00",
-      "finished_at_utc": "2026-03-31T00:35:42.436966+00:00",
-      "duration_sec": 0.61,
+      "started_at_utc": "2026-03-31T12:13:18.484301+00:00",
+      "finished_at_utc": "2026-03-31T12:13:18.840871+00:00",
+      "duration_sec": 0.359,
       "command": "python3 scripts/qcit_coordination_engine.py --out docs/qcit-coordination-report.json"
     },
     {
@@ -1366,9 +1362,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:42.436966+00:00",
-      "finished_at_utc": "2026-03-31T00:35:43.306189+00:00",
-      "duration_sec": 0.859,
+      "started_at_utc": "2026-03-31T12:13:18.840871+00:00",
+      "finished_at_utc": "2026-03-31T12:13:19.238514+00:00",
+      "duration_sec": 0.391,
       "command": "python3 scripts/quantum_energy_transmutation_engine.py --out docs/quantum-energy-transmutation-report.json"
     },
     {
@@ -1377,9 +1373,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:43.306189+00:00",
-      "finished_at_utc": "2026-03-31T00:35:43.809572+00:00",
-      "duration_sec": 0.516,
+      "started_at_utc": "2026-03-31T12:13:19.238514+00:00",
+      "finished_at_utc": "2026-03-31T12:13:19.554837+00:00",
+      "duration_sec": 0.312,
       "command": "python3 scripts/validate_transmutation_reports.py --qcit docs/qcit-coordination-report.json --quantum docs/quantum-energy-transmutation-report.json"
     },
     {
@@ -1388,9 +1384,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:43.809572+00:00",
-      "finished_at_utc": "2026-03-31T00:35:44.525164+00:00",
-      "duration_sec": 0.703,
+      "started_at_utc": "2026-03-31T12:13:19.554837+00:00",
+      "finished_at_utc": "2026-03-31T12:13:21.089279+00:00",
+      "duration_sec": 1.532,
       "command": "python3 freed_id_minimum_disclosure_verifier.py"
     },
     {
@@ -1399,9 +1395,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:44.525164+00:00",
-      "finished_at_utc": "2026-03-31T00:35:45.180375+00:00",
-      "duration_sec": 0.656,
+      "started_at_utc": "2026-03-31T12:13:21.089279+00:00",
+      "finished_at_utc": "2026-03-31T12:13:21.661229+00:00",
+      "duration_sec": 0.578,
       "command": "python3 freed_id_minimum_disclosure_live_path_verifier.py"
     },
     {
@@ -1410,9 +1406,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:45.180375+00:00",
-      "finished_at_utc": "2026-03-31T00:35:45.740038+00:00",
-      "duration_sec": 0.546,
+      "started_at_utc": "2026-03-31T12:13:21.661229+00:00",
+      "finished_at_utc": "2026-03-31T12:13:22.157392+00:00",
+      "duration_sec": 0.5,
       "command": "python3 freed_id_minimum_disclosure_adversarial_verifier.py"
     },
     {
@@ -1421,9 +1417,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:45.740038+00:00",
-      "finished_at_utc": "2026-03-31T00:35:48.371141+00:00",
-      "duration_sec": 2.625,
+      "started_at_utc": "2026-03-31T12:13:22.157392+00:00",
+      "finished_at_utc": "2026-03-31T12:13:24.148347+00:00",
+      "duration_sec": 1.984,
       "command": "python3 freed_id_dispute_recourse_verifier.py"
     },
     {
@@ -1432,9 +1428,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:48.371141+00:00",
-      "finished_at_utc": "2026-03-31T00:35:49.980951+00:00",
-      "duration_sec": 1.61,
+      "started_at_utc": "2026-03-31T12:13:24.148347+00:00",
+      "finished_at_utc": "2026-03-31T12:13:24.742709+00:00",
+      "duration_sec": 0.594,
       "command": "python3 freed_id_dispute_recourse_adversarial_verifier.py"
     },
     {
@@ -1443,9 +1439,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:49.980951+00:00",
-      "finished_at_utc": "2026-03-31T00:35:55.727958+00:00",
-      "duration_sec": 5.75,
+      "started_at_utc": "2026-03-31T12:13:24.742709+00:00",
+      "finished_at_utc": "2026-03-31T12:13:27.614337+00:00",
+      "duration_sec": 2.875,
       "command": "python3 scripts/trinity_token_credit_zip_converter.py --use-reserve-first --regeneration-multiplier 3.0 --target-reimbursement-ratio 1.0 --zip-snapshot --zip-label token-credit-suite --out docs/token-credit-bank-report.json --ledger docs/token-credit-bank-ledger.jsonl"
     },
     {
@@ -1454,9 +1450,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:55.727958+00:00",
-      "finished_at_utc": "2026-03-31T00:35:57.060692+00:00",
-      "duration_sec": 1.344,
+      "started_at_utc": "2026-03-31T12:13:27.618167+00:00",
+      "finished_at_utc": "2026-03-31T12:13:28.422968+00:00",
+      "duration_sec": 0.812,
       "command": "python3 scripts/cache_waste_regenerator.py --out docs/cache-waste-regenerator-report.json --purge --prune-empty-dirs"
     },
     {
@@ -1465,9 +1461,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:57.060692+00:00",
-      "finished_at_utc": "2026-03-31T00:35:57.455738+00:00",
-      "duration_sec": 0.39,
+      "started_at_utc": "2026-03-31T12:13:28.422968+00:00",
+      "finished_at_utc": "2026-03-31T12:13:28.672020+00:00",
+      "duration_sec": 0.25,
       "command": "python3 scripts/validate_cache_waste_report.py --cache docs/cache-waste-regenerator-report.json"
     },
     {
@@ -1476,9 +1472,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:57.455738+00:00",
-      "finished_at_utc": "2026-03-31T00:35:57.762609+00:00",
-      "duration_sec": 0.297,
+      "started_at_utc": "2026-03-31T12:13:28.672020+00:00",
+      "finished_at_utc": "2026-03-31T12:13:28.922118+00:00",
+      "duration_sec": 0.25,
       "command": "python3 scripts/trinity_energy_bank_system.py --token-report docs/token-credit-bank-report.json --cache-report docs/cache-waste-regenerator-report.json --reserve-growth 1.0 --reserve-cap-multiplier 10.0 --auto-max-cap --cap-ceiling 100.0 --out docs/energy-bank-report.json --state docs/energy-bank-state.json"
     },
     {
@@ -1487,9 +1483,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:57.762609+00:00",
-      "finished_at_utc": "2026-03-31T00:35:58.260678+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-31T12:13:28.922118+00:00",
+      "finished_at_utc": "2026-03-31T12:13:29.162307+00:00",
+      "duration_sec": 0.235,
       "command": "python3 scripts/validate_token_energy_reports.py --token docs/token-credit-bank-report.json --energy docs/energy-bank-report.json"
     },
     {
@@ -1498,9 +1494,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:58.260678+00:00",
-      "finished_at_utc": "2026-03-31T00:35:59.276452+00:00",
-      "duration_sec": 1.016,
+      "started_at_utc": "2026-03-31T12:13:29.162307+00:00",
+      "finished_at_utc": "2026-03-31T12:13:29.774392+00:00",
+      "duration_sec": 0.609,
       "command": "python3 scripts/gyroscopic_hybrid_zip_converter_generator.py --label gyroscopic-suite-cycle --out docs/gyroscopic-hybrid-zip-report.json"
     },
     {
@@ -1509,9 +1505,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:35:59.276452+00:00",
-      "finished_at_utc": "2026-03-31T00:36:01.469859+00:00",
-      "duration_sec": 2.203,
+      "started_at_utc": "2026-03-31T12:13:29.774392+00:00",
+      "finished_at_utc": "2026-03-31T12:13:31.386456+00:00",
+      "duration_sec": 1.61,
       "command": "python3 body_track_runner.py --gammas 0.0 0.01 0.05 --benchmark-profile quick --profile-policy docs/body-profile-policy-v1.json"
     },
     {
@@ -1520,9 +1516,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:01.469859+00:00",
-      "finished_at_utc": "2026-03-31T00:36:03.878338+00:00",
-      "duration_sec": 2.406,
+      "started_at_utc": "2026-03-31T12:13:31.386456+00:00",
+      "finished_at_utc": "2026-03-31T12:13:31.995032+00:00",
+      "duration_sec": 0.609,
       "command": "python3 scripts/body_benchmark_trend_guard.py --trend-profile quick --profile-policy docs/body-profile-policy-v1.json"
     },
     {
@@ -1531,9 +1527,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:03.878338+00:00",
-      "finished_at_utc": "2026-03-31T00:36:04.621984+00:00",
-      "duration_sec": 0.734,
+      "started_at_utc": "2026-03-31T12:13:31.995032+00:00",
+      "finished_at_utc": "2026-03-31T12:13:32.362204+00:00",
+      "duration_sec": 0.375,
       "command": "python3 scripts/body_profile_calibration_report.py --profile-context quick"
     },
     {
@@ -1542,9 +1538,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:04.621984+00:00",
-      "finished_at_utc": "2026-03-31T00:36:05.286811+00:00",
-      "duration_sec": 0.672,
+      "started_at_utc": "2026-03-31T12:13:32.362204+00:00",
+      "finished_at_utc": "2026-03-31T12:13:32.770327+00:00",
+      "duration_sec": 0.406,
       "command": "python3 scripts/body_profile_policy_delta_report.py --policy-json docs/body-profile-policy-v1.json --apply"
     },
     {
@@ -1553,9 +1549,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:05.286811+00:00",
-      "finished_at_utc": "2026-03-31T00:36:05.780787+00:00",
-      "duration_sec": 0.5,
+      "started_at_utc": "2026-03-31T12:13:32.770327+00:00",
+      "finished_at_utc": "2026-03-31T12:13:33.088353+00:00",
+      "duration_sec": 0.313,
       "command": "python3 scripts/body_policy_stress_window_report.py --policy-json docs/body-profile-policy-v1.json"
     },
     {
@@ -1564,9 +1560,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:05.780787+00:00",
-      "finished_at_utc": "2026-03-31T00:36:06.239192+00:00",
-      "duration_sec": 0.453,
+      "started_at_utc": "2026-03-31T12:13:33.088353+00:00",
+      "finished_at_utc": "2026-03-31T12:13:33.320426+00:00",
+      "duration_sec": 0.234,
       "command": "python3 scripts/gmut_comparator_metrics.py"
     },
     {
@@ -1575,9 +1571,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:06.239192+00:00",
-      "finished_at_utc": "2026-03-31T00:36:06.694802+00:00",
-      "duration_sec": 0.454,
+      "started_at_utc": "2026-03-31T12:13:33.320426+00:00",
+      "finished_at_utc": "2026-03-31T12:13:33.757329+00:00",
+      "duration_sec": 0.438,
       "command": "python3 scripts/gmut_external_anchor_exclusion_note.py --anchor-input docs/mind-track-external-anchor-canonical-inputs-v1.json"
     },
     {
@@ -1586,9 +1582,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:06.694802+00:00",
-      "finished_at_utc": "2026-03-31T00:36:07.289232+00:00",
-      "duration_sec": 0.593,
+      "started_at_utc": "2026-03-31T12:13:33.757329+00:00",
+      "finished_at_utc": "2026-03-31T12:13:34.277854+00:00",
+      "duration_sec": 0.531,
       "command": "python3 scripts/gmut_anchor_trace_validator.py"
     },
     {
@@ -1597,9 +1593,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:07.289232+00:00",
-      "finished_at_utc": "2026-03-31T00:36:08.254343+00:00",
-      "duration_sec": 0.969,
+      "started_at_utc": "2026-03-31T12:13:34.277854+00:00",
+      "finished_at_utc": "2026-03-31T12:13:35.205829+00:00",
+      "duration_sec": 0.922,
       "command": "python3 scripts/trinity_api_source_manifest_validator.py"
     },
     {
@@ -1608,9 +1604,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:08.254343+00:00",
-      "finished_at_utc": "2026-03-31T00:36:09.076494+00:00",
-      "duration_sec": 0.828,
+      "started_at_utc": "2026-03-31T12:13:35.205829+00:00",
+      "finished_at_utc": "2026-03-31T12:13:35.680261+00:00",
+      "duration_sec": 0.468,
       "command": "python3 scripts/mind_theory_signal_board.py"
     },
     {
@@ -1619,9 +1615,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:09.076494+00:00",
-      "finished_at_utc": "2026-03-31T00:36:09.813106+00:00",
-      "duration_sec": 0.735,
+      "started_at_utc": "2026-03-31T12:13:35.684471+00:00",
+      "finished_at_utc": "2026-03-31T12:13:36.145398+00:00",
+      "duration_sec": 0.453,
       "command": "python3 scripts/body_compute_signal_board.py"
     },
     {
@@ -1630,9 +1626,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:09.813106+00:00",
-      "finished_at_utc": "2026-03-31T00:36:10.725712+00:00",
-      "duration_sec": 0.906,
+      "started_at_utc": "2026-03-31T12:13:36.145398+00:00",
+      "finished_at_utc": "2026-03-31T12:13:36.562997+00:00",
+      "duration_sec": 0.422,
       "command": "python3 scripts/heart_governance_signal_board.py"
     },
     {
@@ -1641,9 +1637,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:10.725712+00:00",
-      "finished_at_utc": "2026-03-31T00:36:11.540970+00:00",
-      "duration_sec": 0.812,
+      "started_at_utc": "2026-03-31T12:13:36.562997+00:00",
+      "finished_at_utc": "2026-03-31T12:13:37.092042+00:00",
+      "duration_sec": 0.531,
       "command": "python3 scripts/trinity_api_constellation_board.py"
     },
     {
@@ -1652,9 +1648,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:11.540970+00:00",
-      "finished_at_utc": "2026-03-31T00:36:12.170920+00:00",
-      "duration_sec": 0.641,
+      "started_at_utc": "2026-03-31T12:13:37.092042+00:00",
+      "finished_at_utc": "2026-03-31T12:13:37.591157+00:00",
+      "duration_sec": 0.5,
       "command": "python3 scripts/validate_trinity_public_research.py"
     },
     {
@@ -1663,9 +1659,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:12.170920+00:00",
-      "finished_at_utc": "2026-03-31T00:36:12.874171+00:00",
-      "duration_sec": 0.703,
+      "started_at_utc": "2026-03-31T12:13:37.591157+00:00",
+      "finished_at_utc": "2026-03-31T12:13:38.047430+00:00",
+      "duration_sec": 0.453,
       "command": "python3 scripts/trinity_public_signal_board.py"
     },
     {
@@ -1674,9 +1670,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:12.874171+00:00",
-      "finished_at_utc": "2026-03-31T00:36:13.439185+00:00",
-      "duration_sec": 0.563,
+      "started_at_utc": "2026-03-31T12:13:38.051623+00:00",
+      "finished_at_utc": "2026-03-31T12:13:38.469155+00:00",
+      "duration_sec": 0.422,
       "command": "python3 scripts/v17_runtime_session_guard.py"
     },
     {
@@ -1685,9 +1681,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:13.439185+00:00",
-      "finished_at_utc": "2026-03-31T00:36:14.363730+00:00",
-      "duration_sec": 0.921,
+      "started_at_utc": "2026-03-31T12:13:38.469155+00:00",
+      "finished_at_utc": "2026-03-31T12:13:38.803582+00:00",
+      "duration_sec": 0.328,
       "command": "python3 scripts/v17_external_establishment_validator.py"
     },
     {
@@ -1696,9 +1692,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:14.363730+00:00",
-      "finished_at_utc": "2026-03-31T00:36:15.021393+00:00",
-      "duration_sec": 0.657,
+      "started_at_utc": "2026-03-31T12:13:38.803582+00:00",
+      "finished_at_utc": "2026-03-31T12:13:39.072291+00:00",
+      "duration_sec": 0.266,
       "command": "python3 scripts/v17_standards_bridge_validator.py"
     },
     {
@@ -1707,10 +1703,10 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:30.010335+00:00",
-      "finished_at_utc": "2026-03-31T00:36:30.544862+00:00",
-      "duration_sec": 0.547,
-      "command": "python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v29-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane"
+      "started_at_utc": "2026-03-31T12:13:47.805827+00:00",
+      "finished_at_utc": "2026-03-31T12:13:48.036137+00:00",
+      "duration_sec": 0.235,
+      "command": "python3 scripts/v17_evidence_first_control_tower_sync.py --suite-status docs/v30-quick-suite-status.json --control-tower-json docs/v17-evidence-first-control-tower-latest.json --control-tower-md docs/v17-evidence-first-control-tower-latest.md --checkpoint-class v17_evidence_first_quick_lane"
     },
     {
       "label": "trinity mandala scoreboard",
@@ -1718,10 +1714,10 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:30.544862+00:00",
-      "finished_at_utc": "2026-03-31T00:36:31.970972+00:00",
-      "duration_sec": 1.422,
-      "command": "python3 scripts/trinity_mandala_scoreboard.py --suite-status docs/v29-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane"
+      "started_at_utc": "2026-03-31T12:13:48.036137+00:00",
+      "finished_at_utc": "2026-03-31T12:13:48.585686+00:00",
+      "duration_sec": 0.547,
+      "command": "python3 scripts/trinity_mandala_scoreboard.py --suite-status docs/v30-quick-suite-status.json --latest-json docs/v17-mandala-scoreboard-latest.json --latest-md docs/v17-mandala-scoreboard-latest.md --control-tower-path docs/v17-evidence-first-control-tower-latest.json --checkpoint-class v17_evidence_first_quick_lane"
     },
     {
       "label": "zip memory/data snapshot",
@@ -1729,9 +1725,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:18.937724+00:00",
-      "finished_at_utc": "2026-03-31T00:36:20.109634+00:00",
-      "duration_sec": 1.171,
+      "started_at_utc": "2026-03-31T12:13:43.594710+00:00",
+      "finished_at_utc": "2026-03-31T12:13:44.204180+00:00",
+      "duration_sec": 0.61,
       "command": "python3 scripts/trinity_zip_memory_converter.py archive --label suite-quick"
     },
     {
@@ -1740,9 +1736,9 @@ latest_md=docs\v17-mandala-scoreboard-latest.md
       "ok": true,
       "effective_success": true,
       "timed_out": false,
-      "started_at_utc": "2026-03-31T00:36:20.109634+00:00",
-      "finished_at_utc": "2026-03-31T00:36:20.595207+00:00",
-      "duration_sec": 0.485,
+      "started_at_utc": "2026-03-31T12:13:44.204180+00:00",
+      "finished_at_utc": "2026-03-31T12:13:44.541051+00:00",
+      "duration_sec": 0.328,
       "command": "python3 scripts/journey_anchor_scan.py --regex 'Core Modules|Orchestrator|DID Method|Quantum|Freed|GMUT|Cosmic Bill' --max-matches 20 'Beyonder-Real-True Journey v33 (Arielis) (2).pdf'"
     }
   ]

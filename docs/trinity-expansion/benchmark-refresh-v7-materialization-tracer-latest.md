@@ -1,6 +1,6 @@
 # Trinity Expansion Result: benchmark_refresh_v7_materialization_tracer
 
-- generated_utc: `2026-03-31T03:43:48+00:00`
+- generated_utc: `2026-03-31T14:17:43+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

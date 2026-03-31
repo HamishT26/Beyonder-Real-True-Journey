@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_runtime_connectivity_probe
 
-- generated_utc: `2026-03-31T03:35:59+00:00`
+- generated_utc: `2026-03-31T14:12:28+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,12 +8,12 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_fallback | PASS | connectivity fallback used (HTTP Error 400: Bad Request) |
+| offline_cache | PASS | records=6 |
 
 ## Metrics
 ```json
 {
-  "offline_only": false,
+  "offline_only": true,
   "record_count": 6
 }
 ```

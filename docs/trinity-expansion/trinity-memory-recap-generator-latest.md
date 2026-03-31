@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_memory_recap_generator
 
-- generated_utc: `2026-03-31T03:37:31+00:00`
+- generated_utc: `2026-03-31T14:13:08+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -19,6 +19,14 @@
   "manifest_system_count": 1094,
   "recent_commits": [
     {
+      "commit": "dc82acf5a947",
+      "subject": "Beyonder-Real-True Journey v29 (Omega) Update (Aletheon)"
+    },
+    {
+      "commit": "714aca489371",
+      "subject": "Publish V29 omega operator expansion"
+    },
+    {
       "commit": "8c4610214849",
       "subject": "Implement v28 omega hybrid promotion and fluid pilot"
     },
@@ -33,17 +41,9 @@
     {
       "commit": "33f124c627ce",
       "subject": "Implement v27 omega residual closure and v28 beta handoff"
-    },
-    {
-      "commit": "61e1530c4e73",
-      "subject": "Beyonder-Real-True Journey v26 (Omega) Update (Aletheon)"
-    },
-    {
-      "commit": "709833a3d217",
-      "subject": "Beyonder-Real-True Journey v25 (Omega) Update (Aletheon)"
     }
   ],
-  "repo_python_scripts": 327
+  "repo_python_scripts": 330
 }
 ```
 

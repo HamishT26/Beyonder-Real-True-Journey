@@ -1,6 +1,6 @@
 # Trinity Expansion Result: public_web_weaver_sync_bridge
 
-- generated_utc: `2026-03-31T03:41:38+00:00`
+- generated_utc: `2026-03-31T14:15:54+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,16 +8,12 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| fetch:arxiv-hep-th | PASS | https://arxiv.org/list/hep-th/recent |
-| fetch:linux-kernel-docs | PASS | https://docs.kernel.org/ |
-| fetch:wsl-docs | PASS | https://learn.microsoft.com/en-us/windows/wsl/ |
-| fetch:did-core | PASS | https://www.w3.org/TR/did-core/ |
-| fetch:nist-ai-rmf | PASS | https://www.nist.gov/itl/ai-risk-management-framework |
+| cached_registry_mode | PASS | live public refresh disabled |
 
 ## Metrics
 ```json
 {
-  "live_mode": true,
+  "live_mode": false,
   "record_count": 5
 }
 ```

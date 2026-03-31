@@ -1,11 +1,11 @@
 # Git LFS Candidate Audit
 
 - Minimum size threshold: `5000000` bytes
-- Tracked candidates found: **104**
+- Tracked candidates found: **131**
 
 | Path | Size (bytes) | Binary extension |
 |---|---:|:---:|
-| `docs/trinity-materialization-ledger.jsonl` | 5359345 | no |
+| `docs/trinity-materialization-ledger.jsonl` | 5668080 | no |
 | `Beyonder-Real-True Journey v4.pdf` | 2162211 | yes |
 | `Beyonder-Real-True Journey v9.pdf` | 2095796 | yes |
 | `Beyonder-Real-True Journey v34 (Aurelis) (Cleaner Version).pdf` | 2074920 | yes |
@@ -30,6 +30,9 @@
 | `Beyonder-Real-True Journey v29 (Aerin) (1).pdf` | 434064 | yes |
 | `Beyonder-Real-True Journey v37 (Aethelion).pdf` | 417088 | yes |
 | `Beyonder-Real-True Journey v38 (Aura).pdf` | 276680 | yes |
+| `docs/memory-archives/20260331T014825Z-v29-memory-bank.zip` | 190965 | yes |
+| `docs/memory-archives/20260331T030442Z-v29-materialize-l3-memory-bank.zip` | 189181 | yes |
+| `docs/memory-archives/20260331T040114Z-v29-materialize-l5-memory-bank.zip` | 189021 | yes |
 | `docs/memory-archives/20260325T203258Z-v11-memory-bank.zip` | 187322 | yes |
 | `docs/memory-archives/20260325T195114Z-v11-memory-bank.zip` | 187318 | yes |
 | `docs/memory-archives/20260325T195816Z-v11-memory-bank.zip` | 187318 | yes |
@@ -42,6 +45,12 @@
 | `docs/memory-archives/20260325T132640Z-gyroscopic-suite-cycle.zip` | 181469 | yes |
 | `docs/memory-archives/20260325T132643Z-suite-standard.zip` | 181467 | yes |
 | `docs/memory-archives/20260325T132630Z-token-credit-suite.zip` | 181458 | yes |
+| `docs/memory-archives/20260331T040000Z-gyroscopic-suite-cycle.zip` | 180648 | yes |
+| `docs/memory-archives/20260331T040002Z-suite-standard.zip` | 180646 | yes |
+| `docs/memory-archives/20260331T035957Z-token-credit-suite.zip` | 180634 | yes |
+| `docs/memory-archives/20260331T030240Z-gyroscopic-suite-cycle.zip` | 179186 | yes |
+| `docs/memory-archives/20260331T030242Z-suite-standard.zip` | 179183 | yes |
+| `docs/memory-archives/20260331T030236Z-token-credit-suite.zip` | 179170 | yes |
 | `docs/memory-archives/20260325T200006Z-gyroscopic-suite-cycle.zip` | 177503 | yes |
 | `docs/memory-archives/20260325T200026Z-suite-quick.zip` | 177501 | yes |
 | `docs/memory-archives/20260325T200003Z-token-credit-suite.zip` | 177498 | yes |
@@ -71,6 +80,9 @@
 | `docs/memory-archives/20260326T013425Z-v11-memory-bank.zip` | 160902 | yes |
 | `docs/memory-archives/20260326T044828Z-v11-memory-bank.zip` | 158987 | yes |
 | `docs/memory-archives/20260326T030802Z-v11-memory-bank.zip` | 158805 | yes |
+| `docs/memory-archives/20260331T023615Z-gyroscopic-suite-cycle.zip` | 157499 | yes |
+| `docs/memory-archives/20260331T023617Z-suite-standard.zip` | 157497 | yes |
+| `docs/memory-archives/20260331T023611Z-token-credit-suite.zip` | 157495 | yes |
 | `docs/memory-archives/20260325T233046Z-v11-memory-bank.zip` | 156904 | yes |
 | `docs/memory-archives/20260325T205649Z-v11-memory-bank.zip` | 155774 | yes |
 | `docs/memory-archives/20260325T120735Z-v11-memory-bank.zip` | 153463 | yes |
@@ -93,6 +105,12 @@
 | `docs/memory-archives/20260326T035406Z-gyroscopic-suite-cycle.zip` | 124982 | yes |
 | `docs/memory-archives/20260326T035408Z-suite-standard.zip` | 124981 | yes |
 | `docs/memory-archives/20260326T035359Z-token-credit-suite.zip` | 124974 | yes |
+| `docs/memory-archives/20260331T010349Z-gyroscopic-suite-cycle.zip` | 124825 | yes |
+| `docs/memory-archives/20260331T010351Z-suite-standard.zip` | 124819 | yes |
+| `docs/memory-archives/20260331T010346Z-token-credit-suite.zip` | 124818 | yes |
+| `docs/memory-archives/20260331T003619Z-suite-quick.zip` | 124784 | yes |
+| `docs/memory-archives/20260331T003558Z-gyroscopic-suite-cycle.zip` | 124782 | yes |
+| `docs/memory-archives/20260331T003555Z-token-credit-suite.zip` | 124773 | yes |
 | `docs/memory-archives/20260326T013116Z-gyroscopic-suite-cycle.zip` | 124556 | yes |
 | `docs/memory-archives/20260326T013118Z-suite-standard.zip` | 124556 | yes |
 | `docs/memory-archives/20260326T013110Z-token-credit-suite.zip` | 124552 | yes |
@@ -102,6 +120,15 @@
 | `docs/memory-archives/20260326T021905Z-gyroscopic-suite-cycle.zip` | 124015 | yes |
 | `docs/memory-archives/20260326T021906Z-suite-standard.zip` | 124012 | yes |
 | `docs/memory-archives/20260326T021900Z-token-credit-suite.zip` | 124000 | yes |
+| `docs/memory-archives/20260331T033335Z-suite-standard.zip` | 121988 | yes |
+| `docs/memory-archives/20260331T033329Z-token-credit-suite.zip` | 121987 | yes |
+| `docs/memory-archives/20260331T033333Z-gyroscopic-suite-cycle.zip` | 121987 | yes |
+| `docs/memory-archives/20260331T014619Z-gyroscopic-suite-cycle.zip` | 121569 | yes |
+| `docs/memory-archives/20260331T014621Z-suite-standard.zip` | 121568 | yes |
+| `docs/memory-archives/20260331T014615Z-token-credit-suite.zip` | 121561 | yes |
+| `docs/memory-archives/20260331T020838Z-gyroscopic-suite-cycle.zip` | 120909 | yes |
+| `docs/memory-archives/20260331T020840Z-suite-standard.zip` | 120906 | yes |
+| `docs/memory-archives/20260331T020833Z-token-credit-suite.zip` | 120902 | yes |
 | `docs/memory-archives/20260325T125000Z-gyroscopic-suite-cycle.zip` | 118953 | yes |
 | `docs/memory-archives/20260325T125002Z-suite-standard.zip` | 118953 | yes |
 | `docs/memory-archives/20260325T124953Z-token-credit-suite.zip` | 118950 | yes |

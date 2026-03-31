@@ -1,0 +1,75 @@
+{
+  "generated_utc": "2026-03-31T14:41:04+00:00",
+  "phase": "v30_omega",
+  "overall_status": "WARN",
+  "starting_branch_tip_sha": "dc82acf5a94703233628021f78f25ece4b886058",
+  "cleanup_baseline_sha": "714aca4893713b0aca32d3c5b3a2a730d4665c4b",
+  "connector_matrix": {
+    "github": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "linear": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "notion": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "google_drive": {
+      "mode": "bounded_working_mirror",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "postgres": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "cloudflare": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "figma": {
+      "mode": "read_only_verified",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "phase_posture": "carried_forward_v29"
+    },
+    "composio": {
+      "mode": "api_verified_connector_unloaded",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v30-composio-materialization-proof-v1.json",
+      "phase_posture": "v30_refreshed"
+    },
+    "gmail": {
+      "mode": "open_with_blocker",
+      "status": "WARN",
+      "source_url": "docs/trinity-live-traces/v30-gmail-materialization-proof-v1.json",
+      "phase_posture": "v30_blocked"
+    },
+    "hugging_face": {
+      "mode": "open_with_blocker",
+      "status": "WARN",
+      "source_url": "docs/trinity-live-traces/v30-huggingface-execution-proof-v1.json",
+      "phase_posture": "v30_blocked"
+    }
+  },
+  "notes": [
+    "GitHub, Linear, Notion, Postgres, Cloudflare, Figma, and Google Drive are preserved from the proven V29 baseline unless a fresher V30 proof superseded them.",
+    "Gmail stayed blocked because no callable Gmail connector tools were available in-session.",
+    "Hugging Face stayed blocked at execution because HF Jobs returned a 402 credit error.",
+    "Composio kept verified_composio_toolkits empty while proving a safe public capability execution."
+  ]
+}

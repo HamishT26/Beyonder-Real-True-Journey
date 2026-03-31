@@ -1,6 +1,6 @@
 # Trinity Expansion Result: public_intelligence_sync_bridge
 
-- generated_utc: `2026-03-31T03:38:49+00:00`
+- generated_utc: `2026-03-31T14:13:59+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_fallback:semanticscholar | PASS | fallback used (HTTP Error 429: ) |
 | cache_written | PASS | docs/trinity-mcp-cache/public-intelligence-latest.json |
 
 ## Metrics

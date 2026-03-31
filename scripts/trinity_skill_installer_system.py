@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import stat
 import shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -33,11 +35,16 @@ def _discover_skills(include: list[str]) -> list[Path]:
     return [SKILLS_SRC / n for n in names]
 
 
+def _remove_readonly(func, path: str, _exc_info) -> None:
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
+
 def _copy_skill(src: Path, dest_root: Path, force: bool) -> dict[str, object]:
     name = src.name
     dest = dest_root / name
     if dest.exists() and force:
-        shutil.rmtree(dest)
+        shutil.rmtree(dest, onexc=_remove_readonly)
     elif dest.exists() and not force:
         return {"name": name, "installed": False, "reason": "exists", "dest": str(dest)}
 

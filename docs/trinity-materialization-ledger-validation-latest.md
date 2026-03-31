@@ -1,8 +1,8 @@
 # Trinity Materialization Ledger Validation
 
-- generated_utc: `2026-03-31T03:59:44+00:00`
+- generated_utc: `2026-03-31T14:29:50+00:00`
 - overall_status: **PASS**
-- rows_checked: `17343`
+- rows_checked: `18337`
 
 ## Failures
 - none

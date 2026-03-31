@@ -1,6 +1,6 @@
 # V12 Storage Posture Summary
 
-- free_gib: `5.98`
+- free_gib: `3.4`
 - storage_pressure_class: `watch`
 - repo_authority: `PASS`
 - google_drive_state: `deferred_by_operator`
