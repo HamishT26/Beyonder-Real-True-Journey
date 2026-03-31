@@ -1,0 +1,65 @@
+{
+  "generated_utc": "2026-03-31T04:28:27+00:00",
+  "phase": "v29_omega",
+  "overall_status": "PASS",
+  "source_head_sha": "8c461021484918c51e0febbba6ac958e99f12dce",
+  "current_head_sha": "8c461021484918c51e0febbba6ac958e99f12dce",
+  "connector_matrix": {
+    "github": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-mcp-cache/github-pat-materialization-latest.json"
+    },
+    "linear": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-mcp-cache/linear-collab-latest.json"
+    },
+    "notion": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-mcp-cache/notion-memory-bridge-latest.json"
+    },
+    "google_drive": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json"
+    },
+    "postgres": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-mcp-cache/postgres-local-runtime-latest.json"
+    },
+    "cloudflare": {
+      "mode": "bounded_live_write",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json"
+    },
+    "composio": {
+      "mode": "api_verified_connector_unloaded",
+      "status": "PASS",
+      "source_url": "docs/trinity-composio-api-probe-latest.json"
+    },
+    "figma": {
+      "mode": "read_only_verified",
+      "status": "PASS",
+      "source_url": "docs/trinity-mcp-cache/figma-collab-latest.json"
+    },
+    "gmail": {
+      "mode": "read_only_unverified",
+      "status": "OPEN",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json"
+    },
+    "hugging_face": {
+      "mode": "read_only_verified",
+      "status": "PASS",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json"
+    }
+  },
+  "notes": [
+    "Cloudflare is recorded as a bounded disposable proof lane only; no persistent account-wide cleanup was performed.",
+    "Gmail remained read-only and unexercised in the repo publication lane, so it stays OPEN rather than promoted.",
+    "Hugging Face remained read-only and was verified through session reads rather than repo writes.",
+    "Composio keeps verified_composio_toolkits empty until a connected toolkit surface is truly materialized."
+  ]
+}

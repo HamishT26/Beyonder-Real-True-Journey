@@ -1,6 +1,6 @@
 # Trinity Agent Council Validation
 
-- generated_utc: `2026-03-30T23:05:47+00:00`
+- generated_utc: `2026-03-31T04:27:15+00:00`
 - overall_status: **PASS**
 - official_count: `11`
 - deployed_main_agent_count: `2`

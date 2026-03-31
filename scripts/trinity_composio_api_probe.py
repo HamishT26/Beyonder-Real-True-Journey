@@ -18,6 +18,8 @@ OUTPUT_MD = ROOT / "docs" / "trinity-composio-api-probe-latest.md"
 OUTPUT_TRACE = ROOT / "docs" / "trinity-live-traces" / "composio-api-proof-v1.json"
 BASE_URL = "https://backend.composio.dev/api/v3"
 TOOLKIT_SLUG = "github"
+PUBLIC_TOOL_SLUG = "HACKERNEWS_GET_USER"
+PUBLIC_TOOL_ARGUMENTS = {"username": "pg"}
 
 
 def now_iso() -> str:
@@ -61,16 +63,22 @@ def _parse_body(body_text: str) -> Any:
         return {"raw_body": body}
 
 
-def request_body(path: str, api_key: str) -> dict[str, Any]:
+def request_body(path: str, api_key: str, *, method: str = "GET", json_body: dict[str, Any] | None = None) -> dict[str, Any]:
     url = f"{BASE_URL}{path}"
+    data: bytes | None = None
+    headers = {
+        "x-api-key": api_key,
+        "accept": "application/json",
+        "user-agent": "codex-trinity-v29/1.0",
+    }
+    if json_body is not None:
+        data = json.dumps(json_body).encode("utf-8")
+        headers["content-type"] = "application/json"
     req = urllib.request.Request(
         url,
-        headers={
-            "x-api-key": api_key,
-            "accept": "application/json",
-            "user-agent": "codex-trinity-v28/1.0",
-        },
-        method="GET",
+        headers=headers,
+        data=data,
+        method=method,
     )
     try:
         with urllib.request.urlopen(req, timeout=20) as resp:
@@ -164,6 +172,40 @@ def first_list_count(payload: Any) -> int | None:
     return None
 
 
+def summarize_public_capability(response: dict[str, Any]) -> dict[str, Any]:
+    payload = response.get("parsed", {})
+    status = int(response.get("status", 0) or 0)
+    ok = status == 200
+    summary: dict[str, Any] = {
+        "tool_slug": PUBLIC_TOOL_SLUG,
+        "sample_arguments": {"username": "pg"},
+        "status": "PASS" if ok else "FAIL",
+        "http_status": status,
+        "content_type": response.get("content_type", ""),
+        "execution_result_present": False,
+        "result_hint": "",
+    }
+    if isinstance(payload, dict):
+        for key in ("successful", "success"):
+            if key in payload:
+                summary["execution_result_present"] = bool(payload.get(key))
+                break
+        for key in ("message", "status", "id"):
+            value = payload.get(key)
+            if isinstance(value, str) and value.strip():
+                summary["result_hint"] = value.strip()
+                break
+        if not summary["result_hint"]:
+            data = payload.get("data")
+            if isinstance(data, dict):
+                for key in ("id", "username", "user", "status"):
+                    value = data.get(key)
+                    if isinstance(value, str) and value.strip():
+                        summary["result_hint"] = value.strip()
+                        break
+    return summary
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
@@ -210,14 +252,22 @@ def main() -> int:
     toolkit_response = request_body(f"/toolkits/{TOOLKIT_SLUG}", api_key)
     tools_response = request_body("/tools", api_key)
     accounts_response = request_body("/connected_accounts", api_key)
+    public_tool_response = request_body(
+        f"/tools/execute/{PUBLIC_TOOL_SLUG}",
+        api_key,
+        method="POST",
+        json_body={"arguments": PUBLIC_TOOL_ARGUMENTS},
+    )
 
     toolkit_status = int(toolkit_response["status"])
     tools_status = int(tools_response["status"])
     accounts_status = int(accounts_response["status"])
+    public_tool_status = int(public_tool_response["status"])
 
     toolkit_payload = toolkit_response["parsed"]
     tools_payload = tools_response["parsed"]
     accounts_payload = accounts_response["parsed"]
+    public_capability_probe = summarize_public_capability(public_tool_response)
 
     toolkit_names = sample_labels(tools_payload, limit=10)
     if not toolkit_names:
@@ -248,12 +298,16 @@ def main() -> int:
             "toolkit_github": toolkit_status,
             "tools_github": tools_status,
             "connected_accounts": accounts_status,
+            "public_tool_execute": public_tool_status,
         },
         "response_content_types": {
             "toolkit_github": toolkit_response.get("content_type", ""),
             "tools_github": tools_response.get("content_type", ""),
             "connected_accounts": accounts_response.get("content_type", ""),
+            "public_tool_execute": public_tool_response.get("content_type", ""),
         },
+        "public_capability_probe": public_capability_probe,
+        "materialized_public_capability_count": 1 if public_capability_probe["status"] == "PASS" else 0,
         "blockers": [],
         "notes": [
             "The probe verifies the Composio v3 API directly with x-api-key auth.",
@@ -267,6 +321,17 @@ def main() -> int:
             f"github tools probe returned HTTP {tools_status}",
             f"connected_accounts probe returned HTTP {accounts_status}",
         ]
+    elif public_capability_probe["status"] == "PASS":
+        payload["notes"].append(
+            "A safe public tool execution probe succeeded for HACKERNEWS_GET_USER while verified_composio_toolkits remained empty."
+        )
+    else:
+        payload["blockers"] = [
+            f"public capability probe for {PUBLIC_TOOL_SLUG} returned HTTP {public_tool_status}",
+        ]
+        payload["notes"].append(
+            "The API surface is verified, but the bounded public tool execution probe did not complete successfully in this run."
+        )
 
     write_json(OUTPUT_JSON, payload)
     write_json(OUTPUT_TRACE, payload)
@@ -285,6 +350,12 @@ def main() -> int:
                     f"- {name}: `{status}`"
                     for name, status in payload["http_statuses"].items()
                 ],
+                "",
+                "## Public Capability Probe",
+                f"- tool_slug: `{payload['public_capability_probe']['tool_slug']}`",
+                f"- status: `{payload['public_capability_probe']['status']}`",
+                f"- http_status: `{payload['public_capability_probe']['http_status']}`",
+                f"- result_hint: `{payload['public_capability_probe']['result_hint'] or 'n/a'}`",
                 "",
                 "## Blockers",
                 *([f"- {item}" for item in payload["blockers"]] or ["- none"]),
