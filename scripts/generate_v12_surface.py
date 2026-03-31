@@ -233,7 +233,7 @@ PACKS = [
         wave="wave105",
         track="connector_ops",
         activation_group="cloud_archive_hold",
-        summary="Keep Google Drive explicitly deferred by operator for v12 and prevent bootstrap or archive claims from being treated as active.",
+        summary="Guard repo-first authority while allowing Google Drive as a bounded non-authoritative working mirror for v12.",
         repo_targets=[
             "docs/trinity-mcp-catalog-v10.json",
             "docs/trinity-memory-bank-registry-v3.json",
@@ -245,11 +245,12 @@ PACKS = [
         authority_scope="cloud_archive_scope",
         induction_dependency="docker_runtime_truth_v12",
         sync_strategy="local_repo",
-        live_dependency="operator_hold",
-        mirror_target="repo_only",
+        live_dependency="bounded_working_mirror",
+        mirror_target="bounded_working_mirror",
+        gating_class="bounded_working_mirror",
         connector_id="google_drive",
-        cleanup_class="operator_hold",
-        retention_scope="deferred_archive",
+        cleanup_class="bounded_working_mirror",
+        retention_scope="bounded_working_mirror",
         research_surface="none",
     ),
     mkpack(
@@ -526,7 +527,7 @@ def skill_markdown(pack: dict[str, object], kind: str) -> str:
             "",
             "1. Keep the Journey repo authoritative.",
             "2. Preserve official council identity, memory, reflection, and command-scope continuity.",
-            "3. Treat Google Drive as deferred by operator for v12.",
+            "3. Treat Google Drive as a bounded non-authoritative working mirror for v12.",
             "4. Use public sources only for v12 research refresh unless a stronger local proof already exists.",
             "5. Only use materialize paths for bounded live writes.",
             "",
@@ -548,8 +549,8 @@ def pack_contract(pack: dict[str, object]) -> dict[str, object]:
     payload["retention_scope"] = pack["retention_scope"]
     payload["research_surface"] = pack["research_surface"]
     if pack["pack"] == "google_drive_hold_guard_v12":
-        payload["operator_hold"] = True
-        payload["activation_disabled_reason"] = "Google Drive is deferred by operator for v12."
+        payload["operator_hold"] = False
+        payload["activation_disabled_reason"] = ""
     if pack["pack"] == "api_surface_book_v12":
         payload["api_surface"] = "governed_registry"
     return payload
@@ -566,7 +567,7 @@ def pack_fixture(pack: dict[str, object]) -> dict[str, object]:
         "storage_prune_governor_v12": "Apply the balanced prune policy, then rebuild latest authoritative summaries.",
         "artifact_retention_rebuild_v12": "Regenerate latest authoritative snapshots after prune.",
         "docker_runtime_truth_v12": "Keep Docker and Postgres truth aligned with actual runtime health.",
-        "google_drive_hold_guard_v12": "Keep Google Drive explicitly deferred in v12 registries and commands.",
+        "google_drive_hold_guard_v12": "Keep Google Drive bounded to non-authoritative working mirror use in v12 registries and commands.",
         "council_continuity_wellbeing_v12": "Preserve official council continuity and emit blockers on any drift.",
         "journey_log_absorption_v12": "Reconcile historical journey summaries without mutating raw logs.",
         "public_source_refresh_v12": "Refresh public-only Trinity sources and keep evidence boundaries explicit.",
@@ -590,7 +591,7 @@ def pack_workflow(pack: dict[str, object]) -> str:
         f"- retention_scope: `{pack['retention_scope']}`",
         f"- research_surface: `{pack['research_surface']}`",
         "- repo remains authoritative.",
-        "- Google Drive stays explicitly deferred in v12.",
+        "- Google Drive stays bounded to non-authoritative working mirror use in v12.",
         "- Public-source refresh can refine comparison language, but not raise readiness by itself.",
         "",
     ]
@@ -613,11 +614,11 @@ def manifest_entry(pack: dict[str, object], suffix: str) -> dict[str, object]:
     payload["retention_scope"] = pack["retention_scope"]
     payload["research_surface"] = pack["research_surface"]
     payload["storage_surface"] = (
-        "deferred_archive"
+        "bounded_working_mirror"
         if pack["pack"] == "google_drive_hold_guard_v12"
         else ("runtime_storage" if "docker_runtime" in pack["pack"] else "repo")
     )
-    payload["cloud_archive_state"] = "deferred_by_operator" if pack["pack"] == "google_drive_hold_guard_v12" else "not_applicable"
+    payload["cloud_archive_state"] = "bounded_working_mirror" if pack["pack"] == "google_drive_hold_guard_v12" else "not_applicable"
     payload["continuity_posture"] = "official_council_continuity"
     return payload
 
@@ -677,7 +678,7 @@ def build_new_commands() -> list[dict[str, object]]:
         ("validate_storage_prune_v12", "Validate the v12 storage prune outputs and retention boundaries.", "offline", "medium", False, "", "python scripts/trinity_storage_retention.py --keep-stamps 2 --keep-archives 3 --dry-run", ["docs/trinity-storage-prune-latest.json"], "Review the retention policy and restore any missing latest artifacts.", "reviewer", "storage_scope", "council_shared"),
         ("refresh_memory_bank_v12", "Refresh the v12 memory-bank registry and bounded storage posture.", "offline", "medium", False, "", "python scripts/trinity_memory_bank_sync.py --label v12-memory-bank", ["docs/trinity-memory-bank-registry-v3.json", "docs/trinity-memory-bank-sync-latest.json"], "Rebuild the v12 memory-bank registry from repo-first authority.", "archivist", "memory_scope", "council_shared"),
         ("validate_memory_bank_v12", "Validate the v12 memory-bank registry and sync posture.", "offline", "medium", False, "", "python scripts/trinity_memory_bank_validator.py --fail-on-warn", ["docs/trinity-memory-bank-validation-latest.json"], "Restore the v12 memory-bank registry and rerun validation.", "reviewer", "memory_scope", "council_shared"),
-        ("hold_google_drive_v12", "Record the v12 Google Drive operator hold in the catalog and policy surfaces.", "offline", "low", False, "", "python scripts/trinity_expansion_system_runner.py --system-id google_drive_hold_guard_v12_sync_bridge --profile-context standard", ["docs/trinity-mcp-catalog-v10.json", "docs/trinity-google-drive-sync-policy-v1.json"], "Restore the v12 MCP catalog and sync policy from repo authority.", "reviewer", "cloud_archive_scope", "leader_only"),
+        ("hold_google_drive_v12", "Record the v12 Google Drive bounded working mirror posture in the catalog and policy surfaces.", "offline", "low", False, "", "python scripts/trinity_expansion_system_runner.py --system-id google_drive_hold_guard_v12_sync_bridge --profile-context standard", ["docs/trinity-mcp-catalog-v10.json", "docs/trinity-google-drive-sync-policy-v1.json"], "Restore the v12 MCP catalog and sync policy from repo authority.", "reviewer", "cloud_archive_scope", "leader_only"),
         ("refresh_docker_truth_v12", "Refresh the Docker and Postgres runtime truth posture for v12.", "offline", "medium", False, "", "python scripts/trinity_expansion_system_runner.py --system-id docker_runtime_truth_v12_sync_bridge --profile-context standard", ["docs/trinity-storage-posture-summary-v12.json"], "Rebuild the runtime truth summary from bounded local probes.", "builder", "runtime_storage_scope", "leader_only"),
         ("run_deep_v12", "Run the v12 deep suite with fail-on-warn enabled.", "offline", "high", False, "", "python scripts/run_all_trinity_systems.py --profile deep --fail-on-warn", ["docs/system-suite-status.json"], "Restore the last PASS-backed v12 surface before rerunning deep.", "planner", "validation_scope", "leader_only"),
         ("run_collab_v12", "Run the v12 collab suite with MCP refresh enabled.", "collab", "high", True, "notion", "python scripts/run_all_trinity_systems.py --profile collab --include-mcp-refresh --fail-on-warn", ["docs/system-suite-status.json"], "Reset bounded mirrors to repo-first state before rerunning collab.", "planner", "live_sync_scope", "leader_only"),
@@ -780,38 +781,38 @@ def build_mcp_catalog(old_catalog: dict[str, object]) -> dict[str, object]:
         connectors.append(google_drive)
     google_drive.update(
         {
-            "status": "staged_setup_gate",
+            "status": "verified_live_read",
             "auth_class": "oauth_json_local_secret",
-            "interaction_mode": "deferred_archive_target",
-            "tool_surface": "disabled_by_operator",
+            "interaction_mode": "bounded_working_mirror",
+            "tool_surface": "oauth_json_local_secret",
             "cache_artifact": "docs/trinity-google-drive-mcp-activation-latest.json",
             "setup_gate": "docs/google-drive-hold-guard-v12-contract-v1.json",
-            "notes": "Google Drive is intentionally deferred in v12 and must not be bootstrapped or treated as active.",
-            "desired_state": "deferred_archive_target",
-            "actual_state": "operator_hold",
-            "live_read_enabled": False,
-            "live_write_enabled": False,
-            "promotion_evidence": [],
-            "blockers": ["Google Drive activation is explicitly on hold for v12."],
-            "activation_path": "deferred_by_operator",
+            "notes": "Google Drive is bounded to non-authoritative working mirror use in v12 and must not override repo authority.",
+            "desired_state": "bounded_working_mirror",
+            "actual_state": "bounded_working_mirror",
+            "live_read_enabled": True,
+            "live_write_enabled": True,
+            "promotion_evidence": ["docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json"],
+            "blockers": [],
+            "activation_path": "bounded_working_mirror",
             "workspace_target": "google_drive_archive_folder",
-            "proof_target": "none_v12",
+            "proof_target": "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json",
             "last_verified_utc": now_iso(),
-            "ladder_eligibility": "not_applicable",
-            "persistent_scope": "none",
-            "prod_scope": "none",
-            "rollback_scope": "not_applicable",
-            "uat_scope": "not_applicable",
-            "prod_proof_state": "operator_hold",
-            "ha_proof_state": "operator_hold",
-            "cloud_staging_scope": "deferred_archive_only",
-            "archive_only": True,
-            "oauth_bootstrap_state": "disabled_by_operator",
+            "ladder_eligibility": "l2_persistent_dev",
+            "persistent_scope": "bounded_working_mirror",
+            "prod_scope": "readiness_only",
+            "rollback_scope": "remove bounded mirror artifacts",
+            "uat_scope": "synthetic_local_mesh",
+            "prod_proof_state": "readiness_only",
+            "ha_proof_state": "readiness_only",
+            "cloud_staging_scope": "bounded_working_mirror",
+            "archive_only": False,
+            "oauth_bootstrap_state": "interactive_oauth_completed",
             "docker_volume_state": "not_requested",
-            "fallback_mode": "operator_hold",
-            "operator_hold": True,
-            "activation_disabled_reason": "Operator explicitly deferred Google Drive for v12.",
-            "archive_policy_state": "deferred_archive_target",
+            "fallback_mode": "bounded_working_mirror",
+            "operator_hold": False,
+            "activation_disabled_reason": "",
+            "archive_policy_state": "bounded_working_mirror",
         }
     )
     payload["connectors"] = connectors
@@ -853,13 +854,15 @@ def build_memory_bank_registry(old_registry: dict[str, object]) -> dict[str, obj
         row.setdefault("cloud_capacity_class", "bounded")
         row.setdefault("last_archive_verified_utc", "")
         if row.get("surface") == "google_drive":
-            row["status"] = "staged_with_blockers"
-            row["notes"] = "Google Drive is deferred by operator for v12 and remains a future archive target only."
-            row["proof_state"] = "operator_hold"
-            row["reachable"] = False
-            row["blockers"] = ["Google Drive activation is explicitly on hold for v12."]
-            row["archive_upload_state"] = "deferred_by_operator"
-            row["cloud_capacity_class"] = "cloud_archive"
+            row["status"] = "bounded_working_mirror"
+            row["notes"] = "Google Drive is bounded to non-authoritative working mirror use in v12 and never overrides repo authority."
+            row["proof_state"] = "working_mirror_verified"
+            row["reachable"] = True
+            row["blockers"] = []
+            row["archive_upload_state"] = "uploaded"
+            row["cloud_capacity_class"] = "bounded"
+            row["latest_artifact"] = "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json"
+            row["last_archive_verified_utc"] = now_iso()
         elif row.get("surface") in {"docker", "postgres"}:
             row["notes"] = "Runtime/query mirror truth is bounded to actual Docker/Postgres health and may differ from broad suite pass state."
     return payload
@@ -1286,13 +1289,13 @@ def seed_support_docs(roster: dict[str, object]) -> None:
         GOOGLE_POLICY,
         {
             "generated_utc": now_iso(),
-            "operator_hold": True,
-            "drive_role": "deferred_archive_target",
-            "activation_disabled_reason": "Google Drive is explicitly deferred by operator for v12.",
+            "operator_hold": False,
+            "drive_role": "bounded_working_mirror",
+            "activation_disabled_reason": "",
             "repo_authority": ["certificates", "ledgers", "roster", "commands", "official Trinity records"],
-            "archive_allowed": [],
+            "archive_allowed": ["non-authoritative artifacts", "proof traces", "working mirror documents"],
             "archive_forbidden": ["raw duo chats", "local secrets", "OAuth keys", "exclusive-only canonical records", "repo authority overrides"],
-            "fallback_mode": "deferred_by_operator",
+            "fallback_mode": "bounded_working_mirror",
         },
     )
 
@@ -1396,9 +1399,9 @@ def seed_support_docs(roster: dict[str, object]) -> None:
             {
                 "timestamp": now_iso(),
                 "api_id": "google_drive",
-                "mode": "deferred",
-                "result": "operator_hold",
-                "notes": "Google Drive explicitly deferred for v12.",
+                "mode": "bounded_working_mirror",
+                "result": "working_mirror_verified",
+                "notes": "Google Drive bounded working mirror verified for non-authoritative artifacts.",
             },
             {
                 "timestamp": now_iso(),

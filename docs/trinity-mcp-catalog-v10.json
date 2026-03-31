@@ -1,6 +1,6 @@
 {
   "version": "v10",
-  "generated_utc": "2026-03-27T16:28:11Z",
+  "generated_utc": "2026-03-31T03:58:55+00:00",
   "connectors": [
     {
       "mcp_id": "figma",
@@ -338,43 +338,39 @@
     {
       "mcp_id": "google_drive",
       "status": "verified_live_read",
-      "auth_class": "operator_connected_plugin_oauth",
-      "interaction_mode": "hybrid_working_mirror",
-      "tool_surface": "direct_app_connector",
+      "auth_class": "oauth_json_local_secret",
+      "interaction_mode": "bounded_working_mirror",
+      "tool_surface": "oauth_json_local_secret",
       "cache_artifact": "docs/trinity-google-drive-mcp-activation-latest.json",
       "setup_gate": "docs/google-drive-hold-guard-v12-contract-v1.json",
-      "notes": "Google Drive policy is repo-first bounded working mirror. Live read/search proof landed; explicit write/read-back promotion is still pending.",
+      "notes": "Google Drive is bounded to non-authoritative working mirror use in v12 and must not override repo authority.",
       "desired_state": "bounded_working_mirror",
-      "actual_state": "verified_live_read",
+      "actual_state": "bounded_working_mirror",
       "live_read_enabled": true,
-      "live_write_enabled": false,
+      "live_write_enabled": true,
       "promotion_evidence": [
-        "docs/v25-omega-closeout-summary-v1.json"
+        "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json"
       ],
-      "blockers": [
-        "explicit Google Drive write/read-back proof is still pending",
-        "Project Vision working-folder placement was not cleanly proven from tonight's connector lane"
-      ],
-      "activation_path": "hybrid_app_connector",
-      "workspace_target": "google_drive_project_vision_working_folder",
-      "proof_target": "bounded_working_mirror_disposable_artifact",
-      "last_verified_utc": "2026-03-27T16:28:11Z",
+      "blockers": [],
+      "activation_path": "bounded_working_mirror",
+      "workspace_target": "google_drive_archive_folder",
+      "proof_target": "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json",
+      "last_verified_utc": "2026-03-31T03:58:55+00:00",
       "ladder_eligibility": "l2_persistent_dev",
-      "persistent_scope": "non_authoritative_working_mirror",
-      "prod_scope": "not_authoritative",
-      "rollback_scope": "delete bounded working-mirror artifact",
-      "uat_scope": "bounded_connector_alpha",
-      "prod_proof_state": "write_proof_pending",
-      "ha_proof_state": "design_only",
+      "persistent_scope": "bounded_working_mirror",
+      "prod_scope": "readiness_only",
+      "rollback_scope": "remove bounded mirror artifacts",
+      "uat_scope": "synthetic_local_mesh",
+      "prod_proof_state": "readiness_only",
+      "ha_proof_state": "readiness_only",
       "cloud_staging_scope": "bounded_working_mirror",
       "archive_only": false,
-      "oauth_bootstrap_state": "connected_read_verified",
-      "docker_volume_state": "not_required",
+      "oauth_bootstrap_state": "interactive_oauth_completed",
+      "docker_volume_state": "not_requested",
       "fallback_mode": "bounded_working_mirror",
       "operator_hold": false,
       "activation_disabled_reason": "",
-      "archive_policy_state": "bounded_working_mirror",
-      "connector_class": "app_connector"
+      "archive_policy_state": "bounded_working_mirror"
     }
   ]
 }

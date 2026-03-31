@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-03-26T04:06:23+00:00",
+  "generated_utc": "2026-03-31T04:28:27+00:00",
   "integration_id": "connector_materialization",
   "auth_state": "mixed",
   "status": "active",
@@ -15,7 +15,7 @@
       "record_id": "figma",
       "signal_type": "connector_state",
       "title": "figma",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/figma-collab-latest.json",
       "summary": "Verified in-session via whoami. The current seat remains View, so write actions stay disabled.",
       "metrics": {
@@ -38,7 +38,7 @@
       "record_id": "linear",
       "signal_type": "connector_state",
       "title": "linear",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/linear-collab-latest.json",
       "summary": "Verified in-session via user and team reads plus a disposable staging write proof.",
       "metrics": {
@@ -61,7 +61,7 @@
       "record_id": "playwright",
       "signal_type": "connector_state",
       "title": "playwright",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/playwright-ops-latest.json",
       "summary": "No direct Playwright MCP tool surface is available.",
       "metrics": {
@@ -84,7 +84,7 @@
       "record_id": "github",
       "signal_type": "connector_state",
       "title": "github",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/github-pat-materialization-latest.json",
       "summary": "Verified via git HTTPS read handshake and branch-scoped push using the existing local credential path.",
       "metrics": {
@@ -107,7 +107,7 @@
       "record_id": "filesystem",
       "signal_type": "connector_state",
       "title": "filesystem",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/identity-governance-latest.json",
       "summary": "No distinct scoped connector surface is exposed; local shell access alone does not count as connector promotion.",
       "metrics": {
@@ -130,7 +130,7 @@
       "record_id": "notion",
       "signal_type": "connector_state",
       "title": "notion",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/notion-memory-bridge-latest.json",
       "summary": "Verified in-session through creation and read-back of a v5 root page, structured database, and seeded entries.",
       "metrics": {
@@ -153,7 +153,7 @@
       "record_id": "slack",
       "signal_type": "connector_state",
       "title": "slack",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/identity-governance-latest.json",
       "summary": "No token or live connector surface is exposed.",
       "metrics": {
@@ -176,7 +176,7 @@
       "record_id": "google_workspace",
       "signal_type": "connector_state",
       "title": "google_workspace",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/identity-governance-latest.json",
       "summary": "No OAuth credentials or live connector surface are exposed.",
       "metrics": {
@@ -199,7 +199,7 @@
       "record_id": "postgres",
       "signal_type": "connector_state",
       "title": "postgres",
-      "published_at": "2026-03-26",
+      "published_at": "2026-03-31",
       "source_url": "docs/trinity-mcp-cache/postgres-local-runtime-latest.json",
       "summary": "Verified through a Docker-local Postgres container with read handshake, disposable schema write proof, and cleanup.",
       "metrics": {
@@ -216,11 +216,128 @@
         "docs/trinity-mcp-catalog-v4.json",
         "docs/trinity-materialization-ledger.jsonl"
       ]
+    },
+    {
+      "source_id": "connector_materialization",
+      "record_id": "google_drive",
+      "signal_type": "connector_state",
+      "title": "google_drive",
+      "published_at": "2026-03-31",
+      "source_url": "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json",
+      "summary": "Verified via bounded working-mirror read and disposable write/read-back proof.",
+      "metrics": {
+        "desired_state": "verified_live_write",
+        "actual_state": "verified_live_write",
+        "live_read_enabled": true,
+        "live_write_enabled": true
+      },
+      "tags": [
+        "connector_materialization",
+        "google_drive"
+      ],
+      "repo_targets": [
+        "docs/trinity-live-traces",
+        "docs/trinity-materialization-ledger.jsonl"
+      ]
+    },
+    {
+      "source_id": "connector_materialization",
+      "record_id": "cloudflare",
+      "signal_type": "connector_state",
+      "title": "cloudflare",
+      "published_at": "2026-03-31",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "summary": "Verified via a disposable Worker create/delete roundtrip in-session.",
+      "metrics": {
+        "desired_state": "verified_live_write",
+        "actual_state": "verified_live_write",
+        "live_read_enabled": true,
+        "live_write_enabled": true
+      },
+      "tags": [
+        "connector_materialization",
+        "cloudflare"
+      ],
+      "repo_targets": [
+        "docs/trinity-live-traces",
+        "docs/trinity-materialization-ledger.jsonl"
+      ]
+    },
+    {
+      "source_id": "connector_materialization",
+      "record_id": "composio",
+      "signal_type": "connector_state",
+      "title": "composio",
+      "published_at": "2026-03-31",
+      "source_url": "docs/trinity-composio-api-probe-latest.json",
+      "summary": "Verified at the v3 API layer with a safe public tool execution, while verified_composio_toolkits remained empty.",
+      "metrics": {
+        "desired_state": "api_verified_connector_unloaded",
+        "actual_state": "api_verified_connector_unloaded",
+        "live_read_enabled": true,
+        "live_write_enabled": false,
+        "materialized_public_capability_count": 1
+      },
+      "tags": [
+        "connector_materialization",
+        "composio"
+      ],
+      "repo_targets": [
+        "docs/trinity-composio-api-probe-latest.json",
+        "docs/trinity-live-traces"
+      ]
+    },
+    {
+      "source_id": "connector_materialization",
+      "record_id": "hugging_face",
+      "signal_type": "connector_state",
+      "title": "hugging_face",
+      "published_at": "2026-03-31",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "summary": "Verified in-session through read-only profile and search access.",
+      "metrics": {
+        "desired_state": "verified_live_read",
+        "actual_state": "verified_live_read",
+        "live_read_enabled": true,
+        "live_write_enabled": false
+      },
+      "tags": [
+        "connector_materialization",
+        "hugging_face"
+      ],
+      "repo_targets": [
+        "docs/trinity-live-traces",
+        "docs/trinity-materialization-ledger.jsonl"
+      ]
+    },
+    {
+      "source_id": "connector_materialization",
+      "record_id": "gmail",
+      "signal_type": "connector_state",
+      "title": "gmail",
+      "published_at": "2026-03-31",
+      "source_url": "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json",
+      "summary": "Left in an open read-only state because the connector was not exercised in the repo publication lane.",
+      "metrics": {
+        "desired_state": "verified_live_read",
+        "actual_state": "read_only_unverified",
+        "live_read_enabled": false,
+        "live_write_enabled": false
+      },
+      "tags": [
+        "connector_materialization",
+        "gmail"
+      ],
+      "repo_targets": [
+        "docs/trinity-live-traces",
+        "docs/trinity-materialization-ledger.jsonl"
+      ]
     }
   ],
   "repo_targets_touched": [
     "docs/trinity-mcp-catalog-v4.json",
-    "docs/trinity-materialization-ledger.jsonl"
+    "docs/trinity-materialization-ledger.jsonl",
+    "docs/trinity-live-traces/v29-connector-sweep-proof-v1.json"
   ],
-  "next_action": "Use collab for live reads and materialize for disposable write proofs; do not widen connector claims without fresh artifacts."
+  "next_action": "Use the V29 connector sweep proof and the shared connector-materialization gate as the promotion boundary for future live-write claims."
 }

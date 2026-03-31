@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Probe Ubuntu WSL readiness for Trinity v28."""
+"""Probe Ubuntu WSL readiness for Trinity v29."""
 
 from __future__ import annotations
 
@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_JSON = ROOT / "docs" / "v28-linux-readiness-matrix-v1.json"
-OUTPUT_MD = ROOT / "docs" / "v28-linux-readiness-matrix-v1.md"
+OUTPUT_JSON = ROOT / "docs" / "v29-linux-readiness-matrix-v1.json"
+OUTPUT_MD = ROOT / "docs" / "v29-linux-readiness-matrix-v1.md"
 REPO_MOUNT = "/mnt/c/Users/hamis/OneDrive/Documents/GitHub/Beyonder-Real-True-Journey"
 REPO_WINDOWS = "C:/Users/hamis/OneDrive/Documents/GitHub/Beyonder-Real-True-Journey"
 
@@ -136,7 +136,7 @@ def main() -> int:
         [
             "python3",
             "-c",
-            "from pathlib import Path; p=Path('/tmp/v28-smoke.txt'); p.write_text('v28 smoke\\n'); print(p.read_text().strip()); p.unlink()",
+            "from pathlib import Path; p=Path('/tmp/v29-smoke.txt'); p.write_text('v29 smoke\\n'); print(p.read_text().strip()); p.unlink()",
         ],
         timeout=20,
     )
@@ -191,9 +191,9 @@ def main() -> int:
     payload = {
         "generated_utc": now_iso(),
         "overall_status": "PASS" if pass_gate else "WARN",
-        "phase": "v28_omega",
+        "phase": "v29_omega",
         "authority_model": "repo_first",
-        "docker_runtime_role": "fallback_only",
+        "docker_runtime_role": "soft_retired_fallback",
         "current_shell": "ubuntu" if pass_gate else "powershell",
         "linux_switch_recommended_now": pass_gate,
         "readiness_state": "ubuntu_validated_primary" if pass_gate else "ubuntu_probe_blocked",
@@ -212,8 +212,8 @@ def main() -> int:
             "repo_git_status_windows_bridge_full": "not_required" if bridge_repo_git_probe.returncode == 125 else status_for(bridge_repo_git_probe),
             "repo_git_status_diagnostic_uno": "not_required" if diagnostic_repo_git_probe.returncode == 125 else status_for(diagnostic_repo_git_probe),
             "tempfile_smoke_probe": status_for(temp_probe),
-            "docker_probe": "fallback_only_not_required",
-            "kubectl_probe": "fallback_only_not_required",
+            "docker_probe": "soft_retired_not_required",
+            "kubectl_probe": "soft_retired_not_required",
         },
         "probe_details": {
             "launch_stdout": launch_probe.stdout.strip(),
@@ -259,7 +259,7 @@ def main() -> int:
         "recommendation": {
             "keep_current_shell": "ubuntu" if pass_gate else "powershell",
             "reason": (
-                "Ubuntu met the bounded v28 toolchain and repo-parity gate."
+                "Ubuntu met the bounded v29 toolchain and repo-parity gate."
                 if pass_gate
                 else "PowerShell remains primary because Ubuntu still has at least one bounded parity blocker."
             ),
@@ -271,7 +271,7 @@ def main() -> int:
         OUTPUT_MD,
         "\n".join(
             [
-                "# V28 Linux Readiness Matrix",
+                "# V29 Linux Readiness Matrix",
                 "",
                 f"- overall_status: `{payload['overall_status']}`",
                 f"- current_shell: `{payload['current_shell']}`",

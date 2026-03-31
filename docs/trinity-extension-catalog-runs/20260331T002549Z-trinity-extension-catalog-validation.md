@@ -1,0 +1,136 @@
+# Trinity Extension Catalog Validation
+
+- generated_utc: `2026-03-31T00:25:49+00:00`
+- overall_status: **FAIL**
+- extension_count: `2352`
+
+## Failures
+- connectors[0] missing field: archive_only
+- connectors[0] missing field: oauth_bootstrap_state
+- connectors[0] missing field: docker_volume_state
+- connectors[0] missing field: fallback_mode
+- connectors[0] missing field: operator_hold
+- connectors[0] missing field: activation_disabled_reason
+- connectors[0] missing field: archive_policy_state
+- figma oauth_bootstrap_state must be a string
+- figma docker_volume_state must be a string
+- figma fallback_mode must be a string
+- figma activation_disabled_reason must be a string
+- figma archive_policy_state must be a string
+- figma archive_only must be boolean
+- figma operator_hold must be boolean
+- connectors[1] missing field: archive_only
+- connectors[1] missing field: oauth_bootstrap_state
+- connectors[1] missing field: docker_volume_state
+- connectors[1] missing field: fallback_mode
+- connectors[1] missing field: operator_hold
+- connectors[1] missing field: activation_disabled_reason
+- connectors[1] missing field: archive_policy_state
+- linear oauth_bootstrap_state must be a string
+- linear docker_volume_state must be a string
+- linear fallback_mode must be a string
+- linear activation_disabled_reason must be a string
+- linear archive_policy_state must be a string
+- linear archive_only must be boolean
+- linear operator_hold must be boolean
+- connectors[2] missing field: archive_only
+- connectors[2] missing field: oauth_bootstrap_state
+- connectors[2] missing field: docker_volume_state
+- connectors[2] missing field: fallback_mode
+- connectors[2] missing field: operator_hold
+- connectors[2] missing field: activation_disabled_reason
+- connectors[2] missing field: archive_policy_state
+- playwright oauth_bootstrap_state must be a string
+- playwright docker_volume_state must be a string
+- playwright fallback_mode must be a string
+- playwright activation_disabled_reason must be a string
+- playwright archive_policy_state must be a string
+- playwright archive_only must be boolean
+- playwright operator_hold must be boolean
+- connectors[3] missing field: archive_only
+- connectors[3] missing field: oauth_bootstrap_state
+- connectors[3] missing field: docker_volume_state
+- connectors[3] missing field: fallback_mode
+- connectors[3] missing field: operator_hold
+- connectors[3] missing field: activation_disabled_reason
+- connectors[3] missing field: archive_policy_state
+- github oauth_bootstrap_state must be a string
+- github docker_volume_state must be a string
+- github fallback_mode must be a string
+- github activation_disabled_reason must be a string
+- github archive_policy_state must be a string
+- github archive_only must be boolean
+- github operator_hold must be boolean
+- connectors[4] missing field: archive_only
+- connectors[4] missing field: oauth_bootstrap_state
+- connectors[4] missing field: docker_volume_state
+- connectors[4] missing field: fallback_mode
+- connectors[4] missing field: operator_hold
+- connectors[4] missing field: activation_disabled_reason
+- connectors[4] missing field: archive_policy_state
+- filesystem oauth_bootstrap_state must be a string
+- filesystem docker_volume_state must be a string
+- filesystem fallback_mode must be a string
+- filesystem activation_disabled_reason must be a string
+- filesystem archive_policy_state must be a string
+- filesystem archive_only must be boolean
+- filesystem operator_hold must be boolean
+- connectors[5] missing field: archive_only
+- connectors[5] missing field: oauth_bootstrap_state
+- connectors[5] missing field: docker_volume_state
+- connectors[5] missing field: fallback_mode
+- connectors[5] missing field: operator_hold
+- connectors[5] missing field: activation_disabled_reason
+- connectors[5] missing field: archive_policy_state
+- notion oauth_bootstrap_state must be a string
+- notion docker_volume_state must be a string
+- notion fallback_mode must be a string
+- notion activation_disabled_reason must be a string
+- notion archive_policy_state must be a string
+- notion archive_only must be boolean
+- notion operator_hold must be boolean
+- connectors[6] missing field: archive_only
+- connectors[6] missing field: oauth_bootstrap_state
+- connectors[6] missing field: docker_volume_state
+- connectors[6] missing field: fallback_mode
+- connectors[6] missing field: operator_hold
+- connectors[6] missing field: activation_disabled_reason
+- connectors[6] missing field: archive_policy_state
+- slack oauth_bootstrap_state must be a string
+- slack docker_volume_state must be a string
+- slack fallback_mode must be a string
+- slack activation_disabled_reason must be a string
+- slack archive_policy_state must be a string
+- slack archive_only must be boolean
+- slack operator_hold must be boolean
+- connectors[7] missing field: archive_only
+- connectors[7] missing field: oauth_bootstrap_state
+- connectors[7] missing field: docker_volume_state
+- connectors[7] missing field: fallback_mode
+- connectors[7] missing field: operator_hold
+- connectors[7] missing field: activation_disabled_reason
+- connectors[7] missing field: archive_policy_state
+- google_workspace oauth_bootstrap_state must be a string
+- google_workspace docker_volume_state must be a string
+- google_workspace fallback_mode must be a string
+- google_workspace activation_disabled_reason must be a string
+- google_workspace archive_policy_state must be a string
+- google_workspace archive_only must be boolean
+- google_workspace operator_hold must be boolean
+- connectors[8] missing field: archive_only
+- connectors[8] missing field: oauth_bootstrap_state
+- connectors[8] missing field: docker_volume_state
+- connectors[8] missing field: fallback_mode
+- connectors[8] missing field: operator_hold
+- connectors[8] missing field: activation_disabled_reason
+- connectors[8] missing field: archive_policy_state
+- postgres oauth_bootstrap_state must be a string
+- postgres docker_volume_state must be a string
+- postgres fallback_mode must be a string
+- postgres activation_disabled_reason must be a string
+- postgres archive_policy_state must be a string
+- postgres archive_only must be boolean
+- postgres operator_hold must be boolean
+
+## Warnings
+- none

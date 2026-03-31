@@ -1,6 +1,12 @@
-# Google Drive Guard Workflow v12
+# Google Drive Hold Guard V12 Workflow
 
-- Keep the repo authoritative at all times.
-- Use Google Drive only as a bounded working mirror for non-authoritative artifacts.
-- Require explicit write/read-back proof before promoting any Drive write path beyond read-verified status.
-- Never store secrets, raw duo chats, repo-authority overrides, or exclusive canonical records in Drive.
+- activation_group: `cloud_archive_hold`
+- authority_scope: `cloud_archive_scope`
+- council_scope: `leader_only`
+- sync_strategy: `local_repo`
+- cleanup_class: `bounded_working_mirror`
+- retention_scope: `bounded_working_mirror`
+- research_surface: `none`
+- repo remains authoritative.
+- Google Drive stays bounded to non-authoritative working mirror use in v12.
+- Public-source refresh can refine comparison language, but not raise readiness by itself.
