@@ -8,5 +8,5 @@
 - retention_scope: `runtime_state`
 - research_surface: `none`
 - repo remains authoritative.
-- Google Drive stays explicitly deferred in v12.
+- Google Drive stays bounded to non-authoritative working mirror use in v12.
 - Public-source refresh can refine comparison language, but not raise readiness by itself.

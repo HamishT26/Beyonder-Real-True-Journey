@@ -8,11 +8,11 @@
 - follow_up_status: `SUCCESS`
 
 ## Discovery
-- available_tool_count: `17`
-- missing_recommended_tools: `rg, fd, jq`
+- available_tool_count: `25`
+- missing_recommended_tools: `none`
 - network_outbound: `True`
 
 ## Follow-Up
 - safety_violation_free: `True`
 - artifacts_created: `1`
-- package_install_targets_deferred: `rg, fd, jq`
+- package_install_targets_deferred: `none`

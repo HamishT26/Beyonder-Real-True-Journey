@@ -1,10 +1,10 @@
 # Trinity Memory Bank Sync
 
-- generated_utc: `2026-03-28T16:37:32+00:00`
+- generated_utc: `2026-03-31T04:01:18+00:00`
 - overall_status: `PASS`
-- archive: `docs/memory-archives/20260328T163727Z-v27-omega-memory-bank.zip`
-- archive_mb: `0.13`
-- free_gib: `7.41`
+- archive: `docs/memory-archives/20260331T040114Z-v29-materialize-l5-memory-bank.zip`
+- archive_mb: `0.18`
+- free_gib: `5.98`
 
 ## Surfaces
 - `repo`: status=`authoritative`, reachable=`True`, proof_state=`repo_first_authority`, blockers=`none`
@@ -14,7 +14,7 @@
 - `notion`: status=`bounded_mirror`, reachable=`True`, proof_state=`bounded_mirror_only`, blockers=`none`
 - `linear`: status=`bounded_action_mirror`, reachable=`True`, proof_state=`bounded_action_only`, blockers=`none`
 - `new_project_workbench`: status=`local_read_surface`, reachable=`True`, proof_state=`workbench_read_only`, blockers=`none`
-- `google_drive`: status=`bounded_working_mirror`, reachable=`True`, proof_state=`working_mirror_verified`, blockers=`none`
+- `google_drive`: status=`auth_blocked`, reachable=`False`, proof_state=`working_mirror_proof_pending`, blockers=`bounded working-mirror proof not yet completed`
 
 ## Notes
 - Repo remains the authority source.
