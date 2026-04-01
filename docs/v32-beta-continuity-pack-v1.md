@@ -2,7 +2,7 @@
 
 - Source branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - Source head SHA: `f664095aa243f94642ef0f8dc271d3eb4454ef54`
-- Current branch head: `f664095aa243f94642ef0f8dc271d3eb4454ef54`
+- Current branch head: `e4b66abf79a0b70124c62856c8edfe289bc2c241`
 - Authority model: `repo_first`
 - Current shell: `ubuntu`
 - Readiness state: `ubuntu_validated_primary`
