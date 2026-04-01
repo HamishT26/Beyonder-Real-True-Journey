@@ -1,0 +1,18 @@
+{
+  "generated_utc": "2026-03-31T14:41:04+00:00",
+  "phase": "v31_beta",
+  "intended_receiver": "Aletheon",
+  "receiver_ready": false,
+  "receiver_rule_outcome": "aletheon_facing",
+  "carry_forward_blockers": [
+    "Gmail connector tools were not callable in-session, so connector-native Gmail materialization could not proceed.",
+    "Hugging Face Jobs execution is blocked by insufficient pre-paid credits even though authenticated read access works.",
+    "Deep and materialize lanes fail only because the memory-bank validator treats the current 3.54 GiB free-space watch band as a strict failure under fail-on-warn."
+  ],
+  "required_for_orun": [
+    "gmail_materialization_state != open_with_blocker",
+    "huggingface_execution_state != open_with_blocker",
+    "deep_suite.fail_count == 0",
+    "materialize_l2_l5.fail_count == 0"
+  ]
+}

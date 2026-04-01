@@ -1,6 +1,6 @@
 # Trinity Expansion Result: command_surface_research_sync_bridge
 
-- generated_utc: `2026-03-31T03:42:47+00:00`
+- generated_utc: `2026-04-01T02:28:55+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_records_present | PASS | records=3 |
 | cache_written | PASS | docs/trinity-mcp-cache/command-surface-research-latest.json |
 
 ## Metrics
@@ -22,7 +21,7 @@
   "live_read_enabled": false,
   "live_write_enabled": false,
   "pack": "command_surface_research",
-  "record_count": 3,
+  "record_count": 1,
   "strategy": "public_feeds"
 }
 ```

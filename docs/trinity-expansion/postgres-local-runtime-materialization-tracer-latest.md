@@ -1,6 +1,6 @@
 # Trinity Expansion Result: postgres_local_runtime_materialization_tracer
 
-- generated_utc: `2026-03-31T03:39:51+00:00`
+- generated_utc: `2026-04-01T02:25:21+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

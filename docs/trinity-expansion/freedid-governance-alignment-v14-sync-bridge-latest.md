@@ -1,6 +1,6 @@
 # Trinity Expansion Result: freedid_governance_alignment_v14_sync_bridge
 
-- generated_utc: `2026-03-31T03:52:02+00:00`
+- generated_utc: `2026-04-01T02:39:04+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_records_present | PASS | fallback_records=1 |
 | cache_written | PASS | docs/trinity-mcp-cache/freedid-governance-alignment-v14-latest.json |
 
 ## Metrics

@@ -1,6 +1,6 @@
 # Mind Theory Signal Board
 
-- generated_utc: `2026-03-31T03:55:55+00:00`
+- generated_utc: `2026-04-01T02:42:59+00:00`
 - overall_status: **PASS**
 - freshness_status: `PASS`
 - source_count: `14`
@@ -18,6 +18,6 @@
 ## Promotion candidates
 | target | record_count | latest_published_at | supporting_source_ids |
 |---|---|---|---|
-| docs/comparative-validation-grid-v1.md | 14 | 2026-03-30 | arxiv, openalex |
-| docs/gmut-claim-register-v0.md | 8 | 2026-03-29 | arxiv, openalex |
-| docs/trinity-public-research-brief-2026-03-06.md | 6 | 2026-03-30 | arxiv, openalex |
+| docs/comparative-validation-grid-v1.md | 14 | 2026-03-31 | arxiv, openalex |
+| docs/gmut-claim-register-v0.md | 8 | 2026-03-31 | arxiv, openalex |
+| docs/trinity-public-research-brief-2026-03-06.md | 6 | 2026-03-31 | arxiv, openalex |

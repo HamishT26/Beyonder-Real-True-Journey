@@ -2,7 +2,7 @@
 
 - Intended receiver: `Aletheon`
 - Active branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Head SHA: `8c461021484918c51e0febbba6ac958e99f12dce`
+- Head SHA: `f664095aa243f94642ef0f8dc271d3eb4454ef54`
 - Shared suite surface: `1155 PASS / 0 WARN / 0 FAIL`
 - Expansion systems: `1094 / 1094`
 

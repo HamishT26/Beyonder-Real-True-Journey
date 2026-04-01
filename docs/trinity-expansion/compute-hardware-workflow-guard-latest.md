@@ -1,6 +1,6 @@
 # Trinity Expansion Result: compute_hardware_workflow_guard
 
-- generated_utc: `2026-03-31T03:38:18+00:00`
+- generated_utc: `2026-04-01T02:24:12+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

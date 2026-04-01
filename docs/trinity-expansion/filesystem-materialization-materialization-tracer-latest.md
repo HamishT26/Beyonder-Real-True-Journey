@@ -1,6 +1,6 @@
 # Trinity Expansion Result: filesystem_materialization_materialization_tracer
 
-- generated_utc: `2026-03-31T03:38:59+00:00`
+- generated_utc: `2026-04-01T02:24:36+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,7 +10,7 @@
 |---|---|---|
 | proof_written | PASS | docs/trinity-live-traces/filesystem-materialization-proof-v1.json |
 | ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=blocked |
+| write_scope | PASS | mode=offline_only |
 | blockers_recorded | PASS | blockers=1 |
 
 ## Metrics
@@ -24,10 +24,10 @@
   "include_live_writes": true,
   "live_write_enabled": false,
   "materialization_level": "l5_ha_prod",
-  "mode": "blocked",
+  "mode": "offline_only",
   "pack": "filesystem_materialization",
   "profile_context": "materialize",
-  "tracer_result": "BLOCKED"
+  "tracer_result": "SKIP"
 }
 ```
 

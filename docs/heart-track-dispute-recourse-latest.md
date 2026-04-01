@@ -1,6 +1,6 @@
 # Freed ID Dispute/Recourse Verification Report
 
-- generated_utc: `2026-03-31T03:59:52+00:00`
+- generated_utc: `2026-04-01T02:47:05+00:00`
 - control_id: `GOV-004`
 - overall_status: **PASS**
 
@@ -45,7 +45,7 @@
   "subject_did": "did:freed:subject-001",
   "credential_id": "did:freed:subject-001#cred-0",
   "reason": "presentation denial dispute",
-  "opened_utc": "2026-03-31T03:59:52+00:00",
+  "opened_utc": "2026-04-01T02:47:05+00:00",
   "opened_by": "did:freed:ombuds-1",
   "status": "dismissed",
   "evidence_refs": [
@@ -64,7 +64,7 @@
     {
       "event_id": "case-gov004-0001:event:0000",
       "event_seq": 0,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:ombuds-1",
       "actor_role": "ombuds",
       "from_status": "none",
@@ -82,7 +82,7 @@
     {
       "event_id": "case-gov004-0001:event:0001",
       "event_seq": 1,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:reviewer-1",
       "actor_role": "reviewer",
       "from_status": "opened",
@@ -98,7 +98,7 @@
     {
       "event_id": "case-gov004-0001:event:0002",
       "event_seq": 2,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:reviewer-1",
       "actor_role": "reviewer",
       "from_status": "review",
@@ -114,7 +114,7 @@
     {
       "event_id": "case-gov004-0001:event:0003",
       "event_seq": 3,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:council-1",
       "actor_role": "council",
       "from_status": "escalated",
@@ -130,7 +130,7 @@
     {
       "event_id": "case-gov004-0001:event:0004",
       "event_seq": 4,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:reviewer-1",
       "actor_role": "reviewer",
       "from_status": "review",
@@ -146,7 +146,7 @@
     {
       "event_id": "case-gov004-0001:event:0005",
       "event_seq": 5,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:subject-001",
       "actor_role": "subject",
       "from_status": "resolved",
@@ -162,7 +162,7 @@
     {
       "event_id": "case-gov004-0001:event:0006",
       "event_seq": 6,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:reviewer-2",
       "actor_role": "reviewer",
       "from_status": "reopened",
@@ -178,7 +178,7 @@
     {
       "event_id": "case-gov004-0001:event:0007",
       "event_seq": 7,
-      "at_utc": "2026-03-31T03:59:52+00:00",
+      "at_utc": "2026-04-01T02:47:05+00:00",
       "actor": "did:freed:reviewer-2",
       "actor_role": "reviewer",
       "from_status": "review",

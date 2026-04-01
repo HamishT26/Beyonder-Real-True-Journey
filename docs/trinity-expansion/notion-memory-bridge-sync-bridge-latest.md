@@ -1,6 +1,6 @@
 # Trinity Expansion Result: notion_memory_bridge_sync_bridge
 
-- generated_utc: `2026-03-31T03:39:43+00:00`
+- generated_utc: `2026-04-01T02:25:13+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -9,7 +9,7 @@
 | name | status | detail |
 |---|---|---|
 | mcp_connector_present | PASS | notion |
-| verified_refresh_enabled | PASS | include_mcp_refresh=True |
+| verified_refresh_enabled | PASS | include_mcp_refresh=False |
 | cache_written | PASS | docs/trinity-mcp-cache/notion-memory-bridge-latest.json |
 
 ## Metrics

@@ -14,7 +14,6 @@
 - storage_state: `PASS`
 - google_drive_state: `bounded_working_mirror`
 - materialization_level_actual: `readiness_only`
-- docker_runtime_role: `soft_retired_fallback`
 - late_step_autonomy_state: `bounded_repo_first`
 - command_surface_state: `PASS`
 - multi_instance_state: `bounded_eleven_agent_mesh`
@@ -42,3 +41,4 @@
 - v17_evidence_first_state: `PASS`
 - checkpoint_class: `v17_evidence_first_quick_lane`
 - shared_latest_eligible: `False`
+- docker_runtime_role: `soft_retired_fallback`

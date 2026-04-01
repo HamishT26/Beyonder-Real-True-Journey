@@ -1,0 +1,17 @@
+{
+  "generated_utc": "2026-04-01T03:29:39+00:00",
+  "phase": "v31_omega",
+  "intended_receiver": "Aletheon",
+  "receiver_ready": false,
+  "receiver_rule_outcome": "aletheon_facing",
+  "carry_forward_blockers": [
+    "The OneDrive-hosted repo copy remains degraded, so the stable local clone stays authoritative for active V31 work.",
+    "Gmail materialization did not fully promote, so Gmail remains unpromoted in the connector truth model."
+  ],
+  "required_for_orun": [
+    "onedrive_repo_hydration_state == stable_local_clone_primary_or_better",
+    "gmail_materialization_state == bounded_live_write",
+    "deep_suite.overall_status == PASS",
+    "materialize_l2_l5.overall_status == PASS"
+  ]
+}

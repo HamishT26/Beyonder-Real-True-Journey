@@ -1,14 +1,9 @@
 {
-  "generated_utc": "2026-03-31T03:43:48+00:00",
+  "generated_utc": "2026-04-01T02:30:09+00:00",
   "system_id": "benchmark_refresh_v7_sync_bridge",
   "pillar": "trinity",
   "overall_status": "PASS",
   "checks": [
-    {
-      "name": "live_records_present",
-      "status": "PASS",
-      "detail": "records=3"
-    },
     {
       "name": "cache_written",
       "status": "PASS",
@@ -18,7 +13,7 @@
   "metrics": {
     "pack": "benchmark_refresh_v7",
     "strategy": "public_feeds",
-    "record_count": 3,
+    "record_count": 1,
     "auth_state": "public_unauthenticated",
     "cache_status": "active",
     "desired_state": "active",
@@ -36,70 +31,35 @@
   "effective_success": true,
   "records": [
     {
-      "source_id": "linux_kernel_docs",
-      "record_id": "linux_kernel_docs",
-      "signal_type": "live_signal",
-      "title": "linux_kernel_docs",
-      "published_at": "2026-03-31",
-      "source_url": "https://docs.kernel.org/",
-      "summary": "Live refresh succeeded for linux_kernel_docs.",
+      "source_id": "benchmark_refresh_v7",
+      "record_id": "benchmark_refresh_v7-seed",
+      "signal_type": "pack_seed",
+      "title": "Refresh Materialize/dbt, OS/runtime, theory, and governance benchmark anchors without auto-upgrading readiness.",
+      "published_at": "2026-04-01",
+      "source_url": "repo://docs/trinity-benchmark-refresh-v7-board-latest.json",
+      "summary": "Refresh Materialize/dbt, OS/runtime, theory, and governance benchmark anchors without auto-upgrading readiness.",
       "metrics": {
-        "bytes": 16442,
-        "source_format": "text"
+        "connector_snapshot": {
+          "connector_id": "",
+          "write_target": "docs/trinity-benchmark-refresh-v7-board-latest.json"
+        },
+        "live_source_count": 3,
+        "probe_tool_count": 0
       },
-      "tags": [],
-      "repo_targets": []
-    },
-    {
-      "source_id": "w3c_did_core",
-      "record_id": "w3c_did_core",
-      "signal_type": "live_signal",
-      "title": "w3c_did_core",
-      "published_at": "2026-03-31",
-      "source_url": "https://www.w3.org/TR/did-core/",
-      "summary": "Live refresh succeeded for w3c_did_core.",
-      "metrics": {
-        "bytes": 729087,
-        "source_format": "text"
-      },
-      "tags": [],
-      "repo_targets": []
-    },
-    {
-      "source_id": "udhr",
-      "record_id": "udhr",
-      "signal_type": "live_signal",
-      "title": "udhr",
-      "published_at": "2026-03-31",
-      "source_url": "https://www.un.org/en/about-us/universal-declaration-of-human-rights",
-      "summary": "Live refresh succeeded for udhr.",
-      "metrics": {
-        "bytes": 104247,
-        "source_format": "text"
-      },
-      "tags": [],
-      "repo_targets": []
+      "tags": [
+        "benchmark_refresh_v7",
+        "v7"
+      ],
+      "repo_targets": [
+        "docs/trinity-benchmark-refresh-v7-board-latest.json",
+        "docs/trinity-benchmark-registry-v1.json"
+      ]
     }
   ],
   "source_runs": [
     {
-      "source_id": "linux_kernel_docs",
-      "request_url": "https://docs.kernel.org/",
-      "mode": "live",
-      "record_count": 1,
-      "status": "PASS"
-    },
-    {
-      "source_id": "w3c_did_core",
-      "request_url": "https://www.w3.org/TR/did-core/",
-      "mode": "live",
-      "record_count": 1,
-      "status": "PASS"
-    },
-    {
-      "source_id": "udhr",
-      "request_url": "https://www.un.org/en/about-us/universal-declaration-of-human-rights",
-      "mode": "live",
+      "source_id": "benchmark_refresh_v7",
+      "mode": "offline_cache",
       "record_count": 1,
       "status": "PASS"
     }

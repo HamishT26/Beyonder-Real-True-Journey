@@ -1,6 +1,6 @@
 # Trinity Expansion Result: semantic_firewall_sync_bridge
 
-- generated_utc: `2026-03-31T03:42:03+00:00`
+- generated_utc: `2026-04-01T02:28:05+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -9,12 +9,12 @@
 | name | status | detail |
 |---|---|---|
 | policy_written | PASS | docs/semantic-firewall-policy-v1.json |
-| high_risk_findings | PASS | hits=2 |
+| high_risk_findings | PASS | hits=0 |
 
 ## Metrics
 ```json
 {
-  "finding_count": 2
+  "finding_count": 0
 }
 ```
 

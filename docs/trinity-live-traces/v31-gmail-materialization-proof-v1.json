@@ -1,0 +1,32 @@
+{
+  "generated_utc": "2026-04-01T00:00:37+00:00",
+  "phase": "v31_omega",
+  "overall_status": "WARN",
+  "status": "WARN",
+  "proof_state": "open_with_blocker",
+  "connector_native_required": false,
+  "connector_tools_available": false,
+  "path_used": "direct_google_api_fallback",
+  "attempted_steps": [
+    "connector_native_gmail_tools",
+    "google_api_inbox_read",
+    "google_api_draft_create",
+    "google_api_send_to_self",
+    "google_api_readback"
+  ],
+  "completed_steps": [],
+  "pending_steps": [
+    "inbox_read",
+    "draft_creation",
+    "send_to_self",
+    "readback_verification"
+  ],
+  "notes": [
+    "V31 allows a direct Google API fallback because no connector-native Gmail action surface was callable in-session.",
+    "This proof is limited to inbox read, draft creation, one send-to-self test, and read-back verification.",
+    "The available Google refresh token is valid for other Google surfaces but does not carry a usable Gmail scope.",
+    "The Gmail API fallback path failed before proof completion."
+  ],
+  "error_message": "('invalid_scope: Bad Request', {'error': 'invalid_scope', 'error_description': 'Bad Request'})",
+  "blocker_code": "google_refresh_token_missing_gmail_scope"
+}

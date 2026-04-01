@@ -1,6 +1,6 @@
 # Trinity Expansion Result: gmut_research_fabric_v12_sync_bridge
 
-- generated_utc: `2026-03-31T03:49:26+00:00`
+- generated_utc: `2026-04-01T02:36:23+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,6 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| live_fallback:cern_quantum_gravity | PASS | fallback used (HTTP Error 404: Not Found) |
 | cache_written | PASS | docs/trinity-mcp-cache/gmut-research-fabric-v12-latest.json |
 
 ## Metrics
