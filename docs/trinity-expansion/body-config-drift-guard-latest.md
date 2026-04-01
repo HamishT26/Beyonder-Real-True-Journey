@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_config_drift_guard
 
-- generated_utc: `2026-03-31T14:12:24+00:00`
+- generated_utc: `2026-04-01T02:22:36+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,18 +8,18 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| sha256:docs/body-profile-policy-v1.json | PASS | dea3fe42a2f15bde7a5a0e4776e9e6225831f125307c51dc145bc3951212481b |
-| sha256:docs/trinity-api-source-manifest-v1.json | PASS | 07e364a28e7bc9865178df20fb2411c8e35df48171208640465db5aea15eb9f8 |
-| sha256:docs/trinity-expansion-system-manifest-v1.json | PASS | f8c37ff9b2c19f526eb7f5717a5498761fb18c489ec2538581c5b6214bf90a95 |
+| sha256:docs/body-profile-policy-v1.json | PASS | bf8c3cb469e70ee3781ff41a9ac2e825f3ef4ac9d585f270c50307d94619ac8f |
+| sha256:docs/trinity-api-source-manifest-v1.json | PASS | 3176380c05f340c36341bab9975ea91938b0fe41ad4926ce9b24a87ea278f5b1 |
+| sha256:docs/trinity-expansion-system-manifest-v1.json | PASS | 4a5e3bbc03e488e2ebbb5d90074d39df07ff80b0baeea1940637d8b2181884cb |
 | sha256:docs/trinity-expansion-system-manifest-v11.json | PASS | c4f54370bf0aa122af208f1ccec51b700f2d3adf71357eb2b67885f937a3d4e3 |
 
 ## Metrics
 ```json
 {
   "config_sha256": {
-    "docs/body-profile-policy-v1.json": "dea3fe42a2f15bde7a5a0e4776e9e6225831f125307c51dc145bc3951212481b",
-    "docs/trinity-api-source-manifest-v1.json": "07e364a28e7bc9865178df20fb2411c8e35df48171208640465db5aea15eb9f8",
-    "docs/trinity-expansion-system-manifest-v1.json": "f8c37ff9b2c19f526eb7f5717a5498761fb18c489ec2538581c5b6214bf90a95",
+    "docs/body-profile-policy-v1.json": "bf8c3cb469e70ee3781ff41a9ac2e825f3ef4ac9d585f270c50307d94619ac8f",
+    "docs/trinity-api-source-manifest-v1.json": "3176380c05f340c36341bab9975ea91938b0fe41ad4926ce9b24a87ea278f5b1",
+    "docs/trinity-expansion-system-manifest-v1.json": "4a5e3bbc03e488e2ebbb5d90074d39df07ff80b0baeea1940637d8b2181884cb",
     "docs/trinity-expansion-system-manifest-v11.json": "c4f54370bf0aa122af208f1ccec51b700f2d3adf71357eb2b67885f937a3d4e3"
   }
 }

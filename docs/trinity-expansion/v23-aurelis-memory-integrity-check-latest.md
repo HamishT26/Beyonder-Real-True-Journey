@@ -1,6 +1,6 @@
 # Trinity Expansion Result: v23_aurelis_memory_integrity_check
 
-- generated_utc: `2026-03-31T14:28:15+00:00`
+- generated_utc: `2026-04-01T02:44:47+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,7 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| runner_command_exit | PASS | Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\aurelis-memory-integrity-report.md |
+| runner_command_exit | PASS | Wrote C:\Users\hamis\workspace\Beyonder-Real-True-Journey\docs\aurelis-memory-integrity-report.md |
 
 ## Metrics
 ```json

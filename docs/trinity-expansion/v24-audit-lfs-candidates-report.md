@@ -5,7 +5,7 @@
 
 | Path | Size (bytes) | Binary extension |
 |---|---:|:---:|
-| `docs/trinity-materialization-ledger.jsonl` | 5668080 | no |
+| `docs/trinity-materialization-ledger.jsonl` | 5976815 | no |
 | `Beyonder-Real-True Journey v4.pdf` | 2162211 | yes |
 | `Beyonder-Real-True Journey v9.pdf` | 2095796 | yes |
 | `Beyonder-Real-True Journey v34 (Aurelis) (Cleaner Version).pdf` | 2074920 | yes |

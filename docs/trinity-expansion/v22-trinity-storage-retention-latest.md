@@ -1,6 +1,6 @@
 # Trinity Expansion Result: v22_trinity_storage_retention
 
-- generated_utc: `2026-03-31T14:27:48+00:00`
+- generated_utc: `2026-04-01T02:44:08+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,7 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| runner_command_exit | PASS | deleted_files=16980 |
+| runner_command_exit | PASS | deleted_files=16940 |
 
 ## Metrics
 ```json

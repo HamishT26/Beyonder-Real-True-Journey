@@ -1,19 +1,22 @@
 {
-  "generated_utc": "2026-03-31T14:29:11+00:00",
+  "generated_utc": "2026-04-01T03:12:17+00:00",
+  "version": "v3",
+  "retained_snapshot_count": 3,
+  "prune_policy_applied_at": "2026-04-01T03:11:12+00:00",
+  "storage_pressure_class": "healthy",
   "overall_status": "PASS",
   "authority_model": "repo_first",
   "storage_pressure": {
-    "free_gib": 1.5,
+    "free_gib": 6.03,
     "total_gib": 116.97,
-    "archive_bytes": 99777,
-    "archive_megabytes": 0.1
+    "archive_bytes": 131198,
+    "archive_megabytes": 0.13
   },
   "latest_snapshot": {
-    "archive": "docs/memory-archives/20260312T070412Z-v10-memory-bank.zip",
+    "archive": "docs/memory-archives/20260401T031210Z-v31-memory-bank-final.zip",
     "index": "docs/memory-archives/index.jsonl",
     "source_count": 14,
-    "label": "20260312T070412Z-v10-memory-bank",
-    "retained_snapshot_count": 3
+    "label": "20260401T031210Z-v31-memory-bank-final"
   },
   "memory_banks": [
     {
@@ -21,57 +24,61 @@
       "status": "authoritative",
       "capacity_class": "local_git",
       "notes": "Primary source for certificates, ledgers, reflections, commands, and official council state.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
       "reachable": true,
-      "latest_artifact": "docs/memory-archives/20260312T070412Z-v10-memory-bank.zip",
+      "latest_artifact": "docs/memory-archives/20260401T031210Z-v31-memory-bank-final.zip",
       "proof_state": "repo_first_authority",
       "blockers": [],
-      "retention_class": "bounded",
+      "retention_class": "canonical",
       "archive_upload_state": "not_applicable",
-      "cloud_capacity_class": "bounded",
-      "last_archive_verified_utc": ""
+      "cloud_capacity_class": "none",
+      "last_archive_verified_utc": "2026-04-01T03:12:17+00:00"
     },
     {
       "surface": "github",
       "status": "live_mirror",
       "capacity_class": "remote_git",
       "notes": "Branch-scoped remote backup and collaboration surface. Never overrides repo authority.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
       "reachable": true,
-      "latest_artifact": "015c4d018093d9ed39d1621c1f90b48326dc9d71",
+      "latest_artifact": "c5e885345faf29548ce55ff5e63c03315adc0e92",
       "proof_state": "remote_reachable",
       "blockers": [],
-      "retention_class": "bounded",
+      "retention_class": "remote_mirror",
       "archive_upload_state": "not_applicable",
       "cloud_capacity_class": "bounded",
-      "last_archive_verified_utc": ""
+      "last_archive_verified_utc": "2026-04-01T03:12:17+00:00"
     },
     {
       "surface": "postgres",
-      "status": "live_query_store",
+      "status": "blocked",
       "capacity_class": "docker_volume",
-      "notes": "Runtime/query mirror truth is bounded to actual Docker/Postgres health and may differ from broad suite pass state.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
-      "reachable": true,
+      "notes": "Operational state, synthetic mesh, chat indexes, and queryable summaries. Runtime truth follows direct local probes rather than broader suite pass state.",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
+      "reachable": false,
       "latest_artifact": "trinity-v5-pg-proof",
-      "proof_state": "postgres_ready",
-      "blockers": [],
-      "retention_class": "bounded",
+      "proof_state": "postgres_blocked",
+      "blockers": [
+        "postgres container not ready"
+      ],
+      "retention_class": "runtime_query",
       "archive_upload_state": "not_applicable",
       "cloud_capacity_class": "bounded",
       "last_archive_verified_utc": ""
     },
     {
       "surface": "docker",
-      "status": "live_runtime_storage",
+      "status": "blocked",
       "capacity_class": "local_container_volume",
-      "notes": "Runtime/query mirror truth is bounded to actual Docker/Postgres health and may differ from broad suite pass state.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
-      "reachable": true,
-      "latest_artifact": "trinity-v5-pg-proof:/trinity-memory-bank/20260312T070412Z-v10-memory-bank.zip",
-      "proof_state": "docker_ready",
-      "blockers": [],
-      "retention_class": "bounded",
+      "notes": "Runtime substrate for Postgres and bounded simulations. Runtime truth follows direct local probes rather than broader suite pass state.",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
+      "reachable": false,
+      "latest_artifact": "",
+      "proof_state": "docker_unavailable",
+      "blockers": [
+        "docker CLI unavailable"
+      ],
+      "retention_class": "runtime_cache",
       "archive_upload_state": "not_applicable",
       "cloud_capacity_class": "bounded",
       "last_archive_verified_utc": ""
@@ -81,60 +88,62 @@
       "status": "bounded_mirror",
       "capacity_class": "cloud_workspace",
       "notes": "Summary, dashboard, and reflection mirror only.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
       "reachable": true,
       "latest_artifact": "summary_only",
       "proof_state": "bounded_mirror_only",
       "blockers": [],
-      "retention_class": "bounded",
+      "retention_class": "summary_mirror",
       "archive_upload_state": "not_applicable",
       "cloud_capacity_class": "bounded",
-      "last_archive_verified_utc": ""
+      "last_archive_verified_utc": "2026-04-01T03:12:17+00:00"
     },
     {
       "surface": "linear",
       "status": "bounded_action_mirror",
       "capacity_class": "cloud_workspace",
       "notes": "Actionable work mirror only.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
       "reachable": true,
       "latest_artifact": "actionable_items_only",
       "proof_state": "bounded_action_only",
       "blockers": [],
-      "retention_class": "bounded",
+      "retention_class": "action_mirror",
       "archive_upload_state": "not_applicable",
       "cloud_capacity_class": "bounded",
-      "last_archive_verified_utc": ""
+      "last_archive_verified_utc": "2026-04-01T03:12:17+00:00"
     },
     {
       "surface": "new_project_workbench",
       "status": "local_read_surface",
       "capacity_class": "local_folder",
       "notes": "Workbench dashboard and operator shell. Not authoritative.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
       "reachable": true,
       "latest_artifact": "C:\\Users\\hamis\\OneDrive\\Documents\\New project\\memory-bank\\latest-sync-summary.json",
       "proof_state": "workbench_read_only",
       "blockers": [],
-      "retention_class": "bounded",
+      "retention_class": "local_workbench",
       "archive_upload_state": "not_applicable",
-      "cloud_capacity_class": "bounded",
-      "last_archive_verified_utc": ""
+      "cloud_capacity_class": "none",
+      "last_archive_verified_utc": "2026-04-01T03:12:17+00:00"
     },
     {
       "surface": "google_drive",
-      "status": "bounded_working_mirror",
-      "capacity_class": "cloud_archive",
-      "notes": "Google Drive is bounded to non-authoritative working mirror use in v12 and never overrides repo authority.",
-      "live_checked_at": "2026-03-12T07:04:35+00:00",
-      "reachable": true,
-      "latest_artifact": "docs/trinity-live-traces/google-drive-working-mirror-proof-v1.json",
-      "proof_state": "working_mirror_verified",
-      "blockers": [],
-      "retention_class": "archive_only",
-      "archive_upload_state": "uploaded",
-      "cloud_capacity_class": "bounded",
-      "last_archive_verified_utc": "2026-03-31T14:29:11+00:00"
+      "status": "auth_blocked",
+      "capacity_class": "cloud_workspace",
+      "notes": "Bounded working-mirror policy is active, but explicit write/read-back proof is still required before live promotion.",
+      "live_checked_at": "2026-04-01T03:12:17+00:00",
+      "reachable": false,
+      "latest_artifact": "",
+      "proof_state": "working_mirror_proof_pending",
+      "blockers": [
+        "bounded working-mirror proof not yet completed"
+      ],
+      "retention_class": "working_mirror",
+      "archive_upload_state": "proof_pending",
+      "cloud_capacity_class": "cloud_workspace",
+      "last_archive_verified_utc": ""
     }
   ],
   "official_sources": {
@@ -142,9 +151,5 @@
     "google_drive_uploads": "https://developers.google.com/drive/api/guides/manage-uploads",
     "docker_volumes": "https://docs.docker.com/engine/storage/volumes/",
     "git_bundle": "https://git-scm.com/docs/git-bundle"
-  },
-  "version": "v3",
-  "retained_snapshot_count": 3,
-  "prune_policy_applied_at": "",
-  "storage_pressure_class": "watch"
+  }
 }

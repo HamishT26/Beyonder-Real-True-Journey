@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_memory_index_integrity
 
-- generated_utc: `2026-03-31T14:13:07+00:00`
+- generated_utc: `2026-04-01T02:23:25+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,14 +8,14 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| memory_archive_dir_present | PASS | C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\memory-archives |
+| memory_archive_dir_present | PASS | C:\Users\hamis\workspace\Beyonder-Real-True-Journey\docs\memory-archives |
 | zip_snapshot_count | PASS | zip_count=123 |
-| token_ledger_rows | PASS | rows=276 |
+| token_ledger_rows | PASS | rows=284 |
 
 ## Metrics
 ```json
 {
-  "ledger_rows": 276,
+  "ledger_rows": 284,
   "zip_snapshot_count": 123
 }
 ```

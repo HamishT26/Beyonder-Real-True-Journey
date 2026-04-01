@@ -1,6 +1,6 @@
 # Heart Governance Signal Board
 
-- generated_utc: `2026-03-31T14:26:41+00:00`
+- generated_utc: `2026-04-01T02:43:01+00:00`
 - overall_status: **PASS**
 - freshness_status: `PASS`
 - source_count: `17`
@@ -18,6 +18,6 @@
 ## Promotion candidates
 | target | record_count | latest_published_at | supporting_source_ids |
 |---|---|---|---|
-| docs/trinity-public-research-brief-2026-03-06.md | 17 | 2026-03-31 | data_govt_nz, oecd, worldbank |
+| docs/trinity-public-research-brief-2026-03-06.md | 17 | 2026-04-01 | data_govt_nz, oecd, worldbank |
 | docs/comparative-validation-grid-v1.md | 9 | 2026-02-28 | data_govt_nz, worldbank |
-| docs/grand-unified-narrative-brief.md | 8 | 2026-03-31 | oecd |
+| docs/grand-unified-narrative-brief.md | 8 | 2026-04-01 | oecd |

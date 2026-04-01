@@ -1,6 +1,6 @@
 # Trinity Expansion Result: v24_trinity_token_credit_zip_converter
 
-- generated_utc: `2026-03-31T14:29:42+00:00`
+- generated_utc: `2026-04-01T02:46:49+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,7 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| runner_command_exit | PASS | Wrote C:\Users\hamis\OneDrive\Documents\GitHub\Beyonder-Real-True-Journey\docs\trinity-expansion\v24-token-credit-bank-report.json |
+| runner_command_exit | PASS | Wrote C:\Users\hamis\workspace\Beyonder-Real-True-Journey\docs\trinity-expansion\v24-token-credit-bank-report.json |
 | output_status | PASS | path=docs/trinity-expansion/v24-token-credit-bank-report.json, status=PASS |
 
 ## Metrics

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: api_surface_book_v12_gate
 
-- generated_utc: `2026-03-31T14:22:28+00:00`
+- generated_utc: `2026-04-01T02:37:04+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
