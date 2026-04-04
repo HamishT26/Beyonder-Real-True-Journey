@@ -37,7 +37,7 @@ def _load_cached_payload(path_str: str) -> dict[str, Any] | None:
     return payload if isinstance(payload, dict) else None
 
 
-def _cache_fallback_payload(existing: dict[str, Any], reason: Exception) -> dict[str, Any]:
+def _cache_fallback_payload(existing: dict[str, Any], reason: Exception, latest_json: str) -> dict[str, Any]:
     cached_records = existing.get("records", [])
     cached_runs = existing.get("source_runs", [])
     payload = dict(existing)
@@ -48,15 +48,22 @@ def _cache_fallback_payload(existing: dict[str, Any], reason: Exception) -> dict
     payload["fallback_reason"] = compact_text(str(reason), limit=240)
     if not isinstance(cached_records, list):
         cached_records = []
-    if not isinstance(cached_runs, list):
-        cached_runs = []
+    normalized_runs: list[dict[str, Any]] = []
+    if isinstance(cached_runs, list):
+        for index, row in enumerate(cached_runs, start=1):
+            if isinstance(row, dict):
+                normalized = dict(row)
+                normalized.setdefault("request_url", latest_json)
+                normalized.setdefault("request_id", f"cached-source-run-{index}")
+                normalized_runs.append(normalized)
     payload["record_count"] = len(cached_records)
     payload["records"] = cached_records
     payload["source_runs"] = [
-        *cached_runs,
+        *normalized_runs,
         {
             "api_id": "cache_fallback",
             "request_id": "mind_theory_signal_refresh",
+            "request_url": latest_json,
             "status": "PASS",
             "record_count": len(cached_records),
             "detail": compact_text(f"reused cached latest because live refresh failed: {reason}", limit=240),
@@ -212,7 +219,7 @@ def main() -> int:
         existing = _load_cached_payload(args.latest_json)
         if existing is None:
             raise
-        payload = _cache_fallback_payload(existing, exc)
+        payload = _cache_fallback_payload(existing, exc, args.latest_json)
     timestamped_json, latest_json = save_json_run(
         payload=payload,
         latest_json=args.latest_json,

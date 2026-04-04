@@ -1,0 +1,758 @@
+{
+  "generated_utc": "2026-04-03T16:03:21+00:00",
+  "phase": "v32_omega",
+  "overall_status": "PASS",
+  "proof_state": "cluster_bootstrap_validated_windows_kubectl_fallback",
+  "project_id": "gen-lang-client-0020882673",
+  "region": "australia-southeast1",
+  "cluster_name": "beyonder-v32-autopilot-dev",
+  "namespace": "v32-omega",
+  "completed_steps": [
+    "mint_primary_token",
+    "cluster_inventory",
+    "cluster_exists",
+    "cluster_readback",
+    "kubectl_client_detected",
+    "kubectl_cluster_reads",
+    "namespace_ready",
+    "smoke_configmap_verified"
+  ],
+  "blockers": [],
+  "primary_identity": "6***@d***",
+  "cluster_inventory_status": 200,
+  "gke_cluster_inventory": [
+    "beyonder-v32-autopilot-dev"
+  ],
+  "cluster_bootstrap": {
+    "status": "exists",
+    "cluster": {
+      "name": "beyonder-v32-autopilot-dev",
+      "nodeConfig": {
+        "machineType": "ek-standard-8",
+        "diskSizeGb": 100,
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "imageType": "COS_CONTAINERD",
+        "serviceAccount": "default",
+        "diskType": "pd-balanced",
+        "workloadMetadataConfig": {
+          "mode": "GKE_METADATA"
+        },
+        "taints": [
+          {
+            "key": "cloud.google.com/gke-quick-remove",
+            "value": "true",
+            "effect": "NO_SCHEDULE"
+          }
+        ],
+        "reservationAffinity": {
+          "consumeReservationType": "NO_RESERVATION"
+        },
+        "shieldedInstanceConfig": {
+          "enableSecureBoot": true,
+          "enableIntegrityMonitoring": true
+        },
+        "kubeletConfig": {
+          "insecureKubeletReadonlyPortEnabled": false,
+          "maxParallelImagePulls": 2
+        },
+        "gcfsConfig": {
+          "enabled": true
+        },
+        "gvnic": {
+          "enabled": true
+        },
+        "resourceLabels": {
+          "goog-gke-node-pool-provisioning-model": "on-demand"
+        },
+        "windowsNodeConfig": {},
+        "effectiveCgroupMode": "EFFECTIVE_CGROUP_MODE_V2",
+        "bootDisk": {
+          "diskType": "pd-balanced",
+          "sizeGb": "100"
+        }
+      },
+      "masterAuth": {
+        "clientCertificateConfig": {},
+        "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVMRENDQXBTZ0F3SUJBZ0lRQmdQZUFBSE9VT2hVTWpVS1pVQXhaVEFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlReE5EbGlPRFl4WkMxaU1EUmtMVFJrWVdRdE9HUXdZeTA0TVRoall6TmxPVGt6TldVdwpJQmNOTWpZd05EQXpNVFF6TVRReldoZ1BNakExTmpBek1qWXhOVE14TkROYU1DOHhMVEFyQmdOVkJBTVRKREUwCk9XSTROakZrTFdJd05HUXROR1JoWkMwNFpEQmpMVGd4T0dOak0yVTVPVE0xWlRDQ0FhSXdEUVlKS29aSWh2Y04KQVFFQkJRQURnZ0dQQURDQ0FZb0NnZ0dCQU01eFJxTmgxL3BKUFVsOXpYMVVPV0NWeFNXTVB5SUFwaktWUGRjVwowS1ZEYVdrYXBCb3hCT3JTZ0EwV0pKQVhvUGY1emovNWdRTmpkOXpZSTlPYjFQZUhtb21IMzNnLzFOMU1saHB1CmxISWlGQXVjaFhJd1lVY3hOUDc0dkk5Vnp2K05iN3ZDMjZ6L29Dc2VuNnB4bVhXRUhqa1hLWmxxNGNMYmhiSjkKeGdrL2pvTTYyMUx5dmN3OGZ0R3prREVQbHhwK0tNWW1rYVVzVWg2T3dubkR4YVNrejFRNTRPU3pCNXVrUVdSTwpwRnpQU2F1eFlQdWF4dDFwUzh1eTFZaXNEdEhKWk5OdXlsdWpXdlE0ZmZaZzArYSthWG9wbzFBbEpiQkErUFNrCkhMMzZTUlh5UnFyMnhnV2lpTytXdkJKb2c2d3Q2dHhoUmZNdFp2TkJaUitBNGZHMmZtNmw3NlR1U1NwY2p4VHkKWTZxL3plRVB1ZHF6TXBJSzJwMUVWbDVKUng4QmJSb2NvV0p3dm9hd3hvUTd5QVZmcUxXd1lrQVNWditRR3FJSwpQdUViVVpWZlBQcDdZNFlFa0g2dEZMUjdodEdQV3hPSTRmUEJ6SS8zQS9iL05xajhkVzl4ZjE0SE50dFJ2MlVxCmlHZTlubGhzM0w0QVdUU1lTYUpIcVpuSTd3SURBUUFCbzBJd1FEQU9CZ05WSFE4QkFmOEVCQU1DQWdRd0R3WUQKVlIwVEFRSC9CQVV3QXdFQi96QWRCZ05WSFE0RUZnUVU1RG5xdHFidlRpeEVkUDZEREdIMEYvVjBNSlF3RFFZSgpLb1pJaHZjTkFRRUxCUUFEZ2dHQkFGcWJ1US85QmYrZDYwbEU1ZVFqVWxJOUtLV2RPTGx4UTlNU2hmd2ZTN1VTCnZsaWhSVE56TUJJREQrZjBXL2t1VGtZNStwbkZRK2xJWnZQN3RiZGs5WWQzOWNvM3QwUzNUcG5yREMvakRzZ0sKbDA1VGVDa3pHc1d6Y0lxSW9kMlZkci95OU5rcWQ0aVd5T3hHeGxZNE00UVF1WFN3QnJ6L3NEUkZnRkI2VTdzYQorTDFmbmRaZkZRM3crTDVkNW94UUJHU1dkQTFTeWVsL08xN0xFOEpXdTFBZ3l2bElJcURMekV6WVNUTzhjUkM0CkFZa3Z3RnpKT1dUTGJsY1NuL1EvR1dmTXA1RUI0RG9FdkhEd1lSVmpIaldVd2UxUmhtM09QNVh2Umg2dWdic2wKK0M1RDBTUW1xcFo5MUVkaENPRFdvN0RQbnZjSVVjZWVnR2RpaXFzZC9Mb1pZczFwd0lKRDhGbU1JQUpYL2krLwoxM3VPNjhkQUZqTWsvbldiZjZEV2lzZDFEOWdDbW5hb3lUK0dpa1JZM1U0TEVTNkcrSnAzMnZUa2dDcEgzK0hRClBtYjE1VmU4enJnc0Y4dHVOUnJLMVVwVDE5OGZCbWpKYnpKMnVVQWtERi9ISncxdS9hTURHakE5Um5OckpiVTQKQisrSXYxME9MeCtERFNlTWhSNUFUZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "network": "default",
+      "clusterIpv4Cidr": "10.94.0.0/17",
+      "addonsConfig": {
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        },
+        "dnsCacheConfig": {
+          "enabled": true
+        },
+        "gcePersistentDiskCsiDriverConfig": {
+          "enabled": true
+        },
+        "gcpFilestoreCsiDriverConfig": {
+          "enabled": true
+        },
+        "gcsFuseCsiDriverConfig": {
+          "enabled": true
+        },
+        "statefulHaConfig": {
+          "enabled": true
+        },
+        "parallelstoreCsiDriverConfig": {
+          "enabled": true
+        }
+      },
+      "subnetwork": "default",
+      "nodePools": [
+        {
+          "name": "default-pool",
+          "config": {
+            "machineType": "ek-standard-8",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "imageType": "COS_CONTAINERD",
+            "serviceAccount": "default",
+            "diskType": "pd-balanced",
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            },
+            "taints": [
+              {
+                "key": "cloud.google.com/gke-quick-remove",
+                "value": "true",
+                "effect": "NO_SCHEDULE"
+              }
+            ],
+            "reservationAffinity": {
+              "consumeReservationType": "NO_RESERVATION"
+            },
+            "shieldedInstanceConfig": {
+              "enableSecureBoot": true,
+              "enableIntegrityMonitoring": true
+            },
+            "kubeletConfig": {
+              "insecureKubeletReadonlyPortEnabled": false,
+              "maxParallelImagePulls": 2
+            },
+            "gcfsConfig": {
+              "enabled": true
+            },
+            "gvnic": {
+              "enabled": true
+            },
+            "resourceLabels": {
+              "goog-gke-node-pool-provisioning-model": "on-demand"
+            },
+            "windowsNodeConfig": {},
+            "effectiveCgroupMode": "EFFECTIVE_CGROUP_MODE_V2",
+            "bootDisk": {
+              "diskType": "pd-balanced",
+              "sizeGb": "100"
+            }
+          },
+          "initialNodeCount": 1,
+          "autoscaling": {
+            "enabled": true,
+            "maxNodeCount": 1000,
+            "locationPolicy": "BALANCED"
+          },
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "32"
+          },
+          "podIpv4CidrSize": 26,
+          "locations": [
+            "australia-southeast1-a"
+          ],
+          "networkConfig": {
+            "podRange": "gke-beyonder-v32-autopilot-dev-pods-72fc5519",
+            "podIpv4CidrBlock": "10.94.0.0/17",
+            "subnetwork": "projects/gen-lang-client-0020882673/regions/australia-southeast1/subnetworks/default",
+            "networkTierConfig": {
+              "networkTier": "NETWORK_TIER_DEFAULT"
+            }
+          },
+          "selfLink": "https://container.googleapis.com/v1/projects/gen-lang-client-0020882673/locations/australia-southeast1/clusters/beyonder-v32-autopilot-dev/nodePools/default-pool",
+          "version": "1.35.1-gke.1396002",
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopil-default-pool-5acf174e-grp"
+          ],
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "etag": "0854286c-4318-45ad-8ea9-52b4f5f1288b"
+        },
+        {
+          "name": "pool-1",
+          "config": {
+            "machineType": "ek-standard-8",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "imageType": "COS_CONTAINERD",
+            "serviceAccount": "default",
+            "diskType": "pd-balanced",
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            },
+            "reservationAffinity": {
+              "consumeReservationType": "NO_RESERVATION"
+            },
+            "shieldedInstanceConfig": {
+              "enableSecureBoot": true,
+              "enableIntegrityMonitoring": true
+            },
+            "kubeletConfig": {
+              "insecureKubeletReadonlyPortEnabled": false,
+              "maxParallelImagePulls": 2
+            },
+            "gcfsConfig": {
+              "enabled": true
+            },
+            "gvnic": {
+              "enabled": true
+            },
+            "resourceLabels": {
+              "goog-gke-node-pool-provisioning-model": "on-demand"
+            },
+            "windowsNodeConfig": {},
+            "effectiveCgroupMode": "EFFECTIVE_CGROUP_MODE_V2",
+            "bootDisk": {
+              "diskType": "pd-balanced",
+              "sizeGb": "100"
+            }
+          },
+          "autoscaling": {
+            "enabled": true,
+            "maxNodeCount": 1000,
+            "locationPolicy": "BALANCED"
+          },
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "64"
+          },
+          "podIpv4CidrSize": 25,
+          "locations": [
+            "australia-southeast1-c",
+            "australia-southeast1-a",
+            "australia-southeast1-b"
+          ],
+          "networkConfig": {
+            "podRange": "gke-beyonder-v32-autopilot-dev-pods-72fc5519",
+            "podIpv4CidrBlock": "10.94.0.0/17",
+            "subnetwork": "projects/gen-lang-client-0020882673/regions/australia-southeast1/subnetworks/default",
+            "networkTierConfig": {
+              "networkTier": "NETWORK_TIER_DEFAULT"
+            }
+          },
+          "selfLink": "https://container.googleapis.com/v1/projects/gen-lang-client-0020882673/locations/australia-southeast1/clusters/beyonder-v32-autopilot-dev/nodePools/pool-1",
+          "version": "1.35.1-gke.1396002",
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-c/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-1-04b8e8a4-grp",
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-1-49edfdd2-grp",
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-b/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-1-8ab2086d-grp"
+          ],
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "etag": "52220c3b-a986-4399-98ab-89419464c756"
+        },
+        {
+          "name": "pool-2",
+          "config": {
+            "machineType": "ek-standard-16",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "imageType": "COS_CONTAINERD",
+            "serviceAccount": "default",
+            "diskType": "pd-balanced",
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            },
+            "reservationAffinity": {
+              "consumeReservationType": "NO_RESERVATION"
+            },
+            "shieldedInstanceConfig": {
+              "enableSecureBoot": true,
+              "enableIntegrityMonitoring": true
+            },
+            "kubeletConfig": {
+              "insecureKubeletReadonlyPortEnabled": false,
+              "maxParallelImagePulls": 2
+            },
+            "gcfsConfig": {
+              "enabled": true
+            },
+            "gvnic": {
+              "enabled": true
+            },
+            "resourceLabels": {
+              "goog-gke-node-pool-provisioning-model": "on-demand"
+            },
+            "windowsNodeConfig": {},
+            "effectiveCgroupMode": "EFFECTIVE_CGROUP_MODE_V2",
+            "bootDisk": {
+              "diskType": "pd-balanced",
+              "sizeGb": "100"
+            }
+          },
+          "autoscaling": {
+            "enabled": true,
+            "maxNodeCount": 1000,
+            "locationPolicy": "BALANCED"
+          },
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "110"
+          },
+          "podIpv4CidrSize": 24,
+          "locations": [
+            "australia-southeast1-c",
+            "australia-southeast1-a",
+            "australia-southeast1-b"
+          ],
+          "networkConfig": {
+            "podRange": "gke-beyonder-v32-autopilot-dev-pods-72fc5519",
+            "podIpv4CidrBlock": "10.94.0.0/17",
+            "subnetwork": "projects/gen-lang-client-0020882673/regions/australia-southeast1/subnetworks/default",
+            "networkTierConfig": {
+              "networkTier": "NETWORK_TIER_DEFAULT"
+            }
+          },
+          "selfLink": "https://container.googleapis.com/v1/projects/gen-lang-client-0020882673/locations/australia-southeast1/clusters/beyonder-v32-autopilot-dev/nodePools/pool-2",
+          "version": "1.35.1-gke.1396002",
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-c/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-2-d71541ec-grp",
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-2-49419330-grp",
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-b/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-2-d870a27e-grp"
+          ],
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "etag": "2289878c-f781-46dd-b53f-4bb65b0336b1"
+        },
+        {
+          "name": "pool-3",
+          "config": {
+            "machineType": "ek-standard-32",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "imageType": "COS_CONTAINERD",
+            "serviceAccount": "default",
+            "diskType": "pd-balanced",
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            },
+            "reservationAffinity": {
+              "consumeReservationType": "NO_RESERVATION"
+            },
+            "shieldedInstanceConfig": {
+              "enableSecureBoot": true,
+              "enableIntegrityMonitoring": true
+            },
+            "kubeletConfig": {
+              "insecureKubeletReadonlyPortEnabled": false,
+              "maxParallelImagePulls": 2
+            },
+            "gcfsConfig": {
+              "enabled": true
+            },
+            "gvnic": {
+              "enabled": true
+            },
+            "resourceLabels": {
+              "goog-gke-node-pool-provisioning-model": "on-demand"
+            },
+            "windowsNodeConfig": {},
+            "effectiveCgroupMode": "EFFECTIVE_CGROUP_MODE_V2",
+            "bootDisk": {
+              "diskType": "pd-balanced",
+              "sizeGb": "100"
+            }
+          },
+          "autoscaling": {
+            "enabled": true,
+            "maxNodeCount": 1000,
+            "locationPolicy": "BALANCED"
+          },
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "110"
+          },
+          "podIpv4CidrSize": 24,
+          "locations": [
+            "australia-southeast1-c",
+            "australia-southeast1-a",
+            "australia-southeast1-b"
+          ],
+          "networkConfig": {
+            "podRange": "gke-beyonder-v32-autopilot-dev-pods-72fc5519",
+            "podIpv4CidrBlock": "10.94.0.0/17",
+            "subnetwork": "projects/gen-lang-client-0020882673/regions/australia-southeast1/subnetworks/default",
+            "networkTierConfig": {
+              "networkTier": "NETWORK_TIER_DEFAULT"
+            }
+          },
+          "selfLink": "https://container.googleapis.com/v1/projects/gen-lang-client-0020882673/locations/australia-southeast1/clusters/beyonder-v32-autopilot-dev/nodePools/pool-3",
+          "version": "1.35.1-gke.1396002",
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-c/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-3-78011a7f-grp",
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-3-6967596a-grp",
+            "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-b/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-3-9ba96721-grp"
+          ],
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "etag": "86585e60-3f4b-482a-83b4-09e0cbec732a"
+        }
+      ],
+      "locations": [
+        "australia-southeast1-c",
+        "australia-southeast1-a",
+        "australia-southeast1-b"
+      ],
+      "resourceLabels": {
+        "phase": "v32omega",
+        "managed_by": "codex"
+      },
+      "labelFingerprint": "809dab61",
+      "legacyAbac": {},
+      "ipAllocationPolicy": {
+        "useIpAliases": true,
+        "clusterIpv4Cidr": "10.94.0.0/17",
+        "servicesIpv4Cidr": "34.118.224.0/20",
+        "clusterSecondaryRangeName": "gke-beyonder-v32-autopilot-dev-pods-72fc5519",
+        "clusterIpv4CidrBlock": "10.94.0.0/17",
+        "servicesIpv4CidrBlock": "34.118.224.0/20",
+        "stackType": "IPV4",
+        "podCidrOverprovisionConfig": {},
+        "networkTierConfig": {
+          "networkTier": "NETWORK_TIER_DEFAULT"
+        }
+      },
+      "masterAuthorizedNetworksConfig": {},
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "autoscaling": {
+        "enableNodeAutoprovisioning": true,
+        "resourceLimits": [
+          {
+            "resourceType": "cpu",
+            "maximum": "1000000000"
+          },
+          {
+            "resourceType": "memory",
+            "maximum": "1000000000"
+          },
+          {
+            "resourceType": "nvidia-tesla-t4",
+            "maximum": "1000000000"
+          },
+          {
+            "resourceType": "nvidia-tesla-a100",
+            "maximum": "1000000000"
+          }
+        ],
+        "autoscalingProfile": "OPTIMIZE_UTILIZATION",
+        "autoprovisioningNodePoolDefaults": {
+          "oauthScopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol",
+            "https://www.googleapis.com/auth/trace.append"
+          ],
+          "serviceAccount": "default",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "imageType": "COS_CONTAINERD"
+        }
+      },
+      "networkConfig": {
+        "network": "projects/gen-lang-client-0020882673/global/networks/default",
+        "subnetwork": "projects/gen-lang-client-0020882673/regions/australia-southeast1/subnetworks/default",
+        "enableIntraNodeVisibility": true,
+        "datapathProvider": "ADVANCED_DATAPATH",
+        "dnsConfig": {
+          "clusterDns": "CLOUD_DNS",
+          "clusterDnsScope": "CLUSTER_SCOPE",
+          "clusterDnsDomain": "cluster.local"
+        },
+        "serviceExternalIpsConfig": {},
+        "gatewayApiConfig": {
+          "channel": "CHANNEL_STANDARD"
+        }
+      },
+      "defaultMaxPodsConstraint": {
+        "maxPodsPerNode": "110"
+      },
+      "privateClusterConfig": {
+        "privateEndpoint": "10.152.0.2",
+        "publicEndpoint": "34.40.189.8"
+      },
+      "databaseEncryption": {
+        "state": "DECRYPTED",
+        "currentState": "CURRENT_STATE_DECRYPTED"
+      },
+      "verticalPodAutoscaling": {
+        "enabled": true
+      },
+      "shieldedNodes": {
+        "enabled": true
+      },
+      "releaseChannel": {
+        "channel": "REGULAR"
+      },
+      "workloadIdentityConfig": {
+        "workloadPool": "gen-lang-client-0020882673.svc.id.goog"
+      },
+      "notificationConfig": {
+        "pubsub": {}
+      },
+      "selfLink": "https://container.googleapis.com/v1/projects/gen-lang-client-0020882673/locations/australia-southeast1/clusters/beyonder-v32-autopilot-dev",
+      "zone": "australia-southeast1",
+      "endpoint": "34.40.189.8",
+      "initialClusterVersion": "1.35.1-gke.1396002",
+      "currentMasterVersion": "1.35.1-gke.1396002",
+      "currentNodeVersion": "1.35.1-gke.1396002",
+      "createTime": "2026-04-03T15:31:41+00:00",
+      "status": "RUNNING",
+      "servicesIpv4Cidr": "34.118.224.0/20",
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopil-default-pool-5acf174e-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-c/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-1-04b8e8a4-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-1-49edfdd2-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-b/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-1-8ab2086d-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-c/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-2-d71541ec-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-2-49419330-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-b/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-2-d870a27e-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-c/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-3-78011a7f-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-a/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-3-6967596a-grp",
+        "https://www.googleapis.com/compute/v1/projects/gen-lang-client-0020882673/zones/australia-southeast1-b/instanceGroupManagers/gk3-beyonder-v32-autopilot-dev-pool-3-9ba96721-grp"
+      ],
+      "location": "australia-southeast1",
+      "autopilot": {
+        "enabled": true
+      },
+      "id": "72fc5519acdd479cb972cbcbc979896ea0cf40441b384bdb95a8935fa8ff19e4",
+      "nodePoolDefaults": {
+        "nodeConfigDefaults": {
+          "gcfsConfig": {
+            "enabled": true
+          },
+          "loggingConfig": {
+            "variantConfig": {
+              "variant": "DEFAULT"
+            }
+          },
+          "nodeKubeletConfig": {
+            "insecureKubeletReadonlyPortEnabled": false
+          }
+        }
+      },
+      "loggingConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS",
+            "WORKLOADS"
+          ]
+        }
+      },
+      "monitoringConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS",
+            "HPA",
+            "POD",
+            "DAEMONSET",
+            "DEPLOYMENT",
+            "STATEFULSET",
+            "JOBSET",
+            "STORAGE",
+            "CADVISOR",
+            "KUBELET",
+            "DCGM"
+          ]
+        },
+        "managedPrometheusConfig": {
+          "enabled": true
+        },
+        "advancedDatapathObservabilityConfig": {
+          "enableMetrics": true
+        }
+      },
+      "nodePoolAutoConfig": {
+        "nodeKubeletConfig": {
+          "insecureKubeletReadonlyPortEnabled": false
+        }
+      },
+      "podAutoscaling": {
+        "hpaProfile": "PERFORMANCE"
+      },
+      "etag": "63722f36-d992-4b18-aa6b-722df95f9a15",
+      "securityPostureConfig": {
+        "mode": "BASIC",
+        "vulnerabilityMode": "VULNERABILITY_MODE_UNSPECIFIED"
+      },
+      "controlPlaneEndpointsConfig": {
+        "dnsEndpointConfig": {
+          "endpoint": "gke-72fc5519acdd479cb972cbcbc979896ea0cf-649817769181.australia-southeast1.gke.goog",
+          "allowExternalTraffic": false,
+          "enableK8sTokensViaDns": false,
+          "enableK8sCertsViaDns": false
+        },
+        "ipEndpointsConfig": {
+          "enabled": true,
+          "enablePublicEndpoint": true,
+          "authorizedNetworksConfig": {},
+          "publicEndpoint": "34.40.189.8",
+          "privateEndpoint": "10.152.0.2"
+        }
+      },
+      "enterpriseConfig": {
+        "clusterTier": "STANDARD"
+      },
+      "userManagedKeysConfig": {},
+      "rbacBindingConfig": {
+        "enableInsecureBindingSystemUnauthenticated": false,
+        "enableInsecureBindingSystemAuthenticated": false
+      },
+      "anonymousAuthenticationConfig": {
+        "mode": "LIMITED"
+      },
+      "controlPlaneEgress": {
+        "mode": "VIA_CONTROL_PLANE"
+      }
+    },
+    "http_status": 200
+  },
+  "cluster_probe_status": 200,
+  "cluster_details": {
+    "status": "RUNNING",
+    "endpoint": "34.40.189.8",
+    "release_channel": "REGULAR",
+    "autopilot_enabled": true,
+    "location": "australia-southeast1"
+  },
+  "wsl_probe": {
+    "status_returncode": 0,
+    "status_stdout": "D\u0000e\u0000f\u0000a\u0000u\u0000l\u0000t\u0000 \u0000D\u0000i\u0000s\u0000t\u0000r\u0000i\u0000b\u0000u\u0000t\u0000i\u0000o\u0000n\u0000:\u0000 \u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000\n\u0000\n\u0000D\u0000e\u0000f\u0000a\u0000u\u0000l\u0000t\u0000 \u0000V\u0000e\u0000r\u0000s\u0000i\u0000o\u0000n\u0000:\u0000 \u00002\u0000\n\u0000\n\u0000",
+    "status_stderr": "",
+    "list_returncode": 0,
+    "list_stdout": "\u0000 \u0000N\u0000A\u0000M\u0000E\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000S\u0000T\u0000A\u0000T\u0000E\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000V\u0000E\u0000R\u0000S\u0000I\u0000O\u0000N\u0000\n\u0000\n\u0000*\u0000 \u0000U\u0000b\u0000u\u0000n\u0000t\u0000u\u0000 \u0000 \u0000 \u0000 \u0000S\u0000t\u0000o\u0000p\u0000p\u0000e\u0000d\u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u0000 \u00002\u0000\n\u0000\n\u0000",
+    "list_stderr": "",
+    "smoke_returncode": 124,
+    "smoke_stdout": "",
+    "smoke_stderr": "command timed out after 15 seconds",
+    "readiness": "ubuntu_launch_timeout"
+  },
+  "gcloud_cli_state": "blocked_wsl_launch_timeout",
+  "kubectl_client_path": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE",
+  "kubeconfig_path": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\kube\\v32-kubeconfig.yaml",
+  "kubectl_nodes": {
+    "returncode": 0,
+    "item_count": 0,
+    "stderr": ""
+  },
+  "kubectl_pods": {
+    "returncode": 0,
+    "item_count": 15,
+    "stderr": ""
+  },
+  "namespace_create": {
+    "returncode": 0,
+    "stdout": "namespace/v32-omega created",
+    "stderr": ""
+  },
+  "configmap_apply": {
+    "returncode": 0,
+    "stdout": "configmap/v32-omega-smoke created",
+    "stderr": ""
+  },
+  "configmap_verify": {
+    "returncode": 0,
+    "stderr": "",
+    "name": "v32-omega-smoke"
+  },
+  "gke_cluster_state": "cluster_ready"
+}

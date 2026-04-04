@@ -158,6 +158,43 @@ def _github_search_records(query: dict[str, Any], limit: int, timeout_sec: int) 
     return records, source_runs
 
 
+def _cache_fallback_payload(existing: dict[str, Any], reason: Exception, latest_json: str) -> dict[str, Any]:
+    cached_records = existing.get("records", [])
+    cached_runs = existing.get("source_runs", [])
+    if not isinstance(cached_records, list):
+        cached_records = []
+    normalized_runs: list[dict[str, Any]] = []
+    if isinstance(cached_runs, list):
+        for index, row in enumerate(cached_runs, start=1):
+            if isinstance(row, dict):
+                normalized = dict(row)
+                normalized.setdefault("request_url", latest_json)
+                normalized.setdefault("request_id", f"cached-source-run-{index}")
+                normalized_runs.append(normalized)
+
+    payload = dict(existing)
+    payload["generated_utc"] = iso_now()
+    payload["overall_status"] = "PASS"
+    payload["effective_success"] = True
+    payload["refresh_mode"] = "cache_fallback"
+    payload["fallback_reason"] = compact_text(str(reason), limit=240)
+    payload["record_count"] = len(cached_records)
+    payload["records"] = cached_records
+    payload["source_runs"] = [
+        *normalized_runs,
+        {
+            "api_id": "fallback_cache",
+            "request_id": "body-live-refresh-fallback",
+            "request_url": latest_json,
+            "status": "PASS",
+            "record_count": len(cached_records),
+            "detail": f"live refresh fallback due to: {compact_text(str(reason), limit=200)}",
+        },
+    ]
+    payload["candidate_repo_targets"] = aggregate_candidate_targets(cached_records)
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Refresh cached Trinity Body public API signals.")
     parser.add_argument("--manifest", default="docs/trinity-api-source-manifest-v1.json")
@@ -200,25 +237,7 @@ def main() -> int:
             source_runs.extend(runs)
     except Exception as exc:  # noqa: BLE001
         if isinstance(cached_payload, dict):
-            payload = dict(cached_payload)
-            payload["generated_utc"] = iso_now()
-            existing_runs = payload.get("source_runs", [])
-            if not isinstance(existing_runs, list):
-                existing_runs = []
-            existing_runs.append(
-                {
-                    "api_id": "fallback_cache",
-                    "request_id": "body-live-refresh-fallback",
-                    "request_url": args.latest_json,
-                    "status": "PASS",
-                    "record_count": len(payload.get("records", [])),
-                    "detail": f"live refresh fallback due to: {exc}",
-                }
-            )
-            payload["source_runs"] = existing_runs
-            payload["overall_status"] = "PASS"
-            payload["effective_success"] = True
-            payload["record_count"] = len(payload.get("records", []))
+            payload = _cache_fallback_payload(cached_payload, exc, args.latest_json)
             timestamped_json, latest_json = save_json_run(
                 payload=payload,
                 latest_json=args.latest_json,

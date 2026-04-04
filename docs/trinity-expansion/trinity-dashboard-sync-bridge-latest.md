@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_dashboard_sync_bridge
 
-- generated_utc: `2026-04-01T02:27:46+00:00`
+- generated_utc: `2026-04-04T00:46:56+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -15,15 +15,15 @@
 ```json
 {
   "corpus_versions": 13,
-  "generated_utc": "2026-04-01T02:27:46+00:00",
-  "mandala_status": "FAIL",
+  "generated_utc": "2026-04-04T00:46:56+00:00",
+  "mandala_status": "PASS",
   "suite_counts": {
     "fail": 0,
     "pass": 1155,
     "timeout": 0,
     "warn": 0
   },
-  "suite_profile": "standard"
+  "suite_profile": "materialize"
 }
 ```
 

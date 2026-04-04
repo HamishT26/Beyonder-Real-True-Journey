@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import json
 import re
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -30,6 +32,7 @@ REQUIRED_RECORD_FIELDS = {
     "repo_relevance",
 }
 HTML_TAG_RE = re.compile(r"<[^>]+>")
+TRANSIENT_HTTP_STATUSES = {408, 429, 500, 502, 503, 504}
 
 
 def repo_path(path_str: str) -> Path:
@@ -115,10 +118,21 @@ def fetch_text(url: str, *, accept: str | None = None, timeout_sec: int = 30) ->
     headers = {"User-Agent": USER_AGENT}
     if accept:
         headers["Accept"] = accept
-    request = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(request, timeout=timeout_sec) as response:
-        charset = response.headers.get_content_charset() or "utf-8"
-        return response.read().decode(charset, errors="replace")
+    attempts = 3
+    for attempt in range(1, attempts + 1):
+        request = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(request, timeout=timeout_sec) as response:
+                charset = response.headers.get_content_charset() or "utf-8"
+                return response.read().decode(charset, errors="replace")
+        except urllib.error.HTTPError as exc:
+            if exc.code not in TRANSIENT_HTTP_STATUSES or attempt >= attempts:
+                raise
+        except urllib.error.URLError:
+            if attempt >= attempts:
+                raise
+        time.sleep(float(attempt))
+    raise RuntimeError(f"unreachable retry path for fetch_text({url})")
 
 
 def fetch_json(url: str, *, accept: str | None = "application/json", timeout_sec: int = 30) -> dict[str, Any] | list[Any]:

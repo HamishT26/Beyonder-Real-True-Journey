@@ -19,3 +19,4 @@
 ## Next Action
 
 - Carry V32 Beta Aletheon-facing and continue from the remaining hydration, Gmail, Hugging Face, or suite blockers.
+- Use `docs/v32-omega-priority-actions-v1.md` as the first-turn execution order for V32 Omega.

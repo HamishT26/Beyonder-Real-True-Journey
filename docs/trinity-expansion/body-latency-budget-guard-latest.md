@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_latency_budget_guard
 
-- generated_utc: `2026-04-01T02:22:35+00:00`
+- generated_utc: `2026-04-04T00:44:04+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,7 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| latency_budget | PASS | duration_sec=1.532451, max=12.500, profile=standard |
+| latency_budget | PASS | duration_sec=1.839314, max=12.500, profile=standard |
 | health_budget | PASS | health=100.000, min=66.170, profile=standard |
 
 ## Metrics
@@ -18,7 +18,7 @@
   "body_health_score": 100.0,
   "max_duration_sec": 12.5,
   "min_health_score": 66.17,
-  "total_duration_seconds": 1.532451
+  "total_duration_seconds": 1.839314
 }
 ```
 

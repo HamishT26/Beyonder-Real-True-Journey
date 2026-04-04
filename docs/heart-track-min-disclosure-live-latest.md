@@ -1,14 +1,14 @@
 # Freed ID Minimum-Disclosure Live-Path Verification Report
 
-- generated_utc: `2026-04-01T02:47:04+00:00`
+- generated_utc: `2026-04-04T00:57:21+00:00`
 - control: `GOV-002`
 - overall_status: **PASS**
 
 ## Checks
 | check | status | detail |
 |---|---|---|
-| register_did | PASS | did=did:freed:19f1f87d6e264ddd982df8fb355cd64f |
-| issue_credential | PASS | credential_id=did:freed:19f1f87d6e264ddd982df8fb355cd64f#cred-0 |
+| register_did | PASS | did=did:freed:421670ba209d42df993cac68d3637132 |
+| issue_credential | PASS | credential_id=did:freed:421670ba209d42df993cac68d3637132#cred-0 |
 | default_policy_block | PASS | government_id withheld by default policy |
 | default_denied_tracking | PASS | government_id recorded as denied |
 | allowlisted_sensitive_disclosure | PASS | allowlisted sensitive field disclosed |

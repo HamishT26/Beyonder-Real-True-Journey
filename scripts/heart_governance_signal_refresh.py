@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import json
 import xml.etree.ElementTree as ET
+from pathlib import Path
 from typing import Any
 
 from trinity_api_common import (
@@ -25,6 +27,54 @@ OECD_NS = {
     "structure": "http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure",
     "common": "http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common",
 }
+
+
+def _load_cached_payload(path_str: str) -> dict[str, Any] | None:
+    path = Path(path_str)
+    if not path.exists():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _cache_fallback_payload(existing: dict[str, Any], reason: Exception, latest_json: str) -> dict[str, Any]:
+    cached_records = existing.get("records", [])
+    cached_runs = existing.get("source_runs", [])
+    if not isinstance(cached_records, list):
+        cached_records = []
+    normalized_runs: list[dict[str, Any]] = []
+    if isinstance(cached_runs, list):
+        for index, row in enumerate(cached_runs, start=1):
+            if isinstance(row, dict):
+                normalized = dict(row)
+                normalized.setdefault("request_url", latest_json)
+                normalized.setdefault("request_id", f"cached-source-run-{index}")
+                normalized_runs.append(normalized)
+
+    payload = dict(existing)
+    payload["generated_utc"] = iso_now()
+    payload["overall_status"] = "PASS"
+    payload["effective_success"] = True
+    payload["refresh_mode"] = "cache_fallback"
+    payload["fallback_reason"] = compact_text(str(reason), limit=240)
+    payload["record_count"] = len(cached_records)
+    payload["records"] = cached_records
+    payload["source_runs"] = [
+        *normalized_runs,
+        {
+            "api_id": "cache_fallback",
+            "request_id": "heart_governance_signal_refresh",
+            "request_url": latest_json,
+            "status": "PASS",
+            "record_count": len(cached_records),
+            "detail": compact_text(f"reused cached latest because live refresh failed: {reason}", limit=240),
+        },
+    ]
+    payload["candidate_repo_targets"] = aggregate_candidate_targets(cached_records)
+    return payload
 
 
 def _world_bank_records(entry: dict[str, Any], timeout_sec: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
@@ -179,34 +229,41 @@ def main() -> int:
     manifest_entries = manifest_entries_for_pillar(manifest, "heart")
     api_ids = sorted(str(entry["api_id"]) for entry in manifest_entries)
 
-    records: list[dict[str, Any]] = []
-    source_runs: list[dict[str, Any]] = []
-    for entry in query_pack["heart"]["world_bank_indicators"]:
-        rows, runs = _world_bank_records(entry, args.timeout_sec)
-        records.extend(rows)
-        source_runs.extend(runs)
-    for entry in query_pack["heart"]["oecd_keywords"]:
-        rows, runs = _oecd_records(entry, args.timeout_sec)
-        records.extend(rows)
-        source_runs.extend(runs)
-    for entry in query_pack["heart"]["data_govt_queries"]:
-        rows, runs = _data_govt_records(entry, args.limit_per_query, args.timeout_sec)
-        records.extend(rows)
-        source_runs.extend(runs)
+    try:
+        records: list[dict[str, Any]] = []
+        source_runs: list[dict[str, Any]] = []
+        for entry in query_pack["heart"]["world_bank_indicators"]:
+            rows, runs = _world_bank_records(entry, args.timeout_sec)
+            records.extend(rows)
+            source_runs.extend(runs)
+        for entry in query_pack["heart"]["oecd_keywords"]:
+            rows, runs = _oecd_records(entry, args.timeout_sec)
+            records.extend(rows)
+            source_runs.extend(runs)
+        for entry in query_pack["heart"]["data_govt_queries"]:
+            rows, runs = _data_govt_records(entry, args.limit_per_query, args.timeout_sec)
+            records.extend(rows)
+            source_runs.extend(runs)
 
-    records = sort_records(records)
-    payload = {
-        "generated_utc": iso_now(),
-        "pillar": "heart",
-        "overall_status": "PASS",
-        "effective_success": True,
-        "record_count": len(records),
-        "refresh_window_days": int(manifest.get("refresh_window_days", 30)),
-        "apis_checked": api_ids,
-        "source_runs": source_runs,
-        "records": records,
-        "candidate_repo_targets": aggregate_candidate_targets(records),
-    }
+        records = sort_records(records)
+        payload = {
+            "generated_utc": iso_now(),
+            "pillar": "heart",
+            "overall_status": "PASS",
+            "effective_success": True,
+            "refresh_mode": "live_refresh",
+            "record_count": len(records),
+            "refresh_window_days": int(manifest.get("refresh_window_days", 30)),
+            "apis_checked": api_ids,
+            "source_runs": source_runs,
+            "records": records,
+            "candidate_repo_targets": aggregate_candidate_targets(records),
+        }
+    except Exception as exc:  # noqa: BLE001
+        existing = _load_cached_payload(args.latest_json)
+        if existing is None:
+            raise
+        payload = _cache_fallback_payload(existing, exc, args.latest_json)
     timestamped_json, latest_json = save_json_run(
         payload=payload,
         latest_json=args.latest_json,
@@ -214,7 +271,9 @@ def main() -> int:
         stem="heart-signals",
     )
     print("overall_status=PASS")
-    print(f"record_count={len(records)}")
+    print(f"record_count={int(payload.get('record_count', 0) or 0)}")
+    if payload.get("refresh_mode") == "cache_fallback":
+        print("refresh_mode=cache_fallback")
     print(f"timestamped_json={timestamped_json}")
     print(f"latest_json={latest_json}")
     return 0

@@ -1,6 +1,6 @@
 # Trinity API Source Manifest Validation
 
-- generated_utc: `2026-04-01T02:45:20+00:00`
+- generated_utc: `2026-04-04T00:55:56+00:00`
 - overall_status: **PASS**
 - manifest_path: `docs/trinity-api-source-manifest-v1.json`
 - query_pack_path: `docs/trinity-api-query-pack-v1.json`
