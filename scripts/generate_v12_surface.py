@@ -1526,7 +1526,16 @@ def main() -> int:
 
     command_book = build_command_book(old_command_book)
     mcp_catalog = build_mcp_catalog(old_mcp_catalog)
-    memory_bank = build_memory_bank_registry(old_memory_bank)
+    existing_memory_bank: dict[str, object] | None = None
+    if NEW_MEMORY_BANK.exists():
+        try:
+            loaded_memory_bank = json.loads(NEW_MEMORY_BANK.read_text(encoding="utf-8"))
+            if isinstance(loaded_memory_bank, dict) and loaded_memory_bank.get("version") == "v3":
+                existing_memory_bank = loaded_memory_bank
+        except (OSError, json.JSONDecodeError):
+            existing_memory_bank = None
+
+    memory_bank = existing_memory_bank or build_memory_bank_registry(old_memory_bank)
     roster = refresh_council_assets()
     seed_support_docs(roster)
 

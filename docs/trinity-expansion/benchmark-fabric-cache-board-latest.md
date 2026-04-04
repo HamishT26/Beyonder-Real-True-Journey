@@ -1,6 +1,6 @@
 # Trinity Expansion Result: benchmark_fabric_cache_board
 
-- generated_utc: `2026-04-01T02:26:11+00:00`
+- generated_utc: `2026-04-04T00:46:27+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

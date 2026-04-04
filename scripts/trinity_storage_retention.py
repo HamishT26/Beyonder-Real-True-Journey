@@ -142,6 +142,11 @@ def main() -> int:
     parser.add_argument("--keep-stamps", type=int, default=2)
     parser.add_argument("--keep-archives", type=int, default=3)
     parser.add_argument("--clear-pycache", action="store_true")
+    parser.add_argument(
+        "--include-workbench-pycache",
+        action="store_true",
+        help="Also clear __pycache__ from the separate OneDrive workbench. Defaults to repo-only cleanup.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -175,7 +180,10 @@ def main() -> int:
 
     pycache_row = {"deleted_dirs": 0, "reclaimed_mb": 0.0, "deleted_paths": []}
     if args.clear_pycache:
-        pycache_row = prune_pycache([ROOT, WORKBENCH_ROOT], args.dry_run)
+        pycache_roots = [ROOT]
+        if args.include_workbench_pycache:
+            pycache_roots.append(WORKBENCH_ROOT)
+        pycache_row = prune_pycache(pycache_roots, args.dry_run)
         total_reclaimed += float(pycache_row["reclaimed_mb"])
 
     after_free = round(shutil.disk_usage(ROOT).free / (1024**3), 2)

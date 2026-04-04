@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_memory_recap_generator
 
-- generated_utc: `2026-04-01T02:23:26+00:00`
+- generated_utc: `2026-04-04T00:44:45+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -19,6 +19,14 @@
   "manifest_system_count": 1094,
   "recent_commits": [
     {
+      "commit": "b8af2d52701e",
+      "subject": "Refresh V31 published truth surfaces"
+    },
+    {
+      "commit": "e4b66abf79a0",
+      "subject": "Publish V31 omega hydration recovery and V32 beta pack"
+    },
+    {
       "commit": "f664095aa243",
       "subject": "Implement V30 omega branch repair and handoff pack"
     },
@@ -33,17 +41,9 @@
     {
       "commit": "8c4610214849",
       "subject": "Implement v28 omega hybrid promotion and fluid pilot"
-    },
-    {
-      "commit": "2531562ec32a",
-      "subject": "Merge branch 'main' into codex/GHC-Family/beyonder-shared-omega-line"
-    },
-    {
-      "commit": "663007f348dd",
-      "subject": "v27 omega residual closure pack"
     }
   ],
-  "repo_python_scripts": 333
+  "repo_python_scripts": 344
 }
 ```
 

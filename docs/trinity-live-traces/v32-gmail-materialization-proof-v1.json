@@ -1,0 +1,36 @@
+{
+  "generated_utc": "2026-04-03T16:04:38+00:00",
+  "phase": "v32_omega",
+  "overall_status": "WARN",
+  "status": "WARN",
+  "proof_state": "open_with_blocker",
+  "gmail_scope_state": "missing_required_scope",
+  "connector_native_attempted": false,
+  "connector_tools_available": false,
+  "path_used": "direct_google_api_fallback",
+  "attempted_steps": [
+    "connector_native_gmail_tools",
+    "scope_preflight",
+    "google_api_inbox_read",
+    "google_api_draft_create",
+    "google_api_send_to_self",
+    "google_api_readback"
+  ],
+  "completed_steps": [],
+  "pending_steps": [
+    "scope_preflight",
+    "inbox_read",
+    "draft_creation",
+    "send_to_self",
+    "readback_verification"
+  ],
+  "notes": [
+    "Connector-native Gmail tools are still unavailable in-session, so V32 uses the direct Google API fallback.",
+    "V32 adds a scope preflight so Gmail auth blockers are published explicitly before message operations begin."
+  ],
+  "token_refresh_status": 200,
+  "granted_scopes": [
+    "https://www.googleapis.com/auth/drive"
+  ],
+  "blocker_code": "google_refresh_token_missing_gmail_scope"
+}

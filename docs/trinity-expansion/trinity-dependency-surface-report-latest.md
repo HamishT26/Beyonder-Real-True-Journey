@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_dependency_surface_report
 
-- generated_utc: `2026-04-01T02:22:54+00:00`
+- generated_utc: `2026-04-04T00:44:22+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,7 +8,7 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| import_scan_complete | PASS | imports=76 |
+| import_scan_complete | PASS | imports=77 |
 | dependency_surface_documented | PASS | external=12 |
 
 ## Metrics
@@ -28,7 +28,7 @@
     "numpy",
     "pypdf"
   ],
-  "total_import_roots": 76
+  "total_import_roots": 77
 }
 ```
 

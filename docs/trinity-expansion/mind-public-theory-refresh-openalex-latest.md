@@ -1,6 +1,6 @@
 # Trinity Expansion Result: mind_public_theory_refresh_openalex
 
-- generated_utc: `2026-04-01T02:23:02+00:00`
+- generated_utc: `2026-04-04T00:44:29+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`

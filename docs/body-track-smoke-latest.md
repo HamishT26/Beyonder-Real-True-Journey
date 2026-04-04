@@ -1,18 +1,18 @@
 # Body Track Smoke Report
 
-- generated_utc: `2026-04-01T02:42:43+00:00`
+- generated_utc: `2026-04-04T00:54:20+00:00`
 - overall_status: **PASS**
 
 ## Summary metrics
 - pass_rate: `1.0`
-- total_duration_seconds: `1.581455`
+- total_duration_seconds: `0.810361`
 - body_health_score: `100.0`
 - speed_band: `steady`
 
 ## Benchmark guardrail
 - status: **PASS**
 - profile: `standard`
-- trend: `stable`
+- trend: `improvement`
 ```json
 {
   "min_pass_rate": 1.0,
@@ -31,7 +31,7 @@
   },
   "total_duration_seconds": {
     "ok": true,
-    "actual": 1.581455,
+    "actual": 0.810361,
     "threshold": 12.5
   },
   "body_health_score": {
@@ -45,14 +45,14 @@
 ## Step summary
 | step | status | returncode | duration_seconds | command |
 |---|---|---:|---:|---|
-| compile_python_modules | PASS | 0 | 0.834 | `C:\Users\hamis\AppData\Local\Programs\Python\Python312\python3.exe -m py_compile freed_id_registry.py qc_transmuter.py trinity_orchestrator.py trinity_orchestrator_full.py trinity_simulation_engine.py run_simulation.py body_track_runner.py` |
-| run_full_orchestrator_demo | PASS | 0 | 0.435 | `C:\Users\hamis\AppData\Local\Programs\Python\Python312\python3.exe trinity_orchestrator_full.py` |
-| run_gmut_simulation | PASS | 0 | 0.313 | `C:\Users\hamis\AppData\Local\Programs\Python\Python312\python3.exe run_simulation.py --gammas 0.0 0.02 0.05` |
+| compile_python_modules | PASS | 0 | 0.292 | `C:\Users\hamis\AppData\Local\Programs\Python\Python312\python3.exe -m py_compile freed_id_registry.py qc_transmuter.py trinity_orchestrator.py trinity_orchestrator_full.py trinity_simulation_engine.py run_simulation.py body_track_runner.py` |
+| run_full_orchestrator_demo | PASS | 0 | 0.300 | `C:\Users\hamis\AppData\Local\Programs\Python\Python312\python3.exe trinity_orchestrator_full.py` |
+| run_gmut_simulation | PASS | 0 | 0.219 | `C:\Users\hamis\AppData\Local\Programs\Python\Python312\python3.exe run_simulation.py --gammas 0.0 0.02 0.05` |
 
 ## compile_python_modules
 
 - returncode: `0`
-- duration_seconds: `0.834`
+- duration_seconds: `0.292`
 
 ### stdout (trimmed)
 ```
@@ -67,11 +67,11 @@
 ## run_full_orchestrator_demo
 
 - returncode: `0`
-- duration_seconds: `0.435`
+- duration_seconds: `0.300`
 
 ### stdout (trimmed)
 ```
-Registered DID: did:freed:46864b5953df42628c26bb00c1a76c85
+Registered DID: did:freed:94454821edbd4816acb47d3e84737450
 
 Task 'Harmonize energy flows' ARC Score: 0.9090
 Task 'Harmonize energy flows' completed.
@@ -104,7 +104,7 @@ Memory Core is empty.
 ## run_gmut_simulation
 
 - returncode: `0`
-- duration_seconds: `0.313`
+- duration_seconds: `0.219`
 
 ### stdout (trimmed)
 ```
