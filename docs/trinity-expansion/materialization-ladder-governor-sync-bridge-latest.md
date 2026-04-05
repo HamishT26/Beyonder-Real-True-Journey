@@ -1,6 +1,6 @@
 # Trinity Expansion Result: materialization_ladder_governor_sync_bridge
 
-- generated_utc: `2026-04-04T00:47:33+00:00`
+- generated_utc: `2026-04-05T14:59:39+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

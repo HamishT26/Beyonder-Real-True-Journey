@@ -1,6 +1,6 @@
 # Trinity Expansion Result: council_continuity_wellbeing_v12_gate
 
-- generated_utc: `2026-04-04T00:51:12+00:00`
+- generated_utc: `2026-04-05T15:03:09+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
