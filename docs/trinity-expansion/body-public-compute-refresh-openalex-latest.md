@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_public_compute_refresh_openalex
 
-- generated_utc: `2026-04-04T00:44:36+00:00`
+- generated_utc: `2026-04-05T14:56:28+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

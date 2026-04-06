@@ -1,6 +1,6 @@
 # Body Compute Signal Board
 
-- generated_utc: `2026-04-04T00:54:49+00:00`
+- generated_utc: `2026-04-05T15:06:42+00:00`
 - overall_status: **PASS**
 - freshness_status: `PASS`
 - source_count: `17`
@@ -18,6 +18,6 @@
 ## Promotion candidates
 | target | record_count | latest_published_at | supporting_source_ids |
 |---|---|---|---|
-| docs/comparative-validation-grid-v1.md | 17 | 2026-04-04 | crossref, github |
-| docs/trinity-public-research-brief-2026-03-06.md | 9 | 2026-04-04 | crossref, github |
-| docs/grand-unified-narrative-brief.md | 8 | 2026-04-04 | crossref, github |
+| docs/comparative-validation-grid-v1.md | 17 | 2026-04-05 | crossref, github |
+| docs/trinity-public-research-brief-2026-03-06.md | 9 | 2026-04-05 | crossref, github |
+| docs/grand-unified-narrative-brief.md | 8 | 2026-04-05 | crossref, github |

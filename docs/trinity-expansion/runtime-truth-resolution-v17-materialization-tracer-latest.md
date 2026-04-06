@@ -1,6 +1,6 @@
 # Trinity Expansion Result: runtime_truth_resolution_v17_materialization_tracer
 
-- generated_utc: `2026-04-04T00:53:57+00:00`
+- generated_utc: `2026-04-05T15:05:48+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: journey_lineage_inventory_v14_surface_audit
 
-- generated_utc: `2026-04-04T00:52:36+00:00`
+- generated_utc: `2026-04-05T15:04:32+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

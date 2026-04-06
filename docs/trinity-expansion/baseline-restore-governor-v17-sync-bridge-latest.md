@@ -1,6 +1,6 @@
 # Trinity Expansion Result: baseline_restore_governor_v17_sync_bridge
 
-- generated_utc: `2026-04-04T00:53:51+00:00`
+- generated_utc: `2026-04-05T15:05:44+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

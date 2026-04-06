@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_memory_recap_generator
 
-- generated_utc: `2026-04-04T00:44:45+00:00`
+- generated_utc: `2026-04-05T14:56:35+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -18,6 +18,10 @@
   "continuity_mode": "repo_and_session_grounded",
   "manifest_system_count": 1094,
   "recent_commits": [
+    {
+      "commit": "4444aa50b31b",
+      "subject": "Implement V32 omega cloud bootstrap, proofs, and V33 beta handoff"
+    },
     {
       "commit": "b8af2d52701e",
       "subject": "Refresh V31 published truth surfaces"
@@ -37,13 +41,9 @@
     {
       "commit": "714aca489371",
       "subject": "Publish V29 omega operator expansion"
-    },
-    {
-      "commit": "8c4610214849",
-      "subject": "Implement v28 omega hybrid promotion and fluid pilot"
     }
   ],
-  "repo_python_scripts": 344
+  "repo_python_scripts": 351
 }
 ```
 

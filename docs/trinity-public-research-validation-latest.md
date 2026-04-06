@@ -1,10 +1,10 @@
 # Trinity Public Research Validation
 
-- generated_utc: `2026-04-04T00:57:19+00:00`
+- generated_utc: `2026-04-05T15:09:21+00:00`
 - overall_status: **PASS**
 - registry_path: `docs/trinity-public-source-registry-v1.json`
 - registry_generated_utc: `2026-03-25T22:00:49+00:00`
-- registry_age_days: `9`
+- registry_age_days: `10`
 - refresh_window_days: `30`
 - pass: `3`
 - warn: `0`

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: heart_governance_signal_refresh_worldbank_oecd
 
-- generated_utc: `2026-04-04T00:44:10+00:00`
+- generated_utc: `2026-04-05T14:56:03+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`

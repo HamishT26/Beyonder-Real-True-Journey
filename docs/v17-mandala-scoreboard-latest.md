@@ -1,6 +1,6 @@
 # Trinity Mandala Scoreboard
 
-- generated_utc: `2026-04-03T20:14:57+00:00`
+- generated_utc: `2026-04-05T13:34:07+00:00`
 - hybrid_os_status: **PASS**
 - suite_status: `PASS`
 - checkpoint_class: `v17_evidence_first_quick_lane`
@@ -22,7 +22,7 @@
 | mind | Mind API signal board | PASS | freshness_status=PASS, source_count=14, apis=2 | `docs/mind-theory-signal-board-latest.json` |
 | mind | Mind expansion constellation | PASS | checks=9/9 | `docs/trinity-expansion/mind-theory-constellation-board-latest.json` |
 | mind | Mind readiness gate | PASS | checks=10/10 | `docs/trinity-expansion/mind-theory-readiness-gate-latest.json` |
-| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=0.951891, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
+| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=1.036868, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
 | body | Benchmark guardrail | PASS | status extracted | `docs/body-track-benchmark-latest.json` |
 | body | Trend guard | PASS | trend=stable_or_improving | `docs/body-track-trend-guard-latest.json` |
 | body | Stress window | PASS | status extracted | `docs/body-track-policy-stress-latest.json` |
@@ -34,7 +34,7 @@
 | heart | Minimum disclosure live path | PASS | checks=6/6 | `docs/heart-track-min-disclosure-live-latest.json` |
 | heart | Dispute recourse | PASS | final_case_status=dismissed | `docs/heart-track-dispute-recourse-latest.json` |
 | heart | Dispute recourse adversarial | PASS | checks=12/12 | `docs/heart-track-dispute-recourse-adversarial-latest.json` |
-| heart | Heart API signal board | PASS | freshness_status=PASS, source_count=17, apis=4 | `docs/heart-governance-signal-board-latest.json` |
+| heart | Heart API signal board | PASS | freshness_status=PASS, source_count=17, apis=3 | `docs/heart-governance-signal-board-latest.json` |
 | heart | Heart expansion constellation | PASS | checks=9/9 | `docs/trinity-expansion/heart-governance-constellation-board-latest.json` |
 | heart | Heart readiness gate | PASS | checks=10/10 | `docs/trinity-expansion/heart-governance-readiness-gate-latest.json` |
 
