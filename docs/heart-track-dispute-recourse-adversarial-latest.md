@@ -1,6 +1,6 @@
 # Freed ID Dispute/Recourse Adversarial Verification Report
 
-- generated_utc: `2026-04-05T15:09:25+00:00`
+- generated_utc: `2026-04-06T15:44:51+00:00`
 - control_id: `GOV-004`
 - mode: `adversarial`
 - overall_status: **PASS**
@@ -37,7 +37,7 @@
     "subject_did": "did:freed:subject-adv-001",
     "credential_id": "did:freed:subject-adv-001#cred-0",
     "reason": "adversarial transition checks",
-    "opened_utc": "2026-04-05T15:09:25+00:00",
+    "opened_utc": "2026-04-06T15:44:51+00:00",
     "opened_by": "did:freed:ombuds-1",
     "status": "resolved",
     "evidence_refs": [
@@ -53,7 +53,7 @@
       {
         "event_id": "case-gov004-adversarial-0001:event:0000",
         "event_seq": 0,
-        "at_utc": "2026-04-05T15:09:25+00:00",
+        "at_utc": "2026-04-06T15:44:51+00:00",
         "actor": "did:freed:ombuds-1",
         "actor_role": "ombuds",
         "from_status": "none",
@@ -71,7 +71,7 @@
       {
         "event_id": "case-gov004-adversarial-0001:event:0001",
         "event_seq": 1,
-        "at_utc": "2026-04-05T15:09:25+00:00",
+        "at_utc": "2026-04-06T15:44:51+00:00",
         "actor": "did:freed:reviewer-1",
         "actor_role": "reviewer",
         "from_status": "opened",
@@ -87,7 +87,7 @@
       {
         "event_id": "case-gov004-adversarial-0001:event:0002",
         "event_seq": 2,
-        "at_utc": "2026-04-05T15:09:25+00:00",
+        "at_utc": "2026-04-06T15:44:51+00:00",
         "actor": "did:freed:reviewer-1",
         "actor_role": "reviewer",
         "from_status": "review",
@@ -103,7 +103,7 @@
       {
         "event_id": "case-gov004-adversarial-0001:event:0003",
         "event_seq": 3,
-        "at_utc": "2026-04-05T15:09:25+00:00",
+        "at_utc": "2026-04-06T15:44:51+00:00",
         "actor": "did:freed:council-1",
         "actor_role": "council",
         "from_status": "escalated",
@@ -119,7 +119,7 @@
       {
         "event_id": "case-gov004-adversarial-0001:event:0004",
         "event_seq": 4,
-        "at_utc": "2026-04-05T15:09:25+00:00",
+        "at_utc": "2026-04-06T15:44:51+00:00",
         "actor": "did:freed:council-1",
         "actor_role": "council",
         "from_status": "review",

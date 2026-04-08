@@ -1,0 +1,447 @@
+{
+  "generated_utc": "2026-04-06T15:31:14+00:00",
+  "phase": "v35_omega",
+  "overall_status": "WARN",
+  "proof_state": "agent_engine_start_failed_after_upload",
+  "memory_bank_state": "repo_memory_bank_validated_live_start_failed",
+  "agent_engine_state": "live_start_failed",
+  "promotion_gate_ready": false,
+  "project_id": "gen-lang-client-0020882673",
+  "preferred_regions": [
+    "australia-southeast1",
+    "us-central1"
+  ],
+  "preferred_region": "australia-southeast1",
+  "staging_bucket": "gs://beyonder-v32-primary-mirror-gen-lang-client-0020882673",
+  "official_sources": {
+    "overview": "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview",
+    "quickstart": "https://docs.cloud.google.com/agent-builder/agent-engine/memory-bank/quickstart-api"
+  },
+  "completed_steps": [
+    "mint_primary_token",
+    "vertex_service_enabled",
+    "repo_memory_bank_sync_ran",
+    "repo_memory_bank_validator_ran",
+    "live_agent_engine_create_attempted"
+  ],
+  "blockers": [
+    "The live Agent Engine create path staged successfully enough to attempt startup, but the reasoning engine failed to start and never stabilized into a visible Memory Bank session.",
+    "Observed reasoning-engine references: projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000, projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000/operations/8439496662308618240"
+  ],
+  "region_attempts": [
+    {
+      "region": "australia-southeast1",
+      "list_status": 200,
+      "engine_names": [],
+      "resource_refs": [
+        "projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000"
+      ],
+      "resource_probe": {
+        "status": 404,
+        "body_text": "{\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"The ReasoningEngine does not exist.\",\n    \"status\": \"NOT_FOUND\"\n  }\n}\n",
+        "parsed": {
+          "error": {
+            "code": 404,
+            "message": "The ReasoningEngine does not exist.",
+            "status": "NOT_FOUND"
+          }
+        },
+        "headers": {
+          "Vary": "Origin,Accept-Encoding",
+          "Content-Type": "application/json; charset=UTF-8",
+          "Date": "Mon, 06 Apr 2026 15:38:47 GMT",
+          "Server": "ESF",
+          "X-XSS-Protection": "0",
+          "X-Frame-Options": "SAMEORIGIN",
+          "X-Content-Type-Options": "nosniff",
+          "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
+          "Accept-Ranges": "none",
+          "Connection": "close",
+          "Transfer-Encoding": "chunked"
+        }
+      }
+    },
+    {
+      "region": "us-central1",
+      "list_status": 200,
+      "engine_names": [],
+      "resource_refs": []
+    }
+  ],
+  "primary_identity": "6***@d***",
+  "token_expiry_utc": "2026-04-06T04:31:16+00:00",
+  "token_scopes": [
+    "https://www.googleapis.com/auth/cloud-platform"
+  ],
+  "service_enablement": {
+    "service_name": "aiplatform.googleapis.com",
+    "initial_status": 200,
+    "initial_state": "ENABLED",
+    "enable_attempted": false,
+    "enable_status": null,
+    "final_status": 200,
+    "final_state": "ENABLED",
+    "raw_enable_response": {}
+  },
+  "sync_run": {
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "validator_run": {
+    "returncode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "sync_report": {
+    "status": "present",
+    "path": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\docs\\trinity-memory-bank-sync-latest.json",
+    "parsed": {
+      "generated_utc": "2026-04-06T15:31:23+00:00",
+      "overall_status": "PASS",
+      "archive": {
+        "path": "docs/memory-archives/20260406T153120Z-v35-memory-bank.zip",
+        "size_mb": 0.17,
+        "index": "docs/memory-archives/index.jsonl"
+      },
+      "storage_pressure": {
+        "free_gib": 7.21,
+        "total_gib": 116.97,
+        "archive_bytes": 181031,
+        "archive_megabytes": 0.17
+      },
+      "surfaces": [
+        {
+          "surface": "repo",
+          "status": "authoritative",
+          "capacity_class": "local_git",
+          "notes": "Primary source for certificates, ledgers, reflections, commands, and official council state.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "docs/memory-archives/20260406T153120Z-v35-memory-bank.zip",
+          "proof_state": "repo_first_authority",
+          "blockers": [],
+          "retention_class": "canonical",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "none",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "github",
+          "status": "live_mirror",
+          "capacity_class": "remote_git",
+          "notes": "Branch-scoped remote backup and collaboration surface. Never overrides repo authority.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "14b6749f51a921f23b35169075c6cd8170654e52",
+          "proof_state": "remote_reachable",
+          "blockers": [],
+          "retention_class": "remote_mirror",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "postgres",
+          "status": "blocked",
+          "capacity_class": "docker_volume",
+          "notes": "Operational state, synthetic mesh, chat indexes, and queryable summaries. Runtime truth follows direct local probes rather than broader suite pass state.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": false,
+          "latest_artifact": "trinity-v5-pg-proof",
+          "proof_state": "postgres_blocked",
+          "blockers": [
+            "postgres container not ready"
+          ],
+          "retention_class": "runtime_query",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": ""
+        },
+        {
+          "surface": "docker",
+          "status": "blocked",
+          "capacity_class": "local_container_volume",
+          "notes": "Runtime substrate for Postgres and bounded simulations. Runtime truth follows direct local probes rather than broader suite pass state.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": false,
+          "latest_artifact": "",
+          "proof_state": "docker_unavailable",
+          "blockers": [
+            "docker CLI unavailable"
+          ],
+          "retention_class": "runtime_cache",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": ""
+        },
+        {
+          "surface": "notion",
+          "status": "bounded_mirror",
+          "capacity_class": "cloud_workspace",
+          "notes": "Summary, dashboard, and reflection mirror only.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "summary_only",
+          "proof_state": "bounded_mirror_only",
+          "blockers": [],
+          "retention_class": "summary_mirror",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "linear",
+          "status": "bounded_action_mirror",
+          "capacity_class": "cloud_workspace",
+          "notes": "Actionable work mirror only.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "actionable_items_only",
+          "proof_state": "bounded_action_only",
+          "blockers": [],
+          "retention_class": "action_mirror",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "new_project_workbench",
+          "status": "local_read_surface",
+          "capacity_class": "local_folder",
+          "notes": "Workbench dashboard and operator shell. Not authoritative.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "C:\\Users\\hamis\\OneDrive\\Documents\\New project\\memory-bank\\latest-sync-summary.json",
+          "proof_state": "workbench_read_only",
+          "blockers": [],
+          "retention_class": "local_workbench",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "none",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "google_drive",
+          "status": "auth_blocked",
+          "capacity_class": "cloud_workspace",
+          "notes": "Bounded working-mirror policy is active, but explicit write/read-back proof is still required before live promotion.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": false,
+          "latest_artifact": "",
+          "proof_state": "working_mirror_proof_pending",
+          "blockers": [
+            "bounded working-mirror proof not yet completed"
+          ],
+          "retention_class": "working_mirror",
+          "archive_upload_state": "proof_pending",
+          "cloud_capacity_class": "cloud_workspace",
+          "last_archive_verified_utc": ""
+        }
+      ],
+      "latest_snapshot": {
+        "archive": "docs/memory-archives/20260406T153120Z-v35-memory-bank.zip",
+        "index": "docs/memory-archives/index.jsonl",
+        "source_count": 14,
+        "label": "20260406T153120Z-v35-memory-bank"
+      },
+      "official_sources": {
+        "google_drive_api": "https://developers.google.com/drive/api/reference/rest/v3/files/create",
+        "google_drive_uploads": "https://developers.google.com/drive/api/guides/manage-uploads",
+        "docker_volumes": "https://docs.docker.com/engine/storage/volumes/",
+        "git_bundle": "https://git-scm.com/docs/git-bundle"
+      }
+    }
+  },
+  "validation_report": {
+    "status": "present",
+    "path": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\docs\\trinity-memory-bank-validation-latest.json",
+    "parsed": {
+      "generated_utc": "2026-04-06T15:31:24+00:00",
+      "overall_status": "PASS",
+      "error_count": 0,
+      "warning_count": 0,
+      "errors": [],
+      "warnings": [],
+      "registry": "docs/trinity-memory-bank-registry-v3.json",
+      "report": "docs/trinity-memory-bank-sync-latest.json"
+    }
+  },
+  "registry_report": {
+    "status": "present",
+    "path": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\docs\\trinity-memory-bank-registry-v3.json",
+    "parsed": {
+      "generated_utc": "2026-04-06T15:31:23+00:00",
+      "version": "v3",
+      "retained_snapshot_count": 3,
+      "prune_policy_applied_at": "2026-04-05T15:07:58+00:00",
+      "storage_pressure_class": "healthy",
+      "overall_status": "PASS",
+      "authority_model": "repo_first",
+      "storage_pressure": {
+        "free_gib": 7.21,
+        "total_gib": 116.97,
+        "archive_bytes": 181031,
+        "archive_megabytes": 0.17
+      },
+      "latest_snapshot": {
+        "archive": "docs/memory-archives/20260406T153120Z-v35-memory-bank.zip",
+        "index": "docs/memory-archives/index.jsonl",
+        "source_count": 14,
+        "label": "20260406T153120Z-v35-memory-bank"
+      },
+      "memory_banks": [
+        {
+          "surface": "repo",
+          "status": "authoritative",
+          "capacity_class": "local_git",
+          "notes": "Primary source for certificates, ledgers, reflections, commands, and official council state.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "docs/memory-archives/20260406T153120Z-v35-memory-bank.zip",
+          "proof_state": "repo_first_authority",
+          "blockers": [],
+          "retention_class": "canonical",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "none",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "github",
+          "status": "live_mirror",
+          "capacity_class": "remote_git",
+          "notes": "Branch-scoped remote backup and collaboration surface. Never overrides repo authority.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "14b6749f51a921f23b35169075c6cd8170654e52",
+          "proof_state": "remote_reachable",
+          "blockers": [],
+          "retention_class": "remote_mirror",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "postgres",
+          "status": "blocked",
+          "capacity_class": "docker_volume",
+          "notes": "Operational state, synthetic mesh, chat indexes, and queryable summaries. Runtime truth follows direct local probes rather than broader suite pass state.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": false,
+          "latest_artifact": "trinity-v5-pg-proof",
+          "proof_state": "postgres_blocked",
+          "blockers": [
+            "postgres container not ready"
+          ],
+          "retention_class": "runtime_query",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": ""
+        },
+        {
+          "surface": "docker",
+          "status": "blocked",
+          "capacity_class": "local_container_volume",
+          "notes": "Runtime substrate for Postgres and bounded simulations. Runtime truth follows direct local probes rather than broader suite pass state.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": false,
+          "latest_artifact": "",
+          "proof_state": "docker_unavailable",
+          "blockers": [
+            "docker CLI unavailable"
+          ],
+          "retention_class": "runtime_cache",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": ""
+        },
+        {
+          "surface": "notion",
+          "status": "bounded_mirror",
+          "capacity_class": "cloud_workspace",
+          "notes": "Summary, dashboard, and reflection mirror only.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "summary_only",
+          "proof_state": "bounded_mirror_only",
+          "blockers": [],
+          "retention_class": "summary_mirror",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "linear",
+          "status": "bounded_action_mirror",
+          "capacity_class": "cloud_workspace",
+          "notes": "Actionable work mirror only.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "actionable_items_only",
+          "proof_state": "bounded_action_only",
+          "blockers": [],
+          "retention_class": "action_mirror",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "bounded",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "new_project_workbench",
+          "status": "local_read_surface",
+          "capacity_class": "local_folder",
+          "notes": "Workbench dashboard and operator shell. Not authoritative.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": true,
+          "latest_artifact": "C:\\Users\\hamis\\OneDrive\\Documents\\New project\\memory-bank\\latest-sync-summary.json",
+          "proof_state": "workbench_read_only",
+          "blockers": [],
+          "retention_class": "local_workbench",
+          "archive_upload_state": "not_applicable",
+          "cloud_capacity_class": "none",
+          "last_archive_verified_utc": "2026-04-06T15:31:23+00:00"
+        },
+        {
+          "surface": "google_drive",
+          "status": "auth_blocked",
+          "capacity_class": "cloud_workspace",
+          "notes": "Bounded working-mirror policy is active, but explicit write/read-back proof is still required before live promotion.",
+          "live_checked_at": "2026-04-06T15:31:23+00:00",
+          "reachable": false,
+          "latest_artifact": "",
+          "proof_state": "working_mirror_proof_pending",
+          "blockers": [
+            "bounded working-mirror proof not yet completed"
+          ],
+          "retention_class": "working_mirror",
+          "archive_upload_state": "proof_pending",
+          "cloud_capacity_class": "cloud_workspace",
+          "last_archive_verified_utc": ""
+        }
+      ],
+      "official_sources": {
+        "google_drive_api": "https://developers.google.com/drive/api/reference/rest/v3/files/create",
+        "google_drive_uploads": "https://developers.google.com/drive/api/guides/manage-uploads",
+        "docker_volumes": "https://docs.docker.com/engine/storage/volumes/",
+        "git_bundle": "https://git-scm.com/docs/git-bundle"
+      }
+    }
+  },
+  "live_agent_engine_create": {
+    "returncode": 0,
+    "stdout": "Identified the following requirements: {'pydantic': '2.12.5', 'cloudpickle': '3.1.2'}\nThe following requirements are missing: {'pydantic', 'cloudpickle'}\nThe following requirements are appended: {'cloudpickle==3.1.2', 'pydantic==2.12.5'}\nThe final list of requirements: ['cloudpickle==3.1.2', 'pydantic==2.12.5']\nUsing bucket beyonder-v32-primary-mirror-gen-lang-client-0020882673\nWrote to gs://beyonder-v32-primary-mirror-gen-lang-client-0020882673/agent_engine/agent_engine.pkl\nWriting to gs://beyonder-v32-primary-mirror-gen-lang-client-0020882673/agent_engine/requirements.txt\nCreating in-memory tarfile of extra_packages\nWriting to gs://beyonder-v32-primary-mirror-gen-lang-client-0020882673/agent_engine/dependencies.tar.gz\nCreating AgentEngine\nCreate AgentEngine backing LRO: projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000/operations/8439496662308618240\nView progress and logs at https://console.cloud.google.com/logs/query?project=gen-lang-client-0020882673\n{\"success\": false, \"project_id\": \"gen-lang-client-0020882673\", \"region\": \"australia-southeast1\", \"staging_bucket\": \"gs://beyonder-v32-primary-mirror-gen-lang-client-0020882673\", \"exception_type\": \"InvalidArgument\", \"exception_message\": \"400 Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips. 3: Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips.\", \"traceback\": \"Traceback (most recent call last):\\n  File \\\"<string>\\\", line 26, in <module>\\n  File \\\"C:\\\\Users\\\\hamis\\\\workspace\\\\Beyonder-Real-True-Journey\\\\.local-runtime\\\\site-packages\\\\vertexai\\\\agent_engines\\\\__init__.py\\\", line 194, in create\\n    return AgentEngine.create(\\n           ^^^^^^^^^^^^^^^^^^^\\n  File \\\"C:\\\\Users\\\\hamis\\\\workspace\\\\Beyonder-Real-True-Journey\\\\.local-runtime\\\\site-packages\\\\vertexai\\\\agent_engines\\\\_agent_engines.py\\\", line 620, in create\\n    created_resource = operation_future.result()\\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \\\"C:\\\\Users\\\\hamis\\\\workspace\\\\Beyonder-Real-True-Journey\\\\.local-runtime\\\\site-packages\\\\google\\\\api_core\\\\future\\\\polling.py\\\", line 261, in result\\n    raise self._exception\\ngoogle.api_core.exceptions.InvalidArgument: 400 Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips. 3: Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips.\\n\"}",
+    "stderr": "",
+    "parsed": {
+      "success": false,
+      "project_id": "gen-lang-client-0020882673",
+      "region": "australia-southeast1",
+      "staging_bucket": "gs://beyonder-v32-primary-mirror-gen-lang-client-0020882673",
+      "exception_type": "InvalidArgument",
+      "exception_message": "400 Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips. 3: Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips.",
+      "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 26, in <module>\n  File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\site-packages\\vertexai\\agent_engines\\__init__.py\", line 194, in create\n    return AgentEngine.create(\n           ^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\site-packages\\vertexai\\agent_engines\\_agent_engines.py\", line 620, in create\n    created_resource = operation_future.result()\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\site-packages\\google\\api_core\\future\\polling.py\", line 261, in result\n    raise self._exception\ngoogle.api_core.exceptions.InvalidArgument: 400 Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips. 3: Reasoning Engine resource [projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000] failed to start and cannot serve traffic. Please refer to our documentation (https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/troubleshooting/deploy) for checking logs and other troubleshooting tips.\n"
+    }
+  },
+  "live_agent_engine_refs": [
+    "projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000",
+    "projects/649817769181/locations/australia-southeast1/reasoningEngines/9165528929140736000/operations/8439496662308618240"
+  ],
+  "visible_reasoning_engines": []
+}

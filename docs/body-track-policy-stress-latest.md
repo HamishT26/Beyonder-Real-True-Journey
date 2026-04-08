@@ -1,8 +1,8 @@
 # Body Policy Stress-Window Delta Report
 
-- generated_utc: `2026-04-05T15:06:31+00:00`
+- generated_utc: `2026-04-06T15:44:56+00:00`
 - overall_status: **PASS**
-- history_samples: `442`
+- history_samples: `446`
 - stressed_samples: `12`
 
 ## Benchmark profile stressed deltas
