@@ -1,6 +1,6 @@
 # Trinity Expansion Result: k8s_dev_probe_v10_sync_bridge
 
-- generated_utc: `2026-04-05T15:02:00+00:00`
+- generated_utc: `2026-04-08T14:24:49+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

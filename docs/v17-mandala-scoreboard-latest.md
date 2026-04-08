@@ -1,6 +1,6 @@
 # Trinity Mandala Scoreboard
 
-- generated_utc: `2026-04-06T15:45:08+00:00`
+- generated_utc: `2026-04-08T14:18:56+00:00`
 - hybrid_os_status: **PASS**
 - suite_status: `PASS`
 - checkpoint_class: `v17_evidence_first_quick_lane`
@@ -22,7 +22,7 @@
 | mind | Mind API signal board | PASS | freshness_status=PASS, source_count=14, apis=2 | `docs/mind-theory-signal-board-latest.json` |
 | mind | Mind expansion constellation | PASS | checks=9/9 | `docs/trinity-expansion/mind-theory-constellation-board-latest.json` |
 | mind | Mind readiness gate | PASS | checks=10/10 | `docs/trinity-expansion/mind-theory-readiness-gate-latest.json` |
-| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=0.809376, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
+| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=0.685215, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
 | body | Benchmark guardrail | PASS | status extracted | `docs/body-track-benchmark-latest.json` |
 | body | Trend guard | PASS | trend=stable_or_improving | `docs/body-track-trend-guard-latest.json` |
 | body | Stress window | PASS | status extracted | `docs/body-track-policy-stress-latest.json` |

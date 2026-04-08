@@ -1,6 +1,6 @@
 # Trinity Expansion Result: gmut_research_fabric_v12_materialization_tracer
 
-- generated_utc: `2026-04-05T15:03:17+00:00`
+- generated_utc: `2026-04-08T14:26:02+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,7 +10,7 @@
 |---|---|---|
 | proof_written | PASS | docs/trinity-live-traces/gmut-research-fabric-v12-proof-v1.json |
 | ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=not_applicable |
+| write_scope | PASS | mode=preview_only |
 | blockers_recorded | PASS | blockers=0 |
 
 ## Metrics
@@ -21,12 +21,12 @@
   "blocker_count": 0,
   "connector_id": "",
   "desired_state": "active",
-  "include_live_writes": true,
+  "include_live_writes": false,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
-  "mode": "not_applicable",
+  "materialization_level": "l2_persistent_dev",
+  "mode": "preview_only",
   "pack": "gmut_research_fabric_v12",
-  "profile_context": "materialize",
+  "profile_context": "standard",
   "tracer_result": "SKIP"
 }
 ```

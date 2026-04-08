@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_dependency_surface_report
 
-- generated_utc: `2026-04-05T14:56:14+00:00`
+- generated_utc: `2026-04-08T14:20:00+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,8 +8,8 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| import_scan_complete | PASS | imports=77 |
-| dependency_surface_documented | PASS | external=12 |
+| import_scan_complete | PASS | imports=82 |
+| dependency_surface_documented | PASS | external=13 |
 
 ## Metrics
 ```json
@@ -26,9 +26,10 @@
     "googleapiclient",
     "matplotlib",
     "numpy",
-    "pypdf"
+    "pypdf",
+    "vertexai"
   ],
-  "total_import_roots": 77
+  "total_import_roots": 82
 }
 ```
 

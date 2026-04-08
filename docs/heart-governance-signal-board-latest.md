@@ -1,6 +1,6 @@
 # Heart Governance Signal Board
 
-- generated_utc: `2026-04-06T15:44:59+00:00`
+- generated_utc: `2026-04-08T14:28:50+00:00`
 - overall_status: **PASS**
 - freshness_status: `PASS`
 - source_count: `17`

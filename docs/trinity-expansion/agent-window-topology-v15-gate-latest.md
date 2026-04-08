@@ -1,6 +1,6 @@
 # Trinity Expansion Result: agent_window_topology_v15_gate
 
-- generated_utc: `2026-04-05T15:04:48+00:00`
+- generated_utc: `2026-04-08T14:27:22+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

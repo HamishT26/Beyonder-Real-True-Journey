@@ -1,6 +1,6 @@
 # GMUT External-Anchor Numeric Exclusion Note
 
-- generated_utc: `2026-04-06T15:44:57+00:00`
+- generated_utc: `2026-04-08T14:29:26+00:00`
 - overall_status: **WARN**
 - comparator_status: `PASS`
 - comparator_max_abs_deviation: `0.04964`

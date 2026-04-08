@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_trust_boundary_map
 
-- generated_utc: `2026-04-05T14:56:15+00:00`
+- generated_utc: `2026-04-08T14:20:00+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

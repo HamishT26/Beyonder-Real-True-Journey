@@ -1,6 +1,6 @@
 # Trinity Expansion Result: code_knowledge_graph_sync_bridge
 
-- generated_utc: `2026-04-05T14:58:40+00:00`
+- generated_utc: `2026-04-08T14:21:51+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -21,11 +21,11 @@
   "continuity_anchor_count": 13,
   "dependency_count": 717,
   "file_count": 8449,
-  "generated_utc": "2026-04-05T14:58:40+00:00",
+  "generated_utc": "2026-04-08T14:21:51+00:00",
   "manifest_entry_count": 656,
   "postgres_ready": true,
   "postgres_runtime_detail": "bounded fallback from cached summary and prior Postgres proof",
-  "profile_context": "materialize",
+  "profile_context": "standard",
   "sql_summary": {
     "rows_written": {},
     "schema_loaded": false

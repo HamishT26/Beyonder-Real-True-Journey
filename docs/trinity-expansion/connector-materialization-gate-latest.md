@@ -1,6 +1,6 @@
 # Trinity Expansion Result: connector_materialization_gate
 
-- generated_utc: `2026-04-05T14:58:39+00:00`
+- generated_utc: `2026-04-08T14:21:50+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

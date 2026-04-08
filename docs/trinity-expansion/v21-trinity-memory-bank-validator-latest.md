@@ -1,21 +1,21 @@
 # Trinity Expansion Result: v21_trinity_memory_bank_validator
 
-- generated_utc: `2026-04-05T15:06:28+00:00`
+- generated_utc: `2026-04-08T14:28:52+00:00`
 - pillar: `trinity`
-- overall_status: **PASS**
-- effective_success: `True`
+- overall_status: **FAIL**
+- effective_success: `False`
 
 ## Checks
 | name | status | detail |
 |---|---|---|
-| runner_command_exit | PASS | returncode=0 |
-| output_status | PASS | path=docs/trinity-memory-bank-validation-latest.json, status=PASS |
+| runner_command_exit | FAIL | returncode=1 |
+| output_status | PASS | path=docs/trinity-memory-bank-validation-latest.json, status=WARN |
 
 ## Metrics
 ```json
 {
-  "output_status": "PASS",
-  "returncode": 0,
+  "output_status": "WARN",
+  "returncode": 1,
   "runner_command": [
     "python3",
     "scripts/trinity_memory_bank_validator.py",

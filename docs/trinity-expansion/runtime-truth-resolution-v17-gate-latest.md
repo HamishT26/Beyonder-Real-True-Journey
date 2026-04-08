@@ -1,6 +1,6 @@
 # Trinity Expansion Result: runtime_truth_resolution_v17_gate
 
-- generated_utc: `2026-04-05T15:05:49+00:00`
+- generated_utc: `2026-04-08T14:28:21+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

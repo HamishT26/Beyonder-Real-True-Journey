@@ -1,6 +1,6 @@
 # Trinity Expansion Result: notion_materialization_materialization_tracer
 
-- generated_utc: `2026-04-05T14:57:31+00:00`
+- generated_utc: `2026-04-08T14:20:56+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,24 +10,24 @@
 |---|---|---|
 | proof_written | PASS | docs/trinity-live-traces/notion-materialization-proof-v1.json |
 | ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=l5_ha_prod |
+| write_scope | PASS | mode=offline_only |
 | blockers_recorded | PASS | blockers=0 |
 
 ## Metrics
 ```json
 {
   "actual_state": "verified_live_write",
-  "attempted_write": true,
+  "attempted_write": false,
   "blocker_count": 0,
   "connector_id": "notion",
   "desired_state": "verified_live_write",
-  "include_live_writes": true,
+  "include_live_writes": false,
   "live_write_enabled": true,
-  "materialization_level": "l5_ha_prod",
-  "mode": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
+  "mode": "offline_only",
   "pack": "notion_materialization",
-  "profile_context": "materialize",
-  "tracer_result": "PASS"
+  "profile_context": "standard",
+  "tracer_result": "SKIP"
 }
 ```
 
