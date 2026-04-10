@@ -1,6 +1,6 @@
 # Trinity Agent Council Validation
 
-- generated_utc: `2026-04-08T14:31:09+00:00`
+- generated_utc: `2026-04-10T16:11:54+00:00`
 - overall_status: **PASS**
 - official_count: `11`
 - duo_chat_count: `66`

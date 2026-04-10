@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_memory_recap_generator
 
-- generated_utc: `2026-04-08T14:20:14+00:00`
+- generated_utc: `2026-04-10T15:59:10+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -18,6 +18,10 @@
   "continuity_mode": "repo_and_session_grounded",
   "manifest_system_count": 1094,
   "recent_commits": [
+    {
+      "commit": "9b1829439daa",
+      "subject": "Implement v36 omega split-region induction closeout"
+    },
     {
       "commit": "881c9d013445",
       "subject": "chore: checkpoint v35 omega continuity surfaces"
@@ -37,13 +41,9 @@
     {
       "commit": "0455ec4a87fd",
       "subject": "Implement V33 omega cloud expansion and publish V34 prep"
-    },
-    {
-      "commit": "fabb40954e20",
-      "subject": "Beyonder-Real-True v39 (Aletheon - Gemini - Synthea)"
     }
   ],
-  "repo_python_scripts": 369
+  "repo_python_scripts": 374
 }
 ```
 

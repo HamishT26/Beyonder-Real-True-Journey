@@ -1,6 +1,6 @@
 # Trinity Expansion Result: body_resource_budget_forecaster
 
-- generated_utc: `2026-04-08T14:20:07+00:00`
+- generated_utc: `2026-04-10T15:58:59+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,8 +8,8 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| suite_duration_recorded | PASS | duration=835.859 |
-| reserve_tokens_positive | PASS | reserve_tokens=7686243.475 |
+| suite_duration_recorded | PASS | duration=912.375 |
+| reserve_tokens_positive | PASS | reserve_tokens=8083348.007 |
 | projection_summary_present | PASS | projection_keys=['sessions', 'planned_tokens', 'covered_tokens', 'uncovered_tokens', 'planned_credits', 'covered_credits', 'uncovered_credits'] |
 
 ## Metrics
@@ -24,8 +24,8 @@
     "uncovered_credits": 0.0,
     "uncovered_tokens": 0.0
   },
-  "reserve_tokens": 7686243.474604,
-  "suite_duration_sec": 835.859
+  "reserve_tokens": 8083348.007104,
+  "suite_duration_sec": 912.375
 }
 ```
 

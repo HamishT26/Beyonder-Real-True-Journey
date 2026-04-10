@@ -1,6 +1,6 @@
 # Trinity Expansion Result: gmut_mesh_observables_v15_materialization_tracer
 
-- generated_utc: `2026-04-08T14:27:35+00:00`
+- generated_utc: `2026-04-10T16:08:11+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -10,7 +10,7 @@
 |---|---|---|
 | proof_written | PASS | docs/trinity-live-traces/gmut-mesh-observables-v15-proof-v1.json |
 | ledger_appended | PASS | docs/trinity-materialization-ledger.jsonl |
-| write_scope | PASS | mode=preview_only |
+| write_scope | PASS | mode=not_applicable |
 | blockers_recorded | PASS | blockers=0 |
 
 ## Metrics
@@ -21,12 +21,12 @@
   "blocker_count": 0,
   "connector_id": "",
   "desired_state": "active",
-  "include_live_writes": false,
+  "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l2_persistent_dev",
-  "mode": "preview_only",
+  "materialization_level": "l5_ha_prod",
+  "mode": "not_applicable",
   "pack": "gmut_mesh_observables_v15",
-  "profile_context": "standard",
+  "profile_context": "materialize",
   "tracer_result": "SKIP"
 }
 ```

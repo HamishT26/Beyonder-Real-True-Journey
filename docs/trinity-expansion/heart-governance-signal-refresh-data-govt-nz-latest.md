@@ -1,6 +1,6 @@
 # Trinity Expansion Result: heart_governance_signal_refresh_data_govt_nz
 
-- generated_utc: `2026-04-08T14:19:53+00:00`
+- generated_utc: `2026-04-10T15:58:37+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`

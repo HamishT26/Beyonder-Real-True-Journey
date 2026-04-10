@@ -1,6 +1,6 @@
 # Trinity Expansion Result: filesystem_materialization_materialization_tracer
 
-- generated_utc: `2026-04-08T14:20:52+00:00`
+- generated_utc: `2026-04-10T16:00:08+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -21,12 +21,12 @@
   "blocker_count": 1,
   "connector_id": "filesystem",
   "desired_state": "verified_live_write",
-  "include_live_writes": false,
+  "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l2_persistent_dev",
+  "materialization_level": "l5_ha_prod",
   "mode": "offline_only",
   "pack": "filesystem_materialization",
-  "profile_context": "standard",
+  "profile_context": "materialize",
   "tracer_result": "SKIP"
 }
 ```

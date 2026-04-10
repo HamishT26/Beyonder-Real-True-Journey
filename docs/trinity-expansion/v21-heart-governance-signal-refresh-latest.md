@@ -1,6 +1,6 @@
 # Trinity Expansion Result: v21_heart_governance_signal_refresh
 
-- generated_utc: `2026-04-08T14:30:09+00:00`
+- generated_utc: `2026-04-10T16:10:22+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`

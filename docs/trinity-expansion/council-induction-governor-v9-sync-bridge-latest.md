@@ -1,6 +1,6 @@
 # Trinity Expansion Result: council_induction_governor_v9_sync_bridge
 
-- generated_utc: `2026-04-08T14:23:57+00:00`
+- generated_utc: `2026-04-10T16:03:51+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

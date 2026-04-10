@@ -1,6 +1,6 @@
 # Trinity Expansion Result: deep_materialize_regression_v11_sync_bridge
 
-- generated_utc: `2026-04-08T14:25:17+00:00`
+- generated_utc: `2026-04-10T16:05:29+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

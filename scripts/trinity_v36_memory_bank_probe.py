@@ -153,10 +153,10 @@ print(json.dumps(result))
     }
 
 
-def write_outputs(payload: dict[str, Any], output_json: Path, output_md: Path) -> None:
+def write_outputs(payload: dict[str, Any], output_json: Path, output_md: Path, phase_label: str) -> None:
     write_json(output_json, payload)
     lines = [
-        "# V36 Memory Bank Proof",
+        f"# {phase_label.upper()} Memory Bank Proof",
         "",
         f"- Generated UTC: `{payload['generated_utc']}`",
         f"- Overall status: `{payload['overall_status']}`",
@@ -185,6 +185,7 @@ def main() -> int:
     parser.add_argument("--regional-location", default=DEFAULT_REGIONAL_LOCATION)
     parser.add_argument("--model-location", default=DEFAULT_MODEL_LOCATION)
     parser.add_argument("--region", default="", help="Deprecated alias for --regional-location.")
+    parser.add_argument("--phase-label", default=PHASE)
     parser.add_argument("--output-json", default=str(OUTPUT_JSON))
     parser.add_argument("--output-md", default=str(OUTPUT_MD))
     args = parser.parse_args()
@@ -192,10 +193,11 @@ def main() -> int:
     regional_location = args.regional_location or args.region or DEFAULT_REGIONAL_LOCATION
     output_json = Path(args.output_json)
     output_md = Path(args.output_md)
+    phase_label = str(args.phase_label or PHASE)
 
     payload: dict[str, Any] = {
         "generated_utc": now_iso(),
-        "phase": PHASE,
+        "phase": phase_label,
         "overall_status": "WARN",
         "proof_state": "pending",
         "memory_bank_state": "pending",
@@ -219,7 +221,7 @@ def main() -> int:
         payload["memory_bank_state"] = "blocked_missing_identity"
         payload["agent_engine_state"] = "blocked_missing_identity"
         payload["blockers"].append(str(exc))
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
 
     payload.update(primary_identity_fields(primary, minted))
@@ -233,7 +235,7 @@ def main() -> int:
         payload["memory_bank_state"] = "blocked_service_enablement"
         payload["agent_engine_state"] = "blocked_service_enablement"
         payload["blockers"].append("Vertex AI did not report `ENABLED` after the bounded service check.")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
     payload["completed_steps"].append("vertex_service_enabled")
 
@@ -244,7 +246,7 @@ def main() -> int:
         payload["memory_bank_state"] = "blocked_staging_bucket"
         payload["agent_engine_state"] = "blocked_staging_bucket"
         payload["blockers"].append("The v36 us-central1 staging bucket could not be verified or created.")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
     payload["completed_steps"].append("staging_bucket_verified")
 
@@ -259,7 +261,7 @@ def main() -> int:
         payload["memory_bank_state"] = "blocked_repo_sync"
         payload["agent_engine_state"] = "unreached"
         payload["blockers"].append("The repo-side memory-bank sync script did not complete cleanly.")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
     payload["completed_steps"].append("repo_memory_bank_sync_ran")
 
@@ -274,7 +276,7 @@ def main() -> int:
         payload["memory_bank_state"] = "blocked_repo_validation"
         payload["agent_engine_state"] = "unreached"
         payload["blockers"].append("The repo-side memory-bank validator reported a failure.")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
     payload["completed_steps"].append("repo_memory_bank_validator_ran")
     payload["sync_report"] = report_status(SYNC_REPORT)
@@ -328,7 +330,7 @@ def main() -> int:
         payload["selected_region"] = regional_location
         payload["selected_agent_engine"] = engine_names[0]
         payload["completed_steps"].append("agent_engine_inventory_read")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 0
 
     payload["memory_bank_state"] = "repo_memory_bank_validated_live_start_failed"
@@ -342,7 +344,7 @@ def main() -> int:
         payload["blockers"].append(f"Live Agent Engine error: {error_summary}")
     if resource_refs:
         payload["blockers"].append("Observed reasoning-engine references: " + ", ".join(resource_refs[:4]))
-    write_outputs(payload, output_json, output_md)
+    write_outputs(payload, output_json, output_md, phase_label)
     return 1
 
 
