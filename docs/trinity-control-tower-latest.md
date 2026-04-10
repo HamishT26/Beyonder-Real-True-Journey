@@ -1,8 +1,8 @@
 # Trinity Control Tower
 
-- overall_status: `PASS`
-- suite_state: `PASS`
-- suite_summary: `1154 PASS / 0 WARN / 0 FAIL`
+- overall_status: `FAIL`
+- suite_state: `FAIL`
+- suite_summary: `1153 PASS / 0 WARN / 1 FAIL`
 - council_continuity_state: `PASS`
 - agent_mesh_state: `PASS`
 - subagent_mesh_state: `PASS`
@@ -12,7 +12,7 @@
 - lineage_state: `PASS`
 - legacy_reconstruction_state: `PASS`
 - storage_state: `PASS`
-- google_drive_state: `bounded_working_mirror`
+- google_drive_state: `operator_hold`
 - materialization_level_actual: `readiness_only`
 - late_step_autonomy_state: `bounded_repo_first`
 - command_surface_state: `PASS`

@@ -128,6 +128,7 @@ def main() -> int:
     control["runtime_session_state"] = str(runtime_validation.get("overall_status") or "FAIL")
     control["runtime_session_overlay_state"] = overlay_state
     control["runtime_truth_complete"] = runtime_truth_complete
+    control["google_drive_state"] = str(runtime_log.get("google_drive_state") or control.get("google_drive_state") or "operator_hold")
     control["external_establishment_criteria_state"] = str(criteria_validation.get("overall_status") or "FAIL")
     control["standards_bridge_state"] = str(standards_validation.get("overall_status") or "FAIL")
     control["filesystem_promotion_state"] = filesystem_promotion_state

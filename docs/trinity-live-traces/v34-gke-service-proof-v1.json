@@ -1,0 +1,77 @@
+{
+  "generated_utc": "2026-04-06T12:59:12+00:00",
+  "phase": "v34_omega",
+  "overall_status": "PASS",
+  "proof_state": "bounded_service_ready_verified",
+  "gke_service_state": "service_ready_verified",
+  "project_id": "gen-lang-client-0020882673",
+  "region": "australia-southeast1",
+  "cluster_name": "beyonder-v32-autopilot-dev",
+  "namespace": "v34-omega",
+  "completed_steps": [
+    "mint_primary_token",
+    "cluster_readback",
+    "kubectl_detected",
+    "namespace_ready",
+    "service_manifest_applied",
+    "deployment_ready",
+    "ready_replicas_verified",
+    "service_endpoints_verified",
+    "service_http_probe_verified",
+    "service_cleanup_attempted"
+  ],
+  "blockers": [],
+  "primary_identity": "649817769181-compute@developer.gserviceaccount.com",
+  "cluster_probe_status": 200,
+  "kubectl_client_path": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE",
+  "kubeconfig_path": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\kube\\v32-kubeconfig.yaml",
+  "namespace_result": {
+    "status": "created",
+    "returncode": 0,
+    "stdout": "namespace/v34-omega created",
+    "stderr": ""
+  },
+  "manifest_path": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\temp\\v34-gke-service-44x4l0jz.yaml",
+  "apply_result": {
+    "returncode": 0,
+    "stdout": "deployment.apps/v34-omega-web created\nservice/v34-omega-web created",
+    "stderr": ""
+  },
+  "deployment_rollout": {
+    "returncode": 0,
+    "stdout": "Waiting for deployment \"v34-omega-web\" rollout to finish: 0 of 1 updated replicas are available...\ndeployment \"v34-omega-web\" successfully rolled out",
+    "stderr": ""
+  },
+  "deployment_read": {
+    "returncode": 0,
+    "stderr": "",
+    "replicas": 1,
+    "ready_replicas": 1
+  },
+  "endpoints_read": {
+    "returncode": 0,
+    "stderr": "Warning: v1 Endpoints is deprecated in v1.33+; use discovery.k8s.io/v1 EndpointSlice",
+    "address_count": 1
+  },
+  "http_probe": {
+    "status": 200,
+    "body": "<!DOCTYPE html>\n<html>\n<head>\n<title>Welcome to nginx!</title>\n<style>\nhtml { color-scheme: light dark; }\nbody { width: 35em; margin: 0 auto;\nfont-family: Tahoma, Verdana, Arial, sans-serif; }\n</style>\n</head>\n<body>\n<h1>Welcome to nginx!</h1>\n<p>If you see this page, the nginx web server is successfully installed and\nworking. Further configuration is required.</p>\n\n<p>For online documentation and support please refer to\n<a href=\"http://nginx.org/\">nginx.org</a>.<br/>\nCommercial support is available at\n<a href=\"http://nginx.com/\">nginx.com</a>.</p>\n\n<p><em>Thank you for using nginx.</em></p>\n</body>\n</html>\n"
+  },
+  "port_forward_cleanup": {
+    "returncode": 1,
+    "stdout": "Forwarding from 127.0.0.1:18080 -> 80\nForwarding from [::1]:18080 -> 80\nHandling connection for 18080",
+    "stderr": ""
+  },
+  "cleanup": {
+    "deployment_delete": {
+      "returncode": 0,
+      "stdout": "deployment.apps \"v34-omega-web\" deleted from v34-omega namespace",
+      "stderr": ""
+    },
+    "service_delete": {
+      "returncode": 0,
+      "stdout": "service \"v34-omega-web\" deleted from v34-omega namespace",
+      "stderr": ""
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_secrets_exposure_guard
 
-- generated_utc: `2026-04-05T14:56:13+00:00`
+- generated_utc: `2026-04-08T14:19:59+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

@@ -1,6 +1,6 @@
 # Trinity Expansion Result: legacy_module_inventory_v13_gate
 
-- generated_utc: `2026-04-05T15:03:50+00:00`
+- generated_utc: `2026-04-08T14:26:32+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

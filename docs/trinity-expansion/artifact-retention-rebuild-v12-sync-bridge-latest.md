@@ -1,6 +1,6 @@
 # Trinity Expansion Result: artifact_retention_rebuild_v12_sync_bridge
 
-- generated_utc: `2026-04-05T15:02:55+00:00`
+- generated_utc: `2026-04-08T14:25:43+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

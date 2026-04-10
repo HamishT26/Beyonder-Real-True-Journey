@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_public_signal_freshness_forecaster
 
-- generated_utc: `2026-04-05T14:56:38+00:00`
+- generated_utc: `2026-04-08T14:20:15+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -8,10 +8,10 @@
 ## Checks
 | name | status | detail |
 |---|---|---|
-| freshness:docs/trinity-public-source-registry-v1.json | PASS | age_days=10.705 |
-| freshness:docs/trinity-api-cache/mind-signals-latest.json | PASS | age_days=0.003 |
-| freshness:docs/trinity-api-cache/body-signals-latest.json | PASS | age_days=0.003 |
-| freshness:docs/trinity-api-cache/heart-signals-latest.json | PASS | age_days=0.003 |
+| freshness:docs/trinity-public-source-registry-v1.json | PASS | age_days=13.68 |
+| freshness:docs/trinity-api-cache/mind-signals-latest.json | PASS | age_days=2.968 |
+| freshness:docs/trinity-api-cache/body-signals-latest.json | PASS | age_days=2.968 |
+| freshness:docs/trinity-api-cache/heart-signals-latest.json | PASS | age_days=2.968 |
 | freshness:docs/trinity-expansion/mind-public-theory-refresh-arxiv-latest.json | PASS | age_days=0.0 |
 | freshness:docs/trinity-expansion/body-public-compute-refresh-github-watch-latest.json | PASS | age_days=0.0 |
 | freshness:docs/trinity-expansion/heart-public-governance-refresh-global-standards-latest.json | PASS | age_days=0.0 |
@@ -20,13 +20,13 @@
 ```json
 {
   "ages_days": {
-    "docs/trinity-api-cache/body-signals-latest.json": 0.003,
-    "docs/trinity-api-cache/heart-signals-latest.json": 0.003,
-    "docs/trinity-api-cache/mind-signals-latest.json": 0.003,
+    "docs/trinity-api-cache/body-signals-latest.json": 2.968,
+    "docs/trinity-api-cache/heart-signals-latest.json": 2.968,
+    "docs/trinity-api-cache/mind-signals-latest.json": 2.968,
     "docs/trinity-expansion/body-public-compute-refresh-github-watch-latest.json": 0.0,
     "docs/trinity-expansion/heart-public-governance-refresh-global-standards-latest.json": 0.0,
     "docs/trinity-expansion/mind-public-theory-refresh-arxiv-latest.json": 0.0,
-    "docs/trinity-public-source-registry-v1.json": 10.705
+    "docs/trinity-public-source-registry-v1.json": 13.68
   }
 }
 ```

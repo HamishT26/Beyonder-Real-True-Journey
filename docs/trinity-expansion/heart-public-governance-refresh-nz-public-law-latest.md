@@ -1,6 +1,6 @@
 # Trinity Expansion Result: heart_public_governance_refresh_nz_public_law
 
-- generated_utc: `2026-04-05T14:56:32+00:00`
+- generated_utc: `2026-04-08T14:20:12+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`

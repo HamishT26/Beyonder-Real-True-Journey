@@ -1,9 +1,16 @@
 # Trinity Agent Council Validation
 
-- generated_utc: `2026-04-05T15:07:45+00:00`
+- generated_utc: `2026-04-08T14:37:46+00:00`
 - overall_status: **PASS**
-- provisional_agent_count: `5`
-- duo_chat_count: `15`
+- official_count: `11`
+- deployed_main_agent_count: `2`
+- official_undeployed_identity_count: `4`
+- shadow_clone_active_count: `12`
+- duo_chat_count: `66`
+- group_chat_rows: `12`
+- requested_model_profile: `gpt-5.4`
+- resolved_model_profile: `gpt-5.1-codex-max`
+- max_threads: `11`
 
 ## Failures
 - none

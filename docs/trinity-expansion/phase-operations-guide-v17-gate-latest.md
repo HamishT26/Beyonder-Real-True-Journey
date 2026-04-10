@@ -1,6 +1,6 @@
 # Trinity Expansion Result: phase_operations_guide_v17_gate
 
-- generated_utc: `2026-04-05T15:06:04+00:00`
+- generated_utc: `2026-04-08T14:28:34+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

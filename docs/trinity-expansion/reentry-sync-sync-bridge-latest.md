@@ -1,6 +1,6 @@
 # Trinity Expansion Result: reentry_sync_sync_bridge
 
-- generated_utc: `2026-04-05T14:58:26+00:00`
+- generated_utc: `2026-04-08T14:21:37+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

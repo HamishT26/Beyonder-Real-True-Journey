@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_HANDOFF_PATH = "docs/v19-omega-handoff-policy-v1.json"
 
 
 def _repo_path(path_str: str) -> Path:
@@ -76,7 +77,7 @@ def main() -> int:
     parser.add_argument("--schema", default="docs/v17-runtime-session-schema-v1.json")
     parser.add_argument("--session-log", default="docs/v17-runtime-session-log-latest.json")
     parser.add_argument("--control-tower", default="docs/v17-evidence-first-control-tower-latest.json")
-    parser.add_argument("--handoff", default="docs/v19-omega-handoff-policy-v1.json")
+    parser.add_argument("--handoff", default=DEFAULT_HANDOFF_PATH)
     parser.add_argument("--runtime-resolution", default="docs/trinity-runtime-model-resolution-v1.json")
     parser.add_argument("--shadow-clone-policy", default="docs/trinity-shadow-clone-policy-v1.json")
     parser.add_argument("--latest-json", default="docs/v17-runtime-session-validation-latest.json")
@@ -90,8 +91,13 @@ def main() -> int:
     schema = _load_json(args.schema, failures, "schema")
     session_log = _load_json(args.session_log, failures, "session log")
     control_tower = _load_json(args.control_tower, failures, "control tower")
-    handoff = _load_json(args.handoff, failures, "handoff")
     runtime_resolution = _load_json(args.runtime_resolution, failures, "runtime resolution")
+    handoff_path = str(args.handoff or "").strip()
+    if handoff_path == DEFAULT_HANDOFF_PATH:
+        active_handoff_path = str(runtime_resolution.get("active_handoff_policy_path") or "").strip()
+        if active_handoff_path:
+            handoff_path = active_handoff_path
+    handoff = _load_json(handoff_path, failures, "handoff")
     shadow_clone_policy = _load_json(args.shadow_clone_policy, failures, "shadow clone policy")
 
     session_required_fields = schema.get("session_required_fields", [])

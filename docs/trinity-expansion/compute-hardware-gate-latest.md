@@ -1,6 +1,6 @@
 # Trinity Expansion Result: compute_hardware_gate
 
-- generated_utc: `2026-04-05T14:57:16+00:00`
+- generated_utc: `2026-04-08T14:20:42+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

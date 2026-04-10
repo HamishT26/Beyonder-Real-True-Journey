@@ -1,6 +1,6 @@
 # Trinity Expansion Result: api_operator_mesh_v14_sync_bridge
 
-- generated_utc: `2026-04-05T15:04:19+00:00`
+- generated_utc: `2026-04-08T14:26:55+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

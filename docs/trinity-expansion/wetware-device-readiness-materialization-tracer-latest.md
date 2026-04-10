@@ -1,6 +1,6 @@
 # Trinity Expansion Result: wetware_device_readiness_materialization_tracer
 
-- generated_utc: `2026-04-05T14:57:44+00:00`
+- generated_utc: `2026-04-08T14:21:04+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -21,12 +21,12 @@
   "blocker_count": 0,
   "connector_id": "",
   "desired_state": "active",
-  "include_live_writes": true,
+  "include_live_writes": false,
   "live_write_enabled": false,
-  "materialization_level": "l5_ha_prod",
+  "materialization_level": "l2_persistent_dev",
   "mode": "offline_only",
   "pack": "wetware_device_readiness",
-  "profile_context": "materialize",
+  "profile_context": "standard",
   "tracer_result": "SKIP"
 }
 ```

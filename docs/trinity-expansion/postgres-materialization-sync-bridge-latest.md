@@ -1,6 +1,6 @@
 # Trinity Expansion Result: postgres_materialization_sync_bridge
 
-- generated_utc: `2026-04-05T14:57:35+00:00`
+- generated_utc: `2026-04-08T14:20:58+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

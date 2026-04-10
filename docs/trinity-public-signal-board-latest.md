@@ -1,6 +1,6 @@
 # Trinity Public Signal Board
 
-- generated_utc: `2026-04-05T15:09:25+00:00`
+- generated_utc: `2026-04-08T14:32:04+00:00`
 - overall_status: **PASS**
 - registry_validation_status: `PASS`
 
@@ -13,7 +13,7 @@
 
 ## Mind detail
 - freshness_status: `PASS`
-- freshness_detail: `registry_age_days=10, latest_source_age_days=31`
+- freshness_detail: `registry_age_days=13, latest_source_age_days=34`
 - source_count: `5`
 - repo_validation_status: `PASS`
 - repo_targets_touched: `docs/comparative-validation-grid-v1.md, docs/grand-unified-narrative-brief.md, docs/trinity-public-research-brief-2026-03-06.md`
@@ -28,7 +28,7 @@
 
 ## Body detail
 - freshness_status: `PASS`
-- freshness_detail: `registry_age_days=10, latest_source_age_days=19`
+- freshness_detail: `registry_age_days=13, latest_source_age_days=22`
 - source_count: `17`
 - repo_validation_status: `PASS`
 - repo_targets_touched: `docs/comparative-validation-grid-v1.md, docs/grand-unified-narrative-brief.md, docs/trinity-codex-agent-mesh-v1.json, docs/trinity-codex-subagent-adapter-v1.json, docs/trinity-public-research-brief-2026-03-06.md, docs/trinity-public-research-brief-2026-03-16.md, docs/trinity-public-research-brief-2026-03-17.md, docs/v15-public-research-brief.md`
@@ -56,7 +56,7 @@
 
 ## Heart detail
 - freshness_status: `PASS`
-- freshness_detail: `registry_age_days=10, latest_source_age_days=20`
+- freshness_detail: `registry_age_days=13, latest_source_age_days=23`
 - source_count: `14`
 - repo_validation_status: `PASS`
 - repo_targets_touched: `docs/comparative-validation-grid-v1.md, docs/freed-id-minimum-disclosure-policy-v0.md, docs/freedid-cosmic-control-matrix-v0.md, docs/heart-track-gov004-did-signature-verification-scaffold-v0.md, docs/trinity-public-research-brief-2026-03-06.md, docs/v13-freedid-governance-brief.md`

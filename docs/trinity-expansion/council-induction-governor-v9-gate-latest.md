@@ -1,6 +1,6 @@
 # Trinity Expansion Result: council_induction_governor_v9_gate
 
-- generated_utc: `2026-04-05T15:01:04+00:00`
+- generated_utc: `2026-04-08T14:23:59+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

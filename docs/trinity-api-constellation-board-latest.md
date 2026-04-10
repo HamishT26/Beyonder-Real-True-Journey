@@ -1,6 +1,6 @@
 # Trinity API Constellation Board
 
-- generated_utc: `2026-04-05T15:08:10+00:00`
+- generated_utc: `2026-04-08T14:31:03+00:00`
 - overall_status: **PASS**
 - manifest_validation_status: `PASS`
 
@@ -14,9 +14,9 @@
 ## Promotion candidates
 | target | record_count | latest_published_at | supporting_source_ids |
 |---|---|---|---|
-| docs/comparative-validation-grid-v1.md | 40 | 2026-04-05 | arxiv, crossref, data_govt_nz, github, openalex, worldbank |
-| docs/trinity-public-research-brief-2026-03-06.md | 32 | 2026-04-05 | arxiv, crossref, data_govt_nz, github, oecd, openalex, worldbank |
-| docs/grand-unified-narrative-brief.md | 16 | 2026-04-05 | crossref, github, oecd |
+| docs/comparative-validation-grid-v1.md | 40 | 2026-04-08 | arxiv, crossref, data_govt_nz, github, openalex, worldbank |
+| docs/trinity-public-research-brief-2026-03-06.md | 32 | 2026-04-08 | arxiv, crossref, data_govt_nz, github, oecd, openalex, worldbank |
+| docs/grand-unified-narrative-brief.md | 16 | 2026-04-08 | crossref, github, oecd |
 | docs/gmut-claim-register-v0.md | 8 | 2026-04-02 | arxiv, openalex |
 
 ## Manual follow-ups

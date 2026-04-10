@@ -1,6 +1,6 @@
 # V33 Vertex AI Proof
 
-- Generated UTC: `2026-04-05T13:31:50+00:00`
+- Generated UTC: `2026-04-06T12:41:08+00:00`
 - Overall status: `PASS`
 - Proof state: `publisher_model_generate_content_verified`
 - Vertex AI state: `generate_content_verified`

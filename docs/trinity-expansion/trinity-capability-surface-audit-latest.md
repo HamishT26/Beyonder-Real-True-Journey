@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_capability_surface_audit
 
-- generated_utc: `2026-04-05T14:56:11+00:00`
+- generated_utc: `2026-04-08T14:19:58+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -47,7 +47,7 @@
   ],
   "mcp_settings_present": false,
   "repo_local_skill_count": 326,
-  "repo_python_scripts": 351,
+  "repo_python_scripts": 369,
   "skill_only_connectors": [
     "playwright"
   ],

@@ -1,6 +1,6 @@
 # GMUT Comparator Metrics Report
 
-- generated_utc: `2026-04-05T15:06:48+00:00`
+- generated_utc: `2026-04-08T14:29:26+00:00`
 - status: **PASS**
 - baseline_ratio: `1.0`
 - max_abs_deviation: `0.04964`
