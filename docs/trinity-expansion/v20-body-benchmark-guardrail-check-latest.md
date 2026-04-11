@@ -1,6 +1,6 @@
 # Trinity Expansion Result: v20_body_benchmark_guardrail_check
 
-- generated_utc: `2026-04-08T14:28:40+00:00`
+- generated_utc: `2026-04-10T16:09:31+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

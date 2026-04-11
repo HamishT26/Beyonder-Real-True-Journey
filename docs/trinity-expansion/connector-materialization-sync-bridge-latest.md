@@ -1,6 +1,6 @@
 # Trinity Expansion Result: connector_materialization_sync_bridge
 
-- generated_utc: `2026-04-08T14:21:48+00:00`
+- generated_utc: `2026-04-10T16:01:14+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -19,10 +19,10 @@
 ```json
 {
   "connector_count": 9,
-  "include_live_writes": false,
+  "include_live_writes": true,
   "include_mcp_refresh": false,
   "offline_only": true,
-  "profile_context": "standard",
+  "profile_context": "materialize",
   "verified_live_write": [
     "github",
     "linear",

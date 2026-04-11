@@ -1,6 +1,6 @@
 # Trinity Expansion Result: identity_governance_workflow_guard
 
-- generated_utc: `2026-04-08T14:20:43+00:00`
+- generated_utc: `2026-04-10T15:59:55+00:00`
 - pillar: `heart`
 - overall_status: **PASS**
 - effective_success: `True`

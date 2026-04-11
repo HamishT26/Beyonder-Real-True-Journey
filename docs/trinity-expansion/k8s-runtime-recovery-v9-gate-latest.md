@@ -1,6 +1,6 @@
 # Trinity Expansion Result: k8s_runtime_recovery_v9_gate
 
-- generated_utc: `2026-04-08T14:24:19+00:00`
+- generated_utc: `2026-04-10T16:04:16+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`

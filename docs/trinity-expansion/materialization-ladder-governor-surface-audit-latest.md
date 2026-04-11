@@ -1,6 +1,6 @@
 # Trinity Expansion Result: materialization_ladder_governor_surface_audit
 
-- generated_utc: `2026-04-08T14:22:44+00:00`
+- generated_utc: `2026-04-10T16:02:18+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

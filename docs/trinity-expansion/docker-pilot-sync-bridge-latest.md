@@ -1,6 +1,6 @@
 # Trinity Expansion Result: docker_pilot_sync_bridge
 
-- generated_utc: `2026-04-08T14:22:02+00:00`
+- generated_utc: `2026-04-10T16:01:32+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -9,7 +9,7 @@
 | name | status | detail |
 |---|---|---|
 | docker_running_container | PASS | bounded fallback from previous docker pilot proof |
-| docker_pilot_scope | PASS | profile=standard, attempted=False |
+| docker_pilot_scope | PASS | profile=materialize, attempted=False |
 | docker_pilot_result | PASS | preview only |
 
 ## Metrics

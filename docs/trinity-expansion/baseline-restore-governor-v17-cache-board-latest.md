@@ -1,6 +1,6 @@
 # Trinity Expansion Result: baseline_restore_governor_v17_cache_board
 
-- generated_utc: `2026-04-08T14:28:17+00:00`
+- generated_utc: `2026-04-10T16:09:02+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

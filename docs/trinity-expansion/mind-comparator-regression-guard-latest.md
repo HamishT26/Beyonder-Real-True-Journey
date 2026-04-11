@@ -1,6 +1,6 @@
 # Trinity Expansion Result: mind_comparator_regression_guard
 
-- generated_utc: `2026-04-08T14:19:46+00:00`
+- generated_utc: `2026-04-10T15:58:24+00:00`
 - pillar: `mind`
 - overall_status: **PASS**
 - effective_success: `True`

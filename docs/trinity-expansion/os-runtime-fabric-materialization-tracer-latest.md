@@ -1,6 +1,6 @@
 # Trinity Expansion Result: os_runtime_fabric_materialization_tracer
 
-- generated_utc: `2026-04-08T14:21:01+00:00`
+- generated_utc: `2026-04-10T16:00:21+00:00`
 - pillar: `body`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -21,12 +21,12 @@
   "blocker_count": 0,
   "connector_id": "",
   "desired_state": "active",
-  "include_live_writes": false,
+  "include_live_writes": true,
   "live_write_enabled": false,
-  "materialization_level": "l2_persistent_dev",
+  "materialization_level": "l5_ha_prod",
   "mode": "offline_only",
   "pack": "os_runtime_fabric",
-  "profile_context": "standard",
+  "profile_context": "materialize",
   "tracer_result": "SKIP"
 }
 ```

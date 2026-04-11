@@ -5,8 +5,8 @@
 
 | Path | Size (bytes) | Binary extension |
 |---|---:|:---:|
-| `docs/trinity-materialization-ledger.jsonl` | 7564442 | no |
-| `docs/trinity-storage-prune-latest.json` | 6575210 | no |
+| `docs/trinity-storage-prune-latest.json` | 9705426 | no |
+| `docs/trinity-materialization-ledger.jsonl` | 7873177 | no |
 | `docs/trinity-live-traces/v32-session-closeout-proof-v1.json` | 6224457 | no |
 | `Beyonder-Real-True Journey v4.pdf` | 2162211 | yes |
 | `Beyonder-Real-True Journey v9.pdf` | 2095796 | yes |

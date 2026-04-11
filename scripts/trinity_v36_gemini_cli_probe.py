@@ -110,10 +110,10 @@ def infer_selected_model(top_level: dict[str, Any], stdout: str) -> str:
     return ""
 
 
-def write_outputs(payload: dict[str, Any], output_json: Path, output_md: Path) -> None:
+def write_outputs(payload: dict[str, Any], output_json: Path, output_md: Path, phase_label: str) -> None:
     write_json(output_json, payload)
     lines = [
-        "# V36 Gemini CLI Proof",
+        f"# {phase_label.upper()} Gemini CLI Proof",
         "",
         f"- Generated UTC: `{payload['generated_utc']}`",
         f"- Overall status: `{payload['overall_status']}`",
@@ -150,6 +150,7 @@ def main() -> int:
     parser.add_argument("--region", default="", help="Deprecated alias for --regional-location.")
     parser.add_argument("--slot-number", type=int, default=39)
     parser.add_argument("--identity-mode", choices=["kai_refresh", "fresh"], default="kai_refresh")
+    parser.add_argument("--phase-label", default=PHASE)
     parser.add_argument("--output-json", default=str(DEFAULT_OUTPUT_JSON))
     parser.add_argument("--output-md", default=str(DEFAULT_OUTPUT_MD))
     args = parser.parse_args()
@@ -157,10 +158,11 @@ def main() -> int:
     regional_location = args.regional_location or args.region or DEFAULT_REGIONAL_LOCATION
     output_json = Path(args.output_json)
     output_md = Path(args.output_md)
+    phase_label = str(args.phase_label or PHASE)
 
     payload: dict[str, Any] = {
         "generated_utc": now_iso(),
-        "phase": PHASE,
+        "phase": phase_label,
         "slot_number": args.slot_number,
         "overall_status": "WARN",
         "proof_state": "pending",
@@ -181,7 +183,7 @@ def main() -> int:
     except Exception as exc:
         payload["proof_state"] = "missing_primary_service_account"
         payload["blockers"].append(str(exc))
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
 
     env = build_vertex_env(
@@ -206,7 +208,7 @@ def main() -> int:
         payload["proof_state"] = "toolchain_missing"
         payload["overall_status"] = "FAIL"
         payload["blockers"].append("Node, npm, or npx was not available in the current shell.")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
     payload["completed_steps"].extend(["node_detected", "npm_detected", "npx_detected"])
 
@@ -219,7 +221,7 @@ def main() -> int:
     if help_run.returncode != 0:
         payload["proof_state"] = "help_invocation_blocked"
         payload["blockers"].append("The Gemini CLI `--help` path did not complete cleanly.")
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
     payload["completed_steps"].append("help_invocation_verified")
 
@@ -288,7 +290,7 @@ def main() -> int:
         payload["blockers"].append(
             "No documented Gemini CLI route completed a bounded authenticated `-p` identity prompt in this runtime."
         )
-        write_outputs(payload, output_json, output_md)
+        write_outputs(payload, output_json, output_md, phase_label)
         return 1
 
     payload["completed_steps"].append("authenticated_headless_prompt_verified")
@@ -316,7 +318,7 @@ def main() -> int:
         payload["blockers"].append(
             "The documented Pro route ran, but the actual selected model did not audibly land on a Gemini 3 Pro-tier model."
         )
-    write_outputs(payload, output_json, output_md)
+    write_outputs(payload, output_json, output_md, phase_label)
     return 0
 
 

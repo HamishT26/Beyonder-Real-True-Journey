@@ -1,6 +1,6 @@
 # Trinity Expansion Result: artifact_retention_rebuild_v12_surface_audit
 
-- generated_utc: `2026-04-08T14:25:42+00:00`
+- generated_utc: `2026-04-10T16:05:58+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

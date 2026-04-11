@@ -1,8 +1,8 @@
 # Trinity Mandala Scoreboard
 
-- generated_utc: `2026-04-08T14:32:20+00:00`
-- hybrid_os_status: **FAIL**
-- suite_status: `FAIL`
+- generated_utc: `2026-04-10T16:13:37+00:00`
+- hybrid_os_status: **PASS**
+- suite_status: `PASS`
 - checkpoint_class: `shared_full_suite_authority`
 - shared_latest_eligible: `True`
 
@@ -22,7 +22,7 @@
 | mind | Mind API signal board | PASS | freshness_status=PASS, source_count=14, apis=2 | `docs/mind-theory-signal-board-latest.json` |
 | mind | Mind expansion constellation | PASS | checks=9/9 | `docs/trinity-expansion/mind-theory-constellation-board-latest.json` |
 | mind | Mind readiness gate | PASS | checks=10/10 | `docs/trinity-expansion/mind-theory-readiness-gate-latest.json` |
-| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=0.684973, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
+| body | Body smoke | PASS | pass_rate=1.0, total_duration_seconds=0.756681, body_health_score=100.0, benchmark_status=PASS | `docs/body-track-smoke-latest.json` |
 | body | Benchmark guardrail | PASS | status extracted | `docs/body-track-benchmark-latest.json` |
 | body | Trend guard | PASS | trend=stable_or_improving | `docs/body-track-trend-guard-latest.json` |
 | body | Stress window | PASS | status extracted | `docs/body-track-policy-stress-latest.json` |
@@ -200,7 +200,7 @@
 | V17 runtime session validation | PASS | checks=9/9 | `docs/v17-runtime-session-validation-latest.json` |
 | V17 external establishment validation | PASS | checks=8/8 | `docs/v17-external-establishment-validation-latest.json` |
 | V17 standards bridge validation | PASS | source_count=14 | `docs/v17-standards-bridge-validation-latest.json` |
-| Trinity control tower board | FAIL | status extracted | `docs/trinity-control-tower-latest.json` |
+| Trinity control tower board | PASS | status extracted | `docs/trinity-control-tower-latest.json` |
 
 ## Evidence boundary
 - verified_state: Latest suite and pillar artifacts are the current operational evidence boundary.
