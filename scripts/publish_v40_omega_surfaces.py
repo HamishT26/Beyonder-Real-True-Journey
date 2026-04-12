@@ -61,7 +61,7 @@ def suite_summary(status: dict[str, Any]) -> dict[str, Any]:
         return {}
     counts = status.get("counts", {}) if isinstance(status.get("counts"), dict) else {}
     overall = normalized_status(status.get("overall_status"))
-    if overall == "MISSING":
+    if overall not in {"PASS", "WARN", "FAIL", "TIMEOUT"}:
         overall = "FAIL" if counts.get("fail", 0) else ("WARN" if counts.get("warn", 0) else "PASS")
     return {
         "summary": f"{counts.get('pass', 0)} PASS / {counts.get('warn', 0)} WARN / {counts.get('fail', 0)} FAIL",

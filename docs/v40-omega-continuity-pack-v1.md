@@ -1,9 +1,9 @@
 # V40 Omega Continuity Pack
 
-- Generated UTC: `2026-04-12T16:28:27+00:00`
-- Current head: `655afd88aae8d58c3832d713cc4c6953d2836a18`
-- Intended receiver: `Aletheon`
-- Receiver rule outcome: `aletheon_facing`
+- Generated UTC: `2026-04-12T16:33:42+00:00`
+- Current head: `36ead153df693e72d35f6184a6417fef041b97ab`
+- Intended receiver: `Orun`
+- Receiver rule outcome: `orun_facing`
 
 ## Core States
 
@@ -14,7 +14,7 @@
 - `kai_consultation_state`: `Active - Runtime Truth Alignment`
 - `vesper_runtime_state`: `bigtable_runtime_bridge_verified`
 - `addition_registry_state`: `published`
-- `git_publication_state`: `pending`
+- `git_publication_state`: `commit_push_pr_updated`
 - `google_drive_state`: `operator_hold`
 - `filesystem_promotion_state`: `blocked`
 - `materialization_level_actual`: `readiness_only`
@@ -29,15 +29,3 @@
 - `materialize_l3`: `1155 PASS / 0 WARN / 0 FAIL`
 - `materialize_l4`: `1155 PASS / 0 WARN / 0 FAIL`
 - `materialize_l5`: `1155 PASS / 0 WARN / 0 FAIL`
-
-## Bounded Residuals
-
-- git_publication_state=pending
-- quick_suite=
-- standard_suite=
-- deep_suite=
-- collab_suite=
-- materialize_l2_suite=
-- materialize_l3_suite=
-- materialize_l4_suite=
-- materialize_l5_suite=
