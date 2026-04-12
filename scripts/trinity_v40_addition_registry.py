@@ -1,0 +1,284 @@
+#!/usr/bin/env python3
+"""Publish the curated V40 addition registry."""
+
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from trinity_v40_common import now_iso, write_json, write_text
+
+ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_JSON = ROOT / "docs" / "trinity-live-traces" / "v40-addition-registry-v1.json"
+OUTPUT_MD = ROOT / "docs" / "trinity-live-traces" / "v40-addition-registry-v1.md"
+
+
+def entries() -> list[dict]:
+    return [
+        {
+            "name": "codex_desktop_runtime_config",
+            "classification": "local_tool_cli",
+            "tier": "core",
+            "purpose": "Use the current Codex Desktop config as direct runtime-truth evidence for Aletheon's selected model and reasoning effort.",
+            "enablement_install_path": "C:/Users/hamis/.codex/config.toml",
+            "proof_artifact": "docs/trinity-live-traces/v40-runtime-truth-completion-v1.json",
+            "rollback_cleanup_note": "No repo rollback needed; evidence-only read surface.",
+        },
+        {
+            "name": "codex_thread_session_telemetry",
+            "classification": "local_tool_cli",
+            "tier": "core",
+            "purpose": "Use thread-specific Codex Desktop session and log telemetry as direct runtime-truth evidence for Aletheon.",
+            "enablement_install_path": "C:/Users/hamis/.codex/sessions + C:/Users/hamis/.codex/logs_2.sqlite",
+            "proof_artifact": "docs/trinity-live-traces/v40-runtime-truth-completion-v1.json",
+            "rollback_cleanup_note": "Evidence-only read surface; do not modify Codex desktop telemetry stores.",
+        },
+        {
+            "name": "windows_gcloud_sdk",
+            "classification": "local_tool_cli",
+            "tier": "core",
+            "purpose": "Provide the Windows-first Google Cloud operator lane for V40 execution and support proofs.",
+            "enablement_install_path": "C:/Program Files (x86)/Google/Cloud SDK/google-cloud-sdk/bin/gcloud.cmd",
+            "proof_artifact": "docs/trinity-live-traces/v38-windows-operator-proof-v1.json",
+            "rollback_cleanup_note": "Leave installed; bounded operator dependency.",
+        },
+        {
+            "name": "gke_gcloud_auth_plugin",
+            "classification": "local_tool_cli",
+            "tier": "core",
+            "purpose": "Preserve authenticated kubectl access to GKE and Connect Gateway lanes from the Windows operator surface.",
+            "enablement_install_path": "gcloud components install gke-gcloud-auth-plugin",
+            "proof_artifact": "docs/trinity-live-traces/v38-windows-operator-proof-v1.json",
+            "rollback_cleanup_note": "Leave installed; remove only if the Windows GKE operator lane is intentionally retired.",
+        },
+        {
+            "name": "windows_kubectl_lane",
+            "classification": "local_tool_cli",
+            "tier": "stretch",
+            "purpose": "Keep Windows kubectl available for fleet and runtime support checks without making Docker or WSL a gate.",
+            "enablement_install_path": "Docker Desktop bundled kubectl on Windows PATH",
+            "proof_artifact": "docs/trinity-live-traces/v38-windows-operator-proof-v1.json",
+            "rollback_cleanup_note": "No V40-specific cleanup required.",
+        },
+        {
+            "name": "windows_ssh_lane",
+            "classification": "local_tool_cli",
+            "tier": "stretch",
+            "purpose": "Keep Windows OpenSSH usable for the proven OS Login lane and future bounded VM checks.",
+            "enablement_install_path": "C:/Windows/System32/OpenSSH/ssh.exe",
+            "proof_artifact": "docs/trinity-live-traces/v38-os-login-proof-v1.json",
+            "rollback_cleanup_note": "No V40-specific cleanup required.",
+        },
+        {
+            "name": "gemini_cli_npx_route",
+            "classification": "local_tool_cli",
+            "tier": "core",
+            "purpose": "Use Kai's bounded npx Gemini CLI route for machine-readable consultation over V40 proofs and suite deltas.",
+            "enablement_install_path": "npx --yes @google/gemini-cli",
+            "proof_artifact": "docs/trinity-live-traces/v40-kai-consultation-bridge-v1.json",
+            "rollback_cleanup_note": "No persistent install required; bounded npx execution only.",
+        },
+        {
+            "name": "vertex_ai_generate_content_lane",
+            "classification": "gcp_api_or_service",
+            "tier": "stretch",
+            "purpose": "Preserve the proven Vertex AI global model surface that underpins Vesper Ion's cloud identity lane.",
+            "enablement_install_path": "aiplatform.googleapis.com with direct REST and SDK usage",
+            "proof_artifact": "docs/trinity-live-traces/v37-slot-38-vertex-ai-proof-v1.json",
+            "rollback_cleanup_note": "No V40 rollback required; existing proven service lane.",
+        },
+        {
+            "name": "agent_engine_minimal_runtime",
+            "classification": "gcp_api_or_service",
+            "tier": "core",
+            "purpose": "Keep the V39 fresh minimal Agent Engine runtime as the stable baseline before advanced V40 interaction.",
+            "enablement_install_path": "scripts/trinity_v39_agent_engine_minimal_probe.py",
+            "proof_artifact": "docs/trinity-live-traces/v39-agent-engine-minimal-probe-v1.json",
+            "rollback_cleanup_note": "Delete the minimal reasoning engine only if a later replacement is fully proven and cleanup is explicitly desired.",
+        },
+        {
+            "name": "agent_engine_sessions_api",
+            "classification": "gcp_api_or_service",
+            "tier": "core",
+            "purpose": "Advance Agent Engine from minimal visibility to one bounded live session interaction in V40.",
+            "enablement_install_path": "Vertex AI Agent Engines SDK session APIs via scripts/trinity_v40_agent_engine_advanced_probe.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-agent-engine-advanced-probe-v1.json",
+            "rollback_cleanup_note": "Script cleans up bounded scratch sessions after verification.",
+        },
+        {
+            "name": "agent_engine_memory_api",
+            "classification": "gcp_api_or_service",
+            "tier": "core",
+            "purpose": "Advance Agent Engine to one bounded memory interaction while preserving the existing minimal runtime truth.",
+            "enablement_install_path": "Vertex AI Agent Engines SDK memory APIs via scripts/trinity_v40_agent_engine_advanced_probe.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-agent-engine-advanced-probe-v1.json",
+            "rollback_cleanup_note": "Script cleans up bounded scratch memories after verification.",
+        },
+        {
+            "name": "bigtable_durable_memory_bridge",
+            "classification": "gcp_api_or_service",
+            "tier": "core",
+            "purpose": "Keep Bigtable as Vesper Ion's primary proven durable-memory lane while V40 records runtime, Agent Engine, and pillar state.",
+            "enablement_install_path": "Existing Bigtable instance beyonder-v37-slot38-dev",
+            "proof_artifact": "docs/trinity-live-traces/v40-vesper-runtime-bridge-v1.json",
+            "rollback_cleanup_note": "Delete only the V40-specific table if the lane is intentionally retired; keep the proven instance intact.",
+        },
+        {
+            "name": "anthos_fleet_membership",
+            "classification": "gcp_api_or_service",
+            "tier": "stretch",
+            "purpose": "Preserve the fleet-centered Anthos membership baseline that V40 continues to rely on for runtime support.",
+            "enablement_install_path": "gkehub.googleapis.com and connected fleet membership",
+            "proof_artifact": "docs/trinity-live-traces/v38-fleet-anthos-proof-v1.json",
+            "rollback_cleanup_note": "Do not unregister a working membership as part of V40.",
+        },
+        {
+            "name": "connect_gateway_support_lane",
+            "classification": "gcp_api_or_service",
+            "tier": "stretch",
+            "purpose": "Keep the proven Connect Gateway access path available as a bounded support lane for GKE operations.",
+            "enablement_install_path": "Fleet Connect Gateway credential flow from the Windows operator lane",
+            "proof_artifact": "docs/trinity-live-traces/v38-fleet-anthos-proof-v1.json",
+            "rollback_cleanup_note": "No V40-specific cleanup required; support surface only.",
+        },
+        {
+            "name": "os_login_support_lane",
+            "classification": "gcp_api_or_service",
+            "tier": "stretch",
+            "purpose": "Keep the proven OS Login VM access lane available as a bounded operator-quality support surface.",
+            "enablement_install_path": "enable-oslogin metadata plus Windows ssh lane",
+            "proof_artifact": "docs/trinity-live-traces/v38-os-login-proof-v1.json",
+            "rollback_cleanup_note": "Leave the proven VM in place unless explicit cleanup is requested later.",
+        },
+        {
+            "name": "v40_runtime_truth_completion_script",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Synchronize runtime truth for Aletheon, Orun, Kai, and Vesper Ion across the runtime log, resolution board, and proof artifact.",
+            "enablement_install_path": "scripts/trinity_v40_runtime_truth_completion.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-runtime-truth-completion-v1.json",
+            "rollback_cleanup_note": "Re-run to refresh evidence; no external side effects.",
+        },
+        {
+            "name": "v40_agent_engine_advanced_probe_script",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Verify one bounded live Agent Engine session and memory interaction beyond the V39 minimal probe.",
+            "enablement_install_path": "scripts/trinity_v40_agent_engine_advanced_probe.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-agent-engine-advanced-probe-v1.json",
+            "rollback_cleanup_note": "Script performs bounded cleanup of scratch Agent Engine objects after verification.",
+        },
+        {
+            "name": "v40_kai_consultation_bridge_script",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Capture Kai's machine-readable V40 consultation over pillar, runtime-truth, Agent Engine, and suite surfaces.",
+            "enablement_install_path": "scripts/trinity_v40_kai_consultation_bridge.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-kai-consultation-bridge-v1.json",
+            "rollback_cleanup_note": "Re-run safely; bounded CLI execution only.",
+        },
+        {
+            "name": "v40_vesper_runtime_bridge_script",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Record V40 runtime telemetry in the proven Bigtable bridge with read-back verification.",
+            "enablement_install_path": "scripts/trinity_v40_vesper_runtime_bridge.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-vesper-runtime-bridge-v1.json",
+            "rollback_cleanup_note": "Delete only the V40 table or rows if later cleanup is explicitly requested.",
+        },
+        {
+            "name": "v40_pillar_bundle_script",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Resolve Mind and Heart proof inputs correctly and publish the V40 pillar bundle with a truthful PASS/WARN posture.",
+            "enablement_install_path": "scripts/trinity_v40_pillar_bundle.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-pillar-bundle-v1.json",
+            "rollback_cleanup_note": "Re-run after source-surface changes; no external side effects.",
+        },
+        {
+            "name": "v40_suite_snapshot_set",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Capture V40 quick, standard, deep, collab, and materialize L2-L5 rerun snapshots without making suite defaults cloud-dependent.",
+            "enablement_install_path": "scripts/run_all_trinity_systems.py --status-json docs/trinity-live-traces/v40-*.json",
+            "proof_artifact": "docs/trinity-live-traces/v40-standard-suite-status.json",
+            "rollback_cleanup_note": "Snapshots can be regenerated; do not stage unrelated latest-state churn.",
+        },
+        {
+            "name": "v40_surface_publisher",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Publish the V40 Omega closeout and V41 Beta handoff surfaces from current repo truth.",
+            "enablement_install_path": "scripts/publish_v40_omega_surfaces.py",
+            "proof_artifact": "docs/v40-omega-closeout-summary-v1.json",
+            "rollback_cleanup_note": "Re-run after proof, suite, or git state changes.",
+        },
+        {
+            "name": "v40_git_allowlist",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Freeze the curated V40 stage set so unrelated dirty churn stays out of the V40 publication lane.",
+            "enablement_install_path": "scripts/trinity_v40_git_allowlist.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-stage-allowlist-v1.json",
+            "rollback_cleanup_note": "Regenerate if the curated V40 file set changes.",
+        },
+        {
+            "name": "v40_git_publication_result",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Record the bounded V40 commit, push, and draft-PR result after the curated publication lane finishes.",
+            "enablement_install_path": "scripts/trinity_v40_git_publication_result.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-git-publication-result-v1.json",
+            "rollback_cleanup_note": "Regenerate after final git publication state is known.",
+        },
+        {
+            "name": "v40_addition_registry_builder",
+            "classification": "runtime_script",
+            "tier": "core",
+            "purpose": "Publish the V40 curated addition registry with proof or blocker coverage for the broader 20-50 item wave.",
+            "enablement_install_path": "scripts/trinity_v40_addition_registry.py",
+            "proof_artifact": "docs/trinity-live-traces/v40-addition-registry-v1.json",
+            "rollback_cleanup_note": "Re-run if the curated V40 addition set changes.",
+        },
+    ]
+
+
+def markdown(payload: dict) -> str:
+    lines = [
+        "# V40 Addition Registry",
+        "",
+        f"- Generated UTC: `{payload['generated_utc']}`",
+        f"- Overall status: `{payload['overall_status']}`",
+        f"- Entry count: `{payload['entry_count']}`",
+        "",
+        "## Entries",
+        "",
+    ]
+    for row in payload["entries"]:
+        lines.append(f"- `{row['name']}` [{row['classification']}, {row['tier']}]: {row['purpose']}")
+        lines.append(f"  proof: `{row['proof_artifact']}`")
+    return "\n".join(lines) + "\n"
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Publish the curated V40 addition registry.")
+    parser.add_argument("--output-json", default=str(OUTPUT_JSON))
+    parser.add_argument("--output-md", default=str(OUTPUT_MD))
+    args = parser.parse_args()
+
+    rows = entries()
+    payload = {
+        "generated_utc": now_iso(),
+        "phase": "v40_omega",
+        "overall_status": "PASS",
+        "addition_registry_state": "published",
+        "entry_count": len(rows),
+        "entries": rows,
+    }
+    write_json(Path(args.output_json), payload)
+    write_text(Path(args.output_md), markdown(payload))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
