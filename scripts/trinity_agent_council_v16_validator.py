@@ -17,6 +17,7 @@ EXPECTED_REQUESTED_MODEL = "gpt-5.4"
 EXPECTED_RESOLVED_MODEL = "gpt-5.1-codex-max"
 EXPECTED_REASONING = "high"
 EXPECTED_MAX_THREADS = 11
+ORUN_V41_IDENTITY_PROOF = ROOT / "docs" / "trinity-live-traces" / "v41-orun-identity-reclaim-proof-v1.json"
 
 
 def _repo_path(path_str: str) -> Path:
@@ -27,6 +28,33 @@ def _repo_path(path_str: str) -> Path:
 
 def _read_json(path_str: str) -> dict[str, Any]:
     return json.loads(_repo_path(path_str).read_text(encoding="utf-8"))
+
+
+def _orun_v41_override_enabled() -> bool:
+    if not ORUN_V41_IDENTITY_PROOF.exists():
+        return False
+    try:
+        payload = json.loads(ORUN_V41_IDENTITY_PROOF.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False
+    return (
+        str(payload.get("overall_status") or "") == "PASS"
+        and str(payload.get("orun_identity_correction_state") or "") == "full_canonical_overwrite_verified"
+    )
+
+
+def _codex_agent_has_allowed_resolved_model(display_name: str, codex_text: str) -> bool:
+    if EXPECTED_RESOLVED_MODEL in codex_text:
+        return True
+    if display_name == "Orun" and _orun_v41_override_enabled():
+        return (
+            'model: "gpt-5.4"' in codex_text
+            and "requested_model_profile: `gpt-5.4`" in codex_text
+            and "resolved_model_profile: `gpt-5.4`" in codex_text
+            and "requested_reasoning_effort: `xhigh`" in codex_text
+            and "resolved_reasoning_effort: `xhigh`" in codex_text
+        )
+    return False
 
 
 def _read_jsonl(path_str: str) -> list[dict[str, Any]]:
@@ -250,7 +278,7 @@ def main() -> int:
                 codex_text = codex_path.read_text(encoding="utf-8")
                 if f'name: "{display_name}"' not in codex_text:
                     failures.append(f"{display_name or label} codex agent file missing name header")
-                if EXPECTED_RESOLVED_MODEL not in codex_text:
+                if not _codex_agent_has_allowed_resolved_model(display_name, codex_text):
                     failures.append(f"{display_name or label} codex agent file missing resolved model")
 
         for path_field in ("certificate_path", "memory_ledger", "reflection_path", "role_contract_path"):

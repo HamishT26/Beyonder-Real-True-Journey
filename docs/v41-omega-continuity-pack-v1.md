@@ -1,9 +1,9 @@
-# V41 Beta Continuity Pack
+# V41 Omega Continuity Pack
 
 - Generated UTC: `2026-04-13T16:28:16+00:00`
 - Current head: `eebb0f5dbe4f7292be6418c55d9b62a03f37bbc6`
-- Intended receiver: `Orun`
-- Receiver rule outcome: `orun_facing`
+- Intended receiver: `Aletheon`
+- Receiver rule outcome: `aletheon_facing`
 
 ## Core States
 
