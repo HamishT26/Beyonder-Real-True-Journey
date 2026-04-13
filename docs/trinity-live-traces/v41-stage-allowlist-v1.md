@@ -1,8 +1,8 @@
 # V41 Stage Allowlist
 
-- Generated UTC: `2026-04-13T16:33:13+00:00`
-- Current head: `eebb0f5dbe4f7292be6418c55d9b62a03f37bbc6`
-- Dirty path count observed: `2908`
+- Generated UTC: `2026-04-13T16:36:52+00:00`
+- Current head: `fec4f858336e4d057306f1e49889ba4112840c2a`
+- Dirty path count observed: `2861`
 - Intended v41 count: `61`
 - Carried-forward latest-state churn: `2727`
 - Non-stage noise: `125`
@@ -11,48 +11,48 @@
 
 - `.codex/agents/28-orun.md` (`present=True`, `tracked=True`)
 - `.codex/agents/orun.toml` (`present=True`, `tracked=True`)
-- `scripts/publish_v41_omega_surfaces.py` (`present=True`, `tracked=False`)
+- `scripts/publish_v41_omega_surfaces.py` (`present=True`, `tracked=True`)
 - `scripts/trinity_agent_council_v15_validator.py` (`present=True`, `tracked=True`)
 - `scripts/trinity_agent_council_v16_validator.py` (`present=True`, `tracked=True`)
 - `scripts/trinity_api_book_validator.py` (`present=True`, `tracked=True`)
-- `scripts/trinity_v41_api_ascendancy.py` (`present=True`, `tracked=False`)
-- `scripts/trinity_v41_common.py` (`present=True`, `tracked=False`)
-- `scripts/trinity_v41_git_cleanup_allowlist.py` (`present=True`, `tracked=False`)
-- `scripts/trinity_v41_git_publication_result.py` (`present=True`, `tracked=False`)
-- `scripts/trinity_v41_journey_digest.py` (`present=True`, `tracked=False`)
-- `scripts/trinity_v41_kai_health_monitor.py` (`present=True`, `tracked=False`)
-- `scripts/trinity_v41_vesper_telemetry_bridge.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v41_api_ascendancy.py` (`present=True`, `tracked=True`)
+- `scripts/trinity_v41_common.py` (`present=True`, `tracked=True`)
+- `scripts/trinity_v41_git_cleanup_allowlist.py` (`present=True`, `tracked=True`)
+- `scripts/trinity_v41_git_publication_result.py` (`present=True`, `tracked=True`)
+- `scripts/trinity_v41_journey_digest.py` (`present=True`, `tracked=True`)
+- `scripts/trinity_v41_kai_health_monitor.py` (`present=True`, `tracked=True`)
+- `scripts/trinity_v41_vesper_telemetry_bridge.py` (`present=True`, `tracked=True`)
 - `scripts/v17_evidence_first_control_tower_sync.py` (`present=True`, `tracked=True`)
-- `docs/auto-generated/v41-journey-advisory-digest-v1.json` (`present=True`, `tracked=False`)
-- `docs/auto-generated/v41-journey-advisory-digest-v1.md` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v41-journey-advisory-digest-v1.json` (`present=True`, `tracked=True`)
+- `docs/auto-generated/v41-journey-advisory-digest-v1.md` (`present=True`, `tracked=True`)
 - `docs/trinity-agent-role-contracts/28-orun-role-contract.json` (`present=True`, `tracked=True`)
 - `docs/trinity-api-book-latest.md` (`present=True`, `tracked=True`)
 - `docs/trinity-api-book-v6.json` (`present=True`, `tracked=True`)
 - `docs/trinity-api-book-validation-latest.json` (`present=True`, `tracked=True`)
 - `docs/trinity-api-book-validation-latest.md` (`present=True`, `tracked=True`)
-- `docs/trinity-live-traces/v41-api-ascendancy-proof-v1.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-api-ascendancy-proof-v1.md` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-git-publication-result-v1.json` (`present=False`, `tracked=False`)
-- `docs/trinity-live-traces/v41-git-publication-result-v1.md` (`present=False`, `tracked=False`)
-- `docs/trinity-live-traces/v41-kai-health-monitor-proof-v1.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-kai-health-monitor-proof-v1.md` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.md` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-pillar-bundle-v1.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-pillar-bundle-v1.md` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-quick-suite-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-standard-suite-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-deep-suite-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-collab-suite-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-materialize-l2-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-materialize-l3-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-materialize-l4-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-materialize-l5-status.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-git-cleanup-note-v1.md` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-stage-allowlist-v1.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-stage-allowlist-v1.md` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-vesper-telemetry-bridge-proof-v1.json` (`present=True`, `tracked=False`)
-- `docs/trinity-live-traces/v41-vesper-telemetry-bridge-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v41-api-ascendancy-proof-v1.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-api-ascendancy-proof-v1.md` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-git-publication-result-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v41-git-publication-result-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v41-kai-health-monitor-proof-v1.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-kai-health-monitor-proof-v1.md` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.md` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-pillar-bundle-v1.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-pillar-bundle-v1.md` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-quick-suite-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-standard-suite-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-deep-suite-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-collab-suite-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-materialize-l2-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-materialize-l3-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-materialize-l4-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-materialize-l5-status.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-git-cleanup-note-v1.md` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-stage-allowlist-v1.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-stage-allowlist-v1.md` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-vesper-telemetry-bridge-proof-v1.json` (`present=True`, `tracked=True`)
+- `docs/trinity-live-traces/v41-vesper-telemetry-bridge-proof-v1.md` (`present=True`, `tracked=True`)
 - `docs/trinity-runtime-model-resolution-v1.json` (`present=True`, `tracked=True`)
 - `docs/v17-evidence-first-control-tower-latest.json` (`present=True`, `tracked=True`)
 - `docs/v17-evidence-first-control-tower-latest.md` (`present=True`, `tracked=True`)
@@ -64,73 +64,26 @@
 - `docs/v41-beta-closeout-summary-v1.json` (`present=True`, `tracked=True`)
 - `docs/v41-beta-continuity-pack-v1.md` (`present=True`, `tracked=True`)
 - `docs/v41-beta-handoff-policy-v1.json` (`present=True`, `tracked=True`)
-- `docs/v41-omega-closeout-summary-v1.json` (`present=True`, `tracked=False`)
-- `docs/v41-omega-continuity-pack-v1.md` (`present=True`, `tracked=False`)
-- `docs/v41-omega-handoff-policy-v1.json` (`present=True`, `tracked=False`)
-- `docs/v42-beta-closeout-summary-v1.json` (`present=True`, `tracked=False`)
-- `docs/v42-beta-continuity-pack-v1.md` (`present=True`, `tracked=False`)
-- `docs/v42-beta-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+- `docs/v41-omega-closeout-summary-v1.json` (`present=True`, `tracked=True`)
+- `docs/v41-omega-continuity-pack-v1.md` (`present=True`, `tracked=True`)
+- `docs/v41-omega-handoff-policy-v1.json` (`present=True`, `tracked=True`)
+- `docs/v42-beta-closeout-summary-v1.json` (`present=True`, `tracked=True`)
+- `docs/v42-beta-continuity-pack-v1.md` (`present=True`, `tracked=True`)
+- `docs/v42-beta-handoff-policy-v1.json` (`present=True`, `tracked=True`)
 
 ## Dirty Classification Samples
 
 ### intended_v41_delta
 
-- `.codex/agents/28-orun.md`
-- `.codex/agents/orun.toml`
-- `docs/trinity-agent-role-contracts/28-orun-role-contract.json`
-- `docs/trinity-api-book-latest.md`
-- `docs/trinity-api-book-v6.json`
-- `docs/trinity-api-book-validation-latest.json`
 - `docs/trinity-runtime-model-resolution-v1.json`
-- `docs/v17-evidence-first-control-tower-latest.json`
-- `docs/v17-external-establishment-validation-latest.json`
 - `docs/v17-runtime-session-log-latest.json`
-- `docs/v17-runtime-session-validation-latest.json`
 - `docs/v17-runtime-truth-resolution-board-v1.json`
 - `docs/v41-beta-closeout-summary-v1.json`
-- `docs/v41-beta-continuity-pack-v1.md`
-- `docs/v41-beta-handoff-policy-v1.json`
-- `scripts/trinity_agent_council_v15_validator.py`
-- `scripts/trinity_agent_council_v16_validator.py`
-- `scripts/trinity_api_book_validator.py`
-- `scripts/v17_evidence_first_control_tower_sync.py`
-- `docs/auto-generated/v41-journey-advisory-digest-v1.json`
-- `docs/auto-generated/v41-journey-advisory-digest-v1.md`
-- `docs/trinity-live-traces/v41-api-ascendancy-proof-v1.json`
-- `docs/trinity-live-traces/v41-api-ascendancy-proof-v1.md`
-- `docs/trinity-live-traces/v41-collab-suite-status.json`
-- `docs/trinity-live-traces/v41-deep-suite-status.json`
-- `docs/trinity-live-traces/v41-git-cleanup-note-v1.md`
-- `docs/trinity-live-traces/v41-kai-health-monitor-proof-v1.json`
-- `docs/trinity-live-traces/v41-kai-health-monitor-proof-v1.md`
-- `docs/trinity-live-traces/v41-materialize-l2-status.json`
-- `docs/trinity-live-traces/v41-materialize-l3-status.json`
-- `docs/trinity-live-traces/v41-materialize-l4-status.json`
-- `docs/trinity-live-traces/v41-materialize-l5-status.json`
-- `docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.json`
-- `docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.md`
-- `docs/trinity-live-traces/v41-pillar-bundle-v1.json`
-- `docs/trinity-live-traces/v41-pillar-bundle-v1.md`
-- `docs/trinity-live-traces/v41-quick-suite-status.json`
-- `docs/trinity-live-traces/v41-stage-allowlist-v1.json`
-- `docs/trinity-live-traces/v41-stage-allowlist-v1.md`
-- `docs/trinity-live-traces/v41-standard-suite-status.json`
-- `docs/trinity-live-traces/v41-vesper-telemetry-bridge-proof-v1.json`
-- `docs/trinity-live-traces/v41-vesper-telemetry-bridge-proof-v1.md`
 - `docs/v41-omega-closeout-summary-v1.json`
-- `docs/v41-omega-continuity-pack-v1.md`
-- `docs/v41-omega-handoff-policy-v1.json`
 - `docs/v42-beta-closeout-summary-v1.json`
-- `docs/v42-beta-continuity-pack-v1.md`
-- `docs/v42-beta-handoff-policy-v1.json`
-- `scripts/publish_v41_omega_surfaces.py`
-- `scripts/trinity_v41_api_ascendancy.py`
-- `scripts/trinity_v41_common.py`
-- `scripts/trinity_v41_git_cleanup_allowlist.py`
 - `scripts/trinity_v41_git_publication_result.py`
-- `scripts/trinity_v41_journey_digest.py`
-- `scripts/trinity_v41_kai_health_monitor.py`
-- `scripts/trinity_v41_vesper_telemetry_bridge.py`
+- `docs/trinity-live-traces/v41-git-publication-result-v1.json`
+- `docs/trinity-live-traces/v41-git-publication-result-v1.md`
 
 ### carried_forward_dirty_latest_state_churn
 

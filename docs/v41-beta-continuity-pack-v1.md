@@ -1,7 +1,7 @@
 # V41 Beta Continuity Pack
 
 - Generated UTC: `2026-04-13T16:28:16+00:00`
-- Current head: `eebb0f5dbe4f7292be6418c55d9b62a03f37bbc6`
+- Current head: `fec4f858336e4d057306f1e49889ba4112840c2a`
 - Intended receiver: `Orun`
 - Receiver rule outcome: `orun_facing`
 
@@ -18,7 +18,8 @@
 - `google_drive_state`: `operator_hold`
 - `filesystem_promotion_state`: `blocked`
 - `materialization_level_actual`: `readiness_only`
-- `git_cleanup_state`: `allowlist_published`
+- `git_cleanup_state`: `committed_pushed_pr_reused`
+- `publication_commit_sha`: `fec4f858336e4d057306f1e49889ba4112840c2a`
 - `api_book_count`: `62`
 
 ## Suite Summaries

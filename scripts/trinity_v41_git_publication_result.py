@@ -64,14 +64,14 @@ def _rewrite_continuity_md(path: Path, git_cleanup_state: str, publication_commi
         return
     lines = path.read_text(encoding="utf-8").splitlines()
     updated: list[str] = []
-    inserted_commit = False
     for line in lines:
+        if line.startswith("- Current head:"):
+            updated.append(f"- Current head: `{publication_commit_sha}`")
+            continue
         if line.startswith("- `git_cleanup_state`:"):
             updated.append(f"- `git_cleanup_state`: `{git_cleanup_state}`")
             continue
         updated.append(line)
-        if not inserted_commit and line.startswith("- `git_cleanup_state`:"):
-            inserted_commit = True
     if f"- `publication_commit_sha`: `{publication_commit_sha}`" not in updated:
         for index, line in enumerate(updated):
             if line.startswith("- `git_cleanup_state`:"):
@@ -113,7 +113,9 @@ def main() -> int:
         if not doc:
             continue
         doc["git_cleanup_state"] = args.git_cleanup_state
+        doc["current_head_sha"] = args.publication_commit
         doc["publication_commit_sha"] = args.publication_commit
+        doc["checkpoint_anchor_commit"] = args.publication_commit
         doc["git_publication_result_path"] = "docs/trinity-live-traces/v41-git-publication-result-v1.json"
         write_json(path, doc)
 
@@ -121,6 +123,8 @@ def main() -> int:
         doc = read_json(path)
         if not doc:
             continue
+        if "current_head_sha" in doc:
+            doc["current_head_sha"] = args.publication_commit
         core_states = doc.get("core_states")
         if isinstance(core_states, dict):
             core_states["git_cleanup_state"] = args.git_cleanup_state
@@ -134,6 +138,8 @@ def main() -> int:
         doc = read_json(path)
         if not doc:
             continue
+        if "source_head_sha" in doc:
+            doc["source_head_sha"] = args.publication_commit
         doc["git_cleanup_state"] = args.git_cleanup_state
         doc["publication_commit_sha"] = args.publication_commit
         doc["git_publication_result_path"] = "docs/trinity-live-traces/v41-git-publication-result-v1.json"
