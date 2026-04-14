@@ -13,10 +13,10 @@ ROOT = Path(__file__).resolve().parent.parent
 EXPECTED_SLOTS = list(range(27, 38))
 EXPECTED_PAIR_COUNT = ((len(EXPECTED_SLOTS) + 1) * len(EXPECTED_SLOTS)) // 2
 EXPECTED_AGENT_COUNT = len(EXPECTED_SLOTS)
-EXPECTED_REQUESTED_MODEL = "gpt-5.4"
-EXPECTED_RESOLVED_MODEL = "gpt-5.1-codex-max"
-EXPECTED_REASONING = "high"
-EXPECTED_MAX_THREADS = 11
+DEFAULT_REQUESTED_MODEL = "gpt-5.4"
+DEFAULT_RESOLVED_MODEL = "gpt-5.1-codex-mini"
+DEFAULT_REASONING = "high"
+DEFAULT_MAX_THREADS = 11
 ORUN_V41_IDENTITY_PROOF = ROOT / "docs" / "trinity-live-traces" / "v41-orun-identity-reclaim-proof-v1.json"
 
 
@@ -43,8 +43,12 @@ def _orun_v41_override_enabled() -> bool:
     )
 
 
-def _codex_agent_has_allowed_resolved_model(display_name: str, codex_text: str) -> bool:
-    if EXPECTED_RESOLVED_MODEL in codex_text:
+def _codex_agent_has_allowed_resolved_model(
+    display_name: str,
+    codex_text: str,
+    expected_resolved_model: str,
+) -> bool:
+    if expected_resolved_model and expected_resolved_model in codex_text:
         return True
     if display_name == "Orun" and _orun_v41_override_enabled():
         return (
@@ -126,6 +130,16 @@ def main() -> int:
     proof_payload = _read_json(args.proof_json)
     group_rows = _read_jsonl(args.group_chat)
 
+    expected_requested_model = str(roster_payload.get("requested_model_profile") or DEFAULT_REQUESTED_MODEL)
+    expected_resolved_model = str(roster_payload.get("resolved_model_profile") or DEFAULT_RESOLVED_MODEL)
+    expected_requested_reasoning = str(
+        roster_payload.get("requested_reasoning_effort") or DEFAULT_REASONING
+    )
+    expected_resolved_reasoning = str(
+        roster_payload.get("resolved_reasoning_effort") or DEFAULT_REASONING
+    )
+    expected_max_threads = int(roster_payload.get("max_threads", DEFAULT_MAX_THREADS) or DEFAULT_MAX_THREADS)
+
     codex_config_path = _repo_path(args.codex_config)
     if not codex_config_path.exists():
         failures.append(f"missing codex config: {args.codex_config}")
@@ -133,14 +147,16 @@ def main() -> int:
     else:
         codex_config_text = codex_config_path.read_text(encoding="utf-8")
 
-    if f"max_threads = {EXPECTED_MAX_THREADS}" not in codex_config_text:
-        failures.append(f"codex config must set max_threads = {EXPECTED_MAX_THREADS}")
-    if f'requested_model_profile = "{EXPECTED_REQUESTED_MODEL}"' not in codex_config_text:
-        failures.append(f"codex config must request {EXPECTED_REQUESTED_MODEL}")
-    if f'resolved_model_profile = "{EXPECTED_RESOLVED_MODEL}"' not in codex_config_text:
-        failures.append(f"codex config must resolve {EXPECTED_RESOLVED_MODEL}")
-    if f'resolved_reasoning_effort = "{EXPECTED_REASONING}"' not in codex_config_text:
-        failures.append(f"codex config must resolve reasoning {EXPECTED_REASONING}")
+    if f"max_threads = {expected_max_threads}" not in codex_config_text:
+        failures.append(f"codex config must set max_threads = {expected_max_threads}")
+    if f'requested_model_profile = "{expected_requested_model}"' not in codex_config_text:
+        failures.append(f"codex config must request {expected_requested_model}")
+    if f'resolved_model_profile = "{expected_resolved_model}"' not in codex_config_text:
+        failures.append(f"codex config must resolve {expected_resolved_model}")
+    if f'requested_reasoning_effort = "{expected_requested_reasoning}"' not in codex_config_text:
+        failures.append(f"codex config must request reasoning {expected_requested_reasoning}")
+    if f'resolved_reasoning_effort = "{expected_resolved_reasoning}"' not in codex_config_text:
+        failures.append(f"codex config must resolve reasoning {expected_resolved_reasoning}")
 
     agents = roster_payload.get("agents", [])
     if not isinstance(agents, list):
@@ -156,12 +172,6 @@ def main() -> int:
     requested_model_profile = str(roster_payload.get("requested_model_profile") or "")
     resolved_model_profile = str(roster_payload.get("resolved_model_profile") or "")
     max_threads = int(roster_payload.get("max_threads", 0) or 0)
-    if requested_model_profile != EXPECTED_REQUESTED_MODEL:
-        failures.append(f"roster requested_model_profile must be {EXPECTED_REQUESTED_MODEL}")
-    if resolved_model_profile != EXPECTED_RESOLVED_MODEL:
-        failures.append(f"roster resolved_model_profile must be {EXPECTED_RESOLVED_MODEL}")
-    if max_threads != EXPECTED_MAX_THREADS:
-        failures.append(f"roster max_threads must be {EXPECTED_MAX_THREADS}")
 
     command_ids = {
         str(row.get("command_id"))
@@ -235,14 +245,18 @@ def main() -> int:
             failures.append(f"{display_name or label} wellbeing_state must be stable")
         if str(row.get("mesh_state") or "") != "active_project_custom_agent":
             failures.append(f"{display_name or label} mesh_state must be active_project_custom_agent")
-        if str(row.get("requested_model_profile") or "") != EXPECTED_REQUESTED_MODEL:
-            failures.append(f"{display_name or label} requested_model_profile must be {EXPECTED_REQUESTED_MODEL}")
-        if str(row.get("resolved_model_profile") or "") != EXPECTED_RESOLVED_MODEL:
-            failures.append(f"{display_name or label} resolved_model_profile must be {EXPECTED_RESOLVED_MODEL}")
-        if str(row.get("requested_reasoning_effort") or "") != EXPECTED_REASONING:
-            failures.append(f"{display_name or label} requested_reasoning_effort must be {EXPECTED_REASONING}")
-        if str(row.get("resolved_reasoning_effort") or "") != EXPECTED_REASONING:
-            failures.append(f"{display_name or label} resolved_reasoning_effort must be {EXPECTED_REASONING}")
+        if str(row.get("requested_model_profile") or "") != expected_requested_model:
+            failures.append(f"{display_name or label} requested_model_profile must be {expected_requested_model}")
+        if str(row.get("resolved_model_profile") or "") != expected_resolved_model:
+            failures.append(f"{display_name or label} resolved_model_profile must be {expected_resolved_model}")
+        if str(row.get("requested_reasoning_effort") or "") != expected_requested_reasoning:
+            failures.append(
+                f"{display_name or label} requested_reasoning_effort must be {expected_requested_reasoning}"
+            )
+        if str(row.get("resolved_reasoning_effort") or "") != expected_resolved_reasoning:
+            failures.append(
+                f"{display_name or label} resolved_reasoning_effort must be {expected_resolved_reasoning}"
+            )
         if not str(row.get("chat_window_binding") or "").strip():
             failures.append(f"{display_name or label} chat_window_binding must be non-empty")
 
@@ -267,7 +281,11 @@ def main() -> int:
                 codex_text = codex_path.read_text(encoding="utf-8")
                 if f'name: "{display_name}"' not in codex_text:
                     failures.append(f"{display_name or label} codex agent file missing name header")
-                if not _codex_agent_has_allowed_resolved_model(display_name, codex_text):
+                if not _codex_agent_has_allowed_resolved_model(
+                    display_name,
+                    codex_text,
+                    expected_resolved_model,
+                ):
                     failures.append(f"{display_name or label} codex agent file missing resolved model")
 
         for path_field in ("certificate_path", "memory_ledger", "reflection_path", "role_contract_path"):
@@ -333,6 +351,18 @@ def main() -> int:
     if not isinstance(subagents, list) or len(subagents) != EXPECTED_AGENT_COUNT:
         failures.append(f"subagent registry must contain exactly {EXPECTED_AGENT_COUNT} entries")
         subagents = []
+    if str(subagent_registry.get("requested_model_profile") or "") != expected_requested_model:
+        failures.append(f"subagent registry requested_model_profile must be {expected_requested_model}")
+    if str(subagent_registry.get("resolved_model_profile") or "") != expected_resolved_model:
+        failures.append(f"subagent registry resolved_model_profile must be {expected_resolved_model}")
+    if str(subagent_registry.get("requested_reasoning_effort") or "") != expected_requested_reasoning:
+        failures.append(
+            f"subagent registry requested_reasoning_effort must be {expected_requested_reasoning}"
+        )
+    if str(subagent_registry.get("resolved_reasoning_effort") or "") != expected_resolved_reasoning:
+        failures.append(
+            f"subagent registry resolved_reasoning_effort must be {expected_resolved_reasoning}"
+        )
     for row in subagents:
         if not isinstance(row, dict):
             failures.append("subagent registry entries must be objects")
@@ -342,12 +372,18 @@ def main() -> int:
             failures.append(f"unexpected subagent slot: {row.get('slot_number')}")
         if str(row.get("proof_state") or "") != "PASS":
             failures.append(f"subagent {row.get('display_name')} proof_state must be PASS")
-        if str(row.get("requested_model_profile") or "") != EXPECTED_REQUESTED_MODEL:
-            failures.append(f"subagent {row.get('display_name')} requested_model_profile must be {EXPECTED_REQUESTED_MODEL}")
-        if str(row.get("resolved_model_profile") or "") != EXPECTED_RESOLVED_MODEL:
-            failures.append(f"subagent {row.get('display_name')} resolved_model_profile must be {EXPECTED_RESOLVED_MODEL}")
-        if str(row.get("resolved_reasoning_effort") or "") != EXPECTED_REASONING:
-            failures.append(f"subagent {row.get('display_name')} resolved_reasoning_effort must be {EXPECTED_REASONING}")
+        if str(row.get("requested_model_profile") or "") != expected_requested_model:
+            failures.append(
+                f"subagent {row.get('display_name')} requested_model_profile must be {expected_requested_model}"
+            )
+        if str(row.get("resolved_model_profile") or "") != expected_resolved_model:
+            failures.append(
+                f"subagent {row.get('display_name')} resolved_model_profile must be {expected_resolved_model}"
+            )
+        if str(row.get("resolved_reasoning_effort") or "") != expected_resolved_reasoning:
+            failures.append(
+                f"subagent {row.get('display_name')} resolved_reasoning_effort must be {expected_resolved_reasoning}"
+            )
 
     if str(proof_payload.get("overall_status") or "") != "PASS":
         failures.append("mesh proof artifact must be PASS")
@@ -361,9 +397,9 @@ def main() -> int:
         "provisional_agent_count": 0,
         "duo_chat_count": len(pair_channels),
         "group_chat_rows": len(group_rows),
-        "requested_model_profile": requested_model_profile or EXPECTED_REQUESTED_MODEL,
-        "resolved_model_profile": resolved_model_profile or EXPECTED_RESOLVED_MODEL,
-        "max_threads": max_threads or EXPECTED_MAX_THREADS,
+        "requested_model_profile": requested_model_profile or expected_requested_model,
+        "resolved_model_profile": resolved_model_profile or expected_resolved_model,
+        "max_threads": max_threads or expected_max_threads,
         "failures": failures,
         "warnings": warnings,
         "effective_success": not failures and (not warnings or not args.fail_on_warn),
