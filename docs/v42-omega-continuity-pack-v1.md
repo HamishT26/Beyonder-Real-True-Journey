@@ -1,7 +1,7 @@
 # V42 Omega Continuity Pack
 
-- Generated UTC: `2026-04-14T16:58:01+00:00`
-- Current head: `87f2e42dda6c8c5fe67b96cc04a71dc151d0a736`
+- Generated UTC: `2026-04-14T17:06:08+00:00`
+- Current head: `82cb037119eb202248248aebc75f2976b7dd18e9`
 - Intended receiver: `Aletheon`
 - Receiver rule outcome: `aletheon_facing`
 
@@ -21,7 +21,7 @@
 - `gmut_experiment_state`: `bundle_verified`
 - `automation_registry_state`: `scheduler_fallback_verified`
 - `pillar_bundle_overall_status`: `WARN`
-- `git_publication_state`: `allowlist_published`
+- `git_publication_state`: `committed_pushed_pr_updated`
 - `gcloud_cli_state`: `windows_gcloud_ready_wsl_selector_unresolved`
 - `google_drive_state`: `operator_hold`
 - `materialization_level_actual`: `readiness_only`
@@ -30,5 +30,4 @@
 
 - `wsl_probe=WARN`
 - `filesystem=WARN`
-- `git_publication=MISSING`
 - `pillar_delta=WARN`
