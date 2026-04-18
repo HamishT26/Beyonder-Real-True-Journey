@@ -1,7 +1,7 @@
 # V44 Beta Continuity Pack
 
 - Generated UTC: `2026-04-18T15:08:47+00:00`
-- Current head: `77dbfd98e5e5fb3a3d0f79cd15650b3da7db41a2`
+- Current head: `7b561c62e6271acedc96322bedd382564d8d7ab9`
 - Intended receiver: `Aletheon`
 - Receiver rule outcome: `aletheon_facing`
 
@@ -34,7 +34,8 @@
 - `gmut_experiment_state`: `bundle_verified`
 - `automation_registry_state`: `scheduler_fallback_verified_with_lane_residuals`
 - `pillar_bundle_overall_status`: `WARN`
-- `git_publication_state`: `allowlist_published`
+- `git_publication_state`: `committed_pushed_pr_updated`
+- `publication_commit_sha`: `7b561c62e6271acedc96322bedd382564d8d7ab9`
 
 ## Bounded Residuals
 
