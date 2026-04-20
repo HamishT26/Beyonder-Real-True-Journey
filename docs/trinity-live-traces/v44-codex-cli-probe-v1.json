@@ -1,0 +1,65 @@
+{
+  "generated_utc": "2026-04-20T04:38:57+00:00",
+  "phase": "v44_omega",
+  "overall_status": "PASS",
+  "codex_on_path": true,
+  "codex_path": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.CMD",
+  "expected_model": "gpt-5.4",
+  "expected_reasoning_effort": "xhigh",
+  "codex_cli_state": "callable_in_powershell",
+  "codex_cli_identity_state": "explicit_login_status_verified",
+  "target_model_resolution_state": "bounded_exec_verified_on_gpt-5.4",
+  "bounded_continuity_proof_state": "exec_resume_memory_verified",
+  "slot_40_induction_state": "deferred_blocked",
+  "probes": {
+    "version": {
+      "command": "codex --version",
+      "returncode": 0,
+      "stdout_excerpt": "codex-cli 0.114.0\n",
+      "stderr_excerpt": ""
+    },
+    "help": {
+      "command": "codex --help",
+      "returncode": 0,
+      "stdout_excerpt": "ction\n\n  -p, --profile <CONFIG_PROFILE>\n          Configuration profile from config.toml to specify default options\n\n  -s, --sandbox <SANDBOX_MODE>\n          Select the sandbox policy to use when executing model-generated shell commands\n          \n          [possible values: read-only, workspace-write, danger-full-access]\n\n  -a, --ask-for-approval <APPROVAL_POLICY>\n          Configure when the model requires human approval before executing a command\n\n          Possible values:\n          - untrusted:  Only run \"trusted\" commands (e.g. ls, cat, sed) without asking for user\n            approval. Will escalate to the user if the model proposes a command that is not in the\n            \"trusted\" set\n          - on-failure: DEPRECATED: Run all commands without asking for user approval. Only asks for\n            approval if a command fails to execute, in which case it will escalate to the user to\n            ask for un-sandboxed execution. Prefer `on-request` for interactive runs or `never` for\n            non-interactive runs\n          - on-request: The model decides when to ask the user for approval\n          - never:      Never ask for user approval Execution failures are immediately returned to\n            the model\n\n      --full-auto\n          Convenience alias for low-friction sandboxed automatic execution (-a on-request, --sandbox\n          workspace-write)\n\n      --dangerously-bypass-approvals-and-sandbox\n          Skip all confirmation prompts and execute commands without sandboxing. EXTREMELY\n          DANGEROUS. Intended solely for running in environments that are externally sandboxed\n\n  -C, --cd <DIR>\n          Tell the agent to use the specified directory as its working root\n\n      --search\n          Enable live web search. When enabled, the native Responses `web_search` tool is available\n          to the model (no per\u00e2\u20ac\u2018call approval)\n\n      --add-dir <DIR>\n          Additional directories that should be writable alongside the primary workspace\n\n      --no-alt-screen\n          Disable alternate screen mode\n          \n          Runs the TUI in inline mode, preserving terminal scrollback history. This is useful in\n          terminal multiplexers like Zellij that follow the xterm spec strictly and disable\n          scrollback in alternate screen buffers.\n\n  -h, --help\n          Print help (see a summary with '-h')\n\n  -V, --version\n          Print version\n",
+      "stderr_excerpt": ""
+    },
+    "login_help": {
+      "command": "codex login --help",
+      "returncode": 0,
+      "stdout_excerpt": "Manage login\n\nUsage: codex login [OPTIONS] [COMMAND]\n\nCommands:\n  status  Show login status\n  help    Print this message or the help of the given subcommand(s)\n\nOptions:\n  -c, --config <key=value>\n          Override a configuration value that would otherwise be loaded from `~/.codex/config.toml`.\n          Use a dotted path (`foo.bar.baz`) to override nested values. The `value` portion is parsed\n          as TOML. If it fails to parse as TOML, the raw string is used as a literal.\n          \n          Examples: - `-c model=\"o3\"` - `-c 'sandbox_permissions=[\"disk-full-read-access\"]'` - `-c\n          shell_environment_policy.inherit=all`\n\n      --with-api-key\n          Read the API key from stdin (e.g. `printenv OPENAI_API_KEY | codex login --with-api-key`)\n\n      --enable <FEATURE>\n          Enable a feature (repeatable). Equivalent to `-c features.<name>=true`\n\n      --device-auth\n          \n\n      --disable <FEATURE>\n          Disable a feature (repeatable). Equivalent to `-c features.<name>=false`\n\n  -h, --help\n          Print help (see a summary with '-h')\n",
+      "stderr_excerpt": ""
+    }
+  },
+  "login_status": {
+    "command": "codex login status",
+    "returncode": 0,
+    "stdout_excerpt": "",
+    "stderr_excerpt": "Logged in using ChatGPT\n"
+  },
+  "bounded_cycle": {
+    "session_prompt": "Reply with exact text CLI_V44_OK. Also remember token OMEGA44TOKEN-7971656B for the next resumed message.",
+    "resume_prompt": "What token did I ask you to remember? Reply with the token only.",
+    "thread_id": "019da92e-de35-74e1-84f2-e09025fbe24c",
+    "first_cycle": {
+      "returncode": 0,
+      "stdout_excerpt": "{\"type\":\"thread.started\",\"thread_id\":\"019da92e-de35-74e1-84f2-e09025fbe24c\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"CLI_V44_OK\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":53726,\"cached_input_tokens\":2432,\"output_tokens\":68}}\n",
+      "stderr_excerpt": "sion-qa\\SKILL.md: missing YAML frontmatter delimited by ---\n2026-04-20T04:38:34.208533Z ERROR codex_core::codex: failed to load skill C:\\Users\\hamis\\.codex\\skills\\trinity-expansion-release\\SKILL.md: missing YAML frontmatter delimited by ---\n2026-04-20T04:38:34.208555Z ERROR codex_core::codex: failed to load skill C:\\Users\\hamis\\.codex\\skills\\trinity-live-gating-operations\\SKILL.md: missing YAML frontmatter delimited by ---\n2026-04-20T04:38:34.388354Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:34.390858Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite-shm: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:34.391023Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite-wal: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:34.589840Z  WARN codex_state::runtime: failed to open state db at C:\\Users\\hamis\\.codex\\state_5.sqlite: migration 19 was previously applied but is missing in the resolved migrations\n2026-04-20T04:38:34.590797Z  WARN codex_core::state_db: failed to initialize state runtime at C:\\Users\\hamis\\.codex: migration 19 was previously applied but is missing in the resolved migrations\n2026-04-20T04:38:34.777035Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell\n2026-04-20T04:38:36.024557Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Auth(TokenRefreshFailed(\"Server returned error response: invalid_grant: session not found\"))\n2026-04-20T04:38:38.243431Z ERROR rmcp::transport::async_rw: Error reading from stream: serde error expected value at line 1 column 1\n",
+      "agent_message": "CLI_V44_OK",
+      "output_file": "D:\\GHC-Archives\\worktrees\\v44-omega\\.local-runtime\\v44\\codex-cli-session-1.txt"
+    },
+    "resume_cycle": {
+      "returncode": 0,
+      "stdout_excerpt": "{\"type\":\"thread.started\",\"thread_id\":\"019da92e-de35-74e1-84f2-e09025fbe24c\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"OMEGA44TOKEN-7971656B\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":107481,\"cached_input_tokens\":56064,\"output_tokens\":123}}\n",
+      "stderr_excerpt": "2026-04-20T04:38:46.616717Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite-wal: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:46.619094Z  WARN codex_state::runtime: failed to open state db at C:\\Users\\hamis\\.codex\\state_5.sqlite: migration 19 was previously applied but is missing in the resolved migrations\n2026-04-20T04:38:46.619122Z  WARN codex_core::state_db: failed to initialize state runtime at C:\\Users\\hamis\\.codex: migration 19 was previously applied but is missing in the resolved migrations\n2026-04-20T04:38:46.628557Z  WARN codex_core::shell_snapshot: Failed to create shell snapshot for powershell: Shell snapshot not supported yet for PowerShell\n2026-04-20T04:38:46.713408Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:46.713554Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite-shm: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:46.713667Z  WARN codex_state::runtime: failed to remove legacy logs db file C:\\Users\\hamis\\.codex\\logs_2.sqlite-wal: The process cannot access the file because it is being used by another process. (os error 32)\n2026-04-20T04:38:46.750806Z  WARN codex_state::runtime: failed to open state db at C:\\Users\\hamis\\.codex\\state_5.sqlite: migration 19 was previously applied but is missing in the resolved migrations\n2026-04-20T04:38:47.625852Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Auth(TokenRefreshFailed(\"Server returned error response: invalid_grant: session not found\"))\n2026-04-20T04:38:48.439102Z ERROR rmcp::transport::async_rw: Error reading from stream: serde error expected value at line 1 column 1\n",
+      "agent_message": "OMEGA44TOKEN-7971656B",
+      "output_file": "D:\\GHC-Archives\\worktrees\\v44-omega\\.local-runtime\\v44\\codex-cli-session-2.txt"
+    },
+    "remembered_token": "OMEGA44TOKEN-7971656B",
+    "resumed_token": "OMEGA44TOKEN-7971656B"
+  },
+  "warnings": [
+    "Slot 40 remains hard-gated because bounded continuity is only one part of the full induction rule."
+  ],
+  "blockers": []
+}
