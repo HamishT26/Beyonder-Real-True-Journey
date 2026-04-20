@@ -1,7 +1,7 @@
 # V45 Beta Continuity Pack
 
-- Generated UTC: `2026-04-20T04:44:00+00:00`
-- Current head: `75af4c29d352548b0eb05be0c27dee3952512436`
+- Generated UTC: `2026-04-20T04:46:53+00:00`
+- Current head: `424e6bfc16a549ee00ef13b13dd507716de87f88`
 - Intended receiver: `Aletheon`
 - Receiver rule outcome: `aletheon_facing`
 
@@ -32,7 +32,7 @@
 - `vesper_telemetry_ingest_state`: `preflight_blocked_carry_forward_only`
 - `vesper_cognitive_engine_state`: `blocked_preflight_incomplete`
 - `gmut_experiment_state`: `bundle_verified`
-- `git_publication_state`: `allowlist_published`
+- `git_publication_state`: `committed_pushed_pr_updated`
 
 ## Bounded Residuals
 
@@ -50,4 +50,3 @@
 - `suite::materialize_l3`
 - `suite::materialize_l4`
 - `suite::materialize_l5`
-- `git_publication_state=allowlist_published`
