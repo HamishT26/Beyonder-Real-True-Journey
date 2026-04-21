@@ -1,7 +1,7 @@
 # V46 Beta Continuity Pack
 
-- Generated UTC: `2026-04-21T00:53:00+00:00`
-- Current head: `4b8387c32f10adf541057e604ff803b93748a720`
+- Generated UTC: `2026-04-21T00:55:26+00:00`
+- Current head: `3b9f812fef5cf2a252b7f743dcd7212f6578aa6a`
 - Intended receiver: `Aletheon`
 - Receiver rule outcome: `aletheon_facing`
 
@@ -14,4 +14,3 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_published`

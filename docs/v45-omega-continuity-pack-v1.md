@@ -1,7 +1,7 @@
 # V45 Omega Continuity Pack
 
-- Generated UTC: `2026-04-21T00:53:00+00:00`
-- Current head: `4b8387c32f10adf541057e604ff803b93748a720`
+- Generated UTC: `2026-04-21T00:55:26+00:00`
+- Current head: `3b9f812fef5cf2a252b7f743dcd7212f6578aa6a`
 - Intended receiver: `Aletheon`
 - Receiver rule outcome: `aletheon_facing`
 
@@ -28,7 +28,7 @@
 - `local_codex_hygiene_state`: `skill_bom_frontmatter_repaired`
 - `drive_download_policy_state`: `explicit_v45_d_targets_ready`
 - `plugin_surface_split_state`: `explicit_app_cli_split_recorded`
-- `git_publication_state`: `allowlist_published`
+- `git_publication_state`: `committed_pushed_pr_updated`
 
 ## Bounded Residuals
 
@@ -36,4 +36,3 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_published`
