@@ -1,7 +1,7 @@
 # V46 Omega Continuity Pack
 
-- Generated UTC: `2026-04-21T03:23:14+00:00`
-- Current head: `0bcdd7ed3a9bd1cece90fe042be619544ff5f519`
+- Generated UTC: `2026-04-21T03:24:28+00:00`
+- Current head: `3b459c3bd8890c76c6bfeb29084fa543f0aa30f5`
 - Intended receiver: `Aletheon + Slot 40 bounded CLI helper`
 - Receiver rule outcome: `aletheon_lead_slot40_bounded_helper`
 
@@ -28,7 +28,7 @@
 - `cli_mcp_registry_state`: `cli_mcp_list_verified`
 - `v46_cleanup_state`: `classified_only_no_deletion_needed`
 - `suite_ladder_state`: `quick_standard_deep_completed`
-- `git_publication_state`: `allowlist_ready_unpublished`
+- `git_publication_state`: `committed_pushed_pr_updated`
 
 ## Slot 40
 
@@ -42,4 +42,3 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_ready_unpublished`
