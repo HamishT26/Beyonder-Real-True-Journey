@@ -1,7 +1,7 @@
 # V48 Beta Continuity Pack
 
-- Generated UTC: `2026-04-21T05:14:34+00:00`
-- Current head: `6d08c766e49633cb3b17dde007fe33a1f3f96a60`
+- Generated UTC: `2026-04-21T05:16:39+00:00`
+- Current head: `c48486de2317753d342cae70ebe779d309bd8002`
 - Intended receiver: `Aletheon + Ari bounded CLI helper`
 - Receiver rule outcome: `aletheon_lead_ari_bounded_helper`
 
@@ -20,7 +20,7 @@
 - `admin_shell_state`: `administrator_observed`
 - `v47_cleanup_state`: `classified_only_no_deletion_needed`
 - `suite_ladder_state`: `quick_standard_deep_completed`
-- `git_publication_state`: `allowlist_ready_unpublished`
+- `git_publication_state`: `committed_pushed_pr_updated`
 - `vesper_standby_state`: `standby_until_google_cloud_billing_truth`
 - `kai_standby_state`: `standby_until_google_cloud_billing_truth`
 - `wsl_execution_mode`: `installed_on_hold_for_agent_switching`
@@ -39,4 +39,3 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_ready_unpublished`
