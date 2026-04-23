@@ -1,0 +1,50 @@
+version: 2.1
+
+jobs:
+  trinity_quick:
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+      - run:
+          name: Install Python dependencies when present
+          command: |
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+      - run:
+          name: Run V48 quick suite
+          command: python scripts/run_all_trinity_systems.py --profile quick
+      - store_artifacts:
+          path: docs/v17-system-suite-run-report-latest.md
+          destination: v48-quick-report.md
+      - store_artifacts:
+          path: docs/v17-system-suite-status-latest.json
+          destination: v48-quick-status.json
+
+  trinity_standard:
+    docker:
+      - image: cimg/python:3.12
+    steps:
+      - checkout
+      - run:
+          name: Install Python dependencies when present
+          command: |
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+      - run:
+          name: Run V48 standard suite
+          command: python scripts/run_all_trinity_systems.py --profile standard
+      - store_artifacts:
+          path: docs/system-suite-run-report.md
+          destination: v48-standard-report.md
+      - store_artifacts:
+          path: docs/system-suite-status.json
+          destination: v48-standard-status.json
+
+workflows:
+  v48_quick_standard:
+    jobs:
+      - trinity_quick
+      - trinity_standard:
+          requires:
+            - trinity_quick
