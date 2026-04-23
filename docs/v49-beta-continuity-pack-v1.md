@@ -1,7 +1,7 @@
 # V49 Beta Continuity Pack
 
-- Generated UTC: `2026-04-23T08:44:26+00:00`
-- Current head: `e62358965c02fb5616f9d1ffe0d451e5848ca52d`
+- Generated UTC: `2026-04-23T08:46:03+00:00`
+- Current head: `d0da9a84d9bfc00d9705d8a659a4aa486c473145`
 - Intended receiver: `Aletheon + Ari bounded helper; slot 41 future operator induction`
 - Receiver rule outcome: `v49_aletheon_facing_ari_bounded_helper_kimiclaw_prepared_not_inducted`
 
@@ -29,7 +29,7 @@
 - `plugin_surface_split_state`: `app_plugins_and_cli_mcp_are_distinct_surfaces`
 - `codex_cli_extension_state`: `no_automatic_app_plugin_inheritance_proven`
 - `suite_ladder_state`: `quick_standard_deep_completed`
-- `git_publication_state`: `allowlist_ready_unpublished`
+- `git_publication_state`: `committed_pushed_pr45_branch_updated`
 
 ## Bounded Residuals
 
@@ -37,5 +37,4 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_ready_unpublished`
 - `deep_repeats_standard_fail_family_stop_before_materialize`
