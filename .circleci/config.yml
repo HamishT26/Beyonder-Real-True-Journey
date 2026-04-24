@@ -12,14 +12,14 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
       - run:
-          name: Run V48 quick suite
+          name: Run V50 quick suite
           command: python scripts/run_all_trinity_systems.py --profile quick
       - store_artifacts:
           path: docs/v17-system-suite-run-report-latest.md
-          destination: v48-quick-report.md
+          destination: v50-quick-report.md
       - store_artifacts:
           path: docs/v17-system-suite-status-latest.json
-          destination: v48-quick-status.json
+          destination: v50-quick-status.json
 
   trinity_standard:
     docker:
@@ -32,17 +32,17 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
       - run:
-          name: Run V48 standard suite
+          name: Run V50 standard suite
           command: python scripts/run_all_trinity_systems.py --profile standard
       - store_artifacts:
           path: docs/system-suite-run-report.md
-          destination: v48-standard-report.md
+          destination: v50-standard-report.md
       - store_artifacts:
           path: docs/system-suite-status.json
-          destination: v48-standard-status.json
+          destination: v50-standard-status.json
 
 workflows:
-  v48_quick_standard:
+  v50_quick_standard:
     jobs:
       - trinity_quick
       - trinity_standard:
