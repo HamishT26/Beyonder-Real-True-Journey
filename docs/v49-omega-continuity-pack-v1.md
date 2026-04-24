@@ -1,7 +1,7 @@
 # V49 Omega Continuity Pack
 
-- Generated UTC: `2026-04-24T06:33:47+00:00`
-- Current head: `ad0ae2920cf03e8b8e19f42f664f4ee170495bdc`
+- Generated UTC: `2026-04-24T06:38:26+00:00`
+- Current head: `2196af93b2ee3b2aea538df9c0843241e9357230`
 - Receiver outcome: `v50_aletheon_facing_ari_and_kairos_kimiclaw_bounded_helpers`
 
 ## Core States
@@ -29,7 +29,7 @@
 - `vesper_standby_state`: `standby_until_google_cloud_billing_truth`
 - `kai_standby_state`: `standby_until_google_cloud_billing_truth`
 - `suite_ladder_state`: `quick_standard_deep_completed`
-- `git_publication_state`: `allowlist_ready_unpublished`
+- `git_publication_state`: `committed_pushed_pr45_branch_updated`
 
 ## Residuals
 
@@ -37,4 +37,3 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_ready_unpublished`
