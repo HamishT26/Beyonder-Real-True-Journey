@@ -1,7 +1,7 @@
 # V51 Beta Continuity Pack
 
-- Generated UTC: `2026-04-24T08:20:31+00:00`
-- Current head: `262904dbc21c8ce7a0ca222cce87147b5c07f3c3`
+- Generated UTC: `2026-04-24T08:23:29+00:00`
+- Current head: `46c53e7c4311df172a02b84e1c9b059106365c48`
 
 ## Core States
 
@@ -23,7 +23,7 @@
 - `vesper_standby_state`: `standby_until_google_cloud_billing_truth`
 - `kai_standby_state`: `standby_until_google_cloud_billing_truth`
 - `suite_ladder_state`: `quick_standard_deep_completed`
-- `git_publication_state`: `allowlist_ready_unpublished`
+- `git_publication_state`: `committed_pushed_pr45_branch_updated`
 
 ## Residuals
 
@@ -32,4 +32,3 @@
 - `suite::quick`
 - `suite::standard`
 - `suite::deep`
-- `git_publication_state=allowlist_ready_unpublished`
