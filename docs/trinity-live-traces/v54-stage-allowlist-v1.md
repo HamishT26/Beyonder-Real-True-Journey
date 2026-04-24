@@ -1,8 +1,8 @@
 # V54 Stage Allowlist
 
-- Generated UTC: `2026-04-24T18:09:18+00:00`
+- Generated UTC: `2026-04-24T18:11:15+00:00`
 - Curated include count: `51`
-- Dirty path count at write: `2897`
+- Dirty path count at write: `2861`
 
 ## Paths
 
