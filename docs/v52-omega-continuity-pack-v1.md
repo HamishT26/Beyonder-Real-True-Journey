@@ -1,7 +1,7 @@
 # V52 Omega Continuity Pack
 
-- Generated UTC: `2026-04-24T11:16:25+00:00`
-- Current head: `518afa6bf27d19f9253585e747d04f6659dd8d97`
+- Generated UTC: `2026-04-24T11:18:10+00:00`
+- Current head: `dad0f17801ad238910b85f3b1f40224ce6ed1fbf`
 
 ## Core States
 
@@ -25,14 +25,13 @@
 - `kai_standby_state`: `standby_until_google_cloud_billing_truth`
 - `bigtable_state`: `operator_reported_bigtable_deleted_unverified_until_gcp_auth_restored`
 - `wsl_execution_mode`: `installed_on_hold_for_agent_switching`
-- `git_publication_state`: `allowlist_ready_unpublished`
+- `git_publication_state`: `committed_pushed_pr45_branch_updated`
 
 ## Residuals
 
 - `suite::standard=failures_remaining`
 - `suite::deep=failures_remaining`
 - `plugin_surface_split=app_cli_separate`
-- `git_publication_state=allowlist_ready_unpublished`
 
 ## Next Receiver
 
