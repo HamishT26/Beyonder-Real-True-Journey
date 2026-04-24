@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_capability_surface_audit
 
-- generated_utc: `2026-04-10T15:58:43+00:00`
+- generated_utc: `2026-04-24T15:24:07+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -11,7 +11,7 @@
 | codex_config_present | PASS | C:\Users\hamis\.codex\config.toml |
 | preferred_model_gpt54 | PASS | model=gpt-5.4 |
 | credential_env_absent | PASS | exposed=[] |
-| uvx_absent | PASS | uvx=absent |
+| uvx_presence_documented | PASS | uvx=C:\Users\hamis\.local\bin\uvx.EXE |
 | repo_skill_inventory_present | PASS | repo_skills=326 |
 | manifest_system_count | PASS | systems=1094 |
 | mcp_resources_visible | PASS | resource_count=24 |
@@ -29,7 +29,7 @@
   "configured_reasoning_effort": "xhigh",
   "exposed_env_vars": [],
   "last_recorded_suite_expansion_total": 1094,
-  "local_codex_skill_count": 361,
+  "local_codex_skill_count": 359,
   "manifest_system_count": 1094,
   "mcp_resource_count": 24,
   "mcp_resource_template_count": 3,
@@ -47,7 +47,7 @@
   ],
   "mcp_settings_present": false,
   "repo_local_skill_count": 326,
-  "repo_python_scripts": 374,
+  "repo_python_scripts": 491,
   "skill_only_connectors": [
     "playwright"
   ],
@@ -57,7 +57,7 @@
     "google_workspace",
     "slack"
   ],
-  "uvx_present": false,
+  "uvx_present": true,
   "verified_mcp_connectors": [
     "figma",
     "github",

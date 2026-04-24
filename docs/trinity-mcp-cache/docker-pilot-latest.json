@@ -1,23 +1,25 @@
 {
-  "generated_utc": "2026-04-10T16:01:32+00:00",
+  "generated_utc": "2026-04-24T15:46:34+00:00",
   "integration_id": "docker_pilot",
-  "auth_state": "docker_local",
-  "status": "verified_live_write",
+  "auth_state": "docker_cli_unavailable",
+  "status": "blocked",
   "desired_state": "verified_live_write",
-  "actual_state": "verified_live_write",
-  "live_read_enabled": true,
-  "live_write_enabled": true,
+  "actual_state": "blocked",
+  "live_read_enabled": false,
+  "live_write_enabled": false,
   "promotion_evidence": [
     "docs/trinity-live-traces/postgres-local-runtime-proof-v1.json"
   ],
-  "blockers": [],
+  "blockers": [
+    "docker CLI unavailable in V53 PowerShell lane"
+  ],
   "records": [
     {
       "source_id": "docker_pilot",
       "record_id": "docker_pilot-seed",
       "signal_type": "pack_seed",
       "title": "docker pilot",
-      "published_at": "2026-04-10",
+      "published_at": "2026-04-24",
       "source_url": "repo://docs/trinity-live-traces/docker-pilot-proof-v1.json",
       "summary": "Recorded a disposable Docker/Postgres pilot proof or preview.",
       "metrics": {
@@ -36,5 +38,6 @@
   "repo_targets_touched": [
     "docs/trinity-live-traces/docker-pilot-proof-v1.json"
   ],
-  "next_action": "Keep Docker pilot actions disposable and audit-logged."
+  "next_action": "Keep Docker pilot actions disposable and audit-logged.",
+  "v53_refresh_note": "Refreshed as an offline cache artifact for standard/deep suite reuse; live Docker/Postgres activation remains separately gated."
 }

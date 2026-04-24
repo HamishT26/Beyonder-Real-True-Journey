@@ -136,6 +136,9 @@ def _run(command: list[str], *, timeout: int = 60) -> tuple[int, str, str]:
         return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
     except subprocess.TimeoutExpired as exc:
         return 124, (exc.stdout or "").strip(), ((exc.stderr or "").strip() + f" command timed out after {timeout} seconds").strip()
+    except FileNotFoundError as exc:
+        missing = command[0] if command else "unknown"
+        return 127, "", f"{missing} not on PATH ({exc})"
 
 
 def _tool_probe(tool: str, version_arg: str = "--version") -> dict[str, Any]:

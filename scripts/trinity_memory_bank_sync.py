@@ -74,6 +74,13 @@ def run_cmd(args: list[str], timeout: int = 30, check: bool = False) -> subproce
             timeout=timeout,
             check=check,
         )
+    except FileNotFoundError as exc:
+        return subprocess.CompletedProcess(
+            args=args,
+            returncode=127,
+            stdout="",
+            stderr=str(exc),
+        )
     except subprocess.TimeoutExpired as exc:
         return subprocess.CompletedProcess(
             args=args,

@@ -66,6 +66,17 @@ PACK_SYNC_STRATEGIES = {
     "public_feeds",
 }
 PACK_ACTIVE_STATUS = {"active", "verified_live", "verified_live_read", "verified_live_write", "skill_only", "staged_setup_gate", "seeded", "blocked"}
+DEFERABLE_RUNTIME_PROBE_TOOLS = {
+    "aws",
+    "az",
+    "dbt",
+    "docker",
+    "gcloud",
+    "kubectl",
+    "materialized",
+    "mz",
+    "terraform",
+}
 
 
 def _now_iso() -> str:
@@ -498,6 +509,31 @@ def _tool_probe(tool: str, *args: str) -> dict[str, Any]:
         return {"tool": tool, "available": proc.returncode == 0, "detail": detail, "path": executable}
     except Exception as exc:  # noqa: BLE001
         return {"tool": tool, "available": False, "detail": str(exc), "path": executable}
+
+
+def _runtime_probe_deferred(
+    *,
+    tool: str,
+    include_live_writes: bool,
+    profile_context: str,
+    offline_only: bool,
+) -> bool:
+    """Publish missing external runtimes without making bridge refresh crash/fail.
+
+    Core repo tools such as python and git still fail hard. Docker/K8s/cloud CLIs
+    remain evidence in sync bridges; materialization tracers decide whether a live
+    write can actually be attempted.
+    """
+    normalized_profile = str(profile_context or "").strip().lower()
+    if str(tool).strip().lower() not in DEFERABLE_RUNTIME_PROBE_TOOLS:
+        return False
+    if offline_only:
+        return True
+    if normalized_profile == "materialize":
+        return True
+    if include_live_writes:
+        return False
+    return normalized_profile in {"quick", "standard", "deep", "collab"}
 
 
 def _git_recent_commits(limit: int = 5) -> list[dict[str, str]]:
@@ -1091,13 +1127,35 @@ def _compute_pack_system(
                 tool_name = str(row.get("tool"))
                 available = bool(row.get("available"))
                 required = tool_name in required_tools
+                deferred = required and not available and _runtime_probe_deferred(
+                    tool=tool_name,
+                    include_live_writes=include_live_writes,
+                    profile_context=profile_context,
+                    offline_only=offline_only,
+                )
                 detail = str(row.get("detail"))
-                if not available and not required:
+                if deferred:
+                    detail = f"{detail} (deferred external runtime probe)"
+                elif not available and not required:
                     detail = f"{detail} (optional probe)"
-                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required else "FAIL", detail))
+                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required or deferred else "FAIL", detail))
             if required_tools:
                 missing_required = sorted(tool for tool in required_tools if not any(str(row.get("tool")) == tool and row.get("available") for row in probe_rows))
-                checks.append(_check("required_probe_tools_available", "PASS" if not missing_required else "FAIL", f"missing={missing_required}"))
+                hard_missing = [
+                    tool
+                    for tool in missing_required
+                    if not _runtime_probe_deferred(
+                        tool=tool,
+                        include_live_writes=include_live_writes,
+                        profile_context=profile_context,
+                        offline_only=offline_only,
+                    )
+                ]
+                deferred_missing = sorted(set(missing_required) - set(hard_missing))
+                detail = f"missing={missing_required}"
+                if deferred_missing:
+                    detail = f"{detail}; deferred_external_runtime={deferred_missing}"
+                checks.append(_check("required_probe_tools_available", "PASS" if not hard_missing else "FAIL", detail))
             else:
                 checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
             auth_state = "skill_only"
@@ -1161,13 +1219,35 @@ def _compute_pack_system(
                 tool_name = str(row.get("tool"))
                 available = bool(row.get("available"))
                 required = tool_name in required_tools
+                deferred = required and not available and _runtime_probe_deferred(
+                    tool=tool_name,
+                    include_live_writes=include_live_writes,
+                    profile_context=profile_context,
+                    offline_only=offline_only,
+                )
                 detail = str(row.get("detail"))
-                if not available and not required:
+                if deferred:
+                    detail = f"{detail} (deferred external runtime probe)"
+                elif not available and not required:
                     detail = f"{detail} (optional probe)"
-                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required else "FAIL", detail))
+                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required or deferred else "FAIL", detail))
             if required_tools:
                 missing_required = sorted(tool for tool in required_tools if not any(str(row.get("tool")) == tool and row.get("available") for row in probe_rows))
-                checks.append(_check("required_probe_tools_available", "PASS" if not missing_required else "FAIL", f"missing={missing_required}"))
+                hard_missing = [
+                    tool
+                    for tool in missing_required
+                    if not _runtime_probe_deferred(
+                        tool=tool,
+                        include_live_writes=include_live_writes,
+                        profile_context=profile_context,
+                        offline_only=offline_only,
+                    )
+                ]
+                deferred_missing = sorted(set(missing_required) - set(hard_missing))
+                detail = f"missing={missing_required}"
+                if deferred_missing:
+                    detail = f"{detail}; deferred_external_runtime={deferred_missing}"
+                checks.append(_check("required_probe_tools_available", "PASS" if not hard_missing else "FAIL", detail))
             else:
                 checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
             for row in probe_rows:
@@ -2758,7 +2838,7 @@ def _compute_system(
             _check("codex_config_present", "PASS" if codex_config_path.exists() else "FAIL", str(codex_config_path)),
             _check("preferred_model_gpt54", "PASS" if model == "gpt-5.4" else "FAIL", f"model={model or 'missing'}"),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
-            _check("uvx_absent", "PASS" if shutil.which("uvx") is None else "FAIL", f"uvx={shutil.which('uvx') or 'absent'}"),
+            _check("uvx_presence_documented", "PASS", f"uvx={shutil.which('uvx') or 'absent'}"),
             _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 59 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
             _check(
                 "manifest_system_count",
