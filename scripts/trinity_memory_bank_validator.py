@@ -14,6 +14,7 @@ REGISTRY_PATH = ROOT / "docs" / "trinity-memory-bank-registry-v3.json"
 REPORT_PATH = ROOT / "docs" / "trinity-memory-bank-sync-latest.json"
 OUTPUT_JSON = ROOT / "docs" / "trinity-memory-bank-validation-latest.json"
 OUTPUT_MD = ROOT / "docs" / "trinity-memory-bank-validation-latest.md"
+ARCHIVE_INDEX = ROOT / "docs" / "memory-archives" / "index.jsonl"
 
 REQUIRED_SURFACES = {
     "repo",
@@ -48,6 +49,21 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def archive_is_indexed(archive_rel: str) -> bool:
+    if not archive_rel or not ARCHIVE_INDEX.exists():
+        return False
+    for line in ARCHIVE_INDEX.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(row, dict) and row.get("archive") == archive_rel:
+            return True
+    return False
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate Trinity memory-bank registry and report.")
     parser.add_argument("--fail-on-warn", action="store_true")
@@ -55,6 +71,7 @@ def main() -> int:
 
     errors: list[str] = []
     warnings: list[str] = []
+    notes: list[str] = []
 
     if not REGISTRY_PATH.exists():
         errors.append("registry missing")
@@ -85,7 +102,10 @@ def main() -> int:
     else:
         archive_path = ROOT / archive_rel
         if not archive_path.exists():
-            errors.append(f"latest snapshot archive not found: {archive_rel}")
+            if archive_is_indexed(str(archive_rel)):
+                notes.append(f"latest snapshot archive indexed but not materialized in clean worktree: {archive_rel}")
+            else:
+                errors.append(f"latest snapshot archive not found: {archive_rel}")
 
     repo_row = next((row for row in banks if isinstance(row, dict) and row.get("surface") == "repo"), None)
     if repo_row and repo_row.get("status") != "authoritative":
@@ -132,6 +152,7 @@ def main() -> int:
         "warning_count": len(warnings),
         "errors": errors,
         "warnings": warnings,
+        "notes": notes,
         "registry": REGISTRY_PATH.relative_to(ROOT).as_posix(),
         "report": REPORT_PATH.relative_to(ROOT).as_posix(),
     }
@@ -143,7 +164,8 @@ def main() -> int:
         f"- errors: `{len(errors)}`\n"
         f"- warnings: `{len(warnings)}`\n"
         + ("\n".join(f"- error: `{item}`" for item in errors) + "\n" if errors else "")
-        + ("\n".join(f"- warning: `{item}`" for item in warnings) + "\n" if warnings else ""),
+        + ("\n".join(f"- warning: `{item}`" for item in warnings) + "\n" if warnings else "")
+        + ("\n".join(f"- note: `{item}`" for item in notes) + "\n" if notes else ""),
     )
     if status == "FAIL":
         return 1
