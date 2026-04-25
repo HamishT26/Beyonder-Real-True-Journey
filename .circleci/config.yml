@@ -12,17 +12,17 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
       - run:
-          name: Run V54 quick suite
-          command: python scripts/run_all_trinity_systems.py --profile quick --status-json docs/trinity-live-traces/v54-ci-quick-suite-status.json
+          name: Run V55 quick suite
+          command: python scripts/run_all_trinity_systems.py --profile quick --status-json docs/trinity-live-traces/v55-ci-quick-suite-status.json
       - store_artifacts:
-          path: docs/trinity-live-traces/v54-ci-quick-suite-status.json
-          destination: v54-ci-quick-suite-status.json
+          path: docs/trinity-live-traces/v55-ci-quick-suite-status.json
+          destination: v55-ci-quick-suite-status.json
       - store_artifacts:
           path: docs/v17-system-suite-run-report-latest.md
-          destination: v54-quick-report.md
+          destination: v55-quick-report.md
       - store_artifacts:
           path: docs/v17-system-suite-status-latest.json
-          destination: v54-quick-status.json
+          destination: v55-quick-status.json
 
   trinity_standard:
     docker:
@@ -35,20 +35,20 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
       - run:
-          name: Run V54 standard suite
-          command: python scripts/run_all_trinity_systems.py --profile standard --status-json docs/trinity-live-traces/v54-ci-standard-suite-status.json
+          name: Run V55 standard suite
+          command: python scripts/run_all_trinity_systems.py --profile standard --status-json docs/trinity-live-traces/v55-ci-standard-suite-status.json
       - store_artifacts:
-          path: docs/trinity-live-traces/v54-ci-standard-suite-status.json
-          destination: v54-ci-standard-suite-status.json
+          path: docs/trinity-live-traces/v55-ci-standard-suite-status.json
+          destination: v55-ci-standard-suite-status.json
       - store_artifacts:
           path: docs/system-suite-run-report.md
-          destination: v54-standard-report.md
+          destination: v55-standard-report.md
       - store_artifacts:
           path: docs/system-suite-status.json
-          destination: v54-standard-status.json
+          destination: v55-standard-status.json
 
 workflows:
-  v54_quick_standard:
+  v55_quick_standard:
     jobs:
       - trinity_quick
       - trinity_standard:

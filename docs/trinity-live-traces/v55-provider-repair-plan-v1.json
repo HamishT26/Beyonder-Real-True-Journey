@@ -1,0 +1,53 @@
+{
+  "generated_utc": "2026-04-25T10:34:54+00:00",
+  "phase": "v55_omega",
+  "policy": "repair_live_provider_blockers_without_committing_secrets_or_forcing_paid_deploys",
+  "sources": {
+    "vercel_api": "https://vercel.com/api",
+    "vercel_cli": "https://vercel.com/docs/cli",
+    "cloudflare_token_restrictions": "https://developers.cloudflare.com/fundamentals/api/how-to/restrict-tokens/",
+    "cloudflare_wrangler": "https://developers.cloudflare.com/workers/wrangler/",
+    "docker_daemon_troubleshooting": "https://docs.docker.com/engine/daemon/troubleshoot/",
+    "docker_windows_permissions": "https://docs.docker.com/desktop/setup/install/windows-permission-requirements/",
+    "kubectl_current_context": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_config/kubectl_config_current-context/"
+  },
+  "repairs": {
+    "vercel": {
+      "observed_state": {
+        "live_gate": false,
+        "rest_state": "projects_rest_read_green",
+        "create_state": "project_create_blocked_HTTP Error 403: Forbidden"
+      },
+      "likely_cause": "current token can read user/project surfaces but cannot create projects or deploy under the selected personal/team scope",
+      "safe_next_action": "create or rotate a Vercel access token scoped to the exact personal account or team that should own the project, then rerun read-only project listing before any deploy",
+      "do_not_do": "do not commit token values or keep retrying deploys with the blocked token"
+    },
+    "cloudflare": {
+      "observed_state": {
+        "live_gate": false,
+        "repair_state": "requires_new_token_without_location_ip_restriction_or_with_current_operator_ip_allowed"
+      },
+      "likely_cause": "API token is invalid for this session and/or restricted by client IP/location filtering",
+      "safe_next_action": "regenerate or edit the Cloudflare API token with the required account/resources and either remove IP filtering or allow the current operator IP/CIDR, then verify before Wrangler writes",
+      "do_not_do": "do not bypass the IP restriction or publish the public IP/token in repo surfaces"
+    },
+    "docker": {
+      "observed_state": {
+        "client": true,
+        "daemon": false
+      },
+      "likely_cause": "Docker CLI is installed, but the Docker daemon/Desktop named pipe is not running",
+      "safe_next_action": "start Docker Desktop or the intended Docker daemon, then rerun docker info before container-backed proofs",
+      "do_not_do": "do not install or start newly acquired software silently; make daemon startup an explicit operator action if Desktop is absent"
+    },
+    "kubernetes": {
+      "observed_state": {
+        "client": true,
+        "context": false
+      },
+      "likely_cause": "kubectl is installed but no current kubeconfig context is selected",
+      "safe_next_action": "only set a context after a local cluster or approved cloud cluster exists; GCP/Kai/Vesper remain on standby",
+      "do_not_do": "do not create paid cloud clusters during V55"
+    }
+  }
+}
