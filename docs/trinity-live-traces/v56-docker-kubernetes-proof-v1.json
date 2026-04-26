@@ -1,0 +1,46 @@
+{
+  "generated_utc": "2026-04-26T16:07:42+00:00",
+  "phase": "v56_omega",
+  "docker_state": "daemon_green",
+  "kubernetes_state": "context_present_but_api_not_green",
+  "proofs": [
+    {
+      "name": "docker_version",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "Docker version 29.4.1, build 055a478"
+    },
+    {
+      "name": "docker_context_ls",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "NAME              DESCRIPTION                               DOCKER ENDPOINT                             ERROR\ndefault           Current DOCKER_HOST based configuration   npipe:////./pipe/docker_engine              \ndesktop-linux *   Docker Desktop                            npipe:////./pipe/dockerDesktopLinuxEngine"
+    },
+    {
+      "name": "docker_info",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "\"29.4.0\" \"Docker Desktop\" 4"
+    },
+    {
+      "name": "kubectl_current_context",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "docker-desktop"
+    },
+    {
+      "name": "kubectl_get_nodes",
+      "ok": false,
+      "returncode": 1,
+      "output_excerpt": "Unable to connect to the server: net/http: TLS handshake timeout"
+    },
+    {
+      "name": "kubectl_get_namespaces",
+      "ok": false,
+      "returncode": 1,
+      "output_excerpt": "Unable to connect to the server: net/http: TLS handshake timeout"
+    }
+  ],
+  "local_only_policy": "docker_desktop_kubernetes_only_no_gke_or_paid_cloud_cluster",
+  "container_pull_policy": "no_new_image_pull_in_v56_probe_without_separate_explicit_pull_step"
+}
