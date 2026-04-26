@@ -1,8 +1,23 @@
 {
-  "generated_utc": "2026-04-26T16:07:42+00:00",
+  "generated_utc": "2026-04-26T17:12:18+00:00",
   "phase": "v56_omega",
   "docker_state": "daemon_green",
-  "kubernetes_state": "context_present_but_api_not_green",
+  "kubernetes_state": "docker_desktop_windows_kubectl_and_system_pods_green",
+  "kubernetes_resolution_state": "resolved",
+  "windows_kubectl_green": true,
+  "system_pods_green": true,
+  "internal_admin_green": true,
+  "required_docker_desktop_containers_up": true,
+  "required_container_rows": {
+    "desktop-control-plane": "desktop-control-plane|Up 41 minutes|kindest/node:v1.35.1",
+    "desktop-worker": "desktop-worker|Up 40 minutes|kindest/node:v1.35.1",
+    "desktop-worker2": "desktop-worker2|Up 34 minutes|kindest/node:v1.35.1",
+    "kind-cloud-provider": "kind-cloud-provider|Up 40 minutes|docker/desktop-cloud-provider-kind:v0.5.0",
+    "kind-registry-mirror": "kind-registry-mirror|Up 39 minutes (healthy)|docker/<long_id_redacted>:v0.0.3"
+  },
+  "manifest_tuning_state": "single_control_plane_tuning_active",
+  "manifest_backup_path": "D:\\GHC-Archives\\artifacts\\v56-kubernetes-manifest-backup-20260427-050436",
+  "manifest_tuning_scope": "local_docker_desktop_static_pods_only_reversible_from_original_backups",
   "proofs": [
     {
       "name": "docker_version",
@@ -23,22 +38,64 @@
       "output_excerpt": "\"29.4.0\" \"Docker Desktop\" 4"
     },
     {
+      "name": "docker_desktop_containers",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "sharp_shirley|Created|mcp/gdrive\nvigorous_dijkstra|Created|mcp/gdrive\ncool_feistel|Created|mcp/gdrive\nintelligent_liskov|Created|mcp/gdrive\ndreamy_mestorf|Created|mcp/gdrive\njovial_pasteur|Created|mcp/gdrive\nkind-cloud-provider|Up 40 minutes|docker/desktop-cloud-provider-kind:v0.5.0\nkind-registry-mirror|Up 39 minutes (healthy)|docker/<long_id_redacted>:v0.0.3\ndesktop-worker2|Up 34 minutes|kindest/node:v1.35.1\ndesktop-worker|Up 40 minutes|kindest/node:v1.35.1\ndesktop-control-plane|Up 41 minutes|kindest/node:v1.35.1\n<long_id_redacted>|Dead|2bf47c1b01f5\ntrinity-v5-pg-proof|Exited (255) 10 hours ago|postgres:16-alpine"
+    },
+    {
       "name": "kubectl_current_context",
       "ok": true,
       "returncode": 0,
       "output_excerpt": "docker-desktop"
     },
     {
+      "name": "kubectl_readyz",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "ok"
+    },
+    {
+      "name": "kubectl_readyz_verbose",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "[+]ping ok\n[+]log ok\n[+]etcd ok\n[+]etcd-readiness ok\n[+]informer-sync ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/priority-and-fairness-filter ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/start-apiextensions-informers ok\n[+]poststarthook/start-apiextensions-controllers ok\n[+]poststarthook/crd-informer-synced ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/rbac/bootstrap-roles ok\n[+]poststarthook/scheduling/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/bootstrap-controller ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/start-kube-aggregator-informers ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/<long_id_redacted> ok\n[+]poststarthook/apiservice-discovery-controller ok\n[+]poststarthook/kube-apiserver-autoregistration ok\n[+]autoregister-completion ok\n[+]poststarthook/apiservice-openapi-controller ok\n[+]poststarthook/apiservice-openapiv3-controller ok\n[+]shutdown ok\nreadyz check passed"
+    },
+    {
       "name": "kubectl_get_nodes",
-      "ok": false,
-      "returncode": 1,
-      "output_excerpt": "Unable to connect to the server: net/http: TLS handshake timeout"
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "NAME                    STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                     CONTAINER-RUNTIME\ndesktop-control-plane   Ready    control-plane   7h48m   v1.35.1   172.20.0.3    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2   containerd://2.2.1\ndesktop-worker          Ready    <none>          7h46m   v1.35.1   172.20.0.2    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2   containerd://2.2.1\ndesktop-worker2         Ready    <none>          7h46m   v1.35.1   172.20.0.6    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2   containerd://2.2.1"
     },
     {
       "name": "kubectl_get_namespaces",
-      "ok": false,
-      "returncode": 1,
-      "output_excerpt": "Unable to connect to the server: net/http: TLS handshake timeout"
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "NAME                 STATUS   AGE\ndefault              Active   7h47m\nkube-node-lease      Active   7h47m\nkube-public          Active   7h47m\nkube-system          Active   7h48m\nlocal-path-storage   Active   7h46m"
+    },
+    {
+      "name": "kubectl_kube_system_pods",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "NAME                                            READY   STATUS    RESTARTS        AGE     IP           NODE                    NOMINATED NODE   READINESS GATES\ncoredns-7d764666f9-v7d7w                        1/1     Running   8 (33m ago)     7h47m   10.244.1.2   desktop-worker2         <none>           <none>\ncoredns-7d764666f9-vwfcr                        1/1     Running   5 (33m ago)     7h47m   10.244.1.3   desktop-worker2         <none>           <none>\netcd-desktop-control-plane                      1/1     Running   1 (39m ago)     5h11m   172.20.0.3   desktop-control-plane   <none>           <none>\nkindnet-fp82p                                   1/1     Running   6               7h46m   172.20.0.3   desktop-control-plane   <none>           <none>\nkindnet-mfgp8                                   1/1     Running   5               7h46m   172.20.0.6   desktop-worker2         <none>           <none>\nkindnet-wfmgp                                   1/1     Running   4               7h40m   172.20.0.2   desktop-worker          <none>           <none>\n<long_id_redacted>            1/1     Running   0               4m44s   172.20.0.3   desktop-control-plane   <none>           <none>\n<long_id_redacted>   1/1     Running   1 (5m18s ago)   4m58s   172.20.0.3   desktop-control-plane   <none>           <none>\nkube-proxy-gwf7b                                1/1     Running   5               7h47m   172.20.0.3   desktop-control-plane   <none>           <none>\nkube-proxy-mx8l8                                1/1     Running   5 (33m ago)     7h46m   172.20.0.6   desktop-worker2         <none>           <none>\nkube-proxy-xcp8n                                1/1     Running   4               7h40m   172.20.0.2   desktop-worker          <none>           <none>\n<long_id_redacted>            1/1     Running   0               4m58s   172.20.0.3   desktop-control-plane   <none>           <none>"
+    },
+    {
+      "name": "kubernetes_static_manifest_tuning",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "/etc/kubernetes/manifests/kube-controller-manager.yaml:    - --leader-elect=false\n/etc/kubernetes/manifests/kube-controller-manager.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-controller-manager.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-scheduler.yaml:    - --leader-elect=false\n/etc/kubernetes/manifests/kube-scheduler.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-scheduler.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-scheduler.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-apiserver.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-apiserver.yaml:      periodSeconds: 10\n/etc/kubernetes/manifests/kube-apiserver.yaml:      periodSeconds: 10"
+    },
+    {
+      "name": "kubernetes_internal_admin_nodes",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "NAME                    STATUS   ROLES           AGE     VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION                     CONTAINER-RUNTIME\ndesktop-control-plane   Ready    control-plane   7h48m   v1.35.1   172.20.0.3    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2   containerd://2.2.1\ndesktop-worker          Ready    <none>          7h46m   v1.35.1   172.20.0.2    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2   containerd://2.2.1\ndesktop-worker2         Ready    <none>          7h46m   v1.35.1   172.20.0.6    <none>        Debian GNU/Linux 13 (trixie)   6.6.87.2-microsoft-standard-WSL2   containerd://2.2.1"
+    },
+    {
+      "name": "kubernetes_internal_admin_namespaces",
+      "ok": true,
+      "returncode": 0,
+      "output_excerpt": "NAME                 STATUS   AGE\ndefault              Active   7h48m\nkube-node-lease      Active   7h48m\nkube-public          Active   7h48m\nkube-system          Active   7h48m\nlocal-path-storage   Active   7h47m"
     }
   ],
   "local_only_policy": "docker_desktop_kubernetes_only_no_gke_or_paid_cloud_cluster",

@@ -1,12 +1,12 @@
 # V57 Omega Plan Proposal
 
 - Starting suite truth: `green_quick_standard_deep_mcp_refresh_materialize_l2_l5`
-- Provider residuals: `cloudflare_verify=not_green, kubernetes=context_present_but_api_not_green`
+- Provider residuals: `none`
 - Docker: `daemon_green`
-- Kubernetes: `context_present_but_api_not_green`
+- Kubernetes: `docker_desktop_windows_kubectl_and_system_pods_green`
 
 ## Tracks
-- `provider_closure`: Resolve the Cloudflare verify residual and prove Vercel create/deploy without committing account artifacts. Acceptance: Cloudflare verify, accounts, Wrangler whoami, Vercel user/project/list/create/link all green with redacted evidence.
+- `provider_closure`: Keep Cloudflare account-token verification green and prove Vercel create/deploy only in a separate explicit write step. Acceptance: Cloudflare account-token verify, accounts, Wrangler whoami, and Vercel user/project/list stay green with redacted evidence before any create/link.
 - `local_runtime_body`: Promote Docker Desktop and docker-desktop Kubernetes from proof lane to repeatable local runtime harness. Acceptance: Disposable namespace/configmap/job proof, local dashboard container proof, and cleanup manifest all green.
 - `control_plane_ui`: Turn the V56 static dashboard into a live local control plane reading compact suite/provider JSON. Acceptance: Browser Use confirms the dashboard renders current suite counts, provider gates, agent rotation, and QCIT/GMUT telemetry.
 - `neon_memory_lane`: Use Neon as the bounded relational mission-control memory lane while Bigtable/GCP stay paused. Acceptance: Schema migration dry-run, read-only project proof, and optional non-sensitive run metadata insert only if live-write gate is explicitly approved.

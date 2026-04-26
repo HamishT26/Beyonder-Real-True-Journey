@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-04-26T16:07:43+00:00",
+  "generated_utc": "2026-04-26T17:12:18+00:00",
   "phase": "v56_omega",
   "policy": "repair_live_provider_blockers_without_committing_secrets_or_forcing_paid_deploys",
   "source_anchors": {
@@ -7,6 +7,8 @@
     "vercel_deploy_from_cli": "https://vercel.com/docs/projects/deploy-from-cli",
     "vercel_sandbox_sdk": "https://vercel.com/docs/vercel-sandbox/sdk-reference",
     "cloudflare_token_restrictions": "https://developers.cloudflare.com/fundamentals/api/how-to/restrict-tokens/",
+    "cloudflare_user_token_verify": "https://developers.cloudflare.com/api/resources/user/subresources/tokens/methods/verify/",
+    "cloudflare_account_token_verify": "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/verify/",
     "cloudflare_create_token": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
     "cloudflare_wrangler_cli": "https://developers.cloudflare.com/workers/get-started/guide/",
     "neon_projects_api": "https://neon.com/docs/manage/projects",
@@ -22,10 +24,12 @@
     },
     "cloudflare": {
       "observed_state": {
-        "verify_gate": false,
+        "verify_gate": true,
+        "user_verify_gate": false,
+        "account_verify_gate": true,
         "accounts_gate": true
       },
-      "safe_next_action": "verify token status and account read; if blocked, regenerate or edit token without client-IP filtering that excludes this operator lane",
+      "safe_next_action": "treat account-owned token verification as the correct green gate when Wrangler/accounts work and the account-token verify endpoint passes",
       "do_not_do": "do not publish token, public IP, zone IDs, or bypass Cloudflare restrictions"
     },
     "neon": {
@@ -38,7 +42,7 @@
     "docker_kubernetes": {
       "observed_state": {
         "docker": "daemon_green",
-        "kubernetes": "context_present_but_api_not_green"
+        "kubernetes": "docker_desktop_windows_kubectl_and_system_pods_green"
       },
       "safe_next_action": "use Docker Desktop and docker-desktop Kubernetes only for local proofs; keep GKE on standby",
       "do_not_do": "do not pull new images or mutate paid/cloud clusters without a separate explicit step"

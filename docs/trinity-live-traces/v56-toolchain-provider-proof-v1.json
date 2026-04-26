@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-04-26T16:07:10+00:00",
+  "generated_utc": "2026-04-26T17:11:49+00:00",
   "phase": "v56_omega",
   "api_key_bank": {
     "secret_bank_state": "present",
@@ -135,7 +135,7 @@
       "name": "github_repo_read",
       "ok": true,
       "status": 200,
-      "output_excerpt": "success_body_redacted_sha256_12=fc163c624808"
+      "output_excerpt": "success_body_redacted_sha256_12=3cd2c08b35b3"
     },
     {
       "name": "vercel_user_read",
@@ -150,10 +150,16 @@
       "output_excerpt": "success_body_redacted_sha256_12=50cb19883aba"
     },
     {
-      "name": "cloudflare_token_verify",
+      "name": "cloudflare_user_token_verify",
       "ok": false,
       "status": 401,
       "output_excerpt": "{\"success\":false,\"errors\":[{\"code\":1000,\"message\":\"Invalid API Token\"}],\"messages\":[],\"result\":null}"
+    },
+    {
+      "name": "cloudflare_account_token_verify",
+      "ok": true,
+      "status": 200,
+      "output_excerpt": "account_token_verify_body_redacted_sha256_12=ea6747feb2ec; account_id_sha256_12=52c51ee239f4"
     },
     {
       "name": "cloudflare_accounts_read",
@@ -207,7 +213,9 @@
   "provider_live_gate": {
     "github_read": true,
     "vercel_read": true,
-    "cloudflare_verify": false,
+    "cloudflare_user_verify": false,
+    "cloudflare_account_verify": true,
+    "cloudflare_verify": true,
     "cloudflare_accounts": true,
     "neon_read": true,
     "circleci_read": true,

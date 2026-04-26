@@ -251,6 +251,40 @@ def http_probe(name: str, url: str, token: str, *, secrets: list[str], header_na
         return {"name": name, "ok": False, "status": "error", "output_excerpt": redact(excerpt(str(exc), 3000), secrets)}
 
 
+def cloudflare_account_token_verify(token: str, *, secrets: list[str]) -> dict[str, Any]:
+    if not token:
+        return {"name": "cloudflare_account_token_verify", "ok": False, "status": "missing_token", "output_excerpt": "token_missing"}
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    try:
+        accounts_request = urllib.request.Request("https://api.cloudflare.com/client/v4/accounts", headers=headers)
+        with urllib.request.urlopen(accounts_request, timeout=25) as response:
+            accounts_body = response.read().decode("utf-8", errors="replace")
+        accounts_payload = json.loads(accounts_body)
+        accounts = accounts_payload.get("result", []) if isinstance(accounts_payload, dict) else []
+        account_id = ""
+        if accounts and isinstance(accounts[0], dict):
+            account_id = str(accounts[0].get("id", ""))
+        if not account_id:
+            return {"name": "cloudflare_account_token_verify", "ok": False, "status": "missing_account_id", "output_excerpt": "accounts_read_green_but_no_account_id"}
+        verify_url = f"https://api.cloudflare.com/client/v4/accounts/{account_id}/tokens/verify"
+        verify_request = urllib.request.Request(verify_url, headers=headers)
+        with urllib.request.urlopen(verify_request, timeout=25) as response:
+            verify_body = response.read().decode("utf-8", errors="replace")
+            digest = hashlib.sha256(verify_body.encode("utf-8", errors="replace")).hexdigest()[:12]
+            account_digest = hashlib.sha256(account_id.encode("utf-8")).hexdigest()[:12]
+            return {
+                "name": "cloudflare_account_token_verify",
+                "ok": 200 <= response.status < 300,
+                "status": response.status,
+                "output_excerpt": f"account_token_verify_body_redacted_sha256_12={digest}; account_id_sha256_12={account_digest}",
+            }
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        return {"name": "cloudflare_account_token_verify", "ok": False, "status": exc.code, "output_excerpt": redact(excerpt(body or str(exc), 3000), secrets)}
+    except Exception as exc:
+        return {"name": "cloudflare_account_token_verify", "ok": False, "status": "error", "output_excerpt": redact(excerpt(str(exc), 3000), secrets)}
+
+
 def provider_and_tool_proofs() -> dict[str, Any]:
     secrets, ids, bank_path = parse_secret_bank()
     secret_values = [value for value in secrets.values() if value]
@@ -271,7 +305,8 @@ def provider_and_tool_proofs() -> dict[str, Any]:
         http_probe("github_repo_read", "https://api.github.com/repos/HamishT26/Beyonder-Real-True-Journey", secrets.get("Github API", ""), secrets=secret_values),
         http_probe("vercel_user_read", "https://api.vercel.com/v2/user", secrets.get("Vercel", ""), secrets=secret_values),
         http_probe("vercel_projects_read", "https://api.vercel.com/v9/projects", secrets.get("Vercel", ""), secrets=secret_values),
-        http_probe("cloudflare_token_verify", "https://api.cloudflare.com/client/v4/user/tokens/verify", secrets.get("Cloudflare (Wrangler) API", ""), secrets=secret_values),
+        http_probe("cloudflare_user_token_verify", "https://api.cloudflare.com/client/v4/user/tokens/verify", secrets.get("Cloudflare (Wrangler) API", ""), secrets=secret_values),
+        cloudflare_account_token_verify(secrets.get("Cloudflare (Wrangler) API", ""), secrets=secret_values),
         http_probe("cloudflare_accounts_read", "https://api.cloudflare.com/client/v4/accounts", secrets.get("Cloudflare (Wrangler) API", ""), secrets=secret_values),
         http_probe("neon_projects_read", "https://console.neon.tech/api/v2/projects", secrets.get("Neon postgres API", ""), secrets=secret_values),
         http_probe("circleci_me_read", "https://circleci.com/api/v2/me", secrets.get("CircleCI API", ""), secrets=secret_values, header_name="Circle-Token"),
@@ -285,7 +320,9 @@ def provider_and_tool_proofs() -> dict[str, Any]:
     live_gate = {
         "github_read": by_name["github_repo_read"]["ok"],
         "vercel_read": by_name["vercel_user_read"]["ok"] and by_name["vercel_projects_read"]["ok"],
-        "cloudflare_verify": by_name["cloudflare_token_verify"]["ok"],
+        "cloudflare_user_verify": by_name["cloudflare_user_token_verify"]["ok"],
+        "cloudflare_account_verify": by_name["cloudflare_account_token_verify"]["ok"],
+        "cloudflare_verify": by_name["cloudflare_user_token_verify"]["ok"] or by_name["cloudflare_account_token_verify"]["ok"],
         "cloudflare_accounts": by_name["cloudflare_accounts_read"]["ok"],
         "neon_read": by_name["neon_projects_read"]["ok"],
         "circleci_read": by_name["circleci_me_read"]["ok"],
@@ -306,25 +343,120 @@ def provider_and_tool_proofs() -> dict[str, Any]:
 
 def docker_kubernetes_proof() -> dict[str, Any]:
     env = env_with_tools()
+    backup_dirs = sorted((D_ARCHIVE_ROOT / "artifacts").glob("v56-kubernetes-manifest-backup-*")) if (D_ARCHIVE_ROOT / "artifacts").exists() else []
+    latest_backup = backup_dirs[-1] if backup_dirs else None
     proofs = [
         probe_command("docker_version", ["docker", "--version"], env=env, secrets=[], timeout=20),
         probe_command("docker_context_ls", ["docker", "context", "ls"], env=env, secrets=[], timeout=20),
         probe_command("docker_info", ["docker", "info", "--format", "{{json .ServerVersion}} {{json .OperatingSystem}} {{json .NCPU}}"], env=env, secrets=[], timeout=90),
+        probe_command("docker_desktop_containers", ["docker", "ps", "-a", "--format", "{{.Names}}|{{.Status}}|{{.Image}}"], env=env, secrets=[], timeout=30),
         probe_command("kubectl_current_context", ["kubectl", "config", "current-context"], env=env, secrets=[], timeout=20),
+        probe_command("kubectl_readyz", ["kubectl", "get", "--raw=/readyz", "--request-timeout=45s"], env=env, secrets=[], timeout=75),
+        probe_command("kubectl_readyz_verbose", ["kubectl", "get", "--raw=/readyz?verbose", "--request-timeout=60s"], env=env, secrets=[], timeout=90),
         probe_command("kubectl_get_nodes", ["kubectl", "get", "nodes", "-o", "wide", "--request-timeout=45s"], env=env, secrets=[], timeout=75),
         probe_command("kubectl_get_namespaces", ["kubectl", "get", "namespaces", "--request-timeout=45s"], env=env, secrets=[], timeout=75),
+        probe_command("kubectl_kube_system_pods", ["kubectl", "-n", "kube-system", "get", "pods", "-o", "wide", "--request-timeout=60s"], env=env, secrets=[], timeout=90),
+        probe_command(
+            "kubernetes_static_manifest_tuning",
+            [
+                "docker",
+                "exec",
+                "desktop-control-plane",
+                "sh",
+                "-lc",
+                "grep -H -E -- '--leader-elect|periodSeconds:' /etc/kubernetes/manifests/kube-controller-manager.yaml /etc/kubernetes/manifests/kube-scheduler.yaml /etc/kubernetes/manifests/kube-apiserver.yaml",
+            ],
+            env=env,
+            secrets=[],
+            timeout=45,
+        ),
+        probe_command(
+            "kubernetes_internal_admin_nodes",
+            ["docker", "exec", "desktop-control-plane", "kubectl", "--kubeconfig", "/etc/kubernetes/admin.conf", "get", "nodes", "-o", "wide"],
+            env=env,
+            secrets=[],
+            timeout=75,
+        ),
+        probe_command(
+            "kubernetes_internal_admin_namespaces",
+            ["docker", "exec", "desktop-control-plane", "kubectl", "--kubeconfig", "/etc/kubernetes/admin.conf", "get", "namespaces"],
+            env=env,
+            secrets=[],
+            timeout=75,
+        ),
     ]
     by_name = {row["name"]: row for row in proofs}
     docker_state = "daemon_green" if by_name["docker_info"]["ok"] else ("daemon_timeout_or_blocked" if by_name["docker_info"]["returncode"] == 124 else "daemon_not_green")
-    kube_state = "docker_desktop_context_green" if by_name["kubectl_current_context"]["ok"] and by_name["kubectl_get_nodes"]["ok"] else "context_present_but_api_not_green"
+    required_containers = ["desktop-control-plane", "desktop-worker", "desktop-worker2", "kind-cloud-provider", "kind-registry-mirror"]
+    container_output = by_name["docker_desktop_containers"]["output_excerpt"]
+    container_rows = {
+        name: next((line for line in container_output.splitlines() if line.startswith(f"{name}|")), "")
+        for name in required_containers
+    }
+    required_containers_up = all("|Up " in row or "|Up" in row for row in container_rows.values())
+    windows_kubectl_green = (
+        by_name["kubectl_current_context"]["ok"]
+        and "docker-desktop" in by_name["kubectl_current_context"]["output_excerpt"]
+        and by_name["kubectl_readyz"]["ok"]
+        and by_name["kubectl_readyz_verbose"]["ok"]
+        and by_name["kubectl_get_nodes"]["ok"]
+        and by_name["kubectl_get_namespaces"]["ok"]
+    )
+    system_pods_output = by_name["kubectl_kube_system_pods"]["output_excerpt"]
+    system_pods_green = by_name["kubectl_kube_system_pods"]["ok"] and "CrashLoopBackOff" not in system_pods_output and " 0/1 " not in system_pods_output
+    internal_admin_green = by_name["kubernetes_internal_admin_nodes"]["ok"] and by_name["kubernetes_internal_admin_namespaces"]["ok"]
+    manifest_tuning_output = by_name["kubernetes_static_manifest_tuning"]["output_excerpt"]
+    manifest_tuning_green = manifest_tuning_output.count("--leader-elect=false") >= 2
+    if windows_kubectl_green and system_pods_green and required_containers_up:
+        kube_state = "docker_desktop_windows_kubectl_and_system_pods_green"
+    elif windows_kubectl_green and required_containers_up:
+        kube_state = "docker_desktop_windows_kubectl_green_system_pods_pending"
+    elif windows_kubectl_green:
+        kube_state = "windows_kubectl_green_container_residual"
+    elif internal_admin_green:
+        kube_state = "cluster_internal_green_windows_bridge_pending"
+    else:
+        kube_state = "context_present_but_api_not_green"
     return {
         "generated_utc": now_iso(),
         "phase": PHASE,
         "docker_state": docker_state,
         "kubernetes_state": kube_state,
+        "kubernetes_resolution_state": "resolved" if kube_state == "docker_desktop_windows_kubectl_and_system_pods_green" else "partial",
+        "windows_kubectl_green": windows_kubectl_green,
+        "system_pods_green": system_pods_green,
+        "internal_admin_green": internal_admin_green,
+        "required_docker_desktop_containers_up": required_containers_up,
+        "required_container_rows": container_rows,
+        "manifest_tuning_state": "single_control_plane_tuning_active" if manifest_tuning_green else "default_or_unverified",
+        "manifest_backup_path": str(latest_backup) if latest_backup else "",
+        "manifest_tuning_scope": "local_docker_desktop_static_pods_only_reversible_from_original_backups",
         "proofs": proofs,
         "local_only_policy": "docker_desktop_kubernetes_only_no_gke_or_paid_cloud_cluster",
         "container_pull_policy": "no_new_image_pull_in_v56_probe_without_separate_explicit_pull_step",
+    }
+
+
+def kubernetes_resolution(docker_proof: dict[str, Any]) -> dict[str, Any]:
+    resolved = docker_proof.get("kubernetes_state") == "docker_desktop_windows_kubectl_and_system_pods_green"
+    return {
+        "generated_utc": now_iso(),
+        "phase": PHASE,
+        "kubernetes_resolution_state": "resolved_docker_desktop_windows_kubectl_and_system_pods_green" if resolved else docker_proof.get("kubernetes_state", "unknown"),
+        "windows_kubectl_nodes_green": any(row.get("name") == "kubectl_get_nodes" and row.get("ok") for row in docker_proof.get("proofs", [])),
+        "windows_kubectl_namespaces_green": any(row.get("name") == "kubectl_get_namespaces" and row.get("ok") for row in docker_proof.get("proofs", [])),
+        "windows_kubectl_readyz_green": any(row.get("name") == "kubectl_readyz" and row.get("ok") for row in docker_proof.get("proofs", [])),
+        "windows_kubectl_readyz_verbose_green": any(row.get("name") == "kubectl_readyz_verbose" and row.get("ok") for row in docker_proof.get("proofs", [])),
+        "kube_system_pods_green": docker_proof.get("system_pods_green"),
+        "control_plane_admin_nodes_green": any(row.get("name") == "kubernetes_internal_admin_nodes" and row.get("ok") for row in docker_proof.get("proofs", [])),
+        "control_plane_admin_namespaces_green": any(row.get("name") == "kubernetes_internal_admin_namespaces" and row.get("ok") for row in docker_proof.get("proofs", [])),
+        "required_docker_desktop_containers_up": docker_proof.get("required_docker_desktop_containers_up"),
+        "required_container_rows": docker_proof.get("required_container_rows", {}),
+        "manifest_tuning_state": docker_proof.get("manifest_tuning_state"),
+        "manifest_backup_path": docker_proof.get("manifest_backup_path"),
+        "repair_interpretation": "worker2_restarted_then_single_control_plane_static_pod_tuning_verified" if resolved else "no_destructive_reset_used_partial_state_recorded",
+        "safe_next_action": "use docker-desktop for bounded local namespace/job proofs; keep Docker Desktop memory pressure visible" if resolved else "avoid destructive cluster reset; recheck Docker Desktop resources and bridge state first",
+        "truth_boundary": "local Docker Desktop Kubernetes only; no GKE, paid cloud, or raw kubeconfig material captured",
     }
 
 
@@ -594,6 +726,8 @@ def provider_repair_plan(tool_proofs: dict[str, Any], docker_proof: dict[str, An
             "vercel_deploy_from_cli": "https://vercel.com/docs/projects/deploy-from-cli",
             "vercel_sandbox_sdk": "https://vercel.com/docs/vercel-sandbox/sdk-reference",
             "cloudflare_token_restrictions": "https://developers.cloudflare.com/fundamentals/api/how-to/restrict-tokens/",
+            "cloudflare_user_token_verify": "https://developers.cloudflare.com/api/resources/user/subresources/tokens/methods/verify/",
+            "cloudflare_account_token_verify": "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/verify/",
             "cloudflare_create_token": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
             "cloudflare_wrangler_cli": "https://developers.cloudflare.com/workers/get-started/guide/",
             "neon_projects_api": "https://neon.com/docs/manage/projects",
@@ -610,9 +744,11 @@ def provider_repair_plan(tool_proofs: dict[str, Any], docker_proof: dict[str, An
             "cloudflare": {
                 "observed_state": {
                     "verify_gate": gates.get("cloudflare_verify"),
+                    "user_verify_gate": gates.get("cloudflare_user_verify"),
+                    "account_verify_gate": gates.get("cloudflare_account_verify"),
                     "accounts_gate": gates.get("cloudflare_accounts"),
                 },
-                "safe_next_action": "verify token status and account read; if blocked, regenerate or edit token without client-IP filtering that excludes this operator lane",
+                "safe_next_action": "treat account-owned token verification as the correct green gate when Wrangler/accounts work and the account-token verify endpoint passes",
                 "do_not_do": "do not publish token, public IP, zone IDs, or bypass Cloudflare restrictions",
             },
             "neon": {
@@ -639,6 +775,36 @@ def provider_repair_plan(tool_proofs: dict[str, Any], docker_proof: dict[str, An
                 "do_not_do": "do not trigger paid or noisy CI pipelines before local config is green",
             },
         },
+    }
+
+
+def cloudflare_resolution(tool_proofs: dict[str, Any]) -> dict[str, Any]:
+    proofs = {row.get("name"): row for row in tool_proofs.get("provider_proofs", []) if isinstance(row, dict)}
+    account_verify = bool(proofs.get("cloudflare_account_token_verify", {}).get("ok"))
+    accounts_read = bool(proofs.get("cloudflare_accounts_read", {}).get("ok"))
+    wrangler = bool(proofs.get("wrangler_cli_whoami", {}).get("ok"))
+    user_verify = bool(proofs.get("cloudflare_user_token_verify", {}).get("ok"))
+    resolved = account_verify and accounts_read and wrangler
+    return {
+        "generated_utc": now_iso(),
+        "phase": PHASE,
+        "cloudflare_resolution_state": "resolved_account_owned_token_verified" if resolved else "still_blocked",
+        "account_token_verify_green": account_verify,
+        "accounts_read_green": accounts_read,
+        "wrangler_whoami_green": wrangler,
+        "user_token_verify_green": user_verify,
+        "interpretation": (
+            "The token behaves as an account-owned Cloudflare token. The user-token verify endpoint can return invalid while the account-token verify endpoint, accounts API, and Wrangler all pass."
+            if resolved and not user_verify
+            else "Cloudflare token family still needs review."
+        ),
+        "source_anchors": {
+            "account_token_verify": "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/verify/",
+            "user_token_verify": "https://developers.cloudflare.com/api/resources/user/subresources/tokens/methods/verify/",
+            "token_restrictions": "https://developers.cloudflare.com/fundamentals/api/how-to/restrict-tokens/",
+            "wrangler": "https://developers.cloudflare.com/workers/wrangler/",
+        },
+        "safe_next_action": "Use the account-token verify gate for this token family; keep any Worker deploy as a separate live-write step.",
     }
 
 
@@ -774,6 +940,7 @@ def update_runtime(tool_proofs: dict[str, Any], docker_proof: dict[str, Any], co
         "provider_readiness_state": tool_proofs.get("provider_live_gate"),
         "docker_state": docker_proof.get("docker_state"),
         "kubernetes_state": docker_proof.get("kubernetes_state"),
+        "kubernetes_resolution_state": docker_proof.get("kubernetes_resolution_state"),
         "control_plane_state": control.get("control_plane_state"),
         "qcit_gmut_simulation_state": "bounded_symbolic_pass",
         "browser_use_state": "local_dashboard_file_ready_for_iab_browser_use",
@@ -800,11 +967,13 @@ def closeout(tool_proofs: dict[str, Any], docker_proof: dict[str, Any], control:
     residuals = []
     gates = tool_proofs.get("provider_live_gate", {})
     for key, ok in gates.items():
+        if key == "cloudflare_user_verify" and gates.get("cloudflare_account_verify"):
+            continue
         if not ok:
             residuals.append(f"{key}=not_green")
     if docker_proof.get("docker_state") != "daemon_green":
         residuals.append(f"docker={docker_proof.get('docker_state')}")
-    if docker_proof.get("kubernetes_state") != "docker_desktop_context_green":
+    if docker_proof.get("kubernetes_state") not in {"docker_desktop_context_green", "docker_desktop_windows_kubectl_green", "docker_desktop_windows_kubectl_and_system_pods_green"}:
         residuals.append(f"kubernetes={docker_proof.get('kubernetes_state')}")
     if suite.get("suite_ladder_state", "").startswith("pending"):
         residuals.append("suite_ladder=pending_after_publication_script_until_runner_executes")
@@ -821,6 +990,7 @@ def closeout(tool_proofs: dict[str, Any], docker_proof: dict[str, Any], control:
             "control_plane_state": control.get("control_plane_state"),
             "docker_state": docker_proof.get("docker_state"),
             "kubernetes_state": docker_proof.get("kubernetes_state"),
+            "kubernetes_resolution_state": docker_proof.get("kubernetes_resolution_state"),
             "public_source_registry_refresh_state": source_refresh.get("overall_status"),
             "suite_ladder_state": suite.get("suite_ladder_state"),
             "git_publication_state": "pending",
@@ -832,6 +1002,7 @@ def closeout(tool_proofs: dict[str, Any], docker_proof: dict[str, Any], control:
             "advisory_digest": "docs/auto-generated/v56-advisory-digest-v1.json",
             "toolchain_provider_proof": "docs/trinity-live-traces/v56-toolchain-provider-proof-v1.json",
             "docker_kubernetes_proof": "docs/trinity-live-traces/v56-docker-kubernetes-proof-v1.json",
+            "kubernetes_resolution": "docs/trinity-live-traces/v56-kubernetes-resolution-v1.json",
             "plugin_matrix": "docs/trinity-live-traces/v56-plugin-mcp-matrix-v1.json",
             "control_plane_proof": "docs/trinity-live-traces/v56-live-control-plane-proof-v1.json",
             "qcit_gmut_simulation": "docs/trinity-live-traces/v56-qcit-gmut-simulation-v1.json",
@@ -868,8 +1039,8 @@ def v57_plan_proposal(close: dict[str, Any]) -> dict[str, Any]:
         "recommended_tracks": [
             {
                 "track": "provider_closure",
-                "goal": "Resolve the Cloudflare verify residual and prove Vercel create/deploy without committing account artifacts.",
-                "acceptance": "Cloudflare verify, accounts, Wrangler whoami, Vercel user/project/list/create/link all green with redacted evidence.",
+                "goal": "Keep Cloudflare account-token verification green and prove Vercel create/deploy only in a separate explicit write step.",
+                "acceptance": "Cloudflare account-token verify, accounts, Wrangler whoami, and Vercel user/project/list stay green with redacted evidence before any create/link.",
             },
             {
                 "track": "local_runtime_body",
@@ -924,10 +1095,14 @@ def build_stage_allowlist(control: dict[str, Any]) -> dict[str, Any]:
         "docs/trinity-live-traces/v56-toolchain-provider-proof-v1.md",
         "docs/trinity-live-traces/v56-docker-kubernetes-proof-v1.json",
         "docs/trinity-live-traces/v56-docker-kubernetes-proof-v1.md",
+        "docs/trinity-live-traces/v56-kubernetes-resolution-v1.json",
+        "docs/trinity-live-traces/v56-kubernetes-resolution-v1.md",
         "docs/trinity-live-traces/v56-plugin-mcp-matrix-v1.json",
         "docs/trinity-live-traces/v56-plugin-mcp-matrix-v1.md",
         "docs/trinity-live-traces/v56-provider-repair-plan-v1.json",
         "docs/trinity-live-traces/v56-provider-repair-plan-v1.md",
+        "docs/trinity-live-traces/v56-cloudflare-resolution-v1.json",
+        "docs/trinity-live-traces/v56-cloudflare-resolution-v1.md",
         "docs/trinity-live-traces/v56-live-control-plane-proof-v1.json",
         "docs/trinity-live-traces/v56-live-control-plane-proof-v1.md",
         "docs/trinity-live-traces/v56-qcit-gmut-simulation-v1.json",
@@ -942,6 +1117,8 @@ def build_stage_allowlist(control: dict[str, Any]) -> dict[str, Any]:
         "docs/trinity-live-traces/v56-suite-ladder-summary-v1.md",
         "docs/trinity-live-traces/v56-stage-allowlist-v1.json",
         "docs/trinity-live-traces/v56-stage-allowlist-v1.md",
+        "docs/trinity-live-traces/v56-git-publication-result-v1.json",
+        "docs/trinity-live-traces/v56-git-publication-result-v1.md",
         "docs/v56-omega-closeout-summary-v1.json",
         "docs/v56-omega-handoff-policy-v1.json",
         "docs/v56-omega-continuity-pack-v1.md",
@@ -969,7 +1146,7 @@ def write_markdown_summaries(payloads: dict[str, dict[str, Any]]) -> None:
     for stem, payload in payloads.items():
         title = stem.replace("-", " ").replace("_", " ").title()
         lines = [f"# {title}", "", f"- Generated UTC: `{payload.get('generated_utc', now_iso())}`"]
-        for key in ["secret_hygiene_state", "plugin_surface_split_state", "control_plane_state", "docker_state", "kubernetes_state", "simulation_state", "rotation_state", "overall_status", "suite_ladder_state"]:
+        for key in ["secret_hygiene_state", "plugin_surface_split_state", "control_plane_state", "docker_state", "kubernetes_state", "kubernetes_resolution_state", "simulation_state", "rotation_state", "overall_status", "suite_ladder_state"]:
             if key in payload:
                 lines.append(f"- `{key}`: `{payload[key]}`")
         if "provider_live_gate" in payload:
@@ -989,12 +1166,14 @@ def publish_surfaces() -> None:
     update_circleci_config()
     tool_proofs = provider_and_tool_proofs()
     docker_proof = docker_kubernetes_proof()
+    kube_resolution = kubernetes_resolution(docker_proof)
     matrix = plugin_matrix(tool_proofs)
     advisory = advisory_digest()
     simulation = qcit_gmut_simulation()
     browser = browser_use_proof()
     control = control_plane_scaffold(tool_proofs, docker_proof)
     repair = provider_repair_plan(tool_proofs, docker_proof)
+    cloudflare = cloudflare_resolution(tool_proofs)
     source_refresh = refresh_public_source_registry()
     rotation = agent_rotation()
     suite = suite_ladder_summary()
@@ -1005,8 +1184,10 @@ def publish_surfaces() -> None:
 
     write_json(TRACE_DIR / "v56-toolchain-provider-proof-v1.json", tool_proofs)
     write_json(TRACE_DIR / "v56-docker-kubernetes-proof-v1.json", docker_proof)
+    write_json(TRACE_DIR / "v56-kubernetes-resolution-v1.json", kube_resolution)
     write_json(TRACE_DIR / "v56-plugin-mcp-matrix-v1.json", matrix)
     write_json(TRACE_DIR / "v56-provider-repair-plan-v1.json", repair)
+    write_json(TRACE_DIR / "v56-cloudflare-resolution-v1.json", cloudflare)
     write_json(AUTO_DIR / "v56-advisory-digest-v1.json", advisory)
     write_json(TRACE_DIR / "v56-live-control-plane-proof-v1.json", control)
     write_json(TRACE_DIR / "v56-qcit-gmut-simulation-v1.json", simulation)
@@ -1020,7 +1201,7 @@ def publish_surfaces() -> None:
     write_json(ROOT / "docs" / "v57-beta-closeout-summary-v1.json", {**close, "phase": NEXT_PHASE, "receiver": "Aletheon or Orun after V56 provider and suite publication"})
     write_json(ROOT / "docs" / "v57-beta-handoff-policy-v1.json", {"generated_utc": now_iso(), "phase": NEXT_PHASE, "handoff_state": "ready_after_v56_publication_and_suite_ladder"})
     write_json(ROOT / "docs" / "v57-omega-plan-proposal-v1.json", proposal)
-    write_text(ROOT / "docs" / "v56-omega-continuity-pack-v1.md", f"# V56 Omega Continuity Pack\n\n- Baseline: `{BASELINE_SHA}`\n- Control plane: `{control['control_plane_state']}`\n- Docker: `{docker_proof['docker_state']}`\n- Kubernetes: `{docker_proof['kubernetes_state']}`\n- QCIT/GMUT: `{simulation['simulation_state']}`\n- Suite ladder: `{close['summary']['suite_ladder_state']}`\n- Residuals: `{', '.join(close['bounded_residuals'])}`\n")
+    write_text(ROOT / "docs" / "v56-omega-continuity-pack-v1.md", f"# V56 Omega Continuity Pack\n\n- Baseline: `{BASELINE_SHA}`\n- Control plane: `{control['control_plane_state']}`\n- Docker: `{docker_proof['docker_state']}`\n- Kubernetes: `{docker_proof['kubernetes_state']}`\n- Kubernetes resolution: `{kube_resolution['kubernetes_resolution_state']}`\n- QCIT/GMUT: `{simulation['simulation_state']}`\n- Suite ladder: `{close['summary']['suite_ladder_state']}`\n- Residuals: `{', '.join(close['bounded_residuals']) or 'none'}`\n")
     write_text(ROOT / "docs" / "v57-beta-continuity-pack-v1.md", "# V57 Beta Continuity Pack\n\nCarry forward V56 provider repair, local Docker/Kubernetes proofing, suite validation, and D-drive-first control-plane maturation.\n")
     write_text(
         ROOT / "docs" / "v57-omega-plan-proposal-v1.md",
@@ -1050,8 +1231,10 @@ def publish_surfaces() -> None:
         {
             "v56-toolchain-provider-proof-v1": tool_proofs,
             "v56-docker-kubernetes-proof-v1": docker_proof,
+            "v56-kubernetes-resolution-v1": kube_resolution,
             "v56-plugin-mcp-matrix-v1": matrix,
             "v56-provider-repair-plan-v1": repair,
+            "v56-cloudflare-resolution-v1": cloudflare,
             "v56-live-control-plane-proof-v1": control,
             "v56-qcit-gmut-simulation-v1": simulation,
             "v56-browser-use-dashboard-proof-v1": browser,
