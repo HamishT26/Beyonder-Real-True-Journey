@@ -12,11 +12,11 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
       - run:
-          name: Run V56 quick suite
-          command: python scripts/run_all_trinity_systems.py --profile quick --status-json docs/trinity-live-traces/v56-ci-quick-suite-status.json
+          name: Run V57 quick suite
+          command: python scripts/run_all_trinity_systems.py --profile quick --status-json docs/trinity-live-traces/v57-ci-quick-suite-status.json
       - store_artifacts:
-          path: docs/trinity-live-traces/v56-ci-quick-suite-status.json
-          destination: v56-ci-quick-suite-status.json
+          path: docs/trinity-live-traces/v57-ci-quick-suite-status.json
+          destination: v57-ci-quick-suite-status.json
 
   trinity_standard:
     docker:
@@ -29,14 +29,14 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
       - run:
-          name: Run V56 standard suite
-          command: python scripts/run_all_trinity_systems.py --profile standard --status-json docs/trinity-live-traces/v56-ci-standard-suite-status.json
+          name: Run V57 standard suite
+          command: python scripts/run_all_trinity_systems.py --profile standard --status-json docs/trinity-live-traces/v57-ci-standard-suite-status.json
       - store_artifacts:
-          path: docs/trinity-live-traces/v56-ci-standard-suite-status.json
-          destination: v56-ci-standard-suite-status.json
+          path: docs/trinity-live-traces/v57-ci-standard-suite-status.json
+          destination: v57-ci-standard-suite-status.json
 
 workflows:
-  v56_quick_standard:
+  v57_quick_standard:
     jobs:
       - trinity_quick
       - trinity_standard:
