@@ -19,6 +19,7 @@ CONTROL = ROOT / "control-plane" / "v58-nexus-dashboard"
 SKILL_DIR = ROOT / "skills" / "trinity-workbench-guarded-v1"
 WORKBENCH = Path(r"C:\Users\hamis\OneDrive\Documents\New project")
 PHASE = "v58_omega"
+HYBRID_PHASE = "v59_v67_hybrid_omega"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
 EXECUTION_BRANCH = "codex/GHC-Family/v58-omega-exec"
 BASELINE_SHA = "5bed2feb58ad2e19de145e441e0ffa027b1b8b2d"
@@ -271,6 +272,16 @@ def suite_ladder_summary() -> dict[str, Any]:
         "v62-deep": TRACE / "v62-deep-suite-status.json",
         "v62-materialize-l4": TRACE / "v62-materialize-l4-suite-status.json",
         "v62-materialize-l5": TRACE / "v62-materialize-l5-suite-status.json",
+        "v63-deep": TRACE / "v63-deep-suite-status.json",
+        "v63-materialize-l5": TRACE / "v63-materialize-l5-suite-status.json",
+        "v64-deep": TRACE / "v64-deep-suite-status.json",
+        "v64-materialize-l5": TRACE / "v64-materialize-l5-suite-status.json",
+        "v65-deep": TRACE / "v65-deep-suite-status.json",
+        "v65-materialize-l5": TRACE / "v65-materialize-l5-suite-status.json",
+        "v66-deep": TRACE / "v66-deep-suite-status.json",
+        "v66-materialize-l5": TRACE / "v66-materialize-l5-suite-status.json",
+        "v67-deep": TRACE / "v67-deep-suite-status.json",
+        "v67-materialize-l5": TRACE / "v67-materialize-l5-suite-status.json",
     }
     resolved = {name: suite_status(path) for name, path in profiles.items()}
     required_v58 = ["v58-quick", "v58-standard", "v58-deep", "v58-mcp-refresh", "v58-materialize-l4", "v58-materialize-l5"]
@@ -305,11 +316,63 @@ def suite_ladder_summary() -> dict[str, Any]:
         "phase": PHASE,
         "suite_ladder_state": state,
         "mcp_refresh_policy": "run_once_in_v58_skip_for_v59_v62_unless_connector_state_changes",
-        "standard_repeat_policy": "v58_standard_already_green_v59_v62_skip_standalone_standard_when_deep_l4_l5_green",
+        "standard_repeat_policy": "v58_standard_already_green_v59_v67_skip_standalone_standard_when_deep_l5_green",
         "materialize_l2_l3_policy": "skip_when_l4_l5_green_and_no_lower_specific_failures_observed",
-        "phase_start_eureka_policy": "mandatory_before_each_v59_v62_suite_load",
+        "phase_start_eureka_policy": "mandatory_before_each_v59_v67_suite_load",
         "health_stop_policy": "pause_suite_execution_when_kubernetes_readyz_is_not_ok",
+        "mcp_refresh_policy": "separate_audit_lane_not_covered_by_deep_plus_l5",
         "profiles": resolved,
+    }
+
+
+def suite_labels(path: Path) -> set[str]:
+    data = read_json(path, {})
+    if not isinstance(data, dict):
+        return set()
+    return {str(item.get("label")) for item in data.get("results", []) if item.get("label")}
+
+
+def suite_coverage_policy() -> dict[str, Any]:
+    v58_standard = suite_labels(TRACE / "v58-standard-suite-status.json")
+    v58_deep = suite_labels(TRACE / "v58-deep-suite-status.json")
+    v59_deep = suite_labels(TRACE / "v59-deep-suite-status.json")
+    v58_l4 = suite_labels(TRACE / "v58-materialize-l4-suite-status.json")
+    v58_l5 = suite_labels(TRACE / "v58-materialize-l5-suite-status.json")
+    v59_l5 = suite_labels(TRACE / "v59-materialize-l5-suite-status.json")
+    standard_missing_from_v58_deep = sorted(v58_standard - v58_deep)
+    standard_missing_from_v59_deep = sorted(v58_standard - v59_deep)
+    l4_missing_from_l5 = sorted(v58_l4 - v58_l5)
+    l5_drift_to_v59 = sorted(v58_l5 - v59_l5)
+    cut_state = "approved_for_repeated_phases"
+    if standard_missing_from_v58_deep or standard_missing_from_v59_deep or l4_missing_from_l5 or l5_drift_to_v59:
+        cut_state = "not_approved_reintroduce_full_ladder"
+    return {
+        "generated_utc": now_iso(),
+        "phase": HYBRID_PHASE,
+        "suite_cut_state": cut_state,
+        "evidence": {
+            "v58_standard_labels": len(v58_standard),
+            "v58_deep_labels": len(v58_deep),
+            "v59_deep_labels": len(v59_deep),
+            "v58_l4_labels": len(v58_l4),
+            "v58_l5_labels": len(v58_l5),
+            "v59_l5_labels": len(v59_l5),
+            "standard_missing_from_v58_deep": len(standard_missing_from_v58_deep),
+            "standard_missing_from_v59_deep": len(standard_missing_from_v59_deep),
+            "l4_missing_from_l5": len(l4_missing_from_l5),
+            "v58_l5_missing_from_v59_l5": len(l5_drift_to_v59),
+        },
+        "repeat_policy": "for_v60_v67_run_deep_plus_l5_only_when_health_green",
+        "audit_cadence": "reintroduce_standard_and_l4_every_fifth_phase_or_on_failure_or_runner_change",
+        "mcp_cadence": "run_true_mcp_refresh_every_third_phase_or_on_connector_auth_cache_catalog_change",
+        "mcp_caveat": "deep_plus_l5_do_not_cover_true_mcp_refresh",
+        "fallback": "if_deep_or_l5_warns_or_fails_run_standard_then_l4_before_advancing",
+        "sample_missing_labels": {
+            "standard_missing_from_v58_deep": standard_missing_from_v58_deep[:10],
+            "standard_missing_from_v59_deep": standard_missing_from_v59_deep[:10],
+            "l4_missing_from_l5": l4_missing_from_l5[:10],
+            "v58_l5_missing_from_v59_l5": l5_drift_to_v59[:10],
+        },
     }
 
 
@@ -624,10 +687,14 @@ def additions_registry(commands: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def eureka_reports(suite: dict[str, Any], additions: dict[str, Any]) -> dict[str, Any]:
+def phase_queue() -> list[str]:
+    return [f"v{number}" for number in range(59, 68)]
+
+
+def eureka_reports(suite: dict[str, Any], additions: dict[str, Any], coverage: dict[str, Any]) -> dict[str, Any]:
     members = [
         ("Aletheon", "Do not confuse momentum with health; V59+ should start with eureka analysis before load."),
-        ("Ari", "Use deep plus L4/L5 as the repeated standard proof, but retain standard as a repair fallback."),
+        ("Ari", "Use deep plus L5 as the repeated standard/L4 proof, but keep MCP refresh as its own audit lane."),
         ("Kairos", "Pair QCIT/GMUT probes with observable deltas, not claims of external validation."),
         ("Sera", "Anchor public-source claims and keep advisory text separate from verified truth."),
         ("Cael Voss", "Treat the one-node cluster as a scarce runtime and cool it between heavy proofs."),
@@ -635,7 +702,18 @@ def eureka_reports(suite: dict[str, Any], additions: dict[str, Any]) -> dict[str
         ("Riven", "Publish forward-only with curated allowlists; leave suite churn unstaged."),
         ("Nox Soren", "Escalate only after readiness, pod health, and restart posture are recorded."),
     ]
-    phases = ["v59", "v60", "v61", "v62"]
+    phases = phase_queue()
+    next_moves = {
+        "v59": "Expo/phone UI lane, dashboard alternation, and post-V58 health-aware proof cycle.",
+        "v60": "Notion return lane if parent ID is supplied, otherwise repo dashboard consolidation.",
+        "v61": "Provider CLI/toolchain tranche with no unconfirmed installs.",
+        "v62": "Hybrid closeout slice for the original V58-V62 plan and V63 decision board.",
+        "v63": "Local/Cloud Nexus OS provider inventory and no-secret API readiness matrix.",
+        "v64": "GMUT/QCIT observable-delta proof refresh with claim/source separation.",
+        "v65": "Dashboard parity pass across local HTML, Notion pack, and Expo scaffold.",
+        "v66": "Storage/archive and dirty-churn compaction plan without destructive cleanup.",
+        "v67": "Final hybrid rollup, publication checkpoint, and V68/V69 decision board.",
+    }
     reports = {
         phase: {
             "phase": phase,
@@ -646,12 +724,8 @@ def eureka_reports(suite: dict[str, Any], additions: dict[str, Any]) -> dict[str
             "council": [{"member": name, "eureka": insight} for name, insight in members],
             "extension_board_count": len(additions["items"]),
             "suite_policy": suite["standard_repeat_policy"],
-            "next_move": {
-                "v59": "Expo/phone UI lane, dashboard alternation, and post-V58 health-aware proof cycle.",
-                "v60": "Notion return lane if parent ID is supplied, otherwise repo dashboard consolidation.",
-                "v61": "Provider CLI/toolchain tranche with no unconfirmed installs.",
-                "v62": "Hybrid closeout, publication, and V63 decision board.",
-            }[phase],
+            "suite_cut_state": coverage["suite_cut_state"],
+            "next_move": next_moves[phase],
         }
         for phase in phases
     }
@@ -664,11 +738,16 @@ def phase_plans() -> dict[str, Any]:
         "v60": "Return to Notion dashboard if parent access is supplied, then consolidate API proof lanes. Skip standalone standard if deep, L4, and L5 are green.",
         "v61": "Provider CLI tranche and one-node Kubernetes restart-watch hardening. Reintroduce standard only if deep/materialize exposes a failure family.",
         "v62": "Hybrid closeout: publish V58-V62 evidence rollup, suite ladder, and next V63 decision board. Treat deep plus L4/L5 as the standard-validation proof.",
+        "v63": "Provider/plugin inventory pass: Vercel, Cloudflare, Neon, Render, CircleCI, GitHub, Google Drive, Figma, Browser Use, and Notion blockers recorded without secrets.",
+        "v64": "Science lane pass: GMUT, QCIT, kairotic, and quantum-energy probes recorded as observable deltas with falsification notes.",
+        "v65": "Dashboard parity pass: local HTML, Notion import pack, Expo scaffold, and future phone UI route all share one data contract.",
+        "v66": "Storage and archive pass: classify heavy generated churn, preserve proof artifacts, and plan non-destructive compaction.",
+        "v67": "Hybrid publication and V68 decision pass: publish only curated truth and leave the full suite ladder available as an audit fallback.",
     }
     for phase, summary in plans.items():
         write_text(
             ROOT / "docs" / f"{phase}-omega-plan-proposal-v1.md",
-            f"# {phase.upper()} Omega Plan Proposal\n\n- Summary: {summary}\n- Gate: inherit V58 green standard, then use deep plus materialize L4/L5 as the repeated standard-validation proof.\n- Kubernetes: one-node only unless hardware state changes.\n",
+            f"# {phase.upper()} Omega Plan Proposal\n\n- Summary: {summary}\n- Gate: start with eureka analysis, then use Deep plus Materialize L5 as the repeated validation pair when health is green.\n- Audit cadence: reintroduce Standard and L4 every fifth phase or on any failure family; run true MCP refresh every third phase or on connector/cache changes.\n- Kubernetes: one-node only unless hardware state changes.\n",
         )
     write_text(
         ROOT / "docs" / "v59-beta-continuity-pack-v1.md",
@@ -684,6 +763,7 @@ def closeout(
     dashboard: dict[str, Any],
     drift: dict[str, Any],
     additions: dict[str, Any],
+    coverage: dict[str, Any],
 ) -> dict[str, Any]:
     residuals: list[str] = []
     if dashboard["notion_dashboard_state"] == "blocked_missing_parent":
@@ -708,7 +788,8 @@ def closeout(
             "workbench_drift_state": drift["recommendation"],
             "additions_state": additions["registry_state"],
             "git_publication_state": "pending",
-            "phase_start_eureka_state": "mandatory_v59_v62_before_suite_load",
+            "phase_start_eureka_state": "mandatory_v59_v67_before_suite_load",
+            "suite_cut_state": coverage["suite_cut_state"],
         },
         "bounded_residuals": residuals,
     }
@@ -736,6 +817,16 @@ def allowlist() -> dict[str, Any]:
         "docs/v61-eureka-analysis-v1.md",
         "docs/v62-eureka-analysis-v1.md",
         "docs/v58-omega-closeout-summary-v1.json",
+        "docs/v63-eureka-analysis-v1.md",
+        "docs/v63-omega-plan-proposal-v1.md",
+        "docs/v64-eureka-analysis-v1.md",
+        "docs/v64-omega-plan-proposal-v1.md",
+        "docs/v65-eureka-analysis-v1.md",
+        "docs/v65-omega-plan-proposal-v1.md",
+        "docs/v66-eureka-analysis-v1.md",
+        "docs/v66-omega-plan-proposal-v1.md",
+        "docs/v67-eureka-analysis-v1.md",
+        "docs/v67-omega-plan-proposal-v1.md",
         "docs/v58-omega-continuity-pack-v1.md",
         "docs/v58-omega-handoff-policy-v1.json",
         "docs/v59-beta-handoff-policy-v1.json",
@@ -758,12 +849,13 @@ def allowlist() -> dict[str, Any]:
         "git-publication-result",
         "browser-dashboard-proof",
         "eureka-analysis",
+        "suite-coverage-policy",
     ]:
         paths.append(f"docs/trinity-live-traces/v58-{name}-v1.json")
         paths.append(f"docs/trinity-live-traces/v58-{name}-v1.md")
     for profile in ["quick", "standard", "deep", "mcp-refresh", "materialize-l4", "materialize-l5"]:
         paths.append(f"docs/trinity-live-traces/v58-{profile}-suite-status.json")
-    for phase in ["v59", "v60", "v61", "v62"]:
+    for phase in phase_queue():
         for profile in ["quick", "standard", "deep", "materialize-l4", "materialize-l5"]:
             paths.append(f"docs/trinity-live-traces/{phase}-{profile}-suite-status.json")
     return {
@@ -807,6 +899,7 @@ def generate() -> dict[str, Any]:
     kube = kubernetes_truth()
     host = host_pressure_truth()
     suite = suite_ladder_summary()
+    coverage = suite_coverage_policy()
     drift, lineage, skill = workbench_reports()
     write_workbench_skill(skill)
     dashboard = dashboard_and_notion(api_bank, kube, suite)
@@ -823,9 +916,9 @@ def generate() -> dict[str, Any]:
         "local_dashboard_exists": (ROOT / "docs" / "v58-nexus-dashboard.html").exists(),
     }
     additions = additions_registry(commands)
-    eureka = eureka_reports(suite, additions)
+    eureka = eureka_reports(suite, additions, coverage)
     plans = phase_plans()
-    close = closeout(kube, host, suite, dashboard, drift, additions)
+    close = closeout(kube, host, suite, dashboard, drift, additions, coverage)
     staged = allowlist()
     baseline = {
         "generated_utc": now_iso(),
@@ -862,6 +955,8 @@ def generate() -> dict[str, Any]:
         "notion_parent_status": dashboard["notion_dashboard_state"],
         "hybrid_phase_policy": "execute_v58_live_then_v59_v62_live_if_health_gates_remain_green",
         "hybrid_phase_completion_state": suite["suite_ladder_state"],
+        "extended_hybrid_phase": HYBRID_PHASE,
+        "suite_cut_state": coverage["suite_cut_state"],
         "standard_repeat_policy": "drop_repeated_standard_after_v58_if_deep_l4_l5_remain_green",
         "operator_latest_correction": "new_phase_starts_require_grand_analysis_eureka_check_before_suite_execution",
         "suite_health_gate": "do_not_run_more_suites_while_kubernetes_readyz_is_not_ok",
@@ -898,6 +993,8 @@ def generate() -> dict[str, Any]:
         )
     write_json(TRACE / "v58-suite-ladder-summary-v1.json", suite)
     write_text(TRACE / "v58-suite-ladder-summary-v1.md", md("V58 Suite Ladder Summary", suite))
+    write_json(TRACE / "v58-suite-coverage-policy-v1.json", coverage)
+    write_text(TRACE / "v58-suite-coverage-policy-v1.md", md("V58 Suite Coverage Policy", coverage))
     write_json(TRACE / "v58-stage-allowlist-v1.json", staged)
     write_text(TRACE / "v58-stage-allowlist-v1.md", md("V58 Stage Allowlist", staged))
     write_json(AUTO / "v58-advisory-digest-v1.json", advisory)
@@ -916,6 +1013,7 @@ def generate() -> dict[str, Any]:
         "host": host,
         "dashboard": dashboard,
         "suite": suite,
+        "coverage": coverage,
         "drift": drift,
         "lineage": lineage,
         "skill": skill,

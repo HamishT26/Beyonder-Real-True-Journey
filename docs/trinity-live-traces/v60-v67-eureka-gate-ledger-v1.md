@@ -1,0 +1,59 @@
+# V60-V67 Eureka Gate Ledger
+
+```json
+{
+  "generated_utc": "2026-04-28T20:50:48+00:00",
+  "phase": "v60_v67_hybrid_omega",
+  "state": "mandatory_before_each_phase",
+  "phases": [
+    {
+      "phase": "v60",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v60 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v61",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v61 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v62",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v62 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v63",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v63 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v64",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v64 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v65",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v65 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v66",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v66 only when runtime health gate is open.",
+      "additions_count": 8
+    },
+    {
+      "phase": "v67",
+      "gate": "eureka_before_suite_load",
+      "next_move": "Execute v67 only when runtime health gate is open.",
+      "additions_count": 8
+    }
+  ]
+}
+```

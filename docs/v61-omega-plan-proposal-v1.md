@@ -1,5 +1,5 @@
 # V61 Omega Plan Proposal
 
-- Summary: Provider CLI tranche and one-node Kubernetes restart-watch hardening. Reintroduce standard only if deep/materialize exposes a failure family.
-- Gate: inherit V58 green standard, then use deep plus materialize L4/L5 as the repeated standard-validation proof.
-- Kubernetes: one-node only unless hardware state changes.
+- Additions: helm_presence_probe, kustomize_presence_probe, stern_log_probe, kubectx_guard, one_node_restart_watch, host_cooldown_ledger, docker_compose_profile_guard, local_runtime_budget
+- Validation: Deep plus Materialize L5 when runtime health gate is open.
+- Audit: Standard and L4 every fifth phase or on any failure family; MCP refresh every third phase or on connector/cache changes.
