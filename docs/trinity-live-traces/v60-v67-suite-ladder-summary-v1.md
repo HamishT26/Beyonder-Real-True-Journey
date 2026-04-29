@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-29T09:29:15+00:00",
+  "generated_utc": "2026-04-29T09:35:14+00:00",
   "phase": "v60_v67_hybrid_omega",
   "profiles": {
     "v58-quick": {

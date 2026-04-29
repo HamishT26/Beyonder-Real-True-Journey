@@ -394,6 +394,8 @@ def stage_allowlist() -> dict[str, Any]:
     paths = [
         "scripts/trinity_v60_v67_omega.py",
         "scripts/trinity_v58_omega.py",
+        "docs/trinity-live-traces/v60-git-publication-result-v1.json",
+        "docs/trinity-live-traces/v60-git-publication-result-v1.md",
         "docs/v60-v67-omega-hybrid-extension-plan-v1.md",
         "docs/v67-omega-closeout-summary-v1.json",
         "docs/v67-omega-continuity-pack-v1.md",
@@ -430,6 +432,29 @@ def stage_allowlist() -> dict[str, Any]:
     }
 
 
+def publication_result() -> dict[str, Any]:
+    local_head = run(["git", "rev-parse", "HEAD"], timeout=20)
+    remote_head = run(["git", "ls-remote", "origin", f"refs/heads/{PUBLICATION_BRANCH}"], timeout=30)
+    remote_sha = ""
+    if remote_head.get("ok") and remote_head.get("stdout"):
+        remote_sha = remote_head["stdout"].split()[0]
+    return {
+        "generated_utc": now_iso(),
+        "phase": PHASE,
+        "publication_branch": PUBLICATION_BRANCH,
+        "local_head_at_receipt_generation": local_head.get("stdout", ""),
+        "remote_head_verified": remote_sha,
+        "evidence_commit_state": "pushed_to_shared_branch" if remote_sha and remote_sha == local_head.get("stdout") else "verify_remote_branch",
+        "bookkeeping_commit_state": "this_receipt_is_written_after_the_evidence_push_and_included_in_the_next_forward_commit",
+        "pr_thread": {
+            "number": 45,
+            "url": "https://github.com/HamishT26/Beyonder-Real-True-Journey/pull/45",
+            "body_update_state": "not_updated_this_turn_to_avoid_unconfirmed_representational_edit",
+        },
+        "publication_policy": "forward_only_no_force_push_stage_only_allowlist",
+    }
+
+
 def generate() -> dict[str, Any]:
     TRACE.mkdir(parents=True, exist_ok=True)
     coverage = coverage_governor()
@@ -438,6 +463,7 @@ def generate() -> dict[str, Any]:
     provider = provider_board(commands)
     additions, plan_md = extension_plan()
     suite = suite_ladder()
+    publication = publication_result()
     eureka = {
         "generated_utc": now_iso(),
         "phase": PHASE,
@@ -475,7 +501,7 @@ def generate() -> dict[str, Any]:
             "runtime_load_gate": health["load_gate"],
             "local_kubernetes_state": health["local_kubernetes_state"],
             "provider_board_state": "blocker_aware_no_live_writes",
-            "publication_state": "pending",
+            "publication_state": publication["evidence_commit_state"],
         },
         "bounded_residuals": [
             "v60_v67_heavy_suites_not_run_until_runtime_health_gate_opens",
@@ -513,6 +539,8 @@ def generate() -> dict[str, Any]:
     write_text(TRACE / "v60-v67-suite-ladder-summary-v1.md", md("V60-V67 Suite Ladder Summary", suite))
     write_json(TRACE / "v67-provider-decision-board-v1.json", provider)
     write_text(TRACE / "v67-provider-decision-board-v1.md", md("V67 Provider Decision Board", provider))
+    write_json(TRACE / "v60-git-publication-result-v1.json", publication)
+    write_text(TRACE / "v60-git-publication-result-v1.md", md("V60 Git Publication Result", publication))
     write_json(TRACE / "v67-stage-allowlist-v1.json", allowlist)
     write_text(TRACE / "v67-stage-allowlist-v1.md", md("V67 Stage Allowlist", allowlist))
     write_text(ROOT / "docs" / "v60-v67-omega-hybrid-extension-plan-v1.md", plan_md)
@@ -541,6 +569,7 @@ def generate() -> dict[str, Any]:
         "eureka": eureka,
         "identity": identity,
         "journey": journey,
+        "publication": publication,
         "closeout": closeout,
         "allowlist": allowlist,
     }
