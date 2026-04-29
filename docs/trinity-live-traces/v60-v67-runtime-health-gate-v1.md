@@ -2,34 +2,29 @@
 
 ```json
 {
-  "generated_utc": "2026-04-28T23:07:46+00:00",
+  "generated_utc": "2026-04-29T09:29:14+00:00",
   "phase": "v60_v67_hybrid_omega",
-  "kubernetes_readyz": "not_ok",
+  "kubernetes_readyz": "not_requested_local_kubernetes_retired",
+  "local_kubernetes_state": "retired_by_operator_for_v60",
   "kubernetes_probe": {
     "ok": false,
     "returncode": 1,
-    "stderr_excerpt": "Unable to connect to the server: net/http: TLS handshake timeout"
+    "stdout_excerpt": "",
+    "stderr_excerpt": "error: current-context is not set",
+    "policy": "do_not_reenable_docker_desktop_kubernetes_in_v60"
+  },
+  "docker_probe": {
+    "state": "running",
+    "info_ok": true,
+    "ps_ok": true,
+    "server_version_excerpt": "\"29.4.0\"",
+    "running_containers": []
   },
   "host_pressure_state": "hot_pause_heavy_suites",
-  "max_container_cpu_percent": 181.54,
-  "free_physical_memory_kb": 157080,
-  "containers": [
-    {
-      "name": "kind-cloud-provider",
-      "cpu_percent": 48.18,
-      "memory": "42.8MiB / 1.711GiB"
-    },
-    {
-      "name": "kind-registry-mirror",
-      "cpu_percent": 0.0,
-      "memory": "7.973MiB / 1.711GiB"
-    },
-    {
-      "name": "desktop-control-plane",
-      "cpu_percent": 181.54,
-      "memory": "710.3MiB / 1.711GiB"
-    }
-  ],
-  "load_gate": "closed"
+  "max_container_cpu_percent": 0.0,
+  "free_physical_memory_kb": 278632,
+  "containers": [],
+  "load_gate": "closed",
+  "load_gate_basis": "docker_ok_plus_host_pressure_cool; local_kubernetes_is_not_required_for_v60"
 }
 ```

@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-28T20:50:47+00:00",
+  "generated_utc": "2026-04-29T09:29:14+00:00",
   "phase": "v60_v67_hybrid_omega",
   "lanes": [
     {
@@ -14,8 +14,8 @@
     },
     {
       "provider": "browser_use",
-      "state": "blocked_kernel_assets_missing",
-      "next_allowed_action": "repair kernel asset path then retry local dashboard/doc probe",
+      "state": "runtime_available_current_session",
+      "next_allowed_action": "use in-app browser for local dashboard/doc probes; no sensitive form submission without action-time confirmation",
       "live_write_enabled": false,
       "secret_policy": "raw_values_never_written"
     },
@@ -28,7 +28,7 @@
     },
     {
       "provider": "cloudflare",
-      "state": "missing_cli_or_path",
+      "state": "cli_available_read_gate_next",
       "next_allowed_action": "read-only account/pages/workers probe before any disposable worker",
       "live_write_enabled": false,
       "secret_policy": "raw_values_never_written"
@@ -79,6 +79,20 @@
       "provider": "figma",
       "state": "read_only_view_seat",
       "next_allowed_action": "read-only capture with explicit file key/node ID",
+      "live_write_enabled": false,
+      "secret_policy": "raw_values_never_written"
+    },
+    {
+      "provider": "oracle_cloud",
+      "state": "cli_available_read_gate_next",
+      "next_allowed_action": "read-only tenancy/region/limit probe before any OKE resource creation",
+      "live_write_enabled": false,
+      "secret_policy": "raw_values_never_written"
+    },
+    {
+      "provider": "multi_cli_windows",
+      "state": "cli_available_read_gate_next",
+      "next_allowed_action": "visible terminal orchestration only after exact commands and data-sharing boundary are confirmed",
       "live_write_enabled": false,
       "secret_policy": "raw_values_never_written"
     }

@@ -8,8 +8,8 @@
 
 | Phase | Additions |
 |---|---|
-| V60 | notion_parent_binding_gate, notion_block_mapper, notion_write_receipt_schema, api_surface_proof_index, connector_permission_matrix, workbench_truth_precedence_v2, browser_kernel_repair_probe, v60_deep_l5_packet |
-| V61 | helm_presence_probe, kustomize_presence_probe, stern_log_probe, kubectx_guard, one_node_restart_watch, host_cooldown_ledger, docker_compose_profile_guard, local_runtime_budget |
+| V60 | agent_identity_reality_ledger, multi_cli_persistence_gate, docker_only_runtime_gate, oci_readonly_feasibility_gate, notion_parent_binding_gate, connector_permission_matrix, browser_use_live_probe, v60_deep_l5_packet |
+| V61 | cli_agent_receipt_protocol, kimi_codex_data_boundary, visible_terminal_command_board, host_cooldown_ledger, docker_compose_profile_guard, local_runtime_budget, v61_eureka_recommendation_board, cloud_resource_confirmation_gate |
 | V62 | v58_v62_rollup_index, suite_ladder_delta_digest, additions_promotion_board, blocker_retirement_board, v63_decision_board, publication_allowlist_v62, publication_result_validator, closeout_handoff_triplet |
 | V63 | expo_go_qr_lane, expo_web_preview_smoke, phone_dashboard_contract, mobile_truth_cards, offline_dashboard_bundle, dashboard_a11y_smoke, browser_fallback_probe, dashboard_screenshot_receipt |
 | V64 | wrangler_readonly_probe, cloudflare_pages_probe, d1_schema_dry_run, r2_inventory_probe, workers_ai_capability_card, vercel_static_probe, render_static_probe, neon_readonly_state |

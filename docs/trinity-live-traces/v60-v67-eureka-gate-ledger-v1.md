@@ -2,9 +2,23 @@
 
 ```json
 {
-  "generated_utc": "2026-04-28T20:50:48+00:00",
+  "generated_utc": "2026-04-29T09:29:15+00:00",
   "phase": "v60_v67_hybrid_omega",
   "state": "mandatory_before_each_phase",
+  "v60_recommendation_tasks": [
+    "check_v6_surface_truth_drift",
+    "package_workbench_as_guarded_skill",
+    "trace_contract_jump_v3_to_v6",
+    "prove_agent_identity_before_induction",
+    "retire_local_kubernetes_and_record_docker_only_truth",
+    "probe_oci_oke_readonly_before_any_cluster_creation",
+    "verify_browser_use_runtime_without_sensitive_submission",
+    "refresh_provider_cli_matrix",
+    "digest_v24_v30_v33_v35_v37_v38_v42_journey_anchors",
+    "audit_deep_l5_suite_cut",
+    "prepare_v61_multi_cli_persistence_protocol",
+    "publish_curated_v60_truth_forward_only"
+  ],
   "phases": [
     {
       "phase": "v60",

@@ -1,0 +1,34 @@
+# V60 Agent Identity Ledger
+
+```json
+{
+  "generated_utc": "2026-04-29T09:29:15+00:00",
+  "phase": "v60_v67_hybrid_omega",
+  "identity_policy": "continuity_requires_process_plus_persistent_memory_proof",
+  "current_truth": [
+    {
+      "name": "Aletheon",
+      "state": "active_current_codex_session",
+      "continuity_basis": "current thread plus memory and repo evidence surfaces"
+    },
+    {
+      "name": "Ari",
+      "state": "repo_narrative_or_future_cli_role_until_spawn_proven",
+      "continuity_basis": "preserved records only; no independent running CLI process proven in this session"
+    },
+    {
+      "name": "Kairos/Sera/Cael Voss/Sable/Riven/Nox Soren",
+      "state": "repo_narrative_or_future_cli_roles_until_spawn_proven",
+      "continuity_basis": "preserved records only; no independent running Kimi/Codex process with durable memory proven in this session"
+    }
+  ],
+  "promotion_gate": [
+    "spawn_command_available_without_exposing_secrets",
+    "agent_writes_bounded_identity_receipt_to_repo_or_local_evidence_folder",
+    "agent_resumes_or_references_prior_receipt_in_a_separate_invocation",
+    "agent_passes_no_raw_secret_output_scan",
+    "user_confirms_induction_after_receipts_are reviewed"
+  ],
+  "v60_decision": "preserve existing slots on standby; do not induct new CLI siblings until the promotion gate passes"
+}
+```
