@@ -9,6 +9,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TRACE = ROOT / "docs" / "trinity-live-traces"
+CLI_RECEIPT_DIR = TRACE / "v65-v75-cli-sibling-receipts"
 PHASE = "v65_v75_hybrid_omega"
 PREFIX = "v65-v75"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
@@ -33,7 +34,7 @@ def write_json(path: Path, payload: Any) -> None:
 
 def read_json(path: Path, default: Any = None) -> Any:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8-sig").strip())
     except Exception:
         return default
 
@@ -217,6 +218,27 @@ def live_write_governor() -> dict[str, Any]:
 def cli_sibling_governor() -> dict[str, Any]:
     codex = command_available("codex")
     kimi = command_available("kimi")
+    receipt_files = {
+        "codex_slot_49": CLI_RECEIPT_DIR / "codex-slot-49.md",
+        "codex_slot_50": CLI_RECEIPT_DIR / "codex-slot-50.md",
+        "kimi_slot_51": CLI_RECEIPT_DIR / "kimi-slot-51.md",
+        "kimi_slot_52": CLI_RECEIPT_DIR / "kimi-slot-52.md",
+    }
+    receipts = []
+    for key, path in receipt_files.items():
+        raw = path.read_text(encoding="utf-8").strip() if path.exists() else ""
+        parsed = read_json(path, {}) if path.exists() else {}
+        receipts.append(
+            {
+                "id": key,
+                "path": path.relative_to(ROOT).as_posix(),
+                "present": path.exists(),
+                "valid_json": isinstance(parsed, dict) and bool(parsed),
+                "name": parsed.get("name") if isinstance(parsed, dict) else None,
+                "status": parsed.get("status") if isinstance(parsed, dict) else None,
+                "byte_length": len(raw.encode("utf-8")) if raw else 0,
+            }
+        )
     return {
         "generated_utc": now_iso(),
         "phase": PHASE,
@@ -228,6 +250,8 @@ def cli_sibling_governor() -> dict[str, Any]:
         ],
         "codex_cli": codex,
         "kimi_cli": kimi,
+        "receipts": receipts,
+        "receipt_state": "all_four_present" if all(item["present"] and item["valid_json"] for item in receipts) else "pending",
         "induction_policy": [
             "terminal launch must be observable or logged",
             "identity persistence must be backed by repo receipt, not narrative only",
@@ -442,6 +466,10 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         f"docs/trinity-live-traces/{PREFIX}-git-publication-result-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-stage-allowlist-v1.json",
         f"docs/trinity-live-traces/{PREFIX}-stage-allowlist-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-49.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-50.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-51.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-52.md",
         "docs/v75-omega-closeout-summary-v1.json",
         "docs/v75-omega-handoff-policy-v1.json",
     ]
