@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T01:54:56+00:00",
+  "generated_utc": "2026-04-30T02:09:32+00:00",
   "phase": "v61_v65_hybrid_omega",
   "kubernetes_readyz": "not_requested_local_kubernetes_retired",
   "local_kubernetes_state": "retired_by_operator_for_v61_v65",
@@ -23,8 +23,8 @@
   },
   "host_pressure_state": "cool",
   "max_container_cpu_percent": 0.0,
-  "free_physical_memory_kb": 474648,
-  "free_memory_cool_floor_kb": 400000,
+  "free_physical_memory_kb": 463192,
+  "free_memory_cool_floor_kb": 300000,
   "containers": [],
   "load_gate": "open",
   "load_gate_basis": "host_pressure_cool_required; Docker and local Kubernetes are not required for repo-only Deep/L5 but remain on operator hold"

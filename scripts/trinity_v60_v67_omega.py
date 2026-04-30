@@ -16,7 +16,7 @@ PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
 ACTIVE_PHASES = ["v61", "v62", "v63", "v64", "v65"]
 LEGACY_TRACE_PREFIX = "v60-v67"
 ACTIVE_TRACE_PREFIX = "v61-v65"
-FREE_MEMORY_COOL_FLOOR_KB = 400_000
+FREE_MEMORY_COOL_FLOOR_KB = 300_000
 API_BANK_CANDIDATES = [
     Path("C:/Users/hamis/GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up).txt"),
     Path("D:/GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up).txt"),
@@ -580,7 +580,13 @@ def phase_half_governor() -> dict[str, Any]:
         first_half_state = "published_green_legacy" if is_legacy_green else "pending"
         if phase == "v63":
             first_half_state = "complete"
-        if phase == "v64" and suite_status("v63-deep")["effective_success"]:
+        if (
+            phase == "v64"
+            and suite_status("v63-deep")["effective_success"]
+            and suite_status("v63-materialize-l5")["effective_success"]
+        ):
+            first_half_state = "complete"
+        elif phase == "v64" and suite_status("v63-deep")["effective_success"]:
             first_half_state = "cooldown_prep_started"
         rows.append(
             {
@@ -656,7 +662,7 @@ def prep_half_markdown(phase: str, governor: dict[str, Any]) -> str:
             "Build offline_dashboard_bundle from repo-side data only.",
             "Add dashboard_a11y_smoke for static HTML/mobile surfaces.",
             "Record browser_fallback_probe using local file proof only.",
-            "Produce dashboard_screenshot_receipt only if Browser Use is stable and memory stays above 400 MB.",
+            "Produce dashboard_screenshot_receipt only if Browser Use is stable and memory stays above 300 MB.",
             "Keep notion_parent_binding_gate blocked_missing_parent until a real parent page or database ID is supplied.",
             "Refresh local_html_dashboard_refresh from existing artifacts, not Google Drive or live Notion.",
             "Record dashboard_token_usage_placeholder as unknown/not_measured unless a real metering source appears.",

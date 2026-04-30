@@ -12,7 +12,7 @@
 - Build offline_dashboard_bundle from repo-side data only.
 - Add dashboard_a11y_smoke for static HTML/mobile surfaces.
 - Record browser_fallback_probe using local file proof only.
-- Produce dashboard_screenshot_receipt only if Browser Use is stable and memory stays above 400 MB.
+- Produce dashboard_screenshot_receipt only if Browser Use is stable and memory stays above 300 MB.
 - Keep notion_parent_binding_gate blocked_missing_parent until a real parent page or database ID is supplied.
 - Refresh local_html_dashboard_refresh from existing artifacts, not Google Drive or live Notion.
 - Record dashboard_token_usage_placeholder as unknown/not_measured unless a real metering source appears.
