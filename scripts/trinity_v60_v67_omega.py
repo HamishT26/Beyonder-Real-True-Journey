@@ -550,6 +550,160 @@ def active_phase_suite_states() -> dict[str, Any]:
     }
 
 
+def phase_half_governor() -> dict[str, Any]:
+    phase_inputs = {
+        "v63": [
+            "published_v61_v62_deep_l5_green_evidence",
+            "Grand v60 Omega multi CLI window proposal",
+            "Beyonder v41/v42 journey proposals",
+            "Kimi K2.6 Agent Swarm official help page",
+            "E2B sandbox CLI docs",
+            "Oracle OKE docs",
+        ],
+        "v64": [
+            "v63_deep_result",
+            "v63_cooldown_window",
+            "provider_readiness_probe",
+            "V64 cloud/provider read-only lane",
+        ],
+        "v65": [
+            "v64_deep_l5_result",
+            "GMUT/QCIT/FreedID evidence surfaces",
+            "standard_l4_audit_reintroduction_policy",
+        ],
+    }
+    rows = []
+    for phase in ACTIVE_PHASES:
+        deep = suite_status(f"{phase}-deep")
+        l5 = suite_status(f"{phase}-materialize-l5")
+        is_legacy_green = phase in {"v61", "v62"} and deep["effective_success"] and l5["effective_success"]
+        first_half_state = "published_green_legacy" if is_legacy_green else "pending"
+        if phase == "v63":
+            first_half_state = "complete"
+        rows.append(
+            {
+                "phase": phase,
+                "first_half_name": "research_extension_prep",
+                "first_half_artifact": f"docs/{phase}-omega-prep-half-v1.md",
+                "first_half_required": True,
+                "first_half_state": first_half_state,
+                "first_half_inputs": phase_inputs.get(phase, ["prior_phase_green_evidence", "current_provider_board"]),
+                "extension_targets": "30_to_50_candidate_systems_skills_scripts_commands_workflows",
+                "prep_outputs": [
+                    f"docs/{phase}-omega-prep-half-v1.md",
+                    f"docs/{phase}-eureka-analysis-v1.md",
+                    f"docs/{phase}-omega-plan-proposal-v1.md",
+                ],
+                "second_half_name": "deep_l5_validation",
+                "second_half_artifacts": [
+                    f"docs/trinity-live-traces/{phase}-deep-suite-status.json",
+                    f"docs/trinity-live-traces/{phase}-materialize-l5-suite-status.json",
+                ],
+                "deep_l5_gate": [
+                    "first_half_state_complete_or_published_green_legacy",
+                    "runtime_load_gate_open",
+                    "no_raw_secrets_written",
+                    "google_drive_state_operator_hold_preserved",
+                    "prior_phase_deep_l5_has_no_warn_fail_timeout_or_standard_l4_fallback_passed",
+                ],
+                "cooldown_state": "cooldown_before_l5_if_memory_margin_is_thin",
+                "overlap_prep": {
+                    "starts_during_phase": "v63",
+                    "starts_when": "v63_cooldown_started",
+                    "allowed_work": ["research", "provider_readiness_review", "prep_artifact_draft"],
+                    "blocked_work": ["v64_deep", "v64_materialize_l5", "live_write_promotion"],
+                }
+                if phase == "v64"
+                else None,
+            }
+        )
+    return {
+        "generated_utc": now_iso(),
+        "phase": PHASE,
+        "policy": "each_future_phase_requires_research_extension_prep_before_deep_l5_validation",
+        "published_suite_evidence_preserved": {
+            "v61": active_phase_suite_states()["v61"],
+            "v62": active_phase_suite_states()["v62"],
+        },
+        "phases": rows,
+    }
+
+
+def prep_half_markdown(phase: str, governor: dict[str, Any]) -> str:
+    row = next(item for item in governor["phases"] if item["phase"] == phase)
+    tasks = [
+        "Package the v6 surface truth drift check into a compact audit card.",
+        "Convert the workbench guarded skill into an install-safe local-only receipt.",
+        "Trace the v3-v6 contract jump and mark API/surface drift.",
+        "Draft the CLI sibling receipt protocol without external model transmission.",
+        "Score E2B sandbox as a future cloud execution lane from official CLI docs.",
+        "Score OCI OKE as future Kubernetes lane from official OKE docs.",
+        "Keep Docker Desktop and local Kubernetes on standby.",
+        "Refresh Browser Use local dashboard proof.",
+        "Build a phone-dashboard contract that can target Notion or Expo later.",
+        "Add a suite cooldown handoff before Materialize L5 when memory margin is thin.",
+        "Map 30-50 candidate additions into promote/defer/blocked buckets.",
+        "Preserve API bank as presence-only secret evidence.",
+    ]
+    if phase == "v63":
+        tasks = [
+            "Create expo_go_qr_lane readiness receipt without cloud build or EAS publish.",
+            "Run expo_web_preview_smoke only as local/npx readiness if the host gate is open.",
+            "Define phone_dashboard_contract from V58 dashboard data fields to mobile cards.",
+            "Materialize mobile_truth_cards from suite/provider/runtime JSON preserving operator_hold and blocked states.",
+            "Build offline_dashboard_bundle from repo-side data only.",
+            "Add dashboard_a11y_smoke for static HTML/mobile surfaces.",
+            "Record browser_fallback_probe using local file proof only.",
+            "Produce dashboard_screenshot_receipt only if Browser Use is stable and memory stays above 400 MB.",
+            "Keep notion_parent_binding_gate blocked_missing_parent until a real parent page or database ID is supplied.",
+            "Refresh local_html_dashboard_refresh from existing artifacts, not Google Drive or live Notion.",
+            "Record dashboard_token_usage_placeholder as unknown/not_measured unless a real metering source appears.",
+            "Generate v64_provider_probe_decision_board for read/list probes only.",
+        ]
+    if phase == "v64":
+        tasks = [
+            "Run wrangler_readonly_probe as identity/status only; no worker or Pages creation.",
+            "Run cloudflare_pages_probe as list/read capability proof with account details redacted.",
+            "Run d1_schema_dry_run against local schema files only; no D1 database creation.",
+            "Run r2_inventory_probe as read-only capability check or blocker truth.",
+            "Create workers_ai_capability_card from CLI/docs/cache evidence only; no inference call without confirmation.",
+            "Run vercel_static_probe as missing-CLI or read-only status only.",
+            "Run render_static_probe as missing-CLI or read-only status only.",
+            "Run neon_readonly_state as missing-CLI or read-only status only.",
+            "Run circleci_config_probe as config validation/read status only; no pipeline trigger.",
+            "Run github_pr_truth_sync_readonly and preserve PR body edit gate.",
+            "Record google_drive_operator_hold_receipt and keep Drive non-authoritative.",
+            "Carry V63 cooldown notes into V64 validation gate.",
+        ]
+        tasks.extend(
+            [
+                "Start V64 provider readiness review during V63 cooldown only.",
+                "Prepare Cloudflare/Vercel/Render/Neon read-only cards without live writes.",
+                "Block V64 Deep and L5 until V63 is complete and V64 prep is complete.",
+            ]
+        )
+    lines = [
+        f"# {phase.upper()} Omega Prep Half",
+        "",
+        f"- First half state: `{row['first_half_state']}`",
+        "- Goal: research, internalize, plan, and package extension candidates before suite load.",
+        "- Validation remains Deep plus Materialize L5 after prep and load gates are open.",
+        "",
+        "## Extension Tasks",
+    ]
+    lines.extend(f"- {task}" for task in tasks)
+    lines.extend(
+        [
+            "",
+            "## Safety Gates",
+            "- No raw secrets are read into committed artifacts.",
+            "- No Kimi/Codex CLI external sibling induction without receipt proof and explicit action-time confirmation for data transmission.",
+            "- No Docker Desktop, local Kubernetes, cloud resource creation, Notion live write, or PR body edit without a fresh gate.",
+        ]
+    )
+    return "\n".join(lines) + "\n"
+
+
 def stage_allowlist() -> dict[str, Any]:
     paths = [
         "scripts/trinity_v60_v67_omega.py",
@@ -564,6 +718,8 @@ def stage_allowlist() -> dict[str, Any]:
         "docs/trinity-live-traces/v61-v65-additions-registry-v1.md",
         "docs/trinity-live-traces/v61-v65-eureka-gate-ledger-v1.json",
         "docs/trinity-live-traces/v61-v65-eureka-gate-ledger-v1.md",
+        "docs/trinity-live-traces/v61-v65-phase-half-governor-v1.json",
+        "docs/trinity-live-traces/v61-v65-phase-half-governor-v1.md",
         "docs/trinity-live-traces/v61-v65-agent-identity-ledger-v1.json",
         "docs/trinity-live-traces/v61-v65-agent-identity-ledger-v1.md",
         "docs/trinity-live-traces/v61-v65-journey-anchor-digest-v1.json",
@@ -610,6 +766,7 @@ def stage_allowlist() -> dict[str, Any]:
     for phase in range(61, 66):
         paths.append(f"docs/v{phase}-omega-plan-proposal-v1.md")
         paths.append(f"docs/v{phase}-eureka-analysis-v1.md")
+        paths.append(f"docs/v{phase}-omega-prep-half-v1.md")
         paths.append(f"docs/trinity-live-traces/v{phase}-deep-suite-status.json")
         paths.append(f"docs/trinity-live-traces/v{phase}-materialize-l5-suite-status.json")
     return {
@@ -653,6 +810,7 @@ def generate() -> dict[str, Any]:
     additions, plan_md = extension_plan()
     suite = suite_ladder()
     active_suites = active_phase_suite_states()
+    half_governor = phase_half_governor()
     publication = publication_result()
     secret_banks = api_bank_presence()
     eureka = {
@@ -729,6 +887,8 @@ def generate() -> dict[str, Any]:
     write_text(TRACE / "v61-v65-additions-registry-v1.md", md("V61-V65 Additions Registry", additions))
     write_json(TRACE / "v61-v65-eureka-gate-ledger-v1.json", eureka)
     write_text(TRACE / "v61-v65-eureka-gate-ledger-v1.md", md("V61-V65 Eureka Gate Ledger", eureka))
+    write_json(TRACE / "v61-v65-phase-half-governor-v1.json", half_governor)
+    write_text(TRACE / "v61-v65-phase-half-governor-v1.md", md("V61-V65 Phase Half Governor", half_governor))
     write_json(TRACE / "v61-v65-agent-identity-ledger-v1.json", identity)
     write_text(TRACE / "v61-v65-agent-identity-ledger-v1.md", md("V61-V65 Agent Identity Ledger", identity))
     write_json(TRACE / "v61-v65-journey-anchor-digest-v1.json", journey)
@@ -774,6 +934,7 @@ def generate() -> dict[str, Any]:
             ROOT / "docs" / f"{phase['phase']}-omega-plan-proposal-v1.md",
             f"# {phase['phase'].upper()} Omega Plan Proposal\n\n- Additions: {', '.join(phase['additions'])}\n- Validation: Deep plus Materialize L5 when runtime health gate is open.\n- Audit: Standard and L4 every fifth phase or on any failure family; MCP refresh every third phase or on connector/cache changes.\n",
         )
+        write_text(ROOT / "docs" / f"{phase['phase']}-omega-prep-half-v1.md", prep_half_markdown(phase["phase"], half_governor))
     write_json(ROOT / "docs" / "v65-omega-closeout-summary-v1.json", closeout)
     write_json(ROOT / "docs" / "v65-omega-handoff-policy-v1.json", handoff)
     write_json(ROOT / "docs" / "v67-omega-closeout-summary-v1.json", closeout)
@@ -795,6 +956,7 @@ def generate() -> dict[str, Any]:
         "additions": additions,
         "suite": suite,
         "eureka": eureka,
+        "half_governor": half_governor,
         "identity": identity,
         "journey": journey,
         "secret_banks": secret_banks,

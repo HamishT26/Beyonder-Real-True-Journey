@@ -1,0 +1,216 @@
+# V61-V65 Phase Half Governor
+
+```json
+{
+  "generated_utc": "2026-04-30T01:42:41+00:00",
+  "phase": "v61_v65_hybrid_omega",
+  "policy": "each_future_phase_requires_research_extension_prep_before_deep_l5_validation",
+  "published_suite_evidence_preserved": {
+    "v61": {
+      "deep": {
+        "path": "docs/trinity-live-traces/v61-deep-suite-status.json",
+        "present": true,
+        "effective_success": true,
+        "summary": "1160 PASS / 0 WARN / 0 FAIL"
+      },
+      "materialize_l5": {
+        "path": "docs/trinity-live-traces/v61-materialize-l5-suite-status.json",
+        "present": true,
+        "effective_success": true,
+        "summary": "1155 PASS / 0 WARN / 0 FAIL"
+      }
+    },
+    "v62": {
+      "deep": {
+        "path": "docs/trinity-live-traces/v62-deep-suite-status.json",
+        "present": true,
+        "effective_success": true,
+        "summary": "1160 PASS / 0 WARN / 0 FAIL"
+      },
+      "materialize_l5": {
+        "path": "docs/trinity-live-traces/v62-materialize-l5-suite-status.json",
+        "present": true,
+        "effective_success": true,
+        "summary": "1155 PASS / 0 WARN / 0 FAIL"
+      }
+    }
+  },
+  "phases": [
+    {
+      "phase": "v61",
+      "first_half_name": "research_extension_prep",
+      "first_half_artifact": "docs/v61-omega-prep-half-v1.md",
+      "first_half_required": true,
+      "first_half_state": "published_green_legacy",
+      "first_half_inputs": [
+        "prior_phase_green_evidence",
+        "current_provider_board"
+      ],
+      "extension_targets": "30_to_50_candidate_systems_skills_scripts_commands_workflows",
+      "prep_outputs": [
+        "docs/v61-omega-prep-half-v1.md",
+        "docs/v61-eureka-analysis-v1.md",
+        "docs/v61-omega-plan-proposal-v1.md"
+      ],
+      "second_half_name": "deep_l5_validation",
+      "second_half_artifacts": [
+        "docs/trinity-live-traces/v61-deep-suite-status.json",
+        "docs/trinity-live-traces/v61-materialize-l5-suite-status.json"
+      ],
+      "deep_l5_gate": [
+        "first_half_state_complete_or_published_green_legacy",
+        "runtime_load_gate_open",
+        "no_raw_secrets_written",
+        "google_drive_state_operator_hold_preserved",
+        "prior_phase_deep_l5_has_no_warn_fail_timeout_or_standard_l4_fallback_passed"
+      ],
+      "cooldown_state": "cooldown_before_l5_if_memory_margin_is_thin",
+      "overlap_prep": null
+    },
+    {
+      "phase": "v62",
+      "first_half_name": "research_extension_prep",
+      "first_half_artifact": "docs/v62-omega-prep-half-v1.md",
+      "first_half_required": true,
+      "first_half_state": "published_green_legacy",
+      "first_half_inputs": [
+        "prior_phase_green_evidence",
+        "current_provider_board"
+      ],
+      "extension_targets": "30_to_50_candidate_systems_skills_scripts_commands_workflows",
+      "prep_outputs": [
+        "docs/v62-omega-prep-half-v1.md",
+        "docs/v62-eureka-analysis-v1.md",
+        "docs/v62-omega-plan-proposal-v1.md"
+      ],
+      "second_half_name": "deep_l5_validation",
+      "second_half_artifacts": [
+        "docs/trinity-live-traces/v62-deep-suite-status.json",
+        "docs/trinity-live-traces/v62-materialize-l5-suite-status.json"
+      ],
+      "deep_l5_gate": [
+        "first_half_state_complete_or_published_green_legacy",
+        "runtime_load_gate_open",
+        "no_raw_secrets_written",
+        "google_drive_state_operator_hold_preserved",
+        "prior_phase_deep_l5_has_no_warn_fail_timeout_or_standard_l4_fallback_passed"
+      ],
+      "cooldown_state": "cooldown_before_l5_if_memory_margin_is_thin",
+      "overlap_prep": null
+    },
+    {
+      "phase": "v63",
+      "first_half_name": "research_extension_prep",
+      "first_half_artifact": "docs/v63-omega-prep-half-v1.md",
+      "first_half_required": true,
+      "first_half_state": "complete",
+      "first_half_inputs": [
+        "published_v61_v62_deep_l5_green_evidence",
+        "Grand v60 Omega multi CLI window proposal",
+        "Beyonder v41/v42 journey proposals",
+        "Kimi K2.6 Agent Swarm official help page",
+        "E2B sandbox CLI docs",
+        "Oracle OKE docs"
+      ],
+      "extension_targets": "30_to_50_candidate_systems_skills_scripts_commands_workflows",
+      "prep_outputs": [
+        "docs/v63-omega-prep-half-v1.md",
+        "docs/v63-eureka-analysis-v1.md",
+        "docs/v63-omega-plan-proposal-v1.md"
+      ],
+      "second_half_name": "deep_l5_validation",
+      "second_half_artifacts": [
+        "docs/trinity-live-traces/v63-deep-suite-status.json",
+        "docs/trinity-live-traces/v63-materialize-l5-suite-status.json"
+      ],
+      "deep_l5_gate": [
+        "first_half_state_complete_or_published_green_legacy",
+        "runtime_load_gate_open",
+        "no_raw_secrets_written",
+        "google_drive_state_operator_hold_preserved",
+        "prior_phase_deep_l5_has_no_warn_fail_timeout_or_standard_l4_fallback_passed"
+      ],
+      "cooldown_state": "cooldown_before_l5_if_memory_margin_is_thin",
+      "overlap_prep": null
+    },
+    {
+      "phase": "v64",
+      "first_half_name": "research_extension_prep",
+      "first_half_artifact": "docs/v64-omega-prep-half-v1.md",
+      "first_half_required": true,
+      "first_half_state": "pending",
+      "first_half_inputs": [
+        "v63_deep_result",
+        "v63_cooldown_window",
+        "provider_readiness_probe",
+        "V64 cloud/provider read-only lane"
+      ],
+      "extension_targets": "30_to_50_candidate_systems_skills_scripts_commands_workflows",
+      "prep_outputs": [
+        "docs/v64-omega-prep-half-v1.md",
+        "docs/v64-eureka-analysis-v1.md",
+        "docs/v64-omega-plan-proposal-v1.md"
+      ],
+      "second_half_name": "deep_l5_validation",
+      "second_half_artifacts": [
+        "docs/trinity-live-traces/v64-deep-suite-status.json",
+        "docs/trinity-live-traces/v64-materialize-l5-suite-status.json"
+      ],
+      "deep_l5_gate": [
+        "first_half_state_complete_or_published_green_legacy",
+        "runtime_load_gate_open",
+        "no_raw_secrets_written",
+        "google_drive_state_operator_hold_preserved",
+        "prior_phase_deep_l5_has_no_warn_fail_timeout_or_standard_l4_fallback_passed"
+      ],
+      "cooldown_state": "cooldown_before_l5_if_memory_margin_is_thin",
+      "overlap_prep": {
+        "starts_during_phase": "v63",
+        "starts_when": "v63_cooldown_started",
+        "allowed_work": [
+          "research",
+          "provider_readiness_review",
+          "prep_artifact_draft"
+        ],
+        "blocked_work": [
+          "v64_deep",
+          "v64_materialize_l5",
+          "live_write_promotion"
+        ]
+      }
+    },
+    {
+      "phase": "v65",
+      "first_half_name": "research_extension_prep",
+      "first_half_artifact": "docs/v65-omega-prep-half-v1.md",
+      "first_half_required": true,
+      "first_half_state": "pending",
+      "first_half_inputs": [
+        "v64_deep_l5_result",
+        "GMUT/QCIT/FreedID evidence surfaces",
+        "standard_l4_audit_reintroduction_policy"
+      ],
+      "extension_targets": "30_to_50_candidate_systems_skills_scripts_commands_workflows",
+      "prep_outputs": [
+        "docs/v65-omega-prep-half-v1.md",
+        "docs/v65-eureka-analysis-v1.md",
+        "docs/v65-omega-plan-proposal-v1.md"
+      ],
+      "second_half_name": "deep_l5_validation",
+      "second_half_artifacts": [
+        "docs/trinity-live-traces/v65-deep-suite-status.json",
+        "docs/trinity-live-traces/v65-materialize-l5-suite-status.json"
+      ],
+      "deep_l5_gate": [
+        "first_half_state_complete_or_published_green_legacy",
+        "runtime_load_gate_open",
+        "no_raw_secrets_written",
+        "google_drive_state_operator_hold_preserved",
+        "prior_phase_deep_l5_has_no_warn_fail_timeout_or_standard_l4_fallback_passed"
+      ],
+      "cooldown_state": "cooldown_before_l5_if_memory_margin_is_thin",
+      "overlap_prep": null
+    }
+  ]
+}
+```
