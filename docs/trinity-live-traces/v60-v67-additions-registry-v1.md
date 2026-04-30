@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T01:34:05+00:00",
+  "generated_utc": "2026-04-30T01:38:25+00:00",
   "phase": "v61_v65_hybrid_omega",
   "additions_total": 60,
   "policy": "evidence_first_no_secret_no_unconfirmed_install",
