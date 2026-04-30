@@ -1,6 +1,6 @@
 # V75 Omega Prep Half
 
-- State: `pending`
+- State: `ready`
 - Live write phase: `True`
 - Extension target: `50` candidate systems/skills/scripts/workflows.
 - Eureka target: `25` recommendations before validation.
