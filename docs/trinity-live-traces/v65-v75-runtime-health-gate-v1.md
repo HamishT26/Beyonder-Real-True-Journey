@@ -2,10 +2,10 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T10:15:45+00:00",
+  "generated_utc": "2026-04-30T10:16:54+00:00",
   "phase": "v65_v75_hybrid_omega",
   "host_pressure_state": "cool",
-  "free_physical_memory_kb": 432304,
+  "free_physical_memory_kb": 425740,
   "free_memory_cool_floor_kb": 300000,
   "load_gate": "open",
   "docker_state": "operator_hold",
