@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T07:49:31+00:00",
+  "generated_utc": "2026-04-30T08:14:14+00:00",
   "phase": "v65_v75_hybrid_omega",
   "anchor": {
     "v64_deep": {
@@ -145,6 +145,8 @@
       "live_write_mode": "full_live_guarded",
       "required_artifacts": [
         "docs/v70-omega-prep-half-v1.md",
+        "docs/trinity-live-traces/v70-live-write-preflight-v1.json",
+        "docs/trinity-live-traces/v70-live-write-preflight-v1.md",
         "docs/trinity-live-traces/v70-deep-suite-status.json",
         "docs/trinity-live-traces/v70-materialize-l5-suite-status.json"
       ]
@@ -153,7 +155,7 @@
       "phase": "v71",
       "prior_phase": "v70",
       "first_half": "research_extension_prep",
-      "first_half_state": "pending",
+      "first_half_state": "ready",
       "extension_target_count": 50,
       "eureka_recommendation_target": 25,
       "validation": [
@@ -202,6 +204,8 @@
       "live_write_mode": "full_live_guarded",
       "required_artifacts": [
         "docs/v73-omega-prep-half-v1.md",
+        "docs/trinity-live-traces/v73-live-write-preflight-v1.json",
+        "docs/trinity-live-traces/v73-live-write-preflight-v1.md",
         "docs/trinity-live-traces/v73-deep-suite-status.json",
         "docs/trinity-live-traces/v73-materialize-l5-suite-status.json"
       ]
@@ -240,6 +244,8 @@
       "live_write_mode": "full_live_guarded",
       "required_artifacts": [
         "docs/v75-omega-prep-half-v1.md",
+        "docs/trinity-live-traces/v75-live-write-preflight-v1.json",
+        "docs/trinity-live-traces/v75-live-write-preflight-v1.md",
         "docs/trinity-live-traces/v75-deep-suite-status.json",
         "docs/trinity-live-traces/v75-materialize-l5-suite-status.json"
       ]

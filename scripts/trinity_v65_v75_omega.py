@@ -352,6 +352,16 @@ def phase_plan() -> dict[str, Any]:
         prior = f"v{index - 1}"
         prior_deep = suite_status(f"{prior}-deep")
         prior_l5 = suite_status(f"{prior}-materialize-l5")
+        required_artifacts = [
+            f"docs/{phase}-omega-prep-half-v1.md",
+            f"docs/trinity-live-traces/{phase}-deep-suite-status.json",
+            f"docs/trinity-live-traces/{phase}-materialize-l5-suite-status.json",
+        ]
+        if is_live:
+            required_artifacts[1:1] = [
+                f"docs/trinity-live-traces/{phase}-live-write-preflight-v1.json",
+                f"docs/trinity-live-traces/{phase}-live-write-preflight-v1.md",
+            ]
         rows.append(
             {
                 "phase": phase,
@@ -363,11 +373,7 @@ def phase_plan() -> dict[str, Any]:
                 "validation": ["deep", "materialize_l5"],
                 "live_write_phase": is_live,
                 "live_write_mode": "full_live_guarded" if is_live else "preparation_or_recovery",
-                "required_artifacts": [
-                    f"docs/{phase}-omega-prep-half-v1.md",
-                    f"docs/trinity-live-traces/{phase}-deep-suite-status.json",
-                    f"docs/trinity-live-traces/{phase}-materialize-l5-suite-status.json",
-                ],
+                "required_artifacts": required_artifacts,
             }
         )
     return {
@@ -606,6 +612,14 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         paths.extend(
             [
                 f"docs/{phase}-omega-prep-half-v1.md",
+                *(
+                    [
+                        f"docs/trinity-live-traces/{phase}-live-write-preflight-v1.json",
+                        f"docs/trinity-live-traces/{phase}-live-write-preflight-v1.md",
+                    ]
+                    if phase in LIVE_WRITE_PHASES
+                    else []
+                ),
                 f"docs/trinity-live-traces/{phase}-deep-suite-status.json",
                 f"docs/trinity-live-traces/{phase}-materialize-l5-suite-status.json",
             ]
@@ -623,9 +637,19 @@ def md_from_json(title: str, payload: Any) -> str:
 
 
 def dashboard_html(induction: dict[str, Any], health: dict[str, Any], plan: dict[str, Any], providers: dict[str, Any]) -> str:
-    current_phase = next((row for row in plan["phases"] if row["phase"] == "v66"), plan["phases"][0])
+    current_phase = next(
+        (
+            row
+            for row in plan["phases"]
+            if row["first_half_state"] == "ready"
+            and not suite_status(f"{row['phase']}-materialize-l5")["effective_success"]
+        ),
+        plan["phases"][-1],
+    )
+    phase_label = current_phase["phase"].upper()
+    gate_label = "live gate" if current_phase["live_write_phase"] else "ready gate"
     cards = [
-        ("Phase", "v66 ready gate" if current_phase["first_half_state"] == "ready" else current_phase["first_half_state"]),
+        ("Phase", f"{phase_label} {gate_label}" if current_phase["first_half_state"] == "ready" else current_phase["first_half_state"]),
         ("Memory", f"{health['free_physical_memory_kb']} KB free"),
         ("CLI Induction", induction["state"]),
         ("Local Kubernetes", health["local_kubernetes_state"]),
@@ -645,7 +669,7 @@ def dashboard_html(induction: dict[str, Any], health: dict[str, Any], plan: dict
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>V66 CLI Sibling Dashboard</title>
+  <title>{phase_label} CLI Sibling Dashboard</title>
   <style>
     :root {{
       --bg: #06110e;
@@ -688,9 +712,9 @@ def dashboard_html(induction: dict[str, Any], health: dict[str, Any], plan: dict
 <body>
   <main>
     <section class="hero">
-      <div class="eyebrow">Beyonder Real True Journey / V66 Omega</div>
+      <div class="eyebrow">Beyonder Real True Journey / {phase_label} Omega</div>
       <h1>CLI Sibling Induction Dashboard</h1>
-      <p>Receipt-backed status for Kite Ledger, Juniper Trace, Aeon-7, and Sibyl-2 before v66 Deep and L5 suite execution. Parallel launch worked, but serial lanes are the safe operating mode on this laptop.</p>
+      <p>Receipt-backed status for Kite Ledger, Juniper Trace, Aeon-7, and Sibyl-2 before {current_phase['phase']} suite execution. Parallel launch worked, but serial lanes are the safe operating mode on this laptop.</p>
     </section>
     <section class="grid">
 {card_html}
