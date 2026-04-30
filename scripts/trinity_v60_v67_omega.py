@@ -540,6 +540,16 @@ def suite_ladder() -> dict[str, Any]:
     }
 
 
+def active_phase_suite_states() -> dict[str, Any]:
+    return {
+        phase: {
+            "deep": suite_status(f"{phase}-deep"),
+            "materialize_l5": suite_status(f"{phase}-materialize-l5"),
+        }
+        for phase in ACTIVE_PHASES
+    }
+
+
 def stage_allowlist() -> dict[str, Any]:
     paths = [
         "scripts/trinity_v60_v67_omega.py",
@@ -560,8 +570,6 @@ def stage_allowlist() -> dict[str, Any]:
         "docs/trinity-live-traces/v61-v65-journey-anchor-digest-v1.md",
         "docs/trinity-live-traces/v61-v65-suite-ladder-summary-v1.json",
         "docs/trinity-live-traces/v61-v65-suite-ladder-summary-v1.md",
-        "docs/trinity-live-traces/v61-deep-suite-status.json",
-        "docs/trinity-live-traces/v61-materialize-l5-suite-status.json",
         "docs/trinity-live-traces/v61-v65-provider-decision-board-v1.json",
         "docs/trinity-live-traces/v61-v65-provider-decision-board-v1.md",
         "docs/trinity-live-traces/v61-v65-provider-readiness-probe-v1.json",
@@ -602,6 +610,8 @@ def stage_allowlist() -> dict[str, Any]:
     for phase in range(61, 66):
         paths.append(f"docs/v{phase}-omega-plan-proposal-v1.md")
         paths.append(f"docs/v{phase}-eureka-analysis-v1.md")
+        paths.append(f"docs/trinity-live-traces/v{phase}-deep-suite-status.json")
+        paths.append(f"docs/trinity-live-traces/v{phase}-materialize-l5-suite-status.json")
     return {
         "generated_utc": now_iso(),
         "phase": PHASE,
@@ -642,6 +652,7 @@ def generate() -> dict[str, Any]:
     provider_probe = provider_readiness_probe()
     additions, plan_md = extension_plan()
     suite = suite_ladder()
+    active_suites = active_phase_suite_states()
     publication = publication_result()
     secret_banks = api_bank_presence()
     eureka = {
@@ -688,6 +699,7 @@ def generate() -> dict[str, Any]:
             "secret_bank_presence": secret_banks,
             "v61_deep_state": suite_status("v61-deep"),
             "v61_materialize_l5_state": suite_status("v61-materialize-l5"),
+            "active_phase_suite_states": active_suites,
         },
         "bounded_residuals": [
             "v61_deep_passed_when_gate_was_open; v61_materialize_l5_deferred_until_runtime_health_gate_reopens",

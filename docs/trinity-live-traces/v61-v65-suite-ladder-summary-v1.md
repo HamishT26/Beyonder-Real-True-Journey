@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T01:11:17+00:00",
+  "generated_utc": "2026-04-30T01:34:05+00:00",
   "phase": "v61_v65_hybrid_omega",
   "profiles": {
     "v58-quick": {
@@ -163,9 +163,9 @@
     },
     "v62-deep": {
       "path": "docs/trinity-live-traces/v62-deep-suite-status.json",
-      "present": false,
-      "effective_success": false,
-      "summary": "0 PASS / 0 WARN / 0 FAIL"
+      "present": true,
+      "effective_success": true,
+      "summary": "1160 PASS / 0 WARN / 0 FAIL"
     },
     "v62-materialize-l4": {
       "path": "docs/trinity-live-traces/v62-materialize-l4-suite-status.json",
@@ -175,9 +175,9 @@
     },
     "v62-materialize-l5": {
       "path": "docs/trinity-live-traces/v62-materialize-l5-suite-status.json",
-      "present": false,
-      "effective_success": false,
-      "summary": "0 PASS / 0 WARN / 0 FAIL"
+      "present": true,
+      "effective_success": true,
+      "summary": "1155 PASS / 0 WARN / 0 FAIL"
     },
     "v62-mcp-refresh": {
       "path": "docs/trinity-live-traces/v62-mcp-refresh-suite-status.json",
