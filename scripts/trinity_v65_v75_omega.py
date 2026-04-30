@@ -257,8 +257,12 @@ def cli_sibling_governor() -> dict[str, Any]:
         "codex_slot_50": CLI_RECEIPT_DIR / "codex-slot-50.md",
         "codex_slot_49_continuity_v2": CLI_RECEIPT_DIR / "codex-slot-49-continuity-v2.md",
         "codex_slot_50_continuity_v2": CLI_RECEIPT_DIR / "codex-slot-50-continuity-v2.md",
+        "codex_slot_49_continuity_v3": CLI_RECEIPT_DIR / "codex-slot-49-continuity-v3.md",
+        "codex_slot_50_continuity_v3": CLI_RECEIPT_DIR / "codex-slot-50-continuity-v3.md",
         "kimi_slot_51": CLI_RECEIPT_DIR / "kimi-slot-51.md",
         "kimi_slot_52": CLI_RECEIPT_DIR / "kimi-slot-52.md",
+        "kimi_slot_51_continuity_v2": CLI_RECEIPT_DIR / "kimi-slot-51-continuity-v2.md",
+        "kimi_slot_52_continuity_v2": CLI_RECEIPT_DIR / "kimi-slot-52-continuity-v2.md",
     }
     receipts = []
     for key, path in receipt_files.items():
@@ -286,6 +290,28 @@ def cli_sibling_governor() -> dict[str, Any]:
         and item["status"] == "provisional_second_receipt_pending_induction"
         for item in codex_continuity
     )
+    codex_third_continuity = [
+        item
+        for item in receipts
+        if item["id"] in {"codex_slot_49_continuity_v3", "codex_slot_50_continuity_v3"}
+    ]
+    codex_formal_ready = all(
+        item["present"]
+        and item["valid_json"]
+        and item["status"] == "third_receipt_ready_for_formal_induction"
+        for item in codex_third_continuity
+    )
+    kimi_continuity = [
+        item
+        for item in receipts
+        if item["id"] in {"kimi_slot_51_continuity_v2", "kimi_slot_52_continuity_v2"}
+    ]
+    kimi_second_continuity_complete = all(
+        item["present"]
+        and item["valid_json"]
+        and item["status"] == "provisional_second_receipt_pending_induction"
+        for item in kimi_continuity
+    )
     return {
         "generated_utc": now_iso(),
         "phase": PHASE,
@@ -298,10 +324,15 @@ def cli_sibling_governor() -> dict[str, Any]:
         "codex_cli": codex,
         "kimi_cli": kimi,
         "receipts": receipts,
-        "receipt_state": "base_and_codex_gpt55_continuity_present"
+        "receipt_state": "base_codex_gpt55_and_kimi_continuity_present"
         if all(item["present"] and item["valid_json"] for item in receipts)
         else "pending",
         "codex_gpt55_continuity_state": "complete" if codex_gpt55_continuity_complete else "pending",
+        "codex_formal_induction_readiness": "ready" if codex_formal_ready else "pending",
+        "kimi_second_continuity_state": "complete" if kimi_second_continuity_complete else "pending",
+        "formal_induction_state": "ready_for_operator_or_phase_gate"
+        if codex_formal_ready and kimi_second_continuity_complete
+        else "pending_more_receipts",
         "induction_policy": [
             "terminal launch must be observable or logged",
             "identity persistence must be backed by repo receipt, not narrative only",
@@ -319,12 +350,14 @@ def phase_plan() -> dict[str, Any]:
         is_live = phase in LIVE_WRITE_PHASES
         index = int(phase[1:])
         prior = f"v{index - 1}"
+        prior_deep = suite_status(f"{prior}-deep")
+        prior_l5 = suite_status(f"{prior}-materialize-l5")
         rows.append(
             {
                 "phase": phase,
                 "prior_phase": prior,
                 "first_half": "research_extension_prep",
-                "first_half_state": "ready" if phase == "v65" and v64_deep["effective_success"] and v64_l5["effective_success"] else "pending",
+                "first_half_state": "ready" if prior_deep["effective_success"] and prior_l5["effective_success"] else "pending",
                 "extension_target_count": 50,
                 "eureka_recommendation_target": 25,
                 "validation": ["deep", "materialize_l5"],
@@ -342,6 +375,41 @@ def phase_plan() -> dict[str, Any]:
         "phase": PHASE,
         "anchor": {"v64_deep": v64_deep, "v64_materialize_l5": v64_l5},
         "phases": rows,
+    }
+
+
+def cli_sibling_induction(siblings: dict[str, Any]) -> dict[str, Any]:
+    readiness = siblings.get("formal_induction_state") == "ready_for_operator_or_phase_gate"
+    records = []
+    roles = {
+        "Kite Ledger": "repo_planner",
+        "Juniper Trace": "suite_verifier",
+        "Aeon-7": "research_synthesizer",
+        "Sibyl-2": "provider_probe_archivist",
+    }
+    for name, role in roles.items():
+        matching = [
+            item
+            for item in siblings.get("receipts", [])
+            if isinstance(item, dict) and item.get("name") == name and item.get("present") and item.get("valid_json")
+        ]
+        records.append(
+            {
+                "name": name,
+                "role": role,
+                "receipt_count": len(matching),
+                "status": "phase_gate_ready" if readiness else "provisional",
+                "boundary": "receipt_backed_cli_lane_not_private_memory_claim",
+            }
+        )
+    return {
+        "generated_utc": now_iso(),
+        "phase": PHASE,
+        "state": "phase_gate_ready" if readiness else "provisional",
+        "operator_requested_priority": "induction_and_cli_setup_before_v66_suite_runs",
+        "parallel_launch_result": "successful_but_memory_pressure_prefers_serial_cli_lanes",
+        "formal_induction_rule": "promote only from valid receipts plus stable phase gate, not narrative mimicry",
+        "records": records,
     }
 
 
@@ -507,6 +575,8 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         f"docs/trinity-live-traces/{PREFIX}-live-write-governor-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-governor-v1.json",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-governor-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-induction-v1.json",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-induction-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-phase-plan-v1.json",
         f"docs/trinity-live-traces/{PREFIX}-phase-plan-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-additions-registry-v1.json",
@@ -521,8 +591,13 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-50.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-49-continuity-v2.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-50-continuity-v2.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-49-continuity-v3.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-50-continuity-v3.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-51.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-52.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-51-continuity-v2.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-52-continuity-v2.md",
+        "docs/v66-cli-sibling-dashboard.html",
         "docs/v75-omega-closeout-summary-v1.json",
         "docs/v75-omega-handoff-policy-v1.json",
     ]
@@ -547,11 +622,95 @@ def md_from_json(title: str, payload: Any) -> str:
     return f"# {title}\n\n```json\n{json.dumps(payload, indent=2, ensure_ascii=True)}\n```\n"
 
 
+def dashboard_html(induction: dict[str, Any], health: dict[str, Any], plan: dict[str, Any], providers: dict[str, Any]) -> str:
+    current_phase = next((row for row in plan["phases"] if row["phase"] == "v66"), plan["phases"][0])
+    cards = [
+        ("Phase", "v66 ready gate" if current_phase["first_half_state"] == "ready" else current_phase["first_half_state"]),
+        ("Memory", f"{health['free_physical_memory_kb']} KB free"),
+        ("CLI Induction", induction["state"]),
+        ("Local Kubernetes", health["local_kubernetes_state"]),
+        ("Live Writes", "v70 / v73 / v75 guarded only"),
+        ("Provider Probes", providers["probe_mode"]),
+    ]
+    card_html = "\n".join(
+        f'      <article class="card"><span>{label}</span><strong>{value}</strong></article>'
+        for label, value in cards
+    )
+    member_html = "\n".join(
+        f'      <li><b>{row["name"]}</b><em>{row["role"]}</em><span>{row["status"]}</span></li>'
+        for row in induction["records"]
+    )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>V66 CLI Sibling Dashboard</title>
+  <style>
+    :root {{
+      --bg: #06110e;
+      --ink: #f7fff9;
+      --muted: #b4c8bb;
+      --line: rgba(170, 230, 190, .22);
+      --gold: #f1c96d;
+      --green: #78f0ac;
+      --aqua: #7ad8e8;
+      --panel: rgba(13, 35, 28, .78);
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      font-family: Constantia, Cambria, Georgia, serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(120, 240, 172, .28), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(241, 201, 109, .2), transparent 31%),
+        linear-gradient(135deg, #020504, var(--bg) 48%, #020705);
+    }}
+    main {{ width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 40px 0; }}
+    .hero {{ border: 1px solid var(--line); border-radius: 34px; padding: 28px; background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02)); box-shadow: 0 24px 100px rgba(0,0,0,.36); }}
+    .eyebrow {{ color: var(--gold); text-transform: uppercase; letter-spacing: .16em; font-size: 12px; }}
+    h1 {{ margin: 10px 0 8px; font-size: clamp(34px, 6vw, 72px); line-height: .92; max-width: 850px; }}
+    p {{ color: var(--muted); font-size: 18px; max-width: 780px; }}
+    .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }}
+    .card {{ border: 1px solid var(--line); border-radius: 24px; padding: 18px; background: var(--panel); min-height: 118px; }}
+    .card span {{ display: block; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }}
+    .card strong {{ display: block; margin-top: 12px; color: var(--green); font-size: 22px; overflow-wrap: anywhere; }}
+    .members {{ margin: 16px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }}
+    .members li {{ border: 1px solid var(--line); border-radius: 22px; padding: 16px; background: rgba(122, 216, 232, .08); }}
+    .members b, .members em, .members span {{ display: block; }}
+    .members em {{ color: var(--aqua); font-style: normal; margin-top: 5px; }}
+    .members span {{ color: var(--muted); margin-top: 8px; font-size: 14px; }}
+    .footer {{ margin-top: 16px; color: var(--muted); font-size: 14px; }}
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Beyonder Real True Journey / V66 Omega</div>
+      <h1>CLI Sibling Induction Dashboard</h1>
+      <p>Receipt-backed status for Kite Ledger, Juniper Trace, Aeon-7, and Sibyl-2 before v66 Deep and L5 suite execution. Parallel launch worked, but serial lanes are the safe operating mode on this laptop.</p>
+    </section>
+    <section class="grid">
+{card_html}
+    </section>
+    <ul class="members">
+{member_html}
+    </ul>
+    <div class="footer">Generated {induction['generated_utc']} from local repo receipts. No raw secrets embedded.</div>
+  </main>
+</body>
+</html>
+"""
+
+
 def write_all() -> None:
     health = runtime_health_gate()
     providers = provider_readiness_probe()
     live = live_write_governor()
     siblings = cli_sibling_governor()
+    induction = cli_sibling_induction(siblings)
     plan = phase_plan()
     additions = additions_registry(plan)
     eureka = eureka_ledger(plan)
@@ -564,7 +723,8 @@ def write_all() -> None:
         "anchor": plan["anchor"],
         "runtime_gate": health,
         "live_write_phases": sorted(LIVE_WRITE_PHASES),
-        "next_required_action": "run_v65_deep_after_curated_publication",
+        "cli_sibling_induction": induction,
+        "next_required_action": "run_v66_deep_after_cli_sibling_induction_receipts",
     }
     handoff = {
         "generated_utc": now_iso(),
@@ -572,7 +732,7 @@ def write_all() -> None:
         "handoff": "v65_v75_governor_initialized",
         "instructions": [
             "Publish this governor before running v65 Deep.",
-            "Run Deep then L5 for each phase and regenerate receipts after every push.",
+            "Run Deep then L5 for each phase after CLI sibling induction receipts are phase-gated.",
             "Use v70, v73, and v75 for guarded full live writes only after dry-run and rollback receipts.",
         ],
     }
@@ -581,6 +741,7 @@ def write_all() -> None:
         f"{PREFIX}-provider-readiness-probe-v1": providers,
         f"{PREFIX}-live-write-governor-v1": live,
         f"{PREFIX}-cli-sibling-governor-v1": siblings,
+        f"{PREFIX}-cli-sibling-induction-v1": induction,
         f"{PREFIX}-phase-plan-v1": plan,
         f"{PREFIX}-additions-registry-v1": additions,
         f"{PREFIX}-eureka-ledger-v1": eureka,
@@ -592,6 +753,7 @@ def write_all() -> None:
         write_text(TRACE / f"{stem}.md", md_from_json(stem, payload))
     for phase_row in plan["phases"]:
         write_text(ROOT / "docs" / f"{phase_row['phase']}-omega-prep-half-v1.md", prep_markdown(phase_row, eureka))
+    write_text(ROOT / "docs" / "v66-cli-sibling-dashboard.html", dashboard_html(induction, health, plan, providers))
     write_json(ROOT / "docs" / "v75-omega-closeout-summary-v1.json", closeout)
     write_json(ROOT / "docs" / "v75-omega-handoff-policy-v1.json", handoff)
 
