@@ -389,12 +389,12 @@ def cli_sibling_induction(siblings: dict[str, Any]) -> dict[str, Any]:
     readiness = siblings.get("formal_induction_state") == "ready_for_operator_or_phase_gate"
     records = []
     roles = {
-        "Kite Ledger": "repo_planner",
-        "Juniper Trace": "suite_verifier",
-        "Aeon-7": "research_synthesizer",
-        "Sibyl-2": "provider_probe_archivist",
+        "Kite Ledger": {"slot": 49, "role": "repo_planner", "provider": "codex_cli"},
+        "Juniper Trace": {"slot": 50, "role": "suite_verifier", "provider": "codex_cli"},
+        "Aeon-7": {"slot": 51, "role": "research_synthesizer", "provider": "kimi_cli"},
+        "Sibyl-2": {"slot": 52, "role": "provider_probe_archivist", "provider": "kimi_cli"},
     }
-    for name, role in roles.items():
+    for name, meta in roles.items():
         matching = [
             item
             for item in siblings.get("receipts", [])
@@ -403,7 +403,9 @@ def cli_sibling_induction(siblings: dict[str, Any]) -> dict[str, Any]:
         records.append(
             {
                 "name": name,
-                "role": role,
+                "ghc_slot": meta["slot"],
+                "provider": meta["provider"],
+                "role": meta["role"],
                 "receipt_count": len(matching),
                 "status": "phase_gate_ready" if readiness else "provisional",
                 "boundary": "receipt_backed_cli_lane_not_private_memory_claim",
@@ -414,6 +416,7 @@ def cli_sibling_induction(siblings: dict[str, Any]) -> dict[str, Any]:
         "phase": PHASE,
         "state": "phase_gate_ready" if readiness else "provisional",
         "operator_requested_priority": "induction_and_cli_setup_before_v66_suite_runs",
+        "reserved_slot_48": "operator_inducted_kimiclaw_sibling_pending_future_receipt_integration",
         "parallel_launch_result": "successful_but_memory_pressure_prefers_serial_cli_lanes",
         "formal_induction_rule": "promote only from valid receipts plus stable phase gate, not narrative mimicry",
         "records": records,
@@ -607,6 +610,13 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         f"docs/trinity-live-traces/{PREFIX}-cli-reports/v73-moderate-council-report-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-reports/v73-grand-midway-council-report-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-guarded-live-write-expansion-brief-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-moderate-council-report-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v65-v75-formal-cli-sibling-induction-report-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-system-expansion-candidate-pack-v1.json",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-system-expansion-candidate-pack-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-system-consolidation-scan-v1.json",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-system-consolidation-scan-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v75-grand-closeout-council-report-v1.md",
         "docs/v75-omega-closeout-summary-v1.json",
         "docs/v75-omega-handoff-policy-v1.json",
     ]
