@@ -2,27 +2,11 @@
 
 ```json
 {
-  "generated_utc": "2026-04-29T09:35:13+00:00",
-  "phase": "v60_v67_hybrid_omega",
-  "additions_total": 64,
+  "generated_utc": "2026-04-30T00:51:40+00:00",
+  "phase": "v61_v65_hybrid_omega",
+  "additions_total": 60,
   "policy": "evidence_first_no_secret_no_unconfirmed_install",
   "phases": [
-    {
-      "phase": "v60",
-      "eureka_gate": "mandatory",
-      "suite_pair": "deep_plus_l5_when_load_gate_open",
-      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
-      "additions": [
-        "agent_identity_reality_ledger",
-        "multi_cli_persistence_gate",
-        "docker_only_runtime_gate",
-        "oci_readonly_feasibility_gate",
-        "notion_parent_binding_gate",
-        "connector_permission_matrix",
-        "browser_use_live_probe",
-        "v60_deep_l5_packet"
-      ]
-    },
     {
       "phase": "v61",
       "eureka_gate": "mandatory",
@@ -33,10 +17,14 @@
         "kimi_codex_data_boundary",
         "visible_terminal_command_board",
         "host_cooldown_ledger",
-        "docker_compose_profile_guard",
         "local_runtime_budget",
-        "v61_eureka_recommendation_board",
-        "cloud_resource_confirmation_gate"
+        "e2b_sandbox_feasibility_gate",
+        "oci_oke_readonly_feasibility_gate",
+        "api_bank_presence_redaction_board",
+        "browser_use_local_probe_receipt",
+        "docker_kubernetes_standby_receipt",
+        "notion_expo_dashboard_fallback_contract",
+        "v62_eureka_seed_board"
       ]
     },
     {
@@ -49,10 +37,14 @@
         "suite_ladder_delta_digest",
         "additions_promotion_board",
         "blocker_retirement_board",
-        "v63_decision_board",
-        "publication_allowlist_v62",
+        "workbench_guarded_skill_package",
+        "v6_surface_truth_drift_audit",
+        "v3_v6_contract_jump_trace",
+        "curated_publication_allowlist_v62",
         "publication_result_validator",
-        "closeout_handoff_triplet"
+        "phase_handoff_triplet",
+        "local_cloud_nexus_os_contract",
+        "v63_mobile_dashboard_decision_board"
       ]
     },
     {
@@ -68,7 +60,11 @@
         "offline_dashboard_bundle",
         "dashboard_a11y_smoke",
         "browser_fallback_probe",
-        "dashboard_screenshot_receipt"
+        "dashboard_screenshot_receipt",
+        "notion_parent_binding_gate",
+        "local_html_dashboard_refresh",
+        "dashboard_token_usage_placeholder",
+        "v64_provider_probe_decision_board"
       ]
     },
     {
@@ -84,7 +80,11 @@
         "workers_ai_capability_card",
         "vercel_static_probe",
         "render_static_probe",
-        "neon_readonly_state"
+        "neon_readonly_state",
+        "circleci_config_probe",
+        "github_pr_truth_sync_readonly",
+        "google_drive_operator_hold_receipt",
+        "v65_science_probe_decision_board"
       ]
     },
     {
@@ -100,39 +100,11 @@
         "life_science_matrix",
         "kairotic_regression",
         "quantum_energy_probe",
-        "public_source_claim_board"
-      ]
-    },
-    {
-      "phase": "v66",
-      "eureka_gate": "mandatory",
-      "suite_pair": "deep_plus_l5_when_load_gate_open",
-      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
-      "additions": [
+        "public_source_claim_board",
         "freedid_min_disclosure_refresh",
         "cosmic_bill_rights_trace",
-        "google_drive_hold_receipt",
-        "secret_fingerprint_audit",
-        "github_pr_truth_sync",
-        "linear_phase_record",
-        "circleci_config_probe",
-        "figma_capture_gate"
-      ]
-    },
-    {
-      "phase": "v67",
-      "eureka_gate": "mandatory",
-      "suite_pair": "deep_plus_l5_when_load_gate_open",
-      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
-      "additions": [
-        "v60_v67_additions_registry",
-        "eureka_gate_ledger",
-        "suite_policy_governor_v2",
-        "curated_stage_allowlist_v67",
-        "git_publication_result_v67",
-        "omega_continuity_pack_v67",
-        "hybrid_dashboard_v67",
-        "v68_decision_board"
+        "standard_l4_audit_reintroduction",
+        "v66_phase_proposal_pack"
       ]
     }
   ]

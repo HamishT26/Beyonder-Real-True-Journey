@@ -2,71 +2,55 @@
 
 ```json
 {
-  "generated_utc": "2026-04-29T09:35:18+00:00",
-  "phase": "v60_v67_hybrid_omega",
+  "generated_utc": "2026-04-30T00:51:42+00:00",
+  "phase": "v61_v65_hybrid_omega",
   "state": "mandatory_before_each_phase",
-  "v60_recommendation_tasks": [
+  "v61_recommendation_tasks": [
     "check_v6_surface_truth_drift",
     "package_workbench_as_guarded_skill",
     "trace_contract_jump_v3_to_v6",
     "prove_agent_identity_before_induction",
-    "retire_local_kubernetes_and_record_docker_only_truth",
+    "preserve_ari_kimiclaw_slots_until_cli_receipts_prove_continuity",
+    "record_docker_kubernetes_operator_hold",
+    "probe_e2b_cli_presence_before_any_install",
     "probe_oci_oke_readonly_before_any_cluster_creation",
     "verify_browser_use_runtime_without_sensitive_submission",
     "refresh_provider_cli_matrix",
     "digest_v24_v30_v33_v35_v37_v38_v42_journey_anchors",
     "audit_deep_l5_suite_cut",
-    "prepare_v61_multi_cli_persistence_protocol",
-    "publish_curated_v60_truth_forward_only"
+    "prepare_visible_multi_cli_command_board_without_launching_unconfirmed_agents",
+    "publish_curated_v61_v65_truth_forward_only"
   ],
   "phases": [
-    {
-      "phase": "v60",
-      "gate": "eureka_before_suite_load",
-      "next_move": "Execute v60 only when runtime health gate is open.",
-      "additions_count": 8
-    },
     {
       "phase": "v61",
       "gate": "eureka_before_suite_load",
       "next_move": "Execute v61 only when runtime health gate is open.",
-      "additions_count": 8
+      "additions_count": 12
     },
     {
       "phase": "v62",
       "gate": "eureka_before_suite_load",
       "next_move": "Execute v62 only when runtime health gate is open.",
-      "additions_count": 8
+      "additions_count": 12
     },
     {
       "phase": "v63",
       "gate": "eureka_before_suite_load",
       "next_move": "Execute v63 only when runtime health gate is open.",
-      "additions_count": 8
+      "additions_count": 12
     },
     {
       "phase": "v64",
       "gate": "eureka_before_suite_load",
       "next_move": "Execute v64 only when runtime health gate is open.",
-      "additions_count": 8
+      "additions_count": 12
     },
     {
       "phase": "v65",
       "gate": "eureka_before_suite_load",
       "next_move": "Execute v65 only when runtime health gate is open.",
-      "additions_count": 8
-    },
-    {
-      "phase": "v66",
-      "gate": "eureka_before_suite_load",
-      "next_move": "Execute v66 only when runtime health gate is open.",
-      "additions_count": 8
-    },
-    {
-      "phase": "v67",
-      "gate": "eureka_before_suite_load",
-      "next_move": "Execute v67 only when runtime health gate is open.",
-      "additions_count": 8
+      "additions_count": 12
     }
   ]
 }

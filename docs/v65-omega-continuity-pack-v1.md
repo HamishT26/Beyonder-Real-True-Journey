@@ -1,4 +1,4 @@
-# V67 Omega Continuity Pack
+# V65 Omega Continuity Pack
 
 - Suite cut: `approved_deep_plus_l5_repeated_pair`
 - Runtime load gate: `closed`

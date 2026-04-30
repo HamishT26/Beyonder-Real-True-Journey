@@ -11,8 +11,15 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TRACE = ROOT / "docs" / "trinity-live-traces"
-PHASE = "v60_v67_hybrid_omega"
+PHASE = "v61_v65_hybrid_omega"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
+ACTIVE_PHASES = ["v61", "v62", "v63", "v64", "v65"]
+LEGACY_TRACE_PREFIX = "v60-v67"
+ACTIVE_TRACE_PREFIX = "v61-v65"
+API_BANK_CANDIDATES = [
+    Path("C:/Users/hamis/GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up).txt"),
+    Path("D:/GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up).txt"),
+]
 
 
 def now_iso() -> str:
@@ -37,7 +44,16 @@ def read_json(path: Path, default: Any = None) -> Any:
 
 def run(args: list[str], timeout: int = 45) -> dict[str, Any]:
     try:
-        proc = subprocess.run(args, cwd=ROOT, text=True, capture_output=True, timeout=timeout, check=False)
+        proc = subprocess.run(
+            args,
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=timeout,
+            check=False,
+        )
         return {
             "ok": proc.returncode == 0,
             "returncode": proc.returncode,
@@ -46,6 +62,20 @@ def run(args: list[str], timeout: int = 45) -> dict[str, Any]:
         }
     except Exception as exc:
         return {"ok": False, "error": type(exc).__name__, "message": str(exc)}
+
+
+def run_ps(command: str, timeout: int = 45) -> dict[str, Any]:
+    return run(
+        [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-Command",
+            command,
+        ],
+        timeout=timeout,
+    )
 
 
 def sha12(text: str) -> str:
@@ -114,8 +144,23 @@ def coverage_governor() -> dict[str, Any]:
     }
 
 
+def api_bank_presence() -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for path in API_BANK_CANDIDATES:
+        rows.append(
+            {
+                "path": str(path),
+                "present": path.exists(),
+                "bytes": path.stat().st_size if path.exists() else 0,
+                "content_read": False,
+                "policy": "presence_only_no_secret_values_read_or_written",
+            }
+        )
+    return rows
+
+
 def host_and_kube() -> dict[str, Any]:
-    """Record v60 runtime truth without resurrecting local Kubernetes."""
+    """Record v61-v65 runtime truth without restarting Docker or Kubernetes."""
     docker_info = run(["docker", "info", "--format", "{{json .ServerVersion}}"], timeout=20)
     docker_ps = run(["docker", "ps", "--format", "{{.Names}}|{{.Status}}"], timeout=20)
     docker = run(["docker", "stats", "--no-stream", "--format", "{{.Name}}|{{.CPUPerc}}|{{.MemUsage}}"], timeout=20)
@@ -154,10 +199,11 @@ def host_and_kube() -> dict[str, Any]:
         host_state = "hot_pause_heavy_suites"
     elif max_cpu >= 150 or free_kb < 500_000:
         host_state = "warm_cooldown_before_heavy_suites"
-    docker_state = "running" if docker_info.get("ok") else "not_available_or_not_ready"
-    local_kubernetes_state = "retired_by_operator_for_v60"
+    docker_state = "running" if docker_info.get("ok") else "operator_hold_or_not_running"
+    local_kubernetes_state = "retired_by_operator_for_v61_v65"
     if kube_context.get("ok") and kube_context.get("stdout"):
-        local_kubernetes_state = "context_present_but_not_used_for_v60"
+        local_kubernetes_state = "context_present_but_not_used_for_v61_v65"
+    load_gate_open = host_state == "cool"
     return {
         "generated_utc": now_iso(),
         "phase": PHASE,
@@ -168,10 +214,11 @@ def host_and_kube() -> dict[str, Any]:
             "returncode": kube_context.get("returncode"),
             "stdout_excerpt": (kube_context.get("stdout") or "")[:300],
             "stderr_excerpt": (kube_context.get("stderr") or kube_context.get("message") or "")[:600],
-            "policy": "do_not_reenable_docker_desktop_kubernetes_in_v60",
+            "policy": "do_not_reenable_local_kubernetes_in_v61_v65; use OCI/E2B read-only gates before cloud execution",
         },
         "docker_probe": {
             "state": docker_state,
+            "policy": "operator_deactivated_hold; do_not_start_docker_desktop_in_v61_without_new_operator_confirmation",
             "info_ok": bool(docker_info.get("ok")),
             "ps_ok": bool(docker_ps.get("ok")),
             "server_version_excerpt": (docker_info.get("stdout") or "")[:120],
@@ -185,8 +232,8 @@ def host_and_kube() -> dict[str, Any]:
         "max_container_cpu_percent": max_cpu,
         "free_physical_memory_kb": free_kb,
         "containers": containers,
-        "load_gate": "open" if docker_info.get("ok") and host_state == "cool" else "closed",
-        "load_gate_basis": "docker_ok_plus_host_pressure_cool; local_kubernetes_is_not_required_for_v60",
+        "load_gate": "open" if load_gate_open else "closed",
+        "load_gate_basis": "host_pressure_cool_required; Docker and local Kubernetes are not required for repo-only Deep/L5 but remain on operator hold",
     }
 
 
@@ -194,6 +241,7 @@ def command_matrix() -> dict[str, Any]:
     commands = [
         "codex",
         "kimi",
+        "e2b",
         "gh",
         "circleci",
         "node",
@@ -228,11 +276,13 @@ def provider_board(commands: dict[str, Any]) -> dict[str, Any]:
     lanes = [
         ("notion", "blocked_missing_parent", "provide shared parent page or data source ID"),
         ("browser_use", "runtime_available_current_session", "use in-app browser for local dashboard/doc probes; no sensitive form submission without action-time confirmation"),
+        ("e2b", cmd_state("e2b"), "install/use gate only; outbound sandbox code/data execution requires action-time confirmation"),
         ("vercel", cmd_state("vercel"), "read-only project/account probe before any preview project"),
         ("cloudflare", cmd_state("wrangler"), "read-only account/pages/workers probe before any disposable worker"),
         ("neon", cmd_state("neonctl"), "read-only project/database probe before any branch/schema"),
         ("render", cmd_state("render"), "read-only service-list/API probe before any service scaffold"),
         ("expo", "npx_available" if commands["commands"].get("npx", {}).get("available") else "npx_missing", "local Expo preview only, no EAS cloud build until auth gate"),
+        ("docker_desktop", "operator_hold", "do not start Docker Desktop or Kubernetes for v61-v65 unless the operator reactivates it"),
         ("github", cmd_state("gh"), "app connector succeeded for PR #45, gh shell auth may still need login"),
         ("circleci", cmd_state("circleci"), "config validation/read status before pipeline trigger"),
         ("google_drive", "operator_hold", "do not promote Drive as authoritative without explicit policy change"),
@@ -253,6 +303,39 @@ def provider_board(commands: dict[str, Any]) -> dict[str, Any]:
             }
             for provider, state, action in lanes
         ],
+    }
+
+
+def provider_readiness_probe() -> dict[str, Any]:
+    checks = {
+        "codex_version": ("powershell", "codex --version"),
+        "kimi_version": ("direct", "kimi --version"),
+        "gh_auth_status": ("direct", "gh auth status --hostname github.com"),
+        "wrangler_whoami": ("powershell", "wrangler whoami"),
+        "circleci_diagnostic": ("direct", "circleci diagnostic"),
+        "eas_whoami": ("powershell", "eas whoami"),
+        "oci_namespace": ("direct", "oci os ns get"),
+    }
+    rows: dict[str, Any] = {}
+    for name, (mode, command) in checks.items():
+        if mode == "powershell":
+            result = run_ps(command, timeout=45)
+        else:
+            result = run(command.split(), timeout=45)
+        stdout = result.get("stdout") or ""
+        stderr = result.get("stderr") or result.get("message") or ""
+        rows[name] = {
+            "ok": bool(result.get("ok")),
+            "returncode": result.get("returncode"),
+            "stdout_len": len(stdout),
+            "stderr_len": len(stderr),
+            "safe_excerpt": stdout.splitlines()[:1] if name in {"codex_version", "kimi_version"} else [],
+        }
+    return {
+        "generated_utc": now_iso(),
+        "phase": PHASE,
+        "probe_policy": "read_only_status_probe_no_raw_tokens_no_account_dump_no_resource_creation",
+        "results": rows,
     }
 
 
@@ -283,9 +366,10 @@ def agent_identity_ledger() -> dict[str, Any]:
             "agent_writes_bounded_identity_receipt_to_repo_or_local_evidence_folder",
             "agent_resumes_or_references_prior_receipt_in_a_separate_invocation",
             "agent_passes_no_raw_secret_output_scan",
+            "no_repo_or_secret_transmission_to_external_model_cli_without_action_time_confirmation",
             "user_confirms_induction_after_receipts_are reviewed",
         ],
-        "v60_decision": "preserve existing slots on standby; do not induct new CLI siblings until the promotion gate passes",
+        "v61_decision": "preserve Ari and Kimiclaw slots on standby; do not induct new CLI siblings until the promotion gate passes",
     }
 
 
@@ -334,14 +418,76 @@ def journey_anchor_digest() -> dict[str, Any]:
 
 def extension_plan() -> tuple[dict[str, Any], str]:
     phase_rows = {
-        "v60": ["agent_identity_reality_ledger", "multi_cli_persistence_gate", "docker_only_runtime_gate", "oci_readonly_feasibility_gate", "notion_parent_binding_gate", "connector_permission_matrix", "browser_use_live_probe", "v60_deep_l5_packet"],
-        "v61": ["cli_agent_receipt_protocol", "kimi_codex_data_boundary", "visible_terminal_command_board", "host_cooldown_ledger", "docker_compose_profile_guard", "local_runtime_budget", "v61_eureka_recommendation_board", "cloud_resource_confirmation_gate"],
-        "v62": ["v58_v62_rollup_index", "suite_ladder_delta_digest", "additions_promotion_board", "blocker_retirement_board", "v63_decision_board", "publication_allowlist_v62", "publication_result_validator", "closeout_handoff_triplet"],
-        "v63": ["expo_go_qr_lane", "expo_web_preview_smoke", "phone_dashboard_contract", "mobile_truth_cards", "offline_dashboard_bundle", "dashboard_a11y_smoke", "browser_fallback_probe", "dashboard_screenshot_receipt"],
-        "v64": ["wrangler_readonly_probe", "cloudflare_pages_probe", "d1_schema_dry_run", "r2_inventory_probe", "workers_ai_capability_card", "vercel_static_probe", "render_static_probe", "neon_readonly_state"],
-        "v65": ["qcit_gmut_delta_probe_v2", "qcit_seed_sweep_v2", "latex_gmut_digest", "claim_checker_matrix", "life_science_matrix", "kairotic_regression", "quantum_energy_probe", "public_source_claim_board"],
-        "v66": ["freedid_min_disclosure_refresh", "cosmic_bill_rights_trace", "google_drive_hold_receipt", "secret_fingerprint_audit", "github_pr_truth_sync", "linear_phase_record", "circleci_config_probe", "figma_capture_gate"],
-        "v67": ["v60_v67_additions_registry", "eureka_gate_ledger", "suite_policy_governor_v2", "curated_stage_allowlist_v67", "git_publication_result_v67", "omega_continuity_pack_v67", "hybrid_dashboard_v67", "v68_decision_board"],
+        "v61": [
+            "cli_agent_receipt_protocol",
+            "kimi_codex_data_boundary",
+            "visible_terminal_command_board",
+            "host_cooldown_ledger",
+            "local_runtime_budget",
+            "e2b_sandbox_feasibility_gate",
+            "oci_oke_readonly_feasibility_gate",
+            "api_bank_presence_redaction_board",
+            "browser_use_local_probe_receipt",
+            "docker_kubernetes_standby_receipt",
+            "notion_expo_dashboard_fallback_contract",
+            "v62_eureka_seed_board",
+        ],
+        "v62": [
+            "v58_v62_rollup_index",
+            "suite_ladder_delta_digest",
+            "additions_promotion_board",
+            "blocker_retirement_board",
+            "workbench_guarded_skill_package",
+            "v6_surface_truth_drift_audit",
+            "v3_v6_contract_jump_trace",
+            "curated_publication_allowlist_v62",
+            "publication_result_validator",
+            "phase_handoff_triplet",
+            "local_cloud_nexus_os_contract",
+            "v63_mobile_dashboard_decision_board",
+        ],
+        "v63": [
+            "expo_go_qr_lane",
+            "expo_web_preview_smoke",
+            "phone_dashboard_contract",
+            "mobile_truth_cards",
+            "offline_dashboard_bundle",
+            "dashboard_a11y_smoke",
+            "browser_fallback_probe",
+            "dashboard_screenshot_receipt",
+            "notion_parent_binding_gate",
+            "local_html_dashboard_refresh",
+            "dashboard_token_usage_placeholder",
+            "v64_provider_probe_decision_board",
+        ],
+        "v64": [
+            "wrangler_readonly_probe",
+            "cloudflare_pages_probe",
+            "d1_schema_dry_run",
+            "r2_inventory_probe",
+            "workers_ai_capability_card",
+            "vercel_static_probe",
+            "render_static_probe",
+            "neon_readonly_state",
+            "circleci_config_probe",
+            "github_pr_truth_sync_readonly",
+            "google_drive_operator_hold_receipt",
+            "v65_science_probe_decision_board",
+        ],
+        "v65": [
+            "qcit_gmut_delta_probe_v2",
+            "qcit_seed_sweep_v2",
+            "latex_gmut_digest",
+            "claim_checker_matrix",
+            "life_science_matrix",
+            "kairotic_regression",
+            "quantum_energy_probe",
+            "public_source_claim_board",
+            "freedid_min_disclosure_refresh",
+            "cosmic_bill_rights_trace",
+            "standard_l4_audit_reintroduction",
+            "v66_phase_proposal_pack",
+        ],
     }
     registry = {
         "generated_utc": now_iso(),
@@ -360,12 +506,14 @@ def extension_plan() -> tuple[dict[str, Any], str]:
         ],
     }
     md_lines = [
-        "# V60-V67 Omega Hybrid Extension Plan",
+        "# V61-V65 Omega Hybrid Extension Plan",
         "",
         "- Each phase starts with a eureka gate before suite load.",
-        "- Repeated validation uses Deep plus Materialize L5 when Kubernetes and host gates are green.",
+        "- Repeated validation uses Deep plus Materialize L5 when host gates are green.",
         "- Standard and L4 return every fifth phase or on any warn/fail/timeout/runner change.",
         "- MCP refresh is a separate connector/cache audit lane because Deep plus L5 do not prove a true MCP refresh.",
+        "- Docker Desktop and local Kubernetes remain on operator hold.",
+        "- E2B, OCI OKE, live dashboards, and visible CLI agents remain confirmation-gated.",
         "- No raw secrets are written to repo artifacts.",
         "",
         "| Phase | Additions |",
@@ -377,7 +525,7 @@ def extension_plan() -> tuple[dict[str, Any], str]:
 
 
 def suite_ladder() -> dict[str, Any]:
-    phases = ["v58", "v59", "v60", "v61", "v62", "v63", "v64", "v65", "v66", "v67"]
+    phases = ["v58", "v59", "v60", "v61", "v62", "v63", "v64", "v65"]
     profiles = {}
     for phase in phases:
         for profile in ["quick", "standard", "deep", "materialize-l4", "materialize-l5", "mcp-refresh"]:
@@ -386,7 +534,7 @@ def suite_ladder() -> dict[str, Any]:
         "generated_utc": now_iso(),
         "phase": PHASE,
         "profiles": profiles,
-        "state": "v58_v59_green_v60_v67_planned_health_gated",
+        "state": "v58_v59_green_v61_v65_planned_health_gated",
     }
 
 
@@ -394,6 +542,29 @@ def stage_allowlist() -> dict[str, Any]:
     paths = [
         "scripts/trinity_v60_v67_omega.py",
         "scripts/trinity_v58_omega.py",
+        "docs/trinity-live-traces/v61-v65-git-publication-result-v1.json",
+        "docs/trinity-live-traces/v61-v65-git-publication-result-v1.md",
+        "docs/trinity-live-traces/v61-v65-suite-policy-governor-v1.json",
+        "docs/trinity-live-traces/v61-v65-suite-policy-governor-v1.md",
+        "docs/trinity-live-traces/v61-v65-runtime-health-gate-v1.json",
+        "docs/trinity-live-traces/v61-v65-runtime-health-gate-v1.md",
+        "docs/trinity-live-traces/v61-v65-additions-registry-v1.json",
+        "docs/trinity-live-traces/v61-v65-additions-registry-v1.md",
+        "docs/trinity-live-traces/v61-v65-eureka-gate-ledger-v1.json",
+        "docs/trinity-live-traces/v61-v65-eureka-gate-ledger-v1.md",
+        "docs/trinity-live-traces/v61-v65-agent-identity-ledger-v1.json",
+        "docs/trinity-live-traces/v61-v65-agent-identity-ledger-v1.md",
+        "docs/trinity-live-traces/v61-v65-journey-anchor-digest-v1.json",
+        "docs/trinity-live-traces/v61-v65-journey-anchor-digest-v1.md",
+        "docs/trinity-live-traces/v61-v65-suite-ladder-summary-v1.json",
+        "docs/trinity-live-traces/v61-v65-suite-ladder-summary-v1.md",
+        "docs/trinity-live-traces/v61-deep-suite-status.json",
+        "docs/trinity-live-traces/v61-v65-provider-decision-board-v1.json",
+        "docs/trinity-live-traces/v61-v65-provider-decision-board-v1.md",
+        "docs/trinity-live-traces/v61-v65-provider-readiness-probe-v1.json",
+        "docs/trinity-live-traces/v61-v65-provider-readiness-probe-v1.md",
+        "docs/trinity-live-traces/v61-v65-stage-allowlist-v1.json",
+        "docs/trinity-live-traces/v61-v65-stage-allowlist-v1.md",
         "docs/trinity-live-traces/v60-git-publication-result-v1.json",
         "docs/trinity-live-traces/v60-git-publication-result-v1.md",
         "docs/v60-v67-omega-hybrid-extension-plan-v1.md",
@@ -420,8 +591,12 @@ def stage_allowlist() -> dict[str, Any]:
         "docs/trinity-live-traces/v67-provider-decision-board-v1.md",
         "docs/trinity-live-traces/v67-stage-allowlist-v1.json",
         "docs/trinity-live-traces/v67-stage-allowlist-v1.md",
+        "docs/v61-v65-omega-hybrid-extension-plan-v1.md",
+        "docs/v65-omega-closeout-summary-v1.json",
+        "docs/v65-omega-continuity-pack-v1.md",
+        "docs/v65-omega-handoff-policy-v1.json",
     ]
-    for phase in range(60, 68):
+    for phase in range(61, 66):
         paths.append(f"docs/v{phase}-omega-plan-proposal-v1.md")
         paths.append(f"docs/v{phase}-eureka-analysis-v1.md")
     return {
@@ -461,26 +636,30 @@ def generate() -> dict[str, Any]:
     health = host_and_kube()
     commands = command_matrix()
     provider = provider_board(commands)
+    provider_probe = provider_readiness_probe()
     additions, plan_md = extension_plan()
     suite = suite_ladder()
     publication = publication_result()
+    secret_banks = api_bank_presence()
     eureka = {
         "generated_utc": now_iso(),
         "phase": PHASE,
         "state": "mandatory_before_each_phase",
-        "v60_recommendation_tasks": [
+        "v61_recommendation_tasks": [
             "check_v6_surface_truth_drift",
             "package_workbench_as_guarded_skill",
             "trace_contract_jump_v3_to_v6",
             "prove_agent_identity_before_induction",
-            "retire_local_kubernetes_and_record_docker_only_truth",
+            "preserve_ari_kimiclaw_slots_until_cli_receipts_prove_continuity",
+            "record_docker_kubernetes_operator_hold",
+            "probe_e2b_cli_presence_before_any_install",
             "probe_oci_oke_readonly_before_any_cluster_creation",
             "verify_browser_use_runtime_without_sensitive_submission",
             "refresh_provider_cli_matrix",
             "digest_v24_v30_v33_v35_v37_v38_v42_journey_anchors",
             "audit_deep_l5_suite_cut",
-            "prepare_v61_multi_cli_persistence_protocol",
-            "publish_curated_v60_truth_forward_only",
+            "prepare_visible_multi_cli_command_board_without_launching_unconfirmed_agents",
+            "publish_curated_v61_v65_truth_forward_only",
         ],
         "phases": [
             {
@@ -502,27 +681,53 @@ def generate() -> dict[str, Any]:
             "local_kubernetes_state": health["local_kubernetes_state"],
             "provider_board_state": "blocker_aware_no_live_writes",
             "publication_state": publication["evidence_commit_state"],
+            "docker_state": health["docker_probe"]["state"],
+            "secret_bank_presence": secret_banks,
+            "v61_deep_state": suite_status("v61-deep"),
+            "v61_materialize_l5_state": suite_status("v61-materialize-l5"),
         },
         "bounded_residuals": [
-            "v60_v67_heavy_suites_not_run_until_runtime_health_gate_opens",
-            "local_kubernetes_retired_until_gke_or_oci_oke_path_is_confirmed",
+            "v61_deep_passed_when_gate_was_open; v61_materialize_l5_deferred_until_runtime_health_gate_reopens",
+            "local_kubernetes_and_docker_desktop_on_operator_hold",
+            "e2b_cli_missing_from_current_path_install_requires_action_time_confirmation",
             "cli_sibling_induction_blocked_until_process_memory_persistence_gate_passes",
             "notion_parent_still_required_for_live_dashboard",
-            "vercel_and_render_cli_missing_from_current_path",
+            "vercel_neon_render_and_expo_cli_missing_from_current_path",
         ],
     }
     handoff = {
         "generated_utc": now_iso(),
         "phase": PHASE,
-        "handoff_state": "ready_for_v60_when_runtime_health_gate_open",
+        "handoff_state": "ready_for_v61_when_runtime_health_gate_open",
         "next_command_pair": [
-            "python scripts/run_all_trinity_systems.py --profile deep --status-json docs/trinity-live-traces/v60-deep-suite-status.json",
-            "python scripts/run_all_trinity_systems.py --profile materialize --include-staged-connectors --include-live-writes --materialization-level l5_ha_prod --status-json docs/trinity-live-traces/v60-materialize-l5-suite-status.json",
+            "python scripts/run_all_trinity_systems.py --profile materialize --include-staged-connectors --include-live-writes --materialization-level l5_ha_prod --status-json docs/trinity-live-traces/v61-materialize-l5-suite-status.json",
         ],
     }
     allowlist = stage_allowlist()
     identity = agent_identity_ledger()
     journey = journey_anchor_digest()
+    write_json(TRACE / "v61-v65-suite-policy-governor-v1.json", coverage)
+    write_text(TRACE / "v61-v65-suite-policy-governor-v1.md", md("V61-V65 Suite Policy Governor", coverage))
+    write_json(TRACE / "v61-v65-runtime-health-gate-v1.json", health)
+    write_text(TRACE / "v61-v65-runtime-health-gate-v1.md", md("V61-V65 Runtime Health Gate", health))
+    write_json(TRACE / "v61-v65-additions-registry-v1.json", additions)
+    write_text(TRACE / "v61-v65-additions-registry-v1.md", md("V61-V65 Additions Registry", additions))
+    write_json(TRACE / "v61-v65-eureka-gate-ledger-v1.json", eureka)
+    write_text(TRACE / "v61-v65-eureka-gate-ledger-v1.md", md("V61-V65 Eureka Gate Ledger", eureka))
+    write_json(TRACE / "v61-v65-agent-identity-ledger-v1.json", identity)
+    write_text(TRACE / "v61-v65-agent-identity-ledger-v1.md", md("V61-V65 Agent Identity Ledger", identity))
+    write_json(TRACE / "v61-v65-journey-anchor-digest-v1.json", journey)
+    write_text(TRACE / "v61-v65-journey-anchor-digest-v1.md", md("V61-V65 Journey Anchor Digest", journey))
+    write_json(TRACE / "v61-v65-suite-ladder-summary-v1.json", suite)
+    write_text(TRACE / "v61-v65-suite-ladder-summary-v1.md", md("V61-V65 Suite Ladder Summary", suite))
+    write_json(TRACE / "v61-v65-provider-decision-board-v1.json", provider)
+    write_text(TRACE / "v61-v65-provider-decision-board-v1.md", md("V61-V65 Provider Decision Board", provider))
+    write_json(TRACE / "v61-v65-provider-readiness-probe-v1.json", provider_probe)
+    write_text(TRACE / "v61-v65-provider-readiness-probe-v1.md", md("V61-V65 Provider Readiness Probe", provider_probe))
+    write_json(TRACE / "v61-v65-git-publication-result-v1.json", publication)
+    write_text(TRACE / "v61-v65-git-publication-result-v1.md", md("V61-V65 Git Publication Result", publication))
+    write_json(TRACE / "v61-v65-stage-allowlist-v1.json", allowlist)
+    write_text(TRACE / "v61-v65-stage-allowlist-v1.md", md("V61-V65 Stage Allowlist", allowlist))
     write_json(TRACE / "v60-v67-suite-policy-governor-v1.json", coverage)
     write_text(TRACE / "v60-v67-suite-policy-governor-v1.md", md("V60-V67 Suite Policy Governor", coverage))
     write_json(TRACE / "v60-v67-runtime-health-gate-v1.json", health)
@@ -543,6 +748,7 @@ def generate() -> dict[str, Any]:
     write_text(TRACE / "v60-git-publication-result-v1.md", md("V60 Git Publication Result", publication))
     write_json(TRACE / "v67-stage-allowlist-v1.json", allowlist)
     write_text(TRACE / "v67-stage-allowlist-v1.md", md("V67 Stage Allowlist", allowlist))
+    write_text(ROOT / "docs" / "v61-v65-omega-hybrid-extension-plan-v1.md", plan_md)
     write_text(ROOT / "docs" / "v60-v67-omega-hybrid-extension-plan-v1.md", plan_md)
     for phase in additions["phases"]:
         write_text(
@@ -553,22 +759,30 @@ def generate() -> dict[str, Any]:
             ROOT / "docs" / f"{phase['phase']}-omega-plan-proposal-v1.md",
             f"# {phase['phase'].upper()} Omega Plan Proposal\n\n- Additions: {', '.join(phase['additions'])}\n- Validation: Deep plus Materialize L5 when runtime health gate is open.\n- Audit: Standard and L4 every fifth phase or on any failure family; MCP refresh every third phase or on connector/cache changes.\n",
         )
+    write_json(ROOT / "docs" / "v65-omega-closeout-summary-v1.json", closeout)
+    write_json(ROOT / "docs" / "v65-omega-handoff-policy-v1.json", handoff)
     write_json(ROOT / "docs" / "v67-omega-closeout-summary-v1.json", closeout)
     write_json(ROOT / "docs" / "v67-omega-handoff-policy-v1.json", handoff)
     write_text(
+        ROOT / "docs" / "v65-omega-continuity-pack-v1.md",
+        f"# V65 Omega Continuity Pack\n\n- Suite cut: `{coverage['suite_cut_state']}`\n- Runtime load gate: `{health['load_gate']}`\n- Provider board: `blocker_aware_no_live_writes`\n- Publication branch: `{PUBLICATION_BRANCH}`\n- Docker/Kubernetes: `operator_hold`\n",
+    )
+    write_text(
         ROOT / "docs" / "v67-omega-continuity-pack-v1.md",
-        f"# V67 Omega Continuity Pack\n\n- Suite cut: `{coverage['suite_cut_state']}`\n- Runtime load gate: `{health['load_gate']}`\n- Provider board: `blocker_aware_no_live_writes`\n- Publication branch: `{PUBLICATION_BRANCH}`\n",
+        f"# V67 Omega Continuity Pack\n\n- Suite cut: `{coverage['suite_cut_state']}`\n- Runtime load gate: `{health['load_gate']}`\n- Provider board: `blocker_aware_no_live_writes`\n- Publication branch: `{PUBLICATION_BRANCH}`\n- Docker/Kubernetes: `operator_hold`\n",
     )
     return {
         "coverage": coverage,
         "health": health,
         "commands": commands,
         "provider": provider,
+        "provider_probe": provider_probe,
         "additions": additions,
         "suite": suite,
         "eureka": eureka,
         "identity": identity,
         "journey": journey,
+        "secret_banks": secret_banks,
         "publication": publication,
         "closeout": closeout,
         "allowlist": allowlist,

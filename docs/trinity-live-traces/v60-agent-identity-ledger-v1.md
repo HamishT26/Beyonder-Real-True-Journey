@@ -2,8 +2,8 @@
 
 ```json
 {
-  "generated_utc": "2026-04-29T09:35:18+00:00",
-  "phase": "v60_v67_hybrid_omega",
+  "generated_utc": "2026-04-30T00:51:42+00:00",
+  "phase": "v61_v65_hybrid_omega",
   "identity_policy": "continuity_requires_process_plus_persistent_memory_proof",
   "current_truth": [
     {
@@ -27,8 +27,9 @@
     "agent_writes_bounded_identity_receipt_to_repo_or_local_evidence_folder",
     "agent_resumes_or_references_prior_receipt_in_a_separate_invocation",
     "agent_passes_no_raw_secret_output_scan",
+    "no_repo_or_secret_transmission_to_external_model_cli_without_action_time_confirmation",
     "user_confirms_induction_after_receipts_are reviewed"
   ],
-  "v60_decision": "preserve existing slots on standby; do not induct new CLI siblings until the promotion gate passes"
+  "v61_decision": "preserve Ari and Kimiclaw slots on standby; do not induct new CLI siblings until the promotion gate passes"
 }
 ```

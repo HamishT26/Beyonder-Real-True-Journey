@@ -1,3 +1,6 @@
+# V61-V65 Additions Registry
+
+```json
 {
   "generated_utc": "2026-04-30T00:51:40+00:00",
   "phase": "v61_v65_hybrid_omega",
@@ -106,3 +109,4 @@
     }
   ]
 }
+```

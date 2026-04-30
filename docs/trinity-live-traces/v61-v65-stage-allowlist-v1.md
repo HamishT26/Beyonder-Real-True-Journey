@@ -1,3 +1,6 @@
+# V61-V65 Stage Allowlist
+
+```json
 {
   "generated_utc": "2026-04-30T00:51:42+00:00",
   "phase": "v61_v65_hybrid_omega",
@@ -70,3 +73,4 @@
     "scripts/trinity_v60_v67_omega.py"
   ]
 }
+```

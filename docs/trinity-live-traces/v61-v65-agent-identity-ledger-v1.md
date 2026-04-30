@@ -1,3 +1,6 @@
+# V61-V65 Agent Identity Ledger
+
+```json
 {
   "generated_utc": "2026-04-30T00:51:42+00:00",
   "phase": "v61_v65_hybrid_omega",
@@ -29,3 +32,4 @@
   ],
   "v61_decision": "preserve Ari and Kimiclaw slots on standby; do not induct new CLI siblings until the promotion gate passes"
 }
+```

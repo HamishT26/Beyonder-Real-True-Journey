@@ -1,3 +1,6 @@
+# V61-V65 Runtime Health Gate
+
+```json
 {
   "generated_utc": "2026-04-30T00:51:14+00:00",
   "phase": "v61_v65_hybrid_omega",
@@ -25,3 +28,4 @@
   "load_gate": "closed",
   "load_gate_basis": "host_pressure_cool_required; Docker and local Kubernetes are not required for repo-only Deep/L5 but remain on operator hold"
 }
+```

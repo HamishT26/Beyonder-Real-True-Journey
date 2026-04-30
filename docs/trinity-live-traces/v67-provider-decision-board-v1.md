@@ -2,8 +2,8 @@
 
 ```json
 {
-  "generated_utc": "2026-04-29T09:35:13+00:00",
-  "phase": "v60_v67_hybrid_omega",
+  "generated_utc": "2026-04-30T00:51:15+00:00",
+  "phase": "v61_v65_hybrid_omega",
   "lanes": [
     {
       "provider": "notion",
@@ -16,6 +16,13 @@
       "provider": "browser_use",
       "state": "runtime_available_current_session",
       "next_allowed_action": "use in-app browser for local dashboard/doc probes; no sensitive form submission without action-time confirmation",
+      "live_write_enabled": false,
+      "secret_policy": "raw_values_never_written"
+    },
+    {
+      "provider": "e2b",
+      "state": "missing_cli_or_path",
+      "next_allowed_action": "install/use gate only; outbound sandbox code/data execution requires action-time confirmation",
       "live_write_enabled": false,
       "secret_policy": "raw_values_never_written"
     },
@@ -51,6 +58,13 @@
       "provider": "expo",
       "state": "npx_available",
       "next_allowed_action": "local Expo preview only, no EAS cloud build until auth gate",
+      "live_write_enabled": false,
+      "secret_policy": "raw_values_never_written"
+    },
+    {
+      "provider": "docker_desktop",
+      "state": "operator_hold",
+      "next_allowed_action": "do not start Docker Desktop or Kubernetes for v61-v65 unless the operator reactivates it",
       "live_write_enabled": false,
       "secret_policy": "raw_values_never_written"
     },
