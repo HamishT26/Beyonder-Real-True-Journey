@@ -1,0 +1,12 @@
+# v76-v84-git-publication-result-v1
+
+```json
+{
+  "generated_utc": "2026-04-30T13:35:01+00:00",
+  "phase": "v76_v84_hybrid_omega",
+  "publication_branch": "codex/GHC-Family/beyonder-shared-omega-line",
+  "local_head_at_receipt_generation": "5219251c4e5799131b752dcdb36649a60f130270",
+  "remote_head_verified": "5219251c4e5799131b752dcdb36649a60f130270",
+  "remote_matches_local": true
+}
+```
