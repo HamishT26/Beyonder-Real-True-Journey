@@ -2,11 +2,12 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T04:16:28+00:00",
+  "generated_utc": "2026-04-30T04:34:39+00:00",
   "phase": "v65_v75_hybrid_omega",
   "policy": "stage_only_curated_v65_v75_truth_surfaces_and_suite_statuses",
   "paths": [
     "scripts/trinity_v65_v75_omega.py",
+    "scripts/trinity_expansion_system_runner.py",
     "docs/trinity-live-traces/v65-v75-runtime-health-gate-v1.json",
     "docs/trinity-live-traces/v65-v75-runtime-health-gate-v1.md",
     "docs/trinity-live-traces/v65-v75-provider-readiness-probe-v1.json",

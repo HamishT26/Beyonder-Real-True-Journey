@@ -2836,7 +2836,11 @@ def _compute_system(
         session_template_count = int(mcp_surface.get("resource_template_count", 0) or 0) if ok_mcp_surface else 0
         checks = [
             _check("codex_config_present", "PASS" if codex_config_path.exists() else "FAIL", str(codex_config_path)),
-            _check("preferred_model_gpt54", "PASS" if model == "gpt-5.4" else "FAIL", f"model={model or 'missing'}"),
+            _check(
+                "codex_model_config_supported",
+                "PASS" if model in {"gpt-5.4", "gpt-5.5"} else "FAIL",
+                f"model={model or 'missing'}; cli_fallback=gpt-5.4_when_current_codex_cli_rejects_gpt-5.5",
+            ),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_presence_documented", "PASS", f"uvx={shutil.which('uvx') or 'absent'}"),
             _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 59 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
@@ -2856,6 +2860,7 @@ def _compute_system(
             "checks": checks,
             "metrics": {
                 "configured_model": model,
+                "codex_cli_model_fallback": "gpt-5.4",
                 "configured_reasoning_effort": reasoning_effort,
                 "repo_python_scripts": _count_script_files(),
                 "repo_local_skill_count": len(_repo_skill_dirs()),

@@ -448,6 +448,7 @@ def prep_markdown(phase_row: dict[str, Any], ledger: dict[str, Any]) -> str:
 def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
     paths = [
         "scripts/trinity_v65_v75_omega.py",
+        "scripts/trinity_expansion_system_runner.py",
         f"docs/trinity-live-traces/{PREFIX}-runtime-health-gate-v1.json",
         f"docs/trinity-live-traces/{PREFIX}-runtime-health-gate-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-provider-readiness-probe-v1.json",
