@@ -3334,13 +3334,18 @@ sandbox = \"elevated\"
             materialization_level="l2_persistent_dev",
         )
         expansion_labels = [label for label, _ in commands if label.startswith("expansion: ")]
+        standard_system_count = sum(
+            1
+            for row in manifest.get("systems", [])
+            if isinstance(row, dict) and "standard" in {str(value) for value in row.get("profiles", []) if str(value)}
+        )
         checks = [
-            _check("standard_expansion_count", "PASS" if len(expansion_labels) == len(manifest.get("systems", [])) else "FAIL", f"labels={len(expansion_labels)}"),
+            _check("standard_expansion_count", "PASS" if len(expansion_labels) == standard_system_count else "FAIL", f"labels={len(expansion_labels)}, standard_systems={standard_system_count}"),
             _check("expansion_labels_unique", "PASS" if len(expansion_labels) == len(set(expansion_labels)) else "FAIL", f"unique={len(set(expansion_labels))}"),
         ]
         return {
             "checks": checks,
-            "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
+            "metrics": {"standard_expansion_labels": len(expansion_labels), "standard_manifest_system_count": standard_system_count, "manifest_system_count": len(manifest.get("systems", []))},
             "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v11.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,

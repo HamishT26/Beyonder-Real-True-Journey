@@ -10,11 +10,11 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
-EXPECTED_SYSTEM_COUNT = 1094
+EXPECTED_SYSTEM_COUNT = 1114
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}
-ALLOWED_WAVES = {"legacy"} | {f"wave{i}" for i in range(1, 300)}
+ALLOWED_WAVES = {"legacy", "v76_promoted_candidate_wave"} | {f"wave{i}" for i in range(1, 300)}
 ALLOWED_TRACKS = {
     "mind_theory",
     "body_compute",
@@ -45,6 +45,7 @@ ALLOWED_TRACKS = {
     "reflection_scope",
     "public_intelligence",
     "os_runtime",
+    "v76_candidate_promotion",
 }
 ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate", "pack_gate"}
 
