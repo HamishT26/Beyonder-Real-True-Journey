@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T06:47:37+00:00",
+  "generated_utc": "2026-04-30T06:49:07+00:00",
   "phase": "v65_v75_hybrid_omega",
   "state": "phase_gate_ready",
   "operator_requested_priority": "induction_and_cli_setup_before_v66_suite_runs",
