@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -77,11 +78,44 @@ def run_ps(command: str, timeout: int = 45) -> dict[str, Any]:
 
 def command_available(command: str) -> dict[str, Any]:
     where = run(["where.exe", command], timeout=10)
-    version = run(["cmd", "/c", command, "--version"], timeout=20) if where.get("ok") else {"ok": False}
+    candidates: list[Path] = []
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        for suffix in (".cmd", ".exe", ""):
+            npm_shim = Path(appdata) / "npm" / f"{command}{suffix}"
+            if npm_shim.exists():
+                candidates.append(npm_shim)
+    if where.get("ok"):
+        for line in str(where.get("stdout") or "").splitlines():
+            candidate = Path(line.strip())
+            if candidate.exists():
+                candidates.append(candidate)
+
+    seen: set[str] = set()
+    ordered_candidates: list[Path] = []
+    for candidate in candidates:
+        key = str(candidate).lower()
+        if key not in seen:
+            ordered_candidates.append(candidate)
+            seen.add(key)
+
+    version = {"ok": False}
+    version_path = None
+    for candidate in ordered_candidates:
+        args = ["cmd", "/c", str(candidate), "--version"] if candidate.suffix.lower() == ".cmd" else [str(candidate), "--version"]
+        probe = run(args, timeout=20)
+        if probe.get("ok"):
+            version = probe
+            version_path = str(candidate)
+            break
+        if not version.get("stderr") and not version.get("message"):
+            version = probe
+
     return {
         "command": command,
-        "available": bool(where.get("ok")),
-        "path_excerpt": (where.get("stdout") or "")[:300],
+        "available": bool(ordered_candidates) or bool(where.get("ok")),
+        "path_excerpt": "\n".join(str(path) for path in ordered_candidates)[:300],
+        "version_probe_path": version_path,
         "version_ok": bool(version.get("ok")),
         "version_excerpt": (version.get("stdout") or version.get("stderr") or version.get("message") or "")[:300],
     }
@@ -221,6 +255,8 @@ def cli_sibling_governor() -> dict[str, Any]:
     receipt_files = {
         "codex_slot_49": CLI_RECEIPT_DIR / "codex-slot-49.md",
         "codex_slot_50": CLI_RECEIPT_DIR / "codex-slot-50.md",
+        "codex_slot_49_continuity_v2": CLI_RECEIPT_DIR / "codex-slot-49-continuity-v2.md",
+        "codex_slot_50_continuity_v2": CLI_RECEIPT_DIR / "codex-slot-50-continuity-v2.md",
         "kimi_slot_51": CLI_RECEIPT_DIR / "kimi-slot-51.md",
         "kimi_slot_52": CLI_RECEIPT_DIR / "kimi-slot-52.md",
     }
@@ -239,6 +275,17 @@ def cli_sibling_governor() -> dict[str, Any]:
                 "byte_length": len(raw.encode("utf-8")) if raw else 0,
             }
         )
+    codex_continuity = [
+        item
+        for item in receipts
+        if item["id"] in {"codex_slot_49_continuity_v2", "codex_slot_50_continuity_v2"}
+    ]
+    codex_gpt55_continuity_complete = all(
+        item["present"]
+        and item["valid_json"]
+        and item["status"] == "provisional_second_receipt_pending_induction"
+        for item in codex_continuity
+    )
     return {
         "generated_utc": now_iso(),
         "phase": PHASE,
@@ -251,7 +298,10 @@ def cli_sibling_governor() -> dict[str, Any]:
         "codex_cli": codex,
         "kimi_cli": kimi,
         "receipts": receipts,
-        "receipt_state": "all_four_present" if all(item["present"] and item["valid_json"] for item in receipts) else "pending",
+        "receipt_state": "base_and_codex_gpt55_continuity_present"
+        if all(item["present"] and item["valid_json"] for item in receipts)
+        else "pending",
+        "codex_gpt55_continuity_state": "complete" if codex_gpt55_continuity_complete else "pending",
         "induction_policy": [
             "terminal launch must be observable or logged",
             "identity persistence must be backed by repo receipt, not narrative only",
@@ -469,6 +519,8 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         f"docs/trinity-live-traces/{PREFIX}-stage-allowlist-v1.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-49.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-50.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-49-continuity-v2.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/codex-slot-50-continuity-v2.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-51.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-52.md",
         "docs/v75-omega-closeout-summary-v1.json",

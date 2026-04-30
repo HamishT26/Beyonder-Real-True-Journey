@@ -2839,7 +2839,7 @@ def _compute_system(
             _check(
                 "codex_model_config_supported",
                 "PASS" if model in {"gpt-5.4", "gpt-5.5"} else "FAIL",
-                f"model={model or 'missing'}; cli_fallback=gpt-5.4_when_current_codex_cli_rejects_gpt-5.5",
+                f"model={model or 'missing'}; cli_fallback=conditional_gpt-5.4_only_if_installed_codex_cli_rejects_gpt-5.5",
             ),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_presence_documented", "PASS", f"uvx={shutil.which('uvx') or 'absent'}"),
@@ -2860,7 +2860,8 @@ def _compute_system(
             "checks": checks,
             "metrics": {
                 "configured_model": model,
-                "codex_cli_model_fallback": "gpt-5.4",
+                "codex_cli_model_fallback": "conditional_gpt-5.4_only_if_needed",
+                "codex_cli_model_support_policy": "gpt-5.4_and_gpt-5.5_supported_by_config_gate",
                 "configured_reasoning_effort": reasoning_effort,
                 "repo_python_scripts": _count_script_files(),
                 "repo_local_skill_count": len(_repo_skill_dirs()),
