@@ -166,11 +166,10 @@ def _git_remote_state() -> dict[str, Any]:
     refs = [
         "refs/heads/codex/GHC-Family/beyonder-shared-omega-line",
         "HEAD",
-        "main",
     ]
     last_detail = ""
     for ref in refs:
-        code, stdout, stderr = _run(["git", "ls-remote", "origin", ref], timeout=30)
+        code, stdout, stderr = _run(["git", "ls-remote", "origin", ref], timeout=8)
         if code == 0 and stdout.strip():
             return {"ok": True, "live": True, "mode": "live_probe", "detail": f"git ls-remote origin {ref}"}
         last_detail = stderr or stdout or f"git ls-remote origin {ref} returned {code}"

@@ -1,6 +1,6 @@
 # V77-V84 Candidate System Result: v77_12_l5_marker_diff_scanner
 
-- generated_utc: `2026-04-30T15:16:19+00:00`
+- generated_utc: `2026-04-30T15:59:16+00:00`
 - phase: `v77`
 - overall_status: **PASS**
 - effective_success: `True`
