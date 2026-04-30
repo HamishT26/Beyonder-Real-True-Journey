@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T01:42:41+00:00",
+  "generated_utc": "2026-04-30T01:55:17+00:00",
   "phase": "v61_v65_hybrid_omega",
   "profiles": {
     "v58-quick": {
@@ -199,9 +199,9 @@
     },
     "v63-deep": {
       "path": "docs/trinity-live-traces/v63-deep-suite-status.json",
-      "present": false,
-      "effective_success": false,
-      "summary": "0 PASS / 0 WARN / 0 FAIL"
+      "present": true,
+      "effective_success": true,
+      "summary": "1160 PASS / 0 WARN / 0 FAIL"
     },
     "v63-materialize-l4": {
       "path": "docs/trinity-live-traces/v63-materialize-l4-suite-status.json",

@@ -1,7 +1,7 @@
 # V65 Omega Continuity Pack
 
 - Suite cut: `approved_deep_plus_l5_repeated_pair`
-- Runtime load gate: `closed`
+- Runtime load gate: `open`
 - Provider board: `blocker_aware_no_live_writes`
 - Publication branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - Docker/Kubernetes: `operator_hold`

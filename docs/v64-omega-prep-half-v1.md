@@ -1,6 +1,6 @@
 # V64 Omega Prep Half
 
-- First half state: `pending`
+- First half state: `cooldown_prep_started`
 - Goal: research, internalize, plan, and package extension candidates before suite load.
 - Validation remains Deep plus Materialize L5 after prep and load gates are open.
 

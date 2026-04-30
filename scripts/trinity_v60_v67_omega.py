@@ -580,6 +580,8 @@ def phase_half_governor() -> dict[str, Any]:
         first_half_state = "published_green_legacy" if is_legacy_green else "pending"
         if phase == "v63":
             first_half_state = "complete"
+        if phase == "v64" and suite_status("v63-deep")["effective_success"]:
+            first_half_state = "cooldown_prep_started"
         rows.append(
             {
                 "phase": phase,
