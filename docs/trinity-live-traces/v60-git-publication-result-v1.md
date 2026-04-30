@@ -2,11 +2,11 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T00:55:31+00:00",
+  "generated_utc": "2026-04-30T01:09:34+00:00",
   "phase": "v61_v65_hybrid_omega",
   "publication_branch": "codex/GHC-Family/beyonder-shared-omega-line",
-  "local_head_at_receipt_generation": "e03cd6101fbfdab8fcbd841410d3f758ea59ad85",
-  "remote_head_verified": "e03cd6101fbfdab8fcbd841410d3f758ea59ad85",
+  "local_head_at_receipt_generation": "d20b736ea3880c7a0ca6f3056b30425e02553e14",
+  "remote_head_verified": "d20b736ea3880c7a0ca6f3056b30425e02553e14",
   "evidence_commit_state": "pushed_to_shared_branch",
   "bookkeeping_commit_state": "this_receipt_is_written_after_the_evidence_push_and_included_in_the_next_forward_commit",
   "pr_thread": {

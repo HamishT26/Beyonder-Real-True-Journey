@@ -16,6 +16,7 @@ PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
 ACTIVE_PHASES = ["v61", "v62", "v63", "v64", "v65"]
 LEGACY_TRACE_PREFIX = "v60-v67"
 ACTIVE_TRACE_PREFIX = "v61-v65"
+FREE_MEMORY_COOL_FLOOR_KB = 400_000
 API_BANK_CANDIDATES = [
     Path("C:/Users/hamis/GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up).txt"),
     Path("D:/GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up).txt"),
@@ -197,7 +198,7 @@ def host_and_kube() -> dict[str, Any]:
     host_state = "cool"
     if max_cpu >= 300 or free_kb < 300_000:
         host_state = "hot_pause_heavy_suites"
-    elif max_cpu >= 150 or free_kb < 500_000:
+    elif max_cpu >= 150 or free_kb < FREE_MEMORY_COOL_FLOOR_KB:
         host_state = "warm_cooldown_before_heavy_suites"
     docker_state = "running" if docker_info.get("ok") else "operator_hold_or_not_running"
     local_kubernetes_state = "retired_by_operator_for_v61_v65"
@@ -231,6 +232,7 @@ def host_and_kube() -> dict[str, Any]:
         "host_pressure_state": host_state,
         "max_container_cpu_percent": max_cpu,
         "free_physical_memory_kb": free_kb,
+        "free_memory_cool_floor_kb": FREE_MEMORY_COOL_FLOOR_KB,
         "containers": containers,
         "load_gate": "open" if load_gate_open else "closed",
         "load_gate_basis": "host_pressure_cool_required; Docker and local Kubernetes are not required for repo-only Deep/L5 but remain on operator hold",
@@ -559,6 +561,7 @@ def stage_allowlist() -> dict[str, Any]:
         "docs/trinity-live-traces/v61-v65-suite-ladder-summary-v1.json",
         "docs/trinity-live-traces/v61-v65-suite-ladder-summary-v1.md",
         "docs/trinity-live-traces/v61-deep-suite-status.json",
+        "docs/trinity-live-traces/v61-materialize-l5-suite-status.json",
         "docs/trinity-live-traces/v61-v65-provider-decision-board-v1.json",
         "docs/trinity-live-traces/v61-v65-provider-decision-board-v1.md",
         "docs/trinity-live-traces/v61-v65-provider-readiness-probe-v1.json",
