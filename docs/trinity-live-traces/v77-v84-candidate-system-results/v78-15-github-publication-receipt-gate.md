@@ -1,6 +1,6 @@
 # V77-V84 Candidate System Result: v78_15_github_publication_receipt_gate
 
-- generated_utc: `2026-04-30T15:59:27+00:00`
+- generated_utc: `2026-04-30T16:32:16+00:00`
 - phase: `v78`
 - overall_status: **PASS**
 - effective_success: `True`

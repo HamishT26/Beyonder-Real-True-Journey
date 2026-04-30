@@ -2,39 +2,39 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T16:00:53+00:00",
-  "phase": "v78",
+  "generated_utc": "2026-04-30T16:33:32+00:00",
+  "phase": "v79",
   "state": "progressive_v77_v84_candidate_pack",
   "active_phase_promotion": {
-    "generated_utc": "2026-04-30T16:00:46+00:00",
-    "phase": "v78",
+    "generated_utc": "2026-04-30T16:33:26+00:00",
+    "phase": "v79",
     "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
-    "before_count": 1154,
-    "after_count": 1154,
+    "before_count": 1174,
+    "after_count": 1174,
     "added_count": 0,
     "refreshed_count": 20,
     "added_systems": [],
     "refreshed_systems": [
-      "v78_01_phase_ledger_receipt_gate",
-      "v78_02_prior_suite_delta_mapper",
-      "v78_03_guarded_live_write_preflight_gate",
-      "v78_04_candidate_pack_quality_gate",
-      "v78_05_eureka_report_length_gate",
-      "v78_06_cli_lane_reflection_synthesizer",
-      "v78_07_gmut_qcit_claim_labeler",
-      "v78_08_freedid_cbr_consent_guard",
-      "v78_09_provider_posture_receipt_matrix",
-      "v78_10_memory_floor_cooldown_logger",
-      "v78_11_d_drive_artifact_router",
-      "v78_12_l5_marker_diff_scanner",
-      "v78_13_suite_count_growth_guard",
-      "v78_14_consolidation_opportunity_register",
-      "v78_15_github_publication_receipt_gate",
-      "v78_16_operator_hold_surface_enforcer",
-      "v78_17_research_cache_router",
-      "v78_18_artifact_parity_validator",
-      "v78_19_next_phase_handoff_builder",
-      "v78_20_grand_closeout_reflection_weaver"
+      "v79_01_phase_ledger_receipt_gate",
+      "v79_02_prior_suite_delta_mapper",
+      "v79_03_guarded_live_write_preflight_gate",
+      "v79_04_candidate_pack_quality_gate",
+      "v79_05_eureka_report_length_gate",
+      "v79_06_cli_lane_reflection_synthesizer",
+      "v79_07_gmut_qcit_claim_labeler",
+      "v79_08_freedid_cbr_consent_guard",
+      "v79_09_provider_posture_receipt_matrix",
+      "v79_10_memory_floor_cooldown_logger",
+      "v79_11_d_drive_artifact_router",
+      "v79_12_l5_marker_diff_scanner",
+      "v79_13_suite_count_growth_guard",
+      "v79_14_consolidation_opportunity_register",
+      "v79_15_github_publication_receipt_gate",
+      "v79_16_operator_hold_surface_enforcer",
+      "v79_17_research_cache_router",
+      "v79_18_artifact_parity_validator",
+      "v79_19_next_phase_handoff_builder",
+      "v79_20_grand_closeout_reflection_weaver"
     ]
   },
   "candidate_count": 160,
@@ -324,140 +324,140 @@
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_02_prior_suite_delta_mapper",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "map prior Deep and L5 count movement before any new phase claim",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_03_guarded_live_write_preflight_gate",
       "phase": "v79",
       "pillar": "heart",
       "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_04_candidate_pack_quality_gate",
       "phase": "v79",
       "pillar": "body",
       "purpose": "check every candidate has runner metadata, outputs, and markdown parity",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_05_eureka_report_length_gate",
       "phase": "v79",
       "pillar": "mind",
       "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_06_cli_lane_reflection_synthesizer",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_07_gmut_qcit_claim_labeler",
       "phase": "v79",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_08_freedid_cbr_consent_guard",
       "phase": "v79",
       "pillar": "heart",
       "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_09_provider_posture_receipt_matrix",
       "phase": "v79",
       "pillar": "body",
       "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_10_memory_floor_cooldown_logger",
       "phase": "v79",
       "pillar": "body",
       "purpose": "record host memory posture before suites and make heavy lanes pause-aware",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_11_d_drive_artifact_router",
       "phase": "v79",
       "pillar": "body",
       "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_12_l5_marker_diff_scanner",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "scan L5 status files for external mutation and personal-surface markers",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_13_suite_count_growth_guard",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "block system count movement unless new systems have passing direct and suite proof",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_14_consolidation_opportunity_register",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_15_github_publication_receipt_gate",
       "phase": "v79",
       "pillar": "body",
       "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_16_operator_hold_surface_enforcer",
       "phase": "v79",
       "pillar": "heart",
       "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_17_research_cache_router",
       "phase": "v79",
       "pillar": "mind",
       "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_18_artifact_parity_validator",
       "phase": "v79",
       "pillar": "body",
       "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_19_next_phase_handoff_builder",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "turn completed suite evidence into the next phase handoff policy",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v79_20_grand_closeout_reflection_weaver",
       "phase": "v79",
       "pillar": "trinity",
       "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v80_01_phase_ledger_receipt_gate",
