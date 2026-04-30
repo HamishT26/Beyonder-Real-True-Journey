@@ -1,7 +1,7 @@
-# V65 Omega Prep Half
+# V73 Omega Prep Half
 
-- State: `ready`
-- Live write phase: `False`
+- State: `pending`
+- Live write phase: `True`
 - Extension target: `50` candidate systems/skills/scripts/workflows.
 - Eureka target: `25` recommendations before validation.
 - Validation: Deep then Materialize L5 after runtime gate is open.

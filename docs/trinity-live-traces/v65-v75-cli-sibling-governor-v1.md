@@ -1,0 +1,54 @@
+# v65-v75-cli-sibling-governor-v1
+
+```json
+{
+  "generated_utc": "2026-04-30T04:05:28+00:00",
+  "phase": "v65_v75_hybrid_omega",
+  "requested_siblings": [
+    {
+      "slot": 49,
+      "provider": "codex_cli",
+      "status": "pending_launch_recipe",
+      "role": "repo_planner"
+    },
+    {
+      "slot": 50,
+      "provider": "codex_cli",
+      "status": "pending_launch_recipe",
+      "role": "suite_verifier"
+    },
+    {
+      "slot": 51,
+      "provider": "kimi_cli",
+      "status": "pending_launch_recipe",
+      "role": "research_synthesizer"
+    },
+    {
+      "slot": 52,
+      "provider": "kimi_cli",
+      "status": "pending_launch_recipe",
+      "role": "provider_probe_archivist"
+    }
+  ],
+  "codex_cli": {
+    "command": "codex",
+    "available": true,
+    "path_excerpt": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.cmd\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.422.8496.0_x64__2p2nqsd0c76g0\\app\\resources\\codex\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.422.8496.0_x64__2p2nqsd0c76g0\\app\\resources\\codex.exe",
+    "version_ok": true,
+    "version_excerpt": "codex-cli 0.114.0"
+  },
+  "kimi_cli": {
+    "command": "kimi",
+    "available": true,
+    "path_excerpt": "C:\\Users\\hamis\\.local\\bin\\kimi.exe",
+    "version_ok": true,
+    "version_excerpt": "kimi, version 1.38.0"
+  },
+  "induction_policy": [
+    "terminal launch must be observable or logged",
+    "identity persistence must be backed by repo receipt, not narrative only",
+    "external model prompts must avoid raw secrets and must be summarized before commit",
+    "formal induction remains pending until two-session continuity is proven"
+  ]
+}
+```
