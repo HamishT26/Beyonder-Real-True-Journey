@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T08:58:05+00:00",
+  "generated_utc": "2026-04-30T09:11:59+00:00",
   "phase": "v65_v75_hybrid_omega",
   "recommendation_count": 275,
   "recommendations": [
@@ -75,7 +75,7 @@
     {
       "phase": "v65",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -225,7 +225,7 @@
     {
       "phase": "v66",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -375,7 +375,7 @@
     {
       "phase": "v67",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -525,7 +525,7 @@
     {
       "phase": "v68",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -675,7 +675,7 @@
     {
       "phase": "v69",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -825,7 +825,7 @@
     {
       "phase": "v70",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -975,7 +975,7 @@
     {
       "phase": "v71",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -1125,7 +1125,7 @@
     {
       "phase": "v72",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -1275,7 +1275,7 @@
     {
       "phase": "v73",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -1372,13 +1372,13 @@
       "phase": "v74",
       "rank": 3,
       "recommendation": "trace provider state from read-only to live write",
-      "class": "governance"
+      "class": "live_write"
     },
     {
       "phase": "v74",
       "rank": 4,
       "recommendation": "add budget before-after receipt",
-      "class": "governance"
+      "class": "live_write"
     },
     {
       "phase": "v74",
@@ -1402,7 +1402,7 @@
       "phase": "v74",
       "rank": 8,
       "recommendation": "add rollback receipt for every write",
-      "class": "governance"
+      "class": "live_write"
     },
     {
       "phase": "v74",
@@ -1425,7 +1425,7 @@
     {
       "phase": "v74",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {
@@ -1456,7 +1456,7 @@
       "phase": "v74",
       "rank": 17,
       "recommendation": "prefer preview/test resources over production surfaces",
-      "class": "governance"
+      "class": "live_write"
     },
     {
       "phase": "v74",
@@ -1480,7 +1480,7 @@
       "phase": "v74",
       "rank": 21,
       "recommendation": "score provider usefulness by evidence gained per credit",
-      "class": "governance"
+      "class": "live_write"
     },
     {
       "phase": "v74",
@@ -1575,7 +1575,7 @@
     {
       "phase": "v75",
       "rank": 12,
-      "recommendation": "add dashboard card only from committed data",
+      "recommendation": "add report section only from committed data",
       "class": "governance"
     },
     {

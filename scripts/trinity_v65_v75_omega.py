@@ -11,11 +11,12 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 TRACE = ROOT / "docs" / "trinity-live-traces"
 CLI_RECEIPT_DIR = TRACE / "v65-v75-cli-sibling-receipts"
+CLI_REPORT_DIR = TRACE / "v65-v75-cli-reports"
 PHASE = "v65_v75_hybrid_omega"
 PREFIX = "v65-v75"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
 ACTIVE_PHASES = [f"v{n}" for n in range(65, 76)]
-LIVE_WRITE_PHASES = {"v70", "v73", "v75"}
+LIVE_WRITE_PHASES = {"v70", "v73", "v74", "v75"}
 FREE_MEMORY_COOL_FLOOR_KB = 300_000
 BUDGET_CEILING_FRACTION = 0.30
 
@@ -227,7 +228,7 @@ def live_write_governor() -> dict[str, Any]:
             "test_or_preview_projects",
             "sandbox_or_ephemeral_compute",
             "repo_publication_and_receipts",
-            "dashboard_or_database_surfaces_with_rollback_receipts",
+            "report_or_database_surfaces_with_rollback_receipts",
         ],
         "blocked_without_fresh_operator_confirmation": [
             "production_dns_or_domain_mutation",
@@ -432,8 +433,8 @@ def additions_registry(plan: dict[str, Any]) -> dict[str, Any]:
         "vercel_preview_lane",
         "neon_schema_lane",
         "render_service_lane",
-        "notion_dashboard_lane",
-        "expo_phone_dashboard_lane",
+        "notion_report_lane",
+        "expo_report_lane",
         "gmut_observable_mapping",
         "qcit_validation",
         "freedid_governance",
@@ -463,7 +464,7 @@ def additions_registry(plan: dict[str, Any]) -> dict[str, Any]:
         "external_provider_transcript_redactor",
         "doi_metadata_matrix",
         "latex_equation_compiler",
-        "phone_dashboard_contract",
+        "phone_report_contract",
         "expo_preview_gate",
         "figma_design_receipt",
         "linear_issue_sync_receipt",
@@ -508,7 +509,7 @@ def eureka_ledger(plan: dict[str, Any]) -> dict[str, Any]:
         "avoid raw secret materialization",
         "separate narrative identity from runtime agent proof",
         "compress similar systems into one governed pack",
-        "add dashboard card only from committed data",
+        "add report section only from committed data",
         "run Deep before L5",
         "publish actual remote SHA after every push",
         "reintroduce broader audit only on schedule or drift",
@@ -560,8 +561,8 @@ def prep_markdown(phase_row: dict[str, Any], ledger: dict[str, Any]) -> str:
         [
             "",
             "## Gates",
-            "- No raw secrets in artifacts, prompts, dashboards, or commits.",
-            "- Live writes only in v70, v73, and v75 after dry-run, usage receipt, and rollback receipt.",
+            "- No raw secrets in artifacts, prompts, reports, or commits.",
+            "- Live writes only in v70, v73, v74, and v75 after dry-run, usage receipt, and rollback receipt.",
             "- Docker Desktop and local Kubernetes remain retired unless a future explicit recovery phase reopens them.",
             "- CLI sibling induction remains evidence-bound until terminal launch and two-session continuity are proven.",
         ]
@@ -603,7 +604,9 @@ def stage_allowlist(plan: dict[str, Any]) -> dict[str, Any]:
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-52.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-51-continuity-v2.md",
         f"docs/trinity-live-traces/{PREFIX}-cli-sibling-receipts/kimi-slot-52-continuity-v2.md",
-        "docs/v66-cli-sibling-dashboard.html",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v73-moderate-council-report-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v73-grand-midway-council-report-v1.md",
+        f"docs/trinity-live-traces/{PREFIX}-cli-reports/v74-guarded-live-write-expansion-brief-v1.md",
         "docs/v75-omega-closeout-summary-v1.json",
         "docs/v75-omega-handoff-policy-v1.json",
     ]
@@ -653,7 +656,7 @@ def dashboard_html(induction: dict[str, Any], health: dict[str, Any], plan: dict
         ("Memory", f"{health['free_physical_memory_kb']} KB free"),
         ("CLI Induction", induction["state"]),
         ("Local Kubernetes", health["local_kubernetes_state"]),
-        ("Live Writes", "v70 / v73 / v75 guarded only"),
+        ("Live Writes", "v70 / v73 / v74 / v75 guarded only"),
         ("Provider Probes", providers["probe_mode"]),
     ]
     card_html = "\n".join(
@@ -757,7 +760,7 @@ def write_all() -> None:
         "instructions": [
             "Publish this governor before running v65 Deep.",
             "Run Deep then L5 for each phase after CLI sibling induction receipts are phase-gated.",
-            "Use v70, v73, and v75 for guarded full live writes only after dry-run and rollback receipts.",
+            "Use v70, v73, v74, and v75 for guarded full live writes only after dry-run and rollback receipts.",
         ],
     }
     artifacts = {
@@ -777,7 +780,6 @@ def write_all() -> None:
         write_text(TRACE / f"{stem}.md", md_from_json(stem, payload))
     for phase_row in plan["phases"]:
         write_text(ROOT / "docs" / f"{phase_row['phase']}-omega-prep-half-v1.md", prep_markdown(phase_row, eureka))
-    write_text(ROOT / "docs" / "v66-cli-sibling-dashboard.html", dashboard_html(induction, health, plan, providers))
     write_json(ROOT / "docs" / "v75-omega-closeout-summary-v1.json", closeout)
     write_json(ROOT / "docs" / "v75-omega-handoff-policy-v1.json", handoff)
 

@@ -1,7 +1,7 @@
 # V74 Omega Prep Half
 
 - State: `pending`
-- Live write phase: `False`
+- Live write phase: `True`
 - Extension target: `50` candidate systems/skills/scripts/workflows.
 - Eureka target: `25` recommendations before validation.
 - Validation: Deep then Materialize L5 after runtime gate is open.
@@ -18,7 +18,7 @@
 - 09. avoid raw secret materialization
 - 10. separate narrative identity from runtime agent proof
 - 11. compress similar systems into one governed pack
-- 12. add dashboard card only from committed data
+- 12. add report section only from committed data
 - 13. run Deep before L5
 - 14. publish actual remote SHA after every push
 - 15. reintroduce broader audit only on schedule or drift
@@ -34,7 +34,7 @@
 - 25. close each phase with next-phase plan
 
 ## Gates
-- No raw secrets in artifacts, prompts, dashboards, or commits.
-- Live writes only in v70, v73, and v75 after dry-run, usage receipt, and rollback receipt.
+- No raw secrets in artifacts, prompts, reports, or commits.
+- Live writes only in v70, v73, v74, and v75 after dry-run, usage receipt, and rollback receipt.
 - Docker Desktop and local Kubernetes remain retired unless a future explicit recovery phase reopens them.
 - CLI sibling induction remains evidence-bound until terminal launch and two-session continuity are proven.

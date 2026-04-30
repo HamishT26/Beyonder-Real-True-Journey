@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T08:58:06+00:00",
+  "generated_utc": "2026-04-30T09:12:00+00:00",
   "phase": "v65_v75_hybrid_omega",
   "policy": "stage_only_curated_v65_v75_truth_surfaces_and_suite_statuses",
   "paths": [
@@ -38,7 +38,9 @@
     "docs/trinity-live-traces/v65-v75-cli-sibling-receipts/kimi-slot-52.md",
     "docs/trinity-live-traces/v65-v75-cli-sibling-receipts/kimi-slot-51-continuity-v2.md",
     "docs/trinity-live-traces/v65-v75-cli-sibling-receipts/kimi-slot-52-continuity-v2.md",
-    "docs/v66-cli-sibling-dashboard.html",
+    "docs/trinity-live-traces/v65-v75-cli-reports/v73-moderate-council-report-v1.md",
+    "docs/trinity-live-traces/v65-v75-cli-reports/v73-grand-midway-council-report-v1.md",
+    "docs/trinity-live-traces/v65-v75-cli-reports/v74-guarded-live-write-expansion-brief-v1.md",
     "docs/v75-omega-closeout-summary-v1.json",
     "docs/v75-omega-handoff-policy-v1.json",
     "docs/v65-omega-prep-half-v1.md",
@@ -73,6 +75,8 @@
     "docs/trinity-live-traces/v73-deep-suite-status.json",
     "docs/trinity-live-traces/v73-materialize-l5-suite-status.json",
     "docs/v74-omega-prep-half-v1.md",
+    "docs/trinity-live-traces/v74-live-write-preflight-v1.json",
+    "docs/trinity-live-traces/v74-live-write-preflight-v1.md",
     "docs/trinity-live-traces/v74-deep-suite-status.json",
     "docs/trinity-live-traces/v74-materialize-l5-suite-status.json",
     "docs/v75-omega-prep-half-v1.md",

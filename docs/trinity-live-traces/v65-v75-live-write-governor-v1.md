@@ -2,11 +2,12 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T08:58:03+00:00",
+  "generated_utc": "2026-04-30T09:11:58+00:00",
   "phase": "v65_v75_hybrid_omega",
   "live_write_phases": [
     "v70",
     "v73",
+    "v74",
     "v75"
   ],
   "budget_policy": {
@@ -18,7 +19,7 @@
     "test_or_preview_projects",
     "sandbox_or_ephemeral_compute",
     "repo_publication_and_receipts",
-    "dashboard_or_database_surfaces_with_rollback_receipts"
+    "report_or_database_surfaces_with_rollback_receipts"
   ],
   "blocked_without_fresh_operator_confirmation": [
     "production_dns_or_domain_mutation",

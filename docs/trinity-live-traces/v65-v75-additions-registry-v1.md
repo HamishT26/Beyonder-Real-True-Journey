@@ -2,7 +2,7 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T08:58:05+00:00",
+  "generated_utc": "2026-04-30T09:11:59+00:00",
   "phase": "v65_v75_hybrid_omega",
   "candidate_count": 550,
   "records": [
@@ -96,16 +96,16 @@
     },
     {
       "phase": "v65",
-      "id": "v65-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v65-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v65",
-      "id": "v65-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v65-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -344,8 +344,8 @@
     },
     {
       "phase": "v65",
-      "id": "v65-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v65-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -496,16 +496,16 @@
     },
     {
       "phase": "v66",
-      "id": "v66-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v66-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v66",
-      "id": "v66-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v66-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -744,8 +744,8 @@
     },
     {
       "phase": "v66",
-      "id": "v66-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v66-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -896,16 +896,16 @@
     },
     {
       "phase": "v67",
-      "id": "v67-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v67-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v67",
-      "id": "v67-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v67-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -1144,8 +1144,8 @@
     },
     {
       "phase": "v67",
-      "id": "v67-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v67-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -1296,16 +1296,16 @@
     },
     {
       "phase": "v68",
-      "id": "v68-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v68-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v68",
-      "id": "v68-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v68-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -1544,8 +1544,8 @@
     },
     {
       "phase": "v68",
-      "id": "v68-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v68-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -1696,16 +1696,16 @@
     },
     {
       "phase": "v69",
-      "id": "v69-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v69-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v69",
-      "id": "v69-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v69-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -1944,8 +1944,8 @@
     },
     {
       "phase": "v69",
-      "id": "v69-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v69-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -2096,16 +2096,16 @@
     },
     {
       "phase": "v70",
-      "id": "v70-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v70-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
     },
     {
       "phase": "v70",
-      "id": "v70-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v70-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
@@ -2344,8 +2344,8 @@
     },
     {
       "phase": "v70",
-      "id": "v70-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v70-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
@@ -2496,16 +2496,16 @@
     },
     {
       "phase": "v71",
-      "id": "v71-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v71-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v71",
-      "id": "v71-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v71-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -2744,8 +2744,8 @@
     },
     {
       "phase": "v71",
-      "id": "v71-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v71-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -2896,16 +2896,16 @@
     },
     {
       "phase": "v72",
-      "id": "v72-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v72-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
     },
     {
       "phase": "v72",
-      "id": "v72-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v72-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -3144,8 +3144,8 @@
     },
     {
       "phase": "v72",
-      "id": "v72-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v72-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": false
@@ -3296,16 +3296,16 @@
     },
     {
       "phase": "v73",
-      "id": "v73-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v73-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
     },
     {
       "phase": "v73",
-      "id": "v73-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v73-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
@@ -3544,8 +3544,8 @@
     },
     {
       "phase": "v73",
-      "id": "v73-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v73-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
@@ -3612,7 +3612,7 @@
       "domain": "command_surface",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3620,7 +3620,7 @@
       "domain": "api_operator_mesh",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3628,7 +3628,7 @@
       "domain": "provider_budget_meter",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3636,7 +3636,7 @@
       "domain": "live_write_rollback",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3644,7 +3644,7 @@
       "domain": "e2b_sandbox_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3652,7 +3652,7 @@
       "domain": "oracle_managed_compute_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3660,7 +3660,7 @@
       "domain": "github_publication_truth",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3668,7 +3668,7 @@
       "domain": "cloudflare_preview_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3676,7 +3676,7 @@
       "domain": "vercel_preview_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3684,7 +3684,7 @@
       "domain": "neon_schema_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3692,23 +3692,23 @@
       "domain": "render_service_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
-      "id": "v74-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v74-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
-      "id": "v74-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v74-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3716,7 +3716,7 @@
       "domain": "gmut_observable_mapping",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3724,7 +3724,7 @@
       "domain": "qcit_validation",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3732,7 +3732,7 @@
       "domain": "freedid_governance",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3740,7 +3740,7 @@
       "domain": "cosmic_bill_of_rights",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3748,7 +3748,7 @@
       "domain": "journey_lineage_digest",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3756,7 +3756,7 @@
       "domain": "cli_sibling_receipts",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3764,7 +3764,7 @@
       "domain": "credential_safety_scan",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3772,7 +3772,7 @@
       "domain": "browser_local_probe",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3780,7 +3780,7 @@
       "domain": "latex_publication_pack",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3788,7 +3788,7 @@
       "domain": "life_science_evidence_router",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3796,7 +3796,7 @@
       "domain": "memory_boundary_gate",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3804,7 +3804,7 @@
       "domain": "artifact_retention_governor",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3812,7 +3812,7 @@
       "domain": "suite_ladder_compression",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3820,7 +3820,7 @@
       "domain": "standard_l4_reintroduction_audit",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3828,7 +3828,7 @@
       "domain": "materialize_l5_receipt_chain",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3836,7 +3836,7 @@
       "domain": "pr_truth_surface",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3844,7 +3844,7 @@
       "domain": "d_drive_artifact_bank",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3852,7 +3852,7 @@
       "domain": "cache_waste_regeneration",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3860,7 +3860,7 @@
       "domain": "token_credit_budgeting",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3868,7 +3868,7 @@
       "domain": "energy_bank_receipts",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3876,7 +3876,7 @@
       "domain": "managed_kubernetes_future_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3884,7 +3884,7 @@
       "domain": "worker_agent_sandbox",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3892,7 +3892,7 @@
       "domain": "postgres_state_receipts",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3900,7 +3900,7 @@
       "domain": "semantic_firewall",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3908,7 +3908,7 @@
       "domain": "control_tower_merger",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3916,7 +3916,7 @@
       "domain": "phase_half_governor",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3924,7 +3924,7 @@
       "domain": "external_provider_transcript_redactor",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3932,7 +3932,7 @@
       "domain": "doi_metadata_matrix",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3940,15 +3940,15 @@
       "domain": "latex_equation_compiler",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
-      "id": "v74-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v74-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3956,7 +3956,7 @@
       "domain": "expo_preview_gate",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3964,7 +3964,7 @@
       "domain": "figma_design_receipt",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3972,7 +3972,7 @@
       "domain": "linear_issue_sync_receipt",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3980,7 +3980,7 @@
       "domain": "circleci_config_probe",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3988,7 +3988,7 @@
       "domain": "gmail_operator_hold_guard",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -3996,7 +3996,7 @@
       "domain": "calendar_operator_hold_guard",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v74",
@@ -4004,7 +4004,7 @@
       "domain": "google_drive_operator_hold_guard",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
-      "live_write_sensitive": false
+      "live_write_sensitive": true
     },
     {
       "phase": "v75",
@@ -4096,16 +4096,16 @@
     },
     {
       "phase": "v75",
-      "id": "v75-12-notion_dashboard_lane",
-      "domain": "notion_dashboard_lane",
+      "id": "v75-12-notion_report_lane",
+      "domain": "notion_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
     },
     {
       "phase": "v75",
-      "id": "v75-13-expo_phone_dashboard_lane",
-      "domain": "expo_phone_dashboard_lane",
+      "id": "v75-13-expo_report_lane",
+      "domain": "expo_report_lane",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
@@ -4344,8 +4344,8 @@
     },
     {
       "phase": "v75",
-      "id": "v75-43-phone_dashboard_contract",
-      "domain": "phone_dashboard_contract",
+      "id": "v75-43-phone_report_contract",
+      "domain": "phone_report_contract",
       "status": "candidate",
       "promotion_gate": "deep_l5_green_and_no_secret_leak",
       "live_write_sensitive": true
