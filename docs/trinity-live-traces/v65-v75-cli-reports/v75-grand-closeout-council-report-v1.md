@@ -4,7 +4,7 @@ Generated UTC: 2026-04-30T10:02:18Z
 
 Phase family: v65 to v75 Hybrid Omega
 
-State: pre_L5_closeout_seed
+State: final_closeout_ready
 
 ## Page 1 - The Night's Shape
 
@@ -179,4 +179,4 @@ From all five lanes: the v65-v75 family is not final until v75 L5 passes and is 
 
 ## Final Pending Gate
 
-This report is a closeout seed until v75 Materialize L5 passes. After L5, update this state to final_closeout_ready and publish the final v75 completion and receipt.
+V75 Materialize L5 passed with 1155 pass, 0 warn, 0 fail, and 0 timeout. The final guarded live closeout phase is ready for publication and receipt.
