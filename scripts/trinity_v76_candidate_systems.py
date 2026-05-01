@@ -308,9 +308,11 @@ def checks_for(system_id: str) -> tuple[list[dict[str, str]], dict[str, Any], li
         checks.append(check("blocked_surfaces_recorded", len(blocked) >= 5, f"blocked={len(blocked)}"))
         targets = [f"docs/trinity-live-traces/{V65_PREFIX}-live-write-governor-v1.json"]
     elif system_id == "v74_10_report_to_github_exchange_gate":
-        commits = git_lines(["log", "-8", "--pretty=%s"])
+        # Forward-only publication adds receipt commits quickly; keep the historical
+        # v75 anchor check deep enough that normal v80+ progress does not break it.
+        commits = git_lines(["log", "-80", "--pretty=%s"])
         checks.append(check("recent_publication_commits_present", any("publication receipt" in line.lower() for line in commits), f"commits={commits[:3]}"))
-        checks.append(check("v75_closeout_commit_present", any("V75" in line for line in commits), f"commits={commits[:5]}"))
+        checks.append(check("v75_closeout_commit_present", any("V75" in line for line in commits), f"searched_commits={len(commits)}"))
         targets = [f"docs/trinity-live-traces/{V65_PREFIX}-git-publication-result-v1.json"]
     elif system_id == "v74_11_gmut_qcit_crosswalk_board":
         paths = ["docs/gmut-observable-map-v2.json", "docs/qcit-coordination-report.json", "docs/quantum-energy-transmutation-report.json"]

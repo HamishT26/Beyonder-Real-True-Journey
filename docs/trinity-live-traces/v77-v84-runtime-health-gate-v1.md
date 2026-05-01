@@ -2,13 +2,13 @@
 
 ```json
 {
-  "generated_utc": "2026-05-01T04:51:23+00:00",
+  "generated_utc": "2026-05-01T05:18:29+00:00",
   "phase": "v77_v85_hybrid_omega",
-  "free_physical_memory_kb": 412516,
+  "free_physical_memory_kb": 348180,
   "free_memory_floor_kb": 300000,
   "load_gate": "open",
-  "c_drive_free_mb": 29326,
-  "d_drive_free_mb": 902972,
+  "c_drive_free_mb": 29303,
+  "d_drive_free_mb": 902938,
   "local_kubernetes_state": "retired_by_operator_for_v77_v85",
   "docker_desktop_state": "operator_hold",
   "execution_policy": "one_heavy_suite_lane_at_a_time_guarded_repo_live_write_publication"
