@@ -2,14 +2,14 @@
 
 ```json
 {
-  "generated_utc": "2026-04-30T16:33:27+00:00",
-  "phase": "v77_v84_hybrid_omega",
+  "generated_utc": "2026-05-01T04:24:50+00:00",
+  "phase": "v77_v85_hybrid_omega",
   "probe_mode": "local_cli_presence_only_no_secret_read_no_provider_write",
   "commands": [
     {
       "command": "codex",
       "available": true,
-      "path_excerpt": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.cmd\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.422.9565.0_x64__2p2nqsd0c76g0\\app\\resources\\codex\nC:\\Program Files\\WindowsApps\\OpenAI.Cod",
+      "path_excerpt": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.cmd\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.429.2026.0_x64__2p2nqsd0c76g0\\app\\resources\\codex\nC:\\Program Files\\WindowsApps\\OpenAI.Cod",
       "version_ok": false,
       "version_excerpt": "[WinError 5] Access is denied"
     },
@@ -58,7 +58,7 @@
     {
       "command": "node",
       "available": true,
-      "path_excerpt": "C:\\Program Files\\nodejs\\node.exe\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.422.9565.0_x64__2p2nqsd0c76g0\\app\\resources\\node.exe",
+      "path_excerpt": "C:\\Program Files\\nodejs\\node.exe\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.429.2026.0_x64__2p2nqsd0c76g0\\app\\resources\\node.exe",
       "version_ok": true,
       "version_excerpt": "v24.15.0"
     },

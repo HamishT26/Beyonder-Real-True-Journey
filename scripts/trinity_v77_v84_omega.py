@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""V77-V84 Hybrid Omega phase planner, promoter, and publication receipt writer."""
+"""V77-V85 Hybrid Omega phase planner, promoter, and publication receipt writer."""
 
 from __future__ import annotations
 
@@ -20,9 +20,9 @@ TRACE = DOCS / "trinity-live-traces"
 REPORT_DIR = TRACE / "v77-v84-cli-reports"
 RESULT_DIR = TRACE / "v77-v84-candidate-system-results"
 PREFIX = "v77-v84"
-PHASE = "v77_v84_hybrid_omega"
+PHASE = "v77_v85_hybrid_omega"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
-PHASE_RANGE = range(77, 85)
+PHASE_RANGE = range(77, 86)
 FREE_MEMORY_FLOOR_KB = 300_000
 MANIFEST = DOCS / "trinity-expansion-system-manifest-v17.json"
 MARKERS = [
@@ -162,7 +162,7 @@ def runtime_health_gate() -> dict[str, Any]:
         "load_gate": "open" if free_kb >= FREE_MEMORY_FLOOR_KB else "closed",
         "c_drive_free_mb": int(shutil.disk_usage("C:\\").free / (1024 * 1024)),
         "d_drive_free_mb": int(shutil.disk_usage("D:\\").free / (1024 * 1024)) if Path("D:\\").exists() else 0,
-        "local_kubernetes_state": "retired_by_operator_for_v77_v84",
+        "local_kubernetes_state": "retired_by_operator_for_v77_v85",
         "docker_desktop_state": "operator_hold",
         "execution_policy": "one_heavy_suite_lane_at_a_time_guarded_repo_live_write_publication",
     }
@@ -230,7 +230,7 @@ def manifest_entry(system_id: str, spec: dict[str, Any]) -> dict[str, Any]:
         "retention_scope": "v77_v84_curated",
         "research_surface": "repo_or_cache",
         "canon_surface": "supporting",
-        "historical_source_band": "v76_to_v84",
+        "historical_source_band": "v76_to_v85",
         "evidence_posture": "runner_backed_candidate",
         "subagent_lane": "cli_report_lane",
         "official_after_proof": False,
@@ -276,7 +276,7 @@ def ensure_manifest_promotions(phase: str) -> dict[str, Any]:
     manifest["systems"] = rows
     manifest["generated_utc"] = now_iso()
     manifest["description"] = (
-        "V17 shared manifest with v76 and v77-v84 runner-backed candidate waves. "
+        "V17 shared manifest with v76 and v77-v85 runner-backed candidate waves. "
         "System counts are evidence-gated by direct candidate checks plus Deep and L5 suite status artifacts."
     )
     write_json(MANIFEST, manifest)
@@ -463,7 +463,7 @@ def closeout_payload(phase: str, promotion: dict[str, Any]) -> dict[str, Any]:
         "materialize_l5": l5,
         "l5_marker_hits": marker_hits(phase),
         "manifest_promotion": promotion,
-        "next_required_action": f"prepare_{next_phase(phase)}_from_{phase}_green_results" if green and phase != "v84" else "finish_v77_v84_closeout",
+        "next_required_action": f"prepare_{next_phase(phase)}_from_{phase}_green_results" if green and phase != "v85" else "finish_v77_v85_closeout",
     }
 
 
@@ -472,12 +472,12 @@ def handoff_payload(phase: str) -> dict[str, Any]:
     return {
         "generated_utc": now_iso(),
         "phase": f"{phase}_to_{nxt}_handoff",
-        "state": "proposal_ready" if phase != "v84" else "final_closeout_ready",
+        "state": "proposal_ready" if phase != "v85" else "final_closeout_ready",
         "prior_deep": suite_status(phase, "deep"),
         "prior_l5": suite_status(phase, "l5"),
         "next_phase": nxt,
         "guarded_live_write_policy": "repo_publication_only_without_fresh_external_provider_confirmation",
-        "candidate_seed_count": 20 if phase != "v84" else 0,
+        "candidate_seed_count": 20 if phase != "v85" else 0,
     }
 
 
@@ -564,7 +564,7 @@ def stage_allowlist(active_phase: str) -> dict[str, Any]:
         "generated_utc": now_iso(),
         "phase": PHASE,
         "active_phase": active_phase,
-        "policy": "stage_only_curated_v77_v84_truth_surfaces_candidate_outputs_suite_statuses_and_receipts",
+        "policy": "stage_only_curated_v77_v85_truth_surfaces_candidate_outputs_suite_statuses_and_receipts",
         "paths": sorted(dict.fromkeys(paths)),
     }
 
@@ -584,6 +584,13 @@ def publication_result() -> dict[str, Any]:
         "remote_head_verified": remote_head,
         "remote_matches_local": bool(local_head and remote_head and local_head == remote_head),
     }
+
+
+def write_publication_receipt() -> None:
+    publication = publication_result()
+    stem = f"{PREFIX}-git-publication-result-v1"
+    write_json(TRACE / f"{stem}.json", publication)
+    write_text(TRACE / f"{stem}.md", report_markdown(stem, publication))
 
 
 def write_phase(active_phase: str, promote: bool = True) -> None:
@@ -613,15 +620,19 @@ def write_phase(active_phase: str, promote: bool = True) -> None:
         write_json(TRACE / f"{stem}.json", payload)
         write_text(TRACE / f"{stem}.md", report_markdown(stem, payload))
     write_json(DOCS / f"{active_phase}-omega-closeout-summary-v1.json", closeout_payload(active_phase, promotion))
-    if active_phase != "v84":
+    if active_phase != "v85":
         write_json(DOCS / f"{next_phase(active_phase)}-omega-handoff-policy-v1.json", handoff_payload(active_phase))
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Write v77-v84 Omega phase artifacts.")
+    parser = argparse.ArgumentParser(description="Write v77-v85 Omega phase artifacts.")
     parser.add_argument("--phase", required=True, choices=[f"v{n}" for n in PHASE_RANGE])
     parser.add_argument("--no-promote", action="store_true")
+    parser.add_argument("--receipt-only", action="store_true")
     args = parser.parse_args()
+    if args.receipt_only:
+        write_publication_receipt()
+        return 0
     write_phase(args.phase, promote=not args.no_promote)
     return 0
 

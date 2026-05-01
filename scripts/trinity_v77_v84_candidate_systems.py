@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable candidate systems for the v77-v84 hybrid Omega phase."""
+"""Executable candidate systems for the v77-v85 hybrid Omega phase."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ TRACE = DOCS / "trinity-live-traces"
 RESULT_DIR = TRACE / "v77-v84-candidate-system-results"
 REPORT_DIR = TRACE / "v77-v84-cli-reports"
 MANIFEST = DOCS / "trinity-expansion-system-manifest-v17.json"
-PHASE_RANGE = range(77, 85)
+PHASE_RANGE = range(77, 86)
 FREE_MEMORY_FLOOR_KB = 300_000
 
 
@@ -248,7 +248,7 @@ def run_system(system_id: str) -> int:
     write_json(result_json, payload)
     write_json(latest_json, payload)
     lines = [
-        f"# V77-V84 Candidate System Result: {system_id}",
+        f"# V77-V85 Candidate System Result: {system_id}",
         "",
         f"- generated_utc: `{payload['generated_utc']}`",
         f"- phase: `{payload['phase']}`",
@@ -279,7 +279,7 @@ def run_phase(phase: str) -> int:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run v77-v84 candidate systems.")
+    parser = argparse.ArgumentParser(description="Run v77-v85 candidate systems.")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--system-id", choices=sorted(CANDIDATES))
     group.add_argument("--phase", choices=[f"v{n}" for n in PHASE_RANGE])

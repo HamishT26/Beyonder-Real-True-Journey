@@ -1,6 +1,6 @@
 # Trinity Expansion Result: reentry_sync_sync_bridge
 
-- generated_utc: `2026-04-30T16:21:25+00:00`
+- generated_utc: `2026-05-01T04:15:43+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -9,7 +9,7 @@
 | name | status | detail |
 |---|---|---|
 | suite_status_present | PASS | present |
-| git_remote_available | PASS | live probe unavailable; docs/trinity-live-traces/v76-v84-git-publication-result-v1.json proves remote head 5219251c4e57 is an ancestor of local HEAD |
+| git_remote_available | PASS | git ls-remote origin refs/heads/codex/GHC-Family/beyonder-shared-omega-line |
 | docker_container_running | PASS | bounded fallback from prior runtime proof |
 | postgres_ready | PASS | bounded fallback from prior runtime proof |
 
@@ -21,8 +21,8 @@
     "docker_container_running": true,
     "gh_available": true,
     "git_remote_available": true,
-    "git_remote_live": false,
-    "git_remote_mode": "publication_receipt_fallback",
+    "git_remote_live": true,
+    "git_remote_mode": "live_probe",
     "node_available": true,
     "npx_available": true,
     "postgres_ready": true
