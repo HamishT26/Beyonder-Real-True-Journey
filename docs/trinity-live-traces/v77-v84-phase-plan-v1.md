@@ -2,9 +2,9 @@
 
 ```json
 {
-  "generated_utc": "2026-05-01T05:18:39+00:00",
+  "generated_utc": "2026-05-01T05:51:18+00:00",
   "phase": "v77_v85_hybrid_omega",
-  "active_phase": "v82",
+  "active_phase": "v83_v85_merged",
   "active_phases": [
     "v77",
     "v78",
@@ -17,381 +17,228 @@
     "v85"
   ],
   "runtime_health": {
-    "generated_utc": "2026-05-01T05:18:29+00:00",
+    "generated_utc": "2026-05-01T05:51:11+00:00",
     "phase": "v77_v85_hybrid_omega",
-    "free_physical_memory_kb": 348180,
+    "free_physical_memory_kb": 462700,
     "free_memory_floor_kb": 300000,
     "load_gate": "open",
-    "c_drive_free_mb": 29303,
-    "d_drive_free_mb": 902938,
+    "c_drive_free_mb": 29337,
+    "d_drive_free_mb": 902899,
     "local_kubernetes_state": "retired_by_operator_for_v77_v85",
     "docker_desktop_state": "operator_hold",
     "execution_policy": "one_heavy_suite_lane_at_a_time_guarded_repo_live_write_publication"
   },
-  "promotion": {
-    "generated_utc": "2026-05-01T05:18:27+00:00",
-    "phase": "v82",
-    "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
-    "before_count": 1234,
-    "after_count": 1234,
-    "added_count": 0,
-    "refreshed_count": 20,
-    "added_systems": [],
-    "refreshed_systems": [
-      "v82_01_phase_ledger_receipt_gate",
-      "v82_02_prior_suite_delta_mapper",
-      "v82_03_guarded_live_write_preflight_gate",
-      "v82_04_candidate_pack_quality_gate",
-      "v82_05_eureka_report_length_gate",
-      "v82_06_cli_lane_reflection_synthesizer",
-      "v82_07_gmut_qcit_claim_labeler",
-      "v82_08_freedid_cbr_consent_guard",
-      "v82_09_provider_posture_receipt_matrix",
-      "v82_10_memory_floor_cooldown_logger",
-      "v82_11_d_drive_artifact_router",
-      "v82_12_l5_marker_diff_scanner",
-      "v82_13_suite_count_growth_guard",
-      "v82_14_consolidation_opportunity_register",
-      "v82_15_github_publication_receipt_gate",
-      "v82_16_operator_hold_surface_enforcer",
-      "v82_17_research_cache_router",
-      "v82_18_artifact_parity_validator",
-      "v82_19_next_phase_handoff_builder",
-      "v82_20_grand_closeout_reflection_weaver"
+  "provider_probe": {
+    "generated_utc": "2026-05-01T05:51:11+00:00",
+    "phase": "v77_v85_hybrid_omega",
+    "probe_mode": "local_cli_presence_only_no_secret_read_no_provider_write",
+    "commands": [
+      {
+        "command": "codex",
+        "available": true,
+        "path_excerpt": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.cmd\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.429.2026.0_x64__2p2nqsd0c76g0\\app\\resources\\codex\nC:\\Program Files\\WindowsApps\\OpenAI.Cod",
+        "version_ok": false,
+        "version_excerpt": "[WinError 5] Access is denied"
+      },
+      {
+        "command": "kimi",
+        "available": true,
+        "path_excerpt": "C:\\Users\\hamis\\.local\\bin\\kimi.exe",
+        "version_ok": true,
+        "version_excerpt": "kimi, version 1.38.0"
+      },
+      {
+        "command": "gh",
+        "available": true,
+        "path_excerpt": "C:\\Program Files\\GitHub CLI\\gh.exe",
+        "version_ok": true,
+        "version_excerpt": "gh version 2.91.0 (2026-04-22)\nhttps://github.com/cli/cli/releases/tag/v2.91.0"
+      },
+      {
+        "command": "e2b",
+        "available": false,
+        "path_excerpt": "",
+        "version_ok": false,
+        "version_excerpt": ""
+      },
+      {
+        "command": "oci",
+        "available": true,
+        "path_excerpt": "C:\\Users\\hamis\\bin\\oci.exe",
+        "version_ok": true,
+        "version_excerpt": "3.81.0"
+      },
+      {
+        "command": "vercel",
+        "available": false,
+        "path_excerpt": "",
+        "version_ok": false,
+        "version_excerpt": ""
+      },
+      {
+        "command": "wrangler",
+        "available": true,
+        "path_excerpt": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\wrangler\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\wrangler.cmd",
+        "version_ok": false,
+        "version_excerpt": "[WinError 2] The system cannot find the file specified"
+      },
+      {
+        "command": "node",
+        "available": true,
+        "path_excerpt": "C:\\Program Files\\nodejs\\node.exe\nC:\\Program Files\\WindowsApps\\OpenAI.Codex_26.429.2026.0_x64__2p2nqsd0c76g0\\app\\resources\\node.exe",
+        "version_ok": true,
+        "version_excerpt": "v24.15.0"
+      },
+      {
+        "command": "npm",
+        "available": true,
+        "path_excerpt": "C:\\Program Files\\nodejs\\npm\nC:\\Program Files\\nodejs\\npm.cmd\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\npm\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\npm.cmd",
+        "version_ok": false,
+        "version_excerpt": "[WinError 2] The system cannot find the file specified"
+      },
+      {
+        "command": "npx",
+        "available": true,
+        "path_excerpt": "C:\\Program Files\\nodejs\\npx\nC:\\Program Files\\nodejs\\npx.cmd\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\npx\nC:\\Users\\hamis\\AppData\\Roaming\\npm\\npx.cmd",
+        "version_ok": false,
+        "version_excerpt": "[WinError 2] The system cannot find the file specified"
+      }
     ]
   },
-  "phases": [
-    {
-      "phase": "v77",
-      "state": "active_or_completed",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1180,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1180,
-        "expansion_systems_total": 1114,
-        "expansion_systems_passed": 1114,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v76-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1175,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1175,
-        "expansion_systems_total": 1114,
-        "expansion_systems_passed": 1114,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v76-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
+  "merged_superphase": {
+    "generated_utc": "2026-05-01T05:51:10+00:00",
+    "phase": "v83_v85_merged_omega",
+    "state": "planned_or_in_progress",
+    "phases": [
+      "v83",
+      "v84",
+      "v85"
+    ],
+    "anchor_phase": "v82",
+    "validation_mode": "single_combined_deep_and_l5_after_all_promotions",
+    "suite_status_paths": {
+      "deep": "docs/trinity-live-traces/v83-v85-merged-deep-suite-status.json",
+      "l5": "docs/trinity-live-traces/v83-v85-merged-materialize-l5-suite-status.json"
     },
-    {
-      "phase": "v78",
-      "state": "active_or_completed",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1200,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1200,
-        "expansion_systems_total": 1134,
-        "expansion_systems_passed": 1134,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v77-deep-suite-status.json"
+    "direct_sweep_logs": [
+      "docs/trinity-live-traces/v77-v84-cli-reports/v83-direct-candidate-sweep.log",
+      "docs/trinity-live-traces/v77-v84-cli-reports/v84-direct-candidate-sweep.log",
+      "docs/trinity-live-traces/v77-v84-cli-reports/v85-direct-candidate-sweep.log"
+    ],
+    "candidate_expansion_target": 60,
+    "eureka_proposal_target": 60,
+    "merged_final_wave_candidate_count": 60,
+    "promotions": [
+      {
+        "generated_utc": "2026-05-01T05:51:10+00:00",
+        "phase": "v83",
+        "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
+        "before_count": 1294,
+        "after_count": 1294,
+        "added_count": 0,
+        "refreshed_count": 20,
+        "added_systems": [],
+        "refreshed_systems": [
+          "v83_01_phase_ledger_receipt_gate",
+          "v83_02_prior_suite_delta_mapper",
+          "v83_03_guarded_live_write_preflight_gate",
+          "v83_04_candidate_pack_quality_gate",
+          "v83_05_eureka_report_length_gate",
+          "v83_06_cli_lane_reflection_synthesizer",
+          "v83_07_gmut_qcit_claim_labeler",
+          "v83_08_freedid_cbr_consent_guard",
+          "v83_09_provider_posture_receipt_matrix",
+          "v83_10_memory_floor_cooldown_logger",
+          "v83_11_d_drive_artifact_router",
+          "v83_12_l5_marker_diff_scanner",
+          "v83_13_suite_count_growth_guard",
+          "v83_14_consolidation_opportunity_register",
+          "v83_15_github_publication_receipt_gate",
+          "v83_16_operator_hold_surface_enforcer",
+          "v83_17_research_cache_router",
+          "v83_18_artifact_parity_validator",
+          "v83_19_next_phase_handoff_builder",
+          "v83_20_grand_closeout_reflection_weaver"
+        ]
       },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1195,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1195,
-        "expansion_systems_total": 1134,
-        "expansion_systems_passed": 1134,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v77-materialize-l5-suite-status.json"
+      {
+        "generated_utc": "2026-05-01T05:51:10+00:00",
+        "phase": "v84",
+        "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
+        "before_count": 1294,
+        "after_count": 1294,
+        "added_count": 0,
+        "refreshed_count": 20,
+        "added_systems": [],
+        "refreshed_systems": [
+          "v84_01_phase_ledger_receipt_gate",
+          "v84_02_prior_suite_delta_mapper",
+          "v84_03_guarded_live_write_preflight_gate",
+          "v84_04_candidate_pack_quality_gate",
+          "v84_05_eureka_report_length_gate",
+          "v84_06_cli_lane_reflection_synthesizer",
+          "v84_07_gmut_qcit_claim_labeler",
+          "v84_08_freedid_cbr_consent_guard",
+          "v84_09_provider_posture_receipt_matrix",
+          "v84_10_memory_floor_cooldown_logger",
+          "v84_11_d_drive_artifact_router",
+          "v84_12_l5_marker_diff_scanner",
+          "v84_13_suite_count_growth_guard",
+          "v84_14_consolidation_opportunity_register",
+          "v84_15_github_publication_receipt_gate",
+          "v84_16_operator_hold_surface_enforcer",
+          "v84_17_research_cache_router",
+          "v84_18_artifact_parity_validator",
+          "v84_19_next_phase_handoff_builder",
+          "v84_20_grand_closeout_reflection_weaver"
+        ]
       },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v79",
-      "state": "active_or_completed",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1220,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1220,
-        "expansion_systems_total": 1154,
-        "expansion_systems_passed": 1154,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v78-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1215,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1215,
-        "expansion_systems_total": 1154,
-        "expansion_systems_passed": 1154,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v78-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v80",
-      "state": "active_or_completed",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1240,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1240,
-        "expansion_systems_total": 1174,
-        "expansion_systems_passed": 1174,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v79-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1235,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1235,
-        "expansion_systems_total": 1174,
-        "expansion_systems_passed": 1174,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v79-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v81",
-      "state": "active_or_completed",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1260,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1260,
-        "expansion_systems_total": 1194,
-        "expansion_systems_passed": 1194,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v80-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1255,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1255,
-        "expansion_systems_total": 1194,
-        "expansion_systems_passed": 1194,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v80-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v82",
-      "state": "active_or_completed",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1280,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1280,
-        "expansion_systems_total": 1214,
-        "expansion_systems_passed": 1214,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v81-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1275,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1275,
-        "expansion_systems_total": 1214,
-        "expansion_systems_passed": 1214,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v81-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v83",
-      "state": "future_candidate",
-      "prior_deep": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1300,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1300,
-        "expansion_systems_total": 1234,
-        "expansion_systems_passed": 1234,
-        "active_materialization_mode": "read_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v82-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": true,
-        "counts": {
-          "pass": 1295,
-          "warn": 0,
-          "timeout": 0,
-          "fail": 0
-        },
-        "achieved_steps": 1295,
-        "expansion_systems_total": 1234,
-        "expansion_systems_passed": 1234,
-        "active_materialization_mode": "offline_only",
-        "google_drive_state": "operator_hold",
-        "path": "docs/trinity-live-traces/v82-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v84",
-      "state": "future_candidate",
-      "prior_deep": {
-        "present": true,
-        "effective_success": false,
-        "counts": null,
-        "achieved_steps": null,
-        "expansion_systems_total": null,
-        "expansion_systems_passed": null,
-        "active_materialization_mode": null,
-        "google_drive_state": null,
-        "path": "docs/trinity-live-traces/v83-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": false,
-        "counts": null,
-        "achieved_steps": null,
-        "expansion_systems_total": null,
-        "expansion_systems_passed": null,
-        "active_materialization_mode": null,
-        "google_drive_state": null,
-        "path": "docs/trinity-live-traces/v83-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    },
-    {
-      "phase": "v85",
-      "state": "future_candidate",
-      "prior_deep": {
-        "present": true,
-        "effective_success": false,
-        "counts": null,
-        "achieved_steps": null,
-        "expansion_systems_total": null,
-        "expansion_systems_passed": null,
-        "active_materialization_mode": null,
-        "google_drive_state": null,
-        "path": "docs/trinity-live-traces/v84-deep-suite-status.json"
-      },
-      "prior_l5": {
-        "present": true,
-        "effective_success": false,
-        "counts": null,
-        "achieved_steps": null,
-        "expansion_systems_total": null,
-        "expansion_systems_passed": null,
-        "active_materialization_mode": null,
-        "google_drive_state": null,
-        "path": "docs/trinity-live-traces/v84-materialize-l5-suite-status.json"
-      },
-      "live_write_mode": "guarded_repo_publication_only",
-      "candidate_expansion_target": 20,
-      "eureka_proposal_target": 20
-    }
-  ]
+      {
+        "generated_utc": "2026-05-01T05:51:10+00:00",
+        "phase": "v85",
+        "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
+        "before_count": 1294,
+        "after_count": 1294,
+        "added_count": 0,
+        "refreshed_count": 20,
+        "added_systems": [],
+        "refreshed_systems": [
+          "v85_01_phase_ledger_receipt_gate",
+          "v85_02_prior_suite_delta_mapper",
+          "v85_03_guarded_live_write_preflight_gate",
+          "v85_04_candidate_pack_quality_gate",
+          "v85_05_eureka_report_length_gate",
+          "v85_06_cli_lane_reflection_synthesizer",
+          "v85_07_gmut_qcit_claim_labeler",
+          "v85_08_freedid_cbr_consent_guard",
+          "v85_09_provider_posture_receipt_matrix",
+          "v85_10_memory_floor_cooldown_logger",
+          "v85_11_d_drive_artifact_router",
+          "v85_12_l5_marker_diff_scanner",
+          "v85_13_suite_count_growth_guard",
+          "v85_14_consolidation_opportunity_register",
+          "v85_15_github_publication_receipt_gate",
+          "v85_16_operator_hold_surface_enforcer",
+          "v85_17_research_cache_router",
+          "v85_18_artifact_parity_validator",
+          "v85_19_next_phase_handoff_builder",
+          "v85_20_grand_closeout_reflection_weaver"
+        ]
+      }
+    ],
+    "promotion_added_count": 0,
+    "promotion_refreshed_count": 60,
+    "guarded_live_write_policy": "repo_publication_only_without_fresh_external_provider_confirmation",
+    "operator_hold_surfaces": [
+      "google_drive_content_mutation",
+      "gmail_or_personal_email_send",
+      "calendar_event_mutation",
+      "account_setting_change",
+      "production_dns",
+      "provider_billing_change",
+      "raw_secret_transmission"
+    ],
+    "truth_note": "v83, v84, and v85 are intentionally merged after v82. No separate v83 or v84 suite receipt is claimed; one combined Deep and one combined L5 validate the full 60-system promotion."
+  }
 }
 ```

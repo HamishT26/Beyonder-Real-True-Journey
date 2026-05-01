@@ -20,6 +20,7 @@ REPORT_DIR = TRACE / "v77-v84-cli-reports"
 MANIFEST = DOCS / "trinity-expansion-system-manifest-v17.json"
 PHASE_RANGE = range(77, 86)
 FREE_MEMORY_FLOOR_KB = 300_000
+MERGED_SUPERPHASE_PLAN = "docs/trinity-live-traces/v83-v85-merged-superphase-plan-v1.json"
 
 
 THEMES: list[tuple[str, str, str]] = [
@@ -122,6 +123,18 @@ def prior_phase(phase: str) -> str:
     return f"v{int(phase[1:]) - 1}"
 
 
+def effective_prior_phase(phase: str) -> tuple[str, str]:
+    plan = read_json(MERGED_SUPERPHASE_PLAN, {})
+    if not isinstance(plan, dict):
+        return prior_phase(phase), "nominal"
+    phases = {str(item) for item in plan.get("phases", [])}
+    anchor = str(plan.get("anchor_phase") or "")
+    mode = str(plan.get("validation_mode") or "")
+    if phase in phases and anchor and mode == "single_combined_deep_and_l5_after_all_promotions":
+        return anchor, f"merged_superphase_anchor_for_{phase}"
+    return prior_phase(phase), "nominal"
+
+
 def suite_status(phase: str, kind: str) -> dict[str, Any]:
     suffix = "deep" if kind == "deep" else "materialize-l5"
     payload = read_json(f"docs/trinity-live-traces/{phase}-{suffix}-suite-status.json", {})
@@ -170,7 +183,8 @@ def checks_for(system_id: str) -> tuple[list[dict[str, str]], dict[str, Any], li
         return [check("known_candidate", False, f"unknown system_id={system_id}")], {}, []
 
     phase = str(spec["phase"])
-    prior = prior_phase(phase)
+    nominal_prior = prior_phase(phase)
+    prior, prior_mode = effective_prior_phase(phase)
     prior_deep = suite_status(prior, "deep")
     prior_l5 = suite_status(prior, "l5")
     rows = manifest_rows()
@@ -202,6 +216,8 @@ def checks_for(system_id: str) -> tuple[list[dict[str, str]], dict[str, Any], li
         "system_id": system_id,
         "phase": phase,
         "prior_phase": prior,
+        "nominal_prior_phase": nominal_prior,
+        "prior_phase_mode": prior_mode,
         "manifest_system_count": len(rows),
         "prior_l5_expansion_systems_total": expansion_total,
         "prior_deep_counts": prior_deep.get("counts") if isinstance(prior_deep, dict) else None,
