@@ -2,39 +2,39 @@
 
 ```json
 {
-  "generated_utc": "2026-05-02T20:32:14+00:00",
-  "phase": "v94",
+  "generated_utc": "2026-05-02T21:08:34+00:00",
+  "phase": "v95",
   "state": "v87_v95_candidate_pack",
   "active_phase_promotion": {
-    "generated_utc": "2026-05-02T20:32:14+00:00",
-    "phase": "v94",
+    "generated_utc": "2026-05-02T21:08:33+00:00",
+    "phase": "v95",
     "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
-    "before_count": 1474,
-    "after_count": 1474,
+    "before_count": 1494,
+    "after_count": 1494,
     "added_count": 0,
     "refreshed_count": 20,
     "added_systems": [],
     "refreshed_systems": [
-      "v94_01_beta_dynamic_plan_gate",
-      "v94_02_prior_phase_receipt_reconciler",
-      "v94_03_alpha_checkpoint_option_gate",
-      "v94_04_guarded_live_write_floor_gate",
-      "v94_05_browser_web_research_floor_gate",
-      "v94_06_open_source_expansion_triage",
-      "v94_07_agent_observability_trace_seed",
-      "v94_08_durable_workflow_checkpoint_seed",
-      "v94_09_feature_flag_lane_control_seed",
-      "v94_10_ci_workbench_portability_seed",
-      "v94_11_manifest_consolidation_backlog",
-      "v94_12_suite_marker_integrity_gate",
-      "v94_13_operator_hold_enforcer",
-      "v94_14_memory_cooldown_policy",
-      "v94_15_provider_posture_matrix",
-      "v94_16_eureka_report_quality",
-      "v94_17_council_lane_truth",
-      "v94_18_next_handoff_generator",
-      "v94_19_publication_receipt_gate",
-      "v94_20_closeout_reflection_gate"
+      "v95_01_beta_dynamic_plan_gate",
+      "v95_02_prior_phase_receipt_reconciler",
+      "v95_03_alpha_checkpoint_option_gate",
+      "v95_04_guarded_live_write_floor_gate",
+      "v95_05_browser_web_research_floor_gate",
+      "v95_06_open_source_expansion_triage",
+      "v95_07_agent_observability_trace_seed",
+      "v95_08_durable_workflow_checkpoint_seed",
+      "v95_09_feature_flag_lane_control_seed",
+      "v95_10_ci_workbench_portability_seed",
+      "v95_11_manifest_consolidation_backlog",
+      "v95_12_suite_marker_integrity_gate",
+      "v95_13_operator_hold_enforcer",
+      "v95_14_memory_cooldown_policy",
+      "v95_15_provider_posture_matrix",
+      "v95_16_eureka_report_quality",
+      "v95_17_council_lane_truth",
+      "v95_18_next_handoff_generator",
+      "v95_19_publication_receipt_gate",
+      "v95_20_closeout_reflection_gate"
     ]
   },
   "candidate_count": 180,
@@ -1164,140 +1164,140 @@
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "plan each phase from the prior closeout rather than prewriting the whole band",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_02_prior_phase_receipt_reconciler",
       "phase": "v95",
       "pillar": "body",
       "purpose": "map the prior phase Deep, L5, closeout, and Git receipt into the current gate",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_03_alpha_checkpoint_option_gate",
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "activate Alpha cleanup only on scheduled v89, v92, and v95 checkpoints",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_04_guarded_live_write_floor_gate",
       "phase": "v95",
       "pillar": "heart",
       "purpose": "require the 350 MB floor before online live-write suite lanes",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_05_browser_web_research_floor_gate",
       "phase": "v95",
       "pillar": "mind",
       "purpose": "require the 350 MB floor before browser or web-heavy expansion scouting",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_06_open_source_expansion_triage",
       "phase": "v95",
       "pillar": "mind",
       "purpose": "turn external open-source ideas into cached recommendations before claiming integration",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_07_agent_observability_trace_seed",
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "seed structured agent-lane telemetry and traceability without hidden memory claims",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_08_durable_workflow_checkpoint_seed",
       "phase": "v95",
       "pillar": "body",
       "purpose": "model long-running phases as resumable checkpoints before adding workflow infrastructure",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_09_feature_flag_lane_control_seed",
       "phase": "v95",
       "pillar": "heart",
       "purpose": "design feature flags for risky live-write, browser, and provider lanes",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_10_ci_workbench_portability_seed",
       "phase": "v95",
       "pillar": "body",
       "purpose": "study portable CI/workbench execution without reintroducing local Docker pressure",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_11_manifest_consolidation_backlog",
       "phase": "v95",
       "pillar": "body",
       "purpose": "record merge and delete candidates with rollback and replacement coverage",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_12_suite_marker_integrity_gate",
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "scan materialize outputs for external mutation and personal-surface markers",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_13_operator_hold_enforcer",
       "phase": "v95",
       "pillar": "heart",
       "purpose": "preserve provider, personal, billing, DNS, and raw-secret holds",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_14_memory_cooldown_policy",
       "phase": "v95",
       "pillar": "body",
       "purpose": "pause or resume failed-only rather than forcing heavy lanes under pressure",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_15_provider_posture_matrix",
       "phase": "v95",
       "pillar": "heart",
       "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited states",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_16_eureka_report_quality",
       "phase": "v95",
       "pillar": "mind",
       "purpose": "keep at least 20 concrete recommendations tied to verifiable artifacts",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_17_council_lane_truth",
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "keep CLI siblings and sidecars receipt-backed unless live transcripts exist",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_18_next_handoff_generator",
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "write the next phase handoff after the current L5 evidence exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_19_publication_receipt_gate",
       "phase": "v95",
       "pillar": "body",
       "purpose": "treat GitHub push and post-push receipt equality as the live exchange",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v95_20_closeout_reflection_gate",
       "phase": "v95",
       "pillar": "trinity",
       "purpose": "close each phase with precise counts, boundaries, and next assumptions",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     }
   ]
 }
