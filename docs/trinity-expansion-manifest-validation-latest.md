@@ -1,8 +1,8 @@
 # Trinity Expansion Manifest Validation
 
-- generated_utc: `2026-05-02T16:30:33+00:00`
+- generated_utc: `2026-05-02T17:03:06+00:00`
 - overall_status: **PASS**
-- systems: `1334`
+- systems: `1354`
 - minimum_system_count: `1114`
 
 ## Failures
