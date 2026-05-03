@@ -2822,6 +2822,8 @@ def _compute_system(
         reasoning_effort = str(config.get("model_reasoning_effort") or "")
         mcp_servers = config.get("mcp_servers", {})
         mcp_server_names = sorted(mcp_servers.keys()) if isinstance(mcp_servers, dict) else []
+        model_runtime_source = "config.toml" if model else "desktop_app_runtime_selector"
+        model_supported = model in {"gpt-5.4", "gpt-5.5"} or (not model and codex_config_path.exists())
         exposed_env = [name for name in RELEVANT_ENV_VARS if os.getenv(name)]
         mcp_settings_path = Path.home() / "Library" / "Application Support" / "Codex" / "mcp_settings.json"
         suite_ok, suite_payload, _ = _read_json_safe("docs/system-suite-status.json")
@@ -2838,8 +2840,8 @@ def _compute_system(
             _check("codex_config_present", "PASS" if codex_config_path.exists() else "FAIL", str(codex_config_path)),
             _check(
                 "codex_model_config_supported",
-                "PASS" if model in {"gpt-5.4", "gpt-5.5"} else "FAIL",
-                f"model={model or 'missing'}; cli_fallback=conditional_gpt-5.4_only_if_installed_codex_cli_rejects_gpt-5.5",
+                "PASS" if model_supported else "FAIL",
+                f"model={model or 'desktop_runtime_selected'}; source={model_runtime_source}; cli_fallback=conditional_gpt-5.4_only_if_installed_codex_cli_rejects_gpt-5.5",
             ),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
             _check("uvx_presence_documented", "PASS", f"uvx={shutil.which('uvx') or 'absent'}"),
@@ -2860,6 +2862,7 @@ def _compute_system(
             "checks": checks,
             "metrics": {
                 "configured_model": model,
+                "configured_model_source": model_runtime_source,
                 "codex_cli_model_fallback": "conditional_gpt-5.4_only_if_needed",
                 "codex_cli_model_support_policy": "gpt-5.4_and_gpt-5.5_supported_by_config_gate",
                 "configured_reasoning_effort": reasoning_effort,

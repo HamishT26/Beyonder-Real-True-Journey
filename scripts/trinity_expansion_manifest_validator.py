@@ -14,7 +14,14 @@ MIN_SYSTEM_COUNT = 1114
 ALLOWED_PILLARS = {"mind", "body", "heart", "trinity"}
 ALLOWED_MODES = {"live", "offline"}
 ALLOWED_PROFILES = {"standard", "deep", "collab", "materialize"}
-ALLOWED_WAVES = {"legacy", "v76_promoted_candidate_wave", "v77_v84_candidate_wave", "v86_v95_hybrid_candidate_wave", "v87_v95_hybrid_candidate_wave"} | {f"wave{i}" for i in range(1, 300)}
+ALLOWED_WAVES = {
+    "legacy",
+    "v76_promoted_candidate_wave",
+    "v77_v84_candidate_wave",
+    "v86_v95_hybrid_candidate_wave",
+    "v87_v95_hybrid_candidate_wave",
+    "v96_v120_hybrid_candidate_wave",
+} | {f"wave{i}" for i in range(1, 300)}
 ALLOWED_TRACKS = {
     "mind_theory",
     "body_compute",
@@ -49,6 +56,7 @@ ALLOWED_TRACKS = {
     "v77_v84_candidate_promotion",
     "v86_v95_hybrid_promotion",
     "v87_v95_hybrid_promotion",
+    "v96_v120_hybrid_promotion",
 }
 ALLOWED_GATE_LEVELS = {"support", "pillar_constellation", "hardening_gate", "readiness_gate", "supercycle_gate", "pack_gate"}
 
