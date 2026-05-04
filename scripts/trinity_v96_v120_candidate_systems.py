@@ -29,21 +29,21 @@ STAGE_SCHEDULE: dict[str, dict[str, str]] = {
     "v98": {"kind": "omega", "cycle": "v96_v98_trinity", "note": "first v96-v120 suite execution stage"},
     "v99": {"kind": "beta", "cycle": "v99_v100_dual", "note": "dual-action planning stage"},
     "v100": {"kind": "omega", "cycle": "v99_v100_dual", "note": "dual-action suite execution stage"},
-    "v101": {"kind": "beta", "cycle": "v101_v102_dual", "note": "dual-action planning stage"},
-    "v102": {"kind": "omega", "cycle": "v101_v102_dual", "note": "dual-action suite execution stage"},
-    "v103": {"kind": "beta", "cycle": "v103_v105_trinity", "note": "trinity planning stage"},
-    "v104": {"kind": "alpha", "cycle": "v103_v105_trinity", "note": "record-only cleanup stage"},
-    "v105": {"kind": "omega", "cycle": "v103_v105_trinity", "note": "trinity suite execution stage"},
-    "v106": {"kind": "beta", "cycle": "v106_v107_dual", "note": "dual-action planning stage"},
-    "v107": {"kind": "omega", "cycle": "v106_v107_dual", "note": "dual-action suite execution stage"},
-    "v108": {"kind": "beta", "cycle": "v108_v109_dual", "note": "dual-action planning stage"},
-    "v109": {"kind": "omega", "cycle": "v108_v109_dual", "note": "dual-action suite execution stage"},
-    "v110": {"kind": "beta", "cycle": "v110_v112_trinity", "note": "trinity planning stage"},
-    "v111": {"kind": "alpha", "cycle": "v110_v112_trinity", "note": "record-only cleanup stage"},
-    "v112": {"kind": "omega", "cycle": "v110_v112_trinity", "note": "trinity suite execution stage"},
-    "v113": {"kind": "beta", "cycle": "v113_v115_bridge", "note": "continuity bridge inserted because the user outline skipped v113"},
-    "v114": {"kind": "beta", "cycle": "v113_v115_bridge", "note": "dual-action planning refinement stage"},
-    "v115": {"kind": "omega", "cycle": "v113_v115_bridge", "note": "bridge suite execution stage"},
+    "v101": {"kind": "omega", "cycle": "v101_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v102": {"kind": "omega", "cycle": "v102_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v103": {"kind": "omega", "cycle": "v103_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v104": {"kind": "omega", "cycle": "v104_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v105": {"kind": "omega", "cycle": "v105_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v106": {"kind": "omega", "cycle": "v106_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v107": {"kind": "omega", "cycle": "v107_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v108": {"kind": "omega", "cycle": "v108_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v109": {"kind": "omega", "cycle": "v109_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v110": {"kind": "omega", "cycle": "v110_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v111": {"kind": "omega", "cycle": "v111_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v112": {"kind": "omega", "cycle": "v112_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v113": {"kind": "omega", "cycle": "v113_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v114": {"kind": "omega", "cycle": "v114_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v115": {"kind": "omega", "cycle": "v115_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
     "v116": {"kind": "beta", "cycle": "v116_v117_dual", "note": "dual-action planning stage"},
     "v117": {"kind": "omega", "cycle": "v116_v117_dual", "note": "dual-action suite execution stage"},
     "v118": {"kind": "beta", "cycle": "v118_v120_trinity", "note": "final trinity planning stage"},
@@ -53,6 +53,7 @@ STAGE_SCHEDULE: dict[str, dict[str, str]] = {
 
 ALPHA_PHASES = {phase for phase, spec in STAGE_SCHEDULE.items() if spec["kind"] == "alpha"}
 OMEGA_PHASES = {phase for phase, spec in STAGE_SCHEDULE.items() if spec["kind"] == "omega"}
+PACKED_TRINITY_PHASES = {phase for phase, spec in STAGE_SCHEDULE.items() if spec.get("packed_workflow") == "beta_alpha_omega"}
 
 THEMES: list[tuple[str, str, str]] = [
     ("stage_schedule_truth_gate", "trinity", "bind each numeric phase to beta, alpha, or omega semantics"),
@@ -215,7 +216,7 @@ def stage_artifact(phase: str) -> dict[str, Any]:
 
 
 def alpha_valid(phase: str) -> tuple[bool, str]:
-    if phase not in ALPHA_PHASES:
+    if phase not in ALPHA_PHASES and phase not in PACKED_TRINITY_PHASES:
         payload = read_json(f"docs/trinity-live-traces/{phase}-alpha-checkpoint-policy-v1.json", {})
         ok = isinstance(payload, dict) and payload.get("state") == "not_alpha_stage"
         return ok, f"alpha_policy_state={payload.get('state') if isinstance(payload, dict) else None}"

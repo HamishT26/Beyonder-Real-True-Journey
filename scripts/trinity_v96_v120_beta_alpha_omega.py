@@ -19,6 +19,7 @@ from trinity_v96_v120_candidate_systems import (
     CANDIDATES,
     OMEGA_PHASES,
     ONLINE_LIVE_WRITE_FLOOR_KB,
+    PACKED_TRINITY_PHASES,
     PHASE_RANGE,
     STAGE_SCHEDULE,
     THEMES,
@@ -384,6 +385,7 @@ def stage_plan(phase: str, health: dict[str, Any], providers: dict[str, Any]) ->
         "generated_utc": now_iso(),
         "phase": phase,
         "stage_kind": info["kind"],
+        "packed_workflow": info.get("packed_workflow", "split_stage"),
         "cycle": info["cycle"],
         "stage_note": info["note"],
         "prior_omega_anchor": {
@@ -409,6 +411,7 @@ def beta_plan_markdown(phase: str, payload: dict[str, Any]) -> str:
         "",
         f"- generated_utc: `{payload['generated_utc']}`",
         f"- cycle: `{payload['cycle']}`",
+        f"- packed_workflow: `{payload.get('packed_workflow', 'split_stage')}`",
         f"- suite_run_required: `{payload['suite_run_required']}`",
         "- live_write_policy: `guarded_repo_publication_only`",
         "- browser_floor_mb: `350`",
@@ -687,6 +690,8 @@ def stage_allowlist(phase: str) -> dict[str, Any]:
         f"docs/trinity-live-traces/{phase}-source-digest-v1.md",
         f"docs/trinity-live-traces/{phase}-mcp-integration-digest-v1.json",
         f"docs/trinity-live-traces/{phase}-mcp-integration-digest-v1.md",
+        f"docs/trinity-live-traces/{phase}-web-research-snapshot-v1.json",
+        f"docs/trinity-live-traces/{phase}-web-research-snapshot-v1.md",
         f"docs/trinity-live-traces/{phase}-cli-identity-boundary-v1.json",
         f"docs/trinity-live-traces/{phase}-cli-identity-boundary-v1.md",
         f"docs/trinity-live-traces/{phase}-stage-plan-v1.json",
@@ -705,7 +710,7 @@ def stage_allowlist(phase: str) -> dict[str, Any]:
         f"docs/trinity-live-traces/{phase}-git-publication-result-v1.json",
         f"docs/trinity-live-traces/{phase}-git-publication-result-v1.md",
     ]
-    if phase in ALPHA_PHASES:
+    if phase in ALPHA_PHASES or phase in PACKED_TRINITY_PHASES:
         paths.extend(
             [
                 f"docs/trinity-live-traces/{phase}-alpha-cleanup-audit-v1.json",
@@ -826,7 +831,7 @@ def write_phase(phase: str, promote: bool = True) -> None:
         f"{phase}-stage-allowlist-v1": stage_allowlist(phase),
         f"{phase}-git-publication-result-v1": publication_result(phase),
     }
-    if phase in ALPHA_PHASES:
+    if phase in ALPHA_PHASES or phase in PACKED_TRINITY_PHASES:
         artifacts[f"{phase}-alpha-cleanup-audit-v1"] = alpha_payload(phase)
     else:
         artifacts[f"{phase}-alpha-checkpoint-policy-v1"] = alpha_policy(phase)

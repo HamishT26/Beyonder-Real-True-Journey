@@ -2,39 +2,39 @@
 
 ```json
 {
-  "generated_utc": "2026-05-03T17:24:58+00:00",
-  "phase": "v100",
+  "generated_utc": "2026-05-04T02:19:27+00:00",
+  "phase": "v101",
   "state": "v96_v120_candidate_pack",
   "active_phase_promotion": {
-    "generated_utc": "2026-05-03T17:24:58+00:00",
-    "phase": "v100",
+    "generated_utc": "2026-05-04T02:19:27+00:00",
+    "phase": "v101",
     "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
-    "before_count": 1594,
-    "after_count": 1594,
+    "before_count": 1614,
+    "after_count": 1614,
     "added_count": 0,
     "refreshed_count": 20,
     "added_systems": [],
     "refreshed_systems": [
-      "v100_01_stage_schedule_truth_gate",
-      "v100_02_local_cloud_nexus_digest_gate",
-      "v100_03_mcp_playwright_posture_gate",
-      "v100_04_provider_spend_sandbox_gate",
-      "v100_05_browser_live_write_floor_gate",
-      "v100_06_cli_identity_boundary_gate",
-      "v100_07_oracle_e2b_cloud_probe_gate",
-      "v100_08_vercel_cloudflare_bridge_gate",
-      "v100_09_neon_circleci_control_plane_gate",
-      "v100_10_notion_expo_dashboard_gate",
-      "v100_11_gmut_qcit_claim_evidence_gate",
-      "v100_12_freedid_cbr_consent_gate",
-      "v100_13_alpha_manifest_cleanup_gate",
-      "v100_14_open_source_scout_gate",
-      "v100_15_mcp_security_prompt_injection_gate",
-      "v100_16_suite_omega_only_gate",
-      "v100_17_publication_receipt_gate",
-      "v100_18_d_drive_retention_gate",
-      "v100_19_eureka_report_density_gate",
-      "v100_20_next_stage_handoff_gate"
+      "v101_01_stage_schedule_truth_gate",
+      "v101_02_local_cloud_nexus_digest_gate",
+      "v101_03_mcp_playwright_posture_gate",
+      "v101_04_provider_spend_sandbox_gate",
+      "v101_05_browser_live_write_floor_gate",
+      "v101_06_cli_identity_boundary_gate",
+      "v101_07_oracle_e2b_cloud_probe_gate",
+      "v101_08_vercel_cloudflare_bridge_gate",
+      "v101_09_neon_circleci_control_plane_gate",
+      "v101_10_notion_expo_dashboard_gate",
+      "v101_11_gmut_qcit_claim_evidence_gate",
+      "v101_12_freedid_cbr_consent_gate",
+      "v101_13_alpha_manifest_cleanup_gate",
+      "v101_14_open_source_scout_gate",
+      "v101_15_mcp_security_prompt_injection_gate",
+      "v101_16_suite_omega_only_gate",
+      "v101_17_publication_receipt_gate",
+      "v101_18_d_drive_retention_gate",
+      "v101_19_eureka_report_density_gate",
+      "v101_20_next_stage_handoff_gate"
     ]
   },
   "candidate_count": 500,
@@ -222,188 +222,188 @@
     {
       "id": "v101_01_stage_schedule_truth_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_02_local_cloud_nexus_digest_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_03_mcp_playwright_posture_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_04_provider_spend_sandbox_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_05_browser_live_write_floor_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_06_cli_identity_boundary_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_07_oracle_e2b_cloud_probe_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_08_vercel_cloudflare_bridge_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_09_neon_circleci_control_plane_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_10_notion_expo_dashboard_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_11_gmut_qcit_claim_evidence_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_12_freedid_cbr_consent_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_13_alpha_manifest_cleanup_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_14_open_source_scout_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_15_mcp_security_prompt_injection_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_16_suite_omega_only_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_17_publication_receipt_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_18_d_drive_retention_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_19_eureka_report_density_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v101_20_next_stage_handoff_gate",
       "phase": "v101",
-      "stage_kind": "beta",
-      "cycle": "v101_v102_dual",
+      "stage_kind": "omega",
+      "cycle": "v101_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v102_01_stage_schedule_truth_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -412,7 +412,7 @@
       "id": "v102_02_local_cloud_nexus_digest_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -421,7 +421,7 @@
       "id": "v102_03_mcp_playwright_posture_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -430,7 +430,7 @@
       "id": "v102_04_provider_spend_sandbox_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -439,7 +439,7 @@
       "id": "v102_05_browser_live_write_floor_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -448,7 +448,7 @@
       "id": "v102_06_cli_identity_boundary_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -457,7 +457,7 @@
       "id": "v102_07_oracle_e2b_cloud_probe_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -466,7 +466,7 @@
       "id": "v102_08_vercel_cloudflare_bridge_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -475,7 +475,7 @@
       "id": "v102_09_neon_circleci_control_plane_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -484,7 +484,7 @@
       "id": "v102_10_notion_expo_dashboard_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -493,7 +493,7 @@
       "id": "v102_11_gmut_qcit_claim_evidence_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -502,7 +502,7 @@
       "id": "v102_12_freedid_cbr_consent_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -511,7 +511,7 @@
       "id": "v102_13_alpha_manifest_cleanup_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -520,7 +520,7 @@
       "id": "v102_14_open_source_scout_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -529,7 +529,7 @@
       "id": "v102_15_mcp_security_prompt_injection_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -538,7 +538,7 @@
       "id": "v102_16_suite_omega_only_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -547,7 +547,7 @@
       "id": "v102_17_publication_receipt_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -556,7 +556,7 @@
       "id": "v102_18_d_drive_retention_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -565,7 +565,7 @@
       "id": "v102_19_eureka_report_density_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -574,7 +574,7 @@
       "id": "v102_20_next_stage_handoff_gate",
       "phase": "v102",
       "stage_kind": "omega",
-      "cycle": "v101_v102_dual",
+      "cycle": "v102_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -582,8 +582,8 @@
     {
       "id": "v103_01_stage_schedule_truth_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -591,8 +591,8 @@
     {
       "id": "v103_02_local_cloud_nexus_digest_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -600,8 +600,8 @@
     {
       "id": "v103_03_mcp_playwright_posture_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -609,8 +609,8 @@
     {
       "id": "v103_04_provider_spend_sandbox_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -618,8 +618,8 @@
     {
       "id": "v103_05_browser_live_write_floor_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -627,8 +627,8 @@
     {
       "id": "v103_06_cli_identity_boundary_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -636,8 +636,8 @@
     {
       "id": "v103_07_oracle_e2b_cloud_probe_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -645,8 +645,8 @@
     {
       "id": "v103_08_vercel_cloudflare_bridge_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -654,8 +654,8 @@
     {
       "id": "v103_09_neon_circleci_control_plane_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -663,8 +663,8 @@
     {
       "id": "v103_10_notion_expo_dashboard_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -672,8 +672,8 @@
     {
       "id": "v103_11_gmut_qcit_claim_evidence_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -681,8 +681,8 @@
     {
       "id": "v103_12_freedid_cbr_consent_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -690,8 +690,8 @@
     {
       "id": "v103_13_alpha_manifest_cleanup_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -699,8 +699,8 @@
     {
       "id": "v103_14_open_source_scout_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -708,8 +708,8 @@
     {
       "id": "v103_15_mcp_security_prompt_injection_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -717,8 +717,8 @@
     {
       "id": "v103_16_suite_omega_only_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -726,8 +726,8 @@
     {
       "id": "v103_17_publication_receipt_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -735,8 +735,8 @@
     {
       "id": "v103_18_d_drive_retention_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -744,8 +744,8 @@
     {
       "id": "v103_19_eureka_report_density_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -753,8 +753,8 @@
     {
       "id": "v103_20_next_stage_handoff_gate",
       "phase": "v103",
-      "stage_kind": "beta",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v103_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -762,8 +762,8 @@
     {
       "id": "v104_01_stage_schedule_truth_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -771,8 +771,8 @@
     {
       "id": "v104_02_local_cloud_nexus_digest_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -780,8 +780,8 @@
     {
       "id": "v104_03_mcp_playwright_posture_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -789,8 +789,8 @@
     {
       "id": "v104_04_provider_spend_sandbox_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -798,8 +798,8 @@
     {
       "id": "v104_05_browser_live_write_floor_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -807,8 +807,8 @@
     {
       "id": "v104_06_cli_identity_boundary_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -816,8 +816,8 @@
     {
       "id": "v104_07_oracle_e2b_cloud_probe_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -825,8 +825,8 @@
     {
       "id": "v104_08_vercel_cloudflare_bridge_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -834,8 +834,8 @@
     {
       "id": "v104_09_neon_circleci_control_plane_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -843,8 +843,8 @@
     {
       "id": "v104_10_notion_expo_dashboard_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -852,8 +852,8 @@
     {
       "id": "v104_11_gmut_qcit_claim_evidence_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -861,8 +861,8 @@
     {
       "id": "v104_12_freedid_cbr_consent_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -870,8 +870,8 @@
     {
       "id": "v104_13_alpha_manifest_cleanup_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -879,8 +879,8 @@
     {
       "id": "v104_14_open_source_scout_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -888,8 +888,8 @@
     {
       "id": "v104_15_mcp_security_prompt_injection_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -897,8 +897,8 @@
     {
       "id": "v104_16_suite_omega_only_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -906,8 +906,8 @@
     {
       "id": "v104_17_publication_receipt_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -915,8 +915,8 @@
     {
       "id": "v104_18_d_drive_retention_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -924,8 +924,8 @@
     {
       "id": "v104_19_eureka_report_density_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -933,8 +933,8 @@
     {
       "id": "v104_20_next_stage_handoff_gate",
       "phase": "v104",
-      "stage_kind": "alpha",
-      "cycle": "v103_v105_trinity",
+      "stage_kind": "omega",
+      "cycle": "v104_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -943,7 +943,7 @@
       "id": "v105_01_stage_schedule_truth_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -952,7 +952,7 @@
       "id": "v105_02_local_cloud_nexus_digest_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -961,7 +961,7 @@
       "id": "v105_03_mcp_playwright_posture_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -970,7 +970,7 @@
       "id": "v105_04_provider_spend_sandbox_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -979,7 +979,7 @@
       "id": "v105_05_browser_live_write_floor_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -988,7 +988,7 @@
       "id": "v105_06_cli_identity_boundary_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -997,7 +997,7 @@
       "id": "v105_07_oracle_e2b_cloud_probe_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -1006,7 +1006,7 @@
       "id": "v105_08_vercel_cloudflare_bridge_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -1015,7 +1015,7 @@
       "id": "v105_09_neon_circleci_control_plane_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -1024,7 +1024,7 @@
       "id": "v105_10_notion_expo_dashboard_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -1033,7 +1033,7 @@
       "id": "v105_11_gmut_qcit_claim_evidence_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -1042,7 +1042,7 @@
       "id": "v105_12_freedid_cbr_consent_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -1051,7 +1051,7 @@
       "id": "v105_13_alpha_manifest_cleanup_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -1060,7 +1060,7 @@
       "id": "v105_14_open_source_scout_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -1069,7 +1069,7 @@
       "id": "v105_15_mcp_security_prompt_injection_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -1078,7 +1078,7 @@
       "id": "v105_16_suite_omega_only_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -1087,7 +1087,7 @@
       "id": "v105_17_publication_receipt_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -1096,7 +1096,7 @@
       "id": "v105_18_d_drive_retention_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -1105,7 +1105,7 @@
       "id": "v105_19_eureka_report_density_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -1114,7 +1114,7 @@
       "id": "v105_20_next_stage_handoff_gate",
       "phase": "v105",
       "stage_kind": "omega",
-      "cycle": "v103_v105_trinity",
+      "cycle": "v105_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -1122,8 +1122,8 @@
     {
       "id": "v106_01_stage_schedule_truth_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -1131,8 +1131,8 @@
     {
       "id": "v106_02_local_cloud_nexus_digest_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -1140,8 +1140,8 @@
     {
       "id": "v106_03_mcp_playwright_posture_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -1149,8 +1149,8 @@
     {
       "id": "v106_04_provider_spend_sandbox_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -1158,8 +1158,8 @@
     {
       "id": "v106_05_browser_live_write_floor_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -1167,8 +1167,8 @@
     {
       "id": "v106_06_cli_identity_boundary_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -1176,8 +1176,8 @@
     {
       "id": "v106_07_oracle_e2b_cloud_probe_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -1185,8 +1185,8 @@
     {
       "id": "v106_08_vercel_cloudflare_bridge_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -1194,8 +1194,8 @@
     {
       "id": "v106_09_neon_circleci_control_plane_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -1203,8 +1203,8 @@
     {
       "id": "v106_10_notion_expo_dashboard_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -1212,8 +1212,8 @@
     {
       "id": "v106_11_gmut_qcit_claim_evidence_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -1221,8 +1221,8 @@
     {
       "id": "v106_12_freedid_cbr_consent_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -1230,8 +1230,8 @@
     {
       "id": "v106_13_alpha_manifest_cleanup_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -1239,8 +1239,8 @@
     {
       "id": "v106_14_open_source_scout_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -1248,8 +1248,8 @@
     {
       "id": "v106_15_mcp_security_prompt_injection_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -1257,8 +1257,8 @@
     {
       "id": "v106_16_suite_omega_only_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -1266,8 +1266,8 @@
     {
       "id": "v106_17_publication_receipt_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -1275,8 +1275,8 @@
     {
       "id": "v106_18_d_drive_retention_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -1284,8 +1284,8 @@
     {
       "id": "v106_19_eureka_report_density_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -1293,8 +1293,8 @@
     {
       "id": "v106_20_next_stage_handoff_gate",
       "phase": "v106",
-      "stage_kind": "beta",
-      "cycle": "v106_v107_dual",
+      "stage_kind": "omega",
+      "cycle": "v106_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -1303,7 +1303,7 @@
       "id": "v107_01_stage_schedule_truth_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -1312,7 +1312,7 @@
       "id": "v107_02_local_cloud_nexus_digest_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -1321,7 +1321,7 @@
       "id": "v107_03_mcp_playwright_posture_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -1330,7 +1330,7 @@
       "id": "v107_04_provider_spend_sandbox_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -1339,7 +1339,7 @@
       "id": "v107_05_browser_live_write_floor_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -1348,7 +1348,7 @@
       "id": "v107_06_cli_identity_boundary_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -1357,7 +1357,7 @@
       "id": "v107_07_oracle_e2b_cloud_probe_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -1366,7 +1366,7 @@
       "id": "v107_08_vercel_cloudflare_bridge_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -1375,7 +1375,7 @@
       "id": "v107_09_neon_circleci_control_plane_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -1384,7 +1384,7 @@
       "id": "v107_10_notion_expo_dashboard_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -1393,7 +1393,7 @@
       "id": "v107_11_gmut_qcit_claim_evidence_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -1402,7 +1402,7 @@
       "id": "v107_12_freedid_cbr_consent_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -1411,7 +1411,7 @@
       "id": "v107_13_alpha_manifest_cleanup_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -1420,7 +1420,7 @@
       "id": "v107_14_open_source_scout_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -1429,7 +1429,7 @@
       "id": "v107_15_mcp_security_prompt_injection_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -1438,7 +1438,7 @@
       "id": "v107_16_suite_omega_only_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -1447,7 +1447,7 @@
       "id": "v107_17_publication_receipt_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -1456,7 +1456,7 @@
       "id": "v107_18_d_drive_retention_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -1465,7 +1465,7 @@
       "id": "v107_19_eureka_report_density_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -1474,7 +1474,7 @@
       "id": "v107_20_next_stage_handoff_gate",
       "phase": "v107",
       "stage_kind": "omega",
-      "cycle": "v106_v107_dual",
+      "cycle": "v107_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -1482,8 +1482,8 @@
     {
       "id": "v108_01_stage_schedule_truth_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -1491,8 +1491,8 @@
     {
       "id": "v108_02_local_cloud_nexus_digest_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -1500,8 +1500,8 @@
     {
       "id": "v108_03_mcp_playwright_posture_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -1509,8 +1509,8 @@
     {
       "id": "v108_04_provider_spend_sandbox_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -1518,8 +1518,8 @@
     {
       "id": "v108_05_browser_live_write_floor_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -1527,8 +1527,8 @@
     {
       "id": "v108_06_cli_identity_boundary_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -1536,8 +1536,8 @@
     {
       "id": "v108_07_oracle_e2b_cloud_probe_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -1545,8 +1545,8 @@
     {
       "id": "v108_08_vercel_cloudflare_bridge_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -1554,8 +1554,8 @@
     {
       "id": "v108_09_neon_circleci_control_plane_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -1563,8 +1563,8 @@
     {
       "id": "v108_10_notion_expo_dashboard_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -1572,8 +1572,8 @@
     {
       "id": "v108_11_gmut_qcit_claim_evidence_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -1581,8 +1581,8 @@
     {
       "id": "v108_12_freedid_cbr_consent_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -1590,8 +1590,8 @@
     {
       "id": "v108_13_alpha_manifest_cleanup_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -1599,8 +1599,8 @@
     {
       "id": "v108_14_open_source_scout_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -1608,8 +1608,8 @@
     {
       "id": "v108_15_mcp_security_prompt_injection_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -1617,8 +1617,8 @@
     {
       "id": "v108_16_suite_omega_only_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -1626,8 +1626,8 @@
     {
       "id": "v108_17_publication_receipt_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -1635,8 +1635,8 @@
     {
       "id": "v108_18_d_drive_retention_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -1644,8 +1644,8 @@
     {
       "id": "v108_19_eureka_report_density_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -1653,8 +1653,8 @@
     {
       "id": "v108_20_next_stage_handoff_gate",
       "phase": "v108",
-      "stage_kind": "beta",
-      "cycle": "v108_v109_dual",
+      "stage_kind": "omega",
+      "cycle": "v108_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -1663,7 +1663,7 @@
       "id": "v109_01_stage_schedule_truth_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -1672,7 +1672,7 @@
       "id": "v109_02_local_cloud_nexus_digest_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -1681,7 +1681,7 @@
       "id": "v109_03_mcp_playwright_posture_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -1690,7 +1690,7 @@
       "id": "v109_04_provider_spend_sandbox_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -1699,7 +1699,7 @@
       "id": "v109_05_browser_live_write_floor_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -1708,7 +1708,7 @@
       "id": "v109_06_cli_identity_boundary_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -1717,7 +1717,7 @@
       "id": "v109_07_oracle_e2b_cloud_probe_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -1726,7 +1726,7 @@
       "id": "v109_08_vercel_cloudflare_bridge_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -1735,7 +1735,7 @@
       "id": "v109_09_neon_circleci_control_plane_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -1744,7 +1744,7 @@
       "id": "v109_10_notion_expo_dashboard_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -1753,7 +1753,7 @@
       "id": "v109_11_gmut_qcit_claim_evidence_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -1762,7 +1762,7 @@
       "id": "v109_12_freedid_cbr_consent_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -1771,7 +1771,7 @@
       "id": "v109_13_alpha_manifest_cleanup_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -1780,7 +1780,7 @@
       "id": "v109_14_open_source_scout_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -1789,7 +1789,7 @@
       "id": "v109_15_mcp_security_prompt_injection_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -1798,7 +1798,7 @@
       "id": "v109_16_suite_omega_only_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -1807,7 +1807,7 @@
       "id": "v109_17_publication_receipt_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -1816,7 +1816,7 @@
       "id": "v109_18_d_drive_retention_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -1825,7 +1825,7 @@
       "id": "v109_19_eureka_report_density_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -1834,7 +1834,7 @@
       "id": "v109_20_next_stage_handoff_gate",
       "phase": "v109",
       "stage_kind": "omega",
-      "cycle": "v108_v109_dual",
+      "cycle": "v109_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -1842,8 +1842,8 @@
     {
       "id": "v110_01_stage_schedule_truth_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -1851,8 +1851,8 @@
     {
       "id": "v110_02_local_cloud_nexus_digest_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -1860,8 +1860,8 @@
     {
       "id": "v110_03_mcp_playwright_posture_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -1869,8 +1869,8 @@
     {
       "id": "v110_04_provider_spend_sandbox_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -1878,8 +1878,8 @@
     {
       "id": "v110_05_browser_live_write_floor_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -1887,8 +1887,8 @@
     {
       "id": "v110_06_cli_identity_boundary_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -1896,8 +1896,8 @@
     {
       "id": "v110_07_oracle_e2b_cloud_probe_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -1905,8 +1905,8 @@
     {
       "id": "v110_08_vercel_cloudflare_bridge_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -1914,8 +1914,8 @@
     {
       "id": "v110_09_neon_circleci_control_plane_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -1923,8 +1923,8 @@
     {
       "id": "v110_10_notion_expo_dashboard_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -1932,8 +1932,8 @@
     {
       "id": "v110_11_gmut_qcit_claim_evidence_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -1941,8 +1941,8 @@
     {
       "id": "v110_12_freedid_cbr_consent_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -1950,8 +1950,8 @@
     {
       "id": "v110_13_alpha_manifest_cleanup_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -1959,8 +1959,8 @@
     {
       "id": "v110_14_open_source_scout_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -1968,8 +1968,8 @@
     {
       "id": "v110_15_mcp_security_prompt_injection_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -1977,8 +1977,8 @@
     {
       "id": "v110_16_suite_omega_only_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -1986,8 +1986,8 @@
     {
       "id": "v110_17_publication_receipt_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -1995,8 +1995,8 @@
     {
       "id": "v110_18_d_drive_retention_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -2004,8 +2004,8 @@
     {
       "id": "v110_19_eureka_report_density_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -2013,8 +2013,8 @@
     {
       "id": "v110_20_next_stage_handoff_gate",
       "phase": "v110",
-      "stage_kind": "beta",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v110_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -2022,8 +2022,8 @@
     {
       "id": "v111_01_stage_schedule_truth_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -2031,8 +2031,8 @@
     {
       "id": "v111_02_local_cloud_nexus_digest_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -2040,8 +2040,8 @@
     {
       "id": "v111_03_mcp_playwright_posture_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -2049,8 +2049,8 @@
     {
       "id": "v111_04_provider_spend_sandbox_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -2058,8 +2058,8 @@
     {
       "id": "v111_05_browser_live_write_floor_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -2067,8 +2067,8 @@
     {
       "id": "v111_06_cli_identity_boundary_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -2076,8 +2076,8 @@
     {
       "id": "v111_07_oracle_e2b_cloud_probe_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -2085,8 +2085,8 @@
     {
       "id": "v111_08_vercel_cloudflare_bridge_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -2094,8 +2094,8 @@
     {
       "id": "v111_09_neon_circleci_control_plane_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -2103,8 +2103,8 @@
     {
       "id": "v111_10_notion_expo_dashboard_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -2112,8 +2112,8 @@
     {
       "id": "v111_11_gmut_qcit_claim_evidence_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -2121,8 +2121,8 @@
     {
       "id": "v111_12_freedid_cbr_consent_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -2130,8 +2130,8 @@
     {
       "id": "v111_13_alpha_manifest_cleanup_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -2139,8 +2139,8 @@
     {
       "id": "v111_14_open_source_scout_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -2148,8 +2148,8 @@
     {
       "id": "v111_15_mcp_security_prompt_injection_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -2157,8 +2157,8 @@
     {
       "id": "v111_16_suite_omega_only_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -2166,8 +2166,8 @@
     {
       "id": "v111_17_publication_receipt_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -2175,8 +2175,8 @@
     {
       "id": "v111_18_d_drive_retention_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -2184,8 +2184,8 @@
     {
       "id": "v111_19_eureka_report_density_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -2193,8 +2193,8 @@
     {
       "id": "v111_20_next_stage_handoff_gate",
       "phase": "v111",
-      "stage_kind": "alpha",
-      "cycle": "v110_v112_trinity",
+      "stage_kind": "omega",
+      "cycle": "v111_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -2203,7 +2203,7 @@
       "id": "v112_01_stage_schedule_truth_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -2212,7 +2212,7 @@
       "id": "v112_02_local_cloud_nexus_digest_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -2221,7 +2221,7 @@
       "id": "v112_03_mcp_playwright_posture_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -2230,7 +2230,7 @@
       "id": "v112_04_provider_spend_sandbox_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -2239,7 +2239,7 @@
       "id": "v112_05_browser_live_write_floor_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -2248,7 +2248,7 @@
       "id": "v112_06_cli_identity_boundary_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -2257,7 +2257,7 @@
       "id": "v112_07_oracle_e2b_cloud_probe_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -2266,7 +2266,7 @@
       "id": "v112_08_vercel_cloudflare_bridge_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -2275,7 +2275,7 @@
       "id": "v112_09_neon_circleci_control_plane_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -2284,7 +2284,7 @@
       "id": "v112_10_notion_expo_dashboard_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -2293,7 +2293,7 @@
       "id": "v112_11_gmut_qcit_claim_evidence_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -2302,7 +2302,7 @@
       "id": "v112_12_freedid_cbr_consent_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -2311,7 +2311,7 @@
       "id": "v112_13_alpha_manifest_cleanup_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -2320,7 +2320,7 @@
       "id": "v112_14_open_source_scout_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -2329,7 +2329,7 @@
       "id": "v112_15_mcp_security_prompt_injection_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -2338,7 +2338,7 @@
       "id": "v112_16_suite_omega_only_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -2347,7 +2347,7 @@
       "id": "v112_17_publication_receipt_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -2356,7 +2356,7 @@
       "id": "v112_18_d_drive_retention_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -2365,7 +2365,7 @@
       "id": "v112_19_eureka_report_density_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -2374,7 +2374,7 @@
       "id": "v112_20_next_stage_handoff_gate",
       "phase": "v112",
       "stage_kind": "omega",
-      "cycle": "v110_v112_trinity",
+      "cycle": "v112_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -2382,8 +2382,8 @@
     {
       "id": "v113_01_stage_schedule_truth_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -2391,8 +2391,8 @@
     {
       "id": "v113_02_local_cloud_nexus_digest_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -2400,8 +2400,8 @@
     {
       "id": "v113_03_mcp_playwright_posture_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -2409,8 +2409,8 @@
     {
       "id": "v113_04_provider_spend_sandbox_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -2418,8 +2418,8 @@
     {
       "id": "v113_05_browser_live_write_floor_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -2427,8 +2427,8 @@
     {
       "id": "v113_06_cli_identity_boundary_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -2436,8 +2436,8 @@
     {
       "id": "v113_07_oracle_e2b_cloud_probe_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -2445,8 +2445,8 @@
     {
       "id": "v113_08_vercel_cloudflare_bridge_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -2454,8 +2454,8 @@
     {
       "id": "v113_09_neon_circleci_control_plane_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -2463,8 +2463,8 @@
     {
       "id": "v113_10_notion_expo_dashboard_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -2472,8 +2472,8 @@
     {
       "id": "v113_11_gmut_qcit_claim_evidence_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -2481,8 +2481,8 @@
     {
       "id": "v113_12_freedid_cbr_consent_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -2490,8 +2490,8 @@
     {
       "id": "v113_13_alpha_manifest_cleanup_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -2499,8 +2499,8 @@
     {
       "id": "v113_14_open_source_scout_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -2508,8 +2508,8 @@
     {
       "id": "v113_15_mcp_security_prompt_injection_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -2517,8 +2517,8 @@
     {
       "id": "v113_16_suite_omega_only_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -2526,8 +2526,8 @@
     {
       "id": "v113_17_publication_receipt_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -2535,8 +2535,8 @@
     {
       "id": "v113_18_d_drive_retention_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -2544,8 +2544,8 @@
     {
       "id": "v113_19_eureka_report_density_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -2553,8 +2553,8 @@
     {
       "id": "v113_20_next_stage_handoff_gate",
       "phase": "v113",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v113_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -2562,8 +2562,8 @@
     {
       "id": "v114_01_stage_schedule_truth_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -2571,8 +2571,8 @@
     {
       "id": "v114_02_local_cloud_nexus_digest_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -2580,8 +2580,8 @@
     {
       "id": "v114_03_mcp_playwright_posture_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -2589,8 +2589,8 @@
     {
       "id": "v114_04_provider_spend_sandbox_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -2598,8 +2598,8 @@
     {
       "id": "v114_05_browser_live_write_floor_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -2607,8 +2607,8 @@
     {
       "id": "v114_06_cli_identity_boundary_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -2616,8 +2616,8 @@
     {
       "id": "v114_07_oracle_e2b_cloud_probe_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -2625,8 +2625,8 @@
     {
       "id": "v114_08_vercel_cloudflare_bridge_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -2634,8 +2634,8 @@
     {
       "id": "v114_09_neon_circleci_control_plane_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -2643,8 +2643,8 @@
     {
       "id": "v114_10_notion_expo_dashboard_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -2652,8 +2652,8 @@
     {
       "id": "v114_11_gmut_qcit_claim_evidence_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -2661,8 +2661,8 @@
     {
       "id": "v114_12_freedid_cbr_consent_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -2670,8 +2670,8 @@
     {
       "id": "v114_13_alpha_manifest_cleanup_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -2679,8 +2679,8 @@
     {
       "id": "v114_14_open_source_scout_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -2688,8 +2688,8 @@
     {
       "id": "v114_15_mcp_security_prompt_injection_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -2697,8 +2697,8 @@
     {
       "id": "v114_16_suite_omega_only_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -2706,8 +2706,8 @@
     {
       "id": "v114_17_publication_receipt_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -2715,8 +2715,8 @@
     {
       "id": "v114_18_d_drive_retention_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -2724,8 +2724,8 @@
     {
       "id": "v114_19_eureka_report_density_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -2733,8 +2733,8 @@
     {
       "id": "v114_20_next_stage_handoff_gate",
       "phase": "v114",
-      "stage_kind": "beta",
-      "cycle": "v113_v115_bridge",
+      "stage_kind": "omega",
+      "cycle": "v114_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
@@ -2743,7 +2743,7 @@
       "id": "v115_01_stage_schedule_truth_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
       "state": "candidate_only_not_suite_counted"
@@ -2752,7 +2752,7 @@
       "id": "v115_02_local_cloud_nexus_digest_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
       "state": "candidate_only_not_suite_counted"
@@ -2761,7 +2761,7 @@
       "id": "v115_03_mcp_playwright_posture_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
       "state": "candidate_only_not_suite_counted"
@@ -2770,7 +2770,7 @@
       "id": "v115_04_provider_spend_sandbox_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
       "state": "candidate_only_not_suite_counted"
@@ -2779,7 +2779,7 @@
       "id": "v115_05_browser_live_write_floor_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
       "state": "candidate_only_not_suite_counted"
@@ -2788,7 +2788,7 @@
       "id": "v115_06_cli_identity_boundary_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
       "state": "candidate_only_not_suite_counted"
@@ -2797,7 +2797,7 @@
       "id": "v115_07_oracle_e2b_cloud_probe_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
       "state": "candidate_only_not_suite_counted"
@@ -2806,7 +2806,7 @@
       "id": "v115_08_vercel_cloudflare_bridge_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
       "state": "candidate_only_not_suite_counted"
@@ -2815,7 +2815,7 @@
       "id": "v115_09_neon_circleci_control_plane_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
       "state": "candidate_only_not_suite_counted"
@@ -2824,7 +2824,7 @@
       "id": "v115_10_notion_expo_dashboard_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
       "state": "candidate_only_not_suite_counted"
@@ -2833,7 +2833,7 @@
       "id": "v115_11_gmut_qcit_claim_evidence_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
       "state": "candidate_only_not_suite_counted"
@@ -2842,7 +2842,7 @@
       "id": "v115_12_freedid_cbr_consent_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
       "state": "candidate_only_not_suite_counted"
@@ -2851,7 +2851,7 @@
       "id": "v115_13_alpha_manifest_cleanup_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
       "state": "candidate_only_not_suite_counted"
@@ -2860,7 +2860,7 @@
       "id": "v115_14_open_source_scout_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
       "state": "candidate_only_not_suite_counted"
@@ -2869,7 +2869,7 @@
       "id": "v115_15_mcp_security_prompt_injection_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
       "state": "candidate_only_not_suite_counted"
@@ -2878,7 +2878,7 @@
       "id": "v115_16_suite_omega_only_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
       "state": "candidate_only_not_suite_counted"
@@ -2887,7 +2887,7 @@
       "id": "v115_17_publication_receipt_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
       "state": "candidate_only_not_suite_counted"
@@ -2896,7 +2896,7 @@
       "id": "v115_18_d_drive_retention_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
       "state": "candidate_only_not_suite_counted"
@@ -2905,7 +2905,7 @@
       "id": "v115_19_eureka_report_density_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
       "state": "candidate_only_not_suite_counted"
@@ -2914,7 +2914,7 @@
       "id": "v115_20_next_stage_handoff_gate",
       "phase": "v115",
       "stage_kind": "omega",
-      "cycle": "v113_v115_bridge",
+      "cycle": "v115_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
       "state": "candidate_only_not_suite_counted"
