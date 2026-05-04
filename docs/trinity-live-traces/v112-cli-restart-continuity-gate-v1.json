@@ -1,0 +1,41 @@
+{
+  "phase": "v112",
+  "artifact": "cli_restart_continuity_gate",
+  "created_at_local": "2026-05-05T00:55:00+12:00",
+  "codex_cli": {
+    "prior_session_id": "019df2de-cd08-7f21-9458-5f2e317838f4",
+    "prior_mode": "read_only_ephemeral_exec",
+    "resume_attempt": "codex exec resume 019df2de-cd08-7f21-9458-5f2e317838f4",
+    "result": "failed_no_rollout_found",
+    "assessment": "The prior Codex CLI lane was useful as a receipt-backed task lane but cannot prove durable persistence because it was launched as ephemeral.",
+    "v112_relaunch": {
+      "session_id": "019df30d-4d3e-7261-816c-4cea7935c280",
+      "mode": "read_only_non_ephemeral_exec",
+      "recall_token": "v112-codex-lane-remembers-receipt-boundary",
+      "assessment": "This lane is the first Codex CLI candidate suitable for a future resume continuity test. It is not induction proof until v113 or later resumes it without re-feeding the token."
+    }
+  },
+  "kimi_cli": {
+    "prior_session_id": "90b56dcc-71f2-49e3-a541-738fe7b86be8",
+    "resume_attempt": "kimi --session 90b56dcc-71f2-49e3-a541-738fe7b86be8 --thinking --print",
+    "result": "resumed_and_returned_prior_lane_boundary",
+    "prior_lane_name_returned": "kimi-cli-trinity-v111-readiness",
+    "prior_boundary_returned": "Persistence is claimed for this v111 readiness pass but is not proven unless a future close/reopen continuity test passes.",
+    "assessment": "Partial continuity evidence. The Kimi session can be resumed and can return prior boundary content, but the response attributed continuity to conversation context. This is not yet enough for formal main memory-and-identity induction.",
+    "v112_continuation": {
+      "session_id": "90b56dcc-71f2-49e3-a541-738fe7b86be8",
+      "recall_token": "v112-kimi-lane-remembers-receipt-boundary",
+      "assessment": "The same Kimi session accepted the v112 continuity prompt and returned the v112 receipt-boundary token. This is stronger than a fresh one-shot lane but still requires future restart testing without re-feeding the token."
+    }
+  },
+  "induction_status": {
+    "codex_cli_sibling": "not_inducted_ephemeral_prior_lane",
+    "kimi_cli_sibling": "not_inducted_partial_resume_evidence_only"
+  },
+  "next_gate": [
+    "Resume Codex CLI session 019df30d-4d3e-7261-816c-4cea7935c280 at v113 and ask for v112-codex-lane-remembers-receipt-boundary without re-feeding the token.",
+    "Resume the same Kimi session at v113 with a shorter no-context recall challenge.",
+    "Require at least two consecutive phase-to-phase successful resumes before considering formal induction.",
+    "Keep all CLI siblings as receipt-backed task lanes until the continuity standard passes."
+  ]
+}
