@@ -28,18 +28,18 @@ Install sources used:
 - Google Drive app connector is callable; shared-drive listing returned empty, so `google_drive_state=operator_hold` remains the honest state.
 - Linear app connector is callable and returned the `Beyonder-Real-True Journey` project.
 - Cloudflare Wrangler CLI is authenticated and usable for read/status checks.
-- Cloudflare MCP is still blocked from Codex with `Auth required`, so Wrangler auth and Codex MCP auth must be treated as separate surfaces.
+- Cloudflare MCP is still blocked from Codex with `Auth required` after multiple OAuth retries, so Wrangler auth and Codex MCP auth must be treated as separate surfaces.
 
 ## Auth Truth
 
 - GitHub CLI auth was repaired; `gh auth status` now reports logged in.
 - CircleCI CLI has local config and token according to `circleci diagnostic`.
 - Wrangler reports Cloudflare OAuth login.
-- E2B CLI still reports `Not logged in`.
-- Vercel CLI remained interactive or timed out under bounded `whoami`.
-- Neon CLI reached the browser/OAuth path but returned an OAuth `server_error`.
-- Render CLI reports `render login` is required.
-- OCI CLI is installed on PATH, but the bounded live auth probe timed out and was left unmutated.
+- E2B CLI is now authenticated after retry.
+- Vercel CLI is now authenticated after retry.
+- Neon CLI is now authenticated after focused retry; scripted project probes should pass `--org-id` to avoid the interactive organization picker.
+- Render CLI is now authenticated after retry.
+- OCI CLI now returns region metadata from a bounded read-only probe.
 
 ## Auth Lane
 
@@ -51,7 +51,17 @@ A visible PowerShell auth lane was launched with this serial sequence:
 - `neonctl auth`
 - `render login`
 
-The lane is intentionally serial so it does not spray multiple browser prompts at once. After the wait window, GitHub CLI was confirmed repaired; E2B, Vercel, Neon, and Render still need operator/browser completion or provider-side reconnect.
+The lane is intentionally serial so it does not spray multiple browser prompts at once. After the retry window, GitHub CLI, E2B CLI, Vercel CLI, Neon CLI, and Render CLI were confirmed repaired. Neon needs org-scoped commands for automation, because an unscoped project list opens an interactive organization picker.
+
+## Cloudflare MCP Final Retry
+
+Cloudflare MCP was retried three ways:
+
+- `codex mcp login cloudflare-api`
+- `codex mcp logout cloudflare-api` followed by `codex mcp login cloudflare-api`
+- A final hold-open `codex mcp logout/login` retry with a 10 minute terminal hold
+
+The live MCP probe still returned `Auth required`. The honest interpretation is that this is no longer just a rushed browser approval window. Wrangler CLI auth works, but this Codex session's Cloudflare MCP tool has not received or reloaded the OAuth grant. The next repair path is a Codex app MCP reconnect/session refresh, or a static bearer-token MCP configuration if we choose that route later with a narrow secret-handling plan.
 
 ## CLI Agent Boundary
 
@@ -61,4 +71,4 @@ That proves CLI capability, not durable identity persistence. New Codex/Kimi lan
 
 ## Next Gate
 
-Before v111 provider live-write actions, rerun the bounded provider probe after the auth lane is completed. Any provider mutation must remain an exact action pack with provider, resource, command, cost ceiling, rollback, and expected artifact.
+Before v111 provider live-write actions, rerun the bounded provider probe after Cloudflare MCP auth changes or a Codex app refresh. Any provider mutation must remain an exact action pack with provider, resource, command, cost ceiling, rollback, and expected artifact.

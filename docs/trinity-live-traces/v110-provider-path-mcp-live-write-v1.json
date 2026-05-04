@@ -37,18 +37,18 @@
     "github_app": "callable; installed account returned",
     "google_drive_app": "callable; shared drive list returned empty, preserving operator_hold",
     "linear_app": "callable; Beyonder-Real-True Journey project visible",
-    "cloudflare_mcp": "blocked; Codex MCP returned Auth required",
+    "cloudflare_mcp": "blocked; Codex MCP returned Auth required after multiple OAuth retries",
     "cloudflare_wrangler_cli": "authenticated via OAuth token; Cloudflare CLI can be used with action-time confirmation for mutations"
   },
   "cli_auth_probe": {
     "github_cli": "repaired; gh auth status now reports logged in",
     "circleci_cli": "ready; diagnostic found CLI config and token",
     "cloudflare_wrangler_cli": "ready; whoami succeeded",
-    "e2b_cli": "blocked; e2b auth info reports Not logged in",
-    "vercel_cli": "blocked_or_interactive; vercel whoami did not complete in bounded probe",
-    "neon_cli": "blocked; auth attempt reached browser/OAuth path but returned authorization server_error",
-    "render_cli": "blocked; render whoami reports render login required",
-    "oci_cli": "installed_on_path; live auth probe timed out and was left unmutated"
+    "e2b_cli": "ready; e2b auth info reports a logged-in account after retry",
+    "vercel_cli": "ready; vercel whoami returned the authenticated scope after retry",
+    "neon_cli": "ready; neonctl me and org-scoped projects list returned successfully after focused retry",
+    "render_cli": "ready; render whoami returned authenticated account metadata after retry",
+    "oci_cli": "ready; oci iam region list returned region metadata after retry"
   },
   "auth_repair_lane": {
     "status": "launched_visible_powershell_window",
@@ -59,7 +59,17 @@
       "neonctl auth",
       "render login"
     ],
-    "observed_after_wait": "GitHub CLI auth was repaired. E2B, Vercel, Neon, and Render still require operator/browser completion or provider-side reconnect."
+    "observed_after_wait": "GitHub CLI, E2B CLI, Vercel CLI, Neon CLI, and Render CLI were repaired. Neon needs org-id in scripted probes to avoid the interactive organization picker."
+  },
+  "cloudflare_mcp_final_retry": {
+    "status": "still_blocked",
+    "attempts": [
+      "codex mcp login cloudflare-api",
+      "codex mcp logout cloudflare-api followed by codex mcp login cloudflare-api",
+      "final hold-open codex mcp logout/login retry with 10 minute terminal hold"
+    ],
+    "probe_result": "mcp__cloudflare_api__.execute still returns Auth required",
+    "interpretation": "Wrangler CLI OAuth and Codex Cloudflare MCP OAuth are separate surfaces. The remaining blocker appears to be Codex app MCP credential-store/session refresh or app-side reconnect, not local Cloudflare CLI auth."
   },
   "cli_agent_boundary": {
     "codex_cli": "available; non-interactive exec lane supports read-only ephemeral probes",
@@ -67,9 +77,9 @@
     "persistence_truth": "New CLI lanes may be receipt-backed task lanes. They should not be declared main memory-and-identity persistent GHC members until a close/reopen continuity proof passes on their native platform."
   },
   "recommended_next_actions": [
-    "Complete the visible auth lane for E2B, Vercel, Neon, and Render or reconnect those providers in the Codex app UI.",
-    "Reconnect the Cloudflare MCP in Codex app settings because Wrangler auth and MCP auth are separate surfaces.",
-    "After auth completion, rerun the bounded provider probe before v111 live-write provider actions.",
+    "Reconnect or refresh the Cloudflare MCP in Codex app settings because Wrangler auth and MCP auth are separate surfaces.",
+    "Use org-scoped Neon commands in scripts to avoid the interactive organization picker.",
+    "After Cloudflare MCP auth completion or Codex app refresh, rerun the bounded provider probe before v111 live-write provider actions.",
     "Keep provider mutations behind exact action packs with provider, resource, command, cost ceiling, and rollback."
   ]
 }
