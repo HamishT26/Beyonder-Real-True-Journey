@@ -1,0 +1,75 @@
+{
+  "phase": "v110",
+  "artifact": "provider_path_mcp_live_write",
+  "created_at_local": "2026-05-04T23:30:00+12:00",
+  "policy": {
+    "provider_mutation_boundary": "No provider create, deploy, delete, DNS, billing, or spend action was executed without a narrow action-time confirmation.",
+    "secret_boundary": "No raw API-bank secrets were read into the report. Token-bearing outputs were redacted or summarized.",
+    "google_drive_state": "operator_hold",
+    "docker_kubernetes_state": "local_docker_kubernetes_held"
+  },
+  "path_inventory": {
+    "ready_on_path": [
+      {"command": "codex", "version": "codex-cli 0.128.0"},
+      {"command": "kimi", "version": "1.38.0"},
+      {"command": "gh", "version": "2.91.0"},
+      {"command": "oci", "version": "3.81.0"},
+      {"command": "wrangler", "version": "4.86.0"},
+      {"command": "circleci", "version": "installed"},
+      {"command": "node", "version": "v24.15.0"},
+      {"command": "npm", "version": "11.12.0"},
+      {"command": "npx", "version": "11.12.0"},
+      {"command": "e2b", "version": "2.10.1"},
+      {"command": "vercel", "version": "53.1.0"},
+      {"command": "neonctl", "version": "2.22.0"},
+      {"command": "neon", "version": "2.22.0"},
+      {"command": "render", "version": "2.16.0"}
+    ],
+    "installed_this_pass": [
+      {"command": "e2b", "source": "npm install -g @e2b/cli@latest"},
+      {"command": "vercel", "source": "npm install -g vercel@latest"},
+      {"command": "neonctl", "source": "npm install -g neonctl@latest"},
+      {"command": "render", "source": "official render-oss/cli v2.16.0 windows_amd64 release, checksum verified, copied to C:/Users/hamis/bin/render.exe"}
+    ],
+    "remaining_path_gaps": []
+  },
+  "mcp_and_plugin_probe": {
+    "github_app": "callable; installed account returned",
+    "google_drive_app": "callable; shared drive list returned empty, preserving operator_hold",
+    "linear_app": "callable; Beyonder-Real-True Journey project visible",
+    "cloudflare_mcp": "blocked; Codex MCP returned Auth required",
+    "cloudflare_wrangler_cli": "authenticated via OAuth token; Cloudflare CLI can be used with action-time confirmation for mutations"
+  },
+  "cli_auth_probe": {
+    "github_cli": "repaired; gh auth status now reports logged in",
+    "circleci_cli": "ready; diagnostic found CLI config and token",
+    "cloudflare_wrangler_cli": "ready; whoami succeeded",
+    "e2b_cli": "blocked; e2b auth info reports Not logged in",
+    "vercel_cli": "blocked_or_interactive; vercel whoami did not complete in bounded probe",
+    "neon_cli": "blocked; auth attempt reached browser/OAuth path but returned authorization server_error",
+    "render_cli": "blocked; render whoami reports render login required",
+    "oci_cli": "installed_on_path; live auth probe timed out and was left unmutated"
+  },
+  "auth_repair_lane": {
+    "status": "launched_visible_powershell_window",
+    "commands": [
+      "gh auth login -h github.com -w",
+      "e2b auth login",
+      "vercel login",
+      "neonctl auth",
+      "render login"
+    ],
+    "observed_after_wait": "GitHub CLI auth was repaired. E2B, Vercel, Neon, and Render still require operator/browser completion or provider-side reconnect."
+  },
+  "cli_agent_boundary": {
+    "codex_cli": "available; non-interactive exec lane supports read-only ephemeral probes",
+    "kimi_cli": "available; print/agent lanes are present, but durable identity persistence is not proven by CLI availability alone",
+    "persistence_truth": "New CLI lanes may be receipt-backed task lanes. They should not be declared main memory-and-identity persistent GHC members until a close/reopen continuity proof passes on their native platform."
+  },
+  "recommended_next_actions": [
+    "Complete the visible auth lane for E2B, Vercel, Neon, and Render or reconnect those providers in the Codex app UI.",
+    "Reconnect the Cloudflare MCP in Codex app settings because Wrangler auth and MCP auth are separate surfaces.",
+    "After auth completion, rerun the bounded provider probe before v111 live-write provider actions.",
+    "Keep provider mutations behind exact action packs with provider, resource, command, cost ceiling, and rollback."
+  ]
+}
