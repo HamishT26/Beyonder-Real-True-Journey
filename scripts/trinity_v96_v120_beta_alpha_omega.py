@@ -33,6 +33,7 @@ from trinity_v96_v120_candidate_systems import (
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 TRACE = DOCS / "trinity-live-traces"
+SKILLS = ROOT / "skills"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
 MANIFEST = DOCS / "trinity-expansion-system-manifest-v17.json"
 GENERAL_FLOOR_KB = 300 * 1024
@@ -543,6 +544,203 @@ def candidates_for_phase(phase: str) -> list[dict[str, Any]]:
     return [{"id": system_id, **spec} for system_id, spec in sorted(CANDIDATES.items()) if spec["phase"] == phase]
 
 
+def phase_skill_id(phase: str, index: int, suffix: str) -> str:
+    return f"{phase}-trinity-{suffix.replace('_', '-')}-skill-{index:02d}"
+
+
+def phase_skill_specs(phase: str) -> list[dict[str, Any]]:
+    specs: list[dict[str, Any]] = []
+    for index, candidate in enumerate(candidates_for_phase(phase), start=1):
+        suffix = str(candidate["suffix"])
+        skill_id = phase_skill_id(phase, index, suffix)
+        specs.append(
+            {
+                "skill_id": skill_id,
+                "candidate_id": candidate["id"],
+                "phase": phase,
+                "index": index,
+                "pillar": candidate["pillar"],
+                "purpose": candidate["purpose"],
+                "skill_path": f"skills/{skill_id}/SKILL.md",
+                "agent_path": f"skills/{skill_id}/agents/openai.yaml",
+            }
+        )
+    return specs
+
+
+def skill_markdown(spec: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "---",
+            f"name: {spec['skill_id']}",
+            f"description: Operate {spec['candidate_id']} as a guarded {spec['phase']} Trinity phase skill.",
+            "---",
+            "",
+            f"# {spec['skill_id']}",
+            "",
+            f"- phase: `{spec['phase']}`",
+            f"- candidate_id: `{spec['candidate_id']}`",
+            f"- pillar: `{spec['pillar']}`",
+            "- authority: `repo_first_guarded_receipt_only`",
+            "- provider_policy: `no_external_write_without_action_time_confirmation`",
+            "",
+            "## Use",
+            "",
+            "1. Start from the current phase receipt and suite statuses.",
+            "2. Keep Google Drive and personal accounts on operator hold unless explicitly confirmed for a narrow action.",
+            "3. Generate evidence as repo artifacts before claiming live-write success.",
+            "4. Preserve forward-only Git publication and curated allowlist staging.",
+            "",
+            "## Purpose",
+            "",
+            str(spec["purpose"]),
+            "",
+        ]
+    )
+
+
+def skill_yaml(spec: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            "version: 1",
+            "name: openai",
+            "entrypoint: SKILL.md",
+            "metadata:",
+            f"  phase: {spec['phase']}",
+            f"  candidate_id: {spec['candidate_id']}",
+            f"  pillar: {spec['pillar']}",
+            "",
+        ]
+    )
+
+
+def write_phase_skills(phase: str) -> dict[str, Any]:
+    specs = phase_skill_specs(phase)
+    for spec in specs:
+        skill_dir = SKILLS / str(spec["skill_id"])
+        write_text(skill_dir / "SKILL.md", skill_markdown(spec))
+        write_text(skill_dir / "agents" / "openai.yaml", skill_yaml(spec))
+    return {
+        "generated_utc": now_iso(),
+        "phase": phase,
+        "state": "repo_skill_surfaces_generated",
+        "skill_count": len(specs),
+        "install_policy": "local_skill_installer_verify_after_generation",
+        "restart_note": "Codex restart may be required before newly installed skills appear in the live skill list.",
+        "skills": specs,
+    }
+
+
+def phase_command_pack(phase: str) -> dict[str, Any]:
+    commands = []
+    for spec in phase_skill_specs(phase):
+        index = int(spec["index"])
+        commands.append(
+            {
+                "command_id": f"{phase}_guarded_command_{index:02d}",
+                "phase": phase,
+                "skill_id": spec["skill_id"],
+                "candidate_id": spec["candidate_id"],
+                "intent": f"Run the guarded evidence lane for {spec['candidate_id']}.",
+                "mode": "repo_guarded",
+                "risk_class": "low",
+                "requires_live": False,
+                "requires_connector": "",
+                "preconditions": [
+                    f"{phase} stage plan exists",
+                    f"{phase} live-write preflight exists",
+                    "curated allowlist staging is active",
+                ],
+                "command_template": f"python scripts/trinity_v96_v120_candidate_systems.py --system-id {spec['candidate_id']}",
+                "expected_artifacts": [
+                    f"docs/trinity-live-traces/v96-v120-candidate-system-results/{hyphen(str(spec['candidate_id']))}.json",
+                    f"docs/trinity-expansion/{hyphen(str(spec['candidate_id']))}-latest.json",
+                ],
+                "rollback": "No destructive rollback needed; remove generated phase artifacts with a new forward-only commit if abandoned.",
+                "source_of_truth": "scripts/trinity_v96_v120_candidate_systems.py",
+                "executor_role": "aletheon",
+                "authority_scope": "repo_authority",
+                "council_visibility": "council_shared",
+                "api_binding": "",
+                "resume_safe": True,
+                "subagent_target": "read_only_sidecar_optional",
+                "proof_required": True,
+                "adapter_scope": "repo_first_only",
+                "agent_owner": "aletheon",
+                "delegation_safe": True,
+                "fallback_mode": "manual_candidate_system_run",
+            }
+        )
+    return {
+        "generated_utc": now_iso(),
+        "phase": phase,
+        "state": "phase_command_pack_generated",
+        "command_count": len(commands),
+        "commands": commands,
+    }
+
+
+def phase_command_validation(command_pack: dict[str, Any], skill_pack: dict[str, Any]) -> dict[str, Any]:
+    required = {
+        "command_id",
+        "intent",
+        "mode",
+        "risk_class",
+        "requires_live",
+        "preconditions",
+        "command_template",
+        "expected_artifacts",
+        "rollback",
+        "source_of_truth",
+        "executor_role",
+        "authority_scope",
+        "council_visibility",
+        "resume_safe",
+        "proof_required",
+    }
+    failures: list[str] = []
+    commands = command_pack.get("commands", [])
+    skills = skill_pack.get("skills", [])
+    if len(commands) != 20:
+        failures.append(f"expected 20 commands, found {len(commands)}")
+    if len(skills) != 20:
+        failures.append(f"expected 20 skills, found {len(skills)}")
+    seen: set[str] = set()
+    for command in commands if isinstance(commands, list) else []:
+        if not isinstance(command, dict):
+            failures.append("command row must be an object")
+            continue
+        missing = sorted(required - set(command))
+        if missing:
+            failures.append(f"{command.get('command_id', '<unknown>')} missing fields: {missing}")
+        command_id = str(command.get("command_id") or "")
+        if command_id in seen:
+            failures.append(f"duplicate command_id: {command_id}")
+        seen.add(command_id)
+        source = ROOT / str(command.get("source_of_truth") or "")
+        if not source.exists():
+            failures.append(f"{command_id} missing source_of_truth: {command.get('source_of_truth')}")
+    for skill in skills if isinstance(skills, list) else []:
+        if not isinstance(skill, dict):
+            failures.append("skill row must be an object")
+            continue
+        skill_path = ROOT / str(skill.get("skill_path") or "")
+        agent_path = ROOT / str(skill.get("agent_path") or "")
+        if not skill_path.exists():
+            failures.append(f"{skill.get('skill_id')} missing SKILL.md")
+        if not agent_path.exists():
+            failures.append(f"{skill.get('skill_id')} missing agents/openai.yaml")
+    return {
+        "generated_utc": now_iso(),
+        "phase": command_pack.get("phase"),
+        "state": "PASS" if not failures else "FAIL",
+        "effective_success": not failures,
+        "command_count": len(commands) if isinstance(commands, list) else 0,
+        "skill_count": len(skills) if isinstance(skills, list) else 0,
+        "failures": failures,
+    }
+
+
 def manifest_entry(system_id: str, spec: dict[str, Any]) -> dict[str, Any]:
     phase = str(spec["phase"])
     stem = hyphen(system_id)
@@ -736,6 +934,12 @@ def stage_allowlist(phase: str) -> dict[str, Any]:
         f"docs/trinity-live-traces/{phase}-live-write-preflight-v1.md",
         f"docs/trinity-live-traces/{phase}-open-source-expansion-scout-v1.json",
         f"docs/trinity-live-traces/{phase}-open-source-expansion-scout-v1.md",
+        f"docs/trinity-live-traces/{phase}-phase-skill-pack-v1.json",
+        f"docs/trinity-live-traces/{phase}-phase-skill-pack-v1.md",
+        f"docs/trinity-live-traces/{phase}-phase-command-pack-v1.json",
+        f"docs/trinity-live-traces/{phase}-phase-command-pack-v1.md",
+        f"docs/trinity-live-traces/{phase}-phase-command-validation-v1.json",
+        f"docs/trinity-live-traces/{phase}-phase-command-validation-v1.md",
         f"docs/trinity-live-traces/{phase}-stage-allowlist-v1.json",
         f"docs/trinity-live-traces/{phase}-stage-allowlist-v1.md",
         f"docs/trinity-live-traces/{phase}-cli-reports/{phase}-beta-eureka-plan-v1.md",
@@ -777,6 +981,8 @@ def stage_allowlist(phase: str) -> dict[str, Any]:
                 f"docs/trinity-expansion/{stem}-latest.md",
             ]
         )
+    for skill in phase_skill_specs(phase):
+        paths.extend([str(skill["skill_path"]), str(skill["agent_path"])])
     return {
         "generated_utc": now_iso(),
         "phase": phase,
@@ -789,6 +995,7 @@ def closeout_payload(phase: str, promotion: dict[str, Any]) -> dict[str, Any]:
     info = stage(phase)
     deep = suite_status(TRACE / f"{phase}-deep-suite-status.json")
     l5 = suite_status(TRACE / f"{phase}-materialize-l5-suite-status.json")
+    command_validation = read_json(TRACE / f"{phase}-phase-command-validation-v1.json", {})
     if info["kind"] == "omega":
         green = bool(deep.get("effective_success") and l5.get("effective_success"))
         state = "completed_green" if green else "planned_or_in_progress"
@@ -805,6 +1012,7 @@ def closeout_payload(phase: str, promotion: dict[str, Any]) -> dict[str, Any]:
         "materialize_l5": l5,
         "l5_marker_hits": marker_hits(TRACE / f"{phase}-materialize-l5-suite-status.json") if info["kind"] == "omega" else [],
         "manifest_promotion": promotion,
+        "phase_command_validation": command_validation,
         "next_required_action": f"prepare_{next_phase(phase)}_from_{phase}_evidence" if phase != "v120" else "finish_v96_v120_closeout",
         "effective_success": green,
     }
@@ -854,6 +1062,9 @@ def write_phase(phase: str, promote: bool = True) -> None:
     providers = provider_probe(phase)
     plan = stage_plan(phase, health, providers)
     promotion = ensure_manifest_promotions(phase) if promote else {"phase": phase, "added_count": 0, "refreshed_count": 0}
+    skill_pack = write_phase_skills(phase)
+    command_pack = phase_command_pack(phase)
+    command_validation = phase_command_validation(command_pack, skill_pack)
     artifacts: dict[str, Any] = {
         f"{phase}-runtime-health-gate-v1": health,
         f"{phase}-provider-readiness-probe-v1": providers,
@@ -864,6 +1075,9 @@ def write_phase(phase: str, promote: bool = True) -> None:
         f"{phase}-stage-plan-v1": plan,
         f"{phase}-live-write-preflight-v1": live_write_preflight(phase),
         f"{phase}-open-source-expansion-scout-v1": source_scout(phase),
+        f"{phase}-phase-skill-pack-v1": skill_pack,
+        f"{phase}-phase-command-pack-v1": command_pack,
+        f"{phase}-phase-command-validation-v1": command_validation,
         "v96-v120-system-expansion-candidate-pack-v1": candidate_pack_payload(phase, promotion),
         f"{phase}-stage-allowlist-v1": stage_allowlist(phase),
         f"{phase}-git-publication-result-v1": publication_result(phase),
