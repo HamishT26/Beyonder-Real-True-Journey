@@ -2,39 +2,39 @@
 
 ```json
 {
-  "generated_utc": "2026-05-04T09:32:31+00:00",
-  "phase": "v108",
+  "generated_utc": "2026-05-04T10:27:40+00:00",
+  "phase": "v109",
   "state": "v96_v120_candidate_pack",
   "active_phase_promotion": {
-    "generated_utc": "2026-05-04T09:32:31+00:00",
-    "phase": "v108",
+    "generated_utc": "2026-05-04T10:27:40+00:00",
+    "phase": "v109",
     "manifest_path": "docs/trinity-expansion-system-manifest-v17.json",
-    "before_count": 1754,
-    "after_count": 1754,
+    "before_count": 1774,
+    "after_count": 1774,
     "added_count": 0,
     "refreshed_count": 20,
     "added_systems": [],
     "refreshed_systems": [
-      "v108_01_stage_schedule_truth_gate",
-      "v108_02_local_cloud_nexus_digest_gate",
-      "v108_03_mcp_playwright_posture_gate",
-      "v108_04_provider_spend_sandbox_gate",
-      "v108_05_browser_live_write_floor_gate",
-      "v108_06_cli_identity_boundary_gate",
-      "v108_07_oracle_e2b_cloud_probe_gate",
-      "v108_08_vercel_cloudflare_bridge_gate",
-      "v108_09_neon_circleci_control_plane_gate",
-      "v108_10_notion_expo_dashboard_gate",
-      "v108_11_gmut_qcit_claim_evidence_gate",
-      "v108_12_freedid_cbr_consent_gate",
-      "v108_13_alpha_manifest_cleanup_gate",
-      "v108_14_open_source_scout_gate",
-      "v108_15_mcp_security_prompt_injection_gate",
-      "v108_16_suite_omega_only_gate",
-      "v108_17_publication_receipt_gate",
-      "v108_18_d_drive_retention_gate",
-      "v108_19_eureka_report_density_gate",
-      "v108_20_next_stage_handoff_gate"
+      "v109_01_stage_schedule_truth_gate",
+      "v109_02_local_cloud_nexus_digest_gate",
+      "v109_03_mcp_playwright_posture_gate",
+      "v109_04_provider_spend_sandbox_gate",
+      "v109_05_browser_live_write_floor_gate",
+      "v109_06_cli_identity_boundary_gate",
+      "v109_07_oracle_e2b_cloud_probe_gate",
+      "v109_08_vercel_cloudflare_bridge_gate",
+      "v109_09_neon_circleci_control_plane_gate",
+      "v109_10_notion_expo_dashboard_gate",
+      "v109_11_gmut_qcit_claim_evidence_gate",
+      "v109_12_freedid_cbr_consent_gate",
+      "v109_13_alpha_manifest_cleanup_gate",
+      "v109_14_open_source_scout_gate",
+      "v109_15_mcp_security_prompt_injection_gate",
+      "v109_16_suite_omega_only_gate",
+      "v109_17_publication_receipt_gate",
+      "v109_18_d_drive_retention_gate",
+      "v109_19_eureka_report_density_gate",
+      "v109_20_next_stage_handoff_gate"
     ]
   },
   "candidate_count": 500,
@@ -1666,7 +1666,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "trinity",
       "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_02_local_cloud_nexus_digest_gate",
@@ -1675,7 +1675,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_03_mcp_playwright_posture_gate",
@@ -1684,7 +1684,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_04_provider_spend_sandbox_gate",
@@ -1693,7 +1693,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "separate free-credit enthusiasm from action-time billing authority",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_05_browser_live_write_floor_gate",
@@ -1702,7 +1702,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "enforce the 350 MB browser and online live-write floor",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_06_cli_identity_boundary_gate",
@@ -1711,7 +1711,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_07_oracle_e2b_cloud_probe_gate",
@@ -1720,7 +1720,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "record OCI and e2b availability without provisioning paid resources",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_08_vercel_cloudflare_bridge_gate",
@@ -1729,7 +1729,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_09_neon_circleci_control_plane_gate",
@@ -1738,7 +1738,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "prepare database and CI ledger use without creating live services blindly",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_10_notion_expo_dashboard_gate",
@@ -1747,7 +1747,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_11_gmut_qcit_claim_evidence_gate",
@@ -1756,7 +1756,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_12_freedid_cbr_consent_gate",
@@ -1765,7 +1765,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "preserve consent, recourse, and identity boundary checks",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_13_alpha_manifest_cleanup_gate",
@@ -1774,7 +1774,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_14_open_source_scout_gate",
@@ -1783,7 +1783,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "convert official docs and source-scouting into cached recommendations",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_15_mcp_security_prompt_injection_gate",
@@ -1792,7 +1792,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "heart",
       "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_16_suite_omega_only_gate",
@@ -1801,7 +1801,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "trinity",
       "purpose": "run Deep and L5 suites only on Omega execution stages",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_17_publication_receipt_gate",
@@ -1810,7 +1810,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "require post-push remote/local equality before declaring cloud live write success",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_18_d_drive_retention_gate",
@@ -1819,7 +1819,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "body",
       "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_19_eureka_report_density_gate",
@@ -1828,7 +1828,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "mind",
       "purpose": "keep at least twenty actionable recommendations per stage",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v109_20_next_stage_handoff_gate",
@@ -1837,7 +1837,7 @@
       "cycle": "v109_packed_trinity",
       "pillar": "trinity",
       "purpose": "derive each next stage from the current closeout, not a stale global plan",
-      "state": "candidate_only_not_suite_counted"
+      "state": "promoted_runner_backed"
     },
     {
       "id": "v110_01_stage_schedule_truth_gate",
