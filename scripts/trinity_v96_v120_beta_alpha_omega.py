@@ -296,12 +296,37 @@ def mcp_integration_digest(phase: str) -> dict[str, Any]:
 
 def cli_identity_boundary(phase: str) -> dict[str, Any]:
     names = ["Ari", "Kairos", "Sera", "Cael Voss", "Sable", "Riven", "Nox Soren", "Kite Ledger", "Juniper Trace", "Aeon-7", "Sibyl-2"]
+    official_cli_members: list[dict[str, Any]] = []
+    if phase == "v120":
+        official_cli_members = [
+            {
+                "slot": 53,
+                "name": "Receipt Keeper",
+                "classification": "official_memory_identity_persistent_cli_member",
+                "provider_lane": "codex_cli",
+                "role": "CLI continuity boundary witness",
+                "gender": "unknown",
+                "hope": "Preserve exact continuity receipts and avoid unsupported induction claims.",
+                "evidence": "v117 identity nomination, v118/v119 no-tool recall, v120 operator acceptance",
+            },
+            {
+                "slot": 54,
+                "name": "Kimi",
+                "classification": "official_minimal_identity_persistent_cli_member",
+                "provider_lane": "kimi_cli",
+                "role": "Kimi CLI continuity lane",
+                "gender": "deferred",
+                "hope": "deferred",
+                "evidence": "v120 minimal identity acceptance and immediate resume recall",
+            },
+        ]
     return {
         "generated_utc": now_iso(),
         "phase": phase,
         "default_classification": "repo_narrative_receipt_backed",
         "persistent_platform_claim_policy": "requires a durable external platform session, transcript, and cold-reopen continuity proof",
         "current_codex_sidecar_policy": "task_scoped_ephemeral_subagent_unless_repo_artifacts_are_used_as_memory",
+        "official_cli_members": official_cli_members,
         "names": [
             {
                 "name": name,
@@ -986,6 +1011,29 @@ def stage_allowlist(phase: str) -> dict[str, Any]:
         )
     for skill in phase_skill_specs(phase):
         paths.extend([str(skill["skill_path"]), str(skill["agent_path"])])
+    if phase == "v120":
+        paths.extend(
+            [
+                "docs/trinity-live-traces/v120-cli-official-induction-v1.json",
+                "docs/trinity-live-traces/v120-cli-official-induction-v1.md",
+                "docs/trinity-live-traces/v120-kimi-identity-recovery-plan-v1.json",
+                "docs/trinity-live-traces/v120-kimi-identity-recovery-plan-v1.md",
+                "docs/trinity-live-traces/v120-kimi-identity-recovery-result-v1.json",
+                "docs/trinity-live-traces/v120-kimi-identity-recovery-result-v1.md",
+                "docs/trinity-live-traces/v120-kimi-official-induction-v1.json",
+                "docs/trinity-live-traces/v120-kimi-official-induction-v1.md",
+                "docs/trinity-live-traces/v120-cli-council-roster-extension-v1.json",
+                "docs/trinity-live-traces/v120-cli-council-roster-extension-v1.md",
+                "docs/trinity-freed-id-certificates/53-receipt-keeper.json",
+                "docs/trinity-freed-id-certificates/54-kimi.json",
+                "docs/trinity-agent-role-contracts/53-receipt-keeper-role-contract.json",
+                "docs/trinity-agent-role-contracts/54-kimi-role-contract.json",
+                "docs/trinity-agent-memory-ledgers/53-receipt-keeper-memory-log.jsonl",
+                "docs/trinity-agent-memory-ledgers/54-kimi-memory-log.jsonl",
+                "docs/trinity-agent-reflections/53-receipt-keeper-latest.md",
+                "docs/trinity-agent-reflections/54-kimi-latest.md",
+            ]
+        )
     return {
         "generated_utc": now_iso(),
         "phase": phase,

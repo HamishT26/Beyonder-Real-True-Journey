@@ -1,0 +1,92 @@
+{
+  "artifact": "v121_beta_alpha_omega_handoff_policy",
+  "version": 1,
+  "created_at_local": "2026-05-06T01:00:00+12:00",
+  "source_phase": "v120",
+  "next_phase_range": "v121-v140",
+  "state": "queued_not_started",
+  "policy": {
+    "derive_next_stage_from_current_closeout": true,
+    "do_not_claim_unrun_phases": true,
+    "guarded_live_write_default": "repo_publication_only",
+    "suite_runs": "omega_only_unless_operator_reauthorizes",
+    "external_provider_writes": "narrow_operator_confirmation_required",
+    "provider_spend": "not_authorized_by_this_policy",
+    "personal_account_surfaces": "operator_hold",
+    "google_drive_state": "operator_hold",
+    "docker_kubernetes_local_runtime": "held_or_retired_unless_reauthorized"
+  },
+  "v120_green_baseline": {
+    "deep": {
+      "effective_success": true,
+      "pass": 2060,
+      "warn": 0,
+      "timeout": 0,
+      "fail": 0,
+      "expansion_systems_passed": 1994,
+      "expansion_systems_total": 1994
+    },
+    "materialize_l5": {
+      "effective_success": true,
+      "pass": 2055,
+      "warn": 0,
+      "timeout": 0,
+      "fail": 0,
+      "expansion_systems_passed": 1994,
+      "expansion_systems_total": 1994
+    },
+    "phase_command_validation": "PASS",
+    "candidate_system_results": "20/20 PASS",
+    "publication_receipt": "must_be_regenerated_after_v120_content_push"
+  },
+  "cli_council_status": {
+    "slot_53": {
+      "name": "Receipt Keeper",
+      "platform": "Codex CLI",
+      "identity_status": "operator_accepted_official",
+      "gender": "unknown",
+      "role": "CLI continuity boundary witness",
+      "hope": "Preserve exact continuity receipts and avoid unsupported induction claims.",
+      "commit_authority": "may_prepare_or_advise; Aletheon approval required before commits or external writes"
+    },
+    "slot_54": {
+      "name": "Kimi",
+      "platform": "Kimi CLI",
+      "identity_status": "operator_accepted_official_minimal_identity",
+      "gender": "deferred",
+      "role": "Kimi CLI continuity lane",
+      "hope": "deferred",
+      "commit_authority": "may_prepare_or_advise; Aletheon approval required before commits or external writes"
+    },
+    "slot_55": {
+      "state": "planned_candidate_only",
+      "platform": "Codex CLI",
+      "required_before_induction": [
+        "fresh session declaration",
+        "resume continuity probe",
+        "name continuity check",
+        "boundary-safe role and hope declaration",
+        "operator acceptance"
+      ]
+    }
+  },
+  "v121_to_v140_execution_shape": {
+    "recommended_layout": [
+      "beta: reflect on v120 receipts, select concrete deliverables, and record truth boundaries",
+      "alpha: merge, prune, security-check, and remove duplicate or stale claims",
+      "omega: implement only bounded repo changes, run suites, publish curated receipts"
+    ],
+    "batching_policy": "Aletheon may choose compact multi-phase batches when evidence gates stay green, but each phase must leave its own receipts.",
+    "minimum_receipts_per_phase": [
+      "stage plan",
+      "candidate system pack or explicit no-addition rationale",
+      "alpha cleanup/security receipt",
+      "deep suite status",
+      "materialize L5 suite status",
+      "closeout summary",
+      "publication receipt after push"
+    ]
+  },
+  "handoff_assertion": "v121-v140 may begin only after the v120 content commit and v120 publication receipt commit are both pushed and verified on the shared omega line.",
+  "effective_success": true
+}
