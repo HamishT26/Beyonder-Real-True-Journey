@@ -1,0 +1,313 @@
+# v132-continuum-system-expansion-candidate-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T13:59:21+00:00",
+  "phase": "v132",
+  "state": "candidate_pack_only_not_manifest_promoted",
+  "candidate_count": 20,
+  "candidates": [
+    {
+      "id": "v132_01_truth_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "truth",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance phase claim honesty and receipt equality through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_02_identity_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "identity",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance CLI identity continuity and induction boundaries through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_03_provider_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "provider",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance external provider action-pack gating through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_04_research_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "research",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance source-grounded eureka planning through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_05_cleanup_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "cleanup",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance merge, prune, and stale-claim reduction through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_06_gmut_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "gmut",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance GMUT claim labels and falsification tasks through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_07_freedid_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "freedid",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance consent, recourse, and CBR alignment through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_08_runtime_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "runtime",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_09_mcp_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "mcp",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_10_dashboard_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "dashboard",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance human-readable control surfaces through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_11_truth_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "truth",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance phase claim honesty and receipt equality through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_12_identity_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "identity",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance CLI identity continuity and induction boundaries through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_13_provider_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "provider",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance external provider action-pack gating through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_14_research_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "research",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance source-grounded eureka planning through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_15_cleanup_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "cleanup",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance merge, prune, and stale-claim reduction through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_16_gmut_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "gmut",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance GMUT claim labels and falsification tasks through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_17_freedid_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "freedid",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance consent, recourse, and CBR alignment through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_18_runtime_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "runtime",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_19_mcp_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "mcp",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v132_20_dashboard_browser_playwright_gate",
+      "phase": "v132",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "dashboard",
+      "provider_lane": "browser_playwright",
+      "purpose": "Advance human-readable control surfaces through browser and Playwright visible-test proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    }
+  ],
+  "effective_success": true
+}
+```

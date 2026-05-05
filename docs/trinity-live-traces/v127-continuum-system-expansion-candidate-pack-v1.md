@@ -1,0 +1,313 @@
+# v127-continuum-system-expansion-candidate-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T13:59:20+00:00",
+  "phase": "v127",
+  "state": "candidate_pack_only_not_manifest_promoted",
+  "candidate_count": 20,
+  "candidates": [
+    {
+      "id": "v127_01_truth_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "truth",
+      "provider_lane": "neon",
+      "purpose": "Advance phase claim honesty and receipt equality through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_02_identity_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "identity",
+      "provider_lane": "neon",
+      "purpose": "Advance CLI identity continuity and induction boundaries through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_03_provider_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "provider",
+      "provider_lane": "neon",
+      "purpose": "Advance external provider action-pack gating through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_04_research_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "research",
+      "provider_lane": "neon",
+      "purpose": "Advance source-grounded eureka planning through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_05_cleanup_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "cleanup",
+      "provider_lane": "neon",
+      "purpose": "Advance merge, prune, and stale-claim reduction through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_06_gmut_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "gmut",
+      "provider_lane": "neon",
+      "purpose": "Advance GMUT claim labels and falsification tasks through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_07_freedid_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "freedid",
+      "provider_lane": "neon",
+      "purpose": "Advance consent, recourse, and CBR alignment through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_08_runtime_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "runtime",
+      "provider_lane": "neon",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_09_mcp_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "mcp",
+      "provider_lane": "neon",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_10_dashboard_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "dashboard",
+      "provider_lane": "neon",
+      "purpose": "Advance human-readable control surfaces through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_11_truth_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "truth",
+      "provider_lane": "neon",
+      "purpose": "Advance phase claim honesty and receipt equality through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_12_identity_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "identity",
+      "provider_lane": "neon",
+      "purpose": "Advance CLI identity continuity and induction boundaries through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_13_provider_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "provider",
+      "provider_lane": "neon",
+      "purpose": "Advance external provider action-pack gating through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_14_research_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "research",
+      "provider_lane": "neon",
+      "purpose": "Advance source-grounded eureka planning through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_15_cleanup_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "cleanup",
+      "provider_lane": "neon",
+      "purpose": "Advance merge, prune, and stale-claim reduction through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_16_gmut_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "gmut",
+      "provider_lane": "neon",
+      "purpose": "Advance GMUT claim labels and falsification tasks through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_17_freedid_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "freedid",
+      "provider_lane": "neon",
+      "purpose": "Advance consent, recourse, and CBR alignment through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_18_runtime_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "runtime",
+      "provider_lane": "neon",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_19_mcp_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "mcp",
+      "provider_lane": "neon",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v127_20_dashboard_neon_gate",
+      "phase": "v127",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "dashboard",
+      "provider_lane": "neon",
+      "purpose": "Advance human-readable control surfaces through serverless Postgres sandbox schema proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    }
+  ],
+  "effective_success": true
+}
+```
