@@ -908,6 +908,7 @@ def report_markdown(title: str, payload: Any) -> str:
 
 def stage_allowlist(phase: str) -> dict[str, Any]:
     paths = [
+        "scripts/trinity_v76_candidate_systems.py",
         "scripts/trinity_v96_v120_candidate_systems.py",
         "scripts/trinity_v96_v120_beta_alpha_omega.py",
         "scripts/trinity_expansion_manifest_validator.py",

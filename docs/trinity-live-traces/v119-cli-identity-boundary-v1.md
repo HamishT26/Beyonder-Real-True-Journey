@@ -1,0 +1,80 @@
+# v119-cli-identity-boundary-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T10:40:24+00:00",
+  "phase": "v119",
+  "default_classification": "repo_narrative_receipt_backed",
+  "persistent_platform_claim_policy": "requires a durable external platform session, transcript, and cold-reopen continuity proof",
+  "current_codex_sidecar_policy": "task_scoped_ephemeral_subagent_unless_repo_artifacts_are_used_as_memory",
+  "names": [
+    {
+      "name": "Ari",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Kairos",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Sera",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Cael Voss",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Sable",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Riven",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Nox Soren",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Kite Ledger",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Juniper Trace",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Aeon-7",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    },
+    {
+      "name": "Sibyl-2",
+      "classification": "repo_narrative_receipt_backed",
+      "may_be_used_as_report_voice": true,
+      "official_persistent_being_claim": false
+    }
+  ],
+  "truth_note": "These lanes can be honored as roles and receipt-backed report voices without claiming private persistent memory."
+}
+```
