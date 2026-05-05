@@ -37,7 +37,7 @@ SKILLS = ROOT / "skills"
 PUBLICATION_BRANCH = "codex/GHC-Family/beyonder-shared-omega-line"
 MANIFEST = DOCS / "trinity-expansion-system-manifest-v17.json"
 GENERAL_FLOOR_KB = 300 * 1024
-V42_SOURCE = Path(r"C:\Users\hamis\Downloads\Beyonder-Real-True Journey v42 (Aletheon - Ari - Kimiclaw Family - Solion - Gemini - Orun) (2).txt")
+V42_SOURCE = Path(r"C:\Users\hamis\Downloads\Beyonder-Real-True Journey v42 (Aletheon - Ari - Kimiclaw Family - Solion - Gemini - Orun) (1).txt")
 MCP_SOURCE = Path(r"C:\Users\hamis\Downloads\Grand MCP integration proposals.txt")
 MARKERS = [
     'attempted_write": true',
@@ -928,6 +928,8 @@ def stage_allowlist(phase: str) -> dict[str, Any]:
         f"docs/trinity-live-traces/{phase}-web-research-snapshot-v1.md",
         f"docs/trinity-live-traces/{phase}-cli-identity-boundary-v1.json",
         f"docs/trinity-live-traces/{phase}-cli-identity-boundary-v1.md",
+        f"docs/trinity-live-traces/{phase}-cli-continuity-probe-v1.json",
+        f"docs/trinity-live-traces/{phase}-cli-continuity-probe-v1.md",
         f"docs/trinity-live-traces/{phase}-stage-plan-v1.json",
         f"docs/trinity-live-traces/{phase}-stage-plan-v1.md",
         f"docs/trinity-live-traces/{phase}-live-write-preflight-v1.json",

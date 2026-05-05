@@ -44,11 +44,11 @@ STAGE_SCHEDULE: dict[str, dict[str, str]] = {
     "v113": {"kind": "omega", "cycle": "v113_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
     "v114": {"kind": "omega", "cycle": "v114_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
     "v115": {"kind": "omega", "cycle": "v115_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
-    "v116": {"kind": "beta", "cycle": "v116_v117_dual", "note": "dual-action planning stage"},
-    "v117": {"kind": "omega", "cycle": "v116_v117_dual", "note": "dual-action suite execution stage"},
-    "v118": {"kind": "beta", "cycle": "v118_v120_trinity", "note": "final trinity planning stage"},
-    "v119": {"kind": "alpha", "cycle": "v118_v120_trinity", "note": "final record-only cleanup stage"},
-    "v120": {"kind": "omega", "cycle": "v118_v120_trinity", "note": "final suite execution and closeout stage"},
+    "v116": {"kind": "omega", "cycle": "v116_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v117": {"kind": "omega", "cycle": "v117_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v118": {"kind": "omega", "cycle": "v118_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v119": {"kind": "omega", "cycle": "v119_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
+    "v120": {"kind": "omega", "cycle": "v120_packed_trinity", "packed_workflow": "beta_alpha_omega", "note": "packed Beta-Alpha-Omega planning, cleanup, suite, and receipt stage"},
 }
 
 ALPHA_PHASES = {phase for phase, spec in STAGE_SCHEDULE.items() if spec["kind"] == "alpha"}
