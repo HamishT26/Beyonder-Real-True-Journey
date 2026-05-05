@@ -1,0 +1,20 @@
+# v141-v160 v2 Stage Allowlist v1
+
+Stage only the new `v141-v160-v2` artifacts:
+
+- `docs/trinity-live-traces/v141-v160-v2-cli-council-consultation-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-cli-council-consultation-v1.md`
+- `docs/trinity-live-traces/v141-v160-v2-phase-run-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-phase-run-v1.md`
+- `docs/trinity-live-traces/v141-v160-v2-provider-plugin-readiness-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-provider-plugin-readiness-v1.md`
+- `docs/trinity-live-traces/v141-v160-v2-eureka-expansion-candidate-pack-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-eureka-expansion-candidate-pack-v1.md`
+- `docs/trinity-live-traces/v141-v160-v2-alpha-security-cleanup-board-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-alpha-security-cleanup-board-v1.md`
+- `docs/trinity-live-traces/v141-v160-v2-closeout-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-closeout-v1.md`
+- `docs/trinity-live-traces/v141-v160-v2-stage-allowlist-v1.json`
+- `docs/trinity-live-traces/v141-v160-v2-stage-allowlist-v1.md`
+
+Do not stage raw CLI logs, auth HTML, plugin 403 noise, MCP shutdown warnings, carried-forward dirty worktree files, provider mutation outputs, or secret-bearing configuration.
