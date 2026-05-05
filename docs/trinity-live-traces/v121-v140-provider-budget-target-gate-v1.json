@@ -1,0 +1,125 @@
+﻿{
+    "artifact_id":  "v121-v140-provider-budget-target-gate-v1",
+    "generated_local":  "2026-05-06T02:35:02.7244144+12:00",
+    "generated_utc":  "2026-05-05T14:35:02.7244144Z",
+    "operator_budget_ceiling_usd_per_provider":  50,
+    "budget_status":  "ceiling_recorded_not_spent",
+    "attempted_external_spend":  0,
+    "attempted_external_provider_mutations":  0,
+    "mutation_rule":  "Do not spend or mutate external provider state until exact target, spend ceiling, rollback path, and sanitized receipt path are all present for that provider action.",
+    "provider_targets":  [
+                             {
+                                 "provider":  "browser_playwright",
+                                 "target_status":  "local_surface_only",
+                                 "target":  "no browser target URL specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "close browser context; no browser launched in this run"
+                             },
+                             {
+                                 "provider":  "circleci",
+                                 "target_status":  "missing_exact_project_pipeline",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify project/pipeline/action and cancel/revert path before live write"
+                             },
+                             {
+                                 "provider":  "cloudflare",
+                                 "target_status":  "missing_exact_account_project_resource",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify worker/route/dns resource and delete/revert command before live write"
+                             },
+                             {
+                                 "provider":  "codex_cli",
+                                 "target_status":  "known_local_cli_session",
+                                 "target":  "resumed read-only CLI sessions only",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "no mutation performed; discard temp output if needed"
+                             },
+                             {
+                                 "provider":  "codex_security",
+                                 "target_status":  "plugin_skill_surface_present",
+                                 "target":  "local security scan scope not specified for live action",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "no mutation; local scan artifacts only after scope chosen"
+                             },
+                             {
+                                 "provider":  "e2b",
+                                 "target_status":  "missing_exact_sandbox_template",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify sandbox/template and termination path before live write"
+                             },
+                             {
+                                 "provider":  "github",
+                                 "target_status":  "known_repo_branch",
+                                 "target":  "origin/codex/GHC-Family/beyonder-shared-omega-line",
+                                 "mutation_allowed_now":  true,
+                                 "rollback_path":  "forward-only corrective commit; no reset, rebase, or force-push"
+                             },
+                             {
+                                 "provider":  "google_drive",
+                                 "target_status":  "held_operator_hold",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "not available until exact Drive folder/file/share action is specified"
+                             },
+                             {
+                                 "provider":  "huggingface",
+                                 "target_status":  "no_local_surface_detected",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "install/configure CLI or connector target before live write"
+                             },
+                             {
+                                 "provider":  "kimi_cli",
+                                 "target_status":  "known_local_cli_session",
+                                 "target":  "resumed read-only Kimi CLI session only",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "no mutation performed; discard temp output if needed"
+                             },
+                             {
+                                 "provider":  "latex_gmut",
+                                 "target_status":  "no_local_tectonic_surface_detected",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "no live action; use bundled tectonic/plugin path or install compiler before compile receipt"
+                             },
+                             {
+                                 "provider":  "neon",
+                                 "target_status":  "missing_exact_project_database_branch",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify database/branch and drop/revert path before live write"
+                             },
+                             {
+                                 "provider":  "notion_expo",
+                                 "target_status":  "missing_notion_destination_or_expo_project",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify Notion page/db or Expo project and delete/revert path before live write"
+                             },
+                             {
+                                 "provider":  "oci",
+                                 "target_status":  "missing_exact_compartment_resource",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify compartment/resource and terminate/delete path before live write"
+                             },
+                             {
+                                 "provider":  "render",
+                                 "target_status":  "missing_exact_service_or_project",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify service/action and rollback/delete path before live write"
+                             },
+                             {
+                                 "provider":  "vercel",
+                                 "target_status":  "missing_exact_project_scope",
+                                 "target":  "not specified",
+                                 "mutation_allowed_now":  false,
+                                 "rollback_path":  "must specify project/deployment and rollback/delete path before live write"
+                             }
+                         ],
+    "effective_success":  true
+}
