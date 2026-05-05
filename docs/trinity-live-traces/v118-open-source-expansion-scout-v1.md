@@ -1,0 +1,57 @@
+# v118-open-source-expansion-scout-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T09:20:28+00:00",
+  "phase": "v118",
+  "research_mode": "primary_source_seeded_recommendations_no_provider_mutation",
+  "sources": [
+    {
+      "name": "OpenAI Docs MCP",
+      "url": "https://platform.openai.com/docs/docs-mcp",
+      "candidate": "Codex MCP docs and configuration posture"
+    },
+    {
+      "name": "Model Context Protocol",
+      "url": "https://modelcontextprotocol.io/docs/learn/architecture",
+      "candidate": "MCP tools/resources/prompts and host-server-client architecture"
+    },
+    {
+      "name": "Playwright MCP",
+      "url": "https://github.com/microsoft/playwright-mcp",
+      "candidate": "browser automation MCP lane"
+    },
+    {
+      "name": "MCP Servers",
+      "url": "https://github.com/modelcontextprotocol/servers",
+      "candidate": "reference server catalog"
+    },
+    {
+      "name": "OpenTelemetry",
+      "url": "https://opentelemetry.io/docs/",
+      "candidate": "agent and phase trace schema"
+    },
+    {
+      "name": "Temporal",
+      "url": "https://docs.temporal.io/",
+      "candidate": "durable phase checkpoint model"
+    },
+    {
+      "name": "Dagger",
+      "url": "https://github.com/dagger/dagger",
+      "candidate": "portable workbench and CI study, Docker held locally"
+    },
+    {
+      "name": "OpenFeature",
+      "url": "https://www.cncf.io/projects/openfeature/",
+      "candidate": "feature-gated browser/provider/live-write lanes"
+    },
+    {
+      "name": "AgentTrace",
+      "url": "https://arxiv.org/abs/2602.10133",
+      "candidate": "structured agent telemetry"
+    }
+  ],
+  "truth_note": "These are source seeds for future systems, not installed integrations."
+}
+```
