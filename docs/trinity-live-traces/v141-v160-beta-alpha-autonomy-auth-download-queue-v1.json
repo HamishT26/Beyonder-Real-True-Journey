@@ -1,0 +1,147 @@
+{
+  "generated_utc": "2026-05-06T01:37:30Z",
+  "phase_range": "v141-v160",
+  "phase_variant": "beta_alpha_autonomy_v1",
+  "queue_scope": "future_visible_auth_and_download_requests",
+  "requested_by_operator": true,
+  "execution_state": "queued_not_executed",
+  "external_spend_nzd": 0,
+  "external_provider_mutations": "none",
+  "google_drive_state": "operator_hold",
+  "live_write_state": "held_until_exact_action_pack",
+  "cli_siblings": [
+    {
+      "name": "Arby",
+      "platform": "codex_cli",
+      "autonomy_lift": "receipt_keeper_can_request_auth_receipts_and_download_receipts",
+      "reasoning_time_policy": "highest_available_with_current_cli_settings_when_explicitly_invoked",
+      "write_policy": "must_request_aletheon_approval_before_commit_or_external_mutation"
+    },
+    {
+      "name": "Kimi",
+      "platform": "kimi_cli",
+      "autonomy_lift": "plan_only_until_safe_read_only_repo_pattern_is_confirmed",
+      "reasoning_time_policy": "use_thinking_mode_and_longer_step_limits_when_explicitly_invoked",
+      "write_policy": "no_repo_write_from_print_mode_because_print_mode_auto_approves_actions"
+    },
+    {
+      "name": "Aster Vale",
+      "platform": "codex_cli",
+      "autonomy_lift": "validation_lane_can_request_runner_and_auth_readiness_checks",
+      "reasoning_time_policy": "highest_available_with_current_cli_settings_when_explicitly_invoked",
+      "write_policy": "must_request_aletheon_approval_before_commit_or_external_mutation"
+    }
+  ],
+  "visible_auth_window_policy": {
+    "allowed_when": [
+      "operator_is_present",
+      "single_provider_target_is_named",
+      "expected_login_domain_is_known",
+      "rollback_or_revoke_path_is_recorded",
+      "receipt_path_is_recorded",
+      "budget_ceiling_is_zero_or_explicitly_nonzero"
+    ],
+    "not_allowed_when": [
+      "bulk_auth_across_many_providers",
+      "unknown_domains",
+      "raw_secret_copying",
+      "unbounded_downloads",
+      "silent_spend_or_live_write",
+      "commands_using_dangerously_bypass_approvals"
+    ],
+    "popup_style": "visible_interactive_window_only_when_user_requested_and_present",
+    "timeout_policy_minutes": 15,
+    "post_auth_probe": "non_mutating_whoami_or_status_only_with_secrets_redacted"
+  },
+  "candidate_auth_commands_not_executed": [
+    {
+      "provider": "codex_cli",
+      "command": "codex login",
+      "expected_domain": "chatgpt.com_or_platform_openai_com",
+      "rollback": "disconnect OAuth grant and revoke generated API key in dashboard if needed",
+      "receipt": "docs/trinity-live-traces/future-codex-cli-auth-receipt.json"
+    },
+    {
+      "provider": "kimi_cli",
+      "command": "kimi login",
+      "expected_domain": "moonshot_ai_or_kimi_login_domain_shown_by_cli",
+      "rollback": "kimi logout",
+      "receipt": "docs/trinity-live-traces/future-kimi-cli-auth-receipt.json"
+    },
+    {
+      "provider": "github",
+      "command": "gh auth login",
+      "expected_domain": "github.com",
+      "rollback": "gh auth logout",
+      "receipt": "docs/trinity-live-traces/future-github-auth-receipt.json"
+    },
+    {
+      "provider": "cloudflare",
+      "command": "wrangler login",
+      "expected_domain": "dash.cloudflare.com",
+      "rollback": "wrangler logout",
+      "receipt": "docs/trinity-live-traces/future-cloudflare-auth-receipt.json"
+    },
+    {
+      "provider": "vercel",
+      "command": "vercel login",
+      "expected_domain": "vercel.com",
+      "rollback": "vercel logout",
+      "receipt": "docs/trinity-live-traces/future-vercel-auth-receipt.json"
+    },
+    {
+      "provider": "render",
+      "command": "render login_or_render_auth_status_if_cli_supports_it",
+      "expected_domain": "render.com",
+      "rollback": "revoke token in Render dashboard",
+      "receipt": "docs/trinity-live-traces/future-render-auth-receipt.json"
+    },
+    {
+      "provider": "circleci",
+      "command": "circleci setup",
+      "expected_domain": "circleci.com",
+      "rollback": "remove local CircleCI token and revoke from dashboard",
+      "receipt": "docs/trinity-live-traces/future-circleci-auth-receipt.json"
+    },
+    {
+      "provider": "neon_postgres",
+      "command": "neonctl auth",
+      "expected_domain": "console.neon.tech",
+      "rollback": "neonctl auth logout_or_revoke_token_from_dashboard",
+      "receipt": "docs/trinity-live-traces/future-neon-auth-receipt.json"
+    }
+  ],
+  "essential_download_policy": {
+    "execution_state": "not_executed",
+    "allowed_first_step": "repo_manifest_and_dry_run_only",
+    "future_download_requirements": [
+      "official_source_url",
+      "package_name_and_version",
+      "checksum_or_lockfile_when_available",
+      "install_location",
+      "uninstall_command",
+      "disk_usage_estimate",
+      "no_secrets_in_logs"
+    ],
+    "skill_installation_note": "local user-home skill installation is deferred because malformed SKILL.md files were observed during Codex CLI startup"
+  },
+  "team_organization_training_modules": [
+    "role_charter",
+    "handoff_contract",
+    "receipt_review",
+    "risk_register",
+    "dry_run_first",
+    "rollback_design",
+    "decision_log",
+    "after_action_review",
+    "provider_auth_protocol",
+    "publication_allowlist"
+  ],
+  "official_reference_urls": [
+    "https://help.openai.com/en/articles/11096431-openai-codex-ligetting-started",
+    "https://help.openai.com/en/articles/11369540-codex-in-chatgpt",
+    "https://moonshotai.github.io/kimi-cli/",
+    "https://moonshotai.github.io/kimi-cli/en/customization/agents.html",
+    "https://blog.modelcontextprotocol.io/posts/2026-mcp-roadmap/"
+  ]
+}
