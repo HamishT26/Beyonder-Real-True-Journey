@@ -505,6 +505,7 @@ def build_commands(
     profile: str,
     body_benchmark_mode: str,
     materialization_level: str,
+    skip_v166_v180_dashboard_run: bool,
 ) -> list[tuple[str, list[str]]]:
     if profile == "recover":
         enforce = True
@@ -1407,6 +1408,26 @@ def build_commands(
                 )
             )
 
+    include_v166_v180_dashboard = (
+        not skip_v166_v180_dashboard_run
+        and (
+            profile == "deep"
+            or (profile == "materialize" and materialization_level == "l5_ha_prod")
+        )
+    )
+    if include_v166_v180_dashboard:
+        commands.append(
+            (
+                "v166-v180 checkpointed Chrome/CLI dashboard runner",
+                [
+                    PYTHON_BIN,
+                    "scripts/trinity_v166_v180_low_live_chrome_cli.py",
+                    "--run-all",
+                    "--verify-artifacts",
+                ],
+            )
+        )
+
     if body_benchmark_mode == "off":
         commands = [
             item
@@ -1426,6 +1447,7 @@ def render_profile_catalog() -> str:
     for name in ("standard", "quick", "deep", "collab", "materialize", "recover"):
         lines.append(f"- {name}: {PROFILE_HELP[name]}")
     lines.append("- --quick-mode: legacy alias for --profile quick")
+    lines.append("- --skip-v166-v180-dashboard-run: disables the checkpointed Chrome/CLI dashboard runner in deep and L5 materialize runs")
     return "\n".join(lines)
 
 
@@ -1892,6 +1914,11 @@ def main() -> None:
         help="Skip body_track_runner benchmark guardrail stage.",
     )
     parser.add_argument(
+        "--skip-v166-v180-dashboard-run",
+        action="store_true",
+        help="Skip the checkpointed v166-v180 Chrome/CLI dashboard runner that deep and L5 materialize runs include by default.",
+    )
+    parser.add_argument(
         "--body-benchmark-mode",
         choices=("auto", "off", "observe", "enforce"),
         default="auto",
@@ -2000,6 +2027,7 @@ def main() -> None:
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
         materialization_level=args.materialization_level,
+        skip_v166_v180_dashboard_run=args.skip_v166_v180_dashboard_run,
     )
     resumed_step_count = 0
     recovery_parent_run = ""

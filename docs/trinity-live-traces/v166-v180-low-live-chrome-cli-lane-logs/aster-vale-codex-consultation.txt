@@ -1,0 +1,24 @@
+Aster Vale consultation, read-only.
+
+1. **Dashboard Cadence Risks**
+
+- Low-write checkpointing can drift if dashboard snapshots are treated as live truth instead of dated evidence.
+- Cadence gaps may hide regressions between v166-v180 checkpoints, especially if “green” dashboard state is copied forward without fresh suite evidence.
+- Over-frequent writes risk turning the dashboard into churn, weakening its value as a stable validation surface.
+- Each checkpoint should record: phase version, timestamp, suite source, pass/fail/blocked state, and any operator-held dependencies.
+
+2. **Suite Hook Risks**
+
+- Hooks that silently skip unavailable suites are the main risk. A skipped suite must surface as `blocked` or `not_run`, not pass.
+- Suite hooks should avoid mutating publication, cleanup, branch, or runtime state during validation.
+- Dashboard ingestion should distinguish raw suite output from interpreted dashboard status.
+- Any hook that depends on filesystem, Docker/K8s, overlay boot, or external services needs explicit precondition reporting.
+
+3. **Tests Aletheon Should Run Before Committing**
+
+- Run the dashboard generation/validation command from a clean working tree snapshot and verify no unintended files change.
+- Run the full suite hook path with expected available suites, confirming pass/fail/blocked states are faithfully represented.
+- Run a missing-suite or unavailable-dependency case to ensure it reports `blocked`/`not_run`, not success.
+- Run schema/JSON validation for all dashboard checkpoint artifacts.
+- Run a git diff review limited to intended v166-v180 dashboard/checkpoint files before staging.
+- Run any existing repo test target that covers dashboard, trace, or publication-result artifacts.

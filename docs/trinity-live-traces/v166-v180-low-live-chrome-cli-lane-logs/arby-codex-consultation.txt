@@ -1,0 +1,10 @@
+Arby receipt consultation for v166-v180 low-write Trinity Hybrid:
+
+**Checkpoint Evidence**
+Preserve only non-secret receipts: current branch/worktree identity, commit SHA before/after Aletheon work, staged vs unstaged file list, exact checkpoint names, generated artifact paths, validation command names and outcomes, and any explicit operator hold markers. Keep receipts descriptive, not credential-bearing.
+
+**Operator-Held**
+Keep secrets, tokens, private keys, account sessions, external service authorization, publication approval, Google Drive or cloud-side state changes, Docker/K8s runtime activation, and any destructive filesystem cleanup under operator control unless explicitly released by the operator.
+
+**Aletheon Pre-Commit Verification**
+Before committing, Aletheon should verify the diff is low-write and scoped to v166-v180, no secrets or environment-local paths were introduced, operator-held states are still marked as held, generated receipts match actual command/file evidence, tests or validations were run or explicitly marked unavailable, and the commit message does not overclaim persistence, publication, or runtime establishment.
