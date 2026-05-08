@@ -30,6 +30,8 @@ PHASE_RANGE = range(161, 166)
 SYSTEM_EXPANSIONS_PER_PHASE = 50
 COMMAND_SKILL_PER_PHASE = 100
 EUREKA_PER_PHASE = 50
+TAPESTRY_INLINE_ENTRY_LIMIT = 12
+TAPESTRY_ACTIVE_SOFT_LIMIT_BYTES = 300_000
 CHROME_PLUGIN_ROOT = Path.home() / ".codex" / "plugins" / "cache" / "openai-bundled" / "chrome" / "0.1.7"
 
 
@@ -115,6 +117,44 @@ def read_json(path: Path, fallback: Any) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return fallback
+
+
+def read_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows = []
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        if not line.strip():
+            continue
+        try:
+            item = json.loads(line)
+        except Exception:
+            continue
+        if isinstance(item, dict):
+            rows.append(item)
+    return rows
+
+
+def append_jsonl(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True, ensure_ascii=False) + "\n")
+
+
+def archive_stamp(value: str) -> str:
+    return (
+        value.replace(":", "")
+        .replace("+", "Z")
+        .replace("-", "")
+        .replace(".", "")
+    )
+
+
+def dashboard_archive_root() -> Path:
+    preferred = Path("D:/GHC-Archives/trinity-dashboard-tapestry") / HYphen_LANE
+    if Path("D:/").exists():
+        return preferred
+    return TRACE / f"{HYphen_LANE}-dashboard-tapestry-archive-fallback"
 
 
 def git_value(*args: str) -> str:
@@ -230,6 +270,13 @@ def artifact_paths() -> dict[str, Path]:
         "verification_json": TRACE / f"{HYphen_LANE}-artifact-verification-v1.json",
         "closeout_json": TRACE / f"{HYphen_LANE}-closeout-v1.json",
         "closeout_md": TRACE / f"{HYphen_LANE}-closeout-v1.md",
+        "tapestry_jsonl": TRACE / f"{HYphen_LANE}-dashboard-tapestry-v1.jsonl",
+        "tapestry_index_json": TRACE / f"{HYphen_LANE}-dashboard-tapestry-index-v1.json",
+        "tapestry_md": TRACE / f"{HYphen_LANE}-dashboard-tapestry-v1.md",
+        "archive_receipt_json": TRACE / f"{HYphen_LANE}-dashboard-archive-receipt-v1.json",
+        "archive_receipt_md": TRACE / f"{HYphen_LANE}-dashboard-archive-receipt-v1.md",
+        "rollover_policy_json": TRACE / f"{HYphen_LANE}-dashboard-rollover-policy-v1.json",
+        "rollover_policy_md": TRACE / f"{HYphen_LANE}-dashboard-rollover-policy-v1.md",
         "allowlist_json": TRACE / f"{HYphen_LANE}-stage-allowlist-v1.json",
         "allowlist_md": TRACE / f"{HYphen_LANE}-stage-allowlist-v1.md",
         "publication_json": TRACE / f"{HYphen_LANE}-publication-result-v1.json",
@@ -459,8 +506,152 @@ def build_provider_drafts() -> dict[str, Any]:
     }
 
 
+def compact_tapestry_entry(state: dict[str, Any], entry_id: str, archive_file: Path) -> dict[str, Any]:
+    lanes = []
+    for lane in state.get("lanes", []):
+        transcript = str(lane.get("transcript", ""))
+        lanes.append(
+            {
+                "id": lane.get("id"),
+                "formal_name": lane.get("formal_name") or lane.get("name"),
+                "platform": lane.get("platform"),
+                "role": lane.get("role"),
+                "status": lane.get("status"),
+                "transcript_path": lane.get("transcript_path"),
+                "transcript": transcript,
+                "transcript_chars": len(transcript),
+            }
+        )
+    return {
+        "entry_id": entry_id,
+        "generated_utc": state.get("generated_utc"),
+        "phase_range": state.get("phase_range"),
+        "dashboard_mode": state.get("dashboard_mode"),
+        "summary": state.get("summary"),
+        "archive_file": str(archive_file),
+        "archive_file_sha256": sha256_path(archive_file),
+        "lanes": lanes,
+        "phases": [
+            {
+                "phase": phase.get("phase"),
+                "theme": phase.get("theme"),
+                "lead_name": phase.get("lead_name"),
+                "segments": phase.get("segments", []),
+            }
+            for phase in state.get("phases", [])
+        ],
+        "google_drive_state": state.get("google_drive_state"),
+        "external_provider_mutations": state.get("external_provider_mutations"),
+        "external_spend_nzd": state.get("external_spend_nzd"),
+    }
+
+
+def update_dashboard_tapestry(state: dict[str, Any], generated: str) -> dict[str, Any]:
+    paths = artifact_paths()
+    archive_root = dashboard_archive_root()
+    archive_root.mkdir(parents=True, exist_ok=True)
+    entry_id = f"{HYphen_LANE}-{archive_stamp(generated)}"
+    archive_file = archive_root / f"{entry_id}.json"
+    full_snapshot = {
+        "entry_id": entry_id,
+        "archived_utc": now_iso(),
+        "archive_mode": "d_drive_full_snapshot_with_repo_jsonl_index",
+        "dashboard_state": state,
+    }
+    write_json(archive_file, full_snapshot)
+
+    compact = compact_tapestry_entry(state, entry_id, archive_file)
+    append_jsonl(paths["tapestry_jsonl"], compact)
+    entries = read_jsonl(paths["tapestry_jsonl"])
+    inline_entries = entries[-TAPESTRY_INLINE_ENTRY_LIMIT:]
+    active_size = len(json.dumps({**state, "tapestry_entries": inline_entries}, ensure_ascii=False).encode("utf-8"))
+    rollover_policy = {
+        "generated_utc": generated,
+        "active_soft_limit_bytes": TAPESTRY_ACTIVE_SOFT_LIMIT_BYTES,
+        "active_estimated_bytes": active_size,
+        "inline_entry_limit": TAPESTRY_INLINE_ENTRY_LIMIT,
+        "rollover_recommended": active_size >= TAPESTRY_ACTIVE_SOFT_LIMIT_BYTES,
+        "rollover_trigger": "when active dashboard state reaches the soft limit or the Chrome tab becomes heavy",
+        "rollover_action": "archive current state to D drive, close the old dashboard tab through Chrome automation, then open a fresh dashboard tab",
+        "web_page_self_close_truth": "the page cannot safely close arbitrary Chrome tabs by itself; Codex Chrome automation performs that handoff when requested or when threshold is reached",
+    }
+    index = {
+        "generated_utc": generated,
+        "entry_count": len(entries),
+        "latest_entry_id": entry_id,
+        "repo_tapestry_jsonl": rel(paths["tapestry_jsonl"]),
+        "repo_tapestry_index": rel(paths["tapestry_index_json"]),
+        "d_drive_archive_root": str(archive_root),
+        "latest_archive_file": str(archive_file),
+        "latest_archive_sha256": sha256_path(archive_file),
+        "inline_entries": len(inline_entries),
+        "rollover_policy": rollover_policy,
+    }
+    receipt = {
+        "generated_utc": generated,
+        "archive_root": str(archive_root),
+        "latest_archive_file": str(archive_file),
+        "latest_archive_sha256": sha256_path(archive_file),
+        "repo_tapestry_jsonl": rel(paths["tapestry_jsonl"]),
+        "repo_tapestry_index": rel(paths["tapestry_index_json"]),
+        "archive_write_success": archive_file.exists(),
+        "external_provider_mutations": "none",
+        "external_spend_nzd": 0,
+    }
+    write_json(paths["tapestry_index_json"], index)
+    write_json(paths["archive_receipt_json"], receipt)
+    write_json(paths["rollover_policy_json"], rollover_policy)
+    write_md(
+        paths["tapestry_md"],
+        "\n".join(
+            [
+                "# v161-v165 Dashboard Tapestry",
+                "",
+                f"- entries recorded: {len(entries)}",
+                f"- inline entries shown on dashboard: {len(inline_entries)}",
+                f"- D drive archive root: {archive_root}",
+                f"- latest entry: {entry_id}",
+                "- full snapshots stay in the D drive archive mirror and compact history stays in the repo trace ledger",
+            ]
+        ),
+    )
+    write_md(
+        paths["archive_receipt_md"],
+        "\n".join(
+            [
+                "# v161-v165 Dashboard Archive Receipt",
+                "",
+                f"- archive write success: {receipt['archive_write_success']}",
+                f"- latest archive file: {archive_file}",
+                f"- latest archive sha256: {receipt['latest_archive_sha256']}",
+                "- provider writes: none",
+                "- spend: 0 NZD",
+            ]
+        ),
+    )
+    write_md(
+        paths["rollover_policy_md"],
+        "\n".join(
+            [
+                "# v161-v165 Dashboard Rollover Policy",
+                "",
+                f"- active soft limit bytes: {TAPESTRY_ACTIVE_SOFT_LIMIT_BYTES}",
+                f"- active estimated bytes: {active_size}",
+                f"- rollover recommended now: {rollover_policy['rollover_recommended']}",
+                "- action: archive, close old Chrome dashboard tab, open a fresh dashboard tab",
+                "- truth boundary: the web page cannot safely close arbitrary Chrome tabs by itself",
+            ]
+        ),
+    )
+    return {
+        "index": index,
+        "rollover_policy": rollover_policy,
+        "entries": inline_entries,
+    }
+
+
 def dashboard_html(state: dict[str, Any]) -> str:
-    embedded = json.dumps(state, ensure_ascii=False)
+    embedded = json.dumps(state, ensure_ascii=False).replace("</", "<\\/")
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -504,21 +695,33 @@ def dashboard_html(state: dict[str, Any]) -> str:
     .eyebrow {{ color: var(--gold); letter-spacing: .17em; text-transform: uppercase; font-size: 12px; }}
     h1 {{ margin: 10px 0 8px; font-size: clamp(34px, 6vw, 76px); line-height: .92; max-width: 980px; }}
     p {{ margin: 8px 0 0; color: var(--muted); font-size: 18px; max-width: 950px; }}
-    .metrics, .phases, .lanes {{ display: grid; gap: 14px; margin-top: 18px; }}
+    .metrics, .phases, .lanes, .tapestry-grid {{ display: grid; gap: 14px; margin-top: 18px; }}
     .metrics {{ grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }}
     .phases {{ grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }}
     .lanes {{ grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }}
-    .card, .lane, .phase {{
+    .tapestry-grid {{ grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }}
+    .card, .lane, .phase, .tapestry-entry {{
       border: 1px solid var(--line);
       border-radius: 24px;
       padding: 18px;
       background: var(--panel);
       box-shadow: 0 18px 60px rgba(0,0,0,.22);
     }}
-    .card span, .phase span, .lane span {{ display: block; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }}
+    .tapestry {{
+      margin-top: 22px;
+      border: 1px solid rgba(244, 199, 107, .28);
+      border-radius: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(244,199,107,.10), rgba(126,215,247,.06));
+    }}
+    .tapestry h2 {{ margin: 0; font-size: clamp(26px, 4vw, 46px); }}
+    .tapestry .meta {{ margin-top: 8px; color: var(--muted); font-size: 15px; overflow-wrap: anywhere; }}
+    .card span, .phase span, .lane span, .tapestry-entry span {{ display: block; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }}
     .card strong {{ display: block; margin-top: 10px; color: var(--green); font-size: 24px; overflow-wrap: anywhere; }}
-    .phase b, .lane b {{ display: block; margin-top: 8px; color: var(--ink); font-size: 22px; }}
-    .phase em, .lane em {{ display: block; margin-top: 6px; color: var(--blue); font-style: normal; }}
+    .phase b, .lane b, .tapestry-entry b {{ display: block; margin-top: 8px; color: var(--ink); font-size: 22px; }}
+    .phase em, .lane em, .tapestry-entry em {{ display: block; margin-top: 6px; color: var(--blue); font-style: normal; overflow-wrap: anywhere; }}
+    details {{ margin-top: 12px; border-top: 1px solid rgba(180,238,196,.16); padding-top: 10px; }}
+    summary {{ cursor: pointer; color: var(--gold); font-weight: 700; }}
     pre {{
       margin: 14px 0 0;
       padding: 14px;
@@ -547,6 +750,7 @@ def dashboard_html(state: dict[str, Any]) -> str:
     <section class="metrics" id="metrics"></section>
     <section class="phases" id="phases"></section>
     <section class="lanes" id="lanes"></section>
+    <section class="tapestry" id="tapestry"></section>
     <footer id="footer"></footer>
   </main>
   <script id="embedded-state" type="application/json">{embedded}</script>
@@ -563,7 +767,34 @@ def dashboard_html(state: dict[str, Any]) -> str:
       }}
     }}
     function metric(label, value, cls = "") {{
-      return `<article class="card"><span>${{label}}</span><strong class="${{cls}}">${{value}}</strong></article>`;
+      return `<article class="card"><span>${{esc(label)}}</span><strong class="${{esc(cls)}}">${{esc(value)}}</strong></article>`;
+    }}
+    function esc(value) {{
+      return String(value ?? "").replace(/[&<>"']/g, ch => ({{
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }}[ch]));
+    }}
+    function renderTapestry(state) {{
+      const tapestry = state.tapestry || {{}};
+      const index = tapestry.index || {{}};
+      const policy = tapestry.rollover_policy || {{}};
+      const entries = (tapestry.entries || []).slice().reverse();
+      const cards = entries.map((entry, idx) => {{
+        const laneBlocks = (entry.lanes || []).map(lane =>
+          `<details ${{idx === 0 ? "open" : ""}}><summary>${{esc(lane.formal_name)}} / ${{esc(lane.role)}} / ${{esc(lane.transcript_chars)}} chars</summary><pre>${{esc(lane.transcript)}}</pre></details>`
+        ).join("");
+        return `<article class="tapestry-entry"><span>${{esc(entry.phase_range)}} / archived input</span><b>${{esc(entry.generated_utc)}}</b><em>${{esc(entry.archive_file)}}</em>${{laneBlocks}}</article>`;
+      }}).join("");
+      document.getElementById("tapestry").innerHTML = `
+        <h2>Dashboard Tapestry Archive</h2>
+        <div class="meta">Entries: ${{esc(index.entry_count ?? entries.length)}} / D: archive: ${{esc(index.d_drive_archive_root || "pending")}}</div>
+        <div class="meta">Rollover: ${{policy.rollover_recommended ? "recommended now" : "not needed yet"}} / soft limit: ${{esc(policy.active_soft_limit_bytes || "n/a")}} bytes / active estimate: ${{esc(policy.active_estimated_bytes || "n/a")}} bytes</div>
+        <div class="tapestry-grid">${{cards || "<article class='tapestry-entry'><b>No prior tapestry entries yet.</b></article>"}}</div>
+      `;
     }}
     function render(state) {{
       document.getElementById("summary").textContent = state.summary;
@@ -576,12 +807,13 @@ def dashboard_html(state: dict[str, Any]) -> str:
         metric("Updated", state.generated_utc)
       ].join("");
       document.getElementById("phases").innerHTML = state.phases.map(p =>
-        `<article class="phase"><span>${{p.theme}}</span><b>${{p.phase}}</b><em>${{p.lead_name}} / ${{p.segments.join(" + ")}}</em><p>${{p.theme_note}}</p></article>`
+        `<article class="phase"><span>${{esc(p.theme)}}</span><b>${{esc(p.phase)}}</b><em>${{esc(p.lead_name)}} / ${{esc(p.segments.join(" + "))}}</em><p>${{esc(p.theme_note)}}</p></article>`
       ).join("");
       document.getElementById("lanes").innerHTML = state.lanes.map(lane =>
-        `<article class="lane"><span>${{lane.platform}}</span><b>${{lane.formal_name}}</b><em>${{lane.role}} / ${{lane.status}}</em><pre>${{lane.transcript}}</pre></article>`
+        `<article class="lane"><span>${{esc(lane.platform)}}</span><b>${{esc(lane.formal_name)}}</b><em>${{esc(lane.role)}} / ${{esc(lane.status)}}</em><pre>${{esc(lane.transcript)}}</pre></article>`
       ).join("");
-      document.getElementById("footer").textContent = "Refreshes every " + state.dashboard_refresh_seconds + "s when served over localhost. File mode uses embedded snapshot.";
+      renderTapestry(state);
+      document.getElementById("footer").textContent = "Refreshes every " + state.dashboard_refresh_seconds + "s when served over localhost. File mode uses embedded snapshot. Full history is mirrored to D: and compact history stays in repo traces.";
     }}
     async function tick() {{ render(await loadState()); }}
     tick();
@@ -616,6 +848,7 @@ def run_all() -> dict[str, Any]:
     chrome = chrome_checks()
     lanes = build_lane_transcripts(generated)
     dashboard_state = build_dashboard_state(generated, phases, lanes)
+    dashboard_state["tapestry"] = update_dashboard_tapestry(dashboard_state, generated)
     cli = build_cli_consultation(lanes, versions)
     systems = build_system_expansions(phases)
     eureka = build_eureka_tasks(phases)
@@ -635,6 +868,9 @@ def run_all() -> dict[str, Any]:
         "command_count": command_skill["command_count"],
         "skill_count": command_skill["skill_count"],
         "dashboard": rel(paths["dashboard_html"]),
+        "dashboard_tapestry_entries": dashboard_state["tapestry"]["index"]["entry_count"],
+        "dashboard_archive_root": dashboard_state["tapestry"]["index"]["d_drive_archive_root"],
+        "dashboard_rollover_recommended": dashboard_state["tapestry"]["rollover_policy"]["rollover_recommended"],
         "cli_lanes": [lane["id"] for lane in lanes],
         "google_drive_state": "operator_hold",
         "external_provider_mutations": "none",
@@ -677,13 +913,13 @@ def run_all() -> dict[str, Any]:
     write_json(paths["alpha_json"], alpha)
     write_md(paths["alpha_md"], "# v161-v165 Alpha Cleanup and Security\n\n- cleanup mode: classification only\n- delete actions: 0\n- provider writes: none\n- Google Drive: operator_hold")
     write_json(paths["surface_json"], surface)
-    write_md(paths["surface_md"], "# v161-v165 Hybrid Terminal Surface\n\n- preferred view: one Chrome dashboard tab with three terminal-like panels\n- native terminal embedding: deferred\n- localhost polling: supported when a local server is running")
+    write_md(paths["surface_md"], "# v161-v165 Hybrid Terminal Surface\n\n- preferred view: one Chrome dashboard tab with three terminal-like panels\n- native terminal embedding: deferred\n- localhost polling: supported when a local server is running\n- dashboard tapestry: active view keeps compact history; full snapshots mirror to D drive")
     write_json(paths["provider_json"], providers)
     write_md(paths["provider_md"], "# v161-v165 Deferred Live-Write Pack Drafts\n\n- all provider packs are draft-only\n- spend: 0 NZD\n- broad auth: not opened")
     write_json(paths["source_json"], sources)
     write_md(paths["source_md"], "# v161-v165 Source Digest\n\n- journey/archive inputs are recorded by digest where private\n- raw private source text is not republished")
     write_json(paths["closeout_json"], closeout)
-    write_md(paths["closeout_md"], "# v161-v165 Low-Live Chrome/CLI Closeout\n\n- effective success: true\n- dashboard generated\n- CLI lanes recorded\n- provider writes: none\n- next: v166-v180 or future narrow live-write pack")
+    write_md(paths["closeout_md"], f"# v161-v165 Low-Live Chrome/CLI Closeout\n\n- effective success: true\n- dashboard generated\n- CLI lanes recorded\n- dashboard tapestry entries: {closeout['dashboard_tapestry_entries']}\n- dashboard archive root: {closeout['dashboard_archive_root']}\n- provider writes: none\n- next: v166-v180 or future narrow live-write pack")
     write_json(paths["allowlist_json"], allowlist)
     write_md(paths["allowlist_md"], f"# v161-v165 Stage Allowlist\n\n- include count: {len(allowlist['include'])}\n- publication rule: forward-only, allowlist-only")
     return closeout
@@ -700,13 +936,19 @@ def verify_artifacts() -> dict[str, Any]:
     closeout = read_json(paths["closeout_json"], {})
     dashboard = read_json(paths["dashboard_json"], {})
     allowlist = read_json(paths["allowlist_json"], {})
+    tapestry_index = read_json(paths["tapestry_index_json"], {})
+    archive_receipt = read_json(paths["archive_receipt_json"], {})
     status = {
         "generated_utc": now_iso(),
-        "effective_success": not missing and closeout.get("effective_success") is True,
+        "effective_success": not missing and closeout.get("effective_success") is True and archive_receipt.get("archive_write_success") is True,
         "missing": missing,
         "phase_range": closeout.get("phase_range"),
         "dashboard_mode": dashboard.get("dashboard_mode"),
         "allowlist_count": len(allowlist.get("include", [])),
+        "dashboard_tapestry_entries": tapestry_index.get("entry_count"),
+        "dashboard_archive_root": tapestry_index.get("d_drive_archive_root"),
+        "dashboard_rollover_recommended": (tapestry_index.get("rollover_policy") or {}).get("rollover_recommended"),
+        "dashboard_archive_write_success": archive_receipt.get("archive_write_success"),
         "google_drive_state": closeout.get("google_drive_state"),
         "external_provider_mutations": closeout.get("external_provider_mutations"),
         "external_spend_nzd": closeout.get("external_spend_nzd"),

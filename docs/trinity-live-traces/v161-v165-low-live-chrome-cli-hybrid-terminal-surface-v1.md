@@ -3,3 +3,4 @@
 - preferred view: one Chrome dashboard tab with three terminal-like panels
 - native terminal embedding: deferred
 - localhost polling: supported when a local server is running
+- dashboard tapestry: active view keeps compact history; full snapshots mirror to D drive
