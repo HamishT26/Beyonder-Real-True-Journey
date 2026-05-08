@@ -1,0 +1,38 @@
+[2026-05-08T03:06:01+00:00] Arby lane online.
+platform: codex_cli
+role: receipt_keeper
+authority: advisory_and_receipt_review_under_aletheon_approval
+write_scope: repo_artifact_review_only
+focus: verify the chain of evidence, phase receipts, allowlist, and publication boundaries
+safe_probe: codex --version
+live_write_state: deferred
+google_drive_state: operator_hold
+provider_spend_nzd: 0
+commit_rule: Aletheon curated allowlist only
+terminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.
+
+--- bounded_cli_consultation ---
+Arby receipt lane consultation:
+
+1. **Evidence to Preserve**
+- Exact phase label: `low-live v161-v165 Trinity Hybrid`.
+- Current branch/worktree identity, but only as reported by Aletheon or existing receipts.
+- Any runtime/session receipts already produced: timestamps, command transcripts, exit codes, generated artifact paths, hashes, and operator notes.
+- Truth-state markers: what was actually run, what was simulated, what was blocked, what was operator-held.
+- Any explicit external-boundary states, especially auth, secrets, filesystem, Drive/cloud, Docker/K8s, or live overlay claims.
+
+2. **Remain Held**
+- Secrets, tokens, credentials, env files, auth prompts, and external connector access.
+- Any live boot, real overlay activation, publish, push, commit, or tag action until verified.
+- Any claim that v161-v165 is complete unless receipts prove it.
+- Any cleanup that could erase logs, transcripts, staged diffs, or generated trace files.
+- Any state transition from “held/blocked/pending” to “done” without direct evidence.
+
+3. **Aletheon Should Verify Before Committing**
+- `git status` and branch provenance match the intended lane.
+- The staged set is receipt-only or exactly within the approved allowlist.
+- No secrets or auth material are staged.
+- Every changed artifact has a corresponding evidence trail.
+- Runtime claims match actual command outputs and timestamps.
+- Held states remain explicitly marked as held.
+- Commit message names the receipt scope and avoids overstating live completion.

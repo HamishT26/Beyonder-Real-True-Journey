@@ -1,0 +1,20 @@
+Aster Vale validation consultation for low-live v161-v165:
+
+1. **Dashboard Risks**
+- Dashboard must not imply live establishment if the phase is still low-live or operator-held.
+- Status tiles should distinguish `observed`, `blocked`, `simulated`, `operator_hold`, and `not_run`.
+- Any runtime/session evidence must show timestamps, source path, and whether it came from a real run or fixture.
+- Avoid green “ready” states unless the underlying evidence is current and reproducible.
+
+2. **CLI Boundary Risks**
+- CLI should fail closed when required runtime logs, identity records, or establishment criteria are missing.
+- Commands must not silently cross from validation into boot, publish, auth, secret access, or external service calls.
+- Dry-run and validation modes need explicit output labeling so Aletheon cannot mistake them for real execution.
+- Exit codes should separate validation failure from infrastructure unavailable, operator hold, and skipped-by-policy.
+
+3. **Tests Aletheon Should Run Before Commit**
+- Unit tests for dashboard status mapping, especially blocked/operator-hold/not-run cases.
+- CLI tests confirming validation commands do not invoke boot, auth, network, or secret-reading paths.
+- Fixture-based regression tests for v161-v165 evidence parsing and truth-state rendering.
+- Negative tests for missing runtime-session logs, stale evidence, malformed identity records, and absent establishment criteria.
+- One end-to-end low-live validation run using fixtures only, with captured output reviewed for no false success claims.
