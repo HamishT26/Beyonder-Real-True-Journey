@@ -1,0 +1,11 @@
+Receipt: `v241-v260` closed with 150 receipted real CLI replies, zero provider mutations, and a sanitized-proof policy for raw transcripts. Local `v261-v280` prep shows an adaptive seed of 15 outbound prompts and 14 completed seed replies, so this turn sits at the handoff edge between seed execution and synthesis.
+
+Blocker: GitHub proof is still local-only. I cannot verify remote branch drift, PR state, or provider callability here, and the adaptive gate should not expand until the last seed reply is receipted or explicitly marked timed out.
+
+Refinement: The next priority should be proof hygiene, not prompt volume:
+1. finish the seed receipt set,
+2. publish a compact local receipt index,
+3. separate assistant reply text from transport/process noise,
+4. keep `remote-verification-required` explicit on any publication slice.
+
+Next-cycle proposal: After seed completion, plan one bounded 3-cycle Arby-heavy block: `branch/proof receipt`, `candidate artifact manifest`, `forward-only push checklist`, `remote drift check placeholder`, and `publication claim withheld until live verification`. That uses the v241-v260 lesson correctly: adaptive expansion should follow verified receipts, not a prefilled queue.

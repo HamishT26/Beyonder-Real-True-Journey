@@ -126,7 +126,7 @@ def adaptive_rules(generated: str) -> dict[str, Any]:
         "initial_batch": "5 outbound prompts per lane, 15 outbound total, 15 expected responses, 30 total exchange items",
         "expansion_gate": "do not generate the next 3-cycle planning block until all available seed responses are summarized or marked timed_out",
         "planning_block_after_seed": "plan three 5-prompt-per-lane cycles at a time after the initial 5-prompt seed",
-        "multiplex_refresh_seconds": 180,
+        "multiplex_refresh_seconds": 30,
         "health_check_interval_minutes": 5,
         "max_response_wait_hours_per_lane": 2,
         "timeout_policy": [
@@ -159,7 +159,8 @@ def action_pack_md(generated: str) -> list[str]:
         "- Repeat in three-cycle planning blocks until the chosen 60 or 120 exchange target is reached.",
         "",
         "Runtime health:",
-        "- Multiplex TUI refreshes every 3 minutes.",
+        "- Multiplex TUI refreshes every 30 seconds by default.",
+        "- If the terminal panes become unstable, fall back to 4 seconds only for active debugging.",
         "- Supervisor checks every 5 minutes.",
         "- Allow up to 2 hours per lane response when the process is alive.",
         "- Treat silence as a health state, not a completed reply.",

@@ -1,0 +1,7 @@
+Receipt: Local repo evidence shows the v241-v260 bundle was verified with `effective_success=true`, but its own synthesis keeps the truth boundary explicit: 3 real probe responses, 150 queued touchpoints, 147 still queued rather than claimed complete. For this lane on May 14, 2026, `arby.log` shows `cycle-01-turn-02` started, while turn 01 completed with a receipted response.
+
+Blocker: Response delivery isolation is still weak. The saved raw artifact for Arby turn 01 contains the intended response plus unrelated process-termination and stderr noise, which means the capture path can contaminate lane receipts. Also, turn 02 has a start marker but no completed response receipt yet, so delivery for this turn is not proven.
+
+Refinement: Treat multiplex TUI health as two separate surfaces: lane liveness and receipt cleanliness. v241-v260 already suggested a per-lane evidence strip; I’d tighten that to `lane | cwd | branch | sandbox mode | last clean receipt | last stderr event`. Keep claims read-only and local unless a receipt explicitly proves more.
+
+Next-cycle proposal: Add a two-file delivery contract per turn: `response.txt` for assistant text only, and `transport.log` for shell/process noise. Mark a turn healthy only when both exist and `response.txt` parses cleanly. If contamination repeats, follow the adaptive rule already present: downgrade to smaller prompts and read-only probes.

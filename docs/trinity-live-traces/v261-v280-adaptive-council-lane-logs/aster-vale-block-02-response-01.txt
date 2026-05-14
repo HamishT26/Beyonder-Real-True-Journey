@@ -1,0 +1,11 @@
+Receipt:
+Authoritative checkpoint `docs/trinity-live-traces/v261-v280-adaptive-council-seed-synthesis-v1.json` shows Aster Vale ended the seed run with a guarded local-only result: Windows sandbox constraints are observable, but runtime-health and TUI success are not proven. The synthesis also preserves the cross-lane rule that response receipts and transport/process noise must be treated as separate proof surfaces.
+
+Blocker:
+The blocker is permission-profile mismatch inside this sandbox. The seed synthesis records policy-rejected or timed-out benign read probes, blocked git/path inspection, and no verified provider, billing, web, remote, or live publication surface. That means the thing currently under test is the Windows sandbox and receipt path, not the target runtime.
+
+Refinement:
+Use narrower language than “runtime healthy.” The supported claim is: `read-only + approval=never` permits bounded local observation, but does not validate multiplex TUI health, response-delivery cleanliness, or push/provider readiness. Health reporting should stay evidence-first with fields like `observed locally`, `not verified this turn`, and `remote-verification-required`.
+
+Next-cycle proposal:
+Run one minimal read-only health pass against a single known artifact or compact board, not a broad scan. Best target shape: timestamp, session id, active pane count, last clean response receipt, and last error class. If that O(1) probe works, follow with the four-gate sandbox check already implied by the synthesis: narrow `git status`, narrow `git ls-files`, one relative-path text search, and one runtime-health dry probe with no provider side effects.

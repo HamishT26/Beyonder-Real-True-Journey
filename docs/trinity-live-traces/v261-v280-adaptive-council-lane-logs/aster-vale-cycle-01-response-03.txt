@@ -1,0 +1,21 @@
+Receipt:
+Using the prior cycle direction as context, the current lane result is still a Windows sandbox readiness judgment, not a provider/runtime-success claim. In this worktree on 2026-05-14, read-only execution plus `approval=never` prevented broader validation, and several benign PowerShell/git search forms were policy-rejected or timed out.
+
+Blocker:
+The main blocker is permission-profile mismatch. This lane cannot prove runtime-health readiness when the sandbox allows only constrained reads and rejects common inspection patterns needed to verify file reachability, tracked report surfaces, and command-path behavior. That means Windows sandbox behavior is currently the thing under test, not the target runtime.
+
+Refinement:
+Treat “sandbox ready” as a narrower gate with explicit criteria:
+1. Relative-path PowerShell and git inspection commands execute reliably.
+2. Non-destructive recursive search over tracked artifacts completes inside budget.
+3. The permission profile clearly distinguishes read-only validation from write-capable runtime prep.
+4. Runtime-health claims remain blocked unless those inspection gates pass.
+
+Next-cycle proposal:
+Run a dedicated permission-profile probe pass with a minimal allowlisted command set:
+1. `git status --short`
+2. `git ls-files` on a narrow path
+3. one relative-path text search against a known report directory
+4. one runtime-health dry probe with no provider side effects
+
+If those four pass, the next cycle can separate sandbox failure from actual runtime-health failure.

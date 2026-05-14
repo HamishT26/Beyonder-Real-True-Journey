@@ -16,7 +16,8 @@ Expansion shape:
 - Repeat in three-cycle planning blocks until the chosen 60 or 120 exchange target is reached.
 
 Runtime health:
-- Multiplex TUI refreshes every 3 minutes.
+- Multiplex TUI refreshes every 30 seconds by default.
+- If the terminal panes become unstable, fall back to 4 seconds only for active debugging.
 - Supervisor checks every 5 minutes.
 - Allow up to 2 hours per lane response when the process is alive.
 - Treat silence as a health state, not a completed reply.

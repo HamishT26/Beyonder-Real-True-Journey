@@ -1,7 +1,7 @@
 # v261-v280 adaptive council multiplex TUI
 param(
   [int]$Tail = 18,
-  [int]$RefreshSeconds = 180
+  [int]$RefreshSeconds = 30
 )
 
 $ErrorActionPreference = 'SilentlyContinue'
@@ -14,19 +14,19 @@ $lanes = @(
 while ($true) {
   Clear-Host
   Write-Host 'v261-v280 Adaptive Council TUI - seed cycle'
-  Write-Host 'Refresh cadence: 180 seconds. Completion requires response files, not queued prompts.'
+  Write-Host ('Refresh cadence: ' + $RefreshSeconds + ' seconds. Completion requires response files, not queued prompts.')
   Write-Host ('Updated: ' + (Get-Date).ToString('yyyy-MM-dd HH:mm:ss zzz'))
   Write-Host ''
   foreach ($lane in $lanes) {
     Write-Host ('========== ' + $lane.Name + ' ==========')
     if (Test-Path -LiteralPath $lane.Path) {
       $content = Get-Content -LiteralPath $lane.Path
-      $started = ($content | Select-String -SimpleMatch 'V261-SEED-START').Count
-      $completed = ($content | Select-String -SimpleMatch 'V261-SEED-RESPONSE-END').Count
-      $lastSeed = ($content | Select-String -SimpleMatch 'V261-SEED-END' | Select-Object -Last 1).Line
-      if (-not $lastSeed) { $lastSeed = 'No v261 seed response completed yet.' }
-      Write-Host ('Evidence strip: started=' + $started + ' completed_seed_responses=' + $completed)
-      Write-Host ('Last seed: ' + $lastSeed)
+      $started = ($content | Select-String -Pattern 'V261-(SEED|BLOCK-[0-9]+)-START').Count
+      $completed = ($content | Select-String -Pattern 'V261-(SEED|BLOCK-[0-9]+)-RESPONSE-END').Count
+      $lastTurn = ($content | Select-String -Pattern 'V261-(SEED|BLOCK-[0-9]+)-END' | Select-Object -Last 1).Line
+      if (-not $lastTurn) { $lastTurn = 'No v261 response completed yet.' }
+      Write-Host ('Evidence strip: started=' + $started + ' completed_responses=' + $completed)
+      Write-Host ('Last turn: ' + $lastTurn)
       $content | Select-Object -Last $Tail
     } else {
       Write-Host ('Waiting for log: ' + $lane.Path)
