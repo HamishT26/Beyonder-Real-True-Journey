@@ -1,6 +1,6 @@
 # v261-v280 Adaptive Council Live Write Action Pack
 
-Generated UTC: `2026-05-14T07:11:09.888668+00:00`
+Generated UTC: `2026-05-14T10:49:59.235863+00:00`
 
 This phase starts with a small seed rather than a prefilled 150-message queue.
 
@@ -12,11 +12,12 @@ Seed shape:
 
 Expansion shape:
 - After the seed, synthesize the three lane response sets.
-- Generate the next 5 prompts per lane from the actual replies.
-- Repeat until the chosen 60 or 120 exchange target is reached.
+- Generate the next three 5-prompt-per-lane cycles from the actual replies.
+- Repeat in three-cycle planning blocks until the chosen 60 or 120 exchange target is reached.
 
 Runtime health:
-- Check every 5 minutes.
+- Multiplex TUI refreshes every 3 minutes.
+- Supervisor checks every 5 minutes.
 - Allow up to 2 hours per lane response when the process is alive.
 - Treat silence as a health state, not a completed reply.
 

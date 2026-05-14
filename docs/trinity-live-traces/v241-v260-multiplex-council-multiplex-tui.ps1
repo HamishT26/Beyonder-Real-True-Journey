@@ -2,7 +2,7 @@
 # Generated UTC: 2026-05-14T05:43:02.276491+00:00
 param(
   [int]$Tail = 18,
-  [int]$RefreshSeconds = 3
+  [int]$RefreshSeconds = 180
 )
 
 $ErrorActionPreference = 'SilentlyContinue'

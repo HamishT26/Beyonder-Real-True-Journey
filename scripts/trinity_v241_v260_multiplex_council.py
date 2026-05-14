@@ -291,7 +291,7 @@ def write_multiplex_tui(generated: str) -> Path:
 # Generated UTC: {generated}
 param(
   [int]$Tail = 18,
-  [int]$RefreshSeconds = 3
+  [int]$RefreshSeconds = 180
 )
 
 $ErrorActionPreference = 'SilentlyContinue'
