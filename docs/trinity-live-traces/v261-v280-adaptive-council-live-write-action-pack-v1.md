@@ -1,6 +1,6 @@
 # v261-v280 Adaptive Council Live Write Action Pack
 
-Generated UTC: `2026-05-14T10:49:59.235863+00:00`
+Generated UTC: `2026-05-14T11:06:06.830938+00:00`
 
 This phase starts with a small seed rather than a prefilled 150-message queue.
 
@@ -24,3 +24,6 @@ Runtime health:
 Current v241-v260 dependency:
 - Do not start v261 live messages until the current v241-v260 runner is either complete or deliberately paused.
 - The v241 runner stop file is `docs/trinity-live-traces/v241-v260-multiplex-council.stop`.
+
+Live view:
+- Use `docs/trinity-live-traces/v261-v280-adaptive-council-multiplex-tui.ps1` for the v261 seed cycle.

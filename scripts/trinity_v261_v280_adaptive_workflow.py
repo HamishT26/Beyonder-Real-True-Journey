@@ -167,6 +167,9 @@ def action_pack_md(generated: str) -> list[str]:
         "Current v241-v260 dependency:",
         "- Do not start v261 live messages until the current v241-v260 runner is either complete or deliberately paused.",
         "- The v241 runner stop file is `docs/trinity-live-traces/v241-v260-multiplex-council.stop`.",
+        "",
+        "Live view:",
+        "- Use `docs/trinity-live-traces/v261-v280-adaptive-council-multiplex-tui.ps1` for the v261 seed cycle.",
     ]
 
 
@@ -200,6 +203,7 @@ def main() -> int:
         "expected_seed_responses": seed["expected_seed_responses"],
         "source_count": source["actual_source_count"],
         "files": {key: rel(path) for key, path in paths.items()},
+        "multiplex_tui": f"docs/trinity-live-traces/{LANE}-multiplex-tui.ps1",
     }
     write_json(paths["closeout"], closeout)
     print(json.dumps(closeout, indent=2))
