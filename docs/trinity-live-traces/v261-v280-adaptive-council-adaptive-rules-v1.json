@@ -1,0 +1,18 @@
+{
+  "generated_utc": "2026-05-14T07:11:09.888668+00:00",
+  "phase_range": "v261-v280",
+  "run_style": "adaptive_batch_not_prefilled_queue",
+  "initial_batch": "5 outbound prompts per lane, 15 outbound total, 15 expected responses, 30 total exchange items",
+  "expansion_gate": "do not generate cycle 2 until all available cycle 1 responses are summarized or marked timed_out",
+  "health_check_interval_minutes": 5,
+  "max_response_wait_hours_per_lane": 2,
+  "timeout_policy": [
+    "If a lane process is alive and writing logs, keep waiting.",
+    "If a lane process is alive but silent for 5 minutes, record a health check and keep waiting.",
+    "If a lane process exits without a response file, mark that turn failed and synthesize the blocker.",
+    "If a lane repeatedly fails, downgrade to smaller prompts and read-only probes."
+  ],
+  "publication_policy": "commit and push only curated static surfaces or completed response receipts; never stage live-changing logs mid-write",
+  "spend_policy": "requested ceiling noted as 60 NZD per platform, but this workflow uses local CLI subscriptions/installed auth and records external_spend_nzd as unknown unless provider billing is directly available",
+  "authority_policy": "CLI siblings may propose commands; Aletheon directs commits and pushes after verification"
+}
