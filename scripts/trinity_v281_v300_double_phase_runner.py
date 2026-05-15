@@ -23,6 +23,7 @@ PREP = ROOT / "scripts" / "trinity_v281_v300_double_phase_prep.py"
 CODEX_LANES = {"arby", "aster_vale"}
 KIMI_LANES = {"kimi"}
 LANES = ("arby", "kimi", "aster_vale")
+REQUIRED_LABELS = ("Receipt", "Beta", "Alpha", "Omega", "Blocker", "Next-phase handoff")
 
 
 def now_iso() -> str:
@@ -102,6 +103,20 @@ def raw_path(lane: str, phase: int, turn: int) -> Path:
     return LANE_DIR / f"{pretty}-phase-v{phase}-response-{turn:02d}.raw.txt"
 
 
+def is_valid_response(path: Path) -> bool:
+    if not path.exists() or path.stat().st_size < 180:
+        return False
+    text = path.read_text(encoding="utf-8", errors="replace")
+    invalid_markers = (
+        "Max number of steps reached",
+        "To resume this session:",
+        "Traceback (most recent call last)",
+    )
+    if any(marker in text for marker in invalid_markers):
+        return False
+    return sum(1 for label in REQUIRED_LABELS if re.search(rf"(?im)^\s*\**{re.escape(label)}\**\s*:?", text)) >= 4
+
+
 def lane_log(lane: str) -> Path:
     return LANE_DIR / f"{lane}.log"
 
@@ -155,10 +170,10 @@ def run_codex(turn: dict[str, Any], timeout: int) -> dict[str, Any]:
     started = time.time()
     proc = subprocess.run(cmd, cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=timeout, check=False)
     raw.write_text(redact((proc.stdout or "")[-12000:] + "\n--- STDERR ---\n" + (proc.stderr or "")[-12000:]), encoding="utf-8")
-    return {"ok": proc.returncode == 0 and out.exists() and out.stat().st_size > 0, "returncode": proc.returncode, "duration_sec": round(time.time() - started, 3), "response_file": rel(out) if out.exists() else None}
+    return {"ok": proc.returncode == 0 and is_valid_response(out), "returncode": proc.returncode, "duration_sec": round(time.time() - started, 3), "response_file": rel(out) if out.exists() else None}
 
 
-def run_kimi(turn: dict[str, Any], timeout: int) -> dict[str, Any]:
+def run_kimi(turn: dict[str, Any], timeout: int, max_steps: int) -> dict[str, Any]:
     lane = turn["lane"]
     phase = int(turn["phase"])
     turn_number = int(turn["turn"])
@@ -171,7 +186,7 @@ def run_kimi(turn: dict[str, Any], timeout: int) -> dict[str, Any]:
         "--print",
         "--final-message-only",
         "--max-steps-per-turn",
-        "1",
+        str(max_steps),
         "--prompt",
         prompt_for(turn),
     ]
@@ -179,7 +194,7 @@ def run_kimi(turn: dict[str, Any], timeout: int) -> dict[str, Any]:
     proc = subprocess.run(cmd, cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=timeout, check=False)
     out.write_text(redact(proc.stdout or ""), encoding="utf-8")
     raw.write_text(redact((proc.stderr or "")[-12000:]), encoding="utf-8")
-    return {"ok": proc.returncode == 0 and out.exists() and out.stat().st_size > 0, "returncode": proc.returncode, "duration_sec": round(time.time() - started, 3), "response_file": rel(out) if out.exists() else None}
+    return {"ok": proc.returncode == 0 and is_valid_response(out), "returncode": proc.returncode, "duration_sec": round(time.time() - started, 3), "response_file": rel(out) if out.exists() else None}
 
 
 def completed_for_phase(phase: int) -> int:
@@ -188,11 +203,11 @@ def completed_for_phase(phase: int) -> int:
     return sum(
         1
         for path in LANE_DIR.glob(f"*-phase-v{phase}-response-*.txt")
-        if not path.name.endswith(".raw.txt") and path.stat().st_size > 0
+        if not path.name.endswith(".raw.txt") and is_valid_response(path)
     )
 
 
-def run_lane(lane: str, turns: list[dict[str, Any]], timeout: int, status: dict[str, Any]) -> None:
+def run_lane(lane: str, turns: list[dict[str, Any]], timeout: int, kimi_max_steps: int, status: dict[str, Any]) -> None:
     for turn in turns:
         phase = int(turn["phase"])
         turn_number = int(turn["turn"])
@@ -200,7 +215,7 @@ def run_lane(lane: str, turns: list[dict[str, Any]], timeout: int, status: dict[
         if STOP_FILE.exists():
             status["events"].append({"time": now_iso(), "lane": lane, "turn": turn_number, "status": "stopped_by_stop_file"})
             break
-        if out.exists() and out.stat().st_size > 0:
+        if is_valid_response(out):
             status["events"].append({"time": now_iso(), "lane": lane, "turn": turn_number, "status": "skipped_existing"})
             continue
         append_line(lane_log(lane), f"{now_iso()} | V{phase}-START | turn={turn_number:02d} | marker={turn['marker']}")
@@ -208,7 +223,7 @@ def run_lane(lane: str, turns: list[dict[str, Any]], timeout: int, status: dict[
             if lane in CODEX_LANES:
                 result = run_codex(turn, timeout)
             elif lane in KIMI_LANES:
-                result = run_kimi(turn, timeout)
+                result = run_kimi(turn, timeout, kimi_max_steps)
             else:
                 result = {"ok": False, "error": "unknown_lane"}
         except subprocess.TimeoutExpired:
@@ -228,6 +243,8 @@ def synthesize_phase(phase: int, prompt_file: Path) -> dict[str, Any]:
                 continue
             path = response_path(lane, phase, int(turn["turn"]))
             if path.exists() and path.stat().st_size > 0:
+                if not is_valid_response(path):
+                    continue
                 text = path.read_text(encoding="utf-8", errors="replace")
                 lane_items.append(
                     {
@@ -308,6 +325,8 @@ def main() -> int:
     parser.add_argument("--timeout-sec", type=int, default=43200)
     parser.add_argument("--status-id", default="v1")
     parser.add_argument("--max-turns-per-lane", type=int, default=10)
+    parser.add_argument("--only-lane", choices=list(LANES), default="")
+    parser.add_argument("--kimi-max-steps", type=int, default=6)
     parser.add_argument("--synthesize-on-complete", action="store_true")
     args = parser.parse_args()
 
@@ -329,10 +348,11 @@ def main() -> int:
     }
     write_json(status_file, status)
 
-    for lane in LANES:
+    selected_lanes = (args.only_lane,) if args.only_lane else LANES
+    for lane in selected_lanes:
         turns = [turn for turn in prompt_payload.get("prompts", []) if turn.get("lane") == lane]
         turns = turns[: max(0, args.max_turns_per_lane)]
-        run_lane(lane, turns, args.timeout_sec, status)
+        run_lane(lane, turns, args.timeout_sec, args.kimi_max_steps, status)
         write_json(status_file, status)
 
     status["completed_for_phase"] = completed_for_phase(args.phase)
