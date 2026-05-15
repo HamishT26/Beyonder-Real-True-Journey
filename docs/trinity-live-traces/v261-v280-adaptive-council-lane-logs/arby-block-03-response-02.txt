@@ -1,0 +1,20 @@
+Receipt:
+The block-02 synthesis is the authoritative checkpoint. For Arby, it supports only a local publication-prep receipt, not shared omega proof: receipt hygiene first, publication claim withheld, and any candidate artifact set should stay marked `remote-verification-required`.
+
+Blocker:
+The checkpoint keeps the blocker explicit: proof artifacts are not yet publication-safe if assistant response text and transport/process noise are mixed, and no remote branch, PR, provider, or publication state is verified in this turn. On that basis, a sanitized shared-omega allowlist cannot honestly include anything that implies push success or GitHub proof.
+
+Refinement:
+Use a minimal sanitized allowlist surface, not a publication-success surface. The safe shape from the checkpoint is:
+`response.txt` for assistant text only
+`transport.log` for shell/process noise only
+a compact local receipt board with lane, evidence path, last clean receipt, and `remote-verification-required=true`
+That keeps artifact cleanliness separate from publication readiness and preserves the forward-only/shared-omega boundary without claiming it was exercised.
+
+Next-cycle proposal:
+Run one bounded read-only preflight for the candidate allowlist only:
+1. confirm artifact pair existence
+2. confirm `response.txt` is transport-clean
+3. emit a compact manifest of publication-candidate files
+4. attach `publication-claim-withheld` and `remote-verification-required`
+5. carry a forward-only shared omega checklist as a placeholder, not as completed proof

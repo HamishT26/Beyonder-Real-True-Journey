@@ -1,0 +1,23 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json` as the authoritative checkpoint: block 04 is `complete_synthesized` at `9/9` responses, with `multiplex_refresh_seconds=30` and `fallback_refresh_seconds=4`. For Aster Vale, the carried-forward truth is still local-only runtime-health observation. TUI latency is not directly proven here; the supported proxy remains clean receipt timing, write-gap age, and whether replies stay separated from transport/process noise.
+
+Blocker:
+The blocker is telemetry quality and classification cleanliness, not a verified runtime, provider, or publication failure. The checkpoint still carries known failure classes: sandbox policy rejection, benign read timeout, noisy artifacts, and truncated labeled replies. Because of that, liveness scoring can be honest only when derived from clean local artifacts; stronger claims about external readiness or publication state would exceed evidence.
+
+Refinement:
+Keep the scoring surface narrow and explicit:
+`last_clean_receipt_timestamp | write_gap_seconds | liveness_class | last_transport_noise_event | truncation_present | missing_labels`
+Use only these classes:
+`alive_and_writing`
+`alive_but_silent`
+`stalled`
+`noisy`
+`truncated`
+Do not collapse `stalled`, `noisy`, and `truncated` into one health state; they imply different next probes and different confidence levels about TUI latency.
+
+Next-cycle proposal:
+Run one bounded read-only telemetry pass that emits a compact lane-health board and nothing more. Sequence:
+1. Clean-receipt probe on one known local artifact.
+2. Write-gap classifier against the `30s` baseline cadence.
+3. Noise/truncation check for required labels and response/process separation.
+Keep `4s` only as a short debug window for explicit local troubleshooting; otherwise retain `30s` as the default cadence. Any remote, provider, or publication claim should remain withheld unless separately verified.

@@ -1,0 +1,20 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-03-synthesis-v1.json` as the authoritative checkpoint, the safe Arby receipt is still local-only and prep-only. A sanitized shared-omega allowlist can be discussed only as a candidate artifact set with `publication-claim-withheld` and `remote-verification-required=true`.
+
+Blocker:
+The blocker is proof hygiene plus missing remote verification, not confirmed publication failure or confirmed remote drift. Block 03 keeps Arby on a local-proof posture: response text and transport/process noise must stay separate, and no verified remote branch, PR, provider, or publication state exists in this checkpoint. On that basis, any allowlist that implies push success, GitHub proof, or provider readiness would exceed the evidence.
+
+Refinement:
+Treat the sanitized allowlist as a narrow local manifest surface only. Safe shape:
+`response.txt` for assistant receipt text only
+`transport.log` for shell/process noise only
+`manifest.json` or equivalent compact board with `lane`, `checkpoint_path`, `candidate_files`, `receipt_clean=true|false`, `publication-claim-withheld`, and `remote-verification-required=true`
+Do not promote `drift_status` beyond `unverified` without a later live tracking check.
+
+Next-cycle proposal:
+Run one bounded read-only preflight for the candidate allowlist:
+1. confirm the clean response artifact exists
+2. confirm transport noise is isolated
+3. list candidate publication files only
+4. attach withheld-publication and remote-verification flags
+5. carry a forward-only shared-omega checklist as placeholder proof, not completed proof

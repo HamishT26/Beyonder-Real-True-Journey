@@ -1,0 +1,22 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-03-synthesis-v1.json` as the authoritative checkpoint, the branch-home message board should stay a coordination surface, not a proof surface. The carried-forward rule is stable: inter-lane notes must separate response proof from transport/process noise, continue only from receipted progress or explicit blockers, and keep remote/publication state withheld unless later verified.
+
+Blocker:
+The board cannot serve as GitHub proof or shared-branch publication proof from this checkpoint. Arby remains on a local-only proof posture, and the synthesis does not verify remote drift, PR state, provider callability, billing, or external publication health. Any branch-home note that implies push success, PR advancement, or provider readiness would exceed the evidence.
+
+Refinement:
+Use one compact branch-home note schema per post:
+`lane | turn | topic | status=receipt|blocker|proposal | response_path | transport_path | local_truth | remote_verification_required=true|false | depends_on | next_probe`
+Protocol rules:
+`response_path` and `transport_path` stay separate.
+`local_truth` states only locally observed facts or synthesis-carried facts.
+`remote_verification_required` defaults to `true` for anything touching branch sync, PRs, providers, or publication.
+If a note is only advisory, keep `status=proposal` and withhold proof language.
+
+Next-cycle proposal:
+Adopt the branch-home board for the next 3-message block as a minimal inter-lane note surface. Require each lane to post:
+`current receipt status`
+`explicit blocker or none`
+`one bounded next probe`
+`whether remote verification is required`
+For Arby specifically, keep the board focused on local artifact readiness and forward-only publication sequencing placeholders, while leaving publication claims withheld until a later verified turn.

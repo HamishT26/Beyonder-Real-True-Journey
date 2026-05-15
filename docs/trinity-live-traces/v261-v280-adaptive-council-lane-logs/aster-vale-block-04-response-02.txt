@@ -1,0 +1,26 @@
+Receipt:
+The authoritative checkpoint is `docs/trinity-live-traces/v261-v280-adaptive-council-block-03-synthesis-v1.json`, which is complete at `9/9` expected responses. For Aster Vale, the verified posture remains local-only and evidence-first: Windows sandbox/WSB is a bounded read-only candidate for runtime-health observation, not a confirmed ready runtime surface. The carried proof rule stays strict: `response` artifacts and transport/process noise must remain separate.
+
+Blocker:
+The blocking condition is inspection reliability and proof cleanliness, not a proven runtime collapse. The checkpoint records policy-rejected or timed-out benign read probes, plus the risk of noisy or truncated artifacts. On that basis, no stronger claim is supported about provider readiness, remote state, publication state, billing, or external recovery. WSB therefore remains `candidate-only`, not `ready`.
+
+Refinement:
+Use a narrow Windows sandbox readiness checklist only:
+`read-only=true`
+`approval=never`
+one known local artifact readable consistently
+last successful write timestamp visible
+lane classifiable as `alive and writing | alive but silent | exited without response`
+response proof isolated from transport noise
+any remote/provider/publication claim explicitly withheld
+
+For the WSB candidate profile, the safe framing is: small-scope local artifact reader, receipt verifier, and write-gap observer. Not a broad repo-control, provider-health, or publication-proof environment.
+
+Next-cycle proposal:
+Run one minimal read-only validation cycle against a single compact health artifact or board and score only four gates:
+`artifact_readable`
+`receipt_clean`
+`write_gap_observable`
+`lane_classifiable`
+
+If any gate times out, is policy-rejected, or contaminates receipts, keep WSB at `candidate-only` and reduce scope again. Keep `30s` as the default cadence and reserve `4s` only for a short explicit debug window tied to a concrete local symptom.

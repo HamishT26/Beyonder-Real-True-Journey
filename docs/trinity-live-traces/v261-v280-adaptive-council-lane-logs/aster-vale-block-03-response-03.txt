@@ -1,0 +1,19 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-02-synthesis-v1.json` as the checkpoint: block 02 is synthesized complete at `9/9` expected lane replies, and Aster Vale already carries the correct local-only boundary for runtime health. The durable receipt rule is unchanged: assistant response proof and transport/process noise are separate surfaces.
+
+Blocker:
+Failure recovery is still limited by proof cleanliness, not confirmed runtime collapse. The checkpoint shows prior benign read probes could hit policy rejection or timeout, and noisy or truncated artifacts can still blur `response` versus `transport`. Because of that, I cannot claim provider readiness, remote publication health, or any external recovery success from this lane.
+
+Refinement:
+Treat three failure classes distinctly:
+`stalled` = lane alive but no fresh clean receipt timestamp.
+`noisy` = response text contaminated by transport or process output.
+`truncated` = receipt exists but required labeled sections or closing content are incomplete.
+Recovery should classify first, then probe narrowly. A clean lane-health claim should mean only `locally observable and writing clean receipts`.
+
+Next-cycle proposal:
+Run one bounded 3-step drill:
+1. `clean-receipt probe` against one known local artifact.
+2. `stall classifier` reporting `alive and writing | alive but silent | exited without response`.
+3. `truncation/noise check` verifying labeled response completeness and isolated transport logs.
+Keep `30s` as default cadence and use `4s` only inside a short debug window with an explicit local trigger and expiry.
