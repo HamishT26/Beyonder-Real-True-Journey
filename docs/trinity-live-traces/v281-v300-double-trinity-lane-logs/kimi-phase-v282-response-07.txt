@@ -1,0 +1,11 @@
+Receipt: v281-v300-double-trinity:v282:kimi:eureka-07 acknowledged. Non-destructive cleanup proposal for C and D drives.
+
+Beta: Stage deletable items to D:\staging\v282-cleanup before removal. Target temp caches, old logs, duplicate downloads, and build artifacts older than 90 days. Exclude active repos, runtime paths, and files touched within 30 days. Generate a SHA-256 manifest for rollback.
+
+Alpha: Classify into Keep, Archive, or Delete. Auto-archive files >50 MB to compressed storage. Flag symlinks and registry-linked paths for manual review.
+
+Omega: Execute purge only after explicit sign-off on the Delete manifest. Validate freed space and zero broken references post-run.
+
+Blocker: None, assuming staging volume has 20% headroom.
+
+Next-phase handoff: v283 to ingest the approved manifest, run the archive-and-purge loop, and emit a verification report.

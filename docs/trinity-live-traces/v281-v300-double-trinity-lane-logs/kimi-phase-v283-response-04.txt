@@ -1,0 +1,11 @@
+Receipt: Acknowledged v283 eureka-04 for Windows sandbox readiness and remote-control retry gate evaluation. Lane Kimi active.
+
+Beta: Windows Sandbox isolation layer is partially ready�Hyper-V/DISM installable, but nested virtualization may be blocked on consumer SKUs. Remote-control retry gate needs exponential backoff with jitter (base 2s, cap 60s) and a circuit-breaker at 5 consecutive failures. WinRM and SSH paths are viable; prefer SSH for lower overhead.
+
+Alpha: Sandbox egress defaults to loopback; bridging required for external target reachability. Credential Guard blocks NTLM relay�use Kerberos or certificate auth. Retry state should persist in `%TEMP%\.trinity_retry_state.json` with 300s TTL to survive restarts.
+
+Omega: Full readiness gated on Windows Pro/Enterprise with firmware virtualization enabled. Retry gate stabilizes after circuit-breaker integration; 3-of-5 success threshold required for promotion.
+
+Blocker: Windows Sandbox does not persist state across sessions without a mapped host folder in the `.wsb` manifest. Windows Home lacks Hyper-V, blocking sandbox entirely.
+
+Next-phase handoff: Await v284 operator-mesh validation of `.wsb` manifest with mapped host folder for state persistence, then proceed to remote-control retry integration test against `localhost:5920` mock target.

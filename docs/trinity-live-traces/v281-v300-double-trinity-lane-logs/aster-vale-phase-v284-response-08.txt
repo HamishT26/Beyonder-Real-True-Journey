@@ -1,0 +1,17 @@
+- Receipt:
+Marker `v281-v300-double-trinity:v284:aster_vale:eureka-08` received for Aster Vale on `2026-05-15` in `D:\GHC-Archives\worktrees\v58-omega`. I used the repo prompt source `docs/trinity-live-traces/v281-v300-double-trinity-phase-v283-v1-prompts-v1.json`, which contains the Aster Vale v283 eureka-08 block for the same topic and points upstream to `docs/trinity-live-traces/v281-v300-double-trinity-phase-v282-v1-prompts-v1.json`.
+
+- Beta:
+Plan from the latest verified proof surfaces I could actually read in this run: `docs/trinity-live-traces/v281-v300-double-trinity-phase-v283-v1-prompts-v1.json` for the active lane contract; `docs/trinity-live-traces/v96-v120-candidate-system-results/v112-04-provider-spend-sandbox-gate.md` generated `2026-05-06T00:11:33+00:00` with `overall_status: PASS`; `docs/auto-generated/v49-advisory-digest-v1.json` generated `2026-04-24T06:37:19+00:00`; `docs/auto-generated/v52-advisory-digest-v1.json` generated `2026-04-24T11:18:10+00:00`; `docs/auto-generated/v55-advisory-digest-v1.json` generated `2026-04-25T10:34:54+00:00`; and `docs/v48-powershell-control-plane-note-v1.md`. Exact proof inputs to carry forward are: `source_digest_present`, `mcp_digest_present`, `guarded_repo_only_policy`, and `operator_hold_surfaces_blocked` from the v112 gate; `Codex CLI is logged in with ChatGPT and MCP list is observable` from v49; `Codex CLI is callable and logged in` from v52; and `Codex app plugin enablement, Codex CLI MCP config, and local provider CLIs are separate surfaces` from v55.
+
+- Alpha:
+Safe command surface for the next unblocked lane is: prove CLI presence first, then auth state, then MCP/plugin surface, then provider reachability, and only then discuss billing. The minimal proposal is to keep four separate verdicts: `cli_callable`, `auth_observed`, `mcp_or_plugin_observed`, and `provider_or_billing_unproven`. Do not collapse plugin/browser surfaces into CLI MCP proof, and do not promote any provider to healthy unless a direct probe succeeds in that future lane.
+
+- Omega:
+This run proved repo-side evidence only. I confirmed the phase contract file exists locally and that the Aster Vale v283 prompt block matches the requested topic and guardrails. I also confirmed the repo already preserves a provider-spend sandbox gate pattern and explicit separation between app plugins, CLI MCP config, and provider CLIs. I could not prove current `codex`, `git`, home-config, plugin, browser, auth, or billing state live in this run because direct local probes were blocked by the sandbox policy before execution.
+
+- Blocker:
+Current Windows sandbox policy rejected direct local CLI and home-surface probes, so provider health, plugin enablement, billing state, authenticated browser state, and remote-control access are unproven in this run. Historical repo receipts exist, but they are not current-run live proof.
+
+- Next-phase handoff:
+Use this run as a bounded validation receipt only. In the next lane with direct local probe permission, run read-only checks for CLI callable state, auth status, and MCP/plugin observability as separate steps, summarize only pass/fail/blocked status, and keep provider billing/auth marked `unproven` unless a direct non-secret probe succeeds.

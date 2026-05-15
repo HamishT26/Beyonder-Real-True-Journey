@@ -23,6 +23,7 @@ STOP_FILE = TRACE / f"{LANE}.stop"
 PREP = ROOT / "scripts" / "trinity_v281_v300_double_phase_prep.py"
 RUNNER = ROOT / "scripts" / "trinity_v281_v300_double_phase_runner.py"
 GLOBAL_V2 = ROOT / "scripts" / "trinity_v281_v300_global_v2_prep.py"
+REFRESHER = ROOT / "scripts" / "trinity_v281_v300_blocked_phase_refresher.py"
 LANE_DIR = TRACE / f"{LANE}-lane-logs"
 LANES = ("arby", "kimi", "aster-vale")
 
@@ -182,6 +183,35 @@ def run_phase(phase: int, timeout_sec: int, kimi_max_steps: int, status: dict[st
     return ok
 
 
+def refresh_blocked_phase(phase: int, timeout_sec: int, kimi_max_steps: int, max_attempts: int, status: dict[str, Any]) -> bool:
+    cmd = [
+        sys.executable,
+        str(REFRESHER),
+        "--phase",
+        str(phase),
+        "--timeout-sec",
+        str(timeout_sec),
+        "--kimi-max-steps",
+        str(kimi_max_steps),
+        "--max-attempts",
+        str(max_attempts),
+    ]
+    proc = run_checked(cmd, timeout=timeout_sec * 3 + 600)
+    count = valid_phase_count(phase)
+    status["events"].append(
+        {
+            "time": now_iso(),
+            "phase": phase,
+            "status": "blocked_phase_refresh_finished",
+            "returncode": proc.returncode,
+            "valid_responses": count,
+            "stdout_tail": (proc.stdout or "")[-1000:],
+            "stderr_tail": (proc.stderr or "")[-1000:],
+        }
+    )
+    return proc.returncode == 0 and count >= 30
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--start-phase", type=int, default=282)
@@ -193,6 +223,8 @@ def main() -> int:
     parser.add_argument("--wait-for-phase", type=int, default=0)
     parser.add_argument("--wait-timeout-sec", type=int, default=43200)
     parser.add_argument("--wait-poll-sec", type=int, default=180)
+    parser.add_argument("--auto-refresh-blocked", action="store_true")
+    parser.add_argument("--refresh-max-attempts", type=int, default=2)
     args = parser.parse_args()
 
     status = read_json(
@@ -241,8 +273,17 @@ def main() -> int:
         write_json(STATUS, status)
         write_md(status)
         if not run_phase(phase, args.timeout_sec, args.kimi_max_steps, status):
-            status["status"] = "blocked_phase_runner"
-            break
+            if args.auto_refresh_blocked and refresh_blocked_phase(
+                phase,
+                args.timeout_sec,
+                args.kimi_max_steps,
+                args.refresh_max_attempts,
+                status,
+            ):
+                status["events"].append({"time": now_iso(), "phase": phase, "status": "blocked_phase_recovered"})
+            else:
+                status["status"] = "blocked_phase_runner"
+                break
         dependency = rel(phase_prompt(phase))
         status[f"phase_v{phase}_status"] = "v1_complete"
         status["updated_utc"] = now_iso()

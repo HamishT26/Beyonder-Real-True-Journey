@@ -19,6 +19,7 @@ TRACE = ROOT / "docs" / "trinity-live-traces"
 LANE = "v281-v300-double-trinity"
 LANE_DIR = TRACE / f"{LANE}-lane-logs"
 PREP = ROOT / "scripts" / "trinity_v281_v300_global_v2_prep.py"
+REACTIVATION = ROOT / "scripts" / "trinity_aletheon_reactivation_packet.py"
 PLAN_JSON = TRACE / f"{LANE}-global-v2-session-plan-v1.json"
 SYNTH_JSON = TRACE / f"{LANE}-global-v2-synthesis-v1.json"
 SYNTH_MD = TRACE / f"{LANE}-global-v2-synthesis-v1.md"
@@ -127,6 +128,33 @@ def run_prep(write_supervisor_candidate: bool) -> dict[str, Any]:
         "returncode": proc.returncode,
         "stdout_tail": (proc.stdout or "")[-2000:],
         "stderr_tail": (proc.stderr or "")[-2000:],
+    }
+
+
+def write_reactivation_packet(target_phase: str, reason: str) -> dict[str, Any]:
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(REACTIVATION),
+            "--source",
+            "v2-watcher",
+            "--target-phase",
+            target_phase,
+            "--reason",
+            reason,
+        ],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        timeout=600,
+        check=False,
+    )
+    return {
+        "returncode": proc.returncode,
+        "stdout_tail": (proc.stdout or "")[-1200:],
+        "stderr_tail": (proc.stderr or "")[-1200:],
     }
 
 
@@ -252,6 +280,8 @@ def main() -> int:
     parser.add_argument("--poll-sec", type=int, default=180)
     parser.add_argument("--timeout-sec", type=int, default=86400)
     parser.add_argument("--write-supervisor-candidate", action="store_true")
+    parser.add_argument("--write-reactivation-packet-on-complete", action="store_true")
+    parser.add_argument("--reactivation-target-phase", default="v341-v360")
     args = parser.parse_args()
 
     status: dict[str, Any] = {
@@ -283,6 +313,11 @@ def main() -> int:
         write_status(status)
         if ready(counts) or not args.watch:
             result = run_once(args.write_supervisor_candidate)
+            if args.write_reactivation_packet_on_complete and result["status"] == "global_v2_complete":
+                result["reactivation_packet"] = write_reactivation_packet(
+                    args.reactivation_target_phase,
+                    "v281-v300 global v2 synthesis complete",
+                )
             status.update({"updated_utc": now_iso(), **result})
             write_status(status)
             print(json.dumps(result, indent=2))
