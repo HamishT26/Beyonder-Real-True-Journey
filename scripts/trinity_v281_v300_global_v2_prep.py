@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -46,7 +47,7 @@ def is_valid_response(path: Path) -> bool:
     if "Max number of steps reached" in text or "To resume this session:" in text:
         return False
     labels = ("Receipt", "Beta", "Alpha", "Omega", "Blocker", "Next-phase handoff")
-    return sum(1 for label in labels if f"{label}:" in text or f"**{label}:**" in text) >= 4
+    return sum(1 for label in labels if re.search(rf"(?im)^\s*(?:[-*]\s*)?\**{re.escape(label)}\**\s*:?", text)) >= 4
 
 
 def phase_counts(phase: int) -> dict[str, Any]:

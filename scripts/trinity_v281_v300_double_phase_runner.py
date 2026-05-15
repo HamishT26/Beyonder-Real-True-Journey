@@ -70,7 +70,7 @@ def redact(text: str) -> str:
 
 def section(text: str, label: str) -> str:
     pattern = re.compile(
-        rf"(?ims)^\s*\**{re.escape(label)}\**\s*:?\s*(.*?)(?=^\s*\**(?:Receipt|Beta|Alpha|Omega|Blocker|Next-phase handoff)\**\s*:|\Z)"
+        rf"(?ims)^\s*(?:[-*]\s*)?\**{re.escape(label)}\**\s*:?\s*(.*?)(?=^\s*(?:[-*]\s*)?\**(?:Receipt|Beta|Alpha|Omega|Blocker|Next-phase handoff)\**\s*:|\Z)"
     )
     match = pattern.search(text)
     if not match:
@@ -114,7 +114,7 @@ def is_valid_response(path: Path) -> bool:
     )
     if any(marker in text for marker in invalid_markers):
         return False
-    return sum(1 for label in REQUIRED_LABELS if re.search(rf"(?im)^\s*\**{re.escape(label)}\**\s*:?", text)) >= 4
+    return sum(1 for label in REQUIRED_LABELS if re.search(rf"(?im)^\s*(?:[-*]\s*)?\**{re.escape(label)}\**\s*:?", text)) >= 4
 
 
 def lane_log(lane: str) -> Path:
@@ -143,6 +143,27 @@ def prompt_for(turn: dict[str, Any]) -> str:
             "",
             "Respond only with these labels:",
             labels,
+        ]
+    )
+
+
+def kimi_prompt_for(turn: dict[str, Any]) -> str:
+    return "\n".join(
+        [
+            f"Marker: {turn['marker']}",
+            f"Lane: {turn['name']}",
+            f"Topic: {turn['topic']}",
+            f"Source dependency: {turn.get('source_dependency', 'none')}",
+            "",
+            "Respond from the prompt only. Do not run commands, inspect files, browse, or create artifacts.",
+            "Keep the answer compact and under 240 words.",
+            "Use these exact labels:",
+            "Receipt:",
+            "Beta:",
+            "Alpha:",
+            "Omega:",
+            "Blocker:",
+            "Next-phase handoff:",
         ]
     )
 
@@ -188,7 +209,7 @@ def run_kimi(turn: dict[str, Any], timeout: int, max_steps: int) -> dict[str, An
         "--max-steps-per-turn",
         str(max_steps),
         "--prompt",
-        prompt_for(turn),
+        kimi_prompt_for(turn),
     ]
     started = time.time()
     proc = subprocess.run(cmd, cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=timeout, check=False)

@@ -1,6 +1,6 @@
 # v281-v300 Double Trinity Continuity Plan
 
-Generated UTC: `2026-05-15T04:38:32.047516+00:00`
+Generated UTC: `2026-05-15T06:21:12.267389+00:00`
 
 Workflow:
 - Finish v261-v280 to the clean-response target before promoting v281.
@@ -9,8 +9,8 @@ Workflow:
 - Keep the multiplex TUI as observability; authority remains in proof receipts and Aletheon review.
 
 v281 prepared files:
-- Prompt pack: `docs/trinity-live-traces/v281-v300-double-trinity-phase-v281-v1-prompts-v1.json`
-- v2 handoff: `docs/trinity-live-traces/v281-v300-double-trinity-phase-v281-v2-handoff-v1.json`
+- Prompt pack: `docs/trinity-live-traces/v281-v300-double-trinity-phase-v282-v1-prompts-v1.json`
+- v2 handoff: `docs/trinity-live-traces/v281-v300-double-trinity-phase-v282-v2-handoff-v1.json`
 
 v281 baseline counts:
 - System expansions: `30`

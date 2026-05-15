@@ -1,0 +1,17 @@
+Receipt:
+Local-only validation pass completed in `D:\GHC-Archives\worktrees\v58-omega` against the cited synthesis and related trace artifacts. No files were edited, and no commit, push, provider call, browser action, or remote-control action is claimed.
+
+Beta:
+Latest verified proof inputs used in this run are `docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json`, `docs/trinity-live-traces/v261-v280-adaptive-council-lane-logs/aster-vale-block-04-response-03.txt`, `docs/v221-v240-remote-control-mesh-dashboard.html`, and `docs/trinity-live-traces/v221-v240-remote-control-mesh-lane-logs/aster_vale.log`. They show block `v261-v280` block 4 is synthesized complete, Aster Vale remains a local-only runtime-health lane with `multiplex_refresh_seconds=30` and `fallback_refresh_seconds=4`, checkpoint decisions keep remote-control deferred until platform blockers are explicitly cleared, and the prior Aster Vale remote-control path recorded `codex_cli_failed` plus a timed-out `codex exec --sandbox read-only` run with noisy transport output.
+
+Alpha:
+Safe retry gate, without committing: reopen only for one bounded read-only retry against a single known local artifact, and only score `artifact_readable`, `receipt_clean`, and `lane_classifiable`. Keep `30s` as the normal cadence, reserve `4s` for a short debug window only, and keep remote-control, provider, browser, billing, and publication claims withheld unless a clean local receipt is produced in that retry.
+
+Omega:
+This run proved narrow local reads work: `Get-Location` succeeded, and direct `Get-Content` reads of the synthesis, dashboard, and prior lane logs succeeded. This run also proved current friction: an exact-file `Get-ChildItem` probe was policy-rejected, `git rev-parse` probes were policy-rejected, and broader `rg` searches timed out. On that evidence, Windows sandbox readiness is still only `candidate-only`, and the remote-control retry gate should stay closed.
+
+Blocker:
+The blocker is proof cleanliness and command-surface reliability, not a proven external outage. Prior remote-control evidence is noisy and timed out, and this run could not establish stable git/CLI control-plane access under the sandbox policy. I cannot honestly claim TUI health, remote-control readiness, provider access, or any external runtime/control access from this lane.
+
+Next-phase handoff:
+Treat Aster Vale as `local-observation-only`. Next safe phase is one minimal retry that reads one local artifact and emits a compact board for `artifact_readable`, `receipt_clean`, and `lane_classifiable`; if any part is noisy, truncated, timed out, or policy-rejected, preserve `deferred until platform blockers are explicitly cleared`.

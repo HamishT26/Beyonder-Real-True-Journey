@@ -1,9 +1,9 @@
 # v281-v300 Global v2 Session Plan
 
-Generated UTC: `2026-05-15T05:45:45.545277+00:00`
+Generated UTC: `2026-05-15T06:21:11.920144+00:00`
 Status: `waiting_for_all_v1_phases`
-Complete v1 phases: `0/20`
-Valid v1 responses: `13/600`
+Complete v1 phases: `1/20`
+Valid v1 responses: `31/600`
 
 Global v2 shape:
 - Wait for all v281-v300 v1 lane sessions to complete.
@@ -12,8 +12,8 @@ Global v2 shape:
 - Promote only curated proof, not raw transport or placeholder output.
 
 Current phase readiness:
-- v281: 13/30 valid replies, `waiting_for_v1`.
-- v282: 0/30 valid replies, `waiting_for_v1`.
+- v281: 30/30 valid replies, `complete`.
+- v282: 1/30 valid replies, `waiting_for_v1`.
 - v283: 0/30 valid replies, `waiting_for_v1`.
 - v284: 0/30 valid replies, `waiting_for_v1`.
 - v285: 0/30 valid replies, `waiting_for_v1`.

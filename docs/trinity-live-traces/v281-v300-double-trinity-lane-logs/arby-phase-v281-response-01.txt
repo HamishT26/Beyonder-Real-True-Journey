@@ -1,0 +1,20 @@
+Receipt:
+Marker `v281-v300-double-trinity:v281:arby:eureka-01` received and grounded against `docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json`, the carried Arby receipts in `docs/trinity-live-traces/v261-v280-adaptive-council-lane-logs/arby-block-04-response-01.txt` and `.../arby-block-04-response-03.txt`, the live v281 prompt pack, current branch metadata, and the live v281 runner status file.
+
+Beta:
+Latest verified phase result is `v261-v280` block 04 with status `complete_synthesized`, `9/9` expected responses complete, and Arby’s carried rule set unchanged: keep `publication_claim=withheld`, keep `remote_verification_required=true`, and treat the branch-home board as coordination only, not GitHub proof. Exact proof inputs for this turn are `docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json`, `docs/trinity-live-traces/v261-v280-adaptive-council-lane-logs/arby-block-04-response-01.txt`, `docs/trinity-live-traces/v261-v280-adaptive-council-lane-logs/arby-block-04-response-03.txt`, `docs/trinity-live-traces/v281-v300-double-trinity-phase-v281-v1-prompts-v1.json`, `docs/trinity-live-traces/v281-v300-double-trinity-phase-v281-runner-status-live-v281.json`, `docs/trinity-live-traces/v281-v300-double-trinity-lane-logs/arby.log`, `git status --short --branch`, and `git branch -vv`.
+
+Alpha:
+Safe branch-home proposal, no commit:
+`lane=arby | turn=1 | topic=forward-only proof and branch-home message board | status=receipt | response_path=docs/trinity-live-traces/v261-v280-adaptive-council-lane-logs/arby-block-04-response-03.txt | transport_path=withheld_in_board | local_truth=branch-home stays coordination-only; publication proof withheld pending remote verification | remote_verification_required=true | depends_on=docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json | next_probe=read-only drift board`
+Safe drift board row:
+`lane=arby | cwd=D:\GHC-Archives\worktrees\v58-omega | branch=codex/GHC-Family/v58-omega-exec | local_head=d2615a0eef | upstream_target=origin/codex/GHC-Family/beyonder-shared-omega-line | drift_status=unverified | receipt_clean=true | publication_claim=withheld`
+
+Omega:
+Read-only probes completed. `docs/trinity-live-traces/v281-v300-double-trinity-phase-v281-runner-status-live-v281.json` shows phase `281` is `running` with an empty `events` array, and `docs/trinity-live-traces/v281-v300-double-trinity-lane-logs/arby.log` currently shows only the `V281-START` line for this marker. Local Git proof shows branch `codex/GHC-Family/v58-omega-exec` at `d2615a0eef`, tracking `origin/codex/GHC-Family/beyonder-shared-omega-line`, while `git status --short --branch` shows a heavily dirty worktree with many modified and untracked files, including new `v281-v300` surfaces. I did not fetch, push, open GitHub, or verify PR state in this run.
+
+Blocker:
+The blocker remains missing live remote verification, not a proven drift or publication failure. Because this run did not refresh upstream refs or verify GitHub/PR state, `drift_status` must stay `unverified`, GitHub proof must stay withheld, and the dirty worktree means any future publication claim needs a curated allowlist or equivalent proof boundary before synthesis authorizes v2 publication.
+
+Next-phase handoff:
+Use the exact proof inputs named above and keep the next Arby turn bounded to one read-only forward-only preflight board: `checkpoint_path`, `branch`, `local_head`, `upstream_target`, `drift_status`, `receipt_clean`, `publication_claim`, and `remote_verification_required`. If a later authorized turn performs live upstream inspection, extend this board forward-only without rewriting the current local-only truth.
