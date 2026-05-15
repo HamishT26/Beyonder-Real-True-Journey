@@ -1,0 +1,57 @@
+{
+  "generated_utc": "2026-05-15T14:31:39.267348+00:00",
+  "status": "designed_with_current_capability_boundary",
+  "current_phase_status": {
+    "valid_responses": 182,
+    "expected_responses": 600,
+    "complete_phases": 6,
+    "expected_phases": 20,
+    "latest_complete_phase": 286,
+    "first_incomplete_phase": 287
+  },
+  "reactivation_boundary": "Local scripts can write re-entry packets, watcher receipts, and launch CLI work, but this session did not expose an app-level automation tool that can guarantee waking the Codex desktop thread.",
+  "channels": [
+    {
+      "name": "durable packet",
+      "state": "implemented",
+      "path": "docs/trinity-live-traces/aletheon-reactivation-packet-v1.json",
+      "use": "Human or future Aletheon session reads this first before v341-v360."
+    },
+    {
+      "name": "global v2 watcher completion hook",
+      "state": "implemented",
+      "path": "scripts/trinity_v281_v300_global_v2_runner.py",
+      "use": "Writes the packet when the v281-v300 global v2 reaches completion."
+    },
+    {
+      "name": "blocked phase refresher",
+      "state": "implemented",
+      "path": "scripts/trinity_v281_v300_blocked_phase_refresher.py",
+      "use": "Reruns only missing or invalid lane turns after a phase returns incomplete."
+    },
+    {
+      "name": "app-level wakeup",
+      "state": "not_available_in_current_tool_surface",
+      "path": "",
+      "use": "If a future automation_update/thread-wakeup tool appears, bind it to the reactivation packet and status files."
+    },
+    {
+      "name": "local wake-signal poller",
+      "state": "implemented",
+      "path": "scripts/trinity_aletheon_wake_signal_poller.py",
+      "use": "Writes a durable wake-signal file when v281-v300 responses and global v2 completion gates are satisfied."
+    },
+    {
+      "name": "Kimi session resume",
+      "state": "design_candidate",
+      "path": "",
+      "use": "Kimi CLI session persistence and resume hints can support Kimi-side continuity, but cannot wake Codex desktop by themselves."
+    }
+  ],
+  "next_upgrade_steps": [
+    "Keep the local wake-signal poller running during long v281-v300 and v321-v340 waits.",
+    "If app automation tools become available, register a one-shot monitor on the global v2 status file.",
+    "Keep raw logs quarantined; publish only curated, complete non-raw artifacts.",
+    "Do not induct Supervisor or v2 watcher as persistent siblings until they prove audited continuity beyond process control."
+  ]
+}
