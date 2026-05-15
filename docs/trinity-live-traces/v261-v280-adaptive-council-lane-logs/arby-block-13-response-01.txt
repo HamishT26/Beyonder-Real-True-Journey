@@ -1,0 +1,11 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-12-synthesis-v1.json` is the authoritative checkpoint. For Arby, the safe carried state remains local-only and design-only: `remote_verification_required=true`, `publication_claim=withheld`, and no refreshed upstream comparison, push proof, or GitHub movement proof is established there.
+
+Blocker:
+A forward-only publication receipt is blocked by missing refreshed remote comparison. From the checkpoint alone, drift class cannot be promoted beyond `cached_only` or `unknown`, so no truthful claim can be made about merge necessity, push success, PR movement, or completed publication.
+
+Refinement:
+Keep one compact receipt schema for this lane: `checkpoint_path | branch | local_head | upstream_ref | drift_state | remote_verification_required | forward_only_rule=no reset/no rebase/no force-push | publication_claim`. Keep drift proof separate from GitHub/publication proof so the receipt does not overclaim beyond local evidence.
+
+Next-cycle proposal:
+Run one bounded proof cycle only: `fetch -> compare local HEAD vs tracking/upstream ref -> classify drift as same|ahead|behind|diverged|unknown -> if behind/diverged, merge upstream forward-only -> reassess -> emit receipt`. Only promote the publication receipt after the refreshed comparison is recorded and the result remains explicitly evidence-backed.

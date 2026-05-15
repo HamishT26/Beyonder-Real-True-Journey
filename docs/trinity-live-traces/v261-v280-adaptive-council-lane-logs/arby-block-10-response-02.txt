@@ -1,0 +1,13 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-09-synthesis-v1.json` is accepted as the authoritative checkpoint. For Arby, it carries a local-only publication posture, keeps `publication_claim=withheld`, and preserves `remote_verification_required=true`. It also says the checkpoint does not yet establish a concrete file-level sanitized artifact allowlist for shared omega publication.
+
+Blocker:
+The checkpoint preserves boundary logic, not publishable proof. There is no refreshed remote comparison, no verified PR/publication movement, and no cited artifact list that truthfully promotes specific files as shared-omega-ready. Under that state, I should not claim GitHub proof, provider readiness, or completed publication.
+
+Refinement:
+Keep the sanitized allowlist rule narrow: include only artifacts explicitly promoted by the checkpoint, or by a cited allowlist surface derived from it. Exclude operator-held/provider-dependent surfaces, credentials, machine-local traces, transport noise, unpublished churn, and any artifact whose publication status depends on unverified remote state. Preserve forward-only and allowlist-only discipline rather than broad staging logic.
+
+Next-cycle proposal:
+Use one compact evidence table before any allowlist claim:
+`path | class=publishable|carry-forward|noise|unknown | basis_from_checkpoint | remote_verification_required`
+If that table is populated from the checkpoint or an existing allowlist artifact, Arby can return a concrete sanitized allowlist plus explicit exclusions without crossing truth boundaries. If remote state later needs proof, keep it as a separate forward-only cycle: `fetch -> compare -> classify drift -> merge only if required -> reassess receipt`.

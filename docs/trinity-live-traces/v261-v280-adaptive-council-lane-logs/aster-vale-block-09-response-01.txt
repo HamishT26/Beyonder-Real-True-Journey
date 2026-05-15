@@ -1,0 +1,17 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-08-synthesis-v1.json` as the authoritative checkpoint. That artifact is `complete_synthesized` with `9/9` expected responses, and the carried Aster Vale position is still evidence-first and local-only. For TUI latency telemetry and lane liveness scoring, the checkpoint supports classification rules, not a fresh runtime-health receipt for this turn.
+
+Blocker:
+No newly verified latency telemetry is established in the checkpoint for this turn. The carried boundary is that missing telemetry keeps liveness at `unknown`, not failed, and Windows sandbox/runtime-health posture remains bounded by prior local classification only. Transport noise, truncated receipts, stalled responses, and recovery drift remain active contamination risks, so no stronger provider, publication, or external-runtime claim is justified.
+
+Refinement:
+Keep one narrow scoring board:
+`telemetry_present | heartbeat_recent | stall_within_budget | transport_noise_separated | lane_classifiable | score_state=alive|degraded|unknown | score_reason | unverified_scope_frozen`
+Use `30s` as the normal multiplex cadence. Reserve `4s` only for explicit local debug windows, not as evidence of steady liveness. Missing telemetry should resolve to `score_state=unknown`; exceeded stall budget can justify `degraded`; only clean local observation should justify `alive`.
+
+Next-cycle proposal:
+Run one bounded Aster Vale-only liveness pass anchored to the same block-08 checkpoint and require a clean receipt with the labels above. Limit the next result to one of:
+`alive_by_local_observation`
+`degraded_by_stall_budget`
+`unknown_due_to_missing_telemetry`
+If the receipt is noisy, truncated, or policy-blocked again, freeze unverified scope and request only the missing clean telemetry slice rather than widening claims.

@@ -1,0 +1,14 @@
+Receipt:
+Authoritative checkpoint is `docs/trinity-live-traces/v261-v280-adaptive-council-block-07-synthesis-v1.json`, which is `complete_synthesized` with `9/9` responses. Verified local-only Git fact: the current branch is `codex/GHC-Family/v58-omega-exec`, and local branch metadata shows it tracking `origin/codex/GHC-Family/beyonder-shared-omega-line`. No live fetch, PR proof, provider proof, or publication receipt is established in this turn, so `publication_claim=withheld`.
+
+Blocker:
+Remote drift is still unverified. The block-07 synthesis carries forward the same truth boundary from Arby block 07: no refreshed fetch result, no proven upstream comparison, and no confirmed forward-only merge/push path. Because that external check has not been executed here, cached tracking information cannot be promoted into a real publication receipt.
+
+Refinement:
+Use one compact receipt schema and keep cached vs refreshed truth separate:
+`checkpoint_path`, `branch`, `local_head`, `cached_tracking_ref`, `cached_alignment=same|ahead|behind|diverged|unknown`, `remote_verification_required=true|false`, `publication_claim=withheld|earned`.
+For this turn, `cached_alignment` is at most `unknown-or-cached-only`, not verified remote truth.
+
+Next-cycle proposal:
+When allowed, do one bounded forward-only preflight: `fetch -> compare HEAD vs tracking ref -> classify drift -> record receipt`.
+If the branch is behind or diverged, keep the forward-only rule explicit: merge from upstream, then reassess; do not reset, rebase, or force-push. Only after that refreshed comparison should a publication receipt be considered.

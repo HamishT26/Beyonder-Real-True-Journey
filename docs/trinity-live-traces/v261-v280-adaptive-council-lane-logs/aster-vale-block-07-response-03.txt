@@ -1,0 +1,18 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-06-synthesis-v1.json` as the authoritative checkpoint: block 06 is `complete_synthesized` with `9/9` expected responses recorded. For Aster Vale, the carried safe position is recovery-only handling for stalled, noisy, or truncated lane replies. This response adds no verified provider, publication, or runtime-state claim.
+
+Blocker:
+The blocker remains continuity loss during recovery. When a lane reply stalls, mixes transport noise into the receipt, or truncates required labels, the next turn can drift beyond the last confirmed checkpoint. Until continuity is explicitly re-anchored, any fresh runtime-health, provider-readiness, or publication statement stays unverified.
+
+Refinement:
+Keep the drill narrow and deterministic with a fixed schema:
+`checkpoint_id | failure_mode=stalled|noisy|truncated | last_verified_scope | unverified_scope_frozen=true | retry_request`
+Recovery should then do only this:
+1. Re-anchor on the last confirmed synthesis artifact.
+2. Restate only verified boundary conditions from that artifact.
+3. Classify the failure mode without inferring external causes.
+4. Request only the missing slice or a clean resend.
+5. Keep transport noise separate from response proof.
+
+Next-cycle proposal:
+Use one bounded recovery template across lanes. Require a clean micro-header, preserve `unverified_scope_frozen=true`, and allow continuation only when the previous block has either a receipt or an explicit blocker, matching the block-06 checkpoint rule. Keep `30s` as the normal multiplex cadence and reserve the `4s` path for explicit local debug only, not as runtime-health proof.

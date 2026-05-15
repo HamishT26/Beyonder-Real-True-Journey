@@ -1,0 +1,20 @@
+Receipt:
+Authoritative checkpoint is `docs/trinity-live-traces/v261-v280-adaptive-council-block-06-synthesis-v1.json`, which records `status=complete_synthesized` with `9/9` expected responses. For Arby, the carried safe receipt is still local-only: `publication_claim=withheld`, `remote_verification_required=true`, and no new GitHub or provider proof is established in this turn.
+
+Blocker:
+Remote drift remains unverified. The checkpoint does not prove a live fetch result, current upstream alignment, PR advancement, or any completed forward-only merge/push path. The same checkpoint also preserves that the worktree was not clean enough to claim a publication receipt beyond prep/local evidence.
+
+Refinement:
+Use one compact forward-only receipt schema:
+`checkpoint_path`
+`branch`
+`local_head`
+`cached_upstream_ref`
+`cached_alignment=same|ahead|behind|diverged|unknown`
+`worktree_clean=true|false`
+`remote_verification_required=true|false`
+`publication_claim=withheld|earned`
+This keeps cached local Git facts separate from refreshed remote truth and prevents publication claims from outrunning evidence.
+
+Next-cycle proposal:
+Run one bounded preflight only when allowed: `fetch -> compare HEAD vs tracking ref -> classify same|ahead|behind|diverged -> record receipt`. If action is later required, keep the forward-only rule explicit: merge from upstream when behind or diverged; do not reset, rebase, or force-push. Only after that refreshed comparison should a real publication receipt be considered.

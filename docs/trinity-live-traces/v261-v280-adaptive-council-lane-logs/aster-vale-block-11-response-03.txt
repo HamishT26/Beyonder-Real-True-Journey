@@ -1,0 +1,23 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-10-synthesis-v1.json` as the authoritative checkpoint for this reply. For Aster Vale, that synthesis carries forward a local-only, evidence-first recovery posture: focus on stalled, noisy, and truncated lane replies under Windows sandbox constraints, with no live provider, publication, or runtime-health recovery claim beyond the checkpointed record.
+
+Blocker:
+The blocker is not a confirmed runtime failure; it is truth-preserving recovery when reply integrity degrades mid-cycle. Policy-rejected probes, benign timeouts, transport-noise contamination, truncated receipts, and missing telemetry mean lane liveness and runtime health cannot be promoted past `unknown` or `candidate-only` from this checkpoint alone. A stalled or truncated reply can appear superficially complete unless the lane contract forces explicit completion markers and checkpoint echoing.
+
+Refinement:
+Treat reply integrity as a first-class runtime-health surface. Keep the response schema compact and mandatory:
+`checkpoint_path | lane | role | failure_class | completion_state=complete|partial|retry-required | unverified_scope_frozen=true`
+Require:
+- checkpoint restatement at the top
+- one explicit failure class: `stalled`, `noisy`, or `truncated`
+- bounded output length and a closing state marker
+- transport noise separated from the truth surface
+- missing telemetry resolved to `unknown`, not failure
+
+Next-cycle proposal:
+Run one bounded recovery drill with three cases only: `stalled`, `noisy`, `truncated`. For each case, require:
+- checkpoint restatement
+- failure classification
+- safe retry instruction
+- operator-visible truth note stating what remains unverified
+If the next receipt is again noisy, truncated, or policy-blocked, freeze scope, keep runtime health at `unknown` or `candidate-only`, and request only the missing clean telemetry or closing marker slice.

@@ -1,0 +1,18 @@
+Receipt:
+Authoritative checkpoint is `docs/trinity-live-traces/v261-v280-adaptive-council-block-07-synthesis-v1.json`. It records `status=complete_synthesized`, `9/9` expected responses, and `3/3` completed Aster Vale replies. The carried safe position for this lane is still recovery-only handling for stalled, noisy, or truncated lane replies; this does not establish any new verified runtime-health, provider-readiness, publication, or remote-state claim.
+
+Blocker:
+The blocker is continuity drift during recovery, not a confirmed provider or runtime failure. If a reply stalls, mixes transport noise into the receipt, or truncates required labels, the next turn can outrun the last verified checkpoint. Telemetry gaps, policy-rejected probes, or contaminated receipts also keep Windows sandbox/runtime-health posture at `candidate-only` or `unknown`, rather than proved ready.
+
+Refinement:
+Use one deterministic recovery schema:
+`checkpoint_id | failure_mode=stalled|noisy|truncated | last_verified_scope | unverified_scope_frozen=true | retry_request`
+Recovery should do only four things:
+1. Re-anchor on the last confirmed synthesis artifact.
+2. Restate only verified boundary conditions from that artifact.
+3. Classify the failure mode without inferring external cause.
+4. Request one clean replacement reply using the required labels only.
+Keep transport noise separate from proof, and treat missing telemetry as `unknown`, not failure.
+
+Next-cycle proposal:
+Run one bounded Aster Vale recovery drill using the block-07 checkpoint as anchor and score only: `telemetry_present`, `receipt_clean`, `transport_noise_separated`, `lane_classifiable`, and `score_state=alive|degraded|unknown`. Keep `30s` as normal multiplex cadence. Reserve `4s` only for explicit local debug windows, not as evidence of steady runtime health. Continue adaptive blocks only when the previous block has either a clean receipt or an explicit blocker.

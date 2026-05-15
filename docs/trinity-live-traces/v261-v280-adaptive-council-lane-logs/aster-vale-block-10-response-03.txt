@@ -1,0 +1,27 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-09-synthesis-v1.json` as the authoritative checkpoint for this lane, the recovery focus is narrowed to reply-path failure modes: stalled responses, noisy over-generation, and truncation under Windows sandbox constraints. This response does not claim live provider, publication, or runtime recovery state beyond that checkpoint.
+
+Blocker:
+The main blocker is truth-preserving recovery when a lane reply degrades mid-cycle. A stalled or truncated reply can look superficially successful unless the lane contract requires explicit completion markers, bounded output length, and checkpoint echoing. A noisy reply creates a second failure mode: signal loss without clear hard failure. From the current prompt alone, I cannot verify live runtime-health telemetry, provider stability, or whether the synthesis artifact has already encoded a canonical retry threshold.
+
+Refinement:
+Recovery drills should treat reply integrity as a first-class runtime-health surface:
+1. Require each lane reply to restate checkpoint identity and lane role at the top.
+2. Require a compact end-state marker such as `complete`, `partial`, or `retry-required`.
+3. On truncation suspicion, prefer resumable continuation from the last acknowledged checkpoint rather than freeform regeneration.
+4. On noisy output, collapse to a fixed four-label schema and defer nonessential detail.
+5. Distinguish transport failure from reasoning failure so the next cycle retries the right layer.
+
+Next-cycle proposal:
+Run the next drill as a bounded recovery matrix with three explicit cases:
+1. `stalled`: no meaningful reply inside the lane timeout window.
+2. `noisy`: reply arrives but violates schema or exceeds signal budget.
+3. `truncated`: reply starts correctly but loses the closing state marker.
+
+For each case, require:
+- checkpoint restatement,
+- failure classification,
+- safe retry instruction,
+- operator-visible truth note if runtime health is unknown.
+
+That will keep failure recovery concrete without overstating provider or publication status.

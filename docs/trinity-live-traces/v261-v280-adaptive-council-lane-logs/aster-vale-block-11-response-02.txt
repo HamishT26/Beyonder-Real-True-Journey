@@ -1,0 +1,26 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-10-synthesis-v1.json` is the authoritative checkpoint for this turn. For Aster Vale, it carries Windows sandbox / WSB as `candidate-only`, local-only, and not a verified ready runtime surface. The safe carried state is that readiness proof is incomplete, while transport noise must remain separate from proof.
+
+Blocker:
+Promotion beyond `candidate-only` is blocked by proof quality gaps, not by a confirmed runtime failure. The checkpoint still carries unresolved classes: policy-rejected probes, benign timeouts, transport-noise contamination, truncated receipts, telemetry gaps, and recovery drift after stalls. Under that state, runtime health should remain `unknown` unless a clean local validation slice exists. I am not claiming provider readiness, publication readiness, or remote runtime health.
+
+Refinement:
+Use a narrow Windows sandbox readiness checklist only:
+`artifact_readable`
+`receipt_clean`
+`write_gap_observable`
+`telemetry_present`
+`thresholds_defined`
+`transport_noise_separated=true`
+`lane_classifiable=alive_and_writing|alive_but_silent|exited_without_response`
+`external_claims_frozen=true`
+
+WSB candidate profile should stay limited to: readable local artifacts, bounded clean receipts, observable write/heartbeat evidence, and explicit classification rules. Missing telemetry resolves to `unknown`, not failure and not readiness.
+
+Next-cycle proposal:
+Run one bounded, read-only validation pass against a single compact local health artifact or board derived from the block-10 checkpoint. Score only the checklist above and emit one result:
+`ready_for_next_probe`
+`candidate_only_more_telemetry_needed`
+`unknown_due_to_unclean_proof`
+
+If any gate is policy-rejected, times out, or contaminates the receipt, keep WSB at `candidate-only` and request only the missing clean slice.

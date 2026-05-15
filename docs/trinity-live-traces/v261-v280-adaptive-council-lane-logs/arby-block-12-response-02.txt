@@ -1,0 +1,17 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-11-synthesis-v1.json` is the authoritative checkpoint I am carrying forward. For Arby, it preserves a local-only publication posture: `publication_claim=withheld`, `remote_verification_required=true`, and block 11 does not establish a cited per-path sanitized allowlist that is ready to certify shared-omega publication.
+
+Blocker:
+The blocker is proof completeness, not a claimed publication failure. The checkpoint does not provide a refreshed upstream comparison, GitHub movement proof, or a checkpoint-cited artifact table that classifies concrete paths as `publishable`, `carry-forward`, `noise`, or `unknown`. Under that state, no truthful shared-omega allowlist receipt should promote provider-dependent outputs, credentials, machine-local traces, transport noise, or unpublished churn.
+
+Refinement:
+Keep the allowlist surface compact and evidence-first:
+`path | class=publishable|carry-forward|noise|unknown | basis_from_checkpoint | needs_remote_proof`
+Only mark `publishable` when the path is explicitly supported by the checkpoint or by an existing cited local allowlist surface under `docs/`. Everything else should remain excluded or `unknown`, with the basis stated directly.
+
+Next-cycle proposal:
+Produce one checkpoint-derived local artifact pair only:
+1. a sanitized allowlist limited to cited local `docs/` evidence
+2. an explicit exclusion set for noise, machine-local state, provider state, and uncited churn
+
+If branch/publication proof is needed after that, handle it as a separate remote-verification cycle rather than mixing publication claims into the allowlist receipt.

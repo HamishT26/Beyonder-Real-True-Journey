@@ -1,0 +1,22 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-07-synthesis-v1.json` is the authoritative checkpoint. It records `status=complete_synthesized`, `9/9` completed responses overall, and `3/3` completed Aster Vale responses. For this lane, the safe carried truth is still local-only and evidence-first: TUI liveness can be discussed only as checkpoint-derived classification, not as freshly measured runtime-health proof.
+
+Blocker:
+The checkpoint does not provide newly verified TUI latency telemetry for this turn. That leaves liveness bounded by prior local classifications only: stalled-response risk, transport-noise contamination risk, truncated-reply risk, and continuity-loss risk after recovery. Because telemetry is missing, any stronger claim about current runtime health, provider readiness, or publication state would outrun the evidence.
+
+Refinement:
+Use one narrow scoring board:
+`telemetry_present`
+`heartbeat_recent`
+`stall_within_budget`
+`transport_noise_separated`
+`score_state=alive|degraded|unknown`
+`score_reason`
+Treat missing telemetry as `unknown`, not failure. Keep `30s` as the normal multiplex cadence and reserve `4s` only for explicit local debug windows, not as proof of steady liveness. Preserve `unverified_scope_frozen=true` whenever a reply is noisy, stalled, or truncated.
+
+Next-cycle proposal:
+Re-anchor on the block-07 synthesis unchanged, then request one clean Aster Vale-only liveness table with no extra provider or publication claims. A defensible next result should be limited to one of:
+`alive_by_local_observation`
+`degraded_by_stall_budget`
+`unknown_due_to_missing_telemetry`
+If the receipt is noisy or incomplete again, keep the score local-only and freeze unverified scope rather than widening claims.

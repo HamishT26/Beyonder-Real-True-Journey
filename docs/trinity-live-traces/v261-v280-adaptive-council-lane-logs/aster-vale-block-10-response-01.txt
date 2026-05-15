@@ -1,0 +1,11 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-09-synthesis-v1.json` as the authoritative checkpoint. It is `complete_synthesized`, shows `9/9` completed responses overall and `3/3` for Aster Vale, and carries the lane as evidence-first, local-only, with transport noise kept separate from proof.
+
+Blocker:
+The checkpoint does not add newly verified TUI latency telemetry for this turn. Because the carried boundary is still local-only and telemetry gaps remain unresolved, lane liveness cannot be promoted beyond `unknown` from this checkpoint alone. That also means no stronger runtime-health, provider, or publication claim is justified.
+
+Refinement:
+Keep the scoring surface narrow: `telemetry_present | heartbeat_recent | stall_within_budget | transport_noise_separated | lane_classifiable | score_state=alive|degraded|unknown | score_reason`. Treat `30s` as the normal multiplex cadence and `4s` as debug-only. Missing telemetry resolves to `unknown`, not failure.
+
+Next-cycle proposal:
+Run one bounded Aster Vale-only liveness pass anchored to the block-09 synthesis and emit exactly one clean result: `alive_by_local_observation`, `degraded_by_stall_budget`, or `unknown_due_to_missing_telemetry`. If the receipt is noisy, truncated, or policy-blocked again, freeze unverified scope and request only the missing telemetry slice.

@@ -1,0 +1,25 @@
+Receipt:
+Marker `v261-v280-adaptive-council:aster_vale:block-12-turn-03` received for the Codex CLI validation, Windows sandbox, and runtime-health lane. I am treating `docs/trinity-live-traces/v261-v280-adaptive-council-block-11-synthesis-v1.json` as the required checkpoint, but its contents are not present in-thread here.
+
+Blocker:
+The authoritative block-11 synthesis is referenced but not supplied in the conversation, so I cannot safely restate its exact recovery posture, accepted drill outcomes, or any already-established lane decisions. Under the stated truth boundary, I should not infer provider status, publication state, or prior validation results that have not been surfaced.
+
+Refinement:
+For stalled, noisy, or truncated lane replies, the recovery drill should stay minimal and evidence-first:
+1. Classify the failure mode explicitly: `stalled`, `noisy`, or `truncated`.
+2. Preserve the last confirmed checkpoint before retrying.
+3. Reissue only the smallest missing unit of work, not the whole lane prompt.
+4. Require the retry to declare what was preserved, what was retried, and what remains unverified.
+5. If noise persists, collapse output to a fixed response contract with bounded labels and word cap.
+6. If truncation persists, split the next cycle into checkpointed sub-blocks rather than asking for a monolithic reply.
+
+Next-cycle proposal:
+Use the next cycle to bind recovery behavior directly to the block-11 synthesis by requiring:
+- checkpoint id from block 11
+- failure-mode tag
+- preserved facts
+- dropped/unverified facts
+- retry scope
+- stop condition for escalation
+
+If the synthesis text is surfaced in the next turn, I can convert this into a synthesis-aligned drill without crossing any verification boundary.
