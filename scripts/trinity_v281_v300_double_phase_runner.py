@@ -149,6 +149,7 @@ def prompt_for(turn: dict[str, Any]) -> str:
             guardrails,
             "",
             "Respond only with these labels:",
+            "Each label must contain a concrete non-empty sentence. Do not answer with labels only or a marker-only acknowledgement.",
             labels,
         ]
     )
@@ -193,10 +194,19 @@ def run_codex(turn: dict[str, Any], timeout: int) -> dict[str, Any]:
         str(ROOT),
         "-o",
         str(out),
-        prompt_for(turn),
     ]
     started = time.time()
-    proc = subprocess.run(cmd, cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=timeout, check=False)
+    proc = subprocess.run(
+        cmd,
+        cwd=ROOT,
+        input=prompt_for(turn),
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        timeout=timeout,
+        check=False,
+    )
     raw.write_text(redact((proc.stdout or "")[-12000:] + "\n--- STDERR ---\n" + (proc.stderr or "")[-12000:]), encoding="utf-8")
     return {"ok": proc.returncode == 0 and is_valid_response(out), "returncode": proc.returncode, "duration_sec": round(time.time() - started, 3), "response_file": rel(out) if out.exists() else None}
 
