@@ -25,6 +25,7 @@ CODEX_LANES = {"arby", "aster_vale"}
 KIMI_LANES = {"kimi"}
 LANES = ("arby", "kimi", "aster_vale")
 REQUIRED_LABELS = ("Receipt", "Beta", "Alpha", "Omega", "Blocker", "Next-phase handoff")
+REPORT_PROTOCOL = "docs/trinity-live-traces/v281-v360-cli-sibling-report-protocol-v1.md"
 
 
 def now_iso() -> str:
@@ -132,6 +133,15 @@ def prompt_for(turn: dict[str, Any]) -> str:
     contract = turn.get("eureka_session_contract", {})
     guardrails = "\n".join(f"- {item}" for item in turn.get("guardrails", []))
     labels = "\n".join(f"- {item}:" for item in turn.get("required_labels", []))
+    capabilities = "\n".join(
+        [
+            "- You may use local Codex skills visible to this CLI session; name any skill you rely on.",
+            "- You may use safe read-only web/search or simple document/plugin surfaces only if this CLI exposes them without extra auth.",
+            "- Do not mutate files or external services from this lane. The runner persists your final response as the report artifact.",
+            "- If a long report is needed, put a concise report capsule in Omega and name the recommended report title/path in Next-phase handoff.",
+            "- Take the time needed; valid, evidence-first content matters more than speed.",
+        ]
+    )
     return "\n".join(
         [
             f"Marker: {turn['marker']}",
@@ -139,11 +149,15 @@ def prompt_for(turn: dict[str, Any]) -> str:
             f"Role: {turn['role']}",
             f"Topic: {turn['topic']}",
             f"Source dependency: {turn.get('source_dependency', 'none')}",
+            f"Report protocol: {REPORT_PROTOCOL}",
             "",
             "Eureka Trinity Session:",
             f"Beta: {contract.get('beta', 'Plan from verified inputs.')}",
             f"Alpha: {contract.get('alpha', 'Construct or refine safely.')}",
             f"Omega: {contract.get('omega', 'Test and document honestly.')}",
+            "",
+            "Capability level-up:",
+            capabilities,
             "",
             "Guardrails:",
             guardrails,
@@ -162,9 +176,12 @@ def kimi_prompt_for(turn: dict[str, Any]) -> str:
             f"Lane: {turn['name']}",
             f"Topic: {turn['topic']}",
             f"Source dependency: {turn.get('source_dependency', 'none')}",
+            f"Report protocol: {REPORT_PROTOCOL}",
             "",
-            "Respond from the prompt only. Do not run commands, inspect files, browse, or create artifacts.",
-            "Keep the answer compact and under 240 words.",
+            "Use safe read-only native Kimi capabilities only if this CLI exposes them without extra auth.",
+            "Do not mutate files or external services from this lane. The runner persists your final response as the report artifact.",
+            "If web, skills, or plugin-like tools are unavailable, state the blocker and continue from the prompt.",
+            "Use enough detail for a useful durable report; keep labels scannable and put any long-report title/path in Next-phase handoff.",
             "Use these exact labels:",
             "Receipt:",
             "Beta:",
