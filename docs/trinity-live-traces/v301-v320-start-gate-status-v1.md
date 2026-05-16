@@ -1,16 +1,16 @@
 # v301-v320 Start Gate Status
 
-Generated UTC: `2026-05-16T11:25:01.876859+00:00`
+Generated UTC: `2026-05-16T12:28:58.259035+00:00`
 Status: `waiting_for_v281_v300_and_global_v2`
 Ready: `False`
-Responses: `450/600`
+Responses: `460/600`
 Complete phases: `15/20`
 Latest complete phase: `v295`
 First incomplete phase: `v296`
 Global v2 complete: `False`
 
 Blockers:
-- v281-v300 valid replies are 450/600
+- v281-v300 valid replies are 460/600
 - complete phases are 15/20
 - global v2 synthesis is not complete
 

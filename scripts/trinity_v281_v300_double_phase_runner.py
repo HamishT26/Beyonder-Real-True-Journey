@@ -53,6 +53,11 @@ def append_line(path: Path, text: str) -> None:
         handle.write(text.rstrip("\n") + "\n")
 
 
+def persist_status(path: Path, status: dict[str, Any]) -> None:
+    status["updated_utc"] = now_iso()
+    write_json(path, status)
+
+
 def redact(text: str) -> str:
     markers = [
         "__cf" + "_chl",
@@ -268,18 +273,42 @@ def completed_for_phase(phase: int) -> int:
     )
 
 
-def run_lane(lane: str, turns: list[dict[str, Any]], timeout: int, kimi_max_steps: int, status: dict[str, Any]) -> None:
+def run_lane(
+    lane: str,
+    turns: list[dict[str, Any]],
+    timeout: int,
+    kimi_max_steps: int,
+    status: dict[str, Any],
+    status_file: Path,
+) -> None:
     for turn in turns:
         phase = int(turn["phase"])
         turn_number = int(turn["turn"])
         out = response_path(lane, phase, turn_number)
         if STOP_FILE.exists():
             status["events"].append({"time": now_iso(), "lane": lane, "turn": turn_number, "status": "stopped_by_stop_file"})
+            persist_status(status_file, status)
             break
         if is_valid_response(out):
             status["events"].append({"time": now_iso(), "lane": lane, "turn": turn_number, "status": "skipped_existing"})
+            status["completed_for_phase"] = completed_for_phase(phase)
+            persist_status(status_file, status)
             continue
         append_line(lane_log(lane), f"{now_iso()} | V{phase}-START | turn={turn_number:02d} | marker={turn['marker']}")
+        start_event = {
+            "time": now_iso(),
+            "lane": lane,
+            "turn": turn_number,
+            "status": "turn_started",
+            "marker": turn.get("marker"),
+            "timeout_sec": timeout,
+        }
+        status["active_lane"] = lane
+        status["active_turn"] = turn_number
+        status["active_marker"] = turn.get("marker")
+        status["active_turn_started_utc"] = start_event["time"]
+        status["events"].append(start_event)
+        persist_status(status_file, status)
         try:
             if lane in CODEX_LANES:
                 result = run_codex(turn, timeout)
@@ -292,6 +321,11 @@ def run_lane(lane: str, turns: list[dict[str, Any]], timeout: int, kimi_max_step
         append_line(lane_log(lane), f"{now_iso()} | V{phase}-END | turn={turn_number:02d} | ok={result.get('ok')} | response={result.get('response_file')}")
         status["events"].append({"time": now_iso(), "lane": lane, "turn": turn_number, **result})
         status["completed_for_phase"] = completed_for_phase(phase)
+        status.pop("active_lane", None)
+        status.pop("active_turn", None)
+        status.pop("active_marker", None)
+        status.pop("active_turn_started_utc", None)
+        persist_status(status_file, status)
 
 
 def synthesize_phase(phase: int, prompt_file: Path) -> dict[str, Any]:
@@ -413,8 +447,8 @@ def main() -> int:
     for lane in selected_lanes:
         turns = [turn for turn in prompt_payload.get("prompts", []) if turn.get("lane") == lane]
         turns = turns[: max(0, args.max_turns_per_lane)]
-        run_lane(lane, turns, args.timeout_sec, args.kimi_max_steps, status)
-        write_json(status_file, status)
+        run_lane(lane, turns, args.timeout_sec, args.kimi_max_steps, status, status_file)
+        persist_status(status_file, status)
 
     status["completed_for_phase"] = completed_for_phase(args.phase)
     status["status"] = "complete" if status["completed_for_phase"] >= len(prompt_payload.get("prompts", [])) else "incomplete"
