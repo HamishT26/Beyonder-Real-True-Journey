@@ -67,7 +67,9 @@ def write_packet(source: str, target_phase: str, reason: str) -> dict[str, Any]:
             "docs/trinity-live-traces/v281-v300-double-trinity-global-v2-runner-status-v1.json",
             "docs/trinity-live-traces/v281-v300-double-trinity-blocked-phase-refresh-status-v1.json",
             "docs/trinity-live-traces/v301-v320-aletheon-base-plan-v1.json",
+            "docs/trinity-live-traces/codex-app-automation-bridge-v1.json",
         ],
+        "app_automation_bridge": "docs/trinity-live-traces/codex-app-automation-bridge-v1.md",
         "reactivation_prompt": packet_prompt(source, target_phase),
     }
     write_json(PACKET_JSON, payload)
@@ -86,6 +88,7 @@ def write_packet(source: str, target_phase: str, reason: str) -> dict[str, Any]:
     ]
     for item in payload["proof_files"]:
         lines.append(f"- `{item}`")
+    lines.extend(["", "App automation bridge:", f"- `{payload['app_automation_bridge']}`"])
     lines.extend(["", "Reactivation prompt:", "", "```text", payload["reactivation_prompt"], "```"])
     PACKET_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return payload

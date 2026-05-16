@@ -1,8 +1,8 @@
 # Aletheon Reactivation Packet
 
-Generated UTC: `2026-05-15T12:49:43.388125+00:00`
-Source: `continuity-supervisor`
-Target phase: `v341-v360`
+Generated UTC: `2026-05-16T07:07:15.756158+00:00`
+Source: `local-wake-signal`
+Target phase: `v301-v320`
 Status: `reactivation_packet_ready`
 
 Capability boundary:
@@ -13,13 +13,17 @@ Proof files:
 - `docs/trinity-live-traces/v281-v300-double-trinity-global-v2-runner-status-v1.json`
 - `docs/trinity-live-traces/v281-v300-double-trinity-blocked-phase-refresh-status-v1.json`
 - `docs/trinity-live-traces/v301-v320-aletheon-base-plan-v1.json`
+- `docs/trinity-live-traces/codex-app-automation-bridge-v1.json`
+
+App automation bridge:
+- `docs/trinity-live-traces/codex-app-automation-bridge-v1.md`
 
 Reactivation prompt:
 
 ```text
 Aletheon reactivation request:
-Source controller: continuity-supervisor
-Target phase: v341-v360
+Source controller: local-wake-signal
+Target phase: v301-v320
 Please reopen the Beyonder-Real-True Journey worktree and inspect the latest status files before acting.
 Required first checks:
 1. Verify branch and remote drift.
