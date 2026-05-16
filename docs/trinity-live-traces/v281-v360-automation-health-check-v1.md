@@ -1,12 +1,21 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-16T12:57:42.716329+00:00`
+Generated UTC: `2026-05-16T13:26:10.877493+00:00`
 Status: `standby`
 
-Automation:
+Primary automation:
+- ID: `aletheon`
+- Kind: `heartbeat`
+- Status: `PAUSED`
+- Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=30`
+- Interval minutes: `30`
+- Target thread: `019cc07b-70b8-7673-ac44-d2ee1fedb86a`
+
+Secondary automation:
+- ID: `grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os`
+- Kind: `cron`
 - Status: `PAUSED`
 - Schedule: `RRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA`
-- Model: `gpt-5.5` / `xhigh`
 - CWD includes target worktree: `False`
 
 Gate:
@@ -17,10 +26,12 @@ Gate:
 - Global v2 complete: `False`
 
 Findings:
-- Automation config status is PAUSED; activate through the Codex app UI rather than editing TOML directly.
-- Automation cwd is not the D: worktree; keep the prompt's explicit D: worktree instruction, and choose the D: project/worktree in the UI if available.
+- Primary Aletheon chat heartbeat exists and targets this Codex thread.
+- Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.
+- Primary chat heartbeat interval is 30 minutes; set it to 5 minutes for the active recovery loop.
+- Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
 - v301-v320 is not ready; automation should report standby only.
 - Local supervisor/watcher processes are present.
 
 Recommended action:
-- If the app UI shows PAUSED, unpause it. Do not start v301-v320 until gate.ready is true. If the UI lets you pick the D: worktree as the project, prefer that; otherwise keep the explicit D: path in the prompt.
+- Use the Aletheon chat heartbeat as primary. Set interval to 5 minutes, unpause it, and optionally Run now once. The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only.

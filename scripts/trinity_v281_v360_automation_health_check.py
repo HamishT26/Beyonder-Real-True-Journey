@@ -21,9 +21,9 @@ START_GATE_SCRIPT = ROOT / "scripts" / "trinity_v301_v320_start_gate.py"
 START_GATE = TRACE / "v301-v320-start-gate-status-v1.json"
 PHASE_296_STATUS = TRACE / "v281-v300-double-trinity-phase-v296-runner-status-v1-sequence.json"
 SUPERVISOR_STATUS = TRACE / "v281-v300-double-trinity-v1-sequence-supervisor-status-v1.json"
-AUTOMATION_DIR = Path.home() / ".codex" / "automations" / "grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os"
-AUTOMATION_TOML = AUTOMATION_DIR / "automation.toml"
-AUTOMATION_MEMORY = AUTOMATION_DIR / "memory.md"
+AUTOMATION_BASE = Path.home() / ".codex" / "automations"
+PRIMARY_AUTOMATION_ID = "aletheon"
+SECONDARY_AUTOMATION_ID = "grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os"
 
 
 def now_iso() -> str:
@@ -113,18 +113,63 @@ def process_snapshot() -> list[dict[str, Any]]:
     ]
 
 
+def parse_interval_minutes(rrule: str | None) -> int | None:
+    if not rrule:
+        return None
+    parts: dict[str, str] = {}
+    for item in rrule.replace("RRULE:", "").split(";"):
+        if "=" in item:
+            key, value = item.split("=", 1)
+            parts[key] = value
+    try:
+        interval = int(parts.get("INTERVAL", "1"))
+    except ValueError:
+        return None
+    freq = parts.get("FREQ")
+    if freq == "MINUTELY":
+        return interval
+    if freq == "HOURLY":
+        return interval * 60
+    return None
+
+
+def automation_record(automation_id: str) -> dict[str, Any]:
+    directory = AUTOMATION_BASE / automation_id
+    toml_path = directory / "automation.toml"
+    memory_path = directory / "memory.md"
+    config = read_toml(toml_path)
+    cwds = config.get("cwds") or []
+    root_text = str(ROOT)
+    cwd_mentions_root = any(str(cwd).lower() == root_text.lower() for cwd in cwds)
+    return {
+        "id": automation_id,
+        "path": str(toml_path),
+        "exists": toml_path.exists(),
+        "memory_path": str(memory_path),
+        "memory_exists": memory_path.exists(),
+        "name": config.get("name"),
+        "kind": config.get("kind"),
+        "status": config.get("status"),
+        "rrule": config.get("rrule"),
+        "interval_minutes": parse_interval_minutes(config.get("rrule")),
+        "target_thread_id": config.get("target_thread_id"),
+        "model": config.get("model"),
+        "reasoning_effort": config.get("reasoning_effort"),
+        "execution_environment": config.get("execution_environment"),
+        "cwds": cwds,
+        "cwd_mentions_target_worktree": cwd_mentions_root,
+    }
+
+
 def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     if args.refresh_gate:
         refresh_gate()
-    automation = read_toml(AUTOMATION_TOML)
+    primary = automation_record(PRIMARY_AUTOMATION_ID)
+    secondary = automation_record(SECONDARY_AUTOMATION_ID)
     gate = read_json(START_GATE, {})
     phase_296 = read_json(PHASE_296_STATUS, {})
     supervisor = read_json(SUPERVISOR_STATUS, {})
     processes = process_snapshot()
-    cwds = automation.get("cwds") or []
-    root_text = str(ROOT)
-    cwd_mentions_root = any(str(cwd).lower() == root_text.lower() for cwd in cwds)
-    paused = automation.get("status") == "PAUSED"
     ready = bool(gate.get("ready"))
     valid = gate.get("valid_responses")
     expected = gate.get("expected_responses")
@@ -133,10 +178,18 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         blockers = gate.get("blockers") or []
         global_v2_complete = not any("global v2" in str(item).lower() for item in blockers)
     findings: list[str] = []
-    if paused:
-        findings.append("Automation config status is PAUSED; activate through the Codex app UI rather than editing TOML directly.")
-    if not cwd_mentions_root:
-        findings.append("Automation cwd is not the D: worktree; keep the prompt's explicit D: worktree instruction, and choose the D: project/worktree in the UI if available.")
+    if primary.get("exists") and primary.get("kind") == "heartbeat" and primary.get("target_thread_id"):
+        findings.append("Primary Aletheon chat heartbeat exists and targets this Codex thread.")
+    else:
+        findings.append("Primary Aletheon chat heartbeat is missing or incomplete; keep using the older worktree automation only as fallback.")
+    if primary.get("status") == "PAUSED":
+        findings.append("Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.")
+    if primary.get("interval_minutes") and primary["interval_minutes"] > 5:
+        findings.append(f"Primary chat heartbeat interval is {primary['interval_minutes']} minutes; set it to 5 minutes for the active recovery loop.")
+    if secondary.get("exists") and secondary.get("status") != "PAUSED":
+        findings.append("Secondary worktree automation is active; consider pausing it to avoid duplicate wakeups while Aletheon chat heartbeat is primary.")
+    if secondary.get("exists") and not secondary.get("cwd_mentions_target_worktree"):
+        findings.append("Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.")
     if not ready:
         findings.append("v301-v320 is not ready; automation should report standby only.")
     if processes:
@@ -146,21 +199,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "generated_utc": now_iso(),
         "status": "ready_to_start_v301" if ready else "standby",
-        "automation": {
-            "path": str(AUTOMATION_TOML),
-            "exists": AUTOMATION_TOML.exists(),
-            "memory_path": str(AUTOMATION_MEMORY),
-            "memory_exists": AUTOMATION_MEMORY.exists(),
-            "name": automation.get("name"),
-            "kind": automation.get("kind"),
-            "status": automation.get("status"),
-            "rrule": automation.get("rrule"),
-            "model": automation.get("model"),
-            "reasoning_effort": automation.get("reasoning_effort"),
-            "execution_environment": automation.get("execution_environment"),
-            "cwds": cwds,
-            "cwd_mentions_target_worktree": cwd_mentions_root,
-        },
+        "primary_automation": primary,
+        "secondary_automation": secondary,
         "gate": {
             "path": rel(START_GATE),
             "ready": gate.get("ready"),
@@ -187,26 +227,36 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "processes": processes,
         "findings": findings,
         "recommended_action": (
-            "If the app UI shows PAUSED, unpause it. Do not start v301-v320 until gate.ready is true. "
-            "If the UI lets you pick the D: worktree as the project, prefer that; otherwise keep the explicit D: path in the prompt."
+            "Use the Aletheon chat heartbeat as primary. Set interval to 5 minutes, unpause it, and optionally Run now once. "
+            "The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
         ),
     }
 
 
 def write_md(payload: dict[str, Any]) -> None:
     gate = payload["gate"]
-    automation = payload["automation"]
+    primary = payload["primary_automation"]
+    secondary = payload["secondary_automation"]
     lines = [
         "# v281-v360 Automation Health Check",
         "",
         f"Generated UTC: `{payload['generated_utc']}`",
         f"Status: `{payload['status']}`",
         "",
-        "Automation:",
-        f"- Status: `{automation.get('status')}`",
-        f"- Schedule: `{automation.get('rrule')}`",
-        f"- Model: `{automation.get('model')}` / `{automation.get('reasoning_effort')}`",
-        f"- CWD includes target worktree: `{automation.get('cwd_mentions_target_worktree')}`",
+        "Primary automation:",
+        f"- ID: `{primary.get('id')}`",
+        f"- Kind: `{primary.get('kind')}`",
+        f"- Status: `{primary.get('status')}`",
+        f"- Schedule: `{primary.get('rrule')}`",
+        f"- Interval minutes: `{primary.get('interval_minutes')}`",
+        f"- Target thread: `{primary.get('target_thread_id')}`",
+        "",
+        "Secondary automation:",
+        f"- ID: `{secondary.get('id')}`",
+        f"- Kind: `{secondary.get('kind')}`",
+        f"- Status: `{secondary.get('status')}`",
+        f"- Schedule: `{secondary.get('rrule')}`",
+        f"- CWD includes target worktree: `{secondary.get('cwd_mentions_target_worktree')}`",
         "",
         "Gate:",
         f"- Ready: `{gate.get('ready')}`",

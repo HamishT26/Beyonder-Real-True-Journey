@@ -1,7 +1,26 @@
 {
-  "generated_utc": "2026-05-16T12:57:42.716329+00:00",
+  "generated_utc": "2026-05-16T13:26:10.877493+00:00",
   "status": "standby",
-  "automation": {
+  "primary_automation": {
+    "id": "aletheon",
+    "path": "C:\\Users\\hamis\\.codex\\automations\\aletheon\\automation.toml",
+    "exists": true,
+    "memory_path": "C:\\Users\\hamis\\.codex\\automations\\aletheon\\memory.md",
+    "memory_exists": true,
+    "name": "Aletheon",
+    "kind": "heartbeat",
+    "status": "PAUSED",
+    "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=30",
+    "interval_minutes": 30,
+    "target_thread_id": "019cc07b-70b8-7673-ac44-d2ee1fedb86a",
+    "model": null,
+    "reasoning_effort": null,
+    "execution_environment": null,
+    "cwds": [],
+    "cwd_mentions_target_worktree": false
+  },
+  "secondary_automation": {
+    "id": "grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os",
     "path": "C:\\Users\\hamis\\.codex\\automations\\grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os\\automation.toml",
     "exists": true,
     "memory_path": "C:\\Users\\hamis\\.codex\\automations\\grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os\\memory.md",
@@ -10,6 +29,8 @@
     "kind": "cron",
     "status": "PAUSED",
     "rrule": "RRULE:FREQ=HOURLY;INTERVAL=1;BYMINUTE=0;BYDAY=SU,MO,TU,WE,TH,FR,SA",
+    "interval_minutes": 60,
+    "target_thread_id": null,
     "model": "gpt-5.5",
     "reasoning_effort": "xhigh",
     "execution_environment": "worktree",
@@ -74,10 +95,12 @@
     }
   ],
   "findings": [
-    "Automation config status is PAUSED; activate through the Codex app UI rather than editing TOML directly.",
-    "Automation cwd is not the D: worktree; keep the prompt's explicit D: worktree instruction, and choose the D: project/worktree in the UI if available.",
+    "Primary Aletheon chat heartbeat exists and targets this Codex thread.",
+    "Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.",
+    "Primary chat heartbeat interval is 30 minutes; set it to 5 minutes for the active recovery loop.",
+    "Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.",
     "v301-v320 is not ready; automation should report standby only.",
     "Local supervisor/watcher processes are present."
   ],
-  "recommended_action": "If the app UI shows PAUSED, unpause it. Do not start v301-v320 until gate.ready is true. If the UI lets you pick the D: worktree as the project, prefer that; otherwise keep the explicit D: path in the prompt."
+  "recommended_action": "Use the Aletheon chat heartbeat as primary. Set interval to 5 minutes, unpause it, and optionally Run now once. The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
 }

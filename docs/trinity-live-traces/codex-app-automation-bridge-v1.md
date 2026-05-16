@@ -1,6 +1,6 @@
 # Codex App Automation Bridge
 
-Generated UTC: `2026-05-16T12:30:03.731725+00:00`
+Generated UTC: `2026-05-16T13:25:41.317007+00:00`
 Status: `ready_for_app_thread_automation_or_local_fallback`
 
 Capability boundary:
@@ -8,21 +8,21 @@ Capability boundary:
 
 Recommended app automation:
 - Type: `thread`
-- Schedule: `hourly app automation, backed by the local 5-minute wake poller while available`
+- Schedule: `primary chat-attached heartbeat every 5 minutes, backed by the local 5-minute wake poller while available`
 
 Screenshot assessment, 2026-05-17:
-- Status: `hourly_is_acceptable_with_local_watchdog`
-- Good: the automation exists in the Codex app and can act as the app-level safety wake.
-- Good: the prompt matches the recovery bridge intent and keeps the no-raw-log/no-live-partial boundary.
-- Plan: use `Hourly` app wakeups as the durable app layer, while the local wake poller remains the tighter 5-minute watchdog.
-- Recommended action: unpause it with `Repeats: Hourly`. If the app offers `Run now`, use it once after unpausing to confirm it reports standby rather than starting v301 early.
+- Status: `chat_heartbeat_is_preferred`
+- Good: the Aletheon automation is chat-attached and has a target thread.
+- Good: it supports minute intervals, so it is the preferred app wakeup path.
+- Plan: use `Every 5m` chat wakeups as the app layer, while the local wake poller remains the filesystem/process watchdog.
+- Recommended action: set Aletheon to `Every 5m`, unpause it, and optionally use `Run now` once to confirm it reports standby rather than starting v301 early.
 
 Manual thread automation request:
 
 ```text
 Create a thread automation attached to this current Codex thread.
 Name: GHC v281-v360 recovery wake bridge.
-Schedule: hourly until I ask you to stop or update it.
+Schedule: every 5 minutes until I ask you to stop or update it.
 Project: use the local Beyonder-Real-True Journey worktree at D:\GHC-Archives\worktrees\v58-omega.
 Automation type: thread automation, not standalone, because this workflow must preserve the current thread context.
 Sandbox: prefer workspace-write or stricter. Do not use full access unless I explicitly approve it for a specific run.
@@ -32,7 +32,7 @@ On each wakeup:
 2. If v281-v300 is below 600/600 or global v2 is incomplete, report only material progress, blockers, or stale runners. Do not stage live partial lane replies.
 3. If v281-v300 is 600/600 and global v2 is complete, wake Aletheon in this thread and ask to begin v301-v320 from the prepared gate and reactivation packet.
 4. Before any commit or push, verify branch drift and stage only curated non-raw artifacts. Never stage .raw.txt files, stdout/stderr logs, live .log files, or active partial lane files.
-5. Preserve the truth boundary: this hourly app automation is a safety wake. The local wake poller remains the tighter 5-minute watchdog when it is running.
+5. Preserve the truth boundary: this chat-attached heartbeat is the app wake, and the local wake poller remains the filesystem/process watchdog when it is running.
 
 Stop condition: after v301-v320 has started and a v321-v340 handoff exists, ask whether to update this automation for v341-v360 or archive it.
 ```
