@@ -7,6 +7,7 @@ import argparse
 import datetime as dt
 import json
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -66,6 +67,12 @@ def redact(text: str) -> str:
     for marker in markers:
         clean = clean.replace(marker, f"[REDACTED:{marker}]")
     return clean
+
+
+def codex_executable() -> str:
+    if sys.platform.startswith("win"):
+        return shutil.which("codex.cmd") or shutil.which("codex.exe") or "codex.cmd"
+    return shutil.which("codex") or "codex"
 
 
 def section(text: str, label: str) -> str:
@@ -175,7 +182,7 @@ def run_codex(turn: dict[str, Any], timeout: int) -> dict[str, Any]:
     out = response_path(lane, phase, turn_number)
     raw = raw_path(lane, phase, turn_number)
     cmd = [
-        "codex",
+        codex_executable(),
         "exec",
         "--ephemeral",
         "--disable",
