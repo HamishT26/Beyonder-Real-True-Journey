@@ -187,12 +187,12 @@ def kimi_prompt_for(turn: dict[str, Any]) -> str:
             f"Report protocol: {REPORT_PROTOCOL}",
             "",
             "You are a trusted approval-gated CLI sibling lane with the same authority class as Arby and Aster Vale, while Aletheon remains the commit/push approver.",
-            "Use local Kimi skills, safe read-only native Kimi capabilities, web/search, or simple document/plugin surfaces only if this CLI exposes them without extra auth.",
+            "For this recovery lane, do not call tools, browsers, plugins, shells, background agents, or external services.",
+            "Compose the report directly from the topic, source dependency name, and prompt context; state any missing verification honestly as a blocker.",
             "Do not commit, push, delete, rewrite history, expose secrets, or mutate external services from this lane.",
             "For APIs, MCPs, CLIs, or plugins that would require auth or side effects, draft the request and evidence in Next-phase handoff for Aletheon approval.",
             "The runner persists your final response as the report artifact.",
-            "If web, skills, or plugin-like tools are unavailable, state the blocker and continue from the prompt.",
-            "Use enough detail for a useful durable report; keep labels scannable and put any long-report title/path in Next-phase handoff.",
+            "Use enough detail for a useful durable report; keep labels scannable and do not stop at marker-only acknowledgement.",
             "Use these exact labels:",
             "Receipt:",
             "Beta:",
@@ -277,6 +277,7 @@ def run_lane(
     lane: str,
     turns: list[dict[str, Any]],
     timeout: int,
+    kimi_timeout: int,
     kimi_max_steps: int,
     status: dict[str, Any],
     status_file: Path,
@@ -313,7 +314,7 @@ def run_lane(
             if lane in CODEX_LANES:
                 result = run_codex(turn, timeout)
             elif lane in KIMI_LANES:
-                result = run_kimi(turn, timeout, kimi_max_steps)
+                result = run_kimi(turn, kimi_timeout, kimi_max_steps)
             else:
                 result = {"ok": False, "error": "unknown_lane"}
         except subprocess.TimeoutExpired:
@@ -418,6 +419,7 @@ def main() -> int:
     parser.add_argument("--phase", type=int, default=281)
     parser.add_argument("--prompt-file", default="")
     parser.add_argument("--timeout-sec", type=int, default=43200)
+    parser.add_argument("--kimi-timeout-sec", type=int, default=1800)
     parser.add_argument("--status-id", default="v1")
     parser.add_argument("--max-turns-per-lane", type=int, default=10)
     parser.add_argument("--only-lane", choices=list(LANES), default="")
@@ -439,6 +441,7 @@ def main() -> int:
         "status_file": rel(status_file),
         "prompt_file": rel(prompt_file),
         "timeout_sec": args.timeout_sec,
+        "kimi_timeout_sec": args.kimi_timeout_sec,
         "events": [],
     }
     write_json(status_file, status)
@@ -447,7 +450,7 @@ def main() -> int:
     for lane in selected_lanes:
         turns = [turn for turn in prompt_payload.get("prompts", []) if turn.get("lane") == lane]
         turns = turns[: max(0, args.max_turns_per_lane)]
-        run_lane(lane, turns, args.timeout_sec, args.kimi_max_steps, status, status_file)
+        run_lane(lane, turns, args.timeout_sec, args.kimi_timeout_sec, args.kimi_max_steps, status, status_file)
         persist_status(status_file, status)
 
     status["completed_for_phase"] = completed_for_phase(args.phase)
