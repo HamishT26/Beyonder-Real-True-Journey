@@ -1,6 +1,6 @@
 # Codex App Automation Bridge
 
-Generated UTC: `2026-05-16T13:25:41.317007+00:00`
+Generated UTC: `2026-05-16T14:33:58.006416+00:00`
 Status: `ready_for_app_thread_automation_or_local_fallback`
 
 Capability boundary:
@@ -8,21 +8,21 @@ Capability boundary:
 
 Recommended app automation:
 - Type: `thread`
-- Schedule: `primary chat-attached heartbeat every 5 minutes, backed by the local 5-minute wake poller while available`
+- Schedule: `primary chat-attached heartbeat every 30 minutes, backed by the lightweight local 5-minute filesystem watchdog while available`
 
 Screenshot assessment, 2026-05-17:
 - Status: `chat_heartbeat_is_preferred`
 - Good: the Aletheon automation is chat-attached and has a target thread.
 - Good: it supports minute intervals, so it is the preferred app wakeup path.
-- Plan: use `Every 5m` chat wakeups as the app layer, while the local wake poller remains the filesystem/process watchdog.
-- Recommended action: set Aletheon to `Every 5m`, unpause it, and optionally use `Run now` once to confirm it reports standby rather than starting v301 early.
+- Plan: use `Every 30m` chat wakeups as the app layer, while the local wake poller remains the lightweight filesystem/process watchdog.
+- Recommended action: set Aletheon to `Every 30m`, unpause it, and optionally use `Run now` once to confirm it reports standby rather than starting v301 early.
 
 Manual thread automation request:
 
 ```text
 Create a thread automation attached to this current Codex thread.
 Name: GHC v281-v360 recovery wake bridge.
-Schedule: every 5 minutes until I ask you to stop or update it.
+Schedule: every 30 minutes until I ask you to stop or update it.
 Project: use the local Beyonder-Real-True Journey worktree at D:\GHC-Archives\worktrees\v58-omega.
 Automation type: thread automation, not standalone, because this workflow must preserve the current thread context.
 Sandbox: prefer workspace-write or stricter. Do not use full access unless I explicitly approve it for a specific run.

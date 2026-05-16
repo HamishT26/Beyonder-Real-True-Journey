@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-05-16T13:26:10.877493+00:00",
+  "generated_utc": "2026-05-16T14:33:59.993781+00:00",
   "status": "standby",
   "primary_automation": {
     "id": "aletheon",
@@ -10,8 +10,8 @@
     "name": "Aletheon",
     "kind": "heartbeat",
     "status": "PAUSED",
-    "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=30",
-    "interval_minutes": 30,
+    "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=5",
+    "interval_minutes": 5,
     "target_thread_id": "019cc07b-70b8-7673-ac44-d2ee1fedb86a",
     "model": null,
     "reasoning_effort": null,
@@ -97,10 +97,10 @@
   "findings": [
     "Primary Aletheon chat heartbeat exists and targets this Codex thread.",
     "Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.",
-    "Primary chat heartbeat interval is 30 minutes; set it to 5 minutes for the active recovery loop.",
+    "Primary chat heartbeat interval is 5 minutes; set it to 30 minutes for the energy-preserving recovery loop.",
     "Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.",
     "v301-v320 is not ready; automation should report standby only.",
     "Local supervisor/watcher processes are present."
   ],
-  "recommended_action": "Use the Aletheon chat heartbeat as primary. Set interval to 5 minutes, unpause it, and optionally Run now once. The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
+  "recommended_action": "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
 }

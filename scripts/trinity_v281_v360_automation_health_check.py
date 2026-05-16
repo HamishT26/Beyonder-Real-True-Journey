@@ -24,6 +24,7 @@ SUPERVISOR_STATUS = TRACE / "v281-v300-double-trinity-v1-sequence-supervisor-sta
 AUTOMATION_BASE = Path.home() / ".codex" / "automations"
 PRIMARY_AUTOMATION_ID = "aletheon"
 SECONDARY_AUTOMATION_ID = "grand-v281-to-v360-beta-alpha-omega-trinity-hybrid-os"
+TARGET_CHAT_HEARTBEAT_MINUTES = 30
 
 
 def now_iso() -> str:
@@ -184,8 +185,11 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Primary Aletheon chat heartbeat is missing or incomplete; keep using the older worktree automation only as fallback.")
     if primary.get("status") == "PAUSED":
         findings.append("Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.")
-    if primary.get("interval_minutes") and primary["interval_minutes"] > 5:
-        findings.append(f"Primary chat heartbeat interval is {primary['interval_minutes']} minutes; set it to 5 minutes for the active recovery loop.")
+    if primary.get("interval_minutes") != TARGET_CHAT_HEARTBEAT_MINUTES:
+        findings.append(
+            f"Primary chat heartbeat interval is {primary.get('interval_minutes')} minutes; set it to "
+            f"{TARGET_CHAT_HEARTBEAT_MINUTES} minutes for the energy-preserving recovery loop."
+        )
     if secondary.get("exists") and secondary.get("status") != "PAUSED":
         findings.append("Secondary worktree automation is active; consider pausing it to avoid duplicate wakeups while Aletheon chat heartbeat is primary.")
     if secondary.get("exists") and not secondary.get("cwd_mentions_target_worktree"):
@@ -227,7 +231,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "processes": processes,
         "findings": findings,
         "recommended_action": (
-            "Use the Aletheon chat heartbeat as primary. Set interval to 5 minutes, unpause it, and optionally Run now once. "
+            "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. "
             "The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
         ),
     }
