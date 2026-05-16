@@ -39,6 +39,7 @@ Stop condition: after v301-v320 has started and a v321-v340 handoff exists, ask 
 
 Local fallback commands:
 - `python scripts\trinity_v301_v320_start_gate.py`
+- `python scripts\trinity_v281_v360_automation_health_check.py --refresh-gate`
 - `python scripts\trinity_aletheon_wake_signal_poller.py --reason v295-v300-recovery-v301-gate`
 - `python scripts\trinity_aletheon_reactivation_packet.py --source local-wake-signal --target-phase v301-v320 --reason "Wake Aletheon when v281-v300 reaches 600/600 and global v2 synthesis is complete"`
 - `python scripts\trinity_v281_v300_global_v2_runner.py --watch --poll-sec 180 --timeout-sec 172800 --write-supervisor-candidate --write-reactivation-packet-on-complete --reactivation-target-phase v301-v320`
