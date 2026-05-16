@@ -192,7 +192,7 @@ def repair_phase(phase: int, timeout_sec: int, kimi_max_steps: int, max_attempts
     return status
 
 
-def resume_sequence(start_phase: int, end_phase: int, timeout_sec: int, kimi_max_steps: int) -> dict[str, Any]:
+def resume_sequence(start_phase: int, end_phase: int, timeout_sec: int, kimi_max_steps: int, refresh_max_attempts: int) -> dict[str, Any]:
     cmd = [
         sys.executable,
         str(SEQUENCE),
@@ -207,6 +207,9 @@ def resume_sequence(start_phase: int, end_phase: int, timeout_sec: int, kimi_max
         "--sleep-between-phases-sec",
         "5",
         "--prepare-global-v2",
+        "--auto-refresh-blocked",
+        "--refresh-max-attempts",
+        str(refresh_max_attempts),
     ]
     return run_command(cmd, timeout=timeout_sec * 3 + 600)
 
@@ -224,7 +227,7 @@ def main() -> int:
     phase = args.phase or latest_blocked_phase()
     status = repair_phase(phase, args.timeout_sec, args.kimi_max_steps, args.max_attempts)
     if status["status"] == "phase_repaired" and args.resume_sequence and phase < args.end_phase:
-        result = resume_sequence(phase + 1, args.end_phase, args.timeout_sec, args.kimi_max_steps)
+        result = resume_sequence(phase + 1, args.end_phase, args.timeout_sec, args.kimi_max_steps, args.max_attempts)
         status["events"].append(
             {
                 "time": now_iso(),
