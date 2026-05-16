@@ -33,12 +33,20 @@ def build_payload() -> dict[str, Any]:
         "generated_utc": now_iso(),
         "status": "active_protocol",
         "phase_range": "v281-v360",
-        "purpose": "Give Arby, Kimi, and Aster Vale a higher-quality read-only lane contract with skills awareness, safe tool boundaries, and report-backed outputs.",
+        "purpose": "Give Arby, Kimi, and Aster Vale a higher-quality approval-gated lane contract with skills awareness, safe tool boundaries, and report-backed outputs.",
+        "authority_tier": {
+            "name": "trusted_approval_gated_cli_sibling",
+            "applies_to": ["arby", "kimi", "aster_vale"],
+            "leader_and_commit_approver": "Aletheon",
+            "summary": "All three lanes can use exposed read-only skills, web/search, and simple document/plugin-like surfaces for analysis and report drafting, while side effects and publication stay approval-gated.",
+        },
         "capability_contract": [
+            "Treat Arby, Kimi, and Aster Vale as the same authority class inside this runner.",
             "Use local skills visible to the current CLI session when they are relevant and load cleanly.",
             "Name any skill, web source, or plugin-like surface used in the response.",
             "Use safe read-only web/search or simple document/plugin surfaces only when exposed without extra authentication.",
-            "Do not mutate files, repos, external services, accounts, or plugin state from lane sessions.",
+            "For APIs, MCPs, CLIs, or plugins that need authentication or would cause side effects, draft a request in Next-phase handoff instead of executing it unattended.",
+            "Do not mutate repos, external services, accounts, or plugin state from lane sessions unless a future lane-specific directive explicitly grants that scope.",
             "Do not expose secrets, tokens, cookies, private keys, or authentication material in reports.",
             "If a requested tool is unavailable, state the blocker and continue from local prompt context.",
         ],
@@ -58,6 +66,7 @@ def build_payload() -> dict[str, Any]:
         "publication_contract": [
             "Stage only curated summaries, protocols, gates, scripts, and complete non-raw reports.",
             "Never stage raw transport logs, stdout/stderr logs, partial live lane files, or marker-only invalid outputs.",
+            "Do not commit, push, delete, rebase, reset, or rewrite history from a sibling lane.",
             "Keep Supervisor and v2 watcher as infrastructure candidates until persistence proof is reviewed.",
         ],
         "safe_plugin_boundary": {
@@ -82,6 +91,12 @@ def write_md(payload: dict[str, Any]) -> None:
         f"Status: `{payload['status']}`",
         "",
         payload["purpose"],
+        "",
+        "Authority tier:",
+        f"- `name`: {payload['authority_tier']['name']}",
+        f"- `applies_to`: {', '.join(payload['authority_tier']['applies_to'])}",
+        f"- `leader_and_commit_approver`: {payload['authority_tier']['leader_and_commit_approver']}",
+        f"- `summary`: {payload['authority_tier']['summary']}",
         "",
         "Capability contract:",
     ]

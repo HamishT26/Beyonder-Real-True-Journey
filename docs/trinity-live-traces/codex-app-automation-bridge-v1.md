@@ -1,6 +1,6 @@
 # Codex App Automation Bridge
 
-Generated UTC: `2026-05-16T07:07:15.642549+00:00`
+Generated UTC: `2026-05-16T11:25:53.351953+00:00`
 Status: `ready_for_app_thread_automation_or_local_fallback`
 
 Capability boundary:
@@ -39,11 +39,11 @@ Local fallback commands:
 Current gate summary:
 
 - `v301_ready`: `False`
-- `valid_responses`: `429`
+- `valid_responses`: `450`
 - `expected_responses`: `600`
-- `complete_phases`: `14`
+- `complete_phases`: `15`
 - `expected_phases`: `20`
-- `first_incomplete_phase`: `295`
+- `first_incomplete_phase`: `296`
 - `wake_status`: `waiting`
 - `reactivation_target_phase`: `v301-v320`
 

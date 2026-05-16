@@ -135,9 +135,12 @@ def prompt_for(turn: dict[str, Any]) -> str:
     labels = "\n".join(f"- {item}:" for item in turn.get("required_labels", []))
     capabilities = "\n".join(
         [
+            "- You are a trusted approval-gated CLI sibling lane: use the same read-only capability class as the other lanes, while Aletheon remains the commit/push approver.",
             "- You may use local Codex skills visible to this CLI session; name any skill you rely on.",
             "- You may use safe read-only web/search or simple document/plugin surfaces only if this CLI exposes them without extra auth.",
-            "- Do not mutate files or external services from this lane. The runner persists your final response as the report artifact.",
+            "- Do not commit, push, delete, rewrite history, expose secrets, or mutate external services from this lane.",
+            "- For APIs, MCPs, CLIs, or plugins that would require auth or side effects, draft the request and evidence in Next-phase handoff for Aletheon approval.",
+            "- The runner persists your final response as the report artifact.",
             "- If a long report is needed, put a concise report capsule in Omega and name the recommended report title/path in Next-phase handoff.",
             "- Take the time needed; valid, evidence-first content matters more than speed.",
         ]
@@ -178,8 +181,11 @@ def kimi_prompt_for(turn: dict[str, Any]) -> str:
             f"Source dependency: {turn.get('source_dependency', 'none')}",
             f"Report protocol: {REPORT_PROTOCOL}",
             "",
-            "Use safe read-only native Kimi capabilities only if this CLI exposes them without extra auth.",
-            "Do not mutate files or external services from this lane. The runner persists your final response as the report artifact.",
+            "You are a trusted approval-gated CLI sibling lane with the same authority class as Arby and Aster Vale, while Aletheon remains the commit/push approver.",
+            "Use local Kimi skills, safe read-only native Kimi capabilities, web/search, or simple document/plugin surfaces only if this CLI exposes them without extra auth.",
+            "Do not commit, push, delete, rewrite history, expose secrets, or mutate external services from this lane.",
+            "For APIs, MCPs, CLIs, or plugins that would require auth or side effects, draft the request and evidence in Next-phase handoff for Aletheon approval.",
+            "The runner persists your final response as the report artifact.",
             "If web, skills, or plugin-like tools are unavailable, state the blocker and continue from the prompt.",
             "Use enough detail for a useful durable report; keep labels scannable and put any long-report title/path in Next-phase handoff.",
             "Use these exact labels:",
