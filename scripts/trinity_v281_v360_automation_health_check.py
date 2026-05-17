@@ -73,6 +73,7 @@ def process_snapshot() -> list[dict[str, Any]]:
     if not sys.platform.startswith("win"):
         return []
     pattern = (
+        "trinity_v281_v360_recovery_watchdog.py|"
         "trinity_v281_v300_v1_sequence_supervisor.py|"
         "trinity_v281_v300_double_phase_runner.py|"
         "trinity_v281_v300_global_v2_runner.py|"
@@ -194,7 +195,9 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Secondary worktree automation is active; consider pausing it to avoid duplicate wakeups while Aletheon chat heartbeat is primary.")
     if secondary.get("exists") and not secondary.get("cwd_mentions_target_worktree"):
         findings.append("Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.")
-    if not ready:
+    if ready:
+        findings.append("v301-v320 start gate is ready; begin from the Aletheon run status and reactivation packet.")
+    else:
         findings.append("v301-v320 is not ready; automation should report standby only.")
     if processes:
         findings.append("Local supervisor/watcher processes are present.")
@@ -231,8 +234,13 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "processes": processes,
         "findings": findings,
         "recommended_action": (
-            "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. "
-            "The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
+            "Gate is ready. Use the Aletheon chat heartbeat as primary, unpause it if needed, and begin v301 from "
+            "docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Keep the old worktree automation paused or fallback-only."
+            if ready
+            else (
+                "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. "
+                "The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
+            )
         ),
     }
 
