@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-05-16T14:33:59.993781+00:00",
-  "status": "standby",
+  "generated_utc": "2026-05-17T07:46:59.500636+00:00",
+  "status": "v301_v320_running",
   "primary_automation": {
     "id": "aletheon",
     "path": "C:\\Users\\hamis\\.codex\\automations\\aletheon\\automation.toml",
@@ -9,9 +9,9 @@
     "memory_exists": true,
     "name": "Aletheon",
     "kind": "heartbeat",
-    "status": "PAUSED",
-    "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=5",
-    "interval_minutes": 5,
+    "status": "ACTIVE",
+    "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=30",
+    "interval_minutes": 30,
     "target_thread_id": "019cc07b-70b8-7673-ac44-d2ee1fedb86a",
     "model": null,
     "reasoning_effort": null,
@@ -41,14 +41,26 @@
   },
   "gate": {
     "path": "docs/trinity-live-traces/v301-v320-start-gate-status-v1.json",
-    "ready": false,
-    "status": "waiting_for_v281_v300_and_global_v2",
-    "valid_responses": 460,
+    "ready": true,
+    "status": "ready_to_start_v301_v320",
+    "valid_responses": 600,
     "expected_responses": 600,
-    "complete_phases": 15,
+    "complete_phases": 20,
     "expected_phases": 20,
-    "first_incomplete_phase": 296,
-    "global_v2_complete": false
+    "first_incomplete_phase": null,
+    "global_v2_complete": true
+  },
+  "v301_v320_run": {
+    "path": "docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.json",
+    "status": "running",
+    "active_phase": 302,
+    "active_phase_status": "phase_started",
+    "last_completion": {
+      "phase": 301,
+      "json": "docs/trinity-live-traces/v301-v320-aletheon-phase-v301-completion-v1.json",
+      "md": "docs/trinity-live-traces/v301-v320-aletheon-phase-v301-completion-v1.md"
+    },
+    "next_action": "Execute v302 tasks, write a v302 completion receipt, then decide whether v303 can open."
   },
   "phase_296": {
     "path": "docs/trinity-live-traces/v281-v300-double-trinity-phase-v296-runner-status-v1-sequence.json",
@@ -60,47 +72,21 @@
   "supervisor": {
     "path": "docs/trinity-live-traces/v281-v300-double-trinity-v1-sequence-supervisor-status-v1.json",
     "status": "running",
-    "latest_phase": 296
+    "latest_phase": 300
   },
   "processes": [
     {
-      "pid": 10208,
-      "parent_pid": 7228,
+      "pid": 7956,
+      "parent_pid": 6880,
       "name": "python.exe",
-      "command": "\"C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" scripts\\trinity_v281_v300_global_v2_runner.py --watch --poll-sec 180 --timeout-sec 172800 --write-supervisor-candidate --write-reactivation-packet-on-complete --reactivation-target-phase v301-v320 "
-    },
-    {
-      "pid": 15032,
-      "parent_pid": 14548,
-      "name": "python.exe",
-      "command": "\"C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" scripts\\trinity_aletheon_wake_signal_poller.py --watch --poll-sec 300 --reason v295-v300-recovery-v301-gate "
-    },
-    {
-      "pid": 12160,
-      "parent_pid": 10712,
-      "name": "python.exe",
-      "command": "\"C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" scripts\\trinity_v281_v300_v1_sequence_supervisor.py --start-phase 296 --end-phase 300 --timeout-sec 43200 --kimi-max-steps 6 --sleep-between-phases-sec 5 --prepare-global-v2 --auto-refresh-blocked --refresh-max-attempts 2 "
-    },
-    {
-      "pid": 2076,
-      "parent_pid": 12160,
-      "name": "python.exe",
-      "command": "C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python.exe D:\\GHC-Archives\\worktrees\\v58-omega\\scripts\\trinity_v281_v300_double_phase_runner.py --phase 296 --timeout-sec 43200 --status-id v1-sequence --max-turns-per-lane 10 --kimi-max-steps 6"
-    },
-    {
-      "pid": 4356,
-      "parent_pid": 2076,
-      "name": "kimi.exe",
-      "command": "kimi --work-dir D:\\GHC-Archives\\worktrees\\v58-omega --print --final-message-only --max-steps-per-turn 6 --prompt \"Marker: v281-v300-double-trinity:v296:kimi:eureka-05\nLane: Kimi\nTopic: GMUT claim boundary: verified science, metaphor, and speculation\nSource dependency: docs/trinity-live-traces/v281-v300-double-trinity-global-v2-session-plan-v1.json\nReport protocol: docs/trinity-live-traces/v281-v360-cli-sibling-report-protocol-v1.md\n\nUse safe read-only native Kimi capabilities only if this CLI exposes them without extra auth.\nDo not mutate files or external services from this lane. The runner persists your final response as the report artifact.\nIf web, skills, or plugin-like tools are unavailable, state the blocker and continue from the prompt.\nUse enough detail for a useful durable report; keep labels scannable and put any long-report title/path in Next-phase handoff.\nUse these exact labels:\nReceipt:\nBeta:\nAlpha:\nOmega:\nBlocker:\nNext-phase handoff:\""
+      "command": "\"C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" scripts\\trinity_v281_v360_recovery_watchdog.py --watch --poll-sec 300 --stale-minutes 20 --repair --ensure-global-watch --max-attempts 6 "
     }
   ],
   "findings": [
     "Primary Aletheon chat heartbeat exists and targets this Codex thread.",
-    "Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.",
-    "Primary chat heartbeat interval is 5 minutes; set it to 30 minutes for the energy-preserving recovery loop.",
     "Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.",
-    "v301-v320 is not ready; automation should report standby only.",
+    "v301-v320 is already running at v302; do not reopen v301.",
     "Local supervisor/watcher processes are present."
   ],
-  "recommended_action": "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
+  "recommended_action": "Continue v302 from docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Do not rerun the v301 start gate; complete the active phase, write its completion receipt, and only then open the next phase."
 }

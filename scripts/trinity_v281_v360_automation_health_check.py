@@ -19,6 +19,7 @@ OUT_JSON = TRACE / "v281-v360-automation-health-check-v1.json"
 OUT_MD = TRACE / "v281-v360-automation-health-check-v1.md"
 START_GATE_SCRIPT = ROOT / "scripts" / "trinity_v301_v320_start_gate.py"
 START_GATE = TRACE / "v301-v320-start-gate-status-v1.json"
+V301_RUN_STATUS = TRACE / "v301-v320-aletheon-run-status-v1.json"
 PHASE_296_STATUS = TRACE / "v281-v300-double-trinity-phase-v296-runner-status-v1-sequence.json"
 SUPERVISOR_STATUS = TRACE / "v281-v300-double-trinity-v1-sequence-supervisor-status-v1.json"
 AUTOMATION_BASE = Path.home() / ".codex" / "automations"
@@ -169,10 +170,16 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     primary = automation_record(PRIMARY_AUTOMATION_ID)
     secondary = automation_record(SECONDARY_AUTOMATION_ID)
     gate = read_json(START_GATE, {})
+    v301_run = read_json(V301_RUN_STATUS, {})
     phase_296 = read_json(PHASE_296_STATUS, {})
     supervisor = read_json(SUPERVISOR_STATUS, {})
     processes = process_snapshot()
     ready = bool(gate.get("ready"))
+    v301_running = (
+        v301_run.get("status") == "running"
+        and str(v301_run.get("phase_range", "")).lower() == "v301-v320"
+        and int(v301_run.get("active_phase") or 0) >= 301
+    )
     valid = gate.get("valid_responses")
     expected = gate.get("expected_responses")
     global_v2_complete = gate.get("global_v2_complete")
@@ -195,7 +202,11 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Secondary worktree automation is active; consider pausing it to avoid duplicate wakeups while Aletheon chat heartbeat is primary.")
     if secondary.get("exists") and not secondary.get("cwd_mentions_target_worktree"):
         findings.append("Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.")
-    if ready:
+    if v301_running:
+        findings.append(
+            f"v301-v320 is already running at v{v301_run.get('active_phase')}; do not reopen v301."
+        )
+    elif ready:
         findings.append("v301-v320 start gate is ready; begin from the Aletheon run status and reactivation packet.")
     else:
         findings.append("v301-v320 is not ready; automation should report standby only.")
@@ -203,9 +214,26 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Local supervisor/watcher processes are present.")
     else:
         findings.append("No local runner processes matched the health pattern; inspect before assuming background progress.")
+    status = "v301_v320_running" if v301_running else ("ready_to_start_v301" if ready else "standby")
+    if v301_running:
+        recommended_action = (
+            f"Continue v{v301_run.get('active_phase')} from docs/trinity-live-traces/"
+            "v301-v320-aletheon-run-status-v1.md. Do not rerun the v301 start gate; complete the active phase, "
+            "write its completion receipt, and only then open the next phase."
+        )
+    elif ready:
+        recommended_action = (
+            "Gate is ready. Use the Aletheon chat heartbeat as primary, unpause it if needed, and begin v301 from "
+            "docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Keep the old worktree automation paused or fallback-only."
+        )
+    else:
+        recommended_action = (
+            "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. "
+            "The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
+        )
     return {
         "generated_utc": now_iso(),
-        "status": "ready_to_start_v301" if ready else "standby",
+        "status": status,
         "primary_automation": primary,
         "secondary_automation": secondary,
         "gate": {
@@ -218,6 +246,14 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "expected_phases": gate.get("expected_phases"),
             "first_incomplete_phase": gate.get("first_incomplete_phase"),
             "global_v2_complete": global_v2_complete,
+        },
+        "v301_v320_run": {
+            "path": rel(V301_RUN_STATUS),
+            "status": v301_run.get("status"),
+            "active_phase": v301_run.get("active_phase"),
+            "active_phase_status": v301_run.get("active_phase_status"),
+            "last_completion": v301_run.get("last_completion"),
+            "next_action": v301_run.get("next_action"),
         },
         "phase_296": {
             "path": rel(PHASE_296_STATUS),
@@ -233,20 +269,13 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         },
         "processes": processes,
         "findings": findings,
-        "recommended_action": (
-            "Gate is ready. Use the Aletheon chat heartbeat as primary, unpause it if needed, and begin v301 from "
-            "docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Keep the old worktree automation paused or fallback-only."
-            if ready
-            else (
-                "Use the Aletheon chat heartbeat as primary. Set interval to 30 minutes, unpause it, and optionally Run now once. "
-                "The expected result is standby until gate.ready is true. Keep the old worktree automation paused or fallback-only."
-            )
-        ),
+        "recommended_action": recommended_action,
     }
 
 
 def write_md(payload: dict[str, Any]) -> None:
     gate = payload["gate"]
+    v301_run = payload["v301_v320_run"]
     primary = payload["primary_automation"]
     secondary = payload["secondary_automation"]
     lines = [
@@ -276,6 +305,12 @@ def write_md(payload: dict[str, Any]) -> None:
         f"- Complete phases: `{gate.get('complete_phases')}/{gate.get('expected_phases')}`",
         f"- First incomplete phase: `v{gate.get('first_incomplete_phase')}`",
         f"- Global v2 complete: `{gate.get('global_v2_complete')}`",
+        "",
+        "v301-v320 run:",
+        f"- Status: `{v301_run.get('status')}`",
+        f"- Active phase: `v{v301_run.get('active_phase')}`",
+        f"- Active phase status: `{v301_run.get('active_phase_status')}`",
+        f"- Next action: `{v301_run.get('next_action')}`",
         "",
         "Findings:",
     ]
