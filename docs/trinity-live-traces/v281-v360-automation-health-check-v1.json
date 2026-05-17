@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-05-17T21:02:29.087970+00:00",
-  "status": "v301_v320_complete_handoff_ready",
+  "generated_utc": "2026-05-17T21:48:30.412296+00:00",
+  "status": "v321_v340_running",
   "primary_automation": {
     "id": "aletheon",
     "path": "C:\\Users\\hamis\\.codex\\automations\\aletheon\\automation.toml",
@@ -9,7 +9,7 @@
     "memory_exists": true,
     "name": "Aletheon",
     "kind": "heartbeat",
-    "status": "ACTIVE",
+    "status": "PAUSED",
     "rrule": "RRULE:FREQ=MINUTELY;INTERVAL=30",
     "interval_minutes": 30,
     "target_thread_id": "019cc07b-70b8-7673-ac44-d2ee1fedb86a",
@@ -66,6 +66,18 @@
     "path": "docs/trinity-live-traces/v321-v340-sibling-handoff-v1.json",
     "exists": true
   },
+  "v321_v340_run": {
+    "path": "docs/trinity-live-traces/v321-v340-sibling-run-status-v1.json",
+    "status": "running",
+    "active_phase": 322,
+    "active_phase_status": "phase_started",
+    "last_completion": {
+      "phase": 321,
+      "json": "docs/trinity-live-traces/v321-v340-sibling-phase-v321-completion-v1.json",
+      "md": "docs/trinity-live-traces/v321-v340-sibling-phase-v321-completion-v1.md"
+    },
+    "next_action": "Execute v322 sibling tasks, write v1/v2 reports, complete v322, then decide whether v323 can open."
+  },
   "phase_296": {
     "path": "docs/trinity-live-traces/v281-v300-double-trinity-phase-v296-runner-status-v1-sequence.json",
     "status": "running",
@@ -88,10 +100,10 @@
   ],
   "findings": [
     "Primary Aletheon chat heartbeat exists and targets this Codex thread.",
+    "Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.",
     "Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.",
-    "v301-v320 is complete at v320; do not reopen v301.",
-    "v321-v340 sibling handoff exists and can be used for the next phase.",
+    "v321-v340 is already running at v322; do not reopen v321.",
     "Local supervisor/watcher processes are present."
   ],
-  "recommended_action": "v301-v320 is complete and the v321-v340 sibling handoff exists. Ask whether to update the Aletheon heartbeat for v341-v360 or archive the current recovery bridge."
+  "recommended_action": "Continue v322 from docs/trinity-live-traces/v321-v340-sibling-run-status-v1.md. Complete the active sibling phase, write v1/v2 reports, and only then open the next sibling phase."
 }

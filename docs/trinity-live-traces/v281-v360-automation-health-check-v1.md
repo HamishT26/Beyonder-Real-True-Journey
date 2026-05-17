@@ -1,12 +1,12 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-17T21:02:29.087970+00:00`
-Status: `v301_v320_complete_handoff_ready`
+Generated UTC: `2026-05-17T21:48:30.412296+00:00`
+Status: `v321_v340_running`
 
 Primary automation:
 - ID: `aletheon`
 - Kind: `heartbeat`
-- Status: `ACTIVE`
+- Status: `PAUSED`
 - Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=30`
 - Interval minutes: `30`
 - Target thread: `019cc07b-70b8-7673-ac44-d2ee1fedb86a`
@@ -35,12 +35,18 @@ v321-v340 handoff:
 - Exists: `True`
 - Path: `docs/trinity-live-traces/v321-v340-sibling-handoff-v1.json`
 
+v321-v340 run:
+- Status: `running`
+- Active phase: `v322`
+- Active phase status: `phase_started`
+- Next action: `Execute v322 sibling tasks, write v1/v2 reports, complete v322, then decide whether v323 can open.`
+
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
+- Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v301-v320 is complete at v320; do not reopen v301.
-- v321-v340 sibling handoff exists and can be used for the next phase.
+- v321-v340 is already running at v322; do not reopen v321.
 - Local supervisor/watcher processes are present.
 
 Recommended action:
-- v301-v320 is complete and the v321-v340 sibling handoff exists. Ask whether to update the Aletheon heartbeat for v341-v360 or archive the current recovery bridge.
+- Continue v322 from docs/trinity-live-traces/v321-v340-sibling-run-status-v1.md. Complete the active sibling phase, write v1/v2 reports, and only then open the next sibling phase.
