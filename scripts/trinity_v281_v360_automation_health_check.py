@@ -20,6 +20,7 @@ OUT_MD = TRACE / "v281-v360-automation-health-check-v1.md"
 START_GATE_SCRIPT = ROOT / "scripts" / "trinity_v301_v320_start_gate.py"
 START_GATE = TRACE / "v301-v320-start-gate-status-v1.json"
 V301_RUN_STATUS = TRACE / "v301-v320-aletheon-run-status-v1.json"
+V321_HANDOFF = TRACE / "v321-v340-sibling-handoff-v1.json"
 PHASE_296_STATUS = TRACE / "v281-v300-double-trinity-phase-v296-runner-status-v1-sequence.json"
 SUPERVISOR_STATUS = TRACE / "v281-v300-double-trinity-v1-sequence-supervisor-status-v1.json"
 AUTOMATION_BASE = Path.home() / ".codex" / "automations"
@@ -180,6 +181,13 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         and str(v301_run.get("phase_range", "")).lower() == "v301-v320"
         and int(v301_run.get("active_phase") or 0) >= 301
     )
+    v301_complete = (
+        v301_run.get("status") == "phase_complete_waiting"
+        and str(v301_run.get("phase_range", "")).lower() == "v301-v320"
+        and int(v301_run.get("active_phase") or 0) >= 320
+        and v301_run.get("active_phase_status") == "phase_complete"
+    )
+    v321_handoff_ready = V321_HANDOFF.exists()
     valid = gate.get("valid_responses")
     expected = gate.get("expected_responses")
     global_v2_complete = gate.get("global_v2_complete")
@@ -202,7 +210,13 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Secondary worktree automation is active; consider pausing it to avoid duplicate wakeups while Aletheon chat heartbeat is primary.")
     if secondary.get("exists") and not secondary.get("cwd_mentions_target_worktree"):
         findings.append("Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.")
-    if v301_running:
+    if v301_complete:
+        findings.append("v301-v320 is complete at v320; do not reopen v301.")
+        if v321_handoff_ready:
+            findings.append("v321-v340 sibling handoff exists and can be used for the next phase.")
+        else:
+            findings.append("v321-v340 sibling handoff is still missing; prepare it before changing the heartbeat.")
+    elif v301_running:
         findings.append(
             f"v301-v320 is already running at v{v301_run.get('active_phase')}; do not reopen v301."
         )
@@ -214,8 +228,27 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Local supervisor/watcher processes are present.")
     else:
         findings.append("No local runner processes matched the health pattern; inspect before assuming background progress.")
-    status = "v301_v320_running" if v301_running else ("ready_to_start_v301" if ready else "standby")
-    if v301_running:
+    if v301_complete and v321_handoff_ready:
+        status = "v301_v320_complete_handoff_ready"
+    elif v301_complete:
+        status = "v301_v320_complete_waiting_handoff"
+    elif v301_running:
+        status = "v301_v320_running"
+    elif ready:
+        status = "ready_to_start_v301"
+    else:
+        status = "standby"
+    if v301_complete and v321_handoff_ready:
+        recommended_action = (
+            "v301-v320 is complete and the v321-v340 sibling handoff exists. Ask whether to update the "
+            "Aletheon heartbeat for v341-v360 or archive the current recovery bridge."
+        )
+    elif v301_complete:
+        recommended_action = (
+            "v301-v320 is complete. Prepare docs/trinity-live-traces/v321-v340-sibling-handoff-v1.md "
+            "before changing or archiving the Aletheon heartbeat."
+        )
+    elif v301_running:
         recommended_action = (
             f"Continue v{v301_run.get('active_phase')} from docs/trinity-live-traces/"
             "v301-v320-aletheon-run-status-v1.md. Do not rerun the v301 start gate; complete the active phase, "
@@ -255,6 +288,10 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "last_completion": v301_run.get("last_completion"),
             "next_action": v301_run.get("next_action"),
         },
+        "v321_v340_handoff": {
+            "path": rel(V321_HANDOFF),
+            "exists": v321_handoff_ready,
+        },
         "phase_296": {
             "path": rel(PHASE_296_STATUS),
             "status": phase_296.get("status"),
@@ -276,6 +313,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
 def write_md(payload: dict[str, Any]) -> None:
     gate = payload["gate"]
     v301_run = payload["v301_v320_run"]
+    handoff = payload["v321_v340_handoff"]
     primary = payload["primary_automation"]
     secondary = payload["secondary_automation"]
     lines = [
@@ -311,6 +349,10 @@ def write_md(payload: dict[str, Any]) -> None:
         f"- Active phase: `v{v301_run.get('active_phase')}`",
         f"- Active phase status: `{v301_run.get('active_phase_status')}`",
         f"- Next action: `{v301_run.get('next_action')}`",
+        "",
+        "v321-v340 handoff:",
+        f"- Exists: `{handoff.get('exists')}`",
+        f"- Path: `{handoff.get('path')}`",
         "",
         "Findings:",
     ]

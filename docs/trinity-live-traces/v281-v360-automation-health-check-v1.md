@@ -1,7 +1,7 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-17T20:27:06.357875+00:00`
-Status: `v301_v320_running`
+Generated UTC: `2026-05-17T21:02:29.087970+00:00`
+Status: `v301_v320_complete_handoff_ready`
 
 Primary automation:
 - ID: `aletheon`
@@ -26,16 +26,21 @@ Gate:
 - Global v2 complete: `True`
 
 v301-v320 run:
-- Status: `running`
+- Status: `phase_complete_waiting`
 - Active phase: `v320`
-- Active phase status: `phase_started`
-- Next action: `Execute v320 tasks, write a v320 completion receipt, then decide whether v321 can open.`
+- Active phase status: `phase_complete`
+- Next action: `Hold for operator or automation heartbeat before opening the next phase.`
+
+v321-v340 handoff:
+- Exists: `True`
+- Path: `docs/trinity-live-traces/v321-v340-sibling-handoff-v1.json`
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v301-v320 is already running at v320; do not reopen v301.
+- v301-v320 is complete at v320; do not reopen v301.
+- v321-v340 sibling handoff exists and can be used for the next phase.
 - Local supervisor/watcher processes are present.
 
 Recommended action:
-- Continue v320 from docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Do not rerun the v301 start gate; complete the active phase, write its completion receipt, and only then open the next phase.
+- v301-v320 is complete and the v321-v340 sibling handoff exists. Ask whether to update the Aletheon heartbeat for v341-v360 or archive the current recovery bridge.

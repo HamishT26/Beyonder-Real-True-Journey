@@ -1,17 +1,17 @@
 # v301-v320 Aletheon Run Status
 
-Generated UTC: `2026-05-17T20:26:55.081554+00:00`
-Status: `running`
+Generated UTC: `2026-05-17T20:59:36.149572+00:00`
+Status: `phase_complete_waiting`
 Active phase: `v320`
-Active phase status: `phase_started`
+Active phase status: `phase_complete`
 
 Active artifacts:
-- `docs/trinity-live-traces/v301-v320-aletheon-phase-v320-start-v1.json`
-- `docs/trinity-live-traces/v301-v320-aletheon-phase-v320-start-v1.md`
+- `docs/trinity-live-traces/v301-v320-aletheon-phase-v320-completion-v1.json`
+- `docs/trinity-live-traces/v301-v320-aletheon-phase-v320-completion-v1.md`
 
 Last completion:
-- `v319`
-- `docs/trinity-live-traces/v301-v320-aletheon-phase-v319-completion-v1.json`
-- `docs/trinity-live-traces/v301-v320-aletheon-phase-v319-completion-v1.md`
+- `v320`
+- `docs/trinity-live-traces/v301-v320-aletheon-phase-v320-completion-v1.json`
+- `docs/trinity-live-traces/v301-v320-aletheon-phase-v320-completion-v1.md`
 
-Next action: Execute v320 tasks, write a v320 completion receipt, then decide whether v321 can open.
+Next action: Hold for operator or automation heartbeat before opening the next phase.
