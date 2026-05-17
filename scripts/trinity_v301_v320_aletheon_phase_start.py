@@ -90,8 +90,8 @@ def build_payload(phase: int, force: bool) -> dict[str, Any]:
         "phase_plan": plan,
         "blockers": blockers,
         "truth_boundaries": [
-            "This artifact starts v301; it does not mark v301 complete.",
-            "Do not open v302 until v301 has a completion receipt and curated handoff.",
+            f"This artifact starts v{phase}; it does not mark v{phase} complete.",
+            f"Do not open v{phase + 1} until v{phase} has a completion receipt and curated handoff.",
             "Do not stage raw lane replies, live logs, stderr/stdout, or health-probe scratch files.",
             "Keep Administrator terminals for explicit elevated tasks only; normal phase work should use non-admin runners.",
         ],
@@ -151,6 +151,7 @@ def write_phase_md(path: Path, payload: dict[str, Any]) -> None:
 
 
 def write_run_status(payload: dict[str, Any], phase_json: Path, phase_md: Path) -> None:
+    previous_status = read_json(RUN_STATUS_JSON, {})
     run_payload = {
         "generated_utc": now_iso(),
         "phase_range": payload["phase_range"],
@@ -163,6 +164,8 @@ def write_run_status(payload: dict[str, Any], phase_json: Path, phase_md: Path) 
         },
         "next_action": payload["next_action"],
     }
+    if previous_status.get("last_completion"):
+        run_payload["last_completion"] = previous_status["last_completion"]
     write_json(RUN_STATUS_JSON, run_payload)
     lines = [
         "# v301-v320 Aletheon Run Status",
@@ -176,8 +179,19 @@ def write_run_status(payload: dict[str, Any], phase_json: Path, phase_md: Path) 
         f"- `{run_payload['active_phase_artifacts']['json']}`",
         f"- `{run_payload['active_phase_artifacts']['md']}`",
         "",
-        f"Next action: {run_payload['next_action']}",
     ]
+    if run_payload.get("last_completion"):
+        completion = run_payload["last_completion"]
+        lines.extend(
+            [
+                "Last completion:",
+                f"- `v{completion.get('phase')}`",
+                f"- `{completion.get('json')}`",
+                f"- `{completion.get('md')}`",
+                "",
+            ]
+        )
+    lines.append(f"Next action: {run_payload['next_action']}")
     RUN_STATUS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 

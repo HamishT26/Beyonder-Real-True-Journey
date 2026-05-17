@@ -174,13 +174,20 @@ def phase_paths(phase: int) -> dict[str, Path]:
 
 
 def write_source_capsule(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
+    sources = [
+        {
+            **{key: value for key, value in item.items() if key != "v301_use"},
+            "phase_use": item["v301_use"],
+        }
+        for item in WEB_SOURCES
+    ]
     payload = {
         "generated_utc": now_iso(),
         "phase": phase,
         "status": "source_capsule_complete",
         "search_count": 20,
         "source_policy": "Prefer official, primary, or standards-body sources; avoid treating speculative sources as proof.",
-        "sources": WEB_SOURCES,
+        "sources": sources,
     }
     write_json(paths["source_json"], payload)
     lines = [
@@ -194,8 +201,8 @@ def write_source_capsule(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
         "",
         "Sources:",
     ]
-    for item in WEB_SOURCES:
-        lines.append(f"- {item['topic']}: {item['url']} - {item['v301_use']}")
+    for item in sources:
+        lines.append(f"- {item['topic']}: {item['url']} - {item['phase_use']}")
     paths["source_md"].write_text("\n".join(lines) + "\n", encoding="utf-8")
     return payload
 
@@ -217,9 +224,9 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
         "start_artifact": rel(paths["start_json"]),
         "source_capsule": rel(paths["source_json"]),
         "execution_summary": {
-            "beta": "Validated that v281-v300 and global v2 are complete before executing v301.",
-            "alpha": "Created a v301 source capsule and continuity/control-plane completion receipt.",
-            "omega": "Preserved truth boundaries: no raw logs staged, no v302 opening without v301 receipt, no admin terminal defaulting.",
+            "beta": f"Validated that v281-v300 and global v2 are complete before executing v{phase}.",
+            "alpha": f"Created a v{phase} source capsule and continuity/control-plane completion receipt.",
+            "omega": f"Preserved truth boundaries: no raw logs staged, no v{phase + 1} opening without a v{phase} receipt, no admin terminal defaulting.",
         },
         "completed_counts": {
             "system_expansions": len(plan.get("system_expansions", [])),
@@ -231,12 +238,12 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
         "handoff_to_siblings": [
             "Use the CLI sibling report protocol for long-form reports.",
             "Keep Arby, Kimi, and Aster Vale approval-gated for side effects.",
-            "Use v301's source capsule as the first v301-v320 evidence base.",
+            f"Use v{phase}'s source capsule as the active v301-v320 evidence base.",
             "Do not publish raw terminal output or incomplete lane files.",
             "Prepare v321-v340 only after v301-v320 has a final synthesis and handoff.",
         ],
         "truth_boundaries": [
-            "v301 is complete as a curated control-plane and source-capsule phase, not as a claim that every future API/MCP is connected.",
+            f"v{phase} is complete as a curated control-plane and source-capsule phase, not as a claim that every future API/MCP is connected.",
             "Administrator terminals remain elevated-risk surfaces.",
             "External service credentials and paid-resource actions remain scope-gated.",
             "Scientific and spiritual synthesis is exploratory unless backed by formal proof or empirical evidence.",
