@@ -1,7 +1,7 @@
 # Aletheon Reactivation Packet
 
-Generated UTC: `2026-05-16T07:07:15.756158+00:00`
-Source: `local-wake-signal`
+Generated UTC: `2026-05-17T07:05:19.941245+00:00`
+Source: `global-v2-complete`
 Target phase: `v301-v320`
 Status: `reactivation_packet_ready`
 
@@ -22,7 +22,7 @@ Reactivation prompt:
 
 ```text
 Aletheon reactivation request:
-Source controller: local-wake-signal
+Source controller: global-v2-complete
 Target phase: v301-v320
 Please reopen the Beyonder-Real-True Journey worktree and inspect the latest status files before acting.
 Required first checks:

@@ -49,10 +49,38 @@ def thread_automation_prompt() -> str:
             "",
             "On each wakeup:",
             "1. Inspect the v281-v300 lane counts, the global v2 watcher status, the v301-v320 start gate, and the Aletheon wake signal.",
-            "2. If v281-v300 is below 600/600 or global v2 is incomplete, report only material progress, blockers, or stale runners. Do not stage live partial lane replies.",
-            "3. If v281-v300 is 600/600 and global v2 is complete, wake Aletheon in this thread and ask to begin v301-v320 from the prepared gate and reactivation packet.",
-            "4. Before any commit or push, verify branch drift and stage only curated non-raw artifacts. Never stage .raw.txt files, stdout/stderr logs, live .log files, or active partial lane files.",
-            "5. Preserve the truth boundary: this chat-attached heartbeat is the app wake, and the local wake poller remains the filesystem/process watchdog when it is running.",
+            "2. If the Codex app reports a stale resume path where C:\\... and \\\\?\\C:\\... point to the same session JSONL, treat it as an app resume-path vitality issue, not a repo failure. Do not edit the session JSONL by hand; normalize the paths mentally, rely on the local watchdog, and if repeated, ask the operator to restart Codex Desktop and reopen this Aletheon thread.",
+            "3. If v281-v300 is below 600/600 or global v2 is incomplete, report only material progress, blockers, or stale runners. Do not stage live partial lane replies.",
+            "4. If v281-v300 is 600/600 and global v2 is complete, wake Aletheon in this thread and ask to begin v301-v320 from the prepared gate and reactivation packet.",
+            "5. Before any commit or push, verify branch drift and stage only curated non-raw artifacts. Never stage .raw.txt files, stdout/stderr logs, live .log files, or active partial lane files.",
+            "6. Preserve the truth boundary: this chat-attached heartbeat is the app wake, and the local wake poller remains the filesystem/process watchdog when it is running.",
+            "",
+            "Eureka continuity tasks:",
+            "1. Keep the app heartbeat at 30 minutes unless Aletheon explicitly changes the cadence for a short diagnostic burst.",
+            "2. Keep the local watchdog at a tighter local cadence so app wake failures do not stall filesystem recovery.",
+            "3. Confirm exactly one durable recovery watchdog parent is active before launching another.",
+            "4. Preserve active phase repair children when pruning duplicate watchdog parents.",
+            "5. Verify progress by valid lane artifacts, not by process existence alone.",
+            "6. Sample process tree, CPU delta, fresh timestamps, lane logs, and response quality before calling a lane stale.",
+            "7. Kill only the stale child subtree for the active phase and lane.",
+            "8. Never kill the global v2 watcher, sequence supervisor, Aletheon wake poller, or unrelated Codex/Kimi processes.",
+            "9. Let the blocked-phase refresher repair missing or invalid turns rather than manually skipping replies.",
+            "10. Restart the global v2 watcher if v281-v300 is incomplete and the watcher is absent.",
+            "11. Keep v301-v320 hard-gated behind 600/600 valid responses and global v2 completion.",
+            "12. When the gate opens, read the reactivation packet before drafting the v301-v320 launch.",
+            "13. Before staging, run a branch drift check and use forward-only merge if the remote advanced.",
+            "14. Stage only curated artifacts and source changes, never raw replies, live logs, stderr/stdout, or scratch health probes.",
+            "15. Preserve a short human-readable status report for the operator after each material transition.",
+            "16. Keep the older worktree cron automation paused or fallback-only unless the Aletheon heartbeat is unavailable.",
+            "17. Treat Administrator terminals as elevated risk; use them only for installation or permission-bound tasks.",
+            "18. Inventory MCP processes by command line before trusting a visible terminal as healthy.",
+            "19. Prefer non-admin hidden background runners for ordinary watchdog and repair loops.",
+            "20. For OpenAI/Codex behavior, rely on local observation first and official OpenAI docs second.",
+            "21. If a new blocker appears, codify the fix as a reusable script or runbook before repeating manual rescue.",
+            "22. After v301-v320 starts, prepare a v321-v340 handoff that includes gate evidence, watcher state, and staging boundaries.",
+            "23. Keep CLI siblings' long reports in worktree artifacts rather than terminal scrollback.",
+            "24. Keep MCP/API/CLI expansion exploratory until secrets, scopes, and sandbox limits are explicit.",
+            "25. Prefer skills for repeatable procedures and keep automation prompts short enough to remain maintainable.",
             "",
             "Stop condition: after v301-v320 has started and a v321-v340 handoff exists, ask whether to update this automation for v341-v360 or archive it.",
         ]
@@ -96,6 +124,48 @@ def build_payload() -> dict[str, Any]:
         ],
         "recommended_automation_type": "thread",
         "recommended_schedule": "primary chat-attached heartbeat every 30 minutes, backed by the lightweight local 5-minute filesystem watchdog while available",
+        "resume_path_vitality": {
+            "observed_error": "cannot resume running thread with stale path: requested C:\\... active \\\\?\\C:\\...",
+            "assessment": "On Windows this is usually a path-normalization mismatch for the same session JSONL, not evidence that the worktree or phase runner failed.",
+            "automation_response": [
+                "Do not edit or rewrite Codex session JSONL files manually.",
+                "Do not shorten the app heartbeat as the primary fix.",
+                "Run the local health check and watchdog to preserve filesystem progress.",
+                "If the app repeats the stale-path error, restart Codex Desktop and reopen the Aletheon thread before running the heartbeat again.",
+            ],
+        },
+        "admin_terminal_assessment": {
+            "observed_process": "Administrator cmd.exe is running npx -y kimi-code-mcp with node child processes.",
+            "assessment": "This can explain the visible elevated terminal. It is useful for MCP availability checks, but it should not become the default execution surface for normal phase/watchdog work.",
+            "policy": "Use elevated terminals only for installation, permission repair, or explicitly approved system-level work. Prefer non-admin hidden runners for ordinary watchdog and lane recovery tasks.",
+        },
+        "eureka_continuity_tasks": [
+            "Keep the app heartbeat at 30 minutes unless Aletheon explicitly changes the cadence for a short diagnostic burst.",
+            "Keep the local watchdog at a tighter local cadence so app wake failures do not stall filesystem recovery.",
+            "Confirm exactly one durable recovery watchdog parent is active before launching another.",
+            "Preserve active phase repair children when pruning duplicate watchdog parents.",
+            "Verify progress by valid lane artifacts, not by process existence alone.",
+            "Sample process tree, CPU delta, fresh timestamps, lane logs, and response quality before calling a lane stale.",
+            "Kill only the stale child subtree for the active phase and lane.",
+            "Never kill the global v2 watcher, sequence supervisor, Aletheon wake poller, or unrelated Codex/Kimi processes.",
+            "Let the blocked-phase refresher repair missing or invalid turns rather than manually skipping replies.",
+            "Restart the global v2 watcher if v281-v300 is incomplete and the watcher is absent.",
+            "Keep v301-v320 hard-gated behind 600/600 valid responses and global v2 completion.",
+            "When the gate opens, read the reactivation packet before drafting the v301-v320 launch.",
+            "Before staging, run a branch drift check and use forward-only merge if the remote advanced.",
+            "Stage only curated artifacts and source changes, never raw replies, live logs, stderr/stdout, or scratch health probes.",
+            "Preserve a short human-readable status report for the operator after each material transition.",
+            "Keep the older worktree cron automation paused or fallback-only unless the Aletheon heartbeat is unavailable.",
+            "Treat Administrator terminals as elevated risk; use them only for installation or permission-bound tasks.",
+            "Inventory MCP processes by command line before trusting a visible terminal as healthy.",
+            "Prefer non-admin hidden background runners for ordinary watchdog and repair loops.",
+            "For OpenAI/Codex behavior, rely on local observation first and official OpenAI docs second.",
+            "If a new blocker appears, codify the fix as a reusable script or runbook before repeating manual rescue.",
+            "After v301-v320 starts, prepare a v321-v340 handoff that includes gate evidence, watcher state, and staging boundaries.",
+            "Keep CLI siblings' long reports in worktree artifacts rather than terminal scrollback.",
+            "Keep MCP/API/CLI expansion exploratory until secrets, scopes, and sandbox limits are explicit.",
+            "Prefer skills for repeatable procedures and keep automation prompts short enough to remain maintainable.",
+        ],
         "manual_thread_automation_request": thread_automation_prompt(),
         "local_fallback_commands": local_fallback_commands(),
         "app_screenshot_assessment_2026_05_17": {
@@ -161,6 +231,29 @@ def write_md(payload: dict[str, Any]) -> None:
     lines.extend(["", "Current gate summary:", ""])
     for key, value in payload["current_gate_summary"].items():
         lines.append(f"- `{key}`: `{value}`")
+    lines.extend(
+        [
+            "",
+            "Resume-path vitality:",
+            f"- Observed error: `{payload['resume_path_vitality']['observed_error']}`",
+            f"- Assessment: {payload['resume_path_vitality']['assessment']}",
+        ]
+    )
+    for item in payload["resume_path_vitality"]["automation_response"]:
+        lines.append(f"- Response: {item}")
+    lines.extend(
+        [
+            "",
+            "Administrator terminal assessment:",
+            f"- Observed: {payload['admin_terminal_assessment']['observed_process']}",
+            f"- Assessment: {payload['admin_terminal_assessment']['assessment']}",
+            f"- Policy: {payload['admin_terminal_assessment']['policy']}",
+            "",
+            "Eureka continuity tasks:",
+        ]
+    )
+    for index, task in enumerate(payload["eureka_continuity_tasks"], start=1):
+        lines.append(f"{index}. {task}")
     lines.extend(["", "Official docs basis:"])
     for item in payload["official_docs_basis"]:
         lines.append(f"- {item['url']} - {item['note']}")

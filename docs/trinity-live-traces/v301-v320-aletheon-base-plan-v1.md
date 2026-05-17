@@ -1,8 +1,8 @@
 # v301-v320 Aletheon Base Plan
 
-Generated UTC: `2026-05-15T14:32:02.644104+00:00`
-Status: `draft_waiting_for_v281_v300_completion`
-Source readiness: `182/600` valid replies, `6/20` complete phases.
+Generated UTC: `2026-05-17T07:05:21.451340+00:00`
+Status: `ready_after_v281_v300_global_v2`
+Source readiness: `600/600` valid replies, `20/20` complete phases.
 
 Execution shape:
 - Aletheon leads v301-v320 one phase at a time.

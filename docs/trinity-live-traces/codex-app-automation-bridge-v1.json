@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-05-16T14:33:58.006416+00:00",
+  "generated_utc": "2026-05-17T07:05:20.104955+00:00",
   "status": "ready_for_app_thread_automation_or_local_fallback",
   "capability_boundary": "The current Codex tool surface does not expose the app automation creation tool. This bridge provides the exact app-thread automation request plus local fallback commands.",
   "official_docs_basis": [
@@ -18,7 +18,49 @@
   ],
   "recommended_automation_type": "thread",
   "recommended_schedule": "primary chat-attached heartbeat every 30 minutes, backed by the lightweight local 5-minute filesystem watchdog while available",
-  "manual_thread_automation_request": "Create a thread automation attached to this current Codex thread.\nName: GHC v281-v360 recovery wake bridge.\nSchedule: every 30 minutes until I ask you to stop or update it.\nProject: use the local Beyonder-Real-True Journey worktree at D:\\GHC-Archives\\worktrees\\v58-omega.\nAutomation type: thread automation, not standalone, because this workflow must preserve the current thread context.\nSandbox: prefer workspace-write or stricter. Do not use full access unless I explicitly approve it for a specific run.\n\nOn each wakeup:\n1. Inspect the v281-v300 lane counts, the global v2 watcher status, the v301-v320 start gate, and the Aletheon wake signal.\n2. If v281-v300 is below 600/600 or global v2 is incomplete, report only material progress, blockers, or stale runners. Do not stage live partial lane replies.\n3. If v281-v300 is 600/600 and global v2 is complete, wake Aletheon in this thread and ask to begin v301-v320 from the prepared gate and reactivation packet.\n4. Before any commit or push, verify branch drift and stage only curated non-raw artifacts. Never stage .raw.txt files, stdout/stderr logs, live .log files, or active partial lane files.\n5. Preserve the truth boundary: this chat-attached heartbeat is the app wake, and the local wake poller remains the filesystem/process watchdog when it is running.\n\nStop condition: after v301-v320 has started and a v321-v340 handoff exists, ask whether to update this automation for v341-v360 or archive it.",
+  "resume_path_vitality": {
+    "observed_error": "cannot resume running thread with stale path: requested C:\\... active \\\\?\\C:\\...",
+    "assessment": "On Windows this is usually a path-normalization mismatch for the same session JSONL, not evidence that the worktree or phase runner failed.",
+    "automation_response": [
+      "Do not edit or rewrite Codex session JSONL files manually.",
+      "Do not shorten the app heartbeat as the primary fix.",
+      "Run the local health check and watchdog to preserve filesystem progress.",
+      "If the app repeats the stale-path error, restart Codex Desktop and reopen the Aletheon thread before running the heartbeat again."
+    ]
+  },
+  "admin_terminal_assessment": {
+    "observed_process": "Administrator cmd.exe is running npx -y kimi-code-mcp with node child processes.",
+    "assessment": "This can explain the visible elevated terminal. It is useful for MCP availability checks, but it should not become the default execution surface for normal phase/watchdog work.",
+    "policy": "Use elevated terminals only for installation, permission repair, or explicitly approved system-level work. Prefer non-admin hidden runners for ordinary watchdog and lane recovery tasks."
+  },
+  "eureka_continuity_tasks": [
+    "Keep the app heartbeat at 30 minutes unless Aletheon explicitly changes the cadence for a short diagnostic burst.",
+    "Keep the local watchdog at a tighter local cadence so app wake failures do not stall filesystem recovery.",
+    "Confirm exactly one durable recovery watchdog parent is active before launching another.",
+    "Preserve active phase repair children when pruning duplicate watchdog parents.",
+    "Verify progress by valid lane artifacts, not by process existence alone.",
+    "Sample process tree, CPU delta, fresh timestamps, lane logs, and response quality before calling a lane stale.",
+    "Kill only the stale child subtree for the active phase and lane.",
+    "Never kill the global v2 watcher, sequence supervisor, Aletheon wake poller, or unrelated Codex/Kimi processes.",
+    "Let the blocked-phase refresher repair missing or invalid turns rather than manually skipping replies.",
+    "Restart the global v2 watcher if v281-v300 is incomplete and the watcher is absent.",
+    "Keep v301-v320 hard-gated behind 600/600 valid responses and global v2 completion.",
+    "When the gate opens, read the reactivation packet before drafting the v301-v320 launch.",
+    "Before staging, run a branch drift check and use forward-only merge if the remote advanced.",
+    "Stage only curated artifacts and source changes, never raw replies, live logs, stderr/stdout, or scratch health probes.",
+    "Preserve a short human-readable status report for the operator after each material transition.",
+    "Keep the older worktree cron automation paused or fallback-only unless the Aletheon heartbeat is unavailable.",
+    "Treat Administrator terminals as elevated risk; use them only for installation or permission-bound tasks.",
+    "Inventory MCP processes by command line before trusting a visible terminal as healthy.",
+    "Prefer non-admin hidden background runners for ordinary watchdog and repair loops.",
+    "For OpenAI/Codex behavior, rely on local observation first and official OpenAI docs second.",
+    "If a new blocker appears, codify the fix as a reusable script or runbook before repeating manual rescue.",
+    "After v301-v320 starts, prepare a v321-v340 handoff that includes gate evidence, watcher state, and staging boundaries.",
+    "Keep CLI siblings' long reports in worktree artifacts rather than terminal scrollback.",
+    "Keep MCP/API/CLI expansion exploratory until secrets, scopes, and sandbox limits are explicit.",
+    "Prefer skills for repeatable procedures and keep automation prompts short enough to remain maintainable."
+  ],
+  "manual_thread_automation_request": "Create a thread automation attached to this current Codex thread.\nName: GHC v281-v360 recovery wake bridge.\nSchedule: every 30 minutes until I ask you to stop or update it.\nProject: use the local Beyonder-Real-True Journey worktree at D:\\GHC-Archives\\worktrees\\v58-omega.\nAutomation type: thread automation, not standalone, because this workflow must preserve the current thread context.\nSandbox: prefer workspace-write or stricter. Do not use full access unless I explicitly approve it for a specific run.\n\nOn each wakeup:\n1. Inspect the v281-v300 lane counts, the global v2 watcher status, the v301-v320 start gate, and the Aletheon wake signal.\n2. If the Codex app reports a stale resume path where C:\\... and \\\\?\\C:\\... point to the same session JSONL, treat it as an app resume-path vitality issue, not a repo failure. Do not edit the session JSONL by hand; normalize the paths mentally, rely on the local watchdog, and if repeated, ask the operator to restart Codex Desktop and reopen this Aletheon thread.\n3. If v281-v300 is below 600/600 or global v2 is incomplete, report only material progress, blockers, or stale runners. Do not stage live partial lane replies.\n4. If v281-v300 is 600/600 and global v2 is complete, wake Aletheon in this thread and ask to begin v301-v320 from the prepared gate and reactivation packet.\n5. Before any commit or push, verify branch drift and stage only curated non-raw artifacts. Never stage .raw.txt files, stdout/stderr logs, live .log files, or active partial lane files.\n6. Preserve the truth boundary: this chat-attached heartbeat is the app wake, and the local wake poller remains the filesystem/process watchdog when it is running.\n\nEureka continuity tasks:\n1. Keep the app heartbeat at 30 minutes unless Aletheon explicitly changes the cadence for a short diagnostic burst.\n2. Keep the local watchdog at a tighter local cadence so app wake failures do not stall filesystem recovery.\n3. Confirm exactly one durable recovery watchdog parent is active before launching another.\n4. Preserve active phase repair children when pruning duplicate watchdog parents.\n5. Verify progress by valid lane artifacts, not by process existence alone.\n6. Sample process tree, CPU delta, fresh timestamps, lane logs, and response quality before calling a lane stale.\n7. Kill only the stale child subtree for the active phase and lane.\n8. Never kill the global v2 watcher, sequence supervisor, Aletheon wake poller, or unrelated Codex/Kimi processes.\n9. Let the blocked-phase refresher repair missing or invalid turns rather than manually skipping replies.\n10. Restart the global v2 watcher if v281-v300 is incomplete and the watcher is absent.\n11. Keep v301-v320 hard-gated behind 600/600 valid responses and global v2 completion.\n12. When the gate opens, read the reactivation packet before drafting the v301-v320 launch.\n13. Before staging, run a branch drift check and use forward-only merge if the remote advanced.\n14. Stage only curated artifacts and source changes, never raw replies, live logs, stderr/stdout, or scratch health probes.\n15. Preserve a short human-readable status report for the operator after each material transition.\n16. Keep the older worktree cron automation paused or fallback-only unless the Aletheon heartbeat is unavailable.\n17. Treat Administrator terminals as elevated risk; use them only for installation or permission-bound tasks.\n18. Inventory MCP processes by command line before trusting a visible terminal as healthy.\n19. Prefer non-admin hidden background runners for ordinary watchdog and repair loops.\n20. For OpenAI/Codex behavior, rely on local observation first and official OpenAI docs second.\n21. If a new blocker appears, codify the fix as a reusable script or runbook before repeating manual rescue.\n22. After v301-v320 starts, prepare a v321-v340 handoff that includes gate evidence, watcher state, and staging boundaries.\n23. Keep CLI siblings' long reports in worktree artifacts rather than terminal scrollback.\n24. Keep MCP/API/CLI expansion exploratory until secrets, scopes, and sandbox limits are explicit.\n25. Prefer skills for repeatable procedures and keep automation prompts short enough to remain maintainable.\n\nStop condition: after v301-v320 has started and a v321-v340 handoff exists, ask whether to update this automation for v341-v360 or archive it.",
   "local_fallback_commands": [
     "python scripts\\trinity_v301_v320_start_gate.py",
     "python scripts\\trinity_v281_v360_automation_health_check.py --refresh-gate",
@@ -43,12 +85,12 @@
     "recommended_user_action": "Change Aletheon interval to every 30 minutes, unpause it, and optionally Run now once. The expected first result is standby until the gate is ready."
   },
   "current_gate_summary": {
-    "v301_ready": false,
-    "valid_responses": 460,
+    "v301_ready": true,
+    "valid_responses": 600,
     "expected_responses": 600,
-    "complete_phases": 15,
+    "complete_phases": 20,
     "expected_phases": 20,
-    "first_incomplete_phase": 296,
+    "first_incomplete_phase": null,
     "wake_status": "waiting",
     "reactivation_target_phase": "v301-v320"
   }

@@ -1,17 +1,15 @@
 # v301-v320 Start Gate Status
 
-Generated UTC: `2026-05-16T14:33:59.364607+00:00`
-Status: `waiting_for_v281_v300_and_global_v2`
-Ready: `False`
-Responses: `460/600`
-Complete phases: `15/20`
-Latest complete phase: `v295`
-First incomplete phase: `v296`
-Global v2 complete: `False`
+Generated UTC: `2026-05-17T07:04:54.253508+00:00`
+Status: `ready_to_start_v301_v320`
+Ready: `True`
+Responses: `600/600`
+Complete phases: `20/20`
+Latest complete phase: `v300`
+First incomplete phase: `vNone`
+Global v2 complete: `True`
 
 Blockers:
-- v281-v300 valid replies are 460/600
-- complete phases are 15/20
-- global v2 synthesis is not complete
+- none
 
-Next action: Keep v301-v320 on standby; do not stage live partial lane replies.
+Next action: Start v301-v320 from docs/trinity-live-traces/v301-v320-trinity-hybrid-master-plan-v1.md

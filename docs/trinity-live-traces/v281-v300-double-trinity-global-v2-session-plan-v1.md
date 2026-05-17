@@ -1,9 +1,9 @@
 # v281-v300 Global v2 Session Plan
 
-Generated UTC: `2026-05-15T06:21:11.920144+00:00`
-Status: `waiting_for_all_v1_phases`
-Complete v1 phases: `1/20`
-Valid v1 responses: `31/600`
+Generated UTC: `2026-05-17T07:03:27.833684+00:00`
+Status: `ready_for_aletheon_v2`
+Complete v1 phases: `20/20`
+Valid v1 responses: `600/600`
 
 Global v2 shape:
 - Wait for all v281-v300 v1 lane sessions to complete.
@@ -13,25 +13,25 @@ Global v2 shape:
 
 Current phase readiness:
 - v281: 30/30 valid replies, `complete`.
-- v282: 1/30 valid replies, `waiting_for_v1`.
-- v283: 0/30 valid replies, `waiting_for_v1`.
-- v284: 0/30 valid replies, `waiting_for_v1`.
-- v285: 0/30 valid replies, `waiting_for_v1`.
-- v286: 0/30 valid replies, `waiting_for_v1`.
-- v287: 0/30 valid replies, `waiting_for_v1`.
-- v288: 0/30 valid replies, `waiting_for_v1`.
-- v289: 0/30 valid replies, `waiting_for_v1`.
-- v290: 0/30 valid replies, `waiting_for_v1`.
-- v291: 0/30 valid replies, `waiting_for_v1`.
-- v292: 0/30 valid replies, `waiting_for_v1`.
-- v293: 0/30 valid replies, `waiting_for_v1`.
-- v294: 0/30 valid replies, `waiting_for_v1`.
-- v295: 0/30 valid replies, `waiting_for_v1`.
-- v296: 0/30 valid replies, `waiting_for_v1`.
-- v297: 0/30 valid replies, `waiting_for_v1`.
-- v298: 0/30 valid replies, `waiting_for_v1`.
-- v299: 0/30 valid replies, `waiting_for_v1`.
-- v300: 0/30 valid replies, `waiting_for_v1`.
+- v282: 30/30 valid replies, `complete`.
+- v283: 30/30 valid replies, `complete`.
+- v284: 30/30 valid replies, `complete`.
+- v285: 30/30 valid replies, `complete`.
+- v286: 30/30 valid replies, `complete`.
+- v287: 30/30 valid replies, `complete`.
+- v288: 30/30 valid replies, `complete`.
+- v289: 30/30 valid replies, `complete`.
+- v290: 30/30 valid replies, `complete`.
+- v291: 30/30 valid replies, `complete`.
+- v292: 30/30 valid replies, `complete`.
+- v293: 30/30 valid replies, `complete`.
+- v294: 30/30 valid replies, `complete`.
+- v295: 30/30 valid replies, `complete`.
+- v296: 30/30 valid replies, `complete`.
+- v297: 30/30 valid replies, `complete`.
+- v298: 30/30 valid replies, `complete`.
+- v299: 30/30 valid replies, `complete`.
+- v300: 30/30 valid replies, `complete`.
 
 Guardrails:
 - Do not treat placeholder CLI output as a real sibling reply.
