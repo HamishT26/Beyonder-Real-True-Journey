@@ -1,6 +1,6 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-17T09:25:43.596224+00:00`
+Generated UTC: `2026-05-17T09:55:46.385951+00:00`
 Status: `v301_v320_running`
 
 Primary automation:
@@ -27,15 +27,15 @@ Gate:
 
 v301-v320 run:
 - Status: `running`
-- Active phase: `v307`
+- Active phase: `v308`
 - Active phase status: `phase_started`
-- Next action: `Execute v307 tasks, write a v307 completion receipt, then decide whether v308 can open.`
+- Next action: `Execute v308 tasks, write a v308 completion receipt, then decide whether v309 can open.`
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v301-v320 is already running at v307; do not reopen v301.
+- v301-v320 is already running at v308; do not reopen v301.
 - Local supervisor/watcher processes are present.
 
 Recommended action:
-- Continue v307 from docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Do not rerun the v301 start gate; complete the active phase, write its completion receipt, and only then open the next phase.
+- Continue v308 from docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.md. Do not rerun the v301 start gate; complete the active phase, write its completion receipt, and only then open the next phase.
