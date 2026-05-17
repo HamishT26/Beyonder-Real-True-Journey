@@ -30,6 +30,19 @@ SOURCE_NOTES = [
     ("W3C Verifiable Credentials", "https://www.w3.org/TR/vc-data-model/", "Anchor Freed ID discussions in portable credential standards."),
     ("CERN Standard Model", "https://home.cern/science/physics/standard-model/", "Separate established physics from metaphoric GMUT synthesis."),
     ("NASA dark matter and dark energy", "https://science.nasa.gov/universe/dark-matter-dark-energy/", "Keep cosmology unknowns honest."),
+    ("OpenAI Codex app", "https://openai.com/codex", "Treat Codex as the agentic coding command center, not as proof of unattended success."),
+    ("OpenAI Responses API", "https://platform.openai.com/docs/api-reference/responses", "Keep future API calls stateful, auditable, and explicitly scoped."),
+    ("OpenAI Agents SDK", "https://openai.github.io/openai-agents-python/agents/", "Separate agents, tools, handoffs, guardrails, and sessions."),
+    ("OECD AI Principles", "https://www.oecd.org/en/topics/ai-principles.html", "Keep trustworthy AI tied to human rights, democratic values, and accountability."),
+    ("EU AI Act", "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai", "Preserve risk-based governance and human oversight in system claims."),
+    ("Perimeter quantum gravity", "https://perimeterinstitute.ca/quantum-gravity", "Treat theory-of-everything synthesis as exploratory until mathematical and empirical bridges exist."),
+    ("NVIDIA DGX Spark", "https://docs.nvidia.com/dgx/dgx-spark/index.html", "Treat future hardware as acceleration, not a prerequisite for repo correctness."),
+    ("NVIDIA Omniverse", "https://docs.nvidia.com/omniverse/index.html", "Keep simulation and digital-twin ideas as optional validation layers."),
+    ("NVIDIA NVLink", "https://www.nvidia.com/object/multi-gpu-technology.html", "Use high-bandwidth interconnects as an analogy for explicit handoff channels."),
+    ("Cloudflare Workers AI and agents", "https://developers.cloudflare.com/workers/framework-guides/ai-and-agents/", "Keep edge deployment exploratory until secrets and scope are explicit."),
+    ("Neon MCP Server", "https://neon.com/docs/ai/neon-mcp-server", "Use database branch and MCP actions only after credentials, rollback, and scope are clear."),
+    ("CircleCI contexts", "https://circleci.com/docs/guides/security/contexts/", "Keep CI secrets in restricted contexts and avoid leaking them into logs."),
+    ("Vercel AI agents", "https://vercel.com/docs/agents/", "Treat hosted agent deployment as future scoped infrastructure, not current implicit access."),
 ]
 
 
