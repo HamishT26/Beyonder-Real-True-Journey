@@ -1,7 +1,7 @@
 # v321-v340 Sibling Run Status
 
-Generated UTC: `2026-05-18T02:59:09.924216+00:00`
-Status: `running`
+Generated UTC: `2026-05-18T05:57:24.368019+00:00`
+Status: `paused`
 Active phase: `v333`
 Active phase status: `phase_started`
 
@@ -14,4 +14,7 @@ Last completion:
 - `docs/trinity-live-traces/v321-v340-sibling-phase-v332-completion-v1.json`
 - `docs/trinity-live-traces/v321-v340-sibling-phase-v332-completion-v1.md`
 
-Next action: Execute v333 sibling tasks, write v1/v2 reports, complete v333, then decide whether v334 can open.
+Pause artifact: `docs/trinity-live-traces/v321-v333-pause-wrapup-v1.json`
+Pause reason: operator requested laptop availability and a clean hold before continuing v333.
+
+Next action: Pause active. Do not complete v333 until the operator explicitly resumes; on resume, read this JSON first and complete exactly the active phase.

@@ -195,6 +195,11 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         and str(v321_run.get("phase_range", "")).lower() == "v321-v340"
         and int(v321_run.get("active_phase") or 0) >= 321
     )
+    v321_paused = (
+        v321_run.get("status") == "paused"
+        and str(v321_run.get("phase_range", "")).lower() == "v321-v340"
+        and int(v321_run.get("active_phase") or 0) >= 321
+    )
     v321_complete = (
         v321_run.get("status") == "phase_complete_waiting"
         and str(v321_run.get("phase_range", "")).lower() == "v321-v340"
@@ -225,6 +230,10 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.")
     if v321_complete:
         findings.append("v321-v340 is complete at v340; prepare v341-v360 launch only from the final handoff.")
+    elif v321_paused:
+        findings.append(
+            f"v321-v340 is paused at v{v321_run.get('active_phase')}; do not complete the active phase until the operator resumes."
+        )
     elif v321_running:
         findings.append(
             f"v321-v340 is already running at v{v321_run.get('active_phase')}; do not reopen v321."
@@ -249,6 +258,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("No local runner processes matched the health pattern; inspect before assuming background progress.")
     if v321_complete:
         status = "v321_v340_complete_waiting_v341"
+    elif v321_paused:
+        status = "v321_v340_paused"
     elif v321_running:
         status = "v321_v340_running"
     elif v301_complete and v321_handoff_ready:
@@ -264,6 +275,11 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     if v321_complete:
         recommended_action = (
             "v321-v340 is complete. Prepare the v341-v360 Aletheon-led launch and final closeout handoff."
+        )
+    elif v321_paused:
+        recommended_action = (
+            f"Hold v{v321_run.get('active_phase')} until the operator explicitly resumes. On resume, read "
+            "docs/trinity-live-traces/v321-v340-sibling-run-status-v1.json and complete exactly the active phase."
         )
     elif v321_running:
         recommended_action = (
