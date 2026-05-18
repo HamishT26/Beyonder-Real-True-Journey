@@ -1,6 +1,6 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-17T23:29:19.593356+00:00`
+Generated UTC: `2026-05-17T23:59:18.878316+00:00`
 Status: `v321_v340_running`
 
 Primary automation:
@@ -37,15 +37,15 @@ v321-v340 handoff:
 
 v321-v340 run:
 - Status: `running`
-- Active phase: `v326`
+- Active phase: `v327`
 - Active phase status: `phase_started`
-- Next action: `Execute v326 sibling tasks, write v1/v2 reports, complete v326, then decide whether v327 can open.`
+- Next action: `Execute v327 sibling tasks, write v1/v2 reports, complete v327, then decide whether v328 can open.`
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v321-v340 is already running at v326; do not reopen v321.
+- v321-v340 is already running at v327; do not reopen v321.
 - Local supervisor/watcher processes are present.
 
 Recommended action:
-- Continue v326 from docs/trinity-live-traces/v321-v340-sibling-run-status-v1.md. Complete the active sibling phase, write v1/v2 reports, and only then open the next sibling phase.
+- Continue v327 from docs/trinity-live-traces/v321-v340-sibling-run-status-v1.md. Complete the active sibling phase, write v1/v2 reports, and only then open the next sibling phase.
