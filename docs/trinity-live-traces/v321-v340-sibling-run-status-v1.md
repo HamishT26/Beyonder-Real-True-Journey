@@ -1,17 +1,17 @@
 # v321-v340 Sibling Run Status
 
-Generated UTC: `2026-05-19T08:02:05.954673+00:00`
-Status: `running`
+Generated UTC: `2026-05-19T08:32:44.046038+00:00`
+Status: `phase_complete_waiting`
 Active phase: `v340`
-Active phase status: `phase_started`
+Active phase status: `phase_complete`
 
 Active artifacts:
-- `docs/trinity-live-traces/v321-v340-sibling-phase-v340-start-v1.json`
-- `docs/trinity-live-traces/v321-v340-sibling-phase-v340-start-v1.md`
+- `docs/trinity-live-traces/v321-v340-sibling-phase-v340-completion-v1.json`
+- `docs/trinity-live-traces/v321-v340-sibling-phase-v340-completion-v1.md`
 
 Last completion:
-- `v339`
-- `docs/trinity-live-traces/v321-v340-sibling-phase-v339-completion-v1.json`
-- `docs/trinity-live-traces/v321-v340-sibling-phase-v339-completion-v1.md`
+- `v340`
+- `docs/trinity-live-traces/v321-v340-sibling-phase-v340-completion-v1.json`
+- `docs/trinity-live-traces/v321-v340-sibling-phase-v340-completion-v1.md`
 
-Next action: Execute v340 sibling tasks, write v1/v2 reports, complete v340, then decide whether v341 can open.
+Next action: Hold for the next heartbeat or operator instruction before opening the next phase.

@@ -1,0 +1,60 @@
+{
+  "generated_utc": "2026-05-19T08:34:00Z",
+  "handoff_id": "v341-v360-final-handoff-v1",
+  "handoff_state": "ready_for_operator_automation_update",
+  "source_phase_range": "v321-v340",
+  "target_phase_range": "v341-v360",
+  "lead": "Aletheon",
+  "supporting_siblings_and_helpers": [
+    "Arby",
+    "Kimi",
+    "Aster Vale",
+    "Supervisor helper",
+    "v2 Watcher helper",
+    "Recovery Watchdog helper"
+  ],
+  "gate_evidence": {
+    "v281_v300": {
+      "status": "complete",
+      "valid_responses": 600,
+      "expected_responses": 600,
+      "global_v2_complete": true,
+      "gate_status_path": "docs/trinity-live-traces/v301-v320-start-gate-status-v1.json"
+    },
+    "v301_v320": {
+      "status": "complete",
+      "last_completion_phase": 320,
+      "run_status_path": "docs/trinity-live-traces/v301-v320-aletheon-run-status-v1.json"
+    },
+    "v321_v340": {
+      "status": "complete_waiting",
+      "last_completion_phase": 340,
+      "run_status_path": "docs/trinity-live-traces/v321-v340-sibling-run-status-v1.json",
+      "v340_completion": "docs/trinity-live-traces/v321-v340-sibling-phase-v340-completion-v1.json"
+    },
+    "health_check": {
+      "status": "v321_v340_complete_waiting_v341",
+      "path": "docs/trinity-live-traces/v281-v360-automation-health-check-v1.json"
+    }
+  },
+  "v341_v360_start_conditions": [
+    "Operator must update or replace the old v333-v360 heartbeat prompt before v341 starts.",
+    "Do not reuse the v333-v340-only bridge as if it were a v341-v360 launcher.",
+    "Before the first v341 action, inspect whether v341-v360 scripts already exist; if absent, create a bounded successor script from the v321-v340 pattern.",
+    "Start v341 only after branch drift is checked and the curated v340 closeout plus this handoff are committed and pushed.",
+    "Keep one active phase per wake unless the operator explicitly requests a diagnostic burst."
+  ],
+  "staging_boundaries": [
+    "Stage only curated health-check, run-status, start, completion, v1/v2 report, source capsule, source-script, handoff, and automation-prompt artifacts.",
+    "Never stage raw replies, stdout or stderr logs, live .log files, active partial lane files, scratch probes, pycache files, or unrelated carried-forward churn.",
+    "Before every commit or push, fetch and verify branch drift; use forward-only merge only if the remote advanced."
+  ],
+  "truth_boundaries": [
+    "The app heartbeat is the thread-context wake layer; local watchdogs and scripts are filesystem/process recovery layers.",
+    "C:\\\\... versus \\\\?\\C:\\\\... session JSONL mismatches are Codex app resume-path vitality issues when they point to the same file.",
+    "Administrator terminals are not default operating surfaces; use non-admin hidden background runners unless installation or permissions require elevation.",
+    "Cloud, MCP, API, and paid-provider expansion remains exploratory until secrets, scopes, rollback, and spend limits are explicit."
+  ],
+  "recommended_next_automation": "docs/trinity-live-traces/v341-v360-recovery-wake-bridge-prompt-v1.md",
+  "next_action": "Commit and push the v340 completion plus this handoff, then ask the operator to update the heartbeat for v341-v360."
+}
