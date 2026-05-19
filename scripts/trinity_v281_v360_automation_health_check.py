@@ -22,6 +22,8 @@ START_GATE = TRACE / "v301-v320-start-gate-status-v1.json"
 V301_RUN_STATUS = TRACE / "v301-v320-aletheon-run-status-v1.json"
 V321_HANDOFF = TRACE / "v321-v340-sibling-handoff-v1.json"
 V321_RUN_STATUS = TRACE / "v321-v340-sibling-run-status-v1.json"
+V341_HANDOFF = TRACE / "v341-v360-final-handoff-v1.json"
+V341_RUN_STATUS = TRACE / "v341-v360-sibling-run-status-v1.json"
 PHASE_296_STATUS = TRACE / "v281-v300-double-trinity-phase-v296-runner-status-v1-sequence.json"
 SUPERVISOR_STATUS = TRACE / "v281-v300-double-trinity-v1-sequence-supervisor-status-v1.json"
 AUTOMATION_BASE = Path.home() / ".codex" / "automations"
@@ -174,6 +176,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     gate = read_json(START_GATE, {})
     v301_run = read_json(V301_RUN_STATUS, {})
     v321_run = read_json(V321_RUN_STATUS, {})
+    v341_handoff = read_json(V341_HANDOFF, {})
+    v341_run = read_json(V341_RUN_STATUS, {})
     phase_296 = read_json(PHASE_296_STATUS, {})
     supervisor = read_json(SUPERVISOR_STATUS, {})
     processes = process_snapshot()
@@ -206,6 +210,28 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         and int(v321_run.get("active_phase") or 0) >= 340
         and v321_run.get("active_phase_status") == "phase_complete"
     )
+    v341_handoff_ready = (
+        V341_HANDOFF.exists()
+        and v341_handoff.get("handoff_state") == "ready_for_operator_automation_update"
+    )
+    v341_active_phase = int(v341_run.get("active_phase") or 0)
+    v341_running = (
+        v341_run.get("status") == "running"
+        and str(v341_run.get("phase_range", "")).lower() == "v341-v360"
+        and 341 <= v341_active_phase <= 360
+    )
+    v341_waiting = (
+        v341_run.get("status") == "phase_complete_waiting"
+        and str(v341_run.get("phase_range", "")).lower() == "v341-v360"
+        and 341 <= v341_active_phase <= 360
+        and v341_run.get("active_phase_status") == "phase_complete"
+    )
+    v341_complete = (
+        v341_run.get("status") == "v281_v360_complete"
+        and str(v341_run.get("phase_range", "")).lower() == "v341-v360"
+        and v341_active_phase >= 360
+        and v341_run.get("active_phase_status") == "phase_complete"
+    )
     valid = gate.get("valid_responses")
     expected = gate.get("expected_responses")
     global_v2_complete = gate.get("global_v2_complete")
@@ -228,7 +254,19 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Secondary worktree automation is active; consider pausing it to avoid duplicate wakeups while Aletheon chat heartbeat is primary.")
     if secondary.get("exists") and not secondary.get("cwd_mentions_target_worktree"):
         findings.append("Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.")
-    if v321_complete:
+    if v341_complete:
+        findings.append("v341-v360 is complete at v360; ask whether to archive this heartbeat or update it for the next packet.")
+    elif v341_running:
+        findings.append(
+            f"v341-v360 is running at v{v341_run.get('active_phase')}; complete exactly the active phase and do not start a duplicate."
+        )
+    elif v341_waiting:
+        findings.append(
+            f"v341-v360 is waiting after v{v341_run.get('active_phase')} completion; open only the next bounded phase if it is within v341-v360."
+        )
+    elif v321_complete and v341_handoff_ready:
+        findings.append("v321-v340 is complete at v340 and the v341-v360 final handoff is ready.")
+    elif v321_complete:
         findings.append("v321-v340 is complete at v340; prepare v341-v360 launch only from the final handoff.")
     elif v321_paused:
         findings.append(
@@ -256,7 +294,15 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         findings.append("Local supervisor/watcher processes are present.")
     else:
         findings.append("No local runner processes matched the health pattern; inspect before assuming background progress.")
-    if v321_complete:
+    if v341_complete:
+        status = "v281_v360_complete"
+    elif v341_running:
+        status = "v341_v360_running"
+    elif v341_waiting:
+        status = "v341_v360_phase_complete_waiting"
+    elif v321_complete and v341_handoff_ready:
+        status = "v321_v340_complete_v341_handoff_ready"
+    elif v321_complete:
         status = "v321_v340_complete_waiting_v341"
     elif v321_paused:
         status = "v321_v340_paused"
@@ -272,7 +318,28 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         status = "ready_to_start_v301"
     else:
         status = "standby"
-    if v321_complete:
+    if v341_complete:
+        recommended_action = (
+            "v341-v360 is complete. Ask Hamish whether to archive the Aletheon heartbeat or update it for the next bounded packet."
+        )
+    elif v341_running:
+        recommended_action = (
+            f"Continue v{v341_run.get('active_phase')} from docs/trinity-live-traces/"
+            "v341-v360-sibling-run-status-v1.md. Complete exactly the active phase, write v1/v2 reports "
+            "and source capsule, then open the next phase only if it is within v341-v360."
+        )
+    elif v341_waiting:
+        next_phase = v341_active_phase + 1
+        recommended_action = (
+            f"v{v341_active_phase} is complete. Open v{next_phase} only if it is still within v341-v360, "
+            "otherwise write the v281-v360 closeout declaration."
+        )
+    elif v321_complete and v341_handoff_ready:
+        recommended_action = (
+            "v321-v340 is complete and the v341-v360 handoff is ready. If no v341-v360 run is active, "
+            "create or use the bounded successor scripts and open v341."
+        )
+    elif v321_complete:
         recommended_action = (
             "v321-v340 is complete. Prepare the v341-v360 Aletheon-led launch and final closeout handoff."
         )
@@ -349,6 +416,20 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "last_completion": v321_run.get("last_completion"),
             "next_action": v321_run.get("next_action"),
         },
+        "v341_v360_handoff": {
+            "path": rel(V341_HANDOFF),
+            "exists": V341_HANDOFF.exists(),
+            "handoff_state": v341_handoff.get("handoff_state"),
+        },
+        "v341_v360_run": {
+            "path": rel(V341_RUN_STATUS),
+            "status": v341_run.get("status"),
+            "active_phase": v341_run.get("active_phase"),
+            "active_phase_status": v341_run.get("active_phase_status"),
+            "last_completion": v341_run.get("last_completion"),
+            "closeout_declaration": v341_run.get("closeout_declaration"),
+            "next_action": v341_run.get("next_action"),
+        },
         "phase_296": {
             "path": rel(PHASE_296_STATUS),
             "status": phase_296.get("status"),
@@ -372,6 +453,8 @@ def write_md(payload: dict[str, Any]) -> None:
     v301_run = payload["v301_v320_run"]
     handoff = payload["v321_v340_handoff"]
     v321_run = payload["v321_v340_run"]
+    v341_handoff = payload["v341_v360_handoff"]
+    v341_run = payload["v341_v360_run"]
     primary = payload["primary_automation"]
     secondary = payload["secondary_automation"]
     lines = [
@@ -417,6 +500,18 @@ def write_md(payload: dict[str, Any]) -> None:
         f"- Active phase: `v{v321_run.get('active_phase')}`",
         f"- Active phase status: `{v321_run.get('active_phase_status')}`",
         f"- Next action: `{v321_run.get('next_action')}`",
+        "",
+        "v341-v360 handoff:",
+        f"- Exists: `{v341_handoff.get('exists')}`",
+        f"- Handoff state: `{v341_handoff.get('handoff_state')}`",
+        f"- Path: `{v341_handoff.get('path')}`",
+        "",
+        "v341-v360 run:",
+        f"- Status: `{v341_run.get('status')}`",
+        f"- Active phase: `v{v341_run.get('active_phase')}`",
+        f"- Active phase status: `{v341_run.get('active_phase_status')}`",
+        f"- Closeout declaration: `{v341_run.get('closeout_declaration')}`",
+        f"- Next action: `{v341_run.get('next_action')}`",
         "",
         "Findings:",
     ]
