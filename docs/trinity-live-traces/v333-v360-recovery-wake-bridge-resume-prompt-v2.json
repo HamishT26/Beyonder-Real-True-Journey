@@ -1,0 +1,47 @@
+{
+  "generated_nzt": "2026-05-19T16:08:42+12:00",
+  "status": "copy_paste_ready",
+  "automation_name": "GHC v333-v360 recovery wake bridge resume update",
+  "schedule": "every_30_minutes",
+  "project": "D:\\GHC-Archives\\worktrees\\v58-omega",
+  "sandbox": "workspace-write_or_stricter",
+  "resume_authority": "installing_unpausing_or_running_this_prompt_is_operator_approval_to_resume_from_v333",
+  "authoritative_run_status": "docs/trinity-live-traces/v321-v340-sibling-run-status-v1.json",
+  "first_resume_active_phase_expected": 333,
+  "phase_start_guard": "read_run_status_then_complete_exactly_active_phase_only_if_no_matching_active_child_is_running",
+  "cadence_policy": {
+    "default": "30_minutes",
+    "diagnostic_burst": "10_minutes_only_on_explicit_operator_request",
+    "avoid_short_phase_cadence_without_duplicate_child_protection": true,
+    "hourly_or_multihour_only_for_laptop_availability": true
+  },
+  "codex_update_policy": {
+    "record_local_codex_version_on_wake": true,
+    "recommend_upgrade_if_below": "0.131.0",
+    "unattended_upgrade_allowed": false
+  },
+  "staging_policy": {
+    "allow": [
+      "curated_health_check",
+      "curated_run_status",
+      "curated_phase_start",
+      "curated_phase_completion",
+      "curated_v1_report",
+      "curated_v2_report",
+      "curated_source_capsule",
+      "curated_source_script",
+      "curated_handoff"
+    ],
+    "deny": [
+      ".raw.txt",
+      "stdout_logs",
+      "stderr_logs",
+      "live_log_files",
+      "active_partial_lane_files",
+      "scratch_probes",
+      "pycache_files",
+      "unrelated_carried_forward_churn"
+    ]
+  },
+  "v341_v360_gate": "do_not_start_until_v321_v340_reaches_v340_complete_and_final_handoff_exists"
+}
