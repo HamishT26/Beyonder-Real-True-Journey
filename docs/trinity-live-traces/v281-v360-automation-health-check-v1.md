@@ -1,12 +1,12 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-19T04:26:04.193622+00:00`
-Status: `v321_v340_paused`
+Generated UTC: `2026-05-19T05:02:13.883700+00:00`
+Status: `v321_v340_running`
 
 Primary automation:
 - ID: `aletheon`
 - Kind: `heartbeat`
-- Status: `PAUSED`
+- Status: `ACTIVE`
 - Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=30`
 - Interval minutes: `30`
 - Target thread: `019cc07b-70b8-7673-ac44-d2ee1fedb86a`
@@ -36,17 +36,16 @@ v321-v340 handoff:
 - Path: `docs/trinity-live-traces/v321-v340-sibling-handoff-v1.json`
 
 v321-v340 run:
-- Status: `paused`
-- Active phase: `v333`
+- Status: `running`
+- Active phase: `v334`
 - Active phase status: `phase_started`
-- Next action: `Pause active. Do not complete v333 until the operator explicitly resumes; on resume, read this JSON first and complete exactly the active phase.`
+- Next action: `Execute v334 sibling tasks, write v1/v2 reports, complete v334, then decide whether v335 can open.`
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
-- Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v321-v340 is paused at v333; do not complete the active phase until the operator resumes.
+- v321-v340 is already running at v334; do not reopen v321.
 - No local runner processes matched the health pattern; inspect before assuming background progress.
 
 Recommended action:
-- Hold v333 until the operator explicitly resumes. On resume, read docs/trinity-live-traces/v321-v340-sibling-run-status-v1.json and complete exactly the active phase.
+- Continue v334 from docs/trinity-live-traces/v321-v340-sibling-run-status-v1.md. Complete the active sibling phase, write v1/v2 reports, and only then open the next sibling phase.
