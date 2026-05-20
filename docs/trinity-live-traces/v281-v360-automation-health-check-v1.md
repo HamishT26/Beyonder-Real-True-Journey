@@ -1,7 +1,7 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-20T02:26:35.465348+00:00`
-Status: `v341_v360_running`
+Generated UTC: `2026-05-20T03:09:22.976311+00:00`
+Status: `v281_v360_complete`
 
 Primary automation:
 - ID: `aletheon`
@@ -47,18 +47,18 @@ v341-v360 handoff:
 - Path: `docs/trinity-live-traces/v341-v360-final-handoff-v1.json`
 
 v341-v360 run:
-- Status: `running`
+- Status: `v281_v360_complete`
 - Active phase: `v360`
-- Active phase status: `phase_started`
-- Closeout declaration: `None`
-- Next action: `Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase 360 --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, then complete v360 with the bounded v341-v360 completion runner.`
+- Active phase status: `phase_complete`
+- Closeout declaration: `docs/trinity-live-traces/v281-v360-closeout-declaration-v1.json`
+- Next action: `Ask Hamish whether to archive this automation or update it for the next packet.`
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
 - Primary chat heartbeat interval is 210 minutes; set it to 30 minutes for the energy-preserving recovery loop.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v341-v360 is running at v360; complete exactly the active phase and do not start a duplicate.
+- v341-v360 is complete at v360; ask whether to archive this heartbeat or update it for the next packet.
 - No local runner processes matched the health pattern; inspect before assuming background progress.
 
 Recommended action:
-- Continue v360 from docs/trinity-live-traces/v341-v360-sibling-run-status-v1.md. Complete exactly the active phase, write v1/v2 reports and source capsule, then open the next phase only if it is within v341-v360.
+- v341-v360 is complete. Ask Hamish whether to archive the Aletheon heartbeat or update it for the next bounded packet.

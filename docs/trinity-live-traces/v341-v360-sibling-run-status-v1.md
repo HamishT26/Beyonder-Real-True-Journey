@@ -1,17 +1,20 @@
 # v341-v360 Sibling Run Status
 
-Generated UTC: `2026-05-20T02:20:39.879925+00:00`
-Status: `running`
+Generated UTC: `2026-05-20T03:09:00.539008+00:00`
+Status: `v281_v360_complete`
 Active phase: `v360`
-Active phase status: `phase_started`
+Active phase status: `phase_complete`
 
 Active artifacts:
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-start-v1.json`
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-start-v1.md`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-completion-v1.json`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-completion-v1.md`
 
 Last completion:
-- `v359`
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v359-completion-v1.json`
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v359-completion-v1.md`
+- `v360`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-completion-v1.json`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-completion-v1.md`
 
-Next action: v360 CLI receipts are complete; complete v360 with `scripts\trinity_v341_v360_sibling_phase_complete.py --phase 360 --open-next`, then stop at v360 closeout before any v361 work.
+Closeout declaration:
+- `docs/trinity-live-traces/v281-v360-closeout-declaration-v1.json`
+
+Next action: Ask Hamish whether to archive this automation or update it for the next packet.
