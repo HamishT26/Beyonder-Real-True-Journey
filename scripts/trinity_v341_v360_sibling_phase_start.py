@@ -221,7 +221,7 @@ def build_payload(phase: int, force: bool) -> dict[str, Any]:
             "If C:/ and //?/C:/ identify the same Codex session JSONL, treat it as app resume-path vitality, not repo failure.",
         ],
         "next_action": (
-            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase}, then complete v{phase} with the bounded v341-v360 completion runner."
+            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase} --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, then complete v{phase} with the bounded v341-v360 completion runner."
             if status == "phase_started"
             else "Resolve blockers before starting v341-v360 execution."
         ),

@@ -112,7 +112,7 @@ def validate_cli_receipts(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
     if not paths["cli_receipts_json"].exists():
         gate["status"] = "blocked_missing_cli_receipts"
         gate["blockers"].append(
-            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase} before completion."
+            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase} --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200 before completion."
         )
         return gate
     payload = read_json(paths["cli_receipts_json"], {})
@@ -329,7 +329,10 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
     next_phase = phase + 1 if open_next and phase < PHASE_MAX else None
     if status == "blocked_missing_cli_receipts":
         next_phase = None
-        next_action = f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase}, then rerun this completion command."
+        next_action = (
+            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase} "
+            "--timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, then rerun this completion command."
+        )
     elif phase == PHASE_MAX and status == "phase_complete":
         next_action = "Stop at v360, write closeout, then ask Hamish whether to archive or update the automation."
     elif next_phase:
@@ -431,7 +434,8 @@ def update_run_status(completion: dict[str, Any], paths: dict[str, Path], opened
         artifacts = {"json": opened_next["phase_artifact"], "md": opened_next["phase_artifact"].replace(".json", ".md")}
         if active_phase >= CLI_RECEIPTS_REQUIRED_FROM_PHASE:
             next_action = (
-                f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {active_phase}, "
+                f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {active_phase} "
+                "--timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, "
                 f"then complete v{active_phase} with the bounded v341-v360 completion runner."
             )
         else:

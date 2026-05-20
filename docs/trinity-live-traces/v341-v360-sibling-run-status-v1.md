@@ -1,17 +1,17 @@
 # v341-v360 Sibling Run Status
 
-Generated UTC: `2026-05-20T01:57:48.855278+00:00`
+Generated UTC: `2026-05-20T02:20:39.879925+00:00`
 Status: `running`
-Active phase: `v359`
+Active phase: `v360`
 Active phase status: `phase_started`
 
 Active artifacts:
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v359-start-v1.json`
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v359-start-v1.md`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-start-v1.json`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v360-start-v1.md`
 
 Last completion:
-- `v358`
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v358-completion-v1.json`
-- `docs/trinity-live-traces/v341-v360-sibling-phase-v358-completion-v1.md`
+- `v359`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v359-completion-v1.json`
+- `docs/trinity-live-traces/v341-v360-sibling-phase-v359-completion-v1.md`
 
-Next action: Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase 359, then complete v359 with the bounded v341-v360 completion runner.
+Next action: Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase 360 --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, then complete v360 with the bounded v341-v360 completion runner.

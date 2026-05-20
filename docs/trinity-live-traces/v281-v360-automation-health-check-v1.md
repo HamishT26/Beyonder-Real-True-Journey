@@ -1,12 +1,12 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-20T01:58:03.172654+00:00`
+Generated UTC: `2026-05-20T02:21:05.927856+00:00`
 Status: `v341_v360_running`
 
 Primary automation:
 - ID: `aletheon`
 - Kind: `heartbeat`
-- Status: `PAUSED`
+- Status: `ACTIVE`
 - Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=30`
 - Interval minutes: `30`
 - Target thread: `019cc07b-70b8-7673-ac44-d2ee1fedb86a`
@@ -48,17 +48,16 @@ v341-v360 handoff:
 
 v341-v360 run:
 - Status: `running`
-- Active phase: `v359`
+- Active phase: `v360`
 - Active phase status: `phase_started`
 - Closeout declaration: `None`
-- Next action: `Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase 359, then complete v359 with the bounded v341-v360 completion runner.`
+- Next action: `Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase 360 --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, then complete v360 with the bounded v341-v360 completion runner.`
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
-- Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
-- v341-v360 is running at v359; complete exactly the active phase and do not start a duplicate.
+- v341-v360 is running at v360; complete exactly the active phase and do not start a duplicate.
 - No local runner processes matched the health pattern; inspect before assuming background progress.
 
 Recommended action:
-- Continue v359 from docs/trinity-live-traces/v341-v360-sibling-run-status-v1.md. Complete exactly the active phase, write v1/v2 reports and source capsule, then open the next phase only if it is within v341-v360.
+- Continue v360 from docs/trinity-live-traces/v341-v360-sibling-run-status-v1.md. Complete exactly the active phase, write v1/v2 reports and source capsule, then open the next phase only if it is within v341-v360.

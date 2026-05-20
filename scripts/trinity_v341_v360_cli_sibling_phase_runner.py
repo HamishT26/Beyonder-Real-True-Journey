@@ -332,9 +332,9 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--phase", type=int, required=True)
     parser.add_argument("--only-lane", choices=sorted(LANES), default="")
-    parser.add_argument("--timeout-sec", type=int, default=1800)
-    parser.add_argument("--kimi-timeout-sec", type=int, default=1800)
-    parser.add_argument("--max-steps", type=int, default=30)
+    parser.add_argument("--timeout-sec", type=int, default=3600)
+    parser.add_argument("--kimi-timeout-sec", type=int, default=3600)
+    parser.add_argument("--max-steps", type=int, default=200)
     args = parser.parse_args()
 
     validate_phase(args.phase)
