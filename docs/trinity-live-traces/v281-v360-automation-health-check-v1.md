@@ -1,12 +1,12 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-20T21:13:49.926012+00:00`
+Generated UTC: `2026-05-20T21:53:23.443151+00:00`
 Status: `v281_v360_complete`
 
 Primary automation:
 - ID: `aletheon`
 - Kind: `heartbeat`
-- Status: `ACTIVE`
+- Status: `PAUSED`
 - Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=30`
 - Interval minutes: `30`
 - Target thread: `019cc07b-70b8-7673-ac44-d2ee1fedb86a`
@@ -55,6 +55,7 @@ v341-v360 run:
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
+- Primary Aletheon chat heartbeat is PAUSED; activate through the Codex app UI rather than editing TOML directly.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
 - v341-v360 is complete at v360; ask whether to archive this heartbeat or update it for the next packet.
 - No local runner processes matched the health pattern; inspect before assuming background progress.
