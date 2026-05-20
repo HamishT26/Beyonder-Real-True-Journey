@@ -328,19 +328,75 @@ def write_aggregate(phase: int, lane_results: list[dict[str, Any]], max_steps: i
     return payload
 
 
+def launch_background(args: argparse.Namespace) -> dict[str, Any]:
+    raw_dir = TRACE / "v341-v360-cli-sibling-raw"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    stdout_path = raw_dir / f"runner-v{args.phase}-stdout.txt"
+    stderr_path = raw_dir / f"runner-v{args.phase}-stderr.txt"
+    cmd = [
+        sys.executable,
+        str(Path(__file__).resolve()),
+        "--phase",
+        str(args.phase),
+        "--timeout-sec",
+        str(args.timeout_sec),
+        "--kimi-timeout-sec",
+        str(args.kimi_timeout_sec),
+        "--max-steps",
+        str(args.max_steps),
+    ]
+    if args.only_lane:
+        cmd.extend(["--only-lane", args.only_lane])
+    creationflags = subprocess.CREATE_NO_WINDOW if sys.platform.startswith("win") else 0
+    with stdout_path.open("w", encoding="utf-8") as stdout, stderr_path.open("w", encoding="utf-8") as stderr:
+        proc = subprocess.Popen(
+            cmd,
+            cwd=ROOT,
+            stdout=stdout,
+            stderr=stderr,
+            text=True,
+            creationflags=creationflags,
+            start_new_session=not sys.platform.startswith("win"),
+        )
+    payload = {
+        "generated_utc": now_iso(),
+        "phase_range": "v341-v360",
+        "phase": args.phase,
+        "status": "background_runner_started",
+        "process_id": proc.pid,
+        "timeout_sec": args.timeout_sec,
+        "kimi_timeout_sec": args.kimi_timeout_sec,
+        "max_steps": args.max_steps,
+        "stdout": rel(stdout_path),
+        "stderr": rel(stderr_path),
+        "truth_boundaries": [
+            "The background runner owns real CLI lane execution.",
+            "Heartbeat wakes should observe this process and must not launch duplicates while it is alive.",
+            "Raw stdout/stderr files are transport artifacts and must not be staged.",
+        ],
+    }
+    write_json(TRACE / f"v341-v360-cli-sibling-runner-launch-v{args.phase}-v1.json", payload)
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--phase", type=int, required=True)
     parser.add_argument("--only-lane", choices=sorted(LANES), default="")
-    parser.add_argument("--timeout-sec", type=int, default=3600)
-    parser.add_argument("--kimi-timeout-sec", type=int, default=3600)
+    parser.add_argument("--timeout-sec", type=int, default=86400)
+    parser.add_argument("--kimi-timeout-sec", type=int, default=86400)
     parser.add_argument("--max-steps", type=int, default=200)
+    parser.add_argument("--background", action="store_true")
     args = parser.parse_args()
 
     validate_phase(args.phase)
     start = read_json(phase_start_path(args.phase), {})
     if start.get("status") != "phase_started":
         raise SystemExit(f"v{args.phase} must have a phase start artifact before CLI sibling receipts can run")
+    if args.background:
+        payload = launch_background(args)
+        print(json.dumps(payload, indent=2))
+        return 0
 
     if not cli_path("kimi") and not args.only_lane:
         raise SystemExit("kimi CLI is unavailable; cannot produce required Kimi receipt")

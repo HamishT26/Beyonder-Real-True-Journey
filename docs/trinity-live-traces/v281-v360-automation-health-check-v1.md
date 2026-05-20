@@ -1,14 +1,14 @@
 # v281-v360 Automation Health Check
 
-Generated UTC: `2026-05-20T02:21:05.927856+00:00`
+Generated UTC: `2026-05-20T02:26:35.465348+00:00`
 Status: `v341_v360_running`
 
 Primary automation:
 - ID: `aletheon`
 - Kind: `heartbeat`
 - Status: `ACTIVE`
-- Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=30`
-- Interval minutes: `30`
+- Schedule: `RRULE:FREQ=MINUTELY;INTERVAL=210`
+- Interval minutes: `210`
 - Target thread: `019cc07b-70b8-7673-ac44-d2ee1fedb86a`
 
 Secondary automation:
@@ -55,6 +55,7 @@ v341-v360 run:
 
 Findings:
 - Primary Aletheon chat heartbeat exists and targets this Codex thread.
+- Primary chat heartbeat interval is 210 minutes; set it to 30 minutes for the energy-preserving recovery loop.
 - Secondary worktree automation cwd is not the D: worktree; leave it as fallback unless the UI can target the D: worktree directly.
 - v341-v360 is running at v360; complete exactly the active phase and do not start a duplicate.
 - No local runner processes matched the health pattern; inspect before assuming background progress.

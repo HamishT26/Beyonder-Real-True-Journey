@@ -1,7 +1,7 @@
 # GHC v357-v370 CLI Multiplex Recovery Wake Bridge
 
 Use thread automation attached to this current Aletheon Codex thread.
-Schedule: every 3 hours and 30 minutes.
+Schedule: every 30 minutes.
 Project: `D:\GHC-Archives\worktrees\v58-omega`.
 Sandbox: workspace-write or stricter. Do not use full access or Administrator terminals unless Hamish explicitly approves a specific run.
 
@@ -10,8 +10,8 @@ Sandbox: workspace-write or stricter. Do not use full access or Administrator te
 - v281-v300 is complete: `600/600`, global v2 complete.
 - v301-v320 is complete through v320.
 - v321-v340 is complete through v340.
-- v341-v357 is complete locally and awaiting publication with the CLI gate update.
-- Current active phase is v358.
+- v341-v359 is complete and pushed.
+- Current active phase is v360.
 - Current run status is `docs\trinity-live-traces\v341-v360-sibling-run-status-v1.json`.
 - Final v341-v360 handoff exists at `docs\trinity-live-traces\v341-v360-final-handoff-v1.json`.
 - v341-v360 scripts are bounded through v360 only. Do not run v361-v370 with v341-v360 scripts.
@@ -29,9 +29,10 @@ Sandbox: workspace-write or stricter. Do not use full access or Administrator te
 - Prefer real CLI lanes for substantive phase work.
 - Codex CLI lanes should use `codex exec` or an existing safe repo runner with workspace-write or stricter sandboxing.
 - Kimi CLI lanes should use `kimi --print` or the existing safe repo runner with `--max-steps-per-turn 200` when available.
-- Target each active CLI sibling lane for up to 1 hour of useful work when real lane work is requested.
+- Target each active CLI sibling lane for up to 24 hours of useful work when real lane work is requested.
 - Target up to 50 curated tasks per CLI sibling per phase, 150 total across Arby, Kimi, and Aster Vale, using up to 200 max steps per lane when the runner supports it.
-- Reserve the last 30 minutes of each automation window for Aletheon cleanup, health checks, branch drift checks, curated staging, commit/push, and next-phase handoff preparation.
+- Aletheon may take up to 24 hours for cleanup, synthesis, validation, closeout, and publication when a phase needs it.
+- Short heartbeat wakes are observation checkpoints, not phase boundaries. A single sibling or Aletheon cleanup may span many heartbeat wakes.
 - Do not force a phase to finish just because a heartbeat fired. A phase may span multiple wakeups.
 - If active CLI lane processes are alive and producing fresh artifacts, report material progress only and do not launch duplicates.
 - Do not use `--dangerously-bypass-approvals-and-sandbox`.
@@ -44,8 +45,8 @@ Sandbox: workspace-write or stricter. Do not use full access or Administrator te
 3. Read the current run-status before deciding anything.
 4. Trust durable run-status over stale prompt text.
 5. If status is running, continue exactly the active phase.
-6. If a matching active CLI child process exists for the active phase and is producing fresh artifacts, do not complete or duplicate it.
-7. If no matching CLI receipt process is running and the active phase has no complete CLI receipt aggregate, run `scripts\trinity_v341_v360_cli_sibling_phase_runner.py --phase ACTIVE_PHASE --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200`.
+6. If a matching active CLI child process exists for the active phase and is producing fresh artifacts, report progress only and do not complete or duplicate it.
+7. If no matching CLI receipt process is running and the active phase has no complete CLI receipt aggregate, launch the background runner with `scripts\trinity_v341_v360_cli_sibling_phase_runner.py --phase ACTIVE_PHASE --background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 200`.
 8. Complete exactly the active phase only after valid real CLI receipts exist for Arby, Kimi, and Aster Vale.
 9. For v357-v360, use `scripts\trinity_v341_v360_sibling_phase_complete.py --phase ACTIVE_PHASE --open-next` only after the CLI receipt gate is complete.
 10. At v360, stop after writing the v281-v360 closeout declaration.
@@ -84,12 +85,13 @@ Do not mark a phase complete until these are true or explicitly blocked with evi
 
 ## Cadence
 
-- Default heartbeat interval: 3 hours and 30 minutes.
-- Do not optimize the interval around short script completion time alone. Real CLI lane work should be artifact-driven and may span multiple wakes.
-- Each normal phase window should allocate up to 1 hour for Arby, up to 1 hour for Kimi, up to 1 hour for Aster Vale, and roughly 30 minutes for Aletheon cleanup/publication/handoff.
+- Default heartbeat interval: 30 minutes.
+- Do not optimize the interval around short script completion time alone. Real CLI lane work should be artifact-driven and may span many wakes.
+- Each CLI sibling lane may run for up to 24 hours under the same phase before the next sibling starts.
+- Aletheon cleanup, synthesis, validation, closeout, and publication may also span multiple wakes when needed.
 - If all CLI sibling lanes are disabled and only bounded phase-completion scripts are running, a temporary 15-minute cadence is acceptable only after Hamish explicitly asks for it.
-- If real CLI sibling lanes are active for long work blocks, keep 3 hours and 30 minutes and report progress only while fresh artifacts appear.
-- If a phase intentionally launches 50-task-per-lane work that may take longer than one window, keep 3 hours and 30 minutes and let the phase span multiple wakes.
+- If real CLI sibling lanes are active for long work blocks, keep 30 minutes and report progress only while fresh artifacts appear.
+- If a phase intentionally launches 50-task-per-lane work that may take longer than one window, keep 30 minutes and let the phase span multiple wakes.
 - Maximum burst: 2 completed phases per wake, and only when there are no live matching runners, branch drift is clean, and the next phase remains inside the current bounded packet.
 - Never cross from v360 to v361 in a burst unless the v361-v370 handoff and scripts already exist and are committed.
 

@@ -14,4 +14,4 @@ Last completion:
 - `docs/trinity-live-traces/v341-v360-sibling-phase-v359-completion-v1.json`
 - `docs/trinity-live-traces/v341-v360-sibling-phase-v359-completion-v1.md`
 
-Next action: Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase 360 --timeout-sec 3600 --kimi-timeout-sec 3600 --max-steps 200, then complete v360 with the bounded v341-v360 completion runner.
+Next action: v360 CLI receipts are complete; complete v360 with `scripts\trinity_v341_v360_sibling_phase_complete.py --phase 360 --open-next`, then stop at v360 closeout before any v361 work.
