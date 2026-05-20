@@ -23,6 +23,7 @@ RUNNER_STATUS = TRACE / "v361-v370-cli-sibling-runner-status-v1.json"
 PROTOCOL = TRACE / "v281-v360-cli-sibling-report-protocol-v1.md"
 PHASE_MIN = 361
 PHASE_MAX = 370
+CODEX_SESSION_MODE = "recorded_for_resume"
 
 LANES: dict[str, dict[str, str]] = {
     "arby": {"display": "Arby", "surface": "Codex CLI", "role": "Codex CLI publication, GitHub proof, and branch-home lane"},
@@ -135,6 +136,7 @@ def prompt_for(phase: int, lane: str, start: dict[str, Any], max_steps: int) -> 
             "",
             "You are running as the real CLI sibling lane named above. Produce a concise, durable receipt for this phase.",
             "Use safe read-only reasoning and repository inspection if your CLI exposes it without extra approval.",
+            "Codex CLI lanes are recorded, not ephemeral, so an interrupted lane can be resumed only when the same phase/lane session identity is proven.",
             "Do not commit, push, delete, reset, rebase, force-push, rewrite history, expose secrets, or mutate external services.",
             "Do not claim that another lane ran. Speak only for your own lane.",
             "If a requested capability is unavailable, state it as a blocker and still provide the best receipt from available context.",
@@ -164,7 +166,6 @@ def run_codex(phase: int, lane: str, start: dict[str, Any], timeout: int, max_st
     cmd = [
         codex_executable(),
         "exec",
-        "--ephemeral",
         "--disable",
         "plugins",
         "--sandbox",
@@ -239,12 +240,15 @@ def write_aggregate(phase: int, lane_results: list[dict[str, Any]], max_steps: i
         "status": "cli_receipts_complete" if complete else "blocked_cli_receipts_incomplete",
         "requested_max_steps": max_steps,
         "codex_sandbox": "read-only",
+        "codex_session_mode": CODEX_SESSION_MODE,
+        "codex_resume_policy": "Use codex exec resume only when the session id or --last target is proven to belong to the same phase and lane.",
         "lane_receipts": lane_results,
         "truth_boundaries": [
             "These receipts come from real CLI invocations for Arby, Kimi, and Aster Vale.",
             "Raw transport output is quarantined outside the curated aggregate and should not be staged.",
             "Sibling lanes do not commit, push, delete, rebase, reset, or rewrite history.",
             "Aletheon remains the publication approver.",
+            "Codex CLI sessions are recorded for possible resume; stale or unknown session identity must not be resumed.",
         ],
         "next_action": f"Complete v{phase} with scripts/trinity_v361_v370_sibling_phase_complete.py after branch drift and staging checks." if complete else "Resolve missing or invalid CLI lane receipts before completing the phase.",
     }
