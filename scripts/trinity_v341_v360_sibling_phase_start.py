@@ -215,13 +215,13 @@ def build_payload(phase: int, force: bool) -> dict[str, Any]:
         "blockers": blockers,
         "truth_boundaries": [
             f"This artifact starts v{phase}; it does not mark v{phase} complete.",
-            f"Do not open v{phase + 1} unless v{phase} has curated v1/v2 reports and a completion receipt.",
+            f"Do not open v{phase + 1} unless v{phase} has real Arby, Kimi, and Aster Vale CLI receipts, curated v1/v2 reports, and a completion receipt.",
             "Never stage raw replies, stdout/stderr logs, live logs, active partial lane files, scratch probes, pycache files, or unrelated churn.",
             "External MCP/API/provider usage remains exploratory until secrets, scopes, rollback, and spend limits are explicit.",
             "If C:/ and //?/C:/ identify the same Codex session JSONL, treat it as app resume-path vitality, not repo failure.",
         ],
         "next_action": (
-            f"Complete v{phase} with the bounded v341-v360 completion runner."
+            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase}, then complete v{phase} with the bounded v341-v360 completion runner."
             if status == "phase_started"
             else "Resolve blockers before starting v341-v360 execution."
         ),

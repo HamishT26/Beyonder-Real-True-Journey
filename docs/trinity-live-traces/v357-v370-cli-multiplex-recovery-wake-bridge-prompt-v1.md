@@ -10,8 +10,8 @@ Sandbox: workspace-write or stricter. Do not use full access or Administrator te
 - v281-v300 is complete: `600/600`, global v2 complete.
 - v301-v320 is complete through v320.
 - v321-v340 is complete through v340.
-- v341-v356 is complete and pushed.
-- Current active phase is v357.
+- v341-v357 is complete locally and awaiting publication with the CLI gate update.
+- Current active phase is v358.
 - Current run status is `docs\trinity-live-traces\v341-v360-sibling-run-status-v1.json`.
 - Final v341-v360 handoff exists at `docs\trinity-live-traces\v341-v360-final-handoff-v1.json`.
 - v341-v360 scripts are bounded through v360 only. Do not run v361-v370 with v341-v360 scripts.
@@ -43,19 +43,21 @@ Sandbox: workspace-write or stricter. Do not use full access or Administrator te
 3. Read the current run-status before deciding anything.
 4. Trust durable run-status over stale prompt text.
 5. If status is running, continue exactly the active phase.
-6. If a matching active child process exists for the active phase and is producing fresh artifacts, do not complete or duplicate it.
-7. If no matching child is running, complete exactly the active phase with the bounded completion runner.
-8. For v357-v360, use `scripts\trinity_v341_v360_sibling_phase_complete.py --phase ACTIVE_PHASE --open-next`.
-9. At v360, stop after writing the v281-v360 closeout declaration.
-10. Before any v361 work, create and commit a v361-v370 handoff plus bounded v361-v370 successor scripts from the v341-v360 pattern.
-11. For v361-v370, continue one active phase at a time from the v361-v370 run-status and stop after v370 closeout.
+6. If a matching active CLI child process exists for the active phase and is producing fresh artifacts, do not complete or duplicate it.
+7. If no matching CLI receipt process is running and the active phase has no complete CLI receipt aggregate, run `scripts\trinity_v341_v360_cli_sibling_phase_runner.py --phase ACTIVE_PHASE --max-steps 30`.
+8. Complete exactly the active phase only after valid real CLI receipts exist for Arby, Kimi, and Aster Vale.
+9. For v357-v360, use `scripts\trinity_v341_v360_sibling_phase_complete.py --phase ACTIVE_PHASE --open-next` only after the CLI receipt gate is complete.
+10. At v360, stop after writing the v281-v360 closeout declaration.
+11. Before any v361 work, create and commit a v361-v370 handoff plus bounded v361-v370 successor scripts from the v341-v360 pattern.
+12. For v361-v370, continue one active phase at a time from the v361-v370 run-status and stop after v370 closeout.
 
 ## Completion Gate
 
 Do not mark a phase complete until these are true or explicitly blocked with evidence:
 
 - Active phase start artifact exists.
-- CLI sibling receipts exist for Arby, Kimi, and Aster Vale, or each missing lane has a blocker receipt.
+- Valid real CLI sibling receipts exist for Arby, Kimi, and Aster Vale.
+- If a CLI lane is unavailable, stop with a blocker artifact and do not mark the phase complete until Hamish/Aletheon explicitly resolves the lane.
 - Supervisor, v2 Watcher, and Recovery-Watcher truth has been checked.
 - v1 report, v2 report, source capsule, completion artifact, and run-status are written.
 - Branch drift has been fetched and checked.

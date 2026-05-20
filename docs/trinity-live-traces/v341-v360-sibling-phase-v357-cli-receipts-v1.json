@@ -1,0 +1,59 @@
+{
+  "generated_utc": "2026-05-20T01:38:36.7201265Z",
+  "phase_range": "v341-v360",
+  "phase": 357,
+  "artifact_id": "v341-v360-sibling-phase-v357-cli-receipts-v1",
+  "status": "curated_blocker_receipts_recorded",
+  "reason": "The bounded v341-v360 completion runner completed v357 but does not launch or persist real Codex/Kimi CLI sibling receipts. This artifact records the missing lane receipts explicitly instead of impersonating CLI work.",
+  "cli_availability_checked": {
+    "codex": {
+      "status": "available",
+      "version": "codex-cli 0.131.0",
+      "path": "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.ps1"
+    },
+    "kimi": {
+      "status": "available",
+      "version": "kimi, version 1.44.0",
+      "path": "C:\\Users\\hamis\\.local\\bin\\kimi.exe"
+    },
+    "kimi_cli": {
+      "status": "available",
+      "path": "C:\\Users\\hamis\\.local\\bin\\kimi-cli.exe"
+    }
+  },
+  "lane_receipts": [
+    {
+      "lane": "Arby",
+      "expected_surface": "Codex CLI",
+      "receipt_type": "blocker",
+      "status": "blocked_cli_not_launched_by_bounded_runner",
+      "truth_boundary": "No Arby CLI output is claimed for v357."
+    },
+    {
+      "lane": "Kimi",
+      "expected_surface": "Kimi CLI",
+      "receipt_type": "blocker",
+      "status": "blocked_cli_not_launched_by_bounded_runner",
+      "truth_boundary": "No Kimi CLI output is claimed for v357."
+    },
+    {
+      "lane": "Aster Vale",
+      "expected_surface": "Codex CLI",
+      "receipt_type": "blocker",
+      "status": "blocked_cli_not_launched_by_bounded_runner",
+      "truth_boundary": "No Aster Vale CLI output is claimed for v357."
+    }
+  ],
+  "helper_truth_check": {
+    "supervisor": "covered_by_bounded_completion_artifact",
+    "v2_watcher": "lead_sibling_for_v357_completion",
+    "recovery_watcher": "health_gate_refreshed_after_completion"
+  },
+  "related_artifacts": {
+    "completion": "docs/trinity-live-traces/v341-v360-sibling-phase-v357-completion-v1.json",
+    "run_status": "docs/trinity-live-traces/v341-v360-sibling-run-status-v1.json",
+    "health_check": "docs/trinity-live-traces/v281-v360-automation-health-check-v1.json",
+    "next_phase_start": "docs/trinity-live-traces/v341-v360-sibling-phase-v358-start-v1.json"
+  },
+  "next_action": "For v358+, either launch real CLI lane work under the CLI runtime contract or record equivalent blocker receipts before completion."
+}

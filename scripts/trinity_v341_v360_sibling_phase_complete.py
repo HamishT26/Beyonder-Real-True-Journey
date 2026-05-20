@@ -23,6 +23,12 @@ CLOSEOUT_MD = TRACE / "v281-v360-closeout-declaration-v1.md"
 PHASE_MIN = 341
 PHASE_MAX = 360
 PHASE_RANGE = "v341-v360"
+CLI_RECEIPTS_REQUIRED_FROM_PHASE = 358
+REQUIRED_CLI_LANES = {
+    "Arby": "Codex CLI",
+    "Kimi": "Kimi CLI",
+    "Aster Vale": "Codex CLI",
+}
 
 SOURCE_NOTES = [
     ("v341-v360 final handoff", "docs/trinity-live-traces/v341-v360-final-handoff-v1.json", "Use v340 completion as the final packet floor."),
@@ -88,7 +94,49 @@ def paths_for_phase(phase: int) -> dict[str, Path]:
         "v2_md": TRACE / f"{stem}-v2-report-v1.md",
         "source_json": TRACE / f"v341-v360-sibling-source-capsule-v{phase}-v1.json",
         "source_md": TRACE / f"v341-v360-sibling-source-capsule-v{phase}-v1.md",
+        "cli_receipts_json": TRACE / f"{stem}-cli-receipts-v1.json",
+        "cli_receipts_md": TRACE / f"{stem}-cli-receipts-v1.md",
     }
+
+
+def validate_cli_receipts(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
+    required = phase >= CLI_RECEIPTS_REQUIRED_FROM_PHASE
+    gate = {
+        "required": required,
+        "path": rel(paths["cli_receipts_json"]),
+        "status": "not_required",
+        "blockers": [],
+    }
+    if not required:
+        return gate
+    if not paths["cli_receipts_json"].exists():
+        gate["status"] = "blocked_missing_cli_receipts"
+        gate["blockers"].append(
+            f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase} before completion."
+        )
+        return gate
+    payload = read_json(paths["cli_receipts_json"], {})
+    gate["status"] = payload.get("status") or "blocked_unreadable_cli_receipts"
+    if payload.get("status") != "cli_receipts_complete":
+        gate["blockers"].append("CLI receipt aggregate is not complete.")
+    lane_receipts = payload.get("lane_receipts") or []
+    for lane, expected_surface in REQUIRED_CLI_LANES.items():
+        receipt = next((item for item in lane_receipts if item.get("lane") == lane), None)
+        if not receipt:
+            gate["blockers"].append(f"Missing {lane} CLI receipt.")
+            continue
+        if receipt.get("surface") != expected_surface:
+            gate["blockers"].append(f"{lane} receipt is from {receipt.get('surface')} instead of {expected_surface}.")
+        if receipt.get("receipt_status") != "valid_cli_receipt" or not receipt.get("valid"):
+            gate["blockers"].append(f"{lane} receipt is not valid: {receipt.get('receipt_status')}.")
+        receipt_path = receipt.get("receipt_path")
+        if receipt_path and not (ROOT / receipt_path).exists():
+            gate["blockers"].append(f"{lane} receipt path does not exist: {receipt_path}.")
+    if gate["blockers"]:
+        gate["status"] = "blocked_missing_cli_receipts"
+    else:
+        gate["status"] = "cli_receipts_complete"
+    return gate
 
 
 def write_source_capsule(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
@@ -272,11 +320,17 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
     paths = paths_for_phase(phase)
     start = read_json(paths["start_json"], {})
     plan = start.get("phase_plan") or {}
+    cli_gate = validate_cli_receipts(phase, paths)
     source_capsule = write_source_capsule(phase, paths)
     v1, v2 = write_reports(phase, start, paths, source_capsule)
     status = "phase_complete" if start.get("status") == "phase_started" else "blocked_missing_phase_start"
+    if status == "phase_complete" and cli_gate["blockers"]:
+        status = "blocked_missing_cli_receipts"
     next_phase = phase + 1 if open_next and phase < PHASE_MAX else None
-    if phase == PHASE_MAX and status == "phase_complete":
+    if status == "blocked_missing_cli_receipts":
+        next_phase = None
+        next_action = f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {phase}, then rerun this completion command."
+    elif phase == PHASE_MAX and status == "phase_complete":
         next_action = "Stop at v360, write closeout, then ask Hamish whether to archive or update the automation."
     elif next_phase:
         next_action = f"Open v{next_phase} from the v341-v360 sibling base plan."
@@ -300,8 +354,11 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
             "eureka_proposals": len(plan.get("eureka_proposals", [])),
             "sources": len(source_capsule["sources"]),
         },
+        "cli_receipt_gate": cli_gate,
+        "blockers": cli_gate["blockers"] if cli_gate["blockers"] else [],
         "truth_boundaries": v1["truth_boundaries"] + [
             "v341-v360 remains bounded under Aletheon oversight, with curated artifacts as the durable source of truth.",
+            "v358+ completion requires real Arby, Kimi, and Aster Vale CLI receipts before the next phase can open.",
             "v361+ must not start from this runner without an explicit new handoff or operator automation update.",
         ],
         "next_phase": next_phase,
@@ -327,6 +384,20 @@ def write_completion_md(completion: dict[str, Any], paths: dict[str, Path]) -> N
     ]
     for key, value in completion["completed_counts"].items():
         lines.append(f"- `{key}`: `{value}`")
+    gate = completion.get("cli_receipt_gate") or {}
+    lines.extend(
+        [
+            "",
+            "CLI receipt gate:",
+            f"- Required: `{gate.get('required')}`",
+            f"- Status: `{gate.get('status')}`",
+            f"- Artifact: `{gate.get('path')}`",
+        ]
+    )
+    if completion.get("blockers"):
+        lines.extend(["", "Blockers:"])
+        for item in completion["blockers"]:
+            lines.append(f"- {item}")
     lines.extend(["", "Truth boundaries:"])
     for item in completion["truth_boundaries"]:
         lines.append(f"- {item}")
@@ -358,7 +429,13 @@ def update_run_status(completion: dict[str, Any], paths: dict[str, Path], opened
         active_phase = opened_next["phase"]
         active_status = opened_next["status"]
         artifacts = {"json": opened_next["phase_artifact"], "md": opened_next["phase_artifact"].replace(".json", ".md")}
-        next_action = f"Complete v{active_phase} with the bounded v341-v360 completion runner."
+        if active_phase >= CLI_RECEIPTS_REQUIRED_FROM_PHASE:
+            next_action = (
+                f"Run scripts/trinity_v341_v360_cli_sibling_phase_runner.py --phase {active_phase}, "
+                f"then complete v{active_phase} with the bounded v341-v360 completion runner."
+            )
+        else:
+            next_action = f"Complete v{active_phase} with the bounded v341-v360 completion runner."
     elif closeout:
         status = closeout["status"]
         active_phase = completion["phase"]
