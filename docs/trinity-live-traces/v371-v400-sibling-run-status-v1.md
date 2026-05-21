@@ -1,17 +1,17 @@
 # v371-v400 Sibling Run Status
 
-Generated UTC: `2026-05-21T10:19:50.144929+00:00`
+Generated UTC: `2026-05-21T10:48:02.041502+00:00`
 Status: `running`
-Active phase: `v399`
+Active phase: `v400`
 Active phase status: `phase_started`
 
 Active artifacts:
-- `docs/trinity-live-traces/v371-v400-sibling-phase-v399-start-v1.json`
-- `docs/trinity-live-traces/v371-v400-sibling-phase-v399-start-v1.md`
+- `docs/trinity-live-traces/v371-v400-sibling-phase-v400-start-v1.json`
+- `docs/trinity-live-traces/v371-v400-sibling-phase-v400-start-v1.md`
 
 Last completion:
-- `v398`
-- `docs/trinity-live-traces/v371-v400-sibling-phase-v398-completion-v1.json`
-- `docs/trinity-live-traces/v371-v400-sibling-phase-v398-completion-v1.md`
+- `v399`
+- `docs/trinity-live-traces/v371-v400-sibling-phase-v399-completion-v1.json`
+- `docs/trinity-live-traces/v371-v400-sibling-phase-v399-completion-v1.md`
 
-Next action: Run scripts/trinity_v371_v400_cli_sibling_phase_runner.py --phase 399 --background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 10000.
+Next action: Run scripts/trinity_v371_v400_cli_sibling_phase_runner.py --phase 400 --background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 10000.
