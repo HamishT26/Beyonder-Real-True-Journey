@@ -24,6 +24,7 @@ PROTOCOL = TRACE / "v281-v360-cli-sibling-report-protocol-v1.md"
 PHASE_MIN = 401
 PHASE_MAX = 420
 CODEX_SESSION_MODE = "recorded_for_resume"
+GOAL_MODE_MIN_PHASE = 407
 
 LANES: dict[str, dict[str, str]] = {
     "arby": {"display": "Arby", "surface": "Codex CLI", "role": "Codex CLI publication, GitHub proof, and branch-home lane"},
@@ -134,6 +135,15 @@ def prompt_for(phase: int, lane: str, start: dict[str, Any], max_steps: int) -> 
     config = LANES[lane]
     plan = start.get("phase_plan") or {}
     source = start.get("handoff", {}).get("path") or "docs/trinity-live-traces/v401-v420-final-handoff-v1.json"
+    goal_mode = plan.get("goal_mode") or {}
+    packet_goal = goal_mode.get("packet_goal") or "Complete the bounded v401-v420 packet through v420 closeout without duplicate runners or v421 launch."
+    phase_goal = goal_mode.get("phase_goal") or f"Complete exactly v{phase} for {config['display']} with a valid receipt and next-phase handoff."
+    if phase >= GOAL_MODE_MIN_PHASE:
+        codex_goal_line = f"/goal {phase_goal} Stop when this lane receipt is valid, has 50 Eureka Session lines, and preserves the packet boundary."
+        goal_policy = "Goal mode is enabled as a focus contract for v407-v420; in non-interactive exec mode treat the /goal line as an explicit durable objective if slash-command state is not persisted."
+    else:
+        codex_goal_line = "Goal mode is not retroactively applied to already-produced v401-v406 receipts."
+        goal_policy = "Goal mode begins with v407 so completed earlier receipts remain stable."
     return "\n".join(
         [
             f"Marker: v401-v420:v{phase}:{lane}:cli-receipt-v1",
@@ -145,10 +155,16 @@ def prompt_for(phase: int, lane: str, start: dict[str, Any], max_steps: int) -> 
             f"Report protocol: {rel(PROTOCOL)}",
             f"Requested maximum useful steps: {max_steps}",
             f"Required Eureka Trinity Session units: {REQUIRED_EUREKA_UNITS}",
+            f"Packet goal: {packet_goal}",
+            f"Phase lane goal: {phase_goal}",
+            f"Slash goal candidate: {codex_goal_line}",
+            f"Goal policy: {goal_policy}",
             "",
             "You are running as the real CLI sibling lane named above. Produce a concise, durable receipt for this phase.",
             "Use safe read-only reasoning and repository inspection if your CLI exposes it without extra approval.",
             "Codex CLI lanes are recorded, not ephemeral, so an interrupted lane can be resumed only when the same phase/lane session identity is proven.",
+            "The goal contract guides focus; it never authorizes commits, pushes, deletion, resets, rebases, external mutation, or bypassing the CLI receipt gate.",
+            "Do not merge all remaining phases into one run. This receipt is for the current phase and current lane only.",
             "Do not commit, push, delete, reset, rebase, force-push, rewrite history, expose secrets, or mutate external services.",
             "Do not claim that another lane ran. Speak only for your own lane.",
             "If a requested capability is unavailable, state it as a blocker and still provide the best receipt from available context.",
@@ -259,6 +275,12 @@ def write_aggregate(phase: int, lane_results: list[dict[str, Any]], max_steps: i
         "required_eureka_units_per_lane": REQUIRED_EUREKA_UNITS,
         "codex_sandbox": "read-only",
         "codex_session_mode": CODEX_SESSION_MODE,
+        "goal_mode_policy": {
+            "enabled_from_phase": GOAL_MODE_MIN_PHASE,
+            "packet_goal": "Complete v401-v420 through v420 closeout with one active phase at a time.",
+            "phase_goal_boundary": "Each receipt run is exactly one lane for exactly one active phase.",
+            "slash_command_boundary": "Local Codex features.goals is enabled; non-interactive codex exec still treats /goal text as a durable objective contract unless slash-command persistence is explicitly proven.",
+        },
         "codex_resume_policy": "Use codex exec resume only when the session id or --last target is proven to belong to the same phase and lane.",
         "lane_receipts": lane_results,
         "truth_boundaries": [

@@ -31,6 +31,9 @@ SOURCE_NOTES = [
     ("v371-v400 closeout", "docs/trinity-live-traces/v371-v400-closeout-declaration-v1.json", "Use the latest completed packet as the direct predecessor."),
     ("v401-v420 final handoff", "docs/trinity-live-traces/v401-v420-final-handoff-v1.json", "Use bounded successor packet rules."),
     ("OpenAI Codex docs", "https://developers.openai.com/codex/", "Keep Codex automation and CLI claims tied to official docs."),
+    ("Codex follow a goal", "https://developers.openai.com/codex/use-cases/follow-goals", "Use /goal only for bounded objectives with clear stopping conditions."),
+    ("Codex Windows app", "https://developers.openai.com/codex/app/windows", "Keep integrated terminal and Windows app claims tied to official product docs."),
+    ("PowerShell profiles", "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles", "Treat Set-Location profile behavior as shell startup truth."),
     ("Model Context Protocol", "https://modelcontextprotocol.io/", "Keep MCP expansion inside explicit trust boundaries."),
     ("NIST AI RMF", "https://www.nist.gov/itl/ai-risk-management-framework", "Govern, map, measure, and manage risk."),
     ("UNESCO AI ethics", "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics", "Keep dignity, rights, and human flourishing visible."),
@@ -79,6 +82,8 @@ def paths_for_phase(phase: int) -> dict[str, Path]:
         "source_md": TRACE / f"v401-v420-sibling-source-capsule-v{phase}-v1.md",
         "cli_receipts_json": TRACE / f"{stem}-cli-receipts-v1.json",
         "cli_receipts_md": TRACE / f"{stem}-cli-receipts-v1.md",
+        "advisory_json": TRACE / f"{stem}-advisory-refinement-v1.json",
+        "advisory_md": TRACE / f"{stem}-advisory-refinement-v1.md",
     }
 
 
@@ -142,7 +147,7 @@ def write_reports(phase: int, start: dict[str, Any], paths: dict[str, Path], sou
         "status": "v2_report_complete",
         "lead_sibling": lead,
         "summary": f"{lead} converted v{phase} receipt evidence into next-phase readiness and publication hygiene.",
-        "readiness": {"app_heartbeat_minutes": 30, "max_steps_requested": 10000, "stage_raw_logs": False, "next_phase_upper_bound": PHASE_MAX},
+        "readiness": {"app_heartbeat_minutes": 15, "max_steps_requested": 10000, "stage_raw_logs": False, "next_phase_upper_bound": PHASE_MAX, "goal_mode_from_phase": 407},
         "handoff_notes": [
             "Keep one active phase at a time.",
             "Before commit or push, fetch and verify branch drift.",
@@ -154,6 +159,59 @@ def write_reports(phase: int, start: dict[str, Any], paths: dict[str, Path], sou
     paths["v1_md"].write_text("\n".join([f"# v{phase} Sibling V1 Report", "", f"Generated UTC: `{v1['generated_utc']}`", f"Status: `{v1['status']}`", f"Lead sibling: `{lead}`", "", v1["summary"], "", "Truth boundaries:", *[f"- {item}" for item in v1["truth_boundaries"]]]) + "\n", encoding="utf-8")
     paths["v2_md"].write_text("\n".join([f"# v{phase} Sibling V2 Report", "", f"Generated UTC: `{v2['generated_utc']}`", f"Status: `{v2['status']}`", f"Lead sibling: `{lead}`", "", v2["summary"], "", "Handoff notes:", *[f"- {item}" for item in v2["handoff_notes"]]]) + "\n", encoding="utf-8")
     return v1, v2
+
+
+def write_advisory_refinement(phase: int, start: dict[str, Any], paths: dict[str, Path], cli_gate: dict[str, Any]) -> dict[str, Any]:
+    next_phase = phase + 1 if phase < PHASE_MAX else None
+    eureka_count = 100 if next_phase and next_phase >= 407 else 50
+    advisors = ["Parfit", "Cicero", "Kierkegaard"]
+    payload = {
+        "generated_utc": now_iso(),
+        "phase": phase,
+        "status": "advisory_refinement_ready" if cli_gate.get("status") == "cli_receipts_complete" else "blocked_until_cli_receipts_complete",
+        "advisors": advisors,
+        "advisory_scope": "Advisory proposal synthesis only; does not replace Arby, Kimi, or Aster Vale receipts.",
+        "next_phase": next_phase,
+        "proposal_target_eureka_tasks": eureka_count,
+        "goal_policy": {
+            "packet_goal": "Complete v401-v420 through v420 closeout with one active phase at a time.",
+            "next_phase_goal": f"Prepare v{next_phase} with 50-100 refined Eureka tasks and valid CLI receipt gates." if next_phase else "Prepare v420 closeout and stop.",
+            "boundary": "Use /goal where interactive Codex surfaces support it; in runner prompts use the goal contract text without collapsing phases.",
+        },
+        "advisor_prompts": [
+            {
+                "advisor": advisor,
+                "message": (
+                    f"End-of-phase advisory refinement for v{phase}. Durable CLI receipts are {cli_gate.get('status')}. "
+                    f"Reflect on v{phase}, inspect the v{next_phase} plan if present, and propose concrete next-phase Eureka tasks, blockers, source leads, and humility checks. "
+                    "Advisory only: do not edit, stage, commit, push, delete, reset, rebase, mutate services, expose secrets, or replace Arby/Kimi/Aster Vale receipt gates."
+                ),
+            }
+            for advisor in advisors
+        ],
+        "truth_boundaries": [
+            "Aletheon may send these prompts through Codex app agent tools when available.",
+            "Late replies are allowed and can seed later phases, but fresh durable artifacts outrank advisory text.",
+            "The advisor proposal loop is a planning accelerator, not a publication gate.",
+        ],
+    }
+    write_json(paths["advisory_json"], payload)
+    lines = [
+        f"# v{phase} Advisory Refinement",
+        "",
+        f"Generated UTC: `{payload['generated_utc']}`",
+        f"Status: `{payload['status']}`",
+        f"Next phase: `v{payload['next_phase']}`",
+        f"Proposal target Eureka tasks: `{payload['proposal_target_eureka_tasks']}`",
+        "",
+        "Advisors:",
+        *[f"- {advisor}" for advisor in advisors],
+        "",
+        "Truth boundaries:",
+        *[f"- {item}" for item in payload["truth_boundaries"]],
+    ]
+    paths["advisory_md"].write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return payload
 
 
 def write_closeout_declaration(completion: dict[str, Any]) -> dict[str, Any]:
@@ -201,6 +259,7 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
     cli_gate = validate_cli_receipts(phase, paths)
     source_capsule = write_source_capsule(phase, paths)
     v1, _v2 = write_reports(phase, start, paths, source_capsule)
+    advisory = write_advisory_refinement(phase, start, paths, cli_gate)
     status = "phase_complete" if start.get("status") == "phase_started" else "blocked_missing_phase_start"
     if status == "phase_complete" and cli_gate["blockers"]:
         status = "blocked_missing_cli_receipts"
@@ -216,8 +275,9 @@ def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[
         "v1_report": rel(paths["v1_json"]),
         "v2_report": rel(paths["v2_json"]),
         "source_capsule": rel(paths["source_json"]),
+        "advisory_refinement": rel(paths["advisory_json"]),
         "completion_artifact": rel(paths["completion_json"]),
-        "completed_counts": {"sources": len(source_capsule["sources"]), "system_expansions": len(plan.get("system_expansions", [])), "commands": len(plan.get("commands", [])), "skills": len(plan.get("skills", [])), "eureka_proposals": len(plan.get("eureka_proposals", []))},
+        "completed_counts": {"sources": len(source_capsule["sources"]), "system_expansions": len(plan.get("system_expansions", [])), "commands": len(plan.get("commands", [])), "skills": len(plan.get("skills", [])), "eureka_proposals": len(plan.get("eureka_proposals", [])), "advisory_target_eureka_tasks": advisory.get("proposal_target_eureka_tasks")},
         "cli_receipt_gate": cli_gate,
         "blockers": cli_gate["blockers"] if cli_gate["blockers"] else [],
         "truth_boundaries": v1["truth_boundaries"] + ["v401-v420 remains bounded under Aletheon oversight.", "v421+ must not start from this runner without a new handoff."],
@@ -240,6 +300,7 @@ def write_completion_md(completion: dict[str, Any], paths: dict[str, Path]) -> N
         f"V1 report: `{completion['v1_report']}`",
         f"V2 report: `{completion['v2_report']}`",
         f"Source capsule: `{completion['source_capsule']}`",
+        f"Advisory refinement: `{completion['advisory_refinement']}`",
         "",
         "CLI receipt gate:",
         f"- Required: `{gate.get('required')}`",

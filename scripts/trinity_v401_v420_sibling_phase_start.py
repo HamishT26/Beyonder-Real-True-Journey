@@ -21,6 +21,8 @@ RUN_STATUS_MD = TRACE / "v401-v420-sibling-run-status-v1.md"
 PHASE_MIN = 401
 PHASE_MAX = 420
 PHASE_RANGE = "v401-v420"
+PLAN_VERSION = 2
+GOAL_MODE_MIN_PHASE = 407
 SIBLINGS = ["Arby", "Kimi", "Aster Vale", "Supervisor", "v2 Watcher", "Recovery Watchdog", "Parfit", "Cicero", "Kierkegaard"]
 
 SYSTEM_TOPICS = [
@@ -34,6 +36,10 @@ SYSTEM_TOPICS = [
     "GMUT hypothesis labeling",
     "Freed ID governance boundary",
     "v420 closeout seed",
+    "PowerShell terminal profile anchor",
+    "Codex goal mode contract",
+    "app advisory proposal loop",
+    "integrated terminal cockpit",
 ]
 COMMAND_TOPICS = [
     "refresh-health-gate",
@@ -46,6 +52,10 @@ COMMAND_TOPICS = [
     "check-stage-boundary",
     "check-branch-drift",
     "publish-forward-only",
+    "verify-terminal-profile-root",
+    "check-codex-goals-feature",
+    "write-advisory-brief",
+    "seed-next-phase-goal",
 ]
 SKILL_TOPICS = [
     "handoff_execution",
@@ -58,6 +68,10 @@ SKILL_TOPICS = [
     "phase_closeout",
     "automation_prompt_stewardship",
     "v420_packet_stop",
+    "terminal_profile_stewardship",
+    "goal_mode_contracting",
+    "advisory_synthesis",
+    "next_phase_task_refinement",
 ]
 EUREKA_TOPICS = [
     "heartbeat as observation checkpoint",
@@ -70,6 +84,11 @@ EUREKA_TOPICS = [
     "operator-friendly status compression",
     "raw transport quarantine",
     "next-packet decision gate",
+    "terminal profile as shared worktree truth",
+    "goal mode as bounded focus rather than broad authority",
+    "Parfit continuity as advisory hypothesis",
+    "Cicero evidence-to-action rhetoric gate",
+    "Kierkegaard bounded commitment check",
 ]
 
 
@@ -126,31 +145,57 @@ def handoff_ready(handoff: dict[str, Any]) -> bool:
 
 def build_phase_plan(phase: int, handoff: dict[str, Any]) -> dict[str, Any]:
     lead = lead_for_phase(phase)
+    goal_enabled = phase >= GOAL_MODE_MIN_PHASE
+    packet_goal = "Complete v401-v420 through v420 closeout using one active phase, durable CLI receipts, forward-only publication, and no v421 launch."
+    next_phase = phase + 1 if phase < PHASE_MAX else None
+    phase_goal = f"Complete v{phase} with valid Arby, Kimi, and Aster Vale receipts, then create a refined v{next_phase} handoff without blurring phase boundaries." if next_phase else "Complete v420, write v401-v420 closeout, and stop without opening v421."
     return {
         "phase": phase,
         "mode": "v401-v420 CLI Multiplex Beta-Alpha-Omega with sibling execution and Aletheon publication oversight",
+        "plan_version": PLAN_VERSION,
         "lead_sibling": lead,
         "supporting_siblings": [item for item in SIBLINGS if item != lead],
         "source_dependency": rel(HANDOFF_JSON),
         "beta": f"{lead} verifies v281-v360 and v361-v370 closeout truth, v401-v420 handoff truth, live runner state, and 10000-step bounded CLI scope.",
         "alpha": f"{lead} produces real CLI receipt evidence, curated v1/v2 reports, and a source capsule without staging raw transport logs.",
         "omega": f"{lead} hands off the next bounded phase, or prepares the v401-v420 closeout at v420.",
+        "terminal_profile": {
+            "required_root": "D:\\GHC-Archives\\worktrees\\v58-omega",
+            "shell": "PowerShell",
+            "purpose": "Keep main and integrated terminals anchored to the authoritative worktree before runner, git, or automation actions.",
+        },
+        "goal_mode": {
+            "enabled": goal_enabled,
+            "enabled_from_phase": GOAL_MODE_MIN_PHASE,
+            "packet_goal": packet_goal,
+            "phase_goal": phase_goal,
+            "slash_goal_policy": "Use /goal in interactive Codex surfaces when available; in non-interactive receipt runners, include the same objective as a durable goal contract.",
+            "anti_pattern": "Do not collapse v407-v420 into one monolithic receipt run.",
+        },
+        "advisory_refinement": {
+            "advisors": ["Parfit", "Cicero", "Kierkegaard"],
+            "status": "advisory_only",
+            "next_phase_target": next_phase,
+            "proposal_target_eureka_tasks": "50-100",
+            "late_reply_policy": "Late advisory replies can seed later phases, but cannot block or replace Arby/Kimi/Aster Vale receipts.",
+        },
         "system_expansions": generate_entries("system", phase, SYSTEM_TOPICS, 30),
         "commands": generate_entries("command", phase, COMMAND_TOPICS, 30),
         "skills": generate_entries("skill", phase, SKILL_TOPICS, 30),
-        "eureka_proposals": generate_entries("eureka", phase, EUREKA_TOPICS, 50),
+        "eureka_proposals": generate_entries("eureka", phase, EUREKA_TOPICS, 100 if goal_enabled else 50),
     }
 
 
 def ensure_base_plan() -> dict[str, Any]:
     existing = read_json(BASE_PLAN_JSON, {})
-    if existing.get("status") == "ready_after_v361_v370_closeout":
+    if existing.get("status") == "ready_after_v371_v400_closeout" and existing.get("plan_version") == PLAN_VERSION:
         return existing
     handoff = read_json(HANDOFF_JSON, {})
     plans = [build_phase_plan(phase, handoff) for phase in range(PHASE_MIN, PHASE_MAX + 1)]
     payload = {
         "generated_utc": now_iso(),
         "phase_range": PHASE_RANGE,
+        "plan_version": PLAN_VERSION,
         "status": "ready_after_v371_v400_closeout" if handoff_ready(handoff) else "blocked_missing_v401_v420_handoff",
         "handoff": rel(HANDOFF_JSON),
         "phase_plans": plans,
@@ -160,6 +205,8 @@ def ensure_base_plan() -> dict[str, Any]:
             "Request 10000 max useful steps where supported, with effective platform limits recorded instead of assumed.",
             "Do not stage raw replies, stdout/stderr logs, live logs, scratch probes, pycache files, secrets, or unrelated churn.",
             "The successor runner is bounded to v401-v420 and must not open v401 automatically.",
+            "From v407 onward, goal mode is used as a bounded focus contract, not as permission to merge phases or skip receipt gates.",
+            "Parfit, Cicero, and Kierkegaard are advisory proposal lanes only; late replies can seed later phases but never replace durable artifacts.",
         ],
     }
     write_json(BASE_PLAN_JSON, payload)
@@ -209,6 +256,8 @@ def build_payload(phase: int, force: bool) -> dict[str, Any]:
         "truth_boundaries": [
             f"This artifact starts v{phase}; it does not mark v{phase} complete.",
             "Real CLI receipts are required from Arby, Kimi, and Aster Vale before completion.",
+            "Integrated and main PowerShell terminals must stay rooted at D:\\GHC-Archives\\worktrees\\v58-omega before runner or git actions.",
+            "Goal mode guides bounded work but does not authorize duplicate runners or cross-phase collapse.",
             "Never stage raw replies, stdout/stderr logs, live logs, scratch probes, pycache files, secrets, or unrelated churn.",
             "External MCP/API/provider usage remains exploratory until secrets, scopes, rollback, and spend limits are explicit.",
         ],
@@ -236,6 +285,14 @@ def write_phase_md(path: Path, payload: dict[str, Any]) -> None:
         f"- Beta: {plan.get('beta')}",
         f"- Alpha: {plan.get('alpha')}",
         f"- Omega: {plan.get('omega')}",
+        "",
+        "Goal mode:",
+        f"- Enabled: `{(plan.get('goal_mode') or {}).get('enabled')}`",
+        f"- Phase goal: {(plan.get('goal_mode') or {}).get('phase_goal')}",
+        "",
+        "Advisory refinement:",
+        f"- Advisors: `{', '.join((plan.get('advisory_refinement') or {}).get('advisors', []))}`",
+        f"- Proposal target: `{(plan.get('advisory_refinement') or {}).get('proposal_target_eureka_tasks')}` Eureka tasks",
         "",
         f"Next action: {payload['next_action']}",
     ]

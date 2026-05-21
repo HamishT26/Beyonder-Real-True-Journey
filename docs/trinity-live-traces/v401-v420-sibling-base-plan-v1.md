@@ -1,6 +1,6 @@
 # v401-v420 Sibling Base Plan
 
-Generated UTC: `2026-05-21T12:52:05.477622+00:00`
+Generated UTC: `2026-05-21T20:47:50.042804+00:00`
 Status: `ready_after_v371_v400_closeout`
 Handoff: `docs/trinity-live-traces/v401-v420-final-handoff-v1.json`
 
@@ -32,3 +32,5 @@ Truth boundaries:
 - Request 10000 max useful steps where supported, with effective platform limits recorded instead of assumed.
 - Do not stage raw replies, stdout/stderr logs, live logs, scratch probes, pycache files, secrets, or unrelated churn.
 - The successor runner is bounded to v401-v420 and must not open v401 automatically.
+- From v407 onward, goal mode is used as a bounded focus contract, not as permission to merge phases or skip receipt gates.
+- Parfit, Cicero, and Kierkegaard are advisory proposal lanes only; late replies can seed later phases but never replace durable artifacts.
