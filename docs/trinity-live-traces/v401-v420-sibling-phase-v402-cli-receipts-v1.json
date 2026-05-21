@@ -1,17 +1,16 @@
 {
-  "generated_utc": "2026-05-21T13:44:49.776119+00:00",
+  "generated_utc": "2026-05-21T13:44:49.696683+00:00",
   "phase_range": "v401-v420",
   "phase": 402,
+  "artifact_id": "v401-v420-sibling-phase-v402-cli-receipts-v1",
   "status": "cli_receipts_complete",
-  "active_lane": null,
-  "events": [
+  "requested_max_steps": 10000,
+  "required_eureka_units_per_lane": 50,
+  "codex_sandbox": "read-only",
+  "codex_session_mode": "recorded_for_resume",
+  "codex_resume_policy": "Use codex exec resume only when the session id or --last target is proven to belong to the same phase and lane.",
+  "lane_receipts": [
     {
-      "time": "2026-05-21T13:31:14.338400+00:00",
-      "lane": "Arby",
-      "status": "started"
-    },
-    {
-      "time": "2026-05-21T13:36:06.788757+00:00",
       "lane": "Arby",
       "surface": "Codex CLI",
       "receipt_status": "valid_cli_receipt",
@@ -24,12 +23,6 @@
       "receipt_path": "docs/trinity-live-traces/v401-v420-cli-sibling-receipts/arby-phase-v402-receipt-v1.md"
     },
     {
-      "time": "2026-05-21T13:36:06.792378+00:00",
-      "lane": "Kimi",
-      "status": "started"
-    },
-    {
-      "time": "2026-05-21T13:41:32.668144+00:00",
       "lane": "Kimi",
       "surface": "Kimi CLI",
       "receipt_status": "valid_cli_receipt",
@@ -43,12 +36,6 @@
       "receipt_path": "docs/trinity-live-traces/v401-v420-cli-sibling-receipts/kimi-phase-v402-receipt-v1.md"
     },
     {
-      "time": "2026-05-21T13:41:32.670268+00:00",
-      "lane": "Aster Vale",
-      "status": "started"
-    },
-    {
-      "time": "2026-05-21T13:44:49.679485+00:00",
       "lane": "Aster Vale",
       "surface": "Codex CLI",
       "receipt_status": "valid_cli_receipt",
@@ -60,5 +47,13 @@
       "max_steps": 10000,
       "receipt_path": "docs/trinity-live-traces/v401-v420-cli-sibling-receipts/aster_vale-phase-v402-receipt-v1.md"
     }
-  ]
+  ],
+  "truth_boundaries": [
+    "These receipts come from real CLI invocations for Arby, Kimi, and Aster Vale.",
+    "Raw transport output is quarantined outside the curated aggregate and should not be staged.",
+    "Sibling lanes do not commit, push, delete, rebase, reset, or rewrite history.",
+    "Aletheon remains the publication approver.",
+    "Codex CLI sessions are recorded for possible resume; stale or unknown session identity must not be resumed."
+  ],
+  "next_action": "Complete v402 with scripts/trinity_v401_v420_sibling_phase_complete.py after branch drift and staging checks."
 }
