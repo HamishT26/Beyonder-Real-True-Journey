@@ -1,0 +1,84 @@
+{
+  "artifact": "v405-v420-toolchain-upgrade-gate-v1",
+  "generated_utc": "2026-05-21T19:54:42.9951349Z",
+  "phase_range": "v405-v420",
+  "status": "safe_updates_applied",
+  "published_phase_anchor": {
+    "phase": 405,
+    "commit": "29b06aa487",
+    "remote_verified": true
+  },
+  "updates": [
+    {
+      "tool": "codex",
+      "before": "codex-cli 0.132.0",
+      "after": "codex-cli 0.133.0",
+      "source": "npm @openai/codex latest",
+      "action": "npm install -g @openai/codex@0.133.0",
+      "status": "updated"
+    },
+    {
+      "tool": "npm",
+      "before": "11.14.1",
+      "after": "11.15.0",
+      "source": "npm latest",
+      "action": "npm install -g npm@11.15.0",
+      "status": "updated"
+    },
+    {
+      "tool": "github-cli",
+      "before": "gh version 2.92.0 (2026-04-28)",
+      "after": "gh version 2.92.0 (2026-04-28)",
+      "source": "winget GitHub.cli",
+      "action": "winget upgrade check only",
+      "status": "already_current"
+    },
+    {
+      "tool": "kimi",
+      "before": "kimi, version 1.44.0",
+      "after": "kimi, version 1.44.0",
+      "source": "local binary help audit",
+      "action": "audit only; no clean self-update command exposed",
+      "status": "audited_no_safe_update_path"
+    },
+    {
+      "tool": "git",
+      "before": "git version 2.53.0.windows.1",
+      "after": "git version 2.53.0.windows.1",
+      "source": "local version audit",
+      "action": "audit only",
+      "status": "audited"
+    },
+    {
+      "tool": "node",
+      "before": "v24.15.0",
+      "after": "v24.15.0",
+      "source": "local version audit",
+      "action": "audit only",
+      "status": "audited"
+    }
+  ],
+  "external_source_checks": [
+    {
+      "source": "OpenAI Codex changelog",
+      "url": "https://developers.openai.com/codex/changelog",
+      "observed": "2026-05-21 Codex CLI 0.133.0 and Codex app 26.519 release notes"
+    },
+    {
+      "source": "npm",
+      "package": "@openai/codex",
+      "observed_latest": "0.133.0"
+    },
+    {
+      "source": "npm",
+      "package": "npm",
+      "observed_latest": "11.15.0"
+    }
+  ],
+  "truth_boundaries": [
+    "Codex app desktop update was treated as user-refreshed app state; this gate verified the local CLI path only.",
+    "Kimi was not force-updated because no clean package-manager or self-update path was exposed by the local CLI help.",
+    "No paid-provider, cloud, Gmail, Drive, OAuth, or external-service mutation was performed.",
+    "Tool updates do not replace the required Arby, Kimi, and Aster Vale CLI receipt gate."
+  ]
+}
