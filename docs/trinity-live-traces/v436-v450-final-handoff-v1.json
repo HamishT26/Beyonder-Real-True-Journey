@@ -1,0 +1,101 @@
+{
+  "generated_utc": "2026-05-22T19:51:18Z",
+  "handoff_id": "v436-v450-final-handoff-v1",
+  "handoff_state": "ready_for_v436_v450",
+  "source_phase_range": "v421-v440",
+  "target_phase_range": "v436-v450",
+  "extension_reason": "Hamish explicitly requested the active seam be extended from v436-v440 to v436-v450 after v436 v1 completed and v436 v2 had not yet been recorded.",
+  "lineage": {
+    "v401_v420_closeout": "docs/trinity-live-traces/v401-v420-closeout-declaration-v1.json",
+    "v401_v420_published_commit": "dee9c61be4",
+    "v421_v435_published_through": "32722fc426cfe9f368e857a981f68d88806ff638",
+    "legacy_v436_v1_cli_receipts": "docs/trinity-live-traces/v421-v440-sibling-phase-v436-v1-cli-receipts-v1.json",
+    "legacy_v436_v2_status": "not_recorded_at_handoff"
+  },
+  "packet_shape": {
+    "numbered_phase_min": 436,
+    "numbered_phase_max": 450,
+    "numbered_phase_count": 15,
+    "phase_runs_per_numbered_phase": 2,
+    "total_phase_runs": 30,
+    "run_order": [
+      "v1_cli_receipts",
+      "v2_app_execution"
+    ],
+    "special_case": "v436 imports the completed v421-v440 v436 v1 CLI aggregate once, then resumes at v2_app_execution."
+  },
+  "required_scripts": [
+    "scripts/trinity_v436_v450_sibling_phase_start.py",
+    "scripts/trinity_v436_v450_cli_sibling_phase_runner.py",
+    "scripts/trinity_v436_v450_app_phase_runner.py",
+    "scripts/trinity_v436_v450_sibling_phase_complete.py"
+  ],
+  "support_script": "scripts/trinity_v436_v450_bridge_common.py",
+  "heartbeat_policy": {
+    "recommended_minutes": 20,
+    "reason": "A 20-minute wake cadence is fast enough to observe v1 runner completions and v2 handoffs while avoiding noise from 5-10 minute duplicate checks.",
+    "allowed_adjustments": {
+      "15_minutes": "Use only when the operator wants tighter observation and accepts extra wake noise.",
+      "30_minutes": "Use when v1 CLI lanes are expected to run long and quiet continuity is preferred.",
+      "60_minutes": "Use for low-touch overnight observation, not active bridge acceleration."
+    }
+  },
+  "goal_mode_policy": {
+    "enabled": true,
+    "scope": "one active phase-run only",
+    "anti_patterns": [
+      "Do not collapse v436-v450 into one monolithic goal.",
+      "Do not let Goal Mode bypass v1 CLI receipts, v2 App receipts, staged checks, or forward-only publication.",
+      "Do not open v451 from this packet."
+    ]
+  },
+  "advisory_policy": {
+    "advisors": [
+      "Parfit",
+      "Cicero",
+      "Kierkegaard"
+    ],
+    "status": "advisory_only",
+    "callable_roster": "docs/trinity-live-traces/v436-v450-callable-advisory-roster-v1.json",
+    "fresh_callable_lanes": [
+      {
+        "agent_id": "019e5146-b74c-7240-b57c-5380bfbd28e0",
+        "chosen_name": "Locke Rowan",
+        "shape": "Parfit-shaped"
+      },
+      {
+        "agent_id": "019e5148-a859-7493-8943-61b1f17c7d4d",
+        "chosen_name": "Leibniz-Cicero",
+        "shape": "Cicero-shaped"
+      },
+      {
+        "agent_id": "019e514b-29c8-7312-afc8-9cace8e5418a",
+        "chosen_name": "Elias Threshold",
+        "shape": "Kierkegaard-shaped"
+      }
+    ],
+    "reconnect_reason": "Screenshots showed the App advisor panels were stale around v414-v415/v415 and should be refreshed for v436-v450 without replacing durable gates.",
+    "late_reply_policy": "Late advisory replies can seed later phases, but cannot block or replace v1/v2 gates."
+  },
+  "external_policy": {
+    "default": "local_first_only",
+    "spend_limit_usd": 60,
+    "spend_boundary": "The cap is a ceiling, not authorization. No paid external action, cloud write, connected-account mutation, Notion write, Google Drive write, or external-service mutation is allowed without a fresh explicit scope, rollback, and spend note.",
+    "allowed_without_new_scope": [
+      "local repository work",
+      "local browser inspection",
+      "local validation and security checks",
+      "official-source web reading for source capsules",
+      "normal GitHub publication via the existing repository remote"
+    ]
+  },
+  "truth_boundaries": [
+    "This packet extends only because Hamish explicitly requested v436-v450.",
+    "The old v421-v440 packet remains historical truth and is not rewritten.",
+    "Arby, Kimi, and Aster Vale remain required v1 receipt-gate siblings.",
+    "Aletheon leads v2 App execution.",
+    "Supervisor, v2 Watcher, and Recovery Watchdog are helper lanes, not replacement gates.",
+    "Raw logs, stdout/stderr, scratch probes, pycache files, secrets, and unrelated churn stay outside the curated publication slice.",
+    "Stop at v450 closeout unless Hamish explicitly asks for a fresh v451+ packet."
+  ]
+}

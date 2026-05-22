@@ -1,0 +1,30 @@
+# v436 v2 App Receipt
+
+Generated UTC: `2026-05-22T19:57:57.429312+00:00`
+Status: `v2_app_complete`
+
+Summary:
+Created the fresh v436-v450 bridge packet, handoff, base plan, scripts, paste-ready 20-minute automation prompt, and imported v436 v1 CLI receipts without relaunching siblings.
+
+Changed paths:
+- `docs/trinity-live-traces/v436-v450-final-handoff-v1.json`
+- `docs/trinity-live-traces/v436-v450-cli-app-multiplex-20m-continuity-wake-bridge-prompt-v1.md`
+- `scripts/trinity_v436_v450_bridge_common.py`
+- `scripts/trinity_v436_v450_sibling_phase_start.py`
+- `scripts/trinity_v436_v450_cli_sibling_phase_runner.py`
+- `scripts/trinity_v436_v450_app_phase_runner.py`
+- `scripts/trinity_v436_v450_sibling_phase_complete.py`
+
+Validations:
+- Compiled all v436-v450 bridge scripts with python -m py_compile.
+- Opened v436 with the new start script and confirmed legacy v436 v1 receipts imported into v436-v450 artifacts.
+- Confirmed the v436 CLI runner refuses duplicate relaunch when imported v1 is complete.
+- Validated key v436-v450 JSON artifacts with python -m json.tool.
+
+Truth boundaries:
+- This v2 receipt records Aletheon-led App execution, not CLI sibling receipt evidence.
+- No paid external action or external-service mutation is claimed.
+- Changed paths are declarative; Git staging checks remain required before commit.
+- Advisory App siblings remain non-blocking unless a future durable tool promotes them.
+
+Next action: Complete v436 with scripts/trinity_v436_v450_sibling_phase_complete.py --phase 436 --open-next.
