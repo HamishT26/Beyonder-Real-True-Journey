@@ -24,6 +24,24 @@ REQUIRED_CLI_LANES = {
     "Kimi": "Kimi CLI",
     "Aster Vale": "Codex CLI",
 }
+PROMOTED_APP_RECEIPT_PHASE_MIN = 437
+PROMOTED_APP_RECEIPT_LANES = {
+    "Parfit": {
+        "agent_id": "019e5158-28ef-75b1-a3f5-563bb358e44e",
+        "call_sign": "parfit-ghc-family.codex-app.advisory.continuity-boundary.v1.2026-05-23",
+        "role": "identity, continuity, phase-boundary, and publication-hygiene advisory receipt lane",
+    },
+    "Cicero": {
+        "agent_id": "019e485f-172b-72c0-adf7-27daea722143",
+        "call_sign": "cicero-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23",
+        "role": "governance, rhetoric-to-action, and publication-hygiene advisory receipt lane",
+    },
+    "Kierkegaard": {
+        "agent_id": "019e485f-1aa5-7c31-b578-748091f7e319",
+        "call_sign": "kierkegaard-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23",
+        "role": "humility, commitment, and existential-boundary advisory receipt lane",
+    },
+}
 
 HANDOFF_JSON = TRACE / f"{PREFIX}-final-handoff-v1.json"
 HANDOFF_MD = TRACE / f"{PREFIX}-final-handoff-v1.md"
@@ -34,6 +52,7 @@ RUN_STATUS_MD = TRACE / f"{PREFIX}-sibling-run-status-v1.md"
 RUNNER_STATUS_JSON = TRACE / f"{PREFIX}-cli-sibling-runner-status-v1.json"
 RECEIPT_DIR = TRACE / f"{PREFIX}-cli-sibling-receipts"
 RAW_DIR = TRACE / f"{PREFIX}-cli-sibling-raw"
+APP_ADVISORY_RECEIPT_DIR = TRACE / f"{PREFIX}-app-advisory-receipts"
 
 LEGACY_V436_AGGREGATE = TRACE / f"{LEGACY_PREFIX}-sibling-phase-v436-v1-cli-receipts-v1.json"
 LEGACY_RUN_STATUS = TRACE / f"{LEGACY_PREFIX}-sibling-run-status-v1.json"
@@ -135,6 +154,17 @@ def v2_active_paths(phase: int) -> tuple[Path, Path]:
 
 def v2_receipt_paths(phase: int) -> tuple[Path, Path]:
     stem = TRACE / f"{phase_stem(phase)}-v2-app-receipt-v1"
+    return stem.with_suffix(".json"), stem.with_suffix(".md")
+
+
+def app_advisory_receipt_paths(phase: int, advisor: str) -> tuple[Path, Path]:
+    slug = lane_slug(advisor)
+    stem = APP_ADVISORY_RECEIPT_DIR / f"{slug}-phase-v{phase}-v2-app-advisory-receipt-v1"
+    return stem.with_suffix(".json"), stem.with_suffix(".md")
+
+
+def app_advisory_aggregate_paths(phase: int) -> tuple[Path, Path]:
+    stem = TRACE / f"{phase_stem(phase)}-v2-app-advisory-receipts-v1"
     return stem.with_suffix(".json"), stem.with_suffix(".md")
 
 
@@ -404,9 +434,14 @@ def write_v2_active(phase: int, *, imported_v1: bool = False) -> dict[str, Any]:
         "truth_boundaries": [
             "This starts v2; it does not mark v2 complete.",
             "Aletheon must record concrete v2 outcomes before phase completion.",
-            "Advisory App siblings seed planning but do not replace v1/v2 gates.",
+            "From v437 onward, Parfit, Cicero, and Kierkegaard are official v2 App advisory receipt lanes.",
+            "Promoted App advisory receipts do not replace Arby, Kimi, Aster Vale, or Aletheon-led v2 execution.",
         ],
-        "next_action": f"After real App-side work and validation, run scripts/trinity_v436_v450_app_phase_runner.py --phase {phase} --complete --summary \"...\" --validation \"...\".",
+        "next_action": (
+            f"Collect Parfit/Cicero/Kierkegaard App advisory receipts, then complete v{phase} v2 with scripts/trinity_v436_v450_app_phase_runner.py --phase {phase} --complete --summary \"...\" --validation \"...\"."
+            if phase >= PROMOTED_APP_RECEIPT_PHASE_MIN
+            else f"After real App-side work and validation, run scripts/trinity_v436_v450_app_phase_runner.py --phase {phase} --complete --summary \"...\" --validation \"...\"."
+        ),
     }
     write_json(active_json, payload)
     lines = [
@@ -448,6 +483,32 @@ def validate_cli_gate(phase: int) -> dict[str, Any]:
     return gate
 
 
+def validate_app_advisory_gate(phase: int) -> dict[str, Any]:
+    aggregate_json, _ = app_advisory_aggregate_paths(phase)
+    gate = {
+        "required": phase >= PROMOTED_APP_RECEIPT_PHASE_MIN,
+        "path": rel(aggregate_json),
+        "status": "not_required_before_v437",
+        "blockers": [],
+    }
+    if phase < PROMOTED_APP_RECEIPT_PHASE_MIN:
+        return gate
+    payload = read_json(aggregate_json, {})
+    if payload.get("status") != "v2_app_advisory_receipts_complete":
+        gate["blockers"].append(f"v{phase} promoted App advisory receipt aggregate is not complete.")
+    for advisor, config in PROMOTED_APP_RECEIPT_LANES.items():
+        receipt = next((item for item in payload.get("lane_receipts", []) if item.get("advisor") == advisor), None)
+        if not receipt:
+            gate["blockers"].append(f"Missing {advisor} App advisory receipt.")
+            continue
+        if receipt.get("agent_id") != config["agent_id"]:
+            gate["blockers"].append(f"{advisor} App advisory receipt has unexpected agent id.")
+        if receipt.get("status") != "valid_app_advisory_receipt":
+            gate["blockers"].append(f"{advisor} App advisory receipt is not valid.")
+    gate["status"] = "blocked_missing_app_advisory_receipts" if gate["blockers"] else "v2_app_advisory_receipts_complete"
+    return gate
+
+
 def validate_v2_gate(phase: int) -> dict[str, Any]:
     receipt_json, _ = v2_receipt_paths(phase)
     gate = {"path": rel(receipt_json), "status": "blocked_missing_v2_app_receipt", "blockers": []}
@@ -458,5 +519,8 @@ def validate_v2_gate(phase: int) -> dict[str, Any]:
         gate["blockers"].append("v2 App receipt must include at least one validation.")
     if payload.get("spent_external_usd", 0) != 0:
         gate["blockers"].append("v2 App receipt records external spend under local-first policy.")
+    advisory_gate = validate_app_advisory_gate(phase)
+    gate["app_advisory_receipt_gate"] = advisory_gate
+    gate["blockers"].extend(advisory_gate["blockers"])
     gate["status"] = "blocked_missing_v2_app_receipt" if gate["blockers"] else "v2_app_complete"
     return gate

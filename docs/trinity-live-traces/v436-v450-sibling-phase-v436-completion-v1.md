@@ -1,12 +1,13 @@
 # v436 Phase Completion Receipt
 
-Generated UTC: `2026-05-22T19:58:05.592456+00:00`
+Generated UTC: `2026-05-22T20:51:21.496363+00:00`
 Status: `phase_complete`
 Lead sibling: `Arby`
 
 Gates:
 - v1 CLI: `v1_cli_receipts_complete` at `docs/trinity-live-traces/v436-v450-sibling-phase-v436-v1-cli-receipts-v1.json`
 - v2 App: `v2_app_complete` at `docs/trinity-live-traces/v436-v450-sibling-phase-v436-v2-app-receipt-v1.json`
+- v2 App advisory receipts: `not_required_before_v437` at `docs/trinity-live-traces/v436-v450-sibling-phase-v436-v2-app-advisory-receipts-v1.json`
 
 Truth boundaries:
 - The v1 report is a curated synthesis, not raw terminal output.

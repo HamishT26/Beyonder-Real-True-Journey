@@ -246,6 +246,7 @@ def write_completion_md(completion: dict[str, Any], paths: dict[str, Path]) -> N
         "Gates:",
         f"- v1 CLI: `{completion['cli_receipt_gate']['status']}` at `{completion['cli_receipt_gate']['path']}`",
         f"- v2 App: `{completion['app_v2_gate']['status']}` at `{completion['app_v2_gate']['path']}`",
+        f"- v2 App advisory receipts: `{(completion['app_v2_gate'].get('app_advisory_receipt_gate') or {}).get('status')}` at `{(completion['app_v2_gate'].get('app_advisory_receipt_gate') or {}).get('path')}`",
     ]
     if completion.get("blockers"):
         lines.extend(["", "Blockers:"])

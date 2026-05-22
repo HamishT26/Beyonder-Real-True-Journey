@@ -1,6 +1,6 @@
 # v436 Advisory Refinement
 
-Generated UTC: `2026-05-22T19:58:05.590495+00:00`
+Generated UTC: `2026-05-22T20:51:21.487731+00:00`
 Status: `advisory_refinement_ready`
 Next phase: `v437`
 

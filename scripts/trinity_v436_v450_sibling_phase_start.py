@@ -11,6 +11,7 @@ from trinity_v436_v450_bridge_common import (
     HANDOFF_JSON,
     PHASE_MIN,
     PREFIX,
+    RUN_STATUS_JSON,
     aggregate_paths,
     build_phase_plan,
     cli_aggregate_complete,
@@ -92,13 +93,15 @@ def main() -> int:
     args = parser.parse_args()
 
     payload = build_start_payload(args.phase, args.force)
+    previous_status = read_json(RUN_STATUS_JSON, {})
+    last_completion = previous_status.get("last_completion")
     start_json, start_md = start_paths(args.phase)
     write_json(start_json, payload)
     write_start_md(args.phase, payload)
 
     if payload["status"] != "phase_started":
         next_action = "Resolve handoff blockers before launching v436-v450."
-        write_run_status(args.phase, "v1_cli_receipts", "blocked", start_json, start_md, next_action)
+        write_run_status(args.phase, "v1_cli_receipts", "blocked", start_json, start_md, next_action, last_completion=last_completion)
         print(json.dumps({"status": "blocked", "phase": args.phase, "start": rel(start_json)}, indent=2))
         return 1
 
@@ -114,7 +117,7 @@ def main() -> int:
         from trinity_v436_v450_bridge_common import v2_active_paths
 
         active_json, active_md = v2_active_paths(args.phase)
-        write_run_status(args.phase, "v2_app_execution", active["status"], active_json, active_md, active["next_action"])
+        write_run_status(args.phase, "v2_app_execution", active["status"], active_json, active_md, active["next_action"], last_completion=last_completion)
         status = active["status"]
     else:
         aggregate_json, _ = aggregate_paths(args.phase)
@@ -122,7 +125,7 @@ def main() -> int:
             f"Run scripts/trinity_v436_v450_cli_sibling_phase_runner.py --phase {args.phase} "
             "--background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 10000."
         )
-        write_run_status(args.phase, "v1_cli_receipts", "running", start_json, start_md, next_action)
+        write_run_status(args.phase, "v1_cli_receipts", "running", start_json, start_md, next_action, last_completion=last_completion)
         status = "phase_started"
 
     print(json.dumps({"status": status, "phase": args.phase, "start": rel(start_json)}, indent=2))

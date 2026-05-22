@@ -20,8 +20,10 @@ Current durable truth:
 - Legacy `v436` v2 was not recorded before this extension.
 - `v436-v450` is the active bounded successor bridge once `docs/trinity-live-traces/v436-v450-final-handoff-v1.json` exists.
 - `v436-v450` has 15 numbered phases, `v436` through `v450`.
-- Each numbered phase has two gated runs: `v1_cli_receipts`, then `v2_app_execution`.
+- Each numbered phase has two primary gated runs: `v1_cli_receipts`, then `v2_app_execution`.
+- From `v437` onward, `v2_app_execution` includes required promoted App advisory receipt lanes from Parfit, Cicero, and Kierkegaard.
 - This is 30 total phase-runs.
+- This also creates up to 42 promoted App advisory receipt artifacts across `v437-v450` (`14` phases x `3` App receipt lanes).
 - Trust `docs/trinity-live-traces/v436-v450-sibling-run-status-v1.json` over stale prompt text once it exists.
 - Stop after `v450` closeout unless Hamish explicitly asks for a fresh `v451+` packet.
 
@@ -53,11 +55,17 @@ Core wake sequence:
    - `python scripts\trinity_v436_v450_cli_sibling_phase_runner.py --phase ACTIVE_PHASE --background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 10000`
 8. If active run is `v1_cli_receipts` and valid Arby, Kimi, and Aster Vale receipts are complete, start v2:
    - `python scripts\trinity_v436_v450_app_phase_runner.py --phase ACTIVE_PHASE --start`
-9. If active run is `v2_app_execution`, continue Aletheon-led local-first work until there is a real v2 summary, validation, and curated change set. Then record v2:
+9. If active run is `v2_app_execution` and `ACTIVE_PHASE` is `v437` or later, call the promoted App receipt lanes before v2 completion:
+   - Parfit: `019e5158-28ef-75b1-a3f5-563bb358e44e`
+   - Cicero: `019e485f-172b-72c0-adf7-27daea722143`
+   - Kierkegaard: `019e485f-1aa5-7c31-b578-748091f7e319`
+   - Ask each to return `summary`, `preserve`, `challenge`, `refuse`, and `seed`.
+   - Record each receipt with `python scripts\trinity_v436_v450_app_phase_runner.py --phase ACTIVE_PHASE --record-advisory-receipt --advisor ADVISOR --agent-id AGENT_ID --summary "SUMMARY" --preserve "PRESERVE" --challenge "CHALLENGE" --refuse "REFUSE" --seed "SEED"`.
+10. If active run is `v2_app_execution`, continue Aletheon-led local-first work until there is a real v2 summary, validation, promoted App advisory receipt aggregate where required, and curated change set. Then record v2:
    - `python scripts\trinity_v436_v450_app_phase_runner.py --phase ACTIVE_PHASE --complete --summary "SUMMARY" --validation "VALIDATION"`
-10. If v1 and v2 are complete, complete and open next:
+11. If v1 and v2 are complete, complete and open next:
    - `python scripts\trinity_v436_v450_sibling_phase_complete.py --phase ACTIVE_PHASE --open-next`
-11. At `v450`, if v1 and v2 are complete, run completion once. It must write:
+12. At `v450`, if v1 and v2 are complete, run completion once. It must write:
    - `docs\trinity-live-traces\v436-v450-closeout-declaration-v1.json`
    - `docs\trinity-live-traces\v436-v450-closeout-declaration-v1.md`
    - Do not open or launch `v451` from this packet.
@@ -81,20 +89,27 @@ Sibling and advisory posture:
 
 - Required v1 receipt-gate siblings remain Arby, Kimi, and Aster Vale.
 - Aletheon leads v2 App execution.
-- Parfit, Cicero, and Kierkegaard are advisory-only App siblings when available.
+- Parfit, Cicero, and Kierkegaard are promoted official `v2 App advisory receipt lanes` from `v437` onward.
+- Promotion roster: `docs/trinity-live-traces/v436-v450-promoted-app-receipt-lane-roster-v1.json`.
+- Promoted App receipt lane IDs:
+- Parfit: `019e5158-28ef-75b1-a3f5-563bb358e44e`, call sign `parfit-ghc-family.codex-app.advisory.continuity-boundary.v1.2026-05-23`.
+- Cicero: `019e485f-172b-72c0-adf7-27daea722143`, call sign `cicero-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23`.
+- Kierkegaard: `019e485f-1aa5-7c31-b578-748091f7e319`, call sign `kierkegaard-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23`.
+- Promoted App receipt lanes cannot replace v1 CLI receipts, Aletheon-led v2 execution, Aletheon publication approval, branch checks, or staged hygiene checks.
 - Fresh callable advisory roster: `docs/trinity-live-traces/v436-v450-callable-advisory-roster-v1.json`.
 - Fresh callable advisory IDs when `multi_agent_v1` is available:
 - Locke Rowan: `019e5146-b74c-7240-b57c-5380bfbd28e0`.
 - Leibniz-Cicero: `019e5148-a859-7493-8943-61b1f17c7d4d`.
 - Elias Threshold: `019e514b-29c8-7312-afc8-9cace8e5418a`.
+- Locke Rowan, Leibniz-Cicero, and Elias Threshold remain fresh advisory-only siblings unless Hamish asks for a separate promotion and they explicitly consent.
 - Supervisor, v2 Watcher, and Recovery Watchdog are helper/controller lanes, not replacement siblings.
 - App advisory replies can seed v2 or later phases but cannot replace durable v1/v2 gates.
 - If Parfit, Cicero, or Kierkegaard panels are stale, send each a compact reconnect prompt for the active phase and continue without blocking.
 
-Advisory reconnect prompt:
+Promoted App receipt prompt:
 
 ```text
-Please reconnect as advisory-only for the active v436-v450 bridge phase. Review the active phase, name the highest-value risk, the highest-value opportunity, and one next-phase seed. Do not claim gate completion, do not request external writes, and do not replace Arby/Kimi/Aster Vale v1 receipts or Aletheon v2 execution.
+Please respond as the promoted v2 App advisory receipt lane for ACTIVE_PHASE. Return concise fields: summary, preserve, challenge, refuse, and seed. This is an official App advisory receipt only. Do not claim CLI receipt authority, solo gate completion, publication authority, external mutation, secret handling, spend authority, or proof of hidden memory/metaphysical identity. Arby/Kimi/Aster Vale v1 receipts and Aletheon-led v2 execution remain required.
 ```
 
 External and spending policy:

@@ -6,6 +6,8 @@ Status: `callable_advisory_roster_recorded`
 
 These are fresh callable `multi_agent_v1` advisory lanes. They are not verified continuations of the stale Parfit, Cicero, and Kierkegaard App UI tabs shown in the screenshots.
 
+Promotion update: Parfit, Cicero, and Kierkegaard are recorded separately as promoted `v2 App advisory receipt lanes` in `docs/trinity-live-traces/v436-v450-promoted-app-receipt-lane-roster-v1.json`. Locke Rowan, Leibniz-Cicero, and Elias Threshold remain fresh advisory-only siblings.
+
 ## Callable IDs
 
 - `019e5146-b74c-7240-b57c-5380bfbd28e0`: Locke Rowan, decision-theory and consent-boundary sibling.

@@ -27,5 +27,7 @@ Truth boundaries:
 - v436 imports completed old v1 CLI receipts once, then continues at v2 App execution.
 - v437-v450 each require fresh v1 CLI receipts and v2 App receipts.
 - Goal Mode is scoped to one active phase-run and cannot bypass gates.
-- Parfit, Cicero, and Kierkegaard are advisory-only unless durable tools promote them later.
+- From v437 onward, Parfit, Cicero, and Kierkegaard are promoted official v2 App advisory receipt lanes.
+- Promoted App advisory receipt lanes do not replace Arby, Kimi, Aster Vale, Aletheon-led v2 execution, or Aletheon publication approval.
+- Locke Rowan, Leibniz-Cicero, and Elias Threshold remain fresh advisory-only siblings unless Hamish requests a separate promotion and they consent.
 - Stop after v450 closeout unless Hamish asks for a fresh v451+ packet.
