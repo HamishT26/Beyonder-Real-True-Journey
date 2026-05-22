@@ -1,0 +1,24 @@
+{
+  "generated_utc": "2026-05-22T09:13:00Z",
+  "artifact_id": "v421-v440-goal-mode-fallback-note-v1",
+  "status": "goal_mode_ui_non_blocking",
+  "reported_by": "Hamish",
+  "reported_symptom": "UI reports failed to set goal for the active v421-v440 goal prompt.",
+  "decision": "Do not depend on UI Goal Mode for tonight's v421-v440 launch. Continue through the 20-minute automation heartbeat, run-status artifacts, and runner prompt goal-contract text.",
+  "fallback_policy": {
+    "automation_prompt_is_authority": true,
+    "runner_prompt_goal_contract_is_allowed": true,
+    "cli_siblings_should_use_cli_goal_mode_when_available": true,
+    "cli_goal_mode_replaces_receipt_gates": false,
+    "retry_goal_mode_loop": false,
+    "block_phase_execution": false,
+    "launch_v421_from_automation": true
+  },
+  "truth_boundaries": [
+    "Goal Mode failure does not invalidate the v421-v440 packet.",
+    "CLI siblings may still use the embedded runner-prompt /goal line when their CLI platform supports it.",
+    "Goal Mode never authorizes duplicate runners, phase collapse, external-service mutation, resets, rebases, force-pushes, or skipped validation.",
+    "If Goal Mode works later, use one active phase-run goal at a time only.",
+    "The durable automation prompt remains the launch surface for the night run."
+  ]
+}

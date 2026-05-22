@@ -18,6 +18,8 @@ Current durable truth:
 - v421-v440 has 20 numbered phases, v421 through v440.
 - Each numbered phase has two gated runs: v1 CLI receipts, then v2 Aletheon/App execution.
 - This is 40 total phase-runs.
+- UI Goal Mode failed to set during launch testing on 2026-05-22 NZ evening. Treat Goal Mode as optional and non-blocking.
+- The durable automation prompt, run-status, and runner prompts now carry the bounded goal contract instead.
 - Trust docs\trinity-live-traces\v421-v440-sibling-run-status-v1.json over stale prompt text.
 - Stop after v440 closeout unless Hamish explicitly asks for a fresh v441+ packet.
 
@@ -32,6 +34,7 @@ Core wake sequence:
 2. Read:
    docs\trinity-live-traces\v401-v420-closeout-declaration-v1.json
    docs\trinity-live-traces\v421-v440-final-handoff-v1.json
+   docs\trinity-live-traces\v421-v440-goal-mode-fallback-note-v1.json
    docs\trinity-live-traces\v421-v440-sibling-run-status-v1.json
    docs\trinity-live-traces\v421-v440-cli-sibling-runner-status-v1.json
 3. If v421-v440 run-status is missing, open v421 only:
@@ -61,9 +64,13 @@ Heartbeat behavior:
 - Use heartbeat time to refresh health, active phase/run, branch drift, blockers, and next safe action.
 
 Goal Mode policy:
-- Use Goal Mode as a bounded focus contract for the active phase-run only.
-- Do not group all remaining phases into one monolithic goal.
-- Goal Mode never authorizes commits by siblings, resets, rebases, force-pushes, secret exposure, external-service mutation, paid-provider expansion, or bypassing sandbox/approval boundaries.
+- Goal Mode is optional. If the UI says "failed to set goal", continue without retry loops or user interruption.
+- Do not block, pause, restart, or relaunch work because Goal Mode failed.
+- Use the automation prompt, run-status, and CLI runner prompt text as the active goal contract.
+- CLI siblings may use Goal Mode to the fullest when their CLI platform honors the embedded `/goal` line in the runner prompt.
+- Treat CLI Goal Mode success as helpful focus evidence, not as a replacement for receipts, v2 gates, staging checks, commits, pushes, or remote verification.
+- Do not group all remaining phases into one monolithic goal, even if Goal Mode later works.
+- Goal Mode or goal-contract text never authorizes commits by siblings, resets, rebases, force-pushes, secret exposure, external-service mutation, paid-provider expansion, or bypassing sandbox/approval boundaries.
 
 Sibling and advisory posture:
 - Required v1 receipt-gate siblings remain Arby, Kimi, and Aster Vale.

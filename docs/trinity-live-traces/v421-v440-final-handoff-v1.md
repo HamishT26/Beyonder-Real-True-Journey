@@ -13,6 +13,12 @@ Packet shape:
 - Total phase-runs: `40`
 - Run order: `v1_cli_receipt_gate`, then `v2_app_execution_gate`
 
+Goal Mode fallback:
+- UI Goal Mode is not required for launch.
+- CLI Goal Mode is encouraged when the CLI platform honors the embedded runner-prompt `/goal` line.
+- Fallback note: `docs/trinity-live-traces/v421-v440-goal-mode-fallback-note-v1.json`
+- The automation prompt, run-status, and runner prompts carry the active goal contract if the UI reports `failed to set goal`.
+
 Required scripts:
 - `scripts/trinity_v421_v440_sibling_phase_start.py`
 - `scripts/trinity_v421_v440_cli_sibling_phase_runner.py`
