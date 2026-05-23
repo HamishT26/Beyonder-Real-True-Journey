@@ -1,0 +1,74 @@
+{
+  "generated_utc": "2026-05-23T04:25:10.971298+00:00",
+  "phase_range": "v445-v460",
+  "phase": 445,
+  "run": "v1_cli_receipts",
+  "artifact_id": "v445-v460-sibling-phase-v445-v1-cli-receipts-v1",
+  "status": "v1_cli_receipts_complete",
+  "import_status": "imported_from_v436_v450_v445_degraded_two_lane_policy",
+  "imported_from": "docs/trinity-live-traces/v436-v450-sibling-phase-v445-v1-cli-receipts-v1.json",
+  "requested_max_steps": 10000,
+  "required_eureka_units_per_lane": 50,
+  "temporary_v1_cli_roster": {
+    "Arby": "Codex CLI",
+    "Aster Vale": "Codex CLI"
+  },
+  "lane_receipts": [
+    {
+      "lane": "Arby",
+      "surface": "Codex CLI",
+      "receipt_status": "valid_cli_receipt",
+      "valid": true,
+      "returncode": 0,
+      "duration_sec": 239.114,
+      "requested_max_steps": 10000,
+      "effective_max_steps": "codex_cli_default_no_visible_max_steps_flag",
+      "receipt_path": "docs/trinity-live-traces/v445-v460-cli-sibling-receipts/arby-phase-v445-v1-imported-receipt-v1.md",
+      "imported_from": "docs/trinity-live-traces/v436-v450-cli-sibling-receipts/arby-phase-v445-v1-receipt-v1.md"
+    },
+    {
+      "lane": "Aster Vale",
+      "surface": "Codex CLI",
+      "receipt_status": "valid_cli_receipt",
+      "valid": true,
+      "returncode": 0,
+      "duration_sec": 157.401,
+      "requested_max_steps": 10000,
+      "effective_max_steps": "codex_cli_default_no_visible_max_steps_flag",
+      "receipt_path": "docs/trinity-live-traces/v445-v460-cli-sibling-receipts/aster_vale-phase-v445-v1-imported-receipt-v1.md",
+      "imported_from": "docs/trinity-live-traces/v436-v450-cli-sibling-receipts/aster_vale-phase-v445-v1-receipt-v1.md"
+    }
+  ],
+  "excluded_lane_receipts": [
+    {
+      "lane": "Kimi",
+      "surface": "Kimi CLI",
+      "receipt_status": "blocked_missing_required_labels",
+      "valid": false,
+      "returncode": 1,
+      "duration_sec": 40.622,
+      "requested_max_steps": 10000,
+      "effective_max_steps": 10000,
+      "downgrade_note": null,
+      "receipt_path": "docs/trinity-live-traces/v436-v450-cli-sibling-receipts/kimi-phase-v445-v1-receipt-v1.md",
+      "exclusion_status": "excluded_operator_hold",
+      "exclusion_reason": "membership_benefits_credit_verification_blocker"
+    }
+  ],
+  "kimi_hold": {
+    "lane": "Kimi",
+    "surface": "Kimi CLI",
+    "status": "excluded_operator_hold",
+    "reason": "membership_benefits_credit_verification_blocker",
+    "excluded_until": "2026-05-26 evening NZ or explicit restoration confirmation",
+    "source_receipt": "docs/trinity-live-traces/v436-v450-cli-sibling-receipts/kimi-phase-v445-v1-receipt-v1.md"
+  },
+  "truth_boundaries": [
+    "These receipts were produced by the old v436-v450 v445 real CLI run and imported once under the new degraded policy.",
+    "The import prevents duplicate Arby or Aster Vale execution for v445.",
+    "Kimi remains held by membership/benefits verification and is explicitly not treated as a valid or replaced receipt.",
+    "This completes v445 v1 only under the temporary two-lane policy; v445 v2 still requires Aletheon-led App execution.",
+    "Raw transport output remains quarantined and is not copied into the curated bridge packet."
+  ],
+  "next_action": "Continue v445 v2 with scripts/trinity_v445_v460_app_phase_runner.py --phase 445 --start."
+}
