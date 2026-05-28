@@ -1,25 +1,23 @@
 # v461-v490 Run Status
 
-Generated UTC: `2026-05-28T05:26:44.5857405Z`
+Generated UTC: `2026-05-28T07:13:46.4678764Z`
 
-Status: `v461_publication_result_recorded`
+Status: `v462_v2_planning_opened`
 
-Active phase: `461`
+Active phase: `462`
 
-Active run: `publication_result_push_verify`
+Active run: `v462_v2_plan_opening`
+
+v462 v1 final head: `3e54f3cc015320ecbd2518ed76bb289116fac350`
+
+v462 v2 plan: `docs/trinity-live-traces/v462-v2-plan-v1.json`
+
+v463: `not_opened`
 
 Heartbeat: `paused`
 
-Kimi: `held_not_retried`
+Kimi: `held_not_retried_not_replaced`
 
-Parfit reconnect: screenshot candidate `resume_failed_unverified_after_three_attempts`; historical Parfit/Lorentz `advisory_reachable_in_current_context_only`.
+Parfit reconnect: screenshot candidate `postponed_by_user_for_later_week`; historical Parfit/Lorentz `active_app_round_robin_advisory_lane`.
 
-v462: `not_opened`
-
-First v461 packet published at `f170bd754a92a580217e1287fc8f3a91d348a22b`.
-
-Publication result committed at `ef8129d60f5630f578bfe5d339d9c9e87d8dc695`.
-
-Personal advisory branches were created at the publication-result head and now need final forward-only advancement to the branch-receipt head.
-
-Next action: push branch receipt, advance personal branches to final v461 head, verify all branch heads, then stop before v462.
+Next action: publish v462 v2 plan opening, then execute personal branch forward sync and branch-local sync receipts before any v463 work.
