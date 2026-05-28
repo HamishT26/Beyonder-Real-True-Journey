@@ -1,8 +1,10 @@
 # v462 v1 Phase Completion
 
-Generated UTC: `2026-05-28T07:08:29.4627646Z`
+Generated UTC: `2026-05-28T07:11:40.2648286Z`
 
-Status: `phase_complete_waiting_publication`
+Status: `phase_complete_published_content_waiting_publication_result_push`
+
+Shared v462 v1 content commit: `8edbf8f521dd778ec475623d83ff468e9912bb95`
 
 ## Completed
 - Source ingestion manifest for v44-v48 local files.
@@ -11,9 +13,10 @@ Status: `phase_complete_waiting_publication`
 - Non-destructive worktree cleanse policy.
 - Codex CLI 0.134.0 terminal-profile audit.
 - Four App advisory receipts.
+- Shared v462 v1 content published.
 - Kimi hold preserved.
 - Parfit screenshot reconnect postponed.
 - v462 v2 not opened.
 
 ## Next Action
-Commit and push curated v462 v1 artifacts, verify shared omega remote equals local, record v462 v1 publication result, then plan v462 v2.
+Commit and push the v462 v1 publication result, verify shared omega remote equals local, then open v462 v2 planning.

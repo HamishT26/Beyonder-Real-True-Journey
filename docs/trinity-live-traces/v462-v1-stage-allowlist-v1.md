@@ -1,6 +1,6 @@
 # v462 v1 Stage Allowlist
 
-Generated UTC: `2026-05-28T07:08:29.4627646Z`
+Generated UTC: `2026-05-28T07:11:40.2648286Z`
 
 ## Include
 - `docs/trinity-live-traces/v461-v2-final-remote-verification-v1.json`
@@ -21,6 +21,8 @@ Generated UTC: `2026-05-28T07:08:29.4627646Z`
 - `docs/trinity-live-traces/v462-v1-phase-completion-v1.md`
 - `docs/trinity-live-traces/v462-v1-stage-allowlist-v1.json`
 - `docs/trinity-live-traces/v462-v1-stage-allowlist-v1.md`
+- `docs/trinity-live-traces/v462-v1-publication-result-v1.json`
+- `docs/trinity-live-traces/v462-v1-publication-result-v1.md`
 - `docs/trinity-live-traces/v461-v490-run-status-v1.json`
 - `docs/trinity-live-traces/v461-v490-run-status-v1.md`
 
