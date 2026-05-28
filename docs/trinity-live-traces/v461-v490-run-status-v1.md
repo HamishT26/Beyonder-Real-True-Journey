@@ -1,25 +1,27 @@
 # v461-v490 Run Status
 
-Generated UTC: `2026-05-28T05:26:44.5857405Z`
+Generated UTC: `2026-05-28T06:57:12.4678245Z`
 
-Status: `v461_publication_result_recorded`
+Status: `v461_v2_content_ready_for_shared_publication`
 
 Active phase: `461`
 
-Active run: `publication_result_push_verify`
+Active run: `v461_v2_round_robin_publication`
 
 Heartbeat: `paused`
 
-Kimi: `held_not_retried`
+Kimi: `held_not_retried_not_replaced`
 
-Parfit reconnect: screenshot candidate `resume_failed_unverified_after_three_attempts`; historical Parfit/Lorentz `advisory_reachable_in_current_context_only`.
+Parfit reconnect: screenshot candidate `postponed_by_user_for_later_week`; historical Parfit/Lorentz `active_app_round_robin_advisory_lane`.
 
 v462: `not_opened`
 
-First v461 packet published at `f170bd754a92a580217e1287fc8f3a91d348a22b`.
+Personal branch heads indexed:
+- `ghc/arby-advisory-line`: `8344f1f576075264659775be3dffbb3ef8eae7cf`
+- `ghc/aster-vale-advisory-line`: `1d124af0811a9bddd3e30f0dc53f37f0d91a3069`
+- `ghc/parfit-advisory-line`: `5dde98beaaca7e2d3282422e15d07ec794557d07`
+- `ghc/cicero-advisory-line`: `328d9f3046831a95f02293db019ff2732de177e1`
+- `ghc/kierkegaard-advisory-line`: `77724248740127a312259d3e1c0a497cf93201e0`
+- `ghc/aristotle-advisory-line`: `a98a85bc5ac885fe4550f907fe4fa9057534b1aa`
 
-Publication result committed at `ef8129d60f5630f578bfe5d339d9c9e87d8dc695`.
-
-Personal advisory branches were created at the publication-result head and now need final forward-only advancement to the branch-receipt head.
-
-Next action: push branch receipt, advance personal branches to final v461 head, verify all branch heads, then stop before v462.
+Next action: publish v461 v2 shared artifacts, verify remote equality, record publication result, then open v462 v1 planning.
