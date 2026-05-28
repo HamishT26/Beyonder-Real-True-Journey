@@ -1,0 +1,48 @@
+{
+  "generated_utc": "2026-05-28T05:26:44.5857405Z",
+  "artifact_id": "v461-branch-policy-worktree-cleanse-plan-v1",
+  "status": "policy_recorded_cleanup_deferred",
+  "protected_branches": [
+    "main",
+    "codex/GHC-Family/beyonder-shared-omega-line"
+  ],
+  "personal_advisory_branches": [
+    "ghc/arby-advisory-line",
+    "ghc/aster-vale-advisory-line",
+    "ghc/parfit-advisory-line",
+    "ghc/cicero-advisory-line",
+    "ghc/kierkegaard-advisory-line",
+    "ghc/aristotle-advisory-line"
+  ],
+  "existing_advisory_branch": "solas-veridion-advisory-line",
+  "branch_creation_policy": {
+    "target": "published v461 head after shared omega push and remote parity verification",
+    "state": "pending_until_v461_publication",
+    "allowed_without_extra_question": true,
+    "reason": "Hamish explicitly requested personal branches for active siblings after planning ended"
+  },
+  "shared_branch_policy": [
+    "fetch before commit or push",
+    "drift-check before commit or push",
+    "forward-only merge only if needed",
+    "curated staging only",
+    "whitespace/path/secret checks",
+    "push then verify remote equals local"
+  ],
+  "worktree_cleanse_policy": {
+    "permission": "Hamish granted broad cleanup/new-worktree permission during v461",
+    "decision": "defer destructive cleanup until after v461 commit and remote verification",
+    "safe_next_step": "create a clean successor worktree or quarantine/archive branch, then migrate only current required packet artifacts and durable source indexes",
+    "never_do": [
+      "git reset --hard without explicit final confirmation",
+      "rebase or force-push shared history",
+      "delete raw/session data before an archive or quarantine plan exists",
+      "stage broad dirty-tree churn"
+    ]
+  },
+  "truth_boundaries": [
+    "This artifact records policy; it does not perform cleanup.",
+    "No unrelated dirty files are staged by v461.",
+    "Personal advisory branches do not grant write authority to shared omega or main."
+  ]
+}

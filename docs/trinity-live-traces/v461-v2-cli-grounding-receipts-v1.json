@@ -1,0 +1,44 @@
+{
+  "generated_utc": "2026-05-28T05:26:44.5857405Z",
+  "artifact_id": "v461-v2-cli-grounding-receipts-v1",
+  "status": "valid_cli_grounding_receipts",
+  "method": "codex exec --ephemeral --sandbox read-only with output-last-message captured outside repo",
+  "lanes": [
+    {
+      "lane": "Arby",
+      "surface": "Codex CLI",
+      "exit_code": 0,
+      "status": "valid_cli_grounding_receipt",
+      "summary": "Validated bounded readiness for v461 only, no v462 auto-open, Kimi held, App advisory lanes not CLI replacements, and fresh v461 handoff still needed before materialization.",
+      "limitations": [
+        "Nested read-only policy blocked direct git/codex checks inside the lane.",
+        "Lane treated some Aletheon-verified facts as packet inputs.",
+        "Raw nested CLI stream is not staged."
+      ]
+    },
+    {
+      "lane": "Aster Vale",
+      "surface": "Codex CLI",
+      "exit_code": 0,
+      "status": "valid_cli_grounding_receipt",
+      "summary": "Validated v461 can open only as a fresh bounded packet, v462 must not auto-open, Kimi remains held, and no files or services were mutated by the receipt.",
+      "limitations": [
+        "Nested lane did not independently verify Codex CLI 0.134.0 or Solas divergence.",
+        "Lane correctly identified that v461 artifacts were not materialized before this packet write.",
+        "Raw nested CLI stream is not staged."
+      ]
+    }
+  ],
+  "aggregate": {
+    "required_lanes": 2,
+    "valid_lanes": 2,
+    "kimi_touched": false,
+    "external_mutation": false,
+    "result": "v2_cli_grounding_complete"
+  },
+  "truth_boundaries": [
+    "CLI receipts are read-only grounding receipts, not broad implementation agents.",
+    "The raw terminal output included nested CLI logs and is intentionally excluded from the curated slice.",
+    "Aletheon local checks supersede nested-lane uncertainty where directly verified in v461 toolchain and Solas artifacts."
+  ]
+}
