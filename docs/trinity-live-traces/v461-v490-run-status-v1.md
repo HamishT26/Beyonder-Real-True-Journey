@@ -18,4 +18,8 @@ v462: `not_opened`
 
 First v461 packet published at `f170bd754a92a580217e1287fc8f3a91d348a22b`.
 
-Next action: push and verify this publication result, then optionally create approved personal advisory branches from the final v461 head. Do not open v462.
+Publication result committed at `ef8129d60f5630f578bfe5d339d9c9e87d8dc695`.
+
+Personal advisory branches were created at the publication-result head and now need final forward-only advancement to the branch-receipt head.
+
+Next action: push branch receipt, advance personal branches to final v461 head, verify all branch heads, then stop before v462.
