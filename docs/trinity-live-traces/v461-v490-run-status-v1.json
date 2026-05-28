@@ -2,9 +2,9 @@
   "generated_utc": "2026-05-28T05:26:44.5857405Z",
   "artifact_id": "v461-v490-run-status-v1",
   "packet": "v461-v490",
-  "status": "v461_phase_complete_waiting_publication",
+  "status": "v461_publication_result_recorded",
   "active_phase": 461,
-  "active_run": "publication_checks",
+  "active_run": "publication_result_push_verify",
   "last_completion": "docs/trinity-live-traces/v461-phase-completion-v1.json",
   "v462_status": "not_opened",
   "heartbeat": "paused",
@@ -15,18 +15,13 @@
     "detail": "docs/trinity-live-traces/v461-parfit-reconnect-attempts-v1.json"
   },
   "remote_publication": {
-    "state": "pending",
+    "state": "first_packet_published",
+    "published_commit": "f170bd754a92a580217e1287fc8f3a91d348a22b",
     "required": [
-      "fetch",
-      "drift_check",
-      "curated_stage",
-      "whitespace_check",
-      "path_check",
-      "secret_check",
-      "commit",
-      "push",
+      "commit publication result",
+      "push publication result",
       "remote_equals_local_verify"
     ]
   },
-  "next_action": "Publish curated v461 slice, verify remote parity, then stop and ask before v462."
+  "next_action": "Push and verify this publication result, then optionally create approved personal advisory branches from the final v461 head. Do not open v462."
 }
