@@ -1,0 +1,27 @@
+{
+  "generated_utc": "2026-05-28T07:08:29.4627646Z",
+  "artifact_id": "v462-v1-non-destructive-worktree-cleanse-policy-v1",
+  "phase": "v462_v1",
+  "status": "non_destructive_cleanse_policy_recorded",
+  "policy": {
+    "delete_or_reset": false,
+    "worktree_removal": false,
+    "archive_branch_created_now": false,
+    "preserve_old_or_unchurned_data": true,
+    "clean_current_phase_worktrees": true
+  },
+  "allowed_actions": [
+    "Create new clean worktrees for new phases when useful.",
+    "Index old worktrees and dirty data by path, branch, and purpose.",
+    "Use curated staging only.",
+    "Create future archive branches or archive worktrees only after explicit planning, path checks, and remote verification."
+  ],
+  "blocked_actions": [
+    "No git reset --hard.",
+    "No git checkout -- to discard user changes.",
+    "No recursive delete of worktrees or raw data.",
+    "No force-push.",
+    "No staging of raw logs, session JSONL, screenshots, secrets, or raw Downloads Journey source files."
+  ],
+  "v462_outcome": "Worktree cleanse is implemented as preserve-and-index, not deletion."
+}
