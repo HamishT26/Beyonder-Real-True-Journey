@@ -18,6 +18,10 @@ v463A: complete published final verified.
 
 Publication result head: `a10ac86d4ecdb3318d00aade29e3365c4994f276`
 
+Branch sync index: `docs/trinity-live-traces/v461A-v463A-branch-sync-index-v1.json`
+
+Personal branch sync: `six_personal_branches_forward_synced_and_indexed`
+
 v464A: not opened.
 
 Kimi remains held, the separate Parfit screenshot reconnect remains postponed, heartbeat automation remains paused for this manual deep run, and `v464A` remains unopened unless Hamish explicitly asks to continue.
