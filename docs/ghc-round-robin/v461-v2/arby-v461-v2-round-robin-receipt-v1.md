@@ -1,0 +1,10 @@
+# Arby v461 v2 Round-Robin Receipt
+
+- lane=Arby
+- branch=ghc/arby-advisory-line
+- worktree_path=D:\GHC-Archives\agent-worktrees\v461-round-robin\arby-advisory
+- v461_v2_verdict=valid_round_robin_worktree_receipt
+- kimi_touched=false
+- v462_opened=false
+- shared_branch_authority=false
+- status=valid_round_robin_worktree_receipt
