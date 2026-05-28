@@ -1,16 +1,14 @@
 # v461-v490 Run Status
 
-Generated UTC: `2026-05-28T07:13:46.4678764Z`
+Generated UTC: `2026-05-28T07:24:04.4817852Z`
 
-Status: `v462_v2_planning_opened`
+Status: `v462_v2_complete_published_final_verified`
 
 Active phase: `462`
 
-Active run: `v462_v2_plan_opening`
+Active run: `closed_waiting_user_direction`
 
-v462 v1 final head: `3e54f3cc015320ecbd2518ed76bb289116fac350`
-
-v462 v2 plan: `docs/trinity-live-traces/v462-v2-plan-v1.json`
+v462 v2 final head: `cb63c5cfa238e3a160c937bf0108ece7a155ad6c`
 
 v463: `not_opened`
 
@@ -20,4 +18,4 @@ Kimi: `held_not_retried_not_replaced`
 
 Parfit reconnect: screenshot candidate `postponed_by_user_for_later_week`; historical Parfit/Lorentz `active_app_round_robin_advisory_lane`.
 
-Next action: publish v462 v2 plan opening, then execute personal branch forward sync and branch-local sync receipts before any v463 work.
+Next action: stop here with v463 closed unless Hamish explicitly asks to continue.
