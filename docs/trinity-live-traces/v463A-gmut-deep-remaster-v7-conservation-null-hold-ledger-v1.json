@@ -1,0 +1,123 @@
+{
+  "artifact_id": "v463A-gmut-deep-remaster-v7-conservation-null-hold-ledger-v1",
+  "phase_version": "v463A_GMUT_v7",
+  "generated_utc": "2026-05-29T17:08:00Z",
+  "generated_nz": "2026-05-30T05:08:00+12:00",
+  "status": "conservation_and_null_recovery_hold",
+  "claim_boundary": "This artifact records readiness and holds; it does not claim conservation, exchange closure, null recovery, or baseline recovery.",
+  "source_context": [
+    {
+      "path": "docs/trinity-live-traces/v463A-gmut-deep-remaster-v6-v7-handoff-v1.json",
+      "classification": "evidence",
+      "note": "v6 handoff permits v7 derivation attempts or explicit holds, and forbids claiming EOM completion, T_Psi acceptance, null recovery, conservation derivation, or baseline recovery without closure artifacts."
+    },
+    {
+      "path": "docs/trinity-live-traces/v462A-physics-constraint-suite-v1.json",
+      "line_refs": [
+        7,
+        8,
+        12,
+        13
+      ],
+      "classification": "evidence",
+      "note": "Null recovery and conservation rules remain required gates."
+    }
+  ],
+  "route_selection": {
+    "classification": "hypothesis",
+    "route": "minimal_decoupled_scalar_conservation_not_exchange_target",
+    "active_assumptions": [
+      "lambda_T = 0 in current scalar-only pass",
+      "B_Psi remains quarantined and inactive",
+      "V(Psi) remains symbolic",
+      "T_Psi_mu_nu remains on metric-variation hold"
+    ],
+    "not_claimed": [
+      "conservation verified",
+      "divergence vanishes",
+      "exchange resolved",
+      "baseline recovered",
+      "null recovery passed"
+    ]
+  },
+  "conservation_readiness_rows": [
+    {
+      "row_id": "GMUT-V7-CONS-001",
+      "classification": "blocker",
+      "item": "scalar_EOM",
+      "status": "prepared_not_derived",
+      "required_artifact": "explicit EOM derivation under selected metric signature, action sign, and potential convention",
+      "failure_if_omitted": "conservation claim must remain blocked"
+    },
+    {
+      "row_id": "GMUT-V7-CONS-002",
+      "classification": "blocker",
+      "item": "T_Psi_mu_nu",
+      "status": "metric_variation_hold",
+      "required_artifact": "metric variation derivation and sign convention review",
+      "failure_if_omitted": "stress-energy readiness cannot be promoted"
+    },
+    {
+      "row_id": "GMUT-V7-CONS-003",
+      "classification": "blocker",
+      "item": "divergence_behavior",
+      "status": "not_executed",
+      "required_artifact": "explicit divergence calculation or exchange-law ledger",
+      "failure_if_omitted": "conservation_or_exchange_law gate remains open"
+    },
+    {
+      "row_id": "GMUT-V7-CONS-004",
+      "classification": "blocker",
+      "item": "boundary_conditions",
+      "status": "not_declared",
+      "required_artifact": "boundary condition and source/sink declaration",
+      "failure_if_omitted": "energy accounting remains incomplete"
+    }
+  ],
+  "null_baseline_rows": [
+    {
+      "row_id": "GMUT-V7-NULL-001",
+      "classification": "blocker",
+      "item": "null_switch",
+      "status": "design_only",
+      "required_artifact": "dry-run or formal fixture that sets candidate scalar/coupling channels to inert limits",
+      "not_allowed_claim": "null recovery passed"
+    },
+    {
+      "row_id": "GMUT-V7-NULL-002",
+      "classification": "blocker",
+      "item": "baseline_comparator",
+      "status": "not_executed",
+      "required_artifact": "explicit comparison of post-switch equations against GR/LambdaCDM/SM or preserved baseline surface",
+      "not_allowed_claim": "baseline recovered"
+    },
+    {
+      "row_id": "GMUT-V7-NULL-003",
+      "classification": "blocker",
+      "item": "fixture_result",
+      "status": "no_execution_artifact",
+      "required_artifact": "JSON or markdown closure fixture with inputs, expected baseline, observed result, and verdict",
+      "not_allowed_claim": "fixture execution complete"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "GMUT-V7-BLK-003",
+      "label": "conservation_divergence_readiness_hold",
+      "classification": "blocker",
+      "description": "Conservation/divergence is ready for future calculation but cannot be claimed without EOM, stress-energy variation, assumptions, and divergence or exchange artifact."
+    },
+    {
+      "id": "GMUT-V7-BLK-004",
+      "label": "null_baseline_execution_hold",
+      "classification": "blocker",
+      "description": "Null and baseline recovery remain open until a fixture is executed or a formal hold records the missing baseline comparison."
+    }
+  ],
+  "gate_effect": {
+    "null_recovery": "open",
+    "baseline_recovery": "open",
+    "conservation_or_exchange_law": "open"
+  },
+  "safe_summary": "v7 preserves the minimal scalar conservation route as a target but records explicit holds for EOM, stress-energy, divergence, null execution, and baseline recovery."
+}
