@@ -1,0 +1,71 @@
+{
+  "artifact_id": "v462A-gmut-deep-remaster-v3-null-recovery-fixture-v1",
+  "generated_utc": "2026-05-29T08:50:45Z",
+  "generated_nz": "2026-05-29T20:50:45+12:00",
+  "phase_version": "v462A_GMUT_v3",
+  "status": "fixture_receipts_materialized_scaffold_check_only",
+  "scope": "P2 bounded symbolic fixture over the declared v462A candidate equation scaffold. This is not GMUT validation, not external GR/LambdaCDM/SM validation, and not a final null-recovery gate closure.",
+  "baseline_target": {
+    "classification": "context",
+    "canonical_boundary": "v13 canon remains canon; v462A remains candidate scaffold.",
+    "baseline_expression": "G + Lambda_g = kappa*(T_SM + T_DM)",
+    "candidate_expression": "G + Lambda_g = kappa*(T_SM + T_DM + alpha_Psi*T_Psi) + alpha_B*B_Psi",
+    "source_artifacts": [
+      "docs/trinity-live-traces/v462A-gmut-deep-remaster-v2-null-recovery-design-v1.json",
+      "docs/trinity-live-traces/v462A-gmut-equation-family-v1.md"
+    ]
+  },
+  "fixtures": [
+    {
+      "fixture_id": "A_hard_null_spacetime_extension",
+      "classification": "evidence",
+      "null_operation": [
+        "alpha_Psi = 0",
+        "alpha_B = 0",
+        "disabled extension source terms are removed by the declared coupling limit before structural comparison"
+      ],
+      "result_expression": "G + Lambda_g = kappa*(T_SM + T_DM)",
+      "matches_declared_baseline_expression": true,
+      "status_label": "pass_candidate_null_recovery_observed_for_declared_string_fixture_only",
+      "claim_limit": "This observes structural reduction for the declared scaffold string fixture only. It does not prove physical null recovery or close GMUT validation gates.",
+      "remaining_blockers": [
+        "external GR/LambdaCDM/SM comparator packet not executed",
+        "full tensor derivation not executed",
+        "conservation or exchange law not derived",
+        "candidate source tensors remain undefined outside the hard-null limit",
+        "fifth-force/equivalence constraints not mapped"
+      ]
+    },
+    {
+      "fixture_id": "B_decoupled_scalar_limit",
+      "classification": "blocker",
+      "null_operation": [
+        "alpha_B = 0",
+        "scalar sector treated as separate only if Psi, V(Psi), source, stress-energy, and conservation behavior are defined"
+      ],
+      "result_expression": "spacetime baseline can remain unchanged only under a separately classified scalar-sector assumption",
+      "matches_declared_baseline_expression": false,
+      "status_label": "blocker_missing_scalar_definition_and_exchange_accounting",
+      "claim_limit": "The decoupled-scalar fixture remains design-only until source, potential, stress-energy, and conservation/exchange behavior are formalized.",
+      "remaining_blockers": [
+        "Psi field dimension not fixed by action convention",
+        "V(Psi) not defined for a physical model",
+        "scalar source not defined",
+        "T_Psi_mu_nu not formally defined",
+        "separate conservation or exchange law not supplied"
+      ]
+    }
+  ],
+  "gate_status": {
+    "null_recovery": "open_with_fixture_A_structural_observation_only",
+    "dimensional_consistency": "open_depends_on_unit_ledger_check",
+    "conservation_or_exchange_law": "open_not_derived",
+    "baseline_recovery": "open_external_comparators_not_executed",
+    "fifth_force_equivalence_constraints": "open_not_mapped",
+    "consciousness_measurement_bridge": "open_not_advanced"
+  },
+  "handoff": {
+    "next_phase_version": "v462A_GMUT_v4",
+    "recommended_action": "Upgrade from string-level fixture receipts to tensor/formal derivation and conservation accounting before any broader null-recovery language is used."
+  }
+}
