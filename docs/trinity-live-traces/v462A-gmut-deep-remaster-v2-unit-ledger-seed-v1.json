@@ -1,0 +1,154 @@
+{
+  "artifact_id": "v462A-gmut-deep-remaster-v2-unit-ledger-seed-v1",
+  "generated_utc": "2026-05-29T08:24:00Z",
+  "generated_nz": "2026-05-29T20:24:00+12:00",
+  "phase_version": "v462A_GMUT_v2",
+  "status": "first_unit_ledger_seed_created_no_dimensional_pass_claim",
+  "scope": "Seed ledger only. Unit and dimension checks are not completed.",
+  "columns": [
+    "symbol",
+    "domain",
+    "rank_or_type",
+    "unit_kind",
+    "expected_dimension_class",
+    "null_limit_behavior",
+    "observable_hook",
+    "comparator_family",
+    "conservation_rule",
+    "promotion_status"
+  ],
+  "rows": [
+    {
+      "symbol": "G_mu_nu",
+      "domain": "baseline_physical_spacetime",
+      "rank_or_type": "rank_2_tensor",
+      "unit_kind": "curvature",
+      "expected_dimension_class": "inverse_length_squared_expected_needs_formal_check",
+      "null_limit_behavior": "baseline_retained",
+      "observable_hook": "GR_spacetime_curvature_observables",
+      "comparator_family": "GR",
+      "conservation_rule": "Bianchi_identity_context_needs_explicit_mapping",
+      "promotion_status": "baseline_seed_needs_formal_unit_check"
+    },
+    {
+      "symbol": "Lambda_g_mu_nu",
+      "domain": "baseline_physical_spacetime",
+      "rank_or_type": "rank_2_tensor",
+      "unit_kind": "curvature",
+      "expected_dimension_class": "inverse_length_squared_expected_needs_formal_check",
+      "null_limit_behavior": "baseline_retained",
+      "observable_hook": "cosmological_constant_or_dark_energy_baseline",
+      "comparator_family": "Lambda_CDM",
+      "conservation_rule": "constant_Lambda_assumption_needs_declared_scope",
+      "promotion_status": "baseline_seed_needs_formal_unit_check"
+    },
+    {
+      "symbol": "(8_pi_G_over_c4)_T_SM_mu_nu",
+      "domain": "baseline_physical_source",
+      "rank_or_type": "rank_2_tensor_after_coupling",
+      "unit_kind": "stress_energy_to_curvature_coupled_term",
+      "expected_dimension_class": "curvature_after_coupling_expected_needs_formal_check",
+      "null_limit_behavior": "baseline_retained",
+      "observable_hook": "Standard_Model_stress_energy_and_gravity_tests",
+      "comparator_family": "GR_plus_Standard_Model",
+      "conservation_rule": "stress_energy_conservation_needs_explicit_scope",
+      "promotion_status": "baseline_seed_needs_formal_unit_check"
+    },
+    {
+      "symbol": "(8_pi_G_over_c4)_T_DM_mu_nu",
+      "domain": "baseline_physical_source",
+      "rank_or_type": "rank_2_tensor_after_coupling",
+      "unit_kind": "dark_matter_stress_energy_to_curvature_coupled_term",
+      "expected_dimension_class": "curvature_after_coupling_expected_needs_formal_check",
+      "null_limit_behavior": "baseline_retained_or_declared_model_component",
+      "observable_hook": "Lambda_CDM_structure_and_cosmology_comparators",
+      "comparator_family": "Lambda_CDM",
+      "conservation_rule": "dark_matter_model_assumption_needs_scope",
+      "promotion_status": "baseline_seed_needs_formal_unit_check"
+    },
+    {
+      "symbol": "alpha_Psi_T_Psi_mu_nu",
+      "domain": "candidate_extension_physical_source",
+      "rank_or_type": "rank_2_tensor_after_unknown_coupling",
+      "unit_kind": "unknown_until_alpha_Psi_and_T_Psi_units_defined",
+      "expected_dimension_class": "must_match_curvature_after_coupling_or_be_rejected",
+      "null_limit_behavior": "must_vanish_when_alpha_Psi_equals_zero",
+      "observable_hook": "candidate_scalar_or_extra_field_gravity_effects",
+      "comparator_family": "GR_Lambda_CDM_plus_fifth_force_bounds",
+      "conservation_rule": "open_requires_divergence_or_exchange_law",
+      "promotion_status": "blocker_requires_units_bounds_null_recovery_and_observables"
+    },
+    {
+      "symbol": "alpha_B_B_Psi_mu_nu",
+      "domain": "candidate_extension_backreaction",
+      "rank_or_type": "rank_2_tensor_or_effective_tensor_not_yet_defined",
+      "unit_kind": "unknown",
+      "expected_dimension_class": "must_match_curvature_or_source_coupled_term_after_definition",
+      "null_limit_behavior": "must_vanish_when_alpha_B_equals_zero",
+      "observable_hook": "candidate_backreaction_or_equivalence_principle_effects",
+      "comparator_family": "fifth_force_equivalence_principle_and_cosmology_constraints",
+      "conservation_rule": "open_high_risk_requires_definition",
+      "promotion_status": "high_risk_open_gap"
+    },
+    {
+      "symbol": "Psi",
+      "domain": "candidate_scalar_or_field",
+      "rank_or_type": "scalar_or_field",
+      "unit_kind": "model_dependent",
+      "expected_dimension_class": "undefined_until_lagrangian_or_action_declared",
+      "null_limit_behavior": "must_be_decoupled_or_absent_from_baseline_fixture",
+      "observable_hook": "candidate_field_observables_if_defined",
+      "comparator_family": "scalar_tensor_or_effective_field_theory_comparators",
+      "conservation_rule": "open_requires_equation_of_motion",
+      "promotion_status": "needs_formal_definition"
+    },
+    {
+      "symbol": "V(Psi)",
+      "domain": "candidate_scalar_potential",
+      "rank_or_type": "scalar_potential",
+      "unit_kind": "potential_or_energy_density_model_dependent",
+      "expected_dimension_class": "undefined_until_action_density_convention_declared",
+      "null_limit_behavior": "must_not_deform_baseline_spacetime_equation unless explicitly coupled and ledgered",
+      "observable_hook": "candidate_scalar_dynamics",
+      "comparator_family": "scalar_field_cosmology_or_particle_physics_constraints",
+      "conservation_rule": "open_requires_equation_of_motion_and_stress_energy_definition",
+      "promotion_status": "needs_formal_definition"
+    },
+    {
+      "symbol": "lambda_T",
+      "domain": "optional_candidate_matter_trace_coupling",
+      "rank_or_type": "coupling",
+      "unit_kind": "unknown",
+      "expected_dimension_class": "undefined_until_source_trace_defined",
+      "null_limit_behavior": "excluded_from_first_null_fixture_unless_source_trace_is_defined",
+      "observable_hook": "candidate_trace_coupling_constraints",
+      "comparator_family": "fifth_force_equivalence_and_particle_constraints",
+      "conservation_rule": "open_requires_source_trace_and_exchange_law",
+      "promotion_status": "optional_excluded_until_defined"
+    },
+    {
+      "symbol": "beta_I_gamma_C_delta_S_epsilon_H",
+      "domain": "mandala_meta_or_meaning_layer",
+      "rank_or_type": "meta_coefficients",
+      "unit_kind": "not_physical_units_in_this_seed",
+      "expected_dimension_class": "not_assigned",
+      "null_limit_behavior": "excluded_from_physical_unit_ledger_until_projection_registry_exists",
+      "observable_hook": "none_for_physical_claims_in_this_phase",
+      "comparator_family": "none_for_physical_claims_in_this_phase",
+      "conservation_rule": "not_applicable_until_projected",
+      "promotion_status": "meta_only_excluded"
+    }
+  ],
+  "gate_status": {
+    "dimensional_consistency": "open_seed_created_no_pass_claim",
+    "null_recovery": "open_depends_on_fixture_execution",
+    "conservation_or_exchange_law": "open_rows_identify_needed_rules",
+    "baseline_recovery": "open_comparator_families_seeded_only",
+    "fifth_force_equivalence_constraints": "open_comparator_families_seeded_only",
+    "consciousness_measurement_bridge": "open_no_empirical_mapping_attempted"
+  },
+  "handoff": {
+    "next_phase_version": "v462A_GMUT_v3",
+    "recommended_action": "Convert seed rows into a checked unit ledger and tie each physical-side candidate term to null-recovery fixture fields."
+  }
+}
