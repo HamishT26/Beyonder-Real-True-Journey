@@ -1,0 +1,95 @@
+{
+  "artifact_id": "v462A-gmut-deep-remaster-v6-v7-handoff-crosswalk-v1",
+  "generated_utc": "2026-05-29T10:02:38Z",
+  "generated_nz": "2026-05-29T22:02:38+12:00",
+  "phase_version": "v462A_GMUT_v6",
+  "status": "v7_crosswalk_requirements_prepared_no_source_uplift",
+  "scope": "P1 handoff crosswalk. This prepares exact fields for v7 and keeps all source anchors context-only unless claim-specific review is performed.",
+  "required_v7_crosswalk_fields": [
+    "requested_symbol",
+    "source_artifact",
+    "source_artifact_commit",
+    "canonical_alias_if_any",
+    "unit_status",
+    "accounting_decision",
+    "definition_status",
+    "divergence_status",
+    "observable_status",
+    "source_tier",
+    "trace_id",
+    "last_reviewed_utc",
+    "claim_limit",
+    "promotion_allowed"
+  ],
+  "seed_rows": [
+    {
+      "requested_symbol": "T_Psi_mu_nu",
+      "source_artifact": "docs/trinity-live-traces/v462A-gmut-deep-remaster-v6-minimal-scalar-definition-attempt-v1.json",
+      "canonical_alias_if_any": "none_selected",
+      "unit_status": "blocked",
+      "accounting_decision": "quarantine",
+      "definition_status": "candidate_template_only",
+      "divergence_status": "not_derived",
+      "observable_status": "not_mapped",
+      "source_tier": "internal_scaffold",
+      "promotion_allowed": false
+    },
+    {
+      "requested_symbol": "B_Psi_mu_nu",
+      "source_artifact": "docs/trinity-live-traces/v462A-gmut-deep-remaster-v5-cross-reference-matrix-v1.json",
+      "canonical_alias_if_any": "none_selected",
+      "unit_status": "blocked",
+      "accounting_decision": "quarantine",
+      "definition_status": "missing",
+      "divergence_status": "not_derived",
+      "observable_status": "not_mapped",
+      "source_tier": "internal_candidate_anchor",
+      "promotion_allowed": false
+    },
+    {
+      "requested_symbol": "Psi",
+      "source_artifact": "docs/trinity-live-traces/v462A-gmut-deep-remaster-v6-minimal-scalar-definition-attempt-v1.json",
+      "canonical_alias_if_any": "none_selected",
+      "unit_status": "blocked",
+      "accounting_decision": "definition_only",
+      "definition_status": "candidate_symbol_only",
+      "divergence_status": "not_applicable_until_source_definition",
+      "observable_status": "not_mapped",
+      "source_tier": "internal_scaffold",
+      "promotion_allowed": false
+    },
+    {
+      "requested_symbol": "V(Psi)",
+      "source_artifact": "docs/trinity-live-traces/v462A-gmut-deep-remaster-v6-minimal-scalar-definition-attempt-v1.json",
+      "canonical_alias_if_any": "none_selected",
+      "unit_status": "blocked",
+      "accounting_decision": "definition_only",
+      "definition_status": "functional_form_missing",
+      "divergence_status": "not_applicable_until_model_definition",
+      "observable_status": "not_mapped",
+      "source_tier": "internal_scaffold",
+      "promotion_allowed": false
+    },
+    {
+      "requested_symbol": "alpha_Psi",
+      "source_artifact": "docs/trinity-live-traces/v462A-gmut-deep-remaster-v6-minimal-scalar-definition-attempt-v1.json",
+      "canonical_alias_if_any": "none_selected",
+      "unit_status": "blocked",
+      "accounting_decision": "quarantine",
+      "definition_status": "null_switch_context_only",
+      "divergence_status": "depends_on_T_Psi_definition",
+      "observable_status": "not_mapped",
+      "source_tier": "internal_scaffold",
+      "promotion_allowed": false
+    }
+  ],
+  "source_anchor_policy": {
+    "classification": "advisory",
+    "decision": "keep_external_anchors_context_only_in_v6",
+    "reason": "No live claim-specific review was performed in v6; source anchors remain future routes only."
+  },
+  "handoff": {
+    "next_phase_version": "v462A_GMUT_v7",
+    "recommended_action": "Use this crosswalk to run a bounded unit/divergence fixture or perform one claim-specific source-anchor review."
+  }
+}
