@@ -1,0 +1,146 @@
+{
+  "artifact_id": "v466A_GMUT_v3_x2_acceptance_threshold_matrix_v1",
+  "phase": "v466A_GMUT_v3_x2",
+  "prepared_at_nz": "2026-06-01T03:26:43+12:00",
+  "status": "SOURCE_AUTHORITY_TO_ACCEPTANCE_THRESHOLD_HOLD",
+  "purpose": "Convert v3 x1 hardening fields and v3 x2 source clusters into explicit acceptance thresholds for future exact rows.",
+  "thresholds": [
+    {
+      "row_family": "provenance_and_source_authority",
+      "minimum_acceptance_fields": [
+        "provenance_entity_id",
+        "provenance_activity_id",
+        "provenance_agent_id",
+        "source_role",
+        "supports_claim_ids",
+        "does_not_support_claim_ids",
+        "extraction_or_summary_scope"
+      ],
+      "hold_if_missing": true,
+      "promotion_ceiling": "context_or_evidence_routing_only",
+      "source_basis": [
+        "W3C PROV-O",
+        "W3C DCAT 3",
+        "RO-Crate",
+        "JSON Schema",
+        "FAIR",
+        "BIDS"
+      ]
+    },
+    {
+      "row_family": "coefficient_and_SI_dictionary",
+      "minimum_acceptance_fields": [
+        "symbol",
+        "role",
+        "measurand_or_quantity",
+        "unit",
+        "SI_dimension",
+        "natural_unit_dimension_if_used",
+        "conversion_policy",
+        "uncertainty_model"
+      ],
+      "hold_if_missing": true,
+      "promotion_ceiling": "dimension_ready_only",
+      "source_basis": [
+        "BIPM SI Brochure",
+        "NIST SP 811",
+        "JCGM/VIM"
+      ]
+    },
+    {
+      "row_family": "metric_action_scalar_route",
+      "minimum_acceptance_fields": [
+        "metric_signature",
+        "action_sign",
+        "kinetic_sign",
+        "variation_target",
+        "boundary_terms_policy",
+        "integration_by_parts_policy",
+        "stress_energy_definition",
+        "metric_action_boundary_policy"
+      ],
+      "hold_if_missing": true,
+      "promotion_ceiling": "derivation_readiness_only",
+      "source_basis": [
+        "boundary term literature",
+        "stress-energy definition context"
+      ]
+    },
+    {
+      "row_family": "null_and_baseline_ladder",
+      "minimum_acceptance_fields": [
+        "disablement_vector",
+        "expected_residual",
+        "baseline_target",
+        "fixture_id",
+        "measurement_technique",
+        "measurand_or_quantity",
+        "uncertainty_model",
+        "pass_fail_criteria"
+      ],
+      "hold_if_missing": true,
+      "promotion_ceiling": "fixture_requirement_only",
+      "source_basis": [
+        "v3_x1 row-lint spec",
+        "metrology uncertainty sources"
+      ]
+    },
+    {
+      "row_family": "fifth_force_equivalence",
+      "minimum_acceptance_fields": [
+        "candidate_parameter",
+        "observable_target",
+        "bound_form",
+        "bound_value",
+        "unit",
+        "regime",
+        "assumption_basis",
+        "mapping_direction",
+        "uncertainty_model"
+      ],
+      "hold_if_missing": true,
+      "promotion_ceiling": "constraint_routing_only",
+      "source_basis": [
+        "MICROSCOPE",
+        "CNES MICROSCOPE",
+        "Eot-Wash",
+        "recent scalar and short-range gravity literature"
+      ]
+    },
+    {
+      "row_family": "consciousness_proxy",
+      "minimum_acceptance_fields": [
+        "proxy_target",
+        "measurement_technique",
+        "measurand_or_quantity",
+        "uncertainty_model",
+        "proxy_false_positive_routes",
+        "discriminant_tests",
+        "public_claim_boundary",
+        "open_science_route_if_applicable"
+      ],
+      "hold_if_missing": true,
+      "promotion_ceiling": "protocol_boundary_only",
+      "source_basis": [
+        "COGITATE",
+        "consciousness review routes",
+        "open-science dataset routes"
+      ]
+    }
+  ],
+  "absolute_non_promotion_rules": [
+    "Schema fields do not validate GMUT.",
+    "Source authority does not close a gate.",
+    "External constraints do not establish fifth-force safety.",
+    "Proxy controls do not solve consciousness.",
+    "Journey/Solas context does not promote canon."
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
