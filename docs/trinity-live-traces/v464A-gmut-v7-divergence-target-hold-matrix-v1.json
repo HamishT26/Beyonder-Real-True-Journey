@@ -1,0 +1,64 @@
+{
+  "artifact_id": "v464A-gmut-v7-divergence-target-hold-matrix-v1",
+  "artifact_kind": "divergence_target_hold_matrix",
+  "phase": "v464A_GMUT_v7",
+  "status": "divergence_targets_named_not_evaluated",
+  "claim_boundary": "This matrix names possible divergence and exchange targets only. It does not evaluate any divergence or assert conservation.",
+  "target_rows": [
+    {
+      "row_id": "GMUT-V464A-V7-DIV-001",
+      "target": "nabla_mu T_total^mu_nu",
+      "target_status": "future_total_conservation_target",
+      "required_inputs": [
+        "gravitational field equation",
+        "total source definition",
+        "all sector EOMs",
+        "boundary policy"
+      ],
+      "blocker": "total source and on-shell conditions are absent",
+      "not_allowed": "total conservation proven or Bianchi closure achieved"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-DIV-002",
+      "target": "nabla_mu T_Psi^mu_nu",
+      "target_status": "future_scalar_sector_check",
+      "required_inputs": [
+        "T_Psi_mu_nu",
+        "EOM_Psi",
+        "coupling decision",
+        "boundary policy"
+      ],
+      "blocker": "T_Psi_mu_nu and EOM_Psi are not derived",
+      "not_allowed": "separate scalar conservation proven"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-DIV-003",
+      "target": "exchange_current_placeholder",
+      "target_status": "reserved_not_defined",
+      "required_inputs": [
+        "S_int",
+        "matter coupling",
+        "sign convention",
+        "sector split"
+      ],
+      "blocker": "no interaction action or sign convention exists",
+      "not_allowed": "exchange law derived or balanced"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-DIV-004",
+      "target": "boundary_flux_terms",
+      "target_status": "reserved_not_evaluated",
+      "required_inputs": [
+        "boundary completion",
+        "boundary conditions",
+        "integration-by-parts policy"
+      ],
+      "blocker": "boundary policy remains undefined",
+      "not_allowed": "boundary flux negligible or closed"
+    }
+  ],
+  "decision_rule": "Do not promote any target to a conservation or exchange result until the required inputs exist and a separate derivation artifact evaluates the target.",
+  "gate_verdict": {
+    "conservation_or_exchange_law": "open"
+  }
+}

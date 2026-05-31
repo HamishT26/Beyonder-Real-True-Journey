@@ -1,0 +1,146 @@
+{
+  "artifact_id": "v464A-gmut-v7-conservation-exchange-prereq-ledger-v1",
+  "artifact_kind": "conservation_exchange_prerequisite_ledger",
+  "phase": "v464A_GMUT_v7",
+  "status": "prerequisite_ledger_only_gate_open",
+  "claim_boundary": "This artifact records prerequisites for future conservation or exchange-law analysis. It does not derive EOM_Psi, T_Psi_mu_nu, a divergence identity, a separate conservation law, an exchange current, null recovery, fifth-force safety, or a consciousness bridge.",
+  "source_basis": [
+    "v464A-gmut-v6-dimensional-si-ledger-open-v1",
+    "v464A-gmut-v6-unit-convention-blocker-matrix-v1",
+    "v7 Cicero advisory",
+    "v7 Kierkegaard advisory",
+    "v7 Aristotle advisory",
+    "v7 Arby advisory",
+    "v7 Aster Vale advisory"
+  ],
+  "ledger_rows": [
+    {
+      "row_id": "GMUT-V464A-V7-CONS-001",
+      "symbol_or_expression_target": "EOM_Psi",
+      "target_type": "scalar_equation_dependency",
+      "dependency_refs": [
+        "v464A-gmut-v5-scalar-eom-route-scaffold-v1",
+        "v464A-gmut-v6-dimensional-si-ledger-open-v1"
+      ],
+      "dependency_status": "partial",
+      "prerequisite_status": "identified_not_derived",
+      "blocker": "route scaffold exists but scalar variation, boundary policy, and unit closure remain incomplete",
+      "allowed_claim": "EOM_Psi is a required future dependency for on-shell conservation checks.",
+      "forbidden_claim": "EOM_Psi exists, has been applied on shell, or validates conservation.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-CONS-002",
+      "symbol_or_expression_target": "T_Psi_mu_nu",
+      "target_type": "stress_tensor_dependency",
+      "dependency_refs": [
+        "v464A-gmut-v4-variation-boundary-prereq-ledger-v1",
+        "v464A-gmut-v6-dimensional-si-ledger-open-v1"
+      ],
+      "dependency_status": "missing",
+      "prerequisite_status": "blocked",
+      "blocker": "metric variation policy, action acceptance, boundary policy, and dimensional/SI rows are unresolved",
+      "allowed_claim": "T_Psi_mu_nu is a future metric-variation target.",
+      "forbidden_claim": "T_Psi_mu_nu is derived, contributes backreaction, or has a computed divergence.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-CONS-003",
+      "symbol_or_expression_target": "nabla_mu T_Psi^mu_nu",
+      "target_type": "divergence_target",
+      "dependency_refs": [
+        "EOM_Psi",
+        "T_Psi_mu_nu",
+        "boundary_policy"
+      ],
+      "dependency_status": "blocked",
+      "prerequisite_status": "not_ready_for_check",
+      "blocker": "divergence target cannot be evaluated before stress tensor and scalar EOM exist",
+      "allowed_claim": "A divergence target is named as a future check.",
+      "forbidden_claim": "The divergence vanishes, closes, or proves separate scalar conservation.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-CONS-004",
+      "symbol_or_expression_target": "Bianchi_on_shell_route",
+      "target_type": "identity_dependency",
+      "dependency_refs": [
+        "gravitational_field_equation",
+        "total_source_definition",
+        "EOM_Psi",
+        "matter_EOM",
+        "boundary_policy"
+      ],
+      "dependency_status": "missing",
+      "prerequisite_status": "identified_not_proved",
+      "blocker": "total source, on-shell equations, and field equations are not defined in this phase",
+      "allowed_claim": "Bianchi/on-shell consistency is a future route condition.",
+      "forbidden_claim": "Bianchi identity enforces the proposed sector conservation here.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-CONS-005",
+      "symbol_or_expression_target": "exchange_current_placeholder",
+      "target_type": "exchange_term",
+      "dependency_refs": [
+        "S_int",
+        "matter_coupling_policy",
+        "sign_convention",
+        "T_matter_mu_nu",
+        "T_Psi_mu_nu"
+      ],
+      "dependency_status": "missing",
+      "prerequisite_status": "blocked",
+      "blocker": "interaction action, matter coupling, and sign convention are absent",
+      "allowed_claim": "An exchange-current option is reserved for later if couplings require it.",
+      "forbidden_claim": "Energy-momentum exchange is formulated, balanced, or controlled.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-CONS-006",
+      "symbol_or_expression_target": "null_baseline_implications",
+      "target_type": "recovery_dependency",
+      "dependency_refs": [
+        "null_switch_fixture",
+        "baseline_reference",
+        "conservation_or_exchange_choice"
+      ],
+      "dependency_status": "missing",
+      "prerequisite_status": "blocked",
+      "blocker": "null and baseline fixtures have not been executed",
+      "allowed_claim": "Null/baseline recovery is a downstream test condition.",
+      "forbidden_claim": "Conservation wording proves null or baseline recovery.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V7-CONS-007",
+      "symbol_or_expression_target": "fifth_force_equivalence_impact",
+      "target_type": "external_constraint_dependency",
+      "dependency_refs": [
+        "matter_coupling_policy",
+        "exchange_current_placeholder",
+        "external_constraint_map"
+      ],
+      "dependency_status": "missing",
+      "prerequisite_status": "blocked",
+      "blocker": "matter coupling and external constraint comparison are absent",
+      "allowed_claim": "Fifth-force/equivalence impact is a downstream review item.",
+      "forbidden_claim": "Decoupled or absent exchange clears fifth-force or equivalence constraints.",
+      "gate_verdict": "open"
+    }
+  ],
+  "route_choice_status": {
+    "separate_scalar_conservation": "not_selected",
+    "total_conservation": "future_on_shell_target_only",
+    "exchange_current": "placeholder_only_not_defined",
+    "current_safe_choice": "prerequisite_ledger_only"
+  },
+  "gate_verdict": {
+    "conservation_or_exchange_law": "open",
+    "null_recovery": "open",
+    "dimensional_si_consistency": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence_constraints": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
