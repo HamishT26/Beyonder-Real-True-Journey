@@ -1,0 +1,95 @@
+{
+  "artifact_id": "v466A_GMUT_v4_x2_schema_and_runner_contract_v1",
+  "phase": "v466A_GMUT_v4_x2",
+  "prepared_at_nz": "2026-06-01T03:47:06+12:00",
+  "status": "EXECUTION_READINESS_NOT_EXECUTION",
+  "schema_contract": {
+    "dialect": "JSON Schema 2020-12",
+    "closed_shape_requirement": "Unexpected fields must fail or be explicitly captured as open_gap.",
+    "required_output_fields": [
+      "row_id",
+      "row_family",
+      "row_status",
+      "schema_mode",
+      "provenance_entity_id",
+      "provenance_activity_id",
+      "provenance_agent_id",
+      "support_claim_ids",
+      "non_support_claim_ids",
+      "hold_criteria",
+      "contradiction_traps",
+      "expected_output_shape",
+      "result_object_shape"
+    ],
+    "failure_output_shape": [
+      "check_id",
+      "row_id",
+      "field_path",
+      "failure_class",
+      "required_remedy",
+      "allowed_next_status"
+    ]
+  },
+  "runner_contract": {
+    "fixture_dependency_policy": "Every fixture row must declare dependencies before execution design.",
+    "parametrization_policy": "Each row family must expose parametrization axes before execution design.",
+    "not_run_policy": "Execution status remains not_run in this phase.",
+    "result_object_policy": "Expected result objects may be specified, but no result object is claimed as observed.",
+    "non_support_policy": "Every support claim must be paired with at least one non-support claim and a contradiction trap."
+  },
+  "family_parametrization_axes": [
+    {
+      "row_family": "coefficient_SI",
+      "axes": [
+        "symbol",
+        "unit_system",
+        "dimension_vector",
+        "definition_artifact_status"
+      ]
+    },
+    {
+      "row_family": "metric_action_scalar_route",
+      "axes": [
+        "metric_signature",
+        "action_sign",
+        "frame_label",
+        "boundary_policy"
+      ]
+    },
+    {
+      "row_family": "null_baseline_ladder",
+      "axes": [
+        "baseline_model",
+        "primary_switch",
+        "disabled_terms",
+        "comparison_method"
+      ]
+    },
+    {
+      "row_family": "fifth_force_equivalence",
+      "axes": [
+        "candidate_parameter",
+        "observable_target",
+        "bound_regime",
+        "mapping_method"
+      ]
+    },
+    {
+      "row_family": "consciousness_proxy",
+      "axes": [
+        "proxy_target",
+        "modality",
+        "false_positive_route",
+        "discriminant_test"
+      ]
+    }
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
