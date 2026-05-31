@@ -1,0 +1,93 @@
+{
+  "artifact_id": "v466A-gmut-v2-x2-row-hardening-ledger-v1",
+  "artifact_kind": "row_hardening_ledger",
+  "phase": "v466A_GMUT_v2_x2",
+  "claim_taxonomy": "blocker",
+  "status": "WEB_GROUNDED_ROW_HARDENING_HOLD",
+  "hardening_rules": [
+    {
+      "rule_id": "provenance_entity_activity_agent_required",
+      "source_routes": [
+        "w3c-prov-o",
+        "w3c-dwbp",
+        "fair-principles",
+        "ro-crate"
+      ],
+      "applies_to": "all rows with source_role or source_locator",
+      "effect": "hold if provenance is only a free-text label"
+    },
+    {
+      "rule_id": "required_field_schema_before_pass",
+      "source_routes": [
+        "json-schema-2020-12"
+      ],
+      "applies_to": "claim dictionary and field overlay rows",
+      "effect": "hold if any required row field is missing"
+    },
+    {
+      "rule_id": "measurement_technique_required_for_proxy_or_dataset_rows",
+      "source_routes": [
+        "schema-org-measurementTechnique",
+        "bids",
+        "scientific-data-cogitate-fmri-2026"
+      ],
+      "applies_to": "consciousness proxy rows and dataset-derived rows",
+      "effect": "hold if measurement technique, data structure, and quality context are missing"
+    },
+    {
+      "rule_id": "si_unit_and_measurand_required_for_numeric_rows",
+      "source_routes": [
+        "nist-sp-811",
+        "bipm-si",
+        "jcgm-gum",
+        "jcgm-vim"
+      ],
+      "applies_to": "coefficient/SI and external constraint rows",
+      "effect": "hold if unit, quantity, uncertainty, or measurand semantics are unresolved"
+    },
+    {
+      "rule_id": "metric_action_boundary_policy_required",
+      "source_routes": [
+        "carroll-gr-notes",
+        "hilbert-stress-energy-route",
+        "ghy-boundary-route"
+      ],
+      "applies_to": "metric/action, scalar EOM, stress-energy, and conservation rows",
+      "effect": "hold if metric signature, action sign, variation target, boundary policy, or integration-by-parts policy is missing"
+    },
+    {
+      "rule_id": "external_bound_not_detection_or_safety",
+      "source_routes": [
+        "microscope-final",
+        "eot-wash",
+        "short-range-gravity-2026",
+        "scalar-fifth-force-2026"
+      ],
+      "applies_to": "fifth-force/equivalence rows",
+      "effect": "hold if bounds or null results are worded as detection, compatibility, or safety"
+    },
+    {
+      "rule_id": "consciousness_proxy_not_personhood_or_spiritual_proof",
+      "source_routes": [
+        "nature-cogitate-2025",
+        "pubmed-consciousness-review-2026",
+        "pci-review"
+      ],
+      "applies_to": "consciousness proxy rows",
+      "effect": "hold if proxy rows imply solved consciousness, personhood, identity, hidden memory, or spiritual proof"
+    }
+  ],
+  "field_updates_recommended": [
+    "Add provenance_entity_id",
+    "Add provenance_activity_id",
+    "Add provenance_agent_id",
+    "Add measurement_technique",
+    "Add measurand_or_quantity",
+    "Add uncertainty_model",
+    "Add metric_action_boundary_policy",
+    "Add external_constraint_parameterization",
+    "Add proxy_false_positive_routes"
+  ],
+  "overall_result": "hold",
+  "next_expected_phase": "v466A_GMUT_v3_x1"
+}
