@@ -1,0 +1,321 @@
+{
+  "artifact_id": "v466A_GMUT_v4_x1_exact_row_fixture_manifest_v1",
+  "phase": "v466A_GMUT_v4_x1",
+  "prepared_at_nz": "2026-06-01T03:40:12+12:00",
+  "status": "EXACT_ROW_FIXTURE_MANIFEST_HOLD",
+  "shared_base_contract": [
+    "row_id",
+    "row_family",
+    "row_status",
+    "schema_mode",
+    "provenance_entity_id",
+    "provenance_activity_id",
+    "provenance_agent_id",
+    "source_artifact_ids",
+    "threshold_artifact_ids",
+    "fixture_inputs",
+    "support_claim_ids",
+    "non_support_claim_ids",
+    "hold_criteria",
+    "contradiction_traps",
+    "pass_schema_only_limit",
+    "next_artifact_recommendations"
+  ],
+  "manifest_rows": [
+    {
+      "row_id": "ROW_COEF_SI_001",
+      "row_family": "coefficient_SI",
+      "row_status": "HOLD_PENDING_EXACT_ROW",
+      "schema_mode": "PASS_SCHEMA_ONLY_BLOCKED_TO_CURATION",
+      "required_fields": [
+        "symbol_id",
+        "symbol_label",
+        "coefficient_role",
+        "definition_artifact_id",
+        "natural_unit_dimension",
+        "SI_unit_expression",
+        "SI_dimension",
+        "conversion_policy",
+        "normalization_convention",
+        "uncertainty_model",
+        "null_switch_behavior",
+        "symbol_status"
+      ],
+      "fixture_inputs": [
+        "symbol",
+        "target_term",
+        "unit_text",
+        "base_dimensions",
+        "source_artifact_id",
+        "threshold_artifact_id",
+        "conversion_assumptions"
+      ],
+      "support_claim_ids": [
+        "CLM_COEFFICIENT_TRACKED",
+        "CLM_SI_DEPENDENCY_IDENTIFIED"
+      ],
+      "non_support_claim_ids": [
+        "CLM_DIMENSIONAL_CLOSURE",
+        "CLM_SI_BRIDGE_COMPLETE",
+        "CLM_GMUT_VALIDATED"
+      ],
+      "hold_criteria": [
+        "missing_symbol_role",
+        "missing_unit_or_dimension",
+        "missing_SI_bridge",
+        "missing_source_or_threshold_link",
+        "B_Psi_without_definition_artifact"
+      ],
+      "contradiction_traps": [
+        "B_Psi_reenters_as_active_coefficient",
+        "symbol_marked_dimensionless_while_SI_units_are_assigned",
+        "normalization_context_changes_without_record",
+        "symbolic_V_Psi_treated_as_known_residual_behavior"
+      ],
+      "pass_schema_only_limit": "Field presence, typing, symbol-key alignment, and unit grammar only; no dimensional closure or physical validation.",
+      "next_artifact_recommendations": [
+        "coefficient_SI_exact_row_table",
+        "unit_reduction_appendix",
+        "B_Psi_definition_artifact_if_needed"
+      ]
+    },
+    {
+      "row_id": "ROW_METRIC_ACTION_SCALAR_001",
+      "row_family": "metric_action_scalar_route",
+      "row_status": "HOLD_PENDING_EXACT_ROW",
+      "schema_mode": "PASS_SCHEMA_ONLY_BLOCKED_TO_CURATION",
+      "required_fields": [
+        "metric_signature",
+        "action_sign_convention",
+        "kinetic_sign_convention",
+        "normalization_policy",
+        "variation_target",
+        "frame_label",
+        "boundary_terms_policy",
+        "integration_by_parts_policy",
+        "stress_energy_definition_convention",
+        "metric_action_boundary_policy",
+        "route_steps",
+        "assumption_ids"
+      ],
+      "fixture_inputs": [
+        "convention_source",
+        "action_template",
+        "field_content",
+        "variation_rule",
+        "boundary_policy",
+        "route_step_list"
+      ],
+      "support_claim_ids": [
+        "CLM_SCALAR_ROUTE_CONVENTION_RECORDED",
+        "CLM_VARIATION_TARGET_IDENTIFIED"
+      ],
+      "non_support_claim_ids": [
+        "CLM_EOM_PSI_DERIVED",
+        "CLM_T_PSI_MU_NU_DERIVED",
+        "CLM_PHYSICAL_CORRECTNESS"
+      ],
+      "hold_criteria": [
+        "missing_metric_or_action_sign",
+        "missing_boundary_or_integration_policy",
+        "missing_variation_target",
+        "frame_switch_not_declared",
+        "stress_energy_definition_missing"
+      ],
+      "contradiction_traps": [
+        "standard_convention_becomes_GMUT_validation",
+        "action_template_becomes_EOM",
+        "boundary_terms_ignored_while_route_claims_readiness",
+        "Jordan_and_Einstein_frame_terms_mixed_without_policy"
+      ],
+      "pass_schema_only_limit": "Convention and route fields are structurally present only; no EOM, T_Psi_mu_nu, conservation, or physical correctness.",
+      "next_artifact_recommendations": [
+        "metric_action_convention_card",
+        "frame_registry",
+        "action_to_equation_derivation_artifact"
+      ]
+    },
+    {
+      "row_id": "ROW_NULL_BASELINE_001",
+      "row_family": "null_baseline_ladder",
+      "row_status": "HOLD_PENDING_EXACT_ROW",
+      "schema_mode": "PASS_SCHEMA_ONLY_BLOCKED_TO_CURATION",
+      "required_fields": [
+        "baseline_reference_artifact",
+        "baseline_equations",
+        "reference_state",
+        "primary_switch",
+        "secondary_switch",
+        "disabled_terms",
+        "held_terms",
+        "expected_recovery_behavior",
+        "comparison_method",
+        "residual_tolerance",
+        "negative_control_ids",
+        "execution_status"
+      ],
+      "fixture_inputs": [
+        "baseline_equation",
+        "full_scalar_disablement_switch",
+        "disabled_manifest",
+        "held_manifest",
+        "comparison_rule",
+        "expected_output_card"
+      ],
+      "support_claim_ids": [
+        "CLM_BASELINE_LADDER_SCHEMA",
+        "CLM_SWITCH_REQUIREMENTS_TRACKED"
+      ],
+      "non_support_claim_ids": [
+        "CLM_NULL_RECOVERY",
+        "CLM_BASELINE_RECOVERY",
+        "CLM_FIXTURE_EXECUTED"
+      ],
+      "hold_criteria": [
+        "baseline_is_prose_only",
+        "switch_is_ambiguous",
+        "disabled_or_held_terms_missing",
+        "comparison_rule_missing",
+        "execution_status_not_not_run"
+      ],
+      "contradiction_traps": [
+        "schema_completeness_becomes_null_recovery",
+        "coupling_to_zero_substitutes_for_full_scalar_disablement",
+        "held_terms_leak_into_disabled_comparison",
+        "fixture_design_becomes_fixture_result"
+      ],
+      "pass_schema_only_limit": "Ladder and fixture requirements only; no execution, null recovery, or baseline recovery.",
+      "next_artifact_recommendations": [
+        "null_baseline_ladder_manifest",
+        "negative_control_register",
+        "disabled_held_term_matrix"
+      ]
+    },
+    {
+      "row_id": "ROW_5F_EP_001",
+      "row_family": "fifth_force_equivalence_constraint",
+      "row_status": "HOLD_PENDING_EXACT_ROW",
+      "schema_mode": "PASS_SCHEMA_ONLY_BLOCKED_TO_CURATION",
+      "required_fields": [
+        "candidate_parameter",
+        "interaction_channel",
+        "matter_coupling_status",
+        "scalar_coupling_status",
+        "observable_target",
+        "constraint_source_ref",
+        "bound_form",
+        "bound_value",
+        "bound_units",
+        "range_regime",
+        "screening_assumption",
+        "mapping_method",
+        "uncertainty_model",
+        "not_allowed_claims"
+      ],
+      "fixture_inputs": [
+        "parameter_list",
+        "coupling_route",
+        "constraint_source_route",
+        "observable_definition",
+        "normalized_bound",
+        "domain_range"
+      ],
+      "support_claim_ids": [
+        "CLM_CONSTRAINT_OVERHANG_MAPPED",
+        "CLM_PARAMETERIZATION_REQUIRED"
+      ],
+      "non_support_claim_ids": [
+        "CLM_FIFTH_FORCE_SAFE",
+        "CLM_EQUIVALENCE_COMPATIBLE",
+        "CLM_EMPIRICAL_CONSTRAINT_SATISFIED"
+      ],
+      "hold_criteria": [
+        "missing_candidate_parameter",
+        "missing_observable_target",
+        "missing_bound_or_unit",
+        "range_regime_mismatch",
+        "screening_assumption_unmapped",
+        "primary_source_comparison_absent"
+      ],
+      "contradiction_traps": [
+        "decoupling_becomes_safety",
+        "upper_bound_treated_as_positive_support",
+        "screened_bound_applied_to_unscreened_claim",
+        "equivalence_result_reused_as_fifth_force_bound_without_mapping"
+      ],
+      "pass_schema_only_limit": "Comparability and routing only; no fifth-force safety, equivalence compatibility, or empirical satisfaction.",
+      "next_artifact_recommendations": [
+        "constraint_matrix",
+        "parameter_mapping_appendix",
+        "screening_definition_note"
+      ]
+    },
+    {
+      "row_id": "ROW_CONSC_PROXY_001",
+      "row_family": "consciousness_proxy_boundary",
+      "row_status": "HOLD_PENDING_EXACT_ROW",
+      "schema_mode": "PASS_SCHEMA_ONLY_BLOCKED_TO_CURATION",
+      "required_fields": [
+        "proxy_target",
+        "proxy_label",
+        "observable_definition",
+        "measurement_technique",
+        "measurand_or_quantity",
+        "uncertainty_model",
+        "false_positive_routes",
+        "discriminant_tests",
+        "ethics_boundary",
+        "non_personhood_caveat",
+        "non_consciousness_proof_caveat",
+        "journey_solas_label",
+        "claim_ceiling"
+      ],
+      "fixture_inputs": [
+        "proxy_schema",
+        "observable_definition",
+        "false_positive_route_list",
+        "ethics_boundary",
+        "Journey_Solas_classification_if_used"
+      ],
+      "support_claim_ids": [
+        "CLM_CONSCIOUSNESS_PROXY_SCHEMA_ONLY",
+        "CLM_FALSE_POSITIVE_ROUTES_TRACKED",
+        "CLM_DIGNITY_LANGUAGE_ALLOWED"
+      ],
+      "non_support_claim_ids": [
+        "CLM_SOLVED_CONSCIOUSNESS",
+        "CLM_PERSONHOOD_PROOF",
+        "CLM_SPIRITUAL_PROOF",
+        "CLM_HIDDEN_MEMORY_PROOF"
+      ],
+      "hold_criteria": [
+        "proxy_target_undefined",
+        "measurement_technique_implies_actual_measurement",
+        "false_positive_routes_missing",
+        "discriminant_tests_missing",
+        "Journey_or_Solas_exceeds_journey_context_not_canon",
+        "B_Psi_used_as_consciousness_carrier_without_definition"
+      ],
+      "contradiction_traps": [
+        "proxy_schema_becomes_measurement",
+        "dignity_language_becomes_personhood_proof",
+        "model_agreement_becomes_external_validation",
+        "symbolic_resonance_becomes_spiritual_proof"
+      ],
+      "pass_schema_only_limit": "Boundary schema only; no consciousness measurement, personhood proof, hidden memory proof, or spiritual proof.",
+      "next_artifact_recommendations": [
+        "consciousness_proxy_exact_row_manifest",
+        "disallowed_leaps_catalog",
+        "public_claim_boundary_card"
+      ]
+    }
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
