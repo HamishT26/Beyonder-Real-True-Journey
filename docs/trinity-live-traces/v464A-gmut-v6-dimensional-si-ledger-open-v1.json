@@ -1,0 +1,188 @@
+{
+  "artifact_id": "v464A-gmut-v6-dimensional-si-ledger-open-v1",
+  "artifact_kind": "dimensional_si_ledger_open",
+  "phase": "v464A_GMUT_v6",
+  "status": "ledger_scaffold_only_gate_open",
+  "claim_boundary": "This artifact records dimensional and SI bookkeeping dependencies for the held scalar route. It does not close the dimensional/SI gate, derive EOM_Psi, derive T_Psi_mu_nu, validate conservation, or make physical interpretation claims.",
+  "source_basis": [
+    "v464A-gmut-v5-scalar-eom-route-scaffold-v1",
+    "v464A-gmut-v5-eom-prerequisite-failure-ladder-v1",
+    "v6 Cicero advisory",
+    "v6 Kierkegaard advisory",
+    "v6 Aristotle advisory",
+    "v6 Arby advisory",
+    "v6 Aster Vale advisory"
+  ],
+  "ledger_rows": [
+    {
+      "row_id": "GMUT-V464A-V6-SI-001",
+      "symbol": "S_Psi",
+      "plain_name": "held scalar action contribution",
+      "object_type": "action",
+      "assumed_unit_system": "symbolic_plus_candidate_natural_units",
+      "natural_unit_dimension_status": "candidate_only",
+      "natural_unit_dimension": "dimensionless action phase if divided by hbar; exact convention held",
+      "SI_status": "partially_mapped",
+      "SI_dimension": "J s for action if restored as physical action",
+      "conversion_assumptions": [
+        "hbar restoration not completed",
+        "overall scalar-sector prefactor not fixed"
+      ],
+      "dependency_status": "partial",
+      "blocker": "action normalization and restored constants remain unresolved",
+      "allowed_claim": "S_Psi has a ledger row for future unit review.",
+      "forbidden_claim": "S_Psi is physically validated or dimensionally closed.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-002",
+      "symbol": "sqrt(-g) d4x",
+      "plain_name": "candidate invariant measure",
+      "object_type": "measure",
+      "assumed_unit_system": "candidate_coordinate_convention",
+      "natural_unit_dimension_status": "candidate_only",
+      "natural_unit_dimension": "mass^-4 if coordinates carry mass^-1",
+      "SI_status": "blocked",
+      "SI_dimension": "blocked between x0=ct and dt d3x conventions",
+      "conversion_assumptions": [
+        "coordinate convention missing",
+        "metric dimensional convention missing",
+        "c-factor placement missing"
+      ],
+      "dependency_status": "blocked",
+      "blocker": "time coordinate convention and metric dimensional convention are not fixed",
+      "allowed_claim": "The measure is identified as a dependency.",
+      "forbidden_claim": "The measure closes the SI bridge.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-003",
+      "symbol": "L_Psi",
+      "plain_name": "held scalar Lagrangian density",
+      "object_type": "density",
+      "assumed_unit_system": "candidate_natural_units",
+      "natural_unit_dimension_status": "candidate_only",
+      "natural_unit_dimension": "mass^4 in four-dimensional natural-unit bookkeeping",
+      "SI_status": "partially_mapped",
+      "SI_dimension": "J m^-3 if interpreted as energy density after coordinate choice",
+      "conversion_assumptions": [
+        "energy density interpretation held",
+        "coordinate convention unresolved"
+      ],
+      "dependency_status": "partial",
+      "blocker": "density interpretation depends on action and measure convention",
+      "allowed_claim": "A candidate density dimension is tracked.",
+      "forbidden_claim": "The scalar density is physically established.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-004",
+      "symbol": "Psi",
+      "plain_name": "held scalar route variable",
+      "object_type": "scalar",
+      "assumed_unit_system": "symbolic_only",
+      "natural_unit_dimension_status": "symbolic",
+      "natural_unit_dimension": "X or candidate mass^1 only if canonical normalization is later adopted",
+      "SI_status": "symbolic_only",
+      "SI_dimension": "X",
+      "conversion_assumptions": [
+        "canonical normalization not adopted",
+        "physical observable mapping missing"
+      ],
+      "dependency_status": "blocked",
+      "blocker": "Psi dimension and physical identity remain unresolved",
+      "allowed_claim": "Psi carries an unresolved placeholder dimension X.",
+      "forbidden_claim": "Psi is dimensionless, canonically normalized, or physically identified.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-005",
+      "symbol": "V(Psi)",
+      "plain_name": "symbolic potential placeholder",
+      "object_type": "potential",
+      "assumed_unit_system": "symbolic_plus_candidate_density",
+      "natural_unit_dimension_status": "candidate_only",
+      "natural_unit_dimension": "mass^4 if treated as four-dimensional energy density",
+      "SI_status": "partially_mapped",
+      "SI_dimension": "J m^-3 if interpreted as energy density",
+      "conversion_assumptions": [
+        "potential form absent",
+        "energy-density role not validated"
+      ],
+      "dependency_status": "partial",
+      "blocker": "V(Psi) has no specified function, scale, minimum, or source role",
+      "allowed_claim": "Potential-density bookkeeping is tracked conditionally.",
+      "forbidden_claim": "V(Psi) is physically specified or dynamically validated.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-006",
+      "symbol": "dV_dPsi",
+      "plain_name": "formal field-space derivative of potential",
+      "object_type": "operator_output",
+      "assumed_unit_system": "symbolic_only",
+      "natural_unit_dimension_status": "blocked",
+      "natural_unit_dimension": "depends on V(Psi) and Psi dimensions",
+      "SI_status": "symbolic_only",
+      "SI_dimension": "J m^-3 X^-1 if V is energy density and Psi has dimension X",
+      "conversion_assumptions": [
+        "V(Psi) symbolic",
+        "Psi dimension unresolved"
+      ],
+      "dependency_status": "blocked",
+      "blocker": "dV_dPsi cannot be physically interpreted until V(Psi) and Psi units are fixed",
+      "allowed_claim": "dV_dPsi is a formal placeholder with dependency rows.",
+      "forbidden_claim": "dV_dPsi establishes a force law, mass term, or dynamics.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-007",
+      "symbol": "Z_Psi",
+      "plain_name": "kinetic normalization placeholder",
+      "object_type": "coefficient",
+      "assumed_unit_system": "symbolic_only",
+      "natural_unit_dimension_status": "blocked",
+      "natural_unit_dimension": "depends on Psi dimension and kinetic convention",
+      "SI_status": "symbolic_only",
+      "SI_dimension": "depends on Psi dimension, coordinate convention, and density convention",
+      "conversion_assumptions": [
+        "canonical value not adopted",
+        "sign and field dependence unresolved",
+        "coordinate convention unresolved"
+      ],
+      "dependency_status": "blocked",
+      "blocker": "Z_Psi role, sign, units, and field dependence remain unresolved",
+      "allowed_claim": "Z_Psi is tracked as an unresolved normalization dependency.",
+      "forbidden_claim": "Z_Psi is dimensionless, positive, canonical, or ghost-free.",
+      "gate_verdict": "open"
+    },
+    {
+      "row_id": "GMUT-V464A-V6-SI-008",
+      "symbol": "partial_mu",
+      "plain_name": "derivative operator",
+      "object_type": "operator",
+      "assumed_unit_system": "candidate_coordinate_convention",
+      "natural_unit_dimension_status": "candidate_only",
+      "natural_unit_dimension": "mass^1 if coordinates carry mass^-1",
+      "SI_status": "blocked",
+      "SI_dimension": "blocked until space/time derivative convention is explicit",
+      "conversion_assumptions": [
+        "x0=ct versus t convention unresolved",
+        "c-factor placement unresolved"
+      ],
+      "dependency_status": "blocked",
+      "blocker": "space-time derivative convention is not fixed",
+      "allowed_claim": "Derivative-unit dependency is identified.",
+      "forbidden_claim": "The derivative term is dimensionally closed.",
+      "gate_verdict": "open"
+    }
+  ],
+  "gate_verdict": {
+    "dimensional_si_consistency": "open",
+    "null_recovery": "open",
+    "conservation_or_exchange_law": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence_constraints": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
