@@ -1,0 +1,38 @@
+{
+  "artifact_id": "v466A_GMUT_v6_x1_lint_dry_run_routing_v1",
+  "phase": "v466A_GMUT_v6_x1",
+  "prepared_at_nz": "2026-06-01T04:23:20+12:00",
+  "status": "NEXT_DRY_RUN_ROUTED",
+  "recommended_next_phase": "v466A_GMUT_v6_x2",
+  "next_phase_tasks": [
+    {
+      "task_id": "SOURCE_REFRESH_FOR_LINT_RULES",
+      "description": "Use web/source authority to confirm lint failure categories and source requirements.",
+      "allowed_probe_level": "P1_stdout_only"
+    },
+    {
+      "task_id": "DRY_RUN_LINT_HARNESS_REHEARSAL",
+      "description": "If safe, design a stdout-only lint harness rehearsal against the example rows without writing generated outputs.",
+      "allowed_probe_level": "P1_stdout_only"
+    },
+    {
+      "task_id": "CLI_TIMEOUT_REMEDY_LEDGER",
+      "description": "Record CLI-lane timeout as workflow blocker and avoid repeated long hangs unless a tighter command pattern is available.",
+      "allowed_probe_level": "P0_inspect_only"
+    }
+  ],
+  "blocked_routes": [
+    "Treating lint examples as executed tests",
+    "Treating app advisories as validation",
+    "Treating CLI timeout as a negative physics result",
+    "Closing any GMUT gate from schema examples"
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
