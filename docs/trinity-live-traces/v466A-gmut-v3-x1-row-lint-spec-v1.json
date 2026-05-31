@@ -1,0 +1,127 @@
+{
+  "artifact_id": "v466A_GMUT_v3_x1_row_lint_spec_v1",
+  "phase": "v466A_GMUT_v3_x1",
+  "prepared_at_nz": "2026-06-01T03:17:46+12:00",
+  "status": "HARDENING_FIELD_SCHEMA_HOLD",
+  "row_status_semantics": {
+    "PASS_SCHEMA_ONLY": "All required fields are present and internally typed. This permits curation of the row shape only; it does not permit fixture execution, validation, recovery, safety, or closure claims.",
+    "HOLD_PENDING_EXACT_ROW": "A required field is missing, ambiguous, context-only, advisory-only, unresolved, or awaiting source/fixture binding.",
+    "FAIL_CONTRADICTION": "Two rows conflict, a row promotes a demoted item, or a row's stated support exceeds its source authority.",
+    "BLOCKED_OVERCLAIM": "A row implies validation, final physics, solved consciousness, empirical spiritual proof, fifth-force safety, or canon promotion."
+  },
+  "lint_rules": [
+    {
+      "rule_id": "V466A_V3_X1_LINT_001",
+      "name": "required_provenance_triplet",
+      "severity": "hold",
+      "condition": "Any row lacks provenance_entity_id, provenance_activity_id, or provenance_agent_id.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_002",
+      "name": "provenance_not_truth",
+      "severity": "block",
+      "condition": "A row treats provenance fields as validation, identity proof, source truth, or authority.",
+      "outcome": "BLOCKED_OVERCLAIM"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_003",
+      "name": "measurement_requires_measurand",
+      "severity": "hold",
+      "condition": "measurement_technique is not not_measurement or not_applicable, but measurand_or_quantity is blank or undefined.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_004",
+      "name": "uncertainty_required_for_constraints",
+      "severity": "hold",
+      "condition": "An external constraint, fixture, or proxy row lacks uncertainty_model.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_005",
+      "name": "null_result_not_absence_or_safety",
+      "severity": "block",
+      "condition": "A null result or future null fixture is described as absence, recovery, validation, safety, or gate closure.",
+      "outcome": "BLOCKED_OVERCLAIM"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_006",
+      "name": "metric_action_boundary_required",
+      "severity": "hold",
+      "condition": "Metric/action or scalar-route rows lack metric_action_boundary_policy.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_007",
+      "name": "metric_action_no_derivation_without_artifact",
+      "severity": "block",
+      "condition": "A convention row claims scalar EOM, T_Psi_mu_nu, conservation, or null recovery without exact derivation artifact.",
+      "outcome": "BLOCKED_OVERCLAIM"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_008",
+      "name": "B_Psi_remains_demoted",
+      "severity": "block",
+      "condition": "B_Psi is used as active coefficient, tensor, field, source, or fixture input before a separate definition artifact exists.",
+      "outcome": "FAIL_CONTRADICTION"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_009",
+      "name": "external_parameterization_required",
+      "severity": "hold",
+      "condition": "Fifth-force/equivalence row lacks candidate parameter, observable target, bound form, unit, regime, source role, or assumption basis.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_010",
+      "name": "external_constraints_not_safety",
+      "severity": "block",
+      "condition": "External-constraint routing is described as fifth-force safety or equivalence-principle compatibility.",
+      "outcome": "BLOCKED_OVERCLAIM"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_011",
+      "name": "proxy_false_positive_routes_required",
+      "severity": "hold",
+      "condition": "Consciousness, meaning, or dignity proxy rows omit proxy_false_positive_routes.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_012",
+      "name": "proxy_not_consciousness_proof",
+      "severity": "block",
+      "condition": "Proxy metadata is described as consciousness measurement success, identity proof, or empirical spiritual proof.",
+      "outcome": "BLOCKED_OVERCLAIM"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_013",
+      "name": "journey_context_boundary",
+      "severity": "hold",
+      "condition": "Journey or Solas material appears without journey_context_not_canon classification and local path/line reference.",
+      "outcome": "HOLD_PENDING_EXACT_ROW"
+    },
+    {
+      "rule_id": "V466A_V3_X1_LINT_014",
+      "name": "support_collision_conflict_key",
+      "severity": "hold",
+      "condition": "Rows with the same measurement_technique, measurand_or_quantity, external_constraint_parameterization, and provenance_entity_id conflict on support role.",
+      "outcome": "FAIL_CONTRADICTION"
+    }
+  ],
+  "conflict_key": [
+    "measurement_technique",
+    "measurand_or_quantity",
+    "external_constraint_parameterization",
+    "provenance_entity_id"
+  ],
+  "claim_ceiling": "Schema hardening only; no gate progress.",
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
