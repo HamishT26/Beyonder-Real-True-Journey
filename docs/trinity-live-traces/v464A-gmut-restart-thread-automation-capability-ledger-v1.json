@@ -1,0 +1,65 @@
+{
+  "artifact_id": "v464A-gmut-restart-thread-automation-capability-ledger-v1",
+  "artifact_kind": "thread_automation_capability_ledger",
+  "phase": "v464A_GMUT_v1_restart_catchup_prelude",
+  "status": "blocked_with_safe_fallback",
+  "capabilities": [
+    {
+      "capability": "new_codex_main_thread_agent_creation",
+      "requested": true,
+      "callable_tool_exposed": false,
+      "evidence": "Tool discovery for create_thread/list_threads/read_thread/send_message_to_thread/set_thread_pinned/set_thread_archived/set_thread_title returned no matching callable thread-management namespace.",
+      "decision": "Do not create replacement sub-agents. Do not use multi_agent_v1.spawn_agent for new siblings.",
+      "fallback": "Resume existing Cicero, Kierkegaard, and Aristotle lanes only."
+    },
+    {
+      "capability": "old_subagent_spawn_system",
+      "requested": false,
+      "callable_tool_exposed": true,
+      "evidence": "multi_agent_v1.spawn_agent was exposed by tool discovery.",
+      "decision": "Not used for new siblings under Hamish's strict rule.",
+      "fallback": "Existing lane resume/send only."
+    },
+    {
+      "capability": "existing_lane_callback",
+      "requested": true,
+      "callable_tool_exposed": true,
+      "evidence": "multi_agent_v1.resume_agent and send_input were available for existing agent ids.",
+      "decision": "Used for Cicero, Kierkegaard, and Aristotle only.",
+      "fallback": "Record unavailable if initialization stalls."
+    },
+    {
+      "capability": "computer_use_windows",
+      "requested": true,
+      "callable_tool_exposed": true,
+      "evidence": "Computer Use bootstrap succeeded and listed Windows apps.",
+      "decision": "Not used to control the Codex Desktop Automations UI because the Computer Use skill forbids automating Codex desktop, Codex CLI, or Codex extensions within Windows apps.",
+      "fallback": "Provide a paste-ready automation prompt."
+    },
+    {
+      "capability": "automation_update",
+      "requested": true,
+      "callable_tool_exposed": false,
+      "evidence": "Tool discovery for automation_update/automations/reminder/wakeup exposed unrelated connector tools only.",
+      "decision": "No direct automation update performed.",
+      "fallback": "Manual paste/unpause in Codex Automations."
+    },
+    {
+      "capability": "orun_thread_access",
+      "requested": true,
+      "callable_tool_exposed": false,
+      "evidence": "The deeplink/session id is available from Hamish, but no callable read/send thread-management tool is exposed.",
+      "decision": "Do not fabricate Orun advisory.",
+      "fallback": "Carry Orun as not directly reachable in this session."
+    },
+    {
+      "capability": "ari_persistent_cli_status",
+      "requested": true,
+      "callable_tool_exposed": false,
+      "evidence": "No exact Ari persistent CLI worktree or callable identity proof was located in this checkpoint.",
+      "decision": "Do not promote Ari authority.",
+      "fallback": "Carry Ari as unverified pending a separate proof artifact."
+    }
+  ],
+  "new_rule_recorded": "Never create new GHC siblings through the old sub-agent spawning system unless Hamish later explicitly reverses this rule. If the new main-thread system is not exposed, use existing lanes or stop."
+}
