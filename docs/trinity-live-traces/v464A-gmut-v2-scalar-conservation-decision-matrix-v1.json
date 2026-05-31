@@ -1,0 +1,98 @@
+{
+  "artifact_id": "v464A-gmut-v2-scalar-conservation-decision-matrix-v1",
+  "artifact_kind": "scalar_conservation_decision_matrix",
+  "phase": "v464A_GMUT_v2",
+  "status": "decision_matrix_recorded_no_derivation_claim",
+  "claim_boundary": "This artifact records convention and conservation/exchange decision criteria. It does not derive a scalar EOM, T_Psi_mu_nu, divergence relation, or exchange law.",
+  "source_basis": [
+    "v464A-gmut-v1-scalar-route-scope-v1",
+    "v464A-gmut-v1-conservation-exchange-choice-ledger-v1",
+    "v464A-gmut-v2 sibling advisories"
+  ],
+  "scalar_convention_packet_required_fields": [
+    "metric_signature",
+    "action_sign_convention",
+    "kinetic_sign_convention",
+    "stress_energy_definition_convention",
+    "variation_target",
+    "boundary_terms_policy",
+    "integration_by_parts_policy",
+    "field_normalization",
+    "potential_policy",
+    "matter_coupling_policy"
+  ],
+  "candidate_convention_packet": {
+    "metric_signature": "mostly_plus_candidate_from_v463A_context",
+    "action_sign_convention": "not_final",
+    "kinetic_sign_convention": "not_final",
+    "stress_energy_definition_convention": "not_final",
+    "variation_target": "blocked_pending_metric_variation_choice",
+    "boundary_terms_policy": "not_declared",
+    "integration_by_parts_policy": "not_declared",
+    "field_normalization": "not_declared",
+    "potential_policy": "V(Psi) symbolic_only",
+    "matter_coupling_policy": "decoupled pilot target with g_Psi = 0 until L_int exists",
+    "status": "hold_for_definition_artifacts"
+  },
+  "route_options": [
+    {
+      "route_selection": "scalar_as_bookkeeping",
+      "description": "Psi is treated as a formal or bookkeeping variable only.",
+      "allowed_claim": "candidate convention for audit routing",
+      "not_allowed_claim": "physical scalar field or new mediator",
+      "required_next_artifact": "convention packet plus null spectator fixture",
+      "publication_gate": "ALLOW_WITH_WARNINGS"
+    },
+    {
+      "route_selection": "scalar_as_physical_field",
+      "description": "Psi is treated as a physical field with observable map.",
+      "allowed_claim": "none at v2",
+      "not_allowed_claim": "physical scalar is established",
+      "required_next_artifact": "field normalization, EOM, T_Psi_mu_nu, observable map, and external-constraint route",
+      "publication_gate": "HOLD"
+    },
+    {
+      "route_selection": "conservation_not_exchange_decoupled_pilot",
+      "description": "No explicit exchange is claimed while L_int and lambda_T are zero or absent.",
+      "allowed_claim": "future divergence target under restricted decoupled assumptions",
+      "not_allowed_claim": "conservation law proven",
+      "required_next_artifact": "scalar EOM, metric variation, divergence calculation, and boundary conditions",
+      "publication_gate": "ALLOW_WITH_WARNINGS"
+    },
+    {
+      "route_selection": "explicit_exchange_candidate",
+      "description": "Individual sectors exchange via explicit currents while total accounting closes.",
+      "allowed_claim": "decision route only",
+      "not_allowed_claim": "exchange behavior validated",
+      "required_next_artifact": "donor/receiver sector list, J_a^nu definitions, sign conventions, dimensions, and total-exchange sum",
+      "publication_gate": "HOLD"
+    }
+  ],
+  "decision_criteria": {
+    "use_conservation_not_exchange_only_if": [
+      "g_Psi = 0 or L_int absent",
+      "no source/sink prose is used",
+      "no exchange current is introduced",
+      "future divergence calculation is explicitly pending"
+    ],
+    "use_explicit_exchange_only_if": [
+      "donor and receiver sectors are independently defined",
+      "exchange current dimensions are declared",
+      "sum of exchange currents is shown to balance",
+      "recipient sector has an observable signature"
+    ],
+    "hold_if": [
+      "conservation is asserted without divergence calculation",
+      "no-exchange prose coexists with source/sink language",
+      "mostly-plus convention is treated as physical correctness",
+      "symbolic V(Psi) is treated as specified"
+    ]
+  },
+  "safe_wording": "Decoupled conservation is a first-pass target under restricted assumptions, not a derived conservation law. Psi remains a candidate bookkeeping/scalar-route symbol until physical interpretation is separately derived and reviewed.",
+  "gate_verdict": {
+    "conservation_or_exchange_law": "open",
+    "dimensional_si_consistency": "open",
+    "null_recovery": "open",
+    "baseline_recovery": "open"
+  }
+}

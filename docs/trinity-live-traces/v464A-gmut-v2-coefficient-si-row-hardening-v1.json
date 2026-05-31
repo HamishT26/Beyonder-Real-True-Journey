@@ -1,0 +1,206 @@
+{
+  "artifact_id": "v464A-gmut-v2-coefficient-si-row-hardening-v1",
+  "artifact_kind": "coefficient_si_row_hardening",
+  "phase": "v464A_GMUT_v2",
+  "status": "hardening_scaffold_only_gate_open",
+  "claim_boundary": "This artifact tightens coefficient and SI audit rows. It does not validate GMUT, close dimensional/SI consistency, or promote any symbolic row to a physical parameter.",
+  "source_basis": [
+    "v464A-gmut-v1-coefficient-si-dictionary-v1",
+    "v464A-gmut-v1-open-gate-ledger-v1",
+    "Cicero v2 first and second advisory",
+    "Kierkegaard v2 first and second advisory",
+    "Aristotle v2 first and second advisory",
+    "Arby v2 first and second advisory",
+    "Aster Vale v2 first and second advisory"
+  ],
+  "required_row_fields": [
+    "coefficient_id",
+    "symbol",
+    "role",
+    "target_term",
+    "native_unit_system",
+    "native_dimension",
+    "target_SI_dimension",
+    "conversion_assumptions",
+    "value_status",
+    "identifiability_status",
+    "source_anchor",
+    "null_switch_behavior",
+    "allowed_use",
+    "not_allowed_use",
+    "blocker_reason"
+  ],
+  "hardened_rows": [
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-001",
+      "symbol": "Psi",
+      "role": "candidate_scalar_or_bookkeeping_symbol",
+      "target_term": "scalar route field slot",
+      "native_unit_system": "symbolic_only",
+      "native_dimension": "undefined pending field normalization",
+      "target_SI_dimension": "undefined",
+      "conversion_assumptions": [
+        "metric signature not final",
+        "action sign convention not final",
+        "field normalization not final"
+      ],
+      "value_status": "symbolic",
+      "identifiability_status": "not_identifiable",
+      "source_anchor": "internal scaffold plus Baumann scalar-field context only",
+      "null_switch_behavior": "spectator or zero-coupling limit must be defined before use",
+      "allowed_use": "notation and blocker routing",
+      "not_allowed_use": "physical scalar claim, observable field claim, or gate closure",
+      "blocker_reason": "Psi can be bookkeeping, auxiliary, or physical only after a convention packet and measurement map exist"
+    },
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-002",
+      "symbol": "partial_mu_Psi",
+      "role": "candidate scalar gradient slot",
+      "target_term": "kinetic term and stress-energy derivation route",
+      "native_unit_system": "symbolic_only",
+      "native_dimension": "dimension(Psi) per length after normalization",
+      "target_SI_dimension": "blocked pending dimension(Psi)",
+      "conversion_assumptions": [
+        "coordinate dimension declared",
+        "signature declared",
+        "field dimension declared"
+      ],
+      "value_status": "symbolic",
+      "identifiability_status": "not_identifiable",
+      "source_anchor": "internal scaffold",
+      "null_switch_behavior": "must vanish or become dynamically inert in Null-0/Null-1 fixture",
+      "allowed_use": "future derivation checklist",
+      "not_allowed_use": "accepted kinetic contribution",
+      "blocker_reason": "kinetic contribution depends on missing field normalization and action convention"
+    },
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-003",
+      "symbol": "V(Psi)",
+      "role": "candidate scalar potential placeholder",
+      "target_term": "potential energy density route if promoted later",
+      "native_unit_system": "symbolic_only",
+      "native_dimension": "undefined",
+      "target_SI_dimension": "energy density only if exact potential is defined",
+      "conversion_assumptions": [
+        "potential form selected",
+        "coefficients defined",
+        "zero point and sign convention declared"
+      ],
+      "value_status": "undefined",
+      "identifiability_status": "not_identifiable",
+      "source_anchor": "v463A carried blocker",
+      "null_switch_behavior": "set to zero or constant baseline only after formal choice",
+      "allowed_use": "blocker reference",
+      "not_allowed_use": "derivation input or physical prediction",
+      "blocker_reason": "symbolic V(Psi) is not a specified potential"
+    },
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-004",
+      "symbol": "T_Psi_mu_nu",
+      "role": "candidate scalar stress-energy tensor",
+      "target_term": "metric variation route",
+      "native_unit_system": "symbolic_only",
+      "native_dimension": "undefined until action and metric variation are reviewed",
+      "target_SI_dimension": "stress-energy density after derivation",
+      "conversion_assumptions": [
+        "action density fixed",
+        "metric variation convention fixed",
+        "boundary terms handled"
+      ],
+      "value_status": "not_derived",
+      "identifiability_status": "not_identifiable",
+      "source_anchor": "v463A carried blocker",
+      "null_switch_behavior": "absent from baseline until derived",
+      "allowed_use": "missing-artifact reference",
+      "not_allowed_use": "accepted stress-energy or conservation proof",
+      "blocker_reason": "metric variation artifact does not exist"
+    },
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-005",
+      "symbol": "g_Psi",
+      "role": "candidate coupling placeholder",
+      "target_term": "matter, curvature, hidden-sector, or proxy route if chosen later",
+      "native_unit_system": "unknown",
+      "native_dimension": "depends on coupled operator",
+      "target_SI_dimension": "blocked pending operator and L_int",
+      "conversion_assumptions": [
+        "coupled sector selected",
+        "operator dimension defined",
+        "universality or composition-dependence declared"
+      ],
+      "value_status": "unassigned",
+      "identifiability_status": "not_identifiable",
+      "source_anchor": "internal scaffold plus external fifth-force context required later",
+      "null_switch_behavior": "set to zero in decoupled scalar route",
+      "allowed_use": "parameter-overhang tracking",
+      "not_allowed_use": "fifth-force safety or empirical constraint claim",
+      "blocker_reason": "coupling channel and observable map are undeclared"
+    },
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-006",
+      "symbol": "m_Psi",
+      "role": "candidate scalar mass or inverse-range placeholder",
+      "target_term": "range/strength map if scalar is physical later",
+      "native_unit_system": "natural_or_SI_pending",
+      "native_dimension": "mass or inverse length depending convention",
+      "target_SI_dimension": "kg or m^-1 after convention choice",
+      "conversion_assumptions": [
+        "unit system declared",
+        "range relation declared",
+        "hbar and c restoration declared if natural units are used"
+      ],
+      "value_status": "unassigned",
+      "identifiability_status": "not_identifiable",
+      "source_anchor": "internal scaffold plus external fifth-force context required later",
+      "null_switch_behavior": "not active without physical scalar and coupling definition",
+      "allowed_use": "range-overhang placeholder",
+      "not_allowed_use": "numerical bound or safety claim",
+      "blocker_reason": "mass/range relation is not fixed"
+    },
+    {
+      "coefficient_id": "GMUT-V464A-V2-COEFF-007",
+      "symbol": "C_proxy",
+      "role": "operational consciousness proxy placeholder",
+      "target_term": "measurement metadata only",
+      "native_unit_system": "protocol_defined",
+      "native_dimension": "dimensionless index or measured signal feature after protocol",
+      "target_SI_dimension": "not a fundamental source term",
+      "conversion_assumptions": [
+        "proxy variable defined",
+        "measurement channel declared",
+        "preprocessing locked"
+      ],
+      "value_status": "research_hypothesis",
+      "identifiability_status": "not_identifiable_as_consciousness",
+      "source_anchor": "protocol design only",
+      "null_switch_behavior": "metadata-only with no backreaction in Null-2",
+      "allowed_use": "proxy protocol planning",
+      "not_allowed_use": "consciousness proof, hidden-memory proof, personhood proof, or physical backreaction",
+      "blocker_reason": "no falsifiable operational protocol exists"
+    }
+  ],
+  "publication_gate": {
+    "HOLD": [
+      "any coefficient is used downstream without a complete row",
+      "any row claims physical value or validation from naming alone",
+      "any symbolic row is treated as dimensionally closed",
+      "any Journey/Solas context is used as source authority"
+    ],
+    "ALLOW_WITH_WARNINGS": [
+      "rows are complete enough for blocker tracking but values remain symbolic or unknown",
+      "SI restoration requirements are explicit but not yet executed",
+      "identifiability is marked unresolved"
+    ],
+    "ALLOW": [
+      "publication of this hardening artifact as readiness hygiene only, with no gate closure"
+    ]
+  },
+  "gate_verdict": {
+    "dimensional_si_consistency": "open",
+    "null_recovery": "open",
+    "baseline_recovery": "open",
+    "conservation_or_exchange_law": "open",
+    "fifth_force_equivalence_constraints": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}
