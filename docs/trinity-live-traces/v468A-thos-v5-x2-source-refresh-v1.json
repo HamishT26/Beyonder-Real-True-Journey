@@ -1,0 +1,74 @@
+{
+  "artifact": "v468A_THOS_v5_x2_source_refresh_v1",
+  "phase": "v468A_THOS_v5_x2",
+  "prepared_nz": "2026-06-01T23:50:08.7596145+12:00",
+  "search_query_count": 20,
+  "source_policy": "official_or_primary_preferred",
+  "source_groups": [
+    {
+      "group": "python_validator_runtime",
+      "classification": "evidence",
+      "urls": [
+        "https://docs.python.org/3/library/subprocess.html",
+        "https://docs.python.org/3/library/pathlib.html",
+        "https://docs.python.org/3/library/argparse.html",
+        "https://docs.python.org/3/library/json.html"
+      ],
+      "route_into_thos": "Keep subprocess shell-free, use resolved path containment, preserve normal argparse exits, and emit valid JSON reports."
+    },
+    {
+      "group": "git_live_state",
+      "classification": "evidence",
+      "urls": [
+        "https://git-scm.com/docs/git-rev-parse",
+        "https://git-scm.com/docs/git-rev-list",
+        "https://git-scm.com/docs/git-diff",
+        "https://git-scm.com/docs/git-add"
+      ],
+      "route_into_thos": "Keep live head checks based on Git refs and publication based on exact pathspec staging."
+    },
+    {
+      "group": "schema_and_canonicalization",
+      "classification": "context",
+      "urls": [
+        "https://json-schema.org/draft/2020-12",
+        "https://spec.openapis.org/oas/",
+        "https://www.asyncapi.com/docs/guides/validate",
+        "https://www.rfc-editor.org/rfc/rfc8785.html"
+      ],
+      "route_into_thos": "Future v6 work can export a JSON Schema contract and consider canonical report comparison."
+    },
+    {
+      "group": "powershell_runner_behavior",
+      "classification": "evidence",
+      "urls": [
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.5",
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-7.6",
+        "https://learn.microsoft.com/en-my/powershell/module/microsoft.powershell.core/about/about_quoting_rules?view=powershell-5.1",
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.6"
+      ],
+      "route_into_thos": "Expected-fail tests should capture native process exit codes without turning expected stderr into a misleading phase failure."
+    },
+    {
+      "group": "connector_and_receipt_boundaries",
+      "classification": "context",
+      "urls": [
+        "https://developers.google.com/drive/api/v3/manage-uploads",
+        "https://developers.google.com/drive/api/reference/rest/v3",
+        "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+        "https://platform.openai.com/docs/guides/tools-connectors-mcp/",
+        "https://slsa.dev/spec/v1.1/provenance",
+        "https://github.com/in-toto/attestation",
+        "https://docs.sigstore.dev/cosign/verifying/verify/",
+        "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+      ],
+      "route_into_thos": "Connector actions and provenance remain future approval-gated receipt work, not part of this local fixture pass."
+    }
+  ],
+  "non_claims": [
+    "No cloud mutation occurred.",
+    "No attestation was generated.",
+    "No connector action occurred.",
+    "No GMUT gate was closed."
+  ]
+}
