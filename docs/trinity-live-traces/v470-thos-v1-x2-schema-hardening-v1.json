@@ -1,0 +1,43 @@
+{
+  "artifact": "v470_THOS_v1_x2_schema_hardening_v1",
+  "phase": "v470_THOS_v1_x2",
+  "classification": "evidence",
+  "status_values": ["PASS_SHAPE_ONLY", "FAIL_BLOCKER", "OPEN_GAP"],
+  "schemas": {
+    "command_surface": {
+      "required": ["row_id", "command_pattern", "surface_class", "mutation_level", "requires_approval", "allowed_in_advisory", "blocked_reason", "source_authority"],
+      "mutation_level_enum": ["read_only", "local_write", "git_mutation", "external_mutation", "destructive", "unknown"],
+      "pass_rule": "Only read_only rows can be PASS_SHAPE_ONLY in advisory mode."
+    },
+    "plugin_mcp_skill_boundary": {
+      "required": ["surface_id", "surface_type", "capability_class", "credential_surface", "network_effect", "allowed_policy", "approval_required", "source_authority"],
+      "surface_type_enum": ["plugin", "mcp", "skill", "api", "connector", "browser", "computer_use"],
+      "pass_rule": "Inventory-only and read-only rows can be PASS_SHAPE_ONLY; write-capable rows require approval or block."
+    },
+    "cleanup_candidate": {
+      "required": ["candidate_id", "path_or_surface_ref", "cleanup_class", "reason", "risk_class", "approval_required", "rollback_plan", "retention_class"],
+      "cleanup_class_enum": ["observe_only", "safe_local_hygiene", "reversible_requires_approval", "destructive_blocked", "external_blocked"],
+      "pass_rule": "Observe-only and safe-local-hygiene rows can be PASS_SHAPE_ONLY; all action rows stay approval-required."
+    },
+    "retention_row": {
+      "required": ["artifact_id", "phase_ref", "artifact_type", "retention_class", "source_authority", "contains_credentials", "publishable", "quarantine_reason"],
+      "retention_class_enum": ["durable", "publishable_summary", "private_review", "quarantine", "do_not_publish_raw"],
+      "pass_rule": "Rows are PASS_SHAPE_ONLY only if publication and credential fields are explicit."
+    },
+    "thos_check_result": {
+      "required": ["check_id", "predicate_id", "target_ref", "status", "severity", "evidence_ref", "blocked_claims", "gmut_gate_effect"],
+      "status_enum": ["PASS_SHAPE_ONLY", "FAIL_BLOCKER", "OPEN_GAP"],
+      "pass_rule": "No result may use generic PASS; THOS structure can pass shape only."
+    }
+  },
+  "global_fail_conditions": [
+    "destructive action allowed without approval",
+    "connector write allowed without approval",
+    "raw material made publishable",
+    "credential-sensitive content exposed",
+    "advisory text promoted to receipt without curation",
+    "THOS result imports GMUT validation",
+    "GMUT gate effect not equal to none_open_not_tested"
+  ],
+  "gmut_gate_effect_rule": "Every THOS row must use none_open_not_tested for GMUT gate effect."
+}
