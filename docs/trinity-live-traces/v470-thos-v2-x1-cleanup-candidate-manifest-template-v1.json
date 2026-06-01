@@ -1,0 +1,36 @@
+{
+  "artifact": "v470_THOS_v2_x1_cleanup_candidate_manifest_template_v1",
+  "phase": "v470_THOS_v2_x1",
+  "classification": "evidence",
+  "template": {
+    "manifest_id": "string",
+    "phase_ref": "string",
+    "baseline_ref": "v470_THOS_v1_x2",
+    "action_status": "not_performed",
+    "candidates": [
+      {
+        "candidate_id": "string",
+        "artifact_type": "artifact|scratch|cache|log|source|unknown",
+        "target_ref": "string",
+        "created_by_surface": "string|unknown",
+        "cleanup_class": "observe_only|safe_local_hygiene|reversible_requires_approval|destructive_blocked|external_blocked",
+        "risk_class": "low|medium|high|unknown",
+        "source_backlink": "string|none",
+        "cleanup_reason": "string",
+        "safe_to_delete": false,
+        "approval_required": true,
+        "delete_preconditions": ["string"],
+        "owner": "string|unknown",
+        "rollback_or_repair_plan": "string|required_before_action",
+        "retention_class": "durable|publishable_summary|private_review|quarantine|do_not_publish_raw",
+        "status": "candidate_only|review_required|blocked|approved_elsewhere"
+      }
+    ]
+  },
+  "rules": [
+    "Cleanup manifests do not authorize deletion.",
+    "Every candidate needs source, owner, retention class, approval status, and rollback or repair plan.",
+    "Unknown or sensitive candidates are review-required.",
+    "No current v2 x1 artifact performs cleanup."
+  ]
+}

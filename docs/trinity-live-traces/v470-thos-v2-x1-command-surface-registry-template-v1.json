@@ -1,0 +1,42 @@
+{
+  "artifact": "v470_THOS_v2_x1_command_surface_registry_template_v1",
+  "phase": "v470_THOS_v2_x1",
+  "classification": "evidence",
+  "template": {
+    "registry_id": "string",
+    "phase_ref": "string",
+    "baseline_ref": "v470_THOS_v1_x2",
+    "entries": [
+      {
+        "command_id": "string",
+        "command_pattern": "string",
+        "intent": "string",
+        "cwd_scope": "string",
+        "surface_class": "shell|git|validator|artifact|connector|unknown",
+        "mutation_level": "read_only|local_write|git_mutation|external_mutation|destructive|unknown",
+        "approval_policy": "none_for_read_only|explicit_required|blocked_in_advisory",
+        "allowed_in_advisory": false,
+        "allowed_in_dirty_worktree": "yes_if_read_only|no_if_write|unknown",
+        "source_authority": "local_artifact|tool_output|advisory_only|open_gap",
+        "retention_class": "durable|publishable_summary|private_review|quarantine|do_not_publish_raw",
+        "safe_output_claim": "string",
+        "blocked_actions": ["string"],
+        "blocked_reason": "string|null"
+      }
+    ]
+  },
+  "command_safety_rules": [
+    "Every command declares cwd scope before execution.",
+    "Read-only commands cannot expose sensitive values.",
+    "No deletion from advisory lanes.",
+    "No recursive cleanup without explicit approval.",
+    "No reset, rebase, force push, overwrite checkout, or broad restore.",
+    "No staging, commit, or push from advisory-only scope.",
+    "Connector writes require a scoped approval packet.",
+    "PowerShell paths must avoid ambiguous drive assumptions.",
+    "Generated reports must label observed, inferred, or advisory status.",
+    "THOS command checks cannot be described as GMUT validation."
+  ],
+  "pass_rule": "Rows can be PASS_SHAPE_ONLY only when mutation_level is read_only or action is explicitly blocked.",
+  "failure_rule": "Any write, git mutation, external mutation, destructive action, or missing approval policy is FAIL_BLOCKER in advisory mode."
+}
