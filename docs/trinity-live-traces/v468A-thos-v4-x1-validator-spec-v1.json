@@ -1,0 +1,31 @@
+{
+  "artifact": "v468A_THOS_v4_x1_validator_spec_v1",
+  "phase": "v468A_THOS_v4_x1",
+  "prepared_nz": "2026-06-01T23:34:16.7258617+12:00",
+  "script": "scripts/validate_thos_phase_manifest.py",
+  "required_checks": [
+    "manifest is a JSON object",
+    "required fields are present",
+    "phase type is GMUT, THOS, or GMUT_THOS",
+    "live heads are 40-character git hashes",
+    "live heads are equal",
+    "drift is 0 0",
+    "artifact list, blocked actions, and validation chain are non-empty string lists",
+    "blocked actions include the GMUT validation boundary",
+    "validation chain includes remote equality verification",
+    "THOS boundary says GMUT gates are open",
+    "THOS boundary says operational_scaffold_only",
+    "forbidden overclaim phrases are absent"
+  ],
+  "known_limits": [
+    "The checker validates one manifest file, not every phase artifact.",
+    "The checker is dry-run only and does not stage, commit, push, or mutate cloud storage.",
+    "The checker does not replace JSON Schema; it is a narrow local guard."
+  ],
+  "next_hardening_targets": [
+    "Add fixture tests for pass and fail manifests.",
+    "Add optional machine-readable report output.",
+    "Add artifact-path existence checks.",
+    "Add current-head comparison against live git state."
+  ]
+}
