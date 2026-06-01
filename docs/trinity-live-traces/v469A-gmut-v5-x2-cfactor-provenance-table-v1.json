@@ -1,0 +1,46 @@
+{
+  "artifact": "v469A_GMUT_v5_x2_cfactor_provenance_table_v1",
+  "phase": "v469A_GMUT_v5_x2",
+  "classification": "evidence",
+  "purpose": "Stress-test c-factor placement for the selected x0=ct rehearsal branch and held x0=t translation branch.",
+  "rows": [
+    {
+      "surface": "covariant_measure",
+      "x0_ct_branch": "d4x = dx0 d3x = c dt d3x",
+      "x0_t_branch": "d4x = dt d3x, but metric determinant or line-element convention must carry the c placement",
+      "status": "ct_rehearsal_preferred"
+    },
+    {
+      "surface": "prefactor",
+      "x0_ct_branch": "c^3/G on dx0 d3x becomes c^4/G after dx0=c dt",
+      "x0_t_branch": "c^4/G can appear directly when t is used and line element carries c dt",
+      "status": "compatible_if_not_mixed"
+    },
+    {
+      "surface": "derivative",
+      "x0_ct_branch": "partial_0 = (1/c) partial_t",
+      "x0_t_branch": "partial_0 = partial_t if x0=t, with c factors carried elsewhere",
+      "status": "must_not_cross_import"
+    },
+    {
+      "surface": "lapse_shift",
+      "x0_ct_branch": "N and h dimensionless; dimensionless beta^i preferred",
+      "x0_t_branch": "N can remain dimensionless if c is explicit in the line element; shift may be velocity-like or beta^i after rescaling",
+      "status": "translation_hold"
+    },
+    {
+      "surface": "curvature_bundle",
+      "x0_ct_branch": "R and ADM curvature terms carry m^-2 after derivative conversion",
+      "x0_t_branch": "same physical dimension only if metric and derivative c factors are consistently allocated",
+      "status": "open_gap_until_bundle_frozen"
+    },
+    {
+      "surface": "scalar_temporal_kinetic",
+      "x0_ct_branch": "temporal scalar terms inherit 1/c through each partial_0 to partial_t conversion",
+      "x0_t_branch": "time derivative is direct but metric inverse and lapse factors carry the c allocation",
+      "status": "open_gap_until_formula_card"
+    }
+  ],
+  "result": "The x0=ct branch survives v5_x2 as the safer rehearsal branch. x0=t remains usable only as a held translation branch.",
+  "gate_effect": "dimensional_si_consistency remains open because the curvature bundle, scalar dimensions, and source authority are not fully frozen."
+}
