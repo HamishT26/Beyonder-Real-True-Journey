@@ -1,0 +1,74 @@
+{
+  "artifact": "v468A_THOS_v4_x2_source_refresh_v1",
+  "phase": "v468A_THOS_v4_x2",
+  "prepared_nz": "2026-06-01T23:38:38.4165048+12:00",
+  "search_query_count": 20,
+  "source_policy": "official_or_primary_preferred",
+  "source_groups": [
+    {
+      "group": "python_stdlib",
+      "classification": "evidence",
+      "urls": [
+        "https://docs.python.org/3/library/argparse.html",
+        "https://docs.python.org/3/library/json.html",
+        "https://docs.python.org/3/library/pathlib.html",
+        "https://docs.python.org/3/library/re.html"
+      ],
+      "route_into_thos": "Keep the validator dependency-light and based on standard library parsing, path, and pattern tools."
+    },
+    {
+      "group": "json_schema_validator_options",
+      "classification": "context",
+      "urls": [
+        "https://json-schema.org/draft/2020-12",
+        "https://json-schema.org/specification",
+        "https://ajv.js.org/",
+        "https://ajv.js.org/json-schema.html"
+      ],
+      "route_into_thos": "Future v5 work can decide whether to complement the local checker with JSON Schema 2020-12 or an external validator."
+    },
+    {
+      "group": "powershell_exit_and_safety",
+      "classification": "evidence",
+      "urls": [
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_automatic_variables?view=powershell-7.5",
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.5",
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_signing?view=powershell-7.5",
+        "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_quoting_rules?view=powershell-7.5"
+      ],
+      "route_into_thos": "Use explicit exit-code behavior and literal-path quoting for future command cards."
+    },
+    {
+      "group": "github_publication_and_supply_chain",
+      "classification": "context",
+      "urls": [
+        "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations",
+        "https://cli.github.com/manual/gh_attestation_verify",
+        "https://docs.github.com/en/code-security/code-scanning",
+        "https://codeql.github.com/docs",
+        "https://docs.github.com/en/code-security/dependabot",
+        "https://openssf.org/scorecard/"
+      ],
+      "route_into_thos": "Publication safety remains curated-staging-first; future attestation or scanning work needs separate implementation."
+    },
+    {
+      "group": "drive_mcp_and_canonical_receipts",
+      "classification": "context",
+      "urls": [
+        "https://developers.google.com/drive/api/v3/manage-uploads",
+        "https://developers.google.com/workspace/drive/api/guides/push",
+        "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization",
+        "https://www.rfc-editor.org/rfc/rfc8785.html",
+        "https://slsa.dev/spec/v1.0-rc1/provenance",
+        "https://github.com/in-toto/attestation"
+      ],
+      "route_into_thos": "Drive and MCP remain approval-gated; canonical/provenance ideas are future receipt-hardening context only."
+    }
+  ],
+  "non_claims": [
+    "No cloud mutation occurred.",
+    "No attestation was generated.",
+    "No repository security feature was enabled.",
+    "No GMUT gate was closed."
+  ]
+}
