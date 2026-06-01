@@ -1,0 +1,57 @@
+{
+  "phase": "v468A_THOS_v1_x2",
+  "artifact": "safety_card_set",
+  "prepared_nz": "2026-06-01T23:18:00+12:00",
+  "cards": [
+    {
+      "card_id": "curated_staging_only",
+      "rule": "Stage only current-phase curated artifacts by exact path.",
+      "blocked": ["broad git add", "generated-latest sweeps", "raw operational output"]
+    },
+    {
+      "card_id": "no_delete_without_approval",
+      "rule": "Cleanup plans may be drafted, but destructive cleanup requires separate explicit approval.",
+      "blocked": ["recursive delete", "worktree deletion", "drive deletion"]
+    },
+    {
+      "card_id": "drive_mirror_gate",
+      "rule": "Drive mirror work remains planning unless the phase explicitly records live connector approval.",
+      "blocked": ["unrecorded upload", "unrecorded permission change", "silent conversion"]
+    },
+    {
+      "card_id": "powershell_literal_paths",
+      "rule": "Use literal paths and one-shell file operations; do not compose destructive operations across shells.",
+      "blocked": ["string-built delete pipelines", "cmd handoff for deletion", "unchecked computed roots"]
+    },
+    {
+      "card_id": "gmUT_lock_inheritance",
+      "rule": "THOS artifacts inherit v467A GMUT locks until exact GMUT closure artifacts exist.",
+      "blocked": ["physics validation by association", "gate closure by system strength"]
+    },
+    {
+      "card_id": "journey_context_only",
+      "rule": "Journey files may shape terminology/history only when locally cited.",
+      "blocked": ["canon promotion", "current-state proof", "physics validation"]
+    },
+    {
+      "card_id": "usage_limit_retry",
+      "rule": "Do not loop against a known Codex CLI usage-limit blocker before reset.",
+      "blocked": ["quota-burning retries", "claiming sibling advice that did not return"]
+    },
+    {
+      "card_id": "suite_write_guard",
+      "rule": "Suite runners that update latest artifacts require deliberate profile selection and curated staging review.",
+      "blocked": ["broad generated output promotion", "accidental latest-artifact sweep"]
+    },
+    {
+      "card_id": "source_authority",
+      "rule": "Use official/primary docs for current tool and security behavior.",
+      "blocked": ["social image capture as proof", "queued search as completed search"]
+    },
+    {
+      "card_id": "sibling_receipt_truth",
+      "rule": "Record lane status separately from advisory content.",
+      "blocked": ["fabricated app output", "CLI blocker hidden as success"]
+    }
+  ]
+}

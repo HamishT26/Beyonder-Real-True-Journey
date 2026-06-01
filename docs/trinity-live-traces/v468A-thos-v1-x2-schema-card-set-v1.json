@@ -1,0 +1,47 @@
+{
+  "phase": "v468A_THOS_v1_x2",
+  "artifact": "schema_card_set",
+  "prepared_nz": "2026-06-01T23:18:00+12:00",
+  "cards": [
+    {
+      "card_id": "phase_manifest",
+      "required_fields": ["phase", "domain", "x_pass", "start_nz", "baseline_commit", "claim_locks", "mutation_class", "source_class", "next_phase"],
+      "acceptance": "JSON parses, phase matches file name, claim locks are explicit, mutation_class is not implicit."
+    },
+    {
+      "card_id": "live_write_gate",
+      "required_fields": ["surface", "requested_action", "approval_class", "allowed_now", "blocker_if_denied", "evidence_required"],
+      "acceptance": "Connector and destructive changes default to blocked unless explicit approval is recorded."
+    },
+    {
+      "card_id": "command_surface",
+      "required_fields": ["command_id", "surface", "shell", "path_policy", "side_effect_class", "timeout_policy", "safe_probe_level"],
+      "acceptance": "PowerShell commands use literal paths and do not combine recursive path enumeration with destructive actions."
+    },
+    {
+      "card_id": "skill_registry",
+      "required_fields": ["skill_name", "skill_path", "trigger_reason", "workflow_constraints", "loaded", "output_promoted"],
+      "acceptance": "Only loaded skill instructions affect artifacts; named but unread skills are not claimed as applied."
+    },
+    {
+      "card_id": "plugin_api_mcp_inventory",
+      "required_fields": ["surface", "tool_or_connector", "live_read", "live_write", "auth_state", "risk_tags", "bounded_use"],
+      "acceptance": "Live-write connector use requires a separate approval and receipt."
+    },
+    {
+      "card_id": "blocker_ledger",
+      "required_fields": ["blocker_id", "class", "first_seen_nz", "affected_lane", "impact", "retry_rule", "resolved"],
+      "acceptance": "External blockers are recorded without treating them as repo failure."
+    },
+    {
+      "card_id": "source_refresh",
+      "required_fields": ["query_count", "official_sources", "source_use_limits", "latest_check_time_nz"],
+      "acceptance": "Latest/current claims cite official or primary sources where possible."
+    },
+    {
+      "card_id": "run_status",
+      "required_fields": ["phase", "start_nz", "baseline_commit", "validation_claim", "sibling_status", "next_expected_phase", "notification"],
+      "acceptance": "Validation claim is patched only after checks pass."
+    }
+  ]
+}

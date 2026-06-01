@@ -1,0 +1,42 @@
+{
+  "phase": "v468A_THOS_v1_x2",
+  "artifact": "blocker_ledger",
+  "prepared_nz": "2026-06-01T23:18:00+12:00",
+  "blockers": [
+    {
+      "blocker_id": "CLI_USAGE_LIMIT",
+      "affected_lanes": ["Arby", "Aster Vale"],
+      "impact": "No fresh v468A THOS x1/x2 CLI advisory text available before reset.",
+      "retry_rule": "Retry after June 2, 2026 1:07 AM NZ time or explicit credit recovery.",
+      "status": "open_external"
+    },
+    {
+      "blocker_id": "APP_COMPLETED_NO_TEXT",
+      "affected_lanes": ["Cicero", "Kierkegaard", "Aristotle"],
+      "impact": "Tool returned completed markers without exposed final text.",
+      "retry_rule": "Use compact prompts; if still empty, record status and proceed locally.",
+      "status": "open_tool_output"
+    },
+    {
+      "blocker_id": "DIRTY_WORKTREE_BACKGROUND",
+      "affected_lanes": ["Aletheon"],
+      "impact": "Large unrelated dirty inventory makes broad staging unsafe.",
+      "retry_rule": "Exact-path curated staging only; no cleanup without approval.",
+      "status": "open_managed"
+    },
+    {
+      "blocker_id": "DRIVE_MUTATION_GATE",
+      "affected_lanes": ["Aletheon"],
+      "impact": "Drive uploads/permission changes are connector mutations.",
+      "retry_rule": "Materialize checklist first; mutate only with explicit approval and receipt.",
+      "status": "open_gated"
+    },
+    {
+      "blocker_id": "GMUT_ASSOCIATION_RISK",
+      "affected_lanes": ["All"],
+      "impact": "THOS system strength could be misread as GMUT validation.",
+      "retry_rule": "Carry v467A locks in every THOS artifact.",
+      "status": "open_permanent_until_gmut_closure_artifacts"
+    }
+  ]
+}
