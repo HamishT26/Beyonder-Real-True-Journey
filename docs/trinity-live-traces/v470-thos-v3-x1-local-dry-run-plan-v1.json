@@ -1,0 +1,60 @@
+{
+  "artifact": "v470_THOS_v3_x1_local_dry_run_plan_v1",
+  "phase": "v470_THOS_v3_x1",
+  "classification": "evidence",
+  "probe_level": "P1_dry_run_guard_probe",
+  "claim_ceiling": "dry_run_plan_only_no_validator_execution_yet",
+  "gmut_gate_effect": "none_open_not_tested",
+  "planned_checks": [
+    {
+      "check_id": "DRY-001",
+      "name": "current_phase_allowlist_check",
+      "input": "staged_path_list",
+      "fail_if": "any path is outside docs/trinity-live-traces/v470-thos-v3-x1-*"
+    },
+    {
+      "check_id": "DRY-002",
+      "name": "json_parse_check",
+      "input": "current_phase_json_files",
+      "fail_if": "ConvertFrom-Json fails for any JSON artifact"
+    },
+    {
+      "check_id": "DRY-003",
+      "name": "forbidden_path_check",
+      "input": "current_phase_path_list",
+      "fail_if": "path contains session JSONL, JSONL, screenshot, raw log, or credential markers"
+    },
+    {
+      "check_id": "DRY-004",
+      "name": "credential_pattern_check",
+      "input": "current_phase_file_contents",
+      "fail_if": "secret-like token pattern appears"
+    },
+    {
+      "check_id": "DRY-005",
+      "name": "trailing_whitespace_check",
+      "input": "current_phase_file_contents",
+      "fail_if": "any line ends with trailing space or tab"
+    },
+    {
+      "check_id": "DRY-006",
+      "name": "generic_pass_forbidden_check",
+      "input": "current_phase_file_contents",
+      "fail_if": "generic PASS appears as status without SHAPE_ONLY context"
+    },
+    {
+      "check_id": "DRY-007",
+      "name": "gmut_gate_effect_invariant_check",
+      "input": "current_phase_json_files",
+      "fail_if": "gmut_gate_effect is missing or not none_open_not_tested"
+    },
+    {
+      "check_id": "DRY-008",
+      "name": "mutation_claim_check",
+      "input": "current_phase_file_contents",
+      "fail_if": "cleanup, connector write, cloud mutation, or automation mutation is claimed as performed"
+    }
+  ],
+  "output_status_values": ["PASS_SHAPE_ONLY", "FAIL_BLOCKER", "OPEN_GAP", "NOT_RUN"],
+  "blocked_output_status_values": ["PASS", "VALIDATED", "EXECUTED", "CLEANED", "MUTATED", "GMUT_VALIDATED", "GATE_CLOSED"]
+}
