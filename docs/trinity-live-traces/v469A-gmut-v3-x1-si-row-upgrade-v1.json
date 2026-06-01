@@ -1,0 +1,44 @@
+{
+  "artifact": "v469A_GMUT_v3_x1_si_row_upgrade_v1",
+  "phase": "v469A_GMUT_v3_x1",
+  "classification": "open_gap",
+  "rows": [
+    {
+      "row": "gravitational_prefactor_route_A",
+      "expression": "c^4/G",
+      "status": "PASS_CONDITIONAL",
+      "condition": "measure is dt d3x and R is m^-2"
+    },
+    {
+      "row": "gravitational_prefactor_route_B",
+      "expression": "c^3/G",
+      "status": "PASS_CONDITIONAL_ALTERNATIVE",
+      "condition": "measure is length-normalized d4x"
+    },
+    {
+      "row": "prior_compact_d4x_c4_expression",
+      "expression": "d4x c^4 R/G",
+      "status": "FAIL_AMBIGUOUS",
+      "condition": "fails unless d4x is reinterpreted as dt d3x"
+    },
+    {
+      "row": "scalar_kinetic_density",
+      "expression": "1/2 g^{mu nu} nabla_mu Psi nabla_nu Psi",
+      "status": "FAIL_OPEN",
+      "condition": "Psi units and metric component dimensions are undeclared"
+    },
+    {
+      "row": "potential_density",
+      "expression": "V(Psi)",
+      "status": "FAIL_SYMBOLIC",
+      "condition": "potential rule absent"
+    },
+    {
+      "row": "stress_energy",
+      "expression": "T_Psi_mu_nu",
+      "status": "FAIL_OPEN",
+      "condition": "metric variation and energy-density check not complete"
+    }
+  ],
+  "gate_effect": "dimensional_si_consistency remains OPEN"
+}
