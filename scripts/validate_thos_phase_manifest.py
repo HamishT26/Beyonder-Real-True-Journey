@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -125,7 +127,61 @@ def _check_forbidden_claims(payload: dict[str, Any]) -> None:
         raise SystemExit(f"manifest contains forbidden claim pattern(s): {', '.join(hits)}")
 
 
-def validate(path: Path) -> None:
+def _repo_path(repo_root: Path, raw_path: str) -> Path:
+    root = repo_root.resolve()
+    target = (root / raw_path).resolve()
+    try:
+        target.relative_to(root)
+    except ValueError as exc:
+        raise SystemExit(f"manifest artifact path escapes repo root: {raw_path}") from exc
+    return target
+
+
+def _check_artifact_paths(payload: dict[str, Any], repo_root: Path) -> None:
+    missing: list[str] = []
+    for raw_path in payload["current_phase_artifact_list"]:
+        target = _repo_path(repo_root, raw_path)
+        if not target.exists():
+            missing.append(raw_path)
+    if missing:
+        raise SystemExit(f"manifest artifact path(s) missing: {', '.join(missing)}")
+
+
+def _git_rev_parse(ref: str, repo_root: Path) -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", ref],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip() or "unknown git error"
+        raise SystemExit(f"git rev-parse failed for {ref}: {detail}")
+    return result.stdout.strip()
+
+
+def _check_live_git_heads(payload: dict[str, Any], repo_root: Path, upstream_ref: str) -> None:
+    local_head = _git_rev_parse("HEAD", repo_root)
+    upstream_head = _git_rev_parse(upstream_ref, repo_root)
+    if payload["live_local_head"] != local_head:
+        raise SystemExit("manifest.live_local_head does not match live HEAD")
+    if payload["live_upstream_head"] != upstream_head:
+        raise SystemExit("manifest.live_upstream_head does not match live upstream")
+
+
+def _write_report(path: Path, manifest: Path, checks: list[dict[str, str]]) -> None:
+    payload = {
+        "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "manifest": manifest.as_posix(),
+        "status": "PASS",
+        "checks": checks,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+
+
+def validate(path: Path) -> dict[str, Any]:
     payload = _load_json(path)
     _check_required_fields(payload)
     _check_phase_fields(payload)
@@ -133,13 +189,30 @@ def validate(path: Path) -> None:
     _check_lists(payload)
     _check_boundary(payload)
     _check_forbidden_claims(payload)
+    return payload
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate a THOS phase manifest JSON file.")
     parser.add_argument("manifest", type=Path)
+    parser.add_argument("--repo-root", type=Path, default=Path("."))
+    parser.add_argument("--check-artifacts", action="store_true")
+    parser.add_argument("--check-live-git", action="store_true")
+    parser.add_argument("--upstream-ref", default="origin/codex/GHC-Family/beyonder-shared-omega-line")
+    parser.add_argument("--report-json", type=Path)
     args = parser.parse_args()
-    validate(args.manifest)
+    checks = [{"name": "base_manifest", "status": "PASS", "detail": "required fields and claim guard passed"}]
+    payload = validate(args.manifest)
+    repo_root = args.repo_root.resolve()
+    if args.check_artifacts:
+        _check_artifact_paths(payload, repo_root)
+        checks.append({"name": "artifact_paths", "status": "PASS", "detail": "all manifest artifact paths exist"})
+    if args.check_live_git:
+        _check_live_git_heads(payload, repo_root, args.upstream_ref)
+        checks.append({"name": "live_git_heads", "status": "PASS", "detail": "manifest heads match live git refs"})
+    if args.report_json:
+        _write_report(args.report_json, args.manifest, checks)
+        checks.append({"name": "report_json", "status": "PASS", "detail": args.report_json.as_posix()})
     print(f"THOS_PHASE_MANIFEST_OK {args.manifest.as_posix()}")
     return 0
 

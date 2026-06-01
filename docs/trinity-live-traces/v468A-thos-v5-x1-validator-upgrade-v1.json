@@ -1,0 +1,23 @@
+{
+  "artifact": "v468A_THOS_v5_x1_validator_upgrade_v1",
+  "phase": "v468A_THOS_v5_x1",
+  "prepared_nz": "2026-06-01T23:46:12.1314922+12:00",
+  "script": "scripts/validate_thos_phase_manifest.py",
+  "new_flags": [
+    "--repo-root",
+    "--check-artifacts",
+    "--check-live-git",
+    "--upstream-ref",
+    "--report-json"
+  ],
+  "new_behavior": [
+    "Optional artifact path checks resolve paths under the repository root and reject escape attempts.",
+    "Optional live git checks compare manifest heads against live HEAD and upstream.",
+    "Optional report output writes a machine-readable PASS receipt for successful validation."
+  ],
+  "known_limits": [
+    "Report output currently records successful runs only.",
+    "The checker still validates one manifest at a time.",
+    "The checker does not replace a full JSON Schema implementation."
+  ]
+}
