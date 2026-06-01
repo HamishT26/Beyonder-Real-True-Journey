@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ghc.local/schemas/thos-phase-manifest-v1.schema.json",
+  "title": "THOS Phase Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "phase_id",
+    "phase_type",
+    "start_time_nz",
+    "live_local_head",
+    "live_upstream_head",
+    "drift",
+    "current_phase_artifact_list",
+    "blocked_actions",
+    "validation_chain",
+    "thos_gmut_boundary"
+  ],
+  "properties": {
+    "phase_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase_type": {
+      "type": "string",
+      "enum": [
+        "GMUT",
+        "THOS",
+        "GMUT_THOS"
+      ]
+    },
+    "start_time_nz": {
+      "type": "string",
+      "minLength": 1
+    },
+    "live_local_head": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "live_upstream_head": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "drift": {
+      "type": "string",
+      "pattern": "^0[\\t ]+0$"
+    },
+    "current_phase_artifact_list": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blocked_actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "validation_chain": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "thos_gmut_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gmut_gates",
+        "thos_claim"
+      ],
+      "properties": {
+        "gmut_gates": {
+          "type": "string",
+          "const": "open"
+        },
+        "thos_claim": {
+          "type": "string",
+          "const": "operational_scaffold_only"
+        },
+        "non_claim": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
