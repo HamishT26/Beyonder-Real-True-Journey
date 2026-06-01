@@ -1,0 +1,85 @@
+{
+  "artifact": "v468A_THOS_v6_x2_source_refresh_v1",
+  "phase": "v468A_THOS_v6_x2",
+  "started_nz": "2026-06-02T00:01:00.4873243+12:00",
+  "search_count": 20,
+  "purpose": "Check current primary or official sources before deciding how THOS should use the v6 x1 JSON Schema contract.",
+  "source_notes": [
+    {
+      "source": "JSON Schema draft 2020-12 specification",
+      "url": "https://json-schema.org/draft/2020-12",
+      "use": "Keep the schema declared as draft 2020-12 and avoid older draft tuple semantics."
+    },
+    {
+      "source": "JSON Schema validation vocabulary",
+      "url": "https://json-schema.org/draft/2020-12/json-schema-validation",
+      "use": "Treat validation as structural constraints only, not as evidence for GMUT physics claims."
+    },
+    {
+      "source": "JSON Schema 2020-12 release notes",
+      "url": "https://json-schema.org/latest/release-notes",
+      "use": "Record changed array and dynamic-reference semantics as a compatibility risk for future schemas."
+    },
+    {
+      "source": "python-jsonschema package listing",
+      "url": "https://pypi.org/project/jsonschema",
+      "use": "Local environment already has jsonschema 4.26.0; no new dependency was installed."
+    },
+    {
+      "source": "python-jsonschema validators source",
+      "url": "https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/validators.py",
+      "use": "Confirm Draft202012Validator is the latest validator class in the Python stack."
+    },
+    {
+      "source": "Ajv JSON Schema documentation",
+      "url": "https://ajv.js.org/json-schema.html",
+      "use": "Record cross-runtime caveat that draft 2020-12 needs a distinct validator mode."
+    },
+    {
+      "source": "JSON Schema Test Suite",
+      "url": "https://github.com/json-schema-org/JSON-Schema-Test-Suite",
+      "use": "Route future conformance work to an official language-agnostic fixture suite."
+    },
+    {
+      "source": "Bowtie documentation",
+      "url": "https://docs.bowtie.report/en/stable/implementers/",
+      "use": "Record future cross-implementation reporting route; not required for current local guard."
+    },
+    {
+      "source": "Python pathlib documentation",
+      "url": "https://docs.python.org/3.14/library/pathlib.html",
+      "use": "Keep path checks resolve-based when guarding repo-root escapes."
+    },
+    {
+      "source": "Python subprocess documentation",
+      "url": "https://docs.python.org/3/library/subprocess.html",
+      "use": "Keep git probes explicit-argument subprocess calls in validator code."
+    },
+    {
+      "source": "GitHub SARIF documentation",
+      "url": "https://docs.github.com/en/code-security/concepts/code-scanning/sarif-files",
+      "use": "Future validator reports can map to SARIF, but v6 x2 stays local JSON."
+    },
+    {
+      "source": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "use": "Future provenance can attach signed build claims, but no workflow mutation is made in this phase."
+    },
+    {
+      "source": "MCP schema reference",
+      "url": "https://modelcontextprotocol.io/specification/2025-11-25/schema",
+      "use": "Keep tool-schema thinking compatible with MCP structured output fields."
+    },
+    {
+      "source": "OpenAI Docs MCP",
+      "url": "https://platform.openai.com/docs/docs-mcp",
+      "use": "Treat docs MCP as read-only source access, not an action connector."
+    },
+    {
+      "source": "Google Drive API upload documentation",
+      "url": "https://developers.google.com/drive/api/v3/manage-uploads",
+      "use": "Cloud file writes remain blocked until a separate approval scope exists."
+    }
+  ],
+  "decision": "Use installed jsonschema as an optional local validator and add no new package, workflow, Drive mutation, or cloud write."
+}

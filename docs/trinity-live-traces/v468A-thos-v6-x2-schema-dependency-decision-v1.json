@@ -1,0 +1,22 @@
+{
+  "artifact": "v468A_THOS_v6_x2_schema_dependency_decision_v1",
+  "phase": "v468A_THOS_v6_x2",
+  "local_probe": {
+    "jsonschema": "4.26.0",
+    "referencing": "0.37.0",
+    "jsonschema_specifications": "2025.9.1"
+  },
+  "decision": "use_existing_optional_dependency",
+  "not_chosen": [
+    "vendor a schema validator into the repository",
+    "install a new dependency during this phase",
+    "replace the Python publication validator",
+    "treat schema validation as GMUT evidence"
+  ],
+  "rationale": [
+    "The local environment already exposes a draft 2020-12-capable validator.",
+    "The Python publication validator still enforces project-specific live-git, artifact-path, blocked-action, and forbidden-claim rules that JSON Schema cannot fully express.",
+    "No dependency lockfile or runtime package surface needs mutation for this proof phase."
+  ],
+  "follow_up": "If THOS later promotes schema validation into CI, add a pinned dependency and a separate workflow review artifact."
+}
