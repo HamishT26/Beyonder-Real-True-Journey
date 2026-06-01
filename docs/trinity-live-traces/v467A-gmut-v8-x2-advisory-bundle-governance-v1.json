@@ -1,0 +1,70 @@
+{
+  "artifact_id": "v467A_GMUT_v8_x2_advisory_bundle_governance_v1",
+  "phase": "v467A_GMUT_v8_x2",
+  "prepared_at_nz": "2026-06-01T22:49:00+12:00",
+  "claim_taxonomy": "advisory",
+  "bundle_id": "v467A_GMUT_v8_x2_advisory",
+  "baseline_ref": "b3ae7fec6c1ffe58c77ce5f54319f9f433042078",
+  "advisory_bundle_files": [
+    "00-bundle.manifest.json",
+    "01-blocked-claims.registry.json",
+    "02-fixture-taxonomy.index.json",
+    "03-profile-tier.declaration.json",
+    "04-canonicalization-snapshot.policy.json",
+    "05-cross-manifest.linkage-classes.json",
+    "06-identity-ambiguity.register.json",
+    "07-diff-merge.narrative.md",
+    "08-coefficient-unit.error-vocabulary.json",
+    "09-conservation-exchange.reference-appendix.md",
+    "10-advisory-only.reporting-contract.json",
+    "11-v8_x2-implementation.memo.md"
+  ],
+  "normalized_key_registry": {
+    "id": "gmut.registry.normalized_keys.v8_x2",
+    "entry_states": [
+      "active",
+      "deprecated",
+      "quarantined",
+      "demoted",
+      "tombstoned"
+    ],
+    "fail_closed_on_missing_key": true,
+    "locked_truth_keys": {
+      "audit.scaffold_governance": "closed_remote_verified_audit_only",
+      "gate.gmut_01": "open_not_tested",
+      "gate.gmut_02": "open_not_tested",
+      "gate.gmut_03": "open_not_tested",
+      "gate.gmut_04": "open_not_tested",
+      "gate.gmut_05": "open_not_tested",
+      "gate.gmut_06": "open_not_tested",
+      "claim.b_psi": "quarantined_demoted",
+      "claim.v_psi": "symbolic_only",
+      "claim.journey_solas": "journey_context_not_canon"
+    }
+  },
+  "lint_order": [
+    "parse_envelope_and_canonicalize_serialization",
+    "normalize_keys_and_reject_regex_failures",
+    "resolve_registry_entries",
+    "enforce_tombstones_and_expired_alias_rejection",
+    "validate_migration_exceptions",
+    "apply_state_machine_transition_rules",
+    "apply_contamination_guards",
+    "scan_leakage_taxonomy_classes",
+    "scan_blocked_claim_lexicon",
+    "recompute_digest_lineage",
+    "emit_downgrade_analytics",
+    "update_coverage_ledger_and_registry_diff"
+  ],
+  "contamination_guards": [
+    "guard.no_quarantine_promotion",
+    "guard.no_symbolic_physicalization",
+    "guard.no_journey_canonization",
+    "guard.no_gate_inference",
+    "guard.no_alias_truth_upgrade",
+    "guard.no_exemplar_promotion",
+    "guard.no_digest_proof_jump",
+    "guard.fail_closed_on_mixed_envelope"
+  ],
+  "non_escalation_rule": "Registry, digest, exemplar, coverage, and attestation completeness are governance properties only and do not upgrade GMUT scientific status."
+}
