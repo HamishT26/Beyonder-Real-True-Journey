@@ -1,0 +1,71 @@
+{
+  "artifact": "v468A_THOS_v3_x2_live_write_gate_table_v1",
+  "phase": "v468A_THOS_v3_x2",
+  "prepared_nz": "2026-06-01T23:29:26.4417747+12:00",
+  "gate_rows": [
+    {
+      "gate": "P0_inspect_only",
+      "allowed": [
+        "read files",
+        "read git state",
+        "read artifact inventory"
+      ],
+      "approval_needed": false,
+      "receipt_needed": "local command result"
+    },
+    {
+      "gate": "P1_dry_run",
+      "allowed": [
+        "JSON parse",
+        "lint",
+        "safety-pattern guard",
+        "diff review"
+      ],
+      "approval_needed": false,
+      "receipt_needed": "stdout result captured in summary artifact"
+    },
+    {
+      "gate": "P2_bounded_simulation",
+      "allowed": [
+        "deterministic fixture simulation",
+        "toy validation run"
+      ],
+      "approval_needed": false,
+      "receipt_needed": "fixture path and result"
+    },
+    {
+      "gate": "P3_tempdir_materialization",
+      "allowed": [
+        "tempdir rehearsal",
+        "throwaway generated sample"
+      ],
+      "approval_needed": false,
+      "receipt_needed": "temp path and no-stage statement"
+    },
+    {
+      "gate": "P4_curated_repo_write",
+      "allowed": [
+        "current-phase artifact creation",
+        "exact curated staging",
+        "commit",
+        "explicit push",
+        "remote equality verification"
+      ],
+      "approval_needed": "covered_by_current_phase_scope",
+      "receipt_needed": "commit hash and remote equality"
+    },
+    {
+      "gate": "P4_plus_cloud_or_cleanup",
+      "allowed": [],
+      "approval_needed": "separate_explicit_approval",
+      "receipt_needed": "approval artifact plus returned action metadata"
+    }
+  ],
+  "hard_blocks": [
+    "destructive cleanup",
+    "broad stage",
+    "Drive mutation",
+    "old sub-agent spawning",
+    "GMUT validation claim"
+  ]
+}
