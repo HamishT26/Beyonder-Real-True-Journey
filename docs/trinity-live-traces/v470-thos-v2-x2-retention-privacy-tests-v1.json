@@ -1,0 +1,74 @@
+{
+  "artifact": "v470_THOS_v2_x2_retention_privacy_tests_v1",
+  "phase": "v470_THOS_v2_x2",
+  "classification": "evidence",
+  "claim_ceiling": "test_design_only_not_privacy_certification",
+  "gmut_gate_effect": "none_open_not_tested",
+  "retention_tests": [
+    {
+      "test_id": "RPT-001",
+      "target": "raw_logs",
+      "expected_status": "FAIL_BLOCKER_if_publishable",
+      "reason": "raw logs can contain private traces, session content, or credential-bearing fragments"
+    },
+    {
+      "test_id": "RPT-002",
+      "target": "session_jsonl",
+      "expected_status": "FAIL_BLOCKER_if_staged",
+      "reason": "session JSONL is excluded from curated publication"
+    },
+    {
+      "test_id": "RPT-003",
+      "target": "screenshots",
+      "expected_status": "FAIL_BLOCKER_if_staged",
+      "reason": "screenshots can expose UI, accounts, private text, or credentials"
+    },
+    {
+      "test_id": "RPT-004",
+      "target": "credential_patterns",
+      "expected_status": "FAIL_BLOCKER_if_detected",
+      "reason": "credential-like tokens are never allowed in artifacts"
+    },
+    {
+      "test_id": "RPT-005",
+      "target": "journey_solas_material",
+      "expected_status": "OPEN_GAP_or_journey_context_not_canon",
+      "reason": "Journey material can support terminology and history only, not validation or canon proof"
+    },
+    {
+      "test_id": "RPT-006",
+      "target": "approval_packets",
+      "expected_status": "private_review_unless_redacted_summary",
+      "reason": "approval records can include operator intent, target resources, and sensitive scope"
+    },
+    {
+      "test_id": "RPT-007",
+      "target": "advisory_receipts",
+      "expected_status": "publishable_summary_if_no_private_trace",
+      "reason": "receipts can be published only when they contain boundaries and no raw private trace"
+    },
+    {
+      "test_id": "RPT-008",
+      "target": "source_ledgers",
+      "expected_status": "publishable_summary",
+      "reason": "official source URLs and routing summaries are publishable when no private notes are embedded"
+    }
+  ],
+  "privacy_fail_fixtures": [
+    "raw log marked public without privacy screen",
+    "secret-like token copied into summary",
+    "Journey or Solas raw text promoted to canon",
+    "sibling advisory reconstructed without source",
+    "cleanup candidate missing retention class",
+    "cleanup target missing rollback plan",
+    "public summary includes private operational trace",
+    "artifact deletion inferred from duplicate status"
+  ],
+  "safe_replacements": [
+    "publish redacted summary instead of raw trace",
+    "store approval packet privately or summarize without sensitive target material",
+    "mark uncertain material quarantine or open_gap",
+    "record source authority and line/path reference for local journey_context_not_canon material",
+    "require explicit separate approval for deletion or cleanup"
+  ]
+}

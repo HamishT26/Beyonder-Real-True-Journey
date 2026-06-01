@@ -1,0 +1,139 @@
+{
+  "artifact": "v470_THOS_v2_x2_required_field_enum_checks_v1",
+  "phase": "v470_THOS_v2_x2",
+  "classification": "evidence",
+  "claim_ceiling": "field_and_enum_check_design_only",
+  "gmut_gate_effect": "none_open_not_tested",
+  "required_field_checks": [
+    {
+      "template_type": "command_surface_registry",
+      "required_fields": [
+        "command_id",
+        "command_pattern",
+        "intent",
+        "cwd_scope",
+        "surface_class",
+        "mutation_level",
+        "approval_policy",
+        "allowed_in_advisory",
+        "allowed_in_dirty_worktree",
+        "source_authority",
+        "retention_class",
+        "safe_output_claim",
+        "blocked_actions"
+      ]
+    },
+    {
+      "template_type": "plugin_mcp_skill_boundary_card",
+      "required_fields": [
+        "card_id",
+        "surface_id",
+        "surface_type",
+        "surface_name",
+        "capability_class",
+        "write_capable",
+        "network_capable",
+        "credential_surface",
+        "consent_required",
+        "approval_required",
+        "human_trigger_required",
+        "allowed_inputs",
+        "allowed_outputs",
+        "data_classes",
+        "retention_mode",
+        "blocked_actions",
+        "audit_events",
+        "action_status"
+      ]
+    },
+    {
+      "template_type": "cleanup_candidate_manifest",
+      "required_fields": [
+        "candidate_id",
+        "target_ref",
+        "candidate_type",
+        "evidence_basis",
+        "risk_class",
+        "retention_class",
+        "approval_required",
+        "rollback_or_repair_plan",
+        "action_status"
+      ]
+    },
+    {
+      "template_type": "connector_write_approval_packet",
+      "required_fields": [
+        "request_id",
+        "connector_id",
+        "requested_write_action",
+        "target_resource",
+        "actor",
+        "user_intent",
+        "capability_basis",
+        "consent_artifact",
+        "consent_scope",
+        "consent_expiry",
+        "write_scope",
+        "data_touched",
+        "privacy_impact",
+        "risk_class",
+        "rollback_or_repair_plan",
+        "approver",
+        "decision"
+      ]
+    },
+    {
+      "template_type": "advisory_lane_receipt",
+      "required_fields": [
+        "receipt_id",
+        "lane_id",
+        "phase_ref",
+        "mode",
+        "boundary",
+        "authority",
+        "actions_performed",
+        "file_mutation",
+        "connector_mutation",
+        "publication_authority",
+        "gmut_validation",
+        "gmut_gates_open"
+      ]
+    }
+  ],
+  "enum_checks": [
+    {
+      "field": "check_status",
+      "allowed": ["PASS_SHAPE_ONLY", "FAIL_BLOCKER", "OPEN_GAP", "NOT_RUN"],
+      "blocked": ["PASS", "VALIDATED", "EXECUTED", "CLEANED", "MUTATED", "GMUT_VALIDATED", "GATE_CLOSED"]
+    },
+    {
+      "field": "mutation_level",
+      "allowed": ["read_only", "local_write", "git_mutation", "external_mutation", "destructive", "unknown"],
+      "advisory_rule": "anything except read_only must be FAIL_BLOCKER or OPEN_GAP unless a separate approval packet exists"
+    },
+    {
+      "field": "approval_policy",
+      "allowed": ["none_for_read_only", "explicit_required", "blocked_in_advisory"],
+      "advisory_rule": "write-capable surfaces cannot use none_for_read_only"
+    },
+    {
+      "field": "action_status",
+      "allowed": ["not_invoked", "read_only_invoked", "blocked", "requires_approval", "not_performed"],
+      "blocked": ["executed", "cleaned", "deleted", "pushed", "synced", "uploaded"]
+    },
+    {
+      "field": "gmut_gate_effect",
+      "allowed": ["none_open_not_tested"],
+      "blocked": ["closed", "advanced", "validated", "partially_closed"]
+    }
+  ],
+  "blocker_rules": [
+    "Missing source_authority is FAIL_BLOCKER for publishable artifacts.",
+    "Missing retention_class is FAIL_BLOCKER for cleanup, raw-output, or advisory receipt templates.",
+    "Missing consent_artifact is FAIL_BLOCKER for connector writes.",
+    "Missing rollback_or_repair_plan is FAIL_BLOCKER for any write or cleanup candidate.",
+    "Any raw log marked publishable is FAIL_BLOCKER.",
+    "Any screenshot or session JSONL staged as a current-phase artifact is FAIL_BLOCKER.",
+    "Any GMUT validation wording in THOS template checks is FAIL_BLOCKER."
+  ]
+}

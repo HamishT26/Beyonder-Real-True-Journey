@@ -1,0 +1,101 @@
+{
+  "artifact": "v470_THOS_v2_x2_template_validation_schema_v1",
+  "phase": "v470_THOS_v2_x2",
+  "classification": "evidence",
+  "target_artifacts": [
+    "v470-thos-v2-x1-command-surface-registry-template-v1",
+    "v470-thos-v2-x1-plugin-mcp-skill-boundary-card-template-v1",
+    "v470-thos-v2-x1-cleanup-candidate-manifest-template-v1",
+    "v470-thos-v2-x1-retention-source-authority-ladder-v1",
+    "v470-thos-v2-x1-connector-write-approval-packet-v1",
+    "v470-thos-v2-x1-dirty-worktree-triage-cookbook-v1",
+    "v470-thos-v2-x1-advisory-lane-receipt-template-v1"
+  ],
+  "schema_intent": "define local shape validators for THOS templates without claiming runtime execution or physics validation",
+  "validator_contract": {
+    "schema_version": "v470_THOS_v2_x2",
+    "required_top_level_fields": [
+      "artifact",
+      "phase",
+      "classification",
+      "template_or_checks",
+      "claim_ceiling",
+      "gmut_gate_effect"
+    ],
+    "allowed_template_type": [
+      "command_surface_registry",
+      "plugin_mcp_skill_boundary_card",
+      "cleanup_candidate_manifest",
+      "retention_source_authority_ladder",
+      "connector_write_approval_packet",
+      "dirty_worktree_triage_cookbook",
+      "advisory_lane_receipt",
+      "THOS_check_result",
+      "fixture_catalog"
+    ],
+    "allowed_check_status": [
+      "PASS_SHAPE_ONLY",
+      "FAIL_BLOCKER",
+      "OPEN_GAP",
+      "NOT_RUN"
+    ],
+    "forbidden_check_status": [
+      "PASS",
+      "VALIDATED",
+      "EXECUTED",
+      "CLEANED",
+      "PUSHED",
+      "MUTATED",
+      "GMUT_VALIDATED",
+      "GATE_CLOSED"
+    ],
+    "mutation_level": [
+      "read_only",
+      "local_write",
+      "git_mutation",
+      "external_mutation",
+      "destructive",
+      "unknown"
+    ],
+    "approval_policy": [
+      "none_for_read_only",
+      "explicit_required",
+      "blocked_in_advisory"
+    ],
+    "retention_class": [
+      "durable",
+      "publishable_summary",
+      "private_review",
+      "quarantine",
+      "do_not_publish_raw",
+      "delete_with_separate_approval_only"
+    ],
+    "source_authority": [
+      "official_primary",
+      "local_tracked_artifact",
+      "tool_output",
+      "advisory_only",
+      "journey_context_not_canon",
+      "open_gap"
+    ],
+    "gmut_gate_effect_required": "none_open_not_tested"
+  },
+  "global_invariants": [
+    "Generic PASS is forbidden; use PASS_SHAPE_ONLY for shape conformance.",
+    "Advisory lanes cannot claim execution, cleanup, publication, connector writes, or external mutation.",
+    "All write-capable, external, destructive, and git mutation surfaces require explicit separate approval.",
+    "Raw logs, session JSONL, screenshots, and credential-bearing material are not publishable current-phase artifacts.",
+    "Journey and Solas material can be journey_context_not_canon only.",
+    "THOS validation cannot close or advance any GMUT gate."
+  ],
+  "gmut_gate_status_carried": {
+    "null_recovery": "open_gap",
+    "dimensional_si_consistency": "open_gap",
+    "conservation_or_exchange_law": "open_gap",
+    "baseline_recovery": "open_gap",
+    "fifth_force_equivalence_constraints": "open_gap",
+    "consciousness_measurement_bridge": "open_gap"
+  },
+  "gmut_gate_effect": "none_open_not_tested",
+  "claim_ceiling": "validator_schema_only"
+}
