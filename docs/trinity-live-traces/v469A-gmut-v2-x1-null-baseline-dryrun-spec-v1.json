@@ -1,0 +1,41 @@
+{
+  "artifact": "v469A_GMUT_v2_x1_null_baseline_dryrun_spec_v1",
+  "phase": "v469A_GMUT_v2_x1",
+  "classification": "open_gap",
+  "status": "dryrun_spec_only_not_executed",
+  "null_switch_spec": {
+    "switches": [
+      "Psi -> constant_or_zero",
+      "nabla_mu Psi -> 0",
+      "V(Psi) -> declared_null_value_only_after_potential_rule",
+      "scalar_matter_coupling -> absent",
+      "B_Psi -> absent_quarantined"
+    ],
+    "expected_recovery_target": "Einstein equation with declared Lambda and ordinary matter terms only",
+    "expected_current_result": "blocked_before_execution"
+  },
+  "baseline_ladder_spec": [
+    {
+      "rung": "GR_vacuum_or_matter_baseline",
+      "prerequisite": "null_switch_dry_pass",
+      "status": "not_run"
+    },
+    {
+      "rung": "Lambda_retained_baseline",
+      "prerequisite": "declare Lambda role and units",
+      "status": "not_run"
+    },
+    {
+      "rung": "cosmology_baseline_if_claimed",
+      "prerequisite": "declare FLRW assumptions and parameter set",
+      "status": "not_run"
+    }
+  ],
+  "blocked_execution_reasons": [
+    "V(Psi) null value is undefined.",
+    "Psi units are undefined.",
+    "T_Psi_mu_nu has not been derived.",
+    "Conservation/exchange law remains held.",
+    "No fixture code should be treated as proof before these assumptions close."
+  ]
+}
