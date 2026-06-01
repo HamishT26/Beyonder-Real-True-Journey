@@ -1,0 +1,65 @@
+{
+  "artifact": "v468A_THOS_v3_x1_approval_boundary_ledger_v1",
+  "phase": "v468A_THOS_v3_x1",
+  "prepared_nz": "2026-06-01T23:25:56.9349955+12:00",
+  "approval_boundaries": [
+    {
+      "action": "repo_current_phase_artifact_write",
+      "classification": "evidence",
+      "status": "allowed_with_curated_validation",
+      "required_controls": [
+        "exact file list",
+        "JSON parse",
+        "safety guard",
+        "whitespace check",
+        "staged diff review",
+        "remote equality verification"
+      ]
+    },
+    {
+      "action": "github_push_to_shared_omega_line",
+      "classification": "evidence",
+      "status": "allowed_after_fetch_drift_check",
+      "required_controls": [
+        "forward-only state",
+        "explicit destination",
+        "remote equals local after push"
+      ]
+    },
+    {
+      "action": "google_drive_mirror",
+      "classification": "blocker",
+      "status": "blocked_without_separate_connector_mutation_approval",
+      "required_controls": [
+        "source artifact list",
+        "target folder decision",
+        "connector mutation approval",
+        "returned metadata receipt"
+      ]
+    },
+    {
+      "action": "alpha_cleanup_or_deletion",
+      "classification": "blocker",
+      "status": "blocked_without_separate_cleanup_approval",
+      "required_controls": [
+        "resolved absolute target list",
+        "backup or quarantine route",
+        "dry-run manifest",
+        "explicit user approval"
+      ]
+    },
+    {
+      "action": "gm_ut_gate_closure",
+      "classification": "open_gap",
+      "status": "blocked",
+      "required_controls": [
+        "null recovery artifact",
+        "dimensional and SI artifact",
+        "conservation or exchange artifact",
+        "baseline recovery artifact",
+        "fifth-force and equivalence artifact",
+        "consciousness proxy artifact"
+      ]
+    }
+  ]
+}

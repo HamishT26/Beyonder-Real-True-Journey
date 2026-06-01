@@ -1,0 +1,50 @@
+{
+  "artifact": "v468A_THOS_v3_x1_execution_readiness_ledger_v1",
+  "phase": "v468A_THOS_v3_x1",
+  "prepared_nz": "2026-06-01T23:25:56.9349955+12:00",
+  "readiness_rows": [
+    {
+      "area": "phase_manifest_fixture",
+      "classification": "evidence",
+      "current_state": "v2 x2 established a minimal fixture route.",
+      "gap": "The fixture is not yet enforced by schema validation in the repo workflow.",
+      "acceptance_for_v3_x2": "Add or identify a dry-run validator that can reject missing phase id, head, drift, artifact list, and blocked-action fields."
+    },
+    {
+      "area": "live_write_gate",
+      "classification": "blocker",
+      "current_state": "Live writes are described but not yet governed by a reusable gate file.",
+      "gap": "Connector mutation, cleanup, and broad materialization need separate approval records.",
+      "acceptance_for_v3_x2": "Publish a gate table that maps action class to approval status, permitted paths, and disallowed outcomes."
+    },
+    {
+      "area": "surface_inventory",
+      "classification": "open_gap",
+      "current_state": "Skills and command surfaces are locally visible, but not yet normalized into a current inventory.",
+      "gap": "The project lacks a compact current-state inventory that distinguishes verified local surfaces from requested but unavailable surfaces.",
+      "acceptance_for_v3_x2": "Create a minimal inventory card set for repo scripts, local skills, GitHub publication, Drive mirror planning, and app/CLI sibling lanes."
+    },
+    {
+      "area": "powershell_cookbook",
+      "classification": "advisory",
+      "current_state": "PowerShell commands are used successfully for validation and publication.",
+      "gap": "The commands are not yet represented as reusable safe recipes with literal-path and no-destructive constraints.",
+      "acceptance_for_v3_x2": "Publish a cookbook card set for live head check, JSON parse, safety guard, whitespace check, exact staging, and remote equality."
+    },
+    {
+      "area": "drive_mirror_gate",
+      "classification": "blocker",
+      "current_state": "Drive mirroring is requested by the user but not executed.",
+      "gap": "No explicit connector-mutation approval artifact and no returned Drive metadata receipt exist.",
+      "acceptance_for_v3_x2": "Keep Drive mirror as planned-only unless separate approval and connector receipt exist."
+    },
+    {
+      "area": "sibling_lane_retry",
+      "classification": "context",
+      "current_state": "Existing app lanes were messaged for this phase; CLI lanes remain constrained by prior usage limit.",
+      "gap": "App lanes may complete without exposed final text; CLI lanes should not be retried before the known reset window.",
+      "acceptance_for_v3_x2": "Record exact lane status and avoid advisory fabrication."
+    }
+  ],
+  "overall_readiness": "template_ready_but_execution_not_live"
+}
