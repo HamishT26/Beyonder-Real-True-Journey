@@ -1,0 +1,145 @@
+{
+  "artifact_id": "v467A_GMUT_v6_x2_evidence_contract_schema_v1",
+  "phase": "v467A_GMUT_v6_x2",
+  "prepared_at_nz": "2026-06-01T21:59:44+12:00",
+  "claim_taxonomy": "advisory",
+  "schema_status": "DESIGN_ONLY_NOT_EXECUTED",
+  "contract_status_enum": [
+    "blocked",
+    "schema_ready_only",
+    "exact_inputs_bound_no_execution"
+  ],
+  "literal_input_row_required": [
+    "row_id",
+    "gmut_key",
+    "row_family",
+    "claim_class",
+    "source_anchor_ref",
+    "affected_expression_refs",
+    "provenance_entity_id",
+    "provenance_activity_id",
+    "provenance_agent_id",
+    "presence_state",
+    "comparison_type",
+    "unit_system",
+    "dimension_status",
+    "execution_status:not_run",
+    "result_status:no_result"
+  ],
+  "derived_lint_report_required": [
+    "lint_report_id",
+    "literal_row_id",
+    "lint_rule_id",
+    "lint_status",
+    "reason_code",
+    "claim_ceiling",
+    "blocked_fields",
+    "non_implications"
+  ],
+  "presence_state_enum": [
+    "present_supported",
+    "present_symbolic",
+    "present_quarantined",
+    "present_unsupported",
+    "absent_expected",
+    "absent_permitted",
+    "null_declared",
+    "null_derived",
+    "not_comparable",
+    "withheld_conflict"
+  ],
+  "null_semantics_enum": [
+    "zero_measured",
+    "zero_modeled",
+    "zero_assumed",
+    "no_signal_detected",
+    "not_applicable",
+    "not_evaluated"
+  ],
+  "comparison_type_enum": [
+    "scalar",
+    "vector",
+    "tensor",
+    "operator",
+    "symbolic_identity",
+    "interval",
+    "distribution",
+    "bounded_empirical",
+    "null_test",
+    "residual",
+    "not_comparable"
+  ],
+  "unit_system_enum": [
+    "natural_units",
+    "SI",
+    "mixed_declared",
+    "unset_blocker"
+  ],
+  "dimension_status_enum": [
+    "declared_only",
+    "missing_dependency",
+    "blocked",
+    "not_checked"
+  ],
+  "witness_bundle_tiers": [
+    "W0_placeholder_not_claimable",
+    "W1_extracted_unsupported",
+    "W2_single_source_supported",
+    "W3_cross_source_consistent_same_conditions",
+    "WQ_quarantined",
+    "WS_symbolic_only"
+  ],
+  "forbidden_inference_fields": [
+    "observed_result",
+    "matches_expected",
+    "recovered",
+    "validated",
+    "gate_closed",
+    "fixture_executed",
+    "pass_hygiene_only",
+    "safe",
+    "compatible",
+    "proven",
+    "canon_promoted"
+  ],
+  "lint_rules": [
+    {
+      "rule_id": "LIT_001_REQUIRED_SOURCE_ANCHOR",
+      "fatal": true,
+      "blocks": "evidence_voice"
+    },
+    {
+      "rule_id": "LIT_002_REQUIRED_AFFECTED_EXPRESSIONS",
+      "fatal": true,
+      "blocks": "comparison"
+    },
+    {
+      "rule_id": "LIT_003_FORBIDDEN_RESULT_FIELD",
+      "fatal": true,
+      "blocks": "publication"
+    },
+    {
+      "rule_id": "LIT_004_B_PSI_QUARANTINE",
+      "fatal": true,
+      "blocks": "promotion"
+    },
+    {
+      "rule_id": "LIT_005_V_PSI_SYMBOLIC_HOLD",
+      "fatal": true,
+      "blocks": "EOM_or_conservation_claim"
+    },
+    {
+      "rule_id": "LIT_006_GATE_CARRY_OPEN",
+      "fatal": true,
+      "blocks": "any_gate_closure_language"
+    }
+  ],
+  "gate_carry": {
+    "null_recovery": "OPEN_NOT_TESTED",
+    "dimensional_SI_consistency": "OPEN_NOT_TESTED",
+    "conservation_or_exchange_law": "OPEN_NOT_TESTED",
+    "baseline_recovery": "OPEN_NOT_TESTED",
+    "fifth_force_equivalence_constraints": "OPEN_NOT_TESTED",
+    "consciousness_measurement_bridge": "OPEN_NOT_TESTED"
+  }
+}
