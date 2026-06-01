@@ -1,0 +1,79 @@
+{
+  "artifact": "v469A_GMUT_v4_x1_adm_boundary_fixture_requirements_v1",
+  "phase": "v469A_GMUT_v4_x1",
+  "classification": "open_gap",
+  "measure_conversion_requirement": "sqrt(-g) d4x = N sqrt(h) dt d3x",
+  "claim_ceiling": "This is a requirement ledger. It does not validate the reformulation.",
+  "boundary_requirements": [
+    "State which data are fixed on initial and final time slices.",
+    "State which data are fixed on the spatial boundary.",
+    "State falloff requirements for metric perturbations, Psi minus background, and first derivatives.",
+    "Acknowledge corner terms when time slices meet spatial boundaries non-smoothly.",
+    "Track generalized boundary completion for F(Psi)R or broader nonminimal structures.",
+    "Keep B_Psi separate from observable mapping or weak-field reduction until boundary equivalence is shown."
+  ],
+  "fixture_inventory": [
+    "fixture_action_4d_master",
+    "fixture_measure_identity",
+    "fixture_adm_bulk_boundary_split",
+    "fixture_nonminimal_boundary_case",
+    "fixture_minimal_control_case",
+    "fixture_weak_field_symbolic",
+    "fixture_eotvos_placeholder",
+    "fixture_inverse_square_placeholder",
+    "fixture_gate_language"
+  ],
+  "weak_field_ansatz_requirements": [
+    "Do not overload scalar Psi with a metric potential.",
+    "Use distinct metric potentials such as Phi_g and Psi_g if needed.",
+    "State the background and whether Psi_bar is constant.",
+    "State perturbative ordering only if intended.",
+    "State static, quasistatic, or time-dependent regime.",
+    "Keep V(Psi) symbolic.",
+    "Introduce effective range only as a future placeholder derived from V''(Psi_bar), not as a result."
+  ],
+  "observable_placeholders": [
+    {
+      "id": "eotvos_placeholder",
+      "form": "eta_AB(source) = Placeholder_E[source, background, composition, couplings]",
+      "ceiling": "No sign, size, exclusion strength, or safety claim."
+    },
+    {
+      "id": "inverse_square_placeholder",
+      "form": "U_AB(r) = -(G_N m_A m_B / r) [1 + Placeholder_Y_AB(r)]",
+      "ceiling": "No Yukawa parameter, bound comparison, or exclusion claim until downstream derivation exists."
+    }
+  ],
+  "risk_ledger": [
+    {
+      "risk": "algebraic_equivalence",
+      "severity": "high",
+      "reason": "ADM rewrite can drop total derivatives or absorb B_Psi."
+    },
+    {
+      "risk": "variational_closure",
+      "severity": "high",
+      "reason": "F(Psi)R or broader nonminimal couplings may require generalized boundary terms."
+    },
+    {
+      "risk": "notation_collision",
+      "severity": "high",
+      "reason": "Scalar Psi may be confused with a weak-field metric potential."
+    },
+    {
+      "risk": "placeholder_ossification",
+      "severity": "medium",
+      "reason": "Eotvos or inverse-square placeholders can harden into implied predictions."
+    },
+    {
+      "risk": "fixture_incompleteness",
+      "severity": "medium",
+      "reason": "Minimal cases alone do not test nonminimal boundary behavior."
+    },
+    {
+      "risk": "gate_language_drift",
+      "severity": "medium",
+      "reason": "Text can sound like equivalence, validation, or phenomenology is established."
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "artifact": "v469A_GMUT_v4_x1_coordinate_prefactor_cards_v1",
+  "phase": "v469A_GMUT_v4_x1",
+  "classification": "open_gap",
+  "route_status": "Route A convention hardening only",
+  "coordinate_volume_card": {
+    "status": "HOLD_OPEN_GAP",
+    "candidate_a": {
+      "label": "length_normalized_coordinate",
+      "coordinate": "x0 = c t",
+      "measure": "d4x_length = dx0 d3x = c dt d3x",
+      "prefactor_route": "c3/G with dx0 d3x can map to c4/G with dt d3x only through explicit measure conversion"
+    },
+    "candidate_b": {
+      "label": "time_coordinate",
+      "coordinate": "x0 = t",
+      "measure": "dt d3x",
+      "prefactor_route": "requires separate metric determinant and component-unit policy before any prefactor claim"
+    },
+    "required_decisions": [
+      "Declare base coordinate convention.",
+      "Declare whether sqrt(-g) is dimensionless or carries coordinate-unit bookkeeping.",
+      "Declare derivative basis: partial_0 versus partial_t.",
+      "Declare line-element convention and temporal metric component c-factors.",
+      "Declare whether matter and scalar actions use the identical measure."
+    ],
+    "failure_conditions": [
+      "Mixing x0=t and x0=ct without a Jacobian row.",
+      "Using c4/G with length-normalized d4x without the measure conversion.",
+      "Claiming covariant proof from dt d3x bookkeeping.",
+      "Claiming dimensional closure before scalar density and stress-energy rows exist."
+    ]
+  },
+  "prefactor_source_card": {
+    "status": "HOLD_OPEN_GAP",
+    "candidate_rows": [
+      {
+        "row": "length_volume_prefactor",
+        "measure": "dx0 d3x",
+        "candidate_prefactor": "c3/(16*pi*G)",
+        "claim_ceiling": "standard-style reference route only; not GMUT validation"
+      },
+      {
+        "row": "time_volume_prefactor",
+        "measure": "dt d3x after dx0 = c dt",
+        "candidate_prefactor": "c4/(16*pi*G)",
+        "claim_ceiling": "bookkeeping route only; not scalar dynamics"
+      }
+    ],
+    "required_si_rows": [
+      "G dimensions",
+      "c dimensions",
+      "R dimensions",
+      "measure dimensions",
+      "sqrt(-g) dimension policy",
+      "action target dimension",
+      "scalar density dimensions",
+      "stress-energy dimensions"
+    ],
+    "source_ceiling": "NIST and BIPM anchor SI and constants only. Research sources route boundary and constraint context only."
+  },
+  "gate_effect": {
+    "null_recovery": "open_gap",
+    "dimensional_si_consistency": "open_gap",
+    "conservation_or_exchange_law": "open_gap",
+    "baseline_recovery": "open_gap",
+    "fifth_force_equivalence_constraints": "open_gap",
+    "consciousness_measurement_bridge": "open_gap"
+  }
+}
