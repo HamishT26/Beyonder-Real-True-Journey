@@ -1,0 +1,88 @@
+{
+  "artifact": "v470_THOS_v1_x1_workflow_checks_v1",
+  "phase": "v470_THOS_v1_x1",
+  "classification": "evidence",
+  "checks": [
+    {
+      "check_id": "THOS-CHK-001",
+      "name": "no_gmut_validation_import",
+      "predicate": "THOS artifacts must not claim or imply that GMUT gates are closed by operational scaffolding.",
+      "failure_class": "blocked_claim"
+    },
+    {
+      "check_id": "THOS-CHK-002",
+      "name": "advisory_lane_only",
+      "predicate": "Cicero, Kierkegaard, Aristotle, Arby, and Aster Vale outputs remain advisory unless curated by Aletheon.",
+      "failure_class": "authority_overreach"
+    },
+    {
+      "check_id": "THOS-CHK-003",
+      "name": "non_ephemeral_cli_policy",
+      "predicate": "Arby and Aster Vale must remain non-ephemeral and read-only unless explicitly changed by Hamish.",
+      "failure_class": "lane_policy_violation"
+    },
+    {
+      "check_id": "THOS-CHK-004",
+      "name": "curated_stage_only",
+      "predicate": "Only current-phase curated files may be staged for publication.",
+      "failure_class": "publication_guard"
+    },
+    {
+      "check_id": "THOS-CHK-005",
+      "name": "no_raw_session_material",
+      "predicate": "Raw logs, session JSONL, screenshots, and credential-bearing material must not be staged.",
+      "failure_class": "publication_guard"
+    },
+    {
+      "check_id": "THOS-CHK-006",
+      "name": "destructive_requires_approval",
+      "predicate": "Deletion, recursive cleanup, worktree removal, reset, rebase, and purge actions require separate explicit approval.",
+      "failure_class": "blocked_action"
+    },
+    {
+      "check_id": "THOS-CHK-007",
+      "name": "connector_write_requires_approval",
+      "predicate": "GitHub, Drive, automation, browser form, account, database, or cloud mutation requires separate scoped approval.",
+      "failure_class": "external_mutation_guard"
+    },
+    {
+      "check_id": "THOS-CHK-008",
+      "name": "cleanup_proposal_not_action",
+      "predicate": "A cleanup manifest is a proposal unless action approval and rollback plan are present.",
+      "failure_class": "cleanup_overreach"
+    },
+    {
+      "check_id": "THOS-CHK-009",
+      "name": "source_authority_tag_required",
+      "predicate": "Each claim must carry evidence, context, hypothesis, blocker, advisory, open_gap, or journey_context_not_canon.",
+      "failure_class": "claim_taxonomy_gap"
+    },
+    {
+      "check_id": "THOS-CHK-010",
+      "name": "journey_context_not_canon",
+      "predicate": "Journey and Solas material may not validate GMUT or promote canon by assertion.",
+      "failure_class": "canon_overclaim"
+    },
+    {
+      "check_id": "THOS-CHK-011",
+      "name": "dry_run_not_execution",
+      "predicate": "Dry-run reports must not be described as live execution or cleanup completion.",
+      "failure_class": "execution_overclaim"
+    },
+    {
+      "check_id": "THOS-CHK-012",
+      "name": "remote_equals_local_after_publish",
+      "predicate": "Every shared commit must verify remote equals local after push.",
+      "failure_class": "publication_guard"
+    }
+  ],
+  "derived_from_v469A": [
+    "forbidden result fields",
+    "source anchors required",
+    "gate carry open",
+    "dry-run versus live execution split",
+    "no canon promotion",
+    "no scaffold as proof"
+  ],
+  "next_phase_use": "v470_THOS_v1_x2 should run these checks over the current artifact set and report pass/fail/open_gap."
+}

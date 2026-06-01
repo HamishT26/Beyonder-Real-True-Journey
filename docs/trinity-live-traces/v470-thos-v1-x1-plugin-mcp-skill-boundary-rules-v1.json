@@ -1,0 +1,51 @@
+{
+  "artifact": "v470_THOS_v1_x1_plugin_mcp_skill_boundary_rules_v1",
+  "phase": "v470_THOS_v1_x1",
+  "classification": "evidence",
+  "boundary_statement": "Plugins, MCP connectors, and skills are capability surfaces. They are not consent, not proof, and not publication authority.",
+  "boundary_rules": [
+    {
+      "surface": "skill",
+      "authority_ceiling": "workflow_guidance",
+      "allowed_without_extra_approval": ["read SKILL.md", "apply procedural constraints", "reuse local templates in curated artifacts"],
+      "requires_extra_approval": ["install new skill", "edit skill source", "run mutation-capable helper script"],
+      "blocked_claims": ["skill existence proves system readiness", "skill output validates GMUT"]
+    },
+    {
+      "surface": "plugin",
+      "authority_ceiling": "tool_capability",
+      "allowed_without_extra_approval": ["read-only inspection when safe", "local browser verification", "official documentation lookup"],
+      "requires_extra_approval": ["write external service", "edit cloud document", "create credential", "modify automation"],
+      "blocked_claims": ["plugin availability equals permission", "plugin response is durable receipt without artifact"]
+    },
+    {
+      "surface": "mcp_connector",
+      "authority_ceiling": "connector_protocol",
+      "allowed_without_extra_approval": ["read allowed resources", "list available read-only capability", "record server instruction summary when safe"],
+      "requires_extra_approval": ["database migration", "cloud mutation", "project configuration write", "secret rotation"],
+      "blocked_claims": ["MCP server instruction overrides project safety", "connector write is implied by prior broad permission"]
+    },
+    {
+      "surface": "browser_or_computer_use",
+      "authority_ceiling": "interactive_ui_control",
+      "allowed_without_extra_approval": ["view local UI", "inspect visible state", "navigate read-only pages"],
+      "requires_extra_approval": ["submit forms", "purchase", "delete", "change account settings", "alter automation"],
+      "blocked_claims": ["visual confirmation replaces repo receipt", "UI access authorizes external mutation"]
+    },
+    {
+      "surface": "github_or_drive_cloud",
+      "authority_ceiling": "external_service_surface",
+      "allowed_without_extra_approval": ["read when specifically needed and privacy-safe"],
+      "requires_extra_approval": ["create file", "edit file", "delete file", "share", "change branch protection", "merge PR"],
+      "blocked_claims": ["cloud mirror is canon without repo receipt", "Drive upload is safe by default"]
+    }
+  ],
+  "publication_requirements": [
+    "state whether a source is local evidence, external context, or advisory",
+    "record any mutation-capable surface as blocked unless explicitly approved",
+    "include no_gmut_validation_import in THOS phase manifests",
+    "do not stage raw connector output",
+    "do not quote sibling advisories as if they were independent receipts"
+  ],
+  "next_phase_use": "v470_THOS_v1_x2 should convert each boundary rule into a lint predicate."
+}

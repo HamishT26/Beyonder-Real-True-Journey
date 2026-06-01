@@ -1,0 +1,59 @@
+{
+  "artifact": "v470_THOS_v1_x1_artifact_retention_map_v1",
+  "phase": "v470_THOS_v1_x1",
+  "classification": "evidence",
+  "retention_classes": [
+    {
+      "class": "durable_phase_artifact",
+      "keep": true,
+      "publishable": true,
+      "examples": ["run status", "surface inventory", "workflow checks", "handoff roadmap"],
+      "requirements": ["phase id", "classification", "source authority", "no credentials"]
+    },
+    {
+      "class": "schema_contract",
+      "keep": true,
+      "publishable": true,
+      "examples": ["command surface schema", "cleanup candidate schema", "lint predicate schema"],
+      "requirements": ["version", "required fields", "failure mode", "approval boundary"]
+    },
+    {
+      "class": "advisory_summary",
+      "keep": true,
+      "publishable": true,
+      "examples": ["sanitized sibling receipts", "advisory consensus", "blocked lane status"],
+      "requirements": ["lane name", "advisory_only label", "curated summary", "no raw transcript"]
+    },
+    {
+      "class": "private_or_quarantine_candidate",
+      "keep": false,
+      "publishable": false,
+      "examples": ["raw logs", "session JSONL", "screenshots", "credential-bearing files", "unreviewed external dumps"],
+      "requirements": ["do not stage", "record only sanitized summary if needed"]
+    },
+    {
+      "class": "cleanup_candidate",
+      "keep": "pending_review",
+      "publishable": "manifest_only",
+      "examples": ["duplicate scratch file", "generated cache", "stale derived artifact"],
+      "requirements": ["target", "reason", "owner", "retention class", "approval status", "rollback plan"]
+    },
+    {
+      "class": "journey_context_not_canon",
+      "keep": "citation_only_when_used",
+      "publishable": "short_cited_context_only",
+      "examples": ["Journey terminology", "Solas proposal context"],
+      "requirements": ["local path", "line reference", "no physics validation claim"]
+    }
+  ],
+  "publication_exclusions": [
+    "raw logs",
+    "session JSONL",
+    "screenshots",
+    "credential-bearing material",
+    "unreviewed cloud exports",
+    "uncurated sibling transcripts"
+  ],
+  "retention_rule": "Aletheon publishes durable current-phase summaries, not raw operational exhaust.",
+  "next_phase_use": "v470_THOS_v1_x2 should add manifest validation for required retention fields."
+}

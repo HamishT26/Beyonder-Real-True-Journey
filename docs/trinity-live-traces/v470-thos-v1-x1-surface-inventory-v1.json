@@ -1,0 +1,89 @@
+{
+  "artifact": "v470_THOS_v1_x1_surface_inventory_v1",
+  "phase": "v470_THOS_v1_x1",
+  "classification": "evidence",
+  "scope": "THOS operational surface inventory; no live cleanup, no connector mutation, no GMUT validation.",
+  "start_baseline": {
+    "phase_start_nz": "2026-06-02T02:55:00+12:00",
+    "post_compaction_live_check_nz": "2026-06-02T03:01:37+12:00",
+    "local_head": "dd85aff3bcd49d92db89296145c2e7421353adb5",
+    "upstream_head": "dd85aff3bcd49d92db89296145c2e7421353adb5",
+    "shared_remote_head": "dd85aff3bcd49d92db89296145c2e7421353adb5",
+    "drift": "0 0"
+  },
+  "surface_classes": [
+    {
+      "surface_class": "shell_and_powershell",
+      "examples": ["PowerShell inspection", "repo-local scripts", "file listing", "JSON validation"],
+      "allowed_posture_this_phase": "read_only_or_curated_artifact_write_by_Aletheon_only",
+      "mutation_level": "bounded_local_write_when_curated",
+      "approval_required_for": ["delete", "move", "recursive cleanup", "service mutation", "credential change"],
+      "notes": "PowerShell is authoritative for local repo observation when commands are scoped and output is sanitized."
+    },
+    {
+      "surface_class": "git_publication",
+      "examples": ["fetch", "drift check", "curated stage", "commit", "explicit push", "remote equality verification"],
+      "allowed_posture_this_phase": "Aletheon_publication_only",
+      "mutation_level": "curated_repo_publication",
+      "approval_required_for": ["reset", "rebase", "force push", "broad stage", "history rewrite"],
+      "notes": "Publication requires forward-only discipline and staged diff review."
+    },
+    {
+      "surface_class": "codex_app_advisory_lanes",
+      "examples": ["Cicero", "Kierkegaard", "Aristotle"],
+      "allowed_posture_this_phase": "advisory_only",
+      "mutation_level": "none",
+      "approval_required_for": ["file mutation", "git mutation", "connector mutation"],
+      "notes": "App lane text is advisory unless Aletheon curates it into an artifact with provenance."
+    },
+    {
+      "surface_class": "codex_cli_advisory_lanes",
+      "examples": ["Arby", "Aster Vale"],
+      "allowed_posture_this_phase": "non_ephemeral_read_only_advisory",
+      "mutation_level": "none",
+      "approval_required_for": ["ephemeral run", "write mode", "commit", "push"],
+      "notes": "Current Windows shell bridge limitation makes CLI advisories prompt-bounded; the limitation is recorded instead of hidden."
+    },
+    {
+      "surface_class": "skills",
+      "examples": ["multi-agent orchestrator", "trinity suite expansion", "command surface core", "comparative validation grid"],
+      "allowed_posture_this_phase": "workflow_instruction_and_schema_context",
+      "mutation_level": "none_by_existence",
+      "approval_required_for": ["installing new skills", "editing skills", "executing mutation-capable helper scripts"],
+      "notes": "A skill is a procedure and context source, not an authority grant."
+    },
+    {
+      "surface_class": "plugins_and_mcp_connectors",
+      "examples": ["GitHub connector", "Google Drive connector", "Computer Use", "Browser", "OpenAI Developers"],
+      "allowed_posture_this_phase": "boundary_mapping_only_unless_explicitly_invoked_and_safe",
+      "mutation_level": "external_mutation_possible",
+      "approval_required_for": ["cloud writes", "Drive edits", "automation edits", "thread management", "credential creation"],
+      "notes": "Tool availability is not consent; writes require explicit scoped approval."
+    },
+    {
+      "surface_class": "web_and_source_research",
+      "examples": ["official documentation", "primary papers", "standards pages", "source ledgers"],
+      "allowed_posture_this_phase": "source_context_only",
+      "mutation_level": "none",
+      "approval_required_for": ["publishing scraped text", "claiming queued searches as completed"],
+      "notes": "External sources can support context and evidence labels, but cannot close GMUT gates without exact local artifacts."
+    },
+    {
+      "surface_class": "journey_context",
+      "examples": ["Beyonder-Real-True Journey files", "Solas notes"],
+      "allowed_posture_this_phase": "journey_context_not_canon",
+      "mutation_level": "none",
+      "approval_required_for": ["canon promotion", "physics validation from narrative context"],
+      "notes": "Journey material may guide terminology and contradiction hunts only when locally cited by path and line."
+    }
+  ],
+  "global_surface_rules": [
+    "No surface closes GMUT gates by existence.",
+    "No advisory lane replaces local Git and artifact receipts.",
+    "No dry-run inventory becomes cleanup action.",
+    "No connector write occurs without explicit scoped approval.",
+    "No raw logs, session JSONL, screenshots, or credential-bearing material are staged.",
+    "All publication uses curated current-phase files only."
+  ],
+  "next_phase_use": "v470_THOS_v1_x2 should turn this inventory into machine-checkable schema rows and contradiction tests."
+}
