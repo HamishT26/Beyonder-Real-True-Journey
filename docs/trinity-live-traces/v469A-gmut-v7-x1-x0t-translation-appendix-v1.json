@@ -1,0 +1,55 @@
+{
+  "artifact": "v469A_GMUT_v7_x1_x0t_translation_appendix_v1",
+  "phase": "v469A_GMUT_v7_x1",
+  "classification": "advisory",
+  "purpose": "Draft x0=t as a translation appendix only, with c relocation requirements.",
+  "branch_policy": {
+    "rehearsal_branch": "x0=ct",
+    "appendix_branch": "x0=t",
+    "appendix_status": "translation_hold",
+    "not_a_parallel_proof_route": true
+  },
+  "c_relocation_table": [
+    {
+      "term_id": "coordinate",
+      "x0_ct_expression": "x0=ct",
+      "x0_t_expression": "x0=t",
+      "c_power_delta": "branch_label_only",
+      "status": "advisory"
+    },
+    {
+      "term_id": "differential",
+      "x0_ct_expression": "dx0=c dt",
+      "x0_t_expression": "dt",
+      "c_power_delta": "-1 in the coordinate differential",
+      "status": "advisory"
+    },
+    {
+      "term_id": "derivative_operator",
+      "x0_ct_expression": "partial_0=(1/c)partial_t",
+      "x0_t_expression": "partial_t",
+      "c_power_delta": "+1 in the derivative basis",
+      "status": "advisory"
+    },
+    {
+      "term_id": "temporal_kinetic_factor",
+      "x0_ct_expression": "g00 partial_0 Psi partial_0 Psi",
+      "x0_t_expression": "metric or coefficient carries explicit c placement",
+      "c_power_delta": "requires coefficient dictionary",
+      "status": "HOLD_OPEN_GAP"
+    },
+    {
+      "term_id": "measure_prefactor",
+      "x0_ct_expression": "c3_over_G dx0 d3x",
+      "x0_t_expression": "c4_over_G dt d3x",
+      "c_power_delta": "+1 in prefactor after dx0=c dt",
+      "status": "advisory_not_closure"
+    }
+  ],
+  "invalid_conditions": [
+    "treating x0=t as active rehearsal branch",
+    "mixing x0=ct and x0=t in one formula card",
+    "moving c powers without coefficient dictionary",
+    "claiming physical equivalence or validation from the appendix"
+  ]
+}

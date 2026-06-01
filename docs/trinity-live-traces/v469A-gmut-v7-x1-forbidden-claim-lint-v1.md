@@ -1,0 +1,35 @@
+# v469A GMUT v7 x1 Forbidden Claim Lint
+
+Classification: `blocker`
+
+Forbidden claims:
+
+- metric/action signs validated
+- temporal kinetic card passed
+- scalar EOM derived
+- `T_Psi` accepted
+- SI consistency closed
+- fixture passed
+- null recovered
+- baseline recovered
+- fifth-force safe
+- equivalence compatible
+- consciousness measured
+- GMUT validated
+- canon promoted
+- gate closed
+
+Allowed language:
+
+- metric signature explicit hold
+- action sign explicit hold
+- `x0=t` translation appendix drafted
+- `x0=ct` rehearsal branch preserved
+- scalar unit policy held
+- `V(Psi)` symbolic hold
+- `T_Psi` template-only
+- `B_Psi` quarantined
+- `F0/F2` criteria drafted not run
+- all six gates remain open
+
+Lint result: `phase_language_passes_with_open_gate_labels`.
