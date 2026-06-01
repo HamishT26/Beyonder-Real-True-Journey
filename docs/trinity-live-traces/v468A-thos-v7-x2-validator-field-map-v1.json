@@ -1,0 +1,41 @@
+{
+  "artifact": "v468A_THOS_v7_x2_validator_field_map_v1",
+  "phase": "v468A_THOS_v7_x2",
+  "mappings": [
+    {
+      "validator_field": "phase_id",
+      "report_field": "runs[].properties.phase",
+      "status": "direct"
+    },
+    {
+      "validator_field": "validation_chain",
+      "report_field": "runs[].results[].message.text",
+      "status": "summarized"
+    },
+    {
+      "validator_field": "blocked_actions",
+      "report_field": "runs[].results[] with warning level",
+      "status": "summarized"
+    },
+    {
+      "validator_field": "thos_gmut_boundary",
+      "report_field": "runs[].properties.thosBoundary and gmutGates",
+      "status": "direct"
+    },
+    {
+      "validator_field": "forbidden_claim_patterns",
+      "report_field": "future error-level result",
+      "status": "future_route"
+    },
+    {
+      "validator_field": "artifact_path_checks",
+      "report_field": "future location object",
+      "status": "future_route"
+    }
+  ],
+  "parity_gap": [
+    "The report does not replace validator execution.",
+    "The report does not prove artifact existence unless produced from a live validator run.",
+    "The report does not upload to GitHub code scanning."
+  ]
+}
