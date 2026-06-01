@@ -1,0 +1,31 @@
+{
+  "phase": "v468A_THOS_v2_x1",
+  "artifact": "phase_manifest_schema",
+  "prepared_nz": "2026-06-01T23:16:00+12:00",
+  "baseline_commit": "4cf261d22c9b4a8ef60b7aa6e7f68bf3d525977e",
+  "schema_name": "thos_phase_manifest_v1",
+  "required_fields": {
+    "phase": "string matching v[0-9]+A_THOS_v[0-9]+_x[12]",
+    "domain": "THOS",
+    "x_pass": "x1 or x2",
+    "start_nz": "ISO-8601 Pacific/Auckland timestamp",
+    "baseline_commit": "40-character git commit hash",
+    "claim_locks": "object carrying inherited GMUT and Journey boundaries",
+    "mutation_class": "none, repo_curated_write, tempdir_write, connector_write, live_system_change, or destructive_change",
+    "source_class": "official_primary, repo_evidence, journey_context_not_canon, advisory, or mixed",
+    "next_phase": "string"
+  },
+  "claim_locks": {
+    "gmUT_gates": "OPEN_NOT_TESTED",
+    "B_Psi": "quarantined_or_demoted",
+    "V_Psi": "symbolic_only",
+    "journey_solas": "journey_context_not_canon"
+  },
+  "acceptance_tests": [
+    "JSON parses.",
+    "Phase string matches file name.",
+    "Mutation class is explicit.",
+    "GMUT locks are present.",
+    "No live connector or destructive action is implied by narrative wording."
+  ]
+}

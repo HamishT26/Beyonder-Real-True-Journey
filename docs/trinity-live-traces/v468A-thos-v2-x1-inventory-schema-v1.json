@@ -1,0 +1,39 @@
+{
+  "phase": "v468A_THOS_v2_x1",
+  "artifact": "inventory_schema",
+  "prepared_nz": "2026-06-01T23:16:00+12:00",
+  "schema_name": "thos_surface_inventory_v1",
+  "surfaces": [
+    "codex_app",
+    "codex_cli",
+    "powershell",
+    "windows_filesystem",
+    "d_drive_repo",
+    "github",
+    "google_drive",
+    "skill_registry",
+    "command_surface",
+    "api_surface",
+    "mcp_surface",
+    "plugin_surface",
+    "suite_runner",
+    "scoreboard"
+  ],
+  "required_fields": [
+    "surface_id",
+    "surface_type",
+    "auth_state",
+    "live_read_allowed",
+    "live_write_allowed",
+    "default_probe_level",
+    "known_blockers",
+    "proof_required_for_promotion",
+    "latest_safe_action"
+  ],
+  "acceptance_tests": [
+    "Every surface has an explicit live_write_allowed value.",
+    "Every connector-like surface has an auth_state.",
+    "Every command-like surface has a default probe level.",
+    "No surface can promote narrative claims without proof_required_for_promotion."
+  ]
+}
