@@ -1,0 +1,154 @@
+{
+  "artifact_id": "v470-thos-v4-x2-source-refresh-v1",
+  "phase": "v470_THOS_v4_x2",
+  "created_at_nz": "2026-06-02T14:56:12+12:00",
+  "web_search_count": 24,
+  "minimum_required_web_searches": 20,
+  "source_mode": "official_or_primary_sources_preferred",
+  "claim_ceiling": [
+    "source refresh supports THOS route design only",
+    "source refresh does not validate GMUT",
+    "source refresh does not authorize connector writes or paid deployments",
+    "source refresh does not certify the local checker"
+  ],
+  "sources": [
+    {
+      "label": "NVIDIA AI-Q Blueprint docs",
+      "url": "https://docs.nvidia.com/aiq-blueprint/latest/index.html",
+      "route": "NVIDIA research-agent skill route",
+      "use": "context for future local AI-Q backend gating"
+    },
+    {
+      "label": "NVIDIA Dynamo documentation",
+      "url": "https://docs.dynamo.nvidia.com/dynamo/getting-started/introduction",
+      "route": "NVIDIA inference/runtime route",
+      "use": "context for distributed inference, routing, observability, and no-deploy defaults"
+    },
+    {
+      "label": "NVIDIA NIM Operator documentation",
+      "url": "https://docs.nvidia.com/nim-operator/latest/index.html",
+      "route": "NVIDIA Kubernetes deployment route",
+      "use": "context for future approval-gated NIM/Kubernetes work"
+    },
+    {
+      "label": "OpenAI Running Codex safely",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "route": "Codex safety route",
+      "use": "approval, sandbox, and low-risk versus high-risk action boundary"
+    },
+    {
+      "label": "OpenAI Agents SDK guide",
+      "url": "https://platform.openai.com/docs/guides/agents-sdk/",
+      "route": "OpenAI Developers route",
+      "use": "future agent app design only; no API call in this phase"
+    },
+    {
+      "label": "OpenAI Agents SDK guardrails",
+      "url": "https://openai.github.io/openai-agents-python/guardrails/",
+      "route": "OpenAI Developers route",
+      "use": "comparator for tool guardrails and handoff limitations"
+    },
+    {
+      "label": "Google Drive sharing and permissions",
+      "url": "https://developers.google.com/workspace/drive/api/guides/manage-sharing",
+      "route": "Google Drive refusal route",
+      "use": "permission/ACL awareness before any Drive mutation"
+    },
+    {
+      "label": "Google Docs batchUpdate",
+      "url": "https://developers.google.com/workspace/docs/api/reference/rest/v1/documents/batchUpdate",
+      "route": "Documents/Drive write route",
+      "use": "write operation classification; no document mutation in this phase"
+    },
+    {
+      "label": "Google Sheets batchUpdate",
+      "url": "https://developers.google.com/workspace/sheets/api/guides/batchupdate",
+      "route": "Spreadsheets/Drive write route",
+      "use": "write operation classification; no spreadsheet mutation in this phase"
+    },
+    {
+      "label": "Google Slides batchUpdate",
+      "url": "https://developers.google.com/workspace/slides/api/reference/rest/v1/presentations/batchUpdate",
+      "route": "Presentations/Drive write route",
+      "use": "write operation classification; no presentation mutation in this phase"
+    },
+    {
+      "label": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "route": "AI governance route",
+      "use": "risk management comparator for THOS governance rows"
+    },
+    {
+      "label": "NIST Generative AI Profile",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "route": "AI governance route",
+      "use": "generative AI risk profile comparator"
+    },
+    {
+      "label": "CISA Secure by Design",
+      "url": "https://www.cisa.gov/securebydesign",
+      "route": "secure-by-design route",
+      "use": "secure-by-design comparator for THOS guardrails"
+    },
+    {
+      "label": "OWASP Top 10 for LLM Applications",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications",
+      "route": "AI security route",
+      "use": "LLM application risk comparator"
+    },
+    {
+      "label": "OWASP Agentic Skills Top 10",
+      "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+      "route": "agentic skill security route",
+      "use": "agent skill risk comparator for local skills and plugin surfaces"
+    },
+    {
+      "label": "OpenTelemetry semantic conventions",
+      "url": "https://opentelemetry.io/docs/concepts/semantic-conventions/",
+      "route": "telemetry route",
+      "use": "naming comparator for future watcher and supervisor telemetry"
+    },
+    {
+      "label": "OpenTelemetry baggage security considerations",
+      "url": "https://opentelemetry.io/docs/concepts/signals/baggage/",
+      "route": "telemetry privacy route",
+      "use": "context propagation privacy caution"
+    },
+    {
+      "label": "Kubernetes auditing",
+      "url": "https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/",
+      "route": "runtime audit route",
+      "use": "audit-event comparator for future runtime watchers"
+    },
+    {
+      "label": "Kubernetes admission controllers",
+      "url": "https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/",
+      "route": "runtime policy route",
+      "use": "validation-policy comparator for future deploy gates"
+    },
+    {
+      "label": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations",
+      "route": "GitHub provenance route",
+      "use": "future provenance route; no attestation generated in this phase"
+    },
+    {
+      "label": "GitHub SARIF code scanning",
+      "url": "https://docs.github.com/en/code-security/concepts/code-scanning/sarif-files",
+      "route": "GitHub security route",
+      "use": "future checker-output export comparator; no SARIF upload"
+    },
+    {
+      "label": "GitHub Actions secret masking",
+      "url": "https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions",
+      "route": "secret masking route",
+      "use": "log redaction comparator for future CI"
+    }
+  ],
+  "open_gaps": [
+    "No NVIDIA AI-Q backend was called; AI-Q remains future local-backend work",
+    "No Google Workspace document/sheet/slide mutation was performed",
+    "No Kubernetes or cloud deployment was performed",
+    "No GitHub attestation, SARIF upload, or secret scanning configuration was changed"
+  ]
+}
