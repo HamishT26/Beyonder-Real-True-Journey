@@ -1,0 +1,220 @@
+{
+  "aggregate_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+  "app_advisories": [
+    {
+      "lane": "Cicero",
+      "points": [
+        "separate final-message readiness from marker-review clearance",
+        "keep Aster on marker-review hold while one final marker is unresolved",
+        "publish lane/status/hash/byte/marker metadata only",
+        "raw final text, stderr, transport, visual captures, runtime records, and credential-like substrings remain blocked"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Kierkegaard",
+      "points": [
+        "waiting is the correct ethical state while privacy/provenance is unresolved",
+        "do not collapse ready into publishable",
+        "safe summaries can use hashes, bytes, marker counts, raw-output boundary, and blocker category",
+        "aggregate status stays open until reviewed clearance exists"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Aristotle",
+      "points": [
+        "use explicit marker-review state machine",
+        "Arby marker count zero can be metadata-clean",
+        "Aster marker count one requires review",
+        "raw output publication, missing refs, generic pass, or GMUT wording are blockers"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    }
+  ],
+  "completion_notice_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+  "fixtures": [
+    {
+      "case": {
+        "final_sensitive_marker_count": 0,
+        "has_hash": true,
+        "raw_output_published": false,
+        "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+      },
+      "case_id": "arby_metadata_clean_expected_pass_shape",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "final_sensitive_marker_count": 1,
+        "has_hash": true,
+        "raw_output_published": false,
+        "summary_publication_status": "BLOCK_SUMMARY"
+      },
+      "case_id": "aster_marker_expected_open_gap",
+      "expected": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "observed": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "final_sensitive_marker_count": 1,
+        "has_hash": true,
+        "raw_output_published": false,
+        "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+      },
+      "case_id": "marker_with_summary_allow_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "final_sensitive_marker_count": 0,
+        "has_hash": true,
+        "raw_output_published": true,
+        "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+      },
+      "case_id": "raw_output_published_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "final_sensitive_marker_count": 0,
+        "has_hash": false,
+        "raw_output_published": false,
+        "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+      },
+      "case_id": "missing_hash_expected_open_gap",
+      "expected": "OPEN_GAP_SOURCE_REF_MISSING",
+      "observed": "OPEN_GAP_SOURCE_REF_MISSING",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "final_sensitive_marker_count": 0,
+        "has_gmut_claim": true,
+        "has_hash": true,
+        "raw_output_published": false,
+        "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+      },
+      "case_id": "gmut_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "final_sensitive_marker_count": 0,
+        "generic_pass": true,
+        "has_hash": true,
+        "raw_output_published": false,
+        "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+      },
+      "case_id": "generic_pass_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T18:52:19+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "lane_states": [
+    {
+      "completion_status": "FINAL_MESSAGE_READY",
+      "final_message_bytes": 8280,
+      "final_message_hash": "85f6efdb3ab93d77bd0c1d59f6506d04160cc6de5fe163c895c4415a486ceffd",
+      "final_sensitive_marker_count": 0,
+      "lane": "Arby",
+      "marker_review_state": "CLEAN_METADATA_ONLY",
+      "raw_output_boundary": "temp_only_not_published",
+      "stderr_bytes_unpublished": 3656940,
+      "stderr_sensitive_marker_count_unpublished": 3217,
+      "summary_publication_status": "ALLOW_METADATA_SUMMARY"
+    },
+    {
+      "completion_status": "FINAL_MESSAGE_READY",
+      "final_message_bytes": 5464,
+      "final_message_hash": "b2f667cdb483d0b268cd2befdc02d95cf3fcf1327d8d6ac6e6efbfe9f557464d",
+      "final_sensitive_marker_count": 1,
+      "lane": "Aster Vale",
+      "marker_review_state": "REVIEW_REQUIRED",
+      "raw_output_boundary": "temp_only_not_published",
+      "stderr_bytes_unpublished": 1601978,
+      "stderr_sensitive_marker_count_unpublished": 46,
+      "summary_publication_status": "BLOCK_SUMMARY"
+    }
+  ],
+  "next_expected_phase": "v474-thos-v6-x2",
+  "phase_slug": "v474-thos-v6-x1",
+  "publication_blockers": [
+    "Aster Vale final sensitive marker count remains unresolved",
+    "raw lane text remains temp-only and unpublished",
+    "stderr marker counts remain unpublished and cannot be converted into content claims",
+    "no GMUT validation or gate movement is permitted"
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "path": "docs/trinity-live-traces/v474-thos-v5-x2-cli-lane-completion-notice-v1.json",
+        "sha256": "96467ce72cd8ced92a96c81a49feb997aa31f49e48c4af9982e8eaa85e155ea4"
+      },
+      "message": "The v5 x2 completion notice is the only source used for CLI lane metadata.",
+      "row_id": "completion_notice_source",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "missing_lanes": [],
+        "review_required_lanes": [
+          "Aster Vale"
+        ]
+      },
+      "message": "Lane marker states were classified from status/hash/byte/marker metadata only.",
+      "row_id": "lane_marker_states",
+      "status": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+    },
+    {
+      "evidence": null,
+      "message": "Raw final messages, stdout, stderr, and transport remain temp-only and unpublished.",
+      "row_id": "raw_output_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 7,
+        "mismatch_count": 0
+      },
+      "message": "Negative fixtures confirmed that marker holds and raw-output publication attempts do not pass.",
+      "row_id": "fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle advisories were folded into a metadata-only marker-review workflow.",
+      "row_id": "app_advisory_synthesis",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This phase improves THOS receipt hygiene only and does not close or test GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v474-thos-v5-x2"
+}
