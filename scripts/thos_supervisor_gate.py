@@ -288,6 +288,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run a dry-run THOS supervisor gate.")
     parser.add_argument("--input", required=True, help="JSON file containing a request or requests list")
+    parser.add_argument("--output", help="Optional JSON report path to write. Omit for stdout-only dry run.")
     args = parser.parse_args()
 
     data = json.loads(Path(args.input).read_text(encoding="utf-8"))
@@ -305,7 +306,10 @@ def main() -> int:
         "gmUT_gate_effect": "none_open_not_tested",
         "rows": rows,
     }
-    print(json.dumps(report, indent=2, sort_keys=True))
+    output = json.dumps(report, indent=2, sort_keys=True)
+    if args.output:
+        Path(args.output).write_text(output + "\n", encoding="utf-8")
+    print(output)
     return 1 if report["aggregate_status"] == "FAIL_BLOCKER" else 0
 
 

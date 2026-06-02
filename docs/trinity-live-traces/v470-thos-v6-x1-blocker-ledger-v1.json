@@ -1,0 +1,61 @@
+{
+  "artifact_id": "v470-thos-v6-x1-blocker-ledger-v1",
+  "phase": "v470_THOS_v6_x1",
+  "created_at_nz": "2026-06-02T15:44:10+12:00",
+  "source_artifact": "docs/trinity-live-traces/v470-thos-v5-x2-supervisor-dry-run-v1.json",
+  "source_head": "6aeb7cb7f5c7fde6db036f6f507d7b313a8fa5fa",
+  "ledger_policy": "expected blockers are active guardrails and must not be removed just to make counts look clean",
+  "rows": [
+    {
+      "blocker_id": "THOS-BLOCKER-DOCS-EDIT-NO-APPROVAL",
+      "source_row_id": "drive_batch_update_without_named_target",
+      "rule_map_id": "THOS-RULE-DOCS-EDIT-NO-APPROVAL",
+      "status": "OPEN_GAP",
+      "reconciliation_status": "matched_expected",
+      "blocked_action": "Google Docs batchUpdate without named document target",
+      "required_resolution": "explicit_approval_and_named_target",
+      "mutation_status": "none",
+      "local_visualization_safe": true
+    },
+    {
+      "blocker_id": "THOS-BLOCKER-DESTRUCTIVE-CLEANUP",
+      "source_row_id": "cleanup_delete_request",
+      "rule_map_id": "THOS-RULE-DESTRUCTIVE-CLEANUP-BLOCK",
+      "status": "FAIL_BLOCKER",
+      "reconciliation_status": "matched_expected",
+      "blocked_action": "unbounded cleanup delete request",
+      "required_resolution": "keep_blocked_until_separate_destructive_scope_approval",
+      "mutation_status": "none",
+      "local_visualization_safe": true
+    },
+    {
+      "blocker_id": "THOS-BLOCKER-MIXED-CONNECTOR-REQUEST",
+      "source_row_id": "mixed_connector_read_write",
+      "rule_map_id": "THOS-RULE-MIXED-REQUEST-SPLIT",
+      "status": "OPEN_GAP",
+      "reconciliation_status": "matched_expected",
+      "blocked_action": "mixed connector read and write request",
+      "required_resolution": "split_observe_step_from_mutation_step",
+      "mutation_status": "none",
+      "local_visualization_safe": true
+    },
+    {
+      "blocker_id": "THOS-BLOCKER-GITHUB-WRITE-NO-APPROVAL",
+      "source_row_id": "github_comment_mutation",
+      "rule_map_id": "THOS-RULE-GITHUB-WRITE-NO-APPROVAL",
+      "status": "OPEN_GAP",
+      "reconciliation_status": "matched_expected",
+      "blocked_action": "GitHub comment mutation without named issue or pull request target",
+      "required_resolution": "explicit_approval_and_named_github_target",
+      "mutation_status": "none",
+      "local_visualization_safe": true
+    }
+  ],
+  "coverage": {
+    "open_gap_rows_reconciled": 3,
+    "fail_blocker_rows_reconciled": 1,
+    "unexpected_success_rows": 0,
+    "unexpected_failure_rows": 0,
+    "unreconciled_rows": 0
+  }
+}

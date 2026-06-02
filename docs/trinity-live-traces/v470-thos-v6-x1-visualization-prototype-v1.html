@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>v470 THOS v6 x1 Local Guardrail Prototype</title>
+  <style>
+    :root {
+      --ink: #15201a;
+      --paper: #f5f1e8;
+      --line: #2f513a;
+      --pass: #5d8c58;
+      --gap: #d49b37;
+      --block: #b54d3e;
+      --card: #fffaf0;
+    }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(circle at 20% 10%, #fff7d6 0, #f5f1e8 38%, #e7e0cf 100%);
+      color: var(--ink);
+    }
+    main {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+    .banner, .card {
+      background: var(--card);
+      border: 2px solid rgba(47, 81, 58, 0.28);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(42, 57, 40, 0.14);
+    }
+    .banner {
+      padding: 24px;
+      margin-bottom: 22px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+    .card {
+      padding: 18px;
+    }
+    .count {
+      font-size: 38px;
+      font-weight: 700;
+    }
+    .pass { color: var(--pass); }
+    .gap { color: var(--gap); }
+    .block { color: var(--block); }
+    .rows {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: minmax(120px, 1.2fr) 120px minmax(160px, 1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.62);
+      border-left: 6px solid var(--line);
+      border-radius: 12px;
+    }
+    .row.pass { border-left-color: var(--pass); }
+    .row.gap { border-left-color: var(--gap); }
+    .row.block { border-left-color: var(--block); }
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(21, 32, 26, 0.24);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    @media (max-width: 680px) {
+      .row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="banner">
+      <p class="tag">Local prototype only</p>
+      <h1>THOS Guardrail Ledger</h1>
+      <p>This static page visualizes v5 x2 dry-run rows for v6 x1. It is local, non-authoritative, and contains no raw logs, screenshots, session JSONL, credentials, connector writes, cleanup actions, or GMUT validation.</p>
+    </section>
+    <section class="grid" aria-label="status summary">
+      <article class="card"><div class="count pass">4</div><div>Expected pass matched</div></article>
+      <article class="card"><div class="count gap">3</div><div>Open guardrail gaps</div></article>
+      <article class="card"><div class="count block">1</div><div>Active blocker</div></article>
+      <article class="card"><div class="count">0</div><div>Unreconciled rows</div></article>
+    </section>
+    <section class="card">
+      <h2>Dry-Run Rows</h2>
+      <div class="rows">
+        <div class="row pass"><strong>read_skill_inventory</strong><span>PASS_SHAPE_ONLY</span><span>THOS-RULE-READ-ONLY-INVENTORY</span></div>
+        <div class="row pass"><strong>dry_publication_validator</strong><span>PASS_SHAPE_ONLY</span><span>THOS-RULE-DRY-VALIDATOR</span></div>
+        <div class="row pass"><strong>curated_artifact_write_shape</strong><span>PASS_SHAPE_ONLY</span><span>THOS-RULE-CURATED-LOCAL-WRITE-SHAPE</span></div>
+        <div class="row gap"><strong>drive_batch_update_without_named_target</strong><span>OPEN_GAP</span><span>THOS-RULE-DOCS-EDIT-NO-APPROVAL</span></div>
+        <div class="row block"><strong>cleanup_delete_request</strong><span>FAIL_BLOCKER</span><span>THOS-RULE-DESTRUCTIVE-CLEANUP-BLOCK</span></div>
+        <div class="row gap"><strong>mixed_connector_read_write</strong><span>OPEN_GAP</span><span>THOS-RULE-MIXED-REQUEST-SPLIT</span></div>
+        <div class="row pass"><strong>watcher_observe_phase_status</strong><span>PASS_SHAPE_ONLY</span><span>THOS-RULE-WATCHER-OBSERVE-ONLY</span></div>
+        <div class="row gap"><strong>github_comment_mutation</strong><span>OPEN_GAP</span><span>THOS-RULE-GITHUB-WRITE-NO-APPROVAL</span></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
