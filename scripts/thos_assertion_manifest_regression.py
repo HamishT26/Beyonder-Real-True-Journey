@@ -29,7 +29,7 @@ class Case:
     case_id: str
     expected_decision: str
     expected_status: str
-    expected_fragments: list[str]
+    expected_reason_codes: list[str]
     materialize_valid_assertion: bool = True
     materialize_stray_assertion: bool = False
     manifest_override: dict[str, Any] | None = None
@@ -159,8 +159,23 @@ def run_guard(
     return result.returncode, payload
 
 
-def row_blob(payload: dict[str, Any]) -> str:
-    return json.dumps(payload.get("rows", []), sort_keys=True)
+def row_reason_codes(payload: dict[str, Any]) -> list[str]:
+    codes: list[str] = []
+    for row in payload.get("rows", []):
+        if not isinstance(row, dict):
+            continue
+        evidence = row.get("evidence")
+        if not isinstance(evidence, str):
+            continue
+        try:
+            parsed = json.loads(evidence)
+        except Exception:
+            continue
+        if isinstance(parsed, dict):
+            for code in parsed.get("reason_codes", []):
+                if isinstance(code, str):
+                    codes.append(code)
+    return codes
 
 
 def case_decision(returncode: int, payload: dict[str, Any]) -> str:
@@ -190,7 +205,8 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
             if case.case_id == "boundary_drift_rejected":
                 payload = assertion_payload(connector_write=True)
             write_json(assertion_path, payload)
-            negative_payload = assertion_payload(status="FAIL_BLOCKER")
+            negative_status = "PASS_SHAPE_ONLY" if case.case_id == "expected_negative_unexpected_pass" else "FAIL_BLOCKER"
+            negative_payload = assertion_payload(status=negative_status)
             negative_payload["report_input"] = "synthetic://manifest-regression-negative"
             write_json(negative_path, negative_payload)
 
@@ -224,8 +240,8 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
             path_list_path=Path(path_list_rel),
             required_coverage_tokens=case.required_coverage_tokens,
         )
-        blob = row_blob(guard_payload)
-        matched = [fragment for fragment in case.expected_fragments if fragment in blob]
+        observed_reason_codes = row_reason_codes(guard_payload)
+        matched = [code for code in case.expected_reason_codes if code in observed_reason_codes]
         observed_decision = case_decision(returncode, guard_payload)
         temp_fixture_count = len(list(artifact_root.glob("*"))) if artifact_root.exists() else 0
 
@@ -233,7 +249,7 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
     matches = (
         observed_decision == case.expected_decision
         and guard_payload.get("aggregate_status") == case.expected_status
-        and len(matched) == len(case.expected_fragments)
+        and len(matched) == len(case.expected_reason_codes)
         and cleanup_verified
     )
     return {
@@ -241,14 +257,15 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         "cleanup_verified": cleanup_verified,
         "curated_temp_fixture_count": 0,
         "expected_decision": case.expected_decision,
-        "expected_fragments": case.expected_fragments,
+        "expected_reason_codes": case.expected_reason_codes,
         "expected_status": case.expected_status,
         "guard_aggregate_status": guard_payload.get("aggregate_status"),
         "guard_decision": observed_decision,
         "guard_returncode": returncode,
-        "matched_fragments": matched,
+        "matched_reason_codes": matched,
         "matches_expected": matches,
         "mutation_performed": False,
+        "observed_reason_codes": observed_reason_codes,
         "root_ref": root_ref,
         "temp_fixture_count": temp_fixture_count,
     }
@@ -259,21 +276,38 @@ def build_cases(phase_slug: str) -> list[Case]:
     negative_rel = f"artifacts/{phase_slug}-assert-negative-happy-v1.json"
     happy_manifest = base_manifest(phase_slug, assertion_rel, negative_rel)
     return [
-        Case("happy_manifest_allows", "allow", "PASS_SHAPE_ONLY", ["assertion artifacts passed contract"]),
-        Case("missing_manifest_required", "deny", "FAIL_BLOCKER", ["explicit assertion manifest is required"], omit_manifest_flag=True),
-        Case("malformed_manifest_json", "deny", "FAIL_BLOCKER", ["manifest JSON unreadable"], manifest_bytes="{"),
+        Case("happy_manifest_allows", "allow", "PASS_SHAPE_ONLY", []),
+        Case("missing_manifest_required", "deny", "FAIL_BLOCKER", ["MANIFEST_REQUIRED_MISSING"], omit_manifest_flag=True),
+        Case("malformed_manifest_json", "deny", "FAIL_BLOCKER", ["MANIFEST_JSON_UNREADABLE"], manifest_bytes="{"),
+        Case(
+            "unknown_manifest_schema_rejected",
+            "deny",
+            "FAIL_BLOCKER",
+            ["MANIFEST_SCHEMA_INVALID"],
+            manifest_override={**happy_manifest, "manifest_schema": "thos_assertion_artifact_manifest_v99"},
+        ),
         Case(
             "path_list_mismatch",
             "deny",
             "FAIL_BLOCKER",
-            ["paths do not match manifest"],
+            ["MANIFEST_PATH_LIST_MISMATCH"],
             path_list_override=base_path_list(phase_slug, f"artifacts/{phase_slug}-assert-other-v1.json", negative_rel),
+        ),
+        Case(
+            "unknown_path_list_schema_rejected",
+            "deny",
+            "FAIL_BLOCKER",
+            ["PATH_LIST_SCHEMA_INVALID"],
+            path_list_override={
+                **base_path_list(phase_slug, assertion_rel, negative_rel),
+                "path_list_schema": "thos_assertion_path_list_v99",
+            },
         ),
         Case(
             "absolute_path_rejected",
             "deny",
             "FAIL_BLOCKER",
-            ["absolute paths are not allowed"],
+            ["MANIFEST_PATH_INVALID"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [{**happy_manifest["artifact_refs"][0], "path": "C:/escape.json"}],
@@ -283,22 +317,70 @@ def build_cases(phase_slug: str) -> list[Case]:
             "traversal_path_rejected",
             "deny",
             "FAIL_BLOCKER",
-            ["path traversal or empty path segment is not allowed"],
+            ["MANIFEST_PATH_INVALID"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [{**happy_manifest["artifact_refs"][0], "path": f"artifacts/../{phase_slug}-assert-escape-v1.json"}],
             },
         ),
-        Case("missing_artifact_rejected", "deny", "FAIL_BLOCKER", ["manifest-listed assertion artifact is not in phase artifact set"], materialize_valid_assertion=False),
-        Case("expectation_status_mismatch", "deny", "FAIL_BLOCKER", ["did not match manifest expected_status"]),
-        Case("boundary_drift_rejected", "deny", "FAIL_BLOCKER", ["assertion boundary fields are not local/non-mutating"]),
-        Case("coverage_gap_rejected", "deny", "FAIL_BLOCKER", ["missing assertion coverage tokens"], required_coverage_tokens=["missing-token"]),
-        Case("stray_assertion_rejected", "deny", "FAIL_BLOCKER", ["closed-world contract"], materialize_stray_assertion=True),
+        Case(
+            "duplicate_normalized_path_rejected",
+            "deny",
+            "FAIL_BLOCKER",
+            ["MANIFEST_PATH_DUPLICATE"],
+            manifest_override={
+                **happy_manifest,
+                "artifact_refs": [
+                    happy_manifest["artifact_refs"][0],
+                    {
+                        **happy_manifest["artifact_refs"][1],
+                        "path": happy_manifest["artifact_refs"][0]["path"].replace("/", "\\"),
+                    },
+                ],
+            },
+        ),
+        Case(
+            "windows_case_collision_path_rejected",
+            "deny",
+            "FAIL_BLOCKER",
+            ["MANIFEST_PATH_CASE_COLLISION"],
+            manifest_override={
+                **happy_manifest,
+                "artifact_refs": [
+                    happy_manifest["artifact_refs"][0],
+                    {
+                        **happy_manifest["artifact_refs"][1],
+                        "path": happy_manifest["artifact_refs"][0]["path"].upper(),
+                    },
+                ],
+            },
+        ),
+        Case(
+            "unexpected_role_enum_rejected",
+            "deny",
+            "FAIL_BLOCKER",
+            ["MANIFEST_ROLE_INVALID"],
+            manifest_override={
+                **happy_manifest,
+                "artifact_refs": [{**happy_manifest["artifact_refs"][0], "role": "publisher"}],
+            },
+        ),
+        Case("missing_artifact_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_ARTIFACT_MISSING"], materialize_valid_assertion=False),
+        Case("expectation_status_mismatch", "deny", "FAIL_BLOCKER", ["ASSERTION_STATUS_MISMATCH"]),
+        Case(
+            "expected_negative_unexpected_pass",
+            "deny",
+            "FAIL_BLOCKER",
+            ["ASSERTION_STATUS_MISMATCH", "ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL"],
+        ),
+        Case("boundary_drift_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_BOUNDARY_INVALID"]),
+        Case("coverage_gap_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_COVERAGE_MISSING"], required_coverage_tokens=["missing-token"]),
+        Case("stray_assertion_rejected", "deny", "FAIL_BLOCKER", ["MANIFEST_CLOSED_WORLD_STRAY"], materialize_stray_assertion=True),
         Case(
             "duplicate_artifact_id_rejected",
             "deny",
             "FAIL_BLOCKER",
-            ["duplicate artifact_id"],
+            ["MANIFEST_ARTIFACT_ID_DUPLICATE"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [happy_manifest["artifact_refs"][0], happy_manifest["artifact_refs"][0]],
