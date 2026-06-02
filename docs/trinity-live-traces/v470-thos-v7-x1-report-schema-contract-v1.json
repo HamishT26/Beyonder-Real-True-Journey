@@ -1,0 +1,33 @@
+{
+  "artifact_id": "v470-thos-v7-x1-report-schema-contract-v1",
+  "phase": "v470_THOS_v7_x1",
+  "created_at_nz": "2026-06-02T17:48:59+12:00",
+  "validator": "scripts/thos_visualization_binding_check.py",
+  "required_new_fields": [
+    "report_mode",
+    "precedence_order",
+    "dominant_failure_code",
+    "dominant_finding_code",
+    "secondary_findings",
+    "precedence_reason",
+    "weaker_findings_suppressed",
+    "digest_ref_presence.status",
+    "count_reconciliation.count_source_ref",
+    "count_reconciliation.count_reconciliation_status",
+    "orphan_row_count",
+    "duplicate_binding_count",
+    "tuple_mismatch_count",
+    "gate_effect_drift_count"
+  ],
+  "status_rules": [
+    "FAIL_BLOCKER overrides OPEN_GAP",
+    "OPEN_GAP overrides PASS_SHAPE_ONLY",
+    "weaker findings must remain visible in secondary_findings",
+    "gate_effect_drift_count greater than zero is blocker-class",
+    "missing digest references alone remain OPEN_GAP"
+  ],
+  "claim_boundary": "Report schema hardening explains local checker behavior only. It does not certify safety, publish governance findings, authorize connector writes, validate GMUT, or move any GMUT gate.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}
