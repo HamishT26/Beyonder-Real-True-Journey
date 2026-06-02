@@ -1,0 +1,37 @@
+{
+  "artifact_id": "v470-thos-v6-x4-snapshot-version-mismatch-policy-v1",
+  "phase": "v470_THOS_v6_x4",
+  "created_at_nz": "2026-06-02T16:38:09+12:00",
+  "policy_version": "thos-snapshot-version-mismatch-policy-v1",
+  "version_axes": [
+    "manifest_schema_version",
+    "snapshot_contract_version",
+    "consumer_compatibility_version"
+  ],
+  "default_policy": "exact_match_or_fail_closed",
+  "rules": [
+    {
+      "case_id": "manifest_schema_version_unknown",
+      "status": "FAIL_BLOCKER",
+      "reason": "unknown manifest schema cannot be safely consumed"
+    },
+    {
+      "case_id": "snapshot_contract_version_unknown",
+      "status": "FAIL_BLOCKER",
+      "reason": "unknown snapshot contract cannot be silently coerced"
+    },
+    {
+      "case_id": "documented_minor_compatibility",
+      "status": "OPEN_GAP",
+      "reason": "compatibility may be allowed only when a compatibility artifact names the accepted mapping"
+    },
+    {
+      "case_id": "gmut_gate_effect_drift",
+      "status": "FAIL_BLOCKER",
+      "reason": "THOS infrastructure cannot infer GMUT gate movement"
+    }
+  ],
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}

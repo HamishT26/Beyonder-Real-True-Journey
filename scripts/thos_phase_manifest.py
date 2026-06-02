@@ -127,18 +127,119 @@ def build_manifest(phase_slug: str, artifact_root: Path) -> dict[str, Any]:
     }
 
 
+def verify_manifest(manifest_path: Path) -> dict[str, Any]:
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {
+            "validator_mode": "local_non_mutating_phase_manifest_verify",
+            "manifest_file": manifest_path.as_posix(),
+            "aggregate_status": "FAIL_BLOCKER",
+            "mutation_performed": False,
+            "connector_write_performed": False,
+            "gmUT_gate_effect": "none_open_not_tested",
+            "rows": [
+                {
+                    "row_id": "manifest_parse",
+                    "status": "FAIL_BLOCKER",
+                    "reason_code": "manifest_parse_failed",
+                    "evidence": str(exc),
+                }
+            ],
+        }
+
+    rows: list[dict[str, Any]] = []
+    artifacts = manifest.get("artifacts", [])
+    if not isinstance(artifacts, list):
+        rows.append(
+            {
+                "row_id": "manifest_artifacts",
+                "status": "FAIL_BLOCKER",
+                "reason_code": "artifacts_not_list",
+                "path": None,
+            }
+        )
+    for idx, artifact in enumerate(artifacts):
+        if not isinstance(artifact, dict):
+            rows.append(
+                {
+                    "row_id": f"artifact_{idx}",
+                    "status": "FAIL_BLOCKER",
+                    "reason_code": "artifact_not_object",
+                    "path": None,
+                }
+            )
+            continue
+        artifact_path = artifact.get("path")
+        expected_sha256 = artifact.get("sha256")
+        if not isinstance(artifact_path, str) or not isinstance(expected_sha256, str):
+            rows.append(
+                {
+                    "row_id": f"artifact_{idx}",
+                    "status": "FAIL_BLOCKER",
+                    "reason_code": "missing_path_or_sha256",
+                    "path": artifact_path,
+                }
+            )
+            continue
+        path = Path(artifact_path)
+        if not path.exists():
+            rows.append(
+                {
+                    "row_id": artifact_path,
+                    "status": "FAIL_BLOCKER",
+                    "reason_code": "artifact_missing",
+                    "path": artifact_path,
+                    "expected_sha256": expected_sha256,
+                    "actual_sha256": None,
+                }
+            )
+            continue
+        actual_sha256 = sha256_hex(path)
+        status = "PASS_SHAPE_ONLY" if actual_sha256 == expected_sha256 else "FAIL_BLOCKER"
+        reason = "checksum_matched" if status == "PASS_SHAPE_ONLY" else "checksum_mismatch"
+        rows.append(
+            {
+                "row_id": artifact_path,
+                "status": status,
+                "reason_code": reason,
+                "path": artifact_path,
+                "expected_sha256": expected_sha256,
+                "actual_sha256": actual_sha256,
+            }
+        )
+    aggregate_status = "FAIL_BLOCKER" if not rows or any(row["status"] == "FAIL_BLOCKER" for row in rows) else "PASS_SHAPE_ONLY"
+    return {
+        "validator_mode": "local_non_mutating_phase_manifest_verify",
+        "manifest_file": manifest_path.as_posix(),
+        "manifested_phase_slug": manifest.get("manifested_phase_slug"),
+        "aggregate_status": aggregate_status,
+        "mutation_performed": False,
+        "connector_write_performed": False,
+        "gmUT_gate_effect": "none_open_not_tested",
+        "artifact_count": len(artifacts) if isinstance(artifacts, list) else 0,
+        "rows": rows,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate a local THOS phase artifact manifest.")
-    parser.add_argument("--phase-slug", required=True, help="Phase slug to manifest")
+    parser.add_argument("--phase-slug", help="Phase slug to manifest")
     parser.add_argument(
         "--artifact-root",
         default="docs/trinity-live-traces",
         help="Directory containing phase artifacts",
     )
     parser.add_argument("--output", help="Optional JSON manifest path to write")
+    parser.add_argument("--verify-manifest", help="Verify paths and checksums from an existing manifest")
     args = parser.parse_args()
 
-    report = build_manifest(args.phase_slug, Path(args.artifact_root))
+    if args.verify_manifest:
+        report = verify_manifest(Path(args.verify_manifest))
+    else:
+        if not args.phase_slug:
+            raise SystemExit("--phase-slug is required unless --verify-manifest is used")
+        report = build_manifest(args.phase_slug, Path(args.artifact_root))
     output = json.dumps(report, indent=2, sort_keys=True)
     if args.output:
         Path(args.output).write_text(output + "\n", encoding="utf-8")
