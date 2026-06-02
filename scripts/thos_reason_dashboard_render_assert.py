@@ -143,18 +143,69 @@ def assert_render(preflight: dict[str, Any], html_text: str, phase_slug: str) ->
     }
 
 
+def remove_first_render_row(html_text: str) -> str:
+    return re.sub(r"\n\s*<tr data-case-id=.*?</tr>", "", html_text, count=1, flags=re.DOTALL)
+
+
+def self_test_negative(preflight: dict[str, Any], html_text: str, phase_slug: str) -> dict[str, Any]:
+    cases = [
+        ("missing_required_label", html_text.replace("Case ID", "Case Identity", 1), "required_labels"),
+        ("case_count_mismatch", re.sub(r'data-case-count="\d+"', 'data-case-count="0"', html_text, count=1), "case_count_parity"),
+        ("row_count_mismatch", remove_first_render_row(html_text), "row_count_parity"),
+    ]
+    report_rows: list[dict[str, Any]] = []
+    for case_id, mutated_html, expected_failing_row in cases:
+        negative_report = assert_render(preflight, mutated_html, f"{phase_slug}-{case_id}")
+        observed_failures = [
+            item["row_id"]
+            for item in negative_report["rows"]
+            if item.get("status") == "FAIL_BLOCKER"
+        ]
+        passed = negative_report["aggregate_status"] == "FAIL_BLOCKER" and expected_failing_row in observed_failures
+        report_rows.append(
+            row(
+                case_id,
+                "PASS_SHAPE_ONLY" if passed else "FAIL_BLOCKER",
+                "negative rendered-artifact mutation fails as expected",
+                {
+                    "expected_failing_row": expected_failing_row,
+                    "observed_aggregate_status": negative_report["aggregate_status"],
+                    "observed_failures": observed_failures,
+                },
+            )
+        )
+    aggregate_status = "FAIL_BLOCKER" if any(item["status"] == "FAIL_BLOCKER" for item in report_rows) else "PASS_SHAPE_ONLY"
+    return {
+        "aggregate_status": aggregate_status,
+        "connector_write_performed": False,
+        "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
+        "gmUT_gate_effect": "none_open_not_tested",
+        "mutation_performed": False,
+        "negative_self_test": True,
+        "phase_slug": phase_slug,
+        "rows": report_rows,
+        "validator_mode": "local_non_mutating_render_negative_self_test",
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Assert a rendered THOS reason dashboard artifact.")
     parser.add_argument("--preflight", required=True)
     parser.add_argument("--html", required=True)
     parser.add_argument("--phase-slug", required=True)
     parser.add_argument("--output", required=True)
+    parser.add_argument("--self-test-negative", action="store_true")
     args = parser.parse_args()
 
     html_path = Path(args.html)
     if not html_path.exists():
         raise FileNotFoundError(args.html)
-    report = assert_render(read_json_object(Path(args.preflight)), html_path.read_text(encoding="utf-8"), args.phase_slug)
+    preflight = read_json_object(Path(args.preflight))
+    html_text = html_path.read_text(encoding="utf-8")
+    if args.self_test_negative:
+        report = self_test_negative(preflight, html_text, args.phase_slug)
+    else:
+        report = assert_render(preflight, html_text, args.phase_slug)
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
