@@ -1,0 +1,155 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_V475_CLOSURE_HANDOFF_READY",
+  "fixtures": [
+    {
+      "case": {
+        "closure_ready": true,
+        "gmut_gate_effect": "none_open_not_tested",
+        "handoff_ready": true,
+        "metadata_only": true
+      },
+      "case_id": "closure_and_handoff_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "source_missing": true
+      },
+      "case_id": "source_missing_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_handoff_task": true
+      },
+      "case_id": "missing_handoff_task_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_text_publication": true
+      },
+      "case_id": "raw_text_publication_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "quality_claim": true
+      },
+      "case_id": "quality_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "closure_ready": true,
+        "gmut_gate_effect": "gate_moved",
+        "handoff_ready": true,
+        "metadata_only": true
+      },
+      "case_id": "gmut_gate_move_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T21:19:36+00:00",
+  "gmut_gate_effect": "none_open_not_tested",
+  "gmut_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v475-thos-v8-x2",
+  "phase_slug": "v475-thos-v8-x1",
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 3,
+        "source_gap_count": 0
+      },
+      "message": "v7 candidate and preflight sources were checked for v475 closure.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "preflight_status": "PASS_SHAPE_ONLY_METADATA_SUMMARY_PREFLIGHT_READY",
+        "run_status": "PASS_SHAPE_ONLY_METADATA_SUMMARY_PREFLIGHT_READY"
+      },
+      "message": "v7 x2 preflight must be ready before closure handoff.",
+      "row_id": "preflight_ready",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "lane_count": 2,
+        "marker_total": 0
+      },
+      "message": "Arby/Aster metadata summary is shape-ready with zero final-message markers.",
+      "row_id": "lane_metadata_summary",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "quality_claimed": false,
+        "raw_lane_text_published": false
+      },
+      "message": "v475 closure permits metadata summary only and leaves lane text unpublished.",
+      "row_id": "publication_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "gmut_gates_open": [
+          "null recovery",
+          "dimensional/SI consistency",
+          "conservation or exchange law",
+          "baseline recovery",
+          "fifth-force/equivalence constraints",
+          "consciousness measurement bridge"
+        ]
+      },
+      "message": "v475 THOS closure does not validate GMUT or close any GMUT gate.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_refs": [
+    {
+      "bytes": 7608,
+      "path": "docs/trinity-live-traces/v475-thos-v7-x1-metadata-summary-candidate-v1.json",
+      "sha256": "0c529d04245bee1e918d8eba9010a1dfba17d0dbd0440d97a1940bc64a736a93",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 6042,
+      "path": "docs/trinity-live-traces/v475-thos-v7-x2-metadata-summary-preflight-v1.json",
+      "sha256": "65eeacd27851ca78ed2d0b19828ff0a7d4b09ae72dd558947c2e6f0249e5b354",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 2915,
+      "path": "docs/trinity-live-traces/v475-thos-v7-x2-run-status-v1.json",
+      "sha256": "de6912e6df6291e2fe09cf19a59f2ddd4f2c263318a23de30cb4c0bd309e9ebe",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}
