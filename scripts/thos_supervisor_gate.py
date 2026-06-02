@@ -63,6 +63,56 @@ CONNECTOR_SURFACES = {
 }
 LOCAL_WRITE_APPROVALS = {"approved_live_write_action_pack", "approved_scope_limited"}
 REMOTE_WRITE_APPROVALS = {"approved_scope_limited"}
+RULE_METADATA = {
+    "read_skill_inventory": {
+        "rule_map_id": "THOS-RULE-READ-ONLY-INVENTORY",
+        "authority_route": "local_repo_read",
+        "expected_status": "PASS_SHAPE_ONLY",
+        "expected_failure": False,
+    },
+    "dry_publication_validator": {
+        "rule_map_id": "THOS-RULE-DRY-VALIDATOR",
+        "authority_route": "local_validator_only",
+        "expected_status": "PASS_SHAPE_ONLY",
+        "expected_failure": False,
+    },
+    "curated_artifact_write_shape": {
+        "rule_map_id": "THOS-RULE-CURATED-LOCAL-WRITE-SHAPE",
+        "authority_route": "approved_local_write_shape_only",
+        "expected_status": "PASS_SHAPE_ONLY",
+        "expected_failure": False,
+    },
+    "drive_batch_update_without_named_target": {
+        "rule_map_id": "THOS-RULE-DOCS-EDIT-NO-APPROVAL",
+        "authority_route": "connector_mutation_requires_named_target",
+        "expected_status": "OPEN_GAP",
+        "expected_failure": True,
+    },
+    "cleanup_delete_request": {
+        "rule_map_id": "THOS-RULE-DESTRUCTIVE-CLEANUP-BLOCK",
+        "authority_route": "destructive_request_refusal",
+        "expected_status": "FAIL_BLOCKER",
+        "expected_failure": True,
+    },
+    "mixed_connector_read_write": {
+        "rule_map_id": "THOS-RULE-MIXED-REQUEST-SPLIT",
+        "authority_route": "split_read_write_before_connector_gate",
+        "expected_status": "OPEN_GAP",
+        "expected_failure": True,
+    },
+    "watcher_observe_phase_status": {
+        "rule_map_id": "THOS-RULE-WATCHER-OBSERVE-ONLY",
+        "authority_route": "observer_only_local_runtime",
+        "expected_status": "PASS_SHAPE_ONLY",
+        "expected_failure": False,
+    },
+    "github_comment_mutation": {
+        "rule_map_id": "THOS-RULE-GITHUB-WRITE-NO-APPROVAL",
+        "authority_route": "github_write_requires_named_target",
+        "expected_status": "OPEN_GAP",
+        "expected_failure": True,
+    },
+}
 
 
 def norm(value: Any) -> str:
@@ -87,6 +137,26 @@ def write_verb(operation: str) -> bool:
 def required_missing(request: dict[str, Any]) -> list[str]:
     required = ["request_id", "actor", "target_surface", "mutation_class", "operation", "scope"]
     return [field for field in required if not request.get(field)]
+
+
+def attach_rule_metadata(result: dict[str, Any]) -> dict[str, Any]:
+    meta = RULE_METADATA.get(result["request_id"], {})
+    expected_status = meta.get("expected_status")
+    expected_failure = bool(meta.get("expected_failure", False))
+    result["rule_map_id"] = meta.get("rule_map_id", "THOS-RULE-UNMAPPED")
+    result["authority_route"] = meta.get("authority_route", "unmapped_authority_route")
+    result["expected_status"] = expected_status
+    result["expected_failure"] = expected_failure
+    result["matches_expected"] = bool(expected_status and result["status"] == expected_status)
+    if expected_failure and result["matches_expected"]:
+        result["expected_interpretation"] = "expected_failure_matched"
+    elif expected_failure:
+        result["expected_interpretation"] = "unexpected_success_or_wrong_blocker"
+    elif result["matches_expected"]:
+        result["expected_interpretation"] = "expected_pass_matched"
+    else:
+        result["expected_interpretation"] = "unexpected_failure_or_unmapped_status"
+    return result
 
 
 def decision_for(request: dict[str, Any]) -> dict[str, Any]:
@@ -120,7 +190,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             reason_code="missing_required_fields",
             missing_fields=missing,
         )
-        return result
+        return attach_rule_metadata(result)
 
     if mutation_class in {"credential", "destructive"}:
         result.update(
@@ -128,7 +198,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             status="FAIL_BLOCKER",
             reason_code=f"{mutation_class}_request_not_allowed_by_dry_gate",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if mutation_class == "mixed":
         result.update(
@@ -136,7 +206,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             status="OPEN_GAP",
             reason_code="mixed_read_write_request_must_be_split",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if not bounded:
         result.update(
@@ -144,7 +214,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             status="OPEN_GAP",
             reason_code="scope_not_bounded",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if surface in CONNECTOR_SURFACES and (write_verb(operation) or mutation_class in {"remote_write", "connector_mutate"}):
         if approval not in REMOTE_WRITE_APPROVALS:
@@ -153,20 +223,20 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
                 status="FAIL_BLOCKER",
                 reason_code="connector_write_requires_named_scope_and_separate_approval",
             )
-            return result
+            return attach_rule_metadata(result)
         if spend_limit is None:
             result.update(
                 gate_result="handoff",
                 status="OPEN_GAP",
                 reason_code="connector_write_missing_spend_limit",
             )
-            return result
+            return attach_rule_metadata(result)
         result.update(
             gate_result="dry_run_only",
             status="PASS_SHAPE_ONLY",
             reason_code="connector_write_shape_only_approved_but_not_executed",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if mutation_class == "local_write":
         if approval not in LOCAL_WRITE_APPROVALS:
@@ -175,13 +245,13 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
                 status="OPEN_GAP",
                 reason_code="local_write_requires_curated_approval",
             )
-            return result
+            return attach_rule_metadata(result)
         result.update(
             gate_result="dry_run_only",
             status="PASS_SHAPE_ONLY",
             reason_code="local_write_shape_only_approved_but_not_executed",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if mutation_class == "external_spend":
         result.update(
@@ -189,7 +259,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             status="OPEN_GAP",
             reason_code="external_spend_requires_named_budget_and_action_packet",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if mutation_class in OBSERVE_CLASSES:
         result.update(
@@ -197,7 +267,7 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             status="PASS_SHAPE_ONLY",
             reason_code="observe_or_dry_validate_only",
         )
-        return result
+        return attach_rule_metadata(result)
 
     if mutation_class in MUTATING_CLASSES:
         result.update(
@@ -205,14 +275,14 @@ def decision_for(request: dict[str, Any]) -> dict[str, Any]:
             status="OPEN_GAP",
             reason_code="mutation_class_requires_policy_mapping",
         )
-        return result
+        return attach_rule_metadata(result)
 
     result.update(
         gate_result="handoff",
         status="OPEN_GAP",
         reason_code="unknown_mutation_class",
     )
-    return result
+    return attach_rule_metadata(result)
 
 
 def main() -> int:
