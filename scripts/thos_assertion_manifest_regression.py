@@ -30,6 +30,7 @@ class Case:
     expected_decision: str
     expected_status: str
     expected_reason_codes: list[str]
+    allowed_extra_reason_codes: list[str] = field(default_factory=list)
     materialize_valid_assertion: bool = True
     materialize_stray_assertion: bool = False
     manifest_override: dict[str, Any] | None = None
@@ -248,6 +249,9 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         matched = [code for code in case.expected_reason_codes if code in observed_reason_codes]
         expected_dominant_reason_code = case.expected_reason_codes[0] if case.expected_reason_codes else None
         observed_dominant_reason_code = observed_dominant_reason_codes[0] if observed_dominant_reason_codes else None
+        allowed_codes = set(case.expected_reason_codes) | set(case.allowed_extra_reason_codes)
+        observed_unique_reason_codes = list(dict.fromkeys(observed_reason_codes))
+        unexpected_extra_reason_codes = [code for code in observed_unique_reason_codes if code not in allowed_codes]
         observed_decision = case_decision(returncode, guard_payload)
         temp_fixture_count = len(list(artifact_root.glob("*"))) if artifact_root.exists() else 0
 
@@ -257,10 +261,12 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         and guard_payload.get("aggregate_status") == case.expected_status
         and len(matched) == len(case.expected_reason_codes)
         and observed_dominant_reason_code == expected_dominant_reason_code
+        and not unexpected_extra_reason_codes
         and cleanup_verified
     )
     return {
         "case_id": case.case_id,
+        "allowed_extra_reason_codes": case.allowed_extra_reason_codes,
         "cleanup_verified": cleanup_verified,
         "curated_temp_fixture_count": 0,
         "expected_decision": case.expected_decision,
@@ -275,6 +281,7 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         "mutation_performed": False,
         "observed_dominant_reason_code": observed_dominant_reason_code,
         "observed_reason_codes": observed_reason_codes,
+        "unexpected_extra_reason_codes": unexpected_extra_reason_codes,
         "root_ref": root_ref,
         "temp_fixture_count": temp_fixture_count,
     }
@@ -293,6 +300,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_SCHEMA_INVALID"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_LIST_MISMATCH"],
             manifest_override={**happy_manifest, "manifest_schema": "thos_assertion_artifact_manifest_v99"},
         ),
         Case(
@@ -307,6 +315,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["PATH_LIST_SCHEMA_INVALID"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_LIST_MISMATCH"],
             path_list_override={
                 **base_path_list(phase_slug, assertion_rel, negative_rel),
                 "path_list_schema": "thos_assertion_path_list_v99",
@@ -317,6 +326,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_PATH_INVALID"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_LIST_MISMATCH"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [{**happy_manifest["artifact_refs"][0], "path": "C:/escape.json"}],
@@ -327,6 +337,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_PATH_INVALID"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_LIST_MISMATCH"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [{**happy_manifest["artifact_refs"][0], "path": f"artifacts/../{phase_slug}-assert-escape-v1.json"}],
@@ -337,6 +348,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_PATH_DUPLICATE"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_CASE_COLLISION", "MANIFEST_PATH_LIST_MISMATCH"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [
@@ -353,6 +365,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_PATH_CASE_COLLISION"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_LIST_MISMATCH"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [
@@ -369,18 +382,37 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_ROLE_INVALID"],
+            allowed_extra_reason_codes=["MANIFEST_PATH_LIST_MISMATCH"],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [{**happy_manifest["artifact_refs"][0], "role": "publisher"}],
             },
         ),
-        Case("missing_artifact_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_ARTIFACT_MISSING"], materialize_valid_assertion=False),
-        Case("expectation_status_mismatch", "deny", "FAIL_BLOCKER", ["ASSERTION_STATUS_MISMATCH"]),
+        Case(
+            "missing_artifact_rejected",
+            "deny",
+            "FAIL_BLOCKER",
+            ["ASSERTION_ARTIFACT_MISSING"],
+            allowed_extra_reason_codes=[
+                "ASSERTION_COVERAGE_MISSING",
+                "ASSERTION_POSITIVE_MISSING",
+                "ASSERTION_EXPECTED_NEGATIVE_MISSING",
+            ],
+            materialize_valid_assertion=False,
+        ),
+        Case(
+            "expectation_status_mismatch",
+            "deny",
+            "FAIL_BLOCKER",
+            ["ASSERTION_STATUS_MISMATCH"],
+            allowed_extra_reason_codes=["ASSERTION_POSITIVE_NOT_CLEAN"],
+        ),
         Case(
             "expected_negative_unexpected_pass",
             "deny",
             "FAIL_BLOCKER",
             ["ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL", "ASSERTION_STATUS_MISMATCH"],
+            allowed_extra_reason_codes=["ASSERTION_EXPECTED_FAILURE_TOKEN_MISSING"],
         ),
         Case("boundary_drift_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_BOUNDARY_INVALID"]),
         Case("coverage_gap_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_COVERAGE_MISSING"], required_coverage_tokens=["missing-token"]),
@@ -390,6 +422,11 @@ def build_cases(phase_slug: str) -> list[Case]:
             "deny",
             "FAIL_BLOCKER",
             ["MANIFEST_ARTIFACT_ID_DUPLICATE"],
+            allowed_extra_reason_codes=[
+                "MANIFEST_PATH_DUPLICATE",
+                "MANIFEST_PATH_CASE_COLLISION",
+                "MANIFEST_PATH_LIST_MISMATCH",
+            ],
             manifest_override={
                 **happy_manifest,
                 "artifact_refs": [happy_manifest["artifact_refs"][0], happy_manifest["artifact_refs"][0]],
