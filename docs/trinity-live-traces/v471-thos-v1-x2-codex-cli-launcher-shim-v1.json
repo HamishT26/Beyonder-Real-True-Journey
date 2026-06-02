@@ -1,0 +1,55 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "generated_at_utc": "2026-06-02T10:14:10+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "launcher_script": "scripts/thos_codex_cli_advisory_launcher.py",
+  "mutation_performed": false,
+  "phase_slug": "v471-thos-v1-x2",
+  "rows": [
+    {
+      "evidence": null,
+      "message": "Unsupported -a flag failure captured and routed",
+      "row_id": "old_launcher_failure_captured",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Reusable read-only non-ephemeral launcher script added",
+      "row_id": "safe_launcher_materialized",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": [
+        {
+          "lane": "arby",
+          "last_message_bytes": 0,
+          "last_message_present": false,
+          "stderr_bytes": 2778279,
+          "stderr_present": true,
+          "stderr_summary": "Reading additional input from stdin...\n2026-06-02T10:06:03.641922Z ERROR codex_core::session: failed to load skill <local_path_redacted> missing YAML frontmatter delimited by ---\n2026-06-02T10:06:03.644474Z ERROR codex_core::session: failed to load skill <local_path_redacted> missing YAML frontmatter delimited by ---\n2026-06-02T10:06:03.644563Z ERROR codex_core::session: failed to load skill <local_path_redacted> mis",
+          "stdout_bytes": 1209,
+          "stdout_present": true
+        },
+        {
+          "lane": "aster-vale",
+          "last_message_bytes": 0,
+          "last_message_present": false,
+          "stderr_bytes": 1289517,
+          "stderr_present": true,
+          "stderr_summary": "Reading additional input from stdin...\n2026-06-02T10:05:46.687508Z ERROR codex_core_skills::manager: failed to install system skills: io error while remove existing system skills dir: Access is denied. (os error 5)\n2026-06-02T10:06:03.641729Z ERROR codex_core::session: failed to load skill <local_path_redacted> missing YAML frontmatter delimited by ---\n2026-06-02T10:06:03.643153Z ERROR codex_core::session: failed to ",
+          "stdout_bytes": 1211,
+          "stdout_present": true
+        }
+      ],
+      "message": "CLI advisory outputs did not complete because deeper skill-load errors flooded stderr",
+      "row_id": "cli_advisory_completion",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Only the two v471 CLI advisory processes launched in this pass were stopped after the stderr flood was confirmed",
+      "row_id": "cli_process_containment",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}
