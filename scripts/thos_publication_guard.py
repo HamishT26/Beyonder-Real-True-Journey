@@ -13,7 +13,7 @@ import re
 import subprocess
 import sys
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 
 ALLOWED_STATUSES = {"FAIL_BLOCKER", "OPEN_GAP", "NOT_RUN", "PASS_SHAPE_ONLY"}
@@ -113,8 +113,171 @@ def iter_row_status_values(value: object) -> list[str]:
     return found
 
 
-def check_assertion_artifacts(files: list[Path], coverage_tokens: list[str]) -> tuple[str, str, str | None]:
-    assertion_files = [path for path in files if path.suffix == ".json" and "-assert-" in path.name]
+def normalize_repo_path(path_text: str) -> tuple[str | None, str | None]:
+    if not isinstance(path_text, str) or not path_text.strip():
+        return None, "path is empty or not a string"
+    normalized = path_text.replace("\\", "/")
+    if PureWindowsPath(path_text).is_absolute() or PurePosixPath(normalized).is_absolute():
+        return None, "absolute paths are not allowed"
+    if normalized.startswith("//"):
+        return None, "UNC-like paths are not allowed"
+    parts = PurePosixPath(normalized).parts
+    if any(part in {"..", ""} for part in parts):
+        return None, "path traversal or empty path segment is not allowed"
+    return PurePosixPath(normalized).as_posix(), None
+
+
+def load_json_object(path: Path) -> dict:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("JSON payload must be an object")
+    return payload
+
+
+def read_path_list(path_list_path: Path, phase_slug: str) -> tuple[list[str], list[str]]:
+    failures: list[str] = []
+    try:
+        payload = load_json_object(path_list_path)
+    except Exception as exc:
+        return [], [f"{path_list_path.as_posix()}: path-list JSON unreadable: {exc}"]
+    if payload.get("phase_slug") != phase_slug:
+        failures.append(f"{path_list_path.as_posix()}: phase_slug mismatch")
+    raw_paths = payload.get("paths")
+    if not isinstance(raw_paths, list):
+        return [], failures + [f"{path_list_path.as_posix()}: paths must be a list"]
+    normalized_paths: list[str] = []
+    for raw_path in raw_paths:
+        normalized, error = normalize_repo_path(raw_path)
+        if error:
+            failures.append(f"{path_list_path.as_posix()}: {raw_path!r}: {error}")
+            continue
+        normalized_paths.append(normalized or "")
+    return normalized_paths, failures
+
+
+def read_assertion_manifest(
+    manifest_path: Path,
+    path_list_path: Path | None,
+    artifact_root: str,
+    phase_slug: str,
+) -> tuple[list[dict], list[str]]:
+    failures: list[str] = []
+    try:
+        payload = load_json_object(manifest_path)
+    except Exception as exc:
+        return [], [f"{manifest_path.as_posix()}: manifest JSON unreadable: {exc}"]
+
+    if payload.get("phase_slug") != phase_slug:
+        failures.append(f"{manifest_path.as_posix()}: phase_slug mismatch")
+    if payload.get("validator_mode") != "local_non_mutating":
+        failures.append(f"{manifest_path.as_posix()}: validator_mode must be local_non_mutating")
+    if payload.get("connector_write_performed") is not False:
+        failures.append(f"{manifest_path.as_posix()}: connector_write_performed must be false")
+    if payload.get("mutation_performed") is not False:
+        failures.append(f"{manifest_path.as_posix()}: mutation_performed must be false")
+    gate_effect = payload.get("gmUT_gate_effect", payload.get("gmut_gate_effect"))
+    if gate_effect != "none_open_not_tested":
+        failures.append(f"{manifest_path.as_posix()}: gmUT_gate_effect must be none_open_not_tested")
+
+    refs = payload.get("artifact_refs")
+    if not isinstance(refs, list) or not refs:
+        return [], failures + [f"{manifest_path.as_posix()}: artifact_refs must be a non-empty list"]
+
+    phase_prefix = f"{artifact_root.replace(chr(92), '/')}/{phase_slug}-"
+    seen_paths: set[str] = set()
+    seen_ids: set[str] = set()
+    casefold_paths: set[str] = set()
+    normalized_refs: list[dict] = []
+    for index, ref in enumerate(refs):
+        if not isinstance(ref, dict):
+            failures.append(f"{manifest_path.as_posix()}: artifact_refs[{index}] must be an object")
+            continue
+        artifact_id = ref.get("artifact_id")
+        if not isinstance(artifact_id, str) or not artifact_id.strip():
+            failures.append(f"{manifest_path.as_posix()}: artifact_refs[{index}] missing artifact_id")
+        elif artifact_id in seen_ids:
+            failures.append(f"{manifest_path.as_posix()}: duplicate artifact_id {artifact_id}")
+        else:
+            seen_ids.add(artifact_id)
+        path_value = ref.get("path") or ref.get("artifact_path")
+        normalized, error = normalize_repo_path(path_value)
+        if error:
+            failures.append(f"{manifest_path.as_posix()}: artifact_refs[{index}] path error: {error}")
+            continue
+        assert normalized is not None
+        if not normalized.startswith(phase_prefix):
+            failures.append(f"{manifest_path.as_posix()}: {normalized} is outside current phase artifact root")
+        if normalized in seen_paths:
+            failures.append(f"{manifest_path.as_posix()}: duplicate path {normalized}")
+        seen_paths.add(normalized)
+        lowered = normalized.casefold()
+        if lowered in casefold_paths:
+            failures.append(f"{manifest_path.as_posix()}: case-colliding path {normalized}")
+        casefold_paths.add(lowered)
+        if Path(normalized).suffix != ".json":
+            failures.append(f"{manifest_path.as_posix()}: {normalized} must be a JSON assertion artifact")
+        expectation = ref.get("expectation")
+        if expectation not in {"positive", "expected_negative"}:
+            failures.append(f"{manifest_path.as_posix()}: {normalized} has invalid expectation {expectation!r}")
+        expected_status = ref.get("expected_status")
+        if expected_status not in {"PASS_SHAPE_ONLY", "FAIL_BLOCKER"}:
+            failures.append(f"{manifest_path.as_posix()}: {normalized} has invalid expected_status {expected_status!r}")
+        if expectation == "positive" and expected_status != "PASS_SHAPE_ONLY":
+            failures.append(f"{manifest_path.as_posix()}: {normalized} positive entry must expect PASS_SHAPE_ONLY")
+        if expectation == "expected_negative" and expected_status != "FAIL_BLOCKER":
+            failures.append(f"{manifest_path.as_posix()}: {normalized} expected-negative entry must expect FAIL_BLOCKER")
+        coverage = ref.get("coverage_tokens")
+        if not isinstance(coverage, list) or not all(isinstance(item, str) and item for item in coverage):
+            failures.append(f"{manifest_path.as_posix()}: {normalized} coverage_tokens must be non-empty strings")
+        normalized_ref = dict(ref)
+        normalized_ref["path"] = normalized
+        normalized_refs.append(normalized_ref)
+
+    if path_list_path is not None:
+        path_list, path_list_failures = read_path_list(path_list_path, phase_slug)
+        failures.extend(path_list_failures)
+        if sorted(path_list) != sorted(seen_paths):
+            failures.append(
+                f"{path_list_path.as_posix()}: paths do not match manifest artifact_refs"
+            )
+    return normalized_refs, failures
+
+
+def check_assertion_artifacts(
+    files: list[Path],
+    coverage_tokens: list[str],
+    manifest_path: Path | None = None,
+    path_list_path: Path | None = None,
+    artifact_root: str = "docs/trinity-live-traces",
+    phase_slug: str = "",
+    require_manifest: bool = False,
+) -> tuple[str, str, str | None]:
+    file_map = {path.as_posix(): path for path in files}
+    manifest_refs: list[dict] = []
+    manifest_failures: list[str] = []
+    if manifest_path is not None:
+        manifest_refs, manifest_failures = read_assertion_manifest(
+            manifest_path, path_list_path, artifact_root, phase_slug
+        )
+    elif require_manifest:
+        manifest_failures.append("explicit assertion manifest is required")
+
+    if manifest_failures:
+        return "FAIL_BLOCKER", "assertion manifest failed contract", json.dumps(manifest_failures)
+
+    if manifest_refs:
+        assertion_files = [Path(ref["path"]) for ref in manifest_refs if "path" in ref]
+        manifest_path_set = {path.as_posix() for path in assertion_files}
+        stray = [
+            path.as_posix()
+            for path in files
+            if path.suffix == ".json" and "-assert-" in path.name and path.as_posix() not in manifest_path_set
+        ]
+        if stray:
+            return "FAIL_BLOCKER", "assertion manifest failed closed-world contract", json.dumps(stray)
+    else:
+        assertion_files = [path for path in files if path.suffix == ".json" and "-assert-" in path.name]
+
     if not assertion_files:
         return "FAIL_BLOCKER", "no assertion artifacts found", None
 
@@ -123,33 +286,53 @@ def check_assertion_artifacts(files: list[Path], coverage_tokens: list[str]) -> 
     failures: list[str] = []
     covered = {token: False for token in coverage_tokens}
 
-    for path in assertion_files:
+    for index, path in enumerate(assertion_files):
         try:
+            repo_path = path.as_posix()
+            if repo_path not in file_map:
+                failures.append(f"{repo_path}: manifest-listed assertion artifact is not in phase artifact set")
+                continue
             payload = json.loads(path.read_text(encoding="utf-8"))
         except Exception as exc:
             failures.append(f"{path.as_posix()}: assertion JSON unreadable: {exc}")
             continue
 
         name = path.name
+        manifest_ref = manifest_refs[index] if manifest_refs else {}
+        manifest_tokens = manifest_ref.get("coverage_tokens", [])
         for token in covered:
-            if token in name:
+            if token in name or token in manifest_tokens:
                 covered[token] = True
 
-        expected_negative = "-assert-negative-" in name or "pre-fix" in name
+        expected_negative = (
+            manifest_ref.get("expectation") == "expected_negative"
+            if manifest_ref
+            else "-assert-negative-" in name or "pre-fix" in name
+        )
         status = payload.get("assertion_status") or payload.get("aggregate_status")
         assertion_failures = payload.get("assertion_failures")
         boundary_ok = (
             payload.get("report_mode") == "local_non_mutating"
             and payload.get("connector_write_performed") is False
             and payload.get("mutation_performed") is False
-            and payload.get("gmUT_gate_effect") == "none_open_not_tested"
+            and payload.get("external_mutations_performed", False) is False
+            and payload.get("gmUT_gate_effect", payload.get("gmut_gate_effect")) == "none_open_not_tested"
         )
         if not boundary_ok:
             failures.append(f"{path.as_posix()}: assertion boundary fields are not local/non-mutating")
+        expected_status = manifest_ref.get("expected_status") if manifest_ref else None
+        if expected_status and status != expected_status:
+            failures.append(f"{path.as_posix()}: status {status!r} did not match manifest expected_status {expected_status!r}")
+        expected_report_input = manifest_ref.get("report_input") if manifest_ref else None
+        if expected_report_input and payload.get("report_input") != expected_report_input:
+            failures.append(f"{path.as_posix()}: report_input did not match manifest")
         if expected_negative:
             expected_negative_count += 1
             if status != "FAIL_BLOCKER" or not assertion_failures:
                 failures.append(f"{path.as_posix()}: expected-negative assertion did not fail with reasons")
+            for token in manifest_ref.get("expected_failure_tokens", []):
+                if token not in " ".join(assertion_failures or []):
+                    failures.append(f"{path.as_posix()}: expected failure token {token!r} not found")
         else:
             positive_count += 1
             if status != "PASS_SHAPE_ONLY" or assertion_failures:
@@ -200,6 +383,19 @@ def main() -> int:
         action="append",
         default=[],
         help="Require an assertion artifact filename to contain this coverage token, repeatable",
+    )
+    parser.add_argument(
+        "--assertion-manifest",
+        help="Explicit assertion artifact manifest JSON for closed-world assertion checking",
+    )
+    parser.add_argument(
+        "--assertion-path-list",
+        help="Optional assertion path-list JSON that must match the assertion manifest paths",
+    )
+    parser.add_argument(
+        "--require-assertion-manifest",
+        action="store_true",
+        help="Fail closed unless --assertion-manifest is provided when assertion artifacts are required",
     )
     args = parser.parse_args()
 
@@ -255,7 +451,15 @@ def main() -> int:
         report.add("trailing_whitespace", "PASS_SHAPE_ONLY", "no trailing whitespace found")
 
     if args.require_assertion_artifacts:
-        status, message, evidence = check_assertion_artifacts(files, args.require_assertion_coverage)
+        status, message, evidence = check_assertion_artifacts(
+            files,
+            args.require_assertion_coverage,
+            manifest_path=Path(args.assertion_manifest) if args.assertion_manifest else None,
+            path_list_path=Path(args.assertion_path_list) if args.assertion_path_list else None,
+            artifact_root=args.artifact_root,
+            phase_slug=args.phase_slug,
+            require_manifest=args.require_assertion_manifest,
+        )
         report.add("assertion_artifact_contract", status, message, evidence)
     else:
         report.add("assertion_artifact_contract", "NOT_RUN", "assertion artifact contract not requested")

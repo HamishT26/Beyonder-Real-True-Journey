@@ -381,7 +381,6 @@ def main() -> int:
         "mutation_performed": False,
         "connector_write_performed": False,
         "gmUT_gate_effect": "none_open_not_tested",
-        "gmut_gate_effect": "none_open_not_tested",
         "rows": rows,
     }
     text = json.dumps(output, indent=2, sort_keys=True)
