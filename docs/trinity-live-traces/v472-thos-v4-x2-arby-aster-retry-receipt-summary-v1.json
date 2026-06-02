@@ -1,0 +1,77 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "cli_probes": [
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Arby",
+      "last_message_bytes": 0,
+      "loader_error_counts": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 0
+      },
+      "runtime_warnings": [
+        "stale curated plugins temp directory warning with os error 2",
+        "PowerShell shell snapshot unsupported warning"
+      ],
+      "sandbox": "read-only",
+      "terminated_after_timeout": true
+    },
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Aster Vale",
+      "last_message_bytes": 0,
+      "loader_error_counts": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 1
+      },
+      "runtime_warnings": [
+        "stale curated plugins temp directory warning with os error 5 access denied",
+        "PowerShell shell snapshot unsupported warning"
+      ],
+      "sandbox": "read-only",
+      "terminated_after_timeout": true
+    }
+  ],
+  "generated_at_utc": "2026-06-02T13:46:14+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v4-x2",
+  "rows": [
+    {
+      "evidence": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 0
+      },
+      "message": "Arby v4 x2 probe has zero missing-frontmatter and invalid-name loader errors",
+      "row_id": "arby_loader",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 1
+      },
+      "message": "Aster v4 x2 probe has zero missing-frontmatter and invalid-name loader errors",
+      "row_id": "aster_loader",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Arby/Aster still timed out without final advisory messages in the bounded wait",
+      "row_id": "final_message_quality",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Aster still emitted a stale temp plugin-clone access warning; deletion was not performed",
+      "row_id": "stale_temp",
+      "status": "OPEN_GAP"
+    }
+  ]
+}
