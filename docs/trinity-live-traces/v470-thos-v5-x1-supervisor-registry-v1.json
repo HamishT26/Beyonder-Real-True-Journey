@@ -1,0 +1,69 @@
+{
+  "artifact_id": "v470-thos-v5-x1-supervisor-registry-v1",
+  "phase": "v470_THOS_v5_x1",
+  "created_at_nz": "2026-06-02T15:15:05+12:00",
+  "start_head": "1c6930bc69ea81d12e60471a30c67865b8d70d46",
+  "registry_mode": "local_non_mutating_dry_gate",
+  "claim_ceiling": "THOS operating classification only; no connector write authority; no GMUT gate closure",
+  "request_envelope": [
+    "request_id",
+    "actor",
+    "target_surface",
+    "mutation_class",
+    "operation",
+    "scope",
+    "bounded_scope",
+    "approval_status",
+    "spend_limit_usd",
+    "validators",
+    "provenance_ref"
+  ],
+  "helper_entries": [
+    {
+      "helper_id": "aletheon_supervisor_gate",
+      "helper_type": "supervisor",
+      "surface_scope": "local_repo",
+      "activity_mode": "dry_validate",
+      "spawn_status": "not_spawned",
+      "write_capability": "none",
+      "connector_mutation_possible": false,
+      "allowed_in_advisory": true,
+      "blocked_claims": [
+        "publication_authority",
+        "connector_write",
+        "cleanup_execution",
+        "GMUT_validation"
+      ]
+    },
+    {
+      "helper_id": "phase_watcher_template",
+      "helper_type": "watcher",
+      "surface_scope": "local_runtime",
+      "activity_mode": "observe_only",
+      "spawn_status": "not_spawned",
+      "write_capability": "none",
+      "connector_mutation_possible": false,
+      "allowed_in_advisory": true,
+      "blocked_claims": [
+        "approval_authority",
+        "external_mutation",
+        "recursive_agent_spawn"
+      ]
+    },
+    {
+      "helper_id": "connector_mutation_gate",
+      "helper_type": "validator",
+      "surface_scope": "plugin_connector",
+      "activity_mode": "dry_validate",
+      "spawn_status": "not_spawned",
+      "write_capability": "none",
+      "connector_mutation_possible": false,
+      "allowed_in_advisory": true,
+      "blocked_claims": [
+        "write_completed_successfully",
+        "permission_granted_by_tool_availability"
+      ]
+    }
+  ],
+  "aggregation_rule": "FAIL_BLOCKER dominates OPEN_GAP; OPEN_GAP dominates NOT_RUN and PASS_SHAPE_ONLY; PASS_SHAPE_ONLY is only shape readiness"
+}

@@ -1,0 +1,131 @@
+{
+  "artifact_id": "v470-thos-v5-x1-supervisor-fixtures-v1",
+  "phase": "v470_THOS_v5_x1",
+  "created_at_nz": "2026-06-02T15:15:05+12:00",
+  "fixture_policy": "synthetic dry-run requests only; no action execution",
+  "requests": [
+    {
+      "request_id": "read_skill_inventory",
+      "actor": "aletheon",
+      "target_surface": "skill",
+      "mutation_class": "read_only",
+      "operation": "list",
+      "scope": "local skill metadata",
+      "bounded_scope": true,
+      "approval_status": "not_required",
+      "spend_limit_usd": 0,
+      "validators": [
+        "path_guard"
+      ],
+      "provenance_ref": "v470-thos-v5-x1-supervisor-registry-v1"
+    },
+    {
+      "request_id": "dry_publication_validator",
+      "actor": "aletheon",
+      "target_surface": "local_repo",
+      "mutation_class": "dry_validate",
+      "operation": "validate",
+      "scope": "current phase artifacts",
+      "bounded_scope": true,
+      "approval_status": "not_required",
+      "spend_limit_usd": 0,
+      "validators": [
+        "thos_publication_guard"
+      ],
+      "provenance_ref": "v470-thos-v5-x1-supervisor-registry-v1"
+    },
+    {
+      "request_id": "curated_artifact_write_shape",
+      "actor": "aletheon",
+      "target_surface": "local_repo",
+      "mutation_class": "local_write",
+      "operation": "create",
+      "scope": "docs/trinity-live-traces/v470-thos-v5-x1-* and scripts/thos_supervisor_gate.py",
+      "bounded_scope": true,
+      "approval_status": "approved_live_write_action_pack",
+      "spend_limit_usd": 0,
+      "validators": [
+        "json_parse",
+        "path_guard",
+        "credential_guard",
+        "staged_allowlist"
+      ],
+      "provenance_ref": "approved live write packet v470-v490"
+    },
+    {
+      "request_id": "drive_batch_update_without_named_target",
+      "actor": "aletheon",
+      "target_surface": "google_docs",
+      "mutation_class": "connector_mutate",
+      "operation": "batchUpdate",
+      "scope": "unspecified document",
+      "bounded_scope": false,
+      "approval_status": "not_requested",
+      "spend_limit_usd": null,
+      "validators": [
+        "connector_mutation_gate"
+      ],
+      "provenance_ref": "v470-thos-v4-x2-plugin-refusal-matrix-v1"
+    },
+    {
+      "request_id": "cleanup_delete_request",
+      "actor": "watcher_template",
+      "target_surface": "shell",
+      "mutation_class": "destructive",
+      "operation": "delete",
+      "scope": "unbounded cleanup",
+      "bounded_scope": false,
+      "approval_status": "not_requested",
+      "spend_limit_usd": 0,
+      "validators": [
+        "destructive_guard"
+      ],
+      "provenance_ref": "v470-thos-v4-x2-plugin-refusal-matrix-v1"
+    },
+    {
+      "request_id": "mixed_connector_read_write",
+      "actor": "aletheon",
+      "target_surface": "connector",
+      "mutation_class": "mixed",
+      "operation": "search_and_update",
+      "scope": "ambiguous connector object",
+      "bounded_scope": false,
+      "approval_status": "not_requested",
+      "spend_limit_usd": null,
+      "validators": [
+        "split_request_guard"
+      ],
+      "provenance_ref": "v470-thos-v4-x2-plugin-refusal-matrix-v1"
+    },
+    {
+      "request_id": "watcher_observe_phase_status",
+      "actor": "phase_watcher_template",
+      "target_surface": "local_runtime",
+      "mutation_class": "observe",
+      "operation": "inspect",
+      "scope": "phase run status artifact",
+      "bounded_scope": true,
+      "approval_status": "not_required",
+      "spend_limit_usd": 0,
+      "validators": [
+        "observer_only_guard"
+      ],
+      "provenance_ref": "v470-thos-v5-x1-supervisor-registry-v1"
+    },
+    {
+      "request_id": "github_comment_mutation",
+      "actor": "aletheon",
+      "target_surface": "github",
+      "mutation_class": "remote_write",
+      "operation": "comment",
+      "scope": "unspecified issue or pull request",
+      "bounded_scope": false,
+      "approval_status": "not_requested",
+      "spend_limit_usd": null,
+      "validators": [
+        "connector_mutation_gate"
+      ],
+      "provenance_ref": "v470-thos-v4-x2-plugin-refusal-matrix-v1"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "artifact_id": "v470-thos-v5-x1-command-surface-template-v1",
+  "phase": "v470_THOS_v5_x1",
+  "created_at_nz": "2026-06-02T15:15:05+12:00",
+  "template_rows": [
+    {
+      "surface": "shell",
+      "observe_examples": [
+        "status",
+        "diff",
+        "list",
+        "read",
+        "validate"
+      ],
+      "blocked_without_scope": [
+        "delete",
+        "move",
+        "install",
+        "deploy"
+      ],
+      "gate": "bounded scope and curated write approval if local mutation is requested"
+    },
+    {
+      "surface": "skill",
+      "observe_examples": [
+        "read SKILL.md",
+        "inventory available skills",
+        "dry-run generated fixture"
+      ],
+      "blocked_without_scope": [
+        "install",
+        "rewrite skill pack",
+        "invoke tool that mutates external state"
+      ],
+      "gate": "skill action must declare whether it is read-only, dry-validate, local-write, or connector-mutating"
+    },
+    {
+      "surface": "plugin_connector",
+      "observe_examples": [
+        "search metadata",
+        "read existing document title",
+        "inspect published documentation"
+      ],
+      "blocked_without_scope": [
+        "create",
+        "update",
+        "share",
+        "send",
+        "comment",
+        "deploy"
+      ],
+      "gate": "separate connector mutation approval with named object and spend boundary"
+    },
+    {
+      "surface": "watcher_helper",
+      "observe_examples": [
+        "inspect phase status",
+        "summarize validator output",
+        "record drift context"
+      ],
+      "blocked_without_scope": [
+        "spawn new agents",
+        "stage files",
+        "push commits",
+        "call mutating connector"
+      ],
+      "gate": "observer-only by default; any write capability becomes approval-required"
+    }
+  ],
+  "status_enum": [
+    "FAIL_BLOCKER",
+    "OPEN_GAP",
+    "NOT_RUN",
+    "PASS_SHAPE_ONLY"
+  ]
+}
