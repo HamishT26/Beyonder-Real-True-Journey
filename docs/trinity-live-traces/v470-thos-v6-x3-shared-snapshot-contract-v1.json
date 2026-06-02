@@ -1,0 +1,54 @@
+{
+  "artifact_id": "v470-thos-v6-x3-shared-snapshot-contract-v1",
+  "phase": "v470_THOS_v6_x3",
+  "created_at_nz": "2026-06-02T16:28:13+12:00",
+  "contract_version": "thos-shared-snapshot-contract-v1",
+  "snapshot_subject": "v470-thos-v6-x2",
+  "required_snapshot_fields": [
+    "snapshot_id",
+    "manifested_phase_slug",
+    "source_head",
+    "artifact_count",
+    "artifact_paths",
+    "artifact_sha256",
+    "family_counts",
+    "row_universe_id",
+    "gmut_gate_effect",
+    "connector_write_performed",
+    "mutation_performed"
+  ],
+  "row_universe_contract": {
+    "row_universe_id": "v470-thos-v6-x2-local-export-row-universe",
+    "included_artifact_families": [
+      "supervisor-export",
+      "regression-execution",
+      "unreconciled-exception-export",
+      "data-driven-visualization",
+      "sibling-synthesis",
+      "handoff",
+      "run-status",
+      "source-refresh"
+    ],
+    "required_reconciliation": [
+      "visualization counts must derive from supervisor/regression rows or declare local embedded rows",
+      "sibling synthesis must cite lane authority and any repo-inspection blocker",
+      "exception export must define row grain even when row count is zero",
+      "handoff must carry open blockers without converting them into closure claims"
+    ]
+  },
+  "status_semantics": {
+    "PASS_SHAPE_ONLY": "local shape or guard passed without external authority",
+    "OPEN_GAP": "known unresolved requirement or approval/scope gap",
+    "FAIL_BLOCKER": "must not proceed through that route until resolved",
+    "NOT_RUN": "declared but not executed"
+  },
+  "strict_boundaries": [
+    "no external connector write is implied by a manifest",
+    "no destructive cleanup is implied by a manifest",
+    "no GMUT gate closure is implied by a manifest",
+    "no sibling advisory has publication authority"
+  ],
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}
