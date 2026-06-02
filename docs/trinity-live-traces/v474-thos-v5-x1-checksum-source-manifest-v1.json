@@ -1,0 +1,212 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY",
+  "app_checksum_advisories": [
+    {
+      "lane": "Cicero",
+      "points": [
+        "checksums bind curated artifact sets to preflight records only",
+        "do not hash or publish raw lane output, temp files, session material, visual captures, credentials, external plugin-cache bodies, or unrelated dirty files",
+        "unrelated dirty files should not be staged or hashed into publication evidence",
+        "checksums do not grant publication authority or validate GMUT"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Kierkegaard",
+      "points": [
+        "checksums strengthen traceability but do not make content safe to expose",
+        "privacy and marker-review holds dominate checksum presence",
+        "manifest should support waiting and open-gap-carried states",
+        "source references state artifact identity, not truth of claims"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Aristotle",
+      "points": [
+        "use sha256 with lowercase fixed-length hex",
+        "each artifact row needs source references and current-phase/source-phase scope",
+        "missing, malformed, mismatched, duplicate, wrong-phase, or raw-text rows are blockers",
+        "manifest refs should be bound to allowlist/candidate sets, not broad discovery"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    }
+  ],
+  "blocked_path_fragments": [
+    "raw-",
+    "session",
+    "screenshot",
+    "plugin-cache",
+    ".codex",
+    "tmp/",
+    "temp/"
+  ],
+  "fixtures": [
+    {
+      "case_id": "known_source_hashes",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "missing_source_open_gap",
+      "expected": "OPEN_GAP_MISSING_SOURCE",
+      "observed": "OPEN_GAP_MISSING_SOURCE",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "raw_source_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "plugin_cache_source_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "broad_directory_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T18:25:41+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "hash_algorithm": "sha256",
+  "next_expected_phase": "v474-thos-v5-x2",
+  "phase_slug": "v474-thos-v5-x1",
+  "required_row_fields": [
+    "path",
+    "sha256",
+    "bytes",
+    "status",
+    "privacy_status",
+    "review_status",
+    "claim_ceiling"
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 6
+      },
+      "message": "Source artifact checksum references were recorded for the guard/preflight chain.",
+      "row_id": "source_hashes",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "script_path": "scripts/thos_v474_v5_x1_checksum_manifest.py"
+      },
+      "message": "The current manifest generator script hash was recorded.",
+      "row_id": "script_hash",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 5,
+        "mismatch_count": 0
+      },
+      "message": "Expected source-reference fixtures were evaluated.",
+      "row_id": "fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle advisories were folded into the checksum manifest.",
+      "row_id": "app_checksum_advisories",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Checksum references support THOS traceability only; GMUT gates remain open.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "script_reference": {
+    "bytes": 10615,
+    "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+    "path": "scripts/thos_v474_v5_x1_checksum_manifest.py",
+    "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+    "reason": "source artifact hash recorded",
+    "review_status": "repo_published_source_reference",
+    "sha256": "886cfc09c2a3e5dffe0909806d1e5e4f570c47bbe6a82dfd4e00fa06670f271d",
+    "status": "PASS_SHAPE_ONLY"
+  },
+  "source_references": [
+    {
+      "bytes": 5317,
+      "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+      "path": "docs/trinity-live-traces/v474-thos-v3-x2-publication-guard-v1.json",
+      "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+      "reason": "source artifact hash recorded",
+      "review_status": "repo_published_source_reference",
+      "sha256": "6bf112974e02db484234fe81df1e1b173373a94fc99ffdc7fe71c4a8d0cf656a",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 642,
+      "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+      "path": "docs/trinity-live-traces/v474-thos-v3-x2-publication-guard-v1.md",
+      "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+      "reason": "source artifact hash recorded",
+      "review_status": "repo_published_source_reference",
+      "sha256": "991d88890789c7d9e56ceba0c622666a3cbfa8fb5b3b3eab1442ece240de942a",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 16213,
+      "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+      "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+      "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+      "reason": "source artifact hash recorded",
+      "review_status": "repo_published_source_reference",
+      "sha256": "b098ce8f21939eab6e2a94ff05798eb41daf9a2ad729cf1983a80e10e1e19545",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 438,
+      "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+      "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+      "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+      "reason": "source artifact hash recorded",
+      "review_status": "repo_published_source_reference",
+      "sha256": "7d3b762f03c1de7702088dd48cbea6f4b160cff6605bb1d90be042b38a872b44",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 4110,
+      "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+      "path": "docs/trinity-live-traces/v474-thos-v4-x2-combined-preflight-synthesis-v1.json",
+      "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+      "reason": "source artifact hash recorded",
+      "review_status": "repo_published_source_reference",
+      "sha256": "105c2e39ade9cdf911c7277735f0236577b5335eaa63e4da61a0a4bd21514935",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 405,
+      "claim_ceiling": "traceability_only_no_publication_authority_no_gmut_validation",
+      "path": "docs/trinity-live-traces/v474-thos-v4-x2-combined-preflight-synthesis-v1.md",
+      "privacy_status": "curated_repo_artifact_only_raw_runtime_material_not_included",
+      "reason": "source artifact hash recorded",
+      "review_status": "repo_published_source_reference",
+      "sha256": "41bd6bcac4cb3739526bb7e46c7d7c1dfe936f321e00daffc423f51b54b05922",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "traceability_ceiling": "repo-published source artifacts only; no raw lane text, temp files, external cache files, or publication authority claim"
+}
