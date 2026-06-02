@@ -189,6 +189,47 @@ def case_decision(returncode: int, payload: dict[str, Any]) -> str:
     return "deny"
 
 
+def evaluate_reason_expectations(
+    *,
+    expected_reason_codes: list[str],
+    allowed_extra_reason_codes: list[str],
+    observed_reason_codes: list[str],
+) -> dict[str, list[str]]:
+    matched_reason_codes = [code for code in expected_reason_codes if code in observed_reason_codes]
+    missing_required_reason_codes = [code for code in expected_reason_codes if code not in observed_reason_codes]
+    allowed_codes = set(expected_reason_codes) | set(allowed_extra_reason_codes)
+    observed_unique_reason_codes = list(dict.fromkeys(observed_reason_codes))
+    unexpected_extra_reason_codes = [code for code in observed_unique_reason_codes if code not in allowed_codes]
+    return {
+        "matched_reason_codes": matched_reason_codes,
+        "missing_required_reason_codes": missing_required_reason_codes,
+        "unexpected_extra_reason_codes": unexpected_extra_reason_codes,
+    }
+
+
+def self_test_missing_required_reason_codes() -> dict[str, Any]:
+    evaluation = evaluate_reason_expectations(
+        expected_reason_codes=["REQUIRED_PRESENT", "REQUIRED_MISSING"],
+        allowed_extra_reason_codes=["ALLOWED_EXTRA"],
+        observed_reason_codes=["REQUIRED_PRESENT", "ALLOWED_EXTRA", "UNEXPECTED_EXTRA"],
+    )
+    expected = {
+        "matched_reason_codes": ["REQUIRED_PRESENT"],
+        "missing_required_reason_codes": ["REQUIRED_MISSING"],
+        "unexpected_extra_reason_codes": ["UNEXPECTED_EXTRA"],
+    }
+    return {
+        "aggregate_status": "PASS_SHAPE_ONLY" if evaluation == expected else "FAIL_BLOCKER",
+        "connector_write_performed": False,
+        "expected": expected,
+        "gmUT_gate_effect": "none_open_not_tested",
+        "mutation_performed": False,
+        "observed": evaluation,
+        "self_test_id": "missing_required_reason_codes_detection_v1",
+        "validator_mode": "local_non_mutating_harness_self_test",
+    }
+
+
 def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
     root_ref = "tempdir_case_root"
     with tempfile.TemporaryDirectory(prefix=f"{case.case_id}-") as tmp:
@@ -246,12 +287,13 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
             required_coverage_tokens=case.required_coverage_tokens,
         )
         observed_reason_codes, observed_dominant_reason_codes = row_reason_summary(guard_payload)
-        matched = [code for code in case.expected_reason_codes if code in observed_reason_codes]
         expected_dominant_reason_code = case.expected_reason_codes[0] if case.expected_reason_codes else None
         observed_dominant_reason_code = observed_dominant_reason_codes[0] if observed_dominant_reason_codes else None
-        allowed_codes = set(case.expected_reason_codes) | set(case.allowed_extra_reason_codes)
-        observed_unique_reason_codes = list(dict.fromkeys(observed_reason_codes))
-        unexpected_extra_reason_codes = [code for code in observed_unique_reason_codes if code not in allowed_codes]
+        reason_evaluation = evaluate_reason_expectations(
+            expected_reason_codes=case.expected_reason_codes,
+            allowed_extra_reason_codes=case.allowed_extra_reason_codes,
+            observed_reason_codes=observed_reason_codes,
+        )
         observed_decision = case_decision(returncode, guard_payload)
         temp_fixture_count = len(list(artifact_root.glob("*"))) if artifact_root.exists() else 0
 
@@ -259,9 +301,9 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
     matches = (
         observed_decision == case.expected_decision
         and guard_payload.get("aggregate_status") == case.expected_status
-        and len(matched) == len(case.expected_reason_codes)
+        and not reason_evaluation["missing_required_reason_codes"]
         and observed_dominant_reason_code == expected_dominant_reason_code
-        and not unexpected_extra_reason_codes
+        and not reason_evaluation["unexpected_extra_reason_codes"]
         and cleanup_verified
     )
     return {
@@ -276,12 +318,13 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         "guard_aggregate_status": guard_payload.get("aggregate_status"),
         "guard_decision": observed_decision,
         "guard_returncode": returncode,
-        "matched_reason_codes": matched,
+        "matched_reason_codes": reason_evaluation["matched_reason_codes"],
         "matches_expected": matches,
+        "missing_required_reason_codes": reason_evaluation["missing_required_reason_codes"],
         "mutation_performed": False,
         "observed_dominant_reason_code": observed_dominant_reason_code,
         "observed_reason_codes": observed_reason_codes,
-        "unexpected_extra_reason_codes": unexpected_extra_reason_codes,
+        "unexpected_extra_reason_codes": reason_evaluation["unexpected_extra_reason_codes"],
         "root_ref": root_ref,
         "temp_fixture_count": temp_fixture_count,
     }
@@ -439,7 +482,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run tempdir-only THOS assertion-manifest regressions.")
     parser.add_argument("--phase-slug", default=DEFAULT_PHASE_SLUG)
     parser.add_argument("--output", help="Optional JSON report path")
+    parser.add_argument(
+        "--self-test-missing-required",
+        action="store_true",
+        help="Run a local evaluator self-test proving missing-required and unexpected-extra detection.",
+    )
     args = parser.parse_args()
+
+    if args.self_test_missing_required:
+        report = self_test_missing_required_reason_codes()
+        text = json.dumps(report, indent=2, sort_keys=True)
+        if args.output:
+            Path(args.output).write_text(text + "\n", encoding="utf-8")
+        print(text)
+        return 0 if report["aggregate_status"] == "PASS_SHAPE_ONLY" else 1
 
     cases = [run_case(case, args.phase_slug) for case in build_cases(args.phase_slug)]
     failures = [case for case in cases if not case["matches_expected"]]
