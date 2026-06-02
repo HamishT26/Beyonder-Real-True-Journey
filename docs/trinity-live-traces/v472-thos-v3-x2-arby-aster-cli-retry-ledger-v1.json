@@ -1,0 +1,86 @@
+{
+  "aggregate_status": "PLUGIN_INVALID_NAMES_CLEARED",
+  "generated_at_utc": "2026-06-02T13:33:47+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v3-x2",
+  "retries": [
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Arby",
+      "last_message_bytes": 0,
+      "loader_error_counts": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 0
+      },
+      "loader_error_lines": [],
+      "sandbox": "read-only",
+      "stderr_bytes": 1343,
+      "terminated_after_timeout": true
+    },
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Aster Vale",
+      "last_message_bytes": 0,
+      "loader_error_counts": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 0
+      },
+      "loader_error_lines": [],
+      "sandbox": "read-only",
+      "stderr_bytes": 1394,
+      "terminated_after_timeout": true
+    }
+  ],
+  "retry_count": 2,
+  "rows": [
+    {
+      "evidence": {
+        "remaining_invalid_name": 0
+      },
+      "message": "In-scope plugin-cache invalid-name errors should be cleared",
+      "row_id": "plugin_invalid_name_repair",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "required": 8,
+        "verified_plugin_targets": 8
+      },
+      "message": "All eight in-scope plugin-cache names should now be below the canonical length limit",
+      "row_id": "plugin_target_verification",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "remaining_missing_frontmatter_errors": 0
+      },
+      "message": "User-level BOM-bearing skills are outside the approved plugin-cache write scope",
+      "row_id": "user_skill_bom",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "All final-run writes preserved body bytes; idempotent reruns perform no extra writes",
+      "row_id": "body_preservation",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "attempts": [
+          {
+            "attempt": 1,
+            "pending_count": 0
+          }
+        ]
+      },
+      "message": "Repair used bounded attempts below the 50-attempt ceiling",
+      "row_id": "retry_ceiling",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}
