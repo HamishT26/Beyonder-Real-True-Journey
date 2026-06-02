@@ -200,15 +200,19 @@ def check_binding(canonical_report: dict[str, Any], visualization: dict[str, Any
     else:
         digest_ref_presence_status = "present"
     count_reconciliation_status = (
-        "PASS_SHAPE_ONLY"
-        if not (
+        "FAIL_BLOCKER"
+        if (
             duplicate_canonical_row_ids
             or malformed_visual_rows
             or duplicate_visual_row_ids
             or orphan_visual_row_ids
             or missing_visual_row_ids
+            or tuple_mismatches
+            or gate_effect_drift_rows
+            or top_level_gate_effect_drift
+            or digest_mismatch_row_ids
         )
-        else "FAIL_BLOCKER"
+        else "PASS_SHAPE_ONLY"
     )
 
     return {

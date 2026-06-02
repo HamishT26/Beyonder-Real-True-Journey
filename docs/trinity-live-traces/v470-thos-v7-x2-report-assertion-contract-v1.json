@@ -1,0 +1,30 @@
+{
+  "artifact_id": "v470-thos-v7-x2-report-assertion-contract-v1",
+  "phase": "v470_THOS_v7_x2",
+  "created_at_nz": "2026-06-02T18:15:45+12:00",
+  "baseline_commit": "3d8d03a4e8e2cedf15fdfcdab6a842d3cceed673",
+  "validator": "scripts/thos_visualization_report_assert.py",
+  "paired_generator": "scripts/thos_visualization_binding_check.py",
+  "assertion_contract": [
+    "required top-level report fields must be present and typed",
+    "report_mode must remain local_non_mutating",
+    "mutation_performed and connector_write_performed must remain false",
+    "gmUT_gate_effect must remain none_open_not_tested",
+    "aggregate_status must be rederived from detailed blocker/open-gap evidence",
+    "dominant_failure_code and dominant_finding_code must reconcile with failure-code precedence",
+    "secondary_findings must preserve non-dominant findings in deterministic order",
+    "count_reconciliation counters must match row-detail lists",
+    "digest_ref_presence status and counts must reconcile with missing digest-ref rows",
+    "gate-effect drift must force blocker-class count reconciliation"
+  ],
+  "status_precedence": [
+    "FAIL_BLOCKER",
+    "OPEN_GAP",
+    "PASS_SHAPE_ONLY"
+  ],
+  "claim_boundary": "This contract validates local THOS report shape and reconciliation only. It does not authorize connector writes, certify security, validate GMUT, close GMUT gates, prove fifth-force safety, or prove consciousness claims.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmut_gate_effect": "none_open_not_tested"
+}
