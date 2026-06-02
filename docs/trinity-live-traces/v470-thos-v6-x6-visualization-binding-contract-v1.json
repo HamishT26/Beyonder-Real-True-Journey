@@ -1,0 +1,35 @@
+{
+  "artifact_id": "v470-thos-v6-x6-visualization-binding-contract-v1",
+  "phase": "v470_THOS_v6_x6",
+  "created_at_nz": "2026-06-02T17:13:52+12:00",
+  "binding_scope": "local_visualization_projection_from_canonical_rows",
+  "source_row_universe": "docs/trinity-live-traces/v470-thos-v6-x5-visualization-row-data-v1.json",
+  "source_digest_report": "docs/trinity-live-traces/v470-thos-v6-x6-rich-row-universe-digest-v1.json",
+  "required_visualization_fields": [
+    "phase_id",
+    "row_id",
+    "family",
+    "status",
+    "surface",
+    "source_row_id",
+    "row_identity_digest",
+    "row_content_digest",
+    "derived_from_canonical"
+  ],
+  "binding_rules": [
+    "visualization rows must derive from canonical_rows",
+    "rejected rows must not be projected as canonical visualization rows",
+    "visualization counts must reconcile with canonical row count or declare aggregation policy",
+    "row_id-only visualization binding is transitional and must reference row_content_digest",
+    "orphan visualization rows are blockers unless explicitly marked not produced"
+  ],
+  "known_open_gaps": [
+    "existing v6_x2 HTML still carries embedded row data",
+    "v6_x6 documents the binding contract but does not rewrite the HTML renderer",
+    "orphan and multi-bind visualization fixture checks remain v6_x7 work"
+  ],
+  "safe_wording": "Visualization externalization means local report shaping only. It is not dashboard authority, governance certification, external publication, or GMUT validation.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}
