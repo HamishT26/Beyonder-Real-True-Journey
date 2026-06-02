@@ -286,6 +286,7 @@ def assert_report(report: dict[str, Any]) -> tuple[list[dict[str, Any]], list[st
             or list_len(report, "missing_visual_row_ids") > 0
             or list_len(report, "tuple_mismatches") > 0
             or gate_detail_count > 0
+            or list_len(report, "digest_mismatch_row_ids") > 0
         ) else "PASS_SHAPE_ONLY"
         count_mismatches = {
             "orphan_visual_row_count": [count["orphan_visual_row_count"], list_len(report, "orphan_visual_row_ids"), report["orphan_row_count"]],

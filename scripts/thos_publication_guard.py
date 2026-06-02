@@ -113,6 +113,64 @@ def iter_row_status_values(value: object) -> list[str]:
     return found
 
 
+def check_assertion_artifacts(files: list[Path], coverage_tokens: list[str]) -> tuple[str, str, str | None]:
+    assertion_files = [path for path in files if path.suffix == ".json" and "-assert-" in path.name]
+    if not assertion_files:
+        return "FAIL_BLOCKER", "no assertion artifacts found", None
+
+    positive_count = 0
+    expected_negative_count = 0
+    failures: list[str] = []
+    covered = {token: False for token in coverage_tokens}
+
+    for path in assertion_files:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            failures.append(f"{path.as_posix()}: assertion JSON unreadable: {exc}")
+            continue
+
+        name = path.name
+        for token in covered:
+            if token in name:
+                covered[token] = True
+
+        expected_negative = "-assert-negative-" in name or "pre-fix" in name
+        status = payload.get("assertion_status") or payload.get("aggregate_status")
+        assertion_failures = payload.get("assertion_failures")
+        boundary_ok = (
+            payload.get("report_mode") == "local_non_mutating"
+            and payload.get("connector_write_performed") is False
+            and payload.get("mutation_performed") is False
+            and payload.get("gmUT_gate_effect") == "none_open_not_tested"
+        )
+        if not boundary_ok:
+            failures.append(f"{path.as_posix()}: assertion boundary fields are not local/non-mutating")
+        if expected_negative:
+            expected_negative_count += 1
+            if status != "FAIL_BLOCKER" or not assertion_failures:
+                failures.append(f"{path.as_posix()}: expected-negative assertion did not fail with reasons")
+        else:
+            positive_count += 1
+            if status != "PASS_SHAPE_ONLY" or assertion_failures:
+                failures.append(f"{path.as_posix()}: positive assertion did not pass cleanly")
+
+    missing_coverage = [token for token, present in covered.items() if not present]
+    if missing_coverage:
+        failures.append(f"missing assertion coverage tokens: {missing_coverage}")
+    if positive_count == 0:
+        failures.append("no positive assertion artifacts found")
+    if expected_negative_count == 0:
+        failures.append("no expected-negative assertion artifacts found")
+    if failures:
+        return "FAIL_BLOCKER", "assertion artifacts failed contract", json.dumps(failures)
+    return (
+        "PASS_SHAPE_ONLY",
+        f"assertion artifacts passed contract: {positive_count} positive, {expected_negative_count} expected-negative",
+        json.dumps({"coverage_tokens": coverage_tokens}),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run a non-mutating THOS publication guard.")
     parser.add_argument("--phase-slug", required=True, help="Phase slug, for example v470-thos-v3-x2")
@@ -131,6 +189,17 @@ def main() -> int:
         action="append",
         default=[],
         help="Additional exact staged path allowed for this phase, repeatable",
+    )
+    parser.add_argument(
+        "--require-assertion-artifacts",
+        action="store_true",
+        help="Require local THOS assertion artifacts for visualization/report phases",
+    )
+    parser.add_argument(
+        "--require-assertion-coverage",
+        action="append",
+        default=[],
+        help="Require an assertion artifact filename to contain this coverage token, repeatable",
     )
     args = parser.parse_args()
 
@@ -184,6 +253,12 @@ def main() -> int:
         report.add("status_enum", "PASS_SHAPE_ONLY", "status enum values are constrained")
     if not any(row.row_id == "trailing_whitespace" for row in report.rows):
         report.add("trailing_whitespace", "PASS_SHAPE_ONLY", "no trailing whitespace found")
+
+    if args.require_assertion_artifacts:
+        status, message, evidence = check_assertion_artifacts(files, args.require_assertion_coverage)
+        report.add("assertion_artifact_contract", status, message, evidence)
+    else:
+        report.add("assertion_artifact_contract", "NOT_RUN", "assertion artifact contract not requested")
 
     if args.staged_only:
         staged = git_lines(["diff", "--cached", "--name-only"])
