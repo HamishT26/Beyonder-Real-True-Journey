@@ -159,8 +159,9 @@ def run_guard(
     return result.returncode, payload
 
 
-def row_reason_codes(payload: dict[str, Any]) -> list[str]:
+def row_reason_summary(payload: dict[str, Any]) -> tuple[list[str], list[str]]:
     codes: list[str] = []
+    dominant_codes: list[str] = []
     for row in payload.get("rows", []):
         if not isinstance(row, dict):
             continue
@@ -175,7 +176,10 @@ def row_reason_codes(payload: dict[str, Any]) -> list[str]:
             for code in parsed.get("reason_codes", []):
                 if isinstance(code, str):
                     codes.append(code)
-    return codes
+            dominant = parsed.get("dominant_reason_code")
+            if isinstance(dominant, str):
+                dominant_codes.append(dominant)
+    return codes, dominant_codes
 
 
 def case_decision(returncode: int, payload: dict[str, Any]) -> str:
@@ -240,8 +244,10 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
             path_list_path=Path(path_list_rel),
             required_coverage_tokens=case.required_coverage_tokens,
         )
-        observed_reason_codes = row_reason_codes(guard_payload)
+        observed_reason_codes, observed_dominant_reason_codes = row_reason_summary(guard_payload)
         matched = [code for code in case.expected_reason_codes if code in observed_reason_codes]
+        expected_dominant_reason_code = case.expected_reason_codes[0] if case.expected_reason_codes else None
+        observed_dominant_reason_code = observed_dominant_reason_codes[0] if observed_dominant_reason_codes else None
         observed_decision = case_decision(returncode, guard_payload)
         temp_fixture_count = len(list(artifact_root.glob("*"))) if artifact_root.exists() else 0
 
@@ -250,6 +256,7 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         observed_decision == case.expected_decision
         and guard_payload.get("aggregate_status") == case.expected_status
         and len(matched) == len(case.expected_reason_codes)
+        and observed_dominant_reason_code == expected_dominant_reason_code
         and cleanup_verified
     )
     return {
@@ -257,6 +264,7 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         "cleanup_verified": cleanup_verified,
         "curated_temp_fixture_count": 0,
         "expected_decision": case.expected_decision,
+        "expected_dominant_reason_code": expected_dominant_reason_code,
         "expected_reason_codes": case.expected_reason_codes,
         "expected_status": case.expected_status,
         "guard_aggregate_status": guard_payload.get("aggregate_status"),
@@ -265,6 +273,7 @@ def run_case(case: Case, phase_slug: str) -> dict[str, Any]:
         "matched_reason_codes": matched,
         "matches_expected": matches,
         "mutation_performed": False,
+        "observed_dominant_reason_code": observed_dominant_reason_code,
         "observed_reason_codes": observed_reason_codes,
         "root_ref": root_ref,
         "temp_fixture_count": temp_fixture_count,
@@ -350,7 +359,7 @@ def build_cases(phase_slug: str) -> list[Case]:
                     happy_manifest["artifact_refs"][0],
                     {
                         **happy_manifest["artifact_refs"][1],
-                        "path": happy_manifest["artifact_refs"][0]["path"].upper(),
+                        "path": f"artifacts/{phase_slug}-ASSERT-HAPPY-V1.json",
                     },
                 ],
             },
@@ -371,7 +380,7 @@ def build_cases(phase_slug: str) -> list[Case]:
             "expected_negative_unexpected_pass",
             "deny",
             "FAIL_BLOCKER",
-            ["ASSERTION_STATUS_MISMATCH", "ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL"],
+            ["ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL", "ASSERTION_STATUS_MISMATCH"],
         ),
         Case("boundary_drift_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_BOUNDARY_INVALID"]),
         Case("coverage_gap_rejected", "deny", "FAIL_BLOCKER", ["ASSERTION_COVERAGE_MISSING"], required_coverage_tokens=["missing-token"]),

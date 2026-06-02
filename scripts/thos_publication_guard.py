@@ -37,6 +37,26 @@ FORBIDDEN_CLAIM_RE = re.compile(
     r"connector\s+write\s+completed\s+successfully|cloud\s+mutation\s+completed\s+successfully)",
     re.IGNORECASE,
 )
+REASON_CODE_PRIORITY = {
+    "ASSERTION_BOUNDARY_INVALID": 10,
+    "MANIFEST_JSON_UNREADABLE": 20,
+    "PATH_LIST_JSON_UNREADABLE": 20,
+    "MANIFEST_CLOSED_WORLD_STRAY": 30,
+    "MANIFEST_SCHEMA_INVALID": 40,
+    "PATH_LIST_SCHEMA_INVALID": 40,
+    "MANIFEST_ARTIFACT_ID_DUPLICATE": 50,
+    "MANIFEST_PATH_DUPLICATE": 60,
+    "MANIFEST_PATH_CASE_COLLISION": 70,
+    "MANIFEST_PATH_INVALID": 80,
+    "PATH_LIST_PATH_INVALID": 80,
+    "ASSERTION_ARTIFACTS_MISSING": 85,
+    "ASSERTION_ARTIFACT_MISSING": 85,
+    "ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL": 90,
+    "ASSERTION_COVERAGE_MISSING": 100,
+    "MANIFEST_EXPECTATION_INVALID": 110,
+    "MANIFEST_EXPECTED_STATUS_INVALID": 110,
+    "ASSERTION_STATUS_MISMATCH": 120,
+}
 
 
 @dataclass
@@ -94,10 +114,18 @@ def reason_failure(code: str, message: str) -> ReasonFailure:
 
 
 def reason_evidence(failures: list[ReasonFailure]) -> str:
+    reason_codes = [failure["reason_code"] for failure in failures]
+    dominant_reason_code = min(
+        reason_codes,
+        key=lambda code: (REASON_CODE_PRIORITY.get(code, 10_000), reason_codes.index(code), code),
+        default=None,
+    )
     return json.dumps(
         {
+            "dominant_reason_code": dominant_reason_code,
             "failures": failures,
-            "reason_codes": [failure["reason_code"] for failure in failures],
+            "primary_selection_mode": "priority_table" if dominant_reason_code else "none",
+            "reason_codes": reason_codes,
         },
         sort_keys=True,
     )
