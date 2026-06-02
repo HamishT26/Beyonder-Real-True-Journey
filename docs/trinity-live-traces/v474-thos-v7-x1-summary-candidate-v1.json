@@ -1,0 +1,223 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_SUMMARY_CANDIDATE",
+  "app_advisories": [
+    {
+      "lane": "Cicero",
+      "points": [
+        "safe publication is lane, status, marker-count, classification, and source metadata only",
+        "raw final text, stderr, transport, visual captures, runtime records, and private values remain blocked",
+        "metadata-only review does not prove advisory quality or GMUT progress"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Kierkegaard",
+      "points": [
+        "summary-only publication is ethical only when it remains honest about its limits",
+        "do not infer intent, identity, memory, or consciousness claims from marker metadata",
+        "carry raw-output and GMUT boundaries forward"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Aristotle",
+      "points": [
+        "candidate rows need lane, readiness, marker review state, marker count, raw-unpublished flags, and source refs",
+        "Aster benign classification must reference the review artifact, not raw text",
+        "generic pass, raw content, source mismatch, or GMUT gate movement are blockers"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    }
+  ],
+  "candidate_scope": "summary_only_metadata",
+  "fixtures": [
+    {
+      "case": {
+        "gmut_effect": "none_open_not_tested"
+      },
+      "case_id": "metadata_only_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_effect": "none_open_not_tested",
+        "raw_text": true
+      },
+      "case_id": "raw_text_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_effect": "none_open_not_tested",
+        "stderr": true
+      },
+      "case_id": "stderr_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_effect": "none_open_not_tested",
+        "transport": true
+      },
+      "case_id": "transport_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_effect": "none_open_not_tested",
+        "marker_state": "REVIEWED_BENIGN_METADATA_ONLY",
+        "review_source_present": false
+      },
+      "case_id": "benign_marker_without_source_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_effect": "gate_moved"
+      },
+      "case_id": "gmut_effect_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_effect": "none_open_not_tested",
+        "source_ref_missing": true
+      },
+      "case_id": "missing_source_expected_open_gap",
+      "expected": "OPEN_GAP_SOURCE_REF_MISSING",
+      "observed": "OPEN_GAP_SOURCE_REF_MISSING",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "generic_pass": true,
+        "gmut_effect": "none_open_not_tested"
+      },
+      "case_id": "generic_pass_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T19:04:02+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "lane_summaries": [
+    {
+      "benign_marker_count": 0,
+      "final_message_status": "READY",
+      "lane": "Arby",
+      "marker_count": 0,
+      "marker_review_state": "CLEAN_METADATA_ONLY",
+      "metadata_summary_status": "ALLOW_METADATA_SUMMARY",
+      "raw_text_published": false,
+      "source_refs": [
+        "docs/trinity-live-traces/v474-thos-v5-x2-cli-lane-completion-notice-v1.json",
+        "docs/trinity-live-traces/v474-thos-v6-x1-receipt-marker-review-ledger-v1.json",
+        "docs/trinity-live-traces/v474-thos-v6-x2-marker-classification-v1.json"
+      ],
+      "stderr_published": false,
+      "transport_published": false
+    },
+    {
+      "benign_marker_count": 1,
+      "final_message_status": "READY",
+      "lane": "Aster Vale",
+      "marker_count": 1,
+      "marker_review_state": "REVIEWED_BENIGN_METADATA_ONLY",
+      "metadata_summary_status": "ALLOW_METADATA_SUMMARY",
+      "raw_text_published": false,
+      "source_refs": [
+        "docs/trinity-live-traces/v474-thos-v5-x2-cli-lane-completion-notice-v1.json",
+        "docs/trinity-live-traces/v474-thos-v6-x1-receipt-marker-review-ledger-v1.json",
+        "docs/trinity-live-traces/v474-thos-v6-x2-marker-classification-v1.json"
+      ],
+      "stderr_published": false,
+      "transport_published": false
+    }
+  ],
+  "next_expected_phase": "v474-thos-v7-x2",
+  "phase_slug": "v474-thos-v7-x1",
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 3,
+        "source_gap_count": 0
+      },
+      "message": "Summary candidate source references were checked against curated artifacts.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "blocked_summary_lanes": []
+      },
+      "message": "Lane summaries include metadata only and keep raw outputs unpublished.",
+      "row_id": "lane_summary_scope",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 8,
+        "mismatch_count": 0
+      },
+      "message": "Negative fixtures confirmed raw-output, source-gap, generic-pass, and GMUT overclaim blockers.",
+      "row_id": "fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle advisories were folded into the summary-only candidate.",
+      "row_id": "app_advisory_synthesis",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This phase creates a THOS metadata summary candidate only and does not close or test GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v474-thos-v6-x2",
+  "source_refs": [
+    {
+      "bytes": 1313,
+      "path": "docs/trinity-live-traces/v474-thos-v5-x2-cli-lane-completion-notice-v1.json",
+      "sha256": "96467ce72cd8ced92a96c81a49feb997aa31f49e48c4af9982e8eaa85e155ea4",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 7816,
+      "path": "docs/trinity-live-traces/v474-thos-v6-x1-receipt-marker-review-ledger-v1.json",
+      "sha256": "d1fd6a285f19a982809bb9af95210377496c482659ac4f029a5daecab6dd7654",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 4434,
+      "path": "docs/trinity-live-traces/v474-thos-v6-x2-marker-classification-v1.json",
+      "sha256": "fc965ebecc3008e59865cab8694171230cd68b7c138382637159d80a8c98eae0",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}
