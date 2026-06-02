@@ -1,0 +1,67 @@
+{
+  "artifact_id": "v470-thos-v3-x2-command-connector-hygiene-ledger-v1",
+  "phase": "v470_THOS_v3_x2",
+  "created_at_nz": "2026-06-02T14:28:24+12:00",
+  "command_classes": [
+    {
+      "class": "read_only",
+      "examples": [
+        "git status",
+        "git rev-parse",
+        "git ls-remote",
+        "Get-ChildItem",
+        "Select-String",
+        "JSON parse checks"
+      ],
+      "approval": "allowed_under_packet"
+    },
+    {
+      "class": "curated_safe_write",
+      "examples": [
+        "write current-phase artifact JSON/MD",
+        "git add explicit current-phase files",
+        "git commit current-phase artifacts",
+        "git push explicit shared omega ref"
+      ],
+      "approval": "allowed_under_packet_after_guards"
+    },
+    {
+      "class": "approval_required",
+      "examples": [
+        "Google Drive upload/import",
+        "GitHub connector mutation",
+        "cloud deployment",
+        "paid API call",
+        "TeX Live managed full install",
+        "new supervisor background process"
+      ],
+      "approval": "requires separate scoped action packet if cost or mutation is uncertain"
+    },
+    {
+      "class": "forbidden_without_separate_targeted_approval",
+      "examples": [
+        "delete worktrees",
+        "bulk Drive cleanup",
+        "git reset --hard",
+        "git clean",
+        "force push",
+        "stage raw logs/session JSONL/screenshots/credentials"
+      ],
+      "approval": "not approved in v470_THOS_v3_x2"
+    }
+  ],
+  "connector_boundaries": [
+    "NVIDIA plugin not callable; use official web source context only",
+    "GitHub connector not used for repo mutation; git CLI handles curated publication",
+    "Google Drive not mutated in this phase",
+    "Computer/Chrome not used in this phase because no UI automation was required",
+    "Documents/Presentations/Spreadsheets not used for external publication in this phase"
+  ],
+  "hygiene_recommendations": [
+    "every command receives a risk class before execution",
+    "cwd and current phase must be named before write commands",
+    "destructive cleanup remains separate from cleanup-candidate reporting",
+    "connector write availability must not be confused with connector write approval",
+    "generated checker reports must be treated as evidence only for the exact checks they run"
+  ]
+}
