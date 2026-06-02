@@ -397,6 +397,11 @@ def main() -> int:
         action="store_true",
         help="Fail closed unless --assertion-manifest is provided when assertion artifacts are required",
     )
+    parser.add_argument(
+        "--skip-git-drift",
+        action="store_true",
+        help="Skip git drift row for isolated tempdir-only regression harnesses",
+    )
     args = parser.parse_args()
 
     root = Path(args.artifact_root)
@@ -480,11 +485,14 @@ def main() -> int:
     else:
         report.add("staged_allowlist", "NOT_RUN", "staged-only check not requested")
 
-    drift = git_lines(["rev-list", "--left-right", "--count", "HEAD...@{upstream}"])
-    if drift and drift[0].startswith("UNREADABLE"):
-        report.add("git_drift", "OPEN_GAP", "git drift unreadable", drift[0])
+    if args.skip_git_drift:
+        report.add("git_drift", "NOT_RUN", "git drift skipped for tempdir-only regression")
     else:
-        report.add("git_drift", "PASS_SHAPE_ONLY", "git drift recorded", drift[0] if drift else "no output")
+        drift = git_lines(["rev-list", "--left-right", "--count", "HEAD...@{upstream}"])
+        if drift and drift[0].startswith("UNREADABLE"):
+            report.add("git_drift", "OPEN_GAP", "git drift unreadable", drift[0])
+        else:
+            report.add("git_drift", "PASS_SHAPE_ONLY", "git drift recorded", drift[0] if drift else "no output")
 
     print(json.dumps(report.as_json(), indent=2, sort_keys=True))
     return 1 if report.aggregate_status == "FAIL_BLOCKER" else 0
