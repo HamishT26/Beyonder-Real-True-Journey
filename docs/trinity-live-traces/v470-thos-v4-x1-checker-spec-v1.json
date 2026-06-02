@@ -1,0 +1,42 @@
+{
+  "artifact_id": "v470-thos-v4-x1-checker-spec-v1",
+  "phase": "v470_THOS_v4_x1",
+  "created_at_nz": "2026-06-02T14:46:58+12:00",
+  "script_path": "scripts/thos_publication_guard.py",
+  "checker_mode": "local_non_mutating",
+  "status_lattice": [
+    "FAIL_BLOCKER",
+    "OPEN_GAP",
+    "NOT_RUN",
+    "PASS_SHAPE_ONLY"
+  ],
+  "requirements": [
+    "current phase artifact allowlist",
+    "forbidden claim lint",
+    "raw log/session JSONL/screenshot/path guard",
+    "credential and secret-like content guard",
+    "JSON parse validation",
+    "status enum validation",
+    "trailing whitespace validation",
+    "optional staged path allowlist with exact support-script exceptions",
+    "git drift recording",
+    "gmUT_gate_effect remains none_open_not_tested"
+  ],
+  "expected_fail_fixtures": [
+    "artifact outside current phase allowlist",
+    "raw session JSONL in publishable set",
+    "screenshot path in publishable set",
+    "secret-like token content",
+    "forbidden GMUT validation wording",
+    "generic PASS status in JSON",
+    "staged path outside phase prefix",
+    "trailing whitespace in artifact"
+  ],
+  "non_claims": [
+    "checker does not mutate files",
+    "checker does not stage files",
+    "checker does not perform cleanup",
+    "checker does not write connectors",
+    "checker does not validate GMUT"
+  ]
+}
