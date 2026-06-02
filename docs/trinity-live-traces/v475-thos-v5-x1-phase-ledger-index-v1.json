@@ -1,0 +1,211 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_PHASE_LEDGER_INDEX_READY",
+  "fixtures": [
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "index_ready": true,
+        "metadata_only": true
+      },
+      "case_id": "metadata_index_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_required_column": true
+      },
+      "case_id": "missing_required_column_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_claim_ceiling": true
+      },
+      "case_id": "missing_claim_ceiling_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "source_as_proof": true
+      },
+      "case_id": "source_as_proof_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "production_claim": true
+      },
+      "case_id": "production_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_output": true
+      },
+      "case_id": "raw_output_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "open_gap": true
+      },
+      "case_id": "open_gap_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "gate_moved",
+        "index_ready": true
+      },
+      "case_id": "gmut_effect_moved_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T20:27:58+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "index_rows": [
+    {
+      "artifact_ref": "v475-thos-v4-x1-release-readiness-ledger-v1.json",
+      "claim_ceiling": "THOS release/readiness metadata only",
+      "next_action": "gate ledger row coverage and source ceilings",
+      "open_gap_state": "explicit_open_gap_column_present",
+      "phase_ref": "v475-thos-v4-x1",
+      "raw_output_state": "blocked_unpublished",
+      "readiness_state": "PASS_SHAPE_ONLY_RELEASE_READINESS_LEDGER_READY",
+      "source_authority_state": "3 official context refs recorded"
+    },
+    {
+      "artifact_ref": "v475-thos-v4-x2-release-readiness-gate-v1.json",
+      "claim_ceiling": "THOS release/readiness metadata only",
+      "next_action": "build operator-facing phase ledger index gate",
+      "open_gap_state": "explicit_open_gap_column_present",
+      "phase_ref": "v475-thos-v4-x2",
+      "raw_output_state": "blocked_unpublished",
+      "readiness_state": "PASS_SHAPE_ONLY_RELEASE_READINESS_GATE_READY",
+      "source_authority_state": "3 official context refs gated"
+    }
+  ],
+  "next_expected_phase": "v475-thos-v5-x2",
+  "phase_slug": "v475-thos-v5-x1",
+  "required_index_columns": [
+    "phase_ref",
+    "artifact_ref",
+    "readiness_state",
+    "source_authority_state",
+    "open_gap_state",
+    "raw_output_state",
+    "claim_ceiling",
+    "next_action"
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 3,
+        "source_gap_count": 0
+      },
+      "message": "v4 release/readiness sources were checked for the phase ledger index.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "missing_columns": [],
+        "required_columns": [
+          "phase_ref",
+          "artifact_ref",
+          "readiness_state",
+          "source_authority_state",
+          "open_gap_state",
+          "raw_output_state",
+          "claim_ceiling",
+          "next_action"
+        ]
+      },
+      "message": "Required phase ledger index columns are present.",
+      "row_id": "index_column_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "index_row_count": 2
+      },
+      "message": "v4 x1 and v4 x2 are represented as ledger index rows.",
+      "row_id": "index_row_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 8,
+        "mismatch_count": 0
+      },
+      "message": "Index fixtures checked columns, claim ceilings, source-proof overclaim, production overclaim, raw output, open gaps, and GMUT boundary.",
+      "row_id": "negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This is a THOS phase ledger index only; it does not test or close GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v475-thos-v4-x2",
+  "source_refs": [
+    {
+      "bytes": 7283,
+      "path": "docs/trinity-live-traces/v475-thos-v4-x1-release-readiness-ledger-v1.json",
+      "sha256": "1d005a048e859bc97bd2a39dcb348431b6708d0b6a4fcfec6dca00c31df71374",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 5588,
+      "path": "docs/trinity-live-traces/v475-thos-v4-x2-release-readiness-gate-v1.json",
+      "sha256": "d06782d443727033bd8e33433becbb8e2a7644bbc38b59eaa70c274e5cc29b21",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 844,
+      "path": "docs/trinity-live-traces/v475-thos-v4-x2-run-status-v1.json",
+      "sha256": "19b14072d6daf421e2fed33e9c9790b945e3aae44f137f42e006a906d7f9ef26",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_run_status": "PASS_SHAPE_ONLY_RELEASE_READINESS_GATE_READY",
+  "v5_x2_acceptance_criteria": [
+    "index rows cover v4 x1 and v4 x2",
+    "required columns are present",
+    "source authority remains context only",
+    "open gaps remain explicit",
+    "raw-output and claim-expansion blockers remain active"
+  ]
+}
