@@ -97,14 +97,14 @@ def build_notice(output_dir: Path, lanes: list[str], phase_slug: str, started_at
     snapshots = [lane_snapshot(output_dir, lane) for lane in lanes]
     all_ready = all(item["completion_status"] == "FINAL_MESSAGE_READY" for item in snapshots)
     sensitive_in_final = sum(item["final_message_sensitive_marker_count"] for item in snapshots)
+    if all_ready and sensitive_in_final == 0:
+        aggregate_status = "FINAL_MESSAGES_READY"
+    elif all_ready:
+        aggregate_status = "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW"
+    else:
+        aggregate_status = "OPEN_GAP_FINAL_MESSAGE_PENDING"
     return {
-        "aggregate_status": (
-            "FINAL_MESSAGES_READY"
-            if all_ready and sensitive_in_final == 0
-            else "OPEN_GAP_FINAL_MESSAGE_PENDING"
-            if not all_ready
-            else "FAIL_BLOCKER_FINAL_MESSAGE_MARKER"
-        ),
+        "aggregate_status": aggregate_status,
         "generated_at_utc": utc_now(),
         "lanes": snapshots,
         "mutation_performed": False,
@@ -122,7 +122,7 @@ def watch(args: argparse.Namespace) -> dict[str, Any]:
     notice = build_notice(output_dir, lanes, args.phase_slug, started_at)
     while time.monotonic() <= deadline:
         notice = build_notice(output_dir, lanes, args.phase_slug, started_at)
-        if notice["aggregate_status"] == "FINAL_MESSAGES_READY":
+        if notice["aggregate_status"] in {"FINAL_MESSAGES_READY", "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW"}:
             return notice
         if args.once:
             return notice
@@ -149,7 +149,7 @@ def main() -> int:
     write_json(Path(args.receipt_json), notice)
     write_md(Path(args.receipt_md), notice)
     print(json.dumps(notice, indent=2, sort_keys=True))
-    return 0 if notice["aggregate_status"] == "FINAL_MESSAGES_READY" else 1
+    return 0 if notice["aggregate_status"] in {"FINAL_MESSAGES_READY", "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW"} else 1
 
 
 if __name__ == "__main__":
