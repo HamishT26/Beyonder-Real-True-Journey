@@ -1,0 +1,61 @@
+{
+  "artifact_id": "v470-thos-v6-x7-sibling-synthesis-v1",
+  "phase": "v470_THOS_v6_x7",
+  "created_at_nz": "2026-06-02T17:28:28+12:00",
+  "app_lanes": {
+    "Cicero": {
+      "status": "complete_advisory",
+      "key_points": [
+        "canonical report defines the row universe; visualization may only reference it",
+        "pass requires valid row identity and content digest references",
+        "fail requires blocker for orphan, duplicate, undeclared multi-bind, tuple mismatch, digest mismatch, unsafe payload, or GMUT gate drift"
+      ]
+    },
+    "Kierkegaard": {
+      "status": "complete_advisory",
+      "key_points": [
+        "orphan, multi-bind, mismatch, and digest-reference outcomes describe local row-linkage states only",
+        "clean binding does not imply safety, approval, publication authority, GMUT validation, or gate closure",
+        "publication wording must keep claim ceiling local"
+      ]
+    },
+    "Aristotle": {
+      "status": "complete_advisory",
+      "key_points": [
+        "schema should separate canonical input, visualization input, and verification report",
+        "missing digest refs without tuple mismatch can be OPEN_GAP",
+        "digest mismatch, tuple drift, or GMUT gate-effect drift must be FAIL_BLOCKER"
+      ]
+    }
+  },
+  "cli_lanes": {
+    "Arby": {
+      "status": "complete_prompt_grounded_advisory",
+      "boundary": "read-only CLI inspection hit sandbox setup failures; advice is based on supplied v6_x7 contract",
+      "key_points": [
+        "matrix lacks a confirmed clean PASS fixture with digest refs present",
+        "live-like OPEN_GAP case must be explicit",
+        "blocker-class structural defects are covered by the negative fixture"
+      ]
+    },
+    "Aster Vale": {
+      "status": "complete_prompt_grounded_advisory",
+      "boundary": "read-only CLI inspection hit sandbox setup failures; advice is based on supplied v6_x7 contract",
+      "key_points": [
+        "add precedence coverage where structural blocker and digest-ref gap coexist",
+        "split structural_binding_status from digest_evidence_status",
+        "decide when missing digest refs should remain OPEN_GAP or become mandatory blockers"
+      ]
+    }
+  },
+  "synthesis_decisions": [
+    "add structural_binding_status and digest_evidence_status to checker output",
+    "classify live visualization rows as OPEN_GAP because digest references are missing but row IDs and tuples align",
+    "classify tempdir negative fixture as FAIL_BLOCKER because structural and digest contradictions are present",
+    "carry clean PASS fixture to v6_x8",
+    "keep all GMUT gates open"
+  ],
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}

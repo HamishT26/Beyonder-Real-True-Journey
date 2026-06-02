@@ -1,0 +1,40 @@
+{
+  "artifact_id": "v470-thos-v6-x7-acceptance-matrix-v1",
+  "phase": "v470_THOS_v6_x7",
+  "created_at_nz": "2026-06-02T17:28:28+12:00",
+  "validator": "scripts/thos_visualization_binding_check.py",
+  "status_precedence": "FAIL_BLOCKER overrides OPEN_GAP; OPEN_GAP overrides PASS_SHAPE_ONLY",
+  "rows": [
+    {
+      "case_id": "live_visualization_binding",
+      "input_kind": "current_externalized_visualization_rows",
+      "expected_status": "OPEN_GAP",
+      "actual_status": "OPEN_GAP",
+      "structural_binding_status": "PASS_SHAPE_ONLY",
+      "digest_evidence_status": "OPEN_GAP",
+      "reason": "row IDs and tuple fields align, but digest references are absent"
+    },
+    {
+      "case_id": "negative_orphan_duplicate_missing_tuple_digest",
+      "input_kind": "tempdir_only_negative_fixture",
+      "expected_status": "FAIL_BLOCKER",
+      "actual_status": "FAIL_BLOCKER",
+      "structural_binding_status": "FAIL_BLOCKER",
+      "digest_evidence_status": "FAIL_BLOCKER",
+      "reason": "orphan, duplicate, missing canonical visualization row, tuple mismatch, malformed row, and digest mismatch were detected"
+    },
+    {
+      "case_id": "future_clean_digest_refs",
+      "input_kind": "not_yet_materialized",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "actual_status": "NOT_RUN",
+      "structural_binding_status": "NOT_RUN",
+      "digest_evidence_status": "NOT_RUN",
+      "reason": "v6_x8 should add a clean pass fixture with digest references present and matching"
+    }
+  ],
+  "claim_boundary": "The matrix records local visualization binding behavior only. It does not certify safety, publication, connector action, GMUT validity, or gate closure.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}
