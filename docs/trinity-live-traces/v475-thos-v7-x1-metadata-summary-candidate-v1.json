@@ -1,0 +1,248 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_METADATA_SUMMARY_CANDIDATE_READY",
+  "allowed_summary_fields": [
+    "lane",
+    "completion_status",
+    "final_message_bytes",
+    "final_message_hash",
+    "final_message_sensitive_marker_count",
+    "raw_output_boundary"
+  ],
+  "blocked_summary_fields": [
+    "final_message_text",
+    "stdout_text",
+    "stderr_text",
+    "transport_body",
+    "temp_path",
+    "marker_substrings",
+    "private_auth_material",
+    "quality_score",
+    "truth_score",
+    "gmut_gate_closure"
+  ],
+  "fixtures": [
+    {
+      "case": {
+        "both_lanes_ready": true,
+        "gmut_gate_effect": "none_open_not_tested",
+        "metadata_summary": true
+      },
+      "case_id": "metadata_summary_both_lanes_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "blocked_field_present": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "blocked_field_present_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_text_present": true
+      },
+      "case_id": "raw_text_present_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_required_lane": true
+      },
+      "case_id": "missing_required_lane_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "marker_count_nonzero": true
+      },
+      "case_id": "marker_count_nonzero_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "quality_claim": true
+      },
+      "case_id": "quality_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "completion_not_ready": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "completion_not_ready_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "source_missing": true
+      },
+      "case_id": "source_missing_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "both_lanes_ready": true,
+        "gmut_gate_effect": "gate_moved",
+        "metadata_summary": true
+      },
+      "case_id": "gmut_gate_move_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T21:12:24+00:00",
+  "gmut_gate_effect": "none_open_not_tested",
+  "gmut_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "lane_metadata_summary": [
+    {
+      "completion_status": "FINAL_MESSAGE_READY",
+      "final_message_bytes": 9098,
+      "final_message_hash": "8a89c227ec617e2d18073c919d6d5a03d8a539a4cd0e46c96498582ee705f554",
+      "final_message_sensitive_marker_count": 0,
+      "lane": "Arby",
+      "raw_output_boundary": "temp_only_not_published"
+    },
+    {
+      "completion_status": "FINAL_MESSAGE_READY",
+      "final_message_bytes": 6938,
+      "final_message_hash": "180c22c93d6eba6ff2752dba4a6c7442226f6b9e30e14312925cc0a57c7a5750",
+      "final_message_sensitive_marker_count": 0,
+      "lane": "Aster Vale",
+      "raw_output_boundary": "temp_only_not_published"
+    }
+  ],
+  "next_expected_phase": "v475-thos-v7-x2",
+  "phase_slug": "v475-thos-v7-x1",
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 3,
+        "source_gap_count": 0
+      },
+      "message": "Completion notice and v6 x2 supervisor sources were checked.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "missing_lanes": [],
+        "present_lanes": [
+          "Arby",
+          "Aster Vale"
+        ]
+      },
+      "message": "Required Arby and Aster Vale metadata rows are present.",
+      "row_id": "lane_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "completion_notice_status": "FINAL_MESSAGES_READY"
+      },
+      "message": "Completion summary waits for final-ready metadata from both lanes.",
+      "row_id": "completion_status",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "final_message_marker_total": 0
+      },
+      "message": "Final-message marker counts must be zero before metadata-only summary publication.",
+      "row_id": "marker_counts",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "allowed_summary_fields": [
+          "lane",
+          "completion_status",
+          "final_message_bytes",
+          "final_message_hash",
+          "final_message_sensitive_marker_count",
+          "raw_output_boundary"
+        ],
+        "blocked_field_hits": []
+      },
+      "message": "Summary candidate contains only allowed metadata fields.",
+      "row_id": "blocked_field_scan",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "blocked_summary_fields": [
+          "final_message_text",
+          "stdout_text",
+          "stderr_text",
+          "transport_body",
+          "temp_path",
+          "marker_substrings",
+          "private_auth_material",
+          "quality_score",
+          "truth_score",
+          "gmut_gate_closure"
+        ],
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "message": "Metadata summary candidate does not claim advisory quality, proof, canon, or GMUT closure.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v475-thos-v6-x2",
+  "source_refs": [
+    {
+      "bytes": 1295,
+      "path": "docs/trinity-live-traces/v475-thos-v6-x1-cli-lane-completion-notice-v1.json",
+      "sha256": "d1832e608ceea56c4b69f965f3901312e6e2d28adb4825db58d6b77508b27377",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 9326,
+      "path": "docs/trinity-live-traces/v475-thos-v6-x2-async-supervisor-ledger-v1.json",
+      "sha256": "c283b1173409f154c5413d65a61c96ae016749e49f71ef678d90c54e3582294b",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 2829,
+      "path": "docs/trinity-live-traces/v475-thos-v6-x2-run-status-v1.json",
+      "sha256": "6defb2171047c65338bf1f3d56be76aef23f870d20f9b0f0ff8059d965b3cdd0",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_status": {
+    "completion_notice": "FINAL_MESSAGES_READY",
+    "supervisor_ledger": "PASS_SHAPE_ONLY_ASYNC_SUPERVISOR_LEDGER_READY",
+    "supervisor_status": "PASS_SHAPE_ONLY_ASYNC_SUPERVISOR_LEDGER_READY"
+  }
+}
