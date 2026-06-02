@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -56,7 +58,7 @@ def build_plan(worktree: Path, prompt: str, output_dir: Path, lane_name: str) ->
     }
 
 
-def execute_plan(plan: dict[str, Any]) -> dict[str, Any]:
+def execute_plan(plan: dict[str, Any], wait_seconds: int = 0, terminate_on_timeout: bool = False) -> dict[str, Any]:
     if plan["launcher_status"] != "PASS_SHAPE_ONLY":
         plan["execution_status"] = "FAIL_BLOCKER"
         plan["execution_message"] = "launcher plan was not executable"
@@ -74,7 +76,35 @@ def execute_plan(plan: dict[str, Any]) -> dict[str, Any]:
     plan["execution_status"] = "PASS_SHAPE_ONLY"
     plan["pid"] = process.pid
     plan["execution_message"] = "started non-ephemeral read-only advisory lane"
+    if wait_seconds > 0:
+        deadline = time.monotonic() + wait_seconds
+        while time.monotonic() < deadline and process.poll() is None:
+            time.sleep(0.25)
+        plan["completed_within_wait"] = process.poll() is not None
+        if process.poll() is None and terminate_on_timeout:
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+                plan["terminated_after_timeout"] = True
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait(timeout=5)
+                plan["terminated_after_timeout"] = True
+                plan["termination_mode"] = "kill_after_terminate_timeout"
+        stderr_path = Path(plan["stderr_file"])
+        stdout_path = Path(plan["stdout_file"])
+        last_message_path = Path(plan["last_message_file"])
+        plan["stderr_bytes"] = stderr_path.stat().st_size if stderr_path.exists() else 0
+        plan["stdout_bytes"] = stdout_path.stat().st_size if stdout_path.exists() else 0
+        plan["last_message_bytes"] = last_message_path.stat().st_size if last_message_path.exists() else 0
+        if stderr_path.exists():
+            stderr_text = stderr_path.read_text(encoding="utf-8", errors="replace")
+            plan["stderr_summary"] = redact_text(stderr_text)[:600]
     return plan
+
+
+def redact_text(text: str) -> str:
+    return re.sub(r"[A-Z]:\\Users\\[^\\\s]+\\[^\s]+", "<local_path_redacted>", text)
 
 
 def redact_plan(plan: dict[str, Any]) -> dict[str, Any]:
@@ -93,12 +123,14 @@ def main() -> int:
     parser.add_argument("--prompt", required=True)
     parser.add_argument("--output-dir", default=os.path.join(os.environ.get("TEMP", "."), "ghc-v471-advisory"))
     parser.add_argument("--execute", action="store_true", help="Launch the lane; default is dry-run plan only.")
+    parser.add_argument("--wait-seconds", type=int, default=0, help="If executing, wait this many seconds and summarize outputs.")
+    parser.add_argument("--terminate-on-timeout", action="store_true", help="Terminate the launched process if wait-seconds expires.")
     parser.add_argument("--redact", action="store_true", help="Redact local paths in stdout JSON.")
     args = parser.parse_args()
 
     plan = build_plan(Path(args.worktree), args.prompt, Path(args.output_dir), args.lane_name)
     if args.execute:
-        plan = execute_plan(plan)
+        plan = execute_plan(plan, wait_seconds=args.wait_seconds, terminate_on_timeout=args.terminate_on_timeout)
     output = redact_plan(plan) if args.redact else plan
     print(json.dumps(output, indent=2, sort_keys=True))
     return 0 if plan.get("launcher_status") == "PASS_SHAPE_ONLY" else 1
