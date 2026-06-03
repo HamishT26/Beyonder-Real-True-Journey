@@ -1,0 +1,66 @@
+# v477 THOS v6 x1 Roadmap
+
+- task_count: `60`
+- entry: existing lanes only, no unapproved live writes, all GMUT gates open.
+
+## Tasks
+- v477-v6-x1-task-01 (lanes): Run app-lane notifier probe before any v6 x1 notification pass.
+- v477-v6-x1-task-02 (lanes): Run app-lane notifier notify pass for Cicero, Kierkegaard, and Aristotle if probe passes.
+- v477-v6-x1-task-03 (lanes): Run a fresh Arby/Aster completion watcher using the new observability fields.
+- v477-v6-x1-task-04 (lanes): Record active-turn, no-signal, partial-signal, and timeout categories separately.
+- v477-v6-x1-task-05 (lanes): Keep all lane message content unpublished unless separately approved.
+- v477-v6-x1-task-06 (lanes): Record no old-style spawn and existing-lane-only proof.
+- v477-v6-x1-task-07 (command_queue): Select 12 offline low-risk command rows for P0 inspection.
+- v477-v6-x1-task-08 (command_queue): Select 12 connector command rows for read-only connector readiness review.
+- v477-v6-x1-task-09 (command_queue): Select 12 live-write command rows for approval-packet drafting only.
+- v477-v6-x1-task-10 (command_queue): Add a command-to-skill domain join without skill body copying.
+- v477-v6-x1-task-11 (command_queue): Add proof-required summaries for selected commands.
+- v477-v6-x1-task-12 (command_queue): Reject any command with unclear rollback as not ready.
+- v477-v6-x1-task-13 (skills): Sample user-skill metadata without editing skill files.
+- v477-v6-x1-task-14 (skills): Run a duplicate-name scan as stdout-only evidence.
+- v477-v6-x1-task-15 (skills): Create a skill-readiness queue from metadata only.
+- v477-v6-x1-task-16 (skills): Keep plugin cache and user skills out of repo staging.
+- v477-v6-x1-task-17 (skills): Draft exact repair approval only if a loader failure recurs.
+- v477-v6-x1-task-18 (skills): Add skill-to-command graph edge examples.
+- v477-v6-x1-task-19 (expansions): Run P0 no-write inspections for top system expansion rows.
+- v477-v6-x1-task-20 (expansions): Run P1 stdout-only guard probes for top command rows.
+- v477-v6-x1-task-21 (expansions): Keep P2 toy simulations labelled as simulation only.
+- v477-v6-x1-task-22 (expansions): Keep installed_count at zero unless exact install proof exists.
+- v477-v6-x1-task-23 (expansions): Promote failed probes into open_gap, not failure inflation.
+- v477-v6-x1-task-24 (expansions): Draft a 30/30/30 proposal status board for v6 x1.
+- v477-v6-x1-task-25 (sources): Refresh Codex app-server and CLI release sources before v6 publication.
+- v477-v6-x1-task-26 (sources): Refresh MCP authorization/tool docs before connector planning.
+- v477-v6-x1-task-27 (sources): Refresh GitHub security docs before any workflow proposal.
+- v477-v6-x1-task-28 (sources): Refresh Google/NVIDIA sources as architecture context only.
+- v477-v6-x1-task-29 (sources): Keep spiritual/Journey material context-only and locally cited if used.
+- v477-v6-x1-task-30 (sources): Distinguish official, official repo, official blog, and lower-tier material.
+- v477-v6-x1-task-31 (observability): Add run_id and trace_id to every v6 lane receipt.
+- v477-v6-x1-task-32 (observability): Add retry_window_seconds to every v6 watcher receipt.
+- v477-v6-x1-task-33 (observability): Add timeout_reason values to CLI and app receipts.
+- v477-v6-x1-task-34 (observability): Add payload_publication value to every lane row.
+- v477-v6-x1-task-35 (observability): Add gmut_gate_state field to every run-status pair.
+- v477-v6-x1-task-36 (observability): Prepare dashboard-ready rows with bounded payload size.
+- v477-v6-x1-task-37 (sandbox): Run non-destructive Codex version and sandbox readiness checks.
+- v477-v6-x1-task-38 (sandbox): Record Windows sandbox blocker class without changing system policy.
+- v477-v6-x1-task-39 (sandbox): Avoid package/cache deletion unless exact separate approval exists.
+- v477-v6-x1-task-40 (sandbox): Keep PowerShell settings unchanged unless exact safety need exists.
+- v477-v6-x1-task-41 (sandbox): Retain CLI lane worktrees as read-only advisory surfaces.
+- v477-v6-x1-task-42 (sandbox): Add CLI done-signal alternatives for future Arby/Aster waits.
+- v477-v6-x1-task-43 (handoff): Write v6 x1 synthesis after lane and command probes finish.
+- v477-v6-x1-task-44 (handoff): Generate v6 x2 60-task roadmap from v6 x1 evidence.
+- v477-v6-x1-task-45 (handoff): Decide whether v6 x2 needs x3 overlay from fresh evidence only.
+- v477-v6-x1-task-46 (handoff): Publish every second phase where feasible with exact staging.
+- v477-v6-x1-task-47 (handoff): Keep current v477 sequence moving toward v490 without narrowing the goal.
+- v477-v6-x1-task-48 (handoff): Record remote-equals-local proof after each push.
+- v477-v6-x1-task-49 (gmut): Carry all six GMUT gates open.
+- v477-v6-x1-task-50 (gmut): Keep THOS artifacts from validating GMUT by association.
+- v477-v6-x1-task-51 (gmut): Keep consciousness bridge as protocol requirement, not solved claim.
+- v477-v6-x1-task-52 (gmut): Keep fifth-force/equivalence constraints open.
+- v477-v6-x1-task-53 (gmut): Keep Journey context out of canon proof.
+- v477-v6-x1-task-54 (gmut): Keep source dependencies explicitly separated by claim taxonomy.
+- v477-v6-x1-task-55 (quality): Run JSON parse on every generated v6 artifact.
+- v477-v6-x1-task-56 (quality): Run script compile for any new helper script.
+- v477-v6-x1-task-57 (quality): Run staged whitespace check before publication.
+- v477-v6-x1-task-58 (quality): Run scoped guard scan before publication.
+- v477-v6-x1-task-59 (quality): Review staged names before commit.
+- v477-v6-x1-task-60 (quality): Push only if drift remains zero or a forward-only merge is safely completed.

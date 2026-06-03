@@ -1,0 +1,57 @@
+{
+  "artifact_type": "observability_schema",
+  "phase": "v477_thos_v5_x2",
+  "fields": [
+    {
+      "field": "phase",
+      "reason": "ties a receipt to one phase-version session"
+    },
+    {
+      "field": "lane",
+      "reason": "identifies advisory lane without publishing message text"
+    },
+    {
+      "field": "run_id",
+      "reason": "links start, watcher, and completion receipts"
+    },
+    {
+      "field": "trace_id",
+      "reason": "stable row-level correlation key"
+    },
+    {
+      "field": "generated_utc",
+      "reason": "unambiguous clock source"
+    },
+    {
+      "field": "status",
+      "reason": "machine-readable final state"
+    },
+    {
+      "field": "final_state_reason",
+      "reason": "explains completion or open gap"
+    },
+    {
+      "field": "retry_window_seconds",
+      "reason": "records patience budget"
+    },
+    {
+      "field": "timeout_reason",
+      "reason": "separates no-signal, partial-signal, and active-turn blockers"
+    },
+    {
+      "field": "payload_publication",
+      "reason": "documents status-only publication boundary"
+    },
+    {
+      "field": "gmut_gate_state",
+      "reason": "keeps physics-claim gates visibly open"
+    }
+  ],
+  "invariants": [
+    "No unfiltered event stream is published.",
+    "No local machine-specific filesystem address is required in reader-facing artifacts.",
+    "Existing lanes only; no replacement agent creation.",
+    "All GMUT gates stay open unless exact closure artifacts exist."
+  ],
+  "recommended_next_probe": "add the same schema keys to the next app and CLI notifier receipts"
+}
