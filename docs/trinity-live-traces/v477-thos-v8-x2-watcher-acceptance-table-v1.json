@@ -1,0 +1,57 @@
+{
+  "artifact_type": "watcher_acceptance_table",
+  "phase": "v477_thos_v8_x2",
+  "generated_utc": "2026-06-03T20:27:16+00:00",
+  "generated_nz": "2026-06-04T08:27:16+12:00",
+  "rows": [
+    {
+      "id": "app_read",
+      "criterion": "thread read returns ok",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "app_resume",
+      "criterion": "thread resume returns ok under read-only request",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "app_turn_start",
+      "criterion": "turn start returns ok",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "app_turn_complete",
+      "criterion": "turn completion event observed",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "cli_final_marker",
+      "criterion": "final-message marker found in temp-only watcher output",
+      "requirement": "required_for_cli_closure",
+      "status": "OPEN_GAP"
+    },
+    {
+      "id": "cli_timeout",
+      "criterion": "timeout without final marker is non-blocking if app lanes pass",
+      "requirement": "allowed_open_gap",
+      "status": "PASS"
+    },
+    {
+      "id": "no_duplicate_polling",
+      "criterion": "one bounded CLI poll per x2 closeout",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "no_transport_publication",
+      "criterion": "transport payloads remain unpublished",
+      "requirement": "required",
+      "status": "PASS"
+    }
+  ],
+  "overall_status": "PASS_WITH_CLI_OPEN_GAP"
+}
