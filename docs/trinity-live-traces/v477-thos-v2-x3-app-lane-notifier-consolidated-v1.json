@@ -1,0 +1,53 @@
+{
+  "generated_nz": "2026-06-04T03:51:33+12:00",
+  "phase": "v477_thos_v2_x3",
+  "artifact_type": "app_lane_notifier_consolidated_handoff",
+  "overall_status": "WARN_KIERKEGAARD_COMPLETION_OPEN",
+  "source_receipts": [
+    "v477-thos-v2-x3-app-lane-notifier-probe-v1.json",
+    "v477-thos-v2-x3-app-lane-notifier-run-v1.json",
+    "v477-thos-v2-x3-app-lane-notifier-retry-probe-v1.json",
+    "v477-thos-v2-x3-app-lane-notifier-aristotle-retry-v1.json"
+  ],
+  "policy": {
+    "existing_threads_only": true,
+    "new_threads_created": false,
+    "old_style_subagent_spawn_used": false,
+    "raw_event_stream_published": false,
+    "retry_attempts_per_operation": 5
+  },
+  "lane_state": [
+    {
+      "name": "Cicero",
+      "read_resume_probe": "PASS",
+      "advisory_turn": "completed",
+      "next_use": "available_for_v477_followup"
+    },
+    {
+      "name": "Kierkegaard",
+      "read_resume_probe": "PASS",
+      "advisory_turn": "started_completion_not_observed_in_window",
+      "next_use": "treat_as_live_or_retry_with_probe_before_new_turn"
+    },
+    {
+      "name": "Aristotle",
+      "read_resume_probe": "PASS",
+      "advisory_turn": "completed_after_targeted_retry",
+      "next_use": "available_for_v477_followup"
+    }
+  ],
+  "notifier_runner": {
+    "script": "scripts/thos_v477_app_lane_notifier_runner.py",
+    "supports_probe_only": true,
+    "supports_targeted_lanes": true,
+    "supports_skip_start_if_active": true,
+    "stream_encoding": "utf-8_replace",
+    "writes_sanitized_receipts_only": true
+  },
+  "claim_boundary": {
+    "domain": "THOS app-lane notifier and reconnect coordination",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  },
+  "next_expected_phase": "v477_thos_v3_x1_or_continue_v477_overlay_after_kierkegaard_probe"
+}
