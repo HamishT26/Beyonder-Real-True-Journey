@@ -1,16 +1,16 @@
 # V477 THOS V2 X3 App-Lane Notifier Consolidated Handoff
 
-- generated_nz: `2026-06-04T03:51:33+12:00`
-- overall_status: `WARN_KIERKEGAARD_COMPLETION_OPEN`
-- policy: existing app threads only; no new threads; no old-style subagent spawning; no raw app-server event stream publication.
+- generated_nz: `2026-06-04T04:25:51+12:00`
+- overall_status: `PASS_APP_LANES_RECONNECTED`
+- policy: existing app threads only; no new threads; no old-style subagent spawning; no unfiltered app-server event stream publication.
 - runner: `scripts/thos_v477_app_lane_notifier_runner.py`
 - claim boundary: THOS app-lane notifier and reconnect coordination only; all GMUT gates remain open.
 
 ## Reconnection State
 
 - Cicero: read/resume probe passed; advisory turn completed in the bounded notifier run.
-- Kierkegaard: read/resume probe passed; advisory turn was started, but completion was not observed within the bounded wait window. Treat as possibly live; probe before sending a new turn.
-- Aristotle: read/resume probe passed; first full-run read blocked by timeout after Kierkegaard remained open, then targeted retry completed successfully.
+- Kierkegaard: initial bounded run started a turn but did not observe completion; a fresh probe passed and the targeted retry then completed.
+- Aristotle: first full-run read was blocked after the Kierkegaard timeout; targeted retry completed successfully.
 
 ## Runner Capabilities
 
@@ -18,10 +18,10 @@
 - Supports `--lanes Cicero,Kierkegaard,Aristotle` filtering for targeted retries.
 - Supports `--skip-start-if-active` for safer follow-up when a lane may already have a live turn.
 - Retries each app-server operation up to the configured retry count, defaulting to five attempts.
-- Writes sanitized JSON/Markdown receipts only and does not persist raw app-server event streams.
+- Writes sanitized JSON/Markdown receipts only and does not persist unfiltered app-server event streams.
 
 ## Next Use
 
-- Before opening another full five-lane THOS phase, run a probe-only notifier check for Kierkegaard.
-- If Kierkegaard is idle and no completion was captured elsewhere, send one targeted retry rather than a duplicate all-lane run.
-- Use Cicero and Aristotle normally for v477 follow-up; both completed bounded advisory notifier turns.
+- Run a probe-only notifier check before opening duplicate app-lane turns.
+- Use targeted retries when one lane times out instead of restarting all three app lanes.
+- Treat all three app lanes as available for `v477_thos_v3_x1` advisory follow-up.

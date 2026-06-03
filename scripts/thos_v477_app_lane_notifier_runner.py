@@ -386,9 +386,9 @@ def summarize_call(call: dict) -> dict:
     return result
 
 
-def write_outputs(result: dict, suffix: str) -> None:
-    json_path = TRACES / f"v477-thos-v2-x3-app-lane-notifier-{suffix}-v1.json"
-    md_path = TRACES / f"v477-thos-v2-x3-app-lane-notifier-{suffix}-v1.md"
+def write_outputs(result: dict, suffix: str, artifact_prefix: str) -> None:
+    json_path = TRACES / f"{artifact_prefix}-{suffix}-v1.json"
+    md_path = TRACES / f"{artifact_prefix}-{suffix}-v1.md"
     write_json(json_path, result)
     lane_lines = []
     for lane in result["lanes"]:
@@ -399,14 +399,14 @@ def write_outputs(result: dict, suffix: str) -> None:
         )
     write_md(
         md_path,
-        "V477 THOS V2 X3 App-Lane Notifier",
+        f"{result['phase']} App-Lane Notifier",
         [
             f"- generated_nz: `{result['generated_nz']}`",
             f"- local_head_before_run: `{result['local_head_before_run']}`",
             f"- remote_head_before_run: `{result['remote_head_before_run']}`",
             f"- drift_before_run: `{result['drift_before_run']}`",
             f"- overall_status: `{result['overall_status']}`",
-            "- policy: existing app threads only; no new threads; no old-style subagent spawning; no raw event stream publication.",
+            "- policy: existing app threads only; no new threads; no old-style subagent spawning; no unfiltered event stream publication.",
             "- claim boundary: THOS reconnect/notifier coordination only; all GMUT gates remain open.",
             "",
             "## Lane Status",
@@ -419,6 +419,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--phase", default=PHASE_DEFAULT)
     parser.add_argument("--suffix", default="run")
+    parser.add_argument("--artifact-prefix", default="v477-thos-v2-x3-app-lane-notifier")
     parser.add_argument("--lanes", default="all", help="Comma-separated lane names or all.")
     parser.add_argument("--probe-only", action="store_true")
     parser.add_argument("--skip-start-if-active", action="store_true")
@@ -431,7 +432,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     result = run_notifier(args)
-    write_outputs(result, args.suffix)
+    write_outputs(result, args.suffix, args.artifact_prefix)
     print(json.dumps({"status": result["overall_status"], "lanes": len(result["lanes"])}, indent=2))
 
 
