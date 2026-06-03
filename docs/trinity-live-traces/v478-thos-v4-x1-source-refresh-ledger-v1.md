@@ -1,0 +1,41 @@
+# v478 THOS v4 x1 Source Refresh Ledger
+
+- generated_nz: `2026-06-04T11:14:59+12:00`
+- search_count: `32`
+- source_count: `32`
+- official_or_primary_preference: `true`
+- claim_boundary: THOS infrastructure, governance, and uncertainty framing only.
+
+## Sources
+- S01: [OpenAI Codex app-server README](https://github.com/openai/codex/blob/main/codex-rs/app-server/README.md) - `implementation`.
+- S02: [OpenAI Codex releases](https://github.com/openai/codex/releases) - `implementation`.
+- S03: [OpenAI Codex Windows sandbox](https://openai.com/index/building-codex-windows-sandbox/) - `implementation`.
+- S04: [OpenAI Agents SDK guide](https://platform.openai.com/docs/guides/agents-sdk/) - `implementation`.
+- S05: [OpenAI Agents SDK tracing](https://openai.github.io/openai-agents-python/tracing/) - `implementation`.
+- S06: [OpenAI structured outputs](https://platform.openai.com/docs/guides/structured-outputs) - `implementation`.
+- S07: [MCP tools specification](https://modelcontextprotocol.io/specification/2025-06-18/server/tools) - `implementation`.
+- S08: [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization) - `governance`.
+- S09: [MCP security best practices](https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices) - `governance`.
+- S10: [MCP SDK documentation](https://modelcontextprotocol.io/docs/sdk) - `implementation`.
+- S11: [GitHub Actions hardening](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions) - `governance`.
+- S12: [GitHub push protection](https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection) - `governance`.
+- S13: [GitHub SARIF support](https://docs.github.com/en/code-security/reference/code-scanning/sarif-files/sarif-support-for-code-scanning) - `implementation`.
+- S14: [GitHub MCP server docs](https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp-in-your-ide/use-the-github-mcp-server) - `connector_context`.
+- S15: [Microsoft Windows Sandbox WSB](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-configure-using-wsb-file) - `implementation`.
+- S16: [Microsoft Windows Sandbox CLI](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-cli) - `implementation`.
+- S17: [Microsoft Mandatory Integrity Control](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control) - `implementation`.
+- S18: [Microsoft application isolation](https://learn.microsoft.com/en-us/windows/security/book/application-security-application-isolation) - `implementation`.
+- S19: [PowerShell redirection](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_redirection) - `implementation`.
+- S20: [Python subprocess](https://docs.python.org/3.12/library/subprocess.html) - `implementation`.
+- S21: [Python tempfile](https://docs.python.org/3.12/library/tempfile.html) - `implementation`.
+- S22: [Python json](https://docs.python.org/3.12/library/json.html) - `implementation`.
+- S23: [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/) - `implementation`.
+- S24: [Docker Compose Watch](https://docs.docker.com/compose/how-tos/file-watch/) - `expansion_context`.
+- S25: [Kubernetes Job API](https://kubernetes.io/docs/reference/kubernetes-api/batch/job-v1/) - `expansion_context`.
+- S26: [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/reasoning-engine) - `expansion_context`.
+- S27: [Gemini API File Search](https://ai.google.dev/gemini-api/docs/file-search) - `expansion_context`.
+- S28: [NVIDIA NIM](https://docs.nvidia.com/nim/index.html) - `expansion_context`.
+- S29: [NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/index.html) - `expansion_context`.
+- S30: [NVIDIA Omniverse](https://docs.nvidia.com/omniverse/index.html) - `expansion_context`.
+- S31: [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework) - `governance`.
+- S32: [UNESCO AI ethics recommendation](https://www.unesco.org/en/artificial-intelligence/recommendation-ethics) - `governance`.

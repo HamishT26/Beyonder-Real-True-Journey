@@ -1,0 +1,66 @@
+# v478 THOS v4 x2 Roadmap
+
+- generated_nz: `2026-06-04T11:14:59+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V4X2-01` (lane): Synthesize v478 v4 x1 evidence into v4 x2 lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-02` (cli): Synthesize v478 v4 x1 evidence into v4 x2 cli decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-03` (system): Synthesize v478 v4 x1 evidence into v4 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-04` (command): Synthesize v478 v4 x1 evidence into v4 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-05` (skill): Synthesize v478 v4 x1 evidence into v4 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-06` (source): Synthesize v478 v4 x1 evidence into v4 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-07` (journey): Synthesize v478 v4 x1 evidence into v4 x2 journey decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-08` (governance): Synthesize v478 v4 x1 evidence into v4 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-09` (simulation): Synthesize v478 v4 x1 evidence into v4 x2 simulation decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-10` (schema): Synthesize v478 v4 x1 evidence into v4 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-11` (safety): Synthesize v478 v4 x1 evidence into v4 x2 safety decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-12` (handoff): Synthesize v478 v4 x1 evidence into v4 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-13` (lane): Synthesize v478 v4 x1 evidence into v4 x2 lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-14` (cli): Synthesize v478 v4 x1 evidence into v4 x2 cli decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-15` (system): Synthesize v478 v4 x1 evidence into v4 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-16` (command): Synthesize v478 v4 x1 evidence into v4 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-17` (skill): Synthesize v478 v4 x1 evidence into v4 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-18` (source): Synthesize v478 v4 x1 evidence into v4 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-19` (journey): Synthesize v478 v4 x1 evidence into v4 x2 journey decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-20` (governance): Synthesize v478 v4 x1 evidence into v4 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-21` (simulation): Synthesize v478 v4 x1 evidence into v4 x2 simulation decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-22` (schema): Synthesize v478 v4 x1 evidence into v4 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-23` (safety): Synthesize v478 v4 x1 evidence into v4 x2 safety decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-24` (handoff): Synthesize v478 v4 x1 evidence into v4 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-25` (lane): Synthesize v478 v4 x1 evidence into v4 x2 lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-26` (cli): Synthesize v478 v4 x1 evidence into v4 x2 cli decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-27` (system): Synthesize v478 v4 x1 evidence into v4 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-28` (command): Synthesize v478 v4 x1 evidence into v4 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-29` (skill): Synthesize v478 v4 x1 evidence into v4 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-30` (source): Synthesize v478 v4 x1 evidence into v4 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-31` (journey): Synthesize v478 v4 x1 evidence into v4 x2 journey decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-32` (governance): Synthesize v478 v4 x1 evidence into v4 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-33` (simulation): Synthesize v478 v4 x1 evidence into v4 x2 simulation decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-34` (schema): Synthesize v478 v4 x1 evidence into v4 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-35` (safety): Synthesize v478 v4 x1 evidence into v4 x2 safety decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-36` (handoff): Synthesize v478 v4 x1 evidence into v4 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-37` (lane): Synthesize v478 v4 x1 evidence into v4 x2 lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-38` (cli): Synthesize v478 v4 x1 evidence into v4 x2 cli decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-39` (system): Synthesize v478 v4 x1 evidence into v4 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-40` (command): Synthesize v478 v4 x1 evidence into v4 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-41` (skill): Synthesize v478 v4 x1 evidence into v4 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-42` (source): Synthesize v478 v4 x1 evidence into v4 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-43` (journey): Synthesize v478 v4 x1 evidence into v4 x2 journey decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-44` (governance): Synthesize v478 v4 x1 evidence into v4 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-45` (simulation): Synthesize v478 v4 x1 evidence into v4 x2 simulation decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-46` (schema): Synthesize v478 v4 x1 evidence into v4 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-47` (safety): Synthesize v478 v4 x1 evidence into v4 x2 safety decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-48` (handoff): Synthesize v478 v4 x1 evidence into v4 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-49` (lane): Synthesize v478 v4 x1 evidence into v4 x2 lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-50` (cli): Synthesize v478 v4 x1 evidence into v4 x2 cli decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-51` (system): Synthesize v478 v4 x1 evidence into v4 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-52` (command): Synthesize v478 v4 x1 evidence into v4 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-53` (skill): Synthesize v478 v4 x1 evidence into v4 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-54` (source): Synthesize v478 v4 x1 evidence into v4 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-55` (journey): Synthesize v478 v4 x1 evidence into v4 x2 journey decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-56` (governance): Synthesize v478 v4 x1 evidence into v4 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-57` (simulation): Synthesize v478 v4 x1 evidence into v4 x2 simulation decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-58` (schema): Synthesize v478 v4 x1 evidence into v4 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-59` (safety): Synthesize v478 v4 x1 evidence into v4 x2 safety decisions while preserving status-only receipts and open GMUT gates.
+- `V478V4X2-60` (handoff): Synthesize v478 v4 x1 evidence into v4 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
