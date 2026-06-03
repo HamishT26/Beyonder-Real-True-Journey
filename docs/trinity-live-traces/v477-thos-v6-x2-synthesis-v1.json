@@ -1,0 +1,154 @@
+{
+  "artifact_type": "v6_x2_synthesis",
+  "phase": "v477_thos_v6_x2",
+  "generated_utc": "2026-06-03T19:08:34+00:00",
+  "generated_nz": "2026-06-04T07:08:34+12:00",
+  "local_head_before_build": "2f4eefdb70cacc4938598462417a1aa71a90925a",
+  "remote_head_before_build": "2f4eefdb70cacc4938598462417a1aa71a90925a",
+  "drift_before_build": "0\t0",
+  "lane_summary": {
+    "app_lanes_completed": 3,
+    "cli_lanes_waiting_after_retry": 2,
+    "old_style_spawn_used": false,
+    "new_threads_created": false
+  },
+  "queue_review": {
+    "artifact_type": "v6_x2_queue_review",
+    "phase": "v477_thos_v6_x2",
+    "command_review": {
+      "p0_rows": 12,
+      "connector_rows": 12,
+      "approval_draft_rows": 12,
+      "review_result": "ready_for_v7_no_write_inspection"
+    },
+    "skill_review": {
+      "observed_user_skill_files": 700,
+      "status_counts": {
+        "PASS_METADATA": 700
+      },
+      "review_result": "metadata_sample_ready_for_v7_join"
+    },
+    "expansion_review": {
+      "p0_rows": 12,
+      "p1_rows": 12,
+      "p2_rows": 12,
+      "installed_count": 0,
+      "review_result": "probe_selection_ready_for_v7"
+    }
+  },
+  "overlay_decision": "NO_X3_FOR_V6",
+  "reflection_steps": [
+    {
+      "step": "1",
+      "domain": "lane_rollup",
+      "reflection": "v6 x2 confirms app lanes stayed complete from v6 x1 evidence."
+    },
+    {
+      "step": "2",
+      "domain": "lane_rollup",
+      "reflection": "CLI retry stayed at watcher timeout and remains an open gap."
+    },
+    {
+      "step": "3",
+      "domain": "lane_rollup",
+      "reflection": "The gap is specific to completion-marker availability, not whole-phase failure."
+    },
+    {
+      "step": "4",
+      "domain": "lane_rollup",
+      "reflection": "No new lanes or old-style spawn routes were introduced."
+    },
+    {
+      "step": "5",
+      "domain": "commands",
+      "reflection": "The 36 selected command rows are ready for v7 inspection, not execution."
+    },
+    {
+      "step": "6",
+      "domain": "commands",
+      "reflection": "Live-write rows remain approval-draft-only."
+    },
+    {
+      "step": "7",
+      "domain": "commands",
+      "reflection": "Connector rows remain readiness-only."
+    },
+    {
+      "step": "8",
+      "domain": "skills",
+      "reflection": "The skill sample confirms metadata can be used without body copying."
+    },
+    {
+      "step": "9",
+      "domain": "skills",
+      "reflection": "Skill repairs remain out of scope without fresh loader evidence."
+    },
+    {
+      "step": "10",
+      "domain": "expansions",
+      "reflection": "P0/P1/P2 expansion rows are ready to become v7 probe receipts."
+    },
+    {
+      "step": "11",
+      "domain": "expansions",
+      "reflection": "Installed count remains zero."
+    },
+    {
+      "step": "12",
+      "domain": "sources",
+      "reflection": "Same-session source continuity is enough for this x2 synthesis."
+    },
+    {
+      "step": "13",
+      "domain": "sources",
+      "reflection": "A fresh source refresh should happen before v7 if the session has meaningfully aged."
+    },
+    {
+      "step": "14",
+      "domain": "observability",
+      "reflection": "v7 should improve CLI done-signal taxonomy before more retries."
+    },
+    {
+      "step": "15",
+      "domain": "observability",
+      "reflection": "timeout_reason should separate alive-waiting from no-signal states."
+    },
+    {
+      "step": "16",
+      "domain": "governance",
+      "reflection": "Risk vocabulary remains THOS design context only."
+    },
+    {
+      "step": "17",
+      "domain": "journey_context",
+      "reflection": "Journey context remains non-canon unless locally cited and bounded."
+    },
+    {
+      "step": "18",
+      "domain": "gmut",
+      "reflection": "All six GMUT gates remain open."
+    },
+    {
+      "step": "19",
+      "domain": "handoff",
+      "reflection": "v7 x1 is the better next phase than v6 x3."
+    },
+    {
+      "step": "20",
+      "domain": "quality",
+      "reflection": "Exact staging and remote verification remain mandatory."
+    }
+  ],
+  "claim_boundary": {
+    "thos_scope": "v6 synthesis and v7 handoff only",
+    "gmut_gates": {
+      "null recovery": "open",
+      "dimensional/SI consistency": "open",
+      "conservation or exchange law": "open",
+      "baseline recovery": "open",
+      "fifth-force/equivalence constraints": "open",
+      "consciousness measurement bridge": "open"
+    },
+    "canon_promotion": "not_claimed"
+  }
+}
