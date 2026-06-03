@@ -1,0 +1,66 @@
+# v477 THOS v6 x2 Roadmap
+
+- task_count: `60`
+- entry: remote-verified v6 x1, existing lanes only, all GMUT gates open.
+
+## Tasks
+- v477-v6-x2-task-01 (lanes): Use v6 x2 to summarize app-lane v6 x1 completion and CLI open gap.
+- v477-v6-x2-task-02 (lanes): Retry Arby/Aster completion poll once before v6 x2 synthesis.
+- v477-v6-x2-task-03 (lanes): Add alive-process observation if available without publishing process command text.
+- v477-v6-x2-task-04 (lanes): Keep Cicero, Kierkegaard, and Aristotle advisory-only.
+- v477-v6-x2-task-05 (lanes): Record existing-lane-only proof again.
+- v477-v6-x2-task-06 (lanes): Decide whether v6 needs x3 from fresh lane evidence.
+- v477-v6-x2-task-07 (commands): Inspect the 12 offline low-risk command candidates without executing them.
+- v477-v6-x2-task-08 (commands): Annotate each selected command with proof and rollback adequacy.
+- v477-v6-x2-task-09 (commands): Convert connector queue sample into read-only readiness checklist.
+- v477-v6-x2-task-10 (commands): Convert live-write queue sample into exact approval packet candidates.
+- v477-v6-x2-task-11 (commands): Reject any command missing intent, mode, risk, or proof metadata.
+- v477-v6-x2-task-12 (commands): Keep command templates out of published samples if they include local coupling.
+- v477-v6-x2-task-13 (skills): Summarize the skill metadata sample status counts.
+- v477-v6-x2-task-14 (skills): Run a duplicate-name scan on sample rows only.
+- v477-v6-x2-task-15 (skills): Prepare top skill-readiness rows without editing skills.
+- v477-v6-x2-task-16 (skills): Keep skill body copies out of artifacts.
+- v477-v6-x2-task-17 (skills): Do not mutate plugin cache or user skills in v6 x2.
+- v477-v6-x2-task-18 (skills): Prepare an exact repair packet only if a loader blocker appears.
+- v477-v6-x2-task-19 (expansions): Promote top P0 expansion rows into no-write inspection receipts.
+- v477-v6-x2-task-20 (expansions): Promote top P1 rows into stdout-only guard probe receipts.
+- v477-v6-x2-task-21 (expansions): Keep P2 rows as simulation candidates only.
+- v477-v6-x2-task-22 (expansions): Record installed_count as zero unless exact install proof exists.
+- v477-v6-x2-task-23 (expansions): Rank proposal rows by evidence usefulness for v7 x1.
+- v477-v6-x2-task-24 (expansions): Carry rejected live-write candidates as approval-needed rows.
+- v477-v6-x2-task-25 (sources): Refresh at least Codex, MCP, and GitHub official sources if v6 x2 publishes after a long delay.
+- v477-v6-x2-task-26 (sources): Carry Google and NVIDIA sources as architecture context only.
+- v477-v6-x2-task-27 (sources): Keep governance sources separated from implementation proof.
+- v477-v6-x2-task-28 (sources): Do not use Journey context as empirical proof.
+- v477-v6-x2-task-29 (sources): Prefer official pages over news or forum context.
+- v477-v6-x2-task-30 (sources): Record source-drift caveats explicitly.
+- v477-v6-x2-task-31 (observability): Compare app and CLI receipt schemas for missing fields.
+- v477-v6-x2-task-32 (observability): Add timeout_reason to future CLI notifier if needed.
+- v477-v6-x2-task-33 (observability): Add app-lane probe/notify delta to lane boards.
+- v477-v6-x2-task-34 (observability): Prepare a dashboard-ready bounded row set.
+- v477-v6-x2-task-35 (observability): Keep event method names bounded to safe summaries.
+- v477-v6-x2-task-36 (observability): Keep local temp and machine-specific addresses redacted.
+- v477-v6-x2-task-37 (sandbox): Run Codex version and sandbox help checks only if needed.
+- v477-v6-x2-task-38 (sandbox): Do not change Windows settings in v6 x2.
+- v477-v6-x2-task-39 (sandbox): Do not delete temp or cache folders in v6 x2.
+- v477-v6-x2-task-40 (sandbox): Carry sandbox blockers as diagnostic open gaps.
+- v477-v6-x2-task-41 (sandbox): Keep PowerShell usage non-destructive.
+- v477-v6-x2-task-42 (sandbox): Document any setup-refresh symptom without repair overreach.
+- v477-v6-x2-task-43 (handoff): Generate v7 x1 roadmap after v6 x2 synthesis.
+- v477-v6-x2-task-44 (handoff): Keep every-second-phase publication cadence where feasible.
+- v477-v6-x2-task-45 (handoff): Prepare v7 x1 lane prompts from v6 evidence.
+- v477-v6-x2-task-46 (handoff): Keep the v477 sequence moving toward v490.
+- v477-v6-x2-task-47 (handoff): Avoid widening scope into unapproved account or external writes.
+- v477-v6-x2-task-48 (handoff): Record remote verification after publication.
+- v477-v6-x2-task-49 (gmut): Carry null recovery gate open.
+- v477-v6-x2-task-50 (gmut): Carry dimensional/SI gate open.
+- v477-v6-x2-task-51 (gmut): Carry conservation/exchange gate open.
+- v477-v6-x2-task-52 (gmut): Carry baseline recovery gate open.
+- v477-v6-x2-task-53 (gmut): Carry fifth-force/equivalence gate open.
+- v477-v6-x2-task-54 (gmut): Carry consciousness measurement bridge gate open.
+- v477-v6-x2-task-55 (quality): Parse every v6 x2 JSON artifact.
+- v477-v6-x2-task-56 (quality): Compile any new v6 x2 helper script.
+- v477-v6-x2-task-57 (quality): Run scoped guard scan before staging.
+- v477-v6-x2-task-58 (quality): Run staged diff and whitespace check.
+- v477-v6-x2-task-59 (quality): Stage exact files only.
+- v477-v6-x2-task-60 (quality): Push only after drift check passes.
