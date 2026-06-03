@@ -1,0 +1,66 @@
+# v478 THOS v1 x2 Roadmap
+
+- generated_nz: `2026-06-04T08:49:34+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478X2-01` (lane): Carry v478 x1 app-lane PASS into x2 synthesis without republishing message payloads.
+- `V478X2-02` (lane): Retry Arby/Aster watcher once only if x2 needs fresh CLI evidence.
+- `V478X2-03` (lane): Keep CLI final-marker timeout as explicit open gap.
+- `V478X2-04` (lane): Compare app-lane durations against v477 v8 baseline.
+- `V478X2-05` (lane): Record lane done-signals in compact x2 board.
+- `V478X2-06` (command): Rank the 30 command-index surface rows by risk and proof readiness.
+- `V478X2-07` (command): Select the safest stdout-only command rows for future P1 dry-run.
+- `V478X2-08` (command): Keep live/connector command rows blocked until exact approval.
+- `V478X2-09` (command): Map command rows to source categories from the source ledger.
+- `V478X2-10` (command): Draft command promotion criteria for v478 x2.
+- `V478X2-11` (skill): Score the 30 skill proposals for actionability.
+- `V478X2-12` (skill): Identify duplicate family hints and stale proposal names.
+- `V478X2-13` (skill): Map skill proposals to command-index rows where metadata allows.
+- `V478X2-14` (skill): Keep body text unpublished and unmodified.
+- `V478X2-15` (skill): Draft future skill acceptance schema.
+- `V478X2-16` (expansion): Rank the 30 expansion rows by action bucket.
+- `V478X2-17` (expansion): Choose no-write inspection rows for a future proof pass.
+- `V478X2-18` (expansion): Hold approval-needed rows as blockers.
+- `V478X2-19` (expansion): Separate simulation candidates from live promotion candidates.
+- `V478X2-20` (expansion): Draft expansion acceptance schema.
+- `V478X2-21` (source): Review source ledger for official-source drift.
+- `V478X2-22` (source): Separate implementation sources from governance sources.
+- `V478X2-23` (source): Carry Google/NVIDIA rows as expansion context only.
+- `V478X2-24` (source): Avoid using governance rows as technical proof.
+- `V478X2-25` (source): Decide whether x2 needs additional web refresh.
+- `V478X2-26` (watcher): Convert watcher template into x2 acceptance checklist.
+- `V478X2-27` (watcher): Keep app and CLI done-signals separate.
+- `V478X2-28` (watcher): Avoid duplicate CLI polling loops.
+- `V478X2-29` (watcher): Keep temp-only watcher outputs out of publication.
+- `V478X2-30` (watcher): Prepare v478 reusable notifier interface notes.
+- `V478X2-31` (schema): Parse every v478 x2 JSON artifact.
+- `V478X2-32` (schema): Check top-level keys and next_expected agreement.
+- `V478X2-33` (schema): Bound row counts and deterministic ordering.
+- `V478X2-34` (schema): Run guard scan before staging.
+- `V478X2-35` (schema): Review markdown summaries for overclaim language.
+- `V478X2-36` (safety): Fetch and drift-check before publication.
+- `V478X2-37` (safety): Exact-stage only v478 x2 scoped files.
+- `V478X2-38` (safety): Reject unpublished local dumps and transport payloads.
+- `V478X2-39` (safety): Run whitespace and staged diff review.
+- `V478X2-40` (safety): Push and remote-verify equals local.
+- `V478X2-41` (claim): Keep all six GMUT gates open.
+- `V478X2-42` (claim): Do not claim THOS infrastructure validates GMUT.
+- `V478X2-43` (claim): Do not claim consciousness proof or canon promotion.
+- `V478X2-44` (claim): Keep Journey context non-canon if referenced.
+- `V478X2-45` (claim): Use open_gap for CLI timeout.
+- `V478X2-46` (handoff): Decide whether v478 needs x3 from blocker dominance.
+- `V478X2-47` (handoff): If no x3 is needed, prepare v478 v2 x1 roadmap.
+- `V478X2-48` (handoff): If x3 is needed, scope it to one blocker family.
+- `V478X2-49` (handoff): Carry 30-command, 30-skill, and 30-expansion tables.
+- `V478X2-50` (handoff): Preserve exact staging and remote verification rules.
+- `V478X2-51` (thos): Draft command-index surface repair recommendations.
+- `V478X2-52` (thos): Draft connector read/write boundary recommendations.
+- `V478X2-53` (thos): Draft app-lane notifier health panel concept.
+- `V478X2-54` (thos): Draft skill proposal promotion criteria.
+- `V478X2-55` (thos): Draft expansion no-write rehearsal criteria.
+- `V478X2-56` (quality): Validate x2 synthesis against x1 evidence.
+- `V478X2-57` (quality): Keep file names phase-consistent.
+- `V478X2-58` (quality): Avoid broad staging in dirty worktree.
+- `V478X2-59` (quality): Publish concise final status.
+- `V478X2-60` (quality): Keep the larger v490 goal active.

@@ -1,0 +1,47 @@
+# v478 THOS v1 x1 Source Ledger
+
+- generated_nz: `2026-06-04T08:49:34+12:00`
+- search_count: `39`
+- source_count: `39`
+- boundary: sources guide THOS infrastructure decisions only; they do not validate GMUT.
+
+## Sources
+- S01: [OpenAI Codex app-server README](https://github.com/openai/codex/blob/main/codex-rs/app-server/README.md) — local app-server app-lane routing.
+- S02: [OpenAI Codex CLI help](https://help.openai.com/en/articles/11096431) — CLI and sandbox capability context.
+- S03: [OpenAI Codex releases](https://github.com/openai/codex/releases) — CLI release drift context.
+- S04: [OpenAI Windows sandbox design](https://openai.com/index/building-codex-windows-sandbox/) — Windows sandbox blocker routing.
+- S05: [OpenAI Codex harness architecture](https://openai.com/index/unlocking-the-codex-harness/) — app-server architecture context.
+- S06: [MCP tools specification](https://modelcontextprotocol.io/specification/2025-06-18/server/tools) — tool metadata and command surface design.
+- S07: [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization) — connector boundary design.
+- S08: [MCP security best practices](https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices) — tool trust and blast-radius constraints.
+- S09: [MCP SDK documentation](https://modelcontextprotocol.io/docs/sdk) — future connector runner implementation.
+- S10: [MCP client best practices](https://modelcontextprotocol.io/docs/develop/clients/client-best-practices) — client-side tool boundary context.
+- S11: [OpenAI Apps SDK help](https://help.openai.com/en/articles/12515353-build-with-the-apps-sdk) — apps and MCP bridge context.
+- S12: [OpenAI Agents SDK guide](https://platform.openai.com/docs/guides/agents-sdk/) — agent orchestration and handoff context.
+- S13: [OpenAI Agents SDK tracing](https://openai.github.io/openai-agents-python/tracing/) — trace and watcher signal framing.
+- S14: [OpenAI Agents SDK handoffs](https://openai.github.io/openai-agents-js/guides/handoffs/) — handoff surface framing.
+- S15: [OpenAI Agents SDK MCP guide](https://openai.github.io/openai-agents-js/guides/mcp/) — MCP server tool use context.
+- S16: [OpenAI structured outputs](https://platform.openai.com/docs/guides/structured-outputs) — schema-bound artifact quality.
+- S17: [GitHub Actions security hardening](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions) — least-privilege publication safety.
+- S18: [GitHub push protection](https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection) — publication guard context.
+- S19: [GitHub SARIF limits](https://docs.github.com/en/code-security/reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/results-exceed-limit) — bounded finding output design.
+- S20: [GitHub MCP server in IDE](https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp-in-your-ide/use-the-github-mcp-server) — GitHub connector comparison context.
+- S21: [Microsoft Windows Sandbox WSB](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-configure-using-wsb-file) — Windows sandbox configuration context.
+- S22: [Microsoft Mandatory Integrity Control](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control) — Windows integrity boundary context.
+- S23: [Microsoft AppContainer isolation](https://learn.microsoft.com/en-gb/windows/security/book/application-security-application-isolation) — Windows isolation spectrum context.
+- S24: [PowerShell redirection](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_redirection) — stdout and stderr watcher handling.
+- S25: [Python subprocess](https://docs.python.org/3.12/library/subprocess.html) — bounded process execution design.
+- S26: [Python tempfile](https://docs.python.org/3.12/library/tempfile.html) — temp-only watcher storage.
+- S27: [Python json](https://docs.python.org/3.12/library/json.html) — JSON parse validation.
+- S28: [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/) — watcher event taxonomy.
+- S29: [Docker Compose Watch](https://docs.docker.com/compose/how-tos/file-watch/) — local file watcher comparison.
+- S30: [Kubernetes Jobs](https://kubernetes.io/docs/reference/kubernetes-api/batch/job-v1/) — completion and backoff comparison.
+- S31: [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/reasoning-engine) — external agent engine comparison.
+- S32: [Gemini API File Search](https://ai.google.dev/gemini-api/docs/file-search) — RAG and document retrieval comparison.
+- S33: [NVIDIA NIM](https://docs.nvidia.com/nim/) — inference service expansion context.
+- S34: [NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/index.html) — local AI workstation context.
+- S35: [NVIDIA Omniverse docs](https://docs.nvidia.com/omniverse/index.html) — simulation and digitalization context.
+- S36: [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework) — risk management language.
+- S37: [UNESCO AI ethics recommendation](https://www.unesco.org/en/artificial-intelligence/recommendation-ethics) — governance context.
+- S38: [OECD AI principles](https://www.oecd.org/en/topics/ai-principles.html) — governance context.
+- S39: [EU AI Act timeline](https://ai-act-service-desk.ec.europa.eu/en/ai-act/eu-ai-act-implementation-timeline) — regulatory timeline context.
