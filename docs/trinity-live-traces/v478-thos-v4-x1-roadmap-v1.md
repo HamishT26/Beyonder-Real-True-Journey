@@ -1,0 +1,66 @@
+# v478 THOS v4 x1 Roadmap
+
+- generated_nz: `2026-06-04T10:53:55+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V4X1-01` (app-lane): Use v478 v4 x1 to harden app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-02` (cli-gap): Use v478 v4 x1 to harden cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-03` (source): Use v478 v4 x1 to harden source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-04` (system): Use v478 v4 x1 to harden system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-05` (command): Use v478 v4 x1 to harden command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-06` (skill): Use v478 v4 x1 to harden skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-07` (reflection): Use v478 v4 x1 to harden reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-08` (eureka): Use v478 v4 x1 to harden eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-09` (guard): Use v478 v4 x1 to harden guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-10` (schema): Use v478 v4 x1 to harden schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-11` (sandbox): Use v478 v4 x1 to harden sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-12` (handoff): Use v478 v4 x1 to harden handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-13` (app-lane): Use v478 v4 x1 to harden app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-14` (cli-gap): Use v478 v4 x1 to harden cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-15` (source): Use v478 v4 x1 to harden source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-16` (system): Use v478 v4 x1 to harden system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-17` (command): Use v478 v4 x1 to harden command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-18` (skill): Use v478 v4 x1 to harden skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-19` (reflection): Use v478 v4 x1 to harden reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-20` (eureka): Use v478 v4 x1 to harden eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-21` (guard): Use v478 v4 x1 to harden guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-22` (schema): Use v478 v4 x1 to harden schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-23` (sandbox): Use v478 v4 x1 to harden sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-24` (handoff): Use v478 v4 x1 to harden handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-25` (app-lane): Use v478 v4 x1 to harden app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-26` (cli-gap): Use v478 v4 x1 to harden cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-27` (source): Use v478 v4 x1 to harden source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-28` (system): Use v478 v4 x1 to harden system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-29` (command): Use v478 v4 x1 to harden command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-30` (skill): Use v478 v4 x1 to harden skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-31` (reflection): Use v478 v4 x1 to harden reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-32` (eureka): Use v478 v4 x1 to harden eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-33` (guard): Use v478 v4 x1 to harden guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-34` (schema): Use v478 v4 x1 to harden schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-35` (sandbox): Use v478 v4 x1 to harden sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-36` (handoff): Use v478 v4 x1 to harden handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-37` (app-lane): Use v478 v4 x1 to harden app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-38` (cli-gap): Use v478 v4 x1 to harden cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-39` (source): Use v478 v4 x1 to harden source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-40` (system): Use v478 v4 x1 to harden system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-41` (command): Use v478 v4 x1 to harden command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-42` (skill): Use v478 v4 x1 to harden skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-43` (reflection): Use v478 v4 x1 to harden reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-44` (eureka): Use v478 v4 x1 to harden eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-45` (guard): Use v478 v4 x1 to harden guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-46` (schema): Use v478 v4 x1 to harden schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-47` (sandbox): Use v478 v4 x1 to harden sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-48` (handoff): Use v478 v4 x1 to harden handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-49` (app-lane): Use v478 v4 x1 to harden app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-50` (cli-gap): Use v478 v4 x1 to harden cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-51` (source): Use v478 v4 x1 to harden source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-52` (system): Use v478 v4 x1 to harden system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-53` (command): Use v478 v4 x1 to harden command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-54` (skill): Use v478 v4 x1 to harden skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-55` (reflection): Use v478 v4 x1 to harden reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-56` (eureka): Use v478 v4 x1 to harden eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-57` (guard): Use v478 v4 x1 to harden guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-58` (schema): Use v478 v4 x1 to harden schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-59` (sandbox): Use v478 v4 x1 to harden sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V4X1-60` (handoff): Use v478 v4 x1 to harden handoff readiness with status-only receipts, exact staging, and open GMUT gates.
