@@ -1,0 +1,127 @@
+# v478 THOS v3 x1 Eureka Handoff Board
+
+- generated_nz: `2026-06-04T10:31:09+12:00`
+- proposal_count: `120`
+- payload_boundary: `status_only`
+
+## Proposals
+- ALETHEON-E01 (Aletheon / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E02 (Aletheon / source): Prepare v478 v3 x2 source evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E03 (Aletheon / schema): Prepare v478 v3 x2 schema evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E04 (Aletheon / handoff): Prepare v478 v3 x2 handoff evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E05 (Aletheon / quality): Prepare v478 v3 x2 quality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E06 (Aletheon / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E07 (Aletheon / source): Prepare v478 v3 x2 source evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E08 (Aletheon / schema): Prepare v478 v3 x2 schema evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E09 (Aletheon / handoff): Prepare v478 v3 x2 handoff evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E10 (Aletheon / quality): Prepare v478 v3 x2 quality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E11 (Aletheon / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E12 (Aletheon / source): Prepare v478 v3 x2 source evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E13 (Aletheon / schema): Prepare v478 v3 x2 schema evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E14 (Aletheon / handoff): Prepare v478 v3 x2 handoff evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E15 (Aletheon / quality): Prepare v478 v3 x2 quality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E16 (Aletheon / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E17 (Aletheon / source): Prepare v478 v3 x2 source evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E18 (Aletheon / schema): Prepare v478 v3 x2 schema evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E19 (Aletheon / handoff): Prepare v478 v3 x2 handoff evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ALETHEON-E20 (Aletheon / quality): Prepare v478 v3 x2 quality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E01 (Arby / cli): Prepare v478 v3 x2 cli evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E02 (Arby / sandbox): Prepare v478 v3 x2 sandbox evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E03 (Arby / watcher): Prepare v478 v3 x2 watcher evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E04 (Arby / runtime): Prepare v478 v3 x2 runtime evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E05 (Arby / diagnostic): Prepare v478 v3 x2 diagnostic evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E06 (Arby / cli): Prepare v478 v3 x2 cli evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E07 (Arby / sandbox): Prepare v478 v3 x2 sandbox evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E08 (Arby / watcher): Prepare v478 v3 x2 watcher evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E09 (Arby / runtime): Prepare v478 v3 x2 runtime evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E10 (Arby / diagnostic): Prepare v478 v3 x2 diagnostic evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E11 (Arby / cli): Prepare v478 v3 x2 cli evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E12 (Arby / sandbox): Prepare v478 v3 x2 sandbox evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E13 (Arby / watcher): Prepare v478 v3 x2 watcher evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E14 (Arby / runtime): Prepare v478 v3 x2 runtime evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E15 (Arby / diagnostic): Prepare v478 v3 x2 diagnostic evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E16 (Arby / cli): Prepare v478 v3 x2 cli evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E17 (Arby / sandbox): Prepare v478 v3 x2 sandbox evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E18 (Arby / watcher): Prepare v478 v3 x2 watcher evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E19 (Arby / runtime): Prepare v478 v3 x2 runtime evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARBY-E20 (Arby / diagnostic): Prepare v478 v3 x2 diagnostic evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E01 (Aster Vale / skill): Prepare v478 v3 x2 skill evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E02 (Aster Vale / command): Prepare v478 v3 x2 command evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E03 (Aster Vale / route): Prepare v478 v3 x2 route evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E04 (Aster Vale / loader): Prepare v478 v3 x2 loader evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E05 (Aster Vale / catalog): Prepare v478 v3 x2 catalog evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E06 (Aster Vale / skill): Prepare v478 v3 x2 skill evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E07 (Aster Vale / command): Prepare v478 v3 x2 command evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E08 (Aster Vale / route): Prepare v478 v3 x2 route evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E09 (Aster Vale / loader): Prepare v478 v3 x2 loader evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E10 (Aster Vale / catalog): Prepare v478 v3 x2 catalog evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E11 (Aster Vale / skill): Prepare v478 v3 x2 skill evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E12 (Aster Vale / command): Prepare v478 v3 x2 command evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E13 (Aster Vale / route): Prepare v478 v3 x2 route evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E14 (Aster Vale / loader): Prepare v478 v3 x2 loader evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E15 (Aster Vale / catalog): Prepare v478 v3 x2 catalog evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E16 (Aster Vale / skill): Prepare v478 v3 x2 skill evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E17 (Aster Vale / command): Prepare v478 v3 x2 command evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E18 (Aster Vale / route): Prepare v478 v3 x2 route evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E19 (Aster Vale / loader): Prepare v478 v3 x2 loader evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ASTER_VALE-E20 (Aster Vale / catalog): Prepare v478 v3 x2 catalog evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E01 (Cicero / argument): Prepare v478 v3 x2 argument evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E02 (Cicero / guard): Prepare v478 v3 x2 guard evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E03 (Cicero / index): Prepare v478 v3 x2 index evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E04 (Cicero / evidence): Prepare v478 v3 x2 evidence evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E05 (Cicero / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E06 (Cicero / argument): Prepare v478 v3 x2 argument evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E07 (Cicero / guard): Prepare v478 v3 x2 guard evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E08 (Cicero / index): Prepare v478 v3 x2 index evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E09 (Cicero / evidence): Prepare v478 v3 x2 evidence evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E10 (Cicero / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E11 (Cicero / argument): Prepare v478 v3 x2 argument evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E12 (Cicero / guard): Prepare v478 v3 x2 guard evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E13 (Cicero / index): Prepare v478 v3 x2 index evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E14 (Cicero / evidence): Prepare v478 v3 x2 evidence evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E15 (Cicero / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E16 (Cicero / argument): Prepare v478 v3 x2 argument evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E17 (Cicero / guard): Prepare v478 v3 x2 guard evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E18 (Cicero / index): Prepare v478 v3 x2 index evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E19 (Cicero / evidence): Prepare v478 v3 x2 evidence evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- CICERO-E20 (Cicero / publication): Prepare v478 v3 x2 publication evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E01 (Kierkegaard / humility): Prepare v478 v3 x2 humility evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E02 (Kierkegaard / ethics): Prepare v478 v3 x2 ethics evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E03 (Kierkegaard / claim): Prepare v478 v3 x2 claim evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E04 (Kierkegaard / consent): Prepare v478 v3 x2 consent evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E05 (Kierkegaard / noncanon): Prepare v478 v3 x2 noncanon evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E06 (Kierkegaard / humility): Prepare v478 v3 x2 humility evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E07 (Kierkegaard / ethics): Prepare v478 v3 x2 ethics evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E08 (Kierkegaard / claim): Prepare v478 v3 x2 claim evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E09 (Kierkegaard / consent): Prepare v478 v3 x2 consent evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E10 (Kierkegaard / noncanon): Prepare v478 v3 x2 noncanon evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E11 (Kierkegaard / humility): Prepare v478 v3 x2 humility evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E12 (Kierkegaard / ethics): Prepare v478 v3 x2 ethics evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E13 (Kierkegaard / claim): Prepare v478 v3 x2 claim evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E14 (Kierkegaard / consent): Prepare v478 v3 x2 consent evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E15 (Kierkegaard / noncanon): Prepare v478 v3 x2 noncanon evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E16 (Kierkegaard / humility): Prepare v478 v3 x2 humility evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E17 (Kierkegaard / ethics): Prepare v478 v3 x2 ethics evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E18 (Kierkegaard / claim): Prepare v478 v3 x2 claim evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E19 (Kierkegaard / consent): Prepare v478 v3 x2 consent evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- KIERKEGAARD-E20 (Kierkegaard / noncanon): Prepare v478 v3 x2 noncanon evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E01 (Aristotle / taxonomy): Prepare v478 v3 x2 taxonomy evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E02 (Aristotle / validator): Prepare v478 v3 x2 validator evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E03 (Aristotle / criteria): Prepare v478 v3 x2 criteria evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E04 (Aristotle / causality): Prepare v478 v3 x2 causality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E05 (Aristotle / readiness): Prepare v478 v3 x2 readiness evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E06 (Aristotle / taxonomy): Prepare v478 v3 x2 taxonomy evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E07 (Aristotle / validator): Prepare v478 v3 x2 validator evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E08 (Aristotle / criteria): Prepare v478 v3 x2 criteria evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E09 (Aristotle / causality): Prepare v478 v3 x2 causality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E10 (Aristotle / readiness): Prepare v478 v3 x2 readiness evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E11 (Aristotle / taxonomy): Prepare v478 v3 x2 taxonomy evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E12 (Aristotle / validator): Prepare v478 v3 x2 validator evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E13 (Aristotle / criteria): Prepare v478 v3 x2 criteria evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E14 (Aristotle / causality): Prepare v478 v3 x2 causality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E15 (Aristotle / readiness): Prepare v478 v3 x2 readiness evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E16 (Aristotle / taxonomy): Prepare v478 v3 x2 taxonomy evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E17 (Aristotle / validator): Prepare v478 v3 x2 validator evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E18 (Aristotle / criteria): Prepare v478 v3 x2 criteria evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E19 (Aristotle / causality): Prepare v478 v3 x2 causality evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
+- ARISTOTLE-E20 (Aristotle / readiness): Prepare v478 v3 x2 readiness evidence with exact-stage publication, status-only lane receipts, and open GMUT gates.
