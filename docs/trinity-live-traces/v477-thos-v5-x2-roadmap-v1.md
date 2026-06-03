@@ -1,0 +1,68 @@
+# V477 THOS V5 X2 Roadmap
+
+- generated_nz: `2026-06-04T06:04:13+12:00`
+- task_count: `60`
+- boundary: existing lanes only; proposal-only expansion matrix; all GMUT gates open.
+
+## Tasks
+
+- v477-v5-x2-task-01 [lanes]: Run v5 x2 synthesis using the completed v5 x1 app-lane receipts.
+- v477-v5-x2-task-02 [lanes]: Poll Arby/Aster watcher once more before any new CLI action.
+- v477-v5-x2-task-03 [lanes]: Record final-state-reason for every lane in the merged status board.
+- v477-v5-x2-task-04 [lanes]: Add active-turn blocker categories to app-lane receipt schema.
+- v477-v5-x2-task-05 [lanes]: Keep app-lane payloads unpublished and status-only.
+- v477-v5-x2-task-06 [lanes]: Decide whether x3 is justified by the persistent CLI watcher open gap.
+- v477-v5-x2-task-07 [command_graph]: Promote command field completeness counts into a reader surface.
+- v477-v5-x2-task-08 [command_graph]: Create live-command approval queue rows.
+- v477-v5-x2-task-09 [command_graph]: Create connector-command approval queue rows.
+- v477-v5-x2-task-10 [command_graph]: Add mode/risk heatmap rows for dashboard use.
+- v477-v5-x2-task-11 [command_graph]: Cross-reference safe commands with proposed commands by domain.
+- v477-v5-x2-task-12 [command_graph]: Keep command proposals proposal-only until exact implementation.
+- v477-v5-x2-task-13 [skill_graph]: Refresh metadata sample size and duplicate-name scan.
+- v477-v5-x2-task-14 [skill_graph]: Build skill-to-command domain edges without body copies.
+- v477-v5-x2-task-15 [skill_graph]: Flag malformed frontmatter only as review gaps unless loader failures recur.
+- v477-v5-x2-task-16 [skill_graph]: Create skill proposal queue rows from the readiness matrix.
+- v477-v5-x2-task-17 [skill_graph]: Keep user skills and plugin cache out of ordinary staging.
+- v477-v5-x2-task-18 [skill_graph]: Prepare exact repair packet only from fresh loader evidence.
+- v477-v5-x2-task-19 [expansion_matrix]: Review all 90 proposal rows and rank by safe probe tier.
+- v477-v5-x2-task-20 [expansion_matrix]: Select top P0 rows for v5 x2 no-mutation inspection.
+- v477-v5-x2-task-21 [expansion_matrix]: Select top P1 rows for stdout-only validator probes.
+- v477-v5-x2-task-22 [expansion_matrix]: Keep P2 rows toy/simulation-labeled only.
+- v477-v5-x2-task-23 [expansion_matrix]: Reject P4/live-write rows until separate exact approval.
+- v477-v5-x2-task-24 [expansion_matrix]: Publish installed_count as zero unless actually installed.
+- v477-v5-x2-task-25 [sources]: Carry official source URLs forward with trust tiers.
+- v477-v5-x2-task-26 [sources]: Add source freshness fields to the next source ledger.
+- v477-v5-x2-task-27 [sources]: Use current source claims only where verified by opened pages.
+- v477-v5-x2-task-28 [sources]: Keep news and social sources lower than official documentation.
+- v477-v5-x2-task-29 [sources]: Add source-to-command recommendation rows.
+- v477-v5-x2-task-30 [sources]: Keep spiritual/Journey context separated from implementation proof.
+- v477-v5-x2-task-31 [observability]: Add trace_id and run_id fields to lane boards.
+- v477-v5-x2-task-32 [observability]: Add retry_window_seconds and timeout_reason fields.
+- v477-v5-x2-task-33 [observability]: Prepare dashboard-ready rows with bounded payload size.
+- v477-v5-x2-task-34 [observability]: Add process-is-running-not-complete caveat to CLI watcher receipts.
+- v477-v5-x2-task-35 [observability]: Use OpenTelemetry signal categories in v5 x2 synthesis.
+- v477-v5-x2-task-36 [observability]: Add no-unfiltered-output invariant to every watcher schema.
+- v477-v5-x2-task-37 [sandbox]: Record Codex CLI version in v5 x2 if diagnostics are rerun.
+- v477-v5-x2-task-38 [sandbox]: Probe sandbox help only unless repair is separately approved.
+- v477-v5-x2-task-39 [sandbox]: Keep Windows sandbox readiness observed and scoped.
+- v477-v5-x2-task-40 [sandbox]: Avoid admin elevation or account changes.
+- v477-v5-x2-task-41 [sandbox]: Record app-server mode as diagnostic context only.
+- v477-v5-x2-task-42 [sandbox]: Keep Fast mode state as observed context only.
+- v477-v5-x2-task-43 [handoff]: Carry v54/v55 handoff surface as metadata.
+- v477-v5-x2-task-44 [handoff]: Carry v49 Journey file presence as continuity context.
+- v477-v5-x2-task-45 [handoff]: Do not bulk import old Journey files into current artifacts.
+- v477-v5-x2-task-46 [handoff]: Mark all Journey/Solas content as journey_context_not_canon.
+- v477-v5-x2-task-47 [handoff]: Create v477 v6 receiver criteria after v5 x2.
+- v477-v5-x2-task-48 [handoff]: Record any missing handoff surface as open_gap.
+- v477-v5-x2-task-49 [safety]: Compile helper scripts before staging.
+- v477-v5-x2-task-50 [safety]: Parse all JSON artifacts before staging.
+- v477-v5-x2-task-51 [safety]: Run publication guard on exact current files.
+- v477-v5-x2-task-52 [safety]: Fetch and drift-check before commit.
+- v477-v5-x2-task-53 [safety]: Stage only curated current artifacts.
+- v477-v5-x2-task-54 [safety]: Verify remote equals local after push.
+- v477-v5-x2-task-55 [gmut]: Carry all six GMUT gates open.
+- v477-v5-x2-task-56 [gmut]: Do not claim final physics, solved consciousness, fifth-force safety, or canon promotion.
+- v477-v5-x2-task-57 [gmut]: Keep THOS infrastructure distinct from GMUT validation.
+- v477-v5-x2-task-58 [gmut]: Require exact closure artifacts before any gate movement.
+- v477-v5-x2-task-59 [gmut]: Label fixtures and simulations explicitly.
+- v477-v5-x2-task-60 [gmut]: Preserve claim taxonomy in every closeout.
