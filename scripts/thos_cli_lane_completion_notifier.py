@@ -86,7 +86,7 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-            "This notice records completion markers only. It does not publish raw lane transport.",
+            "This notice records completion markers only. It does not publish unsanitized lane transport.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)

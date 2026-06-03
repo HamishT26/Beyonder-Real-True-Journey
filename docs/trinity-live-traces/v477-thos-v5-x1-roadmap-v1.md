@@ -1,0 +1,68 @@
+# V477 THOS V5 X1 Roadmap
+
+- generated_nz: `2026-06-04T05:42:15+12:00`
+- task_count: `60`
+- boundary: existing lanes only; proposal-only expansions; all GMUT gates open.
+
+## Tasks
+
+- v477-v5-x1-task-01 [lanes]: Use v5 x1 to run app-lane probe and live notifier once again.
+- v477-v5-x1-task-02 [lanes]: Keep Cicero/Kierkegaard/Aristotle existing-thread only.
+- v477-v5-x1-task-03 [lanes]: Poll Arby/Aster watcher before any new CLI task launch.
+- v477-v5-x1-task-04 [lanes]: Do not duplicate CLI work while pending watcher state remains unresolved.
+- v477-v5-x1-task-05 [lanes]: Create a single lane-status board that merges app and CLI metadata.
+- v477-v5-x1-task-06 [lanes]: Add final-state-reason to each lane row.
+- v477-v5-x1-task-07 [command]: Promote command book v11 into a durable reader index.
+- v477-v5-x1-task-08 [command]: Validate command id, mode, risk, live, connector, and source fields.
+- v477-v5-x1-task-09 [command]: Create a command risk tier heatmap as data only.
+- v477-v5-x1-task-10 [command]: Separate live-connector commands from offline commands.
+- v477-v5-x1-task-11 [command]: Flag commands needing exact approval before use.
+- v477-v5-x1-task-12 [command]: Draft command proposals as proposal-only rows.
+- v477-v5-x1-task-13 [skills]: Refresh user skill metadata sample without body publication.
+- v477-v5-x1-task-14 [skills]: Detect duplicate skill names and frontmatter gaps.
+- v477-v5-x1-task-15 [skills]: Map skills to command domains by metadata.
+- v477-v5-x1-task-16 [skills]: Keep plugin cache read/use-only.
+- v477-v5-x1-task-17 [skills]: Prepare repair packet only if loader evidence recurs.
+- v477-v5-x1-task-18 [skills]: Draft skill proposals as proposal-only rows.
+- v477-v5-x1-task-19 [systems]: Carry the 30 system expansion proposals into v5 x1.
+- v477-v5-x1-task-20 [systems]: Classify each system expansion by inspect, dry-run, local simulation, or live write.
+- v477-v5-x1-task-21 [systems]: Create a no-mutation inspection runner plan.
+- v477-v5-x1-task-22 [systems]: Prepare dashboard-ready bounded snapshot rows.
+- v477-v5-x1-task-23 [systems]: Add watcher schema fields using trace/metric/log vocabulary.
+- v477-v5-x1-task-24 [systems]: Keep proposed systems separate from installed systems.
+- v477-v5-x1-task-25 [sources]: Run another current web refresh if v5 x1 extends source claims.
+- v477-v5-x1-task-26 [sources]: Prefer official implementation docs for platform behavior.
+- v477-v5-x1-task-27 [sources]: Record query count separately from reviewed page count.
+- v477-v5-x1-task-28 [sources]: Use source trust tiers in v5 x1 ledgers.
+- v477-v5-x1-task-29 [sources]: Keep NVIDIA/Google sources as context until deployed.
+- v477-v5-x1-task-30 [sources]: Avoid relying on social image posts for implementation proof.
+- v477-v5-x1-task-31 [handoff]: Surface v54/v55 receiver criteria as metadata.
+- v477-v5-x1-task-32 [handoff]: Avoid importing old archive bodies into current artifacts.
+- v477-v5-x1-task-33 [handoff]: Carry v49 Journey presence as continuity context only.
+- v477-v5-x1-task-34 [handoff]: Mark Journey/Solas context as journey_context_not_canon.
+- v477-v5-x1-task-35 [handoff]: Build v477-v478 transition criteria without skipping v477 v5-v8.
+- v477-v5-x1-task-36 [handoff]: Document which handoffs remain open gaps.
+- v477-v5-x1-task-37 [sandbox]: Summarize Codex CLI 0.136.0 observed version.
+- v477-v5-x1-task-38 [sandbox]: Record codex doctor timeout as a diagnostic open gap if still present.
+- v477-v5-x1-task-39 [sandbox]: Probe sandbox help safely before repair claims.
+- v477-v5-x1-task-40 [sandbox]: Keep Windows sandbox readiness observed rather than assumed.
+- v477-v5-x1-task-41 [sandbox]: Avoid admin or account setting changes without separate approval.
+- v477-v5-x1-task-42 [sandbox]: Publish only curated diagnostic receipts.
+- v477-v5-x1-task-43 [safety]: Run script compile before staging.
+- v477-v5-x1-task-44 [safety]: Parse all generated JSON artifacts.
+- v477-v5-x1-task-45 [safety]: Run publication guard over exact current files.
+- v477-v5-x1-task-46 [safety]: Fetch and drift-check before commit.
+- v477-v5-x1-task-47 [safety]: Stage exact current artifacts only.
+- v477-v5-x1-task-48 [safety]: Verify remote equals local after push.
+- v477-v5-x1-task-49 [gmut]: Carry all six GMUT gates open.
+- v477-v5-x1-task-50 [gmut]: Keep THOS infrastructure separate from GMUT validation.
+- v477-v5-x1-task-51 [gmut]: Avoid final physics, consciousness proof, and canon language.
+- v477-v5-x1-task-52 [gmut]: Require exact closure artifacts for any future gate movement.
+- v477-v5-x1-task-53 [gmut]: Label simulations and fixtures as simulations only.
+- v477-v5-x1-task-54 [gmut]: Preserve claim taxonomy in v5 x1.
+- v477-v5-x1-task-55 [phase]: Start v477 THOS v5 x1 after this v4 x2 publication.
+- v477-v5-x1-task-56 [phase]: Use x3/x4 only for concrete blockers.
+- v477-v5-x1-task-57 [phase]: Record NZ time in every artifact.
+- v477-v5-x1-task-58 [phase]: Keep the long v490 objective active.
+- v477-v5-x1-task-59 [phase]: Commit every second phase where feasible.
+- v477-v5-x1-task-60 [phase]: Publish v5 x2 roadmap after v5 x1.
