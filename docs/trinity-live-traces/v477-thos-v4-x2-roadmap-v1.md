@@ -1,0 +1,68 @@
+# V477 THOS V4 X2 Roadmap
+
+- generated_nz: `2026-06-04T05:08:17+12:00`
+- task_count: `60`
+- boundary: existing lanes only, no unfiltered lane payload publication, no GMUT gate closure.
+
+## Tasks
+
+- v477-v4-x2-task-01 [command-index]: Promote v11 command metadata into a compact command-index surface.
+- v477-v4-x2-task-02 [command-index]: Add risk/mode/live/connector summary cards.
+- v477-v4-x2-task-03 [command-index]: Create a parser that checks command_id, source_of_truth, and safety fields.
+- v477-v4-x2-task-04 [command-index]: Flag commands with live connectors for future exact approval review.
+- v477-v4-x2-task-05 [command-index]: Create a top-40 sample table for UI/workbench discovery.
+- v477-v4-x2-task-06 [command-index]: Separate command availability from command aspiration.
+- v477-v4-x2-task-07 [handoff]: Carry v54/v55 continuity packs into v477 route cards.
+- v477-v4-x2-task-08 [handoff]: Record source hashes without copying pack bodies.
+- v477-v4-x2-task-09 [handoff]: Classify handoff rows as journey_context_not_canon.
+- v477-v4-x2-task-10 [handoff]: Connect v55 receiver policy to v478 acceptance criteria.
+- v477-v4-x2-task-11 [handoff]: Preserve dirty input notices and avoid staging unrelated tracked files.
+- v477-v4-x2-task-12 [handoff]: Create a handoff freshness check for v478.
+- v477-v4-x2-task-13 [skills]: Generate a metadata-only skill capability index.
+- v477-v4-x2-task-14 [skills]: Flag missing or malformed frontmatter as review gaps.
+- v477-v4-x2-task-15 [skills]: Do not mutate skill or plugin cache files in ordinary THOS phases.
+- v477-v4-x2-task-16 [skills]: Map skill names to command-index domains.
+- v477-v4-x2-task-17 [skills]: Add duplicate name detection to the skill index.
+- v477-v4-x2-task-18 [skills]: Prepare exact repair packets only if loader failures recur.
+- v477-v4-x2-task-19 [lanes]: Run app-lane probe before the next app advisory pass.
+- v477-v4-x2-task-20 [lanes]: Record app-lane completion status without publishing advisory text.
+- v477-v4-x2-task-21 [lanes]: Poll Arby/Aster completion notice before x2 synthesis.
+- v477-v4-x2-task-22 [lanes]: If the CLI notice remains pending, record process and file evidence.
+- v477-v4-x2-task-23 [lanes]: If CLI final files arrive, hash and summarize metadata only.
+- v477-v4-x2-task-24 [lanes]: Keep all lane calls existing-only with no new old-style spawn.
+- v477-v4-x2-task-25 [source-ledger]: Keep official sources above social or anecdotal sources.
+- v477-v4-x2-task-26 [source-ledger]: Mark opened pages separately from searches.
+- v477-v4-x2-task-27 [source-ledger]: Add citation-required flags for current product behavior.
+- v477-v4-x2-task-28 [source-ledger]: Track MCP authorization and deprecation changes for future connector work.
+- v477-v4-x2-task-29 [source-ledger]: Track Codex app-server source changes before changing notifier assumptions.
+- v477-v4-x2-task-30 [source-ledger]: Keep NVIDIA/Google sources as capacity/architecture context unless deployed.
+- v477-v4-x2-task-31 [observability]: Add trace_id and run_id fields to watcher receipts.
+- v477-v4-x2-task-32 [observability]: Add retry_count and timeout_window fields to app-lane receipts.
+- v477-v4-x2-task-33 [observability]: Create a bounded dashboard snapshot with lane status rows.
+- v477-v4-x2-task-34 [observability]: Use OpenTelemetry signal vocabulary in future receipt schemas.
+- v477-v4-x2-task-35 [observability]: Record process-exists-is-not-progress caveat in CLI watcher docs.
+- v477-v4-x2-task-36 [observability]: Add final_state_reason to every lane watcher summary.
+- v477-v4-x2-task-37 [safety]: Run JSON parse before staging.
+- v477-v4-x2-task-38 [safety]: Compile helper scripts before staging.
+- v477-v4-x2-task-39 [safety]: Run publication guard on exact staged files.
+- v477-v4-x2-task-40 [safety]: Fetch and drift-check before every commit.
+- v477-v4-x2-task-41 [safety]: Stage only current curated artifacts.
+- v477-v4-x2-task-42 [safety]: Verify shared omega remote equals local after push.
+- v477-v4-x2-task-43 [thos-platform]: Design a command/skill/plugin capability graph for v478.
+- v477-v4-x2-task-44 [thos-platform]: Create no-mutation runner mode for broad THOS inspections.
+- v477-v4-x2-task-45 [thos-platform]: Build a source-to-command recommendation table.
+- v477-v4-x2-task-46 [thos-platform]: Define enterprise-grade tiers: inspect, dry-run, local simulation, live write.
+- v477-v4-x2-task-47 [thos-platform]: Add Windows sandbox readiness to the platform board.
+- v477-v4-x2-task-48 [thos-platform]: Add PowerShell terminal hygiene runbook entries.
+- v477-v4-x2-task-49 [gmut-boundary]: Carry all six GMUT gates open.
+- v477-v4-x2-task-50 [gmut-boundary]: Label GMUT-adjacent outputs as infrastructure support only.
+- v477-v4-x2-task-51 [gmut-boundary]: Keep Journey/Solas material as journey_context_not_canon.
+- v477-v4-x2-task-52 [gmut-boundary]: Avoid final physics and consciousness proof language.
+- v477-v4-x2-task-53 [gmut-boundary]: Require exact closure artifacts before any gate state changes.
+- v477-v4-x2-task-54 [gmut-boundary]: Preserve simulation labels for any toy/fixture work.
+- v477-v4-x2-task-55 [phase-closeout]: Use v4 x2 to integrate pending CLI watcher state.
+- v477-v4-x2-task-56 [phase-closeout]: Prepare v478 transition only after v4 surfaces are published.
+- v477-v4-x2-task-57 [phase-closeout]: Keep x3/x4 overlays tied to concrete blockers.
+- v477-v4-x2-task-58 [phase-closeout]: Record NZ phase times in every closeout.
+- v477-v4-x2-task-59 [phase-closeout]: Publish next 60-task map after x2.
+- v477-v4-x2-task-60 [phase-closeout]: Keep the active goal open until v490 THOS is actually verified.
