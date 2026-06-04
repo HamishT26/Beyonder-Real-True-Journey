@@ -1,0 +1,66 @@
+# v478-thos-v13-x2 Roadmap
+
+- generated_nz: `2026-06-05T03:07:51+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V13X2-01` (lane_reliability): Advance v478-thos-v13-x2 lane reliability with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-02` (stale_flow): Advance v478-thos-v13-x2 stale flow with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-03` (runner_contract): Advance v478-thos-v13-x2 runner contract with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-04` (source_freshness): Advance v478-thos-v13-x2 source freshness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-05` (sandbox_readiness): Advance v478-thos-v13-x2 sandbox readiness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-06` (command_surface): Advance v478-thos-v13-x2 command surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-07` (skill_surface): Advance v478-thos-v13-x2 skill surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-08` (mcp_trust): Advance v478-thos-v13-x2 mcp trust with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-09` (publication_guard): Advance v478-thos-v13-x2 publication guard with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-10` (journey_reflection): Advance v478-thos-v13-x2 journey reflection with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-11` (gmut_thos_boundary): Advance v478-thos-v13-x2 gmut thos boundary with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-12` (dashboard_compaction): Advance v478-thos-v13-x2 dashboard compaction with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-13` (lane_reliability): Advance v478-thos-v13-x2 lane reliability with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-14` (stale_flow): Advance v478-thos-v13-x2 stale flow with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-15` (runner_contract): Advance v478-thos-v13-x2 runner contract with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-16` (source_freshness): Advance v478-thos-v13-x2 source freshness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-17` (sandbox_readiness): Advance v478-thos-v13-x2 sandbox readiness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-18` (command_surface): Advance v478-thos-v13-x2 command surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-19` (skill_surface): Advance v478-thos-v13-x2 skill surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-20` (mcp_trust): Advance v478-thos-v13-x2 mcp trust with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-21` (publication_guard): Advance v478-thos-v13-x2 publication guard with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-22` (journey_reflection): Advance v478-thos-v13-x2 journey reflection with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-23` (gmut_thos_boundary): Advance v478-thos-v13-x2 gmut thos boundary with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-24` (dashboard_compaction): Advance v478-thos-v13-x2 dashboard compaction with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-25` (lane_reliability): Advance v478-thos-v13-x2 lane reliability with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-26` (stale_flow): Advance v478-thos-v13-x2 stale flow with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-27` (runner_contract): Advance v478-thos-v13-x2 runner contract with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-28` (source_freshness): Advance v478-thos-v13-x2 source freshness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-29` (sandbox_readiness): Advance v478-thos-v13-x2 sandbox readiness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-30` (command_surface): Advance v478-thos-v13-x2 command surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-31` (skill_surface): Advance v478-thos-v13-x2 skill surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-32` (mcp_trust): Advance v478-thos-v13-x2 mcp trust with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-33` (publication_guard): Advance v478-thos-v13-x2 publication guard with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-34` (journey_reflection): Advance v478-thos-v13-x2 journey reflection with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-35` (gmut_thos_boundary): Advance v478-thos-v13-x2 gmut thos boundary with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-36` (dashboard_compaction): Advance v478-thos-v13-x2 dashboard compaction with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-37` (lane_reliability): Advance v478-thos-v13-x2 lane reliability with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-38` (stale_flow): Advance v478-thos-v13-x2 stale flow with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-39` (runner_contract): Advance v478-thos-v13-x2 runner contract with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-40` (source_freshness): Advance v478-thos-v13-x2 source freshness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-41` (sandbox_readiness): Advance v478-thos-v13-x2 sandbox readiness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-42` (command_surface): Advance v478-thos-v13-x2 command surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-43` (skill_surface): Advance v478-thos-v13-x2 skill surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-44` (mcp_trust): Advance v478-thos-v13-x2 mcp trust with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-45` (publication_guard): Advance v478-thos-v13-x2 publication guard with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-46` (journey_reflection): Advance v478-thos-v13-x2 journey reflection with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-47` (gmut_thos_boundary): Advance v478-thos-v13-x2 gmut thos boundary with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-48` (dashboard_compaction): Advance v478-thos-v13-x2 dashboard compaction with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-49` (lane_reliability): Advance v478-thos-v13-x2 lane reliability with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-50` (stale_flow): Advance v478-thos-v13-x2 stale flow with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-51` (runner_contract): Advance v478-thos-v13-x2 runner contract with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-52` (source_freshness): Advance v478-thos-v13-x2 source freshness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-53` (sandbox_readiness): Advance v478-thos-v13-x2 sandbox readiness with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-54` (command_surface): Advance v478-thos-v13-x2 command surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-55` (skill_surface): Advance v478-thos-v13-x2 skill surface with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-56` (mcp_trust): Advance v478-thos-v13-x2 mcp trust with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-57` (publication_guard): Advance v478-thos-v13-x2 publication guard with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-58` (journey_reflection): Advance v478-thos-v13-x2 journey reflection with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-59` (gmut_thos_boundary): Advance v478-thos-v13-x2 gmut thos boundary with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
+- `V478V13X2-60` (dashboard_compaction): Advance v478-thos-v13-x2 dashboard compaction with v13 x1 compact evidence, stale-flow receipts, source freshness, and open GMUT gates.
