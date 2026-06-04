@@ -1,0 +1,61 @@
+{
+  "artifact_type": "five_lane_start_plan",
+  "phase_slug": "v478-thos-v14-x4",
+  "generated_utc": "2026-06-04T18:19:20Z",
+  "generated_nz": "2026-06-05T06:19:20+12:00",
+  "reason": "x4 is the next every-second-session boundary after v14 x2; all five active lanes must be attempted at start and closeout.",
+  "mandatory_roster": [
+    {
+      "lane": "Cicero",
+      "surface": "existing_app_local_server",
+      "start_action": "Send bounded status-only v14 x4 start advisory request through the existing callable route.",
+      "closeout_action": "Collect bounded completion receipt through the same route."
+    },
+    {
+      "lane": "Kierkegaard",
+      "surface": "existing_app_local_server",
+      "start_action": "Send bounded status-only v14 x4 start advisory request through the existing callable route.",
+      "closeout_action": "Collect bounded completion receipt through the same route."
+    },
+    {
+      "lane": "Aristotle",
+      "surface": "existing_app_local_server",
+      "start_action": "Send bounded status-only v14 x4 start advisory request through the existing callable route.",
+      "closeout_action": "Collect bounded completion receipt through the same route."
+    },
+    {
+      "lane": "Arby",
+      "surface": "read_only_codex_cli",
+      "start_action": "Launch read-only CLI advisory lane with no-rush final-marker watcher.",
+      "closeout_action": "Publish only status, byte count, hash, marker review, and completion state."
+    },
+    {
+      "lane": "Aster Vale",
+      "surface": "read_only_codex_cli",
+      "start_action": "Launch read-only CLI advisory lane with no-rush final-marker watcher.",
+      "closeout_action": "Publish only status, byte count, hash, marker review, and completion state."
+    }
+  ],
+  "start_prechecks": [
+    "Confirm local app-server route is available for Cicero, Kierkegaard, and Aristotle.",
+    "Confirm CLI launcher path still resolves for Arby and Aster Vale.",
+    "Confirm no replacement sibling or old-style subagent creation is needed.",
+    "Confirm raw lane text remains outside published repo artifacts.",
+    "Confirm delayed final markers route to stale-flow refresh before relaunch."
+  ],
+  "expected_artifacts": [
+    "v478-thos-v14-x4-background-council-app-runner-v1",
+    "v478-thos-v14-x4-background-council-app-completion-v1",
+    "v478-thos-v14-x4-cli-start-completion-v1",
+    "v478-thos-v14-x4-five-lane-start-status-v1",
+    "v478-thos-v14-x4-five-lane-completion-update-v1",
+    "v478-thos-v14-x4-closeout-synthesis-v1"
+  ],
+  "stale_flow_policy": [
+    "A delayed final marker is not a failed lane.",
+    "A lane with an open marker remains on the roster.",
+    "At least one bounded retry may be used when the process is healthy and still producing evidence.",
+    "Publish a blocker receipt only when the existing approved route cannot be called safely."
+  ],
+  "claim_boundary": "Start plan only; no lane has completed v14 x4 until bounded receipts prove it."
+}
