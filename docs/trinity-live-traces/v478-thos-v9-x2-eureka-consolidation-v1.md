@@ -1,0 +1,127 @@
+# v478 THOS v9 x2 Eureka Consolidation
+
+- generated_nz: `2026-06-04T14:18:29+12:00`
+- row_count: `120`
+- unfiltered_payloads_published: `false`
+
+## Consolidated Tasks
+- `V9X2-E001` (Aletheon / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E002` (Aletheon / schema): Carry schema into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E003` (Aletheon / handoff): Carry handoff into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E004` (Aletheon / source): Carry source into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E005` (Aletheon / guard): Carry guard into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E006` (Aletheon / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E007` (Aletheon / schema): Carry schema into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E008` (Aletheon / handoff): Carry handoff into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E009` (Aletheon / source): Carry source into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E010` (Aletheon / guard): Carry guard into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E011` (Aletheon / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E012` (Aletheon / schema): Carry schema into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E013` (Aletheon / handoff): Carry handoff into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E014` (Aletheon / source): Carry source into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E015` (Aletheon / guard): Carry guard into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E016` (Aletheon / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E017` (Aletheon / schema): Carry schema into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E018` (Aletheon / handoff): Carry handoff into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E019` (Aletheon / source): Carry source into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E020` (Aletheon / guard): Carry guard into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E021` (Arby / cli): Carry cli into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E022` (Arby / sandbox): Carry sandbox into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E023` (Arby / watcher): Carry watcher into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E024` (Arby / runtime): Carry runtime into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E025` (Arby / diagnostic): Carry diagnostic into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E026` (Arby / cli): Carry cli into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E027` (Arby / sandbox): Carry sandbox into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E028` (Arby / watcher): Carry watcher into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E029` (Arby / runtime): Carry runtime into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E030` (Arby / diagnostic): Carry diagnostic into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E031` (Arby / cli): Carry cli into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E032` (Arby / sandbox): Carry sandbox into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E033` (Arby / watcher): Carry watcher into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E034` (Arby / runtime): Carry runtime into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E035` (Arby / diagnostic): Carry diagnostic into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E036` (Arby / cli): Carry cli into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E037` (Arby / sandbox): Carry sandbox into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E038` (Arby / watcher): Carry watcher into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E039` (Arby / runtime): Carry runtime into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E040` (Arby / diagnostic): Carry diagnostic into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E041` (Aster Vale / skill): Carry skill into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E042` (Aster Vale / command): Carry command into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E043` (Aster Vale / loader): Carry loader into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E044` (Aster Vale / catalog): Carry catalog into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E045` (Aster Vale / route): Carry route into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E046` (Aster Vale / skill): Carry skill into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E047` (Aster Vale / command): Carry command into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E048` (Aster Vale / loader): Carry loader into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E049` (Aster Vale / catalog): Carry catalog into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E050` (Aster Vale / route): Carry route into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E051` (Aster Vale / skill): Carry skill into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E052` (Aster Vale / command): Carry command into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E053` (Aster Vale / loader): Carry loader into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E054` (Aster Vale / catalog): Carry catalog into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E055` (Aster Vale / route): Carry route into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E056` (Aster Vale / skill): Carry skill into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E057` (Aster Vale / command): Carry command into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E058` (Aster Vale / loader): Carry loader into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E059` (Aster Vale / catalog): Carry catalog into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E060` (Aster Vale / route): Carry route into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E061` (Cicero / argument): Carry argument into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E062` (Cicero / evidence): Carry evidence into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E063` (Cicero / index): Carry index into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E064` (Cicero / app-lane): Carry app-lane into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E065` (Cicero / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E066` (Cicero / argument): Carry argument into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E067` (Cicero / evidence): Carry evidence into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E068` (Cicero / index): Carry index into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E069` (Cicero / app-lane): Carry app-lane into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E070` (Cicero / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E071` (Cicero / argument): Carry argument into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E072` (Cicero / evidence): Carry evidence into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E073` (Cicero / index): Carry index into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E074` (Cicero / app-lane): Carry app-lane into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E075` (Cicero / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E076` (Cicero / argument): Carry argument into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E077` (Cicero / evidence): Carry evidence into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E078` (Cicero / index): Carry index into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E079` (Cicero / app-lane): Carry app-lane into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E080` (Cicero / publication): Carry publication into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E081` (Kierkegaard / humility): Carry humility into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E082` (Kierkegaard / ethics): Carry ethics into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E083` (Kierkegaard / claim-boundary): Carry claim-boundary into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E084` (Kierkegaard / consent): Carry consent into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E085` (Kierkegaard / noncanon): Carry noncanon into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E086` (Kierkegaard / humility): Carry humility into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E087` (Kierkegaard / ethics): Carry ethics into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E088` (Kierkegaard / claim-boundary): Carry claim-boundary into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E089` (Kierkegaard / consent): Carry consent into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E090` (Kierkegaard / noncanon): Carry noncanon into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E091` (Kierkegaard / humility): Carry humility into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E092` (Kierkegaard / ethics): Carry ethics into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E093` (Kierkegaard / claim-boundary): Carry claim-boundary into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E094` (Kierkegaard / consent): Carry consent into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E095` (Kierkegaard / noncanon): Carry noncanon into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E096` (Kierkegaard / humility): Carry humility into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E097` (Kierkegaard / ethics): Carry ethics into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E098` (Kierkegaard / claim-boundary): Carry claim-boundary into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E099` (Kierkegaard / consent): Carry consent into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E100` (Kierkegaard / noncanon): Carry noncanon into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E101` (Aristotle / taxonomy): Carry taxonomy into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E102` (Aristotle / criteria): Carry criteria into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E103` (Aristotle / validator): Carry validator into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E104` (Aristotle / causality): Carry causality into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E105` (Aristotle / readiness): Carry readiness into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E106` (Aristotle / taxonomy): Carry taxonomy into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E107` (Aristotle / criteria): Carry criteria into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E108` (Aristotle / validator): Carry validator into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E109` (Aristotle / causality): Carry causality into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E110` (Aristotle / readiness): Carry readiness into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E111` (Aristotle / taxonomy): Carry taxonomy into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E112` (Aristotle / criteria): Carry criteria into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E113` (Aristotle / validator): Carry validator into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E114` (Aristotle / causality): Carry causality into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E115` (Aristotle / readiness): Carry readiness into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E116` (Aristotle / taxonomy): Carry taxonomy into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E117` (Aristotle / criteria): Carry criteria into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E118` (Aristotle / validator): Carry validator into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E119` (Aristotle / causality): Carry causality into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
+- `V9X2-E120` (Aristotle / readiness): Carry readiness into v10 x1 with council-app completion, CLI open-gap evidence, and status-only publication.
