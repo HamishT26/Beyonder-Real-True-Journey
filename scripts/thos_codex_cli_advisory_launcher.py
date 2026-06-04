@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import time
 from datetime import datetime, timezone
@@ -15,6 +16,11 @@ from typing import Any
 
 
 def resolve_codex_executable() -> Path | None:
+    path_candidate = shutil.which("codex.cmd" if os.name == "nt" else "codex")
+    if not path_candidate:
+        path_candidate = shutil.which("codex")
+    if path_candidate:
+        return Path(path_candidate)
     local = Path.home() / "AppData" / "Local" / "OpenAI" / "Codex" / "bin" / "codex.exe"
     if local.exists():
         return local
