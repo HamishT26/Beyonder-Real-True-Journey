@@ -1,0 +1,71 @@
+{
+  "artifact_type": "fix_enhancement_updater_runner",
+  "phase_slug": "v478-thos-v12-x1",
+  "version_label": "v12-x1",
+  "generated_utc": "2026-06-04T04:23:48+00:00",
+  "generated_nz": "2026-06-04T16:23:48+12:00",
+  "overall_status": "PASS_WITH_LIVE_SKILL_APPROVAL_REQUIRED",
+  "issues": [
+    {
+      "id": "ISSUE-BACKGROUND-PARTIAL",
+      "status": "open",
+      "evidence": "background runner can fuse app success with CLI open gap but cannot force final markers.",
+      "safe_retry_count": 1,
+      "repair_class": "background_completion_policy",
+      "approved_now": "repo_runner_design_only"
+    },
+    {
+      "id": "ISSUE-MULTIPLEX-CLI-OPEN",
+      "status": "open",
+      "evidence": "multiplex board can display app readiness while CLI lanes remain open.",
+      "safe_retry_count": 1,
+      "repair_class": "operator_visibility",
+      "approved_now": "repo_runner_design_only"
+    }
+  ],
+  "enhancements": [
+    {
+      "id": "ENH-01",
+      "name": "background_notifier_completion_contract",
+      "description": "Use one runner to coordinate app completion and CLI final-marker status while keeping temp output unpublished.",
+      "mutation_scope": "repo_script_only"
+    },
+    {
+      "id": "ENH-02",
+      "name": "local_multiplex_status_board",
+      "description": "Show all five sibling lanes in one status surface without creating new threads.",
+      "mutation_scope": "repo_script_only"
+    },
+    {
+      "id": "ENH-03",
+      "name": "fix_enhancement_plan_sandbox",
+      "description": "Turn recurring open gaps into bounded repair plans and approval packets.",
+      "mutation_scope": "repo_script_only"
+    },
+    {
+      "id": "ENH-04",
+      "name": "multi_agent_orchestration_skill_draft",
+      "description": "Prepare a draft evolved orchestration skill before any live skill mutation.",
+      "mutation_scope": "draft_artifact_only"
+    },
+    {
+      "id": "ENH-05",
+      "name": "future_background_detach_gate",
+      "description": "Add a detached watcher mode only after a separate exact approval covers persistent processes.",
+      "mutation_scope": "approval_required"
+    }
+  ],
+  "skill_draft_receipt": "v478-thos-v12-x1-multi-agent-orchestration-skill-evolution-draft-v1.json",
+  "approval_packet_receipt": "v478-thos-v12-x1-live-skill-evolution-approval-packet-v1.md",
+  "policy": {
+    "repo_runner_design_only": true,
+    "live_skill_mutation_performed": false,
+    "external_account_mutation_performed": false,
+    "persistent_background_process_started": false
+  },
+  "claim_boundary": {
+    "scope": "fix and enhancement planning only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}
