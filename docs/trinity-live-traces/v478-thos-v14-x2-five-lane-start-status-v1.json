@@ -1,0 +1,54 @@
+{
+  "artifact_type": "five_lane_start_status",
+  "phase_slug": "v478-thos-v14-x2",
+  "generated_utc": "2026-06-04T17:16:05.4361724Z",
+  "generated_nz": "2026-06-05T05:16:05.4361724+12:00",
+  "overall_status": "APP_PASS_CLI_FINAL_MARKER_OPEN",
+  "claim_boundary": "THOS v14 x2 start status only; all GMUT empirical, consciousness, physics, and canon gates remain open.",
+  "app_lanes": {
+    "status": "PASS",
+    "receipt": "v478-thos-v14-x2-background-council-app-completion-v1",
+    "lanes": [
+      {"lane": "Cicero", "completion_status": "completed"},
+      {"lane": "Kierkegaard", "completion_status": "completed"},
+      {"lane": "Aristotle", "completion_status": "completed"}
+    ],
+    "routing_boundary": "existing app/local-server lanes only; no new thread creation and no old-style subagent spawning."
+  },
+  "cli_lanes": {
+    "status": "OPEN_GAP_WATCH_TIMEOUT",
+    "first_attempt_receipt": "v478-thos-v14-x2-cli-start-completion-v1",
+    "retry_receipt": "v478-thos-v14-x2-cli-retry2-completion-v1",
+    "lanes": [
+      {
+        "lane": "Arby",
+        "completion_status": "WAITING_FOR_FINAL_MESSAGE",
+        "process_alive_at_receipt": true,
+        "raw_output_boundary": "temp_only_not_published"
+      },
+      {
+        "lane": "Aster Vale",
+        "completion_status": "WAITING_FOR_FINAL_MESSAGE",
+        "process_alive_at_receipt": true,
+        "raw_output_boundary": "temp_only_not_published"
+      }
+    ]
+  },
+  "launcher_hardening": {
+    "script": "scripts/thos_codex_cli_advisory_launcher.py",
+    "status": "compiled",
+    "change": "CLI launcher now closes child stdin with subprocess.DEVNULL so prompt-based exec lanes do not inherit an open stdin pipe.",
+    "reason": "Codex exec help documents that piped stdin is appended to the prompt; closing stdin removes a stale-flow ambiguity for future launches."
+  },
+  "stale_flow_interpretation": [
+    "v14 x2 satisfied the every-second-session app-lane call requirement.",
+    "Arby and Aster Vale were launched through existing read-only CLI lanes and remain on the active roster.",
+    "CLI final markers are still open after a bounded watcher window, so v14 x2 must continue with a CLI-final-marker-open stale-flow item rather than claim all lanes complete.",
+    "No raw lane text, temp transport, or app payload is published."
+  ],
+  "next_actions": [
+    "Run a later one-shot CLI completion poll before v14 x2 closeout.",
+    "If the CLI lanes remain open after additional useful wait windows, create a stale-flow repair plan instead of relaunching repeatedly.",
+    "Use the v14 x2 roadmap to continue notifier compaction, loader-drift detection, command-surface repair, and publication guards."
+  ]
+}

@@ -74,6 +74,7 @@ def execute_plan(plan: dict[str, Any], wait_seconds: int = 0, terminate_on_timeo
     with stdout_path.open("w", encoding="utf-8") as stdout, stderr_path.open("w", encoding="utf-8") as stderr:
         process = subprocess.Popen(
             plan["command_preview"],
+            stdin=subprocess.DEVNULL,
             stdout=stdout,
             stderr=stderr,
             cwd=plan["worktree_path"],
