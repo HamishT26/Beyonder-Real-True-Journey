@@ -1,0 +1,66 @@
+# v478-thos-v13-x1 Roadmap
+
+- generated_nz: `2026-06-05T02:48:01+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V13X1-01` (stale_flow): Advance v478-thos-v13-x1 stale flow with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-02` (sibling_lane): Advance v478-thos-v13-x1 sibling lane with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-03` (cli_final_marker): Advance v478-thos-v13-x1 cli final marker with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-04` (app_server): Advance v478-thos-v13-x1 app server with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-05` (sandbox_readiness): Advance v478-thos-v13-x1 sandbox readiness with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-06` (source_drift): Advance v478-thos-v13-x1 source drift with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-07` (skill_orchestration): Advance v478-thos-v13-x1 skill orchestration with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-08` (publication_guard): Advance v478-thos-v13-x1 publication guard with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-09` (command_surface): Advance v478-thos-v13-x1 command surface with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-10` (mcp_trust): Advance v478-thos-v13-x1 mcp trust with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-11` (journey_index): Advance v478-thos-v13-x1 journey index with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-12` (gmuthos_boundary): Advance v478-thos-v13-x1 gmuthos boundary with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-13` (stale_flow): Advance v478-thos-v13-x1 stale flow with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-14` (sibling_lane): Advance v478-thos-v13-x1 sibling lane with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-15` (cli_final_marker): Advance v478-thos-v13-x1 cli final marker with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-16` (app_server): Advance v478-thos-v13-x1 app server with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-17` (sandbox_readiness): Advance v478-thos-v13-x1 sandbox readiness with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-18` (source_drift): Advance v478-thos-v13-x1 source drift with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-19` (skill_orchestration): Advance v478-thos-v13-x1 skill orchestration with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-20` (publication_guard): Advance v478-thos-v13-x1 publication guard with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-21` (command_surface): Advance v478-thos-v13-x1 command surface with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-22` (mcp_trust): Advance v478-thos-v13-x1 mcp trust with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-23` (journey_index): Advance v478-thos-v13-x1 journey index with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-24` (gmuthos_boundary): Advance v478-thos-v13-x1 gmuthos boundary with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-25` (stale_flow): Advance v478-thos-v13-x1 stale flow with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-26` (sibling_lane): Advance v478-thos-v13-x1 sibling lane with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-27` (cli_final_marker): Advance v478-thos-v13-x1 cli final marker with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-28` (app_server): Advance v478-thos-v13-x1 app server with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-29` (sandbox_readiness): Advance v478-thos-v13-x1 sandbox readiness with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-30` (source_drift): Advance v478-thos-v13-x1 source drift with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-31` (skill_orchestration): Advance v478-thos-v13-x1 skill orchestration with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-32` (publication_guard): Advance v478-thos-v13-x1 publication guard with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-33` (command_surface): Advance v478-thos-v13-x1 command surface with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-34` (mcp_trust): Advance v478-thos-v13-x1 mcp trust with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-35` (journey_index): Advance v478-thos-v13-x1 journey index with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-36` (gmuthos_boundary): Advance v478-thos-v13-x1 gmuthos boundary with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-37` (stale_flow): Advance v478-thos-v13-x1 stale flow with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-38` (sibling_lane): Advance v478-thos-v13-x1 sibling lane with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-39` (cli_final_marker): Advance v478-thos-v13-x1 cli final marker with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-40` (app_server): Advance v478-thos-v13-x1 app server with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-41` (sandbox_readiness): Advance v478-thos-v13-x1 sandbox readiness with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-42` (source_drift): Advance v478-thos-v13-x1 source drift with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-43` (skill_orchestration): Advance v478-thos-v13-x1 skill orchestration with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-44` (publication_guard): Advance v478-thos-v13-x1 publication guard with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-45` (command_surface): Advance v478-thos-v13-x1 command surface with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-46` (mcp_trust): Advance v478-thos-v13-x1 mcp trust with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-47` (journey_index): Advance v478-thos-v13-x1 journey index with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-48` (gmuthos_boundary): Advance v478-thos-v13-x1 gmuthos boundary with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-49` (stale_flow): Advance v478-thos-v13-x1 stale flow with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-50` (sibling_lane): Advance v478-thos-v13-x1 sibling lane with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-51` (cli_final_marker): Advance v478-thos-v13-x1 cli final marker with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-52` (app_server): Advance v478-thos-v13-x1 app server with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-53` (sandbox_readiness): Advance v478-thos-v13-x1 sandbox readiness with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-54` (source_drift): Advance v478-thos-v13-x1 source drift with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-55` (skill_orchestration): Advance v478-thos-v13-x1 skill orchestration with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-56` (publication_guard): Advance v478-thos-v13-x1 publication guard with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-57` (command_surface): Advance v478-thos-v13-x1 command surface with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-58` (mcp_trust): Advance v478-thos-v13-x1 mcp trust with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-59` (journey_index): Advance v478-thos-v13-x1 journey index with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
+- `V478V13X1-60` (gmuthos_boundary): Advance v478-thos-v13-x1 gmuthos boundary with compact x2 evidence, source-drift refresh, stale-flow tracking, and open GMUT gates.
