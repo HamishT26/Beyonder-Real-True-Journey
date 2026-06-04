@@ -128,6 +128,15 @@ def average_duration(rows: list[dict[str, Any]]) -> float | None:
     return round(sum(durations) / len(durations), 3)
 
 
+def boundary_kind(phase_slug: str) -> str:
+    lowered = phase_slug.lower()
+    if "start" in lowered:
+        return "start"
+    if "closeout" in lowered:
+        return "closeout"
+    return "timing"
+
+
 def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     generated_utc, generated_nz = now_pair()
     app_payload = read_json(TRACE_DIR / f"{args.app_prefix}-v1.json")
@@ -137,14 +146,17 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     app_ready = all(row.get("status") == "completed" for row in lane_rows if row.get("platform") == "codex_app_local_server")
     cli_ready = all(row.get("status") == "FINAL_MESSAGE_READY" for row in lane_rows if row.get("platform") == "codex_cli_read_only")
     avg = average_duration(lane_rows)
+    boundary = boundary_kind(args.phase_slug)
+    status_suffix = boundary.upper()
     payload: dict[str, Any] = {
-        "artifact_type": "five_lane_closeout_timing_receipt",
+        "artifact_type": "five_lane_timing_receipt",
         "phase_slug": args.phase_slug,
+        "boundary": boundary,
         "generated_utc": generated_utc,
         "generated_nz": generated_nz,
         "observation_run_index_today": args.observation_run_index,
         "observation_window_seconds": args.observation_window_seconds,
-        "overall_status": "PASS_FIVE_LANE_CLOSEOUT" if all_attempted and app_ready and cli_ready else "OPEN_GAP_FIVE_LANE_CLOSEOUT",
+        "overall_status": f"PASS_FIVE_LANE_{status_suffix}" if all_attempted and app_ready and cli_ready else f"OPEN_GAP_FIVE_LANE_{status_suffix}",
         "lane_count": len(lane_rows),
         "all_five_lanes_attempted": all_attempted,
         "average_response_seconds_this_run": avg,
@@ -156,16 +168,16 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "cli_output_boundary": "local_temp_redacted_not_published",
         },
         "next_phase_handoff": [
-            "Treat this as observation run 1 of 3 for the five-sibling timing baseline.",
-            "Repeat the same timing ledger for the next two five-sibling runs before deriving the soft future timeout average.",
+            f"Treat this as observation run {args.observation_run_index} of 3 for the five-sibling timing baseline.",
+            "Repeat the same timing ledger until three five-sibling observations exist before deriving the soft future timeout average.",
             "Keep the every-second-session five-lane rule active at both start and closeout boundaries.",
             "Use idle notifier time for source, command, stale-flow, and approval prep rather than manual polling.",
         ],
         "claim_boundary": {
-            "scope": "v478 THOS v14 x4 closeout timing and handoff only",
+            "scope": f"{args.phase_slug} five-lane {boundary} timing and handoff only",
             "gmut_gate_state": "all_gmut_gates_remain_open",
             "canon_promotion": "not_claimed",
-            "raw_lane_text_published": False,
+            "lane_body_text_published": False,
         },
     }
     write_json(TRACE_DIR / f"{args.receipt_prefix}-v1.json", payload)
@@ -180,7 +192,7 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
 
 def write_md(path: Path, payload: dict[str, Any]) -> None:
     lines = [
-        f"# {payload['phase_slug']} Five-Lane Closeout Timing",
+        f"# {payload['phase_slug']} Five-Lane {payload['boundary'].title()} Timing",
         "",
         f"- generated_nz: `{payload['generated_nz']}`",
         f"- overall_status: `{payload['overall_status']}`",
@@ -188,8 +200,8 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
         f"- observation_window_seconds: `{payload['observation_window_seconds']}`",
         f"- average_response_seconds_this_run: `{payload['average_response_seconds_this_run']}`",
         f"- soft_timeout_baseline_status: `{payload['soft_timeout_baseline_status']}`",
-        "- publication boundary: raw lane text, local temp paths, transport output, sessions, screenshots, and credentials are not published.",
-        "- claim boundary: closeout timing only; all GMUT gates remain open.",
+        "- publication boundary: lane body text, local temp paths, transport output, sessions, screenshots, and credentials are not published.",
+        f"- claim boundary: {payload['boundary']} timing only; all GMUT gates remain open.",
         "",
         "## Lane Timing",
     ]
