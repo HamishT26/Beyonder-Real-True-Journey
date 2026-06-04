@@ -1,0 +1,66 @@
+# v478 THOS v6 x2 Roadmap
+
+- generated_nz: `2026-06-04T12:32:35+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V6X2-01` (app-lane): Synthesize v478 v6 x1 evidence into v6 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-02` (cli-gap): Synthesize v478 v6 x1 evidence into v6 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-03` (runner): Synthesize v478 v6 x1 evidence into v6 x2 runner decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-04` (source): Synthesize v478 v6 x1 evidence into v6 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-05` (system): Synthesize v478 v6 x1 evidence into v6 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-06` (command): Synthesize v478 v6 x1 evidence into v6 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-07` (skill): Synthesize v478 v6 x1 evidence into v6 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-08` (reflection): Synthesize v478 v6 x1 evidence into v6 x2 reflection decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-09` (eureka): Synthesize v478 v6 x1 evidence into v6 x2 eureka decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-10` (guard): Synthesize v478 v6 x1 evidence into v6 x2 guard decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-11` (schema): Synthesize v478 v6 x1 evidence into v6 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-12` (handoff): Synthesize v478 v6 x1 evidence into v6 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-13` (app-lane): Synthesize v478 v6 x1 evidence into v6 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-14` (cli-gap): Synthesize v478 v6 x1 evidence into v6 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-15` (runner): Synthesize v478 v6 x1 evidence into v6 x2 runner decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-16` (source): Synthesize v478 v6 x1 evidence into v6 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-17` (system): Synthesize v478 v6 x1 evidence into v6 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-18` (command): Synthesize v478 v6 x1 evidence into v6 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-19` (skill): Synthesize v478 v6 x1 evidence into v6 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-20` (reflection): Synthesize v478 v6 x1 evidence into v6 x2 reflection decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-21` (eureka): Synthesize v478 v6 x1 evidence into v6 x2 eureka decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-22` (guard): Synthesize v478 v6 x1 evidence into v6 x2 guard decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-23` (schema): Synthesize v478 v6 x1 evidence into v6 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-24` (handoff): Synthesize v478 v6 x1 evidence into v6 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-25` (app-lane): Synthesize v478 v6 x1 evidence into v6 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-26` (cli-gap): Synthesize v478 v6 x1 evidence into v6 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-27` (runner): Synthesize v478 v6 x1 evidence into v6 x2 runner decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-28` (source): Synthesize v478 v6 x1 evidence into v6 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-29` (system): Synthesize v478 v6 x1 evidence into v6 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-30` (command): Synthesize v478 v6 x1 evidence into v6 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-31` (skill): Synthesize v478 v6 x1 evidence into v6 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-32` (reflection): Synthesize v478 v6 x1 evidence into v6 x2 reflection decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-33` (eureka): Synthesize v478 v6 x1 evidence into v6 x2 eureka decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-34` (guard): Synthesize v478 v6 x1 evidence into v6 x2 guard decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-35` (schema): Synthesize v478 v6 x1 evidence into v6 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-36` (handoff): Synthesize v478 v6 x1 evidence into v6 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-37` (app-lane): Synthesize v478 v6 x1 evidence into v6 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-38` (cli-gap): Synthesize v478 v6 x1 evidence into v6 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-39` (runner): Synthesize v478 v6 x1 evidence into v6 x2 runner decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-40` (source): Synthesize v478 v6 x1 evidence into v6 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-41` (system): Synthesize v478 v6 x1 evidence into v6 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-42` (command): Synthesize v478 v6 x1 evidence into v6 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-43` (skill): Synthesize v478 v6 x1 evidence into v6 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-44` (reflection): Synthesize v478 v6 x1 evidence into v6 x2 reflection decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-45` (eureka): Synthesize v478 v6 x1 evidence into v6 x2 eureka decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-46` (guard): Synthesize v478 v6 x1 evidence into v6 x2 guard decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-47` (schema): Synthesize v478 v6 x1 evidence into v6 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-48` (handoff): Synthesize v478 v6 x1 evidence into v6 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-49` (app-lane): Synthesize v478 v6 x1 evidence into v6 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-50` (cli-gap): Synthesize v478 v6 x1 evidence into v6 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-51` (runner): Synthesize v478 v6 x1 evidence into v6 x2 runner decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-52` (source): Synthesize v478 v6 x1 evidence into v6 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-53` (system): Synthesize v478 v6 x1 evidence into v6 x2 system decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-54` (command): Synthesize v478 v6 x1 evidence into v6 x2 command decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-55` (skill): Synthesize v478 v6 x1 evidence into v6 x2 skill decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-56` (reflection): Synthesize v478 v6 x1 evidence into v6 x2 reflection decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-57` (eureka): Synthesize v478 v6 x1 evidence into v6 x2 eureka decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-58` (guard): Synthesize v478 v6 x1 evidence into v6 x2 guard decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-59` (schema): Synthesize v478 v6 x1 evidence into v6 x2 schema decisions while preserving status-only receipts and open GMUT gates.
+- `V478V6X2-60` (handoff): Synthesize v478 v6 x1 evidence into v6 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
