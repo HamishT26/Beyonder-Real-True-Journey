@@ -1,0 +1,66 @@
+# v478 THOS v9 x1 Roadmap
+
+- generated_nz: `2026-06-04T13:41:42+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V9X1-01` (source_freshness): Use v478 v9 x1 to deepen source freshness readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-02` (app_lane): Use v478 v9 x1 to deepen app lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-03` (cli_gap): Use v478 v9 x1 to deepen cli gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-04` (sandbox): Use v478 v9 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-05` (mcp_trust): Use v478 v9 x1 to deepen mcp trust readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-06` (windows_isolation): Use v478 v9 x1 to deepen windows isolation readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-07` (google_agents): Use v478 v9 x1 to deepen google agents readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-08` (nvidia_compute): Use v478 v9 x1 to deepen nvidia compute readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-09` (github_security): Use v478 v9 x1 to deepen github security readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-10` (observability): Use v478 v9 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-11` (governance): Use v478 v9 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-12` (handoff): Use v478 v9 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-13` (source_freshness): Use v478 v9 x1 to deepen source freshness readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-14` (app_lane): Use v478 v9 x1 to deepen app lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-15` (cli_gap): Use v478 v9 x1 to deepen cli gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-16` (sandbox): Use v478 v9 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-17` (mcp_trust): Use v478 v9 x1 to deepen mcp trust readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-18` (windows_isolation): Use v478 v9 x1 to deepen windows isolation readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-19` (google_agents): Use v478 v9 x1 to deepen google agents readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-20` (nvidia_compute): Use v478 v9 x1 to deepen nvidia compute readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-21` (github_security): Use v478 v9 x1 to deepen github security readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-22` (observability): Use v478 v9 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-23` (governance): Use v478 v9 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-24` (handoff): Use v478 v9 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-25` (source_freshness): Use v478 v9 x1 to deepen source freshness readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-26` (app_lane): Use v478 v9 x1 to deepen app lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-27` (cli_gap): Use v478 v9 x1 to deepen cli gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-28` (sandbox): Use v478 v9 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-29` (mcp_trust): Use v478 v9 x1 to deepen mcp trust readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-30` (windows_isolation): Use v478 v9 x1 to deepen windows isolation readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-31` (google_agents): Use v478 v9 x1 to deepen google agents readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-32` (nvidia_compute): Use v478 v9 x1 to deepen nvidia compute readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-33` (github_security): Use v478 v9 x1 to deepen github security readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-34` (observability): Use v478 v9 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-35` (governance): Use v478 v9 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-36` (handoff): Use v478 v9 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-37` (source_freshness): Use v478 v9 x1 to deepen source freshness readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-38` (app_lane): Use v478 v9 x1 to deepen app lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-39` (cli_gap): Use v478 v9 x1 to deepen cli gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-40` (sandbox): Use v478 v9 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-41` (mcp_trust): Use v478 v9 x1 to deepen mcp trust readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-42` (windows_isolation): Use v478 v9 x1 to deepen windows isolation readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-43` (google_agents): Use v478 v9 x1 to deepen google agents readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-44` (nvidia_compute): Use v478 v9 x1 to deepen nvidia compute readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-45` (github_security): Use v478 v9 x1 to deepen github security readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-46` (observability): Use v478 v9 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-47` (governance): Use v478 v9 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-48` (handoff): Use v478 v9 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-49` (source_freshness): Use v478 v9 x1 to deepen source freshness readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-50` (app_lane): Use v478 v9 x1 to deepen app lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-51` (cli_gap): Use v478 v9 x1 to deepen cli gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-52` (sandbox): Use v478 v9 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-53` (mcp_trust): Use v478 v9 x1 to deepen mcp trust readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-54` (windows_isolation): Use v478 v9 x1 to deepen windows isolation readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-55` (google_agents): Use v478 v9 x1 to deepen google agents readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-56` (nvidia_compute): Use v478 v9 x1 to deepen nvidia compute readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-57` (github_security): Use v478 v9 x1 to deepen github security readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-58` (observability): Use v478 v9 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-59` (governance): Use v478 v9 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V9X1-60` (handoff): Use v478 v9 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
