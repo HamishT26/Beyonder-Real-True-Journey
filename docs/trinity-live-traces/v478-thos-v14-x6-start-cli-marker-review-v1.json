@@ -1,0 +1,46 @@
+{
+  "artifact_type": "cli_marker_review",
+  "phase_slug": "v478-thos-v14-x6-start",
+  "generated_utc": "2026-06-04T22:13:00Z",
+  "generated_nz": "2026-06-05T10:13:00+12:00",
+  "overall_status": "OPEN_GAP_TUI_MARKER_WITHOUT_LAST_MESSAGE_FILE",
+  "output_boundary": "local_temp_redacted_not_published",
+  "review_reason": "Both CLI stderr streams contain final-marker-looking text while the formal Codex CLI last-message files are absent and the lane processes are still alive.",
+  "lanes": [
+    {
+      "lane": "Arby",
+      "stderr_bytes_observed": 3413980,
+      "last_message_exists": false,
+      "last_message_bytes": 0,
+      "has_final_marker_in_stderr": true,
+      "has_error_word_in_stderr": true,
+      "has_sandbox_word_in_stderr": true,
+      "has_rate_limit_word_in_stderr": false,
+      "completion_claimed": false
+    },
+    {
+      "lane": "Aster Vale",
+      "stderr_bytes_observed": 1134692,
+      "last_message_exists": false,
+      "last_message_bytes": 0,
+      "has_final_marker_in_stderr": true,
+      "has_error_word_in_stderr": true,
+      "has_sandbox_word_in_stderr": true,
+      "has_rate_limit_word_in_stderr": false,
+      "completion_claimed": false
+    }
+  ],
+  "operator_reading": [
+    "This is not a completion receipt.",
+    "The reliable watcher completion condition remains presence of last-message files with sanitized hashes and byte counts.",
+    "If the 30-minute watcher times out, publish the watcher blocker receipt and carry both lanes onto the next roster.",
+    "If last-message files arrive before timeout, prefer the watcher receipt over this review note."
+  ],
+  "claim_boundary": {
+    "scope": "status-only CLI marker review",
+    "lane_body_text_published": false,
+    "local_path_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

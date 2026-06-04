@@ -1,0 +1,95 @@
+{
+  "artifact_type": "five_lane_timing_receipt",
+  "phase_slug": "v478-thos-v14-x6-start",
+  "boundary": "start",
+  "generated_utc": "2026-06-04T22:32:26+00:00",
+  "generated_nz": "2026-06-05T10:32:26+12:00",
+  "observation_run_index_today": 4,
+  "observation_window_seconds": 1800,
+  "overall_status": "PASS_FIVE_LANE_START",
+  "lane_count": 5,
+  "all_five_lanes_attempted": true,
+  "average_response_seconds_this_run": 955.265,
+  "soft_timeout_baseline_status": "THREE_RUN_BASELINE_ALREADY_READY_X6_OVER_WINDOW_COMPLETION_OBSERVED",
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T21:52:35+00:00",
+      "first_completion_utc": "2026-06-04T21:56:27+00:00",
+      "duration_seconds": 232.156,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T21:56:27+00:00",
+      "first_completion_utc": "2026-06-04T21:58:03+00:00",
+      "duration_seconds": 96.75,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aristotle",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T21:58:03+00:00",
+      "first_completion_utc": "2026-06-04T21:59:49+00:00",
+      "duration_seconds": 105.734,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Arby",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T21:52:30+00:00",
+      "first_completion_utc": "2026-06-04T22:29:15+00:00",
+      "duration_seconds": 2205.164,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 3678,
+      "final_message_hash": "4cc56de01213009f9593b92ea898023fe855c34f73d650afd33d92d2857ce319",
+      "marker_review_required": true,
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aster Vale",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T21:52:30+00:00",
+      "first_completion_utc": "2026-06-04T22:28:06+00:00",
+      "duration_seconds": 2136.519,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 3592,
+      "final_message_hash": "afd5f8e7522cb6a3eec4f1d08663febdd598da161dff4b475408b894b89de8a9",
+      "marker_review_required": false,
+      "raw_output_published": false
+    }
+  ],
+  "evidence_sources": {
+    "app_completion_receipt": "v478-thos-v14-x6-start-background-council-app-completion-v1.json",
+    "cli_completion_receipt": "v478-thos-v14-x6-start-cli-completion-v1.json",
+    "cli_output_boundary": "local_temp_redacted_not_published"
+  },
+  "next_phase_handoff": [
+    "Treat this as a post-baseline observation showing formal CLI completion can arrive after the 30-minute observation window.",
+    "Keep the original three-run 312.832 second average as the soft future wait foothold; do not replace it with this over-window run unless a rolling-average policy is approved.",
+    "Keep the every-second-session five-lane rule active at both start and closeout boundaries.",
+    "Use idle notifier time for source, command, stale-flow, and approval prep rather than manual polling.",
+    "Carry Arby's marker-review resolution and the CLI over-window behavior into the next retry2/direct-advisory planning pass."
+  ],
+  "claim_boundary": {
+    "scope": "v478-thos-v14-x6-start five-lane start timing and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "artifact_type": "phase_start_synthesis",
+  "phase_slug": "v478-thos-v14-x6-start",
+  "generated_utc": "2026-06-04T22:34:26Z",
+  "generated_nz": "2026-06-05T10:34:26+12:00",
+  "overall_status": "PASS_X6_START_WITH_OVER_WINDOW_CLI_COMPLETION",
+  "evidence": {
+    "app_lanes": {
+      "receipt": "v478-thos-v14-x6-start-background-council-app-completion-v1.json",
+      "status": "PASS",
+      "lanes": [
+        {
+          "lane": "Cicero",
+          "duration_seconds": 232.156,
+          "completion": "completed"
+        },
+        {
+          "lane": "Kierkegaard",
+          "duration_seconds": 96.75,
+          "completion": "completed"
+        },
+        {
+          "lane": "Aristotle",
+          "duration_seconds": 105.734,
+          "completion": "completed"
+        }
+      ]
+    },
+    "cli_lanes": {
+      "receipt": "v478-thos-v14-x6-start-cli-completion-v1.json",
+      "status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+      "review_resolution_receipt": "v478-thos-v14-x6-start-cli-marker-review-resolution-v1.json",
+      "review_resolution_status": "PASS_FALSE_POSITIVE_TOKEN_WORD_REVIEW",
+      "completion_allowed_after_review": true,
+      "lanes": [
+        {
+          "lane": "Arby",
+          "duration_seconds": 2205.164,
+          "final_message_bytes": 3678,
+          "final_message_hash": "4cc56de01213009f9593b92ea898023fe855c34f73d650afd33d92d2857ce319",
+          "marker_review_required": true,
+          "marker_review_resolution": "false_positive_plain_token_word"
+        },
+        {
+          "lane": "Aster Vale",
+          "duration_seconds": 2136.519,
+          "final_message_bytes": 3592,
+          "final_message_hash": "afd5f8e7522cb6a3eec4f1d08663febdd598da161dff4b475408b894b89de8a9",
+          "marker_review_required": false
+        }
+      ],
+      "body_text_boundary": "temp_only_not_published"
+    },
+    "timing": {
+      "receipt": "v478-thos-v14-x6-start-five-lane-timing-v1.json",
+      "observation_run_index_today": 4,
+      "observation_window_seconds": 1800,
+      "average_response_seconds_this_run": 955.265,
+      "soft_wait_baseline_seconds": 312.832,
+      "interpretation": "post-baseline over-window completion observation"
+    },
+    "multiplex": {
+      "receipt": "v478-thos-v14-x6-start-local-multiplex-tui-app-server-runner-v1.json",
+      "status": "ALL_LANES_READY"
+    },
+    "stale_flow": {
+      "receipt": "v478-thos-v14-x6-start-stale-flow-refresh-v1.json",
+      "status": "READY_NO_STALE_FLOWS"
+    },
+    "source_refresh": {
+      "receipt": "v478-thos-v14-x6-start-source-refresh-v1.json",
+      "status": "PASS_SOURCE_REFRESH_COMPACT"
+    },
+    "command_handoff": {
+      "receipt": "v478-thos-v14-x6-start-command-handoff-compatibility-note-v1.json",
+      "status": "PASS_COMPATIBILITY_NOTE_WITH_OPEN_COMMAND_INDEX_GAP"
+    },
+    "prep": {
+      "receipt": "v478-thos-v14-x6-start-prep-handoff-v1.json",
+      "status": "PASS_PREP_DURING_FIVE_LANE_START_WAIT"
+    },
+    "roadmap": {
+      "receipt": "v478-thos-v14-x6-start-next-phase-roadmap-v1.json",
+      "status": "PASS_ROADMAP_PREP_WHILE_CLI_LANES_RUNNING"
+    }
+  },
+  "x6_lessons": [
+    "The five-lane roster was attempted at x6 start through existing lanes only.",
+    "Cicero, Kierkegaard, and Aristotle completed inside the expected app-server path.",
+    "Arby and Aster Vale produced formal CLI final-message files after the 30-minute observation window, so x6 should be treated as over-window completion rather than clean in-window completion.",
+    "Arby's marker review was resolved as plain token-word false positives; no credential, key, secret, or credential-phrase marker was found in the final-message review.",
+    "The 312.832 second three-run baseline remains useful as a check-in foothold, but x6 proves it cannot be used as a hard timeout or completion substitute.",
+    "The command-index v6 contract question remains a compatibility alias gap, while v54/v55 handoff surfaces remain surfaced.",
+    "Wait time was used for source refresh, command/handoff compatibility, stale-flow refresh, roadmap prep, and marker-review receipts rather than idle polling."
+  ],
+  "x6_closeout_handoff": [
+    "For the next CLI roster, prefer the proven retry2/direct-advisory pattern to reduce stale TUI waiting.",
+    "Keep Arby and Aster Vale on the roster because both ultimately produced valid final-message files.",
+    "Keep every-second-session five-lane discipline active, but record over-window completion separately from in-window completion.",
+    "If CLI final-message files again arrive after timeout, publish both the timeout evidence and any later final-marker resolution so the story remains evidence-led.",
+    "Carry x6 official-source notes into runner hardening, skill-governance, and command-surface compatibility work."
+  ],
+  "claim_boundary": {
+    "scope": "v478 THOS v14 x6 start synthesis and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false,
+    "raw_output_published": false
+  }
+}
