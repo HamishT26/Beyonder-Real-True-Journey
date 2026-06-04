@@ -51,6 +51,7 @@ def cli_rows(phase_slug: str) -> list[dict[str, Any]]:
     names = [f"{phase_slug}-cli-lane-completion-poll-v1.json"] + [
         f"{phase_slug}-cli-lane-completion-poll-retry-{idx}-v1.json" for idx in range(2, 6)
     ]
+    names.append(f"{phase_slug}-cli-completion-v1.json")
     names.append(f"{phase_slug}-background-cli-completion-v1.json")
     latest = None
     for name in names:
