@@ -1,0 +1,127 @@
+# v478 THOS v6 x2 Eureka Synthesis Board
+
+- generated_nz: `2026-06-04T12:44:30+12:00`
+- proposal_count: `120`
+- payload_boundary: `status_only`
+
+## Proposals
+- ALETHEON-X2-E01 (Aletheon / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E02 (Aletheon / schema): Carry schema work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E03 (Aletheon / handoff): Carry handoff work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E04 (Aletheon / source): Carry source work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E05 (Aletheon / guard): Carry guard work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E06 (Aletheon / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E07 (Aletheon / schema): Carry schema work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E08 (Aletheon / handoff): Carry handoff work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E09 (Aletheon / source): Carry source work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E10 (Aletheon / guard): Carry guard work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E11 (Aletheon / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E12 (Aletheon / schema): Carry schema work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E13 (Aletheon / handoff): Carry handoff work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E14 (Aletheon / source): Carry source work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E15 (Aletheon / guard): Carry guard work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E16 (Aletheon / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E17 (Aletheon / schema): Carry schema work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E18 (Aletheon / handoff): Carry handoff work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E19 (Aletheon / source): Carry source work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ALETHEON-X2-E20 (Aletheon / guard): Carry guard work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E01 (Arby / cli): Carry cli work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E02 (Arby / sandbox): Carry sandbox work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E03 (Arby / watcher): Carry watcher work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E04 (Arby / runtime): Carry runtime work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E05 (Arby / diagnostic): Carry diagnostic work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E06 (Arby / cli): Carry cli work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E07 (Arby / sandbox): Carry sandbox work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E08 (Arby / watcher): Carry watcher work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E09 (Arby / runtime): Carry runtime work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E10 (Arby / diagnostic): Carry diagnostic work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E11 (Arby / cli): Carry cli work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E12 (Arby / sandbox): Carry sandbox work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E13 (Arby / watcher): Carry watcher work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E14 (Arby / runtime): Carry runtime work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E15 (Arby / diagnostic): Carry diagnostic work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E16 (Arby / cli): Carry cli work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E17 (Arby / sandbox): Carry sandbox work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E18 (Arby / watcher): Carry watcher work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E19 (Arby / runtime): Carry runtime work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARBY-X2-E20 (Arby / diagnostic): Carry diagnostic work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E01 (Aster Vale / skill): Carry skill work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E02 (Aster Vale / command): Carry command work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E03 (Aster Vale / loader): Carry loader work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E04 (Aster Vale / catalog): Carry catalog work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E05 (Aster Vale / route): Carry route work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E06 (Aster Vale / skill): Carry skill work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E07 (Aster Vale / command): Carry command work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E08 (Aster Vale / loader): Carry loader work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E09 (Aster Vale / catalog): Carry catalog work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E10 (Aster Vale / route): Carry route work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E11 (Aster Vale / skill): Carry skill work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E12 (Aster Vale / command): Carry command work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E13 (Aster Vale / loader): Carry loader work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E14 (Aster Vale / catalog): Carry catalog work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E15 (Aster Vale / route): Carry route work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E16 (Aster Vale / skill): Carry skill work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E17 (Aster Vale / command): Carry command work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E18 (Aster Vale / loader): Carry loader work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E19 (Aster Vale / catalog): Carry catalog work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ASTER_VALE-X2-E20 (Aster Vale / route): Carry route work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E01 (Cicero / argument): Carry argument work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E02 (Cicero / evidence): Carry evidence work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E03 (Cicero / index): Carry index work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E04 (Cicero / app-lane): Carry app-lane work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E05 (Cicero / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E06 (Cicero / argument): Carry argument work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E07 (Cicero / evidence): Carry evidence work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E08 (Cicero / index): Carry index work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E09 (Cicero / app-lane): Carry app-lane work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E10 (Cicero / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E11 (Cicero / argument): Carry argument work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E12 (Cicero / evidence): Carry evidence work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E13 (Cicero / index): Carry index work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E14 (Cicero / app-lane): Carry app-lane work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E15 (Cicero / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E16 (Cicero / argument): Carry argument work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E17 (Cicero / evidence): Carry evidence work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E18 (Cicero / index): Carry index work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E19 (Cicero / app-lane): Carry app-lane work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- CICERO-X2-E20 (Cicero / publication): Carry publication work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E01 (Kierkegaard / humility): Carry humility work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E02 (Kierkegaard / ethics): Carry ethics work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E03 (Kierkegaard / claim-boundary): Carry claim-boundary work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E04 (Kierkegaard / consent): Carry consent work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E05 (Kierkegaard / noncanon): Carry noncanon work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E06 (Kierkegaard / humility): Carry humility work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E07 (Kierkegaard / ethics): Carry ethics work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E08 (Kierkegaard / claim-boundary): Carry claim-boundary work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E09 (Kierkegaard / consent): Carry consent work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E10 (Kierkegaard / noncanon): Carry noncanon work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E11 (Kierkegaard / humility): Carry humility work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E12 (Kierkegaard / ethics): Carry ethics work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E13 (Kierkegaard / claim-boundary): Carry claim-boundary work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E14 (Kierkegaard / consent): Carry consent work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E15 (Kierkegaard / noncanon): Carry noncanon work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E16 (Kierkegaard / humility): Carry humility work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E17 (Kierkegaard / ethics): Carry ethics work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E18 (Kierkegaard / claim-boundary): Carry claim-boundary work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E19 (Kierkegaard / consent): Carry consent work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- KIERKEGAARD-X2-E20 (Kierkegaard / noncanon): Carry noncanon work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E01 (Aristotle / taxonomy): Carry taxonomy work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E02 (Aristotle / criteria): Carry criteria work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E03 (Aristotle / validator): Carry validator work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E04 (Aristotle / causality): Carry causality work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E05 (Aristotle / readiness): Carry readiness work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E06 (Aristotle / taxonomy): Carry taxonomy work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E07 (Aristotle / criteria): Carry criteria work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E08 (Aristotle / validator): Carry validator work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E09 (Aristotle / causality): Carry causality work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E10 (Aristotle / readiness): Carry readiness work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E11 (Aristotle / taxonomy): Carry taxonomy work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E12 (Aristotle / criteria): Carry criteria work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E13 (Aristotle / validator): Carry validator work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E14 (Aristotle / causality): Carry causality work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E15 (Aristotle / readiness): Carry readiness work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E16 (Aristotle / taxonomy): Carry taxonomy work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E17 (Aristotle / criteria): Carry criteria work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E18 (Aristotle / validator): Carry validator work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E19 (Aristotle / causality): Carry causality work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
+- ARISTOTLE-X2-E20 (Aristotle / readiness): Carry readiness work into v478 v7 x1 with status-only evidence, exact staging, and no GMUT closure claims.
