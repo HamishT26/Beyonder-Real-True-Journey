@@ -1,0 +1,53 @@
+{
+  "artifact_type": "phase_closeout_prep_handoff",
+  "phase_slug": "v478-thos-v14-x6-closeout",
+  "generated_utc": "2026-06-04T22:40:00Z",
+  "generated_nz": "2026-06-05T10:40:00+12:00",
+  "overall_status": "PASS_PREP_DURING_X6_CLOSEOUT_WAIT",
+  "inputs": {
+    "x6_start_synthesis": "v478-thos-v14-x6-start-synthesis-v1.json",
+    "x6_start_timing": "v478-thos-v14-x6-start-five-lane-timing-v1.json",
+    "x6_marker_resolution": "v478-thos-v14-x6-start-cli-marker-review-resolution-v1.json",
+    "x6_closeout_stale_flow": "v478-thos-v14-x6-closeout-stale-flow-refresh-v1.json"
+  },
+  "state_reading": [
+    {
+      "surface": "five_lane_roster",
+      "status": "active",
+      "evidence": "x6 closeout launched app-server lanes and read-only CLI lanes through existing routes.",
+      "next_action": "Fold completion and final-marker evidence into x6 closeout synthesis."
+    },
+    {
+      "surface": "cli_pattern",
+      "status": "direct_advisory_with_cap",
+      "evidence": "x6 start completed over-window, so x6 closeout uses direct advisory prompts with launcher-level 30-minute caps.",
+      "next_action": "Compare closeout duration against x6 start over-window duration and the 312.832 second soft baseline."
+    },
+    {
+      "surface": "command_handoff",
+      "status": "known_compatibility_gap",
+      "evidence": "Command index is surfaced with the old v6 workbench contract name still absent; v54/v55 handoff remains surfaced.",
+      "next_action": "Do not invent old contract files; carry compatibility note forward."
+    },
+    {
+      "surface": "stale_flow",
+      "status": "ready_no_stale_flows",
+      "evidence": "x6 closeout stale-flow refresh found no current stale-flow rows.",
+      "next_action": "Reassess only if the direct CLI cap times out or marker review recurs."
+    }
+  ],
+  "closeout_wait_tasks": [
+    "Keep all five lanes on the roster until completion, timeout, or blocker receipt.",
+    "Use direct-advisory CLI evidence to decide whether the x6 start over-window behavior was prompt-shape related.",
+    "Preserve the three-run 312.832 second baseline as a soft check-in point only.",
+    "Avoid staging local temp output, lane body text, transport logs, or private material.",
+    "Prepare x7 handoff around bounded retry2/direct advisory if closeout behaves better."
+  ],
+  "claim_boundary": {
+    "scope": "x6 closeout prep during active five-lane wait",
+    "x6_closeout_lane_completion": "not_claimed_here",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

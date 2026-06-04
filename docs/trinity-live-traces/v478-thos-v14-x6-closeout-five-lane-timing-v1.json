@@ -1,0 +1,95 @@
+{
+  "artifact_type": "five_lane_timing_receipt",
+  "phase_slug": "v478-thos-v14-x6-closeout",
+  "boundary": "closeout",
+  "generated_utc": "2026-06-04T22:50:00+00:00",
+  "generated_nz": "2026-06-05T10:50:00+12:00",
+  "observation_run_index_today": 5,
+  "observation_window_seconds": 1800,
+  "overall_status": "PASS_FIVE_LANE_CLOSEOUT",
+  "lane_count": 5,
+  "all_five_lanes_attempted": true,
+  "average_response_seconds_this_run": 161.032,
+  "soft_timeout_baseline_status": "THREE_RUN_BASELINE_ALREADY_READY_X6_CLOSEOUT_UNDER_BASELINE",
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T22:42:48+00:00",
+      "first_completion_utc": "2026-06-04T22:46:30+00:00",
+      "duration_seconds": 222.36,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T22:46:30+00:00",
+      "first_completion_utc": "2026-06-04T22:47:27+00:00",
+      "duration_seconds": 56.64,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aristotle",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T22:47:27+00:00",
+      "first_completion_utc": "2026-06-04T22:48:26+00:00",
+      "duration_seconds": 59.094,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Arby",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T22:42:44+00:00",
+      "first_completion_utc": "2026-06-04T22:46:44+00:00",
+      "duration_seconds": 240.966,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 1349,
+      "final_message_hash": "236b6d92fd44b281b17d84a6c25cf95e085be425d3fddd653797b335ddfb992c",
+      "marker_review_required": false,
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aster Vale",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T22:42:44+00:00",
+      "first_completion_utc": "2026-06-04T22:46:30+00:00",
+      "duration_seconds": 226.098,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 1574,
+      "final_message_hash": "fd1d70fc822f1aa5ce3f37a6d2814b7266fcb9820fef349f82372a5b238a0a23",
+      "marker_review_required": false,
+      "raw_output_published": false
+    }
+  ],
+  "evidence_sources": {
+    "app_completion_receipt": "v478-thos-v14-x6-closeout-background-council-app-completion-v1.json",
+    "cli_completion_receipt": "v478-thos-v14-x6-closeout-cli-completion-v1.json",
+    "cli_output_boundary": "local_temp_redacted_not_published"
+  },
+  "next_phase_handoff": [
+    "Treat this as a post-baseline observation showing the direct capped CLI pattern completed under the 312.832 second soft wait foothold.",
+    "Keep the original three-run baseline as the planning foothold; use this closeout as pattern evidence rather than a baseline replacement.",
+    "Keep the every-second-session five-lane rule active at both start and closeout boundaries.",
+    "Use idle notifier time for source, command, stale-flow, and approval prep rather than manual polling.",
+    "Prefer direct capped CLI advisory prompts for future synthesis-only Arby and Aster Vale calls."
+  ],
+  "claim_boundary": {
+    "scope": "v478-thos-v14-x6-closeout five-lane closeout timing and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}
