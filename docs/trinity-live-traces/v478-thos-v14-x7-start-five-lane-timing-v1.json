@@ -1,0 +1,95 @@
+{
+  "artifact_type": "five_lane_timing_receipt",
+  "phase_slug": "v478-thos-v14-x7-start",
+  "boundary": "start",
+  "generated_utc": "2026-06-04T23:09:07+00:00",
+  "generated_nz": "2026-06-05T11:09:07+12:00",
+  "observation_run_index_today": 6,
+  "observation_window_seconds": 1800,
+  "overall_status": "PASS_FIVE_LANE_START",
+  "lane_count": 5,
+  "all_five_lanes_attempted": true,
+  "average_response_seconds_this_run": 136.149,
+  "soft_timeout_baseline_status": "THREE_RUN_BASELINE_ALREADY_READY_X7_START_UNDER_BASELINE",
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T23:02:51+00:00",
+      "first_completion_utc": "2026-06-04T23:05:55+00:00",
+      "duration_seconds": 184.64,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T23:05:55+00:00",
+      "first_completion_utc": "2026-06-04T23:06:52+00:00",
+      "duration_seconds": 56.547,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aristotle",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T23:06:52+00:00",
+      "first_completion_utc": "2026-06-04T23:07:51+00:00",
+      "duration_seconds": 59.25,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Arby",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T23:02:47+00:00",
+      "first_completion_utc": "2026-06-04T23:05:58+00:00",
+      "duration_seconds": 191.965,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 1952,
+      "final_message_hash": "3c1d75c4b4e1f9b1b1142b302fe99b687d3bc47fcceb3a2e21a682f90ac7182e",
+      "marker_review_required": false,
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aster Vale",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T23:02:47+00:00",
+      "first_completion_utc": "2026-06-04T23:05:55+00:00",
+      "duration_seconds": 188.343,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 1315,
+      "final_message_hash": "e035ed7d43be39e38e93d315c0dc91baf62318a6a5eb72ed880860c30bcec575",
+      "marker_review_required": false,
+      "raw_output_published": false
+    }
+  ],
+  "evidence_sources": {
+    "app_completion_receipt": "v478-thos-v14-x7-start-background-council-app-completion-v1.json",
+    "cli_completion_receipt": "v478-thos-v14-x7-start-cli-completion-v1.json",
+    "cli_output_boundary": "local_temp_redacted_not_published"
+  },
+  "next_phase_handoff": [
+    "Treat this as a post-baseline observation showing the direct capped CLI pattern remained under the 312.832 second soft wait foothold.",
+    "Keep the original three-run baseline as the planning foothold; use x7 start as reinforcing pattern evidence rather than a baseline replacement.",
+    "Keep the every-second-session five-lane rule active at both start and closeout boundaries.",
+    "Use idle notifier time for source, command, stale-flow, and approval prep rather than manual polling.",
+    "Continue direct capped CLI advisory prompts for synthesis-only Arby and Aster Vale calls."
+  ],
+  "claim_boundary": {
+    "scope": "v478-thos-v14-x7-start five-lane start timing and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}
