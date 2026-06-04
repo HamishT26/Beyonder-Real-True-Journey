@@ -1,0 +1,70 @@
+{
+  "artifact_type": "five_lane_start_status",
+  "phase_slug": "v478-thos-v14-x4",
+  "generated_utc": "2026-06-04T18:49:00Z",
+  "generated_nz": "2026-06-05T06:49:00+12:00",
+  "overall_status": "PASS_FIVE_LANE_START_AFTER_CLI_RETRY2",
+  "app_lanes": {
+    "status": "PASS",
+    "runner_receipt": "v478-thos-v14-x4-background-council-app-runner-v1",
+    "completion_receipt": "v478-thos-v14-x4-background-council-app-completion-v1",
+    "watch_receipt": "v478-thos-v14-x4-background-council-app-watch-v1",
+    "lanes": [
+      {
+        "lane": "Cicero",
+        "completion_status": "completed",
+        "duration_seconds": 122.297
+      },
+      {
+        "lane": "Kierkegaard",
+        "completion_status": "completed",
+        "duration_seconds": 97.984
+      },
+      {
+        "lane": "Aristotle",
+        "completion_status": "completed",
+        "duration_seconds": 91.469
+      }
+    ]
+  },
+  "cli_lanes": {
+    "status": "FINAL_MESSAGES_READY_WITH_MARKER_REVIEW",
+    "authoritative_receipt": "v478-thos-v14-x4-cli-retry2-completion-v1",
+    "first_attempt_status": "SUPERSEDED_OPEN_FINAL_MARKER_GAP",
+    "first_attempt_summary": "Initial CLI attempt launched both lanes but did not produce final-message files; local stderr showed PowerShell profile language-mode noise and stale final markers.",
+    "retry2_summary": "Retry2 used a no-shell, no-tools direct advisory prompt in a separate temp-only folder and produced final-message files for both lanes.",
+    "lanes": [
+      {
+        "lane": "Arby",
+        "completion_status": "FINAL_MESSAGE_READY",
+        "final_message_bytes": 2176,
+        "final_message_hash": "397fee7f9014e6a38eaaf4deed71a96241a99575e7fce5b283e1e5348cc32a5e",
+        "published_sensitive_marker_count": 0,
+        "marker_review": "No published sensitive marker."
+      },
+      {
+        "lane": "Aster Vale",
+        "completion_status": "FINAL_MESSAGE_READY",
+        "final_message_bytes": 2810,
+        "final_message_hash": "b16807ac73cab278225d6fddbd365fd2e336e32bddd9360383224f88914dc6c4",
+        "published_sensitive_marker_count": 1,
+        "marker_review": "Marker is the phrase 'Token drift' in a risk note, not auth material. Raw output remains unpublished."
+      }
+    ],
+    "raw_output_boundary": "temp_only_not_published"
+  },
+  "cadence_reading": [
+    "v14 x4 start met the mandatory every-second-session five-lane attempt requirement.",
+    "Cicero, Kierkegaard, and Aristotle completed through existing app/local-server routes.",
+    "Arby and Aster Vale completed through read-only CLI retry2 after the first attempt stayed marker-open.",
+    "The first attempt remains superseded evidence, not a reason to remove either CLI sibling from the roster.",
+    "v14 x4 closeout must attempt all five lanes again."
+  ],
+  "next_actions": [
+    "Publish this start status and the underlying app and CLI receipts with exact staging only.",
+    "Continue v14 x4 work with Arby and Aster Vale on the roster.",
+    "At v14 x4 closeout, repeat the five-lane completion check.",
+    "Keep the PowerShell profile language-mode noise in stale-flow watch unless it blocks retry2-style direct advisory lanes."
+  ],
+  "claim_boundary": "v14 x4 start status only; no x4 closeout, GMUT validation, final physics, solved consciousness, final THOS readiness, or canon promotion."
+}
