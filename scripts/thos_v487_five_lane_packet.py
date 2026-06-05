@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Generate curated v487 five-lane phase receipts.
+"""Generate curated GMUT/THOS five-lane phase receipts.
 
-This helper keeps the v487 cadence deterministic:
+This helper keeps the five-lane cadence deterministic:
 - refresh the tiny Arby/Aster current-context capsules;
 - validate capsule JSON/BOM/guard posture;
 - review CLI final markers from a temp-only output directory;
@@ -90,6 +90,12 @@ def final_marker(lane: str, phase_slug: str) -> str:
     return f"FINAL_MARKER: {phase_token}_{lane_token}_READY"
 
 
+def phase_token_present(text: str, phase_slug: str) -> bool:
+    """Accept exact slug text or the major version token such as v487/v488."""
+    lower = text.lower()
+    return phase_slug.lower() in lower or phase_slug.split("-")[0].lower() in lower
+
+
 def refresh_capsules(phase_slug: str) -> None:
     now_utc = utc_now()
     now_nz = nz_now()
@@ -125,7 +131,7 @@ def refresh_capsules(phase_slug: str) -> None:
                 "Use hash, byte count, final marker status, and sanitized summaries for receipts.",
                 "End with the requested final marker only when complete.",
             ],
-            "phase_family": "v487-gmut-thos-v23",
+        "phase_family": phase_slug.rsplit("-", 2)[0],
             "repair_scope": "Current-context pointer refresh only.",
             "requested_final_marker": final_marker(lane, phase_slug),
             "schema_version": 1,
@@ -235,7 +241,7 @@ def marker_review(phase_slug: str, output_dir: Path) -> None:
         lane_results.append(
             {
                 "completion_status": "FINAL_MESSAGE_READY" if text else "WAITING_FOR_FINAL_MESSAGE",
-                "current_phase_marker_present": "v487" in text.lower(),
+            "current_phase_marker_present": phase_token_present(text, phase_slug),
                 "expected_final_marker_present": final_marker(lane, phase_slug) in text,
                 "final_message_bytes": final_path.stat().st_size if final_path.exists() else 0,
                 "final_message_sensitive_marker_count": 0,
