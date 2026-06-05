@@ -23,8 +23,8 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_ROOT = REPO_ROOT.parents[1]
 ARTIFACT_ROOT = REPO_ROOT / "docs" / "trinity-live-traces"
-CAPSULE_RELATIVE = Path("docs/trinity-live-traces/v487-gmut-thos-v23-current-context-capsule-v1.json")
-CAPSULE_MD_RELATIVE = Path("docs/trinity-live-traces/v487-gmut-thos-v23-current-context-capsule-v1.md")
+CAPSULE_RELATIVE = Path("docs/trinity-live-traces/current-context-capsule-v1.json")
+CAPSULE_MD_RELATIVE = Path("docs/trinity-live-traces/current-context-capsule-v1.md")
 CLI_LANES = {
     "Arby": ARCHIVE_ROOT / "agent-worktrees" / "v461-round-robin" / "arby-advisory",
     "Aster Vale": ARCHIVE_ROOT / "agent-worktrees" / "v461-round-robin" / "aster-vale-advisory",
@@ -140,7 +140,7 @@ def refresh_capsules(phase_slug: str) -> None:
         write_json(json_path, payload)
         write_md(
             md_path,
-            "v487 GMUT/THOS v23 Current Context Capsule",
+            "GMUT/THOS Current Context Capsule",
             [
                 f"Lane: `{lane}`",
                 f"Generated UTC: `{now_utc}`",
