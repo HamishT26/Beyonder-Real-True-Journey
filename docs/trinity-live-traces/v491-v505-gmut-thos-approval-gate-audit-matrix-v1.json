@@ -1,0 +1,59 @@
+{
+  "artifact": "v491-v505-gmut-thos-approval-gate-audit-matrix-v1",
+  "generated_at_local": "2026-06-06T05:45:00+12:00",
+  "status": "APPROVAL_GATE_ACTIVE",
+  "current_verified_head": "daf6f93477111bf631b2a55a4f910c8fa18f916d",
+  "audit_rows": [
+    {
+      "requirement": "v490 closeout must be verified before v491-v505 approval materials are used.",
+      "evidence": "v490-gmut-thos-v26-v8 closeout was committed and remote-verified at 78ff410e63648e98646a0847c98b539b5cb4bfbf.",
+      "status": "proved_complete"
+    },
+    {
+      "requirement": "v491-v505 approval materials must exist only after v490 evidence is complete.",
+      "evidence": "v491-v505-gmut-thos-pending-approval-tapestry-v1 was committed after the verified v490 closeout and references the v490 closeout commit.",
+      "status": "proved_complete"
+    },
+    {
+      "requirement": "v491-v505 live phase launch requires explicit user approval.",
+      "evidence": "v491-v505-gmut-thos-pending-approval-tapestry-v1 has status PENDING_USER_APPROVAL_ONLY and not_authorization true.",
+      "status": "not_yet_approved"
+    },
+    {
+      "requirement": "The next phase should use existing lanes only.",
+      "evidence": "The pending tapestry and launch-readiness receipt list only Arby, Aster Vale, Cicero, Kierkegaard, and Aristotle.",
+      "status": "ready_after_approval"
+    },
+    {
+      "requirement": "All five responses are required before phase advancement.",
+      "evidence": "The pending tapestry and launch-readiness receipt preserve all_five_required_before_phase_advance and all five responses required before phase advance.",
+      "status": "ready_after_approval"
+    },
+    {
+      "requirement": "Productive waiting must continue while watchers track background lanes.",
+      "evidence": "The pending tapestry records productive_waiting_required true and the continuity prompt mandates research, preparation, and proposals while watchers run.",
+      "status": "ready_after_approval"
+    },
+    {
+      "requirement": "Raw lane outputs and private material must remain unpublished.",
+      "evidence": "The pending tapestry and continuity prompt reject raw lane text, raw transport, image captures, credentials, private dumps, and raw streams.",
+      "status": "ready_after_approval"
+    },
+    {
+      "requirement": "GMUT empirical, physics, consciousness proof, and canon gates must remain open.",
+      "evidence": "The pending tapestry and v490 closeout artifacts explicitly keep all claim gates open.",
+      "status": "ready_after_approval"
+    }
+  ],
+  "current_decision": {
+    "launch_v491_now": false,
+    "reason": "Approval materials are ready, but explicit approval has not been provided in the current state.",
+    "next_safe_action": "wait for Hamish to approve or revise the v491-v505 pending approval tapestry"
+  },
+  "suggested_user_approval_text": "APPROVED LIVE WRITE PACKET v491-v505 GMUT/THOS PHASE RUN: I approve packets V491-V505 from the pending approval tapestry, with the global boundaries and claim ceiling intact.",
+  "claim_ceiling": [
+    "This audit is not approval.",
+    "This audit does not launch v491-v505.",
+    "This audit does not validate GMUT, prove physics, prove consciousness, or promote canon."
+  ]
+}
