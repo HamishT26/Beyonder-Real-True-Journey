@@ -28,9 +28,19 @@ SOURCES = [
         "use": "Treat connector and tool surfaces as governed protocol layers rather than implicit authority.",
     },
     {
+        "label": "Model Context Protocol SEP-1686 Tasks",
+        "url": "https://modelcontextprotocol.io/seps/1686-tasks",
+        "use": "Map long-running sibling work to call-now/fetch-later task semantics with explicit status receipts.",
+    },
+    {
         "label": "OWASP Top 10 for Agentic Applications 2026",
         "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
         "use": "Keep agentic autonomy bounded by explicit authorization, audit trails, and sensitive-data guards.",
+    },
+    {
+        "label": "OWASP Agentic Skills Top 10",
+        "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+        "use": "Treat skills as executable authority surfaces that require review, provenance, and least-privilege boundaries.",
     },
     {
         "label": "NVIDIA Vera Rubin production announcement",
@@ -41,6 +51,11 @@ SOURCES = [
         "label": "NVIDIA AI factories overview",
         "url": "https://www.nvidia.com/en-us/solutions/ai-factories/",
         "use": "Carry digital-twin and factory-runner ideas into THOS runner maps as planning inputs only.",
+    },
+    {
+        "label": "NVIDIA DOCA in-silicon security for agentic AI infrastructure",
+        "url": "https://developer.nvidia.com/blog/advancing-ai-infrastructure-for-agentic-ai-with-nvidia-doca-in-silicon-security/",
+        "use": "Use distributed security and observability as an analogy for layered runner/notifier controls.",
     },
 ]
 
@@ -73,6 +88,13 @@ def parse_dt(value: str) -> datetime:
 
 def file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def phase_token(phase_slug: str, boundary: str) -> str:
+    parts = [part for part in phase_slug.split("-") if part]
+    if parts and parts[-1].lower() == boundary.lower():
+        parts = parts[:-1]
+    return "_".join(part.upper().replace(".", "_") for part in parts)
 
 
 def local_cli_metrics(output_dir: Path, lane_file_stem: str) -> dict[str, Any]:
@@ -185,16 +207,16 @@ def main() -> int:
     phase = args.phase_slug
     boundary = args.boundary.lower()
     boundary_upper = boundary.upper()
-    boundary_title = boundary.capitalize()
+    token = phase_token(phase, boundary)
     pass_five_status = f"PASS_FIVE_LANE_{boundary_upper}"
     watch_five_status = f"WATCH_FIVE_LANE_{boundary_upper}"
     phase_kind = "phase_start" if boundary == "start" else "phase_closeout"
-    pass_phase_status = f"PASS_X8_{boundary_upper}_WITH_FIVE_LANE_ROSTER"
-    watch_phase_status = f"WATCH_X8_{boundary_upper}"
-    prep_status = f"PASS_PREP_DURING_X8_{boundary_upper}_WAIT"
-    seed_suffix = args.seed_suffix or ("x8-closeout-seed-roadmap" if boundary == "start" else "v479-start-seed-roadmap")
-    seed_artifact_type = "x8_closeout_seed_roadmap" if boundary == "start" else "v479_start_seed_roadmap"
-    seed_status = "PASS_X8_CLOSEOUT_SEED_ROADMAP" if boundary == "start" else "PASS_V479_START_SEED_ROADMAP"
+    pass_phase_status = f"PASS_{token}_{boundary_upper}_WITH_FIVE_LANE_ROSTER"
+    watch_phase_status = f"WATCH_{token}_{boundary_upper}"
+    prep_status = f"PASS_PREP_DURING_{token}_{boundary_upper}_WAIT"
+    seed_suffix = args.seed_suffix or ("next-closeout-seed-roadmap" if boundary == "start" else "next-start-seed-roadmap")
+    seed_artifact_type = f"{seed_suffix.replace('-', '_')}"
+    seed_status = f"PASS_{seed_artifact_type.upper()}"
     generated = now_utc()
     generated_nz = generated.astimezone(NZ)
 
@@ -342,7 +364,7 @@ def main() -> int:
         "generated_nz": generated_nz.isoformat(),
         "overall_status": prep_status,
         "state_reading": [
-            f"x8 {boundary} used all five existing lanes after the prior remote-verified boundary.",
+            f"{phase} used all five existing lanes at the {boundary} boundary after the prior remote-verified boundary.",
             "Direct capped CLI remains the preferred synthesis-only pattern for Arby and Aster Vale.",
             "App-server lanes remain active for Cicero, Kierkegaard, and Aristotle.",
             "Source-refresh, stale-flow, loader-watch, and multiplex artifacts are prepared without exposing private lane content.",
@@ -350,7 +372,7 @@ def main() -> int:
         "next_handoff": [
             "Attempt all five existing lanes at the next required boundary.",
             "Use the 312.832 second soft foothold as planning support only.",
-            "Use wait time for v479 THOS preparation, command-surface compatibility notes, and approval packet drafting.",
+            "Use wait time for next-boundary THOS preparation, command-surface compatibility notes, and approval packet drafting.",
             "Keep all GMUT and canon gates open.",
         ],
     }
@@ -363,9 +385,9 @@ def main() -> int:
         "overall_status": seed_status,
         "roadmap": [
             "Carry five-lane status and timing receipts into the next THOS boundary.",
-            "Compare x8 boundary averages against the soft foothold.",
-            "Carry runner/notifier hardening into v479 only when backed by exact receipts.",
-            "Prepare v479 THOS start around stale-flow resilience, command-index compatibility, and source-led security controls.",
+            "Compare boundary averages against the soft foothold.",
+            "Carry runner/notifier hardening forward only when backed by exact receipts.",
+            "Prepare the next THOS boundary around stale-flow resilience, command-index compatibility, and source-led security controls.",
             "Keep direct capped CLI as a default, but do not ignore genuine final-marker blockers if they recur.",
         ],
     }
@@ -413,7 +435,7 @@ def main() -> int:
             "next_seed": {"receipt": f"{phase}-{seed_suffix}-v1.json", "status": seed["overall_status"]},
         },
         "boundary_lessons": [
-            f"All five existing lanes were attempted at the x8 {boundary} boundary.",
+            f"All five existing lanes were attempted at the {phase} {boundary} boundary.",
             "Wait time was used for source, stale-flow, loader-watch, and handoff preparation rather than idle babysitting.",
             "Direct capped CLI remains effective when the prompt is synthesis-only and no-tool.",
             "Startup warnings are metadata, not repair proof.",
@@ -452,7 +474,7 @@ def main() -> int:
         ]),
         ("prep-handoff", prep, "Prep Handoff", [
             f"- Status: `{prep['overall_status']}`",
-            "- Handoff keeps x8 closeout focused on five-lane receipt evidence and v479 preparation.",
+            "- Handoff keeps the next boundary focused on five-lane receipt evidence and THOS preparation.",
         ]),
         (seed_suffix, seed, "Next Seed Roadmap", [
             f"- Status: `{seed['overall_status']}`",
