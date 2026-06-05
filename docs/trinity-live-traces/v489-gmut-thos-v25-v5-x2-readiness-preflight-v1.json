@@ -1,0 +1,59 @@
+{
+  "artifact_type": "codex_app_cli_readiness_preflight",
+  "generated_nz": "2026-06-06T02:04:42+12:00",
+  "generated_utc": "2026-06-05T14:04:42Z",
+  "overall_status": "PASS_WITH_DOCTOR_TIMEOUT_WATCH",
+  "phase_slug": "v489-gmut-thos-v25-v5-x2",
+  "publication_boundary": {
+    "auth_material_published": false,
+    "image_captures_published": false,
+    "local_absolute_paths_published": false,
+    "private_connector_payload_published": false,
+    "raw_command_output_published": false,
+    "raw_lane_body_text_published": false,
+    "raw_transport_published": false
+  },
+  "checks": [
+    {
+      "check": "codex_cli_version",
+      "result": "PASS",
+      "observed": "codex-cli 0.137.0"
+    },
+    {
+      "check": "sandbox_help_surface",
+      "result": "PASS",
+      "observed": "sandbox help surface available"
+    },
+    {
+      "check": "app_server_help_surface",
+      "result": "PASS",
+      "observed": "app-server help surface available"
+    },
+    {
+      "check": "remote_control_help_surface",
+      "result": "PASS",
+      "observed": "remote-control help surface available"
+    },
+    {
+      "check": "doctor_status",
+      "result": "WATCH_TIMEOUT",
+      "observed": "doctor command did not return within the safe timeout and was not forced"
+    },
+    {
+      "check": "repo_drift_before_phase",
+      "result": "PASS",
+      "observed": "local and remote were equal before v5 work"
+    },
+    {
+      "check": "one_hour_reflection_window",
+      "result": "OPEN_NOT_COMPLETE",
+      "observed": "only about twenty-three minutes had elapsed from the committed v4 start receipt at this checkpoint"
+    }
+  ],
+  "carry_forward_rules": [
+    "Record doctor timeout as a stale-flow watch item unless it blocks phase artifacts.",
+    "Do not claim reflection-window closure until elapsed time proves the one-hour minimum.",
+    "Continue exact staging only because unrelated worktree noise is present.",
+    "Keep existing sibling lanes only."
+  ]
+}
