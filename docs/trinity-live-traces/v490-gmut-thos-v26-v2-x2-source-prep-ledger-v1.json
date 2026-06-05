@@ -1,0 +1,59 @@
+{
+  "artifact_type": "source_prep_ledger",
+  "generated_nz": "2026-06-06T03:01:45+12:00",
+  "generated_utc": "2026-06-05T15:01:45Z",
+  "overall_status": "PASS_SOURCE_PREP_WHILE_BACKGROUND_WATCHING",
+  "phase_slug": "v490-gmut-thos-v26-v2-x2",
+  "sources": [
+    {
+      "source_class": "primary_vendor_article",
+      "title": "OpenAI Codex App Server architecture",
+      "url": "https://openai.com/index/unlocking-the-codex-harness/",
+      "takeaway": "Shared app-server harnesses support multiple Codex surfaces; THOS should keep app-lane orchestration status-only and watcher-backed."
+    },
+    {
+      "source_class": "primary_vendor_repository",
+      "title": "OpenAI Codex releases",
+      "url": "https://github.com/openai/codex/releases",
+      "takeaway": "Release surfaces are useful for drift awareness but installed-state checks remain the local truth source."
+    },
+    {
+      "source_class": "primary_vendor_repository",
+      "title": "OpenAI Codex plugin wrapper",
+      "url": "https://github.com/openai/codex-plugin-cc",
+      "takeaway": "Codex app-server delegation can share local authentication, config, checkout, and runtime state; THOS should avoid duplicate runtimes and prefer explicit local receipts."
+    },
+    {
+      "source_class": "primary_protocol_documentation",
+      "title": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "takeaway": "Consent, token audience, redirect/state validation, local-server consent, and confused-deputy resistance remain mandatory connector rules."
+    },
+    {
+      "source_class": "primary_cloud_documentation",
+      "title": "Vertex AI Agent Engine Code Execution",
+      "url": "https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/code-execution/overview",
+      "takeaway": "Managed code-execution sandboxes, TTL, file limits, and stateful execution provide design patterns for THOS sandbox readiness receipts without implying cloud deployment."
+    },
+    {
+      "source_class": "primary_cloud_documentation",
+      "title": "GKE Agent Sandbox",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/agent-sandbox",
+      "takeaway": "Strong process, storage, and network isolation via sandbox controllers reinforces THOS separation between advisory, watcher, and mutation lanes."
+    }
+  ],
+  "publication_boundary": {
+    "auth_material_published": false,
+    "image_captures_published": false,
+    "local_absolute_paths_published": false,
+    "private_connector_payload_published": false,
+    "raw_search_payload_published": false,
+    "raw_transport_published": false
+  },
+  "carry_forward_rules": [
+    "Use background app-lane watchers for future x1 calls.",
+    "Do productive source/prep work while waiting.",
+    "Keep security and sandbox sources mapped to concrete THOS guardrails.",
+    "Keep all GMUT/THOS open gates intact."
+  ]
+}
