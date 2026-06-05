@@ -91,6 +91,40 @@ def run_watch_launcher(args: argparse.Namespace, artifact_prefix: str, launcher_
         command.append("--execute")
     if not args.execute:
         return {"execution_status": "planned_only", "returncode": None}
+    if args.background_watch:
+        creationflags = 0
+        if hasattr(subprocess, "CREATE_NEW_PROCESS_GROUP"):
+            creationflags |= subprocess.CREATE_NEW_PROCESS_GROUP
+        if hasattr(subprocess, "DETACHED_PROCESS"):
+            creationflags |= subprocess.DETACHED_PROCESS
+        try:
+            proc = subprocess.Popen(
+                command,
+                cwd=ROOT,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=creationflags,
+            )
+        except OSError as exc:
+            return {
+                "execution_status": "background_start_failed",
+                "returncode": None,
+                "error_class": exc.__class__.__name__,
+            }
+        return {
+            "execution_status": "background_watch_started",
+            "returncode": None,
+            "pid": proc.pid,
+            "stdout_boundary": "discarded_not_published",
+            "stderr_boundary": "discarded_not_published",
+            "watcher_expected_receipts": [
+                f"{artifact_prefix}-v1.json",
+                f"{artifact_prefix}-v1.md",
+                f"{launcher_prefix}-v1.json",
+                f"{launcher_prefix}-v1.md",
+            ],
+        }
     try:
         proc = subprocess.run(
             command,
@@ -141,13 +175,21 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     launcher_status = str(launcher.get("overall_status", "missing"))
     execution_ok = execution.get("returncode") == 0 or not args.execute
     status_ok = notifier_status.startswith("PASS") and launcher_status.startswith("PASS")
+    background_started = execution.get("execution_status") == "background_watch_started"
+    background_failed = execution.get("execution_status") == "background_start_failed"
+    if background_started:
+        overall_status = "PASS_BACKGROUND_WATCH_STARTED"
+    elif background_failed:
+        overall_status = "OPEN_GAP_BACKGROUND_WATCH_START"
+    else:
+        overall_status = "PASS" if execution_ok and status_ok else "OPEN_GAP_COUNCIL_APP_LANE"
     payload: dict[str, Any] = {
         "artifact_type": "council_app_lane_notifier_runner",
         "generated_utc": generated_utc,
         "generated_nz": generated_nz,
         "phase_slug": args.phase_slug,
         "mode": mode,
-        "overall_status": "PASS" if execution_ok and status_ok else "OPEN_GAP_COUNCIL_APP_LANE",
+        "overall_status": overall_status,
         "local_head_before_run": git_text(["rev-parse", "HEAD"]),
         "remote_head_before_run": git_text(["rev-parse", REMOTE_REF]),
         "drift_before_run": git_text(["rev-list", "--left-right", "--count", f"HEAD...{REMOTE_REF}"]),
@@ -161,12 +203,15 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "advisory_body_published": False,
             "unfiltered_transport_published": False,
             "retry_attempts_per_operation": args.retries,
+            "background_watch_requested": args.background_watch,
+            "work_while_waiting_required": args.background_watch,
         },
         "local_app_server": {
             "watch_launcher_available": WATCH_LAUNCHER.exists(),
             "completion_notifier_receipt": f"{artifact_prefix}-v1.json",
             "watch_launcher_receipt": f"{launcher_prefix}-v1.json",
             "status_surface": "summaries_only",
+            "background_receipts_expected": args.background_watch,
         },
         "execution": execution,
         "notifier_summary": {
@@ -182,6 +227,12 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "scope": "THOS council app-lane notification and completion watching only",
             "gmut_gate_state": "all_gmut_gates_remain_open",
             "canon_promotion": "not_claimed",
+        },
+        "cadence_policy": {
+            "preferred_x1_minutes": 60,
+            "preferred_x2_minutes": 60,
+            "duration_is_completion_proof": False,
+            "background_watch_allows_productive_waiting": args.background_watch,
         },
     }
     write_json(TRACE_DIR / f"{runner_prefix}-v1.json", payload)
@@ -205,12 +256,16 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
         f"- remote_head_before_run: `{payload['remote_head_before_run']}`",
         f"- drift_before_run: `{payload['drift_before_run']}`",
         "- policy: existing app threads only; read-only requested; no new threads; no old-style spawning; status-only publication.",
+        f"- background_watch_requested: `{payload['policy'].get('background_watch_requested')}`",
+        f"- work_while_waiting_required: `{payload['policy'].get('work_while_waiting_required')}`",
         "- local app server: completion and watch surfaces are summarized only.",
         "- claim boundary: THOS council app-lane watching only; all GMUT gates remain open.",
+        "- cadence: one-hour x1/x2 sessions are operating targets, not completion proof.",
         "",
         "## Execution",
         f"- execution_status: `{payload['execution'].get('execution_status')}`",
         f"- returncode: `{payload['execution'].get('returncode')}`",
+        f"- pid: `{payload['execution'].get('pid')}`",
         f"- stdout_status: `{payload['execution'].get('stdout_status')}`",
         f"- stderr_nonempty: `{payload['execution'].get('stderr_nonempty')}`",
         "",
@@ -239,6 +294,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--call-timeout-seconds", type=int, default=90)
     parser.add_argument("--turn-timeout-seconds", type=int, default=900)
     parser.add_argument("--launch-timeout-seconds", type=int, default=3600)
+    parser.add_argument(
+        "--background-watch",
+        action="store_true",
+        help="Start the app-lane watcher as a detached background process and return immediately.",
+    )
     return parser.parse_args()
 
 
