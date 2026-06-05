@@ -64,6 +64,91 @@ def lane_rows(payload: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
+def gate_status_for_rows(rows: list[dict[str, Any]], expected_lanes: list[str]) -> tuple[str, list[str]]:
+    lane_by_name = {str(row.get("lane")): row for row in rows}
+    gaps: list[str] = []
+    for lane in expected_lanes:
+        row = lane_by_name.get(lane)
+        if row is None:
+            gaps.append(f"{lane}:missing")
+            continue
+        if row.get("overall_status") != "completed" or row.get("completion_status") != "completed":
+            gaps.append(f"{lane}:{row.get('overall_status')}/{row.get('completion_status')}")
+    return ("PASS_APP_LANE_COMPLETION_GATE", gaps) if not gaps else ("OPEN_GAP_APP_LANE_COMPLETION_REQUIRED", gaps)
+
+
+def build_gate_payload(args: argparse.Namespace) -> dict[str, Any]:
+    generated_utc, generated_nz = now_pair()
+    mode = "notify" if args.notify else "probe"
+    runner_prefix = args.runner_prefix or f"{args.phase_slug}-council-app-lane-notifier-runner-{mode}"
+    artifact_prefix = args.artifact_prefix or f"{args.phase_slug}-council-app-lane-completion-notifier-{mode}"
+    launcher_prefix = args.launcher_prefix or f"{args.phase_slug}-council-app-lane-watch-launcher-{mode}"
+    gate_prefix = args.gate_prefix or f"{args.phase_slug}-council-app-lane-completion-gate-{mode}"
+    expected_lanes = [part.strip() for part in args.lanes.split(",") if part.strip()]
+    runner = read_json_if_present(TRACE_DIR / f"{runner_prefix}-v1.json")
+    notifier = read_json_if_present(TRACE_DIR / f"{artifact_prefix}-v1.json")
+    launcher = read_json_if_present(TRACE_DIR / f"{launcher_prefix}-v1.json")
+    rows = lane_rows(notifier)
+    lane_status, gaps = gate_status_for_rows(rows, expected_lanes)
+    runner_status = str(runner.get("overall_status", "missing"))
+    notifier_status = str(notifier.get("overall_status", "missing"))
+    launcher_status = str(launcher.get("overall_status", "missing"))
+    receipt_status = lane_status
+    receipt_gaps = list(gaps)
+    if not runner_status.startswith("PASS"):
+        receipt_status = "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED"
+        receipt_gaps.append(f"runner:{runner_status}")
+    if not notifier_status.startswith("PASS"):
+        receipt_status = "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED"
+        receipt_gaps.append(f"notifier:{notifier_status}")
+    if launcher_status != "missing" and not launcher_status.startswith("PASS"):
+        receipt_status = "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED"
+        receipt_gaps.append(f"launcher:{launcher_status}")
+    payload: dict[str, Any] = {
+        "artifact_type": "council_app_lane_completion_gate",
+        "generated_utc": generated_utc,
+        "generated_nz": generated_nz,
+        "phase_slug": args.phase_slug,
+        "mode": mode,
+        "overall_status": receipt_status,
+        "local_head_at_gate": git_text(["rev-parse", "HEAD"]),
+        "remote_head_at_gate": git_text(["rev-parse", REMOTE_REF]),
+        "drift_at_gate": git_text(["rev-list", "--left-right", "--count", f"HEAD...{REMOTE_REF}"]),
+        "expected_lanes": expected_lanes,
+        "gate_inputs": {
+            "runner_receipt": f"{runner_prefix}-v1.json",
+            "runner_status": runner_status,
+            "watch_launcher_receipt": f"{launcher_prefix}-v1.json",
+            "watch_launcher_status": launcher_status,
+            "completion_notifier_receipt": f"{artifact_prefix}-v1.json",
+            "completion_notifier_status": notifier_status,
+        },
+        "lanes": rows,
+        "open_gaps": sorted(set(receipt_gaps)),
+        "phase_advance_rule": {
+            "all_app_lanes_required": True,
+            "all_cli_lanes_required": True,
+            "duration_is_completion_proof": False,
+            "next_phase_allowed": receipt_status.startswith("PASS"),
+        },
+        "publication_boundary": {
+            "advisory_body_published": False,
+            "auth_material_published": False,
+            "image_captures_published": False,
+            "local_absolute_paths_published": False,
+            "raw_transport_published": False,
+        },
+        "claim_boundary": {
+            "scope": "THOS app-lane completion gating only",
+            "gmut_gate_state": "all_gmut_gates_remain_open",
+            "canon_promotion": "not_claimed",
+        },
+    }
+    write_json(TRACE_DIR / f"{gate_prefix}-v1.json", payload)
+    write_gate_md(TRACE_DIR / f"{gate_prefix}-v1.md", payload)
+    return payload
+
+
 def run_watch_launcher(args: argparse.Namespace, artifact_prefix: str, launcher_prefix: str) -> dict[str, Any]:
     command = [
         sys.executable,
@@ -205,6 +290,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "retry_attempts_per_operation": args.retries,
             "background_watch_requested": args.background_watch,
             "work_while_waiting_required": args.background_watch,
+            "phase_advance_requires_all_five_responses": True,
         },
         "local_app_server": {
             "watch_launcher_available": WATCH_LAUNCHER.exists(),
@@ -233,6 +319,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "preferred_x2_minutes": 60,
             "duration_is_completion_proof": False,
             "background_watch_allows_productive_waiting": args.background_watch,
+            "phase_advance_requires_completion_gate": True,
         },
     }
     write_json(TRACE_DIR / f"{runner_prefix}-v1.json", payload)
@@ -258,6 +345,7 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
         "- policy: existing app threads only; read-only requested; no new threads; no old-style spawning; status-only publication.",
         f"- background_watch_requested: `{payload['policy'].get('background_watch_requested')}`",
         f"- work_while_waiting_required: `{payload['policy'].get('work_while_waiting_required')}`",
+        f"- phase_advance_requires_all_five_responses: `{payload['policy'].get('phase_advance_requires_all_five_responses')}`",
         "- local app server: completion and watch surfaces are summarized only.",
         "- claim boundary: THOS council app-lane watching only; all GMUT gates remain open.",
         "- cadence: one-hour x1/x2 sessions are operating targets, not completion proof.",
@@ -281,6 +369,38 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
     path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
 
 
+def write_gate_md(path: Path, payload: dict[str, Any]) -> None:
+    lines = [
+        f"# {payload['phase_slug']} Council App-Lane Completion Gate",
+        "",
+        f"- generated_nz: `{payload['generated_nz']}`",
+        f"- mode: `{payload['mode']}`",
+        f"- overall_status: `{payload['overall_status']}`",
+        f"- drift_at_gate: `{payload['drift_at_gate']}`",
+        f"- next_phase_allowed: `{payload['phase_advance_rule']['next_phase_allowed']}`",
+        "- phase advance rule: all five sibling responses are required; duration is not completion proof.",
+        "- claim boundary: THOS app-lane completion gating only; all GMUT gates remain open.",
+        "",
+        "## Gate Inputs",
+        f"- runner: `{payload['gate_inputs']['runner_status']}`",
+        f"- watch_launcher: `{payload['gate_inputs']['watch_launcher_status']}`",
+        f"- completion_notifier: `{payload['gate_inputs']['completion_notifier_status']}`",
+        "",
+        "## Lane Summary",
+    ]
+    for row in payload.get("lanes", []):
+        lines.append(
+            f"- {row.get('lane')}: `{row.get('overall_status')}`, completion `{row.get('completion_status')}`, "
+            f"read `{row.get('read_status')}`, resume `{row.get('resume_status')}`."
+        )
+    gaps = payload.get("open_gaps", [])
+    if gaps:
+        lines.extend(["", "## Open Gaps"])
+        lines.extend(f"- `{gap}`" for gap in gaps)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--phase-slug", required=True)
@@ -290,6 +410,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--runner-prefix")
     parser.add_argument("--artifact-prefix")
     parser.add_argument("--launcher-prefix")
+    parser.add_argument("--gate-prefix")
     parser.add_argument("--retries", type=int, default=5)
     parser.add_argument("--call-timeout-seconds", type=int, default=90)
     parser.add_argument("--turn-timeout-seconds", type=int, default=900)
@@ -299,11 +420,17 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Start the app-lane watcher as a detached background process and return immediately.",
     )
+    parser.add_argument(
+        "--gate-only",
+        action="store_true",
+        help="Do not send messages; harvest watcher receipts and write a strict all-app-lane completion gate.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
-    payload = build_payload(parse_args())
+    args = parse_args()
+    payload = build_gate_payload(args) if args.gate_only else build_payload(args)
     print(json.dumps({"status": payload["overall_status"], "phase_slug": payload["phase_slug"]}, indent=2))
     return 0 if str(payload["overall_status"]).startswith("PASS") else 1
 
