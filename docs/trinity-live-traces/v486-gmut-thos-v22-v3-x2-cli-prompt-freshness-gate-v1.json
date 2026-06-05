@@ -1,0 +1,39 @@
+{
+  "artifact_type": "cli_prompt_freshness_gate",
+  "phase_slug": "v486-gmut-thos-v22-v3-x2",
+  "source_boundary": "v486-gmut-thos-v22-v3-x1",
+  "generated_utc": "2026-06-05T07:18:55Z",
+  "generated_nz": "2026-06-05T19:18:55+12:00",
+  "overall_status": "PASS_STALE_CONTEXT_BLOCKER_CLASSIFIED",
+  "x1_quality_status": "OPEN_GAP_CLI_ADVISORY_STUB_RETRY_PENDING",
+  "x1_completion_status": "OPEN_GAP_CLI_ADVISORY_STUB_RETRY_PENDING",
+  "freshness_findings": [
+    {
+      "lane_group": "Arby/Aster",
+      "finding": "late CLI final messages were not accepted as v486 v3 x1 advisories because they referenced stale v58 context and omitted the requested v486 final markers",
+      "action": "future CLI prompts must include a current-phase freshness oath, current artifact targets, and a mandatory reject-stale-context clause"
+    },
+    {
+      "lane_group": "all five lanes",
+      "finding": "app lanes remain usable as completion evidence, but raw app bodies are not published",
+      "action": "x2 builds only from sanitized receipts, source ledgers, command surfaces, and Aletheon-authored synthesis"
+    }
+  ],
+  "not_completion_proof": [
+    "handshake stubs",
+    "late stale-context advisory text",
+    "soft wait foothold",
+    "transport warnings"
+  ],
+  "next_retry_contract": [
+    "state the current phase slug in the first sentence",
+    "state that stale v58/v59-only context must be rejected",
+    "require final marker and current-phase artifact proposals",
+    "write to a fresh temp-only output directory per attempt to avoid stale last-message reuse"
+  ],
+  "publication_boundary": {
+    "raw_lane_body_text_published": false,
+    "raw_transport_published": false,
+    "local_temp_paths_published": false
+  }
+}
