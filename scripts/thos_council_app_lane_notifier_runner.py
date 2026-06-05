@@ -320,6 +320,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "duration_is_completion_proof": False,
             "background_watch_allows_productive_waiting": args.background_watch,
             "phase_advance_requires_completion_gate": True,
+            "productive_waiting_research_prep_required": True,
         },
     }
     write_json(TRACE_DIR / f"{runner_prefix}-v1.json", payload)

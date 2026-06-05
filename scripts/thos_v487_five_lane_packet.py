@@ -532,6 +532,50 @@ def synthesize(phase_slug: str, next_phase_slug: str) -> None:
         ["- Status: `PASS_OPEN_GATE_BUILD_QUEUE`"],
     )
 
+    artifact(
+        f"{x2_slug}-productive-waiting-research-prep-ledger-v1",
+        {
+            "artifact_type": "productive_waiting_research_prep_ledger",
+            "carry_forward_rule": (
+                "Whenever the five sibling lanes are running in the background, "
+                "Aletheon must use the waiting span for research, preparation, "
+                "task proposals, next-phase plans, runner hardening, and source-led synthesis."
+            ),
+            "generated_nz": now_nz,
+            "generated_utc": now_utc,
+            "mandatory_waiting_work": [
+                "Review the three previous phase receipts and current lane gate status.",
+                "Prepare source-refresh notes from primary OpenAI/Codex, MCP, security, cloud, and compute references when useful.",
+                "Propose concrete next-phase tasks before advancing the phase boundary.",
+                "Improve watcher/notifier/runner reliability when evidence gaps appear.",
+                "Keep all empirical, physics, consciousness, and canon gates open unless exact closure artifacts prove otherwise.",
+            ],
+            "next_boundary": next_phase_slug,
+            "overall_status": "PASS_PRODUCTIVE_WAITING_RESEARCH_PREP_REQUIRED",
+            "phase_slug": x2_slug,
+            "publication_boundary": {
+                "auth_material_published": False,
+                "image_captures_published": False,
+                "local_absolute_paths_published": False,
+                "raw_lane_body_text_published": False,
+                "raw_transport_published": False,
+            },
+            "research_and_proposal_queue": [
+                "Codex/App Server background watcher receipt latency and all-lane gate reliability.",
+                "THOS command-index compatibility and skill surface evolution under exact approval.",
+                "GMUT comparator and open-gate evidence maps for v490 closeout.",
+                "Security guardrail mapping from MCP and OWASP into local runner policy.",
+                "v491-v505 approval tapestry preparation only after v490 evidence completes.",
+            ],
+        },
+        f"{x2_slug} Productive Waiting Research Prep Ledger",
+        [
+            "- Status: `PASS_PRODUCTIVE_WAITING_RESEARCH_PREP_REQUIRED`",
+            "- While five sibling lanes run in the background, use the waiting span for research, preparation, task proposals, next-phase planning, and runner hardening.",
+            f"- Next boundary: `{next_phase_slug}`",
+        ],
+    )
+
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate v487 five-lane phase receipts.")
