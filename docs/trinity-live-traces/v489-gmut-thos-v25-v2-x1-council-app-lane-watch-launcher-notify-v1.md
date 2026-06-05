@@ -1,0 +1,25 @@
+# v489-gmut-thos-v25-v2-x1 App-Lane Watch Launcher
+
+- generated_nz: `2026-06-05T23:34:28+12:00`
+- overall_status: `PASS`
+- local_head_before_run: `168e8ad21c3c260471c44ed12e77ec3c5ed1a05a`
+- remote_head_before_run: `168e8ad21c3c260471c44ed12e77ec3c5ed1a05a`
+- drift_before_run: `0	0`
+- policy: existing app threads only; no new threads; no old-style spawning; no advisory text publication.
+- claim boundary: THOS app-lane watching only; all GMUT gates remain open.
+
+## Notifier
+- script_available: `True`
+- receipt_json_name: `v489-gmut-thos-v25-v2-x1-council-app-lane-completion-notifier-notify-v1.json`
+- receipt_md_name: `v489-gmut-thos-v25-v2-x1-council-app-lane-completion-notifier-notify-v1.md`
+
+## Execution
+- execution_status: `completed`
+- returncode: `0`
+- stdout_summary: `{'status': 'PASS', 'phase_slug': 'unknown', 'lanes': 3}`
+- stderr_nonempty: `False`
+
+## Lane Summary
+- Cicero: `completed`, duration `131.469`, read `ok`, resume `ok`, turn `ok`, completion `completed`.
+- Kierkegaard: `completed`, duration `50.578`, read `ok`, resume `ok`, turn `ok`, completion `completed`.
+- Aristotle: `completed`, duration `51.14`, read `ok`, resume `ok`, turn `ok`, completion `completed`.
