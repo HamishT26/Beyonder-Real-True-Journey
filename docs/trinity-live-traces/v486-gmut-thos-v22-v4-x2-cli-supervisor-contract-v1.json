@@ -1,0 +1,27 @@
+{
+  "artifact_type": "cli_supervisor_contract",
+  "phase_slug": "v486-gmut-thos-v22-v4-x2",
+  "source_boundary": "v486-gmut-thos-v22-v4-x1",
+  "generated_utc": "2026-06-05T07:34:29Z",
+  "generated_nz": "2026-06-05T19:34:29+12:00",
+  "overall_status": "PASS_SUPERVISOR_CONTRACT_WITH_OPEN_CLI_GAP",
+  "x1_cli_status": "OPEN_GAP_CLI_PENDING_OR_STALE",
+  "contract_rules": [
+    "Use one fresh temp-only folder per lane per attempt.",
+    "Never reuse a previous last-message file as completion proof.",
+    "Require current phase slug plus final marker before classifying CLI as complete.",
+    "Classify pending, stale-context, or marker-missing outputs as open gaps.",
+    "Continue x2 work from safe app/Aletheon evidence while CLI remains pending."
+  ],
+  "v5_x1_prompt_requirements": [
+    "First line must be CURRENT PHASE ONLY with the phase slug.",
+    "Prompt must forbid stale v58/v59 summaries and ask for a reject-stale-context note.",
+    "Prompt must ask for exact current-phase artifact proposals.",
+    "Prompt must include one final marker per lane."
+  ],
+  "publication_boundary": {
+    "raw_lane_body_text_published": false,
+    "raw_transport_published": false,
+    "local_temp_paths_published": false
+  }
+}
