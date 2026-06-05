@@ -1,0 +1,102 @@
+{
+  "artifact_type": "five_lane_timing_receipt",
+  "phase_slug": "v486-gmut-thos-v22-v3-x1",
+  "boundary": "x1",
+  "generated_utc": "2026-06-05T07:11:34Z",
+  "generated_nz": "2026-06-05T19:11:34+12:00",
+  "observation_run_index_today": 27,
+  "observation_window_seconds": 1800,
+  "overall_status": "OPEN_GAP_THREE_APP_LANES_READY_TWO_CLI_STUBS",
+  "lane_count": 5,
+  "all_five_lanes_attempted": true,
+  "average_response_seconds_this_run": 112.228,
+  "soft_timeout_baseline_seconds": 312.832,
+  "soft_timeout_baseline_status": "POST_BASELINE_UNDER_FOOTHOLD",
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-05T06:54:30Z",
+      "first_completion_utc": "2026-06-05T06:56:22.234000Z",
+      "duration_seconds": 112.234,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "body_text_published": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-05T06:56:22.234000Z",
+      "first_completion_utc": "2026-06-05T06:57:16.812000Z",
+      "duration_seconds": 54.578,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "body_text_published": false
+    },
+    {
+      "lane": "Aristotle",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-05T06:57:16.812000Z",
+      "first_completion_utc": "2026-06-05T06:58:13.218000Z",
+      "duration_seconds": 56.406,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "body_text_published": false
+    },
+    {
+      "lane": "Arby",
+      "platform": "codex_cli_read_only",
+      "status": "OPEN_GAP_HANDSHAKE_STUB_RETRY_PENDING",
+      "completion_type": "cli_handshake_stub_not_advisory",
+      "start_utc": "2026-06-05T06:54:27.280401Z",
+      "first_completion_utc": "2026-06-05T06:57:16.264158Z",
+      "duration_seconds": 168.984,
+      "timing_basis": "observed_launcher_generated_utc_and_final_message_mtime",
+      "final_message_bytes": 180,
+      "final_message_hash": "3f3e5b988a68cb9f5c312d3c7f14b701bd101d43d030354a2b822fb6f13eabdf",
+      "marker_review_required": false,
+      "body_text_published": false,
+      "loader_warning_count_unpublished": 24,
+      "startup_timeout_marker_count_unpublished": 47,
+      "advisory_quality_status": "HANDSHAKE_STUB_NOT_X1_ADVISORY"
+    },
+    {
+      "lane": "Aster Vale",
+      "platform": "codex_cli_read_only",
+      "status": "OPEN_GAP_HANDSHAKE_STUB_RETRY_PENDING",
+      "completion_type": "cli_handshake_stub_not_advisory",
+      "start_utc": "2026-06-05T06:54:27.325788Z",
+      "first_completion_utc": "2026-06-05T06:57:16.265157Z",
+      "duration_seconds": 168.939,
+      "timing_basis": "observed_launcher_generated_utc_and_final_message_mtime",
+      "final_message_bytes": 120,
+      "final_message_hash": "c2ca13d5cef67f9c802b297194dc16dba5f8605ebf1446fef7a6c9f6b867242a",
+      "marker_review_required": false,
+      "body_text_published": false,
+      "loader_warning_count_unpublished": 0,
+      "startup_timeout_marker_count_unpublished": 57,
+      "advisory_quality_status": "HANDSHAKE_STUB_NOT_X1_ADVISORY"
+    }
+  ],
+  "evidence_sources": {
+    "app_completion_receipt": "v486-gmut-thos-v22-v3-x1-background-council-app-completion-v1.json",
+    "cli_completion_receipt": "v486-gmut-thos-v22-v3-x1-cli-completion-v1.json",
+    "cli_output_boundary": "local_temp_redacted_not_published"
+  },
+  "next_phase_handoff": [
+    "Treat this as a post-baseline observation, not a replacement for the three-run soft foothold.",
+    "Use idle notifier time for source, command, stale-flow, approval, and next-phase prep.",
+    "Keep direct capped CLI advisory prompts for synthesis-only Arby and Aster Vale calls.",
+    "Escalate loader or startup warnings only if they block final-message artifacts or an exact approval packet authorizes repair."
+  ],
+  "claim_boundary": {
+    "scope": "v486-gmut-thos-v22-v3-x1 five-lane timing and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  },
+  "quality_note": "All five lanes were attempted, but Arby/Aster CLI final-message stubs are not counted as completed x1 advisories."
+}
