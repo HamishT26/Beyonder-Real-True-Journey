@@ -1,0 +1,45 @@
+{
+  "artifact": "v490-gmut-thos-v26-v7-x1-productive-waiting-source-prep-v1",
+  "generated_at_local": "2026-06-06T04:30:00+12:00",
+  "phase_slug": "v490-gmut-thos-v26-v7-x1",
+  "status": "PRODUCTIVE_WAITING_ACTIVE",
+  "reason": "The five sibling lanes were launched under background watcher control, so Aletheon used the waiting window for source refresh and v490 v8 preparation rather than passive polling.",
+  "source_refresh": [
+    {
+      "source": "https://platform.openai.com/docs/guides/agents",
+      "takeaway": "Production agent work should be designed as workflows with tools, guardrails, evaluations, and monitoring rather than isolated prompts."
+    },
+    {
+      "source": "https://platform.openai.com/docs/guides/agent-builder-safety",
+      "takeaway": "Prompt injection, private data leakage, and MCP tool over-permission are active risks; THOS connectors should preserve approvals, structured receipts, and least privilege."
+    },
+    {
+      "source": "https://platform.openai.com/docs/guides/trace-grading",
+      "takeaway": "Trace grading supports status-first evaluation of agent decisions, tool calls, and adherence, which maps cleanly onto THOS completion receipts."
+    },
+    {
+      "source": "https://www.nvidia.com/en-us/solutions/ai-factories/",
+      "takeaway": "AI-factory design unifies infrastructure, models, and applications into repeatable operational layers; THOS can borrow the layering pattern at local scale."
+    },
+    {
+      "source": "https://docs.nvidia.com/enterprise-reference-architectures/nvl72-ai-factory/latest/overview.html",
+      "takeaway": "Reference architectures emphasize validated, modular, high-throughput systems; THOS watcher and runner design should stay modular and receipt-verifiable."
+    },
+    {
+      "source": "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/agent-sandbox",
+      "takeaway": "Agent sandbox patterns emphasize isolated runtime instances for untrusted code; THOS should keep advisory lanes isolated, read-only where possible, and status inspected."
+    }
+  ],
+  "v490_v8_preparation_tasks": [
+    "Promote completion-gate evidence over launch receipts in all v490 v8 summary language.",
+    "Add a compact trace-grade checklist for sibling lane outputs: final marker, body hash, byte count, sensitive-marker count, and gate status.",
+    "Treat doctor, feature-list, and app-server timeouts as stale-flow watch items unless they block final artifacts.",
+    "Keep all GMUT empirical and canon gates open while using THOS artifacts for operational synthesis only.",
+    "Prepare v491-v505 approval candidates after v490 v8 closeout evidence is complete."
+  ],
+  "claim_ceiling": [
+    "No sibling completion is claimed by this source-prep artifact.",
+    "No GMUT validation is claimed.",
+    "No final physics, consciousness proof, or canon promotion is claimed."
+  ]
+}
