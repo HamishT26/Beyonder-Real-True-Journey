@@ -1,0 +1,99 @@
+{
+  "artifact_type": "five_lane_timing_receipt",
+  "phase_slug": "v478-thos-v14-x8-closeout",
+  "boundary": "closeout",
+  "generated_utc": "2026-06-05T00:12:01Z",
+  "generated_nz": "2026-06-05T12:12:01+12:00",
+  "observation_run_index_today": 9,
+  "observation_window_seconds": 1800,
+  "overall_status": "PASS_FIVE_LANE_CLOSEOUT",
+  "lane_count": 5,
+  "all_five_lanes_attempted": true,
+  "average_response_seconds_this_run": 175.229,
+  "soft_timeout_baseline_seconds": 312.832,
+  "soft_timeout_baseline_status": "POST_BASELINE_UNDER_FOOTHOLD",
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-05T00:02:23Z",
+      "first_completion_utc": "2026-06-05T00:06:22.359000Z",
+      "duration_seconds": 239.359,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "body_text_published": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-05T00:06:22.359000Z",
+      "first_completion_utc": "2026-06-05T00:07:23.734000Z",
+      "duration_seconds": 61.375,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "body_text_published": false
+    },
+    {
+      "lane": "Aristotle",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-05T00:07:23.734000Z",
+      "first_completion_utc": "2026-06-05T00:08:27.546000Z",
+      "duration_seconds": 63.812,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "body_text_published": false
+    },
+    {
+      "lane": "Arby",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-05T00:02:14.689132Z",
+      "first_completion_utc": "2026-06-05T00:06:23.611368Z",
+      "duration_seconds": 248.922,
+      "timing_basis": "observed_launcher_generated_utc_and_final_message_mtime",
+      "final_message_bytes": 1072,
+      "final_message_hash": "5b78e12a1b417524e3cfc9f06845de49068fb945b232545b5feb104aa5866915",
+      "marker_review_required": true,
+      "body_text_published": false,
+      "loader_warning_count_unpublished": 16,
+      "startup_timeout_marker_count_unpublished": 0
+    },
+    {
+      "lane": "Aster Vale",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-05T00:02:14.913827Z",
+      "first_completion_utc": "2026-06-05T00:06:37.590203Z",
+      "duration_seconds": 262.676,
+      "timing_basis": "observed_launcher_generated_utc_and_final_message_mtime",
+      "final_message_bytes": 827,
+      "final_message_hash": "e5c1a301fed2dd9187d0b16fbee29be4de479bf850086adb6e140512eac59330",
+      "marker_review_required": false,
+      "body_text_published": false,
+      "loader_warning_count_unpublished": 16,
+      "startup_timeout_marker_count_unpublished": 0
+    }
+  ],
+  "evidence_sources": {
+    "app_completion_receipt": "v478-thos-v14-x8-closeout-background-council-app-completion-v1.json",
+    "cli_completion_receipt": "v478-thos-v14-x8-closeout-cli-completion-v1.json",
+    "cli_output_boundary": "local_temp_redacted_not_published"
+  },
+  "next_phase_handoff": [
+    "Treat this as a post-baseline observation, not a replacement for the three-run soft foothold.",
+    "Use idle notifier time for source, command, stale-flow, approval, and next-phase prep.",
+    "Keep direct capped CLI advisory prompts for synthesis-only Arby and Aster Vale calls.",
+    "Escalate loader or startup warnings only if they block final-message artifacts or an exact approval packet authorizes repair."
+  ],
+  "claim_boundary": {
+    "scope": "v478-thos-v14-x8-closeout five-lane timing and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate bounded v478 THOS v14 x8 start receipts from sanitized lane evidence."""
+"""Generate bounded v478 THOS v14 x8 receipts from sanitized lane evidence."""
 
 from __future__ import annotations
 
@@ -175,12 +175,26 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--phase-slug", default="v478-thos-v14-x8-start")
     parser.add_argument("--boundary", default="start")
+    parser.add_argument("--observation-run-index", type=int, default=8)
+    parser.add_argument("--seed-suffix", default=None)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--traces-dir", default="docs/trinity-live-traces")
     args = parser.parse_args()
 
     traces = Path(args.traces_dir)
     phase = args.phase_slug
+    boundary = args.boundary.lower()
+    boundary_upper = boundary.upper()
+    boundary_title = boundary.capitalize()
+    pass_five_status = f"PASS_FIVE_LANE_{boundary_upper}"
+    watch_five_status = f"WATCH_FIVE_LANE_{boundary_upper}"
+    phase_kind = "phase_start" if boundary == "start" else "phase_closeout"
+    pass_phase_status = f"PASS_X8_{boundary_upper}_WITH_FIVE_LANE_ROSTER"
+    watch_phase_status = f"WATCH_X8_{boundary_upper}"
+    prep_status = f"PASS_PREP_DURING_X8_{boundary_upper}_WAIT"
+    seed_suffix = args.seed_suffix or ("x8-closeout-seed-roadmap" if boundary == "start" else "v479-start-seed-roadmap")
+    seed_artifact_type = "x8_closeout_seed_roadmap" if boundary == "start" else "v479_start_seed_roadmap"
+    seed_status = "PASS_X8_CLOSEOUT_SEED_ROADMAP" if boundary == "start" else "PASS_V479_START_SEED_ROADMAP"
     generated = now_utc()
     generated_nz = generated.astimezone(NZ)
 
@@ -213,9 +227,9 @@ def main() -> int:
         "boundary": args.boundary,
         "generated_utc": iso(generated),
         "generated_nz": generated_nz.isoformat(),
-        "observation_run_index_today": 8,
+        "observation_run_index_today": args.observation_run_index,
         "observation_window_seconds": 1800,
-        "overall_status": "PASS_FIVE_LANE_START" if len(lanes) == 5 and app_status == "PASS" and cli_ready else "WATCH_FIVE_LANE_START",
+        "overall_status": pass_five_status if len(lanes) == 5 and app_status == "PASS" and cli_ready else watch_five_status,
         "lane_count": len(lanes),
         "all_five_lanes_attempted": len(lanes) == 5,
         "average_response_seconds_this_run": average,
@@ -234,7 +248,7 @@ def main() -> int:
             "Escalate loader or startup warnings only if they block final-message artifacts or an exact approval packet authorizes repair.",
         ],
         "claim_boundary": {
-            "scope": "v478-thos-v14-x8-start five-lane timing and handoff only",
+            "scope": f"{phase} five-lane timing and handoff only",
             "gmut_gate_state": "all_gmut_gates_remain_open",
             "canon_promotion": "not_claimed",
             "lane_body_text_published": False,
@@ -246,7 +260,7 @@ def main() -> int:
         "phase_slug": phase,
         "generated_utc": iso(generated),
         "generated_nz": generated_nz.isoformat(),
-        "overall_status": "ALL_LANES_READY" if timing["overall_status"] == "PASS_FIVE_LANE_START" else "WATCH_LANES",
+        "overall_status": "ALL_LANES_READY" if timing["overall_status"] == pass_five_status else "WATCH_LANES",
         "lanes": [
             {
                 "lane": row["lane"],
@@ -265,7 +279,7 @@ def main() -> int:
         "phase_slug": phase,
         "generated_utc": iso(generated),
         "generated_nz": generated_nz.isoformat(),
-        "overall_status": "READY_WITH_MARKER_REVIEW_FALSE_POSITIVE" if marker_review_resolved else ("READY_NO_STALE_FLOWS" if timing["overall_status"] == "PASS_FIVE_LANE_START" else "WATCH_STALE_FLOWS"),
+        "overall_status": "READY_WITH_MARKER_REVIEW_FALSE_POSITIVE" if marker_review_resolved else ("READY_NO_STALE_FLOWS" if timing["overall_status"] == pass_five_status else "WATCH_STALE_FLOWS"),
         "watch_items": [
             {
                 "surface": "cli_startup_warnings",
@@ -284,7 +298,7 @@ def main() -> int:
             {
                 "surface": "five_lane_roster",
                 "status": "active",
-                "next_action": "Attempt all five existing lanes again at x8 closeout.",
+                "next_action": "Attempt all five existing lanes again at the next required boundary.",
             },
         ],
     }
@@ -322,19 +336,19 @@ def main() -> int:
     }
 
     prep = {
-        "artifact_type": "phase_start_prep_handoff",
+        "artifact_type": f"{phase_kind}_prep_handoff",
         "phase_slug": phase,
         "generated_utc": iso(generated),
         "generated_nz": generated_nz.isoformat(),
-        "overall_status": "PASS_PREP_DURING_X8_START_WAIT",
+        "overall_status": prep_status,
         "state_reading": [
-            "x7 closeout was remote-verified and x8 start used all five existing lanes.",
+            f"x8 {boundary} used all five existing lanes after the prior remote-verified boundary.",
             "Direct capped CLI remains the preferred synthesis-only pattern for Arby and Aster Vale.",
             "App-server lanes remain active for Cicero, Kierkegaard, and Aristotle.",
             "Source-refresh, stale-flow, loader-watch, and multiplex artifacts are prepared without exposing private lane content.",
         ],
-        "x8_closeout_handoff": [
-            "Attempt all five existing lanes at x8 closeout.",
+        "next_handoff": [
+            "Attempt all five existing lanes at the next required boundary.",
             "Use the 312.832 second soft foothold as planning support only.",
             "Use wait time for v479 THOS preparation, command-surface compatibility notes, and approval packet drafting.",
             "Keep all GMUT and canon gates open.",
@@ -342,14 +356,14 @@ def main() -> int:
     }
 
     seed = {
-        "artifact_type": "x8_closeout_seed_roadmap",
+        "artifact_type": seed_artifact_type,
         "phase_slug": phase,
         "generated_utc": iso(generated),
         "generated_nz": generated_nz.isoformat(),
-        "overall_status": "PASS_X8_CLOSEOUT_SEED_ROADMAP",
+        "overall_status": seed_status,
         "roadmap": [
-            "Close x8 with five-lane status and timing receipts.",
-            "Compare x8 start and closeout averages against the soft foothold.",
+            "Carry five-lane status and timing receipts into the next THOS boundary.",
+            "Compare x8 boundary averages against the soft foothold.",
             "Carry runner/notifier hardening into v479 only when backed by exact receipts.",
             "Prepare v479 THOS start around stale-flow resilience, command-index compatibility, and source-led security controls.",
             "Keep direct capped CLI as a default, but do not ignore genuine final-marker blockers if they recur.",
@@ -357,11 +371,11 @@ def main() -> int:
     }
 
     synthesis = {
-        "artifact_type": "phase_start_synthesis",
+        "artifact_type": f"{phase_kind}_synthesis",
         "phase_slug": phase,
         "generated_utc": iso(generated),
         "generated_nz": generated_nz.isoformat(),
-        "overall_status": "PASS_X8_START_WITH_FIVE_LANE_ROSTER" if timing["overall_status"] == "PASS_FIVE_LANE_START" else "WATCH_X8_START",
+        "overall_status": pass_phase_status if timing["overall_status"] == pass_five_status else watch_phase_status,
         "evidence": {
             "app_lanes": {
                 "receipt": app_receipt_name,
@@ -386,7 +400,7 @@ def main() -> int:
             },
             "timing": {
                 "receipt": f"{phase}-five-lane-timing-v1.json",
-                "observation_run_index_today": 8,
+                "observation_run_index_today": args.observation_run_index,
                 "observation_window_seconds": 1800,
                 "average_response_seconds_this_run": average,
                 "soft_wait_baseline_seconds": BASELINE_SECONDS,
@@ -396,17 +410,17 @@ def main() -> int:
             "stale_flow": {"receipt": f"{phase}-stale-flow-refresh-v1.json", "status": stale["overall_status"]},
             "loader_watch": {"receipt": f"{phase}-cli-loader-watch-v1.json", "status": loader_watch["overall_status"]},
             "source_refresh": {"receipt": f"{phase}-source-refresh-v1.json", "status": source_refresh["overall_status"]},
-            "x8_closeout_seed": {"receipt": f"{phase}-x8-closeout-seed-roadmap-v1.json", "status": seed["overall_status"]},
+            "next_seed": {"receipt": f"{phase}-{seed_suffix}-v1.json", "status": seed["overall_status"]},
         },
-        "x8_start_lessons": [
-            "All five existing lanes were attempted at the x8 start boundary.",
+        "boundary_lessons": [
+            f"All five existing lanes were attempted at the x8 {boundary} boundary.",
             "Wait time was used for source, stale-flow, loader-watch, and handoff preparation rather than idle babysitting.",
             "Direct capped CLI remains effective when the prompt is synthesis-only and no-tool.",
             "Startup warnings are metadata, not repair proof.",
         ],
-        "x8_closeout_handoff": prep["x8_closeout_handoff"],
+        "next_handoff": prep["next_handoff"],
         "claim_boundary": {
-            "scope": "v478 THOS v14 x8 start synthesis and x8 closeout handoff only",
+            "scope": f"{phase} synthesis and next-boundary handoff only",
             "gmut_gate_state": "all_gmut_gates_remain_open",
             "canon_promotion": "not_claimed",
             "lane_body_text_published": False,
@@ -440,9 +454,9 @@ def main() -> int:
             f"- Status: `{prep['overall_status']}`",
             "- Handoff keeps x8 closeout focused on five-lane receipt evidence and v479 preparation.",
         ]),
-        ("x8-closeout-seed-roadmap", seed, "X8 Closeout Seed Roadmap", [
+        (seed_suffix, seed, "Next Seed Roadmap", [
             f"- Status: `{seed['overall_status']}`",
-            "- Roadmap seeds x8 closeout and v479 THOS preparation without overclaiming.",
+            "- Roadmap seeds the next THOS boundary without overclaiming.",
         ]),
         ("synthesis", synthesis, "Synthesis", [
             f"- Status: `{synthesis['overall_status']}`",
