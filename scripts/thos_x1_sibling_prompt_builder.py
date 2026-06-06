@@ -33,7 +33,7 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
             "COMMAND PROPOSALS (10+), SYSTEM EXPANSION PROPOSALS (10+), SKILL OR MICRO-WORKFLOW PROPOSALS (10+), "
             "EUREKA TASKS (10+), RISKS AND BLOCKERS, X2 BUILD PRIORITIES. "
             "Do not rename, paraphrase, reorder, prefix, or omit these headings. "
-            "Use the headings as standalone lines exactly like this before writing each section: "
+            "Use the headings as standalone lines exactly like this before writing each section:"
             "\nCOMMAND PROPOSALS (10+)\n"
             "1. ...\n"
             "\nSYSTEM EXPANSION PROPOSALS (10+)\n"
