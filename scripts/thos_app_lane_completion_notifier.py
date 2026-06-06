@@ -16,6 +16,10 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TRACE_DIR = ROOT / "docs" / "trinity-live-traces"
+try:
+    from thos_x1_sibling_prompt_builder import build_prompt as build_x1_sibling_prompt
+except ImportError:  # pragma: no cover - fallback keeps older bundles usable.
+    build_x1_sibling_prompt = None
 SHARED_REMOTE = "origin/codex/GHC-Family/beyonder-shared-omega-line"
 LANES = {
     "Cicero": "019e485f-172b-72c0-adf7-27daea722143",
@@ -199,6 +203,8 @@ def selected_lanes(lane_arg: str) -> dict[str, str]:
 
 
 def prompt_for(lane: str, phase_slug: str) -> str:
+    if build_x1_sibling_prompt is not None:
+        return build_x1_sibling_prompt(lane, phase_slug)
     return (
         f"Existing {lane} advisory lane notifier pass for {phase_slug}. "
         "Please provide an advisory-only THOS/GMUT status report with completion criteria, "
