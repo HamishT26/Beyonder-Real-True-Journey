@@ -42,6 +42,7 @@ def classify_flows(phase_slug: str, threshold: int) -> list[dict[str, Any]]:
     fix = read_json(f"{phase_slug}-fix-enhancement-updater-runner-v1.json")
     skill_receipt = read_json(f"{phase_slug}-live-skill-evolution-receipt-v1.json")
     lane_board = read_json(f"{phase_slug}-lane-retry-status-board-v1.json")
+    normalized_board = read_json(f"{phase_slug}-15-minute-five-lane-normalized-status-board-v1.json")
     flows: list[dict[str, Any]] = []
 
     cli_attempts = lane_board.get("cli_retry_rows", [])
@@ -117,6 +118,39 @@ def classify_flows(phase_slug: str, threshold: int) -> list[dict[str, Any]]:
                 "notify_aletheon": False,
                 "evidence": "live skill evolution receipt verifies draft match and frontmatter",
                 "next_action": "use evolved skill rules for future sibling-lane orchestration",
+            }
+        )
+
+    normalized_status = status_of(normalized_board, "overall_status")
+    if normalized_status == "PASS_FIVE_LANE_VISIBLE_WITH_OPEN_REPAIR":
+        cli_open_rows = [
+            row
+            for row in normalized_board.get("lanes", [])
+            if row.get("surface") == "cli" and row.get("quality_status") != "PASS_ELABORATION_GATE"
+        ]
+        flows.append(
+            {
+                "id": "STALE-CLI-STRUCTURE-REPAIR",
+                "surface": "five_lane_normalized_status_board",
+                "status": "visible_open",
+                "observed_count": len(cli_open_rows),
+                "threshold": threshold,
+                "notify_aletheon": bool(cli_open_rows),
+                "evidence": "normalized five-lane board shows CLI final messages are present while structure repair remains open",
+                "next_action": "keep watcher trust intact; carry exact-heading prompt repair into the next x1 launch and x2 synthesis",
+            }
+        )
+    elif normalized_status == "PASS_FIVE_LANE_READY":
+        flows.append(
+            {
+                "id": "READY-FIVE-LANE-NORMALIZED",
+                "surface": "five_lane_normalized_status_board",
+                "status": "ready_verified",
+                "observed_count": len(normalized_board.get("lanes", [])),
+                "threshold": threshold,
+                "notify_aletheon": False,
+                "evidence": "normalized five-lane board reports all lanes ready",
+                "next_action": "allow closeout only after cadence gates and publication validation",
             }
         )
 
