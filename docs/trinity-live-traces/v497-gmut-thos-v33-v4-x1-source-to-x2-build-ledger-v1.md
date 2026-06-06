@@ -7,21 +7,21 @@
 
 ## Source Rows
 
-- OpenAI Codex safety: https://openai.com/index/running-codex-safely/  
+- OpenAI Codex safety: https://openai.com/index/running-codex-safely/
   x2 use: add policy fields to wait, launch, and closeout receipts that separate low-risk productive work from review-required mutations.
-- OpenAI Codex repository: https://github.com/openai/codex  
+- OpenAI Codex repository: https://github.com/openai/codex
   x2 use: keep CLI completion notices on hashes, byte counts, marker counts, and temp-only boundaries.
-- MCP security best practices: https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices  
+- MCP security best practices: https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
   x2 use: gate future connector and app-server steps through a scope ledger before mutation.
-- OWASP Agentic Skills Top 10: https://owasp.org/www-project-agentic-skills-top-10/  
+- OWASP Agentic Skills Top 10: https://owasp.org/www-project-agentic-skills-top-10/
   x2 use: add skill enablement labels and a no-plugin-cache mutation boundary to skill evolution receipts.
-- OWASP MCP Top 10: https://owasp.org/www-project-mcp-top-10/  
+- OWASP MCP Top 10: https://owasp.org/www-project-mcp-top-10/
   x2 use: add MCP/tool-surface risk classes to the stale-flow retry playbook.
-- GitHub artifact attestations: https://docs.github.com/en/actions/concepts/security/artifact-attestations  
+- GitHub artifact attestations: https://docs.github.com/en/actions/concepts/security/artifact-attestations
   x2 use: extend publication receipts with local hash, remote verification, and staged file inventory fields.
-- SLSA provenance: https://slsa.dev/spec/v1.0/provenance  
+- SLSA provenance: https://slsa.dev/spec/v1.0/provenance
   x2 use: create a compact provenance schema for generated phase artifacts.
-- OpenTelemetry GenAI semantic conventions: https://opentelemetry.io/docs/specs/semconv/gen-ai/  
+- OpenTelemetry GenAI semantic conventions: https://opentelemetry.io/docs/specs/semconv/gen-ai/
   x2 use: normalize runner statuses into stable fields without raw payloads.
 
 ## x2 Build Priorities
