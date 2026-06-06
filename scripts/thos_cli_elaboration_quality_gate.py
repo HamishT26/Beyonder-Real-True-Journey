@@ -21,13 +21,20 @@ REQUIRED_HEADINGS = [
     "X2 BUILD PRIORITIES",
 ]
 
+HEADING_ALIASES = {
+    "COMMAND PROPOSALS (10+)": ["COMMAND PROPOSALS"],
+    "SYSTEM EXPANSION PROPOSALS (10+)": ["SYSTEM EXPANSION PROPOSALS"],
+    "SKILL OR MICRO-WORKFLOW PROPOSALS (10+)": ["SKILL OR MICRO-WORKFLOW PROPOSALS"],
+    "EUREKA TASKS (10+)": ["EUREKA TASKS"],
+}
+
 SENSITIVE_RE = re.compile(
     "|".join(
         [
             r"BEGIN (?:RSA|OPENSSH|PRIVATE) KEY",
             r"\b(?:sk|ghp|xoxb)_[A-Za-z0-9_-]{10,}",
             r"\b[A-Z]:\\Users\\",
-            r"\bD:\\GHC-Archives\\",
+            r"\b[A-Z]:\\GHC-Archives\\",
             r"session(?:_|-)?jsonl",
             r"Screenshot 20\d\d",
         ]
@@ -52,13 +59,25 @@ def count_numbered_items(text: str) -> int:
     return len(re.findall(r"(?m)^\s*(?:\d+[\.)]|[-*])\s+", text))
 
 
+def heading_variants(heading: str) -> list[str]:
+    return [heading, *HEADING_ALIASES.get(heading, [])]
+
+
+def find_heading(text: str, heading: str) -> re.Match[str] | None:
+    for variant in heading_variants(heading):
+        heading_re = re.compile(rf"(?im)^\s*#*\s*{re.escape(variant)}\s*:?\s*$")
+        match = heading_re.search(text)
+        if match:
+            return match
+    return None
+
+
 def has_heading(text: str, heading: str) -> bool:
-    return re.search(rf"(?im)^\s*#*\s*{re.escape(heading)}\s*:?\s*$", text) is not None
+    return find_heading(text, heading) is not None
 
 
 def category_item_count(text: str, heading: str) -> int:
-    heading_re = re.compile(rf"(?im)^\s*#*\s*{re.escape(heading)}\s*:?\s*$")
-    match = heading_re.search(text)
+    match = find_heading(text, heading)
     if not match:
         return 0
     next_heading = re.search(r"(?m)^\s*#*\s*[A-Z][A-Z0-9 /&()+-]{5,}\s*:?\s*$", text[match.end() :])
