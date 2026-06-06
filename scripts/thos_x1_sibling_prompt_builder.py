@@ -10,16 +10,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-V497_EXTENDED_RE = re.compile(r"^v497-gmut-thos-v33-v(?P<version>[2-8])-x1$")
+EXTENDED_GMUT_THOS_RE = re.compile(r"^v(?P<phase>49[7-9]|50[0-5])-gmut-thos-v\d+-v(?P<version>[1-8])-x1$")
 
 
-def extended_v497_packet_active(phase_slug: str) -> bool:
-    return bool(V497_EXTENDED_RE.match(phase_slug))
+def extended_gmut_thos_packet_active(phase_slug: str) -> bool:
+    return bool(EXTENDED_GMUT_THOS_RE.match(phase_slug))
 
 
 def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None) -> str:
     next_text = f" then {next_phase_slug}" if next_phase_slug else ""
-    if extended_v497_packet_active(phase_slug):
+    if extended_gmut_thos_packet_active(phase_slug):
         return (
             f"Existing {lane} advisory lane pass for {phase_slug}{next_text}. "
             "Operate as a read-only advisory voice only. Do not use shell, tools, external commands, "
@@ -27,7 +27,7 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
             "If your local advisory worktree does not yet expose this exact current phase, treat this prompt "
             "as the current-phase handoff and still provide the requested advisory artifact instead of refusing "
             "for stale local authority. "
-            "This phase is covered by the approved v497 v2-v8 GMUT/THOS approval tapestry. "
+            "This phase is covered by the approved extended GMUT/THOS phase-run tapestry. "
             "Use a one-hour x1 planning, research, internalization, design, and preparation target where runtime allows; "
             "duration is an operating target, not completion proof. "
             "Prepare an elaborate x1 advisory artifact for the x2 build/run/test/install/use phase. "
@@ -76,7 +76,7 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
 
 
 def build_receipt(phase_slug: str, next_phase_slug: str | None, lanes: list[str]) -> dict[str, object]:
-    extended_v497 = extended_v497_packet_active(phase_slug)
+    extended_gmut_thos = extended_gmut_thos_packet_active(phase_slug)
     return {
         "artifact_type": "x1_sibling_prompt_policy_receipt",
         "phase_slug": phase_slug,
@@ -87,12 +87,12 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, lanes: list[str]
             "watchers_supervise_lanes": True,
             "manual_babysitting_required": False,
             "aletheon_productive_waiting_required": True,
-            "sibling_runtime_target_minutes": 60 if extended_v497 else 4,
-            "v497_v2_v8_approval_tapestry_active": extended_v497,
-            "command_proposal_target": 10 if extended_v497 else None,
-            "system_expansion_proposal_target": 10 if extended_v497 else None,
-            "skill_or_micro_workflow_proposal_target": 10 if extended_v497 else 10,
-            "eureka_task_target": 10 if extended_v497 else 20,
+            "sibling_runtime_target_minutes": 60 if extended_gmut_thos else 4,
+            "extended_gmut_thos_approval_tapestry_active": extended_gmut_thos,
+            "command_proposal_target": 10 if extended_gmut_thos else None,
+            "system_expansion_proposal_target": 10 if extended_gmut_thos else None,
+            "skill_or_micro_workflow_proposal_target": 10 if extended_gmut_thos else 10,
+            "eureka_task_target": 10 if extended_gmut_thos else 20,
             "productive_waiting_target_minutes": 15,
             "x2_prep_minimum_minutes": 10,
             "x2_wait_target_minutes": 15,
@@ -136,8 +136,8 @@ def main() -> int:
             "- Watchers supervise lanes: true",
             "- Manual babysitting required: false",
             "- Aletheon productive waiting required: true",
-            f"- Sibling runtime target: {'60 minutes where runtime allows' if extended_v497_packet_active(args.phase_slug) else '4 minutes where runtime allows'}",
-            f"- v497 v2-v8 approval tapestry active: {str(extended_v497_packet_active(args.phase_slug)).lower()}",
+            f"- Sibling runtime target: {'60 minutes where runtime allows' if extended_gmut_thos_packet_active(args.phase_slug) else '4 minutes where runtime allows'}",
+            f"- extended GMUT/THOS approval tapestry active: {str(extended_gmut_thos_packet_active(args.phase_slug)).lower()}",
             "- Wait-run source-search target: 30+",
             "- Wait-run draft skill/micro-workflow target: 10+",
             "- Safe fix attempts per blocker: 5",
