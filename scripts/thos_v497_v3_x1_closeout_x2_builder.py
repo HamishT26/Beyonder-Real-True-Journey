@@ -109,6 +109,8 @@ def main() -> int:
     generated_utc, generated_nz = now_pair()
     closeout_gate = read_json(f"{args.source_x1_slug}-one-hour-closeout-gate-v1.json")
     require_pass(closeout_gate, "one-hour closeout gate")
+    x2_prep_gate = read_json(f"{args.x2_slug}-10-minute-prep-cadence-gate-v1.json")
+    require_pass(x2_prep_gate, "x2 10-minute prep gate")
     first_status = read_json(f"{args.source_x1_slug}-first-status-synthesis-after-repair-v1.json")
     wait_ledger = read_json(f"{args.source_x1_slug}-productive-wait-source-reflection-ledger-v1.json")
 
@@ -154,6 +156,8 @@ def main() -> int:
         "x1_eureka_wait_tasks": wait_ledger.get("eureka_wait_tasks", []),
         "prep_boundary": {
             "minimum_10_minute_x2_prep_required": True,
+            "minimum_10_minute_x2_prep_status": x2_prep_gate.get("overall_status"),
+            "minimum_10_minute_x2_prep_elapsed_seconds": x2_prep_gate.get("elapsed_seconds"),
             "status_check_before_prep_mark_allowed": False,
         },
     }
