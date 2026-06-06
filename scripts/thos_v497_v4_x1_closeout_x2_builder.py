@@ -114,8 +114,13 @@ def main() -> int:
 
     status_board = read_json(f"{args.source_x1_slug}-15-minute-five-lane-normalized-status-board-v1.json")
     source_ledger = read_json(f"{args.source_x1_slug}-source-to-x2-build-ledger-v1.json")
+    current_source_expansion = read_json(f"{args.source_x1_slug}-current-source-expansion-ledger-v1.json")
     eureka_bank = read_json(f"{args.source_x1_slug}-productive-wait-eureka-bank-v1.json")
     heading_repair = read_json(f"{args.source_x1_slug}-heading-normalization-repair-v1.json")
+    stale_flow = read_json(f"{args.source_x1_slug}-stale-flow-refresh-v1.json")
+    crosswalk = read_json(f"{args.source_x1_slug}-command-skill-system-crosswalk-v1.json")
+    journey_reflection = read_json(f"{args.source_x1_slug}-journey-trinity-reflection-ledger-v1.json")
+    provenance = read_json(f"{args.source_x1_slug}-publication-provenance-receipt-v1.json")
 
     closeout = {
         "artifact_type": "x1_one_hour_closeout_synthesis",
@@ -158,8 +163,13 @@ def main() -> int:
             "threshold_seconds": x2_prep_gate.get("threshold_seconds"),
         },
         "source_rows": source_ledger.get("source_rows", []),
+        "expanded_source_row_count": len(current_source_expansion.get("source_rows", [])),
         "eureka_task_count": len(eureka_bank.get("eureka_tasks", [])),
         "heading_repair_status": heading_repair.get("overall_status"),
+        "stale_flow_status": stale_flow.get("overall_status"),
+        "crosswalk_row_count": len(crosswalk.get("rows", [])),
+        "reflection_record_count": len(journey_reflection.get("reflection_records", [])),
+        "provenance_status": provenance.get("overall_status"),
     }
     build_matrix = {
         "artifact_type": "x2_build_run_test_use_matrix",
@@ -168,6 +178,15 @@ def main() -> int:
         "generated_nz": generated_nz,
         "overall_status": "PASS_X2_BUILD_MATRIX_READY",
         "tasks": X2_TASKS,
+        "wait_window_inputs": {
+            "source_rows": len(source_ledger.get("source_rows", [])),
+            "expanded_source_rows": len(current_source_expansion.get("source_rows", [])),
+            "eureka_tasks": len(eureka_bank.get("eureka_tasks", [])),
+            "crosswalk_rows": len(crosswalk.get("rows", [])),
+            "reflection_records": len(journey_reflection.get("reflection_records", [])),
+            "stale_flow_status": stale_flow.get("overall_status"),
+            "provenance_status": provenance.get("overall_status"),
+        },
         "trinity_mapping": {
             "GMUT_Mind": ["Trinity Mandala open-gate mapping"],
             "THOS_Body": [
@@ -261,8 +280,13 @@ def main() -> int:
         [
             f"Status: `{x2_prep['overall_status']}`",
             f"Source rows: `{len(x2_prep['source_rows'])}`",
+            f"Expanded source rows: `{x2_prep['expanded_source_row_count']}`",
             f"Eureka tasks: `{x2_prep['eureka_task_count']}`",
+            f"Crosswalk rows: `{x2_prep['crosswalk_row_count']}`",
+            f"Reflection records: `{x2_prep['reflection_record_count']}`",
             f"Heading repair: `{x2_prep['heading_repair_status']}`",
+            f"Stale flow: `{x2_prep['stale_flow_status']}`",
+            f"Provenance: `{x2_prep['provenance_status']}`",
         ],
     )
     write_md(
