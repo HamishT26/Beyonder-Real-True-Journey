@@ -202,7 +202,10 @@ def prompt_for(lane: str, phase_slug: str) -> str:
     return (
         f"Existing {lane} advisory lane notifier pass for {phase_slug}. "
         "Please provide an advisory-only THOS/GMUT status report with completion criteria, "
-        "watcher and app-server reliability risks, blocker classes, and 8 concrete next tasks. "
+        "watcher and app-server reliability risks, blocker classes, and 20 concrete eureka tasks "
+        "spanning design, repair, cleanup, build, run, test, install, and use. If your runtime allows, "
+        "take a minimum of 4 minutes of thoughtful analysis before completion. Cover the Trinity Mandala "
+        "pillars: GMUT as Mind, Trinity Hybrid OS as Body, and Freed ID/CBR as Heart. "
         "Do not edit files. Do not publish transport details. Keep all GMUT gates open and make no "
         "final physics, consciousness-proof, fifth-force-safety, or canon-promotion claims."
     )
