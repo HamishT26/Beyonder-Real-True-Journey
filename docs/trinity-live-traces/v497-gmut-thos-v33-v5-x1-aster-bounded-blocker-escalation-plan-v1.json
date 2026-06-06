@@ -1,0 +1,52 @@
+{
+  "artifact_type": "bounded_blocker_escalation_plan",
+  "phase_slug": "v497-gmut-thos-v33-v5-x1",
+  "generated_utc": "2026-06-06T19:43:00Z",
+  "overall_status": "PASS_BOUNDED_ESCALATION_PLAN_READY",
+  "blocker": {
+    "lane": "Aster Vale",
+    "class": "CLI_HEADING_ELABORATION_GATE",
+    "summary": "Original output was substantial but exact-heading harvest failed; repair1 completed but was shallow and non-machine-readable; repair2 is in progress."
+  },
+  "attempt_ladder": [
+    {
+      "attempt": 1,
+      "state": "completed_failed_quality",
+      "safe_next": "Use stricter plain-heading contract."
+    },
+    {
+      "attempt": 2,
+      "state": "running",
+      "safe_next": "Check once at 2026-06-06T19:48:07Z."
+    },
+    {
+      "attempt": 3,
+      "state": "reserved",
+      "safe_next": "If repair2 fails shallow, use an even shorter prompt with only the six headings and item-count contract."
+    },
+    {
+      "attempt": 4,
+      "state": "reserved",
+      "safe_next": "If repair3 fails, classify as lane-specific format blocker and preserve original substantial output as non-harvestable evidence."
+    },
+    {
+      "attempt": 5,
+      "state": "reserved",
+      "safe_next": "If repair4 fails, create bounded blocker receipt and move to x2 with Aster continuity represented as open repair, not absent sibling."
+    }
+  ],
+  "phase_policy": {
+    "do_not_publish_raw_output": true,
+    "do_not_create_replacement_sibling": true,
+    "do_not_spawn_old_style_subagent": true,
+    "do_not_destroy_or_kill_alive_lane_without_need": true,
+    "continue_productive_prep_between_checks": true,
+    "phase_advance_requires": "repair pass or bounded blocker receipt"
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}
