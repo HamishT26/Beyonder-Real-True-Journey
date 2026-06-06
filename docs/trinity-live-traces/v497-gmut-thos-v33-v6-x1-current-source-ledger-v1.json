@@ -1,0 +1,74 @@
+{
+  "artifact_type": "current_source_ledger",
+  "phase_slug": "v497-gmut-thos-v33-v6-x1",
+  "generated_utc": "2026-06-06T21:00:13Z",
+  "overall_status": "PASS_CURRENT_SOURCE_LEDGER_READY",
+  "source_rows": [
+    {
+      "source": "OpenAI Codex releases",
+      "url": "https://github.com/openai/codex/releases",
+      "takeaway": "Codex CLI release cadence and platform behavior are changing quickly; launcher and version receipts should stay explicit.",
+      "x2_use": "Keep v6 launch receipts version/launcher-compatible and redacted."
+    },
+    {
+      "source": "OpenAI Codex CLI sign-in help",
+      "url": "https://help.openai.com/en/articles/11381614-api-codex-cli-and-sign-in-with-chatgpt",
+      "takeaway": "Codex CLI identity and connector authorization are separate operational surfaces.",
+      "x2_use": "Do not mutate account or connector settings while repairing CLI lane authority."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "takeaway": "Least privilege, constrained transport, and explicit authorization boundaries matter for tool-connected agents.",
+      "x2_use": "Treat app-server routes, CLI lanes, and future context-refresh actions as separate permission classes."
+    },
+    {
+      "source": "OpenTelemetry GenAI semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+      "takeaway": "Agent, model, tool, event, and error telemetry should be named consistently.",
+      "x2_use": "Normalize v6 watcher receipts with lane, phase, boundary, repair_state, quality, and blocker fields."
+    },
+    {
+      "source": "Google ADK callbacks",
+      "url": "https://google.github.io/adk-docs/callbacks/",
+      "takeaway": "Callbacks provide observe/customize/control hooks around model, tool, and agent behavior.",
+      "x2_use": "Model THOS watcher gates as callbacks: prelaunch, cadence, completion, quality, repair, and publication."
+    },
+    {
+      "source": "Google ADK multi-agent systems",
+      "url": "https://google.github.io/adk-docs/agents/multi-agents/",
+      "takeaway": "Multi-agent systems need structured composition rather than raw handoff chaos.",
+      "x2_use": "Keep app and CLI siblings as existing lanes with structured receipts, not ad hoc new agents."
+    },
+    {
+      "source": "NVIDIA NeMo Guardrails",
+      "url": "https://docs.nvidia.com/nemo-guardrails/index.html",
+      "takeaway": "Programmable guardrails can constrain LLM applications at behavior boundaries.",
+      "x2_use": "Keep no-overclaim, raw-boundary, credential/path, and stale-authority guards explicit."
+    },
+    {
+      "source": "NVIDIA NIM Operator guardrails",
+      "url": "https://docs.nvidia.com/nim-operator/3.0.2/guardrail.html",
+      "takeaway": "Guardrail services can be deployed as bounded infrastructure components.",
+      "x2_use": "Treat THOS guard runners as deployable bounded services with receipts and status boards."
+    },
+    {
+      "source": "OWASP Agentic Skills Top 10",
+      "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+      "takeaway": "Skills need inventory, permission review, testing, and monitoring.",
+      "x2_use": "Keep skill candidates as overlays unless exact live-skill approval is active."
+    },
+    {
+      "source": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "takeaway": "Provenance and attestations make artifacts traceable.",
+      "x2_use": "Continue subject-hash provenance receipts for v6 x1/x2 packets."
+    }
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}
