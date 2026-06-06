@@ -1,0 +1,100 @@
+{
+  "artifact_type": "productive_wait_nonbabysit_contract",
+  "phase_slug": "v497-gmut-thos-v33-v4-x1",
+  "generated_utc": "2026-06-06T17:33:20Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_LOCKED",
+  "launch_commit": "ae00bffc42f1f921a7bd975ba673b76a37059625",
+  "lane_policy": {
+    "all_five_lanes_attempted": true,
+    "existing_lanes_only": true,
+    "app_lanes": [
+      "Cicero",
+      "Kierkegaard",
+      "Aristotle"
+    ],
+    "cli_lanes": [
+      "Arby",
+      "Aster Vale"
+    ],
+    "new_threads_created": false,
+    "old_style_subagents_spawned": false,
+    "raw_lane_text_published": false,
+    "raw_transport_published": false
+  },
+  "watcher_supervision": {
+    "app_background_watch_requested": true,
+    "cli_launcher_receipt_present": true,
+    "preharvest_supervision_receipt_present": true,
+    "supervision_model": "watchers_and_notifiers_supervise_lanes_while_aletheon_works",
+    "manual_polling_before_cadence_marks_allowed": false,
+    "lane_status_harvested_in_this_artifact": false
+  },
+  "cadence_marks": {
+    "x1_started_utc": "2026-06-06T17:21:23Z",
+    "first_manual_status_check_not_before_utc": "2026-06-06T17:36:23Z",
+    "one_hour_closeout_target_utc": "2026-06-06T18:21:23Z",
+    "x2_prep_minimum_minutes": 10,
+    "x2_build_run_test_use_minimum_minutes": 30
+  },
+  "productive_wait_requirements": [
+    "Do not babysit lane status before the cadence guard allows a check.",
+    "Use the x1 wait window for current-source review, Journey and phase reflection, command planning, skill planning, system expansion design, repair planning, and x2 build preparation.",
+    "Use status_check_cadence_guard before any manual harvest.",
+    "Treat watcher receipts as the supervision surface; do not read raw app transport or raw CLI output into repo artifacts.",
+    "At x2 entry, run a 10 minute preparation gate before build, run, test, install, or usage work."
+  ],
+  "source_refresh_inputs": [
+    {
+      "source": "OpenAI Codex safety",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "wait_task_use": "boundaries, approvals, telemetry, and low-risk productivity while guarded"
+    },
+    {
+      "source": "OpenAI Codex repository",
+      "url": "https://github.com/openai/codex",
+      "wait_task_use": "CLI behavior and terminal-agent surface alignment"
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "wait_task_use": "tool authorization, least privilege, and connector guardrails"
+    },
+    {
+      "source": "OWASP Agentic Skills Top 10",
+      "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+      "wait_task_use": "skill enablement risk, naming, and activation review"
+    },
+    {
+      "source": "OWASP MCP Top 10",
+      "url": "https://owasp.org/www-project-mcp-top-10/",
+      "wait_task_use": "MCP threat modeling and overbroad tool-surface reduction"
+    },
+    {
+      "source": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "wait_task_use": "publication integrity and build evidence patterns"
+    },
+    {
+      "source": "SLSA provenance",
+      "url": "https://slsa.dev/spec/v1.0/provenance",
+      "wait_task_use": "receipt provenance and artifact-chain hardening"
+    },
+    {
+      "source": "OpenTelemetry GenAI semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+      "wait_task_use": "status-only telemetry vocabulary for agent work"
+    }
+  ],
+  "next_actions_before_first_mark": [
+    "Prepare x2 build candidate matrix without lane harvesting.",
+    "Prepare command and skill repair candidates from existing curated surfaces.",
+    "Prepare blocker retry playbook for CLI marker, app watcher, sandbox, and stale source gaps.",
+    "Prepare publication validation checklist for the next exact staged set."
+  ],
+  "claim_boundary": {
+    "gmut_empirical_gate_closed": false,
+    "physics_gate_closed": false,
+    "consciousness_gate_closed": false,
+    "canon_promotion_claimed": false
+  }
+}
