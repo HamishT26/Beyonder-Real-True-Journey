@@ -49,6 +49,70 @@ X2_BUILD_SESSION_TASKS = [
     "If no safe build target exists, use the 30-minute window to produce an approval-packet candidate and blocker receipt instead of forcing mutation.",
 ]
 
+WAIT_RUN_SKILL_CANDIDATES = [
+    {
+        "name": "wait-alpha-task-operations",
+        "label": "EnabledDraft",
+        "purpose": "Run productive reflection, inventory, and planning tasks during scheduled x1/x2 wait windows.",
+    },
+    {
+        "name": "no-babysit-cadence-guard",
+        "label": "EnabledDraft",
+        "purpose": "Prevent pre-mark sibling status checks and route supervision to watcher/notifier receipts.",
+    },
+    {
+        "name": "x2-build-session-gate",
+        "label": "EnabledDraft",
+        "purpose": "Enforce 30-minute build/run/test/use x2 sessions with validation and publication gates.",
+    },
+    {
+        "name": "skill-inventory-auditor",
+        "label": "EnabledDraft",
+        "purpose": "Summarize local skill manifests and candidate gaps without mutating user skills.",
+    },
+    {
+        "name": "command-risk-summarizer",
+        "label": "EnabledDraft",
+        "purpose": "Summarize command-book counts, risk classes, validation state, and rollback coverage.",
+    },
+    {
+        "name": "source-ledger-weaver",
+        "label": "EnabledDraft",
+        "purpose": "Collect current primary sources and map them into phase decisions without raw volume overclaims.",
+    },
+    {
+        "name": "no-overclaim-guard",
+        "label": "EnabledDraft",
+        "purpose": "Detect positive GMUT, canon, physics, or consciousness closure claims before publication.",
+    },
+    {
+        "name": "connector-boundary-watch",
+        "label": "EnabledDraft",
+        "purpose": "Track MCP/app-server connector boundaries without publishing credentials or raw transport.",
+    },
+    {
+        "name": "stale-flow-retry-ladder",
+        "label": "EnabledDraft",
+        "purpose": "Apply up to five safe repair attempts per blocker before recording a blocker receipt.",
+    },
+    {
+        "name": "trinity-mandala-mapper",
+        "label": "EnabledDraft",
+        "purpose": "Map each wait-run and x2 build task to GMUT Mind, THOS Body, and Freed ID/CBR Heart.",
+    },
+]
+
+EXISTING_SKILL_LABELS = [
+    {"name": "skill-creator", "label": "EnabledForDraftingOnly"},
+    {"name": "command-surface-core-operations", "label": "Enabled"},
+    {"name": "command-surface-autonomy-operations", "label": "Enabled"},
+    {"name": "agent-orchestration-v8-operations", "label": "Enabled"},
+    {"name": "council-live-sync-v9-operations", "label": "Enabled"},
+    {"name": "broad-user-skill-mutation", "label": "DisabledWithoutExactApproval"},
+    {"name": "plugin-cache-mutation", "label": "DisabledWithoutExactApproval"},
+    {"name": "raw-lane-publication", "label": "Disabled"},
+]
+
 
 def build_receipt(phase_slug: str, next_phase_slug: str | None, boundary: str) -> dict[str, object]:
     threshold = 15 if boundary == "x1" else 10
@@ -62,7 +126,11 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, boundary: str) -
         "cadence_policy": {
             "x1_wait_mark_minutes": 15,
             "x2_prep_mark_minutes": 10,
+            "x2_expanded_wait_target_minutes": 15,
             "x2_build_run_test_use_minimum_minutes": 30,
+            "web_search_target_per_wait_run": 30,
+            "draft_new_skill_candidates_per_wait_run": 10,
+            "safe_fix_attempts_per_blocker": 5,
             "watchers_and_notifiers_supervise_lanes": True,
             "aletheon_must_work_productively_between_marks": True,
             "no_pre_mark_sibling_status_or_artifact_upload_checks": True,
@@ -72,6 +140,13 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, boundary: str) -
             "x1_15_minute_alpha_tasks": X1_ALPHA_TASKS,
             "x2_10_minute_prep_tasks": X2_PREP_TASKS,
             "x2_30_minute_build_run_test_use_tasks": X2_BUILD_SESSION_TASKS,
+        },
+        "skill_policy_overlay": {
+            "actual_user_skill_mutation_performed": False,
+            "actual_enable_disable_labels_mutated": False,
+            "labels_are_planning_overlay_only": True,
+            "draft_skill_candidates": WAIT_RUN_SKILL_CANDIDATES,
+            "existing_skill_labels": EXISTING_SKILL_LABELS,
         },
         "system_surface_reflection_targets": [
             "local skill manifests and SKILL.md frontmatter",
@@ -107,9 +182,13 @@ def write_md(receipt: dict[str, object], path: str) -> None:
         f"- Status: `{receipt['overall_status']}`",
         f"- Boundary: `{receipt['boundary']}`",
         "- x1 wait mark: `15` minutes",
-        "- x2 prep mark: `10` minutes",
-        "- x2 build/run/test/use minimum: `30` minutes",
-        "- Watchers and notifiers supervise lanes: true",
+            "- x2 prep mark: `10` minutes",
+            "- x2 expanded wait target: `15` minutes",
+            "- x2 build/run/test/use minimum: `30` minutes",
+            "- Web-search target per wait run: `30`",
+            "- Draft skill candidates per wait run: `10`",
+            "- Safe fix attempts per blocker: `5`",
+            "- Watchers and notifiers supervise lanes: true",
         "- Aletheon works productively between marks: true",
         "",
         "## x1 15-Minute Alpha Tasks",
@@ -124,12 +203,18 @@ def write_md(receipt: dict[str, object], path: str) -> None:
     lines.extend(["", "## x2 30-Minute Build/Run/Test/Use Tasks", ""])
     for index, task in enumerate(banks["x2_30_minute_build_run_test_use_tasks"], start=1):  # type: ignore[index]
         lines.append(f"{index}. {task}")
+    lines.extend(["", "## Draft Skill Candidates", ""])
+    for index, row in enumerate(receipt["skill_policy_overlay"]["draft_skill_candidates"], start=1):  # type: ignore[index]
+        lines.append(f"{index}. `{row['name']}` - `{row['label']}` - {row['purpose']}")
+    lines.extend(["", "## Existing Skill Labels", ""])
+    for row in receipt["skill_policy_overlay"]["existing_skill_labels"]:  # type: ignore[index]
+        lines.append(f"- `{row['name']}`: `{row['label']}`")
     lines.extend(
         [
             "",
             "## Boundary",
             "",
-            "This framework is for repo-scoped receipts, helper scripts, validators, and exact approval packets. It does not approve broad skill mutation, plugin-cache edits, user-skill edits, external account mutation, raw lane text publication, or GMUT/canon closure claims.",
+            "This framework is for repo-scoped receipts, helper scripts, validators, draft skill candidates, and exact approval packets. Enabled/Disabled labels are a planning overlay only. It does not approve broad skill mutation, plugin-cache edits, user-skill edits, external account mutation, raw lane text publication, or GMUT/canon closure claims.",
             "",
         ]
     )

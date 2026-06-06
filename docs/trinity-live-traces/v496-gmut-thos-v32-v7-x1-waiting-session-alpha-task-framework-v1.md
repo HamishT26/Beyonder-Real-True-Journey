@@ -4,7 +4,11 @@
 - Boundary: `x1`
 - x1 wait mark: `15` minutes
 - x2 prep mark: `10` minutes
+- x2 expanded wait target: `15` minutes
 - x2 build/run/test/use minimum: `30` minutes
+- Web-search target per wait run: `30`
+- Draft skill candidates per wait run: `10`
+- Safe fix attempts per blocker: `5`
 - Watchers and notifiers supervise lanes: true
 - Aletheon works productively between marks: true
 
@@ -48,6 +52,30 @@
 5. Spend the final 5 minutes preparing exact staging, remote drift checks, and next-boundary handoff.
 6. If no safe build target exists, use the 30-minute window to produce an approval-packet candidate and blocker receipt instead of forcing mutation.
 
+## Draft Skill Candidates
+
+1. `wait-alpha-task-operations` - `EnabledDraft` - Run productive reflection, inventory, and planning tasks during scheduled x1/x2 wait windows.
+2. `no-babysit-cadence-guard` - `EnabledDraft` - Prevent pre-mark sibling status checks and route supervision to watcher/notifier receipts.
+3. `x2-build-session-gate` - `EnabledDraft` - Enforce 30-minute build/run/test/use x2 sessions with validation and publication gates.
+4. `skill-inventory-auditor` - `EnabledDraft` - Summarize local skill manifests and candidate gaps without mutating user skills.
+5. `command-risk-summarizer` - `EnabledDraft` - Summarize command-book counts, risk classes, validation state, and rollback coverage.
+6. `source-ledger-weaver` - `EnabledDraft` - Collect current primary sources and map them into phase decisions without raw volume overclaims.
+7. `no-overclaim-guard` - `EnabledDraft` - Detect positive GMUT, canon, physics, or consciousness closure claims before publication.
+8. `connector-boundary-watch` - `EnabledDraft` - Track MCP/app-server connector boundaries without publishing credentials or raw transport.
+9. `stale-flow-retry-ladder` - `EnabledDraft` - Apply up to five safe repair attempts per blocker before recording a blocker receipt.
+10. `trinity-mandala-mapper` - `EnabledDraft` - Map each wait-run and x2 build task to GMUT Mind, THOS Body, and Freed ID/CBR Heart.
+
+## Existing Skill Labels
+
+- `skill-creator`: `EnabledForDraftingOnly`
+- `command-surface-core-operations`: `Enabled`
+- `command-surface-autonomy-operations`: `Enabled`
+- `agent-orchestration-v8-operations`: `Enabled`
+- `council-live-sync-v9-operations`: `Enabled`
+- `broad-user-skill-mutation`: `DisabledWithoutExactApproval`
+- `plugin-cache-mutation`: `DisabledWithoutExactApproval`
+- `raw-lane-publication`: `Disabled`
+
 ## Boundary
 
-This framework is for repo-scoped receipts, helper scripts, validators, and exact approval packets. It does not approve broad skill mutation, plugin-cache edits, user-skill edits, external account mutation, raw lane text publication, or GMUT/canon closure claims.
+This framework is for repo-scoped receipts, helper scripts, validators, draft skill candidates, and exact approval packets. Enabled/Disabled labels are a planning overlay only. It does not approve broad skill mutation, plugin-cache edits, user-skill edits, external account mutation, raw lane text publication, or GMUT/canon closure claims.
