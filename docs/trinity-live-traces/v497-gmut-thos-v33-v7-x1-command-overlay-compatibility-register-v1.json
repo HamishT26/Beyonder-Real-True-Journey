@@ -1,0 +1,43 @@
+{
+  "artifact_type": "command_overlay_compatibility_register",
+  "phase_slug": "v497-gmut-thos-v33-v7-x1",
+  "generated_utc": "2026-06-06T22:00:10Z",
+  "overall_status": "PASS_COMMAND_OVERLAY_REGISTER_READY",
+  "lane_status_harvested": false,
+  "command_groups": [
+    {
+      "group": "preflight",
+      "commands": ["repo drift check", "scoped status check", "version/readiness receipt"],
+      "risk": "low_when_status_only"
+    },
+    {
+      "group": "launch",
+      "commands": ["app watcher launch", "cli read-only advisory launch", "prompt policy generation"],
+      "risk": "medium_requires_existing_lanes_only"
+    },
+    {
+      "group": "cadence",
+      "commands": ["x1 15-minute cadence guard", "x2 10-minute prep guard"],
+      "risk": "low_when_gate_does_not_harvest_status"
+    },
+    {
+      "group": "completion",
+      "commands": ["app completion gate", "cli completion notifier", "cli quality gate"],
+      "risk": "medium_requires_raw_boundary_controls"
+    },
+    {
+      "group": "publication",
+      "commands": ["json parse", "script compile", "whitespace check", "guard scan", "exact stage", "commit", "push", "remote equality"],
+      "risk": "low_when_exact_scoped"
+    }
+  ],
+  "blocked_commands": [
+    "reset",
+    "rebase",
+    "force-push",
+    "broad staging",
+    "destructive cleanup",
+    "plugin-cache mutation",
+    "user-skill mutation without exact approval"
+  ]
+}
