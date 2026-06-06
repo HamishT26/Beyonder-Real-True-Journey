@@ -20,9 +20,12 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
 
 
-def count_list(payload: dict[str, object], key: str) -> int:
-    value = payload.get(key)
-    return len(value) if isinstance(value, list) else 0
+def count_list(payload: dict[str, object], *keys: str) -> int:
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, list):
+            return len(value)
+    return 0
 
 
 def nested(payload: dict[str, object], *keys: str) -> object:
@@ -72,13 +75,21 @@ def check_rows(
     draft_count = len(draft_skills) if isinstance(draft_skills, list) else 0
     add("draft_skill_candidates_at_least_10", draft_count >= 10, f"count={draft_count}")
 
-    micro_count = count_list(reflection_ledger, "draft_skill_micro_workflows_used")
+    micro_count = count_list(
+        reflection_ledger,
+        "draft_skill_micro_workflows_used",
+        "twelve_new_draft_skill_candidates",
+    )
     add("draft_skill_micro_workflows_used_at_least_10", micro_count >= 10, f"count={micro_count}")
 
     reflections = count_list(reflection_ledger, "thirty_reflections")
     add("journey_trinity_reflections_at_least_30", reflections >= 30, f"count={reflections}")
 
-    eureka_tasks = count_list(reflection_ledger, "twenty_x2_eureka_tasks")
+    eureka_tasks = count_list(
+        reflection_ledger,
+        "twenty_x2_eureka_tasks",
+        "twenty_x1_eureka_tasks_for_x2",
+    )
     add("x2_eureka_tasks_at_least_20", eureka_tasks >= 20, f"count={eureka_tasks}")
 
     fix_attempts = nested(framework, "cadence_policy", "safe_fix_attempts_per_blocker")

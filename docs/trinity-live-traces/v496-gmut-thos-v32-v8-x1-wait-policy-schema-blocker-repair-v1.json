@@ -1,0 +1,53 @@
+{
+  "artifact_type": "wait_policy_schema_blocker_repair",
+  "phase_slug": "v496-gmut-thos-v32-v8-x1",
+  "generated_utc": "2026-06-06T11:22:30Z",
+  "overall_status": "PASS_BLOCKER_REPAIRED_AFTER_FIVE_SAFE_ATTEMPTS",
+  "blocker": {
+    "summary": "The wait-policy guard expected older x2 field names, while the new v8 x1 reflection ledger used x1-specific carry-forward field names.",
+    "failed_rows_before_repair": [
+      "draft_skill_micro_workflows_used_at_least_10",
+      "x2_eureka_tasks_at_least_20"
+    ],
+    "unsafe_escalation_required": false
+  },
+  "five_safe_attempts": [
+    {
+      "attempt": 1,
+      "action": "ran the wait-policy guard against the v8 x1 wait artifacts",
+      "result": "identified schema mismatch blocker without mutating artifacts"
+    },
+    {
+      "attempt": 2,
+      "action": "inspected the guard source to verify expected field names",
+      "result": "confirmed guard only accepted draft_skill_micro_workflows_used and twenty_x2_eureka_tasks"
+    },
+    {
+      "attempt": 3,
+      "action": "inspected the v8 x1 reflection ledger shape",
+      "result": "confirmed the ledger supplied twelve_new_draft_skill_candidates and twenty_x1_eureka_tasks_for_x2"
+    },
+    {
+      "attempt": 4,
+      "action": "patched the guard to accept both older x2 names and newer x1-to-x2 carry-forward names",
+      "result": "script mutation stayed inside approved repo scripts scope"
+    },
+    {
+      "attempt": 5,
+      "action": "compiled the patched guard and reran the wait-policy validation",
+      "result": "guard passed with 32 searches, 12 draft skill workflows, 30 reflections, 20 x2 tasks, and the 15-minute cadence gate"
+    }
+  ],
+  "final_validation": {
+    "guard_status_after_repair": "PASS_WAIT_POLICY_GUARD",
+    "script_compile_passed": true,
+    "real_user_skill_mutation_performed": false,
+    "plugin_cache_mutation_performed": false,
+    "raw_lane_text_published": false,
+    "raw_transport_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}
