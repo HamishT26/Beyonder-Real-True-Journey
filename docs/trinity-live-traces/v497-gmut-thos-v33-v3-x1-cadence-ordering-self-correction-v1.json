@@ -1,0 +1,27 @@
+﻿{
+    "artifact_type":  "cadence_ordering_self_correction_receipt",
+    "phase_slug":  "v497-gmut-thos-v33-v3-x1",
+    "generated_utc":  "2026-06-06T16:24:39Z",
+    "overall_status":  "PASS_SELF_CORRECTION_RECORDED_ORDERING_RULE_TIGHTENED",
+    "incident":  {
+                     "summary":  "Status harvest commands were launched in parallel with the cadence guard before the first 15-minute mark had passed.",
+                     "early_gate_status":  "OPEN_GAP_WAIT_FOR_CADENCE_MARK",
+                     "early_elapsed_seconds":  783,
+                     "required_threshold_seconds":  900,
+                     "raw_output_published":  false,
+                     "phase_decision_made_from_early_status":  false
+                 },
+    "correction":  {
+                       "valid_cadence_gate_rerun":  "PASS_STATUS_CHECK_ALLOWED at exactly 900 seconds",
+                       "future_rule":  "Run cadence guard first and only run CLI/app harvest after PASS_STATUS_CHECK_ALLOWED.",
+                       "no_babysit_policy_preserved_after_correction":  true,
+                       "watcher_trust_required":  true
+                   },
+    "claim_boundary":  {
+                           "raw_lane_text_published":  false,
+                           "raw_transport_published":  false,
+                           "local_absolute_paths_published":  false,
+                           "gmut_gate_state":  "all_gmut_gates_remain_open",
+                           "canon_promotion":  "not_claimed"
+                       }
+}
