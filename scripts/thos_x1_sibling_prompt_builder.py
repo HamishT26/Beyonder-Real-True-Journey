@@ -32,6 +32,7 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
             "Use these exact uppercase section headings so the quality gate can verify the artifact: "
             "COMMAND PROPOSALS (10+), SYSTEM EXPANSION PROPOSALS (10+), SKILL OR MICRO-WORKFLOW PROPOSALS (10+), "
             "EUREKA TASKS (10+), RISKS AND BLOCKERS, X2 BUILD PRIORITIES. "
+            "Do not rename, paraphrase, reorder, prefix, or omit these headings. "
             "Under each of the four proposal sections, provide at least 10 numbered items with concrete purpose, "
             "safe implementation shape, validation signal, and how it helps the next x2 phase. "
             "Target 2500+ words where runtime and output budget allow; if budget is tight, prioritize complete structured coverage "
