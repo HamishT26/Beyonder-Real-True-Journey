@@ -39,6 +39,7 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, lanes: list[str]
             "sibling_runtime_target_minutes": 4,
             "productive_waiting_target_minutes": 15,
             "x2_prep_target_minutes": 10,
+            "x2_build_run_test_use_minimum_minutes": 30,
             "x2_minimum_eureka_tasks": 20,
             "x2_is_build_run_test_use_phase": True,
             "raw_lane_text_published": False,
@@ -76,6 +77,7 @@ def main() -> int:
             "- Aletheon productive waiting required: true",
             "- Sibling runtime target: 4 minutes where runtime allows",
             "- x2 build/run/test/use target: true",
+            "- x2 build/run/test/use minimum: 30 minutes",
             "",
         ]
         for row in receipt["lanes"]:  # type: ignore[index]

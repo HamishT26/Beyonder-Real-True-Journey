@@ -7,6 +7,7 @@
 - Aletheon productive waiting required: true
 - Sibling runtime target: 4 minutes where runtime allows
 - x2 build/run/test/use target: true
+- x2 build/run/test/use minimum: 30 minutes
 
 ## Arby
 
