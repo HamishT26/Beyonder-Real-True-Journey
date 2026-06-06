@@ -1,0 +1,30 @@
+{
+  "artifact_type": "app_lane_retry_contingency_plan",
+  "phase_slug": "v497-gmut-thos-v33-v7-x1",
+  "generated_utc": "2026-06-06T22:18:20Z",
+  "overall_status": "PASS_RETRY4_CONTINGENCY_PLAN_READY",
+  "lane_status_harvested": false,
+  "trigger": "retry3 completion gate still reports missing app-lane completion after the not-before window",
+  "attempt_4_shape": {
+    "route": "existing_app_lanes_only",
+    "new_threads_created": false,
+    "old_style_spawn_used": false,
+    "mode": "foreground_bounded_or_background_long_window_based_on_retry3_evidence",
+    "prefix": "retry4",
+    "call_timeout_seconds": 180,
+    "turn_timeout_seconds": 3600,
+    "launch_timeout_seconds": 4500
+  },
+  "attempt_5_shape": {
+    "route": "blocker_receipt_or_final_safe_retry",
+    "condition": "only if attempt4 preserves existing-lane scope and no destructive or account action is needed",
+    "output": "publish blocker receipt if same missing-completion condition persists"
+  },
+  "blocked_escalations": [
+    "new thread creation",
+    "old-style subagent spawning",
+    "raw app transport publication",
+    "session JSONL editing",
+    "account or app setting mutation"
+  ]
+}
