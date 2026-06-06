@@ -1,0 +1,94 @@
+{
+  "artifact_type": "blocker_retry_playbook",
+  "phase_slug": "v497-gmut-thos-v33-v4-x1",
+  "generated_utc": "2026-06-06T18:14:17Z",
+  "overall_status": "PASS_BLOCKER_RETRY_PLAYBOOK_READY",
+  "retry_limit_per_blocker": 5,
+  "blocker_classes": [
+    {
+      "id": "BLOCKER-CLI-HEADING-SHAPE",
+      "trigger": "CLI final message exists but required headings are missing or shallow.",
+      "retry_ladder": [
+        "Add standalone exact-heading template to next prompt.",
+        "Dry-generate prompt and assert standalone headings.",
+        "Lower ambiguity by showing one numbered placeholder under each heading.",
+        "Run CLI quality gate with status-only counts and hashes.",
+        "If still open, keep as structure repair and request exact prompt/runner approval only if needed."
+      ]
+    },
+    {
+      "id": "BLOCKER-CLI-MARKER-REVIEW",
+      "trigger": "Generic sensitive marker counts appear in final-message metadata.",
+      "retry_ladder": [
+        "Run strict path/key/private-material quality gate.",
+        "Separate generic sensitive vocabulary from strict markers.",
+        "Publish only marker counts, hashes, bytes, and status.",
+        "Treat strict marker count zero as false-positive class, not raw publish clearance.",
+        "If strict markers appear, block summary and request exact review packet."
+      ]
+    },
+    {
+      "id": "BLOCKER-APP-WATCHER-WAIT",
+      "trigger": "App lane watcher has not produced completion receipt.",
+      "retry_ladder": [
+        "Check cadence gate first.",
+        "Use gate-only app notifier receipt, not raw transport.",
+        "Record app lane open gaps by lane/status only.",
+        "Route repeated wait into stale-flow refresh.",
+        "If route is unavailable, publish blocker receipt and continue other approved work."
+      ]
+    },
+    {
+      "id": "BLOCKER-SOURCE-DRIFT",
+      "trigger": "Remote branch diverges before publication.",
+      "retry_ladder": [
+        "Fetch remote branch.",
+        "Inspect drift count.",
+        "If behind, pause publication and inspect changed curated paths.",
+        "Rebase/reset is not allowed without exact approval; prefer safe merge planning or pause.",
+        "Publish only after drift returns to zero or an approved resolution exists."
+      ]
+    },
+    {
+      "id": "BLOCKER-OVERCLAIM",
+      "trigger": "Artifact language implies final GMUT, physics, consciousness, or canon closure.",
+      "retry_ladder": [
+        "Run no-overclaim guard.",
+        "Replace closure claims with open-gate wording.",
+        "Add claim_boundary fields.",
+        "Re-run guard across generated artifacts.",
+        "If unresolved, block publication of the affected artifact."
+      ]
+    },
+    {
+      "id": "BLOCKER-PROVENANCE-GAP",
+      "trigger": "Publication artifact lacks subject/material/hash evidence.",
+      "retry_ladder": [
+        "Run publication provenance receipt helper.",
+        "Use repo-relative subject paths only.",
+        "Include material hashes where available.",
+        "Record local head, remote head, and drift.",
+        "If any subject is missing, block provenance claim and repair subject list."
+      ]
+    },
+    {
+      "id": "BLOCKER-SKILL-MUTATION-SCOPE",
+      "trigger": "Task proposes plugin-cache or user-skill mutation without exact approval.",
+      "retry_ladder": [
+        "Downgrade to repo-scoped skill candidate artifact.",
+        "Record live mutation false.",
+        "Add approval-packet requirement.",
+        "Keep plugin-cache/user-skill files untouched.",
+        "If live mutation is essential, pause for exact packet."
+      ]
+    }
+  ],
+  "x2_use": "Use this playbook during v497 v4 x2 build/run/test/use work and future v497 v5-v8 x1/x2 phases.",
+  "claim_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "destructive_cleanup": false,
+    "plugin_cache_or_user_skill_mutation": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open"
+  }
+}
