@@ -1,0 +1,74 @@
+{
+  "artifact_type": "source_to_x2_build_ledger",
+  "phase_slug": "v497-gmut-thos-v33-v4-x1",
+  "generated_utc": "2026-06-06T17:43:03Z",
+  "overall_status": "PASS_SOURCE_TO_BUILD_LEDGER_READY",
+  "lane_status_harvested": false,
+  "manual_polling_before_next_cadence_mark": false,
+  "source_rows": [
+    {
+      "source": "OpenAI Codex safety",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "operational_takeaway": "Codex work should stay inside explicit boundaries, with higher-risk actions surfaced for review and agent-native telemetry available for audit.",
+      "x2_build_use": "Add policy fields to wait, launch, and closeout receipts that separate low-risk productive work from review-required mutations."
+    },
+    {
+      "source": "OpenAI Codex repository",
+      "url": "https://github.com/openai/codex",
+      "operational_takeaway": "The CLI is a terminal-native coding-agent surface, so watcher receipts should preserve terminal execution boundaries without publishing raw transport.",
+      "x2_build_use": "Keep CLI completion notices on hashes, byte counts, marker counts, and temp-only boundaries."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "operational_takeaway": "Tool and connector access should be authorization-scoped, least-privilege, and explicit.",
+      "x2_build_use": "Gate future connector and app-server steps through a scope ledger before any mutation is allowed."
+    },
+    {
+      "source": "OWASP Agentic Skills Top 10",
+      "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+      "operational_takeaway": "Skills and agentic instructions need activation, provenance, and overbreadth controls.",
+      "x2_build_use": "Add skill enablement labels and a no-plugin-cache mutation boundary to skill evolution receipts."
+    },
+    {
+      "source": "OWASP MCP Top 10",
+      "url": "https://owasp.org/www-project-mcp-top-10/",
+      "operational_takeaway": "MCP systems need tool-surface threat modeling, authorization hygiene, and prompt/tool boundary awareness.",
+      "x2_build_use": "Add MCP/tool-surface risk classes to the stale-flow retry playbook."
+    },
+    {
+      "source": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "operational_takeaway": "Published artifacts benefit from provenance, integrity, and traceable build evidence.",
+      "x2_build_use": "Extend publication receipts with local hash, remote verification, and staged file inventory fields."
+    },
+    {
+      "source": "SLSA provenance",
+      "url": "https://slsa.dev/spec/v1.0/provenance",
+      "operational_takeaway": "Provenance should describe the artifact, build process, and materials in a structured way.",
+      "x2_build_use": "Create a compact provenance schema for generated phase artifacts."
+    },
+    {
+      "source": "OpenTelemetry GenAI semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+      "operational_takeaway": "Agent work can be described with consistent telemetry vocabulary for operations and debugging.",
+      "x2_build_use": "Normalize runner statuses into stable fields such as operation, status, duration, model surface, and error class without raw payloads."
+    }
+  ],
+  "x2_build_priorities": [
+    "productive wait receipt schema",
+    "heading normalization prompt repair",
+    "CLI marker false-positive classifier",
+    "five-lane status receipt normalizer",
+    "publication provenance receipt",
+    "MCP and skill-surface risk ledger",
+    "watcher trust board",
+    "stale-flow retry playbook"
+  ],
+  "claim_boundary": {
+    "raw_lane_text_published": false,
+    "raw_connector_payload_published": false,
+    "external_account_mutation": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open"
+  }
+}
