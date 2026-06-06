@@ -1,0 +1,54 @@
+{
+  "artifact_type": "wait_policy_blocker_repair_receipt",
+  "phase_slug": "v496-gmut-thos-v32-v7-x2",
+  "generated_utc": "2026-06-06T10:20:00Z",
+  "overall_status": "PASS_WAIT_POLICY_BLOCKER_REPAIRED",
+  "blocker": {
+    "blocker_id": "WEB_SEARCH_COUNT_SCHEMA_MISMATCH",
+    "initial_status": "FAIL_WAIT_POLICY_BLOCKER",
+    "initial_evidence": "The wait-policy guard expected search_queries_completed at the top level and returned count=None.",
+    "root_cause": "The source ledger stores the count under prep_window.search_queries_completed."
+  },
+  "five_safe_fix_attempts": [
+    {
+      "attempt": 1,
+      "action": "Ran the wait-policy guard and captured the failing row without mutating live skills, plugin cache, lanes, or raw transport.",
+      "result": "Confirmed a single schema-read blocker: web_searches_at_least_30 count=None."
+    },
+    {
+      "attempt": 2,
+      "action": "Inspected the curated source ledger shape only.",
+      "result": "Found prep_window.search_queries_completed=32 and confirmed the source ledger itself was valid."
+    },
+    {
+      "attempt": 3,
+      "action": "Patched the wait-policy guard to read top-level search_queries_completed first and prep_window.search_queries_completed as a safe fallback.",
+      "result": "Guard code compiled successfully."
+    },
+    {
+      "attempt": 4,
+      "action": "Reran the wait-policy guard against the framework, source ledger, reflection ledger, and cadence gate.",
+      "result": "PASS_WAIT_POLICY_GUARD with web_searches_at_least_30 count=32."
+    },
+    {
+      "attempt": 5,
+      "action": "Cross-checked all current v7 x2 JSON artifacts and reran the no-overclaim guard over the expanded artifact set.",
+      "result": "JSON parse passed and no-overclaim guard reported zero blocker hits."
+    }
+  ],
+  "carry_forward": [
+    "Future source-ledger guards should support nested summary counts when receipts keep counts inside a prep_window object.",
+    "A schema mismatch should be treated as a repairable guard adapter issue when source evidence is present and validated.",
+    "Five safe attempts can complete early when the blocker is repaired and validated without unsafe escalation."
+  ],
+  "claim_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "actual_user_skill_mutation_performed": false,
+    "actual_plugin_cache_mutation_performed": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

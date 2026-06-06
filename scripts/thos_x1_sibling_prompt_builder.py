@@ -20,7 +20,8 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
         "Include at least 20 concrete eureka tasks spanning design, repair, cleanup, build, run, test, "
         "install, refine, and use. Cover the Trinity Mandala pillars: GMUT as Mind, Trinity Hybrid OS "
         "as Body, and Freed ID/CBR as Heart. Include risks, blocker classes, watcher/notifier resilience, "
-        "source/reflection needs, and next-step implementation priorities. Do not include secrets, raw logs, "
+        "source/reflection needs, 30+ source-search priorities, 10+ draft skill/micro-workflow candidates, "
+        "5 safe repair attempts for each blocker class, and next-step implementation priorities. Do not include secrets, raw logs, "
         "local paths, screenshots, session streams, private dumps, or final physics/consciousness/canon claims. "
         "End with a clear final advisory paragraph."
     )
@@ -34,13 +35,18 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, lanes: list[str]
         "generated_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "overall_status": "PASS_PROMPTS_BUILT",
         "policy": {
-            "watchers_babysit_lanes": True,
+            "watchers_supervise_lanes": True,
+            "manual_babysitting_required": False,
             "aletheon_productive_waiting_required": True,
             "sibling_runtime_target_minutes": 4,
             "productive_waiting_target_minutes": 15,
-            "x2_prep_target_minutes": 10,
+            "x2_prep_minimum_minutes": 10,
+            "x2_wait_target_minutes": 15,
             "x2_build_run_test_use_minimum_minutes": 30,
             "x2_minimum_eureka_tasks": 20,
+            "wait_run_web_search_target": 30,
+            "wait_run_draft_skill_micro_workflow_target": 10,
+            "safe_fix_attempts_per_blocker": 5,
             "x2_is_build_run_test_use_phase": True,
             "raw_lane_text_published": False,
             "raw_transport_published": False,
@@ -73,9 +79,13 @@ def main() -> int:
             f"- Phase: {args.phase_slug}",
             f"- Next: {args.next_phase_slug or 'not specified'}",
             "- Status: PASS_PROMPTS_BUILT",
-            "- Watchers babysit lanes: true",
+            "- Watchers supervise lanes: true",
+            "- Manual babysitting required: false",
             "- Aletheon productive waiting required: true",
             "- Sibling runtime target: 4 minutes where runtime allows",
+            "- Wait-run source-search target: 30+",
+            "- Wait-run draft skill/micro-workflow target: 10+",
+            "- Safe fix attempts per blocker: 5",
             "- x2 build/run/test/use target: true",
             "- x2 build/run/test/use minimum: 30 minutes",
             "",

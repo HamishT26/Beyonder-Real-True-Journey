@@ -115,7 +115,7 @@ EXISTING_SKILL_LABELS = [
 
 
 def build_receipt(phase_slug: str, next_phase_slug: str | None, boundary: str) -> dict[str, object]:
-    threshold = 15 if boundary == "x1" else 10
+    threshold = 15
     return {
         "artifact_type": "waiting_session_alpha_task_framework",
         "phase_slug": phase_slug,
@@ -127,9 +127,11 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, boundary: str) -
             "x1_wait_mark_minutes": 15,
             "x2_prep_mark_minutes": 10,
             "x2_expanded_wait_target_minutes": 15,
+            "x2_current_wait_mark_minutes": 15,
             "x2_build_run_test_use_minimum_minutes": 30,
             "web_search_target_per_wait_run": 30,
-            "draft_new_skill_candidates_per_wait_run": 10,
+            "draft_new_skill_candidates_per_wait_run_minimum": 10,
+            "draft_skill_micro_workflows_used_per_wait_run_minimum": 10,
             "safe_fix_attempts_per_blocker": 5,
             "watchers_and_notifiers_supervise_lanes": True,
             "aletheon_must_work_productively_between_marks": True,
@@ -144,7 +146,9 @@ def build_receipt(phase_slug: str, next_phase_slug: str | None, boundary: str) -
         "skill_policy_overlay": {
             "actual_user_skill_mutation_performed": False,
             "actual_enable_disable_labels_mutated": False,
+            "actual_installed_skills_created": 0,
             "labels_are_planning_overlay_only": True,
+            "enabled_disabled_labels_require_exact_skill_path_approval_for_real_mutation": True,
             "draft_skill_candidates": WAIT_RUN_SKILL_CANDIDATES,
             "existing_skill_labels": EXISTING_SKILL_LABELS,
         },
@@ -184,9 +188,11 @@ def write_md(receipt: dict[str, object], path: str) -> None:
         "- x1 wait mark: `15` minutes",
             "- x2 prep mark: `10` minutes",
             "- x2 expanded wait target: `15` minutes",
+            "- x2 current wait mark: `15` minutes",
             "- x2 build/run/test/use minimum: `30` minutes",
             "- Web-search target per wait run: `30`",
-            "- Draft skill candidates per wait run: `10`",
+            "- Draft skill candidates per wait run: `10+`",
+            "- Draft skill micro-workflows used per wait run: `10+`",
             "- Safe fix attempts per blocker: `5`",
             "- Watchers and notifiers supervise lanes: true",
         "- Aletheon works productively between marks: true",

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 
 
 def parse_utc(value: str) -> datetime:
@@ -24,12 +25,17 @@ def main() -> int:
     parser.add_argument("--boundary", choices=["x1", "x2"], required=True)
     parser.add_argument("--started-utc", required=True)
     parser.add_argument("--now-utc")
+    parser.add_argument("--threshold-minutes", type=int)
+    parser.add_argument("--receipt-json")
+    parser.add_argument("--receipt-md")
     args = parser.parse_args()
 
     started = parse_utc(args.started_utc)
     now = parse_utc(args.now_utc) if args.now_utc else datetime.now(timezone.utc)
     elapsed_seconds = max(0, int((now - started).total_seconds()))
-    threshold_minutes = 15 if args.boundary == "x1" else 10
+    threshold_minutes = args.threshold_minutes if args.threshold_minutes is not None else 15
+    if threshold_minutes <= 0:
+        raise SystemExit("--threshold-minutes must be positive")
     threshold_seconds = threshold_minutes * 60
     allowed = elapsed_seconds >= threshold_seconds
     receipt = {
@@ -48,6 +54,24 @@ def main() -> int:
             "raw_transport_published": False,
         },
     }
+    if args.receipt_json:
+        Path(args.receipt_json).write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+    if args.receipt_md:
+        lines = [
+            f"# {args.phase_slug} Status Check Cadence Guard",
+            "",
+            f"- Boundary: `{args.boundary}`",
+            f"- Status: `{receipt['overall_status']}`",
+            f"- Started UTC: `{receipt['started_utc']}`",
+            f"- Generated UTC: `{receipt['generated_utc']}`",
+            f"- Elapsed seconds: `{receipt['elapsed_seconds']}`",
+            f"- Threshold seconds: `{receipt['threshold_seconds']}`",
+            f"- Status check allowed: `{str(receipt['status_check_allowed']).lower()}`",
+            "",
+            "This receipt records the cadence gate only. It does not harvest lane status, publish raw lane text, or read raw transport.",
+            "",
+        ]
+        Path(args.receipt_md).write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(receipt, indent=2))
     return 0 if allowed else 2
 
