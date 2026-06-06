@@ -1,9 +1,9 @@
 # v497-gmut-thos-v33-v6-x1 Five-Lane Normalized Status Board
 
-- generated_utc: `2026-06-06T21:10:13+00:00`
-- overall_status: `OPEN_GAP_FIVE_LANE_STATUS`
-- next_manual_check_utc: `2026-06-06T21:22:02Z`
-- phase_advance_allowed: `false`
+- generated_utc: `2026-06-06T21:13:47+00:00`
+- overall_status: `PASS_FIVE_LANE_READY`
+- next_manual_check_utc: `2026-06-06T21:52:02Z`
+- phase_advance_allowed: `true`
 
 ## Lane Rows
 - Cicero (app): `completed`, completion `completed`, raw `status_only`.

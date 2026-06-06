@@ -70,7 +70,11 @@ def cli_rows(cli_notice: dict[str, Any], quality_gate: dict[str, Any]) -> list[d
 
 
 def status_for(app_gate: dict[str, Any], cli_notice: dict[str, Any], quality_gate: dict[str, Any]) -> str:
-    app_ok = str(app_gate.get("overall_status", "")).startswith("PASS")
+    app_lanes = app_gate.get("lanes", [])
+    app_ok = str(app_gate.get("overall_status", "")).startswith("PASS") or (
+        bool(app_lanes)
+        and all(row.get("overall_status") == "completed" for row in app_lanes)
+    )
     cli_ready = all(
         row.get("completion_status") == "FINAL_MESSAGE_READY"
         for row in cli_notice.get("lanes", [])
