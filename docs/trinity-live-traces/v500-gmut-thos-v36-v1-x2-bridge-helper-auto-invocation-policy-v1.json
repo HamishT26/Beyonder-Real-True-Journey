@@ -1,0 +1,21 @@
+{
+  "artifact_type": "bridge_helper_auto_invocation_policy",
+  "phase_slug": "v500-gmut-thos-v36-v1-x2",
+  "generated_utc": "2026-06-07T12:15:03Z",
+  "overall_status": "PASS_BRIDGE_HELPER_AUTO_INVOCATION_POLICY_READY",
+  "policy": [
+    "after the x1 cadence mark, run CLI completion notifier once",
+    "if expected final-message files are missing, run thos_cli_bridge_surface_repair.py with explicit lane source mappings",
+    "rerun completion notifier after bridge repair",
+    "run elaboration quality gate only after final messages are ready",
+    "run five-lane normalizer only after app gate and CLI quality receipts exist",
+    "publish only status receipts, byte counts, hashes, marker counts, and redacted metadata"
+  ],
+  "v500_live_evidence": {
+    "first_notifier_status": "OPEN_GAP_FINAL_MESSAGE_PENDING",
+    "bridge_repair_status": "PASS_BRIDGE_SURFACE_REPAIR",
+    "post_repair_notifier_status": "FINAL_MESSAGES_READY",
+    "quality_status": "PASS_ALL_CLI_LANES_ELABORATE",
+    "five_lane_status": "PASS_FIVE_LANE_READY"
+  }
+}
