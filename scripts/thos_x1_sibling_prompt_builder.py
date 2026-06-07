@@ -55,7 +55,7 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
             "over prose flourish. Cover the Trinity Mandala pillars: GMUT as Mind, Trinity Hybrid OS as Body, "
             "and Freed ID/CBR as Heart. Include risks, blocker classes, watcher/notifier resilience, "
             "source/reflection needs, 30+ source-search priorities, safe repair ladders with up to 5 attempts per blocker, "
-            "and next-step implementation priorities. Do not include secrets, unfiltered logs, local paths, screenshots, "
+            "and next-step implementation priorities. Do not include secrets, unfiltered logs, local paths, image captures, "
             "session streams, private dumps, or final physics/consciousness/canon claims. "
             "End with a clear final advisory paragraph."
         )
@@ -70,7 +70,7 @@ def build_prompt(lane: str, phase_slug: str, next_phase_slug: str | None = None)
         "as Body, and Freed ID/CBR as Heart. Include risks, blocker classes, watcher/notifier resilience, "
         "source/reflection needs, 30+ source-search priorities, 10+ draft skill/micro-workflow candidates, "
         "5 safe repair attempts for each blocker class, and next-step implementation priorities. Do not include secrets, unfiltered logs, "
-        "local paths, screenshots, session streams, private dumps, or final physics/consciousness/canon claims. "
+        "local paths, image captures, session streams, private dumps, or final physics/consciousness/canon claims. "
         "End with a clear final advisory paragraph."
     )
 
