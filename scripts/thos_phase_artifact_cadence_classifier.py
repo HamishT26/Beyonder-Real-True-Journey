@@ -18,6 +18,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("retry-wait", "productive_wait", "publish_during_wait_if_guarded"),
     ("15m-cadence-guard", "cadence_gate", "publish_after_threshold"),
     ("15-minute-cadence-gate", "cadence_gate", "publish_after_threshold"),
+    ("10m-cadence-guard", "cadence_gate", "publish_after_threshold"),
     ("10-minute-prep-cadence-gate", "cadence_gate", "publish_after_threshold"),
     ("10-minute-cadence-gate", "cadence_gate", "publish_after_threshold"),
     ("candidate-build-backlog", "prebuild_backlog", "publish_during_prep_if_guarded"),

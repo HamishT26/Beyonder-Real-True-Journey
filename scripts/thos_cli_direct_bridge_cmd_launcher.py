@@ -66,6 +66,7 @@ def runner_text(
     repo: Path,
     prompt_file: Path,
     last_file: Path,
+    normalized_last_file: Path,
     events_file: Path,
     stderr_file: Path,
 ) -> str:
@@ -74,6 +75,7 @@ def runner_text(
         f"\"{codex_cmd}\" --search --ask-for-approval never exec --sandbox read-only "
         f"--cd \"{repo}\" --output-last-message \"{last_file}\" --json - "
         f"< \"{prompt_file}\" > \"{events_file}\" 2> \"{stderr_file}\"\n"
+        f"if exist \"{last_file}\" copy /Y \"{last_file}\" \"{normalized_last_file}\" >nul\n"
     )
 
 
@@ -102,15 +104,16 @@ def main() -> int:
     for lane_name, safe_bridge in args.lane:
         prompt_file = output_dir / f"{safe_bridge}-prompt.txt"
         last_file = output_dir / f"{safe_bridge}-last-message.txt"
+        normalized_last_file = output_dir / f"{lane_name}-last-message.txt"
         events_file = output_dir / f"{safe_bridge}-events.jsonl"
         stderr_file = output_dir / f"{safe_bridge}-stderr.txt"
         runner_file = output_dir / f"{safe_bridge}-runner.cmd"
         prompt_file.write_text(f"Lane identity: {lane_name}\n\n{prompt_template}", encoding="utf-8")
-        for file_path in (last_file, events_file, stderr_file):
+        for file_path in (last_file, normalized_last_file, events_file, stderr_file):
             if file_path.exists():
                 file_path.unlink()
         runner_file.write_text(
-            runner_text(codex_cmd, repo, prompt_file, last_file, events_file, stderr_file),
+            runner_text(codex_cmd, repo, prompt_file, last_file, normalized_last_file, events_file, stderr_file),
             encoding="ascii",
         )
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -124,6 +127,7 @@ def main() -> int:
             {
                 "lane": lane_name,
                 "safe_output_bridge": safe_bridge,
+                "normalized_final_message_alias": True,
                 "launch_status": "PASS_CMD_BRIDGE_PROCESS_STARTED",
                 "process_started": proc.poll() is None,
                 "process_id_redacted": True,
