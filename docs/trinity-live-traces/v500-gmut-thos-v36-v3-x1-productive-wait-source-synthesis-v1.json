@@ -1,0 +1,52 @@
+{
+  "artifact_type": "productive_wait_source_synthesis",
+  "phase_slug": "v500-gmut-thos-v36-v3-x1",
+  "generated_utc": "2026-06-07T13:28:27Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_SOURCE_SYNTHESIS_READY",
+  "cadence_boundary": {
+    "next_manual_status_check_not_before_utc": "2026-06-07T13:36:41Z",
+    "sibling_completion_checked": false,
+    "watchers_trusted": true,
+    "aletheon_worked_while_waiting": true
+  },
+  "sources": [
+    {
+      "label": "OpenAI Codex releases",
+      "url": "https://github.com/openai/codex/releases",
+      "use": "track CLI release provenance and avoid relying on stale update assumptions"
+    },
+    {
+      "label": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "use": "shape connector, app-server, and local tool boundaries around consent, token, SSRF, session, and scope risks"
+    },
+    {
+      "label": "OWASP Logging Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "use": "keep status receipts useful for operations while excluding sensitive payloads and raw internals"
+    },
+    {
+      "label": "NVIDIA DGX Spark User Guide",
+      "url": "https://docs.nvidia.com/dgx/dgx-spark/system-overview.html",
+      "use": "inform local/remote/hybrid compute topology thinking for future THOS runner architecture"
+    },
+    {
+      "label": "NVIDIA DGX Spark newsroom overview",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-dgx-spark-arrives-for-worlds-ai-developers",
+      "use": "inform agentic local-workstation design patterns without treating hardware claims as local availability"
+    }
+  ],
+  "synthesis_points": [
+    "release tracking belongs in small receipts rather than assumptions",
+    "MCP/app-server style routing must minimize scopes and avoid token passthrough patterns",
+    "status receipts should support operational debugging without exposing raw prompts, outputs, paths, or private transport",
+    "local and network access modes should be treated as topology choices with explicit trust boundaries",
+    "future THOS runner design should separate launch, watch, completion, quality, redaction, and marker-review responsibilities"
+  ],
+  "claim_boundary": {
+    "hardware_purchase_or_deployment": "not_performed",
+    "external_account_change": "not_performed",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
