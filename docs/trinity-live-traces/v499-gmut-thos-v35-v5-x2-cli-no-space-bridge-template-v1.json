@@ -1,0 +1,24 @@
+{
+  "artifact_type": "cli_no_space_bridge_template",
+  "phase_slug": "v499-gmut-thos-v35-v5-x2",
+  "generated_utc": "2026-06-07T09:01:42Z",
+  "overall_status": "PASS_CLI_NO_SPACE_BRIDGE_TEMPLATE_BUILT",
+  "source_phase_evidence": {
+    "aster_initial_status": "WAITING_FOR_FINAL_MESSAGE_AFTER_ARGUMENT_PARSE_FAILURE",
+    "repair_bridge_raw_bytes": 26300,
+    "repair_bridge_expected_bytes_after_copy": 26300,
+    "aster_repaired_word_count": 3807,
+    "aster_repaired_hash": "c693e8bd1554ad9cd6a5cae204a748044b573a69b42076dbeafbb989c4a60072",
+    "strict_sensitive_or_path_marker_count": 0
+  },
+  "template_rules": [
+    "use safe no-space internal filenames for any lane display name that contains whitespace or punctuation",
+    "feed prompts through stdin to preserve read-only advisory behavior",
+    "disable plugins for CLI lane runs unless an exact packet approves otherwise",
+    "write raw final-message output to temp-only bridge files",
+    "wait until bridge output exists and is non-empty before copying into the expected notifier filename",
+    "publish only status receipts, hashes, counts, and quality metrics"
+  ],
+  "implemented_helper": "thos_cli_strict_stdin_lane_launcher.py",
+  "remaining_followup": "use the helper as the v499 v6 x1 CLI launcher instead of ad hoc PowerShell Start-Process commands"
+}
