@@ -1,0 +1,40 @@
+{
+  "artifact_type": "helper_launch_defect_hypothesis",
+  "phase_slug": "v499-gmut-thos-v35-v6-x1",
+  "generated_utc": "2026-06-07T09:32:30Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_HELPER_DEFECT_HYPOTHESIS_READY",
+  "manual_repair_output_checked": false,
+  "next_direct_repair_check_not_before_utc": "2026-06-07T09:40:43Z",
+  "observed_evidence_before_repair_check": [
+    "strict helper launch receipt reported process start for Arby and Aster Vale",
+    "no expected final-message files existed at the cadence gate",
+    "no strict helper stdout or stderr files existed at the cadence gate",
+    "app lanes passed independently",
+    "direct no-space bridge repair launched for both CLI lanes"
+  ],
+  "hypotheses": [
+    {
+      "name": "detached-wrapper-suppression",
+      "description": "Python-launched detached PowerShell wrappers may have exited or been suppressed before executing the generated wrapper body."
+    },
+    {
+      "name": "process-start-is-not-execution-proof",
+      "description": "A Popen process identifier proves launch attempt only; the helper needs a wrapper-start sentinel or output-file creation receipt before claiming execution."
+    },
+    {
+      "name": "redirectless-background-visibility-gap",
+      "description": "Discarded wrapper stdout/stderr makes helper launch failures invisible; future helper receipts need a status-only wrapper-start and wrapper-exit marker."
+    }
+  ],
+  "x2_build_candidates": [
+    "add wrapper-start sentinel file redacted in receipts",
+    "add wrapper-exit status file with no raw stdout/stderr",
+    "avoid DETACHED_PROCESS for wrappers if it prevents reliable execution",
+    "prefer Start-Process repair bridge until Python helper proves wrapper sentinels",
+    "treat process_started as launch attempt, not execution proof"
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
