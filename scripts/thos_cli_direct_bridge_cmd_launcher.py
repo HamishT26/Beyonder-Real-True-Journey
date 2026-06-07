@@ -72,7 +72,7 @@ def runner_text(
 ) -> str:
     return (
         "@echo off\n"
-        f"\"{codex_cmd}\" --search --ask-for-approval never exec --sandbox read-only "
+        f"call \"{codex_cmd}\" --search --ask-for-approval never exec --sandbox read-only "
         f"--cd \"{repo}\" --output-last-message \"{last_file}\" --json - "
         f"< \"{prompt_file}\" > \"{events_file}\" 2> \"{stderr_file}\"\n"
         f"if exist \"{last_file}\" copy /Y \"{last_file}\" \"{normalized_last_file}\" >nul\n"
