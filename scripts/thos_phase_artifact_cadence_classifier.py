@@ -19,6 +19,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("15-minute-cadence-gate", "cadence_gate", "publish_after_threshold"),
     ("10-minute-prep-cadence-gate", "cadence_gate", "publish_after_threshold"),
     ("10-minute-cadence-gate", "cadence_gate", "publish_after_threshold"),
+    ("prebuild", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("prebuild-source-and-backlog", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("phase-artifact-cadence-classifier", "phase_artifact_classifier", "publish_after_classification"),
     ("completion-gate", "app_completion_gate", "publish_after_cadence_and_redaction"),
