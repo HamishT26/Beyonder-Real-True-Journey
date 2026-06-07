@@ -1,0 +1,29 @@
+{
+  "artifact_type": "marker_review_simplifier",
+  "phase_slug": "v499-gmut-thos-v35-v4-x2",
+  "source_phase_slug": "v499-gmut-thos-v35-v4-x1",
+  "generated_utc": "2026-06-07T07:56:22Z",
+  "overall_status": "PASS_MARKER_REVIEW_SIMPLIFIER_READY",
+  "observed_issue": {
+    "strict_notifier_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+    "quality_gate_status": "PASS_ALL_CLI_LANES_ELABORATE",
+    "strict_sensitive_or_path_marker_count": 0,
+    "classification": "generic marker words required review but did not prove exposure"
+  },
+  "simplified_decision_tree": [
+    "if strict sensitive/path markers are greater than zero, hold publication and review",
+    "if raw local paths, credentials, session streams, screenshots, or private transport are present, fail",
+    "if only generic ordinary words are flagged and strict markers are zero, classify as false-positive marker review",
+    "publish only hashes, byte counts, word counts, category counts, and status summaries",
+    "never publish raw sibling final-message text"
+  ],
+  "next_runner_refinement": [
+    "separate generic vocabulary flags from strict sensitive/path exposure flags",
+    "include a false-positive classification field",
+    "carry marker review status into the five-lane normalizer without blocking when strict exposure markers are zero"
+  ],
+  "claim_boundary": {
+    "security_gate": "reviewed_for_status_only_publication",
+    "not_a_general_secret_scanner": true
+  }
+}
