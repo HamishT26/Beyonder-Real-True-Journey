@@ -1,0 +1,13 @@
+# v499-gmut-thos-v35-v2-x2 CLI Watcher-Control Fallback Hardening
+
+- generated_utc: `2026-06-07T05:35:49Z`
+- overall_status: `PASS_HARDENING_BUILT`
+
+## Rules
+- A CLI watcher-control timeout does not equal a sibling-output or completion blocker.
+- After cadence gate, run the one-shot CLI completion notifier if no background watcher receipt exists.
+- If final messages are ready, continue with strict elaboration quality gate and marker review.
+- If final messages are not ready, publish an open-gap watcher receipt and keep the lane on the roster.
+- Do not inspect raw CLI output, temp paths, stderr bodies, or local path details in curated publication.
+
+Validated by v499 v2 x1: fallback used after cadence gate, CLI notifier reported `FINAL_MESSAGES_READY`, and quality gates passed.
