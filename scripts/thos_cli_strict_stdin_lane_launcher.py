@@ -97,6 +97,8 @@ def wrapper_text(
     expected_output_path: Path,
     stdout_path: Path,
     stderr_path: Path,
+    start_sentinel_path: Path,
+    exit_sentinel_path: Path,
 ) -> str:
     escaped = {
         "codex": str(codex).replace("'", "''"),
@@ -106,19 +108,42 @@ def wrapper_text(
         "expected": str(expected_output_path).replace("'", "''"),
         "stdout": str(stdout_path).replace("'", "''"),
         "stderr": str(stderr_path).replace("'", "''"),
+        "start": str(start_sentinel_path).replace("'", "''"),
+        "exit": str(exit_sentinel_path).replace("'", "''"),
     }
     return f"""$ErrorActionPreference = 'Stop'
+Set-Content -Path '{escaped['start']}' -Value 'started'
 $promptText = Get-Content -Raw -Path '{escaped['prompt']}'
 $promptText | & '{escaped['codex']}' exec --disable plugins --sandbox read-only -C '{escaped['repo']}' -o '{escaped['raw']}' - 1> '{escaped['stdout']}' 2> '{escaped['stderr']}'
+$codexExit = $LASTEXITCODE
 for ($i = 0; $i -lt 60; $i++) {{
   if ((Test-Path '{escaped['raw']}') -and ((Get-Item -LiteralPath '{escaped['raw']}').Length -gt 0)) {{
     break
   }}
   Start-Sleep -Seconds 1
 }}
+$copyStatus = 'not_attempted'
 if (Test-Path '{escaped['raw']}') {{
   Copy-Item -LiteralPath '{escaped['raw']}' -Destination '{escaped['expected']}' -Force
+  $copyStatus = 'copied'
 }}
+$rawBytes = 0
+if (Test-Path '{escaped['raw']}') {{
+  $rawBytes = (Get-Item -LiteralPath '{escaped['raw']}').Length
+}}
+$expectedBytes = 0
+if (Test-Path '{escaped['expected']}') {{
+  $expectedBytes = (Get-Item -LiteralPath '{escaped['expected']}').Length
+}}
+$status = [ordered]@{{
+  codex_exit_code = $codexExit
+  copy_status = $copyStatus
+  raw_exists = (Test-Path '{escaped['raw']}')
+  raw_bytes = $rawBytes
+  expected_exists = (Test-Path '{escaped['expected']}')
+  expected_bytes = $expectedBytes
+}}
+$status | ConvertTo-Json -Compress | Set-Content -Path '{escaped['exit']}'
 """
 
 
@@ -132,12 +157,26 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex:
     stdout_path = output_dir / f"{slug}-strict-stdout.txt"
     stderr_path = output_dir / f"{slug}-strict-stderr.txt"
     wrapper_path = output_dir / f"{slug}-strict-wrapper.ps1"
+    start_sentinel_path = output_dir / f"{slug}-strict-wrapper-start.txt"
+    exit_sentinel_path = output_dir / f"{slug}-strict-wrapper-exit.json"
+    launcher_stdout_path = output_dir / f"{slug}-strict-launcher-stdout.txt"
+    launcher_stderr_path = output_dir / f"{slug}-strict-launcher-stderr.txt"
     prompt_path.write_text(
         build_prompt(lane, args.phase_slug, args.minimum_words, args.items_per_category),
         encoding="utf-8",
     )
     wrapper_path.write_text(
-        wrapper_text(codex, ROOT, prompt_path, raw_output_path, expected_output_path, stdout_path, stderr_path),
+        wrapper_text(
+            codex,
+            ROOT,
+            prompt_path,
+            raw_output_path,
+            expected_output_path,
+            stdout_path,
+            stderr_path,
+            start_sentinel_path,
+            exit_sentinel_path,
+        ),
         encoding="utf-8",
     )
     if not args.execute:
@@ -162,8 +201,8 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex:
         ],
         cwd=ROOT,
         stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
+        stdout=launcher_stdout_path.open("wb"),
+        stderr=launcher_stderr_path.open("wb"),
         creationflags=creationflags,
     )
     return {
@@ -172,6 +211,8 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex:
         "process_started": True,
         "process_id_redacted": True,
         "safe_output_bridge": True,
+        "wrapper_start_sentinel_expected": True,
+        "wrapper_exit_sentinel_expected": True,
         "raw_boundary": "temp_only_not_published",
         "launched_after_utc": iso(generated),
     }

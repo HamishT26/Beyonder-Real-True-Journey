@@ -1,0 +1,21 @@
+{
+  "artifact_type": "direct_bridge_fallback_policy",
+  "phase_slug": "v499-gmut-thos-v35-v6-x2",
+  "generated_utc": "2026-06-07T09:57:10Z",
+  "overall_status": "PASS_DIRECT_BRIDGE_FALLBACK_POLICY_READY",
+  "fallback_rules": [
+    "if strict helper launch produces no wrapper-start sentinel by the cadence gate, classify helper execution gap",
+    "if wrapper-start exists but wrapper-exit is missing, classify wrapper still running or hung",
+    "if wrapper-exit exists but expected notifier file is missing, use bridge copy repair only after cadence gate",
+    "if raw bridge output exists and strict quality passes after copy, allow five-lane normalization",
+    "do not advance phase while either CLI lane lacks final-message quality pass",
+    "publish only status receipts, hashes, counts, and redacted telemetry"
+  ],
+  "v6_x1_evidence": {
+    "direct_bridge_outputs_existed": true,
+    "manual_bridge_copy_required": true,
+    "arby_word_count_after_copy": 3964,
+    "aster_word_count_after_copy": 3506,
+    "five_lane_status": "PASS_FIVE_LANE_READY"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "artifact_type": "five_lane_evidence_matrix",
+  "phase_slug": "v499-gmut-thos-v35-v6-x2",
+  "generated_utc": "2026-06-07T09:57:10Z",
+  "overall_status": "PASS_EVIDENCE_MATRIX_BUILT",
+  "v6_x1_result": {
+    "app_status": "PASS_APP_LANE_COMPLETION_GATE",
+    "arby_status": "PASS_ELABORATION_GATE_AFTER_DIRECT_BRIDGE_COPY",
+    "arby_word_count": 3964,
+    "aster_status": "PASS_ELABORATION_GATE_AFTER_DIRECT_BRIDGE_COPY",
+    "aster_word_count": 3506,
+    "five_lane_status": "PASS_FIVE_LANE_READY"
+  },
+  "required_for_next_x1": [
+    "fetch/drift check",
+    "app background watcher launch",
+    "CLI helper launch with sentinels",
+    "first manual status check held until cadence gate",
+    "sentinel-aware CLI status classification",
+    "strict quality gate",
+    "five-lane normalizer"
+  ],
+  "refusal_conditions": [
+    "raw lane text appears in staged files",
+    "app thread IDs are unredacted",
+    "helper process_start is treated as execution proof without sentinels",
+    "CLI quality gate fails",
+    "five-lane normalizer is not PASS_FIVE_LANE_READY"
+  ]
+}

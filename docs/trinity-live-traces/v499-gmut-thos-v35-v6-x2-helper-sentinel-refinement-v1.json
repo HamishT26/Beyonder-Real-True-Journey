@@ -1,0 +1,19 @@
+{
+  "artifact_type": "helper_sentinel_refinement",
+  "phase_slug": "v499-gmut-thos-v35-v6-x2",
+  "generated_utc": "2026-06-07T09:57:10Z",
+  "overall_status": "PASS_HELPER_SENTINEL_REFINEMENT_BUILT",
+  "target_script": "thos_cli_strict_stdin_lane_launcher.py",
+  "changes": [
+    "write wrapper-start sentinel before invoking Codex CLI",
+    "write wrapper-exit JSON with codex exit code, copy status, raw existence, raw bytes, expected existence, and expected bytes",
+    "capture launcher-level stdout/stderr privately instead of discarding them",
+    "retain no-space bridge output and expected notifier filename copy",
+    "continue to publish status-only receipts"
+  ],
+  "validation": {
+    "python_compile": "PASS",
+    "whitespace_check": "PASS"
+  },
+  "why_it_matters": "v6 x1 proved that process_started alone is insufficient; wrapper sentinels create execution proof without exposing raw lane output."
+}
