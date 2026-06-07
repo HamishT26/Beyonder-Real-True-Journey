@@ -110,6 +110,12 @@ def wrapper_text(
     return f"""$ErrorActionPreference = 'Stop'
 $promptText = Get-Content -Raw -Path '{escaped['prompt']}'
 $promptText | & '{escaped['codex']}' exec --disable plugins --sandbox read-only -C '{escaped['repo']}' -o '{escaped['raw']}' - 1> '{escaped['stdout']}' 2> '{escaped['stderr']}'
+for ($i = 0; $i -lt 60; $i++) {{
+  if ((Test-Path '{escaped['raw']}') -and ((Get-Item -LiteralPath '{escaped['raw']}').Length -gt 0)) {{
+    break
+  }}
+  Start-Sleep -Seconds 1
+}}
 if (Test-Path '{escaped['raw']}') {{
   Copy-Item -LiteralPath '{escaped['raw']}' -Destination '{escaped['expected']}' -Force
 }}
