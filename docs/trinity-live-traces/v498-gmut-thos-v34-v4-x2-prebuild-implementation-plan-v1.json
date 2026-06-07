@@ -1,0 +1,43 @@
+{
+  "artifact_type": "x2_prebuild_implementation_plan",
+  "phase_slug": "v498-gmut-thos-v34-v4-x2",
+  "generated_utc": "2026-06-07T01:51:58Z",
+  "overall_status": "PASS_PREBUILD_PLAN_READY",
+  "build_gate_not_before_utc": "2026-06-07T01:54:27Z",
+  "build_started": false,
+  "implementation_sequence": [
+    {
+      "step": 1,
+      "name": "metadata_combiner_design",
+      "action": "define a status-only receipt combiner contract for app, CLI, cadence, quality, and marker-review inputs"
+    },
+    {
+      "step": 2,
+      "name": "marker_review_policy",
+      "action": "define strict-vs-generic marker handling so false positives do not block metadata-only summaries"
+    },
+    {
+      "step": 3,
+      "name": "sanitization_policy",
+      "action": "require app thread IDs, local implementation handles, and temp-only output references to be redacted before publication"
+    },
+    {
+      "step": 4,
+      "name": "skill_overlay_checklist",
+      "action": "draft a live-skill-safe checklist without editing user skills or plugin cache"
+    },
+    {
+      "step": 5,
+      "name": "x2_closeout",
+      "action": "publish built/tested/held/deferred categories and launch readiness for v498 v5 x1"
+    }
+  ],
+  "test_sequence": [
+    "JSON parse all generated receipts",
+    "run exposure guard including drive-path and unredacted app-thread patterns",
+    "run whitespace check",
+    "verify no script edits require compile checks unless scripts are changed",
+    "verify exact staging only"
+  ],
+  "raw_lane_text_published": false
+}
