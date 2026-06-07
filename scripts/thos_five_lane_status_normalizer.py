@@ -118,7 +118,7 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-            "This board reads curated receipts only. It does not read or publish raw lane text, raw app transport, raw CLI output, screenshots, credentials, session streams, or private dumps.",
+        "This board reads curated receipts only. It does not read or publish raw lane text, raw app transport, raw CLI output, image captures, credentials, session streams, or private dumps.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)

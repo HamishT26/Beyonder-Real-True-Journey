@@ -95,7 +95,7 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
     lines.extend(
         [
             "",
-            "This receipt records repo-relative file subjects and material hashes only. It does not publish raw lane text, raw transport, session streams, screenshots, credentials, or private dumps.",
+            "This receipt records repo-relative file subjects and material hashes only. It does not publish raw lane text, raw transport, session streams, image captures, credentials, or private dumps.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)
