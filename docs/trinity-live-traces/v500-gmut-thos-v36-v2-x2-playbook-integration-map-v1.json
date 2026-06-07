@@ -1,0 +1,41 @@
+{
+  "artifact_type": "x2_playbook_integration_map",
+  "phase_slug": "v500-gmut-thos-v36-v2-x2",
+  "generated_utc": "2026-06-07T13:00:02Z",
+  "overall_status": "PASS_PLAYBOOK_INTEGRATION_READY",
+  "integrated_helpers": [
+    {
+      "helper": "thos_cli_bridge_surface_repair.py",
+      "role": "surface completed direct-bridge CLI outputs into expected notifier filenames",
+      "use_point": "post-cadence when CLI lanes completed but expected final-message files are missing"
+    },
+    {
+      "helper": "thos_app_receipt_thread_redactor.py",
+      "role": "redact local app thread identifiers from status receipts before publication",
+      "use_point": "after app lane receipts and before staging"
+    },
+    {
+      "helper": "thos_cli_marker_review_ledger.py",
+      "role": "classify generic marker warnings against strict quality gate results",
+      "use_point": "after CLI notifier and quality gate when marker review is open"
+    }
+  ],
+  "no_babysitting_rule": {
+    "x1_wait_minutes": 15,
+    "x2_prep_minutes": 10,
+    "expected_behavior": "continue research, reflection, planning, and build preparation while watcher/notifier helpers supervise sibling lanes",
+    "manual_check_boundary": "cadence marks only unless a helper records a blocker"
+  },
+  "publication_discipline": [
+    "fetch and drift-check",
+    "exact staging only",
+    "json parse",
+    "script compile where applicable",
+    "credential/path/raw/session/screenshot guard",
+    "whitespace check",
+    "staged diff review",
+    "commit",
+    "push",
+    "remote-equals-local verification"
+  ]
+}
