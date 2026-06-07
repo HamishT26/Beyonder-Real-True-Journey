@@ -1,0 +1,27 @@
+# v498-gmut-thos-v34-v1-x2 Publication Provenance Receipt
+
+- generated_utc: `2026-06-06T23:58:36+00:00`
+- overall_status: `PASS_PUBLICATION_PROVENANCE_READY`
+- local_head: `9f3632d48a76d3b21d57256ad2a8323528a441d5`
+- remote_head: `9f3632d48a76d3b21d57256ad2a8323528a441d5`
+- drift: `0	0`
+
+## Subjects
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-build-run-use-closeout-v1.json` bytes `745` sha256 `600ef50b6a2da358e67542f8050bbdba3fe7ec79e9fddda74416bd0fa88b2049`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-v498-v2-x1-launch-readiness-v1.json` bytes `568` sha256 `432d468e2d3de611e5d738af6c7aa88aa5ed4b83945bdcbf67ac139265975549`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-validation-result-v1.json` bytes `1036` sha256 `414f64ca712b192e0c168459fbeae9badc4c1921e63039483e6a86c8273e5b0a`
+
+## Materials
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-10-minute-prep-cadence-gate-v1.json` bytes `505` sha256 `25f9351cb18a4fd90fb12987825661a39c1d20aca51c7ff5a3d0d7849e127223`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-prep-synthesis-v1.json` bytes `1764` sha256 `9a0bd24d0e34918df22c3b27f3596837a9c66f74b47e91964cb533561811f82e`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-held-build-matrix-v1.json` bytes `842` sha256 `e24be25e61ad58d815e15f1a5ccb88f97ee62ef2c536e364626d4398e61d6304`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-publication-validation-plan-v1.json` bytes `808` sha256 `28df93b2348dd3f4218f2cbd9d8dfc2996e1279f3ac39b7869f505fba0b03bb6`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-watcher-trust-enforcement-v1.json` bytes `855` sha256 `3b090fd7c41e047c1e5853927026a78e4c1b961219b8027edfde13a6b0ee5fc6`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-deterministic-phase-manifest-v1.json` bytes `720` sha256 `5e4eda481dc3ebf9916fb6df8ba116c5892a91814394245e1aadda8c664a3e9f`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-source-to-trinity-pillar-mapper-v1.json` bytes `1241` sha256 `6d44484f84ff995853663eb9eb846240cb1d33fd728f1663a28b74cf108b529b`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-stale-flow-repair-classifier-v1.json` bytes `1139` sha256 `7a5227419100172ce55b1136f8fc3bd00dba698aa564ffe6382e70bb9b36b541`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-command-overlay-compatibility-register-v1.json` bytes `635` sha256 `fed9f4cb359a2ae4133c3dce1dcbeebc8480d741fdfa782109ccd8ec2570f8c6`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-skill-overlay-safety-register-v1.json` bytes `964` sha256 `4e360fa264f9a37388ac390a77f920564de16f228057c2dac29bc597617e542e`
+- `docs/trinity-live-traces/v498-gmut-thos-v34-v1-x2-no-overclaim-lint-profile-v1.json` bytes `660` sha256 `574827d8f59fe0a390320777819f755351f7b9ca05255be6b5cfaedbf28d89ef`
+
+This receipt records repo-relative file subjects and material hashes only. It does not publish raw lane text, raw transport, session streams, image captures, credentials, or private dumps.
