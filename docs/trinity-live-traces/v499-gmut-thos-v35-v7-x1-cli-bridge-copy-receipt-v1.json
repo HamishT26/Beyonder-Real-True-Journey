@@ -1,0 +1,52 @@
+{
+  "artifact_type": "cli_bridge_copy_receipt",
+  "phase_slug": "v499-gmut-thos-v35-v7-x1",
+  "generated_utc": "2026-06-07T10:46:39Z",
+  "overall_status": "PASS_DIRECT_BRIDGE_COPY_REPAIRED_EXPECTED_FINAL_MESSAGE_SURFACE",
+  "source_gap": {
+    "helper_launcher_expected_final_messages": "missing",
+    "helper_launcher_wrapper_start_sentinels": "missing",
+    "helper_launcher_wrapper_exit_sentinels": "missing",
+    "direct_bridge_raw_outputs": "present_in_temp_only",
+    "classification": "helper_wrapper_execution_gap_with_successful_direct_bridge_outputs"
+  },
+  "copy_action": {
+    "mutation_scope": "local_temp_expected_notifier_surface_only",
+    "repo_mutation": false,
+    "raw_text_published": false,
+    "reason": "notifier and quality gates require expected lane filenames, while direct bridge outputs were already complete"
+  },
+  "lanes": [
+    {
+      "lane": "Arby",
+      "source_bridge_bytes": 27003,
+      "expected_final_message_bytes": 27003,
+      "expected_final_message_hash": "e935369b3223d9413038fcfef50c407d569259741323190cb69ccb14aedbe0cc",
+      "copy_status": "PASS_EXPECTED_FINAL_MESSAGE_READY"
+    },
+    {
+      "lane": "Aster Vale",
+      "source_bridge_bytes": 28408,
+      "expected_final_message_bytes": 28408,
+      "expected_final_message_hash": "e461a3a5b3ce20676668392cb940f060b4609718f420feccb53865d468f23507",
+      "copy_status": "PASS_EXPECTED_FINAL_MESSAGE_READY"
+    }
+  ],
+  "post_copy_receipts": {
+    "completion_notifier": "v499-gmut-thos-v35-v7-x1-cli-lane-completion-notifier-after-copy-v1.json",
+    "quality_gate": "v499-gmut-thos-v35-v7-x1-cli-combined-elaboration-quality-gate-after-copy-v1.json",
+    "five_lane_normalizer": "v499-gmut-thos-v35-v7-x1-five-lane-normalized-status-v1.json"
+  },
+  "carry_forward": [
+    "treat strict helper process_started as launch-attempt only until wrapper-start and wrapper-exit sentinels appear",
+    "prefer direct bridge as the proven CLI lane route for v499 v8 x1 unless helper sentinel proof is repaired first",
+    "keep watcher and notifier receipts as the completion source of truth",
+    "do not inspect raw sibling text during wait windows"
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "physics_gate_state": "open",
+    "consciousness_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
