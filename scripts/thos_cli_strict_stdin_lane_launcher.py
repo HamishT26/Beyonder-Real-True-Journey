@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -39,8 +40,14 @@ def safe_slug(text: str) -> str:
     return slug or "lane"
 
 
-def codex_executable() -> str:
-    return shutil.which("codex.exe") or shutil.which("codex.cmd") or shutil.which("codex") or "codex"
+def codex_command_parts() -> list[str]:
+    appdata = os.environ.get("APPDATA")
+    node = shutil.which("node.exe") or shutil.which("node")
+    if appdata and node:
+        codex_js = Path(appdata) / "npm" / "node_modules" / "@openai" / "codex" / "bin" / "codex.js"
+        if codex_js.exists():
+            return [node, str(codex_js)]
+    return [shutil.which("codex.cmd") or shutil.which("codex.exe") or shutil.which("codex") or "codex"]
 
 
 def ps_quote(value: Path | str) -> str:
@@ -95,7 +102,7 @@ Make the response elaborate, concrete, status-safe, and useful for Aletheon to c
 
 
 def wrapper_text(
-    codex: str,
+    codex_parts: list[str],
     repo: Path,
     prompt_path: Path,
     raw_output_path: Path,
@@ -106,7 +113,6 @@ def wrapper_text(
     exit_sentinel_path: Path,
 ) -> str:
     escaped = {
-        "codex": str(codex).replace("'", "''"),
         "repo": str(repo).replace("'", "''"),
         "prompt": str(prompt_path).replace("'", "''"),
         "raw": str(raw_output_path).replace("'", "''"),
@@ -116,13 +122,14 @@ def wrapper_text(
         "start": str(start_sentinel_path).replace("'", "''"),
         "exit": str(exit_sentinel_path).replace("'", "''"),
     }
+    command_head = " ".join(ps_quote(part) for part in codex_parts)
     return f"""$ErrorActionPreference = 'Stop'
 $codexExit = $null
 $wrapperErrorClass = ''
 try {{
   Set-Content -Path '{escaped['start']}' -Value 'started'
   $promptText = Get-Content -Raw -Path '{escaped['prompt']}'
-  $promptText | & '{escaped['codex']}' exec --disable plugins --sandbox read-only -C '{escaped['repo']}' -o '{escaped['raw']}' - 1> '{escaped['stdout']}' 2> '{escaped['stderr']}'
+  $promptText | & {command_head} exec --disable plugins --sandbox read-only -C '{escaped['repo']}' -o '{escaped['raw']}' - 1> '{escaped['stdout']}' 2> '{escaped['stderr']}'
   $codexExit = $LASTEXITCODE
 }} catch {{
   $wrapperErrorClass = $_.Exception.GetType().Name
@@ -163,7 +170,7 @@ $status | ConvertTo-Json -Compress | Set-Content -Path '{escaped['exit']}'
 """
 
 
-def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex: str) -> dict[str, Any]:
+def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex_parts: list[str]) -> dict[str, Any]:
     output_dir = Path(args.output_dir) if args.output_dir else Path(tempfile.gettempdir()) / args.phase_slug
     output_dir.mkdir(parents=True, exist_ok=True)
     slug = safe_slug(lane)
@@ -183,7 +190,7 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex:
     )
     wrapper_path.write_text(
         wrapper_text(
-            codex,
+            codex_parts,
             ROOT,
             prompt_path,
             raw_output_path,
@@ -250,6 +257,7 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex:
         "wrapper_start_sentinel_expected": True,
         "wrapper_exit_sentinel_expected": True,
         "raw_boundary": "temp_only_not_published",
+        "codex_command_bridge": "node_codex_js" if len(codex_parts) > 1 else "codex_executable",
         "launched_after_utc": iso(generated),
     }
 
@@ -269,8 +277,8 @@ def main() -> int:
 
     generated = utc_now()
     lanes = args.lane or DEFAULT_LANES
-    codex = codex_executable()
-    lane_rows = [launch_lane(args, lane, generated, codex) for lane in lanes]
+    codex_parts = codex_command_parts()
+    lane_rows = [launch_lane(args, lane, generated, codex_parts) for lane in lanes]
     all_started = all(row["process_started"] for row in lane_rows) if args.execute else True
     payload: dict[str, Any] = {
         "artifact_type": "strict_cli_lane_launcher",
