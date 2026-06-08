@@ -40,7 +40,7 @@ def safe_slug(text: str) -> str:
 
 
 def codex_executable() -> str:
-    return shutil.which("codex.cmd") or shutil.which("codex.exe") or shutil.which("codex") or "codex"
+    return shutil.which("codex.exe") or shutil.which("codex.cmd") or shutil.which("codex") or "codex"
 
 
 def ps_quote(value: Path | str) -> str:
@@ -117,10 +117,20 @@ def wrapper_text(
         "exit": str(exit_sentinel_path).replace("'", "''"),
     }
     return f"""$ErrorActionPreference = 'Stop'
-Set-Content -Path '{escaped['start']}' -Value 'started'
-$promptText = Get-Content -Raw -Path '{escaped['prompt']}'
-$promptText | & '{escaped['codex']}' exec --disable plugins --sandbox read-only -C '{escaped['repo']}' -o '{escaped['raw']}' - 1> '{escaped['stdout']}' 2> '{escaped['stderr']}'
-$codexExit = $LASTEXITCODE
+$codexExit = $null
+$wrapperErrorClass = ''
+try {{
+  Set-Content -Path '{escaped['start']}' -Value 'started'
+  $promptText = Get-Content -Raw -Path '{escaped['prompt']}'
+  $promptText | & '{escaped['codex']}' exec --disable plugins --sandbox read-only -C '{escaped['repo']}' -o '{escaped['raw']}' - 1> '{escaped['stdout']}' 2> '{escaped['stderr']}'
+  $codexExit = $LASTEXITCODE
+}} catch {{
+  $wrapperErrorClass = $_.Exception.GetType().Name
+  $codexExit = -999
+  try {{
+    Set-Content -Path '{escaped['stderr']}' -Value ('wrapper_error_class=' + $wrapperErrorClass)
+  }} catch {{}}
+}}
 for ($i = 0; $i -lt 60; $i++) {{
   if ((Test-Path '{escaped['raw']}') -and ((Get-Item -LiteralPath '{escaped['raw']}').Length -gt 0)) {{
     break
@@ -142,6 +152,7 @@ if (Test-Path '{escaped['expected']}') {{
 }}
 $status = [ordered]@{{
   codex_exit_code = $codexExit
+  wrapper_error_class = $wrapperErrorClass
   copy_status = $copyStatus
   raw_exists = (Test-Path '{escaped['raw']}')
   raw_bytes = $rawBytes
