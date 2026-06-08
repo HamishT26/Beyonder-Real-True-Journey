@@ -28,6 +28,8 @@ REQUIRED_PHRASES = [
     "Do not include credentials",
 ]
 
+LANE_SPECIFIC_PREFIXES = ("Lane:", "Existing lane:")
+
 
 def utc_now() -> str:
     return dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -46,6 +48,11 @@ def phrase_present(text: str, phrase: str) -> bool:
     return phrase.lower() in text.lower()
 
 
+def lane_binding_present(text: str) -> bool:
+    stripped_lines = [line.strip() for line in text.splitlines()]
+    return "{lane}" in text or any(line.startswith(LANE_SPECIFIC_PREFIXES) for line in stripped_lines)
+
+
 def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     prompt_path = Path(args.prompt_template)
     text = prompt_path.read_text(encoding="utf-8")
@@ -54,8 +61,8 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
     open_gaps = [
         f"missing_heading:{row['heading']}" for row in headings if not row["present"]
     ] + [f"missing_phrase:{row['phrase']}" for row in phrases if not row["present"]]
-    if "{lane}" not in text:
-        open_gaps.append("missing_lane_placeholder")
+    if not lane_binding_present(text):
+        open_gaps.append("missing_lane_binding")
     if len(text.split()) < args.minimum_prompt_words:
         open_gaps.append("prompt_template_too_short")
     return {
@@ -70,6 +77,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         "headings": headings,
         "phrases": phrases,
         "lane_placeholder_present": "{lane}" in text,
+        "lane_specific_binding_present": lane_binding_present(text),
         "open_gaps": open_gaps,
         "publication_boundary": {
             "prompt_body_published": False,
@@ -99,6 +107,7 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
         f"- prompt_template_word_count: `{payload['prompt_template_word_count']}`",
         f"- minimum_prompt_words: `{payload['minimum_prompt_words']}`",
         f"- lane_placeholder_present: `{payload['lane_placeholder_present']}`",
+        f"- lane_specific_binding_present: `{payload['lane_specific_binding_present']}`",
         "",
         "Headings:",
     ]

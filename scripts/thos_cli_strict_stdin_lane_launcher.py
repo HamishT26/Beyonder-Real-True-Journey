@@ -76,7 +76,7 @@ You are the existing {lane} read-only CLI advisory sibling lane. Do not treat th
 
 Use the current operating contract: watcher-led supervision, no babysitting, x1 is for research/reflection/design/preparation, and x2 is for building/running/testing/installing/using the best safe tasks. Keep GMUT, physics, consciousness, and canon gates open.
 
-Write at least {minimum_words} words. Use exactly these headings, each on its own line, and include at least {items_per_category} numbered items in each of the first four sections:
+Minimum 4,000 words: write at least {minimum_words} words before you mark the response complete. Do not include credentials. End with the exact status phrase FINAL MESSAGE READY after your final advisory paragraph. Use exactly these headings, each on its own line, and include at least 12 concrete items in each of the first four sections, with at least {items_per_category} numbered items when that target is higher:
 
 COMMAND PROPOSALS (10+)
 SYSTEM EXPANSION PROPOSALS (10+)
@@ -248,6 +248,12 @@ def main() -> int:
             "output_dir": "<local_temp_redacted>",
             "prompt_files": "<local_temp_redacted>",
             "stdout_stderr": "temp_only_not_published",
+        },
+        "launch_policy": {
+            "manual_babysitting_required": False,
+            "duration_is_completion_proof": False,
+            "watchers_supervise_until_gate": True,
+            "phase_advance_requires_all_five_responses": True,
         },
         "claim_boundary": {
             "gmut_gate_state": "open",

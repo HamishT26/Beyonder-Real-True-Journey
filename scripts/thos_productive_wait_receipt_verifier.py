@@ -28,6 +28,16 @@ def read_json(path: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {"available": False, "parse_status": "not_object"}
 
 
+def receipt_path(value: str) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    repo_relative = REPO_ROOT / path
+    if repo_relative.exists():
+        return repo_relative
+    return TRACE_DIR / value
+
+
 def truthy(payload: dict[str, Any], *keys: str) -> bool:
     current: Any = payload
     for key in keys:
@@ -38,8 +48,8 @@ def truthy(payload: dict[str, Any], *keys: str) -> bool:
 
 
 def build_payload(args: argparse.Namespace) -> dict[str, Any]:
-    launch_path = TRACE_DIR / f"{args.launch_receipt}"
-    wait_path = TRACE_DIR / f"{args.wait_plan}"
+    launch_path = receipt_path(args.launch_receipt)
+    wait_path = receipt_path(args.wait_plan)
     launch = read_json(launch_path)
     wait_plan = read_json(wait_path)
 

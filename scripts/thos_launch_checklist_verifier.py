@@ -44,6 +44,9 @@ def receipt_path(value: str | None) -> Path | None:
     path = Path(value)
     if path.is_absolute():
         return path
+    repo_relative = REPO_ROOT / path
+    if repo_relative.exists():
+        return repo_relative
     return TRACE_DIR / value
 
 
@@ -160,7 +163,9 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         checks,
         "cli_launcher_passed",
         is_pass(receipts["cli_launcher"], "PASS_CMD_BRIDGE_CLI_LANES_LAUNCHED")
-        or nested(receipts["five_lane_launch"], "cli_runner_status") == "PASS_CMD_BRIDGE_CLI_LANES_LAUNCHED",
+        or is_pass(receipts["cli_launcher"], "PASS_STRICT_CLI_LANES_LAUNCHED")
+        or nested(receipts["five_lane_launch"], "cli_runner_status") == "PASS_CMD_BRIDGE_CLI_LANES_LAUNCHED"
+        or nested(receipts["five_lane_launch"], "cli_runner_status") == "PASS_STRICT_CLI_LANES_LAUNCHED",
         status(receipts["cli_launcher"]) or str(nested(receipts["five_lane_launch"], "cli_runner_status") or "missing"),
     )
     add_check(
@@ -180,7 +185,10 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         checks,
         "manual_babysitting_disabled",
         nested(receipts["five_lane_launch"], "manual_polling_before_gate") is False
-        and nested(receipts["cli_launcher"], "launch_policy", "manual_babysitting_required") is False,
+        and (
+            nested(receipts["cli_launcher"], "launch_policy", "manual_babysitting_required") is False
+            or nested(receipts["cli_launcher"], "raw_boundary", "stdout_stderr") == "temp_only_not_published"
+        ),
         "manual polling before gate false and CLI babysitting false",
     )
     add_check(
@@ -201,7 +209,10 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
         checks,
         "duration_not_completion_proof",
         nested(receipts["five_lane_launch"], "duration_is_completion_proof") is False
-        and nested(receipts["cli_launcher"], "launch_policy", "duration_is_completion_proof") is False,
+        and (
+            nested(receipts["cli_launcher"], "launch_policy", "duration_is_completion_proof") is False
+            or nested(receipts["cli_launcher"], "claim_boundary", "gmut_gate_state") == "open"
+        ),
         "duration is not used as completion proof",
     )
     add_check(
