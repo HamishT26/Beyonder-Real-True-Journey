@@ -25,6 +25,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("10-minute-cadence-gate", "cadence_gate", "publish_after_threshold"),
     ("candidate-build-backlog", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("source-and-eureka-backlog", "prebuild_backlog", "publish_during_wait_if_guarded"),
+    ("repair-wait-source-refresh", "source_refresh", "publish_during_wait_if_guarded"),
     ("source-and-handoff-prep-ledger", "source_handoff_prep", "publish_during_prep_if_guarded"),
     ("source-and-regression-prep-ledger", "source_regression_prep", "publish_during_prep_if_guarded"),
     ("source-and-build-prep-ledger", "source_regression_prep", "publish_during_prep_if_guarded"),

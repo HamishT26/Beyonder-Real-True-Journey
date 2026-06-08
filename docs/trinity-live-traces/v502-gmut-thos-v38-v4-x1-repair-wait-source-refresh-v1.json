@@ -1,0 +1,62 @@
+{
+  "artifact_type": "repair_wait_source_refresh",
+  "phase_slug": "v502-gmut-thos-v38-v4-x1",
+  "generated_utc": "2026-06-08T07:36:02Z",
+  "overall_status": "PASS_REPAIR_WAIT_SOURCE_REFRESH_READY",
+  "wait_context": {
+    "lane": "Arby",
+    "repair_retry": "r1",
+    "next_manual_status_check_not_before_utc": "2026-06-08T07:39:15Z",
+    "lane_status_polled_after_this_receipt": false,
+    "productive_wait_used": true
+  },
+  "sources": [
+    {
+      "name": "OpenAI Codex CLI documentation",
+      "url": "https://developers.openai.com/codex/cli",
+      "application": "Keep CLI bridge launches scoped, receipt-driven, and explicit about approval/sandbox mode."
+    },
+    {
+      "name": "OpenAI Windows sandbox article",
+      "url": "https://openai.com/index/building-codex-windows-sandbox/",
+      "application": "Treat Windows sandbox behavior as a first-class reliability and safety surface, not as invisible plumbing."
+    },
+    {
+      "name": "MCP Security Best Practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "application": "Use explicit consent, scoped authorization, blast-radius limits, and status-only connector/lane receipts."
+    },
+    {
+      "name": "MCP Authorization specification",
+      "url": "https://modelcontextprotocol.io/specification/draft/basic/authorization",
+      "application": "Keep authorization state, client identity, and token boundaries out of published artifacts."
+    },
+    {
+      "name": "OWASP Logging Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "application": "Prefer sanitized event/status receipts over raw stdout, stderr, event streams, prompt bodies, paths, or session dumps."
+    }
+  ],
+  "x2_implications": [
+    "Build future temp-output hygiene verifier around status, counts, hashes, and redacted aliases only.",
+    "Build future app watcher freshness guard around expected receipt presence, monotonic timestamps, redaction, and exposure status.",
+    "Build future phase-advance gate around all five lane completion plus no raw publication and remote drift proof.",
+    "Keep Arby repair retries non-destructive while live processes still exist.",
+    "Keep GMUT, canon, physics, and consciousness gates open unless exact closure artifacts prove otherwise."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}
