@@ -1,0 +1,65 @@
+{
+  "artifact_type": "productive_wait_research_ledger",
+  "phase_slug": "v502-gmut-thos-v38-v7-x1",
+  "generated_utc": "2026-06-08T11:52:18Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_RESEARCH_RECORDED",
+  "lane_supervision_policy": {
+    "manual_babysitting_before_gate": false,
+    "watcher_and_notifier_supervision": true,
+    "phase_advance_requires_all_five_responses": true,
+    "duration_is_completion_proof": false
+  },
+  "source_findings": [
+    {
+      "source": "OpenAI Codex CLI Help Center",
+      "url": "https://help.openai.com/en/articles/11096431",
+      "finding": "Codex CLI is a terminal-based coding agent; phase runners should keep CLI interactions scriptable and resumable rather than UI-dependent.",
+      "application": "Continue using direct CLI bridge launches for Arby and Aster Vale with temp-only raw output and status receipts."
+    },
+    {
+      "source": "OpenAI Codex CLI sign-in guidance",
+      "url": "https://help.openai.com/en/articles/11381614-api-codex-cli-and-sign-in-with-chatgpt",
+      "finding": "CLI authentication and generated secrets are separate from ChatGPT session state; update and sign-in surfaces should not be mixed with raw receipt publication.",
+      "application": "Keep secrets, session material, and raw logs out of phase artifacts."
+    },
+    {
+      "source": "OpenAI Codex GitHub releases",
+      "url": "https://github.com/openai/codex/releases",
+      "finding": "Current Codex release flow continues to expose CLI/app-server/remote-control and plugin-related surfaces that benefit from machine-readable status receipts.",
+      "application": "Keep launch, app gate, CLI quality, marker, exposure, classifier, and phase-advance receipts separated."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "finding": "MCP security guidance emphasizes scope minimization and careful handling of local tool surfaces.",
+      "application": "Keep connector and tool use read-scoped unless an exact mutation approval exists."
+    },
+    {
+      "source": "OWASP Secrets Management Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html",
+      "finding": "Secret handling should prevent repository exposure and avoid logging or alerting patterns that reveal sensitive material.",
+      "application": "Continue staged-name guards, exposure guards, redaction guards, and temp-only raw output."
+    }
+  ],
+  "x2_build_implications": [
+    "Make direct CLI bridge and app-server watcher evidence reusable across v7-v8.",
+    "Treat marker-review warnings as a required safety gate, not as automatic failure or automatic pass.",
+    "Split source-ledger evidence from raw sibling outputs.",
+    "Use status-only build queues for x2 implementation work."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}
