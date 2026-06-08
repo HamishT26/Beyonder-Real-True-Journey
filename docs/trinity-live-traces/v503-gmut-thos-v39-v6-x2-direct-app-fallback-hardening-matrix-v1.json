@@ -1,0 +1,60 @@
+{
+  "artifact_type": "direct_app_fallback_hardening_matrix",
+  "phase_slug": "v503-gmut-thos-v39-v6-x2",
+  "generated_utc": "2026-06-08T19:22:56Z",
+  "overall_status": "PASS_DIRECT_APP_FALLBACK_MATRIX_BUILT",
+  "fallback_states": [
+    {
+      "state": "background_wrapper_waiting",
+      "expected_evidence": "watcher launch receipt",
+      "next_action": "do not poll before configured cadence mark"
+    },
+    {
+      "state": "wrapper_completion_receipt_missing",
+      "expected_evidence": "cadence guard allowed check",
+      "next_action": "run probe-only direct existing app-lane diagnostic"
+    },
+    {
+      "state": "probe_passed",
+      "expected_evidence": "probe redaction guard passed",
+      "next_action": "run direct completion notifier once"
+    },
+    {
+      "state": "direct_notify_passed",
+      "expected_evidence": "thread redaction guard passed",
+      "next_action": "run direct repair gate"
+    },
+    {
+      "state": "direct_repair_gate_passed",
+      "expected_evidence": "PASS_APP_LANE_COMPLETION_GATE",
+      "next_action": "normalize with CLI lane receipts"
+    },
+    {
+      "state": "direct_repair_gate_failed",
+      "expected_evidence": "bounded blocker receipt",
+      "next_action": "pause only if failure escapes approved repair scope"
+    }
+  ],
+  "acceptance_criteria": [
+    "No raw app thread text is published.",
+    "No private runtime traces, screenshots, credentials, or private dumps are published.",
+    "Direct repair uses existing callable app lanes only.",
+    "No new thread, old-style subagent, or replacement sibling is created.",
+    "All direct app receipts pass redaction before promotion.",
+    "Five-lane readiness is decided only after app and CLI receipts both pass."
+  ],
+  "v6_x1_result": {
+    "probe_status": "PASS_PROBE_ONLY",
+    "redaction_status": "PASS_APP_THREAD_REDACTION_GUARD",
+    "direct_notify_status": "PASS",
+    "direct_repair_gate": "PASS_APP_LANE_COMPLETION_GATE"
+  },
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "session_streams_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}
