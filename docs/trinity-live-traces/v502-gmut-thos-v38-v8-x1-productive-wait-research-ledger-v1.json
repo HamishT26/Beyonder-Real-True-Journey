@@ -1,0 +1,59 @@
+{
+  "artifact_type": "productive_wait_research_ledger",
+  "phase_slug": "v502-gmut-thos-v38-v8-x1",
+  "generated_utc": "2026-06-08T12:20:42Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_RESEARCH_RECORDED",
+  "lane_supervision_policy": {
+    "manual_babysitting_before_gate": false,
+    "watcher_and_notifier_supervision": true,
+    "phase_advance_requires_all_five_responses": true,
+    "duration_is_completion_proof": false
+  },
+  "source_findings": [
+    {
+      "source": "OpenAI Codex CLI Help Center",
+      "url": "https://help.openai.com/en/articles/11096431",
+      "finding": "Terminal-first Codex operation favors durable commands, receipts, and replayable launch surfaces.",
+      "application": "Use v8 x2 to keep app and CLI phase gates summarized through the new dashboard receipt helper."
+    },
+    {
+      "source": "OpenAI Codex releases",
+      "url": "https://github.com/openai/codex/releases",
+      "finding": "Codex release surfaces continue to evolve around CLI, app-server, plugin, and remote-control capabilities.",
+      "application": "Keep helpers modular so future app/CLI updates require small classifier or receipt extensions, not broad rewrites."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "finding": "Local tools and connector surfaces should minimize authority and avoid confused-deputy behavior.",
+      "application": "Keep v8 source and connector work read-scoped and status-only unless a later exact mutation packet exists."
+    },
+    {
+      "source": "OWASP Secrets Management Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html",
+      "finding": "Sensitive data should not be committed or exposed through logs or diagnostic artifacts.",
+      "application": "Continue temp-only raw outputs, app redaction, staged-name guard, and exposure guard as mandatory gates."
+    }
+  ],
+  "x2_build_implications": [
+    "Use the phase dashboard helper as the v8 x2 control surface.",
+    "Add a handoff note for future v503 v1 x1 after v502 v8 closes.",
+    "Keep direct bridge health and app redaction visible as status, not raw metadata.",
+    "Prepare a v8 x2 closeout that explicitly preserves open GMUT/canon gates."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}
