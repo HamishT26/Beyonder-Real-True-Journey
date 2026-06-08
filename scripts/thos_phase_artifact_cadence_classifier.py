@@ -34,6 +34,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("handoff-surface", "phase_handoff", "publish_after_closeout"),
     ("launch-timeout-regression-prep", "source_regression_prep", "publish_during_prep_if_guarded"),
     ("x2-build-implementation-plan", "x2_build_plan", "publish_after_x2_prep_gate"),
+    ("implementation-ledger", "x2_implementation_ledger", "publish_after_x2_build_actions"),
     ("x2-build-queue-seed", "x2_build_queue_seed", "publish_during_wait_if_guarded"),
     ("source-backed-x2-build-queue-update", "x2_build_queue_seed", "publish_during_wait_if_guarded"),
     ("x2-build-queue", "x2_build_queue", "publish_after_source_guard"),
