@@ -1,0 +1,56 @@
+{
+  "artifact_type": "productive_wait_research_ledger",
+  "phase_slug": "v504-gmut-thos-v40-v1-x1",
+  "generated_utc": "2026-06-08T22:01:08Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_RESEARCH_RECORDED",
+  "manual_sibling_polling_performed": false,
+  "gate_respected": {
+    "next_manual_status_check_not_before_utc": "2026-06-08T22:08:24Z",
+    "checked_sibling_status_before_gate": false
+  },
+  "sources": [
+    {
+      "title": "OpenAI Codex app introduction",
+      "url": "https://openai.com/index/introducing-the-codex-app/",
+      "takeaway": "Skills and reusable workflows are first-class Codex app surfaces; THOS helper governance should keep skills explicit, scoped, and repeatable."
+    },
+    {
+      "title": "OpenAI Codex product page",
+      "url": "https://openai.com/codex/",
+      "takeaway": "Codex is positioned for multi-agent workflows with worktrees and parallel agents, matching the need for watcher-first lane orchestration."
+    },
+    {
+      "title": "OpenAI Codex GitHub releases",
+      "url": "https://github.com/openai/codex/releases",
+      "takeaway": "The official release surface shows 0.137.0 as latest stable while 0.138.0-alpha prereleases are visible; production runners should distinguish stable from prerelease signals."
+    },
+    {
+      "title": "Model Context Protocol security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "takeaway": "Connector and tool boundaries should minimize scope and treat authorization, proxy behavior, and local server compromise as explicit risks."
+    },
+    {
+      "title": "OWASP Logging Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "takeaway": "Status receipts should be useful for operations while avoiding sensitive raw runtime output and testing logging failure modes."
+    }
+  ],
+  "design_implications": [
+    "Keep watcher/notifier helpers as explicit reusable workflow surfaces rather than ad hoc manual polling.",
+    "Separate stable Codex CLI readiness from prerelease awareness before changing runner assumptions.",
+    "Treat app wrapper stale receipts as operational log-quality gaps, not proof that sibling work failed.",
+    "Use MCP and OWASP guidance to keep connector and receipt publication boundaries tight.",
+    "Prepare x2 build work around helper acceptance tests, command-surface compatibility, and source-backed safety gates."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_web_pages_published": false,
+    "raw_connector_payloads_published": false,
+    "raw_lane_text_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
