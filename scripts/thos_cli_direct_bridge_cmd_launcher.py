@@ -117,6 +117,7 @@ def write_heading_contract_md(path: Path, payload: dict[str, Any]) -> None:
 
 
 def heading_present(prompt_template: str, heading: str) -> bool:
+    prompt_template = prompt_template.replace("\ufeff", "")
     pattern = re.compile(rf"(?im)^\s*#*\s*{re.escape(heading)}\s*:?\s*$")
     return bool(pattern.search(prompt_template))
 
@@ -155,6 +156,11 @@ def main() -> int:
     parser.add_argument("--heading-contract-json")
     parser.add_argument("--heading-contract-md")
     parser.add_argument("--require-heading-contract", action="store_true")
+    parser.add_argument(
+        "--preflight-only",
+        action="store_true",
+        help="Write prestart/heading receipts and stop before creating runner files or launching lanes.",
+    )
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -226,6 +232,9 @@ def main() -> int:
         if args.require_heading_contract and not contract_ok:
             print(json.dumps({"status": heading_payload["overall_status"], "phase_slug": args.phase_slug}, indent=2))
             return 2
+    if args.preflight_only:
+        print(json.dumps({"status": "PASS_CLI_PREFLIGHT_ONLY", "phase_slug": args.phase_slug}, indent=2))
+        return 0
 
     lane_receipts: list[dict[str, Any]] = []
     for lane_name, safe_bridge in args.lane:
