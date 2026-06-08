@@ -1,6 +1,6 @@
 # v503-gmut-thos-v39-v3-x1 Council App-Lane Completion Gate
 
-- generated_nz: `2026-06-09T03:07:00+12:00`
+- generated_nz: `2026-06-09T04:04:45+12:00`
 - mode: `notify`
 - overall_status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
 - drift_at_gate: `0	0`
@@ -11,14 +11,13 @@
 ## Gate Inputs
 - runner: `OPEN_GAP_COUNCIL_APP_LANE`
 - watch_launcher: `OPEN_GAP_APP_LANE_LAUNCH`
-- completion_notifier: `missing`
+- completion_notifier: `PASS`
 
 ## Lane Summary
+- Cicero: `completed`, completion `completed`, read `ok`, resume `ok`.
+- Kierkegaard: `completed`, completion `completed`, read `ok`, resume `ok`.
+- Aristotle: `completed`, completion `completed`, read `ok`, resume `ok`.
 
 ## Open Gaps
-- `Aristotle:missing`
-- `Cicero:missing`
-- `Kierkegaard:missing`
 - `launcher:OPEN_GAP_APP_LANE_LAUNCH`
-- `notifier:missing`
 - `runner:OPEN_GAP_COUNCIL_APP_LANE`
