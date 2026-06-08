@@ -59,6 +59,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("app-watch-thread-redaction", "redaction_guard", "publish_before_app_watch_publication"),
     ("app-watcher-freshness-guard-design", "prebuild_design", "publish_during_wait_if_guarded"),
     ("council-app-lane-notifier-runner", "app_lane_runner_launch", "publish_after_launch_guard"),
+    ("cli-r4-carryover-update", "cli_carryover_update", "publish_after_repair_launch"),
     ("cli-r3-carryover-update", "cli_carryover_update", "publish_after_repair_launch"),
     ("cli-r2-carryover-update", "cli_carryover_update", "publish_after_repair_launch"),
     ("cli-bridge-startprocess-repair", "cli_bridge_repair", "publish_after_cadence_and_exposure"),

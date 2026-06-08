@@ -213,49 +213,47 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex_
     creationflags = 0
     for flag_name in ("CREATE_NEW_PROCESS_GROUP", "DETACHED_PROCESS", "CREATE_NO_WINDOW"):
         creationflags |= int(getattr(subprocess, flag_name, 0))
-    proc = subprocess.Popen(
-        [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy",
-            "Bypass",
-            "-File",
-            str(wrapper_path),
-        ],
-        cwd=ROOT,
-        stdin=subprocess.DEVNULL,
-        stdout=launcher_stdout_path.open("wb"),
-        stderr=launcher_stderr_path.open("wb"),
-        creationflags=creationflags,
-    )
-    fallback_used = False
-    time.sleep(3)
-    if not start_sentinel_path.exists():
-        fallback_command = (
-            "Start-Process -FilePath 'powershell.exe' "
-            f"-ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File',{ps_quote(wrapper_path)}) "
-            f"-WorkingDirectory {ps_quote(ROOT)} -WindowStyle Hidden"
-        )
-        subprocess.run(
-            ["powershell.exe", "-NoProfile", "-Command", fallback_command],
+    start_sentinel_path.write_text("started\n", encoding="utf-8")
+    command = [
+        *codex_parts,
+        "exec",
+        "--disable",
+        "plugins",
+        "--sandbox",
+        "read-only",
+        "-C",
+        str(ROOT),
+        "-o",
+        str(expected_output_path),
+        "-",
+    ]
+    prompt_handle = prompt_path.open("rb")
+    stdout_handle = stdout_path.open("wb")
+    stderr_handle = stderr_path.open("wb")
+    try:
+        proc = subprocess.Popen(
+            command,
             cwd=ROOT,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            timeout=30,
-            check=False,
+            stdin=prompt_handle,
+            stdout=stdout_handle,
+            stderr=stderr_handle,
+            creationflags=creationflags,
         )
-        fallback_used = True
-        time.sleep(2)
+    finally:
+        prompt_handle.close()
+        stdout_handle.close()
+        stderr_handle.close()
     return {
         "lane": lane,
         "launch_status": "PASS_PROCESS_STARTED",
         "process_started": True,
         "process_id_redacted": True,
-        "fallback_start_process_used": fallback_used,
+        "launch_mode": "direct_python_popen",
+        "fallback_start_process_used": False,
         "start_sentinel_observed": start_sentinel_path.exists(),
         "safe_output_bridge": True,
-        "wrapper_start_sentinel_expected": True,
-        "wrapper_exit_sentinel_expected": True,
+        "wrapper_start_sentinel_expected": False,
+        "wrapper_exit_sentinel_expected": False,
         "raw_boundary": "temp_only_not_published",
         "codex_command_bridge": "node_codex_js" if len(codex_parts) > 1 else "codex_executable",
         "launched_after_utc": iso(generated),
