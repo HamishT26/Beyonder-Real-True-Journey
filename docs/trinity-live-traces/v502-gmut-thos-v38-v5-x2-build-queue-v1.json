@@ -1,0 +1,49 @@
+{
+  "artifact_type": "x2_build_queue",
+  "claim_boundary": {
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false,
+    "gmut_gate_state": "open"
+  },
+  "generated_utc": "2026-06-08T09:07:51Z",
+  "input_boundary": {
+    "cli_raw_lane_text_used": false,
+    "unfinished_cli_outputs_used": false,
+    "uses_source_ledger": true,
+    "uses_status_receipts": true
+  },
+  "overall_status": "PASS_V502_V5_X2_BUILD_QUEUE_READY_WITH_CLI_CARRYOVER",
+  "phase_slug": "v502-gmut-thos-v38-v5-x2",
+  "publication_boundary": {
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "prompt_body_published": false,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false,
+    "status_only": true
+  },
+  "queue": [
+    {
+      "task": "strict_cli_launcher_startprocess_fallback",
+      "build_action": "Promote the hidden Start-Process fallback and start-sentinel observation into the strict CLI launcher.",
+      "validation_signal": "py_compile plus future launch receipt fields fallback_start_process_used and start_sentinel_observed."
+    },
+    {
+      "task": "verifier_path_resolution_hardening",
+      "build_action": "Continue accepting basenames, repo-relative paths, and absolute paths in receipt verifiers.",
+      "validation_signal": "Launch checklist and productive-wait verifier pass with repo-relative inputs."
+    },
+    {
+      "task": "cli_carryover_gate",
+      "build_action": "Represent incomplete CLI lanes as explicit carryover status so x2 prep can continue without pretending phase advance is allowed.",
+      "validation_signal": "x2 prep receipt sets phase_advance_allowed false until final CLI quality gates pass."
+    },
+    {
+      "task": "source_backed_status_design",
+      "build_action": "Use official Codex, MCP, GitHub, and OWASP guidance to keep receipts summary-only and least-privilege.",
+      "validation_signal": "Exposure guard passes and staged names exclude raw/session/screenshot/credential patterns."
+    }
+  ]
+}

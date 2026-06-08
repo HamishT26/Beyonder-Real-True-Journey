@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -40,6 +41,10 @@ def safe_slug(text: str) -> str:
 
 def codex_executable() -> str:
     return shutil.which("codex.cmd") or shutil.which("codex.exe") or shutil.which("codex") or "codex"
+
+
+def ps_quote(value: Path | str) -> str:
+    return "'" + str(value).replace("'", "''") + "'"
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -205,11 +210,31 @@ def launch_lane(args: argparse.Namespace, lane: str, generated: datetime, codex:
         stderr=launcher_stderr_path.open("wb"),
         creationflags=creationflags,
     )
+    fallback_used = False
+    time.sleep(3)
+    if not start_sentinel_path.exists():
+        fallback_command = (
+            "Start-Process -FilePath 'powershell.exe' "
+            f"-ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File',{ps_quote(wrapper_path)}) "
+            f"-WorkingDirectory {ps_quote(ROOT)} -WindowStyle Hidden"
+        )
+        subprocess.run(
+            ["powershell.exe", "-NoProfile", "-Command", fallback_command],
+            cwd=ROOT,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=30,
+            check=False,
+        )
+        fallback_used = True
+        time.sleep(2)
     return {
         "lane": lane,
         "launch_status": "PASS_PROCESS_STARTED",
         "process_started": True,
         "process_id_redacted": True,
+        "fallback_start_process_used": fallback_used,
+        "start_sentinel_observed": start_sentinel_path.exists(),
         "safe_output_bridge": True,
         "wrapper_start_sentinel_expected": True,
         "wrapper_exit_sentinel_expected": True,
