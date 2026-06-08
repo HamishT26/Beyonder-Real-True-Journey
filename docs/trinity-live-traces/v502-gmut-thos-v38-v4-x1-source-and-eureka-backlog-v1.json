@@ -1,0 +1,109 @@
+{
+  "artifact_type": "source_and_eureka_backlog",
+  "phase_slug": "v502-gmut-thos-v38-v4-x1",
+  "generated_utc": "2026-06-08T06:24:37Z",
+  "overall_status": "PASS_V502_V4_X1_PRODUCTIVE_WAIT_BACKLOG_READY",
+  "wait_context": {
+    "manual_status_check_not_before_utc": "2026-06-08T06:33:32Z",
+    "lane_status_checked_during_backlog": false,
+    "watchers_supervise_until_gate": true,
+    "work_while_waiting_required": true
+  },
+  "source_notes": [
+    {
+      "source": "OpenAI Codex CLI Getting Started",
+      "url": "https://help.openai.com/en/articles/11096431",
+      "takeaway": "Codex CLI supports multiple approval modes and expects sandbox scope awareness; Windows support should be treated carefully and receipt-tested."
+    },
+    {
+      "source": "OpenAI local shell guide",
+      "url": "https://platform.openai.com/docs/guides/tools-local-shell",
+      "takeaway": "Local command execution should remain sandboxed or governed by strict allow/deny boundaries before forwarding commands."
+    },
+    {
+      "source": "OpenAI Docs MCP",
+      "url": "https://platform.openai.com/docs/docs-mcp",
+      "takeaway": "Documentation-backed MCP surfaces can support source refresh, but connector use must keep authorization and publication boundaries explicit."
+    },
+    {
+      "source": "Model Context Protocol security best practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "takeaway": "Consent, scoped authorization, state validation, and blast-radius reduction are central to safe tool and connector orchestration."
+    },
+    {
+      "source": "Model Context Protocol authorization",
+      "url": "https://modelcontextprotocol.io/specification/draft/basic/authorization",
+      "takeaway": "Authorization flows and dynamic client registration require careful scope handling and token-boundary discipline."
+    },
+    {
+      "source": "OWASP Logging Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "takeaway": "Logs and receipts should exclude secrets, session identifiers, access tokens, sensitive personal data, and raw internal paths unless explicitly justified and protected."
+    }
+  ],
+  "eureka_backlog": [
+    {
+      "task": "Standardize launch checklist verifier after every x1 launch",
+      "x2_action": "Run launch checklist immediately after app and CLI launch receipts are written, then block publication if no-babysitting, prompt, heading, watcher, or productive-wait checks fail."
+    },
+    {
+      "task": "Add temp-output hygiene receipt for CLI lanes",
+      "x2_action": "Create a compact verifier that checks temp output folders are referenced only by redacted aliases in published receipts."
+    },
+    {
+      "task": "Create app watcher receipt freshness guard",
+      "x2_action": "Compare app watcher expected receipts against generated timestamps and mark stale if missing after the completion window."
+    },
+    {
+      "task": "Build x1-to-x2 eureka normalizer",
+      "x2_action": "Normalize sibling eureka proposals into a ranked build queue while preserving raw text exclusion."
+    },
+    {
+      "task": "Create MCP connector consent ledger",
+      "x2_action": "For any connector-backed read, record source, consent boundary, mutation boundary, and publication boundary."
+    },
+    {
+      "task": "Add no-raw-log assertion to exposure guard",
+      "x2_action": "Extend status receipt scans with stronger keys for stdout, stderr, event JSONL, session stream, and screenshot publication flags."
+    },
+    {
+      "task": "Create command-risk receipt for new runners",
+      "x2_action": "Classify runner commands by read, write, launch, network, account, destructive, and credential exposure risk."
+    },
+    {
+      "task": "Create stale-flow retry envelope",
+      "x2_action": "For repeated app/CLI blockers, require up to five safe retry ideas before escalation and a blocker receipt if scope expansion is needed."
+    },
+    {
+      "task": "Build skill enablement manifest",
+      "x2_action": "Track desired skill state as repo documentation only, not user-skill mutation, until exact approval authorizes edits."
+    },
+    {
+      "task": "Create phase advance gate receipt",
+      "x2_action": "Require all five lane responses, CLI quality gates, app completion gate, exposure guard, and closeout ledger before phase advance."
+    },
+    {
+      "task": "Add source freshness scoring",
+      "x2_action": "Rank sources by primary-source status, recency, direct relevance, and actionability for THOS runner design."
+    },
+    {
+      "task": "Create v4 x2 build queue seed",
+      "x2_action": "Use this backlog plus sibling artifacts after the gate to select the first safe build/test/install/use item."
+    }
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}
