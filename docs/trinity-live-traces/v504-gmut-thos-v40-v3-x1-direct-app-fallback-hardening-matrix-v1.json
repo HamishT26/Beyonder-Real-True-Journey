@@ -1,0 +1,42 @@
+{
+  "artifact_type": "direct_app_fallback_hardening_matrix",
+  "phase_slug": "v504-gmut-thos-v40-v3-x1",
+  "generated_utc": "2026-06-08T23:51:00Z",
+  "overall_status": "PASS_DIRECT_APP_FALLBACK_HARDENING_PREPARED",
+  "context": "app watcher wrapper returned an open-gap timeout during launch; direct repair is deferred until the allowed x1 gate",
+  "matrix": [
+    {
+      "condition": "background completion receipt missing at harvest",
+      "safe_action": "run direct app completion notifier with redaction guard",
+      "publish_boundary": "status_only"
+    },
+    {
+      "condition": "notifier receipt contains thread metadata",
+      "safe_action": "run app receipt thread redactor before using the receipt in closeout",
+      "publish_boundary": "redacted_status_only"
+    },
+    {
+      "condition": "app direct repair passes",
+      "safe_action": "feed direct repair gate into five-lane normalizer",
+      "publish_boundary": "completion_gate_only"
+    },
+    {
+      "condition": "app direct repair still fails",
+      "safe_action": "publish blocker receipt and do not advance phase",
+      "publish_boundary": "blocker_status_only"
+    }
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  },
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

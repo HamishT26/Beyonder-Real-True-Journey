@@ -1,0 +1,37 @@
+{
+  "artifact_type": "command_surface_compatibility_queue",
+  "phase_slug": "v504-gmut-thos-v40-v3-x1",
+  "generated_utc": "2026-06-08T23:51:00Z",
+  "overall_status": "PASS_COMMAND_SURFACE_COMPATIBILITY_QUEUE_PREPARED",
+  "queue": [
+    {
+      "surface": "codex_cli_stable_channel",
+      "policy": "default_for_live_sibling_lanes",
+      "x2_action": "keep stable channel as execution default"
+    },
+    {
+      "surface": "codex_cli_prerelease_channel",
+      "policy": "watch_only_without_exact_approval",
+      "x2_action": "record availability but avoid mutation"
+    },
+    {
+      "surface": "app_lane_direct_repair",
+      "policy": "fallback_after_gate_only",
+      "x2_action": "wrap with redaction and direct repair gate"
+    },
+    {
+      "surface": "watcher_trust_verifier",
+      "policy": "reuse_after_each_x1_gate",
+      "x2_action": "verify no early manual polling"
+    }
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}
