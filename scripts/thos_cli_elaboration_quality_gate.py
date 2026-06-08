@@ -22,10 +22,17 @@ REQUIRED_HEADINGS = [
 ]
 
 HEADING_ALIASES = {
-    "COMMAND PROPOSALS (10+)": ["COMMAND PROPOSALS"],
-    "SYSTEM EXPANSION PROPOSALS (10+)": ["SYSTEM EXPANSION PROPOSALS"],
-    "SKILL OR MICRO-WORKFLOW PROPOSALS (10+)": ["SKILL OR MICRO-WORKFLOW PROPOSALS"],
-    "EUREKA TASKS (10+)": ["EUREKA TASKS"],
+    "COMMAND PROPOSALS (10+)": ["COMMAND PROPOSALS", "Command Proposals"],
+    "SYSTEM EXPANSION PROPOSALS (10+)": ["SYSTEM EXPANSION PROPOSALS", "System Expansion Proposals"],
+    "SKILL OR MICRO-WORKFLOW PROPOSALS (10+)": [
+        "SKILL OR MICRO-WORKFLOW PROPOSALS",
+        "Skill Or Micro-Workflow Proposals",
+        "Skill or Micro-Workflow Proposals",
+        "Skills and Micro-Workflows",
+    ],
+    "EUREKA TASKS (10+)": ["EUREKA TASKS", "Eureka Tasks"],
+    "RISKS AND BLOCKERS": ["Risks And Blockers", "Risks and Blockers"],
+    "X2 BUILD PRIORITIES": ["X2 Build Priorities"],
 }
 
 SENSITIVE_RE = re.compile(
@@ -65,7 +72,7 @@ def heading_variants(heading: str) -> list[str]:
 
 def find_heading(text: str, heading: str) -> re.Match[str] | None:
     for variant in heading_variants(heading):
-        heading_re = re.compile(rf"(?im)^\s*#*\s*{re.escape(variant)}\s*:?\s*$")
+        heading_re = re.compile(rf"(?im)^\s*#*\s*(?:\*\*)?\s*{re.escape(variant)}\s*(?:\*\*)?\s*:?\s*$")
         match = heading_re.search(text)
         if match:
             return match
