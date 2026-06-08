@@ -1,0 +1,29 @@
+{
+  "artifact_type": "v501_v6_x1_cli_repair1_productive_wait_prep",
+  "generated_at_utc": "2026-06-08T01:34:20Z",
+  "manual_lane_polling_performed": false,
+  "overall_status": "PASS_REPAIR_WAIT_PREP_RECORDED",
+  "parser_findings": [
+    "The quality gate accepts required headings as exact uppercase lines with optional markdown heading markers.",
+    "The initial v6 CLI answers produced content and final messages but missed the exact heading contract.",
+    "The repair prompt now names all six exact headings on separate lines and requires at least 12 numbered items under the first four categories.",
+    "The x2 build candidate should add a launch-side prompt-preflight card so future prompts preserve exact heading contracts before runners start."
+  ],
+  "phase_slug": "v501-gmut-thos-v37-v6-x1",
+  "status_only": true,
+  "x2_build_candidate": {
+    "name": "cli_heading_contract_preflight",
+    "purpose": "Prevent elaborate-but-unclassifiable CLI responses by emitting a status-only heading contract before each CLI launch.",
+    "safe_build_scope": [
+      "receipt documentation",
+      "prompt template checklist",
+      "classifier-compatible status surface"
+    ],
+    "not_in_scope": [
+      "raw lane text publication",
+      "session or event stream editing",
+      "plugin-cache mutation",
+      "user-skill mutation"
+    ]
+  }
+}

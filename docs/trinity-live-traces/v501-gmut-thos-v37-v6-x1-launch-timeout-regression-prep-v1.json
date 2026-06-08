@@ -1,0 +1,16 @@
+{
+  "artifact_type": "v501_v6_x1_launch_timeout_regression_prep",
+  "generated_at_utc": "2026-06-08T01:36:05Z",
+  "manual_lane_polling_performed": false,
+  "observed_regression": "The first v6 CLI launcher foreground command exceeded its shell timeout before writing a receipt; a retry with a longer foreground window wrote the launch receipt and started both lanes.",
+  "overall_status": "PASS_LAUNCH_TIMEOUT_REGRESSION_PREP_RECORDED",
+  "phase_slug": "v501-gmut-thos-v37-v6-x1",
+  "status_only": true,
+  "x2_hardening_candidates": [
+    "Add a launcher-start receipt stage that writes a planned-start status before process creation.",
+    "Separate shell foreground timeout from lane-output readiness in closeout synthesis.",
+    "Keep repair actions scoped to relaunching existing CLI lanes when no launch receipt exists.",
+    "Do not treat missing launch receipt as sibling failure until start receipt, process status, and output alias evidence are checked after a cadence gate.",
+    "Keep all local temp paths, command lines, process IDs, stdout, stderr, and raw final messages unpublished."
+  ]
+}
