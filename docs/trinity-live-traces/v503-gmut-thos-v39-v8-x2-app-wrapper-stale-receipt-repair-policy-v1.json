@@ -1,0 +1,30 @@
+{
+  "artifact_type": "app_wrapper_stale_receipt_repair_policy",
+  "phase_slug": "v503-gmut-thos-v39-v8-x2",
+  "generated_utc": "2026-06-08T21:45:22Z",
+  "overall_status": "PASS_APP_WRAPPER_STALE_RECEIPT_REPAIR_POLICY_BUILT",
+  "policy_steps": [
+    "Detect missing or stale wrapper completion receipt after the configured gate.",
+    "Run existing-lane app probe only; do not create replacement lanes.",
+    "Redact app receipt thread metadata before publication.",
+    "Run direct existing-thread completion notifier when probe shows callable routes are healthy.",
+    "Run direct repair gate and five-lane normalizer before allowing phase advance.",
+    "Record the wrapper-layer gap as a stale-flow repair target even when direct completion succeeds."
+  ],
+  "not_allowed": [
+    "Raw app transport publication",
+    "Raw message body publication",
+    "Session stream edits",
+    "New thread or replacement sibling creation",
+    "Account or app-state mutation"
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_transport_published": false,
+    "raw_lane_text_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
