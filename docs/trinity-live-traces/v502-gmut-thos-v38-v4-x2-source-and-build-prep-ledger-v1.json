@@ -1,0 +1,53 @@
+{
+  "artifact_type": "source_and_build_prep_ledger",
+  "phase_slug": "v502-gmut-thos-v38-v4-x2",
+  "generated_utc": "2026-06-08T08:13:04Z",
+  "overall_status": "PASS_V502_V4_X2_SOURCE_AND_BUILD_PREP_LEDGER",
+  "timing_gate": {
+    "required_minimum_minutes": 10,
+    "started_utc": "2026-06-08T08:02:37Z",
+    "cadence_receipt": "v502-gmut-thos-v38-v4-x2-x2-10m-cadence-guard-v1.json",
+    "cadence_status": "PASS_STATUS_CHECK_ALLOWED"
+  },
+  "build_items": [
+    {
+      "item": "Phase advance gate verifier",
+      "artifact": "scripts/thos_phase_advance_gate_verifier.py",
+      "purpose": "Require curated evidence for app completion, CLI quality, marker review, five-lane readiness, classifier pass, exposure pass, closeout pass, next-prep pass, and open GMUT/canon gates before phase advance."
+    },
+    {
+      "item": "Classifier registration",
+      "artifact": "scripts/thos_phase_artifact_cadence_classifier.py",
+      "purpose": "Classify phase-advance gate verifier receipts as publish_before_phase_advance artifacts."
+    },
+    {
+      "item": "Proof run",
+      "artifact": "v502-gmut-thos-v38-v4-x2-phase-advance-gate-verifier-v1.json",
+      "purpose": "Verify v4 x1 closeout evidence is sufficient for v4 x2 controlled advance."
+    }
+  ],
+  "source_backing": [
+    "OpenAI Codex CLI documentation",
+    "OpenAI Windows sandbox guidance",
+    "MCP Security Best Practices",
+    "MCP Authorization specification",
+    "OWASP Logging Cheat Sheet",
+    "Google Cloud Vertex AI Agent Engine",
+    "NIST AI Risk Management Framework"
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

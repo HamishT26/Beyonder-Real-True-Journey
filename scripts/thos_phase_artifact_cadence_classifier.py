@@ -50,6 +50,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("phase-artifact-cadence-classifier", "phase_artifact_classifier", "publish_after_classification"),
     ("artifact-cadence-classifier", "phase_artifact_classifier", "publish_after_classification"),
     ("phase-advance-gate-design", "prebuild_design", "publish_during_wait_if_guarded"),
+    ("phase-advance-gate-verifier", "phase_advance_gate", "publish_before_phase_advance"),
     ("completion-gate", "app_completion_gate", "publish_after_cadence_and_redaction"),
     ("completion-notifier", "completion_status", "publish_after_cadence"),
     ("app-thread-redaction", "redaction_guard", "publish_before_app_completion_publication"),
