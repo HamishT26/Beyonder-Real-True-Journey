@@ -30,6 +30,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("source-and-build-prep-ledger", "source_regression_prep", "publish_during_prep_if_guarded"),
     ("handoff-surface", "phase_handoff", "publish_after_closeout"),
     ("launch-timeout-regression-prep", "source_regression_prep", "publish_during_prep_if_guarded"),
+    ("x2-build-implementation-plan", "x2_build_plan", "publish_after_x2_prep_gate"),
     ("x2-build-funnel-draft", "prebuild_backlog", "publish_during_wait_if_guarded"),
     ("x2-design-sketch", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("watcher-trust-cadence-receipt", "watcher_trust_cadence", "publish_after_cadence"),
