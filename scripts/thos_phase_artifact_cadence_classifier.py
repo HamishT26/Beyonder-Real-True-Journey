@@ -23,6 +23,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("10-minute-cadence-gate", "cadence_gate", "publish_after_threshold"),
     ("candidate-build-backlog", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("source-and-regression-prep-ledger", "source_regression_prep", "publish_during_prep_if_guarded"),
+    ("watcher-trust-cadence-receipt", "watcher_trust_cadence", "publish_after_cadence"),
     ("prebuild", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("prebuild-source-and-backlog", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("readiness-preflight", "readiness_preflight", "publish_after_preflight_guard"),
