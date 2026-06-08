@@ -1,0 +1,50 @@
+{
+  "artifact_type": "phase_advance_gate_design",
+  "phase_slug": "v502-gmut-thos-v38-v4-x1",
+  "generated_utc": "2026-06-08T07:20:09Z",
+  "overall_status": "PASS_PHASE_ADVANCE_GATE_DESIGN_READY",
+  "phase_boundary": {
+    "design_only": true,
+    "phase_advance_allowed_now": false,
+    "blocked_until_all_five_lanes_pass": true
+  },
+  "design_goal": "Create a future single receipt that prevents phase advance unless app lanes, CLI lanes, quality gates, redaction, marker review, classifier, and exposure guard all satisfy the v491-v505 continuity contract.",
+  "required_inputs": [
+    "app completion gate",
+    "CLI quality gate",
+    "CLI marker review ledger",
+    "five-lane normalizer",
+    "redaction guard",
+    "phase artifact classifier",
+    "exposure guard",
+    "closeout ledger",
+    "next x2 or x1 prep card"
+  ],
+  "required_assertions": [
+    "all three app lanes completed",
+    "Arby final message complete and quality-gated",
+    "Aster Vale final message complete and quality-gated",
+    "no raw lane text published",
+    "no prompt body published",
+    "no local absolute paths published",
+    "no credentials or screenshots published",
+    "duration not used as proof",
+    "GMUT and canon gates remain open unless exact closure artifacts exist",
+    "remote drift checked before publication"
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}
