@@ -1,0 +1,70 @@
+{
+  "artifact_type": "productive_wait_research_ledger",
+  "phase_slug": "v503-gmut-thos-v39-v4-x1",
+  "generated_utc": "2026-06-08T16:45:42Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_RESEARCH_RECORDED",
+  "lane_supervision_policy": {
+    "manual_babysitting_before_gate": false,
+    "watcher_and_notifier_supervision": true,
+    "repair_runner_supervision": true,
+    "phase_advance_requires_all_five_responses": true,
+    "status_check_only_after_gate": true,
+    "next_status_check_not_before_utc": "2026-06-08T16:44:01Z",
+    "duration_is_completion_proof": false
+  },
+  "source_findings": [
+    {
+      "source": "OpenAI Codex app announcement",
+      "url": "https://openai.com/index/introducing-the-codex-app/",
+      "finding": "The Codex app is framed as a command center for coordinating multiple agents, long-running work, skills, automations, and app/CLI continuity.",
+      "application": "Keep five-lane work under watcher/notifier supervision while Aletheon uses the wait window for research, repair planning, x2 design, and publication prep."
+    },
+    {
+      "source": "OpenAI Codex release 0.137.0",
+      "url": "https://github.com/openai/codex/releases/tag/rust-v0.137.0",
+      "finding": "The 0.137.0 release lists app-server v2 remote-control RPCs, plugin JSON surfaces, multi-agent v2 metadata improvements, and Windows sandbox setup refresh reliability fixes.",
+      "application": "Favor machine-readable status receipts, direct app-server recovery routes, and wrapper-independent repair gates when a launcher appears stale."
+    },
+    {
+      "source": "Work with Codex from anywhere",
+      "url": "https://openai.com/index/work-with-codex-from-anywhere/",
+      "finding": "Codex emphasizes keeping long-running tasks moving across active threads, approvals, plugins, and project context without staying tied to one manual control surface.",
+      "application": "Use gate-only checks and productive wait work instead of repeatedly polling sibling lanes."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "finding": "Least authority, explicit tool boundaries, and confused-deputy avoidance are core safety principles for tool and connector coordination.",
+      "application": "Keep app lanes, CLI lanes, connector reads, and repo publication separated by phase-scoped receipts and exact mutation boundaries."
+    },
+    {
+      "source": "OWASP Logging Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "finding": "Logging guidance emphasizes sanitization and avoiding sensitive data in logs and diagnostic records.",
+      "application": "Keep sibling outputs temp-only and publish only hashes, counts, pass/fail statuses, gate labels, and sanitized summaries."
+    }
+  ],
+  "v4_x2_build_implications": [
+    "Promote the direct app notifier fallback into the standard stale-wrapper decision tree.",
+    "Record a dashboard row for wrapper stale, direct route pass, redaction pass, and direct gate pass.",
+    "Preserve gate-only sibling checks at the 15 minute x1 mark and avoid interim polling.",
+    "Use Codex 0.137.0 app-server and plugin JSON surfaces as design inputs for future machine-readable multiplex status.",
+    "Keep CLI long-form evidence status-only: word counts, item counts, hashes, marker review, and no raw response publication.",
+    "Keep GMUT, canon, consciousness, and final-physics gates open unless exact closure artifacts prove otherwise."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}
