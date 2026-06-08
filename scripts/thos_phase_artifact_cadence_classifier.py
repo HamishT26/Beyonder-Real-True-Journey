@@ -30,6 +30,8 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("prebuild", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("prebuild-source-and-backlog", "prebuild_backlog", "publish_during_prep_if_guarded"),
     ("readiness-preflight", "readiness_preflight", "publish_after_preflight_guard"),
+    ("prestart-receipt", "launch_prestart", "publish_before_launch"),
+    ("heading-contract", "heading_contract_preflight", "publish_before_launch"),
     ("phase-artifact-cadence-classifier", "phase_artifact_classifier", "publish_after_classification"),
     ("artifact-cadence-classifier", "phase_artifact_classifier", "publish_after_classification"),
     ("completion-gate", "app_completion_gate", "publish_after_cadence_and_redaction"),
