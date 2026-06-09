@@ -13,6 +13,8 @@ from typing import Any
 
 ROLE_RULES: list[tuple[str, str, str]] = [
     ("exposure-guard", "exposure_guard", "publish_before_staging"),
+    ("no-overclaim-guard", "no_overclaim_guard", "publish_before_closeout"),
+    ("approval-candidates", "approval_candidate_set", "publish_after_no_overclaim_guard"),
     ("launch", "launch", "publish_after_launch_guard"),
     ("productive-wait", "productive_wait", "publish_during_wait_if_guarded"),
     ("wait-plan", "productive_wait", "publish_during_wait_if_guarded"),
@@ -73,7 +75,6 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("phase-advance-gate-design", "prebuild_design", "publish_during_wait_if_guarded"),
     ("phase-advance-gate-verifier", "phase_advance_gate", "publish_before_phase_advance"),
     ("phase-dashboard-receipt", "phase_dashboard_receipt", "publish_after_phase_advance"),
-    ("no-overclaim-guard", "no_overclaim_guard", "publish_before_closeout"),
     ("completion-gate", "app_completion_gate", "publish_after_cadence_and_redaction"),
     ("completion-notifier", "completion_status", "publish_after_cadence"),
     ("app-thread-redaction", "redaction_guard", "publish_before_app_completion_publication"),
