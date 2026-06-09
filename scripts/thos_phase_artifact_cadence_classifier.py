@@ -59,6 +59,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("cli-quality-regression-tracker", "cli_quality_regression_tracker", "publish_after_quality_gate"),
     ("source-to-system-table", "source_to_system_table", "publish_after_source_guard"),
     ("latest-essential-runner-map", "latest_essential_runner_map", "publish_after_x2_build_actions"),
+    ("omega-v2-continuity-index", "omega_v2_continuity_index", "publish_after_x2_build_actions"),
     ("app-wrapper-stale-receipt-repair-policy", "app_wrapper_repair_policy", "publish_after_repair_gate"),
     ("helper-runner-acceptance-test-list", "helper_runner_acceptance_tests", "publish_after_x2_build_actions"),
     ("direct-app-fallback-hardening-matrix", "direct_app_fallback_matrix", "publish_after_repair_gate"),
