@@ -92,6 +92,7 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("marker-review-ledger", "cli_marker_review", "publish_after_quality_gate"),
     ("five-lane-status-normalizer", "five_lane_normalizer", "publish_before_closeout"),
     ("five-lane-normalized-status", "five_lane_normalizer", "publish_before_closeout"),
+    ("five-lane-gratitude-handoff", "five_lane_gratitude_handoff", "publish_after_launch_guard"),
     ("closeout", "phase_closeout", "publish_after_five_lane_ready"),
     ("prep-start", "next_x2_prep_start", "publish_after_closeout"),
 ]
