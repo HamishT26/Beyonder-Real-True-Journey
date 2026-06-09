@@ -41,6 +41,8 @@ ROLE_RULES: list[tuple[str, str, str]] = [
     ("repair-wait-source-refresh", "source_refresh", "publish_during_wait_if_guarded"),
     ("wider-infra-source-refresh", "source_refresh", "publish_during_wait_if_guarded"),
     ("current-source-ledger", "source_refresh", "publish_during_wait_if_guarded"),
+    ("stale-flow-refresh", "stale_flow_refresh", "publish_during_wait_if_guarded"),
+    ("phase-start-vision-card", "phase_start_vision_card", "publish_after_preflight_guard"),
     ("source-and-handoff-prep-ledger", "source_handoff_prep", "publish_during_prep_if_guarded"),
     ("source-and-regression-prep-ledger", "source_regression_prep", "publish_during_prep_if_guarded"),
     ("source-and-build-prep-ledger", "source_regression_prep", "publish_during_prep_if_guarded"),
