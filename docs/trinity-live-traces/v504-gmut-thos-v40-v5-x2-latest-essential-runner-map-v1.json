@@ -1,0 +1,155 @@
+{
+  "artifact_type": "latest_essential_runner_map",
+  "claim_boundary": {
+    "canon_promotion": "not_claimed",
+    "consciousness_or_final_physics_proof": "not_claimed",
+    "gmut_gate_state": "open"
+  },
+  "generated_utc": "2026-06-09T07:59:20Z",
+  "legacy_avoid_patterns": [
+    "trinity_v*_cli_sibling_phase_runner.py",
+    "trinity_v*_app_phase_runner.py",
+    "thos_v477_app_lane_notifier_runner.py",
+    "thos_v478_app_lane_notifier_runner.py"
+  ],
+  "missing": [],
+  "overall_status": "PASS_LATEST_ESSENTIAL_RUNNER_MAP",
+  "phase_slug": "v504-gmut-thos-v40-v5-x2",
+  "publication_boundary": {
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false,
+    "status_only": true
+  },
+  "runner_groups": {
+    "app_lanes": [
+      {
+        "file": "thos_council_app_lane_notifier_runner.py",
+        "present": true,
+        "repo_relative": "scripts/thos_council_app_lane_notifier_runner.py",
+        "role": "existing r3 app-lane notify, background-watch, and gate-only harvest"
+      },
+      {
+        "file": "thos_app_lane_completion_notifier.py",
+        "present": true,
+        "repo_relative": "scripts/thos_app_lane_completion_notifier.py",
+        "role": "app-lane completion receipt production"
+      },
+      {
+        "file": "thos_app_receipt_thread_redactor.py",
+        "present": true,
+        "repo_relative": "scripts/thos_app_receipt_thread_redactor.py",
+        "role": "app thread identifier redaction before publication"
+      },
+      {
+        "file": "thos_app_lane_direct_repair_gate.py",
+        "present": true,
+        "repo_relative": "scripts/thos_app_lane_direct_repair_gate.py",
+        "role": "direct repair fallback for app completion gaps"
+      }
+    ],
+    "cadence_and_phase": [
+      {
+        "file": "thos_status_check_cadence_guard.py",
+        "present": true,
+        "repo_relative": "scripts/thos_status_check_cadence_guard.py",
+        "role": "five-minute status-check cadence guard"
+      },
+      {
+        "file": "thos_five_lane_status_normalizer.py",
+        "present": true,
+        "repo_relative": "scripts/thos_five_lane_status_normalizer.py",
+        "role": "five-lane normalized status board"
+      },
+      {
+        "file": "thos_phase_advance_gate_verifier.py",
+        "present": true,
+        "repo_relative": "scripts/thos_phase_advance_gate_verifier.py",
+        "role": "phase-advance dependency verifier"
+      },
+      {
+        "file": "thos_phase_dashboard_receipt.py",
+        "present": true,
+        "repo_relative": "scripts/thos_phase_dashboard_receipt.py",
+        "role": "phase dashboard summary from gate receipts"
+      }
+    ],
+    "cli_lanes": [
+      {
+        "file": "thos_cli_strict_stdin_lane_launcher.py",
+        "present": true,
+        "repo_relative": "scripts/thos_cli_strict_stdin_lane_launcher.py",
+        "role": "Node-entrypoint-first strict read-only CLI launch"
+      },
+      {
+        "file": "thos_cli_lane_completion_notifier.py",
+        "present": true,
+        "repo_relative": "scripts/thos_cli_lane_completion_notifier.py",
+        "role": "temp-only final-message completion receipt"
+      },
+      {
+        "file": "thos_cli_elaboration_quality_gate.py",
+        "present": true,
+        "repo_relative": "scripts/thos_cli_elaboration_quality_gate.py",
+        "role": "long-form elaboration and heading quality gate"
+      },
+      {
+        "file": "thos_cli_marker_review_ledger.py",
+        "present": true,
+        "repo_relative": "scripts/thos_cli_marker_review_ledger.py",
+        "role": "generic marker false-positive review"
+      }
+    ],
+    "continuity_and_bus": [
+      {
+        "file": "ghc_multiplex_ipc_bus.py",
+        "present": true,
+        "repo_relative": "scripts/ghc_multiplex_ipc_bus.py",
+        "role": "GHC Multiplex IPC status-only message contract"
+      },
+      {
+        "file": "thos_x2_build_use_acceptance_runner.py",
+        "present": true,
+        "repo_relative": "scripts/thos_x2_build_use_acceptance_runner.py",
+        "role": "x2 build/use acceptance and next x1 handoff"
+      }
+    ],
+    "publication_safety": [
+      {
+        "file": "thos_status_receipt_exposure_guard.py",
+        "present": true,
+        "repo_relative": "scripts/thos_status_receipt_exposure_guard.py",
+        "role": "raw/private/sensitive exposure guard"
+      },
+      {
+        "file": "thos_no_overclaim_guard.py",
+        "present": true,
+        "repo_relative": "scripts/thos_no_overclaim_guard.py",
+        "role": "GMUT/canon/consciousness overclaim guard"
+      },
+      {
+        "file": "thos_publication_guard.py",
+        "present": true,
+        "repo_relative": "scripts/thos_publication_guard.py",
+        "role": "staged publication shape and allowlist guard"
+      },
+      {
+        "file": "thos_phase_artifact_cadence_classifier.py",
+        "present": true,
+        "repo_relative": "scripts/thos_phase_artifact_cadence_classifier.py",
+        "role": "artifact role and cadence classifier"
+      }
+    ]
+  },
+  "selection_policy": {
+    "five_minute_checks": true,
+    "node_entrypoint_first_for_cli": true,
+    "redaction_before_app_publication": true,
+    "status_only_publication": true,
+    "use_latest_essential_helpers_first": true,
+    "windows_entrypoint_fallback_allowed": true
+  }
+}
