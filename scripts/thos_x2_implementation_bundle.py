@@ -354,6 +354,52 @@ def build_handoff(args: argparse.Namespace, implementation: dict[str, Any]) -> d
     }
 
 
+def build_closeout(args: argparse.Namespace, outputs: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    summary = {
+        "implementation_ledger": status(outputs["implementation"]),
+        "source_ledger_to_ipc_mapping": status(outputs["source_ipc"]),
+        "omega_v2_fast_read_pack": status(outputs["fast_read"]),
+        "no_babysitting_watcher_audit": status(outputs["watcher_audit"]),
+        "phase_runtime_foothold_ledger": status(outputs["runtime_foothold"]),
+        "next_x1_handoff": status(outputs["handoff"]),
+    }
+    all_pass = all(value.startswith("PASS") for value in summary.values())
+    return {
+        "artifact_type": "phase_closeout",
+        "phase_slug": args.phase_slug,
+        "next_phase_slug": args.next_phase_slug,
+        "generated_utc": utc_now(),
+        "overall_status": "PASS_X2_CLOSEOUT_READY_FOR_NEXT_X1" if all_pass else "OPEN_GAP_X2_CLOSEOUT",
+        "implementation_summary": summary,
+        "x2_build_use_results": [
+            "Valid-cadence status board rules were preserved as a phase-advance dependency.",
+            "App completion redaction remains a publication and phase-advance precondition.",
+            "CLI long-form quality evidence uses hashes, counts, headings, and marker review instead of raw text.",
+            "Current source-ledger rows were mapped into IPC-safe event vocabulary.",
+            "Omega v2 continuity was refreshed as a curated fast-read pack for phase starts and compact refresh points.",
+            "Watcher audit rules keep Aletheon working productively between scheduled lane checks.",
+            "Runtime footholds record word-count and completion evidence without treating duration as proof.",
+            "The next x1 launch handoff is ready for all five existing lanes.",
+        ],
+        "publication_boundary": {
+            "status_only": True,
+            "raw_lane_text_published": False,
+            "raw_logs_published": False,
+            "prompt_body_published": False,
+            "screenshots_published": False,
+            "credentials_published": False,
+            "session_streams_published": False,
+            "local_absolute_paths_published": False,
+        },
+        "claim_boundary": {
+            "gmut_gate_state": "open",
+            "canon_promotion": "not_claimed",
+            "consciousness_or_final_physics_proof": "not_claimed",
+            "duration_is_completion_proof": False,
+        },
+    }
+
+
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -438,6 +484,17 @@ def main() -> int:
     watcher_audit = build_watcher_audit(args, receipts["prep"])
     runtime_foothold = build_runtime_foothold(args, receipts["closeout"])
     handoff = build_handoff(args, implementation)
+    closeout = build_closeout(
+        args,
+        {
+            "implementation": implementation,
+            "source_ipc": source_ipc,
+            "fast_read": fast_read,
+            "watcher_audit": watcher_audit,
+            "runtime_foothold": runtime_foothold,
+            "handoff": handoff,
+        },
+    )
 
     outputs = {
         "implementation-ledger": implementation,
@@ -446,6 +503,7 @@ def main() -> int:
         "no-babysitting-watcher-audit": watcher_audit,
         "phase-runtime-foothold-ledger": runtime_foothold,
         "launch-handoff": handoff,
+        "closeout": closeout,
     }
     for suffix, payload in outputs.items():
         emit_pair(f"{output_prefix}-{suffix}-v1", payload)
