@@ -1,0 +1,64 @@
+{
+  "artifact_type": "productive_wait_x2_prep",
+  "claim_boundary": {
+    "canon_promotion": "not_claimed",
+    "consciousness_or_final_physics_proof": "not_claimed",
+    "gmut_gate_state": "open"
+  },
+  "generated_utc": "2026-06-09T01:58:30Z",
+  "no_babysit_compliance": {
+    "manual_status_check_not_before_utc": "2026-06-09T02:02:29Z",
+    "manual_status_check_performed": false,
+    "raw_output_inspection_performed": false,
+    "watcher_notifier_repair_helpers_supervise_lanes": true
+  },
+  "overall_status": "PASS_PRODUCTIVE_WAIT_X2_PREP_CREATED",
+  "phase_slug": "v504-gmut-thos-v40-v4-x1",
+  "publication_boundary": {
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false,
+    "status_only": true
+  },
+  "x2_build_candidates": [
+    {
+      "candidate": "gate_aware_background_supervision_dashboard",
+      "purpose": "Summarize launch, next-check, watcher mode, and phase-advance blockers without reading raw outputs before the gate."
+    },
+    {
+      "candidate": "strict_stdin_first_policy",
+      "purpose": "Use strict stdin as the default CLI lane path after Arby's v3 repair proved it avoids command-bridge stale output."
+    },
+    {
+      "candidate": "app_background_watch_then_gate_only_harvest",
+      "purpose": "Use background watch launch for app lanes and harvest only at gate time through curated receipts."
+    },
+    {
+      "candidate": "combined_receipt_generator",
+      "purpose": "Package repaired split CLI outputs into one notifier and one quality receipt for downstream normalizers."
+    },
+    {
+      "candidate": "false_positive_marker_triage",
+      "purpose": "Keep generic sensitive-marker warnings open until strict quality and marker-review ledgers decide whether a real blocker remains."
+    },
+    {
+      "candidate": "phase_advance_dependency_graph",
+      "purpose": "Require cadence, app gate, CLI completion, CLI quality, marker review, five-lane normalizer, exposure, and no-overclaim receipts before phase advancement."
+    },
+    {
+      "candidate": "x2_build_use_acceptance_receipt",
+      "purpose": "Make every x2 phase prove which x1 proposals were built, run, tested, installed, or used, and which stayed queued."
+    }
+  ],
+  "x2_preparation_notes": [
+    "Do not treat launch success as sibling completion.",
+    "Do not treat elapsed time as proof of readiness.",
+    "If app background receipts are missing at the gate, use the direct repair gate rather than repeated manual polling.",
+    "If either CLI lane is pending at the gate, record carryover and continue productive prep instead of narrowing the run.",
+    "If a CLI lane produces short output, repair before phase advance.",
+    "Keep all GMUT, canon, consciousness, and final-physics gates open."
+  ]
+}
