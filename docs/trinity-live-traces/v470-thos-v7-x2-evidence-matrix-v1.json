@@ -1,0 +1,60 @@
+{
+  "artifact_id": "v470-thos-v7-x2-evidence-matrix-v1",
+  "phase": "v470_THOS_v7_x2",
+  "created_at_nz": "2026-06-02T18:15:45+12:00",
+  "baseline_commit": "3d8d03a4e8e2cedf15fdfcdab6a842d3cceed673",
+  "must_pass_evidence": [
+    {
+      "case_id": "pass_report_contract",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-regenerated-pass-report-v1.json",
+      "expected_assertion_status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "case_id": "open_gap_report_contract",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-regenerated-open-gap-report-v1.json",
+      "expected_assertion_status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "case_id": "gate_drift_blocker_contract_after_fix",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-regenerated-gate-drift-report-v1.json",
+      "expected_assertion_status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "must_fail_evidence": [
+    {
+      "case_id": "pre_fix_gate_drift_count_status_gap",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-pre-fix-gate-drift-count-status-failure-v1.json",
+      "expected_assertion_status": "FAIL_BLOCKER",
+      "expected_failure": "count:detail_reconciliation"
+    },
+    {
+      "case_id": "negative_count_mismatch",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-negative-count-mismatch-v1.json",
+      "expected_assertion_status": "FAIL_BLOCKER",
+      "expected_failure": "count:detail_reconciliation"
+    },
+    {
+      "case_id": "negative_secondary_suppressed",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-negative-secondary-suppressed-v1.json",
+      "expected_assertion_status": "FAIL_BLOCKER",
+      "expected_failure": "secondary:retention"
+    },
+    {
+      "case_id": "negative_digest_status",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-negative-digest-status-v1.json",
+      "expected_assertion_status": "FAIL_BLOCKER",
+      "expected_failure": "digest:presence_reconciliation"
+    },
+    {
+      "case_id": "negative_boundary",
+      "report": "docs/trinity-live-traces/v470-thos-v7-x2-assert-negative-boundary-v1.json",
+      "expected_assertion_status": "FAIL_BLOCKER",
+      "expected_failure": "boundary:local_non_mutating"
+    }
+  ],
+  "generator_fix": "scripts/thos_visualization_binding_check.py now marks count_reconciliation_status FAIL_BLOCKER for tuple mismatch, gate-effect drift, and digest mismatch blockers.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmut_gate_effect": "none_open_not_tested"
+}

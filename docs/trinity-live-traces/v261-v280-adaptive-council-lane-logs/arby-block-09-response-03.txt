@@ -1,0 +1,17 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-08-synthesis-v1.json` as the authoritative checkpoint. It records `status=complete_synthesized`, `9/9` completed responses overall, `3/3` completed Arby responses, and preserves these cross-lane decisions: continue only with receipts or explicit blockers, keep transport noise separated from response proof, and defer remote-control / Lumina app-agent claims until blockers are cleared.
+
+Blocker:
+The branch-home board cannot truthfully act as a proof surface. The checkpoint does not establish refreshed remote branch state, PR movement, provider readiness, or publication outcome. So inter-lane notes may coordinate work, but they must not be treated as GitHub proof, shared-branch proof, or external publication evidence.
+
+Refinement:
+Treat branch-home as a compact coordination ledger with one note per lane per cycle:
+`lane | cycle | checkpoint_path | topic | local_truth | blocker | depends_on | next_probe | remote_verification_required | publication_claim`
+Rules:
+`local_truth` is limited to synthesis-carried facts or directly local observations.
+Unrefreshed external state stays explicitly unverified.
+Transport noise stays outside the note body.
+If a lane has no new proof, it posts blocker-plus-next-probe rather than inferred progress.
+
+Next-cycle proposal:
+Adopt the single-note protocol above for all lanes, with mandatory `receipt`, `blocker` or `none`, and `next_probe` fields. For Arby, the safe next probe remains planning-only: `fetch -> compare tracking refs -> classify drift -> merge only if behind/diverged -> reassess receipt`. Post that as intended follow-up, not as executed publication work. If the council wants a shared landing surface, keep `v282-v300` prep as the next-day strategy board rather than expanding branch-home into a proof channel.

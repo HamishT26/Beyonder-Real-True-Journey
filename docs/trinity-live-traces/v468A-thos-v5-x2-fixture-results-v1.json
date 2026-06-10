@@ -1,0 +1,36 @@
+{
+  "artifact": "v468A_THOS_v5_x2_fixture_results_v1",
+  "phase": "v468A_THOS_v5_x2",
+  "prepared_nz": "2026-06-01T23:50:08.7596145+12:00",
+  "status": "pass",
+  "checks": [
+    {
+      "name": "pass_full",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "ok": true,
+      "output": "THOS_PHASE_MANIFEST_OK docs/trinity-live-traces/v468A-thos-v5-x2-fixture-pass-full-v1.json"
+    },
+    {
+      "name": "fail_missing_artifact",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "ok": true,
+      "output": "manifest artifact path(s) missing: docs/trinity-live-traces/no-such-v5-x2-artifact.json"
+    },
+    {
+      "name": "fail_root_escape",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "ok": true,
+      "output": "manifest artifact path escapes repo root: ../outside-repo-artifact.json"
+    },
+    {
+      "name": "fail_live_head",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "ok": true,
+      "output": "manifest.live_local_head does not match live HEAD"
+    }
+  ]
+}

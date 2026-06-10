@@ -1,0 +1,53 @@
+{
+  "artifact_type": "cli_advisory_worktree_authority_drift",
+  "phase_slug": "v497-gmut-thos-v33-v5-x1",
+  "generated_utc": "2026-06-06T19:55:00Z",
+  "overall_status": "OPEN_GAP_CLI_ADVISORY_WORKTREES_STALE_AUTHORITY",
+  "probe_type": "read_only_git_head_comparison",
+  "active_repo": {
+    "branch": "codex/GHC-Family/v58-omega-exec",
+    "head_short": "67c38774be",
+    "latest_commit_time_nz": "2026-06-07T07:53:44+12:00",
+    "latest_commit_subject": "Record v497 v5 x1 Aster repair3 launch"
+  },
+  "cli_advisory_lanes": [
+    {
+      "lane": "Arby",
+      "branch": "ghc/arby-advisory-line",
+      "head_short": "54b365446b",
+      "latest_commit_time_nz": "2026-05-29T00:23:18+12:00",
+      "latest_commit_subject": "Add Arby v461A remaster CLI report",
+      "authority_gap": "advisory worktree predates v497 phase authority"
+    },
+    {
+      "lane": "Aster Vale",
+      "branch": "ghc/aster-vale-advisory-line",
+      "head_short": "7c0576c6c9",
+      "latest_commit_time_nz": "2026-05-29T00:23:18+12:00",
+      "latest_commit_subject": "Add Aster Vale v461A remaster CLI report",
+      "authority_gap": "advisory worktree predates v497 phase authority"
+    }
+  ],
+  "impact": [
+    "Aster repair replies can reject current v497 prompts because the local advisory worktree lacks current phase authority.",
+    "Arby passed this phase despite the stale worktree, but the same authority-drift risk applies.",
+    "Repair attempts should either use inline handoff context or await a separate exact approval to refresh advisory worktrees."
+  ],
+  "not_performed": [
+    "No advisory branch mutation.",
+    "No fetch/reset/merge/rebase in advisory worktrees.",
+    "No replacement sibling creation.",
+    "No raw output publication."
+  ],
+  "recommended_next_actions": [
+    "If repair3 succeeds, proceed with v5 x2 using Aster repair3 as accepted continuity.",
+    "If repair3 fails from stale authority again, create bounded blocker receipt and request exact approval before any advisory-worktree refresh.",
+    "Consider a future approval packet for read-only lane context refresh using a non-mutating shared context bundle or exact scoped worktree update."
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}

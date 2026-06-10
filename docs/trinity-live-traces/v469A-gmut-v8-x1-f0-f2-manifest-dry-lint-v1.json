@@ -1,0 +1,73 @@
+{
+  "artifact": "v469A_GMUT_v8_x1_f0_f2_manifest_dry_lint_v1",
+  "phase": "v469A_GMUT_v8_x1",
+  "classification": "advisory",
+  "execution_status": "dry_lint_design_only",
+  "fixture_execution": "not_run",
+  "common_required_fields": [
+    "fixture_id",
+    "fixture_family",
+    "target_gate",
+    "metric_signature_status",
+    "action_sign_status",
+    "coordinate_branch_primary",
+    "coordinate_branch_appendix",
+    "units_policy",
+    "source_authority_rows",
+    "claim_ceiling",
+    "execution_status",
+    "result_status",
+    "forbidden_claims"
+  ],
+  "F0_null_manifest_fields": [
+    "baseline_reference_equation",
+    "scalar_disablement_switches",
+    "Psi_background",
+    "grad_Psi_zero_required",
+    "Q_mu_zero_required",
+    "lambda_interaction_zero_required",
+    "B_Psi_status",
+    "expected_shape_reference",
+    "residual_tolerance_policy",
+    "comparison_rule",
+    "gate_verdict"
+  ],
+  "F2_exchange_manifest_fields": [
+    "interaction_family",
+    "Q_mu_definition_status",
+    "matter_coupling_map_status",
+    "universal_vs_species_specific",
+    "equivalence_guard_state",
+    "fifth_force_guard_state",
+    "screening_assumption_status",
+    "expected_nonrun_reason",
+    "gate_verdict"
+  ],
+  "dry_lint_pass_predicates": [
+    "all required fields exist",
+    "execution_status equals not_run or dry_lint_only",
+    "result_status equals no_result",
+    "all gate verdicts remain open",
+    "B_Psi status equals quarantined_demoted",
+    "V(Psi) status equals symbolic_hold",
+    "T_Psi status equals template_only",
+    "claim_ceiling does not exceed audit_only"
+  ],
+  "dry_lint_fail_predicates": [
+    "fixture_executed appears",
+    "observed_result appears",
+    "matches_expected appears",
+    "recovered appears as result",
+    "validated appears as result",
+    "gate_closed appears",
+    "dimensionally_consistent appears as closure",
+    "EOM_derived appears",
+    "T_Psi_derived appears",
+    "fifth_force_safe appears",
+    "equivalence_compatible appears",
+    "consciousness_measured appears",
+    "final_physics appears",
+    "canon_promoted appears"
+  ],
+  "safe_next_step": "v8_x2 may materialize a manifest schema and run dry lint against the schema only"
+}

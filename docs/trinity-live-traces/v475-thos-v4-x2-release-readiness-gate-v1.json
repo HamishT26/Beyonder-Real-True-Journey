@@ -1,0 +1,178 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_RELEASE_READINESS_GATE_READY",
+  "fixtures": [
+    {
+      "case": {
+        "claim_ceilings_present": true,
+        "gmut_gate_effect": "none_open_not_tested",
+        "ledger_ready": true
+      },
+      "case_id": "ledger_ready_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_ledger_row": true
+      },
+      "case_id": "missing_ledger_row_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "claim_ceiling_missing": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "claim_ceiling_missing_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "source_promoted_to_proof": true
+      },
+      "case_id": "source_promoted_to_proof_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "production_readiness_claim": true
+      },
+      "case_id": "production_readiness_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_output": true
+      },
+      "case_id": "raw_output_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "open_gap": true
+      },
+      "case_id": "open_gap_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_source": true
+      },
+      "case_id": "missing_source_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "gate_moved",
+        "ledger_ready": true
+      },
+      "case_id": "gmut_effect_moved_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T20:22:08+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v475-thos-v5-x1",
+  "phase_slug": "v475-thos-v4-x2",
+  "release_readiness_gate": {
+    "ledger_row_count": 4,
+    "missing_ledger_rows": [],
+    "official_source_count": 3,
+    "source_ceiling_gaps": [],
+    "source_run_status": "PASS_SHAPE_ONLY_RELEASE_READINESS_LEDGER_READY"
+  },
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 2,
+        "source_gap_count": 0
+      },
+      "message": "v4 x1 ledger sources were checked for the release/readiness gate.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "ledger_row_count": 4,
+        "missing_ledger_rows": []
+      },
+      "message": "Required readiness ledger rows are present.",
+      "row_id": "ledger_row_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "ceiling_gaps": [],
+        "source_count": 3
+      },
+      "message": "Official external sources have explicit claim ceilings and remain context only.",
+      "row_id": "official_source_claim_ceilings",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 9,
+        "mismatch_count": 0
+      },
+      "message": "Release/readiness fixtures checked row coverage, claim ceilings, source-proof overclaim, production overclaim, raw output, open gaps, missing source, and GMUT boundary.",
+      "row_id": "negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This gate is THOS release/readiness metadata only; it does not test or close GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v475-thos-v4-x1",
+  "source_refs": [
+    {
+      "bytes": 7283,
+      "path": "docs/trinity-live-traces/v475-thos-v4-x1-release-readiness-ledger-v1.json",
+      "sha256": "1d005a048e859bc97bd2a39dcb348431b6708d0b6a4fcfec6dca00c31df71374",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 811,
+      "path": "docs/trinity-live-traces/v475-thos-v4-x1-run-status-v1.json",
+      "sha256": "cf0d42a43550e65d64e9ca2b707f2235fdf9392703245aa9fce69514ff4fc798",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "v5_x1_handoff": {
+    "claim_ceiling": "THOS release/readiness metadata only",
+    "recommended_scope": "turn the release/readiness gate into an operator-facing THOS phase ledger index with explicit source authority and open-gap columns"
+  }
+}

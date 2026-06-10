@@ -1,0 +1,23 @@
+{
+  "artifact_type": "bridge_surface_repair_helper_build",
+  "phase_slug": "v499-gmut-thos-v35-v7-x2",
+  "generated_utc": "2026-06-07T10:58:04Z",
+  "overall_status": "PASS_HELPER_BUILT_COMPILED_AND_SYNTHETICALLY_USED",
+  "built_script": "thos_cli_bridge_surface_repair.py",
+  "purpose": "repair temp-only direct bridge outputs into expected notifier final-message filenames while publishing only status receipts",
+  "validation": {
+    "python_compile": "PASS",
+    "help_surface": "PASS",
+    "synthetic_run": "PASS_BRIDGE_SURFACE_REPAIR",
+    "synthetic_receipt": "v499-gmut-thos-v35-v7-x2-bridge-surface-helper-synthetic-test-v1.json"
+  },
+  "operating_rules": [
+    "input and copy scope is temp-only lane output folders",
+    "explicit Lane=filename source mappings are supported",
+    "raw lane text is never written into repo receipts",
+    "hashes, byte counts, lane names, marker counts, and statuses are safe to publish",
+    "existing expected final-message files are not overwritten unless explicitly requested",
+    "strict sensitive/path markers block automatic repair and force review"
+  ],
+  "why_it_matters": "v499 v7 x1 proved the direct bridge can succeed even when the strict helper fails before wrapper sentinels; this helper makes that recovery repeatable and auditable."
+}

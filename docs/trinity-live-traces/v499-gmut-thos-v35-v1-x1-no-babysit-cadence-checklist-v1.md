@@ -1,0 +1,16 @@
+# v499-gmut-thos-v35-v1-x1 No-Babysit Cadence Checklist
+
+- generated_utc: `2026-06-07T04:44:38Z`
+- overall_status: `PASS_CHECKLIST_READY`
+- cadence_gate_not_before_utc: `2026-06-07T04:46:45Z`
+- manual_polling_allowed_before_gate: `false`
+
+## Checklist
+- Do not inspect sibling output artifacts before the cadence gate.
+- Do not poll CLI final markers before the cadence gate.
+- Do not read app-lane completion status before the cadence gate.
+- Treat slow SQL startup warnings as stale-flow watch items unless final artifacts are blocked.
+- At cadence gate, harvest watcher receipts first, then run strict marker review if needed.
+- Redact app thread IDs before staging completion JSON.
+- Run exposure guard before any publication.
+- Advance to x2 only after all five lane responses have receipt evidence.

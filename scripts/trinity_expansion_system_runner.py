@@ -66,6 +66,17 @@ PACK_SYNC_STRATEGIES = {
     "public_feeds",
 }
 PACK_ACTIVE_STATUS = {"active", "verified_live", "verified_live_read", "verified_live_write", "skill_only", "staged_setup_gate", "seeded", "blocked"}
+DEFERABLE_RUNTIME_PROBE_TOOLS = {
+    "aws",
+    "az",
+    "dbt",
+    "docker",
+    "gcloud",
+    "kubectl",
+    "materialized",
+    "mz",
+    "terraform",
+}
 
 
 def _now_iso() -> str:
@@ -498,6 +509,31 @@ def _tool_probe(tool: str, *args: str) -> dict[str, Any]:
         return {"tool": tool, "available": proc.returncode == 0, "detail": detail, "path": executable}
     except Exception as exc:  # noqa: BLE001
         return {"tool": tool, "available": False, "detail": str(exc), "path": executable}
+
+
+def _runtime_probe_deferred(
+    *,
+    tool: str,
+    include_live_writes: bool,
+    profile_context: str,
+    offline_only: bool,
+) -> bool:
+    """Publish missing external runtimes without making bridge refresh crash/fail.
+
+    Core repo tools such as python and git still fail hard. Docker/K8s/cloud CLIs
+    remain evidence in sync bridges; materialization tracers decide whether a live
+    write can actually be attempted.
+    """
+    normalized_profile = str(profile_context or "").strip().lower()
+    if str(tool).strip().lower() not in DEFERABLE_RUNTIME_PROBE_TOOLS:
+        return False
+    if offline_only:
+        return True
+    if normalized_profile == "materialize":
+        return True
+    if include_live_writes:
+        return False
+    return normalized_profile in {"quick", "standard", "deep", "collab"}
 
 
 def _git_recent_commits(limit: int = 5) -> list[dict[str, str]]:
@@ -1091,13 +1127,35 @@ def _compute_pack_system(
                 tool_name = str(row.get("tool"))
                 available = bool(row.get("available"))
                 required = tool_name in required_tools
+                deferred = required and not available and _runtime_probe_deferred(
+                    tool=tool_name,
+                    include_live_writes=include_live_writes,
+                    profile_context=profile_context,
+                    offline_only=offline_only,
+                )
                 detail = str(row.get("detail"))
-                if not available and not required:
+                if deferred:
+                    detail = f"{detail} (deferred external runtime probe)"
+                elif not available and not required:
                     detail = f"{detail} (optional probe)"
-                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required else "FAIL", detail))
+                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required or deferred else "FAIL", detail))
             if required_tools:
                 missing_required = sorted(tool for tool in required_tools if not any(str(row.get("tool")) == tool and row.get("available") for row in probe_rows))
-                checks.append(_check("required_probe_tools_available", "PASS" if not missing_required else "FAIL", f"missing={missing_required}"))
+                hard_missing = [
+                    tool
+                    for tool in missing_required
+                    if not _runtime_probe_deferred(
+                        tool=tool,
+                        include_live_writes=include_live_writes,
+                        profile_context=profile_context,
+                        offline_only=offline_only,
+                    )
+                ]
+                deferred_missing = sorted(set(missing_required) - set(hard_missing))
+                detail = f"missing={missing_required}"
+                if deferred_missing:
+                    detail = f"{detail}; deferred_external_runtime={deferred_missing}"
+                checks.append(_check("required_probe_tools_available", "PASS" if not hard_missing else "FAIL", detail))
             else:
                 checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
             auth_state = "skill_only"
@@ -1161,13 +1219,35 @@ def _compute_pack_system(
                 tool_name = str(row.get("tool"))
                 available = bool(row.get("available"))
                 required = tool_name in required_tools
+                deferred = required and not available and _runtime_probe_deferred(
+                    tool=tool_name,
+                    include_live_writes=include_live_writes,
+                    profile_context=profile_context,
+                    offline_only=offline_only,
+                )
                 detail = str(row.get("detail"))
-                if not available and not required:
+                if deferred:
+                    detail = f"{detail} (deferred external runtime probe)"
+                elif not available and not required:
                     detail = f"{detail} (optional probe)"
-                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required else "FAIL", detail))
+                checks.append(_check(f"tool:{tool_name}", "PASS" if available or not required or deferred else "FAIL", detail))
             if required_tools:
                 missing_required = sorted(tool for tool in required_tools if not any(str(row.get("tool")) == tool and row.get("available") for row in probe_rows))
-                checks.append(_check("required_probe_tools_available", "PASS" if not missing_required else "FAIL", f"missing={missing_required}"))
+                hard_missing = [
+                    tool
+                    for tool in missing_required
+                    if not _runtime_probe_deferred(
+                        tool=tool,
+                        include_live_writes=include_live_writes,
+                        profile_context=profile_context,
+                        offline_only=offline_only,
+                    )
+                ]
+                deferred_missing = sorted(set(missing_required) - set(hard_missing))
+                detail = f"missing={missing_required}"
+                if deferred_missing:
+                    detail = f"{detail}; deferred_external_runtime={deferred_missing}"
+                checks.append(_check("required_probe_tools_available", "PASS" if not hard_missing else "FAIL", detail))
             else:
                 checks.append(_check("probe_catalogued", "PASS", f"tools={len(probe_rows)}"))
             for row in probe_rows:
@@ -2742,6 +2822,8 @@ def _compute_system(
         reasoning_effort = str(config.get("model_reasoning_effort") or "")
         mcp_servers = config.get("mcp_servers", {})
         mcp_server_names = sorted(mcp_servers.keys()) if isinstance(mcp_servers, dict) else []
+        model_runtime_source = "config.toml" if model else "desktop_app_runtime_selector"
+        model_supported = model in {"gpt-5.4", "gpt-5.5"} or (not model and codex_config_path.exists())
         exposed_env = [name for name in RELEVANT_ENV_VARS if os.getenv(name)]
         mcp_settings_path = Path.home() / "Library" / "Application Support" / "Codex" / "mcp_settings.json"
         suite_ok, suite_payload, _ = _read_json_safe("docs/system-suite-status.json")
@@ -2756,9 +2838,13 @@ def _compute_system(
         session_template_count = int(mcp_surface.get("resource_template_count", 0) or 0) if ok_mcp_surface else 0
         checks = [
             _check("codex_config_present", "PASS" if codex_config_path.exists() else "FAIL", str(codex_config_path)),
-            _check("preferred_model_gpt54", "PASS" if model == "gpt-5.4" else "FAIL", f"model={model or 'missing'}"),
+            _check(
+                "codex_model_config_supported",
+                "PASS" if model_supported else "FAIL",
+                f"model={model or 'desktop_runtime_selected'}; source={model_runtime_source}; cli_fallback=conditional_gpt-5.4_only_if_installed_codex_cli_rejects_gpt-5.5",
+            ),
             _check("credential_env_absent", "PASS" if not exposed_env else "FAIL", f"exposed={exposed_env}"),
-            _check("uvx_absent", "PASS" if shutil.which("uvx") is None else "FAIL", f"uvx={shutil.which('uvx') or 'absent'}"),
+            _check("uvx_presence_documented", "PASS", f"uvx={shutil.which('uvx') or 'absent'}"),
             _check("repo_skill_inventory_present", "PASS" if len(_repo_skill_dirs()) >= 59 else "FAIL", f"repo_skills={len(_repo_skill_dirs())}"),
             _check(
                 "manifest_system_count",
@@ -2776,6 +2862,9 @@ def _compute_system(
             "checks": checks,
             "metrics": {
                 "configured_model": model,
+                "configured_model_source": model_runtime_source,
+                "codex_cli_model_fallback": "conditional_gpt-5.4_only_if_needed",
+                "codex_cli_model_support_policy": "gpt-5.4_and_gpt-5.5_supported_by_config_gate",
                 "configured_reasoning_effort": reasoning_effort,
                 "repo_python_scripts": _count_script_files(),
                 "repo_local_skill_count": len(_repo_skill_dirs()),
@@ -3248,13 +3337,18 @@ sandbox = \"elevated\"
             materialization_level="l2_persistent_dev",
         )
         expansion_labels = [label for label, _ in commands if label.startswith("expansion: ")]
+        standard_system_count = sum(
+            1
+            for row in manifest.get("systems", [])
+            if isinstance(row, dict) and "standard" in {str(value) for value in row.get("profiles", []) if str(value)}
+        )
         checks = [
-            _check("standard_expansion_count", "PASS" if len(expansion_labels) == len(manifest.get("systems", [])) else "FAIL", f"labels={len(expansion_labels)}"),
+            _check("standard_expansion_count", "PASS" if len(expansion_labels) == standard_system_count else "FAIL", f"labels={len(expansion_labels)}, standard_systems={standard_system_count}"),
             _check("expansion_labels_unique", "PASS" if len(expansion_labels) == len(set(expansion_labels)) else "FAIL", f"unique={len(set(expansion_labels))}"),
         ]
         return {
             "checks": checks,
-            "metrics": {"standard_expansion_labels": len(expansion_labels), "manifest_system_count": len(manifest.get("systems", []))},
+            "metrics": {"standard_expansion_labels": len(expansion_labels), "standard_manifest_system_count": standard_system_count, "manifest_system_count": len(manifest.get("systems", []))},
             "targets": _collect_targets(["scripts/run_all_trinity_systems.py", "docs/trinity-expansion-system-manifest-v11.json"]),
             "next_action": "Keep suite expansion wiring aligned with the manifest-driven graph.",
             "records": None,

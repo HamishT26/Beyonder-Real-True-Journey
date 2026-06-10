@@ -1,0 +1,15 @@
+Receipt:
+Authoritative checkpoint is `docs/trinity-live-traces/v261-v280-adaptive-council-block-08-synthesis-v1.json`. For Arby, it carries forward `remote_verification_required=true` and `publication_claim=withheld`. That supports a design-only receipt for remote drift checking and forward-only publication, not a claimed GitHub or provider outcome.
+
+Blocker:
+Remote drift remains unverified. The checkpoint does not establish a refreshed `fetch`, an actual upstream comparison, or a completed forward-only merge/push path. Because those external proofs are absent, no truthful publication receipt can promote cached tracking state into confirmed remote alignment.
+
+Refinement:
+Keep one compact receipt schema:
+`checkpoint_path | branch | local_head | cached_tracking_ref | drift_state=cached_only|same|ahead|behind|diverged|unknown | remote_verification_required | publication_claim`
+At this checkpoint, `drift_state` should stay `cached_only` or `unknown` unless a fresh comparison is recorded. That preserves the boundary between local Git metadata and real remote proof.
+
+Next-cycle proposal:
+Run one bounded forward-only proof cycle:
+`fetch -> compare HEAD vs upstream/tracking ref -> classify drift -> if behind/diverged, merge upstream forward-only -> reassess -> emit receipt`
+Keep the rule explicit: no reset, no rebase, no force-push. Only after the refreshed comparison, and only if the branch state is evidenced, should a forward-only publication receipt be issued.

@@ -1,0 +1,214 @@
+# v115-phase-skill-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-04T16:22:32+00:00",
+  "phase": "v115",
+  "state": "repo_skill_surfaces_generated",
+  "skill_count": 20,
+  "install_policy": "local_skill_installer_verify_after_generation",
+  "restart_note": "Codex restart may be required before newly installed skills appear in the live skill list.",
+  "skills": [
+    {
+      "skill_id": "v115-trinity-stage-schedule-truth-gate-skill-01",
+      "candidate_id": "v115_01_stage_schedule_truth_gate",
+      "phase": "v115",
+      "index": 1,
+      "pillar": "trinity",
+      "purpose": "bind each numeric phase to beta, alpha, or omega semantics",
+      "skill_path": "skills/v115-trinity-stage-schedule-truth-gate-skill-01/SKILL.md",
+      "agent_path": "skills/v115-trinity-stage-schedule-truth-gate-skill-01/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-local-cloud-nexus-digest-gate-skill-02",
+      "candidate_id": "v115_02_local_cloud_nexus_digest_gate",
+      "phase": "v115",
+      "index": 2,
+      "pillar": "body",
+      "purpose": "turn Solion Local/Cloud Nexus proposals into bounded repo evidence",
+      "skill_path": "skills/v115-trinity-local-cloud-nexus-digest-gate-skill-02/SKILL.md",
+      "agent_path": "skills/v115-trinity-local-cloud-nexus-digest-gate-skill-02/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-mcp-playwright-posture-gate-skill-03",
+      "candidate_id": "v115_03_mcp_playwright_posture_gate",
+      "phase": "v115",
+      "index": 3,
+      "pillar": "mind",
+      "purpose": "classify MCP and Playwright options before enabling browser-heavy lanes",
+      "skill_path": "skills/v115-trinity-mcp-playwright-posture-gate-skill-03/SKILL.md",
+      "agent_path": "skills/v115-trinity-mcp-playwright-posture-gate-skill-03/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-provider-spend-sandbox-gate-skill-04",
+      "candidate_id": "v115_04_provider_spend_sandbox_gate",
+      "phase": "v115",
+      "index": 4,
+      "pillar": "heart",
+      "purpose": "separate free-credit enthusiasm from action-time billing authority",
+      "skill_path": "skills/v115-trinity-provider-spend-sandbox-gate-skill-04/SKILL.md",
+      "agent_path": "skills/v115-trinity-provider-spend-sandbox-gate-skill-04/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-browser-live-write-floor-gate-skill-05",
+      "candidate_id": "v115_05_browser_live_write_floor_gate",
+      "phase": "v115",
+      "index": 5,
+      "pillar": "body",
+      "purpose": "enforce the 350 MB browser and online live-write floor",
+      "skill_path": "skills/v115-trinity-browser-live-write-floor-gate-skill-05/SKILL.md",
+      "agent_path": "skills/v115-trinity-browser-live-write-floor-gate-skill-05/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-cli-identity-boundary-gate-skill-06",
+      "candidate_id": "v115_06_cli_identity_boundary_gate",
+      "phase": "v115",
+      "index": 6,
+      "pillar": "heart",
+      "purpose": "keep CLI siblings receipt-backed unless a persistent platform transcript exists",
+      "skill_path": "skills/v115-trinity-cli-identity-boundary-gate-skill-06/SKILL.md",
+      "agent_path": "skills/v115-trinity-cli-identity-boundary-gate-skill-06/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-oracle-e2b-cloud-probe-gate-skill-07",
+      "candidate_id": "v115_07_oracle_e2b_cloud_probe_gate",
+      "phase": "v115",
+      "index": 7,
+      "pillar": "body",
+      "purpose": "record OCI and e2b availability without provisioning paid resources",
+      "skill_path": "skills/v115-trinity-oracle-e2b-cloud-probe-gate-skill-07/SKILL.md",
+      "agent_path": "skills/v115-trinity-oracle-e2b-cloud-probe-gate-skill-07/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-vercel-cloudflare-bridge-gate-skill-08",
+      "candidate_id": "v115_08_vercel_cloudflare_bridge_gate",
+      "phase": "v115",
+      "index": 8,
+      "pillar": "body",
+      "purpose": "model edge and tunnel bridges without DNS or production deploy mutation",
+      "skill_path": "skills/v115-trinity-vercel-cloudflare-bridge-gate-skill-08/SKILL.md",
+      "agent_path": "skills/v115-trinity-vercel-cloudflare-bridge-gate-skill-08/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-neon-circleci-control-plane-gate-skill-09",
+      "candidate_id": "v115_09_neon_circleci_control_plane_gate",
+      "phase": "v115",
+      "index": 9,
+      "pillar": "body",
+      "purpose": "prepare database and CI ledger use without creating live services blindly",
+      "skill_path": "skills/v115-trinity-neon-circleci-control-plane-gate-skill-09/SKILL.md",
+      "agent_path": "skills/v115-trinity-neon-circleci-control-plane-gate-skill-09/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-notion-expo-dashboard-gate-skill-10",
+      "candidate_id": "v115_10_notion_expo_dashboard_gate",
+      "phase": "v115",
+      "index": 10,
+      "pillar": "mind",
+      "purpose": "keep dashboard destinations repo-first until live write confirmation exists",
+      "skill_path": "skills/v115-trinity-notion-expo-dashboard-gate-skill-10/SKILL.md",
+      "agent_path": "skills/v115-trinity-notion-expo-dashboard-gate-skill-10/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-gmut-qcit-claim-evidence-gate-skill-11",
+      "candidate_id": "v115_11_gmut_qcit_claim_evidence_gate",
+      "phase": "v115",
+      "index": 11,
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims by evidence type before suite promotion",
+      "skill_path": "skills/v115-trinity-gmut-qcit-claim-evidence-gate-skill-11/SKILL.md",
+      "agent_path": "skills/v115-trinity-gmut-qcit-claim-evidence-gate-skill-11/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-freedid-cbr-consent-gate-skill-12",
+      "candidate_id": "v115_12_freedid_cbr_consent_gate",
+      "phase": "v115",
+      "index": 12,
+      "pillar": "heart",
+      "purpose": "preserve consent, recourse, and identity boundary checks",
+      "skill_path": "skills/v115-trinity-freedid-cbr-consent-gate-skill-12/SKILL.md",
+      "agent_path": "skills/v115-trinity-freedid-cbr-consent-gate-skill-12/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-alpha-manifest-cleanup-gate-skill-13",
+      "candidate_id": "v115_13_alpha_manifest_cleanup_gate",
+      "phase": "v115",
+      "index": 13,
+      "pillar": "body",
+      "purpose": "record merge/delete candidates with replacement coverage and rollback anchors",
+      "skill_path": "skills/v115-trinity-alpha-manifest-cleanup-gate-skill-13/SKILL.md",
+      "agent_path": "skills/v115-trinity-alpha-manifest-cleanup-gate-skill-13/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-open-source-scout-gate-skill-14",
+      "candidate_id": "v115_14_open_source_scout_gate",
+      "phase": "v115",
+      "index": 14,
+      "pillar": "mind",
+      "purpose": "convert official docs and source-scouting into cached recommendations",
+      "skill_path": "skills/v115-trinity-open-source-scout-gate-skill-14/SKILL.md",
+      "agent_path": "skills/v115-trinity-open-source-scout-gate-skill-14/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-mcp-security-prompt-injection-gate-skill-15",
+      "candidate_id": "v115_15_mcp_security_prompt_injection_gate",
+      "phase": "v115",
+      "index": 15,
+      "pillar": "heart",
+      "purpose": "treat MCP tool descriptions and remote pages as untrusted input",
+      "skill_path": "skills/v115-trinity-mcp-security-prompt-injection-gate-skill-15/SKILL.md",
+      "agent_path": "skills/v115-trinity-mcp-security-prompt-injection-gate-skill-15/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-suite-omega-only-gate-skill-16",
+      "candidate_id": "v115_16_suite_omega_only_gate",
+      "phase": "v115",
+      "index": 16,
+      "pillar": "trinity",
+      "purpose": "run Deep and L5 suites only on Omega execution stages",
+      "skill_path": "skills/v115-trinity-suite-omega-only-gate-skill-16/SKILL.md",
+      "agent_path": "skills/v115-trinity-suite-omega-only-gate-skill-16/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-publication-receipt-gate-skill-17",
+      "candidate_id": "v115_17_publication_receipt_gate",
+      "phase": "v115",
+      "index": 17,
+      "pillar": "body",
+      "purpose": "require post-push remote/local equality before declaring cloud live write success",
+      "skill_path": "skills/v115-trinity-publication-receipt-gate-skill-17/SKILL.md",
+      "agent_path": "skills/v115-trinity-publication-receipt-gate-skill-17/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-d-drive-retention-gate-skill-18",
+      "candidate_id": "v115_18_d_drive_retention_gate",
+      "phase": "v115",
+      "index": 18,
+      "pillar": "body",
+      "purpose": "retain heavy traces on D drive while publishing compact curated artifacts",
+      "skill_path": "skills/v115-trinity-d-drive-retention-gate-skill-18/SKILL.md",
+      "agent_path": "skills/v115-trinity-d-drive-retention-gate-skill-18/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-eureka-report-density-gate-skill-19",
+      "candidate_id": "v115_19_eureka_report_density_gate",
+      "phase": "v115",
+      "index": 19,
+      "pillar": "mind",
+      "purpose": "keep at least twenty actionable recommendations per stage",
+      "skill_path": "skills/v115-trinity-eureka-report-density-gate-skill-19/SKILL.md",
+      "agent_path": "skills/v115-trinity-eureka-report-density-gate-skill-19/agents/openai.yaml"
+    },
+    {
+      "skill_id": "v115-trinity-next-stage-handoff-gate-skill-20",
+      "candidate_id": "v115_20_next_stage_handoff_gate",
+      "phase": "v115",
+      "index": 20,
+      "pillar": "trinity",
+      "purpose": "derive each next stage from the current closeout, not a stale global plan",
+      "skill_path": "skills/v115-trinity-next-stage-handoff-gate-skill-20/SKILL.md",
+      "agent_path": "skills/v115-trinity-next-stage-handoff-gate-skill-20/agents/openai.yaml"
+    }
+  ]
+}
+```

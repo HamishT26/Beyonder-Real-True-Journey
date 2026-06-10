@@ -1,0 +1,313 @@
+# v137-continuum-system-expansion-candidate-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T13:59:21+00:00",
+  "phase": "v137",
+  "state": "candidate_pack_only_not_manifest_promoted",
+  "candidate_count": 20,
+  "candidates": [
+    {
+      "id": "v137_01_truth_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "truth",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance phase claim honesty and receipt equality through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_02_identity_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "identity",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance CLI identity continuity and induction boundaries through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_03_provider_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "provider",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance external provider action-pack gating through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_04_research_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "research",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance source-grounded eureka planning through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_05_cleanup_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "cleanup",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance merge, prune, and stale-claim reduction through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_06_gmut_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "gmut",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance GMUT claim labels and falsification tasks through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_07_freedid_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "freedid",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance consent, recourse, and CBR alignment through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_08_runtime_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "runtime",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_09_mcp_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "mcp",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_10_dashboard_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "dashboard",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance human-readable control surfaces through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_11_truth_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "truth",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance phase claim honesty and receipt equality through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_12_identity_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "identity",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance CLI identity continuity and induction boundaries through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_13_provider_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "provider",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance external provider action-pack gating through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_14_research_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "research",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance source-grounded eureka planning through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_15_cleanup_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "cleanup",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance merge, prune, and stale-claim reduction through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_16_gmut_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "gmut",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance GMUT claim labels and falsification tasks through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_17_freedid_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "freedid",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance consent, recourse, and CBR alignment through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_18_runtime_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "runtime",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_19_mcp_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "mcp",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v137_20_dashboard_codex_cli_gate",
+      "phase": "v137",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "dashboard",
+      "provider_lane": "codex_cli",
+      "purpose": "Advance human-readable control surfaces through Codex CLI continuity, review, and implementation lane while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    }
+  ],
+  "effective_success": true
+}
+```

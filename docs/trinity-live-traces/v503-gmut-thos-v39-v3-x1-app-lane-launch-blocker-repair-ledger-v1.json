@@ -1,0 +1,80 @@
+{
+  "artifact_type": "app_lane_launch_blocker_repair_ledger",
+  "phase_slug": "v503-gmut-thos-v39-v3-x1",
+  "generated_utc": "2026-06-08T15:06:15Z",
+  "overall_status": "OPEN_GAP_APP_LANE_LAUNCH_BLOCKS_PHASE_ADVANCE",
+  "safe_repair_attempts": [
+    {
+      "attempt": 1,
+      "mode": "background_watch_launch",
+      "status": "OPEN_GAP_APP_LANE_LAUNCH",
+      "summary": "Initial app watch launcher timed out and produced no completion notifier receipt."
+    },
+    {
+      "attempt": 2,
+      "mode": "gate_only_harvest_after_x1_gate",
+      "status": "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED",
+      "summary": "App completion gate found all three app lanes missing and blocked phase advancement."
+    },
+    {
+      "attempt": 3,
+      "mode": "background_watch_relaunch",
+      "status": "OPEN_GAP_APP_LANE_LAUNCH",
+      "summary": "Relaunch produced a runner receipt but the launcher receipt remained open."
+    },
+    {
+      "attempt": 4,
+      "mode": "foreground_runner_repair",
+      "status": "OPEN_GAP_COUNCIL_APP_LANE",
+      "summary": "Foreground runner returned a status-only open gap without raw advisory publication."
+    },
+    {
+      "attempt": 5,
+      "mode": "direct_lower_level_launcher_repair",
+      "status": "OPEN_GAP_APP_LANE_LAUNCH",
+      "summary": "Direct lower-level launcher timed out under existing-thread-only rules."
+    },
+    {
+      "attempt": 6,
+      "mode": "refreshed_app_gate_and_five_lane_board",
+      "status": "OPEN_GAP_FIVE_LANE_STATUS",
+      "summary": "CLI lanes are ready, but app lanes remain absent, so phase advance is blocked."
+    }
+  ],
+  "known_good_state": {
+    "cli_lanes_ready": true,
+    "cli_quality_status": "PASS_ALL_CLI_LANES_ELABORATE",
+    "cli_marker_review": "PASS_MARKER_REVIEW_LEDGER",
+    "arby_word_count": 5175,
+    "aster_vale_word_count": 5319,
+    "raw_cli_output_published": false
+  },
+  "open_gap_state": {
+    "app_lanes_ready": false,
+    "app_completion_receipt_present": false,
+    "app_watch_launcher_status": "OPEN_GAP_APP_LANE_LAUNCH",
+    "app_gate_status": "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED",
+    "phase_advance_allowed": false
+  },
+  "next_safe_actions": [
+    "Do not advance v503 v3 x1 until Cicero, Kierkegaard, and Aristotle have a passing app completion gate.",
+    "Continue with source refresh, eureka planning, and blocker repair design while app-lane repair is pending.",
+    "Retry app-lane launch only through existing callable routes and status-only receipts.",
+    "If the same app launcher blocker persists across future attempts, request a new exact repair packet before mutating app-server state."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

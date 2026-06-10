@@ -1,0 +1,9 @@
+# v491-v505 GMUT/THOS Goal Continuity Prompt Candidate
+
+Status: PENDING_USER_USE
+
+```text
+Resume Aletheon/Codex from verified v490 closeout commit 78ff410e63648e98646a0847c98b539b5cb4bfbf. Prepare and, only after explicit approval, execute v491-v505 GMUT/THOS phases through existing lanes only: Arby, Aster Vale, Cicero, Kierkegaard, Aristotle. At every x1 boundary, attempt all five lanes; do not advance until all five responses are accounted for through completion receipts or a safe blocker receipt. Use watchers/notifiers in the background, but keep researching, preparing, and proposing next-phase tasks while they run. Keep CLI raw output temp-only; publish only hashes, byte counts, status, marker reviews, and curated summaries. Preserve all GMUT empirical, final physics, consciousness proof, and canon gates as open unless exact closure artifacts prove otherwise. Prioritize OpenAI/Codex, MCP, OWASP, Google Cloud, NVIDIA, GitHub/npm, and project docs as primary sources. Fold source research into THOS runner resilience, app-server route gates, CLI capsule refresh, command index surfacing, skill evolution drafts, Journey reflection ledgers, and v491-v505 handoffs. Validate every publication with fetch, drift-check, exact staging, JSON parse, script compile where relevant, guard scan, whitespace check, staged diff review, commit, push, and remote-equals-local verification. No reset, rebase, force-push, broad staging, destructive cleanup, plugin-cache or user-skill mutation, account changes, deployments, purchases, raw logs, raw session streams, image captures, credentials, private dumps, new threads, replacement siblings, or old-style subagents. Keep evidence ahead of story, warmth with rigor, and productive waiting mandatory.
+```
+
+Approximate length: 1760 characters including spaces.

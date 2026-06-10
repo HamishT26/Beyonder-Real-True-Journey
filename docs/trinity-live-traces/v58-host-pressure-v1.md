@@ -1,0 +1,30 @@
+# V58 Host Pressure
+
+```json
+{
+  "generated_utc": "2026-04-28T17:34:13+00:00",
+  "phase": "v58_omega",
+  "containers": [
+    {
+      "name": "kind-cloud-provider",
+      "cpu_percent": 0.0,
+      "memory": "42.49MiB / 1.711GiB"
+    },
+    {
+      "name": "kind-registry-mirror",
+      "cpu_percent": 0.0,
+      "memory": "9.5MiB / 1.711GiB"
+    },
+    {
+      "name": "desktop-control-plane",
+      "cpu_percent": 117.75,
+      "memory": "649.6MiB / 1.711GiB"
+    }
+  ],
+  "max_container_cpu_percent": 117.75,
+  "free_physical_memory_kb": 403028,
+  "total_visible_memory_kb": 3880440,
+  "host_pressure_state": "warm_cooldown_before_heavy_suites",
+  "policy": "run_one_heavy_suite_at_a_time_and_pause_when_hot"
+}
+```

@@ -1,0 +1,34 @@
+{
+  "artifact_type": "heading_normalization_repair",
+  "phase_slug": "v497-gmut-thos-v33-v4-x1",
+  "generated_utc": "2026-06-06T17:40:00Z",
+  "overall_status": "PASS_PROMPT_BUILDER_REPAIR_PREPARED",
+  "source_receipt": "v497-gmut-thos-v33-v4-x1-15-minute-cli-elaboration-quality-gate-v1.json",
+  "observed_gap": {
+    "gap_type": "exact_heading_normalization",
+    "lanes_affected": [
+      "Arby",
+      "Aster Vale"
+    ],
+    "short_answer_problem": false,
+    "word_counts_confirm_elaboration": true,
+    "strict_sensitive_or_path_marker_count": 0
+  },
+  "repair_applied": {
+    "script": "scripts/thos_x1_sibling_prompt_builder.py",
+    "change": "added_standalone_exact_heading_template",
+    "expected_effect": "future extended v497 x1 sibling prompts include exact standalone headings plus first numbered item placeholders"
+  },
+  "validation_plan": [
+    "compile prompt builder",
+    "generate next-phase prompt policy receipt",
+    "verify required heading strings appear as standalone lines in the prompt text",
+    "continue status-only publication and keep raw lane text temp-only"
+  ],
+  "claim_boundary": {
+    "current_v4_cli_outputs_rewritten": false,
+    "raw_lane_text_published": false,
+    "future_success_claimed": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open"
+  }
+}

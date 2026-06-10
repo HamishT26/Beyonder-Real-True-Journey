@@ -1,0 +1,11 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-02-synthesis-v1.json` as the checkpoint, the safe receipt is design-only: block 02 confirms Arby stayed on a local-proof posture, with remote drift, PR state, and external publication still unverified. It also preserves the required proof split: response text and transport/process noise must remain separate before any publication receipt is considered clean.
+
+Blocker:
+The blocker is not a proven remote-drift event; it is the absence of live remote verification plus known receipt-contamination risk. The checkpoint explicitly withholds GitHub/provider/publication proof, so a forward-only publication receipt cannot advance beyond `remote-verification-required` without a later checked turn.
+
+Refinement:
+Use a narrow forward-only receipt shape: `lane | cwd | branch | local HEAD | upstream target | drift_status=unverified|clean|ahead|behind|diverged | receipt_clean=true|false | publication_claim=withheld|local-only`. Keep `drift_status` unset beyond `unverified` unless a live fetch/tracking check occurs. Keep transport noise out of the receipt artifact entirely.
+
+Next-cycle proposal:
+Run one bounded Arby preflight that produces only a local publication board: checkpoint cited, candidate proof artifacts listed, forward-only sequence documented, and `remote-verification-required=true` carried explicitly. If a later live turn verifies upstream state, the same receipt can extend to a forward-only publication result without rewriting prior truth boundaries.

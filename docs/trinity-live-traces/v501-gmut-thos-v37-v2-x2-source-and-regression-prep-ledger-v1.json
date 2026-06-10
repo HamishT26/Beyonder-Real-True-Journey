@@ -1,0 +1,71 @@
+{
+  "artifact_type": "v501_v2_x2_current_source_and_regression_prep_ledger",
+  "claim_boundary": {
+    "canon_promotion": "not_claimed",
+    "gmut_gate_state": "open"
+  },
+  "generated_at_utc": "2026-06-07T23:07:26Z",
+  "overall_status": "PASS_X2_SOURCE_AND_REGRESSION_PREP_READY",
+  "phase_slug": "v501-gmut-thos-v37-v2-x2",
+  "regression_checks": [
+    "runner_text must start the Codex batch invocation with call so the copy line executes after codex.cmd returns.",
+    "runner_text must preserve --sandbox read-only and --ask-for-approval never for CLI advisory lanes.",
+    "runner_text must copy safe bridge final-message output to the normalized lane final-message alias.",
+    "launch receipt must keep normalized_final_message_alias=true for both CLI lanes.",
+    "No raw lane text, stderr content, events JSONL, temp paths, screenshots, credentials, or session streams may be published."
+  ],
+  "source_anchors": [
+    {
+      "name": "OpenAI Codex CLI Help",
+      "url": "https://help.openai.com/en/articles/11096431",
+      "use": "Codex CLI is the local terminal coding-agent surface; use official help/repo instead of third-party release summaries."
+    },
+    {
+      "name": "OpenAI Codex GitHub repository",
+      "url": "https://github.com/openai/codex",
+      "use": "Authoritative source for CLI release, terminal-agent, and local workflow assumptions."
+    },
+    {
+      "name": "MCP Security Best Practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "use": "Least-privilege and connector-boundary guidance for multi-agent tool routing."
+    },
+    {
+      "name": "OWASP Logging Cheat Sheet",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "use": "Status-only receipt and no raw secret/session/log publication discipline."
+    },
+    {
+      "name": "GitHub Actions security hardening",
+      "url": "https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-guides/security-hardening-for-github-actions",
+      "use": "Runner-hardening inspiration for exact staging and scoped verification."
+    },
+    {
+      "name": "NVIDIA DGX Spark system overview",
+      "url": "https://docs.nvidia.com/dgx/dgx-spark/system-overview.html",
+      "use": "AI-factory local runtime analogy: observe, queue, validate, and iterate."
+    },
+    {
+      "name": "Google Cloud Gemini Enterprise agents",
+      "url": "https://cloud.google.com/gemini-enterprise/agents",
+      "use": "Agent registration, deployment, governance, and enterprise orchestration comparison point."
+    },
+    {
+      "name": "Google Cloud Gemini Enterprise docs",
+      "url": "https://docs.cloud.google.com/gemini/enterprise/docs",
+      "use": "Grounded organizational connectors and agent gallery ideas for source-backed council design."
+    },
+    {
+      "name": "Microsoft Agent Governance Toolkit",
+      "url": "https://opensource.microsoft.com/blog/2026/04/02/introducing-the-agent-governance-toolkit-open-source-runtime-security-for-ai-agents/",
+      "use": "Runtime governance inspiration for policy-aware watcher/notifier supervision."
+    },
+    {
+      "name": "NVIDIA DGX Spark User Guide",
+      "url": "https://docs.nvidia.com/dgx/dgx-spark/index.html",
+      "use": "Compact AI computer operational documentation as local-platform-readiness analogy."
+    }
+  ],
+  "status_only": true,
+  "x2_build_selection": "Prioritize the Windows call/copy launcher fix because v501 v2 x1 proved the exact blocker through status receipts and temp-only evidence."
+}

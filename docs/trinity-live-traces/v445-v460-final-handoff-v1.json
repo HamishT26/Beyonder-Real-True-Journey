@@ -1,0 +1,96 @@
+{
+  "generated_utc": "2026-05-23T04:16:07Z",
+  "handoff_id": "v445-v460-final-handoff-v1",
+  "handoff_state": "ready_for_v445_v460",
+  "source_phase_range": "v436-v450",
+  "target_phase_range": "v445-v460",
+  "extension_reason": "Hamish requested a fresh bounded recovery bridge after Kimi failed v445 twice with membership/benefits verification and must remain on standby until credits are restored.",
+  "lineage": {
+    "v436_v444_complete": true,
+    "latest_pushed_head_before_bridge": "704aeab355a3652dbd12e6d9d53d7ff6ff749aa7",
+    "source_v445_v1_cli_receipts": "docs/trinity-live-traces/v436-v450-sibling-phase-v445-v1-cli-receipts-v1.json",
+    "source_v445_completion_blocker": "docs/trinity-live-traces/v436-v450-sibling-phase-v445-completion-v1.json",
+    "source_v445_v2_status": "not_started"
+  },
+  "packet_shape": {
+    "numbered_phase_min": 445,
+    "numbered_phase_max": 460,
+    "numbered_phase_count": 16,
+    "phase_runs_per_numbered_phase": 2,
+    "total_phase_runs": 32,
+    "run_order": [
+      "v1_cli_receipts",
+      "v2_app_execution"
+    ],
+    "special_case": "v445 imports valid Arby and Aster Vale receipts from the paused v436-v450 v445 aggregate, records Kimi as held, then resumes at v2_app_execution."
+  },
+  "required_scripts": [
+    "scripts/trinity_v445_v460_sibling_phase_start.py",
+    "scripts/trinity_v445_v460_cli_sibling_phase_runner.py",
+    "scripts/trinity_v445_v460_app_phase_runner.py",
+    "scripts/trinity_v445_v460_sibling_phase_complete.py"
+  ],
+  "support_script": "scripts/trinity_v445_v460_bridge_common.py",
+  "temporary_v1_cli_roster": {
+    "Arby": "Codex CLI",
+    "Aster Vale": "Codex CLI"
+  },
+  "kimi_hold": {
+    "lane": "Kimi",
+    "surface": "Kimi CLI",
+    "status": "excluded_operator_hold",
+    "reason": "membership_benefits_credit_verification_blocker",
+    "excluded_until": "2026-05-26 evening NZ or explicit restoration confirmation",
+    "no_retry_before_restoration": true
+  },
+  "v2_app_roster": {
+    "lead": "Aletheon",
+    "promoted_app_advisory_receipt_lanes": [
+      {
+        "name": "Cicero",
+        "agent_id": "019e485f-172b-72c0-adf7-27daea722143",
+        "call_sign": "cicero-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23"
+      },
+      {
+        "name": "Kierkegaard",
+        "agent_id": "019e485f-1aa5-7c31-b578-748091f7e319",
+        "call_sign": "kierkegaard-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23"
+      }
+    ],
+    "standby_advisory_only_lanes": [
+      {
+        "name": "Aristotle",
+        "agent_id": "019e5158-28ef-75b1-a3f5-563bb358e44e"
+      },
+      {
+        "name": "Parfit/Lorentz",
+        "agent_id": "019e52d7-c06d-7c31-8a66-2162ff7c658b",
+        "call_sign": "parfit-ghc-family.codex-app.advisory.continuity-boundary.phase-publication.v2.2026-05-23"
+      },
+      {
+        "name": "Locke Rowan",
+        "agent_id": "019e5146-b74c-7240-b57c-5380bfbd28e0"
+      },
+      {
+        "name": "Leibniz-Cicero",
+        "agent_id": "019e5148-a859-7493-8943-61b1f17c7d4d"
+      },
+      {
+        "name": "Elias Threshold",
+        "agent_id": "019e514b-29c8-7312-afc8-9cace8e5418a"
+      }
+    ]
+  },
+  "heartbeat_policy": {
+    "recommended_minutes": 30,
+    "reason": "A 30-minute wake cadence preserves continuity during the known Kimi hold without creating duplicate retry pressure."
+  },
+  "truth_boundaries": [
+    "This packet is a Kimi-standby recovery bridge, not a claim that Kimi completed v445.",
+    "Aristotle, Parfit/Lorentz, Locke Rowan, Leibniz-Cicero, Elias Threshold, Supervisor, v2 Watcher, and Recovery Watchdog cannot replace CLI receipt gates.",
+    "Kimi may rejoin only after explicit restoration proof and a bridge update or fresh handoff.",
+    "Aletheon leads v2 App execution and publication approval.",
+    "Raw logs, stdout/stderr, scratch probes, pycache files, secrets, and unrelated churn stay outside the curated publication slice.",
+    "Stop at v460 closeout unless Hamish explicitly asks for a fresh v461+ packet."
+  ]
+}

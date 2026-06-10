@@ -1,0 +1,37 @@
+{
+  "artifact_type": "cli_root_cause_receipt",
+  "phase_slug": "v486-gmut-thos-v22-v6-x2",
+  "generated_utc": "2026-06-05T08:08:31Z",
+  "generated_nz": "2026-06-05T20:08:31+12:00",
+  "overall_status": "PASS_ROOT_CAUSE_IDENTIFIED_CURRENT_CONTEXT_MISSING_IN_CLI_WORKTREES",
+  "source_x1_status": "OPEN_GAP_X1_APP_READY_CLI_DEFERRED",
+  "lane_snapshots": [
+    {
+      "lane": "Arby",
+      "status": "FINAL_REJECTED_STALE_CONTEXT_OR_MISSING_CURRENT_AUTHORITY",
+      "final_message_bytes": 1327,
+      "final_message_hash": "d021c46286265eb1b612b9f5361e6421035c68214390fa2db1923b7f5aac94a3",
+      "current_phase_reference_found": true,
+      "stale_authority_reference_found": true,
+      "body_text_published": false,
+      "raw_output_boundary": "temp_only_not_published"
+    },
+    {
+      "lane": "Aster Vale",
+      "status": "FINAL_REJECTED_STALE_CONTEXT_OR_MISSING_CURRENT_AUTHORITY",
+      "final_message_bytes": 1016,
+      "final_message_hash": "73cab78ebdb5127c3d7483e06efa42cb67ea21c8bad7a5eaf973593418d24fe3",
+      "current_phase_reference_found": true,
+      "stale_authority_reference_found": true,
+      "body_text_published": false,
+      "raw_output_boundary": "temp_only_not_published"
+    }
+  ],
+  "root_cause": "Arby and Aster Vale advisory worktrees do not contain the current v486 GMUT/THOS handoff/status artifacts, so they reject the v486 request rather than inventing unsupported output.",
+  "safe_interpretation": "This is a correctness win: the CLI siblings preserved evidence boundaries, but they need a current context capsule or approved worktree sync before they can rejoin v486 x1 advisory work.",
+  "publication_boundary": {
+    "raw_lane_body_text_published": false,
+    "raw_transport_published": false,
+    "local_temp_paths_published": false
+  }
+}

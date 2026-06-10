@@ -1,0 +1,116 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY",
+  "connector_write_performed": false,
+  "expected_negative_report": {
+    "aggregate_status": "FAIL_BLOCKER",
+    "assertion_failures": [
+      "row_logic:negative_missing_required_and_unexpected_extra:missing_required",
+      "row_logic:negative_missing_required_and_unexpected_extra:unexpected_extra",
+      "row_logic:negative_nonempty_missing_not_blocked:row_status",
+      "summary:rederived",
+      "aggregate:status"
+    ],
+    "assertion_status": "FAIL_BLOCKER",
+    "connector_write_performed": false,
+    "gmUT_gate_effect": "none_open_not_tested",
+    "mutation_performed": false,
+    "report_mode": "local_non_mutating",
+    "rows": [
+      {
+        "evidence": [],
+        "message": "required fixture fields are present",
+        "row_id": "top_level_fields",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": [],
+        "message": "required fixture field types are constrained",
+        "row_id": "top_level_types",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": {
+          "connector_write_performed": false,
+          "gmUT_gate_effect": "none_open_not_tested",
+          "mutation_performed": false,
+          "validator_mode": "local_non_mutating_dashboard_fixture"
+        },
+        "message": "fixture remains local, non-mutating, and no-GMUT-gate-effect",
+        "row_id": "local_non_mutating_boundary",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": {
+          "case_count": 2,
+          "rows": 2
+        },
+        "message": "case_count reconciles with row count",
+        "row_id": "case_count",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": [],
+        "message": "required row fields are present",
+        "row_id": "row_fields",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": [],
+        "message": "required row field types are constrained",
+        "row_id": "row_types",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": [
+          "negative_missing_required_and_unexpected_extra:missing_required",
+          "negative_missing_required_and_unexpected_extra:unexpected_extra",
+          "negative_nonempty_missing_not_blocked:row_status"
+        ],
+        "message": "row reason-code logic reconciles",
+        "row_id": "row_logic",
+        "status": "FAIL_BLOCKER"
+      },
+      {
+        "evidence": [],
+        "message": "summary fields are present",
+        "row_id": "summary_fields",
+        "status": "PASS_SHAPE_ONLY"
+      },
+      {
+        "evidence": {
+          "actual": {
+            "dominant_mismatch_case_ids": [],
+            "missing_required_case_ids": [],
+            "nonmatching_case_ids": [],
+            "unexpected_extra_case_ids": []
+          },
+          "expected": {
+            "dominant_mismatch_case_ids": [],
+            "missing_required_case_ids": [
+              "negative_nonempty_missing_not_blocked"
+            ],
+            "nonmatching_case_ids": [],
+            "unexpected_extra_case_ids": []
+          }
+        },
+        "message": "summary reconciles with rows",
+        "row_id": "summary_rederived",
+        "status": "FAIL_BLOCKER"
+      },
+      {
+        "evidence": {
+          "actual": "PASS_SHAPE_ONLY",
+          "expected": "FAIL_BLOCKER"
+        },
+        "message": "aggregate status reconciles with summary",
+        "row_id": "aggregate_status_rederived",
+        "status": "FAIL_BLOCKER"
+      }
+    ],
+    "validator_mode": "local_non_mutating_reason_dashboard_fixture_assertion"
+  },
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "self_test_id": "reason_dashboard_fixture_negative_detection_v1",
+  "validator_mode": "local_non_mutating_reason_dashboard_fixture_negative_self_test"
+}

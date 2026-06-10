@@ -1,0 +1,243 @@
+{
+  "artifact_id": "v466A_GMUT_v7_x1_closed_shape_lint_schema_v1",
+  "phase": "v466A_GMUT_v7_x1",
+  "prepared_at_nz": "2026-06-01T04:40:12+12:00",
+  "status": "CLOSED_SHAPE_SCHEMA_DRAFT_NOT_EXECUTED",
+  "schema_posture": {
+    "dialect_target": "JSON Schema 2020-12",
+    "additionalProperties": false,
+    "execution_status_required": "not_run",
+    "result_status_allowed": [
+      "no_result",
+      "context_boundary_only"
+    ],
+    "gate_status_allowed": [
+      "open"
+    ]
+  },
+  "common_required_fields": [
+    "row_id",
+    "row_family",
+    "schema_version",
+    "execution_status",
+    "result_status",
+    "source_authority",
+    "claim_ceiling",
+    "blocked_claims",
+    "gate_status",
+    "hold_state",
+    "hold_reason"
+  ],
+  "family_schema_fragments": [
+    {
+      "row_family": "coefficient_SI",
+      "required_fields": [
+        "symbol",
+        "target_term_status",
+        "definition_artifact_status",
+        "natural_unit_dimension_status",
+        "SI_bridge_status",
+        "null_switch_behavior_status",
+        "constraint_route_status"
+      ],
+      "enum_constraints": {
+        "execution_status": [
+          "not_run"
+        ],
+        "result_status": [
+          "no_result"
+        ],
+        "source_authority": [
+          "exact_local_artifact_available",
+          "external_context_only",
+          "advisory_only",
+          "blocker",
+          "open_gap"
+        ],
+        "claim_ceiling": [
+          "schema_only",
+          "quarantine_only",
+          "symbolic_placeholder_only",
+          "switch_context_only"
+        ]
+      },
+      "special_constraints": [
+        "B_Psi requires hold_state demoted_quarantined unless definition_artifact_status is exact_local_artifact_available."
+      ]
+    },
+    {
+      "row_family": "metric_action",
+      "required_fields": [
+        "metric_signature_status",
+        "action_sign_status",
+        "kinetic_sign_status",
+        "variation_target_status",
+        "boundary_terms_policy_status",
+        "integration_by_parts_policy_status",
+        "metric_action_boundary_policy"
+      ],
+      "enum_constraints": {
+        "execution_status": [
+          "not_run"
+        ],
+        "result_status": [
+          "no_result"
+        ],
+        "claim_ceiling": [
+          "schema_only",
+          "reproducible_notation_only"
+        ]
+      }
+    },
+    {
+      "row_family": "consciousness_proxy_boundary",
+      "required_fields": [
+        "source_role",
+        "claim_text",
+        "claim_class",
+        "measurement_technique",
+        "measurand_or_quantity",
+        "claim_ceiling",
+        "false_positive_routes",
+        "blocked_claims",
+        "non_proof_caveats"
+      ],
+      "enum_constraints": {
+        "execution_status": [
+          "not_run"
+        ],
+        "result_status": [
+          "no_result"
+        ],
+        "measurement_technique": [
+          "not_measurement"
+        ],
+        "claim_ceiling": [
+          "schema_only"
+        ]
+      }
+    },
+    {
+      "row_family": "journey_context_boundary",
+      "required_fields": [
+        "source_role",
+        "claim_text",
+        "claim_class",
+        "local_path_line_citation",
+        "measurement_technique",
+        "measurand_or_quantity",
+        "claim_ceiling",
+        "blocked_claims",
+        "non_proof_caveats"
+      ],
+      "enum_constraints": {
+        "source_role": [
+          "journey_context_not_canon"
+        ],
+        "execution_status": [
+          "not_run"
+        ],
+        "result_status": [
+          "context_boundary_only"
+        ],
+        "claim_ceiling": [
+          "context_only"
+        ]
+      }
+    },
+    {
+      "row_family": "null_baseline_ladder",
+      "required_fields": [
+        "primary_switch",
+        "secondary_switch",
+        "baseline_ref",
+        "baseline_source_authority",
+        "exactness_requirement",
+        "expected_recovery_behavior",
+        "disabled_terms",
+        "held_terms",
+        "affected_expression_refs"
+      ],
+      "enum_constraints": {
+        "primary_switch": [
+          "full_scalar_disablement"
+        ],
+        "secondary_switch": [
+          "coupling_to_zero_diagnostic_only",
+          "none"
+        ],
+        "execution_status": [
+          "not_run"
+        ],
+        "result_status": [
+          "no_result"
+        ]
+      }
+    },
+    {
+      "row_family": "fifth_force_equivalence_constraint",
+      "required_fields": [
+        "candidate_parameter",
+        "parameter_role",
+        "measurand_or_quantity",
+        "constraint_type",
+        "required_primary_source",
+        "external_constraint_parameterization",
+        "uncertainty_model"
+      ],
+      "enum_constraints": {
+        "candidate_parameter": [
+          "alpha_B",
+          "lambda_T",
+          "other",
+          "unknown"
+        ],
+        "constraint_type": [
+          "fifth_force",
+          "equivalence_principle"
+        ],
+        "uncertainty_model": [
+          "qualitative_only",
+          "interval",
+          "statistical",
+          "systematic",
+          "unknown_blocker"
+        ],
+        "execution_status": [
+          "not_run"
+        ],
+        "result_status": [
+          "no_result"
+        ]
+      }
+    }
+  ],
+  "global_forbidden_fields": [
+    "fixture_output",
+    "derived_EOM",
+    "derived_T_Psi_mu_nu",
+    "dimension_pass",
+    "conservation_result",
+    "null_recovery_result",
+    "baseline_recovery_result",
+    "fifth_force_safety_result",
+    "consciousness_result",
+    "GMUT_validation_status",
+    "canon_promotion_status",
+    "PASS_HYGIENE_ONLY",
+    "observed_result_ref",
+    "matches_expected",
+    "satisfies_constraint",
+    "equivalence_compatible",
+    "personhood_status",
+    "spiritual_proof_status"
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}

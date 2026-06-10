@@ -1,0 +1,76 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "generated_at_utc": "2026-06-02T14:53:23+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "phase_slug": "v472-thos-v7-x1",
+  "rows": [
+    {
+      "evidence": {
+        "rule_count": 6
+      },
+      "message": "Semantic lint rule set is loaded.",
+      "row_id": "rules_loaded",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "failure_count": 0
+      },
+      "message": "Expected-positive and expected-negative fixtures were evaluated.",
+      "row_id": "fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "v7 x1 proves fixture behavior only; repo-wide semantic lint integration remains a v7 x2 target.",
+      "row_id": "scope",
+      "status": "OPEN_GAP"
+    }
+  ],
+  "rules": [
+    {
+      "left": "\\bvalidated\\b|\\bvalidation\\b",
+      "message": "GMUT validation language conflicts with open-gate status.",
+      "right": "gates?\\s+remain\\s+open|GMUT\\s+gates?\\s+remain\\s+open",
+      "rule_id": "gmUT_validation_with_open_gates"
+    },
+    {
+      "left": "observer[- ]only|browser\\s+smoke|image\\s+capture",
+      "message": "Observer evidence cannot certify publication, mutation, or live write.",
+      "right": "publication\\s+verified|mutation\\s+verified|live\\s+write\\s+verified",
+      "rule_id": "observer_evidence_as_publication"
+    },
+    {
+      "left": "\\bheld\\b|\\bstandby\\b",
+      "message": "Held or standby lanes need explicit restoration receipts before restored language.",
+      "right": "\\brestored\\b|\\breconnected\\b",
+      "rule_id": "held_lane_restored_without_receipt"
+    },
+    {
+      "left": "\\bcomplete\\b|\\bclosed\\b",
+      "message": "Completion language cannot mask blocker or open-gap status.",
+      "right": "\\bblocked\\b|\\bopen_gap\\b",
+      "rule_id": "completion_masks_blocker"
+    },
+    {
+      "left": "dry[- ]run|inspect(?:ion)?\\s+only",
+      "message": "Dry-run inspection cannot imply deletion or cleanup.",
+      "right": "\\bdeleted\\b|\\bremoved\\b|\\bcleaned\\b",
+      "rule_id": "dry_run_implies_deletion"
+    },
+    {
+      "left": "\\bcached\\b|\\bhistorical\\b|\\bprior\\b",
+      "message": "Cached or prior evidence needs freshness proof before current/live claims.",
+      "right": "\\bcurrent\\b|\\blive\\b|\\bactive\\b",
+      "rule_id": "cached_claims_current"
+    }
+  ]
+}

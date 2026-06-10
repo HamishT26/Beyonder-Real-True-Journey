@@ -1,0 +1,63 @@
+{
+  "artifact_type": "command_risk_summary",
+  "phase_slug": "v496-gmut-thos-v32-v8-x2",
+  "generated_utc": "2026-06-06T13:04:00Z",
+  "overall_status": "PASS_COMMAND_RISK_SUMMARY_READY",
+  "risk_rows": [
+    {
+      "surface": "status cadence guard",
+      "risk_class": "repo-write-validator",
+      "allowed_use": "write bounded cadence receipts",
+      "required_guard": "JSON parse, no raw lane harvest"
+    },
+    {
+      "surface": "phase sequence guard",
+      "risk_class": "repo-write-validator",
+      "allowed_use": "write strict next-phase receipts",
+      "required_guard": "current and proposed phase slug validation"
+    },
+    {
+      "surface": "no-overclaim guard",
+      "risk_class": "repo-write-validator",
+      "allowed_use": "scan curated artifacts for closure language",
+      "required_guard": "do not treat pass as empirical proof"
+    },
+    {
+      "surface": "wait policy guard",
+      "risk_class": "repo-write-validator",
+      "allowed_use": "validate source, skill, reflection, eureka, cadence, and raw-output policies",
+      "required_guard": "schema compatibility and JSON parse"
+    },
+    {
+      "surface": "CLI advisory launcher and notifier",
+      "risk_class": "local-process-temp-output",
+      "allowed_use": "read-only advisory lanes and temp-only raw output",
+      "required_guard": "hashes, byte counts, sensitive marker review, no raw publication"
+    },
+    {
+      "surface": "app-lane notifier runner",
+      "risk_class": "local-app-server-route",
+      "allowed_use": "existing route resume and status-safe completion gates",
+      "required_guard": "existing threads only, no raw transport, no new sibling creation"
+    },
+    {
+      "surface": "live user skill creation",
+      "risk_class": "exact-user-skill-write",
+      "allowed_use": "create exact approved skill slugs",
+      "required_guard": "frontmatter validation, hashes, no plugin-cache edits"
+    }
+  ],
+  "disabled_without_exact_approval": [
+    "destructive cleanup",
+    "broad staging",
+    "plugin-cache mutation",
+    "external account mutation",
+    "raw session or lane publication",
+    "deployment or public publishing"
+  ],
+  "claim_boundary": {
+    "raw_logs_published": false,
+    "credentials_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open"
+  }
+}

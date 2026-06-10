@@ -1,0 +1,17 @@
+Receipt:
+Using the `v241-v260` lane outcome only as unverified continuity context, the current turn did not produce local confirmation of multiplex TUI health or response-delivery state. In this Windows sandbox/worktree, even low-risk read probes were either policy-blocked or stalled, so I cannot honestly upgrade prior assumptions into a validated runtime-health claim.
+
+Blocker:
+Current validation is blocked by environment behavior, not by a confirmed application fault. Specifically:
+- broad and narrow file-enumeration probes were rejected by sandbox policy
+- simple workspace reads and git introspection stalled past timeout
+- no local trace, log, or health artifact was successfully read in this turn
+
+Refinement:
+Treat this lane as a transport-and-observability problem first. The immediate reliability gap is lack of a cheap, guaranteed-readable health surface inside the sandbox. A single small artifact such as a top-level `runtime-health` snapshot, recent multiplex session summary, or last response-path trace would let this lane separate “TUI unhealthy” from “sandbox cannot inspect”.
+
+Next-cycle proposal:
+1. Expose one minimal local health artifact in a known path.
+2. Include timestamp, session id, active pane/session count, last successful response delivery mark, and last error class.
+3. Keep the probe read-only and O(1): one file read, no recursive scan, no provider dependency.
+4. Re-run this lane against that artifact before attempting deeper multiplex validation.

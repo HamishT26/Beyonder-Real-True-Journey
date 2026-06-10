@@ -1,0 +1,47 @@
+{
+  "artifact_id": "v470-thos-v6-x3-negative-fixture-set-v1",
+  "phase": "v470_THOS_v6_x3",
+  "created_at_nz": "2026-06-02T16:28:13+12:00",
+  "fixture_set_version": "thos-negative-fixture-set-v1",
+  "execution_status": "NOT_RUN",
+  "negative_fixtures": [
+    {
+      "fixture_id": "duplicate_join_same_snapshot",
+      "target_surface": "sibling_synthesis_join",
+      "expected_status": "FAIL_BLOCKER",
+      "trigger": "two rows share the same source_row_id and sibling_group_id in one snapshot without explicit duplicate policy",
+      "required_response": "export unreconciled exception or reject package before visualization/synthesis"
+    },
+    {
+      "fixture_id": "missing_source_provenance",
+      "target_surface": "manifest_or_exception_export",
+      "expected_status": "FAIL_BLOCKER",
+      "trigger": "row lacks source_artifact or source_row_id where the contract requires both",
+      "required_response": "block publication and require provenance repair"
+    },
+    {
+      "fixture_id": "unknown_status_enum",
+      "target_surface": "status_enum_guard",
+      "expected_status": "FAIL_BLOCKER",
+      "trigger": "status is outside PASS_SHAPE_ONLY, OPEN_GAP, FAIL_BLOCKER, NOT_RUN",
+      "required_response": "reject row and record enum failure"
+    },
+    {
+      "fixture_id": "non_none_gmut_gate_effect",
+      "target_surface": "gmut_boundary_lock",
+      "expected_status": "FAIL_BLOCKER",
+      "trigger": "gmut_gate_effect is any value other than none_open_not_tested",
+      "required_response": "block THOS artifact from implying GMUT closure"
+    },
+    {
+      "fixture_id": "checksum_mismatch",
+      "target_surface": "phase_manifest",
+      "expected_status": "FAIL_BLOCKER",
+      "trigger": "manifest sha256 does not match current file content for a declared artifact path",
+      "required_response": "regenerate manifest or reject package"
+    }
+  ],
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}

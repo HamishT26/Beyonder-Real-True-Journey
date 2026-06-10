@@ -1,0 +1,69 @@
+{
+  "generated_utc": "2026-04-21T00:28:44+00:00",
+  "phase": "v45_omega",
+  "overall_status": "WARN",
+  "cloud_activation_mode": "research_only_until_billing_truth",
+  "gcloud_auth_state": "no_active_account",
+  "gcloud_project_state": "no_active_project",
+  "billing_console_credit_state": "console_confirmation_required",
+  "credit_claim_state": "operator_claim_unverified",
+  "vertex_ai_credit_research_state": "bounded_research_ready",
+  "kai_activation_state": "standby_waiting_for_billing_truth",
+  "vesper_activation_state": "standby_waiting_for_billing_truth",
+  "official_product_names": {
+    "suite_name": "Vertex AI Agent Builder",
+    "console_product_name": "AI Applications",
+    "search_lane": "Vertex AI Search",
+    "runtime_lane": "Agent Engine"
+  },
+  "activation_sequence": [
+    "gcloud auth",
+    "active project",
+    "billing account plus budgets plus alerts",
+    "Billing console credit capture",
+    "read-only API and billing truth capture",
+    "bounded low-cost AI Applications / Vertex AI Search proof",
+    "bounded Agent Engine secondary proof"
+  ],
+  "research_use_cases": [
+    "Use Vertex AI Search for bounded grounded-answer flows over operator-selected corpora.",
+    "Prefer Google Drive-backed ingestion only if connector auth and Drive control are ready; otherwise fall back to Cloud Storage, then Bigtable-backed research surfaces.",
+    "Keep Bigtable as the proven primary memory lane until Agent Engine runtime plus Sessions plus Memory Bank are stable and queryable.",
+    "Treat Agent Engine runtime free tier separately from billable Sessions, Memory Bank, and Code Execution so v45 research does not overstate free usage.",
+    "Keep Kai and Vesper Ion on standby until active account, project, and billing truth are restored."
+  ],
+  "verified_external_facts": [
+    {
+      "claim": "Google documents AI Applications as the renamed product from Vertex AI Agent Builder.",
+      "source": "Google Cloud release notes",
+      "url": "https://docs.cloud.google.com/generative-ai-app-builder/docs/release-notes"
+    },
+    {
+      "claim": "Vertex AI Agent Builder docs still present the suite name and the standard free-credit starting point as $300.",
+      "source": "Google Cloud documentation",
+      "url": "https://docs.cloud.google.com/agent-builder"
+    },
+    {
+      "claim": "Agent Engine runtime has a monthly free tier, while Sessions, Memory Bank, and Code Execution are priced services.",
+      "source": "Google Cloud pricing",
+      "url": "https://cloud.google.com/vertex-ai/pricing"
+    },
+    {
+      "claim": "The standard Google Cloud free-trial baseline remains $300 and about 90 days unless the billing console shows a different account-specific credit source.",
+      "source": "Google Cloud Free Program",
+      "url": "https://cloud.google.com/free/docs/gcp-free-tier"
+    }
+  ],
+  "gcloud_auth_probe": {
+    "command": "gcloud auth list",
+    "returncode": 0,
+    "stdout_excerpt": "",
+    "stderr_excerpt": "\nNo credentialed accounts.\n\nTo login, run:\n  $ gcloud auth login `ACCOUNT`\n\n"
+  },
+  "gcloud_config_probe": {
+    "command": "gcloud config list",
+    "returncode": 0,
+    "stdout_excerpt": "[accessibility]\nscreen_reader = False\n[core]\ndisable_usage_reporting = True\n",
+    "stderr_excerpt": "\nYour active configuration is: [default]\n"
+  }
+}

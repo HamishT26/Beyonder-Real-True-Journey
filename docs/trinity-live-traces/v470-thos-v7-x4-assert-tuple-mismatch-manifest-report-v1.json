@@ -1,0 +1,158 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY",
+  "assertion_failures": [],
+  "assertion_status": "PASS_SHAPE_ONLY",
+  "connector_write_performed": false,
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "observed_report_status": "FAIL_BLOCKER",
+  "report_input": "docs/trinity-live-traces/v470-thos-v7-x3-tuple-mismatch-binding-report-v1.json",
+  "report_mode": "local_non_mutating",
+  "rows": [
+    {
+      "evidence": [],
+      "message": "required fields are present",
+      "row_id": "required_top_level_fields",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": [],
+      "message": "required field types are constrained",
+      "row_id": "required_top_level_types",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": [],
+      "message": "status enum values are constrained",
+      "row_id": "status_enums",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "connector_write_performed": false,
+        "gmUT_gate_effect": "none_open_not_tested",
+        "mutation_performed": false,
+        "report_mode": "local_non_mutating"
+      },
+      "message": "report remains local, non-mutating, and no-GMUT-gate-effect",
+      "row_id": "local_non_mutating_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": [
+        "FAIL_BLOCKER",
+        "OPEN_GAP",
+        "PASS_SHAPE_ONLY"
+      ],
+      "message": "status precedence order is explicit",
+      "row_id": "precedence_order",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "actual": "FAIL_BLOCKER",
+        "expected": "FAIL_BLOCKER"
+      },
+      "message": "aggregate status reconciles with detailed findings",
+      "row_id": "aggregate_status_rederived",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "actual_failure": "TUPLE_MISMATCH",
+        "actual_finding": "TUPLE_MISMATCH",
+        "expected_failure": "TUPLE_MISMATCH",
+        "expected_finding": "TUPLE_MISMATCH"
+      },
+      "message": "dominant codes reconcile with failure code precedence",
+      "row_id": "dominant_codes",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "actual": [],
+        "expected": []
+      },
+      "message": "secondary findings are deterministic and not suppressed",
+      "row_id": "secondary_findings_retained",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": "TUPLE_MISMATCH is a blocker-class finding",
+      "message": "precedence reason is non-empty",
+      "row_id": "precedence_reason",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "missing": [],
+        "type_errors": []
+      },
+      "message": "count reconciliation fields are present and typed",
+      "row_id": "count_reconciliation_shape",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "actual_count_reconciliation_status": "FAIL_BLOCKER",
+        "count_vectors": {
+          "digest_mismatch_count": [
+            0,
+            0
+          ],
+          "duplicate_visual_row_count": [
+            0,
+            0,
+            0
+          ],
+          "gate_effect_drift_count": [
+            0,
+            0,
+            0
+          ],
+          "missing_digest_ref_count": [
+            0,
+            0
+          ],
+          "missing_visual_row_count": [
+            0,
+            0
+          ],
+          "orphan_visual_row_count": [
+            0,
+            0,
+            0
+          ],
+          "tuple_mismatch_count": [
+            1,
+            1,
+            1
+          ]
+        },
+        "expected_count_reconciliation_status": "FAIL_BLOCKER"
+      },
+      "message": "summary counters reconcile with detailed row finding lists",
+      "row_id": "row_to_summary_reconciliation",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "missing": [],
+        "type_errors": []
+      },
+      "message": "digest-reference presence fields are present and typed",
+      "row_id": "digest_ref_presence_shape",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "actual_status": "present",
+        "expected_status": "present"
+      },
+      "message": "digest-reference presence status and counts reconcile with row evidence",
+      "row_id": "digest_ref_presence_rederived",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "validator_mode": "local_non_mutating_visualization_report_assertion"
+}

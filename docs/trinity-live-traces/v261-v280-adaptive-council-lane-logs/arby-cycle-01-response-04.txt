@@ -1,0 +1,11 @@
+Receipt:
+Local context is consistent with a proof-only lane: `v241-v260` status records `141` selected touchpoints and `34` completed replies, and the action pack keeps `No commits` and `No provider mutations` as hard boundaries. This `v58` worktree still reports `git_publication_state: pending`, and the live local branch resolves to `codex/GHC-Family/v58-omega-exec`.
+
+Blocker:
+I cannot verify the current remote branch head, PR state, or provider-side publication health from this lane, so any GitHub publication claim would be ungrounded.
+
+Refinement:
+The safe publication slice is: prove the local artifact set first, keep the staged delta curated and minimal, then publish with a forward-only sequence only when remote access is explicitly available: `git fetch`, inspect drift, `git merge origin/<shared-branch> --no-edit` if needed, then `git push`. No reset, no rebase, no force-push, and no claim that publication is complete until a new receipt records the actual pushed head.
+
+Next-cycle proposal:
+Have Arby emit a compact publication receipt template with four fields only: local branch, candidate proof files, remote-verification-required, and forward-only push sequence. That keeps the next turn actionable without pretending GitHub proof already exists.

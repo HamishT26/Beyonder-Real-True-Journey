@@ -1,0 +1,345 @@
+#!/usr/bin/env python3
+"""Complete one bounded v421-v440 v1/v2 phase and optionally open the next."""
+
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import json
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TRACE = ROOT / "docs" / "trinity-live-traces"
+RUN_STATUS_JSON = TRACE / "v421-v440-sibling-run-status-v1.json"
+RUN_STATUS_MD = TRACE / "v421-v440-sibling-run-status-v1.md"
+PHASE_START = ROOT / "scripts" / "trinity_v421_v440_sibling_phase_start.py"
+CLOSEOUT_JSON = TRACE / "v421-v440-closeout-declaration-v1.json"
+CLOSEOUT_MD = TRACE / "v421-v440-closeout-declaration-v1.md"
+
+PHASE_MIN = 421
+PHASE_MAX = 440
+PHASE_RANGE = "v421-v440"
+REQUIRED_CLI_LANES = {"Arby": "Codex CLI", "Kimi": "Kimi CLI", "Aster Vale": "Codex CLI"}
+
+SOURCE_NOTES = [
+    ("v401-v420 closeout", "docs/trinity-live-traces/v401-v420-closeout-declaration-v1.json", "Use completed packet truth as the floor."),
+    ("v421-v440 handoff", "docs/trinity-live-traces/v421-v440-final-handoff-v1.json", "Use bounded successor packet rules."),
+    ("OpenAI Codex changelog", "https://developers.openai.com/codex/changelog", "Anchor Goal Mode, browser, and app update claims."),
+    ("OpenAI Codex prompting", "https://developers.openai.com/codex/prompting", "Keep goal prompts clear and bounded."),
+    ("NIST AI RMF", "https://www.nist.gov/itl/ai-risk-management-framework", "Govern, map, measure, and manage risk."),
+    ("UNESCO AI ethics", "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics", "Keep dignity, rights, and flourishing visible."),
+    ("EU AI Act", "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai", "Preserve risk-based governance language."),
+    ("Model Context Protocol", "https://modelcontextprotocol.io/", "Keep MCP expansion inside explicit trust boundaries."),
+]
+
+
+def now_iso() -> str:
+    return dt.datetime.now(dt.timezone.utc).isoformat()
+
+
+def rel(path: Path) -> str:
+    return str(path.relative_to(ROOT)).replace("\\", "/")
+
+
+def read_json(path: Path, default: Any) -> Any:
+    if not path.exists():
+        return default
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+
+
+def write_json(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+
+
+def validate_phase(phase: int) -> None:
+    if phase < PHASE_MIN or phase > PHASE_MAX:
+        raise SystemExit(f"phase must be between {PHASE_MIN} and {PHASE_MAX}; got {phase}")
+
+
+def paths_for_phase(phase: int) -> dict[str, Path]:
+    stem = f"v421-v440-sibling-phase-v{phase}"
+    return {
+        "start_json": TRACE / f"{stem}-start-v1.json",
+        "completion_json": TRACE / f"{stem}-completion-v1.json",
+        "completion_md": TRACE / f"{stem}-completion-v1.md",
+        "v1_json": TRACE / f"{stem}-v1-report-v1.json",
+        "v1_md": TRACE / f"{stem}-v1-report-v1.md",
+        "v2_json": TRACE / f"{stem}-v2-report-v1.json",
+        "v2_md": TRACE / f"{stem}-v2-report-v1.md",
+        "source_json": TRACE / f"v421-v440-sibling-source-capsule-v{phase}-v1.json",
+        "source_md": TRACE / f"v421-v440-sibling-source-capsule-v{phase}-v1.md",
+        "cli_receipts_json": TRACE / f"{stem}-v1-cli-receipts-v1.json",
+        "cli_receipts_md": TRACE / f"{stem}-v1-cli-receipts-v1.md",
+        "v2_receipt_json": TRACE / f"{stem}-v2-app-receipt-v1.json",
+        "v2_receipt_md": TRACE / f"{stem}-v2-app-receipt-v1.md",
+        "advisory_json": TRACE / f"{stem}-advisory-refinement-v1.json",
+        "advisory_md": TRACE / f"{stem}-advisory-refinement-v1.md",
+    }
+
+
+def validate_cli_receipts(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
+    gate = {"required": True, "path": rel(paths["cli_receipts_json"]), "status": "blocked_missing_v1_cli_receipts", "blockers": []}
+    if not paths["cli_receipts_json"].exists():
+        gate["blockers"].append(f"Run scripts/trinity_v421_v440_cli_sibling_phase_runner.py --phase {phase} --background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 10000 before v2.")
+        return gate
+    payload = read_json(paths["cli_receipts_json"], {})
+    gate["status"] = payload.get("status") or "blocked_unreadable_v1_cli_receipts"
+    if payload.get("status") != "v1_cli_receipts_complete":
+        gate["blockers"].append("v1 CLI receipt aggregate is not complete.")
+    receipts = payload.get("lane_receipts") or []
+    for lane, expected_surface in REQUIRED_CLI_LANES.items():
+        receipt = next((item for item in receipts if item.get("lane") == lane), None)
+        if not receipt:
+            gate["blockers"].append(f"Missing {lane} CLI receipt.")
+            continue
+        if receipt.get("surface") != expected_surface:
+            gate["blockers"].append(f"{lane} receipt is from {receipt.get('surface')} instead of {expected_surface}.")
+        if receipt.get("receipt_status") != "valid_cli_receipt" or not receipt.get("valid"):
+            gate["blockers"].append(f"{lane} receipt is not valid: {receipt.get('receipt_status')}.")
+    gate["status"] = "blocked_missing_v1_cli_receipts" if gate["blockers"] else "v1_cli_receipts_complete"
+    return gate
+
+
+def validate_v2_receipt(paths: dict[str, Path]) -> dict[str, Any]:
+    gate = {"required": True, "path": rel(paths["v2_receipt_json"]), "status": "blocked_missing_v2_app_receipt", "blockers": []}
+    if not paths["v2_receipt_json"].exists():
+        gate["blockers"].append("Run the Aletheon-led v2 App execution and record its receipt before phase completion.")
+        return gate
+    payload = read_json(paths["v2_receipt_json"], {})
+    gate["status"] = payload.get("status") or "blocked_unreadable_v2_app_receipt"
+    if payload.get("status") != "v2_app_complete":
+        gate["blockers"].append(f"v2 App receipt is not complete: {payload.get('status')}.")
+    if payload.get("spent_external_usd", 0) != 0:
+        gate["blockers"].append("v2 recorded external spend; local-first policy requires a fresh explicit scope before completion.")
+    if not payload.get("validations"):
+        gate["blockers"].append("v2 App receipt must record at least one validation.")
+    gate["status"] = "blocked_missing_v2_app_receipt" if gate["blockers"] else "v2_app_complete"
+    return gate
+
+
+def write_source_capsule(phase: int, paths: dict[str, Path]) -> dict[str, Any]:
+    sources = [{"topic": topic, "path_or_url": path_or_url, "phase_use": phase_use} for topic, path_or_url, phase_use in SOURCE_NOTES]
+    payload = {"generated_utc": now_iso(), "phase": phase, "status": "source_capsule_complete", "source_count": len(sources), "source_policy": "Prefer repo evidence, official docs, standards bodies, and established science sources.", "sources": sources}
+    write_json(paths["source_json"], payload)
+    lines = [f"# v{phase} Source Capsule", "", f"Generated UTC: `{payload['generated_utc']}`", f"Status: `{payload['status']}`", "", "Sources:"]
+    lines.extend([f"- {item['topic']}: {item['path_or_url']} - {item['phase_use']}" for item in sources])
+    paths["source_md"].write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return payload
+
+
+def write_reports(phase: int, start: dict[str, Any], paths: dict[str, Path], source_capsule: dict[str, Any], v2_receipt: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    plan = start.get("phase_plan") or {}
+    lead = plan.get("lead_sibling")
+    v1 = {
+        "generated_utc": now_iso(),
+        "phase": phase,
+        "status": "v1_report_complete",
+        "lead_sibling": lead,
+        "summary": f"{lead} preserved v421-v440 handoff truth and mapped v{phase} v1 into CLI receipt evidence.",
+        "evidence": {"start_artifact": rel(paths["start_json"]), "cli_receipts": rel(paths["cli_receipts_json"]), "source_capsule": rel(paths["source_json"])},
+        "truth_boundaries": [
+            "The v1 report is a curated synthesis, not raw terminal output.",
+            "v1 proves Arby/Kimi/Aster Vale receipt readiness; it does not claim App-side implementation.",
+        ],
+    }
+    v2 = {
+        "generated_utc": now_iso(),
+        "phase": phase,
+        "status": "v2_report_complete",
+        "lead_sibling": lead,
+        "summary": v2_receipt.get("summary") or f"{lead} completed v{phase} v2 App-side local-first execution.",
+        "evidence": {"v2_receipt": rel(paths["v2_receipt_json"]), "changed_paths": v2_receipt.get("changed_paths", []), "validations": v2_receipt.get("validations", [])},
+        "truth_boundaries": [
+            "The v2 report records Aletheon-led App execution only.",
+            "No paid external action or external-service mutation is claimed under local-first policy.",
+        ],
+    }
+    write_json(paths["v1_json"], v1)
+    write_json(paths["v2_json"], v2)
+    paths["v1_md"].write_text("\n".join([f"# v{phase} V1 Report", "", f"Generated UTC: `{v1['generated_utc']}`", f"Status: `{v1['status']}`", f"Lead sibling: `{lead}`", "", v1["summary"], "", "Truth boundaries:", *[f"- {item}" for item in v1["truth_boundaries"]]]) + "\n", encoding="utf-8")
+    paths["v2_md"].write_text("\n".join([f"# v{phase} V2 Report", "", f"Generated UTC: `{v2['generated_utc']}`", f"Status: `{v2['status']}`", f"Lead sibling: `{lead}`", "", v2["summary"], "", "Truth boundaries:", *[f"- {item}" for item in v2["truth_boundaries"]]]) + "\n", encoding="utf-8")
+    return v1, v2
+
+
+def write_advisory_refinement(phase: int, paths: dict[str, Path], cli_gate: dict[str, Any], v2_gate: dict[str, Any]) -> dict[str, Any]:
+    next_phase = phase + 1 if phase < PHASE_MAX else None
+    payload = {
+        "generated_utc": now_iso(),
+        "phase": phase,
+        "status": "advisory_refinement_ready" if cli_gate.get("status") == "v1_cli_receipts_complete" and v2_gate.get("status") == "v2_app_complete" else "blocked_until_v1_v2_complete",
+        "advisors": ["Parfit", "Cicero", "Kierkegaard"],
+        "advisory_scope": "Advisory proposal synthesis only; does not replace CLI or App gates.",
+        "next_phase": next_phase,
+        "proposal_target_eureka_tasks": 100,
+        "truth_boundaries": [
+            "Aletheon may send these prompts through Codex app agent tools when available.",
+            "Late replies are allowed and can seed later phases, but fresh durable artifacts outrank advisory text.",
+            "The advisor proposal loop is a planning accelerator, not a publication gate.",
+        ],
+    }
+    write_json(paths["advisory_json"], payload)
+    lines = [f"# v{phase} Advisory Refinement", "", f"Generated UTC: `{payload['generated_utc']}`", f"Status: `{payload['status']}`", f"Next phase: `v{payload['next_phase']}`", "", "Truth boundaries:", *[f"- {item}" for item in payload["truth_boundaries"]]]
+    paths["advisory_md"].write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return payload
+
+
+def write_closeout_declaration(completion: dict[str, Any]) -> dict[str, Any]:
+    completions = sorted(TRACE.glob("v421-v440-sibling-phase-v*-completion-v1.json"))
+    phase_numbers: list[int] = []
+    for item in completions:
+        try:
+            phase_numbers.append(int(item.name.split("-phase-v", 1)[1].split("-", 1)[0]))
+        except (IndexError, ValueError):
+            continue
+    phase_numbers = sorted(set(phase_numbers))
+    completed = [phase for phase in phase_numbers if PHASE_MIN <= phase <= PHASE_MAX]
+    payload = {
+        "generated_utc": now_iso(),
+        "declaration_id": "v421-v440-closeout-declaration-v1",
+        "status": "v421_v440_complete" if completion["phase"] == PHASE_MAX and completion["status"] == "phase_complete" else "blocked",
+        "completed_ranges": {"v401_v420": "complete", "v421_v440": "complete_through_v440" if PHASE_MAX in completed else "incomplete"},
+        "v421_v440_numbered_phase_count": len(completed),
+        "v421_v440_phase_run_count": len(completed) * 2,
+        "v421_v440_completed_phases": completed,
+        "final_completion": {"phase": completion["phase"], "json": completion["completion_artifact"], "md": completion["completion_artifact"].replace(".json", ".md")},
+        "truth_boundaries": [
+            "This closeout declares curated repository artifacts complete; it does not claim uncontrolled external systems were modified.",
+            "Raw logs, scratch probes, pycache files, and unrelated churn remain outside the curated publication slice.",
+            "Future v441+ work requires a new bounded handoff or explicit operator automation update.",
+        ],
+        "next_action": "Stop. Ask Hamish whether to archive this automation or create a fresh v441+ packet.",
+    }
+    write_json(CLOSEOUT_JSON, payload)
+    lines = ["# v421-v440 Closeout Declaration", "", f"Generated UTC: `{payload['generated_utc']}`", f"Status: `{payload['status']}`", f"Numbered phases: `{payload['v421_v440_numbered_phase_count']}`", f"Phase-runs: `{payload['v421_v440_phase_run_count']}`", "", "Truth boundaries:", *[f"- {item}" for item in payload["truth_boundaries"]], "", f"Next action: {payload['next_action']}"]
+    CLOSEOUT_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return payload
+
+
+def build_completion(phase: int, open_next: bool) -> tuple[dict[str, Any], dict[str, Path]]:
+    validate_phase(phase)
+    paths = paths_for_phase(phase)
+    start = read_json(paths["start_json"], {})
+    plan = start.get("phase_plan") or {}
+    cli_gate = validate_cli_receipts(phase, paths)
+    v2_gate = validate_v2_receipt(paths)
+    source_capsule = write_source_capsule(phase, paths)
+    v2_receipt = read_json(paths["v2_receipt_json"], {})
+    v1, v2 = write_reports(phase, start, paths, source_capsule, v2_receipt)
+    advisory = write_advisory_refinement(phase, paths, cli_gate, v2_gate)
+    status = "phase_complete" if start.get("status") == "phase_started" else "blocked_missing_phase_start"
+    blockers = cli_gate["blockers"] + v2_gate["blockers"]
+    if status == "phase_complete" and blockers:
+        status = "blocked_missing_v1_or_v2_gate"
+    next_phase = phase + 1 if open_next and phase < PHASE_MAX and status == "phase_complete" else None
+    next_action = (
+        f"Open v{next_phase} from the v421-v440 sibling base plan."
+        if next_phase
+        else ("Stop at v440, write closeout, then ask Hamish whether to archive or update automation." if phase == PHASE_MAX and status == "phase_complete" else f"Finish v{phase} v1 and v2 gates, then rerun completion.")
+    )
+    completion = {
+        "generated_utc": now_iso(),
+        "phase_range": PHASE_RANGE,
+        "phase": phase,
+        "status": status,
+        "lead_sibling": plan.get("lead_sibling"),
+        "start_artifact": rel(paths["start_json"]),
+        "v1_report": rel(paths["v1_json"]),
+        "v2_report": rel(paths["v2_json"]),
+        "source_capsule": rel(paths["source_json"]),
+        "advisory_refinement": rel(paths["advisory_json"]),
+        "completion_artifact": rel(paths["completion_json"]),
+        "completed_counts": {"sources": len(source_capsule["sources"]), "v1_evidence": cli_gate.get("status"), "v2_evidence": v2_gate.get("status"), "eureka_proposals": len(plan.get("eureka_proposals", [])), "advisory_target_eureka_tasks": advisory.get("proposal_target_eureka_tasks")},
+        "cli_receipt_gate": cli_gate,
+        "app_v2_gate": v2_gate,
+        "blockers": blockers,
+        "truth_boundaries": v1["truth_boundaries"] + v2["truth_boundaries"] + ["v421-v440 remains bounded under Aletheon oversight.", "v441+ must not start from this runner without a new handoff."],
+        "next_phase": next_phase,
+        "next_action": next_action,
+    }
+    write_json(paths["completion_json"], completion)
+    return completion, paths
+
+
+def write_completion_md(completion: dict[str, Any], paths: dict[str, Path]) -> None:
+    cli_gate = completion.get("cli_receipt_gate") or {}
+    app_gate = completion.get("app_v2_gate") or {}
+    lines = [
+        f"# v{completion['phase']} Phase Completion Receipt",
+        "",
+        f"Generated UTC: `{completion['generated_utc']}`",
+        f"Status: `{completion['status']}`",
+        f"Lead sibling: `{completion.get('lead_sibling')}`",
+        "",
+        "Gates:",
+        f"- v1 CLI: `{cli_gate.get('status')}` at `{cli_gate.get('path')}`",
+        f"- v2 App: `{app_gate.get('status')}` at `{app_gate.get('path')}`",
+    ]
+    if completion.get("blockers"):
+        lines.extend(["", "Blockers:", *[f"- {item}" for item in completion["blockers"]]])
+    lines.extend(["", "Truth boundaries:", *[f"- {item}" for item in completion["truth_boundaries"]], "", f"Next action: {completion['next_action']}"])
+    paths["completion_md"].write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def open_next_phase(phase: int) -> dict[str, Any] | None:
+    if phase >= PHASE_MAX:
+        return None
+    proc = subprocess.run([sys.executable, str(PHASE_START), "--phase", str(phase + 1)], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=120, check=False)
+    if proc.returncode != 0:
+        return {"status": "next_phase_open_failed", "phase": phase + 1, "stderr": proc.stderr}
+    return json.loads(proc.stdout)
+
+
+def update_run_status(completion: dict[str, Any], paths: dict[str, Path], opened_next: dict[str, Any] | None, closeout: dict[str, Any] | None) -> None:
+    if opened_next:
+        status = "running"
+        active_phase = opened_next["phase"]
+        active_run = "v1_cli_receipts"
+        active_status = opened_next["status"]
+        artifacts = {"json": opened_next["phase_artifact"], "md": opened_next["phase_artifact"].replace(".json", ".md")}
+        next_action = f"Run scripts/trinity_v421_v440_cli_sibling_phase_runner.py --phase {active_phase} --background --timeout-sec 86400 --kimi-timeout-sec 86400 --max-steps 10000."
+    elif closeout:
+        status = closeout["status"]
+        active_phase = completion["phase"]
+        active_run = "v2_app_execution"
+        active_status = completion["status"]
+        artifacts = {"json": rel(paths["completion_json"]), "md": rel(paths["completion_md"])}
+        next_action = closeout["next_action"]
+    else:
+        status = "phase_complete_waiting" if completion["status"] == "phase_complete" else completion["status"]
+        active_phase = completion["phase"]
+        active_run = "v2_app_execution"
+        active_status = completion["status"]
+        artifacts = {"json": rel(paths["completion_json"]), "md": rel(paths["completion_md"])}
+        next_action = completion["next_action"]
+    payload = {"generated_utc": now_iso(), "phase_range": completion["phase_range"], "status": status, "active_phase": active_phase, "active_run": active_run, "active_phase_status": active_status, "active_phase_artifacts": artifacts, "last_completion": {"phase": completion["phase"], "json": rel(paths["completion_json"]), "md": rel(paths["completion_md"])} if completion["status"] == "phase_complete" else None, "closeout_declaration": rel(CLOSEOUT_JSON) if closeout else None, "next_action": next_action}
+    write_json(RUN_STATUS_JSON, payload)
+    lines = ["# v421-v440 Sibling Run Status", "", f"Generated UTC: `{payload['generated_utc']}`", f"Status: `{payload['status']}`", f"Active phase: `v{payload['active_phase']}`", f"Active run: `{payload['active_run']}`", f"Active phase status: `{payload['active_phase_status']}`", "", "Active artifacts:", f"- `{payload['active_phase_artifacts']['json']}`", f"- `{payload['active_phase_artifacts']['md']}`", ""]
+    if payload.get("last_completion"):
+        lines.extend(["Last completion:", f"- `v{payload['last_completion']['phase']}`", f"- `{payload['last_completion']['json']}`", f"- `{payload['last_completion']['md']}`", ""])
+    if payload.get("closeout_declaration"):
+        lines.extend(["Closeout declaration:", f"- `{payload['closeout_declaration']}`", ""])
+    lines.append(f"Next action: {payload['next_action']}")
+    RUN_STATUS_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--phase", type=int, default=PHASE_MIN)
+    parser.add_argument("--open-next", action="store_true")
+    args = parser.parse_args()
+    completion, paths = build_completion(args.phase, args.open_next)
+    write_completion_md(completion, paths)
+    opened_next = open_next_phase(args.phase) if completion["status"] == "phase_complete" and args.open_next else None
+    closeout = write_closeout_declaration(completion) if completion["status"] == "phase_complete" and args.phase == PHASE_MAX else None
+    update_run_status(completion, paths, opened_next, closeout)
+    print(json.dumps({"status": completion["status"], "phase": args.phase, "completion": rel(paths["completion_json"]), "opened_next": opened_next, "closeout": rel(CLOSEOUT_JSON) if closeout else None}, indent=2))
+    return 0 if completion["status"] == "phase_complete" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

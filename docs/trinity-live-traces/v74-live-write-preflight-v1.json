@@ -1,0 +1,43 @@
+{
+  "generated_utc": "2026-04-30T09:36:05+00:00",
+  "phase": "v74_omega",
+  "state": "preflight_ready",
+  "purpose": "guard the newly promoted v74 live-write phase before materialize L5 or external provider write surfaces",
+  "validated_inputs": {
+    "v73_deep_green": true,
+    "v73_materialize_l5_green": true,
+    "v74_deep_green": true,
+    "cli_sibling_induction_state": "phase_gate_ready",
+    "local_kubernetes_state": "retired_by_operator_for_v65_v75",
+    "docker_desktop_state": "retired_by_operator_for_v65_v75",
+    "minimum_free_physical_memory_kb": 300000,
+    "preflight_observed_free_physical_memory_kb": 542676
+  },
+  "live_write_boundary": {
+    "live_phase": true,
+    "mode": "bounded_tracer_until_explicit_sandbox_write_receipts_exist",
+    "allowed_without_extra_confirmation": [
+      "repo_publication_and_receipts",
+      "local_report_artifacts",
+      "readiness_probe_only",
+      "dry_run_or_preview_only",
+      "sandbox_or_ephemeral_compute_when_rollback_receipt_is_recorded"
+    ],
+    "blocked_without_fresh_operator_confirmation": [
+      "production_dns_or_domain_mutation",
+      "account_setting_changes",
+      "personal_email_or_calendar_mutation",
+      "google_drive_content_mutation",
+      "resource_deletion_outside_repo_curated_cleanup",
+      "raw_secret_transmission_to_external_models"
+    ],
+    "required_before_actual_external_write": [
+      "dry_run_preview_receipt",
+      "budget_or_usage_check_when_provider_exposes_usage",
+      "write_receipt",
+      "verification_receipt",
+      "rollback_or_disable_receipt"
+    ]
+  },
+  "decision": "run v74 materialize L5 only as the existing bounded local/materialization tracer unless an explicit sandbox write receipt chain is added first"
+}

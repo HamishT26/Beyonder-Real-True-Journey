@@ -1,0 +1,66 @@
+# v478 THOS v1 x1 Roadmap
+
+- generated_nz: `2026-06-04T08:27:16+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478X1-01` (lane): Start v478 v1 x1 with app-lane notifier probe for Cicero, Kierkegaard, and Aristotle.
+- `V478X1-02` (lane): Notify app lanes only if the probe confirms read/resume readiness.
+- `V478X1-03` (lane): Run one bounded Arby/Aster CLI watcher pass with final-marker criteria.
+- `V478X1-04` (lane): Carry the CLI timeout as a known open gap if unchanged.
+- `V478X1-05` (lane): Record lane durations without publishing message payloads.
+- `V478X1-06` (command): Build a command-index surface manifest from v8 command bridge candidates.
+- `V478X1-07` (command): Map command IDs to proof-required metadata fields.
+- `V478X1-08` (command): Hold weak command rows as open gaps.
+- `V478X1-09` (command): Prepare P1 stdout-only command probes without executing live writes.
+- `V478X1-10` (command): Draft command promotion criteria for future approval.
+- `V478X1-11` (skill): Sample skill metadata that maps to command-index rows.
+- `V478X1-12` (skill): Reject any skill action requiring body edits or cache mutation.
+- `V478X1-13` (skill): Produce a skill duplicate/staleness board.
+- `V478X1-14` (skill): Keep plugin and user skills unmodified.
+- `V478X1-15` (skill): Define acceptance fields for future skill-generated commands.
+- `V478X1-16` (expansion): Select 30 expansion proposals for no-write review.
+- `V478X1-17` (expansion): Classify proposals by inspection, stdout-only, toy simulation, or blocked.
+- `V478X1-18` (expansion): Reject proposals requiring account settings or installs.
+- `V478X1-19` (expansion): Produce an expansion-readiness score table.
+- `V478X1-20` (expansion): Carry live-promotion candidates only as approval-needed rows.
+- `V478X1-21` (source): Run at least 30 official-source searches for v478 if live research remains needed.
+- `V478X1-22` (source): Map sources to local THOS use rather than broad inspiration.
+- `V478X1-23` (source): Separate governance sources from implementation sources.
+- `V478X1-24` (source): Keep scientific/spiritual context out of GMUT closure claims.
+- `V478X1-25` (source): Record source drift and freshness limits.
+- `V478X1-26` (watcher): Check app-server route stability after each notifier cycle.
+- `V478X1-27` (watcher): Keep temp-only output for CLI watcher runs.
+- `V478X1-28` (watcher): Avoid duplicate polling within a single phase.
+- `V478X1-29` (watcher): Convert watcher criteria into a reusable v478 template.
+- `V478X1-30` (watcher): Track app completion and CLI closure as separate signals.
+- `V478X1-31` (schema): Parse every generated JSON artifact.
+- `V478X1-32` (schema): Check required keys for run status and roadmaps.
+- `V478X1-33` (schema): Check next_expected consistency.
+- `V478X1-34` (schema): Run publication guard scan before staging.
+- `V478X1-35` (schema): Keep row counts bounded.
+- `V478X1-36` (safety): Fetch and drift-check before commit.
+- `V478X1-37` (safety): Exact-stage only v478 scoped artifacts.
+- `V478X1-38` (safety): Reject raw transport, local dumps, or auth material.
+- `V478X1-39` (safety): Run whitespace and staged diff review.
+- `V478X1-40` (safety): Push and remote-verify equals local.
+- `V478X1-41` (claim): Keep all six GMUT gates open.
+- `V478X1-42` (claim): Do not claim THOS proves GMUT.
+- `V478X1-43` (claim): Do not claim solved consciousness.
+- `V478X1-44` (claim): Do not promote Journey context to canon.
+- `V478X1-45` (claim): Use evidence/context/hypothesis/blocker/open_gap taxonomy.
+- `V478X1-46` (handoff): Create v478 x1 synthesis if notifier and source checks pass.
+- `V478X1-47` (handoff): Decide x2 or x3 from blocker dominance.
+- `V478X1-48` (handoff): Carry app-lane success as the baseline coordination mode.
+- `V478X1-49` (handoff): Carry CLI timeout as a named risk.
+- `V478X1-50` (handoff): Prepare v478 x2 roadmap after x1 closeout.
+- `V478X1-51` (thos): Surface command-index repair candidate rows.
+- `V478X1-52` (thos): Surface v54/v55 handoff packs as non-proof references.
+- `V478X1-53` (thos): Draft a local-server health mini-dashboard concept.
+- `V478X1-54` (thos): Draft a connector-read/write boundary manifest.
+- `V478X1-55` (thos): Draft a watcher-runner reusable interface.
+- `V478X1-56` (quality): Review all summaries for overclaim language.
+- `V478X1-57` (quality): Confirm app-lane receipts stay status-only.
+- `V478X1-58` (quality): Confirm no broad staging happened.
+- `V478X1-59` (quality): Prepare concise user-facing closeout.
+- `V478X1-60` (quality): Keep the larger v490 goal active after v478 handoff.

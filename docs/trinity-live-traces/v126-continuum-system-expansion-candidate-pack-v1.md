@@ -1,0 +1,313 @@
+# v126-continuum-system-expansion-candidate-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T13:59:20+00:00",
+  "phase": "v126",
+  "state": "candidate_pack_only_not_manifest_promoted",
+  "candidate_count": 20,
+  "candidates": [
+    {
+      "id": "v126_01_truth_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "truth",
+      "provider_lane": "vercel",
+      "purpose": "Advance phase claim honesty and receipt equality through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_02_identity_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "identity",
+      "provider_lane": "vercel",
+      "purpose": "Advance CLI identity continuity and induction boundaries through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_03_provider_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "provider",
+      "provider_lane": "vercel",
+      "purpose": "Advance external provider action-pack gating through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_04_research_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "research",
+      "provider_lane": "vercel",
+      "purpose": "Advance source-grounded eureka planning through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_05_cleanup_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "cleanup",
+      "provider_lane": "vercel",
+      "purpose": "Advance merge, prune, and stale-claim reduction through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_06_gmut_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "gmut",
+      "provider_lane": "vercel",
+      "purpose": "Advance GMUT claim labels and falsification tasks through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_07_freedid_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "freedid",
+      "provider_lane": "vercel",
+      "purpose": "Advance consent, recourse, and CBR alignment through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_08_runtime_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "runtime",
+      "provider_lane": "vercel",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_09_mcp_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "mcp",
+      "provider_lane": "vercel",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_10_dashboard_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "dashboard",
+      "provider_lane": "vercel",
+      "purpose": "Advance human-readable control surfaces through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_11_truth_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "truth",
+      "provider_lane": "vercel",
+      "purpose": "Advance phase claim honesty and receipt equality through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_12_identity_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "identity",
+      "provider_lane": "vercel",
+      "purpose": "Advance CLI identity continuity and induction boundaries through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_13_provider_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "provider",
+      "provider_lane": "vercel",
+      "purpose": "Advance external provider action-pack gating through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_14_research_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "research",
+      "provider_lane": "vercel",
+      "purpose": "Advance source-grounded eureka planning through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_15_cleanup_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "cleanup",
+      "provider_lane": "vercel",
+      "purpose": "Advance merge, prune, and stale-claim reduction through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_16_gmut_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "gmut",
+      "provider_lane": "vercel",
+      "purpose": "Advance GMUT claim labels and falsification tasks through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_17_freedid_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "freedid",
+      "provider_lane": "vercel",
+      "purpose": "Advance consent, recourse, and CBR alignment through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_18_runtime_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "runtime",
+      "provider_lane": "vercel",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_19_mcp_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "mcp",
+      "provider_lane": "vercel",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v126_20_dashboard_vercel_gate",
+      "phase": "v126",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "dashboard",
+      "provider_lane": "vercel",
+      "purpose": "Advance human-readable control surfaces through preview deployment dry-run proposal while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    }
+  ],
+  "effective_success": true
+}
+```

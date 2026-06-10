@@ -1,0 +1,59 @@
+{
+  "generated_utc": "2026-04-26T17:12:18+00:00",
+  "phase": "v56_omega",
+  "policy": "repair_live_provider_blockers_without_committing_secrets_or_forcing_paid_deploys",
+  "source_anchors": {
+    "vercel_cli": "https://vercel.com/docs/cli",
+    "vercel_deploy_from_cli": "https://vercel.com/docs/projects/deploy-from-cli",
+    "vercel_sandbox_sdk": "https://vercel.com/docs/vercel-sandbox/sdk-reference",
+    "cloudflare_token_restrictions": "https://developers.cloudflare.com/fundamentals/api/how-to/restrict-tokens/",
+    "cloudflare_user_token_verify": "https://developers.cloudflare.com/api/resources/user/subresources/tokens/methods/verify/",
+    "cloudflare_account_token_verify": "https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/verify/",
+    "cloudflare_create_token": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
+    "cloudflare_wrangler_cli": "https://developers.cloudflare.com/workers/get-started/guide/",
+    "neon_projects_api": "https://neon.com/docs/manage/projects",
+    "circleci_local_cli": "https://circleci.com/docs/guides/toolkit/local-cli/"
+  },
+  "repairs": {
+    "vercel": {
+      "observed_state": {
+        "read_gate": true
+      },
+      "safe_next_action": "prove user and project-list access, then create/link the smallest non-production project only if token scope matches the target personal/team account",
+      "do_not_do": "do not retry deploy loops or commit .vercel/env artifacts containing account/project secrets"
+    },
+    "cloudflare": {
+      "observed_state": {
+        "verify_gate": true,
+        "user_verify_gate": false,
+        "account_verify_gate": true,
+        "accounts_gate": true
+      },
+      "safe_next_action": "treat account-owned token verification as the correct green gate when Wrangler/accounts work and the account-token verify endpoint passes",
+      "do_not_do": "do not publish token, public IP, zone IDs, or bypass Cloudflare restrictions"
+    },
+    "neon": {
+      "observed_state": {
+        "read_gate": true
+      },
+      "safe_next_action": "reuse existing Trinity project if visible; create one minimal free-tier project only if no suitable project exists and quota is clear",
+      "do_not_do": "do not delete Neon projects or print connection URIs/passwords"
+    },
+    "docker_kubernetes": {
+      "observed_state": {
+        "docker": "daemon_green",
+        "kubernetes": "docker_desktop_windows_kubectl_and_system_pods_green"
+      },
+      "safe_next_action": "use Docker Desktop and docker-desktop Kubernetes only for local proofs; keep GKE on standby",
+      "do_not_do": "do not pull new images or mutate paid/cloud clusters without a separate explicit step"
+    },
+    "circleci": {
+      "observed_state": {
+        "api_read": true,
+        "config_validate": true
+      },
+      "safe_next_action": "keep local config validation as the main CI proof until live project trigger auth is green",
+      "do_not_do": "do not trigger paid or noisy CI pipelines before local config is green"
+    }
+  }
+}

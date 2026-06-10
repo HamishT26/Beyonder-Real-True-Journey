@@ -1,0 +1,66 @@
+# v478-thos-v14-x1 Roadmap
+
+- generated_nz: `2026-06-05T03:34:39+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V14X1-01` (lane_reliability): Advance v478-thos-v14-x1 lane reliability using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-02` (stale_flow): Advance v478-thos-v14-x1 stale flow using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-03` (runner_contract): Advance v478-thos-v14-x1 runner contract using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-04` (source_freshness): Advance v478-thos-v14-x1 source freshness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-05` (sandbox_readiness): Advance v478-thos-v14-x1 sandbox readiness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-06` (command_surface): Advance v478-thos-v14-x1 command surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-07` (skill_surface): Advance v478-thos-v14-x1 skill surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-08` (mcp_trust): Advance v478-thos-v14-x1 mcp trust using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-09` (publication_guard): Advance v478-thos-v14-x1 publication guard using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-10` (journey_reflection): Advance v478-thos-v14-x1 journey reflection using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-11` (gmut_thos_boundary): Advance v478-thos-v14-x1 gmut thos boundary using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-12` (dashboard_compaction): Advance v478-thos-v14-x1 dashboard compaction using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-13` (lane_reliability): Advance v478-thos-v14-x1 lane reliability using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-14` (stale_flow): Advance v478-thos-v14-x1 stale flow using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-15` (runner_contract): Advance v478-thos-v14-x1 runner contract using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-16` (source_freshness): Advance v478-thos-v14-x1 source freshness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-17` (sandbox_readiness): Advance v478-thos-v14-x1 sandbox readiness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-18` (command_surface): Advance v478-thos-v14-x1 command surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-19` (skill_surface): Advance v478-thos-v14-x1 skill surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-20` (mcp_trust): Advance v478-thos-v14-x1 mcp trust using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-21` (publication_guard): Advance v478-thos-v14-x1 publication guard using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-22` (journey_reflection): Advance v478-thos-v14-x1 journey reflection using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-23` (gmut_thos_boundary): Advance v478-thos-v14-x1 gmut thos boundary using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-24` (dashboard_compaction): Advance v478-thos-v14-x1 dashboard compaction using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-25` (lane_reliability): Advance v478-thos-v14-x1 lane reliability using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-26` (stale_flow): Advance v478-thos-v14-x1 stale flow using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-27` (runner_contract): Advance v478-thos-v14-x1 runner contract using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-28` (source_freshness): Advance v478-thos-v14-x1 source freshness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-29` (sandbox_readiness): Advance v478-thos-v14-x1 sandbox readiness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-30` (command_surface): Advance v478-thos-v14-x1 command surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-31` (skill_surface): Advance v478-thos-v14-x1 skill surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-32` (mcp_trust): Advance v478-thos-v14-x1 mcp trust using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-33` (publication_guard): Advance v478-thos-v14-x1 publication guard using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-34` (journey_reflection): Advance v478-thos-v14-x1 journey reflection using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-35` (gmut_thos_boundary): Advance v478-thos-v14-x1 gmut thos boundary using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-36` (dashboard_compaction): Advance v478-thos-v14-x1 dashboard compaction using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-37` (lane_reliability): Advance v478-thos-v14-x1 lane reliability using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-38` (stale_flow): Advance v478-thos-v14-x1 stale flow using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-39` (runner_contract): Advance v478-thos-v14-x1 runner contract using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-40` (source_freshness): Advance v478-thos-v14-x1 source freshness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-41` (sandbox_readiness): Advance v478-thos-v14-x1 sandbox readiness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-42` (command_surface): Advance v478-thos-v14-x1 command surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-43` (skill_surface): Advance v478-thos-v14-x1 skill surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-44` (mcp_trust): Advance v478-thos-v14-x1 mcp trust using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-45` (publication_guard): Advance v478-thos-v14-x1 publication guard using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-46` (journey_reflection): Advance v478-thos-v14-x1 journey reflection using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-47` (gmut_thos_boundary): Advance v478-thos-v14-x1 gmut thos boundary using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-48` (dashboard_compaction): Advance v478-thos-v14-x1 dashboard compaction using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-49` (lane_reliability): Advance v478-thos-v14-x1 lane reliability using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-50` (stale_flow): Advance v478-thos-v14-x1 stale flow using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-51` (runner_contract): Advance v478-thos-v14-x1 runner contract using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-52` (source_freshness): Advance v478-thos-v14-x1 source freshness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-53` (sandbox_readiness): Advance v478-thos-v14-x1 sandbox readiness using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-54` (command_surface): Advance v478-thos-v14-x1 command surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-55` (skill_surface): Advance v478-thos-v14-x1 skill surface using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-56` (mcp_trust): Advance v478-thos-v14-x1 mcp trust using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-57` (publication_guard): Advance v478-thos-v14-x1 publication guard using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-58` (journey_reflection): Advance v478-thos-v14-x1 journey reflection using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-59` (gmut_thos_boundary): Advance v478-thos-v14-x1 gmut thos boundary using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.
+- `V478V14X1-60` (dashboard_compaction): Advance v478-thos-v14-x1 dashboard compaction using v13 x2 synthesis, helper priorities, source deltas, and open GMUT gates.

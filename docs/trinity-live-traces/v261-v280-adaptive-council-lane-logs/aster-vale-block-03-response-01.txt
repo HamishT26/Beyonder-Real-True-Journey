@@ -1,0 +1,22 @@
+Receipt:
+The authoritative checkpoint is `docs/trinity-live-traces/v261-v280-adaptive-council-block-02-synthesis-v1.json` dated 2026-05-14T11:52:40Z. For Aster Vale, it supports a local-only runtime-health posture: `multiplex_refresh_seconds=30`, `fallback_refresh_seconds=4`, and liveness should be judged from clean local receipts, not from provider, web, remote, or publication assumptions.
+
+Blocker:
+The checkpoint does not prove TUI latency directly. It records sandbox read-policy friction, timed-out benign probes, and the cross-lane requirement to separate `response` proof from transport/process noise. That means lane liveness can be scored only at the receipt layer right now, and any stronger claim such as “runtime healthy” or “TUI responsive” would exceed the verified evidence.
+
+Refinement:
+Use a narrow liveness score derived from already-supported fields:
+`alive and writing`
+`alive but silent`
+`exited without response`
+Score only from local evidence such as `response artifact exists`, `last successful write timestamp`, `transport contamination absent/present`, and `sandbox boundary recorded`. Treat `30s` as default cadence and `4s` only as a bounded debug window triggered by a concrete local symptom like missing receipt or contamination. This preserves the checkpoint’s truth boundary while still giving a usable health board.
+
+Next-cycle proposal:
+Add one compact telemetry board per lane with:
+`current mode`
+`last clean receipt timestamp`
+`last transport-noise event`
+`write-gap seconds`
+`liveness class`
+`missing proof`
+For latency, use `write-gap seconds` as the only supported proxy until a clean dedicated timing artifact exists. Then run a 3-probe block only: clean-receipt probe, silent-lane classification probe, and sandbox-readability probe. If any probe contaminates receipts or times out, classify the lane as `runtime still unproven` rather than broadening scope.

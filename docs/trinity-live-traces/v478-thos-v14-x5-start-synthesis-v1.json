@@ -1,0 +1,97 @@
+{
+  "artifact_type": "phase_start_synthesis",
+  "phase_slug": "v478-thos-v14-x5-start",
+  "generated_utc": "2026-06-04T21:13:00Z",
+  "generated_nz": "2026-06-05T09:13:00+12:00",
+  "overall_status": "PASS_X5_START_WITH_FIVE_LANE_EVIDENCE",
+  "evidence": {
+    "app_lanes": {
+      "receipt": "v478-thos-v14-x5-start-background-council-app-completion-v1.json",
+      "status": "PASS",
+      "lanes": [
+        {
+          "lane": "Cicero",
+          "duration_seconds": 200.422,
+          "completion": "completed"
+        },
+        {
+          "lane": "Kierkegaard",
+          "duration_seconds": 82.594,
+          "completion": "completed"
+        },
+        {
+          "lane": "Aristotle",
+          "duration_seconds": 80.359,
+          "completion": "completed"
+        }
+      ]
+    },
+    "cli_lanes": {
+      "receipt": "v478-thos-v14-x5-start-cli-completion-v1.json",
+      "status": "FINAL_MESSAGES_READY",
+      "lanes": [
+        {
+          "lane": "Arby",
+          "duration_seconds": 369.758,
+          "final_message_bytes": 1404,
+          "final_message_hash": "4adc12747b90bdc0a2d8e9b07d7206ff9b55a315f8a64a587d22fbfade7d9a72",
+          "marker_review_required": false
+        },
+        {
+          "lane": "Aster Vale",
+          "duration_seconds": 208.109,
+          "final_message_bytes": 1119,
+          "final_message_hash": "81b3c1a4df2625b35a48c937bab45c2dc9ce7e6a60db17d668b2dc59b121f89d",
+          "marker_review_required": false
+        }
+      ],
+      "body_text_boundary": "temp_only_not_published"
+    },
+    "multiplex": {
+      "receipt": "v478-thos-v14-x5-start-local-multiplex-tui-app-server-runner-v1.json",
+      "status": "ALL_LANES_READY"
+    },
+    "timing": {
+      "receipt": "v478-thos-v14-x5-start-five-lane-timing-v1.json",
+      "observation_run_index_today": 2,
+      "observation_window_seconds": 1800,
+      "average_response_seconds_this_run": 188.248
+    },
+    "baseline": {
+      "receipt": "v478-thos-v14-five-lane-timing-baseline-v1.json",
+      "status": "PENDING_MORE_OBSERVATIONS",
+      "observed_run_count": 2,
+      "observed_lane_count": 10,
+      "average_response_seconds_two_run_preview": 347.532,
+      "promotion_rule": "Do not use as future soft timeout baseline until observation run 3 is recorded."
+    },
+    "stale_flow": {
+      "receipt": "v478-thos-v14-x5-start-stale-flow-refresh-v1.json",
+      "status": "READY_NO_STALE_FLOWS"
+    },
+    "source_refresh": {
+      "receipt": "v478-thos-v14-x5-start-source-refresh-v1.json",
+      "status": "PASS_SOURCE_REFRESH_COMPACT"
+    }
+  },
+  "x5_lessons": [
+    "x5 start was materially faster than x4 closeout, especially in the CLI lanes.",
+    "Arby and Aster Vale both completed through the fresh temp read-only CLI route without marker review flags.",
+    "The app-server lanes completed in a stable sequence with no new thread creation and no old-style spawning.",
+    "The timing baseline now has two observations and must remain pending until one more five-sibling run.",
+    "The stale-flow refresh found no current stale-flow rows for x5 start."
+  ],
+  "x5_closeout_handoff": [
+    "Use x5 closeout or the next mandatory five-lane boundary as observation run 3 of 3.",
+    "Keep the same 30-minute observation window and status-only body boundary.",
+    "After run 3, rerun the baseline aggregator and only then treat the average as the future soft waiting foothold.",
+    "Continue command-index compatibility, v54/v55 handoff surfacing, source refresh, and stale-flow checks while lanes are active.",
+    "Do not treat the two-run average as completion proof."
+  ],
+  "claim_boundary": {
+    "scope": "v478 THOS v14 x5 start and x5 closeout handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

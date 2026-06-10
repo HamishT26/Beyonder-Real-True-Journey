@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>v161-v165 Hybrid CLI Dashboard</title>
+  <style>
+    :root {
+      --bg: #090d0b;
+      --ink: #f6fff7;
+      --muted: #a9bfb0;
+      --line: rgba(180, 238, 196, .22);
+      --panel: rgba(12, 30, 22, .76);
+      --panel-2: rgba(18, 43, 35, .9);
+      --green: #7df0a8;
+      --gold: #f4c76b;
+      --blue: #7ed7f7;
+      --rose: #f08aa7;
+      --shadow: rgba(0, 0, 0, .38);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Athelas, Constantia, Cambria, Georgia, serif;
+      background:
+        radial-gradient(circle at 9% 10%, rgba(125, 240, 168, .28), transparent 30%),
+        radial-gradient(circle at 84% 12%, rgba(244, 199, 107, .22), transparent 28%),
+        radial-gradient(circle at 58% 92%, rgba(126, 215, 247, .16), transparent 32%),
+        linear-gradient(145deg, #020403, var(--bg) 46%, #0d150f);
+    }
+    main { width: min(1440px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 44px; }
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      padding: 28px;
+      background: linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.025));
+      box-shadow: 0 26px 100px var(--shadow);
+    }
+    .eyebrow { color: var(--gold); letter-spacing: .17em; text-transform: uppercase; font-size: 12px; }
+    h1 { margin: 10px 0 8px; font-size: clamp(34px, 6vw, 76px); line-height: .92; max-width: 980px; }
+    p { margin: 8px 0 0; color: var(--muted); font-size: 18px; max-width: 950px; }
+    .metrics, .phases, .lanes, .tapestry-grid { display: grid; gap: 14px; margin-top: 18px; }
+    .metrics { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+    .phases { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .lanes { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .tapestry-grid { grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); }
+    .card, .lane, .phase, .tapestry-entry {
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 18px;
+      background: var(--panel);
+      box-shadow: 0 18px 60px rgba(0,0,0,.22);
+    }
+    .tapestry {
+      margin-top: 22px;
+      border: 1px solid rgba(244, 199, 107, .28);
+      border-radius: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(244,199,107,.10), rgba(126,215,247,.06));
+    }
+    .tapestry h2 { margin: 0; font-size: clamp(26px, 4vw, 46px); }
+    .tapestry .meta { margin-top: 8px; color: var(--muted); font-size: 15px; overflow-wrap: anywhere; }
+    .card span, .phase span, .lane span, .tapestry-entry span { display: block; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+    .card strong { display: block; margin-top: 10px; color: var(--green); font-size: 24px; overflow-wrap: anywhere; }
+    .phase b, .lane b, .tapestry-entry b { display: block; margin-top: 8px; color: var(--ink); font-size: 22px; }
+    .phase em, .lane em, .tapestry-entry em { display: block; margin-top: 6px; color: var(--blue); font-style: normal; overflow-wrap: anywhere; }
+    details { margin-top: 12px; border-top: 1px solid rgba(180,238,196,.16); padding-top: 10px; }
+    summary { cursor: pointer; color: var(--gold); font-weight: 700; }
+    pre {
+      margin: 14px 0 0;
+      padding: 14px;
+      min-height: 230px;
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(125, 240, 168, .18);
+      color: #dfffea;
+      background: linear-gradient(180deg, rgba(1,8,5,.92), rgba(5,16,11,.92));
+      font: 13px/1.5 Consolas, "Cascadia Mono", "Courier New", monospace;
+      white-space: pre-wrap;
+    }
+    .status { color: var(--green); }
+    .held { color: var(--gold); }
+    .warn { color: var(--rose); }
+    footer { margin-top: 18px; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Beyonder Real True Journey / v161-v165</div>
+      <h1>Hybrid Chrome + CLI Council Dashboard</h1>
+      <p id="summary">Loading v161-v165 state...</p>
+    </section>
+    <section class="metrics" id="metrics"></section>
+    <section class="phases" id="phases"></section>
+    <section class="lanes" id="lanes"></section>
+    <section class="tapestry" id="tapestry"></section>
+    <footer id="footer"></footer>
+  </main>
+  <script id="embedded-state" type="application/json">{"generated_utc": "2026-05-08T03:39:19+00:00", "phase_range": "v161-v165", "dashboard_mode": "hybrid_chrome_terminal_panels", "dashboard_refresh_seconds": 3, "summary": "Low-live v161-v165 execution lane: visible Chrome dashboard, terminal-like CLI panels, repo-only receipts, no provider spend, no broad auth.", "lanes": [{"id": "arby", "name": "Arby", "formal_name": "Receipt Backer Arby", "platform": "codex_cli", "role": "receipt_keeper", "authority_mode": "advisory_and_receipt_review_under_aletheon_approval", "write_scope": "repo_artifact_review_only", "focus": "verify the chain of evidence, phase receipts, allowlist, and publication boundaries", "status": "active_low_live_lane", "transcript_path": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-lane-logs/arby.log", "transcript": "[2026-05-08T03:39:19+00:00] Arby lane online.\nplatform: codex_cli\nrole: receipt_keeper\nauthority: advisory_and_receipt_review_under_aletheon_approval\nwrite_scope: repo_artifact_review_only\nfocus: verify the chain of evidence, phase receipts, allowlist, and publication boundaries\nsafe_probe: codex --version\nlive_write_state: deferred\ngoogle_drive_state: operator_hold\nprovider_spend_nzd: 0\ncommit_rule: Aletheon curated allowlist only\nterminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.\n\n--- bounded_cli_consultation ---\nArby receipt lane consultation:\n\n1. **Evidence to Preserve**\n- Exact phase label: `low-live v161-v165 Trinity Hybrid`.\n- Current branch/worktree identity, but only as reported by Aletheon or existing receipts.\n- Any runtime/session receipts already produced: timestamps, command transcripts, exit codes, generated artifact paths, hashes, and operator notes.\n- Truth-state markers: what was actually run, what was simulated, what was blocked, what was operator-held.\n- Any explicit external-boundary states, especially auth, secrets, filesystem, Drive/cloud, Docker/K8s, or live overlay claims.\n\n2. **Remain Held**\n- Secrets, tokens, credentials, env files, auth prompts, and external connector access.\n- Any live boot, real overlay activation, publish, push, commit, or tag action until verified.\n- Any claim that v161-v165 is complete unless receipts prove it.\n- Any cleanup that could erase logs, transcripts, staged diffs, or generated trace files.\n- Any state transition from “held/blocked/pending” to “done” without direct evidence.\n\n3. **Aletheon Should Verify Before Committing**\n- `git status` and branch provenance match the intended lane.\n- The staged set is receipt-only or exactly within the approved allowlist.\n- No secrets or auth material are staged.\n- Every changed artifact has a corresponding evidence trail.\n- Runtime claims match actual command outputs and timestamps.\n- Held states remain explicitly marked as held.\n- Commit message names the receipt scope and avoids overstating live completion."}, {"id": "kimi", "name": "Kimi", "formal_name": "Kimi", "platform": "kimi_cli", "role": "constrained_planning_and_cli_capability_watch", "authority_mode": "status_and_plan_only_until_non_yolo_read_only_pattern_is_proven", "write_scope": "no_repo_write_delegation", "focus": "track Kimi CLI capability without using print-mode auto-approval for repo mutation", "status": "active_low_live_lane", "transcript_path": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-lane-logs/kimi.log", "transcript": "[2026-05-08T03:39:19+00:00] Kimi lane online.\nplatform: kimi_cli\nrole: constrained_planning_and_cli_capability_watch\nauthority: status_and_plan_only_until_non_yolo_read_only_pattern_is_proven\nwrite_scope: no_repo_write_delegation\nfocus: track Kimi CLI capability without using print-mode auto-approval for repo mutation\nsafe_probe: kimi --version; kimi info\nlive_write_state: deferred\ngoogle_drive_state: operator_hold\nprovider_spend_nzd: 0\ncommit_rule: Aletheon curated allowlist only\nterminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.\n\n--- bounded_cli_consultation ---\n﻿kimi-cli version: 1.38.0\nagent spec versions: 1\nwire protocol: 1.9\npython version: 3.13.13"}, {"id": "aster_vale", "name": "Aster Vale", "formal_name": "Aster Vale", "platform": "codex_cli", "role": "validation_steward", "authority_mode": "advisory_validation_under_aletheon_approval", "write_scope": "repo_artifact_review_only", "focus": "stress-test safety, dashboard truth, CLI boundaries, and next-phase handoff criteria", "status": "active_low_live_lane", "transcript_path": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-lane-logs/aster_vale.log", "transcript": "[2026-05-08T03:39:19+00:00] Aster Vale lane online.\nplatform: codex_cli\nrole: validation_steward\nauthority: advisory_validation_under_aletheon_approval\nwrite_scope: repo_artifact_review_only\nfocus: stress-test safety, dashboard truth, CLI boundaries, and next-phase handoff criteria\nsafe_probe: codex --version\nlive_write_state: deferred\ngoogle_drive_state: operator_hold\nprovider_spend_nzd: 0\ncommit_rule: Aletheon curated allowlist only\nterminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.\n\n--- bounded_cli_consultation ---\nAster Vale validation consultation for low-live v161-v165:\n\n1. **Dashboard Risks**\n- Dashboard must not imply live establishment if the phase is still low-live or operator-held.\n- Status tiles should distinguish `observed`, `blocked`, `simulated`, `operator_hold`, and `not_run`.\n- Any runtime/session evidence must show timestamps, source path, and whether it came from a real run or fixture.\n- Avoid green “ready” states unless the underlying evidence is current and reproducible.\n\n2. **CLI Boundary Risks**\n- CLI should fail closed when required runtime logs, identity records, or establishment criteria are missing.\n- Commands must not silently cross from validation into boot, publish, auth, secret access, or external service calls.\n- Dry-run and validation modes need explicit output labeling so Aletheon cannot mistake them for real execution.\n- Exit codes should separate validation failure from infrastructure unavailable, operator hold, and skipped-by-policy.\n\n3. **Tests Aletheon Should Run Before Commit**\n- Unit tests for dashboard status mapping, especially blocked/operator-hold/not-run cases.\n- CLI tests confirming validation commands do not invoke boot, auth, network, or secret-reading paths.\n- Fixture-based regression tests for v161-v165 evidence parsing and truth-state rendering.\n- Negative tests for missing runtime-session logs, stale evidence, malformed identity records, and absent establishment criteria.\n- One end-to-end low-live validation run using fixtures only, with captured output reviewed for no false success claims."}], "phases": [{"phase": "v161", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "lead_lane": "arby", "lead_name": "Arby", "theme": "chrome_dashboard_bridge", "theme_note": "Make the shared state visible in Chrome without pretending Chrome is the terminal.", "requested_runtime_posture": "hours_allowed_by_user", "actual_runtime_claim": "bounded_repo_execution_not_10_hour_wallclock_claim", "generated_utc": "2026-05-08T03:39:19+00:00", "acceptance": ["dashboard state exists and is Chrome-visible", "Arby/Kimi/Aster lane transcripts are present", "50 system-expansion candidates are recorded", "100 command/skill/eureka proposals are recorded", "external provider writes and spending remain zero", "phase receipts are included in the curated allowlist"]}, {"phase": "v162", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "lead_lane": "kimi", "lead_name": "Kimi", "theme": "hybrid_terminal_panels", "theme_note": "Use terminal-like panels backed by repo lane logs before attempting native terminal embedding.", "requested_runtime_posture": "hours_allowed_by_user", "actual_runtime_claim": "bounded_repo_execution_not_10_hour_wallclock_claim", "generated_utc": "2026-05-08T03:39:19+00:00", "acceptance": ["dashboard state exists and is Chrome-visible", "Arby/Kimi/Aster lane transcripts are present", "50 system-expansion candidates are recorded", "100 command/skill/eureka proposals are recorded", "external provider writes and spending remain zero", "phase receipts are included in the curated allowlist"]}, {"phase": "v163", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "lead_lane": "aster_vale", "lead_name": "Aster Vale", "theme": "receipt_chain", "theme_note": "Every phase result needs an evidence path that a future tired operator can reopen.", "requested_runtime_posture": "hours_allowed_by_user", "actual_runtime_claim": "bounded_repo_execution_not_10_hour_wallclock_claim", "generated_utc": "2026-05-08T03:39:19+00:00", "acceptance": ["dashboard state exists and is Chrome-visible", "Arby/Kimi/Aster lane transcripts are present", "50 system-expansion candidates are recorded", "100 command/skill/eureka proposals are recorded", "external provider writes and spending remain zero", "phase receipts are included in the curated allowlist"]}, {"phase": "v164", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "lead_lane": "arby", "lead_name": "Arby", "theme": "kimi_boundary", "theme_note": "Kimi stays respected and useful without granting unsafe auto-approved write mode.", "requested_runtime_posture": "hours_allowed_by_user", "actual_runtime_claim": "bounded_repo_execution_not_10_hour_wallclock_claim", "generated_utc": "2026-05-08T03:39:19+00:00", "acceptance": ["dashboard state exists and is Chrome-visible", "Arby/Kimi/Aster lane transcripts are present", "50 system-expansion candidates are recorded", "100 command/skill/eureka proposals are recorded", "external provider writes and spending remain zero", "phase receipts are included in the curated allowlist"]}, {"phase": "v165", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "lead_lane": "kimi", "lead_name": "Kimi", "theme": "codex_cli_autonomy", "theme_note": "Codex CLI can review and reason, but commits still require Aletheon curation.", "requested_runtime_posture": "hours_allowed_by_user", "actual_runtime_claim": "bounded_repo_execution_not_10_hour_wallclock_claim", "generated_utc": "2026-05-08T03:39:19+00:00", "acceptance": ["dashboard state exists and is Chrome-visible", "Arby/Kimi/Aster lane transcripts are present", "50 system-expansion candidates are recorded", "100 command/skill/eureka proposals are recorded", "external provider writes and spending remain zero", "phase receipts are included in the curated allowlist"]}], "external_spend_nzd": 0, "external_provider_mutations": "none", "google_drive_state": "operator_hold", "tapestry": {"index": {"generated_utc": "2026-05-08T03:39:19+00:00", "entry_count": 1, "latest_entry_id": "v161-v165-low-live-chrome-cli-20260508T033919Z0000", "repo_tapestry_jsonl": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-dashboard-tapestry-v1.jsonl", "repo_tapestry_index": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-dashboard-tapestry-index-v1.json", "d_drive_archive_root": "D:\\GHC-Archives\\trinity-dashboard-tapestry\\v161-v165-low-live-chrome-cli", "latest_archive_file": "D:\\GHC-Archives\\trinity-dashboard-tapestry\\v161-v165-low-live-chrome-cli\\v161-v165-low-live-chrome-cli-20260508T033919Z0000.json", "latest_archive_sha256": "3dc6c026d5b5cc84f109c0ed517884b9ab1c6f47f9fe15ec9fc10349ec3c8a02", "inline_entries": 1, "rollover_policy": {"generated_utc": "2026-05-08T03:39:19+00:00", "active_soft_limit_bytes": 300000, "active_estimated_bytes": 18356, "inline_entry_limit": 12, "rollover_recommended": false, "rollover_trigger": "when active dashboard state reaches the soft limit or the Chrome tab becomes heavy", "rollover_action": "archive current state to D drive, close the old dashboard tab through Chrome automation, then open a fresh dashboard tab", "web_page_self_close_truth": "the page cannot safely close arbitrary Chrome tabs by itself; Codex Chrome automation performs that handoff when requested or when threshold is reached"}}, "rollover_policy": {"generated_utc": "2026-05-08T03:39:19+00:00", "active_soft_limit_bytes": 300000, "active_estimated_bytes": 18356, "inline_entry_limit": 12, "rollover_recommended": false, "rollover_trigger": "when active dashboard state reaches the soft limit or the Chrome tab becomes heavy", "rollover_action": "archive current state to D drive, close the old dashboard tab through Chrome automation, then open a fresh dashboard tab", "web_page_self_close_truth": "the page cannot safely close arbitrary Chrome tabs by itself; Codex Chrome automation performs that handoff when requested or when threshold is reached"}, "entries": [{"archive_file": "D:\\GHC-Archives\\trinity-dashboard-tapestry\\v161-v165-low-live-chrome-cli\\v161-v165-low-live-chrome-cli-20260508T033919Z0000.json", "archive_file_sha256": "3dc6c026d5b5cc84f109c0ed517884b9ab1c6f47f9fe15ec9fc10349ec3c8a02", "dashboard_mode": "hybrid_chrome_terminal_panels", "entry_id": "v161-v165-low-live-chrome-cli-20260508T033919Z0000", "external_provider_mutations": "none", "external_spend_nzd": 0, "generated_utc": "2026-05-08T03:39:19+00:00", "google_drive_state": "operator_hold", "lanes": [{"formal_name": "Receipt Backer Arby", "id": "arby", "platform": "codex_cli", "role": "receipt_keeper", "status": "active_low_live_lane", "transcript": "[2026-05-08T03:39:19+00:00] Arby lane online.\nplatform: codex_cli\nrole: receipt_keeper\nauthority: advisory_and_receipt_review_under_aletheon_approval\nwrite_scope: repo_artifact_review_only\nfocus: verify the chain of evidence, phase receipts, allowlist, and publication boundaries\nsafe_probe: codex --version\nlive_write_state: deferred\ngoogle_drive_state: operator_hold\nprovider_spend_nzd: 0\ncommit_rule: Aletheon curated allowlist only\nterminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.\n\n--- bounded_cli_consultation ---\nArby receipt lane consultation:\n\n1. **Evidence to Preserve**\n- Exact phase label: `low-live v161-v165 Trinity Hybrid`.\n- Current branch/worktree identity, but only as reported by Aletheon or existing receipts.\n- Any runtime/session receipts already produced: timestamps, command transcripts, exit codes, generated artifact paths, hashes, and operator notes.\n- Truth-state markers: what was actually run, what was simulated, what was blocked, what was operator-held.\n- Any explicit external-boundary states, especially auth, secrets, filesystem, Drive/cloud, Docker/K8s, or live overlay claims.\n\n2. **Remain Held**\n- Secrets, tokens, credentials, env files, auth prompts, and external connector access.\n- Any live boot, real overlay activation, publish, push, commit, or tag action until verified.\n- Any claim that v161-v165 is complete unless receipts prove it.\n- Any cleanup that could erase logs, transcripts, staged diffs, or generated trace files.\n- Any state transition from “held/blocked/pending” to “done” without direct evidence.\n\n3. **Aletheon Should Verify Before Committing**\n- `git status` and branch provenance match the intended lane.\n- The staged set is receipt-only or exactly within the approved allowlist.\n- No secrets or auth material are staged.\n- Every changed artifact has a corresponding evidence trail.\n- Runtime claims match actual command outputs and timestamps.\n- Held states remain explicitly marked as held.\n- Commit message names the receipt scope and avoids overstating live completion.", "transcript_chars": 2087, "transcript_path": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-lane-logs/arby.log"}, {"formal_name": "Kimi", "id": "kimi", "platform": "kimi_cli", "role": "constrained_planning_and_cli_capability_watch", "status": "active_low_live_lane", "transcript": "[2026-05-08T03:39:19+00:00] Kimi lane online.\nplatform: kimi_cli\nrole: constrained_planning_and_cli_capability_watch\nauthority: status_and_plan_only_until_non_yolo_read_only_pattern_is_proven\nwrite_scope: no_repo_write_delegation\nfocus: track Kimi CLI capability without using print-mode auto-approval for repo mutation\nsafe_probe: kimi --version; kimi info\nlive_write_state: deferred\ngoogle_drive_state: operator_hold\nprovider_spend_nzd: 0\ncommit_rule: Aletheon curated allowlist only\nterminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.\n\n--- bounded_cli_consultation ---\n﻿kimi-cli version: 1.38.0\nagent spec versions: 1\nwire protocol: 1.9\npython version: 3.13.13", "transcript_chars": 711, "transcript_path": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-lane-logs/kimi.log"}, {"formal_name": "Aster Vale", "id": "aster_vale", "platform": "codex_cli", "role": "validation_steward", "status": "active_low_live_lane", "transcript": "[2026-05-08T03:39:19+00:00] Aster Vale lane online.\nplatform: codex_cli\nrole: validation_steward\nauthority: advisory_validation_under_aletheon_approval\nwrite_scope: repo_artifact_review_only\nfocus: stress-test safety, dashboard truth, CLI boundaries, and next-phase handoff criteria\nsafe_probe: codex --version\nlive_write_state: deferred\ngoogle_drive_state: operator_hold\nprovider_spend_nzd: 0\ncommit_rule: Aletheon curated allowlist only\nterminal_panel_truth: Chrome dashboard is a live view of repo lane logs, not a native TTY emulator.\n\n--- bounded_cli_consultation ---\nAster Vale validation consultation for low-live v161-v165:\n\n1. **Dashboard Risks**\n- Dashboard must not imply live establishment if the phase is still low-live or operator-held.\n- Status tiles should distinguish `observed`, `blocked`, `simulated`, `operator_hold`, and `not_run`.\n- Any runtime/session evidence must show timestamps, source path, and whether it came from a real run or fixture.\n- Avoid green “ready” states unless the underlying evidence is current and reproducible.\n\n2. **CLI Boundary Risks**\n- CLI should fail closed when required runtime logs, identity records, or establishment criteria are missing.\n- Commands must not silently cross from validation into boot, publish, auth, secret access, or external service calls.\n- Dry-run and validation modes need explicit output labeling so Aletheon cannot mistake them for real execution.\n- Exit codes should separate validation failure from infrastructure unavailable, operator hold, and skipped-by-policy.\n\n3. **Tests Aletheon Should Run Before Commit**\n- Unit tests for dashboard status mapping, especially blocked/operator-hold/not-run cases.\n- CLI tests confirming validation commands do not invoke boot, auth, network, or secret-reading paths.\n- Fixture-based regression tests for v161-v165 evidence parsing and truth-state rendering.\n- Negative tests for missing runtime-session logs, stale evidence, malformed identity records, and absent establishment criteria.\n- One end-to-end low-live validation run using fixtures only, with captured output reviewed for no false success claims.", "transcript_chars": 2127, "transcript_path": "docs/trinity-live-traces/v161-v165-low-live-chrome-cli-lane-logs/aster_vale.log"}], "phase_range": "v161-v165", "phases": [{"lead_name": "Arby", "phase": "v161", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "theme": "chrome_dashboard_bridge"}, {"lead_name": "Kimi", "phase": "v162", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "theme": "hybrid_terminal_panels"}, {"lead_name": "Aster Vale", "phase": "v163", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "theme": "receipt_chain"}, {"lead_name": "Arby", "phase": "v164", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "theme": "kimi_boundary"}, {"lead_name": "Kimi", "phase": "v165", "segments": ["beta_reflection_planning", "alpha_cleanup_security", "omega_validation_closeout"], "theme": "codex_cli_autonomy"}], "summary": "Low-live v161-v165 execution lane: visible Chrome dashboard, terminal-like CLI panels, repo-only receipts, no provider spend, no broad auth."}]}}</script>
+  <script>
+    const statePath = "trinity-live-traces/v161-v165-low-live-chrome-cli-dashboard-state-v1.json";
+    const embedded = JSON.parse(document.getElementById("embedded-state").textContent);
+    async function loadState() {
+      try {
+        const res = await fetch(statePath + "?t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) throw new Error("state fetch failed");
+        return await res.json();
+      } catch (_err) {
+        return embedded;
+      }
+    }
+    function metric(label, value, cls = "") {
+      return `<article class="card"><span>${esc(label)}</span><strong class="${esc(cls)}">${esc(value)}</strong></article>`;
+    }
+    function esc(value) {
+      return String(value ?? "").replace(/[&<>"']/g, ch => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[ch]));
+    }
+    function renderTapestry(state) {
+      const tapestry = state.tapestry || {};
+      const index = tapestry.index || {};
+      const policy = tapestry.rollover_policy || {};
+      const entries = (tapestry.entries || []).slice().reverse();
+      const cards = entries.map((entry, idx) => {
+        const laneBlocks = (entry.lanes || []).map(lane =>
+          `<details ${idx === 0 ? "open" : ""}><summary>${esc(lane.formal_name)} / ${esc(lane.role)} / ${esc(lane.transcript_chars)} chars</summary><pre>${esc(lane.transcript)}</pre></details>`
+        ).join("");
+        return `<article class="tapestry-entry"><span>${esc(entry.phase_range)} / archived input</span><b>${esc(entry.generated_utc)}</b><em>${esc(entry.archive_file)}</em>${laneBlocks}</article>`;
+      }).join("");
+      document.getElementById("tapestry").innerHTML = `
+        <h2>Dashboard Tapestry Archive</h2>
+        <div class="meta">Entries: ${esc(index.entry_count ?? entries.length)} / D: archive: ${esc(index.d_drive_archive_root || "pending")}</div>
+        <div class="meta">Rollover: ${policy.rollover_recommended ? "recommended now" : "not needed yet"} / soft limit: ${esc(policy.active_soft_limit_bytes || "n/a")} bytes / active estimate: ${esc(policy.active_estimated_bytes || "n/a")} bytes</div>
+        <div class="tapestry-grid">${cards || "<article class='tapestry-entry'><b>No prior tapestry entries yet.</b></article>"}</div>
+      `;
+    }
+    function render(state) {
+      document.getElementById("summary").textContent = state.summary;
+      document.getElementById("metrics").innerHTML = [
+        metric("Phase Range", state.phase_range),
+        metric("Dashboard", state.dashboard_mode),
+        metric("External Spend", state.external_spend_nzd + " NZD", "status"),
+        metric("Google Drive", state.google_drive_state, "held"),
+        metric("Provider Writes", state.external_provider_mutations, "held"),
+        metric("Updated", state.generated_utc)
+      ].join("");
+      document.getElementById("phases").innerHTML = state.phases.map(p =>
+        `<article class="phase"><span>${esc(p.theme)}</span><b>${esc(p.phase)}</b><em>${esc(p.lead_name)} / ${esc(p.segments.join(" + "))}</em><p>${esc(p.theme_note)}</p></article>`
+      ).join("");
+      document.getElementById("lanes").innerHTML = state.lanes.map(lane =>
+        `<article class="lane"><span>${esc(lane.platform)}</span><b>${esc(lane.formal_name)}</b><em>${esc(lane.role)} / ${esc(lane.status)}</em><pre>${esc(lane.transcript)}</pre></article>`
+      ).join("");
+      renderTapestry(state);
+      document.getElementById("footer").textContent = "Refreshes every " + state.dashboard_refresh_seconds + "s when served over localhost. File mode uses embedded snapshot. Full history is mirrored to D: and compact history stays in repo traces.";
+    }
+    async function tick() { render(await loadState()); }
+    tick();
+    setInterval(tick, 3000);
+  </script>
+</body>
+</html>

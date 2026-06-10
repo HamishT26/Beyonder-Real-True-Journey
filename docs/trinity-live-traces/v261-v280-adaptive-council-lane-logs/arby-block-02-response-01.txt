@@ -1,0 +1,24 @@
+Receipt:
+The authoritative checkpoint in `docs/trinity-live-traces/v261-v280-adaptive-council-seed-synthesis-v1.json` supports a narrow local receipt only: Arby turn 01 has a receipted response, and the seed synthesis explicitly states that response/transport separation is required before lane replies can be treated as GitHub proof artifacts. It also keeps the publication boundary local-only: remote GitHub/provider proof is withheld until live verification.
+
+Blocker:
+The current capture path contaminates proof artifacts. The synthesis says the saved raw artifact for Arby turn 01 includes the intended response plus unrelated process-termination and `stderr` noise, so receipt cleanliness is not yet reliable. It also records that turn 02 had a start marker but no completed response receipt, which means delivery for that turn is not proven.
+
+Refinement:
+Keep two surfaces separate:
+1. Lane liveness.
+2. Receipt cleanliness.
+
+For proof use, the safer local receipt shape is the one already suggested in the checkpoint: `lane | cwd | branch | sandbox mode | last clean receipt | last stderr event`. That preserves a clean distinction between “response was produced” and “artifact is publication-safe.”
+
+Next-cycle proposal:
+Adopt the checkpoint’s two-file contract per turn:
+1. `response.txt` containing assistant text only.
+2. `transport.log` containing shell/process noise only.
+
+Then gate GitHub-proof candidacy on three local conditions only:
+1. Both files exist.
+2. `response.txt` parses cleanly with no transport contamination.
+3. The publication slice carries `remote-verification-required` until a later live verification turn.
+
+If contamination repeats, follow the seed synthesis rule: shrink prompts and stay on read-only probes until clean receipts stabilize.

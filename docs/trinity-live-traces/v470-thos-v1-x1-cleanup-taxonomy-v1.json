@@ -1,0 +1,80 @@
+{
+  "artifact": "v470_THOS_v1_x1_cleanup_taxonomy_v1",
+  "phase": "v470_THOS_v1_x1",
+  "classification": "evidence",
+  "scope": "Cleanup taxonomy only; no cleanup action is authorized or performed.",
+  "cleanup_classes": [
+    {
+      "class": "read_only_observation",
+      "description": "List, count, inspect, parse, compare, and summarize without writing.",
+      "examples": ["status sampling", "artifact inventory", "schema read", "head comparison"],
+      "allowed_this_phase": true,
+      "approval_required": false,
+      "publication_rule": "Summaries only; no raw logs or sensitive content."
+    },
+    {
+      "class": "safe_local_hygiene",
+      "description": "Create curated manifests, taxonomies, and candidate lists without modifying target files.",
+      "examples": ["retention map", "duplicate candidate ledger", "stale review queue"],
+      "allowed_this_phase": true,
+      "approval_required": false,
+      "publication_rule": "Curated current-phase artifacts only."
+    },
+    {
+      "class": "reversible_cleanup_candidate",
+      "description": "A proposed move, quarantine, archive, or rename that can be reversed.",
+      "examples": ["move generated cache to quarantine", "rename duplicate scratch artifact"],
+      "allowed_this_phase": false,
+      "approval_required": true,
+      "publication_rule": "Describe as proposal only with rollback plan."
+    },
+    {
+      "class": "destructive_cleanup",
+      "description": "Any deletion, recursive purge, history rewrite, cache purge, or permanent removal.",
+      "examples": ["delete files", "remove worktree", "clear raw logs", "prune branch"],
+      "allowed_this_phase": false,
+      "approval_required": true,
+      "publication_rule": "Blocked until explicit separate approval."
+    },
+    {
+      "class": "external_mutation",
+      "description": "Any action changing GitHub, Google Drive, automation, cloud resources, accounts, or services.",
+      "examples": ["Drive write", "automation edit", "API key creation", "connector write"],
+      "allowed_this_phase": false,
+      "approval_required": true,
+      "publication_rule": "Do not perform from this phase."
+    },
+    {
+      "class": "forbidden_material_handling",
+      "description": "Raw logs, session JSONL, screenshots, and credential-bearing material are not staged or published.",
+      "examples": ["session transcript file", "raw automation log", "screenshot dump"],
+      "allowed_this_phase": false,
+      "approval_required": "not_sufficient_for_publication",
+      "publication_rule": "Quarantine or ignore; never stage as phase artifact."
+    }
+  ],
+  "candidate_record_fields": [
+    "target_id",
+    "target_path_or_surface",
+    "observed_reason",
+    "retention_class",
+    "cleanup_class",
+    "approval_status",
+    "rollback_plan",
+    "source_evidence",
+    "blocked_reason"
+  ],
+  "default_rule": "If a candidate lacks ownership, retention class, approval status, and rollback plan, it remains observation-only.",
+  "blocked_actions_this_phase": [
+    "delete",
+    "move",
+    "recursive cleanup",
+    "cache purge",
+    "worktree deletion",
+    "history rewrite",
+    "cloud write",
+    "connector mutation",
+    "automation edit"
+  ],
+  "next_phase_use": "v470_THOS_v1_x2 should test candidate records against this taxonomy and fail closed."
+}

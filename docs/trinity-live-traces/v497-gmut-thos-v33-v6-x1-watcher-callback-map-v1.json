@@ -1,0 +1,49 @@
+{
+  "artifact_type": "watcher_callback_map",
+  "phase_slug": "v497-gmut-thos-v33-v6-x1",
+  "generated_utc": "2026-06-06T21:02:33Z",
+  "overall_status": "PASS_WATCHER_CALLBACK_MAP_READY",
+  "callback_rows": [
+    {
+      "hook": "prelaunch",
+      "purpose": "Verify prompt policy, exact headings, stale-authority handoff, and launch scope before any lane starts.",
+      "source_basis": "Google ADK callbacks and THOS prompt policy receipts"
+    },
+    {
+      "hook": "postlaunch",
+      "purpose": "Record app background watcher and CLI temp-only launch metadata without raw outputs.",
+      "source_basis": "OpenTelemetry GenAI event-style telemetry"
+    },
+    {
+      "hook": "cadence",
+      "purpose": "Prevent manual polling before the 15-minute x1 mark and 10-minute x2 mark.",
+      "source_basis": "THOS cadence guard"
+    },
+    {
+      "hook": "completion",
+      "purpose": "Harvest final-message and app completion receipts at approved marks only.",
+      "source_basis": "existing app and CLI completion notifiers"
+    },
+    {
+      "hook": "quality",
+      "purpose": "Gate CLI output by words, exact headings, category counts, and hard raw/private markers.",
+      "source_basis": "CLI elaboration quality gate"
+    },
+    {
+      "hook": "repair",
+      "purpose": "Classify gaps as prompt repair, stale-authority blocker, app wait, final-message wait, or approval-needed mutation.",
+      "source_basis": "MCP least privilege and bounded blocker escalation"
+    },
+    {
+      "hook": "publication",
+      "purpose": "Parse, scan, exact-stage, commit, push, and remote-verify curated artifacts only.",
+      "source_basis": "GitHub artifact provenance and THOS publication discipline"
+    }
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}

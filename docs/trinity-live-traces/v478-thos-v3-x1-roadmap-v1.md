@@ -1,0 +1,66 @@
+# v478 THOS v3 x1 Roadmap
+
+- generated_nz: `2026-06-04T10:15:41+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V3X1-01` (lane): Advance lane work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-02` (cli): Advance cli work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-03` (command): Advance command work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-04` (skill): Advance skill work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-05` (expansion): Advance expansion work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-06` (source): Advance source work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-07` (journey): Advance journey work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-08` (schema): Advance schema work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-09` (safety): Advance safety work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-10` (handoff): Advance handoff work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-11` (thos): Advance thos work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-12` (quality): Advance quality work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-13` (lane): Advance lane work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-14` (cli): Advance cli work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-15` (command): Advance command work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-16` (skill): Advance skill work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-17` (expansion): Advance expansion work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-18` (source): Advance source work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-19` (journey): Advance journey work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-20` (schema): Advance schema work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-21` (safety): Advance safety work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-22` (handoff): Advance handoff work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-23` (thos): Advance thos work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-24` (quality): Advance quality work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-25` (lane): Advance lane work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-26` (cli): Advance cli work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-27` (command): Advance command work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-28` (skill): Advance skill work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-29` (expansion): Advance expansion work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-30` (source): Advance source work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-31` (journey): Advance journey work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-32` (schema): Advance schema work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-33` (safety): Advance safety work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-34` (handoff): Advance handoff work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-35` (thos): Advance thos work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-36` (quality): Advance quality work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-37` (lane): Advance lane work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-38` (cli): Advance cli work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-39` (command): Advance command work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-40` (skill): Advance skill work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-41` (expansion): Advance expansion work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-42` (source): Advance source work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-43` (journey): Advance journey work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-44` (schema): Advance schema work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-45` (safety): Advance safety work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-46` (handoff): Advance handoff work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-47` (thos): Advance thos work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-48` (quality): Advance quality work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-49` (lane): Advance lane work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-50` (cli): Advance cli work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-51` (command): Advance command work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-52` (skill): Advance skill work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-53` (expansion): Advance expansion work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-54` (source): Advance source work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-55` (journey): Advance journey work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-56` (schema): Advance schema work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-57` (safety): Advance safety work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-58` (handoff): Advance handoff work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-59` (thos): Advance thos work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.
+- `V478V3X1-60` (quality): Advance quality work for v478 v3 x1 using status-only receipts, no raw payload publication, and open GMUT gates.

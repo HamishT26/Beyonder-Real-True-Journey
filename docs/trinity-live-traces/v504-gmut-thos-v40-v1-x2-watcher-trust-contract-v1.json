@@ -1,0 +1,37 @@
+{
+  "artifact_type": "watcher_trust_contract",
+  "phase_slug": "v504-gmut-thos-v40-v1-x2",
+  "generated_utc": "2026-06-08T22:49:18Z",
+  "overall_status": "PASS_WATCHER_TRUST_CONTRACT_BUILT",
+  "scorecard": [
+    {
+      "signal": "launch_receipt",
+      "expected_status": "PASS_BACKGROUND_WATCH_STARTED or explicit blocker"
+    },
+    {
+      "signal": "completion_receipt",
+      "expected_status": "present after gate or direct repair fallback required"
+    },
+    {
+      "signal": "direct_repair_gate",
+      "expected_status": "PASS_APP_LANE_COMPLETION_GATE when wrapper completion is stale"
+    },
+    {
+      "signal": "five_lane_normalizer",
+      "expected_status": "PASS_FIVE_LANE_READY before phase advance"
+    }
+  ],
+  "trust_rules": [
+    "Aletheon does not poll lanes before configured gates.",
+    "Watcher gaps become repair targets, not immediate sibling failure claims.",
+    "Direct repair fallback must preserve existing lane identity.",
+    "Every completion path remains status-only."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_transport_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open"
+  }
+}

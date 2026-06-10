@@ -1,0 +1,80 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "browser_probe": {
+    "attempt": "v472 bounded retry",
+    "direct_browser_usable": false,
+    "signal": "Browser is not available: iab",
+    "status": "OPEN_GAP"
+  },
+  "cli_probes": [
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Arby",
+      "last_message_bytes": 0,
+      "sandbox": "read-only",
+      "stderr_signal": "system skill install access denied plus missing YAML frontmatter skill-load failures",
+      "terminated_after_timeout": true
+    },
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Aster Vale",
+      "last_message_bytes": 0,
+      "sandbox": "read-only",
+      "stderr_signal": "missing YAML frontmatter skill-load failures",
+      "terminated_after_timeout": true
+    }
+  ],
+  "generated_at_utc": "2026-06-02T12:14:26+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v1-x1",
+  "rows": [
+    {
+      "evidence": {
+        "attempt": "v472 bounded retry",
+        "direct_browser_usable": false,
+        "signal": "Browser is not available: iab",
+        "status": "OPEN_GAP"
+      },
+      "message": "Browser direct iab remains unavailable",
+      "row_id": "browser_retry",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": {
+        "completed_within_wait": false,
+        "ephemeral_flag_used": false,
+        "lane": "Arby",
+        "last_message_bytes": 0,
+        "sandbox": "read-only",
+        "stderr_signal": "system skill install access denied plus missing YAML frontmatter skill-load failures",
+        "terminated_after_timeout": true
+      },
+      "message": "Arby launched safely but returned no final advisory",
+      "row_id": "cli_retry_arby",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": {
+        "completed_within_wait": false,
+        "ephemeral_flag_used": false,
+        "lane": "Aster Vale",
+        "last_message_bytes": 0,
+        "sandbox": "read-only",
+        "stderr_signal": "missing YAML frontmatter skill-load failures",
+        "terminated_after_timeout": true
+      },
+      "message": "Aster launched safely but returned no final advisory",
+      "row_id": "cli_retry_aster",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Retry evidence is blocker evidence only",
+      "row_id": "claim_ceiling",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}

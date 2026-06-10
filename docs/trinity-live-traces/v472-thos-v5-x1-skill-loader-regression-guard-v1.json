@@ -1,0 +1,211 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "app_advisories": [
+    {
+      "lane": "Cicero",
+      "status": "REQUEST_SENT",
+      "submission_id": "019e8898-c3d0-75d2-86b0-4d4004b057fe"
+    },
+    {
+      "lane": "Kierkegaard",
+      "status": "REQUEST_SENT",
+      "submission_id": "019e8899-0817-7932-8778-93cf50adbdc0"
+    },
+    {
+      "lane": "Aristotle",
+      "status": "REQUEST_SENT",
+      "submission_id": "019e8899-7616-7c53-9c6e-3ebc5b27b0ed"
+    }
+  ],
+  "browser_smoke": {
+    "correct_methods": [
+      "tab.url()",
+      "tab.title()"
+    ],
+    "expected_negative_method": "tab.playwright.url()",
+    "ok": true,
+    "title": "Plugins and skills | OpenAI",
+    "url": "https://openai.com/academy/codex-plugins-and-skills/"
+  },
+  "expected_negative_fixtures": {
+    "entries": [
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "MISSING_RAW_FRONTMATTER_DELIMITER"
+        ],
+        "fixture": "missing_frontmatter",
+        "hash": "00d1f5cca3ecd4bc8c13001dee077fa92b82921175e9bfe183a653e71adb92ee",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      },
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "LEADING_UTF8_BOM",
+          "MISSING_RAW_FRONTMATTER_DELIMITER"
+        ],
+        "fixture": "leading_bom",
+        "hash": "70d6a5b8772045b623f2915a299c81ca9f0222a12dd2f8ba67c5048ce702a582",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      },
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "REQUIRED_NAME_MISSING"
+        ],
+        "fixture": "missing_name",
+        "hash": "8522128f4ea78c74c6b1dce163c166b116119090d41d95aba8a301df252ebc73",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      },
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "REQUIRED_DESCRIPTION_MISSING"
+        ],
+        "fixture": "missing_description",
+        "hash": "f827890b45e024fe9d863410406abe86f18fe649939113665c678286bdd16210",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      },
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "MALFORMED_FRONTMATTER_DELIMITERS"
+        ],
+        "fixture": "malformed_delimiter",
+        "hash": "c83be4dc4832dbf455a5c40c7004a400322e66963e1fed0fcd2bc9a2a6196ae5",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      },
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "INVALID_NAME_TOO_LONG"
+        ],
+        "fixture": "overlong_name",
+        "hash": "326e39ae783560b7e43ed29698274008137b83e83e787d8aff9d2d55dfb7da28",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      },
+      {
+        "body_text_included": false,
+        "detected_errors": [
+          "RAW_BODY_FIELD_PRESENT"
+        ],
+        "fixture": "raw_body_field_leak",
+        "hash": "5b97097bdd41eddd222ea1d4e95105c0f580afc2692f9c644271233d56698b34",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "write_target": "tempdir_only"
+      }
+    ],
+    "failure_count": 0,
+    "fixture_count": 7,
+    "status": "PASS_EXPECTED_NEGATIVES"
+  },
+  "generated_at_utc": "2026-06-02T13:53:52+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "live_skill_scan": {
+    "error_count": 0,
+    "errors": [],
+    "scan_roots": [
+      "<user-home>/.codex/skills",
+      "<user-home>/.codex/plugins/cache"
+    ],
+    "status": "PASS_LOADER_SHAPE"
+  },
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v5-x1",
+  "rows": [
+    {
+      "evidence": {
+        "error_count": 0
+      },
+      "message": "Live user/plugin skill loader scan should have zero current shape errors",
+      "row_id": "live_skill_scan",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "failure_count": 0,
+        "fixture_count": 7
+      },
+      "message": "All expected-negative fixture shapes should be caught",
+      "row_id": "expected_negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "correct_methods": [
+          "tab.url()",
+          "tab.title()"
+        ],
+        "expected_negative_method": "tab.playwright.url()",
+        "ok": true,
+        "title": "Plugins and skills | OpenAI",
+        "url": "https://openai.com/academy/codex-plugins-and-skills/"
+      },
+      "message": "Browser smoke uses corrected URL/title methods",
+      "row_id": "browser_smoke",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "visible_count": 4
+      },
+      "message": "Stale temp plugin-clone directories are inspected only; no deletion performed",
+      "row_id": "stale_temp",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Skill-loader guard does not validate GMUT or close gates",
+      "row_id": "claim_ceiling",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "stale_temp_inspection": {
+    "entries": [
+      {
+        "cleanup_performed": false,
+        "display_path": "<user-home>/.codex/.tmp/plugins-clone-1RaYwe",
+        "exists": true,
+        "is_dir": true,
+        "status": "INSPECTED_ONLY"
+      },
+      {
+        "cleanup_performed": false,
+        "display_path": "<user-home>/.codex/.tmp/plugins-clone-5obapO",
+        "exists": true,
+        "is_dir": true,
+        "status": "INSPECTED_ONLY"
+      },
+      {
+        "cleanup_performed": false,
+        "display_path": "<user-home>/.codex/.tmp/plugins-clone-CgGbgi",
+        "exists": true,
+        "is_dir": true,
+        "status": "INSPECTED_ONLY"
+      },
+      {
+        "cleanup_performed": false,
+        "display_path": "<user-home>/.codex/.tmp/plugins-clone-H9IEBJ",
+        "exists": true,
+        "is_dir": true,
+        "status": "INSPECTED_ONLY"
+      }
+    ],
+    "status": "OPEN_GAP_STALE_TEMP_PRESENT",
+    "visible_count": 4
+  }
+}

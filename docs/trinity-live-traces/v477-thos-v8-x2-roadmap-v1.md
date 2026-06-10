@@ -1,0 +1,66 @@
+# v477 THOS v8 x2 Roadmap
+
+- generated_nz: `2026-06-04T08:08:24+12:00`
+- task_count: `60`
+
+## Tasks
+- `V8X2-01` (lane): Carry v8 x1 app-lane PASS evidence forward without republishing transport payloads.
+- `V8X2-02` (lane): Retry Arby and Aster Vale CLI watcher once with final-message marker criteria.
+- `V8X2-03` (lane): Keep CLI timeout as open gap if final-message markers remain absent.
+- `V8X2-04` (lane): Compare app-lane completion durations against v8 x1 receipt timing.
+- `V8X2-05` (lane): Record whether app lanes need another notification or only synthesis carry-forward.
+- `V8X2-06` (command): Promote top no-write command rows into v8 x2 proof groups.
+- `V8X2-07` (command): Keep weak command rows as explicit open gaps.
+- `V8X2-08` (command): Map command rows to command-index surface names.
+- `V8X2-09` (command): Flag any command lacking proof-required metadata.
+- `V8X2-10` (command): Prepare next dry-run-only command queue without executing it.
+- `V8X2-11` (skill): Join sampled skill metadata to command rows without copying skill bodies.
+- `V8X2-12` (skill): Score skill-command matches for actionability.
+- `V8X2-13` (skill): Identify duplicate or stale skill hints as open gaps.
+- `V8X2-14` (skill): Keep user and plugin skills unmodified.
+- `V8X2-15` (skill): Draft minimal future skill acceptance fields.
+- `V8X2-16` (expansion): Bucket expansions into no-write inspection, stdout-only probe, and toy-plan rows.
+- `V8X2-17` (expansion): Hold all installs and promotions until exact approval exists.
+- `V8X2-18` (expansion): Select the safest expansion probes for a future P1/P2 pass.
+- `V8X2-19` (expansion): Reject any expansion that needs account or destructive action.
+- `V8X2-20` (expansion): Produce an expansion blocker table for x2 synthesis.
+- `V8X2-21` (source): Refresh source drift only where v8 x2 needs newer evidence.
+- `V8X2-22` (source): Preserve official-source preference.
+- `V8X2-23` (source): Keep each source mapped to a specific THOS use.
+- `V8X2-24` (source): Separate governance context from local implementation evidence.
+- `V8X2-25` (source): Avoid claiming queued searches as complete.
+- `V8X2-26` (schema): Run JSON parse for every v8 x2 artifact.
+- `V8X2-27` (schema): Check required top-level keys for every handoff artifact.
+- `V8X2-28` (schema): Ensure run-status, synthesis, and roadmap agree on next phase.
+- `V8X2-29` (schema): Keep output rows bounded and deterministic.
+- `V8X2-30` (schema): Record any schema misses as blocker rows.
+- `V8X2-31` (watcher): Align app-lane done signals with local app-server events.
+- `V8X2-32` (watcher): Align CLI done signals with temp-only final-message markers.
+- `V8X2-33` (watcher): Avoid duplicate polling loops inside the same phase.
+- `V8X2-34` (watcher): Write a compact watcher acceptance table.
+- `V8X2-35` (watcher): Keep notifier scripts reusable across v478+ phases.
+- `V8X2-36` (safety): Fetch and drift-check before any publication.
+- `V8X2-37` (safety): Exact-stage only v8 scoped files.
+- `V8X2-38` (safety): Run publication guard scans before commit.
+- `V8X2-39` (safety): Reject broad staging even when worktree is noisy.
+- `V8X2-40` (safety): Remote-verify equals local after push.
+- `V8X2-41` (claim): Keep all six GMUT gates open.
+- `V8X2-42` (claim): Do not treat THOS infrastructure as GMUT validation.
+- `V8X2-43` (claim): Mark Journey context as non-canon if referenced.
+- `V8X2-44` (claim): Avoid final physics or consciousness-proof claims.
+- `V8X2-45` (claim): Keep fifth-force safety as open until exact physics artifacts exist.
+- `V8X2-46` (handoff): Decide whether v8 x3 is needed from blocker dominance.
+- `V8X2-47` (handoff): If no x3 is needed, produce v478 v1 roadmap.
+- `V8X2-48` (handoff): If x3 is needed, scope it to one blocker family.
+- `V8X2-49` (handoff): Write concise lane instructions for the next app notifier pass.
+- `V8X2-50` (handoff): Carry CLI timeout as a known risk until resolved.
+- `V8X2-51` (thos): Turn the command-index surface into a navigable manifest.
+- `V8X2-52` (thos): Surface v54/v55 handoff packs as references, not proof.
+- `V8X2-53` (thos): Keep connector reads separate from connector writes.
+- `V8X2-54` (thos): Draft a local-service health panel concept.
+- `V8X2-55` (thos): Document local app-server route as preferred app-lane path.
+- `V8X2-56` (quality): Review artifact names for phase consistency.
+- `V8X2-57` (quality): Review markdown summaries for overclaim language.
+- `V8X2-58` (quality): Verify no transport payloads entered curated artifacts.
+- `V8X2-59` (quality): Keep generated tables short enough for handoff use.
+- `V8X2-60` (quality): Prepare final v8 x2 synthesis and next roadmap.

@@ -1,0 +1,46 @@
+{
+  "artifact_type": "x2_prep_design_bank",
+  "phase_slug": "v499-gmut-thos-v35-v7-x1",
+  "target_phase_slug": "v499-gmut-thos-v35-v7-x2",
+  "generated_utc": "2026-06-07T10:30:00Z",
+  "overall_status": "PASS_X2_PREP_READY_WITH_DIRECT_FALLBACK_GATE_HELD",
+  "manual_repair_output_checked_after_fallback_launch": false,
+  "next_direct_fallback_check_not_before_utc": "2026-06-07T10:40:24Z",
+  "available_evidence": [
+    "app lanes passed cadence completion gate",
+    "strict helper produced no final-message files",
+    "strict helper produced no wrapper-start sentinel files",
+    "strict helper produced no wrapper-exit sentinel files",
+    "direct no-space bridge fallback launched for both CLI lanes",
+    "source synthesis reinforces stable CLI, read-only docs, MCP scope, and no-sensitive-log rules"
+  ],
+  "x2_candidates": [
+    {
+      "candidate": "promote direct bridge as temporary default",
+      "reason": "direct bridge has repeatedly produced valid CLI artifacts while helper wrapper execution remains unproven"
+    },
+    {
+      "candidate": "helper live-run sentinel harness",
+      "reason": "helper should not be trusted for phase launch until a small live harness proves wrapper-start and wrapper-exit files"
+    },
+    {
+      "candidate": "sentinel-aware CLI normalizer",
+      "reason": "normalizer needs to distinguish launch attempt, wrapper execution, bridge output, expected notifier copy, and quality pass"
+    },
+    {
+      "candidate": "fallback-first v499 v8 launch readiness",
+      "reason": "v499 v8 should not repeat a known helper execution gap if v7 direct fallback passes"
+    },
+    {
+      "candidate": "status-only helper failure classifier",
+      "reason": "classify missing sentinels without publishing wrapper scripts, temp paths, stdout/stderr, or raw lane text"
+    }
+  ],
+  "non_actions": [
+    "do not inspect direct fallback output before the fallback cadence gate",
+    "do not advance to x2 closeout with only app lanes ready",
+    "do not publish raw lane text, stdout, stderr, local temp paths, or app thread IDs",
+    "do not mutate plugin cache, user skills, app state, or external accounts",
+    "do not claim GMUT, physics, consciousness, or canon closure"
+  ]
+}

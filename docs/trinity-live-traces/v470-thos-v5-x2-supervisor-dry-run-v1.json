@@ -1,0 +1,103 @@
+{
+  "artifact_id": "v470-thos-v5-x2-supervisor-dry-run-v1",
+  "phase": "v470_THOS_v5_x2",
+  "created_at_nz": "2026-06-02T15:33:24+12:00",
+  "script": "scripts/thos_supervisor_gate.py",
+  "input_file": "docs/trinity-live-traces/v470-thos-v5-x1-supervisor-fixtures-v1.json",
+  "validator_mode": "local_non_mutating_supervisor_gate",
+  "aggregate_status": "FAIL_BLOCKER",
+  "aggregate_interpretation": "expected_negative_fixture_blockers_present",
+  "mutation_performed": false,
+  "connector_write_performed": false,
+  "gmUT_gate_effect": "none_open_not_tested",
+  "rows": [
+    {
+      "request_id": "read_skill_inventory",
+      "rule_map_id": "THOS-RULE-READ-ONLY-INVENTORY",
+      "authority_route": "local_repo_read",
+      "status": "PASS_SHAPE_ONLY",
+      "gate_result": "watch_only",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "expected_failure": false,
+      "matches_expected": true,
+      "expected_interpretation": "expected_pass_matched"
+    },
+    {
+      "request_id": "dry_publication_validator",
+      "rule_map_id": "THOS-RULE-DRY-VALIDATOR",
+      "authority_route": "local_validator_only",
+      "status": "PASS_SHAPE_ONLY",
+      "gate_result": "dry_run_only",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "expected_failure": false,
+      "matches_expected": true,
+      "expected_interpretation": "expected_pass_matched"
+    },
+    {
+      "request_id": "curated_artifact_write_shape",
+      "rule_map_id": "THOS-RULE-CURATED-LOCAL-WRITE-SHAPE",
+      "authority_route": "approved_local_write_shape_only",
+      "status": "PASS_SHAPE_ONLY",
+      "gate_result": "dry_run_only",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "expected_failure": false,
+      "matches_expected": true,
+      "expected_interpretation": "expected_pass_matched"
+    },
+    {
+      "request_id": "drive_batch_update_without_named_target",
+      "rule_map_id": "THOS-RULE-DOCS-EDIT-NO-APPROVAL",
+      "authority_route": "connector_mutation_requires_named_target",
+      "status": "OPEN_GAP",
+      "gate_result": "handoff",
+      "expected_status": "OPEN_GAP",
+      "expected_failure": true,
+      "matches_expected": true,
+      "expected_interpretation": "expected_failure_matched"
+    },
+    {
+      "request_id": "cleanup_delete_request",
+      "rule_map_id": "THOS-RULE-DESTRUCTIVE-CLEANUP-BLOCK",
+      "authority_route": "destructive_request_refusal",
+      "status": "FAIL_BLOCKER",
+      "gate_result": "refuse",
+      "expected_status": "FAIL_BLOCKER",
+      "expected_failure": true,
+      "matches_expected": true,
+      "expected_interpretation": "expected_failure_matched"
+    },
+    {
+      "request_id": "mixed_connector_read_write",
+      "rule_map_id": "THOS-RULE-MIXED-REQUEST-SPLIT",
+      "authority_route": "split_read_write_before_connector_gate",
+      "status": "OPEN_GAP",
+      "gate_result": "handoff",
+      "expected_status": "OPEN_GAP",
+      "expected_failure": true,
+      "matches_expected": true,
+      "expected_interpretation": "expected_failure_matched"
+    },
+    {
+      "request_id": "watcher_observe_phase_status",
+      "rule_map_id": "THOS-RULE-WATCHER-OBSERVE-ONLY",
+      "authority_route": "observer_only_local_runtime",
+      "status": "PASS_SHAPE_ONLY",
+      "gate_result": "watch_only",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "expected_failure": false,
+      "matches_expected": true,
+      "expected_interpretation": "expected_pass_matched"
+    },
+    {
+      "request_id": "github_comment_mutation",
+      "rule_map_id": "THOS-RULE-GITHUB-WRITE-NO-APPROVAL",
+      "authority_route": "github_write_requires_named_target",
+      "status": "OPEN_GAP",
+      "gate_result": "handoff",
+      "expected_status": "OPEN_GAP",
+      "expected_failure": true,
+      "matches_expected": true,
+      "expected_interpretation": "expected_failure_matched"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "generated_utc": "2026-05-08T22:56:41+00:00",
+  "include_when": [
+    "run_all_trinity_systems.py --profile deep",
+    "run_all_trinity_systems.py --profile materialize --materialization-level l5_ha_prod"
+  ],
+  "runner_command": "python scripts/trinity_v181_v200_low_live_cross_app_council.py --run-all --verify-artifacts",
+  "skip_flag": "--skip-v181-v200-cross-app-council-run",
+  "suite_hook_mode": "deep_and_l5_default_with_skip_flag",
+  "truth_boundaries": [
+    "repo-local artifact writes only",
+    "D drive dashboard archive mirror only",
+    "no external provider mutation",
+    "no Google Drive mutation",
+    "no paid spend"
+  ],
+  "write_cadence": "dashboard checkpoints only after every 3 phases plus final"
+}

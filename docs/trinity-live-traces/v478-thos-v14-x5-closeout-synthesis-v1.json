@@ -1,0 +1,99 @@
+{
+  "artifact_type": "phase_closeout_synthesis",
+  "phase_slug": "v478-thos-v14-x5-closeout",
+  "generated_utc": "2026-06-04T21:39:25Z",
+  "generated_nz": "2026-06-05T09:39:25+12:00",
+  "overall_status": "PASS_X5_CLOSEOUT_WITH_THREE_RUN_FIVE_LANE_BASELINE",
+  "evidence": {
+    "app_lanes": {
+      "receipt": "v478-thos-v14-x5-closeout-background-council-app-completion-v1.json",
+      "status": "PASS",
+      "lanes": [
+        {
+          "lane": "Cicero",
+          "duration_seconds": 232.046,
+          "completion": "completed"
+        },
+        {
+          "lane": "Kierkegaard",
+          "duration_seconds": 90.485,
+          "completion": "completed"
+        },
+        {
+          "lane": "Aristotle",
+          "duration_seconds": 91.125,
+          "completion": "completed"
+        }
+      ]
+    },
+    "cli_lanes": {
+      "receipt": "v478-thos-v14-x5-closeout-cli-completion-v1.json",
+      "status": "FINAL_MESSAGES_READY",
+      "lanes": [
+        {
+          "lane": "Arby",
+          "duration_seconds": 413.912,
+          "final_message_bytes": 1154,
+          "final_message_hash": "7b96a655b4e26f1d6573080e2995511ccd6f77d08a869a16ff5131ab8611bc0b",
+          "marker_review_required": false
+        },
+        {
+          "lane": "Aster Vale",
+          "duration_seconds": 389.588,
+          "final_message_bytes": 1254,
+          "final_message_hash": "54f7ec841d032696fb877900408bce61db909ee5c7c09cee60c714933f0d8143",
+          "marker_review_required": false
+        }
+      ],
+      "body_text_boundary": "temp_only_not_published"
+    },
+    "multiplex": {
+      "receipt": "v478-thos-v14-x5-closeout-local-multiplex-tui-app-server-runner-v1.json",
+      "status": "ALL_LANES_READY"
+    },
+    "timing": {
+      "receipt": "v478-thos-v14-x5-closeout-five-lane-timing-v1.json",
+      "observation_run_index_today": 3,
+      "observation_window_seconds": 1800,
+      "average_response_seconds_this_run": 243.431
+    },
+    "baseline": {
+      "receipt": "v478-thos-v14-five-lane-timing-baseline-v1.json",
+      "status": "READY_THREE_RUN_BASELINE",
+      "observed_run_count": 3,
+      "observed_lane_count": 15,
+      "average_response_seconds": 312.832,
+      "promotion_rule": "Use only as a practical wait foothold; never as a substitute for a final marker or completion receipt."
+    },
+    "stale_flow": {
+      "receipt": "v478-thos-v14-x5-closeout-stale-flow-refresh-v1.json",
+      "status": "READY_NO_STALE_FLOWS"
+    },
+    "prep_handoff": {
+      "receipt": "v478-thos-v14-x5-closeout-prep-handoff-v1.json",
+      "status": "PASS_PREP_DURING_FIVE_LANE_CLOSEOUT_WAIT"
+    }
+  },
+  "closeout_lessons": [
+    "The third mandatory five-sibling timing observation completed with all five lanes inside the 30-minute window.",
+    "Arby and Aster Vale both returned CLI final-message markers without marker-review flags, keeping them eligible for the next every-second-session roster.",
+    "Cicero, Kierkegaard, and Aristotle completed through existing app-server lanes without new thread creation or old-style spawning.",
+    "The three-run timing baseline is now ready at 312.832 seconds across 15 lane observations.",
+    "The baseline is only a soft operational waiting foothold and must not replace explicit final markers, completion receipts, or blocker receipts.",
+    "Wait periods were used for prep handoff work rather than idle manual polling, matching the updated goal-prompt rule."
+  ],
+  "next_phase_handoff": [
+    "Carry the five-lane roster into the next every-second-session start or closeout boundary.",
+    "Use the 312.832 second baseline as a practical first check-in point for future long waits, while preserving the longer 30-minute observation window when explicitly requested.",
+    "If any sibling remains open past the soft baseline, continue useful source, command, stale-flow, approval, or next-phase prep work before declaring any blocker.",
+    "If any lane fails to produce a final marker or app completion, keep it on the roster and publish a status-only blocker receipt.",
+    "Continue v478 THOS work toward x6 with command-index repair, v54/v55 surface continuity, stale-flow refresh, sandbox readiness, and source-backed THOS/GMUT prep."
+  ],
+  "claim_boundary": {
+    "scope": "v478 THOS v14 x5 closeout, five-lane timing, and next-phase handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false,
+    "raw_output_published": false
+  }
+}

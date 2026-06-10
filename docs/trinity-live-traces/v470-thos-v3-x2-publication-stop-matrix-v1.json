@@ -1,0 +1,49 @@
+{
+  "artifact_id": "v470-thos-v3-x2-publication-stop-matrix-v1",
+  "phase": "v470_THOS_v3_x2",
+  "created_at_nz": "2026-06-02T14:28:24+12:00",
+  "stop_rules": [
+    {
+      "rule": "raw_material_stop",
+      "stop_if": "raw logs, session JSONL, screenshots, cache dumps, credential-bearing material, or private traces enter publishable artifacts or staging",
+      "action": "unstage/abort publication and isolate as non-curated material"
+    },
+    {
+      "rule": "allowlist_stop",
+      "stop_if": "staged paths differ from docs/trinity-live-traces/v470-thos-v3-x2-*",
+      "action": "unstage unrelated files; do not broad stage"
+    },
+    {
+      "rule": "connector_mutation_stop",
+      "stop_if": "Google Drive, GitHub connector, Gmail, Calendar, cloud, deployment, or desktop mutation is implied without separate scoped approval",
+      "action": "record as future approval-required task"
+    },
+    {
+      "rule": "cleanup_stop",
+      "stop_if": "delete, purge, cache cleanup, worktree cleanup, Drive cleanup, or repo cleanup is requested without a fresh explicit target list",
+      "action": "produce cleanup candidate manifest only"
+    },
+    {
+      "rule": "advisory_overclaim_stop",
+      "stop_if": "sibling advisory is framed as proof, publication authority, independent validation, or live execution evidence",
+      "action": "downgrade to advisory and record evidence boundary"
+    },
+    {
+      "rule": "source_authority_stop",
+      "stop_if": "public claim lacks source authority or source role",
+      "action": "mark open_gap or remove claim"
+    },
+    {
+      "rule": "gmut_overclaim_stop",
+      "stop_if": "THOS report is framed as GMUT validation, gate closure, final physics, consciousness proof, or fifth-force safety",
+      "action": "block publication until language is corrected"
+    },
+    {
+      "rule": "spend_stop",
+      "stop_if": "paid external action is uncertain or approaches $100 ceiling",
+      "action": "stop and request a new packet"
+    }
+  ],
+  "publication_policy": "current_phase_curated_only",
+  "allowed_staged_pattern": "docs/trinity-live-traces/v470-thos-v3-x2-*"
+}

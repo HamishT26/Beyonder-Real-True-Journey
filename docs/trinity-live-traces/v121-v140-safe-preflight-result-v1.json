@@ -1,0 +1,909 @@
+﻿{
+    "artifact_id":  "v121-v140-safe-preflight-result-v1",
+    "generated_local":  "2026-05-06T02:17:17.7764888+12:00",
+    "generated_utc":  "2026-05-05T14:17:17.7764888Z",
+    "continuum":  "v121-v140",
+    "omnibus_approval_artifact":  "docs/trinity-live-traces/v121-v140-omnibus-live-write-approval-v1.json",
+    "no_spend":  true,
+    "no_external_mutation":  true,
+    "no_browser_launch":  true,
+    "no_npx_auto_install":  true,
+    "raw_output_policy":  "sanitized and truncated samples only",
+    "probe_summary":  {
+                          "total_command_probes":  17,
+                          "command_surfaces_available":  12,
+                          "command_probes_ok":  12,
+                          "plugin_skill_checks":  4,
+                          "plugin_skill_checks_ok":  4,
+                          "queued_packs":  20,
+                          "packs_with_detected_surface":  18
+                      },
+    "command_probes":  [
+                           {
+                               "label":  "codex_cli",
+                               "command":  "codex",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.ps1",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "codex-cli 0.128.0",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no model run requested"
+                           },
+                           {
+                               "label":  "kimi_cli",
+                               "command":  "kimi",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\.local\\bin\\kimi.exe",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "kimi, version 1.38.0",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no model run requested"
+                           },
+                           {
+                               "label":  "github",
+                               "command":  "gh",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Program Files\\GitHub CLI\\gh.exe",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "gh version 2.91.0 (2026-04-22)\r\nhttps://github.com/cli/cli/releases/tag/v2.91.0",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no repository mutation"
+                           },
+                           {
+                               "label":  "cloudflare",
+                               "command":  "wrangler",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\wrangler.ps1",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "4.86.0",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no deploy, DNS, worker, or account mutation"
+                           },
+                           {
+                               "label":  "vercel",
+                               "command":  "vercel",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\vercel.ps1",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "53.1.0\r\nnode.exe : Vercel CLI 53.1.0\r\nAt C:\\Users\\hamis\\AppData\\Roaming\\npm\\vercel.ps1:24 char:5\r\n+     \u0026 \"node$exe\"  \"$basedir/node_modules/vercel/dist/vc.js\" $args\r\n+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (Vercel CLI 53.1.0:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no deploy or account mutation"
+                           },
+                           {
+                               "label":  "neon",
+                               "command":  "neon",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\neon.ps1",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "2.22.0",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no database/project mutation"
+                           },
+                           {
+                               "label":  "render",
+                               "command":  "render",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\bin\\render.exe",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "render v2.16.0\r\n\r\nYou are using the latest version",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no deploy/service mutation"
+                           },
+                           {
+                               "label":  "circleci",
+                               "command":  "circleci",
+                               "arguments":  [
+                                                 "version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\AppData\\Local\\Microsoft\\WinGet\\Links\\circleci.exe",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "0.1.35213+1cbd254 (release)",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no pipeline trigger"
+                           },
+                           {
+                               "label":  "oci",
+                               "command":  "oci",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\bin\\oci.exe",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "3.81.0",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no cloud mutation"
+                           },
+                           {
+                               "label":  "e2b",
+                               "command":  "e2b",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\e2b.ps1",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "2.10.1",
+                               "stderr_sample":  "",
+                               "notes":  "local version-only probe; no sandbox creation"
+                           },
+                           {
+                               "label":  "node",
+                               "command":  "node",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Program Files\\nodejs\\node.exe",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "v24.15.0",
+                               "stderr_sample":  "",
+                               "notes":  "runtime availability for browser/playwright/expo lanes"
+                           },
+                           {
+                               "label":  "npm",
+                               "command":  "npm",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  true,
+                               "command_source":  "C:\\Program Files\\nodejs\\npm.ps1",
+                               "executed":  true,
+                               "exit_code":  0,
+                               "timed_out":  false,
+                               "ok":  true,
+                               "stdout_sample":  "11.12.0",
+                               "stderr_sample":  "",
+                               "notes":  "runtime availability only; no package install"
+                           },
+                           {
+                               "label":  "playwright",
+                               "command":  "playwright",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  false,
+                               "command_source":  null,
+                               "executed":  false,
+                               "exit_code":  null,
+                               "timed_out":  false,
+                               "ok":  false,
+                               "stdout_sample":  "",
+                               "stderr_sample":  "not on PATH",
+                               "notes":  "direct command only; npx auto-install intentionally avoided"
+                           },
+                           {
+                               "label":  "expo",
+                               "command":  "expo",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  false,
+                               "command_source":  null,
+                               "executed":  false,
+                               "exit_code":  null,
+                               "timed_out":  false,
+                               "ok":  false,
+                               "stdout_sample":  "",
+                               "stderr_sample":  "not on PATH",
+                               "notes":  "direct command only; npx auto-install intentionally avoided"
+                           },
+                           {
+                               "label":  "huggingface_cli",
+                               "command":  "huggingface-cli",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  false,
+                               "command_source":  null,
+                               "executed":  false,
+                               "exit_code":  null,
+                               "timed_out":  false,
+                               "ok":  false,
+                               "stdout_sample":  "",
+                               "stderr_sample":  "not on PATH",
+                               "notes":  "local version-only probe; no model/dataset access"
+                           },
+                           {
+                               "label":  "hf",
+                               "command":  "hf",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  false,
+                               "command_source":  null,
+                               "executed":  false,
+                               "exit_code":  null,
+                               "timed_out":  false,
+                               "ok":  false,
+                               "stdout_sample":  "",
+                               "stderr_sample":  "not on PATH",
+                               "notes":  "fallback local version-only probe; no model/dataset access"
+                           },
+                           {
+                               "label":  "tectonic",
+                               "command":  "tectonic",
+                               "arguments":  [
+                                                 "--version"
+                                             ],
+                               "available_on_path":  false,
+                               "command_source":  null,
+                               "executed":  false,
+                               "exit_code":  null,
+                               "timed_out":  false,
+                               "ok":  false,
+                               "stdout_sample":  "",
+                               "stderr_sample":  "not on PATH",
+                               "notes":  "local LaTeX compiler probe only"
+                           }
+                       ],
+    "plugin_skill_checks":  [
+                                {
+                                    "label":  "codex_security_skill",
+                                    "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\codex-security\\c5debd62\\skills\\security-scan\\SKILL.md",
+                                    "exists":  true
+                                },
+                                {
+                                    "label":  "browser_use_skill",
+                                    "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-bundled\\browser-use\\0.1.0-alpha1\\skills\\browser\\SKILL.md",
+                                    "exists":  true
+                                },
+                                {
+                                    "label":  "google_drive_skill",
+                                    "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\google-drive\\c5debd62\\skills",
+                                    "exists":  true
+                                },
+                                {
+                                    "label":  "notion_skill",
+                                    "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\notion\\c5debd62\\skills",
+                                    "exists":  true
+                                }
+                            ],
+    "pack_results":  [
+                         {
+                             "phase":  "v121",
+                             "provider_focus":  "codex_cli",
+                             "pack_path":  "docs/trinity-live-traces/v121-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "codex_cli",
+                                                         "command":  "codex",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "codex-cli 0.128.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no model run requested"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v122",
+                             "provider_focus":  "kimi_cli",
+                             "pack_path":  "docs/trinity-live-traces/v122-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "kimi_cli",
+                                                         "command":  "kimi",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\.local\\bin\\kimi.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "kimi, version 1.38.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no model run requested"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v123",
+                             "provider_focus":  "github",
+                             "pack_path":  "docs/trinity-live-traces/v123-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "github",
+                                                         "command":  "gh",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Program Files\\GitHub CLI\\gh.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "gh version 2.91.0 (2026-04-22)\r\nhttps://github.com/cli/cli/releases/tag/v2.91.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no repository mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v124",
+                             "provider_focus":  "google_drive",
+                             "pack_path":  "docs/trinity-live-traces/v124-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "google_drive_skill",
+                                                         "available_on_path":  true,
+                                                         "executed":  false,
+                                                         "ok":  true,
+                                                         "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\google-drive\\c5debd62\\skills",
+                                                         "notes":  "plugin skill path presence check"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v125",
+                             "provider_focus":  "cloudflare",
+                             "pack_path":  "docs/trinity-live-traces/v125-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "cloudflare",
+                                                         "command":  "wrangler",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\wrangler.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "4.86.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no deploy, DNS, worker, or account mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v126",
+                             "provider_focus":  "vercel",
+                             "pack_path":  "docs/trinity-live-traces/v126-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "vercel",
+                                                         "command":  "vercel",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\vercel.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "53.1.0\r\nnode.exe : Vercel CLI 53.1.0\r\nAt C:\\Users\\hamis\\AppData\\Roaming\\npm\\vercel.ps1:24 char:5\r\n+     \u0026 \"node$exe\"  \"$basedir/node_modules/vercel/dist/vc.js\" $args\r\n+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (Vercel CLI 53.1.0:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no deploy or account mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v127",
+                             "provider_focus":  "neon",
+                             "pack_path":  "docs/trinity-live-traces/v127-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "neon",
+                                                         "command":  "neon",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\neon.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "2.22.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no database/project mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v128",
+                             "provider_focus":  "render",
+                             "pack_path":  "docs/trinity-live-traces/v128-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "render",
+                                                         "command":  "render",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\bin\\render.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "render v2.16.0\r\n\r\nYou are using the latest version",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no deploy/service mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v129",
+                             "provider_focus":  "circleci",
+                             "pack_path":  "docs/trinity-live-traces/v129-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "circleci",
+                                                         "command":  "circleci",
+                                                         "arguments":  [
+                                                                           "version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Local\\Microsoft\\WinGet\\Links\\circleci.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "0.1.35213+1cbd254 (release)",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no pipeline trigger"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v130",
+                             "provider_focus":  "oci",
+                             "pack_path":  "docs/trinity-live-traces/v130-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "oci",
+                                                         "command":  "oci",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\bin\\oci.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "3.81.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no cloud mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v131",
+                             "provider_focus":  "e2b",
+                             "pack_path":  "docs/trinity-live-traces/v131-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "e2b",
+                                                         "command":  "e2b",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\e2b.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "2.10.1",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no sandbox creation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v132",
+                             "provider_focus":  "browser_playwright",
+                             "pack_path":  "docs/trinity-live-traces/v132-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "node",
+                                                         "command":  "node",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Program Files\\nodejs\\node.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "v24.15.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "runtime availability for browser/playwright/expo lanes"
+                                                     },
+                                                     {
+                                                         "label":  "npm",
+                                                         "command":  "npm",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Program Files\\nodejs\\npm.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "11.12.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "runtime availability only; no package install"
+                                                     },
+                                                     {
+                                                         "label":  "playwright",
+                                                         "command":  "playwright",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  false,
+                                                         "command_source":  null,
+                                                         "executed":  false,
+                                                         "exit_code":  null,
+                                                         "timed_out":  false,
+                                                         "ok":  false,
+                                                         "stdout_sample":  "",
+                                                         "stderr_sample":  "not on PATH",
+                                                         "notes":  "direct command only; npx auto-install intentionally avoided"
+                                                     },
+                                                     {
+                                                         "label":  "browser_use_skill",
+                                                         "available_on_path":  true,
+                                                         "executed":  false,
+                                                         "ok":  true,
+                                                         "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-bundled\\browser-use\\0.1.0-alpha1\\skills\\browser\\SKILL.md",
+                                                         "notes":  "plugin skill path presence check"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v133",
+                             "provider_focus":  "notion_expo",
+                             "pack_path":  "docs/trinity-live-traces/v133-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "expo",
+                                                         "command":  "expo",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  false,
+                                                         "command_source":  null,
+                                                         "executed":  false,
+                                                         "exit_code":  null,
+                                                         "timed_out":  false,
+                                                         "ok":  false,
+                                                         "stdout_sample":  "",
+                                                         "stderr_sample":  "not on PATH",
+                                                         "notes":  "direct command only; npx auto-install intentionally avoided"
+                                                     },
+                                                     {
+                                                         "label":  "notion_skill",
+                                                         "available_on_path":  true,
+                                                         "executed":  false,
+                                                         "ok":  true,
+                                                         "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\notion\\c5debd62\\skills",
+                                                         "notes":  "plugin skill path presence check"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v134",
+                             "provider_focus":  "huggingface",
+                             "pack_path":  "docs/trinity-live-traces/v134-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "huggingface_cli",
+                                                         "command":  "huggingface-cli",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  false,
+                                                         "command_source":  null,
+                                                         "executed":  false,
+                                                         "exit_code":  null,
+                                                         "timed_out":  false,
+                                                         "ok":  false,
+                                                         "stdout_sample":  "",
+                                                         "stderr_sample":  "not on PATH",
+                                                         "notes":  "local version-only probe; no model/dataset access"
+                                                     },
+                                                     {
+                                                         "label":  "hf",
+                                                         "command":  "hf",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  false,
+                                                         "command_source":  null,
+                                                         "executed":  false,
+                                                         "exit_code":  null,
+                                                         "timed_out":  false,
+                                                         "ok":  false,
+                                                         "stdout_sample":  "",
+                                                         "stderr_sample":  "not on PATH",
+                                                         "notes":  "fallback local version-only probe; no model/dataset access"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  false,
+                             "status":  "safe_preflight_no_local_surface_detected"
+                         },
+                         {
+                             "phase":  "v135",
+                             "provider_focus":  "latex_gmut",
+                             "pack_path":  "docs/trinity-live-traces/v135-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "tectonic",
+                                                         "command":  "tectonic",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  false,
+                                                         "command_source":  null,
+                                                         "executed":  false,
+                                                         "exit_code":  null,
+                                                         "timed_out":  false,
+                                                         "ok":  false,
+                                                         "stdout_sample":  "",
+                                                         "stderr_sample":  "not on PATH",
+                                                         "notes":  "local LaTeX compiler probe only"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  false,
+                             "status":  "safe_preflight_no_local_surface_detected"
+                         },
+                         {
+                             "phase":  "v136",
+                             "provider_focus":  "codex_security",
+                             "pack_path":  "docs/trinity-live-traces/v136-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "codex_security_skill",
+                                                         "available_on_path":  true,
+                                                         "executed":  false,
+                                                         "ok":  true,
+                                                         "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\codex-security\\c5debd62\\skills\\security-scan\\SKILL.md",
+                                                         "notes":  "plugin skill path presence check"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v137",
+                             "provider_focus":  "codex_cli",
+                             "pack_path":  "docs/trinity-live-traces/v137-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "codex_cli",
+                                                         "command":  "codex",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\AppData\\Roaming\\npm\\codex.ps1",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "codex-cli 0.128.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no model run requested"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v138",
+                             "provider_focus":  "kimi_cli",
+                             "pack_path":  "docs/trinity-live-traces/v138-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "kimi_cli",
+                                                         "command":  "kimi",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Users\\hamis\\.local\\bin\\kimi.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "kimi, version 1.38.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no model run requested"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v139",
+                             "provider_focus":  "github",
+                             "pack_path":  "docs/trinity-live-traces/v139-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "github",
+                                                         "command":  "gh",
+                                                         "arguments":  [
+                                                                           "--version"
+                                                                       ],
+                                                         "available_on_path":  true,
+                                                         "command_source":  "C:\\Program Files\\GitHub CLI\\gh.exe",
+                                                         "executed":  true,
+                                                         "exit_code":  0,
+                                                         "timed_out":  false,
+                                                         "ok":  true,
+                                                         "stdout_sample":  "gh version 2.91.0 (2026-04-22)\r\nhttps://github.com/cli/cli/releases/tag/v2.91.0",
+                                                         "stderr_sample":  "",
+                                                         "notes":  "local version-only probe; no repository mutation"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         },
+                         {
+                             "phase":  "v140",
+                             "provider_focus":  "google_drive",
+                             "pack_path":  "docs/trinity-live-traces/v140-live-write-action-pack-v1.json",
+                             "approval_state":  "operator_approved_for_repo_side_safe_preflight",
+                             "external_mutation_state":  "held_pending_provider_specific_target_spend_rollback_confirmation",
+                             "no_spend_checks":  [
+                                                     {
+                                                         "label":  "google_drive_skill",
+                                                         "available_on_path":  true,
+                                                         "executed":  false,
+                                                         "ok":  true,
+                                                         "path":  "C:\\Users\\hamis\\.codex\\plugins\\cache\\openai-curated\\google-drive\\c5debd62\\skills",
+                                                         "notes":  "plugin skill path presence check"
+                                                     }
+                                                 ],
+                             "usable_local_surface_detected":  true,
+                             "status":  "safe_preflight_detected_surface"
+                         }
+                     ],
+    "held_actions":  [
+                         "Cloud/provider deploys",
+                         "DNS changes",
+                         "database creation/migration",
+                         "Drive upload or sharing",
+                         "Notion page/database creation",
+                         "email/calendar sends or edits",
+                         "paid sandbox/cloud resource creation"
+                     ],
+    "effective_success":  true
+}

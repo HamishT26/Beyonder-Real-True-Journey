@@ -1,0 +1,82 @@
+{
+  "artifact_type": "phase_start_prep_handoff",
+  "phase_slug": "v478-thos-v14-x5-start",
+  "generated_utc": "2026-06-04T21:08:00Z",
+  "generated_nz": "2026-06-05T09:08:00+12:00",
+  "overall_status": "PASS_PREP_DURING_FIVE_LANE_WAIT",
+  "inputs": {
+    "x4_closeout": "v478-thos-v14-x4-closeout-synthesis-v1.json",
+    "x4_timing": "v478-thos-v14-x4-closeout-five-lane-timing-v1.json",
+    "x5_source_refresh": "v478-thos-v14-x5-start-source-refresh-v1.json",
+    "command_surface_receipt": "v478-thos-v14-x3-command-handoff-surface-receipt-v1.json",
+    "loader_detector": "v478-thos-v14-x3-loader-drift-detector-v1.json"
+  },
+  "state_reading": [
+    {
+      "surface": "five_lane_cadence",
+      "status": "active",
+      "evidence": "x4 closeout completed all five lanes; x5 start is running as observation 2 of 3.",
+      "next_action": "Do not compute the future soft timeout baseline until observation 3 is complete."
+    },
+    {
+      "surface": "command_index",
+      "status": "pass_with_open_gap",
+      "evidence": "x3 command/handoff surface recorded command book v11 validating 684 commands, with the old v6 workbench contract absent.",
+      "next_action": "Keep the missing v6 workbench contract as a compatibility gap, not a phase blocker."
+    },
+    {
+      "surface": "v54_v55_handoff",
+      "status": "pass",
+      "evidence": "x3 handoff surface located v54 omega and v55 beta continuity/policy packs.",
+      "next_action": "Use those packs as continuity surfaces for future handoff summaries without raw archive import."
+    },
+    {
+      "surface": "skill_loader",
+      "status": "pass",
+      "evidence": "x3 loader drift detector scanned 1031 SKILL.md files and found zero issue files.",
+      "next_action": "Do not mutate plugin-cache or user skills without a fresh exact approval packet."
+    },
+    {
+      "surface": "cli_timing",
+      "status": "watch",
+      "evidence": "x4 Arby completed much later than Aster Vale but still inside the 30-minute observation window.",
+      "next_action": "Carry Arby timing asymmetry into stale-flow review only if it becomes repeated blocker evidence."
+    }
+  ],
+  "x5_wait_tasks": [
+    "Continue source-refresh and security framing using official sources only.",
+    "Keep the x5 watcher open until final-message readiness or the 30-minute ceiling.",
+    "When x5 receipts arrive, synthesize timing observation 2 of 3.",
+    "Rerun the five-lane baseline aggregator after x5 timing; it should remain pending with two observations.",
+    "Prepare x5 closeout or x6 start according to the every-second-session cadence and actual lane state."
+  ],
+  "risk_rows": [
+    {
+      "id": "RISK-X5-CLI-ASYMMETRY",
+      "status": "watch",
+      "mitigation": "Use fresh temp output and final-message hashes; avoid raw body publication."
+    },
+    {
+      "id": "RISK-X5-COMMAND-COMPAT",
+      "status": "open_gap_nonblocking",
+      "mitigation": "Keep v6 workbench-contract absence in compatibility notes until a scoped repair packet exists."
+    },
+    {
+      "id": "RISK-X5-BASELINE-MISUSE",
+      "status": "controlled",
+      "mitigation": "Treat timing average as a waiting baseline only, never as completion proof."
+    },
+    {
+      "id": "RISK-X5-SCOPE-CREEP",
+      "status": "controlled",
+      "mitigation": "Publish only curated receipts under approved paths; no cache, account, or raw archive mutation."
+    }
+  ],
+  "claim_boundary": {
+    "scope": "x5 start prep during active five-lane wait",
+    "x5_lane_completion": "not_claimed_here",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

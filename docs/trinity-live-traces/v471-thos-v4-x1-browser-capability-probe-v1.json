@@ -1,0 +1,62 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "browser_probe": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "signal": "browser connection path timed out before returning a usable selected tab",
+        "status": "OPEN_GAP"
+      },
+      {
+        "attempt": 2,
+        "signal": "Browser is not available: iab",
+        "status": "OPEN_GAP"
+      }
+    ],
+    "browser_client_path_present": true,
+    "browser_skill_present": true,
+    "claim_ceiling": "Browser skill and bridge path are present, but the iab browser surface is unavailable in this thread.",
+    "direct_browser_usable": false
+  },
+  "generated_at_utc": "2026-06-02T11:28:36+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v471-thos-v4-x1",
+  "rows": [
+    {
+      "evidence": null,
+      "message": "Browser skill file was readable before the live probe",
+      "row_id": "browser_skill_present",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "attempts": [
+          {
+            "attempt": 1,
+            "signal": "browser connection path timed out before returning a usable selected tab",
+            "status": "OPEN_GAP"
+          },
+          {
+            "attempt": 2,
+            "signal": "Browser is not available: iab",
+            "status": "OPEN_GAP"
+          }
+        ],
+        "browser_client_path_present": true,
+        "browser_skill_present": true,
+        "claim_ceiling": "Browser skill and bridge path are present, but the iab browser surface is unavailable in this thread.",
+        "direct_browser_usable": false
+      },
+      "message": "In-app browser surface did not return a usable iab browser handle",
+      "row_id": "browser_direct_iab",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Do not claim Browser direct access, screenshot verification, or UI automation success",
+      "row_id": "claim_ceiling",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}

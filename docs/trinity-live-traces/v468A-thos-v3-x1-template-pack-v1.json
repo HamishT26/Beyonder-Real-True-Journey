@@ -1,0 +1,96 @@
+{
+  "artifact": "v468A_THOS_v3_x1_template_pack_v1",
+  "phase": "v468A_THOS_v3_x1",
+  "prepared_nz": "2026-06-01T23:25:56.9349955+12:00",
+  "claim_taxonomy": [
+    "evidence",
+    "context",
+    "hypothesis",
+    "blocker",
+    "advisory",
+    "open_gap",
+    "journey_context_not_canon"
+  ],
+  "template_components": [
+    {
+      "name": "phase_manifest",
+      "purpose": "Declare phase id, focus, prior verified head, current live head, permitted scope, blocked scope, and artifact list before any publication action.",
+      "minimum_fields": [
+        "phase_id",
+        "phase_type",
+        "start_time_nz",
+        "prior_remote_verified_head",
+        "live_local_head",
+        "live_upstream_head",
+        "drift",
+        "permitted_probe_levels",
+        "blocked_actions",
+        "artifact_paths"
+      ],
+      "acceptance": "A reviewer can tell what phase is being run, what head it starts from, and what live actions are forbidden without reading chat history."
+    },
+    {
+      "name": "live_write_gate",
+      "purpose": "Separate inspect-only, dry-run, tempdir rehearsal, curated write, connector mutation, and destructive cleanup gates.",
+      "minimum_fields": [
+        "action_class",
+        "approval_required",
+        "allowed_paths",
+        "forbidden_paths",
+        "preflight_checks",
+        "rollback_free_recovery",
+        "post_action_receipt"
+      ],
+      "acceptance": "No live write, cloud mirror, broad cleanup, or deletion can be mistaken for an automatically approved operation."
+    },
+    {
+      "name": "surface_inventory",
+      "purpose": "Catalog command, skill, script, connector, plugin, repo, Drive, and document surfaces with evidence status and safe operating boundary.",
+      "minimum_fields": [
+        "surface_id",
+        "surface_type",
+        "source_path_or_url",
+        "authority_level",
+        "last_verified",
+        "safe_actions",
+        "blocked_actions",
+        "validation_route"
+      ],
+      "acceptance": "The inventory distinguishes locally verified capability from planned capability and from unavailable connector claims."
+    },
+    {
+      "name": "publication_checklist",
+      "purpose": "Standardize the current-phase commit path without broad staging or hidden raw capture.",
+      "minimum_fields": [
+        "fetch_result",
+        "drift_result",
+        "json_parse_result",
+        "safety_guard_result",
+        "whitespace_result",
+        "staged_file_list",
+        "staged_diff_review",
+        "commit_hash",
+        "remote_equality"
+      ],
+      "acceptance": "The published artifact can be audited from local preparation through remote equality."
+    },
+    {
+      "name": "sibling_retry_prompt",
+      "purpose": "Keep app and CLI advisory lanes useful without fabricating missing text or retrying known rate limits too early.",
+      "minimum_fields": [
+        "lane_id",
+        "lane_kind",
+        "last_status",
+        "retry_after",
+        "message_scope",
+        "expected_output",
+        "do_not_fabricate_rule"
+      ],
+      "acceptance": "A lane can fail, rate-limit, or return no exposed final text while the main phase still records the truth."
+    }
+  ],
+  "gm_ut_boundary": {
+    "status": "all_six_gates_remain_open",
+    "rule": "THOS operational templates do not validate GMUT physics by association."
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "artifact_id": "v466A-gmut-v1-x2-field-level-hold-sieve-v1",
+  "artifact_kind": "field_level_hold_sieve",
+  "phase": "v466A_GMUT_v1_x2",
+  "claim_taxonomy": "blocker",
+  "status": "FIELD_LEVEL_PROVENANCE_SCHEMA_OVERLAY_HOLD",
+  "sieve_rules": [
+    {
+      "rule_id": "hold_missing_stable_source_statement_id",
+      "trigger": "A field that carries support or constraint meaning lacks stable source_id or statement_id.",
+      "effect": "hold",
+      "reason": "The row cannot be traced to a discrete source statement."
+    },
+    {
+      "rule_id": "hold_free_text_support_relations",
+      "trigger": "supports, does_not_support, or constrains values are free text instead of stable claim IDs.",
+      "effect": "hold",
+      "reason": "The row cannot be compared or contradiction-checked reliably."
+    },
+    {
+      "rule_id": "hold_observation_interpretation_mixed",
+      "trigger": "A field mixes observed, derived, assumed, and interpreted content without interpretation_type.",
+      "effect": "hold",
+      "reason": "Evidence posture is ambiguous."
+    },
+    {
+      "rule_id": "hold_uncertainty_semantics_missing",
+      "trigger": "A measured, bounded, or converted value lacks uncertainty_semantics.",
+      "effect": "hold",
+      "reason": "Metrology posture is incomplete."
+    },
+    {
+      "rule_id": "hold_si_transform_missing",
+      "trigger": "A coefficient or dimensional row lacks explicit SI dimension vector, canonical unit, or conversion assumption.",
+      "effect": "hold",
+      "reason": "Dimensional/SI consistency cannot be evaluated."
+    },
+    {
+      "rule_id": "hold_regime_missing",
+      "trigger": "A constraint or comparator row lacks regime, range, coupling basis, or composition basis where applicable.",
+      "effect": "hold",
+      "reason": "External constraint mapping is underdetermined."
+    },
+    {
+      "rule_id": "hold_null_result_promoted_to_existence",
+      "trigger": "A null result or exclusion bound is worded as positive existence, safety, or compatibility.",
+      "effect": "hold",
+      "reason": "Null evidence cannot be promoted beyond its tested regime."
+    },
+    {
+      "rule_id": "hold_journey_context_as_evidence",
+      "trigger": "Journey or Solas context is used as physics, consciousness, spiritual, or canon evidence.",
+      "effect": "hold",
+      "reason": "Journey/Solas material is journey_context_not_canon only."
+    },
+    {
+      "rule_id": "hold_gate_closure_language",
+      "trigger": "A row or summary implies GMUT validation, final physics, fifth-force safety, solved consciousness, empirical spiritual proof, or canon promotion.",
+      "effect": "hold",
+      "reason": "The exact closure artifacts do not exist."
+    },
+    {
+      "rule_id": "hold_missing_boundary_policy",
+      "trigger": "Metric/action or scalar-variation rows lack boundary-term or integration-by-parts policy.",
+      "effect": "hold",
+      "reason": "The scalar route remains convention-incomplete."
+    }
+  ],
+  "schema_status_limits": {
+    "maximum_current_status": "HOLD_PENDING_EXACT_ROW",
+    "pass_schema_only_allowed_now": false,
+    "reason": "The x2 overlay defines required fields and hold rules but does not yet materialize local row instances with stable claim IDs."
+  },
+  "six_gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  },
+  "next_expected_phase": "v466A_GMUT_v2_x1"
+}

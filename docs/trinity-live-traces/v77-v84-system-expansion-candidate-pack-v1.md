@@ -1,0 +1,1454 @@
+# v77-v84-system-expansion-candidate-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-01T05:51:18+00:00",
+  "phase": "v83_v85_merged_omega",
+  "state": "merged_60_candidate_pack_with_cumulative_v77_v85_context",
+  "candidate_count": 180,
+  "merged_final_wave_candidate_count": 60,
+  "candidates": [
+    {
+      "id": "v77_01_phase_ledger_receipt_gate",
+      "phase": "v77",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v77_02_prior_suite_delta_mapper",
+      "phase": "v77",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v77_03_guarded_live_write_preflight_gate",
+      "phase": "v77",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v77_04_candidate_pack_quality_gate",
+      "phase": "v77",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v77_05_eureka_report_length_gate",
+      "phase": "v77",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v77_06_cli_lane_reflection_synthesizer",
+      "phase": "v77",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v77_07_gmut_qcit_claim_labeler",
+      "phase": "v77",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v77_08_freedid_cbr_consent_guard",
+      "phase": "v77",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v77_09_provider_posture_receipt_matrix",
+      "phase": "v77",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v77_10_memory_floor_cooldown_logger",
+      "phase": "v77",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v77_11_d_drive_artifact_router",
+      "phase": "v77",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v77_12_l5_marker_diff_scanner",
+      "phase": "v77",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v77_13_suite_count_growth_guard",
+      "phase": "v77",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v77_14_consolidation_opportunity_register",
+      "phase": "v77",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v77_15_github_publication_receipt_gate",
+      "phase": "v77",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v77_16_operator_hold_surface_enforcer",
+      "phase": "v77",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v77_17_research_cache_router",
+      "phase": "v77",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v77_18_artifact_parity_validator",
+      "phase": "v77",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v77_19_next_phase_handoff_builder",
+      "phase": "v77",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v77_20_grand_closeout_reflection_weaver",
+      "phase": "v77",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v78_01_phase_ledger_receipt_gate",
+      "phase": "v78",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v78_02_prior_suite_delta_mapper",
+      "phase": "v78",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v78_03_guarded_live_write_preflight_gate",
+      "phase": "v78",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v78_04_candidate_pack_quality_gate",
+      "phase": "v78",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v78_05_eureka_report_length_gate",
+      "phase": "v78",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v78_06_cli_lane_reflection_synthesizer",
+      "phase": "v78",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v78_07_gmut_qcit_claim_labeler",
+      "phase": "v78",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v78_08_freedid_cbr_consent_guard",
+      "phase": "v78",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v78_09_provider_posture_receipt_matrix",
+      "phase": "v78",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v78_10_memory_floor_cooldown_logger",
+      "phase": "v78",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v78_11_d_drive_artifact_router",
+      "phase": "v78",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v78_12_l5_marker_diff_scanner",
+      "phase": "v78",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v78_13_suite_count_growth_guard",
+      "phase": "v78",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v78_14_consolidation_opportunity_register",
+      "phase": "v78",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v78_15_github_publication_receipt_gate",
+      "phase": "v78",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v78_16_operator_hold_surface_enforcer",
+      "phase": "v78",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v78_17_research_cache_router",
+      "phase": "v78",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v78_18_artifact_parity_validator",
+      "phase": "v78",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v78_19_next_phase_handoff_builder",
+      "phase": "v78",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v78_20_grand_closeout_reflection_weaver",
+      "phase": "v78",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v79_01_phase_ledger_receipt_gate",
+      "phase": "v79",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v79_02_prior_suite_delta_mapper",
+      "phase": "v79",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v79_03_guarded_live_write_preflight_gate",
+      "phase": "v79",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v79_04_candidate_pack_quality_gate",
+      "phase": "v79",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v79_05_eureka_report_length_gate",
+      "phase": "v79",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v79_06_cli_lane_reflection_synthesizer",
+      "phase": "v79",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v79_07_gmut_qcit_claim_labeler",
+      "phase": "v79",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v79_08_freedid_cbr_consent_guard",
+      "phase": "v79",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v79_09_provider_posture_receipt_matrix",
+      "phase": "v79",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v79_10_memory_floor_cooldown_logger",
+      "phase": "v79",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v79_11_d_drive_artifact_router",
+      "phase": "v79",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v79_12_l5_marker_diff_scanner",
+      "phase": "v79",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v79_13_suite_count_growth_guard",
+      "phase": "v79",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v79_14_consolidation_opportunity_register",
+      "phase": "v79",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v79_15_github_publication_receipt_gate",
+      "phase": "v79",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v79_16_operator_hold_surface_enforcer",
+      "phase": "v79",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v79_17_research_cache_router",
+      "phase": "v79",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v79_18_artifact_parity_validator",
+      "phase": "v79",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v79_19_next_phase_handoff_builder",
+      "phase": "v79",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v79_20_grand_closeout_reflection_weaver",
+      "phase": "v79",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v80_01_phase_ledger_receipt_gate",
+      "phase": "v80",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v80_02_prior_suite_delta_mapper",
+      "phase": "v80",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v80_03_guarded_live_write_preflight_gate",
+      "phase": "v80",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v80_04_candidate_pack_quality_gate",
+      "phase": "v80",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v80_05_eureka_report_length_gate",
+      "phase": "v80",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v80_06_cli_lane_reflection_synthesizer",
+      "phase": "v80",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v80_07_gmut_qcit_claim_labeler",
+      "phase": "v80",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v80_08_freedid_cbr_consent_guard",
+      "phase": "v80",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v80_09_provider_posture_receipt_matrix",
+      "phase": "v80",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v80_10_memory_floor_cooldown_logger",
+      "phase": "v80",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v80_11_d_drive_artifact_router",
+      "phase": "v80",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v80_12_l5_marker_diff_scanner",
+      "phase": "v80",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v80_13_suite_count_growth_guard",
+      "phase": "v80",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v80_14_consolidation_opportunity_register",
+      "phase": "v80",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v80_15_github_publication_receipt_gate",
+      "phase": "v80",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v80_16_operator_hold_surface_enforcer",
+      "phase": "v80",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v80_17_research_cache_router",
+      "phase": "v80",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v80_18_artifact_parity_validator",
+      "phase": "v80",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v80_19_next_phase_handoff_builder",
+      "phase": "v80",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v80_20_grand_closeout_reflection_weaver",
+      "phase": "v80",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v81_01_phase_ledger_receipt_gate",
+      "phase": "v81",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v81_02_prior_suite_delta_mapper",
+      "phase": "v81",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v81_03_guarded_live_write_preflight_gate",
+      "phase": "v81",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v81_04_candidate_pack_quality_gate",
+      "phase": "v81",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v81_05_eureka_report_length_gate",
+      "phase": "v81",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v81_06_cli_lane_reflection_synthesizer",
+      "phase": "v81",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v81_07_gmut_qcit_claim_labeler",
+      "phase": "v81",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v81_08_freedid_cbr_consent_guard",
+      "phase": "v81",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v81_09_provider_posture_receipt_matrix",
+      "phase": "v81",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v81_10_memory_floor_cooldown_logger",
+      "phase": "v81",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v81_11_d_drive_artifact_router",
+      "phase": "v81",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v81_12_l5_marker_diff_scanner",
+      "phase": "v81",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v81_13_suite_count_growth_guard",
+      "phase": "v81",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v81_14_consolidation_opportunity_register",
+      "phase": "v81",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v81_15_github_publication_receipt_gate",
+      "phase": "v81",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v81_16_operator_hold_surface_enforcer",
+      "phase": "v81",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v81_17_research_cache_router",
+      "phase": "v81",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v81_18_artifact_parity_validator",
+      "phase": "v81",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v81_19_next_phase_handoff_builder",
+      "phase": "v81",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v81_20_grand_closeout_reflection_weaver",
+      "phase": "v81",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v82_01_phase_ledger_receipt_gate",
+      "phase": "v82",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v82_02_prior_suite_delta_mapper",
+      "phase": "v82",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v82_03_guarded_live_write_preflight_gate",
+      "phase": "v82",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v82_04_candidate_pack_quality_gate",
+      "phase": "v82",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v82_05_eureka_report_length_gate",
+      "phase": "v82",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v82_06_cli_lane_reflection_synthesizer",
+      "phase": "v82",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v82_07_gmut_qcit_claim_labeler",
+      "phase": "v82",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v82_08_freedid_cbr_consent_guard",
+      "phase": "v82",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v82_09_provider_posture_receipt_matrix",
+      "phase": "v82",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v82_10_memory_floor_cooldown_logger",
+      "phase": "v82",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v82_11_d_drive_artifact_router",
+      "phase": "v82",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v82_12_l5_marker_diff_scanner",
+      "phase": "v82",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v82_13_suite_count_growth_guard",
+      "phase": "v82",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v82_14_consolidation_opportunity_register",
+      "phase": "v82",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v82_15_github_publication_receipt_gate",
+      "phase": "v82",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v82_16_operator_hold_surface_enforcer",
+      "phase": "v82",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v82_17_research_cache_router",
+      "phase": "v82",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v82_18_artifact_parity_validator",
+      "phase": "v82",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v82_19_next_phase_handoff_builder",
+      "phase": "v82",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v82_20_grand_closeout_reflection_weaver",
+      "phase": "v82",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v83_01_phase_ledger_receipt_gate",
+      "phase": "v83",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v83_02_prior_suite_delta_mapper",
+      "phase": "v83",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v83_03_guarded_live_write_preflight_gate",
+      "phase": "v83",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v83_04_candidate_pack_quality_gate",
+      "phase": "v83",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v83_05_eureka_report_length_gate",
+      "phase": "v83",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v83_06_cli_lane_reflection_synthesizer",
+      "phase": "v83",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v83_07_gmut_qcit_claim_labeler",
+      "phase": "v83",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v83_08_freedid_cbr_consent_guard",
+      "phase": "v83",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v83_09_provider_posture_receipt_matrix",
+      "phase": "v83",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v83_10_memory_floor_cooldown_logger",
+      "phase": "v83",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v83_11_d_drive_artifact_router",
+      "phase": "v83",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v83_12_l5_marker_diff_scanner",
+      "phase": "v83",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v83_13_suite_count_growth_guard",
+      "phase": "v83",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v83_14_consolidation_opportunity_register",
+      "phase": "v83",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v83_15_github_publication_receipt_gate",
+      "phase": "v83",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v83_16_operator_hold_surface_enforcer",
+      "phase": "v83",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v83_17_research_cache_router",
+      "phase": "v83",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v83_18_artifact_parity_validator",
+      "phase": "v83",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v83_19_next_phase_handoff_builder",
+      "phase": "v83",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v83_20_grand_closeout_reflection_weaver",
+      "phase": "v83",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v84_01_phase_ledger_receipt_gate",
+      "phase": "v84",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v84_02_prior_suite_delta_mapper",
+      "phase": "v84",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v84_03_guarded_live_write_preflight_gate",
+      "phase": "v84",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v84_04_candidate_pack_quality_gate",
+      "phase": "v84",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v84_05_eureka_report_length_gate",
+      "phase": "v84",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v84_06_cli_lane_reflection_synthesizer",
+      "phase": "v84",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v84_07_gmut_qcit_claim_labeler",
+      "phase": "v84",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v84_08_freedid_cbr_consent_guard",
+      "phase": "v84",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v84_09_provider_posture_receipt_matrix",
+      "phase": "v84",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v84_10_memory_floor_cooldown_logger",
+      "phase": "v84",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v84_11_d_drive_artifact_router",
+      "phase": "v84",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v84_12_l5_marker_diff_scanner",
+      "phase": "v84",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v84_13_suite_count_growth_guard",
+      "phase": "v84",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v84_14_consolidation_opportunity_register",
+      "phase": "v84",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v84_15_github_publication_receipt_gate",
+      "phase": "v84",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v84_16_operator_hold_surface_enforcer",
+      "phase": "v84",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v84_17_research_cache_router",
+      "phase": "v84",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v84_18_artifact_parity_validator",
+      "phase": "v84",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v84_19_next_phase_handoff_builder",
+      "phase": "v84",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v84_20_grand_closeout_reflection_weaver",
+      "phase": "v84",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    },
+    {
+      "id": "v85_01_phase_ledger_receipt_gate",
+      "phase": "v85",
+      "index": 1,
+      "suffix": "phase_ledger_receipt_gate",
+      "pillar": "trinity",
+      "purpose": "require branch, head, receipt, suite, live-write, and memory-floor facts before execution"
+    },
+    {
+      "id": "v85_02_prior_suite_delta_mapper",
+      "phase": "v85",
+      "index": 2,
+      "suffix": "prior_suite_delta_mapper",
+      "pillar": "trinity",
+      "purpose": "map prior Deep and L5 count movement before any new phase claim"
+    },
+    {
+      "id": "v85_03_guarded_live_write_preflight_gate",
+      "phase": "v85",
+      "index": 3,
+      "suffix": "guarded_live_write_preflight_gate",
+      "pillar": "heart",
+      "purpose": "keep live writes limited to repo and GitHub receipts unless a fresh provider-specific receipt chain exists"
+    },
+    {
+      "id": "v85_04_candidate_pack_quality_gate",
+      "phase": "v85",
+      "index": 4,
+      "suffix": "candidate_pack_quality_gate",
+      "pillar": "body",
+      "purpose": "check every candidate has runner metadata, outputs, and markdown parity"
+    },
+    {
+      "id": "v85_05_eureka_report_length_gate",
+      "phase": "v85",
+      "index": 5,
+      "suffix": "eureka_report_length_gate",
+      "pillar": "mind",
+      "purpose": "prove the next-phase proposal includes at least 20 concrete recommendation paragraphs"
+    },
+    {
+      "id": "v85_06_cli_lane_reflection_synthesizer",
+      "phase": "v85",
+      "index": 6,
+      "suffix": "cli_lane_reflection_synthesizer",
+      "pillar": "trinity",
+      "purpose": "merge Aletheon, Kite, Juniper, Aeon-7, and Sibyl-2 lanes as receipt-backed report voices"
+    },
+    {
+      "id": "v85_07_gmut_qcit_claim_labeler",
+      "phase": "v85",
+      "index": 7,
+      "suffix": "gmut_qcit_claim_labeler",
+      "pillar": "mind",
+      "purpose": "label GMUT and QCIT claims as executable proof, citation-backed, philosophical, or open speculation"
+    },
+    {
+      "id": "v85_08_freedid_cbr_consent_guard",
+      "phase": "v85",
+      "index": 8,
+      "suffix": "freedid_cbr_consent_guard",
+      "pillar": "heart",
+      "purpose": "preserve Freed ID and CBR consent boundaries in every guarded phase"
+    },
+    {
+      "id": "v85_09_provider_posture_receipt_matrix",
+      "phase": "v85",
+      "index": 9,
+      "suffix": "provider_posture_receipt_matrix",
+      "pillar": "body",
+      "purpose": "separate read-only, dry-run, sandbox, repo-live, and production-prohibited provider states"
+    },
+    {
+      "id": "v85_10_memory_floor_cooldown_logger",
+      "phase": "v85",
+      "index": 10,
+      "suffix": "memory_floor_cooldown_logger",
+      "pillar": "body",
+      "purpose": "record host memory posture before suites and make heavy lanes pause-aware"
+    },
+    {
+      "id": "v85_11_d_drive_artifact_router",
+      "phase": "v85",
+      "index": 11,
+      "suffix": "d_drive_artifact_router",
+      "pillar": "body",
+      "purpose": "route heavy artifacts to D drive while keeping curated repo truth surfaces compact"
+    },
+    {
+      "id": "v85_12_l5_marker_diff_scanner",
+      "phase": "v85",
+      "index": 12,
+      "suffix": "l5_marker_diff_scanner",
+      "pillar": "trinity",
+      "purpose": "scan L5 status files for external mutation and personal-surface markers"
+    },
+    {
+      "id": "v85_13_suite_count_growth_guard",
+      "phase": "v85",
+      "index": 13,
+      "suffix": "suite_count_growth_guard",
+      "pillar": "trinity",
+      "purpose": "block system count movement unless new systems have passing direct and suite proof"
+    },
+    {
+      "id": "v85_14_consolidation_opportunity_register",
+      "phase": "v85",
+      "index": 14,
+      "suffix": "consolidation_opportunity_register",
+      "pillar": "trinity",
+      "purpose": "record merge/delete opportunities without reducing counts before replacement coverage exists"
+    },
+    {
+      "id": "v85_15_github_publication_receipt_gate",
+      "phase": "v85",
+      "index": 15,
+      "suffix": "github_publication_receipt_gate",
+      "pillar": "body",
+      "purpose": "treat GitHub push plus regenerated receipt as the durable live-write exchange"
+    },
+    {
+      "id": "v85_16_operator_hold_surface_enforcer",
+      "phase": "v85",
+      "index": 16,
+      "suffix": "operator_hold_surface_enforcer",
+      "pillar": "heart",
+      "purpose": "keep Gmail, Calendar, Google Drive content, account settings, DNS, and secrets on hold"
+    },
+    {
+      "id": "v85_17_research_cache_router",
+      "phase": "v85",
+      "index": 17,
+      "suffix": "research_cache_router",
+      "pillar": "mind",
+      "purpose": "route web or provider-derived claims into cached/cited artifacts instead of raw assertions"
+    },
+    {
+      "id": "v85_18_artifact_parity_validator",
+      "phase": "v85",
+      "index": 18,
+      "suffix": "artifact_parity_validator",
+      "pillar": "body",
+      "purpose": "require JSON and Markdown parity for plans, reports, candidates, and receipts"
+    },
+    {
+      "id": "v85_19_next_phase_handoff_builder",
+      "phase": "v85",
+      "index": 19,
+      "suffix": "next_phase_handoff_builder",
+      "pillar": "trinity",
+      "purpose": "turn completed suite evidence into the next phase handoff policy"
+    },
+    {
+      "id": "v85_20_grand_closeout_reflection_weaver",
+      "phase": "v85",
+      "index": 20,
+      "suffix": "grand_closeout_reflection_weaver",
+      "pillar": "trinity",
+      "purpose": "compose personal reflections and recommendations without overclaiming private memory or agency"
+    }
+  ],
+  "count_policy": "all 60 v83-v85 candidates are validated by one combined Deep and one combined L5 after promotion; the cumulative v77-v85 candidate list remains present so earlier runner-backed systems continue to pass."
+}
+```

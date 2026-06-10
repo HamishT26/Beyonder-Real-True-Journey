@@ -1,0 +1,115 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "app_advisories": [
+    {
+      "lane": "Cicero",
+      "status": "ADVISORY_RETURNED",
+      "submission_id": "019e88bb-75f5-74d1-9f34-e25c80e58bd6",
+      "summary": "Publish readiness metadata only; natural runtime supports scoped observation, not permanent reliability."
+    },
+    {
+      "lane": "Kierkegaard",
+      "status": "ADVISORY_RETURNED",
+      "submission_id": "019e88bb-7621-7450-ba47-397fa2f7d8b7",
+      "summary": "Notifier receipts prove readiness state only; stale-temp cleanup and GMUT claims remain outside this evidence."
+    },
+    {
+      "lane": "Aristotle",
+      "status": "ADVISORY_RETURNED",
+      "submission_id": "019e88bb-762c-7a41-a323-47069c29e6d1",
+      "summary": "Use final-message, notifier, stale-temp, and publication-lint schemas with expected-negative fixture rows."
+    }
+  ],
+  "fixture_results": {
+    "entries": [
+      {
+        "detected_errors": [
+          "FINAL_MESSAGE_EMPTY_OR_MISSING"
+        ],
+        "fixture": "missing_final",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "tempdir_only": true
+      },
+      {
+        "detected_errors": [
+          "NONZERO_EXIT_CODE"
+        ],
+        "fixture": "nonzero_exit",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "tempdir_only": true
+      },
+      {
+        "detected_errors": [
+          "FINAL_MESSAGE_CONTAINS_TRANSPORT_MARKERS"
+        ],
+        "fixture": "transport_only",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "tempdir_only": true
+      },
+      {
+        "detected_errors": [
+          "FINAL_MESSAGE_CONTAINS_CREDENTIAL_MARKER"
+        ],
+        "fixture": "credential_marker",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "tempdir_only": true
+      },
+      {
+        "detected_errors": [
+          "SEMANTIC_CONTRADICTION_CANDIDATE"
+        ],
+        "fixture": "semantic_conflict",
+        "status": "EXPECTED_NEGATIVE_CAUGHT",
+        "tempdir_only": true
+      }
+    ],
+    "failure_count": 0,
+    "status": "PASS_EXPECTED_NEGATIVES"
+  },
+  "generated_at_utc": "2026-06-02T14:36:29+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "phase_slug": "v472-thos-v6-x1",
+  "rows": [
+    {
+      "evidence": {
+        "failure_count": 0
+      },
+      "message": "Final-message guard catches missing, failed, transport-only, credential-marker, and semantic-conflict fixtures.",
+      "row_id": "expected_negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "status": "FINAL_MESSAGES_READY"
+      },
+      "message": "Prior v5 x2 notifier receipt is available as a known-good completion marker.",
+      "row_id": "prior_v5_x2_notice",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": [
+        {
+          "completion": "watched_by_notifier",
+          "lane": "Arby",
+          "mode": "read_only_non_ephemeral"
+        },
+        {
+          "completion": "watched_by_notifier",
+          "lane": "Aster Vale",
+          "mode": "read_only_non_ephemeral"
+        }
+      ],
+      "message": "Arby and Aster Vale v6 x1 natural-duration lanes are launched and watched by notifier; final receipt may arrive asynchronously.",
+      "row_id": "natural_duration_v6_lanes",
+      "status": "OPEN_GAP"
+    }
+  ]
+}

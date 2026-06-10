@@ -1,0 +1,20 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-06-synthesis-v1.json` is the authoritative checkpoint. It records `status=complete_synthesized` with `9/9` expected responses. For Aster Vale, the carried position remains local-only and evidence-first: Windows sandbox / WSB is still `candidate-only`, not a verified ready runtime surface.
+
+Blocker:
+The blocker is proof cleanliness, not a confirmed runtime-health or provider failure. Block 06 keeps the active risk classes explicit: policy-rejected probes, benign timeouts, noisy artifacts, truncated replies, and recovery drift after stalled responses. Because those remain unresolved, WSB cannot be promoted beyond `candidate-only`, and no provider, publication, or remote-runtime claim should be upgraded here.
+
+Refinement:
+Use a narrow readiness checklist and candidate profile only:
+`artifact_readable`
+`receipt_clean`
+`write_gap_observable`
+`telemetry_present`
+`thresholds_defined`
+`lane_classifiable=alive_and_writing|alive_but_silent|exited_without_response`
+`transport_noise_separated=true`
+`external_claims_frozen=true`
+For runtime-health scoring, keep the three-state model from the checkpoint logic: `alive`, `degraded`, `unknown`. Use `unknown` whenever telemetry is absent or contaminated.
+
+Next-cycle proposal:
+Run one bounded read-only validation pass against a single compact health artifact or board. Score only the gates above, keep `30s` as normal multiplex cadence, and reserve `4s` only for explicit local debug windows. If any gate is policy-rejected, times out, or contaminates receipts, keep WSB at `candidate-only`, freeze unverified scope, and request only the missing clean slice rather than broadening claims.

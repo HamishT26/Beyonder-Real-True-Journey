@@ -1,0 +1,66 @@
+# v478 THOS v2 x1 Roadmap
+
+- generated_nz: `2026-06-04T09:05:28+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V2X1-01` (lane): Start v478 v2 x1 from the v478 v1 x2 remote-verified head.
+- `V478V2X1-02` (lane): Run app-lane probe before notify if app route freshness is needed.
+- `V478V2X1-03` (lane): Notify Cicero, Kierkegaard, and Aristotle through existing app-server threads.
+- `V478V2X1-04` (lane): Run one bounded Arby/Aster CLI watcher pass.
+- `V478V2X1-05` (lane): Carry CLI final-marker timeout as open_gap if unchanged.
+- `V478V2X1-06` (command): Select 30 command rows from v1 x2 readiness ranking.
+- `V478V2X1-07` (command): Promote only future_p1_stdout_only_candidate rows for dry-run planning.
+- `V478V2X1-08` (command): Hold live and connector rows for exact approval.
+- `V478V2X1-09` (command): Map command rows to source categories.
+- `V478V2X1-10` (command): Draft no-execution proof receipt schema.
+- `V478V2X1-11` (skill): Select 30 skill rows from actionability scoring.
+- `V478V2X1-12` (skill): Map metadata-route candidates to command rows.
+- `V478V2X1-13` (skill): Keep body text unpublished and unmodified.
+- `V478V2X1-14` (skill): Record duplicate or stale skill-name families.
+- `V478V2X1-15` (skill): Draft skill promotion stop conditions.
+- `V478V2X1-16` (expansion): Select 30 expansion rows from action ranking.
+- `V478V2X1-17` (expansion): Promote only no-write candidates to review board.
+- `V478V2X1-18` (expansion): Hold install and live promotion rows.
+- `V478V2X1-19` (expansion): Separate simulation candidates from connector candidates.
+- `V478V2X1-20` (expansion): Draft future approval packet candidates without executing them.
+- `V478V2X1-21` (source): Refresh at least 30 official sources if source drift matters.
+- `V478V2X1-22` (source): Carry implementation/governance/expansion separation.
+- `V478V2X1-23` (source): Do not treat source context as GMUT closure.
+- `V478V2X1-24` (source): Attach source IDs to command and expansion rows.
+- `V478V2X1-25` (source): Record source freshness limits.
+- `V478V2X1-26` (watcher): Reuse x2 watcher checklist.
+- `V478V2X1-27` (watcher): Keep app-lane completion separate from CLI closure.
+- `V478V2X1-28` (watcher): Keep temp-only watcher output unpublished.
+- `V478V2X1-29` (watcher): Avoid duplicate polling loops.
+- `V478V2X1-30` (watcher): Draft v478 reusable notifier interface notes.
+- `V478V2X1-31` (schema): Parse every generated JSON artifact.
+- `V478V2X1-32` (schema): Check required keys and next_expected consistency.
+- `V478V2X1-33` (schema): Bound all published rows.
+- `V478V2X1-34` (schema): Run publication guard scan.
+- `V478V2X1-35` (schema): Review markdown summaries for overclaim language.
+- `V478V2X1-36` (safety): Fetch and drift-check before publication.
+- `V478V2X1-37` (safety): Exact-stage only v478 v2 x1 scoped files.
+- `V478V2X1-38` (safety): Reject unpublished local dumps and transport payloads.
+- `V478V2X1-39` (safety): Run whitespace and staged diff review.
+- `V478V2X1-40` (safety): Push and remote-verify equals local.
+- `V478V2X1-41` (claim): Keep all six GMUT gates open.
+- `V478V2X1-42` (claim): Do not claim THOS validates GMUT.
+- `V478V2X1-43` (claim): Do not claim consciousness proof.
+- `V478V2X1-44` (claim): Do not promote Journey context to canon.
+- `V478V2X1-45` (claim): Use open_gap for unresolved CLI closure.
+- `V478V2X1-46` (handoff): Prepare v478 v2 x2 roadmap after x1.
+- `V478V2X1-47` (handoff): Decide x3 only from blocker dominance.
+- `V478V2X1-48` (handoff): Carry v1 x2 ranking artifacts forward.
+- `V478V2X1-49` (handoff): Keep status-only lane evidence.
+- `V478V2X1-50` (handoff): Maintain exact publication discipline.
+- `V478V2X1-51` (thos): Draft command-index repair candidates from ranking rows.
+- `V478V2X1-52` (thos): Draft connector boundary board from MCP/GitHub sources.
+- `V478V2X1-53` (thos): Draft app-lane health mini-dashboard rows.
+- `V478V2X1-54` (thos): Draft skill acceptance schema from scoring rows.
+- `V478V2X1-55` (thos): Draft expansion review schema from ranking rows.
+- `V478V2X1-56` (quality): Validate all v2 x1 artifacts before staging.
+- `V478V2X1-57` (quality): Keep file names phase-consistent.
+- `V478V2X1-58` (quality): Ignore unrelated dirty worktree content.
+- `V478V2X1-59` (quality): Publish concise closeout.
+- `V478V2X1-60` (quality): Keep the larger v490 goal active.

@@ -1,0 +1,267 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_PHASE_LEDGER_INDEX_GATE_READY",
+  "app_advisory_synthesis": [
+    {
+      "lane": "Cicero",
+      "points": [
+        "ledger rows should carry phase status, source authority, artifact ref, dashboard/receipt status, open-gap/fail-blocker counts, raw-output flags, GMUT effect, and next required artifact",
+        "source authority classes should distinguish remote-verified commit, curated artifact, metadata receipt, advisory-only, open gap, and blocked",
+        "raw CLI output, stderr text, temp transport, session logs, image-capture material, private auth material, marker substrings, and sensitive paths remain blocked"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Kierkegaard",
+      "points": [
+        "ledger index is a calm map, not a scoreboard",
+        "open gaps stay visible without pressure labels",
+        "source authority means traceable metadata, not truth, quality, production readiness, or GMUT validation"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Aristotle",
+      "points": [
+        "ledger rows should include row id, phase, ledger name, artifact ref/type, source hash, claim scope, status, blocker/open-gap codes, raw-output flag, and GMUT effect",
+        "future row coverage should include Arby/Aster receipt summaries, marker review, raw-output block, source-hash manifest, dashboard sync, negative fixture, publication guard, release gate, and handoff seed",
+        "negative fixtures should block missing required rows, hash drift, raw output, unresolved marker review for summary publication, generic pass, wrong phase, GMUT drift, overbroad claim scope, and missing source hash"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    }
+  ],
+  "blocked_raw_material": [
+    "raw_cli_output",
+    "stderr_text",
+    "temp_transport",
+    "session_log_stream",
+    "image_capture_material",
+    "private_auth_material",
+    "marker_substrings",
+    "full_sensitive_paths"
+  ],
+  "fixtures": [
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "index_ready": true,
+        "metadata_only": true
+      },
+      "case_id": "metadata_index_gate_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_current_index_row": true
+      },
+      "case_id": "missing_current_index_row_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_required_column": true
+      },
+      "case_id": "missing_required_column_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "hash_drift": true
+      },
+      "case_id": "hash_drift_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_output": true
+      },
+      "case_id": "raw_output_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "generic_pass": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "generic_pass_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "wrong_phase": true
+      },
+      "case_id": "wrong_phase_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "overbroad_claim": true
+      },
+      "case_id": "overbroad_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_source_hash": true
+      },
+      "case_id": "missing_source_hash_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "future_optional_row_missing": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "future_optional_row_missing_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "open_gap": true
+      },
+      "case_id": "open_gap_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "gate_moved",
+        "index_ready": true
+      },
+      "case_id": "gmut_effect_moved_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "future_expansion_backlog": [
+    "Arby receipt summary row",
+    "Aster Vale receipt summary row",
+    "marker-review summary row",
+    "raw-output block assertion row",
+    "source-hash manifest row",
+    "dashboard sync report row",
+    "negative-fixture report row",
+    "publication guard row",
+    "release/readiness gate row",
+    "handoff seed row"
+  ],
+  "generated_at_utc": "2026-06-02T20:31:08+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v475-thos-v6-x1",
+  "phase_slug": "v475-thos-v5-x2",
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 2,
+        "source_gap_count": 0
+      },
+      "message": "v5 x1 index sources were checked for the ledger index gate.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "index_row_count": 2
+      },
+      "message": "Current v4 x1/x2 index rows are present.",
+      "row_id": "current_index_row_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "column_gaps": []
+      },
+      "message": "Required current ledger index columns are present.",
+      "row_id": "column_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle advisories were folded into source-authority, open-gap, and future-row expansion rules.",
+      "row_id": "advisory_synthesis",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 12,
+        "mismatch_count": 0
+      },
+      "message": "Ledger gate fixtures checked row coverage, columns, hash drift, raw output, generic pass, wrong phase, overbroad claims, missing source hash, optional future rows, open gaps, and GMUT boundary.",
+      "row_id": "negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This gate is THOS phase-ledger metadata only; it does not test or close GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_authority_classes": [
+    "remote_verified_commit",
+    "local_curated_artifact",
+    "metadata_receipt",
+    "advisory_only",
+    "open_gap",
+    "blocked"
+  ],
+  "source_phase": "v475-thos-v5-x1",
+  "source_refs": [
+    {
+      "bytes": 6772,
+      "path": "docs/trinity-live-traces/v475-thos-v5-x1-phase-ledger-index-v1.json",
+      "sha256": "d72d725fe32bf86d2426c894e7da8b039a512fe02980a893b8c5905b4e6b79cf",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 822,
+      "path": "docs/trinity-live-traces/v475-thos-v5-x1-run-status-v1.json",
+      "sha256": "9d7363ce3e0e92e83d33cb8e01edfbe2d328714a2f1e8af010b7477ebe5d8432",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_run_status": "PASS_SHAPE_ONLY_PHASE_LEDGER_INDEX_READY",
+  "v6_x1_handoff": {
+    "claim_ceiling": "repo-only humane ledger-index metadata improves traceability and handoff review",
+    "recommended_scope": "expand the phase ledger index toward lane-specific receipt rows while preserving raw-output and claim-boundary blocks"
+  }
+}

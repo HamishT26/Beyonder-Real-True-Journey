@@ -1,0 +1,202 @@
+{
+  "artifact_id": "v466A_GMUT_v3_x1_hardening_field_dictionary_v1",
+  "phase": "v466A_GMUT_v3_x1",
+  "prepared_at_nz": "2026-06-01T03:17:46+12:00",
+  "status": "HARDENING_FIELD_SCHEMA_HOLD",
+  "purpose": "Define hardening fields needed before v466A source, coefficient, constraint, proxy, and fixture rows can be promoted from advisory scaffolds into exact rows.",
+  "field_dictionary": [
+    {
+      "field": "provenance_entity_id",
+      "definition": "Stable identifier for the artifact, source object, row, claim, or dataset being described.",
+      "required_for": [
+        "all_rows"
+      ],
+      "claim_boundary": "Traceability only; not truth, validation, or identity proof.",
+      "hold_if": [
+        "blank",
+        "unstable_label",
+        "used_as_truth_proof"
+      ],
+      "example": "ent.coefficient.B_Psi.definition_required"
+    },
+    {
+      "field": "provenance_activity_id",
+      "definition": "Stable identifier for the activity that produced, transformed, reviewed, extracted, or classified the row.",
+      "required_for": [
+        "all_rows"
+      ],
+      "claim_boundary": "Process history only; not evidence of gate closure.",
+      "hold_if": [
+        "blank",
+        "activity_scope_unknown",
+        "activity_scope_exceeds_row_claim"
+      ],
+      "example": "act.v466A.v3_x1.hardening_field_review"
+    },
+    {
+      "field": "provenance_agent_id",
+      "definition": "Lane, tool, source, or curator responsible for the activity.",
+      "required_for": [
+        "all_rows"
+      ],
+      "claim_boundary": "Attribution only; not proof of personhood, hidden memory, consciousness, or authority.",
+      "hold_if": [
+        "blank",
+        "used_as_identity_proof",
+        "used_as_source_truth"
+      ],
+      "example": "agent.app.Cicero"
+    },
+    {
+      "field": "measurement_technique",
+      "definition": "The actual or proposed method, detection principle, instrument class, simulation route, symbolic check, or proxy protocol.",
+      "required_for": [
+        "external_constraint_rows",
+        "proxy_rows",
+        "fixture_rows",
+        "empirical_context_rows"
+      ],
+      "safe_values": [
+        "not_measurement",
+        "not_applicable",
+        "future_required",
+        "literature_constraint",
+        "instrumental_measurement",
+        "simulation",
+        "symbolic_check",
+        "proxy_protocol"
+      ],
+      "claim_boundary": "A technique label does not imply execution or result.",
+      "hold_if": [
+        "blank_when_required",
+        "implies_result_without_execution_artifact",
+        "technique_named_without_measurand"
+      ],
+      "example": "literature_constraint"
+    },
+    {
+      "field": "measurand_or_quantity",
+      "definition": "The concrete quantity, parameter, observable, residual, coefficient, or proxy target being constrained, measured, simulated, or symbolically checked.",
+      "required_for": [
+        "coefficient_rows",
+        "SI_rows",
+        "external_constraint_rows",
+        "fixture_rows",
+        "proxy_rows"
+      ],
+      "claim_boundary": "A named quantity must not smuggle in a stronger unearned claim.",
+      "hold_if": [
+        "blank_when_required",
+        "undefined_proxy_target",
+        "quantity_lacks_unit_or_dimension_when_physical"
+      ],
+      "example": "candidate_scalar_coupling_bound"
+    },
+    {
+      "field": "uncertainty_model",
+      "definition": "The way uncertainty, confidence, detection limit, source precision, systematic uncertainty, or false-positive risk is represented.",
+      "required_for": [
+        "measurement_rows",
+        "constraint_rows",
+        "proxy_rows",
+        "fixture_rows"
+      ],
+      "safe_values": [
+        "not_quantified",
+        "not_applicable",
+        "symbolic_only",
+        "source_context_only",
+        "interval",
+        "statistical",
+        "systematic",
+        "detection_limit",
+        "false_positive_risk_unbounded",
+        "blocked_pending_fixture",
+        "blocked_pending_primary_constraint"
+      ],
+      "claim_boundary": "Uncertainty metadata cannot turn context into validation.",
+      "hold_if": [
+        "missing_for_constraint",
+        "overprecise_without_source",
+        "null_result_treated_as_absence_or_safety"
+      ],
+      "example": "blocked_pending_primary_constraint"
+    },
+    {
+      "field": "metric_action_boundary_policy",
+      "definition": "Explicit policy that separates notation and convention rows from field equation, stress-energy, conservation, or validation claims.",
+      "required_for": [
+        "metric_action_rows",
+        "scalar_route_rows",
+        "null_baseline_ladder_rows"
+      ],
+      "safe_values": [
+        "explicit_boundary_terms",
+        "boundary_terms_held",
+        "boundary_terms_ignored_blocker",
+        "out_of_physical_derivation_scope",
+        "not_applicable",
+        "open_gap"
+      ],
+      "claim_boundary": "Action thresholds are workflow gates, not truth thresholds.",
+      "hold_if": [
+        "open_gap",
+        "boundary_terms_ignored_blocker",
+        "used_to_claim_EOM_or_T_Psi"
+      ],
+      "example": "boundary_terms_held"
+    },
+    {
+      "field": "external_constraint_parameterization",
+      "definition": "Mapping from candidate GMUT parameter to external observable, bound form, bound value, unit, regime, source authority, and assumption basis.",
+      "required_for": [
+        "fifth_force_equivalence_rows",
+        "external_constraint_rows"
+      ],
+      "claim_boundary": "Parameterization is routing until exact primary-source mapping exists.",
+      "hold_if": [
+        "missing_candidate_parameter",
+        "missing_observable_target",
+        "missing_bound_form",
+        "missing_unit_or_regime",
+        "used_as_safety_claim"
+      ],
+      "example": {
+        "candidate_parameter": "alpha_B",
+        "observable_target": "open_gap",
+        "bound_form": "open_gap",
+        "unit": "open_gap",
+        "regime": "open_gap",
+        "assumption_basis": "open_gap"
+      }
+    },
+    {
+      "field": "proxy_false_positive_routes",
+      "definition": "Enumerated ways a proxy could falsely appear to support consciousness, identity, meaning, or spiritual proof, with discriminant tests when available.",
+      "required_for": [
+        "consciousness_proxy_rows",
+        "meaning_proxy_rows",
+        "dignity_language_rows"
+      ],
+      "claim_boundary": "False-positive enumeration is a blocker-control step, not proof of consciousness.",
+      "hold_if": [
+        "empty_for_proxy_row",
+        "generic_without_mechanism",
+        "used_as_proxy_success"
+      ],
+      "example": [
+        "linguistic_fluency_mistaken_for_consciousness",
+        "style_continuity_mistaken_for_hidden_memory",
+        "ritual_or_affective_resonance_mistaken_for_empirical_proof"
+      ]
+    }
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}

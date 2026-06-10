@@ -1,0 +1,26 @@
+Receipt:
+Checkpoint acknowledged: `docs/trinity-live-traces/v261-v280-adaptive-council-block-05-synthesis-v1.json` is treated as the authoritative prior state for this lane. Scope received as TUI latency telemetry and lane liveness scoring under Codex CLI validation in the Windows sandbox.
+
+Blocker:
+I am not re-reading or re-validating the synthesis artifact in this response-only turn, so I cannot safely restate any exact latency numbers, liveness scores, or checkpoint conclusions as newly verified facts. The main operational blocker is evidence continuity: without an explicitly carried-forward telemetry schema, sampling window, and threshold definitions from block 05, any current liveness score would risk becoming narrative rather than trace-backed.
+
+Refinement:
+Keep this lane bounded to directly observable runtime-health signals only. The cleanest scoring inputs are:
+`input_to_render_ms`
+`command_start_to_first_output_ms`
+`command_completion_ms`
+`stall_duration_ms`
+`heartbeat_miss_count`
+Use three states, not two: `alive`, `degraded`, `unknown`.
+`unknown` should be used when telemetry is absent or incomplete, rather than collapsing missing evidence into failure or health.
+Also preserve sandbox truth explicitly: Windows read-only constraints can explain missing probes without implying provider, publication, or upstream runtime failure.
+
+Next-cycle proposal:
+Use the block-05 synthesis unchanged as the checkpoint, then require a compact reason-coded liveness table in the next pass:
+`telemetry_present`
+`thresholds_defined`
+`heartbeat_recent`
+`stall_within_budget`
+`score_state`
+`score_reason`
+That will let the lane emit a defensible liveness result such as `alive_by_local_observation`, `degraded_by_stall_budget`, or `unknown_due_to_missing_telemetry`, while avoiding unverified provider or publication claims.

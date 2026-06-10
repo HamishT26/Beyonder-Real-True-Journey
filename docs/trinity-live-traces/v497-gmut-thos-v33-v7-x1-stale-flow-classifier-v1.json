@@ -1,0 +1,47 @@
+{
+  "artifact_type": "stale_flow_classifier",
+  "phase_slug": "v497-gmut-thos-v33-v7-x1",
+  "generated_utc": "2026-06-06T22:05:20Z",
+  "overall_status": "PASS_STALE_FLOW_CLASSIFIER_READY",
+  "lane_status_harvested": false,
+  "classes": [
+    {
+      "class": "APP_WATCHER_STARTED_COMPLETION_MISSING",
+      "severity": "phase_blocking_until_resolved",
+      "safe_attempts": [
+        "confirm runner receipt",
+        "confirm no completion notifier",
+        "retry existing app watcher with distinct receipt prefix",
+        "wait until retry check window",
+        "publish blocker receipt if retry still missing"
+      ]
+    },
+    {
+      "class": "CLI_FINAL_MESSAGE_MARKER_REVIEW",
+      "severity": "review_required_not_phase_blocking_after_quality_pass",
+      "safe_attempts": [
+        "hash final message",
+        "count bytes",
+        "run elaboration gate",
+        "confirm strict sensitive/path markers zero",
+        "publish status-only quality receipt"
+      ]
+    },
+    {
+      "class": "AGGREGATE_STALE_ROW_COMPLETE",
+      "severity": "warning_when_lane_rows_completed",
+      "safe_attempts": [
+        "read completed row statuses",
+        "do not inspect raw message bodies",
+        "normalize aggregate state",
+        "publish repair-state note",
+        "carry warning forward"
+      ]
+    }
+  ],
+  "claim_boundary": {
+    "classifier_is_repair_planning_only": true,
+    "raw_output_published": false,
+    "gmut_gate_state": "open"
+  }
+}

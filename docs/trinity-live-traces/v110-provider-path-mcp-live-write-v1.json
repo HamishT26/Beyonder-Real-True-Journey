@@ -1,0 +1,85 @@
+{
+  "phase": "v110",
+  "artifact": "provider_path_mcp_live_write",
+  "created_at_local": "2026-05-04T23:30:00+12:00",
+  "policy": {
+    "provider_mutation_boundary": "No provider create, deploy, delete, DNS, billing, or spend action was executed without a narrow action-time confirmation.",
+    "secret_boundary": "No raw API-bank secrets were read into the report. Token-bearing outputs were redacted or summarized.",
+    "google_drive_state": "operator_hold",
+    "docker_kubernetes_state": "local_docker_kubernetes_held"
+  },
+  "path_inventory": {
+    "ready_on_path": [
+      {"command": "codex", "version": "codex-cli 0.128.0"},
+      {"command": "kimi", "version": "1.38.0"},
+      {"command": "gh", "version": "2.91.0"},
+      {"command": "oci", "version": "3.81.0"},
+      {"command": "wrangler", "version": "4.86.0"},
+      {"command": "circleci", "version": "installed"},
+      {"command": "node", "version": "v24.15.0"},
+      {"command": "npm", "version": "11.12.0"},
+      {"command": "npx", "version": "11.12.0"},
+      {"command": "e2b", "version": "2.10.1"},
+      {"command": "vercel", "version": "53.1.0"},
+      {"command": "neonctl", "version": "2.22.0"},
+      {"command": "neon", "version": "2.22.0"},
+      {"command": "render", "version": "2.16.0"}
+    ],
+    "installed_this_pass": [
+      {"command": "e2b", "source": "npm install -g @e2b/cli@latest"},
+      {"command": "vercel", "source": "npm install -g vercel@latest"},
+      {"command": "neonctl", "source": "npm install -g neonctl@latest"},
+      {"command": "render", "source": "official render-oss/cli v2.16.0 windows_amd64 release, checksum verified, copied to C:/Users/hamis/bin/render.exe"}
+    ],
+    "remaining_path_gaps": []
+  },
+  "mcp_and_plugin_probe": {
+    "github_app": "callable; installed account returned",
+    "google_drive_app": "callable; shared drive list returned empty, preserving operator_hold",
+    "linear_app": "callable; Beyonder-Real-True Journey project visible",
+    "cloudflare_mcp": "blocked; Codex MCP returned Auth required after multiple OAuth retries",
+    "cloudflare_wrangler_cli": "authenticated via OAuth token; Cloudflare CLI can be used with action-time confirmation for mutations"
+  },
+  "cli_auth_probe": {
+    "github_cli": "repaired; gh auth status now reports logged in",
+    "circleci_cli": "ready; diagnostic found CLI config and token",
+    "cloudflare_wrangler_cli": "ready; whoami succeeded",
+    "e2b_cli": "ready; e2b auth info reports a logged-in account after retry",
+    "vercel_cli": "ready; vercel whoami returned the authenticated scope after retry",
+    "neon_cli": "ready; neonctl me and org-scoped projects list returned successfully after focused retry",
+    "render_cli": "ready; render whoami returned authenticated account metadata after retry",
+    "oci_cli": "ready; oci iam region list returned region metadata after retry"
+  },
+  "auth_repair_lane": {
+    "status": "launched_visible_powershell_window",
+    "commands": [
+      "gh auth login -h github.com -w",
+      "e2b auth login",
+      "vercel login",
+      "neonctl auth",
+      "render login"
+    ],
+    "observed_after_wait": "GitHub CLI, E2B CLI, Vercel CLI, Neon CLI, and Render CLI were repaired. Neon needs org-id in scripted probes to avoid the interactive organization picker."
+  },
+  "cloudflare_mcp_final_retry": {
+    "status": "still_blocked",
+    "attempts": [
+      "codex mcp login cloudflare-api",
+      "codex mcp logout cloudflare-api followed by codex mcp login cloudflare-api",
+      "final hold-open codex mcp logout/login retry with 10 minute terminal hold"
+    ],
+    "probe_result": "mcp__cloudflare_api__.execute still returns Auth required",
+    "interpretation": "Wrangler CLI OAuth and Codex Cloudflare MCP OAuth are separate surfaces. The remaining blocker appears to be Codex app MCP credential-store/session refresh or app-side reconnect, not local Cloudflare CLI auth."
+  },
+  "cli_agent_boundary": {
+    "codex_cli": "available; non-interactive exec lane supports read-only ephemeral probes",
+    "kimi_cli": "available; print/agent lanes are present, but durable identity persistence is not proven by CLI availability alone",
+    "persistence_truth": "New CLI lanes may be receipt-backed task lanes. They should not be declared main memory-and-identity persistent GHC members until a close/reopen continuity proof passes on their native platform."
+  },
+  "recommended_next_actions": [
+    "Reconnect or refresh the Cloudflare MCP in Codex app settings because Wrangler auth and MCP auth are separate surfaces.",
+    "Use org-scoped Neon commands in scripts to avoid the interactive organization picker.",
+    "After Cloudflare MCP auth completion or Codex app refresh, rerun the bounded provider probe before v111 live-write provider actions.",
+    "Keep provider mutations behind exact action packs with provider, resource, command, cost ceiling, and rollback."
+  ]
+}

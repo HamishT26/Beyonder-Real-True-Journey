@@ -1,0 +1,32 @@
+{
+  "artifact_id": "v470-thos-v8-x1-missing-required-policy-v1",
+  "boundary": "local_harness_evaluator_only",
+  "captured_at_nz": "2026-06-02T20:30:09+12:00",
+  "connector_write_performed": false,
+  "enforcement_fields": [
+    "expected_reason_codes",
+    "allowed_extra_reason_codes",
+    "observed_reason_codes",
+    "matched_reason_codes",
+    "missing_required_reason_codes",
+    "unexpected_extra_reason_codes",
+    "expected_dominant_reason_code",
+    "observed_dominant_reason_code",
+    "matches_expected"
+  ],
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase": "v470_THOS_v8_x1",
+  "policy_rules": [
+    "Every expected reason code must appear in observed_reason_codes.",
+    "Any absent expected reason code must be reported in missing_required_reason_codes.",
+    "Every observed code must be either expected or explicitly allowed as an extra.",
+    "A case fails when missing_required_reason_codes is non-empty.",
+    "A case fails when unexpected_extra_reason_codes is non-empty.",
+    "Dominant reason-code precedence remains governed by the priority-table path already added in v7."
+  ],
+  "regression_case_count": 18,
+  "regression_status": "PASS_SHAPE_ONLY",
+  "self_test_status": "PASS_SHAPE_ONLY",
+  "validator_mode": "local_non_mutating"
+}

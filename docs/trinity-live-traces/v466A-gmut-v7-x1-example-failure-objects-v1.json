@@ -1,0 +1,163 @@
+{
+  "artifact_id": "v466A_GMUT_v7_x1_example_failure_objects_v1",
+  "phase": "v466A_GMUT_v7_x1",
+  "prepared_at_nz": "2026-06-01T04:40:12+12:00",
+  "status": "FAILURE_OBJECT_SHAPE_DRAFT_NOT_EXECUTED",
+  "failure_object_shape": {
+    "failure_id": "string",
+    "row_id": "string",
+    "row_family": "string",
+    "severity": "fatal|blocker|warning|lint_error|lint_hold|overclaim_blocker|contradiction",
+    "failed_field": "string",
+    "error_code": "string",
+    "expected": "string",
+    "actual": "string",
+    "blocked_claims": [
+      "string"
+    ],
+    "gate_impacts": [
+      "string"
+    ],
+    "repair_hint": "string",
+    "execution_status": "not_run",
+    "result_status": "no_result"
+  },
+  "example_failure_objects": [
+    {
+      "failure_id": "FAIL.B_PSI.NO_DEFINITION",
+      "row_id": "GMUT.V466A.V7X1.COEF.B_PSI.001",
+      "row_family": "coefficient_SI",
+      "severity": "fatal",
+      "failed_field": "definition_artifact_status",
+      "error_code": "missing_separate_definition_artifact",
+      "expected": "exact_local_artifact_available",
+      "actual": "open_gap",
+      "blocked_claims": [
+        "B_Psi_defined",
+        "dimensional_closure",
+        "conservation_exchange",
+        "GMUT_validation"
+      ],
+      "gate_impacts": [
+        "dimensional_SI",
+        "conservation_exchange"
+      ],
+      "repair_hint": "Keep B_Psi demoted until a separate definition artifact gives rank, units, target term, divergence behavior, and null-switch behavior.",
+      "execution_status": "not_run",
+      "result_status": "no_result"
+    },
+    {
+      "failure_id": "FAIL.METRIC_ACTION.BOUNDARY_POLICY",
+      "row_id": "GMUT.V466A.V7X1.CONV.METRIC_ACTION.001",
+      "row_family": "metric_action",
+      "severity": "fatal",
+      "failed_field": "boundary_terms_policy_status",
+      "error_code": "missing_boundary_terms_policy",
+      "expected": "exact_local_artifact_available",
+      "actual": "open_gap",
+      "blocked_claims": [
+        "EOM_derivation",
+        "T_Psi_mu_nu_acceptance",
+        "conservation_derivation"
+      ],
+      "gate_impacts": [
+        "conservation_exchange",
+        "dimensional_SI"
+      ],
+      "repair_hint": "Require explicit boundary and integration-by-parts policies before any derivation route strengthens.",
+      "execution_status": "not_run",
+      "result_status": "no_result"
+    },
+    {
+      "failure_id": "FAIL_PROXY_MEASUREMENT_001",
+      "row_id": "v466A_GMUT_v7_x1_consciousness_proxy_001",
+      "row_family": "consciousness_proxy_boundary",
+      "severity": "fatal",
+      "failed_field": "measurement_technique",
+      "error_code": "measurement_claim_in_proxy_row",
+      "expected": "not_measurement",
+      "actual": "behavioral_consciousness_measurement",
+      "blocked_claims": [
+        "solved_consciousness",
+        "personhood_proof"
+      ],
+      "gate_impacts": [
+        "consciousness_measurement_bridge"
+      ],
+      "repair_hint": "Proxy rows must keep measurement_technique as not_measurement.",
+      "execution_status": "not_run",
+      "result_status": "no_result"
+    },
+    {
+      "failure_id": "FAIL_JOURNEY_CANON_001",
+      "row_id": "v466A_GMUT_v7_x1_journey_solas_001",
+      "row_family": "journey_context_boundary",
+      "severity": "fatal",
+      "failed_field": "source_role",
+      "error_code": "journey_context_promoted",
+      "expected": "journey_context_not_canon",
+      "actual": "canon_authority",
+      "blocked_claims": [
+        "canon_promotion",
+        "empirical_spiritual_proof"
+      ],
+      "gate_impacts": [
+        "consciousness_measurement_bridge"
+      ],
+      "repair_hint": "Journey/Solas context must remain context only and require local path/line citation before use.",
+      "execution_status": "not_run",
+      "result_status": "context_boundary_only"
+    },
+    {
+      "failure_id": "fail.null_baseline.missing_baseline_ref.v1",
+      "row_id": "v466A_GMUT_v7_x1.null_baseline.full_scalar_disablement.v1",
+      "row_family": "null_baseline_ladder",
+      "severity": "lint_error",
+      "failed_field": "baseline_ref",
+      "error_code": "missing_required_field",
+      "expected": "exact baseline reference",
+      "actual": "missing",
+      "blocked_claims": [
+        "null_recovery",
+        "baseline_recovery",
+        "PASS_HYGIENE_ONLY"
+      ],
+      "gate_impacts": [
+        "null_recovery",
+        "baseline_recovery"
+      ],
+      "repair_hint": "Bind baseline_ref to an exact local artifact or keep row held.",
+      "execution_status": "not_run",
+      "result_status": "no_result"
+    },
+    {
+      "failure_id": "fail.constraint.coupling_to_zero_substitution.v1",
+      "row_id": "v466A_GMUT_v7_x1.constraint.alpha_B.v1",
+      "row_family": "fifth_force_equivalence_constraint",
+      "severity": "overclaim_blocker",
+      "failed_field": "external_constraint_parameterization",
+      "error_code": "diagnostic_substituted_for_constraint",
+      "expected": "primary source mapping",
+      "actual": "coupling_to_zero",
+      "blocked_claims": [
+        "fifth_force_safety",
+        "equivalence_compatibility",
+        "empirical_satisfaction"
+      ],
+      "gate_impacts": [
+        "fifth_force_equivalence"
+      ],
+      "repair_hint": "Add primary source mapping or keep constraint row held.",
+      "execution_status": "not_run",
+      "result_status": "no_result"
+    }
+  ],
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}

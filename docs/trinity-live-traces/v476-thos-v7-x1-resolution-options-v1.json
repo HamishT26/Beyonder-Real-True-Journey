@@ -1,0 +1,383 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_V476_RESOLUTION_OPTIONS_READY",
+  "approval_packet_templates": [
+    {
+      "candidate_family": "command",
+      "packet_state": "TEMPLATE_ONLY_NOT_APPROVED",
+      "required_fields": [
+        "candidate_family",
+        "exact_paths",
+        "allowed_probe_level",
+        "body_preservation_rule",
+        "publication_boundary",
+        "rollback_plan",
+        "spend_ceiling"
+      ]
+    },
+    {
+      "candidate_family": "skill",
+      "packet_state": "TEMPLATE_ONLY_NOT_APPROVED",
+      "required_fields": [
+        "candidate_family",
+        "exact_paths",
+        "allowed_probe_level",
+        "body_preservation_rule",
+        "publication_boundary",
+        "rollback_plan",
+        "spend_ceiling"
+      ]
+    },
+    {
+      "candidate_family": "system_expansion",
+      "packet_state": "TEMPLATE_ONLY_NOT_APPROVED",
+      "required_fields": [
+        "candidate_family",
+        "exact_paths",
+        "allowed_probe_level",
+        "body_preservation_rule",
+        "publication_boundary",
+        "rollback_plan",
+        "spend_ceiling"
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "case": {
+        "closure_ready": true,
+        "metadata_only": true
+      },
+      "case_id": "closure_ready_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "missing_source": true
+      },
+      "case_id": "missing_source_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "marker_review_required": true
+      },
+      "case_id": "marker_review_required_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "raw_lane_text_published": true
+      },
+      "case_id": "raw_lane_text_publication_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "candidate_promoted": true
+      },
+      "case_id": "candidate_promotion_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "approval_granted": true
+      },
+      "case_id": "approval_granted_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "production_claim": true
+      },
+      "case_id": "production_claim_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "missing_handoff": true
+      },
+      "case_id": "missing_handoff_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "moves_gmut_gate": true
+      },
+      "case_id": "gmut_gate_move_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-03T11:53:00+00:00",
+  "gmut_gate_effect": "none_open_not_tested",
+  "gmut_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "marker_review_summary": {
+    "aggregate_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+    "lanes": [
+      {
+        "final_marker_count": 1,
+        "lane": "Arby",
+        "review_state": "OPEN_GAP_REVIEW_REQUIRED",
+        "stderr_marker_count_unpublished": 53
+      },
+      {
+        "final_marker_count": 0,
+        "lane": "Aster Vale",
+        "review_state": "OPEN_GAP_REVIEW_REQUIRED",
+        "stderr_marker_count_unpublished": 173
+      }
+    ],
+    "raw_lane_text_published": false
+  },
+  "next_expected_phase": "v476-thos-v7-x2",
+  "phase_slug": "v476-thos-v7-x1",
+  "preflight_rows": [
+    {
+      "evidence": {
+        "source_count": 7
+      },
+      "message": "v476 source artifacts were hashed for closure routing.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "status_count": 12
+      },
+      "message": "v476 run-status artifacts were hashed for closure routing.",
+      "row_id": "run_status_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "aggregate_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+        "lanes": [
+          {
+            "final_marker_count": 1,
+            "lane": "Arby",
+            "review_state": "OPEN_GAP_REVIEW_REQUIRED",
+            "stderr_marker_count_unpublished": 53
+          },
+          {
+            "final_marker_count": 0,
+            "lane": "Aster Vale",
+            "review_state": "OPEN_GAP_REVIEW_REQUIRED",
+            "stderr_marker_count_unpublished": 173
+          }
+        ],
+        "raw_lane_text_published": false
+      },
+      "message": "Marker review is carried as metadata-only open gap unless a separate exact review packet is approved.",
+      "row_id": "marker_review_open_gap",
+      "status": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+    },
+    {
+      "evidence": {
+        "template_count": 3
+      },
+      "message": "Approval packet templates exist but do not approve any candidate promotion.",
+      "row_id": "approval_templates",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "gmut_gates_open": [
+          "null recovery",
+          "dimensional/SI consistency",
+          "conservation or exchange law",
+          "baseline recovery",
+          "fifth-force/equivalence constraints",
+          "consciousness measurement bridge"
+        ]
+      },
+      "message": "v7 x1 does not publish raw lane text, approve candidates, or move GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "resolution_options": [
+    {
+      "claim_ceiling": "metadata-only option; no raw lane text review is performed here",
+      "option_id": "marker-hold-open",
+      "option_state": "RECOMMENDED_DEFAULT",
+      "required_approval": "none",
+      "result": "carry marker review as open gap"
+    },
+    {
+      "claim_ceiling": "requires separate exact approval before any raw text inspection",
+      "option_id": "exact-review-packet",
+      "option_state": "AVAILABLE_REQUIRES_APPROVAL",
+      "required_approval": "exact path and review scope packet",
+      "result": "reviewer may inspect specific lane final text only if approved"
+    },
+    {
+      "claim_ceiling": "not allowed under current scope",
+      "option_id": "publish-raw-lane-text",
+      "option_state": "DENIED",
+      "required_approval": "not approved",
+      "result": "blocked"
+    }
+  ],
+  "source_refs": [
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_SUITE_MAP_SEED_READY",
+      "bytes": 51153,
+      "path": "docs/trinity-live-traces/v476-thos-v1-x1-suite-map-seed-v1.json",
+      "sha256": "58bd51d0b697b501bc27e4e3e1b08254b98d6239dd3ba04a41b8fb413511b9d5",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_REQUIRED_ROW_GATE_READY",
+      "bytes": 10330,
+      "path": "docs/trinity-live-traces/v476-thos-v2-x2-required-row-gate-v1.json",
+      "sha256": "6c4027a1ba51883e1e91a00b50f8261a6867c07dc1fc911fe5129030d488e222",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_HANDOFF_CONTRACT_GATE_READY",
+      "bytes": 14463,
+      "path": "docs/trinity-live-traces/v476-thos-v3-x2-handoff-contract-gate-v1.json",
+      "sha256": "f7e5e0e7aafa2bd93b0d7146c324b1ddb3539b75c4b04e1b4c6171b7f99a75f8",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_CANDIDATE_PREFLIGHT_GATE_READY",
+      "bytes": 11441,
+      "path": "docs/trinity-live-traces/v476-thos-v4-x2-candidate-preflight-gate-v1.json",
+      "sha256": "46c05b5ad4af0da9f2c0640f807b24c787ae2bd533af47cdab561f3393854faf",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_DRY_RUN_REHEARSAL_GATE_READY",
+      "bytes": 8801,
+      "path": "docs/trinity-live-traces/v476-thos-v5-x2-dry-run-rehearsal-gate-v1.json",
+      "sha256": "f25f70bcb1bf893690c41070efb86c2e00a4f0b76e7f3cff6ae928d6a7633628",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_APPROVAL_MARKER_GATE_READY",
+      "bytes": 6566,
+      "path": "docs/trinity-live-traces/v476-thos-v6-x2-approval-marker-gate-v1.json",
+      "sha256": "59a06992afd80fa52a74b2aab90952c5c597a33437c9d5f9b995bad0c1d777bb",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+      "bytes": 1310,
+      "path": "docs/trinity-live-traces/v476-thos-v3-x1-cli-lane-completion-notice-v1.json",
+      "sha256": "4b2fac05f9a04a91d36a8d484789d03c4a517c82a250c1b65feaf3bfa6418c1a",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "started_at_nz": "2026-06-03T23:53:00+12:00",
+  "status_refs": [
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_SUITE_MAP_SEED_READY",
+      "bytes": 2838,
+      "path": "docs/trinity-live-traces/v476-thos-v1-x1-run-status-v1.json",
+      "sha256": "83f0851c7d92694921be9d8713c6694abdb1d81e039091395b8c266dc7b2eb46",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_SUITE_MAP_PREFLIGHT_READY",
+      "bytes": 3530,
+      "path": "docs/trinity-live-traces/v476-thos-v1-x2-run-status-v1.json",
+      "sha256": "7124460ffcaaa3f0f7335b3f80c97871e90ee1b39bceefc4ea2a37bbd75557b3",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_REQUIRED_ROW_MATRIX_READY",
+      "bytes": 2395,
+      "path": "docs/trinity-live-traces/v476-thos-v2-x1-run-status-v1.json",
+      "sha256": "c135dbc58daa579c0a0ac517182ff4b117cba2190aa4fb3f2a4b123c5f836c17",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_REQUIRED_ROW_GATE_READY",
+      "bytes": 4060,
+      "path": "docs/trinity-live-traces/v476-thos-v2-x2-run-status-v1.json",
+      "sha256": "2924a4b65ab8ceceb344017a63fb40132ec115c0a50e4867f05d9ee634a244ea",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_HANDOFF_CONTRACT_READY",
+      "bytes": 3019,
+      "path": "docs/trinity-live-traces/v476-thos-v3-x1-run-status-v1.json",
+      "sha256": "50b606c480b08f7fbfbc0607444e6bf0e08f4d8766d5dd2382c039e1fbd0321b",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_HANDOFF_CONTRACT_GATE_READY",
+      "bytes": 3914,
+      "path": "docs/trinity-live-traces/v476-thos-v3-x2-run-status-v1.json",
+      "sha256": "02f5c29423c7538e951fed2c3207b2dab16ec86108b38f5b03aa4af398eeded0",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_CANDIDATE_PREFLIGHT_CROSSWALK_READY",
+      "bytes": 2853,
+      "path": "docs/trinity-live-traces/v476-thos-v4-x1-run-status-v1.json",
+      "sha256": "915d9b02613bb63f2e35147e58cab55fb7d966c979e3c438458350049909ea16",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_CANDIDATE_PREFLIGHT_GATE_READY",
+      "bytes": 4029,
+      "path": "docs/trinity-live-traces/v476-thos-v4-x2-run-status-v1.json",
+      "sha256": "7c804a35b3dbe62887471222b15a4681b1c333f5eeea3f61fbfee0dd0d93bc84",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_DRY_RUN_REHEARSAL_READY",
+      "bytes": 3073,
+      "path": "docs/trinity-live-traces/v476-thos-v5-x1-run-status-v1.json",
+      "sha256": "97e6d4d51384df49a068709812a696257affbd87cbffb49b1796a47af83b1743",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_DRY_RUN_REHEARSAL_GATE_READY",
+      "bytes": 2834,
+      "path": "docs/trinity-live-traces/v476-thos-v5-x2-run-status-v1.json",
+      "sha256": "11b87ad3cb2d15d54756d72b8116c3cf78831b2b9b44c6a00c2001d68de387c6",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_APPROVAL_MARKER_LEDGER_READY",
+      "bytes": 3041,
+      "path": "docs/trinity-live-traces/v476-thos-v6-x1-run-status-v1.json",
+      "sha256": "c7c4bd97a75e9265a99907b7863426dc9dd43162ba03d75b77ee585b022174a2",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "aggregate_status": "PASS_SHAPE_ONLY_V476_APPROVAL_MARKER_GATE_READY",
+      "bytes": 2668,
+      "path": "docs/trinity-live-traces/v476-thos-v6-x2-run-status-v1.json",
+      "sha256": "646813c96c7c105374c6d2b7acd0ff27cfe925a971b77fbc8dcae49fa256b5db",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}

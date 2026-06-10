@@ -1,0 +1,18 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-05-synthesis-v1.json` as the authoritative checkpoint, the branch-home message board should stay a coordination surface only. For Arby, the carried truth remains local-only publication readiness with `publication_claim=withheld` and `remote_verification_required=true`. The checkpoint also preserves the global rule that transport noise stays separate from response proof.
+
+Blocker:
+The blocker is proof scope, not a confirmed branch, GitHub, or provider failure. The checkpoint does not verify current remote branch state, PR advancement, or any external publication outcome, so the board cannot honestly act as GitHub proof or shared-branch publication proof.
+
+Refinement:
+Use a fixed compact note schema per lane:
+`lane | turn | checkpoint_path | topic | status | response_path | transport_path | local_truth | remote_verification_required | depends_on | next_probe`
+Keep `local_truth` limited to synthesis-carried or directly local facts. Require any missing or unverified external state to remain explicit instead of being inferred from lane activity. This matches the checkpoint decision to continue only from receipts or explicit blockers.
+
+Next-cycle proposal:
+Adopt a branch-home protocol with one note per lane per cycle containing:
+`receipt`
+`blocker` or `none`
+`next_probe`
+`unverified_scope_frozen=true|false`
+For Arby, the next note should stay limited to local artifact readiness and forward-only sequencing placeholders such as `fetch -> compare tracking refs -> merge only if behind/diverged -> publication receipt`, without claiming that sequence has been executed or that publication succeeded.

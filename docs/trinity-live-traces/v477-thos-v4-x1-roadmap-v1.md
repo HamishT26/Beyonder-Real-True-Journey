@@ -1,0 +1,68 @@
+# V477 THOS V4 X1 Roadmap
+
+- generated_nz: `2026-06-04T04:46:11+12:00`
+- task_count: `60`
+- boundary: no unfiltered lane payloads, no old-style subagent spawning, no GMUT gate closure.
+
+## Tasks
+
+- v477-v4-task-01 [v477-v4-app-lanes]: Run probe-only before each app-lane advisory pass.
+- v477-v4-task-02 [v477-v4-app-lanes]: Add stale-active-turn detection wording to app-lane receipts.
+- v477-v4-task-03 [v477-v4-app-lanes]: Create a compact lane-status board for Cicero, Kierkegaard, and Aristotle.
+- v477-v4-task-04 [v477-v4-app-lanes]: Record app-lane result status without publishing advisory payload text.
+- v477-v4-task-05 [v477-v4-app-lanes]: Add targeted retry templates for each app lane.
+- v477-v4-task-06 [v477-v4-app-lanes]: Use the app-server source ledger to distinguish supported and experimental methods.
+- v477-v4-task-07 [v477-v4-cli-lanes]: Poll the Arby/Aster completion notice and classify the result.
+- v477-v4-task-08 [v477-v4-cli-lanes]: If final messages arrive, hash and summarize them without publishing raw transport.
+- v477-v4-task-09 [v477-v4-cli-lanes]: If timeout occurs, record watcher timeout and preserve running-process status.
+- v477-v4-task-10 [v477-v4-cli-lanes]: Add CLI runtime duration to the next readiness receipt.
+- v477-v4-task-11 [v477-v4-cli-lanes]: Keep read-only sandbox in every launcher invocation.
+- v477-v4-task-12 [v477-v4-cli-lanes]: Reject any CLI lane that requests repo mutation without a separate packet.
+- v477-v4-task-13 [v477-v4-command-surface]: Build the missing command-index surface from existing command books.
+- v477-v4-task-14 [v477-v4-command-surface]: Mark each command with safety tier, source file, and validation status.
+- v477-v4-task-15 [v477-v4-command-surface]: Separate live command availability from aspirational command proposals.
+- v477-v4-task-16 [v477-v4-command-surface]: Add a command-index JSON schema and parser check.
+- v477-v4-task-17 [v477-v4-command-surface]: Cross-link command surfaces to skills only by metadata.
+- v477-v4-task-18 [v477-v4-command-surface]: Publish open gaps where command sources are stale or absent.
+- v477-v4-task-19 [v477-v4-handoffs]: Locate v54/v55 handoff manifests through scoped repo searches.
+- v477-v4-task-20 [v477-v4-handoffs]: Create a handoff surfacing receipt with title, version, and receiver.
+- v477-v4-task-21 [v477-v4-handoffs]: Do not bulk import old archives into current phase artifacts.
+- v477-v4-task-22 [v477-v4-handoffs]: Classify missing handoffs as open_gap.
+- v477-v4-task-23 [v477-v4-handoffs]: Connect Orun continuity only as routing context.
+- v477-v4-task-24 [v477-v4-handoffs]: Prepare v478 acceptance criteria from surfaced handoffs.
+- v477-v4-task-25 [v477-v4-sources]: Promote opened official sources into a compact source ledger.
+- v477-v4-task-26 [v477-v4-sources]: Do not count a query as page-reviewed unless the page was opened.
+- v477-v4-task-27 [v477-v4-sources]: Add citation-required flags for current product behavior claims.
+- v477-v4-task-28 [v477-v4-sources]: Keep search volume metadata separate from evidence strength.
+- v477-v4-task-29 [v477-v4-sources]: Prefer official docs over social posts for implementation decisions.
+- v477-v4-task-30 [v477-v4-sources]: Schedule the next 30-query refresh around unresolved source gaps.
+- v477-v4-task-31 [v477-v4-skills]: Build a metadata-only skill capability index for THOS routing.
+- v477-v4-task-32 [v477-v4-skills]: Flag ambiguous duplicate skill names for later review.
+- v477-v4-task-33 [v477-v4-skills]: Add no-plugin-cache-mutation markers to ordinary phase scripts.
+- v477-v4-task-34 [v477-v4-skills]: Map skills to command-index rows without copying skill bodies.
+- v477-v4-task-35 [v477-v4-skills]: Create a validator for required skill frontmatter fields.
+- v477-v4-task-36 [v477-v4-skills]: Keep repairs separate from design unless an exact repair packet exists.
+- v477-v4-task-37 [v477-v4-observability]: Add OpenTelemetry-style fields to watcher receipts: trace, event, metric, status.
+- v477-v4-task-38 [v477-v4-observability]: Record retry count, timeout window, and final state for every lane run.
+- v477-v4-task-39 [v477-v4-observability]: Add process-existence caveat: process live does not equal useful progress.
+- v477-v4-task-40 [v477-v4-observability]: Create a no-raw-output invariant in the watcher schema.
+- v477-v4-task-41 [v477-v4-observability]: Add per-lane freshness timestamps.
+- v477-v4-task-42 [v477-v4-observability]: Prepare a dashboard-ready bounded snapshot for later Data Analytics use.
+- v477-v4-task-43 [v477-v4-safety]: Run JSON parse and script compile before staging.
+- v477-v4-task-44 [v477-v4-safety]: Run publication guards on exact staged files.
+- v477-v4-task-45 [v477-v4-safety]: Keep unrelated dirty worktree changes untouched.
+- v477-v4-task-46 [v477-v4-safety]: Fetch and drift-check before every commit.
+- v477-v4-task-47 [v477-v4-safety]: Commit only curated current-phase artifacts.
+- v477-v4-task-48 [v477-v4-safety]: Remote-verify shared omega after push.
+- v477-v4-task-49 [v477-v4-gmut-boundary]: Keep all six GMUT gates open in every THOS artifact.
+- v477-v4-task-50 [v477-v4-gmut-boundary]: Label GMUT-adjacent infrastructure as support only.
+- v477-v4-task-51 [v477-v4-gmut-boundary]: Use journey_context_not_canon for Journey/Solas context.
+- v477-v4-task-52 [v477-v4-gmut-boundary]: Avoid final physics, consciousness proof, fifth-force safety, and canon claims.
+- v477-v4-task-53 [v477-v4-gmut-boundary]: Require exact closure artifacts before any gate movement.
+- v477-v4-task-54 [v477-v4-gmut-boundary]: Carry null/SI/conservation/baseline/equivalence/bridge ledgers forward.
+- v477-v4-task-55 [v477-v4-phase-management]: Close v477 v3 x2 only after the CLI watcher state is classified.
+- v477-v4-task-56 [v477-v4-phase-management]: Move into v477 v4 x1 with five-lane readiness and source ledger in hand.
+- v477-v4-task-57 [v477-v4-phase-management]: Use x3/x4 overlays only for concrete blocker handling.
+- v477-v4-task-58 [v477-v4-phase-management]: Keep phase start times in NZ time.
+- v477-v4-task-59 [v477-v4-phase-management]: Publish a 60-task roadmap after x2 closeout.
+- v477-v4-task-60 [v477-v4-phase-management]: Prepare v478 transition criteria without claiming v490 completion.

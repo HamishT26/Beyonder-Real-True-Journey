@@ -1,0 +1,66 @@
+# v478 THOS v8 x1 Roadmap
+
+- generated_nz: `2026-06-04T13:10:57+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V8X1-01` (source): Use v478 v8 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-02` (app-lane): Use v478 v8 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-03` (cli-gap): Use v478 v8 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-04` (sandbox): Use v478 v8 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-05` (mcp): Use v478 v8 x1 to deepen mcp readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-06` (windows): Use v478 v8 x1 to deepen windows readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-07` (google): Use v478 v8 x1 to deepen google readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-08` (nvidia): Use v478 v8 x1 to deepen nvidia readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-09` (github): Use v478 v8 x1 to deepen github readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-10` (observability): Use v478 v8 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-11` (governance): Use v478 v8 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-12` (handoff): Use v478 v8 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-13` (source): Use v478 v8 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-14` (app-lane): Use v478 v8 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-15` (cli-gap): Use v478 v8 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-16` (sandbox): Use v478 v8 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-17` (mcp): Use v478 v8 x1 to deepen mcp readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-18` (windows): Use v478 v8 x1 to deepen windows readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-19` (google): Use v478 v8 x1 to deepen google readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-20` (nvidia): Use v478 v8 x1 to deepen nvidia readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-21` (github): Use v478 v8 x1 to deepen github readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-22` (observability): Use v478 v8 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-23` (governance): Use v478 v8 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-24` (handoff): Use v478 v8 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-25` (source): Use v478 v8 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-26` (app-lane): Use v478 v8 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-27` (cli-gap): Use v478 v8 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-28` (sandbox): Use v478 v8 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-29` (mcp): Use v478 v8 x1 to deepen mcp readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-30` (windows): Use v478 v8 x1 to deepen windows readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-31` (google): Use v478 v8 x1 to deepen google readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-32` (nvidia): Use v478 v8 x1 to deepen nvidia readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-33` (github): Use v478 v8 x1 to deepen github readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-34` (observability): Use v478 v8 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-35` (governance): Use v478 v8 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-36` (handoff): Use v478 v8 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-37` (source): Use v478 v8 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-38` (app-lane): Use v478 v8 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-39` (cli-gap): Use v478 v8 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-40` (sandbox): Use v478 v8 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-41` (mcp): Use v478 v8 x1 to deepen mcp readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-42` (windows): Use v478 v8 x1 to deepen windows readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-43` (google): Use v478 v8 x1 to deepen google readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-44` (nvidia): Use v478 v8 x1 to deepen nvidia readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-45` (github): Use v478 v8 x1 to deepen github readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-46` (observability): Use v478 v8 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-47` (governance): Use v478 v8 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-48` (handoff): Use v478 v8 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-49` (source): Use v478 v8 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-50` (app-lane): Use v478 v8 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-51` (cli-gap): Use v478 v8 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-52` (sandbox): Use v478 v8 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-53` (mcp): Use v478 v8 x1 to deepen mcp readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-54` (windows): Use v478 v8 x1 to deepen windows readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-55` (google): Use v478 v8 x1 to deepen google readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-56` (nvidia): Use v478 v8 x1 to deepen nvidia readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-57` (github): Use v478 v8 x1 to deepen github readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-58` (observability): Use v478 v8 x1 to deepen observability readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-59` (governance): Use v478 v8 x1 to deepen governance readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V8X1-60` (handoff): Use v478 v8 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.

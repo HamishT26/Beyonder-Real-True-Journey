@@ -1,0 +1,33 @@
+{
+  "artifact_id": "v461A-v490A-ninety-minute-heartbeat-workflow-v3",
+  "generated_utc": "2026-05-28T13:26:15Z",
+  "generated_nz": "2026-05-29T01:26:15+12:00",
+  "status": "paste_ready_self_refreshing_automation_packet_created",
+  "replaces_packet": "v461A-v490A-ninety-minute-heartbeat-workflow-v2",
+  "reason_for_replacement": "v2 corrected the bf527c7 series but still embedded the pre-v2 publication head 58dc715; v3 avoids stale latest-head claims by requiring live head verification at each heartbeat.",
+  "schedule": "every 90 minutes",
+  "phase_range": "v461A-v490A",
+  "known_good_baseline_before_v3": "7e270a876da7b7af179dd87e02265bc182fe3da2",
+  "run_model": {
+    "per_heartbeat": "one phase-version half only",
+    "active_work": "1 hour focused phase-version run",
+    "buffer": "30 minutes validation, sibling follow-up, breath, blocker handling, and handoff",
+    "sequence": "v461A v1, v461A v2, v462A v1, v462A v2, continuing through v490A v2"
+  },
+  "live_head_policy": [
+    "At the start of every heartbeat, fetch and read the live local and upstream heads.",
+    "Do not treat any head embedded in the automation text as newer than live git verification.",
+    "Record live head in that heartbeat's run-status artifact."
+  ],
+  "hard_boundaries": [
+    "v464A remains unopened until v461A, v462A, and v463A remaster v1/v2 halves are durably complete in this new run.",
+    "Kimi is held, not retried, not replaced.",
+    "Separate Parfit main reconnect remains postponed.",
+    "Do not invent callable IDs for CLI lanes.",
+    "Do not treat advisory App lanes as CLI receipt replacements.",
+    "Do not mutate external services, spend money, expose secrets, stage raw logs, or stage raw source documents.",
+    "Before shared commits: fetch, drift-check, curated stage only, JSON parse, path/secret/whitespace checks, staged diff review, commit, push, and verify remote equals local.",
+    "Stop after v490A v2 closeout unless Hamish explicitly asks for v491+."
+  ],
+  "markdown_report_path": "docs/trinity-live-traces/v461A-v490A-ninety-minute-heartbeat-workflow-v3.md"
+}

@@ -1,0 +1,37 @@
+{
+  "artifact": "v469A_GMUT_v1_x2_conservation_exchange_criteria_v1",
+  "phase": "v469A_GMUT_v1_x2",
+  "classification": "blocker",
+  "status": "decision_criteria_only",
+  "candidate_lanes": [
+    {
+      "lane": "minimal_uncoupled_scalar",
+      "condition": "S_m is independent of Psi and matter is minimally coupled to g_mu_nu",
+      "expected_shape": "nabla_mu T_m^{mu nu}=0 and nabla_mu T_Psi^{mu nu}=0 on scalar EOM; total conservation follows",
+      "acceptance_requirement": "derive from diffeomorphism invariance and scalar EOM under declared convention",
+      "current_status": "not_accepted"
+    },
+    {
+      "lane": "explicit_exchange_current",
+      "condition": "S_m or a coupling function depends explicitly on Psi",
+      "expected_shape": "nabla_mu T_m^{mu nu}=Q^nu and nabla_mu T_Psi^{mu nu}=-Q^nu, with nabla_mu T_total^{mu nu}=0",
+      "acceptance_requirement": "declare Q^nu, its dimensions, source terms, and external constraint route",
+      "current_status": "blocked_by_missing_coupling_definition"
+    },
+    {
+      "lane": "explicit_hold",
+      "condition": "coupling, potential, or metric convention remains incomplete",
+      "expected_shape": "conservation/exchange gate remains open",
+      "acceptance_requirement": "record exact blocker rather than choosing a law by preference",
+      "current_status": "currently_preferred_until_derivation_exists"
+    }
+  ],
+  "rejection_conditions": [
+    "Do not choose an exchange law without a declared coupling or source term.",
+    "Do not choose separate conservation if S_m has Psi dependence.",
+    "Do not claim total conservation from fixture existence alone.",
+    "Do not use Journey/Solas context as conservation evidence.",
+    "Do not use THOS schema validation as conservation validation."
+  ],
+  "gate_effect": "conservation_or_exchange_law remains OPEN"
+}

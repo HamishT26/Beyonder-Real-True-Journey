@@ -1,0 +1,36 @@
+{
+  "artifact_id": "v470-thos-v6-x1-regression-fixtures-v1",
+  "phase": "v470_THOS_v6_x1",
+  "created_at_nz": "2026-06-02T15:44:10+12:00",
+  "fixture_policy": "shape-only regression definitions for v6 x2; not executed in this phase",
+  "regression_cases": [
+    {
+      "case_id": "unexpected_success_connector_write",
+      "prior_expected_status": "OPEN_GAP",
+      "simulated_current_status": "PASS_SHAPE_ONLY",
+      "expected_interpretation": "unexpected_success",
+      "required_response": "FAIL_BLOCKER until connector gate explains why the expected blocker disappeared"
+    },
+    {
+      "case_id": "unexpected_failure_read_only_inventory",
+      "prior_expected_status": "PASS_SHAPE_ONLY",
+      "simulated_current_status": "FAIL_BLOCKER",
+      "expected_interpretation": "unexpected_failure",
+      "required_response": "OPEN_GAP until path, authority, or schema cause is classified"
+    },
+    {
+      "case_id": "intermittent_same_input_different_status",
+      "prior_expected_status": "PASS_SHAPE_ONLY",
+      "simulated_current_status": "OPEN_GAP",
+      "expected_interpretation": "intermittent_or_environment_drift",
+      "required_response": "carry blocker until identical input can reproduce stable status"
+    },
+    {
+      "case_id": "export_drops_authority_route",
+      "prior_expected_status": "PASS_SHAPE_ONLY",
+      "simulated_current_status": "PASS_SHAPE_ONLY",
+      "expected_interpretation": "reporting_failure",
+      "required_response": "block export headline counts until authority_route is preserved"
+    }
+  ]
+}

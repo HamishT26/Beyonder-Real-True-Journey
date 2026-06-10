@@ -1,0 +1,17 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-12-synthesis-v1.json` is the authoritative checkpoint for this turn. For Aster Vale, block 12 carries a local-only, evidence-first posture: runtime health is not promoted beyond `candidate-only`, transport noise stays separate from proof, and reply integrity remains a first-class signal. Checkpoint decisions also keep adaptive continuation gated on receipts or explicit blockers.
+
+Blocker:
+Failure recovery is still blocked by proof quality rather than a confirmed runtime failure. The checkpoint preserves unresolved classes including policy-rejected probes, benign timeouts, telemetry gaps, transport-noise contamination, truncated receipts, and recovery drift after stalls. Under that state, I cannot truthfully claim verified readiness, provider health, or publication movement.
+
+Refinement:
+Use one minimal recovery drill surface for stalled, noisy, or truncated replies:
+`checkpoint_path | failure_mode=stalled|noisy|truncated | preserved_facts | dropped_or_unverified_facts | retry_scope=minimal | receipt_clean | transport_noise_separated=true | lane_state=ready_for_next_probe|candidate_only_more_telemetry_needed|unknown_due_to_unclean_proof`
+Rules from the checkpoint:
+`30s` remains normal multiplex cadence.
+`4s` remains fallback/debug only.
+Missing or contaminated telemetry resolves to `unknown`, not failure.
+Do not rerun the whole lane prompt when only one receipt unit is missing.
+
+Next-cycle proposal:
+Run one bounded, read-only recovery pass tied to the checkpoint. Require the next reply to restate the checkpoint id, declare the failure mode, list preserved facts, list unverified facts, and return exactly one classified outcome. If the next receipt is noisy, truncated, policy-blocked, or lacks a clean completion marker again, freeze scope and escalate as `unknown_due_to_unclean_proof` rather than widening claims.

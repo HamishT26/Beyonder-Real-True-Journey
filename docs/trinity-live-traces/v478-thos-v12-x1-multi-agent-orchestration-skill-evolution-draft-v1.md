@@ -1,0 +1,33 @@
+# Multi Agent Orchestration Skill Evolution Draft
+
+- version_label: `v12-x1`
+- status: `draft_only_not_applied`
+- live_skill_mutation_performed: `false`
+
+## Draft Body
+```markdown
+---
+name: multi-agent-orchestrator-operations
+description: Operate the Multi Agent Orchestrator pack with proof-backed app, CLI, background notifier, and THOS phase boundaries.
+---
+
+# Multi Agent Orchestrator Operations
+
+Use when Codex needs to coordinate existing app and CLI sibling lanes, background notifier receipts, multiplex status boards, or THOS handoff artifacts.
+
+## Workflow
+1. Read the repo contract and workflow before promoting orchestration state.
+2. Prefer existing app lanes and existing CLI lanes; do not create replacement siblings by default.
+3. Run app-lane notifiers through the local app-server status path when available.
+4. Run CLI final-marker watchers as bounded status checks; never treat absent final markers as completion.
+5. Use the background sibling notifier to fuse app readiness and CLI gap evidence.
+6. Use the multiplex status board for operator visibility when several lanes are active.
+7. Use the fix-enhancement updater to convert repeated gaps into bounded repair plans.
+8. Publish only curated receipts, status boards, roadmaps, and approval packets.
+
+## Boundaries
+- No new old-style subagent spawning unless a separate exact approval says otherwise.
+- No live skill, plugin-cache, account, or external system mutation without separate exact approval.
+- No unpublished transport payloads, nonpublic dumps, auth-material, or temp output in repo artifacts.
+- All GMUT gates remain open unless separate closure artifacts prove otherwise.
+```

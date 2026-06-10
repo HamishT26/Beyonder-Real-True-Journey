@@ -1,0 +1,45 @@
+{
+  "artifact_type": "sensitive_scan_false_positive_repair",
+  "phase_slug": "v496-gmut-thos-v32-v8-x2",
+  "generated_utc": "2026-06-06T13:07:00Z",
+  "overall_status": "PASS_FALSE_POSITIVE_REPAIRED_AFTER_FIVE_SAFE_ATTEMPTS",
+  "blocker": {
+    "summary": "The broad secret regex matched a public NIST URL segment containing ai-risk-management-framework.",
+    "true_secret_found": false,
+    "unsafe_escalation_required": false
+  },
+  "five_safe_attempts": [
+    {
+      "attempt": 1,
+      "action": "ran the sensitive/path/raw scan",
+      "result": "one sk-pattern hit reported"
+    },
+    {
+      "attempt": 2,
+      "action": "inspected the hit line",
+      "result": "hit was a public NIST AI RMF URL segment, not a credential"
+    },
+    {
+      "attempt": 3,
+      "action": "classified the hit",
+      "result": "false positive caused by matching sk- inside risk-management"
+    },
+    {
+      "attempt": 4,
+      "action": "tightened the secret regex with a left boundary",
+      "result": "public URL term no longer matches the credential pattern"
+    },
+    {
+      "attempt": 5,
+      "action": "reran the refined scan",
+      "result": "PASS_REFINED_SENSITIVE_PATH_RAW_SCAN across 26 v8 x2 files"
+    }
+  ],
+  "claim_boundary": {
+    "credentials_published": false,
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

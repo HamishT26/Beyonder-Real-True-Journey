@@ -1,0 +1,60 @@
+{
+  "artifact_type": "x2_publication_validation",
+  "phase_slug": "v497-gmut-thos-v33-v1-x2",
+  "generated_utc": "2026-06-06T14:45:00Z",
+  "overall_status": "PASS_PUBLICATION_VALIDATION",
+  "validated_scope": [
+    "docs/trinity-live-traces/v497-gmut-thos-v33-v1-x2*.json",
+    "docs/trinity-live-traces/v497-gmut-thos-v33-v1-x2*.md"
+  ],
+  "checks": [
+    {
+      "check": "json_parse",
+      "status": "PASS",
+      "json_file_count_before_validation_receipt": 16
+    },
+    {
+      "check": "sensitive_raw_path_scan",
+      "status": "PASS",
+      "file_count_before_validation_receipt": 32,
+      "hit_count": 0
+    },
+    {
+      "check": "no_overclaim_scan",
+      "status": "PASS",
+      "file_count_before_validation_receipt": 32,
+      "hit_count": 0
+    },
+    {
+      "check": "git_diff_check",
+      "status": "PASS"
+    },
+    {
+      "check": "script_compile",
+      "status": "NOT_APPLICABLE_NO_SCRIPT_CHANGES_IN_SCOPE"
+    }
+  ],
+  "repairs_recorded": [
+    {
+      "issue": "no-overclaim scanner initially matched blocked-claim examples inside the no-overclaim card",
+      "repair": "reworded blocked examples as claim categories rather than using closure verbs",
+      "status": "PASS_REPAIRED"
+    },
+    {
+      "issue": "some generated_utc values were initially ahead of the actual clock",
+      "repair": "corrected timestamps to the real x2 build window before validation",
+      "status": "PASS_REPAIRED"
+    }
+  ],
+  "claim_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false,
+    "plugin_cache_mutation_performed": false,
+    "live_user_skill_mutation_performed": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "generated_utc": "2026-06-03T13:18:31+00:00",
+  "session_start_nz": "2026-06-04T00:24:27+12:00",
+  "phase": "v477_thos_v2",
+  "baseline_head": "0973722439be759b1b5ef2f507489d3f7675af5e",
+  "local_head": "0973722439be759b1b5ef2f507489d3f7675af5e",
+  "remote_head": "0973722439be759b1b5ef2f507489d3f7675af5e",
+  "drift": "0\t0",
+  "claim_boundary": {
+    "domain": "THOS Codex App/CLI readiness diagnostics only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  },
+  "artifact_type": "codex_cli_app_readiness",
+  "overall_status": "WARN",
+  "codex_version_observed": "codex-cli 0.136.0",
+  "update_record": {
+    "approved_packet": "APPROVED LIVE ACTION PACKET v477 APP LANES + CODEX CLI/SANDBOX READINESS",
+    "codex_update_attempted": true,
+    "codex_update_result": "completed_before_this_receipt",
+    "codex_version_after_update": "codex-cli 0.136.0",
+    "restart_recommended_by_update": true,
+    "cleanup_warning_observed": true,
+    "cleanup_action_taken": true,
+    "cleanup_result": "approved_stale_temp_removed_before_this_receipt",
+    "cleanup_target_label": ".codex-3J4dZeTD",
+    "cleanup_target_exists_after": false,
+    "cleanup_boundary": "only the approved stale npm temp directory was removed"
+  },
+  "doctor_summary": {
+    "doctor_version": "0.136.0",
+    "update_available": null,
+    "current_version": null,
+    "summary_counts": {
+      "ok": "17",
+      "idle": "1",
+      "notes": "2",
+      "warn": "0",
+      "fail": "0",
+      "status": "ok"
+    },
+    "sanitized_notes": [
+      "update_state_not_extracted",
+      "rollout_storage_pressure_note_present",
+      "current_runtime_unrestricted_note_present",
+      "app_server_idle_ephemeral"
+    ]
+  },
+  "sandbox_probe_status": "FAIL",
+  "sandbox_probes": [
+    {
+      "command_shape": "powershell -NoProfile",
+      "exit_code": 1,
+      "sanitized_result": "windows sandbox failed: spawn setup refresh"
+    },
+    {
+      "command_shape": "cmd /c",
+      "exit_code": 1,
+      "sanitized_result": "windows sandbox failed: spawn setup refresh"
+    },
+    {
+      "command_shape": "-- cmd",
+      "exit_code": 1,
+      "sanitized_result": "windows sandbox failed: spawn setup refresh"
+    }
+  ],
+  "advisory_lanes": [
+    {
+      "lane": "arby-advisory",
+      "exists": true,
+      "branch": "ghc/arby-advisory-line",
+      "head": "54b365446b8b334a59407c8a0a85f93ca19fa12b",
+      "upstream_head": "54b365446b8b334a59407c8a0a85f93ca19fa12b",
+      "drift": "0\t0",
+      "worktree_state": "clean",
+      "boundary": "non_ephemeral_read_only_advisory"
+    },
+    {
+      "lane": "aster-vale-advisory",
+      "exists": true,
+      "branch": "ghc/aster-vale-advisory-line",
+      "head": "7c0576c6c98529e6ec80913c9de6a757956c0a47",
+      "upstream_head": "7c0576c6c98529e6ec80913c9de6a757956c0a47",
+      "drift": "0\t0",
+      "worktree_state": "clean",
+      "boundary": "non_ephemeral_read_only_advisory"
+    }
+  ],
+  "thread_tool_state": {
+    "main_thread_management_tools_exposed": false,
+    "existing_callable_lanes_requested": [
+      "Cicero",
+      "Kierkegaard",
+      "Aristotle"
+    ],
+    "existing_callable_lane_message_tools_exposed": false,
+    "old_subagent_system_used": false,
+    "note": "Only old-style subagent management appeared in tool discovery; it was not used or expanded."
+  },
+  "approved_boundary_observed": [
+    "approved Codex CLI update completed",
+    "approved stale npm temp cleanup completed",
+    "no app setting mutation",
+    "no plugin cache mutation",
+    "no user skill mutation"
+  ],
+  "blockers": [
+    "Codex restart is recommended after the 0.136.0 CLI update.",
+    "Windows sandbox probes fail at setup refresh.",
+    "Existing app-lane message tools for Cicero, Kierkegaard, and Aristotle are not currently callable in this session."
+  ],
+  "next_expected_phase": "v477_thos_v2_x2_or_v477_thos_v3_x1"
+}

@@ -1,0 +1,17 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-11-synthesis-v1.json` is the authoritative checkpoint. It records `status=complete_synthesized`, `9/9` completed responses overall, and `3/3` for Aster Vale. For this lane, the carried posture remains local-only and evidence-first; block 11 preserves unresolved TUI latency and liveness ambiguity rather than proving a clean runtime-health state.
+
+Blocker:
+The blocker is proof quality, not a confirmed runtime failure. The checkpoint carries telemetry gaps, policy-rejected probes, benign timeouts, transport-noise contamination, truncated receipts, and recovery drift after stalls. From that evidence alone, lane liveness should not be promoted beyond `unknown` or a cautious `degraded` classification.
+
+Refinement:
+Use one compact scoring surface only:
+`telemetry_present | heartbeat_recent | stall_within_budget | receipt_clean | transport_noise_separated | lane_classifiable | score_state=alive|degraded|unknown | score_reason`
+Keep `30s` as normal multiplex cadence and `4s` as fallback/debug only. Missing or contaminated telemetry should resolve to `unknown`, not failure. Reply integrity should remain a first-class signal.
+
+Next-cycle proposal:
+Run one bounded, read-only liveness pass against a single compact local health artifact derived from the checkpoint. Emit exactly one outcome:
+`alive_by_local_observation`
+`degraded_by_stall_budget`
+`unknown_due_to_missing_telemetry`
+Require checkpoint restatement, a clean completion marker, and `unverified_scope_frozen=true`. If the next receipt is noisy, truncated, or policy-blocked again, freeze scope and request only the missing clean telemetry slice rather than expanding runtime or provider claims.

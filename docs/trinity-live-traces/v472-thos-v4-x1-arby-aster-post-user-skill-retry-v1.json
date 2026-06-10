@@ -1,0 +1,85 @@
+{
+  "aggregate_status": "PASS_LOADER_RETRY",
+  "generated_at_utc": "2026-06-02T13:29:47+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v4-x1",
+  "retries": [
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Arby",
+      "last_message_bytes": 0,
+      "loader_error_counts": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 0
+      },
+      "loader_error_lines": [],
+      "sandbox": "read-only",
+      "stderr_bytes": 1350,
+      "terminated_after_timeout": true
+    },
+    {
+      "completed_within_wait": false,
+      "ephemeral_flag_used": false,
+      "lane": "Aster Vale",
+      "last_message_bytes": 0,
+      "loader_error_counts": {
+        "invalid_name": 0,
+        "missing_frontmatter": 0,
+        "stale_plugin_temp_access_denied": 0
+      },
+      "loader_error_lines": [],
+      "sandbox": "read-only",
+      "stderr_bytes": 1401,
+      "terminated_after_timeout": true
+    }
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "writes_performed": 6
+      },
+      "message": "Six approved user-skill BOM removals should occur on first live repair",
+      "row_id": "bom_repair",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Every repaired skill must start with raw frontmatter delimiter",
+      "row_id": "raw_delimiter",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Every repaired skill must retain name and description",
+      "row_id": "required_fields",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "remaining_missing": 0
+      },
+      "message": "Arby/Aster should no longer report missing-frontmatter skill loader errors",
+      "row_id": "post_retry_missing_frontmatter",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "remaining_invalid": 0
+      },
+      "message": "Arby/Aster should no longer report invalid-name skill loader errors",
+      "row_id": "post_retry_invalid_name",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "signals": 0
+      },
+      "message": "Stale plugin temp cleanup was inspected only, not deleted",
+      "row_id": "stale_temp",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}

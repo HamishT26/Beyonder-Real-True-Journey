@@ -1,0 +1,41 @@
+{
+  "phase": "v468A_THOS_v2_x1",
+  "artifact": "live_write_command_checklists",
+  "prepared_nz": "2026-06-01T23:16:00+12:00",
+  "checklists": [
+    {
+      "checklist_id": "live_write_gate",
+      "items": [
+        "Identify target surface before any mutation.",
+        "Classify action as repo_curated_write, tempdir_write, connector_write, live_system_change, or destructive_change.",
+        "Require separate explicit approval for connector_write, live_system_change, or destructive_change.",
+        "Record expected receipt before action.",
+        "Record actual receipt after action.",
+        "Block action if target path or connector identity is ambiguous."
+      ]
+    },
+    {
+      "checklist_id": "powershell_literal_path",
+      "items": [
+        "Set project location with Set-Location -LiteralPath.",
+        "Use -LiteralPath for file operations.",
+        "Avoid string-built destructive commands.",
+        "Do not enumerate paths in one shell and delete through another shell.",
+        "Resolve absolute targets before any move/delete proposal.",
+        "Prefer inspection and validation over mutation in phase artifacts."
+      ]
+    },
+    {
+      "checklist_id": "curated_git_publication",
+      "items": [
+        "Fetch before commit.",
+        "Record local head, upstream head, and drift.",
+        "Stage exact current-phase artifact paths only.",
+        "Run JSON parse where applicable.",
+        "Run sensitive/path/session-capture guard.",
+        "Run whitespace and staged diff checks.",
+        "Commit, push explicitly, fetch again, and verify local equals remote."
+      ]
+    }
+  ]
+}

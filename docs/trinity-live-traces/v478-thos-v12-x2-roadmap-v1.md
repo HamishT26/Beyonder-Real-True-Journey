@@ -1,0 +1,66 @@
+# v478-thos-v12-x2 Roadmap
+
+- generated_nz: `2026-06-05T02:33:27+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V12X2-01` (stale_flow): Advance v478-thos-v12-x2 stale flow with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-02` (sibling_lane): Advance v478-thos-v12-x2 sibling lane with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-03` (cli_final_marker): Advance v478-thos-v12-x2 cli final marker with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-04` (app_server): Advance v478-thos-v12-x2 app server with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-05` (sandbox_readiness): Advance v478-thos-v12-x2 sandbox readiness with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-06` (source_drift): Advance v478-thos-v12-x2 source drift with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-07` (skill_orchestration): Advance v478-thos-v12-x2 skill orchestration with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-08` (publication_guard): Advance v478-thos-v12-x2 publication guard with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-09` (command_surface): Advance v478-thos-v12-x2 command surface with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-10` (mcp_trust): Advance v478-thos-v12-x2 mcp trust with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-11` (journey_index): Advance v478-thos-v12-x2 journey index with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-12` (gmuthos_boundary): Advance v478-thos-v12-x2 gmuthos boundary with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-13` (stale_flow): Advance v478-thos-v12-x2 stale flow with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-14` (sibling_lane): Advance v478-thos-v12-x2 sibling lane with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-15` (cli_final_marker): Advance v478-thos-v12-x2 cli final marker with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-16` (app_server): Advance v478-thos-v12-x2 app server with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-17` (sandbox_readiness): Advance v478-thos-v12-x2 sandbox readiness with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-18` (source_drift): Advance v478-thos-v12-x2 source drift with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-19` (skill_orchestration): Advance v478-thos-v12-x2 skill orchestration with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-20` (publication_guard): Advance v478-thos-v12-x2 publication guard with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-21` (command_surface): Advance v478-thos-v12-x2 command surface with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-22` (mcp_trust): Advance v478-thos-v12-x2 mcp trust with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-23` (journey_index): Advance v478-thos-v12-x2 journey index with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-24` (gmuthos_boundary): Advance v478-thos-v12-x2 gmuthos boundary with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-25` (stale_flow): Advance v478-thos-v12-x2 stale flow with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-26` (sibling_lane): Advance v478-thos-v12-x2 sibling lane with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-27` (cli_final_marker): Advance v478-thos-v12-x2 cli final marker with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-28` (app_server): Advance v478-thos-v12-x2 app server with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-29` (sandbox_readiness): Advance v478-thos-v12-x2 sandbox readiness with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-30` (source_drift): Advance v478-thos-v12-x2 source drift with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-31` (skill_orchestration): Advance v478-thos-v12-x2 skill orchestration with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-32` (publication_guard): Advance v478-thos-v12-x2 publication guard with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-33` (command_surface): Advance v478-thos-v12-x2 command surface with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-34` (mcp_trust): Advance v478-thos-v12-x2 mcp trust with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-35` (journey_index): Advance v478-thos-v12-x2 journey index with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-36` (gmuthos_boundary): Advance v478-thos-v12-x2 gmuthos boundary with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-37` (stale_flow): Advance v478-thos-v12-x2 stale flow with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-38` (sibling_lane): Advance v478-thos-v12-x2 sibling lane with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-39` (cli_final_marker): Advance v478-thos-v12-x2 cli final marker with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-40` (app_server): Advance v478-thos-v12-x2 app server with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-41` (sandbox_readiness): Advance v478-thos-v12-x2 sandbox readiness with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-42` (source_drift): Advance v478-thos-v12-x2 source drift with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-43` (skill_orchestration): Advance v478-thos-v12-x2 skill orchestration with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-44` (publication_guard): Advance v478-thos-v12-x2 publication guard with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-45` (command_surface): Advance v478-thos-v12-x2 command surface with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-46` (mcp_trust): Advance v478-thos-v12-x2 mcp trust with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-47` (journey_index): Advance v478-thos-v12-x2 journey index with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-48` (gmuthos_boundary): Advance v478-thos-v12-x2 gmuthos boundary with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-49` (stale_flow): Advance v478-thos-v12-x2 stale flow with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-50` (sibling_lane): Advance v478-thos-v12-x2 sibling lane with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-51` (cli_final_marker): Advance v478-thos-v12-x2 cli final marker with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-52` (app_server): Advance v478-thos-v12-x2 app server with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-53` (sandbox_readiness): Advance v478-thos-v12-x2 sandbox readiness with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-54` (source_drift): Advance v478-thos-v12-x2 source drift with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-55` (skill_orchestration): Advance v478-thos-v12-x2 skill orchestration with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-56` (publication_guard): Advance v478-thos-v12-x2 publication guard with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-57` (command_surface): Advance v478-thos-v12-x2 command surface with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-58` (mcp_trust): Advance v478-thos-v12-x2 mcp trust with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-59` (journey_index): Advance v478-thos-v12-x2 journey index with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.
+- `V478V12X2-60` (gmuthos_boundary): Advance v478-thos-v12-x2 gmuthos boundary with status-only receipts, stale-flow awareness, source-drift context, and open GMUT gates.

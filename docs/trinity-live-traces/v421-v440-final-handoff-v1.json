@@ -1,0 +1,62 @@
+{
+  "generated_utc": "2026-05-22T08:36:00Z",
+  "handoff_id": "v421-v440-final-handoff-v1",
+  "handoff_state": "ready_for_v421_v440",
+  "source_phase_range": "v401-v420",
+  "target_phase_range": "v421-v440",
+  "source_closeout": "docs/trinity-live-traces/v401-v420-closeout-declaration-v1.json",
+  "source_commit": "dee9c61be4",
+  "packet_shape": {
+    "numbered_phase_min": 421,
+    "numbered_phase_max": 440,
+    "numbered_phase_count": 20,
+    "phase_runs_per_numbered_phase": 2,
+    "total_phase_runs": 40,
+    "run_order": [
+      "v1_cli_receipt_gate",
+      "v2_app_execution_gate"
+    ]
+  },
+  "required_scripts": [
+    "scripts/trinity_v421_v440_sibling_phase_start.py",
+    "scripts/trinity_v421_v440_cli_sibling_phase_runner.py",
+    "scripts/trinity_v421_v440_app_phase_runner.py",
+    "scripts/trinity_v421_v440_sibling_phase_complete.py"
+  ],
+  "goal_mode_policy": {
+    "enabled": true,
+    "ui_goal_mode_required": false,
+    "cli_goal_mode_encouraged_when_available": true,
+    "fallback_note": "docs/trinity-live-traces/v421-v440-goal-mode-fallback-note-v1.json",
+    "purpose": "Use Goal Mode as a bounded focus contract for one active phase-run at a time.",
+    "anti_patterns": [
+      "Do not collapse v421-v440 into one monolithic run.",
+      "Do not let Goal Mode bypass v1 CLI receipts, v2 App receipts, staged checks, or forward-only publication.",
+      "Do not open v441 from this packet."
+    ]
+  },
+  "heartbeat_policy": {
+    "minutes": 20,
+    "default_decision": "observe_only",
+    "behavior": "Refresh health, active phase, active run, runner liveness, receipt gates, branch drift, and blockers without interrupting or duplicating live work."
+  },
+  "external_policy": {
+    "default": "local_first_only",
+    "spend_limit_usd": 60,
+    "spend_boundary": "No paid external action, cloud write, connected-account mutation, Notion write, Google Drive write, or external-service mutation is allowed without a fresh explicit scope, rollback, and spend note.",
+    "allowed_without_new_scope": [
+      "local repository work",
+      "local browser inspection",
+      "local validation and security checks",
+      "normal GitHub publication via the existing repository remote"
+    ]
+  },
+  "truth_boundaries": [
+    "v421-v440 starts only after v401-v420 closeout is committed and remote-equals-local is verified.",
+    "Arby, Kimi, and Aster Vale remain required v1 receipt-gate siblings.",
+    "Aletheon leads v2 App execution; Parfit, Cicero, and Kierkegaard are advisory-only unless a future tool exposes their existing app-agent identities.",
+    "Supervisor, v2 Watcher, and Recovery Watchdog are helper lanes, not replacement receipt gates.",
+    "Raw logs, stdout/stderr, scratch probes, pycache files, secrets, and unrelated churn stay outside the curated publication slice.",
+    "Stop at v440 closeout unless Hamish explicitly asks for a fresh v441+ packet."
+  ]
+}

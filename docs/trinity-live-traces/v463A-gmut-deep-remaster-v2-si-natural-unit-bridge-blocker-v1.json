@@ -1,0 +1,73 @@
+{
+  "artifact_id": "v463A-gmut-deep-remaster-v2-si-natural-unit-bridge-blocker-v1",
+  "generated_utc": "2026-05-29T12:48:47Z",
+  "generated_nz": "2026-05-30T00:48:47+12:00",
+  "phase_version": "v463A_GMUT_v2",
+  "status": "SI_natural_unit_bridge_recorded_as_required_not_completed",
+  "scope": "Bridge rule for natural-unit fixture rows before any public physical or dimensional claim.",
+  "bridge_rule": {
+    "rule": "Any natural-unit scalar-route quantity intended for public physical interpretation must state its SI bridge dependencies or remain fixture-only.",
+    "official_context": [
+      "NIST SI pages define SI around base/derived units and defining constants.",
+      "NIST SP 330 records c and h as exact defining constants in the revised SI.",
+      "NIST SP 811 Chapter 5 recognizes natural units for basic science but requires identifying the specific unit system."
+    ],
+    "current_status": "required_not_completed"
+  },
+  "bridge_dependencies": [
+    {
+      "dependency": "c",
+      "role": "speed_of_light_conversion_dependency",
+      "SI_source_status": "source_backed_by_NIST",
+      "GMUT_row_status": "not_applied_to_rows"
+    },
+    {
+      "dependency": "hbar",
+      "role": "action_conversion_dependency_from_h_over_2pi",
+      "SI_source_status": "h_source_backed_by_NIST_hbar_relation_not_expanded_in_v2",
+      "GMUT_row_status": "not_applied_to_rows"
+    },
+    {
+      "dependency": "stress_energy_SI_target",
+      "role": "energy_density_or_pressure_target_for_T_rows",
+      "SI_source_status": "requires derived-unit row",
+      "GMUT_row_status": "target_named_not_derived"
+    },
+    {
+      "dependency": "coordinate_units",
+      "role": "derivative_operator_dimension",
+      "SI_source_status": "requires meter_or_time_bridge",
+      "GMUT_row_status": "not_selected"
+    }
+  ],
+  "claim_boundary": {
+    "allowed": [
+      "A bridge is required before physical unit claims.",
+      "Natural units are retained as fixture-only context.",
+      "v2 identifies missing conversion dependencies."
+    ],
+    "forbidden": [
+      "Natural units close the unit problem.",
+      "The SI bridge is complete.",
+      "Dimensional consistency is passed.",
+      "The scalar sector is physically validated."
+    ]
+  },
+  "claim_classification": {
+    "evidence": [
+      "NIST sources support the need to identify units and constants clearly."
+    ],
+    "context": [
+      "The v462A v7 natural-unit fixture remains useful for review."
+    ],
+    "hypothesis": [
+      "A future SI bridge may make candidate rows auditable."
+    ],
+    "blocker": [
+      "No row-level SI conversion is completed in v2."
+    ],
+    "advisory": [
+      "Keep all natural-unit rows fixture-only until conversion rows exist."
+    ]
+  }
+}

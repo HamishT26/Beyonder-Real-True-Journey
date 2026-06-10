@@ -1,0 +1,66 @@
+# v478 THOS v7 x2 Roadmap
+
+- generated_nz: `2026-06-04T13:00:51+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V7X2-01` (source): Synthesize v478 v7 x1 evidence into v7 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-02` (app-lane): Synthesize v478 v7 x1 evidence into v7 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-03` (cli-gap): Synthesize v478 v7 x1 evidence into v7 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-04` (sandbox): Synthesize v478 v7 x1 evidence into v7 x2 sandbox decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-05` (mcp): Synthesize v478 v7 x1 evidence into v7 x2 mcp decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-06` (windows): Synthesize v478 v7 x1 evidence into v7 x2 windows decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-07` (google): Synthesize v478 v7 x1 evidence into v7 x2 google decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-08` (nvidia): Synthesize v478 v7 x1 evidence into v7 x2 nvidia decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-09` (github): Synthesize v478 v7 x1 evidence into v7 x2 github decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-10` (observability): Synthesize v478 v7 x1 evidence into v7 x2 observability decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-11` (governance): Synthesize v478 v7 x1 evidence into v7 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-12` (handoff): Synthesize v478 v7 x1 evidence into v7 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-13` (source): Synthesize v478 v7 x1 evidence into v7 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-14` (app-lane): Synthesize v478 v7 x1 evidence into v7 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-15` (cli-gap): Synthesize v478 v7 x1 evidence into v7 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-16` (sandbox): Synthesize v478 v7 x1 evidence into v7 x2 sandbox decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-17` (mcp): Synthesize v478 v7 x1 evidence into v7 x2 mcp decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-18` (windows): Synthesize v478 v7 x1 evidence into v7 x2 windows decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-19` (google): Synthesize v478 v7 x1 evidence into v7 x2 google decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-20` (nvidia): Synthesize v478 v7 x1 evidence into v7 x2 nvidia decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-21` (github): Synthesize v478 v7 x1 evidence into v7 x2 github decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-22` (observability): Synthesize v478 v7 x1 evidence into v7 x2 observability decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-23` (governance): Synthesize v478 v7 x1 evidence into v7 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-24` (handoff): Synthesize v478 v7 x1 evidence into v7 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-25` (source): Synthesize v478 v7 x1 evidence into v7 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-26` (app-lane): Synthesize v478 v7 x1 evidence into v7 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-27` (cli-gap): Synthesize v478 v7 x1 evidence into v7 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-28` (sandbox): Synthesize v478 v7 x1 evidence into v7 x2 sandbox decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-29` (mcp): Synthesize v478 v7 x1 evidence into v7 x2 mcp decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-30` (windows): Synthesize v478 v7 x1 evidence into v7 x2 windows decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-31` (google): Synthesize v478 v7 x1 evidence into v7 x2 google decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-32` (nvidia): Synthesize v478 v7 x1 evidence into v7 x2 nvidia decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-33` (github): Synthesize v478 v7 x1 evidence into v7 x2 github decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-34` (observability): Synthesize v478 v7 x1 evidence into v7 x2 observability decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-35` (governance): Synthesize v478 v7 x1 evidence into v7 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-36` (handoff): Synthesize v478 v7 x1 evidence into v7 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-37` (source): Synthesize v478 v7 x1 evidence into v7 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-38` (app-lane): Synthesize v478 v7 x1 evidence into v7 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-39` (cli-gap): Synthesize v478 v7 x1 evidence into v7 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-40` (sandbox): Synthesize v478 v7 x1 evidence into v7 x2 sandbox decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-41` (mcp): Synthesize v478 v7 x1 evidence into v7 x2 mcp decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-42` (windows): Synthesize v478 v7 x1 evidence into v7 x2 windows decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-43` (google): Synthesize v478 v7 x1 evidence into v7 x2 google decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-44` (nvidia): Synthesize v478 v7 x1 evidence into v7 x2 nvidia decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-45` (github): Synthesize v478 v7 x1 evidence into v7 x2 github decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-46` (observability): Synthesize v478 v7 x1 evidence into v7 x2 observability decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-47` (governance): Synthesize v478 v7 x1 evidence into v7 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-48` (handoff): Synthesize v478 v7 x1 evidence into v7 x2 handoff decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-49` (source): Synthesize v478 v7 x1 evidence into v7 x2 source decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-50` (app-lane): Synthesize v478 v7 x1 evidence into v7 x2 app-lane decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-51` (cli-gap): Synthesize v478 v7 x1 evidence into v7 x2 cli-gap decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-52` (sandbox): Synthesize v478 v7 x1 evidence into v7 x2 sandbox decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-53` (mcp): Synthesize v478 v7 x1 evidence into v7 x2 mcp decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-54` (windows): Synthesize v478 v7 x1 evidence into v7 x2 windows decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-55` (google): Synthesize v478 v7 x1 evidence into v7 x2 google decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-56` (nvidia): Synthesize v478 v7 x1 evidence into v7 x2 nvidia decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-57` (github): Synthesize v478 v7 x1 evidence into v7 x2 github decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-58` (observability): Synthesize v478 v7 x1 evidence into v7 x2 observability decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-59` (governance): Synthesize v478 v7 x1 evidence into v7 x2 governance decisions while preserving status-only receipts and open GMUT gates.
+- `V478V7X2-60` (handoff): Synthesize v478 v7 x1 evidence into v7 x2 handoff decisions while preserving status-only receipts and open GMUT gates.

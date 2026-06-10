@@ -1,0 +1,25 @@
+**Validation Receipts**
+1. Artifact verification reports no missing files/markers and success: `"missing_files": []`, `"missing_dashboard_markers": []`, `"effective_success": true` in [artifact-verification-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-artifact-verification-v1.json:3).
+2. Closeout confirms `phase_count: 4`, `touchpoint_count: 60`, and `effective_success: true` in [closeout-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-closeout-v1.json:4).
+3. Safety boundary receipts are present: `"external_provider_mutations": "none"`, `"external_spend_nzd": 0`, `"google_drive_state": "operator_hold"` in [closeout-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-closeout-v1.json:15).
+4. Heartbeat shows three lanes in `stdout_log_ready` and ties to multiplex launcher in [heartbeat-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-heartbeat-v1.json:8).
+5. Control scope is explicitly constrained: each phase has `live_write_scope: repo_artifacts_and_supervised_remote_control_only` and `provider_mutations: held` in [phase-run-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-phase-run-v1.json:9), with command-board safety guard repeated in [command-board-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-command-board-v1.json:9).
+
+**Safety Risks**
+1. Remote-control state inconsistency: preflight says `"remote_control_feature_enabled": true` but retry receipt says `false` ([remote-control-preflight-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v240-remote-control-mesh-remote-control-preflight-v1.json:63) vs [remote-control-retry-receipt-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-remote-control-retry-receipt-v1.json:5)).
+2. Launch evidence is weak: `"started_visible_terminal"` does not prove a successful remote session handshake ([remote-control-retry-receipt-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-remote-control-retry-receipt-v1.json:8)).
+3. Lane logs look templated (repeated `touchpoint` text), so they may overstate execution depth ([aster_vale.log](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-lane-logs/aster_vale.log:6)).
+4. Multiplex TUI only tails local logs; it does not verify remote-control health or authenticity ([multiplex-tui-launcher.ps1](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-multiplex-tui-launcher.ps1:12)).
+5. Config drift risk remains: source and active hashes differ even though embedding is claimed true ([config-transfer-receipt-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-config-transfer-receipt-v1.json:5)).
+
+**Verification Recommendations (Remote-Control + Multiplex TUI)**
+1. Add a per-run remote-control capability matrix receipt (`features list`, `remote-control --help`, version) and fail on contradictions like true/false feature drift.
+2. Add handshake receipts: PID alive check, remote endpoint bind status, auth state, and explicit token redaction confirmation (building on [remote-control-retry-receipt-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-remote-control-retry-receipt-v1.json:9)).
+3. Add freshness checks in heartbeat: each lane log must advance timestamp and line count since prior poll (current heartbeat only says `stdout_log_ready` in [heartbeat-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-heartbeat-v1.json:8)).
+4. Harden multiplex script with stale-log and dead-lane detection; fail if unchanged for N cycles (current loop only tails and sleeps in [multiplex-tui-launcher.ps1](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-multiplex-tui-launcher.ps1:14)).
+5. Add a strict preflight/postflight config-diff receipt with secret/forbidden-surface assertions aligned to the allowlist exclusion policy ([stage-allowlist-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-stage-allowlist-v1.json:24)).
+
+**Approval Requests**
+1. No approval needed for this read-only validation pass.
+2. Required before any provider mutation: explicit separate approval per command-board safety policy ([command-board-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-command-board-v1.json:9)).
+3. Required before Cloudflare/provider reactivation: operator repair decision currently records postponement ([config-transfer-receipt-v1.json](D:/GHC-Archives/worktrees/v58-omega/docs/trinity-live-traces/v221-v224-full-live-write-refresh-config-transfer-receipt-v1.json:25)).

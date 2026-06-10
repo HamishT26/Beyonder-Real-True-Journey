@@ -1,0 +1,72 @@
+{
+  "artifact_type": "watcher_telemetry_schema_draft",
+  "phase_slug": "v497-gmut-thos-v33-v5-x1",
+  "generated_utc": "2026-06-06T19:12:00Z",
+  "overall_status": "PASS_SCHEMA_DRAFT_READY_FOR_X2",
+  "purpose": "Prepare x2 watcher and notifier hardening without polling sibling lanes early or publishing raw outputs.",
+  "schema": {
+    "required_top_level_fields": [
+      "artifact_type",
+      "phase_slug",
+      "generated_utc",
+      "boundary",
+      "lane_rows",
+      "overall_status",
+      "raw_boundary",
+      "claim_boundary"
+    ],
+    "lane_row_fields": [
+      "lane_name",
+      "lane_kind",
+      "existing_lane_only",
+      "new_thread_created",
+      "old_style_spawn_used",
+      "sandbox_requested",
+      "approval_policy_requested",
+      "status",
+      "completion_status",
+      "quality_status",
+      "word_count",
+      "required_heading_count",
+      "missing_required_heading_count",
+      "sensitive_or_path_marker_count",
+      "raw_output_boundary",
+      "repair_state",
+      "next_manual_check_utc"
+    ],
+    "repair_state_values": [
+      "none",
+      "watch_only",
+      "repair_launched",
+      "repair_waiting",
+      "repair_passed",
+      "repair_blocked",
+      "approval_needed"
+    ],
+    "raw_boundary_values": [
+      "status_only",
+      "temp_only_not_published",
+      "redacted_metadata_only",
+      "blocked_if_raw_required"
+    ],
+    "claim_boundary_fields": [
+      "gmut_gate_state",
+      "canon_promotion",
+      "empirical_closure",
+      "raw_private_material"
+    ]
+  },
+  "x2_use_cases": [
+    "Normalize app and CLI watcher rows into one board without raw output reads.",
+    "Represent substantial-but-unharvestable CLI output as repair_launched instead of failure.",
+    "Delay manual checks to approved cadence marks while preserving next_manual_check_utc.",
+    "Expose phase_advance_allowed only when all required lane rows pass completion and quality gates.",
+    "Carry no-overclaim and raw-boundary fields through every status receipt."
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}

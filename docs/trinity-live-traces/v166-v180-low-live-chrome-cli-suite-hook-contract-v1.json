@@ -1,0 +1,18 @@
+{
+  "generated_utc": "2026-05-08T04:57:35+00:00",
+  "include_when": [
+    "run_all_trinity_systems.py --profile deep",
+    "run_all_trinity_systems.py --profile materialize --materialization-level l5_ha_prod"
+  ],
+  "runner_command": "python scripts/trinity_v166_v180_low_live_chrome_cli.py --run-all --verify-artifacts",
+  "skip_flag": "--skip-v166-v180-dashboard-run",
+  "suite_hook_mode": "deep_and_l5_default_with_skip_flag",
+  "truth_boundaries": [
+    "repo-local artifact writes only",
+    "D drive dashboard archive mirror only",
+    "no external provider mutation",
+    "no Google Drive mutation",
+    "no paid spend"
+  ],
+  "write_cadence": "dashboard checkpoints only after every 3 phases"
+}

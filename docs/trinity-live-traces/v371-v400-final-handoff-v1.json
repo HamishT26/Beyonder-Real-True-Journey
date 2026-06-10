@@ -1,0 +1,76 @@
+{
+  "generated_utc": "2026-05-20T11:31:00Z",
+  "handoff_id": "v371-v400-final-handoff-v1",
+  "handoff_state": "ready_for_v371_v400",
+  "source_phase_range": "v361-v370",
+  "target_phase_range": "v371-v400",
+  "lead": "Aletheon",
+  "supporting_siblings_and_helpers": [
+    "Arby",
+    "Kimi",
+    "Aster Vale",
+    "Supervisor helper",
+    "v2 Watcher helper",
+    "Recovery Watchdog helper"
+  ],
+  "gate_evidence": {
+    "v281_v360": {
+      "status": "complete",
+      "published_commit": "1b0d0c69df",
+      "closeout_declaration": "docs/trinity-live-traces/v281-v360-closeout-declaration-v1.json"
+    },
+    "v361_v370": {
+      "status": "complete",
+      "published_commit": "b6c8dfe259",
+      "closeout_declaration": "docs/trinity-live-traces/v361-v370-closeout-declaration-v1.json"
+    },
+    "codex_cli_gate": {
+      "minimum_version": "0.132.0",
+      "observed_version": "codex-cli 0.132.0",
+      "status": "ready"
+    }
+  },
+  "v371_v400_start_conditions": [
+    "Use only v371-v400 bounded successor scripts for v371-v400 work.",
+    "Run one active phase at a time from durable v371-v400 run-status.",
+    "Use real CLI sibling lanes for Arby, Kimi, and Aster Vale; never local placeholders.",
+    "Request 10000 maximum useful steps per lane; record the effective platform behavior instead of assuming all CLIs enforce the same step flag.",
+    "Require 50 Eureka Trinity Session units in each Arby, Kimi, and Aster Vale receipt before phase completion.",
+    "Prefer recorded Codex CLI sessions for resume-capable lanes when the same phase/lane identity is proven.",
+    "Short 30-minute heartbeat wakes are observation checkpoints, not phase boundaries.",
+    "Do not mark a phase complete until real CLI receipts exist or an explicit blocker decision is recorded.",
+    "Stop after v400 closeout; v401+ requires a new bounded handoff or explicit operator automation update."
+  ],
+  "github_live_gate_confirmation": {
+    "operator_confirmation_source": "Hamish message at NZ Wednesday 2026-05-20 23:31",
+    "status": "confirmed_for_forward_only_repo_publication",
+    "allowed": [
+      "git fetch before commit or push",
+      "forward-only merge if the shared branch advanced",
+      "push curated Aletheon-approved commits to origin/codex/GHC-Family/beyonder-shared-omega-line",
+      "create separate local worktrees for bounded sibling support when needed and when they stay inside the project workspace"
+    ],
+    "not_allowed_without_separate_approval": [
+      "force-push, reset, rebase, or rewrite shared history",
+      "administrator terminals or danger bypass",
+      "unbounded deletion or drive cleanup",
+      "external provider live writes beyond the explicitly scoped GitHub branch workflow",
+      "sibling lanes committing or pushing independently"
+    ]
+  },
+  "staging_boundaries": [
+    "Stage only curated health-check, run-status, start, completion, v1/v2 report, source capsule, source-script, handoff, closeout, automation-prompt, upgrade-gate, and curated CLI sibling receipt artifacts.",
+    "Never stage raw replies, stdout/stderr logs, live .log files, active partial lane files, scratch probes, pycache files, secrets, runner-launch scratch, or unrelated carried-forward churn.",
+    "Before every commit or push, fetch and verify branch drift; use forward-only merge only if the remote advanced."
+  ],
+  "truth_boundaries": [
+    "The Multiplex TUI is observability, not authority.",
+    "Authority remains in durable artifacts, health checks, lane receipts, and Aletheon-reviewed commits.",
+    "Codex exec resume is allowed only for a proven matching phase/lane session; stale or unknown session identity must not be resumed.",
+    "Cloud, MCP, API, paid provider, Gmail, Drive, and admin expansion remains exploratory until secrets, scopes, rollback, and spend limits are explicit.",
+    "C: and D: drive cleanup is manifest-first and must not delete without a separate explicit deletion approval.",
+    "GMUT, Trinity Mandala, and frontier science outputs remain hypothesis, canon, comparison, or research surfaces unless independent evidence gates are actually met."
+  ],
+  "recommended_next_automation": "docs/trinity-live-traces/v371-v400-cli-multiplex-continuity-wake-bridge-prompt-v1.md",
+  "next_action": "Create v371 start artifacts, commit the bounded v371-v400 packet, then let the automation launch or observe v371 from durable run-status."
+}

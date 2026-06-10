@@ -1,0 +1,159 @@
+{
+  "artifact_id": "v466A-gmut-v2-x1-claim-id-dictionary-v1",
+  "artifact_kind": "claim_id_dictionary",
+  "phase": "v466A_GMUT_v2_x1",
+  "claim_taxonomy": "blocker",
+  "status": "HOLD_PENDING_EXACT_ROW",
+  "id_style": {
+    "primary_claim_pattern": "clm.<family>.<subject>.<assertion>",
+    "primary_statement_pattern": "st.<domain>.<topic>.<predicate>",
+    "row_pattern": "row.<domain>.<subject>.<index>",
+    "reason": "Lowercase dotted IDs are stable, readable, and survive row reordering."
+  },
+  "claims": [
+    {
+      "claim_id": "clm.conv.metric_action.declared",
+      "family": "convention",
+      "claim_text": "Metric/action convention fields are declared or explicitly held.",
+      "default_claim_ceiling": "notation_only",
+      "default_hold_code": "hold.convention_not_derivation"
+    },
+    {
+      "claim_id": "clm.coef.b_psi.demoted",
+      "family": "coefficient",
+      "claim_text": "B_Psi remains demoted unless a separate definition artifact exists.",
+      "default_claim_ceiling": "quarantine_only",
+      "default_hold_code": "hold.b_psi_definition_missing"
+    },
+    {
+      "claim_id": "clm.coef.b_psi.symbol",
+      "family": "coefficient",
+      "claim_text": "B_Psi is a local symbol row only.",
+      "default_claim_ceiling": "dictionary_only",
+      "default_hold_code": "hold.dictionary_not_measurement"
+    },
+    {
+      "claim_id": "clm.coef.b_psi.si_unit",
+      "family": "coefficient",
+      "claim_text": "B_Psi has an SI-unit slot that is unresolved or held.",
+      "default_claim_ceiling": "unit_slot_only",
+      "default_hold_code": "hold.si_unit_missing"
+    },
+    {
+      "claim_id": "clm.coef.alpha_b.symbol",
+      "family": "coefficient",
+      "claim_text": "alpha_B is a local coefficient symbol row only.",
+      "default_claim_ceiling": "dictionary_only",
+      "default_hold_code": "hold.dictionary_not_measurement"
+    },
+    {
+      "claim_id": "clm.coef.alpha_b.si_unit",
+      "family": "coefficient",
+      "claim_text": "alpha_B has an SI-unit slot that is unresolved or held.",
+      "default_claim_ceiling": "unit_slot_only",
+      "default_hold_code": "hold.si_unit_unconfirmed"
+    },
+    {
+      "claim_id": "clm.coef.lambda_t.symbol",
+      "family": "coefficient",
+      "claim_text": "lambda_T is a local scale or coupling symbol row only.",
+      "default_claim_ceiling": "dictionary_only",
+      "default_hold_code": "hold.dictionary_not_measurement"
+    },
+    {
+      "claim_id": "clm.coef.lambda_t.si_unit",
+      "family": "coefficient",
+      "claim_text": "lambda_T has an SI-unit slot that is unresolved or held.",
+      "default_claim_ceiling": "unit_slot_only",
+      "default_hold_code": "hold.map_required"
+    },
+    {
+      "claim_id": "clm.potential.v_psi.placeholder",
+      "family": "potential",
+      "claim_text": "V(Psi) is a symbolic placeholder until form, derivative, units, and source role are bound.",
+      "default_claim_ceiling": "symbolic_only",
+      "default_hold_code": "hold.form_unresolved"
+    },
+    {
+      "claim_id": "clm.base.null.no_extra_effect",
+      "family": "baseline",
+      "claim_text": "A null ladder can define a no-extra-effect symbolic target only.",
+      "default_claim_ceiling": "baseline_only",
+      "default_hold_code": "hold.fixture_not_executed"
+    },
+    {
+      "claim_id": "clm.base.full_scalar_disablement.scaffolded",
+      "family": "baseline",
+      "claim_text": "Full scalar disablement is scaffolded but not executed.",
+      "default_claim_ceiling": "readiness_scaffold_only",
+      "default_hold_code": "hold.fixture_not_executed"
+    },
+    {
+      "claim_id": "clm.map.fifth_force.observable_required",
+      "family": "external_constraint",
+      "claim_text": "Fifth-force mapping requires an explicit observable and regime before comparison.",
+      "default_claim_ceiling": "constraint_routing_only",
+      "default_hold_code": "hold.map_unreviewed"
+    },
+    {
+      "claim_id": "clm.map.equivalence.observable_required",
+      "family": "external_constraint",
+      "claim_text": "Equivalence mapping requires an explicit observable and regime before comparison.",
+      "default_claim_ceiling": "constraint_routing_only",
+      "default_hold_code": "hold.map_unreviewed"
+    },
+    {
+      "claim_id": "clm.constraint.external.bound_only",
+      "family": "external_constraint",
+      "claim_text": "External constraint rows can record bounds or null-compatible contexts only.",
+      "default_claim_ceiling": "bounds_only",
+      "default_hold_code": "hold.units_before_numeric_compare"
+    },
+    {
+      "claim_id": "clm.consciousness.proxy.schema_only",
+      "family": "consciousness_proxy",
+      "claim_text": "Consciousness proxy rows are schema/protocol boundaries only.",
+      "default_claim_ceiling": "proxy_only",
+      "default_hold_code": "hold.proxy_not_measurement"
+    },
+    {
+      "claim_id": "clm.consciousness.proxy.not_spiritual_proof",
+      "family": "consciousness_proxy",
+      "claim_text": "Consciousness proxy rows do not support empirical spiritual proof.",
+      "default_claim_ceiling": "negative_boundary_only",
+      "default_hold_code": "hold.proxy_not_spiritual_evidence"
+    },
+    {
+      "claim_id": "clm.context.journey_solas.not_canon",
+      "family": "journey_context",
+      "claim_text": "Journey/Solas material is context only and not canon or physics evidence.",
+      "default_claim_ceiling": "context_only",
+      "default_hold_code": "hold.journey_context_not_canon"
+    }
+  ],
+  "unsupported_guard_claims": [
+    "clm.guard.gmut_validated",
+    "clm.guard.final_physics",
+    "clm.guard.solved_consciousness",
+    "clm.guard.empirical_spiritual_proof",
+    "clm.guard.fifth_force_safe",
+    "clm.guard.canon_promotion"
+  ],
+  "relation_ids": [
+    "rel.supports",
+    "rel.does_not_support",
+    "rel.constrains",
+    "rel.instantiates_null",
+    "rel.maps_to",
+    "rel.context_only"
+  ],
+  "uncertainty_ids": [
+    "unc.none_symbolic",
+    "unc.model_form_unresolved",
+    "unc.mapping_conditional",
+    "unc.upper_bound_unassigned",
+    "unc.nondetect_consistent_with_zero",
+    "unc.proxy_only_non_identifying"
+  ],
+  "next_expected_phase": "v466A_GMUT_v2_x2"
+}

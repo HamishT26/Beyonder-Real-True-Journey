@@ -1,0 +1,144 @@
+{
+  "aggregate_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+  "app_guard_advisories": [
+    {
+      "guard_points": [
+        "exact staged-path allowlist must be checked before publication",
+        "marker-review status must be explicit",
+        "raw output in curated artifacts forces blocker status",
+        "mutation scope must remain bounded and current-phase only",
+        "THOS guard result must not imply GMUT validation"
+      ],
+      "lane": "Cicero",
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "guard_points": [
+        "privacy hold dominates convenience",
+        "marker review pending is not publishable",
+        "no-rush permits open gaps without forced retries",
+        "retry only for wrapper or transport failure",
+        "stop on repeated failure, privacy risk, timeout, user pause, or diminishing returns"
+      ],
+      "lane": "Kierkegaard",
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "guard_points": [
+        "fixed precedence should dominate guard status derivation",
+        "expected-negative fixtures must fail for expected reasons",
+        "duplicate receipt identifiers and lane-run mismatches force blockers",
+        "summary-ready contradictions force blockers",
+        "guard reads summary metadata only, not temp raw text"
+      ],
+      "lane": "Aristotle",
+      "status": "ADVISORY_RECEIVED"
+    }
+  ],
+  "blocking_lanes": [
+    {
+      "lane": "Arby",
+      "publication_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "reason": "final message has marker count requiring human or approved marker review",
+      "source_classification": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T17:59:20+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "guard_rules": [
+    "Do not publish raw CLI lane bodies or temp transcripts.",
+    "Do not treat process exit or final-message detection as publication readiness.",
+    "Block combined publication while any lane remains marker-review required.",
+    "Allow metadata-only partial summary planning only for lanes with SUMMARY_READY_METADATA_ONLY.",
+    "Fail if a receipt contains generic PASS, GMUT gate-effect drift, raw-output publication, hard credential markers, duplicate IDs, lane/run mismatches, or summary-ready contradictions.",
+    "Carry open gaps rather than retrying for tone, grandeur, or desired content.",
+    "Compare staged paths to the current-phase allowlist exactly before any shared commit.",
+    "Prefer privacy holds over convenience whenever marker status or provenance is unclear."
+  ],
+  "lane_publications": [
+    {
+      "lane": "Arby",
+      "publication_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "reason": "final message has marker count requiring human or approved marker review",
+      "source_classification": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+    },
+    {
+      "lane": "Aster Vale",
+      "publication_status": "SUMMARY_READY_METADATA_ONLY",
+      "reason": "lane metadata is summary-ready and raw text remains temp-only",
+      "source_classification": "PASS_SUMMARY_READY"
+    }
+  ],
+  "next_expected_phase": "v474-thos-v4-x1",
+  "phase_slug": "v474-thos-v3-x2",
+  "required_guard_fields": [
+    "guard_id",
+    "phase_ref",
+    "source_fixture_ref",
+    "receipt_id",
+    "lane",
+    "run_id",
+    "raw_text_published",
+    "marker_review_status",
+    "final_message_status",
+    "redaction_status",
+    "exit_status",
+    "expected_status",
+    "actual_status",
+    "dominant_reason_code",
+    "secondary_reason_codes",
+    "blocked_claims",
+    "gmUT_gate_effect"
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "verifier_status": "PASS_SHAPE_ONLY"
+      },
+      "message": "v3 x1 negative-fixture verifier is required before publication guard use.",
+      "row_id": "source_verifier",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "classifier_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+      },
+      "message": "v2 x1 classifier supplies lane-level metadata states.",
+      "row_id": "source_classifier",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "blocking_lane_count": 1,
+        "lane_count": 2
+      },
+      "message": "Combined publication remains blocked until every lane is marker-reviewed or explicitly held out.",
+      "row_id": "lane_publication_status",
+      "status": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle app advisories were folded into the guard design.",
+      "row_id": "app_guard_advisories",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Publication guard improves THOS workflow hygiene only; GMUT gates remain open.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_classifier_phase": "v474-thos-v2-x1",
+  "source_verifier_phase": "v474-thos-v3-x1"
+}

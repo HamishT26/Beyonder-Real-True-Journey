@@ -1,0 +1,46 @@
+{
+  "artifact_type": "cli_marker_review_resolution",
+  "phase_slug": "v478-thos-v14-x6-start",
+  "generated_utc": "2026-06-04T22:32:00Z",
+  "generated_nz": "2026-06-05T10:32:00+12:00",
+  "overall_status": "PASS_FALSE_POSITIVE_TOKEN_WORD_REVIEW",
+  "review_scope": "status-only review of sensitive-marker counts in finalized CLI last-message files",
+  "lanes": [
+    {
+      "lane": "Arby",
+      "final_message_bytes": 3678,
+      "final_message_hash": "4cc56de01213009f9593b92ea898023fe855c34f73d650afd33d92d2857ce319",
+      "sensitive_marker_count": 2,
+      "marker_counts": {
+        "begin_rsa": 0,
+        "begin_openssh": 0,
+        "api_credential_marker": 0,
+        "secret": 0,
+        "credential_phrase_marker": 0,
+        "token_word": 2
+      },
+      "resolution": "false_positive_plain_token_word",
+      "completion_allowed": true
+    },
+    {
+      "lane": "Aster Vale",
+      "final_message_bytes": 3592,
+      "final_message_hash": "afd5f8e7522cb6a3eec4f1d08663febdd598da161dff4b475408b894b89de8a9",
+      "sensitive_marker_count": 0,
+      "resolution": "no_sensitive_marker_review_needed",
+      "completion_allowed": true
+    }
+  ],
+  "operator_reading": [
+    "The final-message files arrived after the 30-minute watcher timeout, so x6 start should record an over-window completion rather than an absent completion.",
+    "Arby's two sensitive-marker hits are plain token-word false positives, not credential or private-material evidence.",
+    "No final lane body text is published; only byte counts, hashes, and review status are recorded."
+  ],
+  "claim_boundary": {
+    "scope": "CLI marker review resolution only",
+    "lane_body_text_published": false,
+    "local_path_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

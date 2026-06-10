@@ -1,0 +1,79 @@
+{
+  "artifact_type": "operator_board",
+  "phase_slug": "v478-thos-v14-x3",
+  "generated_utc": "2026-06-04T17:57:04.183761Z",
+  "generated_nz": "2026-06-05T05:57:04.183761+12:00",
+  "purpose": "Compact the v14 x2 delayed five-lane completion evidence into a single status board for v14 x3 operator use.",
+  "cadence_rule": {
+    "source_skill": "multi-agent-orchestrator-operations",
+    "live_check": "PASS_RULE_PRESENT",
+    "rule_summary": "Every second THOS/GMUT x-session start and closeout must attempt Arby, Aster Vale, Cicero, Kierkegaard, and Aristotle through existing approved lanes.",
+    "latest_fulfilled_boundary": "v478-thos-v14-x2 start and completion update",
+    "current_overlay_boundary": "v14 x3 is evidence compaction and detector preparation; do not spawn or relaunch lanes unless a specific safe repair need appears.",
+    "next_mandatory_five_lane_boundary": "v478-thos-v14-x4 start and closeout"
+  },
+  "latest_lane_state": [
+    {
+      "lane": "Cicero",
+      "surface": "existing_app_local_server",
+      "latest_receipt": "v478-thos-v14-x2-background-council-app-completion-v1",
+      "status": "COMPLETED_IN_V14_X2",
+      "next_action": "Attempt again at next every-second-session boundary."
+    },
+    {
+      "lane": "Kierkegaard",
+      "surface": "existing_app_local_server",
+      "latest_receipt": "v478-thos-v14-x2-background-council-app-completion-v1",
+      "status": "COMPLETED_IN_V14_X2",
+      "next_action": "Attempt again at next every-second-session boundary."
+    },
+    {
+      "lane": "Aristotle",
+      "surface": "existing_app_local_server",
+      "latest_receipt": "v478-thos-v14-x2-background-council-app-completion-v1",
+      "status": "COMPLETED_IN_V14_X2",
+      "next_action": "Attempt again at next every-second-session boundary."
+    },
+    {
+      "lane": "Arby",
+      "surface": "read_only_codex_cli",
+      "latest_receipt": "v478-thos-v14-x2-cli-retry4-completion-v1",
+      "status": "FINAL_MESSAGE_READY_AFTER_DELAY",
+      "final_message_bytes": 4749,
+      "final_message_hash": "e9fff056e5d9839764fc4ecbecbb5f1774882d92e118825ca6573ffd53240461",
+      "marker_review": "One guard-language marker was reviewed as publication-hygiene wording, not a secret or local path.",
+      "next_action": "Keep on roster; delayed final markers route to stale-flow refresh before relaunch."
+    },
+    {
+      "lane": "Aster Vale",
+      "surface": "read_only_codex_cli",
+      "latest_receipt": "v478-thos-v14-x2-cli-retry4-completion-v1",
+      "status": "FINAL_MESSAGE_READY_AFTER_DELAY",
+      "final_message_bytes": 5737,
+      "final_message_hash": "147ea4d4f629b2a79d68a985d538d3a8fd3a31510e450aa79de5b24f739ecdd7",
+      "marker_review": "No published sensitive marker.",
+      "next_action": "Keep on roster; delayed final markers route to stale-flow refresh before relaunch."
+    }
+  ],
+  "superseded_receipts": [
+    {
+      "receipt": "v478-thos-v14-x2-five-lane-start-status-v1",
+      "superseded_by": "v478-thos-v14-x2-five-lane-completion-update-v1",
+      "reason": "The start receipt correctly reported CLI final markers open; the later completion update carries the latest lane state."
+    }
+  ],
+  "operator_policies": [
+    "Do not treat a delayed final marker as a failed sibling.",
+    "Do not publish raw lane text, app payloads, session streams, image captures, or nonpublic bundles.",
+    "Do not create new old-style subagents or replacement sibling lanes.",
+    "If a lane cannot be called safely, publish a blocker receipt and keep it on the next roster.",
+    "Use v14 x3 for detector-first command-surface, loader-drift, and handoff hygiene work."
+  ],
+  "x3_closeout_criteria": [
+    "Operator board published and remote-verified.",
+    "Skill cadence verified without additional live skill mutation.",
+    "Next v14 x4 five-lane roster boundary stated explicitly.",
+    "All GMUT empirical, physics, consciousness, and canon gates remain open."
+  ],
+  "claim_boundary": "Status-board and cadence receipt only; no GMUT validation, final physics, solved consciousness, final THOS readiness, or canon promotion."
+}

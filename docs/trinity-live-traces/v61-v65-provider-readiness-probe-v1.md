@@ -1,0 +1,64 @@
+# V61-V65 Provider Readiness Probe
+
+```json
+{
+  "generated_utc": "2026-04-30T04:01:32+00:00",
+  "phase": "v61_v65_hybrid_omega",
+  "probe_policy": "read_only_status_probe_no_raw_tokens_no_account_dump_no_resource_creation",
+  "results": {
+    "codex_version": {
+      "ok": true,
+      "returncode": 0,
+      "stdout_len": 17,
+      "stderr_len": 0,
+      "safe_excerpt": [
+        "codex-cli 0.114.0"
+      ]
+    },
+    "kimi_version": {
+      "ok": true,
+      "returncode": 0,
+      "stdout_len": 20,
+      "stderr_len": 0,
+      "safe_excerpt": [
+        "kimi, version 1.38.0"
+      ]
+    },
+    "gh_auth_status": {
+      "ok": false,
+      "returncode": 1,
+      "stdout_len": 0,
+      "stderr_len": 273,
+      "safe_excerpt": []
+    },
+    "wrangler_whoami": {
+      "ok": true,
+      "returncode": 0,
+      "stdout_len": 119,
+      "stderr_len": 0,
+      "safe_excerpt": []
+    },
+    "circleci_diagnostic": {
+      "ok": true,
+      "returncode": 0,
+      "stdout_len": 179,
+      "stderr_len": 0,
+      "safe_excerpt": []
+    },
+    "eas_whoami": {
+      "ok": true,
+      "returncode": 0,
+      "stdout_len": 28,
+      "stderr_len": 108,
+      "safe_excerpt": []
+    },
+    "oci_namespace": {
+      "ok": true,
+      "returncode": 0,
+      "stdout_len": 28,
+      "stderr_len": 0,
+      "safe_excerpt": []
+    }
+  }
+}
+```

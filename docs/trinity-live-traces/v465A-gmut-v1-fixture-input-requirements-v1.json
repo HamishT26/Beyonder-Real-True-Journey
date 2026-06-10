@@ -1,0 +1,73 @@
+{
+  "artifact_id": "v465A-gmut-v1-fixture-input-requirements-v1",
+  "artifact_kind": "fixture_input_requirements",
+  "phase": "v465A_GMUT_v1",
+  "status": "requirements_recorded_not_satisfied",
+  "claim_boundary": "This artifact lists the minimum inputs required before a null/baseline fixture can move from hold to attempt-ready. It does not execute the fixture.",
+  "requirement_rows": [
+    {
+      "row_id": "GMUT-V465A-V1-REQ-001",
+      "requirement": "baseline_equations_reference_state",
+      "required_content": "exact preserved baseline equations, v13 reference state, or declared comparison target",
+      "current_status": "missing",
+      "hold_code": "hold_baseline_target_missing",
+      "not_allowed": "baseline recovery"
+    },
+    {
+      "row_id": "GMUT-V465A-V1-REQ-002",
+      "requirement": "null_switch_target",
+      "required_content": "specific switch such as Psi -> 0, scalar route disabled, coupling set to zero, or neutral spectator limit",
+      "current_status": "not_selected",
+      "hold_code": "hold_null_switch_ambiguous",
+      "not_allowed": "null recovery"
+    },
+    {
+      "row_id": "GMUT-V465A-V1-REQ-003",
+      "requirement": "disabled_scalar_terms",
+      "required_content": "list scalar contribution, candidate couplings, interaction placeholders, and any extension terms disabled for the fixture",
+      "current_status": "missing",
+      "hold_code": "hold_disabled_terms_missing",
+      "not_allowed": "switch behavior claim"
+    },
+    {
+      "row_id": "GMUT-V465A-V1-REQ-004",
+      "requirement": "held_scalar_terms",
+      "required_content": "list V(Psi), Z_Psi, EOM route, T_Psi_mu_nu, SI bridge, and conservation/divergence as held",
+      "current_status": "partial",
+      "hold_code": "hold_scope_boundary_partial",
+      "not_allowed": "derivation implied by fixture"
+    },
+    {
+      "row_id": "GMUT-V465A-V1-REQ-005",
+      "requirement": "expected_recovery_behavior",
+      "required_content": "state what should match the baseline: equation form, tensor/source terms, coefficients, or observables",
+      "current_status": "missing",
+      "hold_code": "hold_expected_recovery_underspecified",
+      "not_allowed": "pass or fail comparison"
+    },
+    {
+      "row_id": "GMUT-V465A-V1-REQ-006",
+      "requirement": "EOM_Psi_and_T_Psi_status",
+      "required_content": "declare whether fixture avoids these dependencies by full scalar disablement or needs derived artifacts",
+      "current_status": "missing",
+      "hold_code": "hold_EOM_T_status_missing",
+      "not_allowed": "fixture execution"
+    },
+    {
+      "row_id": "GMUT-V465A-V1-REQ-007",
+      "requirement": "result_classification_rule",
+      "required_content": "allowed labels: not_attempted, ready_to_attempt, blocked, fixture_design_only, observed_for_this_fixture_only",
+      "current_status": "defined_as_hold_only",
+      "hold_code": "blocked_missing_dependencies",
+      "not_allowed": "recovered, passed, validated, or baseline proven"
+    }
+  ],
+  "attempt_readiness": "not_ready",
+  "next_requirements": [
+    "bind exact baseline equations or reference state",
+    "select null switch target",
+    "list disabled and held terms",
+    "define expected recovery behavior",
+    "define pass/fail comparison rule"
+  ]
+}

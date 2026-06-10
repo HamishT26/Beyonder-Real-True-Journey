@@ -1,0 +1,313 @@
+# v123-continuum-system-expansion-candidate-pack-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T13:59:20+00:00",
+  "phase": "v123",
+  "state": "candidate_pack_only_not_manifest_promoted",
+  "candidate_count": 20,
+  "candidates": [
+    {
+      "id": "v123_01_truth_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "truth",
+      "provider_lane": "github",
+      "purpose": "Advance phase claim honesty and receipt equality through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_02_identity_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "identity",
+      "provider_lane": "github",
+      "purpose": "Advance CLI identity continuity and induction boundaries through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_03_provider_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "provider",
+      "provider_lane": "github",
+      "purpose": "Advance external provider action-pack gating through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_04_research_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "research",
+      "provider_lane": "github",
+      "purpose": "Advance source-grounded eureka planning through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_05_cleanup_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "cleanup",
+      "provider_lane": "github",
+      "purpose": "Advance merge, prune, and stale-claim reduction through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_06_gmut_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "gmut",
+      "provider_lane": "github",
+      "purpose": "Advance GMUT claim labels and falsification tasks through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_07_freedid_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "freedid",
+      "provider_lane": "github",
+      "purpose": "Advance consent, recourse, and CBR alignment through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_08_runtime_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "runtime",
+      "provider_lane": "github",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_09_mcp_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "mcp",
+      "provider_lane": "github",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_10_dashboard_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "dashboard",
+      "provider_lane": "github",
+      "purpose": "Advance human-readable control surfaces through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_11_truth_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "truth",
+      "provider_lane": "github",
+      "purpose": "Advance phase claim honesty and receipt equality through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_12_identity_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "identity",
+      "provider_lane": "github",
+      "purpose": "Advance CLI identity continuity and induction boundaries through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_13_provider_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "provider",
+      "provider_lane": "github",
+      "purpose": "Advance external provider action-pack gating through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_14_research_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "research",
+      "provider_lane": "github",
+      "purpose": "Advance source-grounded eureka planning through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_15_cleanup_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "cleanup",
+      "provider_lane": "github",
+      "purpose": "Advance merge, prune, and stale-claim reduction through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_16_gmut_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "gmut",
+      "provider_lane": "github",
+      "purpose": "Advance GMUT claim labels and falsification tasks through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_17_freedid_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "mind",
+      "theme": "freedid",
+      "provider_lane": "github",
+      "purpose": "Advance consent, recourse, and CBR alignment through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_18_runtime_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "body",
+      "theme": "runtime",
+      "provider_lane": "github",
+      "purpose": "Advance memory, D-drive retention, and suite discipline through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_19_mcp_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "heart",
+      "theme": "mcp",
+      "provider_lane": "github",
+      "purpose": "Advance MCP trust boundaries and prompt-injection guards through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    },
+    {
+      "id": "v123_20_dashboard_github_gate",
+      "phase": "v123",
+      "state": "candidate_only_not_manifest_promoted",
+      "pillar": "trinity",
+      "theme": "dashboard",
+      "provider_lane": "github",
+      "purpose": "Advance human-readable control surfaces through forward-only publication and receipt equality while preserving repo-first receipts and explicit operator holds.",
+      "proof_required_before_promotion": [
+        "repo artifact exists",
+        "JSON or markdown validation passes",
+        "no provider write occurred",
+        "Aletheon approval before any commit from a CLI lane"
+      ]
+    }
+  ],
+  "effective_success": true
+}
+```

@@ -1,0 +1,55 @@
+{
+  "affected_plugin_cache_skill_count": 42,
+  "aggregate_status": "OPEN_GAP",
+  "approval_required": true,
+  "generated_at_utc": "2026-06-02T11:28:36+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v471-thos-v4-x1",
+  "proposed_packet": {
+    "allowed_actions_after_separate_approval": [
+      "Create exact affected-path manifest from live audit output.",
+      "Copy affected plugin-cache SKILL.md files into a tempdir quarantine rehearsal.",
+      "Generate minimal frontmatter repair candidates in tempdir only.",
+      "Run fixture assertions against repaired tempdir candidates.",
+      "Present diff and ask before any plugin-cache write."
+    ],
+    "disallowed_without_separate_approval": [
+      "Editing plugin-cache files in place.",
+      "Deleting plugin-cache directories.",
+      "Broad cleanup of local cache or worktrees.",
+      "Treating repair rehearsal as completed repair."
+    ],
+    "spending_ceiling_reference": "User supplied a broad 100 USD ceiling for platform work, but filesystem mutation still requires path-specific approval."
+  },
+  "rows": [
+    {
+      "evidence": {
+        "issue_file_count": 42,
+        "missing_frontmatter_count": 42,
+        "missing_name_count": 42,
+        "name_too_long_count": 0,
+        "root_counts": {
+          "plugin_cache": 276,
+          "user_skills": 705
+        },
+        "total_skill_files": 981
+      },
+      "message": "Plugin-cache skill-surface issues remain unresolved",
+      "row_id": "live_audit",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Broad permission is not a path-specific plugin-cache mutation approval",
+      "row_id": "permission_boundary",
+      "status": "OPEN_GAP"
+    },
+    {
+      "evidence": null,
+      "message": "Repair/quarantine should remain tempdir rehearsal until exact path manifest and separate approval exist",
+      "row_id": "repair_route",
+      "status": "OPEN_GAP"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "artifact_id": "v470-thos-v6-x3-enum-null-semantics-v1",
+  "phase": "v470_THOS_v6_x3",
+  "created_at_nz": "2026-06-02T16:28:13+12:00",
+  "schema_version": "thos-enum-null-semantics-v1",
+  "status_enum": {
+    "PASS_SHAPE_ONLY": "local check passed only for shape, guard, or deterministic report structure",
+    "OPEN_GAP": "scope, approval, proof, or artifact requirement remains open",
+    "FAIL_BLOCKER": "route is blocked until exact corrective artifact or approval exists",
+    "NOT_RUN": "declared but not executed in this phase"
+  },
+  "reconciliation_enum": {
+    "matched_expected": "actual result matched the declared expectation",
+    "unexpected_success": "a route passed when it should not have; treat as boundary failure",
+    "unexpected_failure": "a route failed when it should have passed; reconcile before reuse",
+    "intermittent_or_environment_drift": "same input produced unstable result or environment-dependent status",
+    "reporting_failure": "execution may be acceptable but exported report shape lost required authority fields",
+    "unreconciled_exception": "mismatch has no mapped cause yet"
+  },
+  "null_semantics": {
+    "null": "field intentionally has no value for this row",
+    "unknown": "value should exist but was not observed",
+    "not_applicable": "field is not meaningful for this row type",
+    "missing": "field was required but absent; checker should fail or open a gap",
+    "empty_array": "zero observed child rows, not an unknown value"
+  },
+  "fatal_semantics": [
+    {
+      "condition": "gmut_gate_effect != none_open_not_tested",
+      "required_status": "FAIL_BLOCKER",
+      "reason": "THOS infrastructure artifacts cannot close GMUT gates"
+    },
+    {
+      "condition": "connector_write_performed == true without named target and separate approval",
+      "required_status": "FAIL_BLOCKER",
+      "reason": "connector mutation must remain explicitly scoped"
+    },
+    {
+      "condition": "unknown status enum",
+      "required_status": "FAIL_BLOCKER",
+      "reason": "unknown status values break guard routing"
+    }
+  ],
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}

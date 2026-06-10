@@ -1,0 +1,117 @@
+{
+  "artifact_id": "v466A_GMUT_v5_x2_held_row_lint_rules_v1",
+  "phase": "v466A_GMUT_v5_x2",
+  "prepared_at_nz": "2026-06-01T04:11:04+12:00",
+  "status": "LINT_RULES_READY_FOR_DRY_RUN_ONLY",
+  "lint_rules": [
+    {
+      "rule_id": "LINT_EXECUTION_STATUS_NOT_RUN_UNTIL_FIXTURE_PHASE",
+      "severity": "blocker",
+      "applies_to": "all_row_families",
+      "fail_when": "execution_status is absent or differs from not_run before an approved fixture execution phase",
+      "blocked_claims": [
+        "fixture_executed",
+        "observed_result",
+        "gate_closure"
+      ]
+    },
+    {
+      "rule_id": "LINT_PASS_SCHEMA_ONLY_NO_EVIDENCE_PROMOTION",
+      "severity": "blocker",
+      "applies_to": "all_row_families",
+      "fail_when": "PASS_SCHEMA_ONLY is used to support physics, constraint, recovery, or consciousness claims",
+      "blocked_claims": [
+        "GMUT_validated",
+        "final_physics",
+        "null_recovery",
+        "baseline_recovery",
+        "consciousness_measurement"
+      ]
+    },
+    {
+      "rule_id": "LINT_B_PSI_DEMOTED_WITHOUT_DEFINITION_ARTIFACT",
+      "severity": "blocker",
+      "applies_to": "coefficient_SI",
+      "fail_when": "B_Psi has active coefficient status without a separate definition artifact",
+      "blocked_claims": [
+        "B_Psi_defined",
+        "B_Psi_active",
+        "B_Psi_dimensional_closure"
+      ]
+    },
+    {
+      "rule_id": "LINT_SI_ROW_REQUIRES_UNIT_DIMENSION_AND_UNCERTAINTY",
+      "severity": "blocker",
+      "applies_to": "coefficient_SI",
+      "fail_when": "unit expression, dimension vector, conversion policy, or uncertainty model is missing while row_status is not hold",
+      "blocked_claims": [
+        "dimensional_SI_consistency",
+        "SI_bridge_complete"
+      ]
+    },
+    {
+      "rule_id": "LINT_METRIC_ACTION_REQUIRES_BOUNDARY_POLICY",
+      "severity": "blocker",
+      "applies_to": "metric_action_scalar_route",
+      "fail_when": "metric signature, action sign, variation target, frame label, or boundary policy is missing while derivation language is present",
+      "blocked_claims": [
+        "scalar_EOM_derived",
+        "T_Psi_mu_nu_derived",
+        "conservation_exchange_selected"
+      ]
+    },
+    {
+      "rule_id": "LINT_NULL_BASELINE_REQUIRES_FULL_DISABLEMENT_NOT_COUPLING_ZERO",
+      "severity": "blocker",
+      "applies_to": "null_baseline_ladder",
+      "fail_when": "coupling-to-zero is used as a substitute for full scalar disablement",
+      "blocked_claims": [
+        "null_recovery",
+        "baseline_recovery"
+      ]
+    },
+    {
+      "rule_id": "LINT_FIFTH_FORCE_REQUIRES_PARAMETER_OBSERVABLE_MAPPING",
+      "severity": "blocker",
+      "applies_to": "fifth_force_equivalence_constraint",
+      "fail_when": "candidate parameter lacks observable target, bound form, units, range regime, or screening assumption while safety language is present",
+      "blocked_claims": [
+        "fifth_force_safe",
+        "equivalence_compatible",
+        "empirical_constraint_satisfied"
+      ]
+    },
+    {
+      "rule_id": "LINT_CONSCIOUSNESS_PROXY_NO_PROOF_PROMOTION",
+      "severity": "blocker",
+      "applies_to": "consciousness_proxy_boundary",
+      "fail_when": "proxy rows use measurement, personhood, hidden-memory, or spiritual proof language without a defined empirical protocol and non-proof caveats",
+      "blocked_claims": [
+        "solved_consciousness",
+        "personhood_proof",
+        "hidden_memory_proof",
+        "empirical_spiritual_proof"
+      ]
+    },
+    {
+      "rule_id": "LINT_JOURNEY_SOLAS_CONTEXT_ONLY",
+      "severity": "blocker",
+      "applies_to": "journey_context_boundary",
+      "fail_when": "Journey/Solas material is used as physics validation, canon proof, or gate closure evidence",
+      "blocked_claims": [
+        "canon_promotion",
+        "GMUT_validated",
+        "gate_closure"
+      ]
+    }
+  ],
+  "dry_run_policy": "These lint rules may be dry-run in a later phase; this artifact does not execute them.",
+  "gate_status": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_exchange": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "app_hardening_inputs": [
+    {
+      "hardening_points": [
+        "avoid complete unless marker-reviewed curated receipt is ready",
+        "process exit without final message is not success",
+        "unresolved credential-like marker is not success",
+        "retry loops require bounded reason codes",
+        "THOS runtime success must not imply GMUT validation"
+      ],
+      "lane": "Cicero",
+      "received": true
+    },
+    {
+      "hardening_points": [
+        "classify durable artifacts, not raw temp lane text",
+        "wait while lane is healthy; retry only transport or malformed invocation",
+        "carry open gap for privacy hold or incomplete marker review",
+        "do not retry for tone preference",
+        "classifier improves publication hygiene only"
+      ],
+      "lane": "Kierkegaard",
+      "received": true
+    },
+    {
+      "hardening_points": [
+        "add receipt_id and source_artifact_ref",
+        "deterministic precedence must be reproducible",
+        "raw text publication is a fail blocker",
+        "include negative fixtures for duplicates and contradictions",
+        "exact staging must remain repo-only and summary-only"
+      ],
+      "lane": "Aristotle",
+      "received": true
+    }
+  ],
+  "generated_at_utc": "2026-06-02T17:46:28+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "hardening_schema": {
+    "required_receipt_fields": [
+      "receipt_id",
+      "phase_ref",
+      "lane",
+      "run_id",
+      "source_artifact_ref",
+      "raw_text_published",
+      "marker_review_status",
+      "final_message_status",
+      "exit_status",
+      "redaction_status",
+      "summary_ready",
+      "blocked_claims",
+      "derived_status",
+      "gmUT_gate_effect"
+    ],
+    "retry_reason_codes": [
+      "transport_timeout",
+      "no_final_message",
+      "wrapper_exit_mismatch",
+      "marker_review_blocked",
+      "stale_process_state",
+      "operator_requested_retry",
+      "malformed_invocation"
+    ],
+    "status_precedence": [
+      "FAIL_BLOCKER",
+      "REVIEW_REQUIRED",
+      "OPEN_GAP",
+      "PASS_SHAPE_ONLY",
+      "NOT_RUN"
+    ]
+  },
+  "negative_fixtures_to_implement": [
+    "raw_text_published",
+    "hard_credential_marker",
+    "credential_like_review_required",
+    "missing_final_message",
+    "missing_marker_review",
+    "generic_pass_without_derivation",
+    "gmUT_gate_effect_drift",
+    "malformed_json",
+    "duplicate_receipt_id",
+    "lane_run_mismatch",
+    "summary_ready_contradicts_open_gap"
+  ],
+  "next_expected_phase": "v474-thos-v3-x1",
+  "phase_slug": "v474-thos-v2-x2",
+  "recommended_v3_x1_tasks": [
+    "Implement executable negative-fixture verifier for the hardening schema.",
+    "Add receipt_id/source_artifact_ref derivation without exposing raw temp paths.",
+    "Split REVIEW_REQUIRED from OPEN_GAP in classifier output.",
+    "Add a publication guard that fails on generic PASS or GMUT gate-effect drift."
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "classifier_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+        "lane_count": 2
+      },
+      "message": "v2 x1 classifier artifact is present and can be hardened.",
+      "row_id": "source_classifier",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Three app advisories returned and are distilled into classifier hardening points.",
+      "row_id": "app_hardening_inputs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 11
+      },
+      "message": "Negative fixture list is specified but not yet implemented as an executable verifier.",
+      "row_id": "negative_fixtures",
+      "status": "OPEN_GAP_IMPLEMENTATION_PENDING"
+    },
+    {
+      "evidence": null,
+      "message": "Classifier hardening affects THOS publication hygiene only; GMUT gates remain open.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_classifier_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+  "source_phase": "v474-thos-v2-x1"
+}

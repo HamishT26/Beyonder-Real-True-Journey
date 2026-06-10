@@ -1,0 +1,67 @@
+# V58 Workbench V6 Drift
+
+```json
+{
+  "generated_utc": "2026-04-28T17:34:14+00:00",
+  "phase": "v58_omega",
+  "workbench_path": "C:\\Users\\hamis\\OneDrive\\Documents\\New project",
+  "contract": "v6",
+  "surface_truth": [
+    {
+      "path": "D:\\GHC-Archives\\worktrees\\v58-omega\\docs\\trinity-control-tower-latest.json",
+      "exists": true,
+      "generated_utc": "2026-04-28T17:29:07+00:00",
+      "overall_status": "PASS",
+      "suite_summary": "1154 PASS / 0 WARN / 0 FAIL",
+      "suite_ladder_state": null
+    },
+    {
+      "path": "D:\\GHC-Archives\\worktrees\\v58-omega\\docs\\system-suite-status.json",
+      "exists": true,
+      "generated_utc": "2026-04-10T16:13:37.403200+00:00",
+      "overall_status": null,
+      "suite_summary": null,
+      "suite_ladder_state": null
+    },
+    {
+      "path": "D:\\GHC-Archives\\worktrees\\v58-omega\\docs\\trinity-api-book-v5.json",
+      "exists": true,
+      "generated_utc": "2026-04-28T17:27:28+00:00",
+      "overall_status": "PASS",
+      "suite_summary": null,
+      "suite_ladder_state": null
+    },
+    {
+      "path": "D:\\GHC-Archives\\worktrees\\v58-omega\\docs\\v16-trinity-verdict-v1.json",
+      "exists": true,
+      "generated_utc": "2026-04-28T17:27:29+00:00",
+      "overall_status": "PASS",
+      "suite_summary": null,
+      "suite_ladder_state": null
+    },
+    {
+      "path": "D:\\GHC-Archives\\worktrees\\v58-omega\\docs\\trinity-runtime-model-resolution-v1.json",
+      "exists": true,
+      "generated_utc": "2026-04-24T18:11:15+00:00",
+      "overall_status": "PASS",
+      "suite_summary": null,
+      "suite_ladder_state": "v54_quick_standard_deep_mcp_materialize_l2_l5_green"
+    }
+  ],
+  "current_phase_reference": {
+    "path": "D:\\GHC-Archives\\worktrees\\v58-omega\\docs\\trinity-live-traces\\v57-suite-ladder-summary-v1.json",
+    "exists": true,
+    "generated_utc": "2026-04-28T06:38:02+00:00",
+    "overall_status": null,
+    "suite_summary": null,
+    "suite_ladder_state": "green_quick_standard_deep_mcp_refresh_materialize_l4_l5"
+  },
+  "drift_findings": [
+    "v6 still reads shared/latest surfaces whose generated_utc may predate V57 publication.",
+    "V58 should trust phase-specific suite summaries before shared latest surfaces.",
+    "All v6 configured read surfaces exist, so the issue is truth freshness rather than missing files."
+  ],
+  "recommendation": "package_as_read_only_skill_with_phase_specific_truth_precedence",
+  "v57_suite_ladder_state": "green_quick_standard_deep_mcp_refresh_materialize_l4_l5"
+}
+```

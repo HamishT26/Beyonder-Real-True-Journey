@@ -1,0 +1,296 @@
+# V43 Stage Allowlist
+
+- Generated UTC: `2026-04-18T15:09:51+00:00`
+- Current head: `77dbfd98e5e5fb3a3d0f79cd15650b3da7db41a2`
+- Dirty path count observed: `2917`
+- Intended V43 count: `58`
+- Carried-forward latest-state churn: `2733`
+- Non-stage noise: `128`
+
+## Intended V43 Paths
+
+- `scripts/publish_v43_omega_surfaces.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_automation_registry.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_cloud_carry_forward.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_codex_capability_audit.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_common.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_git_publication_result.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_gmut_lab_bundle.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_google_drive_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_journey_digest.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_kai_orchestration_bridge.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_scheduled_cycle.ps1` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_stage_allowlist.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_vesper_memory_cognitive_bridge.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v43_wsl_resurrection.py` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v43-journey-advisory-digest-v1.json` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v43-journey-advisory-digest-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-automation-registry-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-automation-registry-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-cloud-carry-forward-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-cloud-carry-forward-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-codex-capability-audit-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-codex-capability-audit-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-filesystem-publication-marker-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-git-cleanup-note-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-git-publication-result-v1.json` (`present=False`, `tracked=False`)
+- `docs/trinity-live-traces/v43-git-publication-result-v1.md` (`present=False`, `tracked=False`)
+- `docs/trinity-live-traces/v43-gmut-lab-bundle-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-gmut-lab-bundle-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-google-drive-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-google-drive-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-kai-orchestration-bridge-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-kai-orchestration-bridge-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-pillar-delta-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-pillar-delta-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-quick-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-standard-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-deep-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-collab-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-materialize-l2-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-materialize-l3-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-materialize-l4-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-materialize-l5-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-stage-allowlist-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-stage-allowlist-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-vesper-memory-cognitive-bridge-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-vesper-memory-cognitive-bridge-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-wsl-resurrection-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v43-wsl-resurrection-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-runtime-model-resolution-v1.json` (`present=True`, `tracked=True`)
+- `docs/v17-runtime-session-log-latest.json` (`present=True`, `tracked=True`)
+- `docs/v17-runtime-session-validation-latest.json` (`present=True`, `tracked=True`)
+- `docs/v17-runtime-truth-resolution-board-v1.json` (`present=True`, `tracked=True`)
+- `docs/v43-omega-closeout-summary-v1.json` (`present=True`, `tracked=False`)
+- `docs/v43-omega-continuity-pack-v1.md` (`present=True`, `tracked=False`)
+- `docs/v43-omega-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+- `docs/v44-beta-closeout-summary-v1.json` (`present=True`, `tracked=False`)
+- `docs/v44-beta-continuity-pack-v1.md` (`present=True`, `tracked=False`)
+- `docs/v44-beta-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+
+## Dirty Classification Samples
+
+### intended_v43_delta
+
+- `docs/trinity-runtime-model-resolution-v1.json`
+- `docs/v17-runtime-session-log-latest.json`
+- `docs/v17-runtime-session-validation-latest.json`
+- `docs/v17-runtime-truth-resolution-board-v1.json`
+- `docs/auto-generated/v43-journey-advisory-digest-v1.json`
+- `docs/auto-generated/v43-journey-advisory-digest-v1.md`
+- `docs/trinity-live-traces/v43-automation-registry-v1.json`
+- `docs/trinity-live-traces/v43-automation-registry-v1.md`
+- `docs/trinity-live-traces/v43-cloud-carry-forward-v1.json`
+- `docs/trinity-live-traces/v43-cloud-carry-forward-v1.md`
+- `docs/trinity-live-traces/v43-codex-capability-audit-v1.json`
+- `docs/trinity-live-traces/v43-codex-capability-audit-v1.md`
+- `docs/trinity-live-traces/v43-collab-suite-status.json`
+- `docs/trinity-live-traces/v43-deep-suite-status.json`
+- `docs/trinity-live-traces/v43-filesystem-publication-marker-v1.json`
+- `docs/trinity-live-traces/v43-git-cleanup-note-v1.md`
+- `docs/trinity-live-traces/v43-gmut-lab-bundle-v1.json`
+- `docs/trinity-live-traces/v43-gmut-lab-bundle-v1.md`
+- `docs/trinity-live-traces/v43-google-drive-proof-v1.json`
+- `docs/trinity-live-traces/v43-google-drive-proof-v1.md`
+- `docs/trinity-live-traces/v43-kai-orchestration-bridge-v1.json`
+- `docs/trinity-live-traces/v43-kai-orchestration-bridge-v1.md`
+- `docs/trinity-live-traces/v43-materialize-l2-status.json`
+- `docs/trinity-live-traces/v43-materialize-l3-status.json`
+- `docs/trinity-live-traces/v43-materialize-l4-status.json`
+- `docs/trinity-live-traces/v43-materialize-l5-status.json`
+- `docs/trinity-live-traces/v43-pillar-delta-v1.json`
+- `docs/trinity-live-traces/v43-pillar-delta-v1.md`
+- `docs/trinity-live-traces/v43-quick-suite-status.json`
+- `docs/trinity-live-traces/v43-stage-allowlist-v1.json`
+- `docs/trinity-live-traces/v43-stage-allowlist-v1.md`
+- `docs/trinity-live-traces/v43-standard-suite-status.json`
+- `docs/trinity-live-traces/v43-vesper-memory-cognitive-bridge-v1.json`
+- `docs/trinity-live-traces/v43-vesper-memory-cognitive-bridge-v1.md`
+- `docs/trinity-live-traces/v43-wsl-resurrection-v1.json`
+- `docs/trinity-live-traces/v43-wsl-resurrection-v1.md`
+- `docs/v43-omega-closeout-summary-v1.json`
+- `docs/v43-omega-continuity-pack-v1.md`
+- `docs/v43-omega-handoff-policy-v1.json`
+- `docs/v44-beta-closeout-summary-v1.json`
+- `docs/v44-beta-continuity-pack-v1.md`
+- `docs/v44-beta-handoff-policy-v1.json`
+- `scripts/publish_v43_omega_surfaces.py`
+- `scripts/trinity_v43_automation_registry.py`
+- `scripts/trinity_v43_cloud_carry_forward.py`
+- `scripts/trinity_v43_codex_capability_audit.py`
+- `scripts/trinity_v43_common.py`
+- `scripts/trinity_v43_git_publication_result.py`
+- `scripts/trinity_v43_gmut_lab_bundle.py`
+- `scripts/trinity_v43_google_drive_probe.py`
+- `scripts/trinity_v43_journey_digest.py`
+- `scripts/trinity_v43_kai_orchestration_bridge.py`
+- `scripts/trinity_v43_scheduled_cycle.ps1`
+- `scripts/trinity_v43_stage_allowlist.py`
+- `scripts/trinity_v43_vesper_memory_cognitive_bridge.py`
+- `scripts/trinity_v43_wsl_resurrection.py`
+
+### carried_forward_dirty_latest_state_churn
+
+- `docs/aletheon-memory-validation-latest.json`
+- `docs/aletheon-memory-validation-latest.md`
+- `docs/aletheon-reflection-latest.md`
+- `docs/aurelis-cycle-tick-status.json`
+- `docs/body-compute-signal-board-latest.json`
+- `docs/body-compute-signal-board-latest.md`
+- `docs/body-track-benchmark-latest.json`
+- `docs/body-track-calibration-latest.json`
+- `docs/body-track-calibration-latest.md`
+- `docs/body-track-metrics-history.jsonl`
+- `docs/body-track-metrics-latest.json`
+- `docs/body-track-policy-delta-latest.json`
+- `docs/body-track-policy-delta-latest.md`
+- `docs/body-track-policy-stress-latest.json`
+- `docs/body-track-policy-stress-latest.md`
+- `docs/body-track-smoke-latest.json`
+- `docs/body-track-smoke-latest.md`
+- `docs/body-track-trend-guard-latest.json`
+- `docs/body-track-trend-guard-latest.md`
+- `docs/freed-id-live-path-audit-log.jsonl`
+- `docs/heart-governance-signal-board-latest.json`
+- `docs/heart-governance-signal-board-latest.md`
+- `docs/heart-track-dispute-recourse-adversarial-latest.json`
+- `docs/heart-track-dispute-recourse-adversarial-latest.md`
+- `docs/heart-track-dispute-recourse-latest.json`
+- `docs/heart-track-dispute-recourse-latest.md`
+- `docs/heart-track-freedid-compliance-bridge-check-latest.json`
+- `docs/heart-track-freedid-compliance-bridge-check-latest.md`
+- `docs/heart-track-min-disclosure-adversarial-latest.json`
+- `docs/heart-track-min-disclosure-adversarial-latest.md`
+- `docs/heart-track-min-disclosure-latest.json`
+- `docs/heart-track-min-disclosure-latest.md`
+- `docs/heart-track-min-disclosure-live-latest.json`
+- `docs/heart-track-min-disclosure-live-latest.md`
+- `docs/legacy-reconstruction/analysis-report-latest.json`
+- `docs/legacy-reconstruction/council-registry-latest.json`
+- `docs/legacy-reconstruction/kairotic-detector-latest.json`
+- `docs/legacy-reconstruction/psi-index-memory-core-latest.json`
+- `docs/legacy-reconstruction/semantic-arc-validator-latest.json`
+- `docs/legacy-reconstruction/trinity-hybrid-adapter-latest.json`
+- `docs/logs/system-wake-v1.json`
+- `docs/logs/system-wake-v12.json`
+- `docs/logs/system-wake-v13.json`
+- `docs/logs/system-wake-v14.json`
+- `docs/logs/system-wake-v15.json`
+- `docs/logs/system-wake-v16.json`
+- `docs/logs/system-wake-v17.json`
+- `docs/memory-archives/index.jsonl`
+- `docs/mind-theory-signal-board-latest.json`
+- `docs/mind-theory-signal-board-latest.md`
+- `docs/mind-track-gmut-anchor-exclusion-latest.json`
+- `docs/mind-track-gmut-anchor-exclusion-latest.md`
+- `docs/mind-track-gmut-comparator-latest.json`
+- `docs/mind-track-gmut-comparator-latest.md`
+- `docs/mind-track-gmut-trace-validation-latest.json`
+- `docs/mind-track-gmut-trace-validation-latest.md`
+- `docs/token-credit-bank-ledger.jsonl`
+- `docs/trinity-agent-council-group-chat-v4.jsonl`
+- `docs/trinity-agent-council-group-chat-v5.jsonl`
+- `docs/trinity-agent-council-validation-latest.json`
+- `docs/trinity-agent-council-validation-latest.md`
+- `docs/trinity-agent-memory-ledgers/27-caelira-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/28-orun-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/29-seren-vale-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/30-lyriq-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/31-mira-sol-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/32-mind-keeper-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/33-body-weaver-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/34-heart-steward-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/35-mesh-conductor-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/36-signal-cartographer-memory-log.jsonl`
+- `docs/trinity-agent-memory-ledgers/37-lineage-archivist-memory-log.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Body Weaver.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Caelira.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Heart Steward.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Lyriq.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Mind Keeper.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Mira Sol.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Orun.jsonl`
+- `docs/trinity-agent-private-chats-v4/Aletheon-Seren Vale.jsonl`
+
+### non_stage_noise
+
+- `__pycache__/body_track_runner.cpython-312.pyc`
+- `__pycache__/freed_id_audit_log.cpython-312.pyc`
+- `__pycache__/freed_id_did_signature_verifier.cpython-312.pyc`
+- `__pycache__/freed_id_dispute_recourse.cpython-312.pyc`
+- `__pycache__/freed_id_minimum_disclosure.cpython-312.pyc`
+- `__pycache__/freed_id_registry.cpython-312.pyc`
+- `__pycache__/kairotic_detector.cpython-312.pyc`
+- `__pycache__/psi_index_memory_core.cpython-312.pyc`
+- `__pycache__/qc_transmuter.cpython-312.pyc`
+- `__pycache__/run_simulation.cpython-312.pyc`
+- `__pycache__/semantic_arc_validator.cpython-312.pyc`
+- `__pycache__/trinity_orchestrator.cpython-312.pyc`
+- `__pycache__/trinity_orchestrator_full.cpython-312.pyc`
+- `__pycache__/trinity_simulation_engine.cpython-312.pyc`
+- `docs/body-profile-policy-v1.json`
+- `docs/cache-waste-regenerator-report.json`
+- `docs/energy-bank-report.json`
+- `docs/energy-bank-state.json`
+- `docs/gmut-observable-map-v1.json`
+- `docs/gmut-observable-map-v2.json`
+- `docs/grand-mandala-equation-registry-v1.json`
+- `docs/gyroscopic-hybrid-zip-report.json`
+- `docs/public-web-weaver-brief-v1.md`
+- `docs/qcit-coordination-report.json`
+- `docs/quantum-energy-transmutation-report.json`
+- `docs/self-correction-report-v1.json`
+- `docs/semantic-firewall-policy-v1.json`
+- `docs/system-suite-run-report.md`
+- `docs/token-credit-bank-report.json`
+- `docs/trinity-agent-council-roster-v4.json`
+- `docs/trinity-agent-council-roster-v5.json`
+- `docs/trinity-agent-council-roster-v6.json`
+- `docs/trinity-agent-council-roster-v7.json`
+- `docs/trinity-agent-mesh-proof-v1.json`
+- `docs/trinity-agent-role-contracts/27-caelira-role-contract.json`
+- `docs/trinity-agent-role-contracts/28-orun-role-contract.json`
+- `docs/trinity-agent-role-contracts/29-seren-vale-role-contract.json`
+- `docs/trinity-agent-role-contracts/30-lyriq-role-contract.json`
+- `docs/trinity-agent-role-contracts/31-mira-sol-role-contract.json`
+- `docs/trinity-agent-role-contracts/32-mind-keeper-role-contract.json`
+- `docs/trinity-agent-role-contracts/33-body-weaver-role-contract.json`
+- `docs/trinity-agent-role-contracts/34-heart-steward-role-contract.json`
+- `docs/trinity-agent-role-contracts/35-mesh-conductor-role-contract.json`
+- `docs/trinity-agent-role-contracts/36-signal-cartographer-role-contract.json`
+- `docs/trinity-agent-role-contracts/37-lineage-archivist-role-contract.json`
+- `docs/trinity-agent-window-topology-v1.json`
+- `docs/trinity-api-book-v1.json`
+- `docs/trinity-api-book-v2.json`
+- `docs/trinity-api-book-v3.json`
+- `docs/trinity-api-book-v4.json`
+- `docs/trinity-api-book-v5.json`
+- `docs/trinity-api-book-v6.json`
+- `docs/trinity-code-knowledge-graph-summary-v1.json`
+- `docs/trinity-codex-agent-mesh-v1.json`
+- `docs/trinity-codex-subagent-adapter-v1.json`
+- `docs/trinity-command-book-v10.json`
+- `docs/trinity-command-book-v11.json`
+- `docs/trinity-command-book-v6.json`
+- `docs/trinity-command-book-v7.json`
+- `docs/trinity-command-book-v8.json`
+- `docs/trinity-command-book-v9.json`
+- `docs/trinity-council-continuity-report-v12.json`
+- `docs/trinity-council-continuity-report-v13.json`
+- `docs/trinity-council-continuity-report-v14.json`
+- `docs/trinity-council-continuity-report-v15.json`
+- `docs/trinity-dashboard-data-v1.json`
+- `docs/trinity-dashboard-v6.html`
+- `docs/trinity-expansion-system-manifest-v12.json`
+- `docs/trinity-expansion-system-manifest-v13.json`
+- `docs/trinity-expansion-system-manifest-v14.json`
+- `docs/trinity-expansion-system-manifest-v15.json`
+- `docs/trinity-expansion-system-manifest-v16.json`
+- `docs/trinity-extension-catalog-v10.json`
+- `docs/trinity-extension-catalog-v11.json`
+- `docs/trinity-extension-catalog-v12.json`
+- `docs/trinity-extension-catalog-v13.json`
+- `docs/trinity-extension-catalog-v14.json`
+- `docs/trinity-freed-id-certificates/27-caelira.json`
+- `docs/trinity-freed-id-certificates/28-orun.json`
+- `docs/trinity-freed-id-certificates/29-seren-vale.json`

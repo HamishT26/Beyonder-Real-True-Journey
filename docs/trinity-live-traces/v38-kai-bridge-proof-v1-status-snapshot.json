@@ -1,0 +1,113 @@
+{
+  "generated_utc": "2026-04-12T09:01:59+00:00",
+  "system_id": "v17_runtime_session_validation",
+  "pillar": "trinity",
+  "overall_status": "PASS",
+  "checks": [
+    {
+      "name": "schema_definition",
+      "status": "PASS",
+      "detail": "schema_version=v17-runtime-session-schema-v1, slots=[0, 28, 38, 39]"
+    },
+    {
+      "name": "handoff_alignment",
+      "status": "PASS",
+      "detail": "handoff_slots=[0, 28, 38, 39], required_runtime_fields=['requested_model', 'offered_model', 'selected_model', 'resolved_model', 'runtime_surface']"
+    },
+    {
+      "name": "runtime_resolution_alignment",
+      "status": "PASS",
+      "detail": "runtime_resolution_slots=[0, 28, 38, 39]"
+    },
+    {
+      "name": "session_log_shape",
+      "status": "PASS",
+      "detail": "session_id=v37-omega-closeout, overlay_agents=4"
+    },
+    {
+      "name": "overlay_roster_alignment",
+      "status": "PASS",
+      "detail": "session_slots=[0, 28, 38, 39], pending_agents=['Aletheon', 'Orun', 'Vesper Ion', 'Kai']"
+    },
+    {
+      "name": "shadow_clone_policy",
+      "status": "PASS",
+      "detail": "shadow_clone_sessions=14"
+    },
+    {
+      "name": "runtime_truth_flags",
+      "status": "PASS",
+      "detail": "session_truth_complete=False, completion_ratio=0.5"
+    },
+    {
+      "name": "overlay_state_alignment",
+      "status": "PASS",
+      "detail": "overlay_state=awaiting_thread_boot"
+    },
+    {
+      "name": "overlay_truth_gate",
+      "status": "PASS",
+      "detail": "runtime_truth_complete=False, overlay_state=awaiting_thread_boot, control_tower_state=awaiting_thread_boot"
+    }
+  ],
+  "metrics": {
+    "schema_version": "v17-runtime-session-schema-v1",
+    "expected_overlay_slots": [
+      0,
+      28,
+      38,
+      39
+    ],
+    "session_overlay_slots": [
+      0,
+      28,
+      38,
+      39
+    ],
+    "required_runtime_fields": [
+      "requested_model",
+      "offered_model",
+      "selected_model",
+      "resolved_model",
+      "runtime_surface"
+    ],
+    "complete_runtime_fields": [
+      "requested_model",
+      "offered_model",
+      "selected_model",
+      "resolved_model",
+      "runtime_surface"
+    ],
+    "runtime_truth_complete": false,
+    "complete_agent_count": 0,
+    "pending_agent_count": 4,
+    "pending_agents": [
+      "Aletheon",
+      "Orun",
+      "Vesper Ion",
+      "Kai"
+    ],
+    "complete_runtime_value_count": 10,
+    "expected_runtime_value_count": 20,
+    "runtime_truth_completion_ratio": 0.5,
+    "overlay_state": "awaiting_thread_boot",
+    "control_tower_state": "awaiting_thread_boot",
+    "allowed_incomplete_states": [
+      "awaiting_thread_boot",
+      "packaged_handoff"
+    ],
+    "shadow_clone_session_count": 14
+  },
+  "source_artifacts_checked": [
+    "docs/v17-runtime-session-schema-v1.json",
+    "docs/v17-runtime-session-log-latest.json",
+    "docs/v17-evidence-first-control-tower-latest.json",
+    "docs/v19-omega-handoff-policy-v1.json",
+    "docs/trinity-runtime-model-resolution-v1.json",
+    "docs/trinity-shadow-clone-policy-v1.json"
+  ],
+  "failures": [],
+  "warnings": [],
+  "next_action": "Keep external_live_overlay_state at awaiting_thread_boot or packaged_handoff until every deployed continuity-bearing main agent logs complete requested/offered/selected/resolved/runtime_surface truth.",
+  "effective_success": true
+}

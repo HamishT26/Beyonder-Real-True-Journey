@@ -1,0 +1,19 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-03-synthesis-v1.json` as the authoritative checkpoint: block 03 is synthesized complete at `9/9` expected replies. For Aster Vale, the safe receipt remains local-only runtime-health observation with `multiplex_refresh_seconds=30` and `fallback_refresh_seconds=4`, and with response proof kept separate from transport/process noise.
+
+Blocker:
+The blocker is recovery-proof cleanliness, not a verified provider or publication failure. The checkpoint shows failure modes can still be caused by sandbox policy rejection, benign read timeouts, noisy artifacts, or truncated labeled replies. On that basis, I cannot honestly advance any external-runtime, provider-readiness, remote, or publication claim from this lane.
+
+Refinement:
+Use three explicit recovery classes and keep them disjoint:
+`stalled` = no fresh clean receipt within expected cadence, but no proof of process exit.
+`noisy` = assistant reply mixed with shell/transport/process output.
+`truncated` = receipt exists but required labels or closing content are missing.
+Recovery should stay evidence-first: classify the failure class first, then run only the narrow probe needed for that class. A clean lane-health claim should mean only `locally observable and writing clean receipts`.
+
+Next-cycle proposal:
+Run one bounded recovery drill with three checks only:
+1. `clean-receipt probe` against one known local artifact.
+2. `stall classifier` returning `alive and writing | alive but silent | exited without response`.
+3. `noise/truncation check` verifying all required labels are present and transport output is isolated.
+Keep `30s` as the default lane cadence. Use `4s` only as a short debug window with an explicit local trigger and expiry. Any unresolved ambiguity should remain marked as local-only and unverified beyond the checkpoint.

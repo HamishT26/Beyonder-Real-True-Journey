@@ -1,0 +1,91 @@
+{
+  "artifact_type": "command_helper_compatibility_map",
+  "phase_slug": "v497-gmut-thos-v33-v5-x1",
+  "generated_utc": "2026-06-06T19:23:00Z",
+  "overall_status": "PASS_COMPATIBILITY_MAP_READY_FOR_X2",
+  "helper_rows": [
+    {
+      "helper": "thos_codex_cli_advisory_launcher.py",
+      "role": "Launch existing read-only CLI advisory lanes.",
+      "current_state": "usable",
+      "x2_requirement": "Always use redacted launch receipts and temp-only output directories."
+    },
+    {
+      "helper": "thos_cli_lane_completion_notifier.py",
+      "role": "Produce status-only CLI completion receipts from temp-only outputs.",
+      "current_state": "usable",
+      "x2_requirement": "Use only at scheduled cadence marks or explicit repair checks."
+    },
+    {
+      "helper": "thos_cli_elaboration_quality_gate.py",
+      "role": "Count words, headings, category items, and sensitive/path markers without publishing raw text.",
+      "current_state": "usable_with_strict_heading_contract",
+      "x2_requirement": "Pair failures with substantial-output repair classification."
+    },
+    {
+      "helper": "thos_app_lane_completion_notifier.py",
+      "role": "Read/resume existing app lanes and optionally notify them.",
+      "current_state": "usable",
+      "x2_requirement": "Do not re-notify completed app lanes during status-only checks."
+    },
+    {
+      "helper": "thos_council_app_lane_notifier_runner.py",
+      "role": "Launch app-lane background watch/notifier workflows.",
+      "current_state": "usable",
+      "x2_requirement": "Prefer background-watch mode so Aletheon can keep preparing instead of babysitting."
+    },
+    {
+      "helper": "thos_status_check_cadence_guard.py",
+      "role": "Gate manual harvests by elapsed time.",
+      "current_state": "usable",
+      "x2_requirement": "Keep first x1 checks at 15 minutes and x2 prep checks at 10 minutes unless a new packet changes cadence."
+    },
+    {
+      "helper": "thos_five_lane_status_normalizer.py",
+      "role": "Normalize app and CLI receipts into a single five-lane board.",
+      "current_state": "usable_with_repair_state_followup_needed",
+      "x2_requirement": "Extend x2 board rows with repair_state and next_manual_check_utc."
+    },
+    {
+      "helper": "thos_stale_flow_refresh_runner.py",
+      "role": "Classify repeated blockers and stale-flow watch items.",
+      "current_state": "usable",
+      "x2_requirement": "Treat plugin-sync/cache warnings, heading gaps, and final-message waits as watch items unless they block artifacts."
+    },
+    {
+      "helper": "thos_publication_provenance_receipt.py",
+      "role": "Produce subject-file hash provenance receipts.",
+      "current_state": "usable",
+      "x2_requirement": "Attach provenance to x2 build/run/test/use packets before closeout."
+    },
+    {
+      "helper": "thos_v497_v4_x1_closeout_x2_builder.py",
+      "role": "Build x1 closeout and x2 synthesis artifacts from gated inputs.",
+      "current_state": "usable_as_pattern",
+      "x2_requirement": "Use as design pattern for a v5-specific builder once all five lanes are accepted or repair status is resolved."
+    }
+  ],
+  "blocked_or_deferred_helpers": [
+    {
+      "helper": "raw lane readers",
+      "status": "blocked",
+      "reason": "Raw output publication is outside scope."
+    },
+    {
+      "helper": "new sibling/thread creators",
+      "status": "blocked",
+      "reason": "Existing lanes only."
+    },
+    {
+      "helper": "destructive cleanup commands",
+      "status": "blocked",
+      "reason": "No destructive cleanup is approved."
+    }
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}

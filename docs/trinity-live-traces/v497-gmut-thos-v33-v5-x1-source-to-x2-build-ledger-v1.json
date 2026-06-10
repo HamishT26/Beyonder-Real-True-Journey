@@ -1,0 +1,78 @@
+{
+  "artifact_type": "source_to_x2_build_ledger",
+  "phase_slug": "v497-gmut-thos-v33-v5-x1",
+  "generated_utc": "2026-06-06T19:08:00Z",
+  "overall_status": "PASS_X2_PREP_LEDGER_READY",
+  "lane_policy": {
+    "watchers_supervise_siblings": true,
+    "manual_polling_before_next_mark": false,
+    "aster_vale_repair_in_background": true,
+    "raw_lane_text_published": false
+  },
+  "source_rows": [
+    {
+      "source": "OpenAI - Running Codex safely at OpenAI",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "stable_takeaway": "Codex safety posture should combine sandbox boundaries, approval policy, managed network/identity controls, and agent-native telemetry.",
+      "x2_build_implication": "Keep v5 x2 runners read-only by default, exact-scope writes only, and generate status receipts that explain why each action happened."
+    },
+    {
+      "source": "OpenAI Codex repository",
+      "url": "https://github.com/openai/codex",
+      "stable_takeaway": "Codex remains a terminal-first coding agent surface, so local launcher compatibility and version drift matter.",
+      "x2_build_implication": "Add command/launcher compatibility checks before long CLI lane starts and keep version/update receipts status-only."
+    },
+    {
+      "source": "Model Context Protocol security best practices",
+      "url": "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices",
+      "stable_takeaway": "Local tool servers need least privilege, constrained transports, sandboxing, narrow scopes, and elevation loops that avoid broad privilege grants.",
+      "x2_build_implication": "Map every app-server, CLI, connector, and MCP helper into baseline-read, elevated-write, or blocked classes."
+    },
+    {
+      "source": "OWASP Agentic Skills Top 10",
+      "url": "https://owasp.org/www-project-agentic-skills-top-10/",
+      "stable_takeaway": "Agent skills are execution-layer behavior and need inventory, permission review, isolated testing, monitoring, and approval discipline.",
+      "x2_build_implication": "Treat skill evolution as a governed overlay: enabled/disabled labels, provenance, scans, and no plugin-cache or user-skill mutation without exact approval."
+    },
+    {
+      "source": "OpenTelemetry GenAI semantic conventions",
+      "url": "https://opentelemetry.io/docs/specs/semconv/gen-ai/",
+      "stable_takeaway": "GenAI telemetry now has named conventions for events, exceptions, metrics, model spans, agent spans, MCP, and provider-specific operations.",
+      "x2_build_implication": "Shape watcher receipts so later telemetry export can preserve phase, lane, model surface, tool class, error class, and raw-boundary fields."
+    },
+    {
+      "source": "Google Agent Development Kit callbacks",
+      "url": "https://adk.dev/callbacks/",
+      "stable_takeaway": "Callbacks can observe, customize, and control agent behavior around runtime boundaries.",
+      "x2_build_implication": "Model THOS watcher hooks as callback-like gates: pre-launch, post-launch, cadence, completion, quality, repair, and publication."
+    },
+    {
+      "source": "NVIDIA NeMo Guardrails",
+      "url": "https://docs.nvidia.com/nemo/guardrails/latest/index.html",
+      "stable_takeaway": "Guardrail layers can constrain conversational and agentic behavior before it reaches unsafe action surfaces.",
+      "x2_build_implication": "Keep no-overclaim, raw-boundary, credential, path, and canon-gate guards as explicit runner gates instead of prose-only reminders."
+    },
+    {
+      "source": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "stable_takeaway": "Artifact provenance helps consumers verify where build outputs came from and how they were produced.",
+      "x2_build_implication": "Continue repo-local provenance receipts with subject file hashes, source rows, and remote-equals-local verification."
+    }
+  ],
+  "x2_candidate_builds": [
+    "Add a watcher telemetry schema draft for lane, phase, boundary, raw-boundary, quality, blocker, and repair fields.",
+    "Create a skill overlay registry that labels proposed skills as enabled, disabled, watch-only, or approval-needed without mutating live user skills.",
+    "Extend the five-lane board to show repair-state transitions without requiring raw output reads.",
+    "Add a source-to-build crosswalk that ties every x2 build artifact to one current-source row and one Journey/Trinity reflection row.",
+    "Prepare a command-surface compatibility mini-ledger for CLI launcher, app-server notifier, completion notifier, quality gate, stale-flow, and provenance helpers.",
+    "Create a no-overclaim guard row that blocks final physics, consciousness proof, canon promotion, or empirical closure language unless exact evidence exists.",
+    "Add an Aster/Arby heading-repair playbook that distinguishes substantial-but-unharvestable output from genuinely shallow output.",
+    "Prepare v497 v5 x2 build/run/test/use priorities after the Aster repair check mark."
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "raw_private_material": "not_published"
+  }
+}

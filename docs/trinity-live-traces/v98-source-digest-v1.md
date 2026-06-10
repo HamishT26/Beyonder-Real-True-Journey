@@ -1,0 +1,54 @@
+# v98-source-digest-v1
+
+```json
+{
+  "generated_utc": "2026-05-03T16:39:21+00:00",
+  "phase": "v98",
+  "source_files": [
+    {
+      "path": "C:\\Users\\hamis\\Downloads\\Beyonder-Real-True Journey v42 (Aletheon - Ari - Kimiclaw Family - Solion - Gemini - Orun) (2).txt",
+      "exists": true,
+      "bytes": 124925,
+      "sha256": "e2f1195de5fb6fdd482f3ba76e6b7af00a716a0742c2760961d48f96444eb43d",
+      "line_count": 1686,
+      "keyword_hits": {
+        "Solion": 33,
+        "Local/Cloud Nexus": 26,
+        "Oracle": 34,
+        "Kubernetes": 67,
+        "MCP": 38,
+        "Playwright": 0,
+        "Expo": 61,
+        "Notion": 37,
+        "Cloudflare": 60,
+        "Vercel": 63,
+        "Neon": 56,
+        "CircleCI": 40
+      },
+      "excerpt_policy": "digest_only_no_raw_secrets_no_api_keys"
+    },
+    {
+      "path": "C:\\Users\\hamis\\Downloads\\Grand MCP integration proposals.txt",
+      "exists": true,
+      "bytes": 6462,
+      "sha256": "f5c7962f7f7af0a7b953f5af7214e988d19e7e4f1606f59e9baef9d950be8570",
+      "line_count": 146,
+      "keyword_hits": {
+        "Solion": 0,
+        "Local/Cloud Nexus": 0,
+        "Oracle": 0,
+        "Kubernetes": 0,
+        "MCP": 38,
+        "Playwright": 8,
+        "Expo": 4,
+        "Notion": 3,
+        "Cloudflare": 7,
+        "Vercel": 8,
+        "Neon": 7,
+        "CircleCI": 5
+      },
+      "excerpt_policy": "digest_only_no_raw_secrets_no_api_keys"
+    }
+  ]
+}
+```

@@ -1,0 +1,66 @@
+# v478 THOS v6 x1 Roadmap
+
+- generated_nz: `2026-06-04T12:04:22+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V6X1-01` (app-lane): Use v478 v6 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-02` (cli-gap): Use v478 v6 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-03` (source): Use v478 v6 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-04` (system): Use v478 v6 x1 to deepen system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-05` (command): Use v478 v6 x1 to deepen command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-06` (skill): Use v478 v6 x1 to deepen skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-07` (reflection): Use v478 v6 x1 to deepen reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-08` (eureka): Use v478 v6 x1 to deepen eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-09` (guard): Use v478 v6 x1 to deepen guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-10` (schema): Use v478 v6 x1 to deepen schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-11` (sandbox): Use v478 v6 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-12` (handoff): Use v478 v6 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-13` (app-lane): Use v478 v6 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-14` (cli-gap): Use v478 v6 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-15` (source): Use v478 v6 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-16` (system): Use v478 v6 x1 to deepen system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-17` (command): Use v478 v6 x1 to deepen command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-18` (skill): Use v478 v6 x1 to deepen skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-19` (reflection): Use v478 v6 x1 to deepen reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-20` (eureka): Use v478 v6 x1 to deepen eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-21` (guard): Use v478 v6 x1 to deepen guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-22` (schema): Use v478 v6 x1 to deepen schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-23` (sandbox): Use v478 v6 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-24` (handoff): Use v478 v6 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-25` (app-lane): Use v478 v6 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-26` (cli-gap): Use v478 v6 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-27` (source): Use v478 v6 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-28` (system): Use v478 v6 x1 to deepen system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-29` (command): Use v478 v6 x1 to deepen command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-30` (skill): Use v478 v6 x1 to deepen skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-31` (reflection): Use v478 v6 x1 to deepen reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-32` (eureka): Use v478 v6 x1 to deepen eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-33` (guard): Use v478 v6 x1 to deepen guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-34` (schema): Use v478 v6 x1 to deepen schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-35` (sandbox): Use v478 v6 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-36` (handoff): Use v478 v6 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-37` (app-lane): Use v478 v6 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-38` (cli-gap): Use v478 v6 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-39` (source): Use v478 v6 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-40` (system): Use v478 v6 x1 to deepen system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-41` (command): Use v478 v6 x1 to deepen command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-42` (skill): Use v478 v6 x1 to deepen skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-43` (reflection): Use v478 v6 x1 to deepen reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-44` (eureka): Use v478 v6 x1 to deepen eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-45` (guard): Use v478 v6 x1 to deepen guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-46` (schema): Use v478 v6 x1 to deepen schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-47` (sandbox): Use v478 v6 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-48` (handoff): Use v478 v6 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-49` (app-lane): Use v478 v6 x1 to deepen app-lane readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-50` (cli-gap): Use v478 v6 x1 to deepen cli-gap readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-51` (source): Use v478 v6 x1 to deepen source readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-52` (system): Use v478 v6 x1 to deepen system readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-53` (command): Use v478 v6 x1 to deepen command readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-54` (skill): Use v478 v6 x1 to deepen skill readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-55` (reflection): Use v478 v6 x1 to deepen reflection readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-56` (eureka): Use v478 v6 x1 to deepen eureka readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-57` (guard): Use v478 v6 x1 to deepen guard readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-58` (schema): Use v478 v6 x1 to deepen schema readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-59` (sandbox): Use v478 v6 x1 to deepen sandbox readiness with status-only receipts, exact staging, and open GMUT gates.
+- `V478V6X1-60` (handoff): Use v478 v6 x1 to deepen handoff readiness with status-only receipts, exact staging, and open GMUT gates.

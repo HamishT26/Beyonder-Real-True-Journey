@@ -1,0 +1,66 @@
+# v477 THOS v7 x1 Roadmap
+
+- task_count: `60`
+- entry: v6 x2 remote-verified, existing lanes only, all GMUT gates open.
+
+## Tasks
+- v477-v7-x1-task-01 (lanes): Run app-lane probe for Cicero, Kierkegaard, and Aristotle.
+- v477-v7-x1-task-02 (lanes): Run app-lane notify only if probe passes.
+- v477-v7-x1-task-03 (lanes): Run CLI poll with a clearer done-signal taxonomy.
+- v477-v7-x1-task-04 (lanes): Record alive-waiting, no-signal, final-marker, and timeout states separately.
+- v477-v7-x1-task-05 (lanes): Keep lane content unpublished.
+- v477-v7-x1-task-06 (lanes): Use existing lanes only.
+- v477-v7-x1-task-07 (commands): Inspect 12 offline command rows with no execution.
+- v477-v7-x1-task-08 (commands): Assess proof_required and rollback adequacy for each selected row.
+- v477-v7-x1-task-09 (commands): Turn connector rows into a read-only readiness table.
+- v477-v7-x1-task-10 (commands): Turn live-write rows into approval-packet candidates.
+- v477-v7-x1-task-11 (commands): Reject unclear risk rows from v7 execution.
+- v477-v7-x1-task-12 (commands): Add command-to-skill domain edges without body copies.
+- v477-v7-x1-task-13 (skills): Re-sample skill frontmatter metadata if skill count drifted.
+- v477-v7-x1-task-14 (skills): Run metadata duplicate-name review.
+- v477-v7-x1-task-15 (skills): Build a skill-to-command join sample.
+- v477-v7-x1-task-16 (skills): Keep user skills and plugin cache unmodified.
+- v477-v7-x1-task-17 (skills): Record loader evidence only if a loader error appears.
+- v477-v7-x1-task-18 (skills): Keep sample rows bounded.
+- v477-v7-x1-task-19 (expansions): Create no-write inspection receipts for top P0 expansions.
+- v477-v7-x1-task-20 (expansions): Create stdout-only guard probe receipts for top P1 rows.
+- v477-v7-x1-task-21 (expansions): Keep P2 rows simulation-labelled only.
+- v477-v7-x1-task-22 (expansions): Keep installed_count zero unless exact install evidence exists.
+- v477-v7-x1-task-23 (expansions): Rank rows by readiness for v7 x2 synthesis.
+- v477-v7-x1-task-24 (expansions): Carry blocked rows as open gaps.
+- v477-v7-x1-task-25 (sources): Refresh Codex app-server and CLI release official sources.
+- v477-v7-x1-task-26 (sources): Refresh MCP tool and authorization official sources.
+- v477-v7-x1-task-27 (sources): Refresh GitHub security official sources.
+- v477-v7-x1-task-28 (sources): Carry Google and NVIDIA as architecture context.
+- v477-v7-x1-task-29 (sources): Keep Journey context separate from implementation proof.
+- v477-v7-x1-task-30 (sources): Record source freshness and trust tiers.
+- v477-v7-x1-task-31 (observability): Add CLI done-signal taxonomy artifact.
+- v477-v7-x1-task-32 (observability): Add app/CLI schema conformance table.
+- v477-v7-x1-task-33 (observability): Add retry and timeout windows to every lane row.
+- v477-v7-x1-task-34 (observability): Add status-only publication boundary to every artifact.
+- v477-v7-x1-task-35 (observability): Prepare bounded dashboard rows for future visualization.
+- v477-v7-x1-task-36 (observability): Avoid local temp address publication.
+- v477-v7-x1-task-37 (sandbox): Run only non-destructive Codex/sandbox checks if needed.
+- v477-v7-x1-task-38 (sandbox): Do not alter Windows or Codex settings in v7 x1.
+- v477-v7-x1-task-39 (sandbox): Do not delete caches or temp folders in v7 x1.
+- v477-v7-x1-task-40 (sandbox): Record sandbox blockers as open gaps.
+- v477-v7-x1-task-41 (sandbox): Keep PowerShell actions scoped and reversible.
+- v477-v7-x1-task-42 (sandbox): Preserve CLI worktrees read-only.
+- v477-v7-x1-task-43 (handoff): Build v7 x1 synthesis from lane, command, skill, expansion, and source evidence.
+- v477-v7-x1-task-44 (handoff): Build v7 x2 roadmap with 60 tasks.
+- v477-v7-x1-task-45 (handoff): Decide x2/x3 from current evidence only.
+- v477-v7-x1-task-46 (handoff): Continue v477 sequence toward v490 without narrowing scope.
+- v477-v7-x1-task-47 (handoff): Publish exact curated artifacts only.
+- v477-v7-x1-task-48 (handoff): Verify remote equals local after push.
+- v477-v7-x1-task-49 (gmut): Carry null recovery gate open.
+- v477-v7-x1-task-50 (gmut): Carry dimensional/SI gate open.
+- v477-v7-x1-task-51 (gmut): Carry conservation/exchange gate open.
+- v477-v7-x1-task-52 (gmut): Carry baseline recovery gate open.
+- v477-v7-x1-task-53 (gmut): Carry fifth-force/equivalence gate open.
+- v477-v7-x1-task-54 (gmut): Carry consciousness measurement bridge gate open.
+- v477-v7-x1-task-55 (quality): Parse every JSON artifact.
+- v477-v7-x1-task-56 (quality): Compile every new helper script.
+- v477-v7-x1-task-57 (quality): Run scoped guard scan.
+- v477-v7-x1-task-58 (quality): Run whitespace and staged diff checks.
+- v477-v7-x1-task-59 (quality): Stage exact files only.
+- v477-v7-x1-task-60 (quality): Fetch and drift-check before push.

@@ -1,0 +1,27 @@
+# v460 Cicero App Advisory Receipt
+
+Generated UTC: `2026-05-23T12:19:42.278358+00:00`
+Status: `valid_app_advisory_receipt`
+Agent ID: `019e485f-172b-72c0-adf7-27daea722143`
+Call sign: `cicero-ghc-family.codex-app.v2-advisory-receipt-lane.v1.2026-05-23`
+
+Summary:
+v460 App advisory receipt: v445-v459 are complete/pushed at head 26e96d243daaa3d5a886ada7bf0faf2a20eb9e89; v460 v1 is complete under temporary two-lane policy with valid real Arby and Aster Vale CLI receipts; Kimi remains excluded_operator_hold; v460 is final closeout; Aletheon-led v2 is active.
+
+Preserve:
+final-phase closeout discipline, latest-head anchor, degraded two-lane policy labeling, Arby/Aster receipt evidence, Kimi operator-hold ledger, v1/v2 separation, and standby/helper non-replacement status.
+
+Challenge:
+any v461 launch assumption, normal three-lane-gate wording, Kimi replacement narrative, or advisory/helper claim that obscures degraded-gate risk.
+
+Refuse:
+CLI receipt authority, solo gate completion, publication authority, external mutation, secret handling, spend authority, Kimi replacement, v461 authorization, or identity proof.
+
+Seed:
+v445-v460 closeout should state: Arby/Aster valid, Kimi excluded/operator-hold throughout recovery, Aletheon-led v2 required, degraded-gate risk carried transparently, publish closeout, then stop unless Hamish explicitly authorizes a new v461+ handoff.
+
+Truth boundaries:
+- This is an official v2 App advisory receipt, not a v1 CLI receipt.
+- This receipt cannot complete the phase alone.
+- Aletheon/Hamish review remains required before publication reliance.
+- No external mutation, spend, secret handling, commit, push, reset, rebase, or force-push is authorized.

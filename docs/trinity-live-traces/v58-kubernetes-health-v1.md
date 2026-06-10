@@ -1,0 +1,74 @@
+# V58 Kubernetes Health
+
+```json
+{
+  "generated_utc": "2026-04-28T17:34:05+00:00",
+  "phase": "v58_omega",
+  "readyz": "ok",
+  "readyz_probe": {
+    "ok": true,
+    "returncode": 0,
+    "stderr_excerpt": ""
+  },
+  "nodes": [
+    {
+      "name": "desktop-control-plane",
+      "ready": true
+    }
+  ],
+  "kube_system_pods": [
+    {
+      "name": "coredns-7d764666f9-fl7dz",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 7
+    },
+    {
+      "name": "coredns-7d764666f9-w7k6j",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 6
+    },
+    {
+      "name": "etcd-desktop-control-plane",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 1
+    },
+    {
+      "name": "kindnet-gjj5g",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 5
+    },
+    {
+      "name": "kube-apiserver-desktop-control-plane",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 2
+    },
+    {
+      "name": "kube-controller-manager-desktop-control-plane",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 12
+    },
+    {
+      "name": "kube-proxy-vv9r5",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 5
+    },
+    {
+      "name": "kube-scheduler-desktop-control-plane",
+      "phase": "Running",
+      "ready": true,
+      "restarts": 3
+    }
+  ],
+  "kubernetes_state": "one_node_ready_with_recent_restarts",
+  "policy": "one_node_health_gate_no_three_node_retry_on_current_hardware",
+  "suite_gate": "allow_suite_load_only_when_readyz_ok",
+  "source": "https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/"
+}
+```

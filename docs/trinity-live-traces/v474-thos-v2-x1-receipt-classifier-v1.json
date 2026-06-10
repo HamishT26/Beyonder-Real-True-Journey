@@ -1,0 +1,72 @@
+{
+  "aggregate_status": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+  "classifier_version": 1,
+  "generated_at_utc": "2026-06-02T17:42:08+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "lane_classifications": [
+    {
+      "classification": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "final_message_bytes": 10418,
+      "final_message_status": "FINAL_MESSAGE_READY",
+      "lane": "Arby",
+      "marker_count": 1,
+      "raw_text_retained_temp_only": true,
+      "reason": "final message has marker count requiring human or approved marker review"
+    },
+    {
+      "classification": "PASS_SUMMARY_READY",
+      "final_message_bytes": 11112,
+      "final_message_status": "FINAL_MESSAGE_READY",
+      "lane": "Aster Vale",
+      "marker_count": 0,
+      "raw_text_retained_temp_only": true,
+      "reason": "final message metadata is ready and marker count is zero"
+    }
+  ],
+  "next_expected_phase": "v474-thos-v2-x2",
+  "phase_slug": "v474-thos-v2-x1",
+  "raw_text_boundary": "not_read_not_published",
+  "source_completion_status": "OPEN_GAP_FINAL_MESSAGE_MARKER_REVIEW",
+  "source_phase": "v474-thos-v1-x1",
+  "status_order": [
+    "FAIL_BLOCKER",
+    "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+    "OPEN_GAP_FINAL_MESSAGE_PENDING",
+    "OPEN_GAP_WATCH_TIMEOUT",
+    "PASS_SUMMARY_READY"
+  ],
+  "validation_fixtures": [
+    {
+      "case_id": "ready_clean",
+      "expected": "PASS_SUMMARY_READY",
+      "observed": "PASS_SUMMARY_READY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "marker_review",
+      "expected": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "observed": "OPEN_GAP_MARKER_REVIEW_REQUIRED",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "pending",
+      "expected": "OPEN_GAP_FINAL_MESSAGE_PENDING",
+      "observed": "OPEN_GAP_FINAL_MESSAGE_PENDING",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "contradictory_zero_bytes",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ]
+}

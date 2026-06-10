@@ -1,0 +1,70 @@
+- Receipt:
+Aster Vale worked from `docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json` and kept the lane local-only, evidence-first, and non-destructive. No commit, push, deletion, provider claim, browser claim, billing claim, or remote-control claim was made in this run.
+
+- Beta:
+Latest verified phase result carried forward: Aster Vale block 04 says the safe posture remains local-only runtime observation, proof must stay separate from transport noise, and stronger external-runtime or publication claims are not supported from this lane alone. Exact proof inputs used in this run:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-04-synthesis-v1.json`
+`docs/filesystem-materialization-contract-v1.json`
+`docs/filesystem-materialization-workflow-v1.md`
+`docs/trinity-mcp-cache/filesystem-materialization-latest.json`
+`docs/trinity-expansion/filesystem-scope-governor-gate-latest.json`
+`docs/trinity-expansion/filesystem-materialization-risk-board-latest.json`
+`docs/trinity-expansion/docker-storage-ops-v11-gate-latest.json`
+`docs/trinity-expansion/docker-storage-ops-v11-risk-board-latest.json`
+`docs/trinity-expansion/docker-runtime-truth-v12-risk-board-latest.json`
+`docs/trinity-expansion/runtime-truth-resolution-v17-gate-latest.json`
+`docs/v17-runtime-session-validation-latest.json`
+`docs/v17-runtime-session-log-latest.json`
+`docs/cache-waste-regenerator-report.json`
+live read of repo root files in `D:\GHC-Archives\worktrees\v58-omega`
+live read showing `scripts\__pycache__` currently exists
+
+Verified planning consequences:
+`filesystem_materialization` is still `staged_setup_gate`; local shell access does not count as connector promotion.
+`filesystem_scope_governor` is PASS-backed but still reports `actual_state=staged_setup_gate`, `live_read_enabled=false`, `live_write_enabled=false`.
+`docker_storage_ops_v11` and `runtime_truth_resolution_v17` are PASS-backed active packs.
+`v17_runtime_session_validation` is PASS-backed, and the session log references C-drive Codex evidence paths such as `.codex\sessions`, `.codex\logs_2.sqlite`, and `.codex\models_cache.json`, so those are retention-sensitive, not blind-delete targets.
+`docs/cache-waste-regenerator-report.json` proves one prior safe reclaim of `scripts/__pycache__` for `5,496,260` bytes.
+Live repo-root probe shows many large PDF artifacts in the current D-drive worktree, including `Beyonder-Real-True Journey v4.pdf` at `2,162,211` bytes, `v9.pdf` at `2,095,796`, `v34 (Cleaner Version).pdf` at `2,074,920`, and multiple other 1.1 to 1.8 MB PDFs.
+
+- Alpha:
+Safe non-destructive cleanup proposal, staged in this order:
+Phase 1, D-drive filesystem-only staging.
+Target class A: disposable caches already proven safe by prior evidence, starting with `D:\GHC-Archives\worktrees\v58-omega\scripts\__pycache__`.
+Target class B: large repo-root journey PDFs and duplicate text/doc exports in `D:\GHC-Archives\worktrees\v58-omega` that look archival rather than runtime-critical.
+Method: do not delete. Build a manifest first, then move only approved candidates into a quarantine folder on D such as `D:\GHC-Archives\.cleanup-staging\v281\repo-root-review\`.
+Preview-only command surface:
+`Get-ChildItem "D:\GHC-Archives\worktrees\v58-omega\scripts" -Recurse -Directory -Filter "__pycache__"`
+`Get-ChildItem "D:\GHC-Archives\worktrees\v58-omega" -File`
+`Get-ChildItem "D:\GHC-Archives\worktrees\v58-omega" -Recurse -File -Filter "*.pdf"`
+
+Phase 2, C-drive retention review only.
+Do not delete `.codex\sessions`, `.codex\logs_2.sqlite`, `.codex\models_cache.json`, or similar runtime-evidence paths until Aletheon explicitly approves a retention window, because current runtime truth artifacts still cite them as proof surfaces.
+Candidate review-only areas for later operator inspection: `%LOCALAPPDATA%\Temp`, old download duplicates, obsolete local mirrors, and old Codex session archives older than the approved evidence window.
+Method: inventory only, then mirror any keep-worthy evidence to D before any cleanup decision.
+
+Phase 3, Docker and K8s only after filesystem pass.
+Because this lane’s governing surfaces show filesystem scope is still gated and the pack history favors bounded local probes, Docker/K8s cleanup should remain later-phase and separated from repo/archive cleanup. Treat container/image/volume pruning as a distinct operator-authorized pass after D-drive archive staging is complete.
+
+- Omega:
+Tests and probes completed:
+Read the cited `v261-v280` synthesis and extracted the Aster Vale carry-forward rule set.
+Verified filesystem materialization and filesystem scope remain staged/gated.
+Verified Docker storage and runtime truth packs are PASS-backed active surfaces.
+Verified runtime-session validation is PASS-backed and that session-log evidence depends on C-drive Codex artifacts.
+Verified prior reclaim evidence for `scripts/__pycache__`.
+Verified this worktree currently contains many large repo-root PDFs and that `scripts\__pycache__` exists now.
+
+Honest limits from this run:
+Drive-wide free-space probes and some broader PowerShell inspection commands were blocked by sandbox/policy friction, so I do not have a fresh measured `C:` vs `D:` free-space board from this turn.
+A direct `%LOCALAPPDATA%\Temp` listing did not yield usable evidence in this run, so C-drive cleanup candidates beyond Codex evidence paths remain proposal-only, not measured.
+No move-to-staging command was run.
+
+- Blocker:
+The blocker is proof coverage, not cleanup intent. This run could verify repo-local D-drive candidates and pack gates, but it could not produce a clean live `C:`/`D:` free-space snapshot or a trustworthy `%LOCALAPPDATA%\Temp` inventory because broader inspection commands hit sandbox/policy friction. That means the D-drive proposal is evidence-backed, while the C-drive portion is still retention-first and inventory-only.
+
+- Next-phase handoff:
+Aletheon can authorize v2 by turning this into a two-board follow-up:
+Board 1: `candidate_path | class=cache|archive|evidence | measured_here=true|false | action=hold|stage`
+Board 2: `drive | free_space_verified=true|false | top_pressure_surface | cleanup_ready`
+If the next phase has a less restrictive read surface, run a bounded free-space probe for `C:` and `D:`, generate a manifest for `scripts\__pycache__` plus repo-root PDF/archive candidates, and stage only the approved D-drive items into a quarantine folder without deletion.

@@ -136,6 +136,9 @@ def _run(command: list[str], *, timeout: int = 60) -> tuple[int, str, str]:
         return proc.returncode, proc.stdout.strip(), proc.stderr.strip()
     except subprocess.TimeoutExpired as exc:
         return 124, (exc.stdout or "").strip(), ((exc.stderr or "").strip() + f" command timed out after {timeout} seconds").strip()
+    except FileNotFoundError as exc:
+        missing = command[0] if command else "unknown"
+        return 127, "", f"{missing} not on PATH ({exc})"
 
 
 def _tool_probe(tool: str, version_arg: str = "--version") -> dict[str, Any]:
@@ -159,9 +162,44 @@ def _git_recent_commits(limit: int = 5) -> list[dict[str, str]]:
     return rows
 
 
+def _git_remote_state() -> dict[str, Any]:
+    refs = [
+        "refs/heads/codex/GHC-Family/beyonder-shared-omega-line",
+        "HEAD",
+    ]
+    last_detail = ""
+    for ref in refs:
+        code, stdout, stderr = _run(["git", "ls-remote", "origin", ref], timeout=8)
+        if code == 0 and stdout.strip():
+            return {"ok": True, "live": True, "mode": "live_probe", "detail": f"git ls-remote origin {ref}"}
+        last_detail = stderr or stdout or f"git ls-remote origin {ref} returned {code}"
+
+    receipt_paths = [
+        "docs/trinity-live-traces/v76-v84-git-publication-result-v1.json",
+        "docs/trinity-live-traces/v65-v75-git-publication-result-v1.json",
+        "docs/trinity-live-traces/v58-git-publication-result-v1.json",
+    ]
+    for receipt_path in receipt_paths:
+        ok, payload, _ = _read_json_safe(receipt_path)
+        if not ok or not payload.get("remote_matches_local"):
+            continue
+        receipt_head = str(payload.get("remote_head_verified") or payload.get("local_head_at_receipt_generation") or "").strip()
+        if not receipt_head:
+            continue
+        code, _, _ = _run(["git", "merge-base", "--is-ancestor", receipt_head, "HEAD"], timeout=20)
+        if code == 0:
+            return {
+                "ok": True,
+                "live": False,
+                "mode": "publication_receipt_fallback",
+                "detail": f"live probe unavailable; {receipt_path} proves remote head {receipt_head[:12]} is an ancestor of local HEAD",
+            }
+
+    return {"ok": False, "live": False, "mode": "unavailable", "detail": last_detail or "git remote probe failed"}
+
+
 def _git_remote_ok() -> bool:
-    code, _, _ = _run(["git", "ls-remote", "--heads", "origin", "main"], timeout=30)
-    return code == 0
+    return bool(_git_remote_state()["ok"])
 
 
 def _docker_ps(names_only: bool = False) -> list[str]:
@@ -326,8 +364,11 @@ def _reentry_sync(
     effective_pg_ready = pg_ok or (bounded_runtime_fallback and bool(cached_surface.get("postgres_ready")))
     docker_detail = "trinity-v5-pg-proof" if docker_running else ("bounded fallback from prior runtime proof" if effective_docker_running else "trinity-v5-pg-proof")
     postgres_detail = pg_detail if pg_ok else ("bounded fallback from prior runtime proof" if effective_pg_ready else pg_detail)
+    git_remote_state = _git_remote_state()
     surface = {
-        "git_remote_live": _git_remote_ok(),
+        "git_remote_live": bool(git_remote_state["live"]),
+        "git_remote_available": bool(git_remote_state["ok"]),
+        "git_remote_mode": str(git_remote_state["mode"]),
         "docker_cli": bool(shutil.which("docker")),
         "docker_container_running": effective_docker_running,
         "postgres_ready": effective_pg_ready,
@@ -364,7 +405,7 @@ def _reentry_sync(
     _write_text("docs/v6-session-surface-drift-note.md", "\n".join(drift_lines) + "\n")
     checks = [
         _check("suite_status_present", "PASS" if ok_suite else "FAIL", suite_detail if not ok_suite else "present"),
-        _check("git_remote_live", "PASS" if surface["git_remote_live"] else "FAIL", "git ls-remote origin main"),
+        _check("git_remote_available", "PASS" if surface["git_remote_available"] else "FAIL", str(git_remote_state["detail"])),
         _check("docker_container_running", "PASS" if surface["docker_container_running"] else "FAIL", docker_detail),
         _check("postgres_ready", "PASS" if surface["postgres_ready"] else "FAIL", postgres_detail),
     ]

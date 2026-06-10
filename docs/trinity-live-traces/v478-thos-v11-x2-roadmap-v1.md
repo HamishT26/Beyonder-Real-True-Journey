@@ -1,0 +1,66 @@
+# v478 THOS v11 x2 Roadmap
+
+- generated_nz: `2026-06-04T15:42:24+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V11X2-01` (source_freshness): Synthesize v478 v11 x1 evidence into v11 x2 source freshness decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-02` (app_lane): Synthesize v478 v11 x1 evidence into v11 x2 app lane decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-03` (cli_gap): Synthesize v478 v11 x1 evidence into v11 x2 cli gap decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-04` (sandbox): Synthesize v478 v11 x1 evidence into v11 x2 sandbox decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-05` (mcp_trust): Synthesize v478 v11 x1 evidence into v11 x2 mcp trust decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-06` (windows_isolation): Synthesize v478 v11 x1 evidence into v11 x2 windows isolation decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-07` (google_agents): Synthesize v478 v11 x1 evidence into v11 x2 google agents decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-08` (nvidia_compute): Synthesize v478 v11 x1 evidence into v11 x2 nvidia compute decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-09` (github_security): Synthesize v478 v11 x1 evidence into v11 x2 github security decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-10` (observability): Synthesize v478 v11 x1 evidence into v11 x2 observability decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-11` (governance): Synthesize v478 v11 x1 evidence into v11 x2 governance decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-12` (handoff): Synthesize v478 v11 x1 evidence into v11 x2 handoff decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-13` (source_freshness): Synthesize v478 v11 x1 evidence into v11 x2 source freshness decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-14` (app_lane): Synthesize v478 v11 x1 evidence into v11 x2 app lane decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-15` (cli_gap): Synthesize v478 v11 x1 evidence into v11 x2 cli gap decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-16` (sandbox): Synthesize v478 v11 x1 evidence into v11 x2 sandbox decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-17` (mcp_trust): Synthesize v478 v11 x1 evidence into v11 x2 mcp trust decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-18` (windows_isolation): Synthesize v478 v11 x1 evidence into v11 x2 windows isolation decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-19` (google_agents): Synthesize v478 v11 x1 evidence into v11 x2 google agents decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-20` (nvidia_compute): Synthesize v478 v11 x1 evidence into v11 x2 nvidia compute decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-21` (github_security): Synthesize v478 v11 x1 evidence into v11 x2 github security decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-22` (observability): Synthesize v478 v11 x1 evidence into v11 x2 observability decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-23` (governance): Synthesize v478 v11 x1 evidence into v11 x2 governance decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-24` (handoff): Synthesize v478 v11 x1 evidence into v11 x2 handoff decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-25` (source_freshness): Synthesize v478 v11 x1 evidence into v11 x2 source freshness decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-26` (app_lane): Synthesize v478 v11 x1 evidence into v11 x2 app lane decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-27` (cli_gap): Synthesize v478 v11 x1 evidence into v11 x2 cli gap decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-28` (sandbox): Synthesize v478 v11 x1 evidence into v11 x2 sandbox decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-29` (mcp_trust): Synthesize v478 v11 x1 evidence into v11 x2 mcp trust decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-30` (windows_isolation): Synthesize v478 v11 x1 evidence into v11 x2 windows isolation decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-31` (google_agents): Synthesize v478 v11 x1 evidence into v11 x2 google agents decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-32` (nvidia_compute): Synthesize v478 v11 x1 evidence into v11 x2 nvidia compute decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-33` (github_security): Synthesize v478 v11 x1 evidence into v11 x2 github security decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-34` (observability): Synthesize v478 v11 x1 evidence into v11 x2 observability decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-35` (governance): Synthesize v478 v11 x1 evidence into v11 x2 governance decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-36` (handoff): Synthesize v478 v11 x1 evidence into v11 x2 handoff decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-37` (source_freshness): Synthesize v478 v11 x1 evidence into v11 x2 source freshness decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-38` (app_lane): Synthesize v478 v11 x1 evidence into v11 x2 app lane decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-39` (cli_gap): Synthesize v478 v11 x1 evidence into v11 x2 cli gap decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-40` (sandbox): Synthesize v478 v11 x1 evidence into v11 x2 sandbox decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-41` (mcp_trust): Synthesize v478 v11 x1 evidence into v11 x2 mcp trust decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-42` (windows_isolation): Synthesize v478 v11 x1 evidence into v11 x2 windows isolation decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-43` (google_agents): Synthesize v478 v11 x1 evidence into v11 x2 google agents decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-44` (nvidia_compute): Synthesize v478 v11 x1 evidence into v11 x2 nvidia compute decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-45` (github_security): Synthesize v478 v11 x1 evidence into v11 x2 github security decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-46` (observability): Synthesize v478 v11 x1 evidence into v11 x2 observability decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-47` (governance): Synthesize v478 v11 x1 evidence into v11 x2 governance decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-48` (handoff): Synthesize v478 v11 x1 evidence into v11 x2 handoff decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-49` (source_freshness): Synthesize v478 v11 x1 evidence into v11 x2 source freshness decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-50` (app_lane): Synthesize v478 v11 x1 evidence into v11 x2 app lane decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-51` (cli_gap): Synthesize v478 v11 x1 evidence into v11 x2 cli gap decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-52` (sandbox): Synthesize v478 v11 x1 evidence into v11 x2 sandbox decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-53` (mcp_trust): Synthesize v478 v11 x1 evidence into v11 x2 mcp trust decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-54` (windows_isolation): Synthesize v478 v11 x1 evidence into v11 x2 windows isolation decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-55` (google_agents): Synthesize v478 v11 x1 evidence into v11 x2 google agents decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-56` (nvidia_compute): Synthesize v478 v11 x1 evidence into v11 x2 nvidia compute decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-57` (github_security): Synthesize v478 v11 x1 evidence into v11 x2 github security decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-58` (observability): Synthesize v478 v11 x1 evidence into v11 x2 observability decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-59` (governance): Synthesize v478 v11 x1 evidence into v11 x2 governance decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.
+- `V478V11X2-60` (handoff): Synthesize v478 v11 x1 evidence into v11 x2 handoff decisions while preserving status-only receipts, current-source grounding, CLI open-gap evidence, and open GMUT gates.

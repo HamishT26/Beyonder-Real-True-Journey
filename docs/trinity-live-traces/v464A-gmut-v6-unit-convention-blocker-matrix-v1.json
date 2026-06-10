@@ -1,0 +1,94 @@
+{
+  "artifact_id": "v464A-gmut-v6-unit-convention-blocker-matrix-v1",
+  "artifact_kind": "unit_convention_blocker_matrix",
+  "phase": "v464A_GMUT_v6",
+  "status": "unit_conventions_not_closed",
+  "claim_boundary": "This matrix records which unit decisions block dimensional/SI closure. It does not select final conventions or validate a physical scalar sector.",
+  "blocker_rows": [
+    {
+      "row_id": "GMUT-V464A-V6-BLOCK-001",
+      "blocker": "coordinate_time_convention",
+      "choices_open": [
+        "x0=ct",
+        "x0=t",
+        "dt d3x"
+      ],
+      "blocked_outputs": [
+        "measure SI dimension",
+        "partial_mu SI dimension",
+        "c-factor placement",
+        "Z_Psi SI dimension"
+      ],
+      "closure_requirement": "Declare one convention and propagate it through the action, density, derivative, and SI rows."
+    },
+    {
+      "row_id": "GMUT-V464A-V6-BLOCK-002",
+      "blocker": "metric_dimensional_convention",
+      "choices_open": [
+        "dimensionless metric",
+        "dimensionful coordinate metric bookkeeping"
+      ],
+      "blocked_outputs": [
+        "sqrt(-g) interpretation",
+        "kinetic contraction units",
+        "metric variation route"
+      ],
+      "closure_requirement": "State metric convention before using the measure or kinetic contraction as dimensionally closed."
+    },
+    {
+      "row_id": "GMUT-V464A-V6-BLOCK-003",
+      "blocker": "Psi_dimension",
+      "choices_open": [
+        "symbolic X",
+        "candidate canonical mass^1",
+        "dimensionless field",
+        "observable-dependent unit"
+      ],
+      "blocked_outputs": [
+        "dV_dPsi units",
+        "Z_Psi units",
+        "canonical normalization",
+        "physical interpretation"
+      ],
+      "closure_requirement": "Choose or derive a field dimension and explain what physical or formal role fixes it."
+    },
+    {
+      "row_id": "GMUT-V464A-V6-BLOCK-004",
+      "blocker": "Z_Psi_role",
+      "choices_open": [
+        "canonical 1",
+        "dimensionful coefficient",
+        "field-dependent function",
+        "absorbed into Psi",
+        "unknown"
+      ],
+      "blocked_outputs": [
+        "kinetic term closure",
+        "normalization claims",
+        "ghost-free or positivity claims",
+        "EOM coefficient"
+      ],
+      "closure_requirement": "Define value, sign, units, field dependence, and placement before deriving dynamics."
+    },
+    {
+      "row_id": "GMUT-V464A-V6-BLOCK-005",
+      "blocker": "restored_constants",
+      "choices_open": [
+        "hbar restoration",
+        "c restoration",
+        "overall scalar-sector prefactor"
+      ],
+      "blocked_outputs": [
+        "natural-to-SI conversion",
+        "action normalization",
+        "density-to-action conversion"
+      ],
+      "closure_requirement": "Declare restored constants and prefactors before claiming an SI bridge."
+    }
+  ],
+  "allowed_summary": "The matrix may state which decisions remain open and what each decision blocks.",
+  "forbidden_summary": "The matrix may not state that the dimensional/SI bridge is closed, canonical normalization is fixed, or EOM_Psi follows.",
+  "gate_verdict": {
+    "dimensional_si_consistency": "open"
+  }
+}

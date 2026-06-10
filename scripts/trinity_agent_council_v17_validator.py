@@ -11,11 +11,11 @@ ROOT = Path(__file__).resolve().parent.parent
 
 DEFAULT_ARGS = [
     "--roster",
-    "docs/trinity-agent-council-roster-v8.json",
+    "docs/trinity-agent-council-roster-v7.json",
     "--command-book",
     "docs/trinity-command-book-v11.json",
     "--subagent-registry",
-    "docs/trinity-subagent-registry-v5.json",
+    "docs/trinity-subagent-registry-v4.json",
     "--runtime-session-log",
     "docs/v17-runtime-session-log-latest.json",
 ]

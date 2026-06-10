@@ -1,0 +1,43 @@
+{
+  "artifact": "v468A_THOS_v3_x1_command_surface_cookbook_v1",
+  "phase": "v468A_THOS_v3_x1",
+  "prepared_nz": "2026-06-01T23:25:56.9349955+12:00",
+  "recipes": [
+    {
+      "name": "live_head_check",
+      "probe_level": "P0",
+      "intent": "Fetch, read local head, read upstream head, and record drift before any current-phase publication.",
+      "safety_rule": "Read branch state only; no reset, rebase, force push, or broad stage."
+    },
+    {
+      "name": "json_parse_check",
+      "probe_level": "P1",
+      "intent": "Parse only current-phase JSON artifacts before staging.",
+      "safety_rule": "Fail closed on malformed JSON and do not stage partial artifacts."
+    },
+    {
+      "name": "safety_pattern_guard",
+      "probe_level": "P1",
+      "intent": "Scan current-phase artifacts and staged diff for sensitive values, private key material, local capture paths, and raw capture references.",
+      "safety_rule": "Fail closed on hits and rewrite the artifact rather than suppressing the guard."
+    },
+    {
+      "name": "exact_curated_stage",
+      "probe_level": "P4",
+      "intent": "Stage only the explicit current-phase file list.",
+      "safety_rule": "Abort if any pre-existing staged file exists or if staged names differ from the curated list."
+    },
+    {
+      "name": "remote_equality_verify",
+      "probe_level": "P1",
+      "intent": "Fetch after push and verify local head equals upstream head.",
+      "safety_rule": "Do not claim publication until equality is observed live."
+    },
+    {
+      "name": "drive_mirror_planned_only",
+      "probe_level": "P0",
+      "intent": "Document Drive mirror requirements without mutating Drive.",
+      "safety_rule": "Connector mutation remains blocked without separate explicit approval and returned metadata receipt."
+    }
+  ]
+}

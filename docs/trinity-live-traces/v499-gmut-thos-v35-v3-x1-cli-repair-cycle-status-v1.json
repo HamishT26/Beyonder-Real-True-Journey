@@ -1,0 +1,33 @@
+{
+  "artifact_type": "cli_repair_cycle_status",
+  "phase_slug": "v499-gmut-thos-v35-v3-x1",
+  "generated_utc": "2026-06-07T06:29:02Z",
+  "overall_status": "OPEN_GAP_CLI_REPAIR_IN_PROGRESS",
+  "retry_notifier_status": "FINAL_MESSAGES_READY_BUT_QUALITY_FAILED",
+  "quality_gate_retry_status": "OPEN_GAP_CLI_ELABORATION_REPAIR_NEEDED",
+  "lanes": [
+    {
+      "lane": "Arby",
+      "latest_quality_status": "OPEN_GAP_ELABORATION_REPAIR_NEEDED",
+      "repair_status": "repair_process_active",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aster Vale",
+      "latest_quality_status": "OPEN_GAP_ELABORATION_REPAIR_NEEDED",
+      "repair_status": "repair_launched",
+      "raw_output_published": false
+    }
+  ],
+  "phase_advance": {
+    "x2_start_allowed": false,
+    "reason": "CLI repair quality gates have not passed",
+    "duration_is_completion_proof": false
+  },
+  "productive_wait_next": [
+    "continue source-to-x2 design mapping",
+    "prepare x2 build artifacts without closing x1",
+    "rerun one-shot CLI notifier after a bounded repair window",
+    "rerun quality gates after final-message hashes change"
+  ]
+}

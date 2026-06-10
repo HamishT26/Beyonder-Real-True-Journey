@@ -1,0 +1,60 @@
+{
+  "artifact": "v470_THOS_v3_x1_validator_report_design_v1",
+  "phase": "v470_THOS_v3_x1",
+  "classification": "evidence",
+  "basis": [
+    "v470_THOS_v2_x1_template_family",
+    "v470_THOS_v2_x2_validator_schema",
+    "v470_THOS_v2_x2_required_field_enum_checks",
+    "v470_THOS_v2_x2_pass_shape_fixtures",
+    "v470_THOS_v2_x2_fail_blocker_fixtures",
+    "v470_THOS_v2_x2_consent_capability_matrix",
+    "v470_THOS_v2_x2_retention_privacy_tests"
+  ],
+  "claim_ceiling": "validator_report_design_only_not_runtime_execution",
+  "gmut_gate_effect": "none_open_not_tested",
+  "report_schema": {
+    "report_id": "string",
+    "phase_ref": "string",
+    "target_artifacts": ["string"],
+    "source_authority": ["official_primary", "local_tracked_artifact", "tool_output", "advisory_only", "open_gap"],
+    "checks": [
+      {
+        "check_id": "string",
+        "predicate_id": "string",
+        "target_ref": "string",
+        "template_family": "command|boundary|cleanup|retention|connector|publication|advisory|source",
+        "status": "PASS_SHAPE_ONLY|FAIL_BLOCKER|OPEN_GAP|NOT_RUN",
+        "severity": "info|warning|blocker|fatal",
+        "evidence_ref": "string",
+        "blocked_claims": ["string"],
+        "safe_replacement": "string",
+        "gmut_gate_effect": "none_open_not_tested"
+      }
+    ],
+    "summary": {
+      "pass_shape_only_count": "integer",
+      "fail_blocker_count": "integer",
+      "open_gap_count": "integer",
+      "not_run_count": "integer",
+      "publication_allowed": "boolean",
+      "publication_reason": "string"
+    },
+    "excluded_material": [
+      "raw logs",
+      "session JSONL",
+      "screenshots",
+      "credential-bearing material",
+      "unredacted approval records"
+    ]
+  },
+  "publication_rule": "publication_allowed can be true only when fail_blocker_count is zero, target paths are current-phase allowlisted, and no forbidden material is staged",
+  "non_claims": [
+    "runtime success",
+    "connector execution",
+    "cleanup",
+    "cloud mutation",
+    "GMUT validation",
+    "gate closure"
+  ]
+}

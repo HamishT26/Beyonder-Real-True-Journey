@@ -1,0 +1,19 @@
+Receipt:
+The authoritative checkpoint at `docs/trinity-live-traces/v261-v280-adaptive-council-seed-synthesis-v1.json` already sets `multiplex_refresh_seconds=30` and `fallback_refresh_seconds=4`. It also frames the cadence rule as adaptive, with next work generated in small 3-message blocks after seed synthesis.
+
+Blocker:
+The remaining risk is not cadence definition but misuse of the 4-second path. The same checkpoint separates runtime-health proof from transport proof and keeps sandbox/provider truth boundaries explicit. Without a narrow “active debugging” trigger, 4-second polling can be mistaken for normal operations and create avoidable load or noisy false-health interpretation. I am not making any web, provider, billing, or remote publication claim.
+
+Refinement:
+Treat `30s` as the steady-state multiplex default for all lanes after seed synthesis. Reserve `4s` only for short-lived active debugging windows tied to a concrete local symptom such as `alive but silent`, `response.txt missing`, transport contamination, or repeated timeout on a known health artifact. Exit the debug window after one of three conditions: receipt restored, fault classified, or debug budget expired. That keeps the cadence policy aligned with the checkpoint’s evidence-first and small-block discipline.
+
+Next-cycle proposal:
+Adopt a simple lane-local rule:
+`mode=default -> refresh every 30s`
+`mode=debug -> refresh every 4s for one bounded window only`
+
+Debug entry should require a local receiptable reason. Debug exit should write a compact classification:
+`restored`, `transport fault`, `sandbox inspection fault`, or `runtime still unproven`.
+
+For the next 3-message block, have each lane report:
+`current mode`, `debug trigger if any`, `last clean receipt timestamp`, and `whether fallback was actually used`.

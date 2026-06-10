@@ -1,0 +1,33 @@
+{
+  "artifact_type": "watcher_notifier_trust_policy",
+  "phase_slug": "v498-gmut-thos-v34-v7-x2",
+  "generated_utc": "2026-06-07T03:50:02Z",
+  "overall_status": "PASS_POLICY_BUILT",
+  "policy_rules": [
+    {
+      "rule_id": "x1_no_babysit_before_15_minute_gate",
+      "rule": "After all five x1 lane prompts are sent, do not manually check lane status or artifact upload state until the 15-minute cadence gate unless a watcher emits a blocker receipt."
+    },
+    {
+      "rule_id": "x2_no_babysit_before_10_minute_gate",
+      "rule": "After x2 prep starts, do not perform manual lane status checks until the 10-minute prep gate unless a watcher emits a blocker receipt."
+    },
+    {
+      "rule_id": "productive_wait_required",
+      "rule": "Use waiting windows for research, reflection, task design, next-phase planning, source-ledger refresh, runner hardening, and approval-packet preparation."
+    },
+    {
+      "rule_id": "completion_requires_receipt",
+      "rule": "Completion requires watcher, notifier, final-marker, app-lane, CLI-lane, or normalized-board receipt evidence; waiting time alone is not completion proof."
+    },
+    {
+      "rule_id": "status_only_publication",
+      "rule": "Publish only status fields, hashes, byte counts, word counts, timing, and policy outcomes; do not publish raw lane text, raw app transport, screenshots, credentials, or private dumps."
+    }
+  ],
+  "watcher_repair_escalation": [
+    "If a lane misses a cadence gate, keep the sibling on the roster and route the gap into stale-flow repair.",
+    "If a watcher emits sensitive-material risk, pause publication and run exposure guard before staging.",
+    "If CLI output is ready but generic markers appear, run strict marker review before treating the result as blocked."
+  ]
+}

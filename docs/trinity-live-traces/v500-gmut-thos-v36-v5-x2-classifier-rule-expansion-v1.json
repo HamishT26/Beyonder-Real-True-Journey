@@ -1,0 +1,29 @@
+{
+  "artifact_type": "classifier_rule_expansion",
+  "phase_slug": "v500-gmut-thos-v36-v5-x2",
+  "generated_utc": "2026-06-07T19:50:12Z",
+  "overall_status": "PASS_CLASSIFIER_RULE_EXPANSION_BUILT_AND_USED",
+  "script_updated": "thos_phase_artifact_cadence_classifier.py",
+  "rules_added": [
+    "10-minute-prep-cadence-gate -> cadence_gate",
+    "10-minute-cadence-gate -> cadence_gate",
+    "prebuild-source-and-backlog -> prebuild_backlog",
+    "phase-artifact-cadence-classifier -> phase_artifact_classifier"
+  ],
+  "reason": [
+    "v5 x2 introduced a prebuild source/backlog receipt during the wait window",
+    "x2 cadence receipts use a 10-minute prep cadence filename",
+    "rerunning the classifier can include its own prior receipt after an initial blocked pass"
+  ],
+  "run_use_results": [
+    "script compile passed after rule expansion",
+    "v5 x2 classifier rerun returned PASS_PHASE_ARTIFACT_CLASSIFIER",
+    "unclassified_count returned to zero after explicit role coverage"
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "physics_gate_state": "open",
+    "consciousness_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}

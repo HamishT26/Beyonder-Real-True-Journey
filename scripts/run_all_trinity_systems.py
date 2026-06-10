@@ -505,6 +505,9 @@ def build_commands(
     profile: str,
     body_benchmark_mode: str,
     materialization_level: str,
+    skip_v166_v180_dashboard_run: bool,
+    skip_v181_v200_cross_app_council_run: bool,
+    skip_v201_v220_cross_app_council_run: bool,
 ) -> list[tuple[str, list[str]]]:
     if profile == "recover":
         enforce = True
@@ -1407,6 +1410,26 @@ def build_commands(
                 )
             )
 
+    include_v201_v220_council = (
+        not skip_v201_v220_cross_app_council_run
+        and (
+            profile == "deep"
+            or (profile == "materialize" and materialization_level == "l5_ha_prod")
+        )
+    )
+    if include_v201_v220_council:
+        commands.append(
+            (
+                "v201-v220 low-live cross-app council runner",
+                [
+                    PYTHON_BIN,
+                    "scripts/trinity_v201_v220_low_live_cross_app_council.py",
+                    "--run-all",
+                    "--verify-artifacts",
+                ],
+            )
+        )
+
     if body_benchmark_mode == "off":
         commands = [
             item
@@ -1426,6 +1449,9 @@ def render_profile_catalog() -> str:
     for name in ("standard", "quick", "deep", "collab", "materialize", "recover"):
         lines.append(f"- {name}: {PROFILE_HELP[name]}")
     lines.append("- --quick-mode: legacy alias for --profile quick")
+    lines.append("- --skip-v201-v220-cross-app-council-run: disables the latest low-live cross-app council runner in deep and L5 materialize runs")
+    lines.append("- --skip-v181-v200-cross-app-council-run: legacy no-op; v181-v200 remains directly callable")
+    lines.append("- --skip-v166-v180-dashboard-run: legacy no-op; v166-v180 remains directly callable")
     return "\n".join(lines)
 
 
@@ -1892,6 +1918,21 @@ def main() -> None:
         help="Skip body_track_runner benchmark guardrail stage.",
     )
     parser.add_argument(
+        "--skip-v166-v180-dashboard-run",
+        action="store_true",
+        help="Legacy no-op. The v166-v180 runner remains directly callable but is no longer the latest default low-live suite hook.",
+    )
+    parser.add_argument(
+        "--skip-v181-v200-cross-app-council-run",
+        action="store_true",
+        help="Legacy no-op. The v181-v200 runner remains directly callable but is no longer the latest default low-live suite hook.",
+    )
+    parser.add_argument(
+        "--skip-v201-v220-cross-app-council-run",
+        action="store_true",
+        help="Skip the latest v201-v220 low-live cross-app council runner that deep and L5 materialize runs include by default.",
+    )
+    parser.add_argument(
         "--body-benchmark-mode",
         choices=("auto", "off", "observe", "enforce"),
         default="auto",
@@ -2000,6 +2041,9 @@ def main() -> None:
         profile=profile,
         body_benchmark_mode=body_benchmark_mode,
         materialization_level=args.materialization_level,
+        skip_v166_v180_dashboard_run=args.skip_v166_v180_dashboard_run,
+        skip_v181_v200_cross_app_council_run=args.skip_v181_v200_cross_app_council_run,
+        skip_v201_v220_cross_app_council_run=args.skip_v201_v220_cross_app_council_run,
     )
     resumed_step_count = 0
     recovery_parent_run = ""

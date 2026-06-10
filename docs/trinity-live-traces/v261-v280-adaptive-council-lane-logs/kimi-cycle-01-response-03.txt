@@ -1,0 +1,14 @@
+Receipt: Acknowledged v261-v280 cycle-01-turn-03 on Windows sandbox readiness and permission-profile requirements. Current environment is Windows PowerShell, working directory `D:\GHC-Archives\worktrees\v58-omega`, non-interactive mode. No edits, commits, or destructive commands will be issued this turn.
+
+Blocker:
+1. Elevation status unknown � cannot confirm admin privileges required for sandbox boundary changes or system-level permission profiling.
+2. Execution policy may restrict `.ps1` or Python script runs; no prior v241-v260 evidence confirms unrestricted policy in this session.
+3. Large skill/repo footprint (700+ skills, deep paths) risks path-length or ACL restrictions on read-heavy operations if sandbox is hardened.
+
+Refinement:
+- Need a deterministic permission-profile manifest: minimum required ACLs for `scripts/`, `skills/`, `docs/`, and `.codex/` read/write boundaries.
+- Distinguish between user-level (Hamis profile) and sandbox-level restrictions before any future script execution.
+- Prefer read-only probes (e.g., `Get-Acl`, `Get-ExecutionPolicy`, `python --version`) over writes until profile is validated.
+
+Next-cycle proposal:
+Run a lightweight, read-only sandbox audit: check execution policy, current user/group context, ACLs on repo root, and available interpreters (Python, Node). Produce a gated �Windows Permission Profile� summary to unblock v281+ script execution and skill materialization without elevation guesses.

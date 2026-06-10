@@ -1,0 +1,43 @@
+{
+  "artifact": "v470_THOS_v2_x1_plugin_mcp_skill_boundary_card_template_v1",
+  "phase": "v470_THOS_v2_x1",
+  "classification": "evidence",
+  "template": {
+    "card_id": "string",
+    "surface_id": "string",
+    "surface_type": "plugin|mcp|skill|api|connector|browser|computer_use",
+    "surface_name": "string",
+    "owner": "string|unknown",
+    "version": "string|unknown",
+    "capabilities_exposed": ["string"],
+    "capabilities_denied": ["string"],
+    "capability_class": "read|write|external_mutation|credential_sensitive|unknown",
+    "write_capable": "boolean",
+    "network_capable": "boolean",
+    "credential_surface": "none|possible|confirmed|unknown",
+    "consent_required": "boolean",
+    "approval_required": "boolean",
+    "approval_scope": "string|none",
+    "human_trigger_required": "boolean",
+    "allowed_inputs": ["string"],
+    "allowed_outputs": ["string"],
+    "data_classes": ["public|repo|private|sensitive|unknown"],
+    "retention_mode": "none|summary|artifact|private_review",
+    "source_of_record": "string|unknown",
+    "refresh_authority": "string|unknown",
+    "blocked_actions": ["string"],
+    "audit_events": ["string"],
+    "validation_targets": ["string"],
+    "action_status": "not_invoked|read_only_invoked|blocked|requires_approval"
+  },
+  "boundary_rules": [
+    "Capability alone never authorizes a write.",
+    "Consent alone never creates capability.",
+    "Effective permission for mutation requires capability, consent, and approval when approval is required.",
+    "Boundary cards must declare both allowed and denied capability.",
+    "Every write-capable connector needs an approval packet path.",
+    "Skills guide workflow but do not grant authority.",
+    "MCP and plugin writes are external mutations unless proven otherwise.",
+    "GMUT fields are not gated or validated by THOS boundary cards."
+  ]
+}

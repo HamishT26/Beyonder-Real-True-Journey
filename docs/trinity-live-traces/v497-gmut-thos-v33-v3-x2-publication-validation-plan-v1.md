@@ -1,0 +1,4 @@
+# v497-gmut-thos-v33-v3-x2 Publication Validation Plan
+
+- Status: `PASS_PUBLICATION_VALIDATION_PLAN_READY`
+- Exact publication only.

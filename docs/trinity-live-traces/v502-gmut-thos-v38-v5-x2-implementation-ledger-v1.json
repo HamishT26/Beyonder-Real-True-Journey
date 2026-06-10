@@ -1,0 +1,56 @@
+{
+  "artifact_type": "x2_implementation_ledger",
+  "claim_boundary": {
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false,
+    "gmut_gate_state": "open",
+    "phase_closeout_claimed": false
+  },
+  "generated_utc": "2026-06-08T09:29:09Z",
+  "next_manual_status_check_not_before_utc": "2026-06-08T09:37:12Z",
+  "overall_status": "PASS_V502_V5_X2_IMPLEMENTATION_LEDGER_READY_WITH_CLI_R2_RUNNING",
+  "phase_slug": "v502-gmut-thos-v38-v5-x2",
+  "publication_boundary": {
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "prompt_body_published": false,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false,
+    "status_only": true
+  },
+  "implemented_items": [
+    {
+      "item": "strict_cli_launcher_startprocess_fallback",
+      "status": "implemented_and_published",
+      "evidence": "r2 launch receipt observed fallback StartProcess and start sentinels for both CLI lanes."
+    },
+    {
+      "item": "receipt_path_resolution_hardening",
+      "status": "implemented_and_published",
+      "evidence": "productive-wait, launch-checklist, and phase-advance verifiers accept repo-relative paths."
+    },
+    {
+      "item": "app_thread_redaction_before_publication",
+      "status": "implemented_and_published",
+      "evidence": "app completion notifier passed exposure after thread redaction."
+    },
+    {
+      "item": "postgate_carryover_classification",
+      "status": "implemented_and_published",
+      "evidence": "classifier roles added for StartProcess repair, r2 carryover, and generic x2 build queues."
+    },
+    {
+      "item": "phase_advance_gate_kept_closed",
+      "status": "active",
+      "evidence": "x2 prep explicitly carries CLI pending state and does not claim phase advancement."
+    }
+  ],
+  "open_items": [
+    "Harvest r2 CLI completion after the 09:37:12Z gate.",
+    "Run CLI elaboration quality gates only if final messages are present.",
+    "Run five-lane normalizer only after both CLI lanes have final artifacts.",
+    "Only then decide whether v502 v5 x2 can close or needs another repair loop."
+  ]
+}

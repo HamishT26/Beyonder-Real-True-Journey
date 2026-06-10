@@ -1,0 +1,80 @@
+{
+  "artifact_id": "v467A_GMUT_v3_x2_guard_synthesis_v1",
+  "phase": "v467A_GMUT_v3_x2",
+  "prepared_at_nz": "2026-06-01T20:43:29+12:00",
+  "claim_taxonomy": "evidence",
+  "synthesis_status": "machine_checkable_guard_plan_ready_no_fixture_execution",
+  "integrated_inputs": [
+    "v467A_GMUT_v3_x1 baseline-reference schema",
+    "v467A_GMUT_v3_x1 refusal lints",
+    "v467A_GMUT_v3_x1 sibling advisory synthesis",
+    "v467A_GMUT_v3_x1 120-task roadmap",
+    "v467A_GMUT_v3_x2 20-search source refresh",
+    "v467A_GMUT_v3_x2 P1 guard probe"
+  ],
+  "guard_layers": [
+    {
+      "layer": "closed_shape",
+      "requirement": "all required fields must be present and no forbidden fields may appear",
+      "failure_result": "blocked"
+    },
+    {
+      "layer": "hard_locks",
+      "requirement": "execution_status must be not_run, result_status must be no_result, claim_ceiling must be fixture_precondition_only",
+      "failure_result": "blocked"
+    },
+    {
+      "layer": "open_gates",
+      "requirement": "all six gates must remain OPEN_NOT_TESTED in this phase",
+      "failure_result": "blocked"
+    },
+    {
+      "layer": "source_authority",
+      "requirement": "each claim must map to an allowed source authority class",
+      "failure_result": "blocked_or_context_only"
+    },
+    {
+      "layer": "term_inventory",
+      "requirement": "active, explicitly absent, disabled, and held terms must be separated without conflict",
+      "failure_result": "blocked"
+    },
+    {
+      "layer": "comparison_boundary",
+      "requirement": "comparison_rule_ref can describe a future comparison but cannot imply execution",
+      "failure_result": "refused"
+    },
+    {
+      "layer": "potential_and_auxiliary_terms",
+      "requirement": "B_Psi remains demoted and V(Psi) remains symbolic until definition artifacts exist",
+      "failure_result": "blocked"
+    },
+    {
+      "layer": "journey_boundary",
+      "requirement": "Journey/Solas material requires local path/line references and remains journey_context_not_canon",
+      "failure_result": "refused"
+    },
+    {
+      "layer": "prose_endcap",
+      "requirement": "final prose must not claim validation, recovery, safety, proof, closure, or promotion",
+      "failure_result": "refused"
+    }
+  ],
+  "open_blockers": [
+    "exact baseline equation set still missing",
+    "reference state still missing",
+    "expected output still missing",
+    "residual tolerance policy still missing",
+    "switch-leakage policy still missing",
+    "B_Psi definition artifact still absent",
+    "V(Psi) potential-rule artifact still absent",
+    "no null or baseline fixture executed"
+  ],
+  "all_six_gates": {
+    "null_recovery": "open",
+    "dimensional_SI_consistency": "open",
+    "conservation_or_exchange_law": "open",
+    "baseline_recovery": "open",
+    "fifth_force_equivalence_constraints": "open",
+    "consciousness_measurement_bridge": "open"
+  }
+}

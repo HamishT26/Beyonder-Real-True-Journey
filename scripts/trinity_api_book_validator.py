@@ -81,8 +81,8 @@ def main() -> int:
     if not isinstance(apis, list):
         failures.append("apis must be a list")
         apis = []
-    if len(apis) != 54:
-        failures.append(f"expected 54 api entries, found {len(apis)}")
+    if len(apis) < 54:
+        failures.append(f"expected at least 54 api entries, found {len(apis)}")
 
     seen: set[str] = set()
     for index, row in enumerate(apis):

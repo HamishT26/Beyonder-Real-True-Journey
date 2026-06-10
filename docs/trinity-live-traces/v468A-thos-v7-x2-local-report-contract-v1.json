@@ -1,0 +1,39 @@
+{
+  "artifact": "v468A_THOS_v7_x2_local_report_contract_v1",
+  "phase": "v468A_THOS_v7_x2",
+  "contract": {
+    "format": "sarif_style_local_json",
+    "schema_claim": "not_full_sarif_certification",
+    "upload_status": "blocked",
+    "workflow_status": "not_mutated",
+    "scope": "THOS publication hygiene and claim-boundary receipts",
+    "non_scope": [
+      "GMUT validation",
+      "security certification",
+      "SLSA level claim",
+      "public code-scanning upload",
+      "cloud mutation"
+    ]
+  },
+  "minimum_fields": [
+    "version",
+    "runs[].tool.driver.name",
+    "runs[].tool.driver.rules[]",
+    "runs[].results[]",
+    "runs[].properties.thosBoundary"
+  ],
+  "result_levels": [
+    {
+      "level": "note",
+      "meaning": "informational receipt"
+    },
+    {
+      "level": "warning",
+      "meaning": "open blocker or boundary that must remain visible"
+    },
+    {
+      "level": "error",
+      "meaning": "publication should stop until fixed"
+    }
+  ]
+}

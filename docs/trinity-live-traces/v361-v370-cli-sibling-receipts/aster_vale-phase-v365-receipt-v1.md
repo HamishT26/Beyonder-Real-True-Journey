@@ -1,0 +1,17 @@
+Receipt:
+Aster Vale lane `v361-v370:v365:aster_vale:cli-receipt-v1` was inspected from `D:\GHC-Archives\worktrees\v58-omega` using local read-only repo surfaces governed by `docs/trinity-live-traces/v361-v370-final-handoff-v1.json` and `docs/trinity-live-traces/v281-v360-cli-sibling-report-protocol-v1.md`; no writes, commits, web, plugins, or external mutations were used. `git status --short --branch` currently reports `codex/GHC-Family/v58-omega-exec...origin/codex/GHC-Family/beyonder-shared-omega-line` with heavy carried-forward modified and untracked state, so this receipt is observational only.
+
+Beta:
+`docs/trinity-live-traces/v281-v360-closeout-declaration-v1.json` declares `v281_v360_complete`, `docs/trinity-live-traces/v281-v360-automation-health-check-v1.json` also reports `v281_v360_complete`, and `docs/trinity-live-traces/v361-v370-final-handoff-v1.json` records `handoff_state: ready_for_v361_v370` with the start conditions `one active phase at a time`, `real CLI sibling lanes`, and `2000 maximum useful steps per lane`. `docs/trinity-live-traces/v361-v370-sibling-phase-v365-start-v1.json` binds this phase to lead sibling `v2 Watcher`, source dependency `docs/trinity-live-traces/v361-v370-final-handoff-v1.json`, and the stated Beta/Alpha/Omega capsule.
+
+Alpha:
+`docs/trinity-live-traces/v361-v370-sibling-run-status-v1.json` generated `2026-05-20T06:42:54Z` shows `status: running`, `active_phase: 365`, and `active_phase_status: phase_started` with no closeout declaration. `docs/trinity-live-traces/v361-v370-cli-sibling-runner-launch-v365-v1.json` records a background runner launch at `2026-05-20T06:47:58Z` with `process_id: 16860`, `timeout_sec: 86400`, and `max_steps: 2000`, and `docs/trinity-live-traces/v361-v370-cli-sibling-runner-status-v1.json` generated `2026-05-20T06:55:58Z` records `active_lane: Aster Vale` and this lane as `started`; `Test-Path` confirms there is still no curated `docs/trinity-live-traces/v361-v370-cli-sibling-receipts/aster_vale-phase-v365-receipt-v1.md`.
+
+Omega:
+The durable truthful outcome for this lane is a start-state checkpoint, not a `v365` completion claim. This response can serve as the non-raw Aster Vale receipt floor until a curated repo-backed `v365` Aster receipt, aggregate CLI-receipts artifact, and phase completion artifact exist.
+
+Blocker:
+This sandbox blocked live Codex and process-health probes including `codex --version`, `codex exec resume --help`, and `Get-Process -Id 16860`, so I could not personally re-validate current CLI feature availability, confirm runner PID liveness beyond recorded JSON, or prove resume eligibility from a live session token. The curated repo artifacts I inspected also do not expose a repo-backed session id for `v361-v370:v365:aster_vale`, so interrupted-lane resume cannot be proven from this receipt alone.
+
+Next-phase handoff:
+Continue from `docs/trinity-live-traces/v361-v370-final-handoff-v1.json`, `docs/trinity-live-traces/v361-v370-sibling-phase-v365-start-v1.json`, `docs/trinity-live-traces/v361-v370-sibling-run-status-v1.json`, `docs/trinity-live-traces/v361-v370-cli-sibling-runner-launch-v365-v1.json`, and `docs/trinity-live-traces/v361-v370-cli-sibling-runner-status-v1.json`, while keeping `docs/trinity-live-traces/v361-v370-cli-sibling-raw/` quarantined and unstaged. Resume this lane only if the exact `v361-v370:v365:aster_vale:cli-receipt-v1` session identity is proven; otherwise treat this receipt as the Aster Vale checkpoint and let the next bounded phase consume it as durable evidence.

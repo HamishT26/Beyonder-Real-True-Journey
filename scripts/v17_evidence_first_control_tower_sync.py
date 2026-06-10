@@ -81,6 +81,8 @@ def main() -> int:
     parser.add_argument("--control-tower-md", default="docs/v17-evidence-first-control-tower-latest.md")
     parser.add_argument("--runtime-validation", default="docs/v17-runtime-session-validation-latest.json")
     parser.add_argument("--runtime-log", default="docs/v17-runtime-session-log-latest.json")
+    parser.add_argument("--runtime-resolution", default="docs/trinity-runtime-model-resolution-v1.json")
+    parser.add_argument("--identity-proof", default="docs/trinity-live-traces/v41-orun-identity-reclaim-proof-v1.json")
     parser.add_argument("--criteria-validation", default="docs/v17-external-establishment-validation-latest.json")
     parser.add_argument("--standards-validation", default="docs/v17-standards-bridge-validation-latest.json")
     parser.add_argument("--suite-status", default="docs/v17-system-suite-status-latest.json")
@@ -93,6 +95,8 @@ def main() -> int:
     control = _read_json(args.control_tower_json)
     runtime_validation = _read_json(args.runtime_validation)
     runtime_log = _read_json(args.runtime_log)
+    runtime_resolution = _read_json(args.runtime_resolution)
+    identity_proof = _read_json(args.identity_proof)
     criteria_validation = _read_json(args.criteria_validation)
     standards_validation = _read_json(args.standards_validation)
     suite_status = _read_json(args.suite_status)
@@ -118,6 +122,10 @@ def main() -> int:
         if isinstance(runtime_metrics, dict)
         else runtime_validation.get("runtime_truth_complete")
     )
+    repo_default = runtime_resolution.get("repo_runtime_default", {}) if isinstance(runtime_resolution.get("repo_runtime_default"), dict) else {}
+    active_identity = identity_proof.get("active_canonical_identity", {}) if isinstance(identity_proof.get("active_canonical_identity"), dict) else {}
+    agent_md_identity = active_identity.get("agent_md", {}) if isinstance(active_identity.get("agent_md"), dict) else {}
+    role_identity = active_identity.get("role_contract", {}) if isinstance(active_identity.get("role_contract"), dict) else {}
 
     control["generated_utc"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     suite_state, suite_summary = _suite_summary(suite_status)
@@ -125,6 +133,30 @@ def main() -> int:
     control["suite_summary"] = suite_summary
     control["checkpoint_class"] = args.checkpoint_class
     control["shared_latest_eligible"] = args.checkpoint_class == "shared_full_suite_authority"
+    control["requested_model_profile"] = str(
+        repo_default.get("requested_model_profile")
+        or role_identity.get("requested_model_profile")
+        or agent_md_identity.get("requested_model_profile")
+        or "gpt-5.4"
+    )
+    control["resolved_model_profile"] = str(
+        repo_default.get("resolved_model_profile")
+        or role_identity.get("resolved_model_profile")
+        or agent_md_identity.get("resolved_model_profile")
+        or "gpt-5.4"
+    )
+    control["requested_reasoning_effort"] = str(
+        repo_default.get("requested_reasoning_effort")
+        or role_identity.get("requested_reasoning_effort")
+        or agent_md_identity.get("requested_reasoning_effort")
+        or "xhigh"
+    )
+    control["resolved_reasoning_effort"] = str(
+        repo_default.get("resolved_reasoning_effort")
+        or role_identity.get("resolved_reasoning_effort")
+        or agent_md_identity.get("resolved_reasoning_effort")
+        or "xhigh"
+    )
     control["runtime_session_state"] = str(runtime_validation.get("overall_status") or "FAIL")
     control["runtime_session_overlay_state"] = overlay_state
     control["runtime_truth_complete"] = runtime_truth_complete
@@ -145,6 +177,8 @@ def main() -> int:
         filesystem_gate.get("overall_status"),
     )
     control["external_live_overlay_state"] = overlay_state
+    if str(identity_proof.get("orun_identity_correction_state") or "").strip():
+        control["orun_identity_correction_state"] = str(identity_proof.get("orun_identity_correction_state"))
     control["overall_status"] = _worst_status(
         control.get("suite_state"),
         control.get("council_continuity_state"),

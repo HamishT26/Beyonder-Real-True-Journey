@@ -1,0 +1,291 @@
+{
+  "generated_utc": "2026-04-18T13:48:15+00:00",
+  "phase": "v43_omega",
+  "overall_status": "PASS",
+  "automation_registry_state": "scheduler_fallback_verified_with_lane_residuals",
+  "automation_backend_state": "windows_task_scheduler_authoritative",
+  "codex_native_automation_state": "tool_unavailable_in_session",
+  "repo_workspace": "C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey",
+  "python_path": "C:\\Users\\hamis\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+  "powershell_path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "existing_v42_tasks": [
+    {
+      "task_name": "Codex V42 V42 API Health 0330",
+      "state": "3",
+      "task_path": "\\"
+    },
+    {
+      "task_name": "Codex V42 V42 API Health 1530",
+      "state": "3",
+      "task_path": "\\"
+    },
+    {
+      "task_name": "Codex V42 V42 GMUT Lab 0345",
+      "state": "3",
+      "task_path": "\\"
+    },
+    {
+      "task_name": "Codex V42 V42 GMUT Lab 1545",
+      "state": "3",
+      "task_path": "\\"
+    },
+    {
+      "task_name": "Codex V42 V42 Vesper Sync 0400",
+      "state": "3",
+      "task_path": "\\"
+    },
+    {
+      "task_name": "Codex V42 V42 Vesper Sync 1600",
+      "state": "3",
+      "task_path": "\\"
+    }
+  ],
+  "admitted_automations": [
+    {
+      "name": "V43 WSL Health",
+      "lane": "wsl_health",
+      "times": [
+        "03:15",
+        "15:15"
+      ],
+      "classification": "runtime_script",
+      "tier": "core",
+      "purpose": "Probe the repaired WSL host, distro registration, and repo mount without mutating the distro.",
+      "entrypoint": "scripts/trinity_v43_scheduled_cycle.ps1 -Lane wsl_health",
+      "proof_artifact": "docs/trinity-live-traces/v43-wsl-resurrection-v1.json",
+      "rollback_note": "Delete both scheduled tasks and keep WSL checks manual only."
+    },
+    {
+      "name": "V43 API Health",
+      "lane": "api_health",
+      "times": [
+        "03:30",
+        "15:30"
+      ],
+      "classification": "runtime_script",
+      "tier": "core",
+      "purpose": "Refresh the cloud carry-forward surface and capture Kai's bounded orchestration summary.",
+      "entrypoint": "scripts/trinity_v43_scheduled_cycle.ps1 -Lane api_health",
+      "proof_artifact": "docs/trinity-live-traces/v43-cloud-carry-forward-v1.json",
+      "rollback_note": "Delete both scheduled tasks and keep cloud carry-forward manual only."
+    },
+    {
+      "name": "V43 GMUT Lab",
+      "lane": "gmut_lab",
+      "times": [
+        "03:45",
+        "15:45"
+      ],
+      "classification": "runtime_script",
+      "tier": "core",
+      "purpose": "Run the bounded QCIT, transmutation, validation, kairotic, and energy-bank bundle.",
+      "entrypoint": "scripts/trinity_v43_scheduled_cycle.ps1 -Lane gmut_lab",
+      "proof_artifact": "docs/trinity-live-traces/v43-gmut-lab-bundle-v1.json",
+      "rollback_note": "Delete both scheduled tasks and keep GMUT lab manual only."
+    },
+    {
+      "name": "V43 Vesper Sync",
+      "lane": "vesper_sync",
+      "times": [
+        "04:00",
+        "16:00"
+      ],
+      "classification": "runtime_script",
+      "tier": "core",
+      "purpose": "Write bounded V43 telemetry to Bigtable and attempt the cognitive-engine side proof when available.",
+      "entrypoint": "scripts/trinity_v43_scheduled_cycle.ps1 -Lane vesper_sync",
+      "proof_artifact": "docs/trinity-live-traces/v43-vesper-memory-cognitive-bridge-v1.json",
+      "rollback_note": "Delete both scheduled tasks and keep Vesper sync manual only."
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "run_all_trinity_systems",
+      "reason": "Too broad for unattended twice-daily recurrence and not restricted to a bounded proof surface."
+    },
+    {
+      "name": "trinity_background_os",
+      "reason": "Needs additional runtime guardrails before unattended scheduling."
+    },
+    {
+      "name": "broad_trinity_wave",
+      "reason": "Candidate inventory remains too wide for safe recurring admission in V43."
+    }
+  ],
+  "task_results": [
+    {
+      "task_name": "Codex V43 V43 WSL Health 0315",
+      "lane": "wsl_health",
+      "start_time": "03:15",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 WSL Health 0315\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 WSL Health 0315\nNext Run Time:                        19/04/2026 3:15:00 am\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane wsl_health\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           3:15:00 am\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 WSL Health 1515",
+      "lane": "wsl_health",
+      "start_time": "15:15",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 WSL Health 1515\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 WSL Health 1515\nNext Run Time:                        19/04/2026 3:15:00 pm\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane wsl_health\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           3:15:00 pm\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 API Health 0330",
+      "lane": "api_health",
+      "start_time": "03:30",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 API Health 0330\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 API Health 0330\nNext Run Time:                        19/04/2026 3:30:00 am\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane api_health\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           3:30:00 am\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 API Health 1530",
+      "lane": "api_health",
+      "start_time": "15:30",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 API Health 1530\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 API Health 1530\nNext Run Time:                        19/04/2026 3:30:00 pm\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane api_health\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           3:30:00 pm\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 GMUT Lab 0345",
+      "lane": "gmut_lab",
+      "start_time": "03:45",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 GMUT Lab 0345\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 GMUT Lab 0345\nNext Run Time:                        19/04/2026 3:45:00 am\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane gmut_lab\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           3:45:00 am\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 GMUT Lab 1545",
+      "lane": "gmut_lab",
+      "start_time": "15:45",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 GMUT Lab 1545\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 GMUT Lab 1545\nNext Run Time:                        19/04/2026 3:45:00 pm\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane gmut_lab\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           3:45:00 pm\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 Vesper Sync 0400",
+      "lane": "vesper_sync",
+      "start_time": "04:00",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 Vesper Sync 0400\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 Vesper Sync 0400\nNext Run Time:                        19/04/2026 4:00:00 am\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane vesper_sync\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           4:00:00 am\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    },
+    {
+      "task_name": "Codex V43 V43 Vesper Sync 1600",
+      "lane": "vesper_sync",
+      "start_time": "16:00",
+      "create_returncode": 0,
+      "create_stdout_excerpt": "SUCCESS: The scheduled task \"Codex V43 V43 Vesper Sync 1600\" has successfully been created.\n",
+      "create_stderr_excerpt": "",
+      "query_returncode": 0,
+      "query_stdout_excerpt": "\nFolder: \\\nHostName:                             LAPTOP-TT7QEGM9\nTaskName:                             \\Codex V43 V43 Vesper Sync 1600\nNext Run Time:                        19/04/2026 4:00:00 pm\nStatus:                               Ready\nLogon Mode:                           Interactive only\nLast Run Time:                        30/11/1999 12:00:00 am\nLast Result:                          267011\nAuthor:                               LAPTOP-TT7QEGM9\\hamis\nTask To Run:                          C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1\" -Lane vesper_sync\nStart In:                             N/A\nComment:                              N/A\nScheduled Task State:                 Enabled\nIdle Time:                            Disabled\nPower Management:                     Stop On Battery Mode, No Start On Batteries\nRun As User:                          hamis\nDelete Task If Not Rescheduled:       Disabled\nStop Task If Runs X Hours and X Mins: 72:00:00\nSchedule:                             Scheduling data is not available in this format.\nSchedule Type:                        Daily \nStart Time:                           4:00:00 pm\nStart Date:                           19/04/2026\nEnd Date:                             N/A\nDays:                                 Every 1 day(s)\nMonths:                               N/A\nRepeat: Every:                        Disabled\nRepeat: Until: Time:                  Disabled\nRepeat: Until: Duration:              Disabled\nRepeat: Stop If Still Running:        Disabled\n",
+      "query_stderr_excerpt": "",
+      "created": true,
+      "queried": true
+    }
+  ],
+  "manual_first_cycles": [
+    {
+      "lane": "wsl_health",
+      "returncode": 1,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "Command failed: scripts/trinity_v43_wsl_resurrection.py --probe-only\nAt C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1:44 char:9\n+         throw \"Command failed: $($CommandArgs -join ' ')\"\n+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : OperationStopped: (Command failed:...py --probe-only:String) [], RuntimeException\n    + FullyQualifiedErrorId : Command failed: scripts/trinity_v43_wsl_resurrection.py --probe-only\n \n",
+      "proof_artifact": "docs/trinity-live-traces/v43-wsl-resurrection-v1.json",
+      "proof_artifact_exists": true,
+      "proof_artifact_refreshed": true,
+      "proof_artifact_status": "WARN",
+      "verified": true,
+      "verification_state": "verified_with_residuals"
+    },
+    {
+      "lane": "api_health",
+      "returncode": 1,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "Command failed: scripts/trinity_v43_cloud_carry_forward.py --scheduled\nAt C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1:44 char:9\n+         throw \"Command failed: $($CommandArgs -join ' ')\"\n+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : OperationStopped: (Command failed:....py --scheduled:String) [], RuntimeException\n    + FullyQualifiedErrorId : Command failed: scripts/trinity_v43_cloud_carry_forward.py --scheduled\n \n",
+      "proof_artifact": "docs/trinity-live-traces/v43-cloud-carry-forward-v1.json",
+      "proof_artifact_exists": true,
+      "proof_artifact_refreshed": true,
+      "proof_artifact_status": "WARN",
+      "verified": true,
+      "verification_state": "verified_with_residuals"
+    },
+    {
+      "lane": "gmut_lab",
+      "returncode": 0,
+      "stdout_excerpt": "lane=gmut_lab\nlog=C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\.local-runtime\\v43\\scheduled-logs\\gmut_lab-20260419-015124.log\n",
+      "stderr_excerpt": "",
+      "proof_artifact": "docs/trinity-live-traces/v43-gmut-lab-bundle-v1.json",
+      "proof_artifact_exists": true,
+      "proof_artifact_refreshed": true,
+      "proof_artifact_status": "PASS",
+      "verified": true,
+      "verification_state": "verified_clean"
+    },
+    {
+      "lane": "vesper_sync",
+      "returncode": 1,
+      "stdout_excerpt": "",
+      "stderr_excerpt": "Command failed: scripts/trinity_v43_vesper_memory_cognitive_bridge.py --scheduled\nAt C:\\Users\\hamis\\workspace\\Beyonder-Real-True-Journey\\scripts\\trinity_v43_scheduled_cycle.ps1:44 char:9\n+         throw \"Command failed: $($CommandArgs -join ' ')\"\n+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : OperationStopped: (Command failed:....py --scheduled:String) [], RuntimeException\n    + FullyQualifiedErrorId : Command failed: scripts/trinity_v43_vesper_memory_cognitive_bridge.py --scheduled\n \n",
+      "proof_artifact": "docs/trinity-live-traces/v43-vesper-memory-cognitive-bridge-v1.json",
+      "proof_artifact_exists": true,
+      "proof_artifact_refreshed": true,
+      "proof_artifact_status": "FAIL",
+      "verified": true,
+      "verification_state": "verified_with_residuals"
+    }
+  ],
+  "lane_residuals": [
+    "wsl_health=WARN",
+    "api_health=WARN",
+    "vesper_sync=FAIL"
+  ],
+  "completed_steps": [
+    "scheduled_task_created::Codex V43 V43 WSL Health 0315",
+    "scheduled_task_created::Codex V43 V43 WSL Health 1515",
+    "scheduled_task_created::Codex V43 V43 API Health 0330",
+    "scheduled_task_created::Codex V43 V43 API Health 1530",
+    "scheduled_task_created::Codex V43 V43 GMUT Lab 0345",
+    "scheduled_task_created::Codex V43 V43 GMUT Lab 1545",
+    "scheduled_task_created::Codex V43 V43 Vesper Sync 0400",
+    "scheduled_task_created::Codex V43 V43 Vesper Sync 1600",
+    "manual_first_cycle_verified::wsl_health",
+    "manual_first_cycle_verified::api_health",
+    "manual_first_cycle_verified::gmut_lab",
+    "manual_first_cycle_verified::vesper_sync"
+  ],
+  "blockers": []
+}

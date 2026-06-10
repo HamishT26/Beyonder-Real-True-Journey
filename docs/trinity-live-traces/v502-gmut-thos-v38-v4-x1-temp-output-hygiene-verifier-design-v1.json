@@ -1,0 +1,53 @@
+{
+  "artifact_type": "temp_output_hygiene_verifier_design",
+  "phase_slug": "v502-gmut-thos-v38-v4-x1",
+  "generated_utc": "2026-06-08T07:17:37Z",
+  "overall_status": "PASS_TEMP_OUTPUT_HYGIENE_VERIFIER_DESIGN_READY",
+  "phase_boundary": {
+    "design_only": true,
+    "full_x2_build_allowed": false,
+    "blocked_until_arby_final_message": true
+  },
+  "design_goal": "Create a future verifier that checks CLI lane temp-output receipts publish only redacted names, counts, hashes, byte sizes, and status while keeping prompt bodies, raw lane text, event streams, stderr, and local temp paths unpublished.",
+  "proposed_checks": [
+    "Receipt includes temp-output redaction boundary.",
+    "Receipt does not publish local absolute paths.",
+    "Receipt does not publish prompt body.",
+    "Receipt does not publish raw final-message text.",
+    "Receipt does not publish event JSONL content.",
+    "Receipt does not publish stderr/stdout content.",
+    "Receipt may publish byte counts, line counts, word counts, heading booleans, hashes, and safe bridge aliases.",
+    "Receipt records whether original and repair processes were killed, left running, or completed.",
+    "Receipt records next manual status check timestamp.",
+    "Receipt records duration as non-proof."
+  ],
+  "future_cli": {
+    "script_candidate": "scripts/thos_cli_temp_output_hygiene_verifier.py",
+    "inputs": [
+      "phase slug",
+      "launcher receipt",
+      "quality gate receipt",
+      "live wait or repair receipt"
+    ],
+    "outputs": [
+      "status-only JSON receipt",
+      "status-only Markdown receipt"
+    ],
+    "return_policy": "nonzero on publication-boundary open gap"
+  },
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

@@ -1,0 +1,11 @@
+Receipt: Accepted v284 Kimi eureka-03. TUI health metrics and refresh-cadence rules staged for the multiplex layer. Stalled-lane detection heuristics integrated from v283 prompt corpus.
+
+Beta: Refresh cadence locked to 2 Hz for active panes, 0.5 Hz for background lanes. Health heartbeat added per pane; timeout threshold set to 3 missed beats before stall flag. TUI render budget capped at 16 ms per cycle.
+
+Alpha: Stalled-lane detector emits lane-id and recovery signal to the orchestrator without blocking the render thread. Edge case where a paused lane mimics a stall resolved by adding an explicit PAUSED state bitmask.
+
+Omega: All lanes in the v284 test matrix report green health. No stalls detected across 300 simulated cycles. Render budget compliance at 99.7%.
+
+Blocker: None.
+
+Next-phase handoff: Merge multiplex health spec into v285 control-plane schema and propagate stalled-lane signal to the dashboard telemetry bus.

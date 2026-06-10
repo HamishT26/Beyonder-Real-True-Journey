@@ -1,0 +1,52 @@
+{
+  "aggregate_status": "OPEN_GAP",
+  "browser_smoke": {
+    "api_methods": [
+      "tab.url()",
+      "tab.title()",
+      "tab.playwright.locator('body').innerText(...)"
+    ],
+    "body_start_observed": "OpenAI Academy plugins and skills page body text observed",
+    "claim_ceiling": "Browser smoke proves corrected method shape for this page only; it is not broad Browser durability.",
+    "incorrect_prior_method": "tab.playwright.url()",
+    "ok": true,
+    "title": "Plugins and skills | OpenAI",
+    "url": "https://openai.com/academy/codex-plugins-and-skills/"
+  },
+  "generated_at_utc": "2026-06-02T13:46:14+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v4-x2",
+  "rows": [
+    {
+      "evidence": {
+        "api_methods": [
+          "tab.url()",
+          "tab.title()",
+          "tab.playwright.locator('body').innerText(...)"
+        ],
+        "body_start_observed": "OpenAI Academy plugins and skills page body text observed",
+        "claim_ceiling": "Browser smoke proves corrected method shape for this page only; it is not broad Browser durability.",
+        "incorrect_prior_method": "tab.playwright.url()",
+        "ok": true,
+        "title": "Plugins and skills | OpenAI",
+        "url": "https://openai.com/academy/codex-plugins-and-skills/"
+      },
+      "message": "Browser smoke reached the OpenAI Academy plugins/skills page",
+      "row_id": "browser_smoke",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Use tab.url()/tab.title(); do not use tab.playwright.url()",
+      "row_id": "method_correction",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This is a bounded smoke result, not broad Browser durability",
+      "row_id": "durability_claim",
+      "status": "OPEN_GAP"
+    }
+  ]
+}

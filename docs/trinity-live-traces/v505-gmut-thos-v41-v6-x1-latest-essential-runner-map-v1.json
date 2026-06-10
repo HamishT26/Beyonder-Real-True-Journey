@@ -1,0 +1,37 @@
+{
+  "artifact_type": "latest_essential_runner_map",
+  "phase_slug": "v505-gmut-thos-v41-v6-x1",
+  "generated_utc": "2026-06-09T11:40:01Z",
+  "overall_status": "PASS_LATEST_ESSENTIAL_RUNNER_MAP",
+  "runner_groups": {
+    "lane_launch_and_watch": [
+      "thos_council_app_lane_notifier_runner.py",
+      "thos_cli_strict_stdin_lane_launcher.py",
+      "thos_cli_lane_completion_notifier.py",
+      "thos_cli_elaboration_quality_gate.py",
+      "thos_cli_marker_review_ledger.py",
+      "thos_five_lane_status_normalizer.py"
+    ],
+    "cadence_and_wait": [
+      "thos_status_check_cadence_guard.py",
+      "thos_waiting_session_alpha_task_builder.py",
+      "thos_productive_wait_receipt_verifier.py",
+      "thos_wait_policy_guard.py"
+    ],
+    "x2_build_and_publication": [
+      "thos_x1_closeout_x2_input_builder.py",
+      "thos_x2_implementation_bundle.py",
+      "thos_phase_artifact_cadence_classifier.py",
+      "thos_status_receipt_exposure_guard.py",
+      "thos_no_overclaim_guard.py",
+      "thos_phase_advance_gate_verifier.py",
+      "thos_phase_dashboard_receipt.py"
+    ]
+  },
+  "entrypoint_policy": {
+    "node_entrypoint_first_for_cli": true,
+    "windows_entrypoint_fallback_allowed": true,
+    "use_latest_essential_helpers_first": true,
+    "legacy_helpers_not_deleted": true
+  }
+}

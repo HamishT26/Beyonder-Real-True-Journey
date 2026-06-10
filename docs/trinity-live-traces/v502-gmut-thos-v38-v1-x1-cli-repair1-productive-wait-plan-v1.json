@@ -1,0 +1,30 @@
+{
+  "artifact_type": "productive_wait_plan",
+  "phase_slug": "v502-gmut-thos-v38-v1-x1",
+  "generated_utc": "2026-06-08T04:18:30Z",
+  "overall_status": "PASS_REPAIR1_PRODUCTIVE_WAIT_PLAN_READY",
+  "repair_context": {
+    "repair_reason": "Initial CLI artifacts had correct headings and item counts but did not meet the 3000-word elaboration threshold.",
+    "lanes": [
+      "Arby",
+      "Aster Vale"
+    ],
+    "repair_launcher_receipt": "v502-gmut-thos-v38-v1-x1-cli-cmd-launcher-repair1-v1.json"
+  },
+  "wait_gate": {
+    "manual_status_check_not_before_utc": "2026-06-08T04:31:34Z",
+    "status_check_policy": "Do not manually poll CLI repair status before the gate; use the CLI completion notifier after the gate.",
+    "phase_advance_policy": "Do not advance beyond x1 completion until both repaired CLI lanes pass quality or a scoped blocker receipt explains the gap."
+  },
+  "productive_tasks": [
+    "Build and validate the productive-wait receipt verifier.",
+    "Prepare x2 build funnel candidates from source findings and app-lane completion.",
+    "Keep exposure guards ahead of staging so thread IDs, local paths, raw outputs, and private data are not published.",
+    "Capture the repair reason as status-only evidence rather than raw CLI text."
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "raw_lane_text_published": false
+  }
+}

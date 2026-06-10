@@ -1,0 +1,62 @@
+{
+  "artifact_type": "cli_marker_review_resolution",
+  "phase_slug": "v497-gmut-thos-v33-v2-x1",
+  "generated_utc": "2026-06-06T15:10:00Z",
+  "overall_status": "PASS_FALSE_POSITIVE_TOKEN_WORD_REVIEW",
+  "review_scope": "status-only review of sensitive-marker counts in finalized CLI last-message files",
+  "lanes": [
+    {
+      "lane": "Arby",
+      "final_message_bytes": 12049,
+      "final_message_hash": "3b24c9455b330adb026f6c8ca8d199a4de59dad04ec5faa2ca0f32100da7efc2",
+      "sensitive_marker_count": 0,
+      "marker_counts": {
+        "begin_rsa": 0,
+        "begin_openssh": 0,
+        "openai_sk_shape": 0,
+        "aws_akia_shape": 0,
+        "api_key_marker": 0,
+        "secret_word": 0,
+        "password_word": 0,
+        "credential_word": 0,
+        "token_word": 0
+      },
+      "resolution": "no_sensitive_marker_review_needed",
+      "completion_allowed": true
+    },
+    {
+      "lane": "Aster Vale",
+      "final_message_bytes": 12956,
+      "final_message_hash": "44750840a00b656395d940136881c0bdb3142a9c7758e8ba28b30c91bef7b726",
+      "sensitive_marker_count": 1,
+      "marker_counts": {
+        "begin_rsa": 0,
+        "begin_openssh": 0,
+        "openai_sk_shape": 0,
+        "aws_akia_shape": 0,
+        "api_key_marker": 0,
+        "secret_word": 0,
+        "password_word": 0,
+        "credential_word": 0,
+        "token_word": 1
+      },
+      "resolution": "false_positive_plain_token_word",
+      "completion_allowed": true
+    }
+  ],
+  "operator_reading": [
+    "The first v2 x1 CLI status receipt correctly opened a marker-review gap because Aster Vale had one sensitive marker hit.",
+    "Temp-only category review found no credential-shaped pattern, no API-key marker, no password marker, no secret marker, and no credential marker.",
+    "The single hit was the ordinary word token; it is classified as a false-positive policy/content word, not credential evidence.",
+    "No final lane body text is published; only byte counts, hashes, marker categories, and review status are recorded."
+  ],
+  "claim_boundary": {
+    "scope": "CLI marker review resolution only",
+    "lane_body_text_published": false,
+    "local_path_published": false,
+    "raw_transport_published": false,
+    "credentials_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "artifact": "v469A_GMUT_v6_x1_temporal_kinetic_formula_card_v1",
+  "phase": "v469A_GMUT_v6_x1",
+  "classification": "evidence",
+  "purpose": "Draft explicit temporal kinetic formula cards under the selected x0=ct rehearsal branch.",
+  "branch": {
+    "active_rehearsal": "x0=ct",
+    "translation_hold": "x0=t",
+    "conversion": "partial_0 Psi = c^-1 partial_t Psi"
+  },
+  "formula_cards": [
+    {
+      "id": "x0_ct_temporal_kinetic_card",
+      "required_fields": [
+        "coordinate_branch:x0=ct",
+        "metric_signature",
+        "action_sign",
+        "partial_0_relation:partial_0 Psi = c^-1 partial_t Psi",
+        "temporal_contraction:g^00 (partial_0 Psi)^2 = g^00 c^-2 (partial_t Psi)^2",
+        "spatial_contraction:h^ij partial_i Psi partial_j Psi",
+        "V(Psi):symbolic_hold",
+        "source_anchor"
+      ],
+      "status": "HOLD_OPEN_GAP",
+      "reason": "metric signature, action sign, scalar unit policy, and source anchors remain incomplete"
+    },
+    {
+      "id": "partial_0_conversion_row",
+      "required_fields": [
+        "x0_dimension:length",
+        "time_coordinate:t",
+        "conversion_factor:1/c",
+        "derivative_basis",
+        "c_factor_location",
+        "allowed_branch:x0=ct"
+      ],
+      "status": "PASS_ROW_READY_FOR_REVIEW_ONLY",
+      "reason": "conversion is explicit, but this is not an EOM derivation or gate closure"
+    },
+    {
+      "id": "scalar_kinetic_split_row",
+      "required_fields": [
+        "time term",
+        "spatial term",
+        "inverse metric references",
+        "lapse or shift policy",
+        "V(Psi):symbolic_hold",
+        "unit_policy_status"
+      ],
+      "status": "HOLD_OPEN_GAP",
+      "reason": "unit policy and boundary class are not fixed"
+    }
+  ],
+  "invalid_conditions": [
+    "missing partial_0=(1/c)partial_t under x0=ct",
+    "mixing x0=ct and x0=t without a translation appendix",
+    "claiming scalar EOM derivation",
+    "claiming fixture pass",
+    "claiming dimensional/SI gate closure"
+  ]
+}

@@ -1,0 +1,19 @@
+Receipt:
+Using the local worktree only, I can ground this lane in three verified facts: this session is `read-only` with `approval policy = never`; `.codex/config.toml` requests `gpt-5.4`/`high` but records a resolved fallback profile; and the repo’s advisory digests already treat PowerShell plus native Windows sandboxing as the active bounded lane, with read-only proof as a required gate.
+
+Blocker:
+The current permission profile is not publication-ready for any step that requires writing, connector activation, auth refresh, or provider proof. In this session I cannot verify GitHub/provider callability, modify files, or materialize proof artifacts. That means “Windows sandbox readiness” is only partially satisfied: execution is bounded and native, but the permission envelope is too narrow for end-to-end publication proof.
+
+Refinement:
+The next requirement should be stated as a concrete profile contract, not a generic readiness claim:
+`read-only + never-approve` = analysis-only
+`workspace-write + on-request/on-failure approval` = local proof generation
+network/provider-enabled profile = GitHub or connector publication proof
+Also keep model truth separate from sandbox truth: the config requests one model profile, while the resolved runtime profile shows fallback behavior that should be published honestly.
+
+Next-cycle proposal:
+Run the same lane under a non-destructive `workspace-write` profile with explicit approval support, then produce:
+1. a write-proof artifact,
+2. a sandbox/permission matrix,
+3. a model-resolution proof,
+4. a GitHub proof step only if connector/network callability is actually present.

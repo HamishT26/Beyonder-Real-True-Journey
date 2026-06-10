@@ -1,0 +1,38 @@
+{
+  "artifact_type": "x1_cadence_correction",
+  "phase_slug": "v497-gmut-thos-v33-v1-x1",
+  "generated_utc": "2026-06-06T13:25:00Z",
+  "overall_status": "PASS_CORRECTION_RECORDED",
+  "issue": "parallel harvest commands were started before the x1 15-minute cadence gate had cleanly passed",
+  "observed_pre_gate_attempts": [
+    {
+      "generated_utc": "2026-06-06T13:20:55+00:00",
+      "elapsed_seconds": 857,
+      "threshold_seconds": 900,
+      "gate_status": "OPEN_GAP_WAIT_FOR_CADENCE_MARK"
+    },
+    {
+      "generated_utc": "2026-06-06T13:21:32+00:00",
+      "elapsed_seconds": 894,
+      "threshold_seconds": 900,
+      "gate_status": "OPEN_GAP_WAIT_FOR_CADENCE_MARK"
+    }
+  ],
+  "correction": {
+    "clean_gate_generated_utc": "2026-06-06T13:21:53+00:00",
+    "elapsed_seconds": 915,
+    "threshold_seconds": 900,
+    "gate_status": "PASS_STATUS_CHECK_ALLOWED",
+    "postgate_cli_receipt": "v497-gmut-thos-v33-v1-x1-cli-completion-postgate-v2.json",
+    "postgate_app_gate_status": "PASS_APP_LANE_COMPLETION_GATE"
+  },
+  "future_rule": "run the cadence gate sequentially before starting any lane harvest command when a strict wait boundary is active",
+  "claim_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

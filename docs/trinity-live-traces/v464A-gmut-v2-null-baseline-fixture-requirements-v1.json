@@ -1,0 +1,129 @@
+{
+  "artifact_id": "v464A-gmut-v2-null-baseline-fixture-requirements-v1",
+  "artifact_kind": "null_baseline_fixture_requirements",
+  "phase": "v464A_GMUT_v2",
+  "status": "fixture_requirements_recorded_not_run",
+  "claim_boundary": "This artifact records fixture requirements only. It does not run fixtures, pass null recovery, or demonstrate baseline recovery.",
+  "source_basis": [
+    "v464A-gmut-v1-null-baseline-ladder-v1",
+    "v464A-gmut-v1-open-gate-ledger-v1",
+    "multi-lane v2 advisories"
+  ],
+  "required_fixture_fields": [
+    "fixture_id",
+    "switch_target",
+    "switch_operation",
+    "disabled_terms",
+    "held_terms",
+    "baseline_expected",
+    "baseline_source_anchor",
+    "affected_equations",
+    "comparison_method",
+    "tolerance_or_exactness",
+    "failure_interpretation",
+    "execution_status",
+    "observed_result_ref",
+    "claim_limit"
+  ],
+  "fixture_rows": [
+    {
+      "fixture_id": "GMUT-V464A-V2-FIXTURE-NULL-0",
+      "switch_target": "all candidate GMUT extensions",
+      "switch_operation": "set_zero_or_remove",
+      "disabled_terms": ["g_Psi", "V(Psi) effects", "B_Psi", "L_int", "lambda_T", "C_proxy backreaction"],
+      "held_terms": ["declared baseline equations", "standard measurement/noise model"],
+      "baseline_expected": "declared known-physics baseline reappears with no candidate exotic contribution",
+      "baseline_source_anchor": "must be supplied by future baseline artifact",
+      "affected_equations": ["all candidate scalar route equations"],
+      "comparison_method": "analytic limit plus executable fixture if implementation exists",
+      "tolerance_or_exactness": "exact symbolic equality or declared numerical tolerance",
+      "failure_interpretation": "null recovery gate remains open; candidate route may require revision or quarantine",
+      "execution_status": "not_run",
+      "observed_result_ref": null,
+      "claim_limit": "fixture design only"
+    },
+    {
+      "fixture_id": "GMUT-V464A-V2-FIXTURE-NULL-1",
+      "switch_target": "scalar notation with couplings disabled",
+      "switch_operation": "spectator_limit",
+      "disabled_terms": ["g_Psi", "L_int", "exchange currents", "matter coupling"],
+      "held_terms": ["Psi notation", "chosen scalar convention packet once available"],
+      "baseline_expected": "no deviation from Null-0 while scalar remains a spectator/bookkeeping slot",
+      "baseline_source_anchor": "must be supplied by future convention artifact",
+      "affected_equations": ["scalar EOM route", "stress-energy route"],
+      "comparison_method": "show scalar contributions vanish or decouple under declared assumptions",
+      "tolerance_or_exactness": "exact symbolic decoupling preferred",
+      "failure_interpretation": "scalar route cannot be treated as harmless bookkeeping",
+      "execution_status": "not_run",
+      "observed_result_ref": null,
+      "claim_limit": "decoupling target only, not fifth-force safety"
+    },
+    {
+      "fixture_id": "GMUT-V464A-V2-FIXTURE-BASELINE-1",
+      "switch_target": "known weak-field and standard measurement baseline",
+      "switch_operation": "reference_model_comparison",
+      "disabled_terms": ["all novel force/coupling terms", "proxy backreaction", "unmapped exchange"],
+      "held_terms": ["reference baseline chosen by future artifact"],
+      "baseline_expected": "GR/Newtonian weak-field or declared standard baseline is recovered under scalar-off settings",
+      "baseline_source_anchor": "must cite exact future baseline source",
+      "affected_equations": ["baseline observable map"],
+      "comparison_method": "side-by-side equation and observable comparison",
+      "tolerance_or_exactness": "exact analytic or documented numerical tolerance",
+      "failure_interpretation": "baseline recovery gate remains open and physical claims are held",
+      "execution_status": "not_run",
+      "observed_result_ref": null,
+      "claim_limit": "baseline requirement only"
+    },
+    {
+      "fixture_id": "GMUT-V464A-V2-FIXTURE-DEGENERACY-1",
+      "switch_target": "coefficient identifiability",
+      "switch_operation": "one_parameter_knockout_or_reparameterization",
+      "disabled_terms": ["one candidate coefficient at a time"],
+      "held_terms": ["all other declared assumptions"],
+      "baseline_expected": "identify which observables depend on irreducible parameter combinations",
+      "baseline_source_anchor": "future coefficient-identifiability artifact",
+      "affected_equations": ["coefficient/SI dictionary rows"],
+      "comparison_method": "dimensionless re-expression and knockout sweep",
+      "tolerance_or_exactness": "report equivalent and non-equivalent parameter sets",
+      "failure_interpretation": "coefficient remains non-identifiable and cannot support physical interpretation",
+      "execution_status": "not_run",
+      "observed_result_ref": null,
+      "claim_limit": "identifiability test design only"
+    },
+    {
+      "fixture_id": "GMUT-V464A-V2-FIXTURE-PROXY-NULL-1",
+      "switch_target": "C_proxy",
+      "switch_operation": "metadata_only_control",
+      "disabled_terms": ["proxy-to-source coupling", "proxy backreaction", "personhood/consciousness inference"],
+      "held_terms": ["predefined operational proxy variable if future protocol exists"],
+      "baseline_expected": "proxy metadata cannot alter physical equations or prove consciousness",
+      "baseline_source_anchor": "future proxy protocol artifact",
+      "affected_equations": ["none until a protocol exists"],
+      "comparison_method": "protocol audit and sham/control design",
+      "tolerance_or_exactness": "no physical backreaction allowed",
+      "failure_interpretation": "consciousness bridge remains blocked",
+      "execution_status": "not_run",
+      "observed_result_ref": null,
+      "claim_limit": "proxy protocol requirement only"
+    }
+  ],
+  "publication_gate": {
+    "HOLD": [
+      "null recovery is implied without an observed result artifact",
+      "baseline recovery is claimed without a reference-model comparison",
+      "a not-run fixture is described as passed",
+      "proxy metadata is allowed to backreact without a protocol"
+    ],
+    "ALLOW_WITH_WARNINGS": [
+      "fixture requirements are explicit and execution_status remains not_run",
+      "baseline source anchors are acknowledged as future requirements"
+    ],
+    "ALLOW": [
+      "publication of fixture requirements as blocker routing only"
+    ]
+  },
+  "gate_verdict": {
+    "null_recovery": "open",
+    "baseline_recovery": "open"
+  }
+}

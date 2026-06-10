@@ -1,0 +1,51 @@
+{
+  "artifact_id": "v470-thos-v4-x2-plugin-refusal-matrix-v1",
+  "phase": "v470_THOS_v4_x2",
+  "created_at_nz": "2026-06-02T14:56:12+12:00",
+  "default_posture": "read_or_inventory_first; mutation_requires_named_target_and_clear_cost",
+  "matrix": [
+    {
+      "surface": "Google Drive",
+      "allowed_now": "search/read metadata and content excerpts when relevant",
+      "refuse_without_new_scope": "create, import, batchUpdate, share, permission edit, delete, bulk move",
+      "reason": "Drive writes persist externally and can expose private Journey or THOS content"
+    },
+    {
+      "surface": "NVIDIA AI-Q/NIM/Dynamo",
+      "allowed_now": "read local skills and official docs",
+      "refuse_without_new_scope": "backend research call, deploy, Kubernetes change, NGC/NIM credential use, GPU job",
+      "reason": "may spend resources, need credentials, or mutate infrastructure"
+    },
+    {
+      "surface": "GitHub connector",
+      "allowed_now": "read/review metadata where needed",
+      "refuse_without_new_scope": "issue/PR/comment mutation, secret scanning config, SARIF upload, attestation workflow edits outside curated repo patch",
+      "reason": "GitHub writes are public or durable project mutations"
+    },
+    {
+      "surface": "Computer/Chrome",
+      "allowed_now": "view or inspect when UI proof is necessary",
+      "refuse_without_new_scope": "automation changes, credential entry, app settings changes, destructive UI actions",
+      "reason": "desktop actions can have broad machine effects"
+    },
+    {
+      "surface": "Documents/Presentations/Spreadsheets",
+      "allowed_now": "local artifact design and read-only route planning",
+      "refuse_without_new_scope": "native Google Doc/Slide/Sheet creation or content update",
+      "reason": "external document writes require a named target and sharing/retention decision"
+    },
+    {
+      "surface": "Google Calendar/Gmail",
+      "allowed_now": "none unless scheduling or email task is explicit",
+      "refuse_without_new_scope": "create/update events, drafts, labels, sends, forwards",
+      "reason": "communication and scheduling mutations need explicit human intent"
+    }
+  ],
+  "global_stop_rules": [
+    "stop if cost is uncertain",
+    "stop if target file, repo, document, calendar, or infrastructure is ambiguous",
+    "stop if private/raw/secret material would leave the local repo",
+    "stop if action would create durable external state",
+    "stop if action would make a public claim stronger than local evidence supports"
+  ]
+}

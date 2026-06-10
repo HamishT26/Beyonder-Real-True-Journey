@@ -1,0 +1,70 @@
+{
+  "artifact_type": "current_source_ledger",
+  "phase_slug": "v499-gmut-thos-v35-v3-x1",
+  "generated_utc": "2026-06-07T06:04:10Z",
+  "overall_status": "PASS_SOURCE_LEDGER_READY",
+  "source_boundary": "public_current_sources_only",
+  "sources": [
+    {
+      "source_id": "openai_codex_releases",
+      "source_url": "https://github.com/openai/codex/releases",
+      "source_type": "official_github_release_surface",
+      "usable_signal": "Codex release notes emphasize profile selection, sandbox flows, MCP setup, read-only MCP concurrency, extension context, and remote reliability improvements.",
+      "x2_use": "Treat CLI/App readiness as a versioned release-surface compatibility problem, not a sibling failure."
+    },
+    {
+      "source_id": "openai_docs_mcp",
+      "source_url": "https://platform.openai.com/docs/docs-mcp",
+      "source_type": "official_openai_docs",
+      "usable_signal": "The OpenAI docs MCP is documentation-only and read-only, useful for source-backed planning without account mutation.",
+      "x2_use": "Prefer read-only source refresh and citations for Codex/OpenAI product research."
+    },
+    {
+      "source_id": "openai_codex_repo",
+      "source_url": "https://github.com/openai/codex",
+      "source_type": "official_github_repository",
+      "usable_signal": "Codex is the terminal coding-agent surface; install and release surfaces are explicit and auditable.",
+      "x2_use": "Keep local CLI launchers aligned with documented executable and release surfaces."
+    },
+    {
+      "source_id": "mcp_security_best_practices",
+      "source_url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "source_type": "official_mcp_spec",
+      "usable_signal": "MCP security guidance emphasizes consent, sandboxing, scope minimization, SSRF defenses, session integrity, and local-server risk controls.",
+      "x2_use": "Use least-privilege, explicit consent, and no raw local-server transport publication for app-lane and connector work."
+    },
+    {
+      "source_id": "mcp_roots",
+      "source_url": "https://modelcontextprotocol.io/specification/2025-06-18/client",
+      "source_type": "official_mcp_spec",
+      "usable_signal": "MCP roots define client-exposed filesystem focus boundaries rather than complete security enforcement.",
+      "x2_use": "Treat roots and worktrees as scoping aids; rely on sandbox and publication guards for enforcement."
+    },
+    {
+      "source_id": "owasp_logging_cheat_sheet",
+      "source_url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "source_type": "owasp_primary_guidance",
+      "usable_signal": "Logging should sanitize event data and avoid sensitive-data leakage, log injection, and unnecessary detail exposure.",
+      "x2_use": "Keep watcher/notifier receipts status-only with hashes, counts, states, and categories instead of raw outputs."
+    },
+    {
+      "source_id": "nvidia_vera_rubin_ai_factories",
+      "source_url": "https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Vera-Rubin-Ramps-Into-Full-Production-to-Power-Agentic-AI-Factories-Worldwide/default.aspx",
+      "source_type": "official_nvidia_press_release",
+      "usable_signal": "NVIDIA frames Vera Rubin as agentic AI factory infrastructure with scaled agent throughput and security across rack and context-memory layers.",
+      "x2_use": "Map THOS runner architecture to AI-factory patterns: orchestration, throughput, memory context, and security by layer."
+    },
+    {
+      "source_id": "nvidia_blackwell_architecture",
+      "source_url": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+      "source_type": "official_nvidia_architecture_page",
+      "usable_signal": "Blackwell emphasizes confidential compute, NVLink scaling, and large-model acceleration.",
+      "x2_use": "Use as inspiration for layered trust, high-throughput coordination, and scale-aware GMUT/THOS simulation planning."
+    }
+  ],
+  "claim_boundary": {
+    "latest_version_claims": "not_claimed",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}

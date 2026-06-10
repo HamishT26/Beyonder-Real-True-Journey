@@ -1,0 +1,81 @@
+{
+  "artifact_type": "command_surface_compatibility_queue",
+  "phase_slug": "v503-gmut-thos-v39-v7-x2",
+  "generated_utc": "2026-06-08T20:33:03Z",
+  "overall_status": "PASS_COMMAND_SURFACE_COMPATIBILITY_QUEUE_BUILT",
+  "surfaces": [
+    {
+      "surface": "codex_app_server",
+      "compatibility_goal": "Keep existing app-lane callable routes usable for Cicero, Kierkegaard, and Aristotle.",
+      "status_receipts": [
+        "council-app-lane-notifier-runner",
+        "council-app-lane-watch-launcher",
+        "direct-repair-gate"
+      ],
+      "risk": "background wrapper can lag or omit completion receipt",
+      "next_action": "Use direct existing-lane notify plus redaction after cadence gate."
+    },
+    {
+      "surface": "codex_remote_control",
+      "compatibility_goal": "Keep readiness and machine status inspectable without raw transport publication.",
+      "status_receipts": [
+        "phase-dashboard",
+        "command-surface-queue"
+      ],
+      "risk": "remote-control and app-server readiness can drift after updates",
+      "next_action": "Track help/status compatibility as a preflight receipt before broad automation."
+    },
+    {
+      "surface": "codex_sandbox",
+      "compatibility_goal": "Keep CLI lanes read-only and safe while allowing long-form advisory work.",
+      "status_receipts": [
+        "cli-cmd-launcher",
+        "cli-quality-gate",
+        "marker-review"
+      ],
+      "risk": "sandbox or final-marker gaps can create false blockers",
+      "next_action": "Use temp-only output, marker review, and quality gates."
+    },
+    {
+      "surface": "plugin_json",
+      "compatibility_goal": "Keep plugin inventory machine-readable without mutating plugin cache or user skills.",
+      "status_receipts": [
+        "classifier",
+        "publication-guard"
+      ],
+      "risk": "plugin-cache warnings can be mistaken for phase blockers",
+      "next_action": "Classify as stale-flow watch unless exact mutation approval exists."
+    },
+    {
+      "surface": "cli_bridge",
+      "compatibility_goal": "Keep Arby and Aster Vale launched through existing read-only CLI lanes.",
+      "status_receipts": [
+        "cli-prestart",
+        "cli-heading-contract",
+        "cli-cmd-launcher"
+      ],
+      "risk": "prompt drift can weaken elaborate response contracts",
+      "next_action": "Use lane-neutral temp prompt template plus heading contract receipt."
+    },
+    {
+      "surface": "app_watcher",
+      "compatibility_goal": "Keep app lanes supervised by background watcher and repaired only after cadence gate.",
+      "status_receipts": [
+        "watch-launcher",
+        "probe-redactor",
+        "app-receipt-redactor",
+        "direct-repair-gate"
+      ],
+      "risk": "manual babysitting can consume x1 wait windows",
+      "next_action": "Enforce no-babysitting checklist."
+    }
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "private_runtime_traces_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

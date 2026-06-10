@@ -1,0 +1,84 @@
+{
+  "artifact": "v469A_GMUT_v7_x2_x0t_c_relocation_source_table_v1",
+  "phase": "v469A_GMUT_v7_x2",
+  "classification": "open_gap",
+  "branch_policy": {
+    "active_rehearsal_branch": "x0=ct",
+    "translation_appendix_branch": "x0=t",
+    "x0_t_status": "appendix_only",
+    "physical_equivalence_claimed": false
+  },
+  "source_basis": [
+    "BIPM exact c relation supports explicit metre-second conversion discipline.",
+    "NIST dimension-exponent discipline requires row-level SI accounting.",
+    "ADM sources show lapse/shift/3-metric decomposition but do not remove the need to declare coordinate units.",
+    "Scalar action sources require metric and derivative placement to be fixed before T_Psi is varied."
+  ],
+  "relocation_rows": [
+    {
+      "row_id": "coordinate_label",
+      "x0_ct_branch": "x0 has length dimension through ct",
+      "x0_t_appendix": "x0 is a time coordinate t",
+      "c_relocation": "coordinate label changes; no formula may silently absorb c",
+      "coefficient_dependency": "all temporal coefficients",
+      "status": "open_gap"
+    },
+    {
+      "row_id": "differential",
+      "x0_ct_branch": "dx0 = c dt",
+      "x0_t_appendix": "dx0 = dt",
+      "c_relocation": "one c factor leaves the coordinate differential",
+      "coefficient_dependency": "measure and temporal kinetic rows",
+      "status": "open_gap"
+    },
+    {
+      "row_id": "partial_derivative",
+      "x0_ct_branch": "partial_0 = (1/c) partial_t",
+      "x0_t_appendix": "partial_0 = partial_t",
+      "c_relocation": "one inverse c factor must be restored in temporal kinetic terms or metric/coefficient rows",
+      "coefficient_dependency": "scalar kinetic coefficient, metric inverse component",
+      "status": "open_gap"
+    },
+    {
+      "row_id": "line_element_temporal_term",
+      "x0_ct_branch": "temporal interval may be expressed through dx0",
+      "x0_t_appendix": "temporal interval must expose c placement explicitly if ds has length units",
+      "c_relocation": "c^2 likely attaches to temporal metric factor or line-element convention, but project must declare the rule",
+      "coefficient_dependency": "metric signature card, lapse convention, null fixture",
+      "status": "hold_until_convention_bundle"
+    },
+    {
+      "row_id": "scalar_temporal_kinetic",
+      "x0_ct_branch": "g^00 partial_0 Psi partial_0 Psi",
+      "x0_t_appendix": "g^tt partial_t Psi partial_t Psi with explicit c placement",
+      "c_relocation": "two derivative factors create a c^2 sensitivity",
+      "coefficient_dependency": "Psi dimension, kinetic coefficient, metric inverse convention",
+      "status": "hold_until_coefficient_dictionary"
+    },
+    {
+      "row_id": "action_measure",
+      "x0_ct_branch": "d4x includes dx0",
+      "x0_t_appendix": "d4x includes dt",
+      "c_relocation": "one c factor may move into prefactor or integrand depending chosen action units",
+      "coefficient_dependency": "action dimension policy, gravitational prefactor, scalar prefactor",
+      "status": "hold_until_action_sign_and_units"
+    },
+    {
+      "row_id": "stress_energy_variation",
+      "x0_ct_branch": "metric variation under ct coordinate basis",
+      "x0_t_appendix": "metric variation under t coordinate basis",
+      "c_relocation": "variation target and index placement must be consistent before comparison",
+      "coefficient_dependency": "T_Psi metric variation artifact",
+      "status": "template_only"
+    },
+    {
+      "row_id": "null_switch_fixture",
+      "x0_ct_branch": "c-free fixture may hide unit assumptions",
+      "x0_t_appendix": "fixture must expose c explicitly",
+      "c_relocation": "fixture must fail if c is set to 1 without declaration",
+      "coefficient_dependency": "F0/F2 fixture manifest",
+      "status": "not_run"
+    }
+  ],
+  "result": "x0=t table is sharper but still appendix-only. No active branch switch is authorized."
+}

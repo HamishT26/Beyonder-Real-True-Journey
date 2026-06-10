@@ -1,0 +1,38 @@
+{
+  "generated_utc": "2026-05-22T23:00:42.070661+00:00",
+  "phase_range": "v436-v450",
+  "phase": 441,
+  "run": "v2_app_execution",
+  "status": "v2_app_complete",
+  "summary": "Completed v441 v2 App execution by validating complete v441 v1 CLI receipts, recording promoted Parfit/Cicero/Kierkegaard advisory receipts, and preserving freshness-table/stale-context quarantine discipline for v442.",
+  "changed_paths": [],
+  "validations": [
+    "v441 v1 CLI aggregate is complete with valid Arby, Kimi, and Aster Vale receipts; promoted App advisory receipt aggregate is complete for Parfit, Cicero, and Kierkegaard; v2 execution remained local-first with no external mutation or spend; v436-v450 remains bounded through v450 closeout."
+  ],
+  "blockers": [],
+  "external_policy": "local_first_only",
+  "spent_external_usd": 0,
+  "advisory_siblings": [
+    "Parfit",
+    "Cicero",
+    "Kierkegaard"
+  ],
+  "promoted_app_advisory_receipt_gate": {
+    "required": true,
+    "path": "docs/trinity-live-traces/v436-v450-sibling-phase-v441-v2-app-advisory-receipts-v1.json",
+    "status": "v2_app_advisory_receipts_complete",
+    "blockers": []
+  },
+  "helper_lanes": [
+    "Supervisor",
+    "v2 Watcher",
+    "Recovery Watchdog"
+  ],
+  "truth_boundaries": [
+    "This v2 receipt records Aletheon-led App execution, not CLI sibling receipt evidence.",
+    "No paid external action or external-service mutation is claimed.",
+    "Changed paths are declarative; Git staging checks remain required before commit.",
+    "From v437 onward, Parfit, Cicero, and Kierkegaard are official v2 App advisory receipt lanes, but not gate completers alone."
+  ],
+  "next_action": "Complete v441 with scripts/trinity_v436_v450_sibling_phase_complete.py --phase 441 --open-next."
+}

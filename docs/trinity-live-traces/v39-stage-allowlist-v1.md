@@ -1,0 +1,202 @@
+# V39 Stage Allowlist
+
+- Generated UTC: `2026-04-12T13:39:22+00:00`
+- Current head: `2d26ccd549af95d4ea7dc3f415cbd0eb803f1a9b`
+- Dirty path count observed: `2950`
+- Curated include count: `97`
+
+## Included Baseline V38 Prerequisites
+
+- `scripts/publish_v38_omega_surfaces.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_agent_engine_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_enterprise_api_sweep.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_environment_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_fleet_anthos_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_journey_digest.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_kai_bridge_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_os_login_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_vesper_ingest_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v38_windows_operator_probe.py` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v38-journey-advisory-digest-v1.json` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v38-journey-advisory-digest-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-agent-engine-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-agent-engine-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-enterprise-api-sweep-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-enterprise-api-sweep-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-environment-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-environment-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-fleet-anthos-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-fleet-anthos-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-kai-bridge-proof-v1-proof-refresh-snapshot.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-kai-bridge-proof-v1-status-snapshot.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-kai-bridge-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-kai-bridge-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-os-login-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-os-login-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-slot-39-gemini-cli-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-slot-39-gemini-cli-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-vesper-bigtable-ingest-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-vesper-bigtable-ingest-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-windows-operator-proof-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v38-windows-operator-proof-v1.md` (`present=True`, `tracked=False`)
+- `docs/v38-collab-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-council-coordination-note-v1.md` (`present=True`, `tracked=False`)
+- `docs/v38-deep-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-materialize-l2-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-materialize-l3-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-materialize-l4-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-materialize-l5-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-omega-closeout-summary-v1.json` (`present=True`, `tracked=False`)
+- `docs/v38-omega-continuity-pack-v1.md` (`present=True`, `tracked=False`)
+- `docs/v38-omega-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+- `docs/v38-quick-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/v38-standard-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/v39-beta-closeout-summary-v1.json` (`present=True`, `tracked=False`)
+- `docs/v39-beta-continuity-pack-v1.md` (`present=True`, `tracked=False`)
+- `docs/v39-beta-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+
+## Included V39 Paths
+
+- `scripts/trinity_v39_agent_engine_forensics.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_agent_engine_minimal_probe.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_kai_consultation_bridge.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_vesper_runtime_bridge.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_pillar_bundle.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_addition_registry.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_git_allowlist.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_git_publication_result.py` (`present=True`, `tracked=False`)
+- `scripts/trinity_v39_journey_digest.py` (`present=True`, `tracked=False`)
+- `scripts/publish_v39_omega_surfaces.py` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v39-journey-advisory-digest-v1.json` (`present=True`, `tracked=False`)
+- `docs/auto-generated/v39-journey-advisory-digest-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-stage-allowlist-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-stage-allowlist-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-agent-engine-forensics-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-agent-engine-forensics-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-agent-engine-minimal-probe-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-agent-engine-minimal-probe-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-kai-consultation-bridge-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-kai-consultation-bridge-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-vesper-runtime-bridge-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-vesper-runtime-bridge-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-pillar-bundle-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-pillar-bundle-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-mind-proof-bundle-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-mind-proof-bundle-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-body-proof-bundle-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-body-proof-bundle-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-heart-proof-bundle-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-heart-proof-bundle-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-addition-registry-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-addition-registry-v1.md` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-quick-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-standard-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-deep-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-collab-suite-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-materialize-l2-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-materialize-l3-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-materialize-l4-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-materialize-l5-status.json` (`present=True`, `tracked=False`)
+- `docs/trinity-live-traces/v39-git-publication-result-v1.json` (`present=False`, `tracked=False`)
+- `docs/trinity-live-traces/v39-git-publication-result-v1.md` (`present=False`, `tracked=False`)
+- `docs/v39-council-coordination-note-v1.md` (`present=True`, `tracked=False`)
+- `docs/v39-omega-closeout-summary-v1.json` (`present=True`, `tracked=False`)
+- `docs/v39-omega-continuity-pack-v1.md` (`present=True`, `tracked=False`)
+- `docs/v39-omega-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+- `docs/v40-beta-closeout-summary-v1.json` (`present=True`, `tracked=False`)
+- `docs/v40-beta-continuity-pack-v1.md` (`present=True`, `tracked=False`)
+- `docs/v40-beta-handoff-policy-v1.json` (`present=True`, `tracked=False`)
+- `docs/trinity-runtime-model-resolution-v1.json` (`present=True`, `tracked=True`)
+
+## Explicit Exclusions
+
+- `__pycache__/`
+- `docs/*-latest.json`
+- `docs/*-latest.md`
+- `docs/trinity-mcp-cache/`
+- `docs/trinity-expansion/`
+- `docs/trinity-agent-private-chats-`
+- `docs/trinity-agent-memory-ledgers/`
+
+## Background Dirty Sample
+
+- ` M __pycache__/body_track_runner.cpython-312.pyc`
+- ` M __pycache__/freed_id_audit_log.cpython-312.pyc`
+- ` M __pycache__/freed_id_did_signature_verifier.cpython-312.pyc`
+- ` M __pycache__/freed_id_dispute_recourse.cpython-312.pyc`
+- ` M __pycache__/freed_id_minimum_disclosure.cpython-312.pyc`
+- ` M __pycache__/freed_id_registry.cpython-312.pyc`
+- ` M __pycache__/kairotic_detector.cpython-312.pyc`
+- ` M __pycache__/psi_index_memory_core.cpython-312.pyc`
+- ` M __pycache__/qc_transmuter.cpython-312.pyc`
+- ` M __pycache__/run_simulation.cpython-312.pyc`
+- ` M __pycache__/semantic_arc_validator.cpython-312.pyc`
+- ` M __pycache__/trinity_orchestrator.cpython-312.pyc`
+- ` M __pycache__/trinity_orchestrator_full.cpython-312.pyc`
+- ` M __pycache__/trinity_simulation_engine.cpython-312.pyc`
+- ` M docs/aletheon-memory-validation-latest.json`
+- ` M docs/aletheon-memory-validation-latest.md`
+- ` M docs/aletheon-reflection-latest.md`
+- ` M docs/aurelis-cycle-tick-status.json`
+- ` M docs/body-compute-signal-board-latest.json`
+- ` M docs/body-compute-signal-board-latest.md`
+- ` M docs/body-profile-policy-v1.json`
+- ` M docs/body-track-benchmark-latest.json`
+- ` M docs/body-track-calibration-latest.json`
+- ` M docs/body-track-calibration-latest.md`
+- ` M docs/body-track-metrics-history.jsonl`
+- ` M docs/body-track-metrics-latest.json`
+- ` M docs/body-track-policy-delta-latest.json`
+- ` M docs/body-track-policy-delta-latest.md`
+- ` M docs/body-track-policy-stress-latest.json`
+- ` M docs/body-track-policy-stress-latest.md`
+- ` M docs/body-track-smoke-latest.json`
+- ` M docs/body-track-smoke-latest.md`
+- ` M docs/body-track-trend-guard-latest.json`
+- ` M docs/body-track-trend-guard-latest.md`
+- ` M docs/cache-waste-regenerator-report.json`
+- ` M docs/energy-bank-report.json`
+- ` M docs/energy-bank-state.json`
+- ` M docs/freed-id-live-path-audit-log.jsonl`
+- ` M docs/gmut-observable-map-v1.json`
+- ` M docs/gmut-observable-map-v2.json`
+- ` M docs/grand-mandala-equation-registry-v1.json`
+- ` M docs/gyroscopic-hybrid-zip-report.json`
+- ` M docs/heart-governance-signal-board-latest.json`
+- ` M docs/heart-governance-signal-board-latest.md`
+- ` M docs/heart-track-dispute-recourse-adversarial-latest.json`
+- ` M docs/heart-track-dispute-recourse-adversarial-latest.md`
+- ` M docs/heart-track-dispute-recourse-latest.json`
+- ` M docs/heart-track-dispute-recourse-latest.md`
+- ` M docs/heart-track-freedid-compliance-bridge-check-latest.json`
+- ` M docs/heart-track-freedid-compliance-bridge-check-latest.md`
+- ` M docs/heart-track-min-disclosure-adversarial-latest.json`
+- ` M docs/heart-track-min-disclosure-adversarial-latest.md`
+- ` M docs/heart-track-min-disclosure-latest.json`
+- ` M docs/heart-track-min-disclosure-latest.md`
+- ` M docs/heart-track-min-disclosure-live-latest.json`
+- ` M docs/heart-track-min-disclosure-live-latest.md`
+- ` M docs/legacy-reconstruction/analysis-report-latest.json`
+- ` M docs/legacy-reconstruction/council-registry-latest.json`
+- ` M docs/legacy-reconstruction/kairotic-detector-latest.json`
+- ` M docs/legacy-reconstruction/psi-index-memory-core-latest.json`
+- ` M docs/legacy-reconstruction/semantic-arc-validator-latest.json`
+- ` M docs/legacy-reconstruction/trinity-hybrid-adapter-latest.json`
+- ` M docs/logs/system-wake-v1.json`
+- ` M docs/logs/system-wake-v12.json`
+- ` M docs/logs/system-wake-v13.json`
+- ` M docs/logs/system-wake-v14.json`
+- ` M docs/logs/system-wake-v15.json`
+- ` M docs/logs/system-wake-v16.json`
+- ` M docs/logs/system-wake-v17.json`
+- ` M docs/memory-archives/index.jsonl`
+- ` M docs/mind-theory-signal-board-latest.json`
+- ` M docs/mind-theory-signal-board-latest.md`
+- ` M docs/mind-track-gmut-anchor-exclusion-latest.json`
+- ` M docs/mind-track-gmut-anchor-exclusion-latest.md`
+- ` M docs/mind-track-gmut-comparator-latest.json`
+- ` M docs/mind-track-gmut-comparator-latest.md`
+- ` M docs/mind-track-gmut-trace-validation-latest.json`
+- ` M docs/mind-track-gmut-trace-validation-latest.md`
+- ` M docs/public-web-weaver-brief-v1.md`
+- ` M docs/qcit-coordination-report.json`

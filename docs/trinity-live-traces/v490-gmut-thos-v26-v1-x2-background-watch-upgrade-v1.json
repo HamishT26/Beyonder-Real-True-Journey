@@ -1,0 +1,45 @@
+{
+  "artifact_type": "background_watch_runner_upgrade_receipt",
+  "generated_nz": "2026-06-06T02:52:00+12:00",
+  "generated_utc": "2026-06-05T14:52:00Z",
+  "overall_status": "PASS_BACKGROUND_START_WITH_OPEN_PROBE_EVIDENCE",
+  "phase_slug": "v490-gmut-thos-v26-v1-x2",
+  "script_updated": "scripts/thos_council_app_lane_notifier_runner.py",
+  "new_flag": "--background-watch",
+  "behavior": {
+    "launches_existing_watch_stack": true,
+    "returns_immediately_after_process_start": true,
+    "raw_stdout_stderr_published": false,
+    "expected_child_receipts": [
+      "council app-lane watch launcher receipt",
+      "council app-lane completion notifier receipt"
+    ],
+    "lets_aletheon_work_while_waiting": true
+  },
+  "smoke_probe": {
+    "phase_slug": "v490-gmut-thos-v26-v1-x2-background-watch-smoke",
+    "runner_status": "PASS_BACKGROUND_WATCH_STARTED",
+    "watch_launcher_status": "OPEN_GAP_APP_LANE_LAUNCH",
+    "completion_notifier_status": "OPEN_GAP_APP_LANE_PROBE",
+    "interpretation": "The top-level background start succeeded and returned immediately. The non-notifying lower-level probe found one busy/resume-blocked app lane while two lanes probed cleanly, so this is recorded as an app-lane state gap rather than a background-launch failure."
+  },
+  "mandatory_future_rule": {
+    "rule": "Future x1 app-lane calls should use --background-watch with --notify when the goal is to send once and keep working while watcher/notifier helpers observe completion.",
+    "completion_boundary": "A background start is not completion proof; completion still requires later watcher/notifier receipts or a blocker receipt.",
+    "productive_waiting": "After launch, continue source refresh, next-phase planning, guardrail refinement, runner work, and approval packet preparation."
+  },
+  "publication_boundary": {
+    "auth_material_published": false,
+    "image_captures_published": false,
+    "local_absolute_paths_published": false,
+    "private_connector_payload_published": false,
+    "raw_command_output_published": false,
+    "raw_lane_body_text_published": false,
+    "raw_transport_published": false
+  },
+  "claim_boundary": {
+    "scope": "THOS app-lane watcher orchestration only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

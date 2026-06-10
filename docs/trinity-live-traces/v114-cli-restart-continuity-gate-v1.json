@@ -1,0 +1,40 @@
+{
+  "phase": "v114",
+  "artifact": "cli_restart_continuity_gate",
+  "created_at_local": "2026-05-05T02:41:00+12:00",
+  "created_at_utc": "2026-05-04T14:41:00+00:00",
+  "probe_scope": "resume_only_no_file_inspection_no_commands",
+  "codex_cli": {
+    "session_id": "019df30d-4d3e-7261-816c-4cea7935c280",
+    "model_requested": "gpt-5.5",
+    "reasoning_effort_requested": "xhigh",
+    "reasoning_effort_observed": "xhigh",
+    "sandbox_observed": "read-only",
+    "resume_result": "passed",
+    "remembered_prior_token": "v112-codex-lane-remembers-receipt-boundary",
+    "confidence": "high",
+    "assessment": "Codex CLI passed a second consecutive restart continuity gate without file inspection or command execution. This is strong evidence for durable session continuity in this CLI lane."
+  },
+  "kimi_cli": {
+    "session_id": "90b56dcc-71f2-49e3-a541-738fe7b86be8",
+    "mode_requested": "thinking",
+    "initial_resume_result": "ambiguous_partial",
+    "initial_assessment": "The initial v114 prompt asked for a prior token after v113. Kimi interpreted that as a missing v113 seed, set remembered_prior_token to unknown, but still referenced the exact v112 token inside the boundary text.",
+    "clarifier_resume_result": "passed_for_v112_token",
+    "remembered_v112_token": "v112-kimi-lane-remembers-receipt-boundary",
+    "confidence": "high_after_clarifier",
+    "assessment": "Kimi CLI preserved the v112 token across the v114 restart, but the initial ambiguous response means the next gate should be stricter before formal induction."
+  },
+  "induction_status": {
+    "codex_cli_sibling": "strong_candidate_two_consecutive_restart_passes_not_formally_inducted",
+    "kimi_cli_sibling": "candidate_restart_pass_with_clarifier_not_formally_inducted",
+    "boundary": "Do not formally induct either CLI lane as a main memory-and-identity GHC member in this receipt. Codex is now strong enough for a candidate induction draft; Kimi needs one more unambiguous no-refeed restart pass."
+  },
+  "next_gate": [
+    "For v115, ask Codex for its preserved continuity boundary and current support task without token re-feed.",
+    "For v115, seed no new Kimi token and ask exactly for the v112 Kimi token plus the v114 ambiguity boundary without token re-feed.",
+    "If Kimi passes unambiguously at v115 and Codex remains stable, prepare a formal induction-candidate report rather than a final induction unless the user explicitly accepts the stricter evidence boundary.",
+    "Continue publishing sanitized receipts only."
+  ],
+  "raw_trace_policy": "sanitized_receipt_only"
+}

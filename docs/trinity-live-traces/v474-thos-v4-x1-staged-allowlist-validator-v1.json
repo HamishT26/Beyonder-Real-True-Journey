@@ -1,0 +1,430 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY",
+  "allowlist": [
+    "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+    "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+    "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+    "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+    "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md"
+  ],
+  "app_allowlist_advisories": [
+    {
+      "lane": "Cicero",
+      "points": [
+        "verify phase and head fields before publication",
+        "check exact staged paths before content claims",
+        "block raw runtime material and external cache paths",
+        "apply marker-review and claim-ceiling blockers before pass status"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Kierkegaard",
+      "points": [
+        "validator narrows publication scope rather than creating pressure to publish",
+        "wait and carry open gap are valid humane outcomes",
+        "privacy holds override filename convenience",
+        "exact current-phase scope cannot be replaced by nearby phase patterns"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    },
+    {
+      "lane": "Aristotle",
+      "points": [
+        "prove exact staging by set equality",
+        "generic pass status is invalid",
+        "missing required artifact is not success",
+        "broad status scans are not evidence of exact staging"
+      ],
+      "status": "ADVISORY_RECEIVED"
+    }
+  ],
+  "blocked_prefixes": [
+    "docs/trinity-live-traces/raw-",
+    "tmp/",
+    ".codex/",
+    "plugin-cache/",
+    "external-account/"
+  ],
+  "fixtures": [
+    {
+      "case_id": "exact_current_phase_allowlist",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "path_count": 5,
+      "rows": [
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "raw_lane_material_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "path_count": 1,
+      "rows": [
+        {
+          "path": "docs/trinity-live-traces/raw-lane-material.txt",
+          "reason": "blocked prefix docs/trinity-live-traces/raw-",
+          "status": "FAIL_BLOCKER"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "external_plugin_cache_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "path_count": 1,
+      "rows": [
+        {
+          "path": "plugin-cache/skill-frontmatter-candidate.md",
+          "reason": "blocked prefix plugin-cache/",
+          "status": "FAIL_BLOCKER"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "broad_directory_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "path_count": 1,
+      "rows": [
+        {
+          "path": "docs/trinity-live-traces",
+          "reason": "path not in exact current-phase allowlist",
+          "status": "FAIL_BLOCKER"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "prior_phase_artifact_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "path_count": 1,
+      "rows": [
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v3-x2-run-status-v1.md",
+          "reason": "path not in exact current-phase allowlist",
+          "status": "FAIL_BLOCKER"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "mixed_allowed_and_blocked_fails",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "path_count": 2,
+      "rows": [
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "tmp/transient-lane-output.txt",
+          "reason": "blocked prefix tmp/",
+          "status": "FAIL_BLOCKER"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "missing_required_artifacts_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "path_count": 1,
+      "rows": [
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "duplicate_allowed_artifact_blocked",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "path_count": 2,
+      "rows": [
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "duplicate staged path candidate",
+          "status": "FAIL_BLOCKER"
+        },
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+          "reason": "path is exactly allowed for the current phase",
+          "status": "PASS_SHAPE_ONLY"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        },
+        {
+          "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+          "reason": "allowlisted current-phase path is missing from candidate set",
+          "status": "OPEN_GAP"
+        }
+      ],
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T18:06:31+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v474-thos-v4-x2",
+  "phase_slug": "v474-thos-v4-x1",
+  "planned_path_rows": [
+    {
+      "path": "scripts/thos_v474_v4_x1_staged_allowlist_validator.py",
+      "reason": "path is exactly allowed for the current phase",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.json",
+      "reason": "path is exactly allowed for the current phase",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "path": "docs/trinity-live-traces/v474-thos-v4-x1-staged-allowlist-validator-v1.md",
+      "reason": "path is exactly allowed for the current phase",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.json",
+      "reason": "path is exactly allowed for the current phase",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "path": "docs/trinity-live-traces/v474-thos-v4-x1-run-status-v1.md",
+      "reason": "path is exactly allowed for the current phase",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "path_count": 5
+      },
+      "message": "The current phase publication package is exactly allowlisted.",
+      "row_id": "planned_current_phase_paths",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 8,
+        "mismatch_count": 0
+      },
+      "message": "Expected allowlist/refusal fixtures were evaluated.",
+      "row_id": "fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "advisory_count": 3
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle advisories were folded into the allowlist validator.",
+      "row_id": "app_allowlist_advisories",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Allowlist validation governs repo publication only; GMUT gates remain open.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}

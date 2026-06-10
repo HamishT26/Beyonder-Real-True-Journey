@@ -1,0 +1,32 @@
+# v358 Sibling Completion Receipt
+
+Generated UTC: `2026-05-20T01:56:24.890680+00:00`
+Status: `phase_complete`
+Lead sibling: `Recovery Watchdog`
+Start artifact: `docs/trinity-live-traces/v341-v360-sibling-phase-v358-start-v1.json`
+V1 report: `docs/trinity-live-traces/v341-v360-sibling-phase-v358-v1-report-v1.json`
+V2 report: `docs/trinity-live-traces/v341-v360-sibling-phase-v358-v2-report-v1.json`
+Source capsule: `docs/trinity-live-traces/v341-v360-sibling-source-capsule-v358-v1.json`
+
+Completed counts:
+- `system_expansions`: `30`
+- `commands`: `30`
+- `skills`: `30`
+- `eureka_proposals`: `30`
+- `sources`: `24`
+
+CLI receipt gate:
+- Required: `True`
+- Status: `cli_receipts_complete`
+- Artifact: `docs/trinity-live-traces/v341-v360-sibling-phase-v358-cli-receipts-v1.json`
+
+Truth boundaries:
+- The v1 report is a curated synthesis, not raw terminal output.
+- No claim is made that paid/cloud providers were touched without explicit scope and credentials.
+- The app heartbeat remains a wake bridge; local process truth remains separate.
+- Speculative science, GMUT, and frontier AI synthesis are framed as exploratory unless independently validated.
+- v341-v360 remains bounded under Aletheon oversight, with curated artifacts as the durable source of truth.
+- v358+ completion requires real Arby, Kimi, and Aster Vale CLI receipts before the next phase can open.
+- v361+ must not start from this runner without an explicit new handoff or operator automation update.
+
+Next action: Open v359 from the v341-v360 sibling base plan.

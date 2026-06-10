@@ -1,0 +1,51 @@
+{
+  "generated_utc": "2026-04-24T06:38:26+00:00",
+  "phase": "v49_omega",
+  "overall_status": "WARN",
+  "ari_collaboration_state": "bounded_helper_ready_not_reprobed_in_v49_generator",
+  "browser_use_state": "plugin_context_available_but_no_direct_browser_use_tool_callable",
+  "plugin_surface_split_state": "app_plugins_cli_mcp_and_browser_surfaces_separate",
+  "codex_cli_state": {
+    "version": {
+      "returncode": 0,
+      "stdout": "codex-cli 0.114.0\n",
+      "stderr": ""
+    },
+    "login": {
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "Logged in using ChatGPT\n"
+    },
+    "features": {
+      "returncode": 0,
+      "stdout": "apply_patch_freeform             under development  false\napps                             experimental       false\napps_mcp_gateway                 under development  false\nartifact                         under development  false\nchild_agents_md                  under development  false\ncode_mode                        under development  false\ncodex_git_commit                 under development  false\ncodex_hooks                      under development  false\ncollaboration_modes              removed            true\ndefault_mode_request_user_input  under development  false\nelevated_windows_sandbox         removed            false\nenable_request_compression       stable             true\nexperimental_windows_sandbox     removed            false\nfast_mode                        stable             true\nguardian_approval                experimental       false\nimage_detail_original            under development  false\nimage_generation                 under development  false\njs_repl                          experimental       false\njs_repl_tools_only               under development  false\nmemories                         under development  true\nmulti_agent                      experimental       true\npersonality                      stable             true\nplugins                          under development  false\npowershell_utf8                  stable             true\nprevent_idle_sleep               experimental       false\nrealtime_conversation            under development  false\nremote_models                    removed            false\nrequest_permissions              under development  false\nrequest_permissions_tool         under development  false\nrequest_rule                     removed            false\nresponses_websockets             under development  false\nresponses_websockets_v2          under development  false\nruntime_metrics                  under development  false\nsearch_tool                      removed            false\nshell_snapshot                   stable             true\nshell_tool                       stable             true\nshell_zsh_fork                   under development  false\nskill_env_var_dependency_prompt  under development  false\nskill_mcp_dependency_install     stable             true\nsqlite                           removed            true\nsteer                            removed            true\ntool_call_mcp_elicitation        under development  false\nundo                             stable             false\nunified_exec                     stable             false\nuse_linux_sandbox_bwrap          under development  false\nvoice_transcription              under development  false\nweb_search_cached                deprecated         false\nweb_search_request               deprecated         false\n",
+      "stderr": ""
+    },
+    "mcp": {
+      "returncode": 0,
+      "stdout": "Name          Command     Args                                                                                                                                                                            Env                                 Cwd  Status   Auth       \nMCP_DOCKER    docker.exe  mcp gateway run                                                                                                                                                                 -                                   -    enabled  Unsupported\ngithub        npx         -y @modelcontextprotocol/server-github                                                                                                                                          GITHUB_PERSONAL_ACCESS_TOKEN=*****  -    enabled  Unsupported\ngoogle_drive  docker.exe  run -i --rm -v mcp-gdrive:/gdrive-server --mount type=bind,src=C:/Users/hamis/.codex/secrets/google-drive-mcp/gcp-oauth.keys.json,dst=/gcp-oauth.keys.json,readonly mcp/gdrive  -                                   -    enabled  Unsupported\nplaywright    npx         @playwright/mcp@latest                                                                                                                                                          -                                   -    enabled  Unsupported\n\nName      Url                               Bearer Token Env Var  Status   Auth \ncomposio  https://connect.composio.dev/mcp  -                     enabled  OAuth\nfigma     https://mcp.figma.com/mcp         -                     enabled  OAuth\nlinear    https://mcp.linear.app/mcp        -                     enabled  OAuth\nnotion    https://mcp.notion.com/mcp        -                     enabled  OAuth\n",
+      "stderr": ""
+    },
+    "gpt55_exec_probe": {
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "reamableHttpResponseClient>>>] error: Auth error: OAuth token refresh failed: Server returned error response: invalid_grant: session not found, when send initialize request\nmcp: linear ready\nmcp: notion ready\nmcp: figma ready\n2026-04-24T06:37:26.822094Z ERROR rmcp::transport::async_rw: Error reading from stream: serde error expected value at line 1 column 1\nmcp: github failed: MCP client for `github` failed to start: MCP startup failed: handshaking with MCP server failed: connection closed: initialize response\nmcp: playwright ready\nmcp startup: ready: linear, notion, figma, playwright; failed: MCP_DOCKER, google_drive, composio, github\n2026-04-24T06:37:34.381298Z  WARN codex_core::codex: stream disconnected - retrying sampling request (1/5 in 192ms)...\nReconnecting... 1/5 (stream disconnected before completion: The model `gpt-5.5` does not exist or you do not have access to it.)\n2026-04-24T06:37:36.225893Z  WARN codex_core::codex: stream disconnected - retrying sampling request (2/5 in 392ms)...\nReconnecting... 2/5 (stream disconnected before completion: The model `gpt-5.5` does not exist or you do not have access to it.)\n2026-04-24T06:37:38.009380Z  WARN codex_core::codex: stream disconnected - retrying sampling request (3/5 in 849ms)...\nReconnecting... 3/5 (stream disconnected before completion: The model `gpt-5.5` does not exist or you do not have access to it.)\n2026-04-24T06:37:40.255674Z  WARN codex_core::codex: stream disconnected - retrying sampling request (4/5 in 1.441s)...\nReconnecting... 4/5 (stream disconnected before completion: The model `gpt-5.5` does not exist or you do not have access to it.)\n2026-04-24T06:37:44.360670Z  WARN codex_core::codex: stream disconnected - retrying sampling request (5/5 in 3.154s)...\nReconnecting... 5/5 (stream disconnected before completion: The model `gpt-5.5` does not exist or you do not have access to it.)\nERROR: stream disconnected before completion: The model `gpt-5.5` does not exist or you do not have access to it.\n"
+    },
+    "codex_app_model_state": "gpt_5_5_available_in_chatgpt_and_codex_docs_api_coming_soon",
+    "codex_cli_gpt55_state": "not_callable_from_cli_probe"
+  },
+  "cli_presence": {
+    "vercel": false,
+    "neonctl": false,
+    "circleci": false,
+    "gh": false,
+    "kimi": true
+  },
+  "vercel_state": "free_tier_scaffold_only_cli_missing",
+  "neon_state": "free_tier_scaffold_only_cli_missing",
+  "circleci_state": "quick_standard_deep_scaffold_repo_side_cli_missing",
+  "notion_state": "repo_side_mission_control_only_live_write_not_attempted",
+  "gcp_standby_state": "standby_until_user_restores_billing_auth_project_truth",
+  "vesper_standby_state": "standby_until_google_cloud_billing_truth",
+  "kai_standby_state": "standby_until_google_cloud_billing_truth"
+}

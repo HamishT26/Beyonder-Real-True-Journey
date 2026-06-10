@@ -1,0 +1,26 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY",
+  "generated_at_utc": "2026-06-02T12:48:25+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase_slug": "v472-thos-v2-x1",
+  "rollback_execution_approved_now": false,
+  "steps": [
+    "Fetch and drift-check omega before any future approved mutation.",
+    "Verify the exact path list equals this packet's 37 relative paths.",
+    "For each path, confirm live sha256 equals sha256_before before writing.",
+    "Apply only the approved frontmatter-only diff for that exact path.",
+    "Re-hash each file and compare to sha256_after_preview.",
+    "Parse YAML frontmatter for required name and description fields.",
+    "Run no-raw-body and path-safety guards before publishing any receipt.",
+    "If any check fails, stop; do not auto-rollback without exact approval unless the future approval explicitly includes rollback execution."
+  ],
+  "verification_requirements": [
+    "exact path-specific approval receipt",
+    "before-hash match for every path",
+    "after-hash match for every path",
+    "frontmatter parse pass for every path",
+    "no raw body text in curated receipts",
+    "curated exact staging only"
+  ]
+}

@@ -1,0 +1,11 @@
+Receipt: Aster Vale `v360` CLI receipt for the Codex CLI validation, Windows sandbox, TUI, and runtime-health lane. This receipt is bounded to this lane only, uses no mutating actions, and is derived from the prompt capsule because local read-only CLI inspection was unavailable in this session.
+
+Beta: The stated Beta objective is to verify handoff evidence, active-process truth, and bounded `v341-v360` scope before synthesis. In this lane session, that verification could not be independently confirmed from repository files or live process inspection because safe read-only shell access was blocked.
+
+Alpha: The stated Alpha objective is for the lead sibling to write curated `v1/v2` reports, source capsule, and only durable phase artifacts. This lane did not create or mutate artifacts; its durable output here is this non-mutating CLI receipt recording capability limits and lane-local status truthfully.
+
+Omega: The stated Omega objective is for the lead sibling to hand off the next bounded phase or prepare the `v281-v360` closeout at `v360`. From this lane’s visible context, the correct Omega posture is to preserve bounded scope, carry forward the handoff dependency on `docs/trinity-live-traces/v341-v360-final-handoff-v1.json`, and avoid claiming closeout evidence that this lane could not inspect.
+
+Blocker: Safe read-only repository inspection through the CLI was unavailable in this session. Shell access attempts for basic non-mutating checks were blocked by policy, so this lane could not verify `docs/trinity-live-traces/v341-v360-final-handoff-v1.json`, `docs/trinity-live-traces/v281-v360-cli-sibling-report-protocol-v1.md`, git/worktree state, TUI-visible runtime health, or active-process truth.
+
+Next-phase handoff: If the next phase expects a stronger receipt, provide a lane session with working read-only inspection for repository files and basic runtime visibility. Then re-run this lane to confirm the source dependency, protocol compliance, bounded `v341-v360` scope, and any lane-local Windows sandbox or TUI health evidence without mutating the repo or external services.

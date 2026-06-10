@@ -1,0 +1,17 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-block-03-synthesis-v1.json` as the checkpoint: block 03 is `complete_synthesized` with `9/9` expected responses, `multiplex_refresh_seconds=30`, and `fallback_refresh_seconds=4`. For Aster Vale, the carried-forward safe posture is still local-only runtime observation. TUI latency is not directly proven; the supported proxy is receipt timing, especially `last clean receipt timestamp` and `write-gap seconds`, while keeping response proof separate from transport/process noise.
+
+Blocker:
+The blocker is evidence quality, not a confirmed runtime-health failure. The checkpoint still carries sandbox read friction, timed-out or policy-rejected benign probes, and contamination/truncation risk between response text and transport logs. On that basis, lane liveness can be scored only from clean local artifacts. Any stronger claim such as verified TUI responsiveness, provider health, remote state, or publication readiness would exceed the checkpoint.
+
+Refinement:
+Use a narrow scoring model with explicit failure classes:
+`alive and writing` = fresh clean receipt exists.
+`alive but silent` = prior clean receipt exists, but `write-gap seconds` exceeds the active cadence.
+`exited without response` = expected receipt absent after bounded probe window.
+Track only: `last clean receipt timestamp`, `write-gap seconds`, `last transport-noise event`, `truncation present=true|false`, and `sandbox boundary recorded=true|false`. Keep `30s` as normal cadence and reserve `4s` for short debug windows with an explicit local trigger.
+
+Next-cycle proposal:
+Run one bounded telemetry pass that emits a compact lane-health board only:
+`mode | last clean receipt timestamp | write-gap seconds | liveness class | last transport-noise event | truncation present | missing proof`
+Then do three probes only: clean-receipt probe, silent-lane classifier, and truncation/noise check. If any probe contaminates receipts or hits sandbox rejection, keep the lane in local-observation status and withhold stronger runtime claims.

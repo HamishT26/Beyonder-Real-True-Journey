@@ -28,10 +28,10 @@
 - fallback_mode: `repo_first_supported_model_fallback`
 - max_threads: `11`
 - mesh_official_agents: `11`
-- external_live_overlay_state: `awaiting_thread_boot`
+- external_live_overlay_state: `logged_live_overlay`
 - runtime_session_state: `PASS`
-- runtime_session_overlay_state: `awaiting_thread_boot`
-- runtime_truth_complete: `False`
+- runtime_session_overlay_state: `logged_live_overlay`
+- runtime_truth_complete: `True`
 - external_establishment_criteria_state: `PASS`
 - standards_bridge_state: `PASS`
 - filesystem_promotion_state: `blocked`

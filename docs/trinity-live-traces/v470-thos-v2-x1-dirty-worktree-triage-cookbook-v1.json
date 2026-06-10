@@ -1,0 +1,52 @@
+{
+  "artifact": "v470_THOS_v2_x1_dirty_worktree_triage_cookbook_v1",
+  "phase": "v470_THOS_v2_x1",
+  "classification": "evidence",
+  "triage_classes": [
+    {
+      "class": "clean",
+      "meaning": "No modified, staged, or untracked files."
+    },
+    {
+      "class": "dirty_known_safe",
+      "meaning": "Changes exist but are understood, intentional, and outside the current publication slice."
+    },
+    {
+      "class": "dirty_conflict_risk",
+      "meaning": "Changes overlap current artifacts or validation assets."
+    },
+    {
+      "class": "dirty_unknown",
+      "meaning": "Provenance unclear; publication advice blocks until classified."
+    }
+  ],
+  "read_only_cookbook": [
+    "git status --short --branch",
+    "git branch --show-current",
+    "git rev-parse HEAD",
+    "git diff --name-only",
+    "git diff --cached --name-only",
+    "git ls-files --others --exclude-standard",
+    "git log --oneline --decorate -n 10",
+    "git remote -v",
+    "rg -n \"THOS|advisory|receipt|registry|validation|handoff\" .",
+    "Get-ChildItem -Force"
+  ],
+  "blocked_patterns": [
+    "git add",
+    "git commit",
+    "git push",
+    "git reset --hard",
+    "git clean",
+    "destructive restore",
+    "recursive deletion",
+    "unapproved file move"
+  ],
+  "blocker_codes": [
+    "BLOCKED_ENV_READ",
+    "BLOCKED_DIRTY_UNKNOWN",
+    "BLOCKED_OVERLAP_WITH_THOS",
+    "BLOCKED_WRITE_REQUIRED",
+    "BLOCKED_SOURCE_UNVERIFIED"
+  ]
+}

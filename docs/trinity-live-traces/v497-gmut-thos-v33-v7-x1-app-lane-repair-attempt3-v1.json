@@ -1,0 +1,34 @@
+{
+  "artifact_type": "app_lane_repair_attempt",
+  "phase_slug": "v497-gmut-thos-v33-v7-x1",
+  "generated_utc": "2026-06-06T22:13:40Z",
+  "overall_status": "PASS_RETRY3_LONG_WATCHER_STARTED",
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "open_gap",
+      "finding": "background watcher started but lower-level launcher timed out before completion notifier appeared"
+    },
+    {
+      "attempt": 2,
+      "status": "open_gap",
+      "finding": "retry2 repeated the short launcher-timeout failure shape"
+    },
+    {
+      "attempt": 3,
+      "status": "background_watch_started",
+      "finding": "retry3 uses a long launcher timeout aligned to the one-hour app-lane target"
+    }
+  ],
+  "root_cause_hypothesis": "attempts 1 and 2 used a launcher timeout too short for long app-lane work",
+  "repair_action": "retry existing app watcher route with distinct retry3 prefixes and long launch timeout",
+  "next_app_retry_check_not_before_utc": "2026-06-06T22:27:25Z",
+  "phase_advance_allowed": false,
+  "claim_boundary": {
+    "new_threads_created": false,
+    "old_style_spawn_used": false,
+    "raw_transport_published": false,
+    "raw_lane_text_published": false,
+    "gmut_gate_state": "open"
+  }
+}

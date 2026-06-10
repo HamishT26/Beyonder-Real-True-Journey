@@ -1,0 +1,94 @@
+{
+  "artifact_type": "five_lane_timing_receipt",
+  "phase_slug": "v478-thos-v14-x5-closeout",
+  "boundary": "closeout",
+  "generated_utc": "2026-06-04T21:33:58+00:00",
+  "generated_nz": "2026-06-05T09:33:58+12:00",
+  "observation_run_index_today": 3,
+  "observation_window_seconds": 1800,
+  "overall_status": "PASS_FIVE_LANE_CLOSEOUT",
+  "lane_count": 5,
+  "all_five_lanes_attempted": true,
+  "average_response_seconds_this_run": 243.431,
+  "soft_timeout_baseline_status": "READY_TO_COMPUTE_THREE_RUN_AVERAGE",
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T21:25:58+00:00",
+      "first_completion_utc": "2026-06-04T21:29:50+00:00",
+      "duration_seconds": 232.046,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T21:29:50+00:00",
+      "first_completion_utc": "2026-06-04T21:31:20+00:00",
+      "duration_seconds": 90.485,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aristotle",
+      "platform": "codex_app_local_server",
+      "status": "completed",
+      "completion_type": "app_server_turn_completed",
+      "start_utc": "2026-06-04T21:31:20+00:00",
+      "first_completion_utc": "2026-06-04T21:32:51+00:00",
+      "duration_seconds": 91.125,
+      "timing_basis": "derived_from_app_receipt_generated_utc_and_sequential_lane_duration",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Arby",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T21:25:56+00:00",
+      "first_completion_utc": "2026-06-04T21:32:49+00:00",
+      "duration_seconds": 413.912,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 1154,
+      "final_message_hash": "7b96a655b4e26f1d6573080e2995511ccd6f77d08a869a16ff5131ab8611bc0b",
+      "marker_review_required": false,
+      "raw_output_published": false
+    },
+    {
+      "lane": "Aster Vale",
+      "platform": "codex_cli_read_only",
+      "status": "FINAL_MESSAGE_READY",
+      "completion_type": "cli_final_message",
+      "start_utc": "2026-06-04T21:25:56+00:00",
+      "first_completion_utc": "2026-06-04T21:32:25+00:00",
+      "duration_seconds": 389.588,
+      "timing_basis": "observed_process_start_arg_and_final_message_mtime",
+      "final_message_bytes": 1254,
+      "final_message_hash": "54f7ec841d032696fb877900408bce61db909ee5c7c09cee60c714933f0d8143",
+      "marker_review_required": false,
+      "raw_output_published": false
+    }
+  ],
+  "evidence_sources": {
+    "app_completion_receipt": "v478-thos-v14-x5-closeout-background-council-app-completion-v1.json",
+    "cli_completion_receipt": "v478-thos-v14-x5-closeout-cli-completion-v1.json",
+    "cli_output_boundary": "local_temp_redacted_not_published"
+  },
+  "next_phase_handoff": [
+    "Treat this as observation run 3 of 3 for the five-sibling timing baseline.",
+    "Repeat the same timing ledger until three five-sibling observations exist before deriving the soft future timeout average.",
+    "Keep the every-second-session five-lane rule active at both start and closeout boundaries.",
+    "Use idle notifier time for source, command, stale-flow, and approval prep rather than manual polling."
+  ],
+  "claim_boundary": {
+    "scope": "v478-thos-v14-x5-closeout five-lane closeout timing and handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

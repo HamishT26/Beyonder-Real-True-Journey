@@ -1,0 +1,26 @@
+{
+  "artifact": "v469A_GMUT_v3_x1_coordinate_cfactor_decision_v1",
+  "phase": "v469A_GMUT_v3_x1",
+  "started_nz": "2026-06-02T00:56:46+12:00",
+  "baseline_head": "2f6bd8d91702d5f186dba929b5cadc8f3f82263e",
+  "classification": "blocker",
+  "decision": "existing_d4x_notation_is_ambiguous_and_must_be_split",
+  "routes": [
+    {
+      "route": "A_time_coordinate_volume",
+      "volume_element": "dt d3x",
+      "gravitational_prefactor": "c^4/(16*pi*G)",
+      "si_check": "(c^4/G) has units kg m s^-2; R has m^-2; dt d3x has s m^3; product has kg m^2 s^-1 = J s",
+      "status": "working_candidate_for_v3_x2"
+    },
+    {
+      "route": "B_length_normalized_four_volume",
+      "volume_element": "d4x with x0 = c t",
+      "gravitational_prefactor": "c^3/(16*pi*G)",
+      "si_check": "(c^3/G) has units kg s^-1; R has m^-2; d4x has m^4; product has kg m^2 s^-1 = J s",
+      "status": "alternative_candidate_not_selected"
+    }
+  ],
+  "rejection": "The earlier compact notation S_g = integral d4x sqrt(-g) [c^4/(16*pi*G)] (R - 2*Lambda) is not SI-closed unless d4x is interpreted as dt d3x or the prefactor is changed.",
+  "gate_effect": "dimensional_si_consistency remains OPEN"
+}

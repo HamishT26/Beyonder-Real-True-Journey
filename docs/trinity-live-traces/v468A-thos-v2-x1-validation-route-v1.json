@@ -1,0 +1,47 @@
+{
+  "phase": "v468A_THOS_v2_x1",
+  "artifact": "validation_route",
+  "prepared_nz": "2026-06-01T23:16:00+12:00",
+  "route": [
+    {
+      "step": "json_parse",
+      "applies_to": "all JSON artifacts",
+      "failure_result": "block_publication"
+    },
+    {
+      "step": "sensitive_path_session_capture_guard",
+      "applies_to": "all current-phase artifacts",
+      "failure_result": "patch_or_block"
+    },
+    {
+      "step": "whitespace_check",
+      "applies_to": "all current-phase artifacts",
+      "failure_result": "patch_or_block"
+    },
+    {
+      "step": "fetch_drift_check",
+      "applies_to": "before staging and before commit",
+      "failure_result": "forward_only_resolution_required"
+    },
+    {
+      "step": "curated_stage",
+      "applies_to": "exact current-phase artifacts",
+      "failure_result": "unstage_unrelated_before_commit"
+    },
+    {
+      "step": "staged_diff_review",
+      "applies_to": "all staged files",
+      "failure_result": "patch_or_block"
+    },
+    {
+      "step": "commit_push_remote_verify",
+      "applies_to": "publication",
+      "failure_result": "remote_verification_failure"
+    }
+  ],
+  "non_claims": [
+    "Validation route does not validate GMUT.",
+    "Validation route does not prove THOS runtime readiness.",
+    "Validation route does not authorize cleanup or connector mutation."
+  ]
+}

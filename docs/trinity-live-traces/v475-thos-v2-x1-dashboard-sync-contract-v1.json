@@ -1,0 +1,371 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_DASHBOARD_SYNC_CONTRACT_READY",
+  "app_advisory_hints": [
+    {
+      "hint": "dashboard sync needs lane requirement, notification state, notice timestamp, source hash, marker review, staleness, false-complete, raw-output, transport, and GMUT-effect fields",
+      "lane": "Cicero"
+    },
+    {
+      "hint": "dashboard sync should preserve humane metadata continuity without pressure labels, surveillance, proof, quality grading, or continuity overclaims",
+      "lane": "Kierkegaard"
+    },
+    {
+      "hint": "publication-bound rows require matched source hashes, explicit marker state, both required lanes, false raw-output flags, and deterministic blocker fixtures",
+      "lane": "Aristotle"
+    }
+  ],
+  "dashboard_rows": [
+    {
+      "dashboard_label": "metadata_status_only",
+      "gmUT_gate_effect": "none_open_not_tested",
+      "lane": "Arby",
+      "marker_review_status": "metadata_only",
+      "notice_id": "v475-thos-v2-x1-arby-notice",
+      "notice_state": "SUMMARY_READY_METADATA_ONLY",
+      "phase_ref": "v475-thos-v2-x1",
+      "raw_output_published": false,
+      "run_id": "v475-thos-v2-x1-dashboard-sync",
+      "source_chain_status": "MATCHED",
+      "source_hash_refs": [
+        "b27522be949ad1948b7a70b0d5c4241d8062263924b13cdf935690bb9038a522",
+        "2621fef46701e477a1b8fb83f33bfa84109f89b88602305e9daa00f26f869c0a",
+        "96467ce72cd8ced92a96c81a49feb997aa31f49e48c4af9982e8eaa85e155ea4",
+        "411cfe803b80099fecf1cb293a4122463e8aa77786344ad4bd5a2d44382a669c"
+      ],
+      "transport_published": false
+    },
+    {
+      "dashboard_label": "metadata_status_only",
+      "gmUT_gate_effect": "none_open_not_tested",
+      "lane": "Aster Vale",
+      "marker_review_status": "reviewed_metadata_only",
+      "notice_id": "v475-thos-v2-x1-aster-vale-notice",
+      "notice_state": "SUMMARY_READY_METADATA_ONLY",
+      "phase_ref": "v475-thos-v2-x1",
+      "raw_output_published": false,
+      "run_id": "v475-thos-v2-x1-dashboard-sync",
+      "source_chain_status": "MATCHED",
+      "source_hash_refs": [
+        "b27522be949ad1948b7a70b0d5c4241d8062263924b13cdf935690bb9038a522",
+        "2621fef46701e477a1b8fb83f33bfa84109f89b88602305e9daa00f26f869c0a",
+        "96467ce72cd8ced92a96c81a49feb997aa31f49e48c4af9982e8eaa85e155ea4",
+        "411cfe803b80099fecf1cb293a4122463e8aa77786344ad4bd5a2d44382a669c"
+      ],
+      "transport_published": false
+    },
+    {
+      "dashboard_label": "metadata_status_only",
+      "gmUT_gate_effect": "none_open_not_tested",
+      "lane": "aggregate",
+      "marker_review_status": "metadata_only",
+      "notice_id": "v475-thos-v2-x1-aggregate-notice",
+      "notice_state": "PASS_SHAPE_ONLY_NOTIFICATION_CONTINUITY_HARDENED",
+      "phase_ref": "v475-thos-v2-x1",
+      "raw_output_published": false,
+      "run_id": "v475-thos-v2-x1-dashboard-sync",
+      "source_chain_status": "MATCHED",
+      "source_hash_refs": [
+        "b27522be949ad1948b7a70b0d5c4241d8062263924b13cdf935690bb9038a522",
+        "2621fef46701e477a1b8fb83f33bfa84109f89b88602305e9daa00f26f869c0a",
+        "96467ce72cd8ced92a96c81a49feb997aa31f49e48c4af9982e8eaa85e155ea4",
+        "411cfe803b80099fecf1cb293a4122463e8aa77786344ad4bd5a2d44382a669c"
+      ],
+      "transport_published": false
+    }
+  ],
+  "dashboard_schema": {
+    "dashboard_label": "metadata_status_only",
+    "gmUT_gate_effect": "none_open_not_tested",
+    "lane": "Arby|Aster Vale|aggregate",
+    "marker_review_status": "metadata_only|reviewed_metadata_only|open_gap|blocked",
+    "notice_id": "string",
+    "notice_state": "REQUESTED|LAUNCHED|RUNNING|FINAL_MESSAGE_READY|MARKER_REVIEW|SUMMARY_READY_METADATA_ONLY|PUBLISHED_METADATA_ONLY|OPEN_GAP|FAIL_BLOCKER",
+    "phase_ref": "string",
+    "raw_output_published": false,
+    "run_id": "string",
+    "source_chain_status": "MATCHED|OPEN_GAP|FAIL_BLOCKER",
+    "source_hash_refs": [
+      "sha256"
+    ],
+    "transport_published": false
+  },
+  "fixtures": [
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "marker_review_ok": true,
+        "metadata_only": true,
+        "source_hash_match": true
+      },
+      "case_id": "metadata_dashboard_row_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "marker_review_ok": false,
+        "source_hash_match": true,
+        "summary_ready": true
+      },
+      "case_id": "summary_without_marker_review_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "marker_review_ok": true,
+        "source_hash_match": false,
+        "summary_ready": true
+      },
+      "case_id": "summary_with_hash_drift_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "lane_missing": true,
+        "marker_review_ok": true,
+        "source_hash_match": true,
+        "summary_ready": true
+      },
+      "case_id": "summary_with_missing_lane_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_output_published": true
+      },
+      "case_id": "raw_output_flag_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "transport_published": true
+      },
+      "case_id": "transport_flag_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_source": true
+      },
+      "case_id": "missing_source_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "stale_notice": true
+      },
+      "case_id": "stale_notice_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "generic_pass": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "generic_pass_label_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "proof_label": true
+      },
+      "case_id": "proof_label_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "surveillance_label": true
+      },
+      "case_id": "surveillance_label_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_text_derived_status": true
+      },
+      "case_id": "raw_text_derived_dashboard_status_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "gate_moved",
+        "metadata_only": true
+      },
+      "case_id": "gmut_effect_moved_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T20:02:36+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v475-thos-v2-x2",
+  "phase_slug": "v475-thos-v2-x1",
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 2,
+        "source_gap_count": 0
+      },
+      "message": "v475 x2 hardening and run-status sources were checked.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "missing_rows": [],
+        "present_row_count": 8
+      },
+      "message": "Required x2 dashboard update rows are covered by the sync contract.",
+      "row_id": "dashboard_row_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "lane_count": 2
+      },
+      "message": "Arby and Aster Vale dashboard rows are present without raw output.",
+      "row_id": "lane_row_coverage",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "dashboard_label": "metadata_status_only",
+        "gmUT_gate_effect": "none_open_not_tested",
+        "lane": "Arby|Aster Vale|aggregate",
+        "marker_review_status": "metadata_only|reviewed_metadata_only|open_gap|blocked",
+        "notice_id": "string",
+        "notice_state": "REQUESTED|LAUNCHED|RUNNING|FINAL_MESSAGE_READY|MARKER_REVIEW|SUMMARY_READY_METADATA_ONLY|PUBLISHED_METADATA_ONLY|OPEN_GAP|FAIL_BLOCKER",
+        "phase_ref": "string",
+        "raw_output_published": false,
+        "run_id": "string",
+        "source_chain_status": "MATCHED|OPEN_GAP|FAIL_BLOCKER",
+        "source_hash_refs": [
+          "sha256"
+        ],
+        "transport_published": false
+      },
+      "message": "Dashboard rows are constrained to metadata state, source-hash references, marker status, and claim boundary fields.",
+      "row_id": "schema_contract",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "allowed_label": "metadata_status_only",
+        "blocked_labels": [
+          "success",
+          "failure",
+          "stalled",
+          "certified",
+          "truth_verified"
+        ]
+      },
+      "message": "Dashboard labels are metadata-status labels only and avoid pressure, proof, surveillance, or content-quality claims.",
+      "row_id": "label_policy",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 13,
+        "mismatch_count": 0
+      },
+      "message": "Dashboard sync fixtures confirmed marker, hash, lane, raw-output, stale, label, and GMUT boundary behavior.",
+      "row_id": "negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "hints": [
+          {
+            "hint": "dashboard sync needs lane requirement, notification state, notice timestamp, source hash, marker review, staleness, false-complete, raw-output, transport, and GMUT-effect fields",
+            "lane": "Cicero"
+          },
+          {
+            "hint": "dashboard sync should preserve humane metadata continuity without pressure labels, surveillance, proof, quality grading, or continuity overclaims",
+            "lane": "Kierkegaard"
+          },
+          {
+            "hint": "publication-bound rows require matched source hashes, explicit marker state, both required lanes, false raw-output flags, and deterministic blocker fixtures",
+            "lane": "Aristotle"
+          }
+        ]
+      },
+      "message": "Cicero, Kierkegaard, and Aristotle v1 x2 guidance is preserved as dashboard-safe hints.",
+      "row_id": "app_advisory_hints",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This is a THOS dashboard sync contract only; it does not test or close GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v475-thos-v1-x2",
+  "source_refs": [
+    {
+      "bytes": 12469,
+      "path": "docs/trinity-live-traces/v475-thos-v1-x2-notification-continuity-hardening-v1.json",
+      "sha256": "38b62600657c3ac26be3df606e8e55a9085c1275b18bb29003c6aea486000c5b",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 787,
+      "path": "docs/trinity-live-traces/v475-thos-v1-x2-run-status-v1.json",
+      "sha256": "190b1dffbc44353b9d3b6c5d0f7d16a42d04788a56065db8f753bd98a3581013",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_run_status": "PASS_SHAPE_ONLY_NOTIFICATION_CONTINUITY_HARDENED",
+  "v2_x2_acceptance_criteria": [
+    "dashboard rows must remain metadata-only",
+    "Arby and Aster Vale lane rows must both be present",
+    "source-hash refs must match curated sources",
+    "marker-review status must be explicit before summary readiness",
+    "stale notice and dashboard count mismatch rules must be explicit",
+    "raw-output and transport flags must remain false",
+    "dashboard status must never derive from raw text",
+    "dashboard labels must not claim proof, content quality, surveillance, GMUT validation, or canon promotion"
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "THOS Local Publication Guard",
+          "informationUri": "https://github.com/HamishT26/Beyonder-Real-True-Journey",
+          "rules": [
+            {
+              "id": "THOS.MANIFEST.AUTHORING_GUIDE",
+              "shortDescription": {
+                "text": "Manifest authoring guide exists"
+              },
+              "help": {
+                "text": "Future THOS phase authors should record live heads, drift, curated artifacts, blocked actions, validation chain, and THOS/GMUT boundary."
+              }
+            },
+            {
+              "id": "THOS.GMUT.BOUNDARY_OPEN",
+              "shortDescription": {
+                "text": "GMUT boundary remains open"
+              },
+              "help": {
+                "text": "THOS operational scaffolding does not validate GMUT or close the six GMUT gates."
+              }
+            },
+            {
+              "id": "THOS.CLOUD_UPLOAD.BLOCKED",
+              "shortDescription": {
+                "text": "Cloud and report upload actions remain blocked"
+              },
+              "help": {
+                "text": "This local report is not uploaded to code scanning and does not mutate cloud state."
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "THOS.MANIFEST.AUTHORING_GUIDE",
+          "level": "note",
+          "message": {
+            "text": "v7 x1 published a manifest authoring guide and template."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "docs/trinity-live-traces/v468A-thos-v7-x1-authoring-guide-v1.md"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "THOS.GMUT.BOUNDARY_OPEN",
+          "level": "warning",
+          "message": {
+            "text": "All GMUT gates remain open; this report is operational scaffolding only."
+          }
+        },
+        {
+          "ruleId": "THOS.CLOUD_UPLOAD.BLOCKED",
+          "level": "warning",
+          "message": {
+            "text": "SARIF upload, workflow mutation, cloud writes, and attestation claims are blocked in this phase."
+          }
+        }
+      ],
+      "properties": {
+        "phase": "v468A_THOS_v7_x2",
+        "thosBoundary": "operational_scaffold_only",
+        "gmutGates": "open",
+        "reportStatus": "local_only"
+      }
+    }
+  ]
+}

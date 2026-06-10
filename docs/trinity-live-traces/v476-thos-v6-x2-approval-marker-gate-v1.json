@@ -1,0 +1,210 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_V476_APPROVAL_MARKER_GATE_READY",
+  "fixtures": [
+    {
+      "case": {
+        "gate_ready": true,
+        "metadata_only": true
+      },
+      "case_id": "gate_ready_expected_pass",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "missing_source": true
+      },
+      "case_id": "missing_source_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "marker_review_required": true
+      },
+      "case_id": "marker_review_required_expected_open_gap",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "approval_row_missing": true
+      },
+      "case_id": "approval_row_missing_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "promotion_allowed": true
+      },
+      "case_id": "promotion_allowed_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "live_write_allowed": true
+      },
+      "case_id": "live_write_allowed_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "packet_ref_present_without_scope": true
+      },
+      "case_id": "packet_ref_present_without_scope_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "raw_lane_text_published": true
+      },
+      "case_id": "raw_lane_text_publication_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "moves_gmut_gate": true
+      },
+      "case_id": "gmut_gate_move_expected_fail",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T22:28:20+00:00",
+  "gmut_gate_effect": "none_open_not_tested",
+  "gmut_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v476-thos-v7-x1",
+  "next_phase_roadmap": [
+    {
+      "claim_ceiling": "roadmap item only; no live materialization or production claim",
+      "task": "Build marker-review resolution options without raw text publication.",
+      "task_id": "v476-v7-task-01"
+    },
+    {
+      "claim_ceiling": "roadmap item only; no live materialization or production claim",
+      "task": "Build exact approval packet template rows for future candidate classes.",
+      "task_id": "v476-v7-task-02"
+    },
+    {
+      "claim_ceiling": "roadmap item only; no live materialization or production claim",
+      "task": "Build source-drift replay checks for v4-v6 artifacts.",
+      "task_id": "v476-v7-task-03"
+    },
+    {
+      "claim_ceiling": "roadmap item only; no live materialization or production claim",
+      "task": "Build v476 closure ledger for v7/v8 handoff.",
+      "task_id": "v476-v7-task-04"
+    },
+    {
+      "claim_ceiling": "roadmap item only; no live materialization or production claim",
+      "task": "Carry all six GMUT gates open into v476 v7.",
+      "task_id": "v476-v7-task-05"
+    }
+  ],
+  "phase_slug": "v476-thos-v6-x2",
+  "preflight_rows": [
+    {
+      "evidence": {
+        "source_count": 2,
+        "source_gap_count": 0
+      },
+      "message": "v476 v6 x1 ledger and run status were checked.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "ledger_status": "PASS_SHAPE_ONLY_V476_APPROVAL_MARKER_LEDGER_READY",
+        "run_status": "PASS_SHAPE_ONLY_V476_APPROVAL_MARKER_LEDGER_READY"
+      },
+      "message": "The x1 approval-marker ledger must be ready before x2 gate publication.",
+      "row_id": "ledger_status",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "approval_row_count": 90
+      },
+      "message": "All 90 rehearsal candidates must have approval-reference rows.",
+      "row_id": "approval_row_count",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "unsafe_approvals": []
+      },
+      "message": "All approval rows must deny promotion and live write until exact packet scope exists.",
+      "row_id": "approval_denial_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "marker_review_required_count": 2,
+        "marker_row_count": 2
+      },
+      "message": "Marker review remains open when marker metadata is present.",
+      "row_id": "marker_review_required",
+      "status": "OPEN_GAP_MARKER_REVIEW_REQUIRED"
+    },
+    {
+      "evidence": {
+        "raw_lane_publication": []
+      },
+      "message": "No marker row publishes raw lane text.",
+      "row_id": "raw_lane_publication",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "gate_effect_moved": [],
+        "gmut_gates_open": [
+          "null recovery",
+          "dimensional/SI consistency",
+          "conservation or exchange law",
+          "baseline recovery",
+          "fifth-force/equivalence constraints",
+          "consciousness measurement bridge"
+        ]
+      },
+      "message": "Approval-marker gate does not approve writes, install candidates, or move GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v476-thos-v6-x1",
+  "source_refs": [
+    {
+      "bytes": 72190,
+      "path": "docs/trinity-live-traces/v476-thos-v6-x1-approval-marker-ledger-v1.json",
+      "sha256": "b05d648ca12cdda70221dc7af495d501e044fd4e3bd96d0309f8550c4e85754d",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 3041,
+      "path": "docs/trinity-live-traces/v476-thos-v6-x1-run-status-v1.json",
+      "sha256": "c7c4bd97a75e9265a99907b7863426dc9dd43162ba03d75b77ee585b022174a2",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ]
+}

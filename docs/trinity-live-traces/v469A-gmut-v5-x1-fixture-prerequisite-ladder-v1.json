@@ -1,0 +1,87 @@
+{
+  "artifact": "v469A_GMUT_v5_x1_fixture_prerequisite_ladder_v1",
+  "phase": "v469A_GMUT_v5_x1",
+  "classification": "blocker",
+  "purpose": "Define the fixture prerequisites that must exist before null or baseline recovery can be claimed.",
+  "null_fixture_ladder": [
+    {
+      "id": "F0",
+      "name": "scalar_disabled_flat_reference",
+      "requirements": [
+        "N=1",
+        "beta^i=0",
+        "h_ij=delta_ij",
+        "R_ADM=0",
+        "Psi disabled by explicit switch",
+        "V(Psi) unsampled"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "F1",
+      "name": "constant_scalar_symbolic_potential_probe",
+      "requirements": [
+        "Psi=Psi0 constant",
+        "all derivatives zero",
+        "V(Psi0) recorded but not interpreted",
+        "comparison rule declared"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "F2",
+      "name": "homogeneous_temporal_mode",
+      "requirements": [
+        "partial_i Psi=0",
+        "partial_0=(1/c)partial_t applied",
+        "temporal kinetic c-factor row checked"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "F3",
+      "name": "static_spatial_profile",
+      "requirements": [
+        "partial_t Psi=0",
+        "spatial gradient sign checked",
+        "no spurious momentum density with zero shift"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "F4",
+      "name": "shift_transport_translation",
+      "requirements": [
+        "nonzero shift",
+        "x0=ct expression compared with x0=t translation",
+        "transport combination verified"
+      ],
+      "status": "not_run"
+    },
+    {
+      "id": "F5",
+      "name": "boundary_policy_probe",
+      "requirements": [
+        "finite box",
+        "periodic and Dirichlet variants",
+        "B_Psi remains explicit unless conditions make it vanish"
+      ],
+      "status": "not_run"
+    }
+  ],
+  "baseline_prerequisites": [
+    "exact baseline equation card",
+    "selected ADM/SI branch",
+    "full scalar disablement manifest",
+    "disabled and held term list",
+    "expected output shape",
+    "comparison rule",
+    "residual tolerance",
+    "source-authority binding"
+  ],
+  "gate_effect": {
+    "null_recovery": "open_gap",
+    "baseline_recovery": "open_gap",
+    "reason": "No fixture has been executed; this is a prerequisite ladder only."
+  }
+}

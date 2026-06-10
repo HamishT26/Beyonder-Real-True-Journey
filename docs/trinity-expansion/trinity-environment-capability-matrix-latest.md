@@ -1,6 +1,6 @@
 # Trinity Expansion Result: trinity_environment_capability_matrix
 
-- generated_utc: `2026-04-10T15:59:11+00:00`
+- generated_utc: `2026-05-03T16:25:09+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`

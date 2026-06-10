@@ -1,0 +1,134 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY",
+  "fixtures": [
+    {
+      "case_id": "raw_text_published",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "raw text was marked as published",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "hard_credential_marker",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "hard credential marker is present",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "credential_like_review_required",
+      "expected": "REVIEW_REQUIRED",
+      "observed": "REVIEW_REQUIRED",
+      "reason": "credential-like marker needs marker review",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "missing_final_message",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "reason": "final message is missing or not ready",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "missing_marker_review",
+      "expected": "OPEN_GAP",
+      "observed": "OPEN_GAP",
+      "reason": "marker review has not passed",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "generic_pass_without_derivation",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "generic PASS is not a deterministic derived status",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "gmUT_gate_effect_drift",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "GMUT gate effect drift is present",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "malformed_json",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "receipt metadata is malformed",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "duplicate_receipt_id",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "duplicate receipt id is present",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "lane_run_mismatch",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "lane/run mismatch is present",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "summary_ready_contradicts_open_gap",
+      "expected": "FAIL_BLOCKER",
+      "observed": "FAIL_BLOCKER",
+      "reason": "summary readiness contradicts missing marker-review pass",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case_id": "clean_summary_ready",
+      "expected": "PASS_SHAPE_ONLY",
+      "observed": "PASS_SHAPE_ONLY",
+      "reason": "receipt metadata is summary-ready and bounded",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T17:50:36+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v474-thos-v3-x2",
+  "phase_slug": "v474-thos-v3-x1",
+  "rows": [
+    {
+      "evidence": {
+        "source_status": "OPEN_GAP"
+      },
+      "message": "v2 x2 hardening artifact is available.",
+      "row_id": "source_hardening",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 12,
+        "mismatch_count": 0
+      },
+      "message": "Executable negative fixtures were evaluated.",
+      "row_id": "negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "Verifier checks THOS receipt metadata only; it does not test or close GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v474-thos-v2-x2",
+  "status_precedence": [
+    "FAIL_BLOCKER",
+    "REVIEW_REQUIRED",
+    "OPEN_GAP",
+    "PASS_SHAPE_ONLY",
+    "NOT_RUN"
+  ]
+}

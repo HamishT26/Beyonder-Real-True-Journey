@@ -1,0 +1,34 @@
+{
+  "artifact": "v470_THOS_v2_x1_advisory_lane_receipt_template_v1",
+  "phase": "v470_THOS_v2_x1",
+  "classification": "evidence",
+  "template": {
+    "receipt_id": "string",
+    "lane_id": "string",
+    "lane_type": "app_advisory|cli_non_ephemeral_read_only",
+    "phase_ref": "v470_THOS_v2_x1",
+    "baseline_ref": "v470_THOS_v1_x2",
+    "authority": "advisory_only",
+    "actions_performed": "none|read_only_attempted|read_only_completed",
+    "file_mutation": false,
+    "connector_mutation": false,
+    "publication_authority": false,
+    "repo_branch": "string|unknown",
+    "repo_head": "string|unknown",
+    "repo_status_summary": "string|unknown",
+    "dirty_worktree_class": "clean|dirty_known_safe|dirty_conflict_risk|dirty_unknown|unknown",
+    "source_refs": ["string"],
+    "validations_requested": ["string"],
+    "validations_verified": ["string"],
+    "blockers": ["string"],
+    "recommendations": ["string"],
+    "claims_supported": ["schema_advice", "blocker_advice", "wording_advice"],
+    "claims_refused": ["GMUT_validation", "gate_closure", "destructive_action", "connector_mutation"]
+  },
+  "rules": [
+    "Advisory receipts cannot replace Git receipts.",
+    "CLI read failures are blockers, not invented evidence.",
+    "Standby lanes do not receive fabricated advisories.",
+    "Claims refused must travel with the receipt."
+  ]
+}

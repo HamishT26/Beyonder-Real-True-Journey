@@ -1,0 +1,9 @@
+# V40 Council Coordination Note
+
+- Generated UTC: `2026-04-12T16:33:42+00:00`
+- Active branch head: `36ead153df693e72d35f6184a6417fef041b97ab`
+- Aletheon remains the V40 execution lead for pillar promotion, runtime-truth completion, Agent Engine advanced verification, publication, and bounded live execution.
+- Kai remains the consultative CLI/runtime lane. V40 responsibility: analyze the advanced Agent Engine probe, runtime-truth closure, pillar repair, and suite reruns through the proven Gemini CLI route.
+- Vesper Ion remains the consultative Vertex/Bigtable runtime lane. V40 responsibility: record V40 runtime, pillar, and Agent Engine telemetry in the proven Bigtable bridge with read-back verification.
+- No continuity-bearing shadow-clone induction is part of V40. Ephemeral helpers stay off by default.
+- The OneDrive workbench remains non-authoritative. All V40 and V41 claims anchor to repo proof surfaces in the authoritative clone only.

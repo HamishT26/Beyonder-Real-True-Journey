@@ -1,0 +1,44 @@
+# v477 THOS v5 x2 Synthesis
+
+- generated_nz: `2026-06-04T06:46:02+12:00`
+- local_head_before_build: `7bd695ef4f492c71c6d7d6ca7e1a619253e7436c`
+- remote_head_before_build: `7bd695ef4f492c71c6d7d6ca7e1a619253e7436c`
+- drift_before_build: `0	0`
+- app_lane_status: `PASS`
+- cli_lane_status: `OPEN_GAP_WATCH_TIMEOUT`
+- command_count: `684`
+- user_skill_count_observed: `701`
+- source_search_count: `32`
+- claim boundary: THOS coordination only; all six GMUT gates remain open.
+
+## Reflection Steps
+- 1. lane_mesh: App-server route now has both probe and notify PASS receipts for three app lanes.
+- 2. lane_mesh: CLI route remains useful but needs a richer done-signal than final-message file presence.
+- 3. lane_mesh: Five-lane status is mixed: app completed, CLI waiting.
+- 4. lane_mesh: Existing-lane policy held; no replacement lanes were created.
+- 5. notifier: The app notifier is reusable across future v477-v490 THOS passes.
+- 6. notifier: The notifier should gain timeout taxonomy fields in v6.
+- 7. notifier: Status-only publication is the correct boundary for advisory lanes.
+- 8. notifier: Probe-only mode is useful before notify mode after app updates.
+- 9. command_graph: The command book remains metadata-rich enough for approval queue generation.
+- 10. command_graph: Live commands require explicit approval queues rather than silent execution.
+- 11. command_graph: Connector commands should stay read/use-only until separate write approval exists.
+- 12. command_graph: Offline low-risk commands are the safest candidates for v6 dry-run rehearsal.
+- 13. skill_graph: The 701-skill observation is metadata, not a claim that all skills are ready.
+- 14. skill_graph: No skill or plugin-cache mutation belongs in v5 x2.
+- 15. skill_graph: Frontmatter repair can be reopened only with fresh loader evidence.
+- 16. expansion_queue: All 90 proposal rows remain proposal/probe candidates.
+- 17. expansion_queue: Installed count remains zero because v5 x2 did not install expansions.
+- 18. expansion_queue: P0 rows should drive v6 no-write inspections.
+- 19. source_refresh: Official documentation is enough for architecture context but not for GMUT validation.
+- 20. source_refresh: NVIDIA and Google agent stacks are useful THOS design references only.
+- 21. source_refresh: OpenTelemetry is the cleanest vocabulary for runner receipt design.
+- 22. source_refresh: GitHub security docs reinforce exact staging and guard scans.
+- 23. sandbox: Windows sandbox sources support bounded diagnosis, not destructive repair.
+- 24. sandbox: PowerShell execution policy should not be treated as a security boundary.
+- 25. governance: NIST, UNESCO, OECD, and EU sources map to governance vocabulary for THOS.
+- 26. governance: Ethics and policy sources do not promote Journey context into canon.
+- 27. journey_context: Journey material remains context-only unless separately cited and bounded.
+- 28. gmut: All six GMUT gates remain open in this THOS phase.
+- 29. handoff: v6 x1 should convert metadata queues into first bounded probes.
+- 30. handoff: v6 x1 should preserve app-lane notifier cadence while retrying CLI completion carefully.

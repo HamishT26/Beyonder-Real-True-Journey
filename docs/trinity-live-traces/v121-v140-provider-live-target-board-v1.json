@@ -1,0 +1,268 @@
+﻿{
+    "artifact_id":  "v121-v140-provider-live-target-board-v1",
+    "generated_local":  "2026-05-06T03:00:16.1453579+12:00",
+    "generated_utc":  "2026-05-05T15:00:16.1453579Z",
+    "budget_ceiling_usd_per_provider":  50,
+    "active_pack_count":  6,
+    "held_pack_count":  14,
+    "attempted_external_spend":  0,
+    "attempted_external_provider_mutations":  0,
+    "targets":  [
+                    {
+                        "phase":  "v121",
+                        "provider_focus":  "codex_cli",
+                        "current_state":  "active_read_only_cli_lane",
+                        "allowed_now":  "read-only continuity, training, receipt synthesis",
+                        "needed_before_live_mutation":  [
+                                                            "none for repo-side training",
+                                                            "no external spend"
+                                                        ],
+                        "rollback_path":  "no mutation; discard generated receipt if needed",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v122",
+                        "provider_focus":  "kimi_cli",
+                        "current_state":  "active_read_only_cli_lane",
+                        "allowed_now":  "read-only continuity, training, receipt synthesis",
+                        "needed_before_live_mutation":  [
+                                                            "none for repo-side training",
+                                                            "no external spend"
+                                                        ],
+                        "rollback_path":  "no mutation; discard generated receipt if needed",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v123",
+                        "provider_focus":  "github",
+                        "current_state":  "active_forward_only_publication_lane",
+                        "allowed_now":  "curated artifact commits and pushes",
+                        "needed_before_live_mutation":  [
+                                                            "branch target already known",
+                                                            "forward-only corrective path"
+                                                        ],
+                        "rollback_path":  "forward-only corrective commit only",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v124",
+                        "provider_focus":  "google_drive",
+                        "current_state":  "operator_hold",
+                        "allowed_now":  "no mutation yet",
+                        "needed_before_live_mutation":  [
+                                                            "exact Drive folder or file target",
+                                                            "write/share action",
+                                                            "rollback/delete/share-removal path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v125",
+                        "provider_focus":  "cloudflare",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "account/project/resource",
+                                                            "worker/route/dns action",
+                                                            "rollback/delete/revert command"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v126",
+                        "provider_focus":  "vercel",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "project/team target",
+                                                            "deploy/preview action",
+                                                            "rollback/delete path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v127",
+                        "provider_focus":  "neon",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "project/database/branch",
+                                                            "migration or branch action",
+                                                            "drop/revert path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v128",
+                        "provider_focus":  "render",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "service/project target",
+                                                            "deploy/config action",
+                                                            "rollback/delete path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v129",
+                        "provider_focus":  "circleci",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "project/pipeline target",
+                                                            "trigger action",
+                                                            "cancel/revert path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v130",
+                        "provider_focus":  "oci",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "compartment/resource target",
+                                                            "resource action",
+                                                            "terminate/delete path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v131",
+                        "provider_focus":  "e2b",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "sandbox/template target",
+                                                            "sandbox action",
+                                                            "terminate path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v132",
+                        "provider_focus":  "browser_playwright",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "local browser target only after URL specified",
+                        "needed_before_live_mutation":  [
+                                                            "local URL or test page target",
+                                                            "actions allowed",
+                                                            "close/reset path"
+                                                        ],
+                        "rollback_path":  "close browser context; reset local state",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v133",
+                        "provider_focus":  "notion_expo",
+                        "current_state":  "held_missing_exact_target",
+                        "allowed_now":  "dry-run or repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "Notion page/database or Expo project",
+                                                            "write/build action",
+                                                            "delete/revert path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v134",
+                        "provider_focus":  "huggingface",
+                        "current_state":  "held_missing_local_surface_and_target",
+                        "allowed_now":  "repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "CLI/connector availability",
+                                                            "repo/model/dataset target",
+                                                            "delete/revert path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v135",
+                        "provider_focus":  "latex_gmut",
+                        "current_state":  "held_missing_local_compiler_surface",
+                        "allowed_now":  "repo receipt only",
+                        "needed_before_live_mutation":  [
+                                                            "compiler/bundled plugin invocation path",
+                                                            "tex target",
+                                                            "clean output path"
+                                                        ],
+                        "rollback_path":  "delete generated build artifacts",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v136",
+                        "provider_focus":  "codex_security",
+                        "current_state":  "held_pending_scan_scope",
+                        "allowed_now":  "local scan only after scope specified",
+                        "needed_before_live_mutation":  [
+                                                            "scan scope",
+                                                            "output path",
+                                                            "triage rule"
+                                                        ],
+                        "rollback_path":  "delete generated scan artifact or corrective commit",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v137",
+                        "provider_focus":  "codex_cli",
+                        "current_state":  "active_read_only_cli_lane",
+                        "allowed_now":  "read-only continuity, training, receipt synthesis",
+                        "needed_before_live_mutation":  [
+                                                            "none for repo-side training",
+                                                            "no external spend"
+                                                        ],
+                        "rollback_path":  "no mutation; discard generated receipt if needed",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v138",
+                        "provider_focus":  "kimi_cli",
+                        "current_state":  "active_read_only_cli_lane",
+                        "allowed_now":  "read-only continuity, training, receipt synthesis",
+                        "needed_before_live_mutation":  [
+                                                            "none for repo-side training",
+                                                            "no external spend"
+                                                        ],
+                        "rollback_path":  "no mutation; discard generated receipt if needed",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v139",
+                        "provider_focus":  "github",
+                        "current_state":  "active_forward_only_publication_lane",
+                        "allowed_now":  "curated artifact commits and pushes",
+                        "needed_before_live_mutation":  [
+                                                            "branch target already known",
+                                                            "forward-only corrective path"
+                                                        ],
+                        "rollback_path":  "forward-only corrective commit only",
+                        "budget_ceiling_usd":  50
+                    },
+                    {
+                        "phase":  "v140",
+                        "provider_focus":  "google_drive",
+                        "current_state":  "operator_hold",
+                        "allowed_now":  "no mutation yet",
+                        "needed_before_live_mutation":  [
+                                                            "exact Drive folder or file target",
+                                                            "write/share action",
+                                                            "rollback/delete/share-removal path"
+                                                        ],
+                        "rollback_path":  "not defined until exact target exists",
+                        "budget_ceiling_usd":  50
+                    }
+                ],
+    "next_safe_provider_to_try":  "github disposable branch or browser local URL, because both can have explicit rollback without touching paid cloud/account state.",
+    "effective_success":  true
+}

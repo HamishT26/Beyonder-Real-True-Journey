@@ -1,0 +1,11 @@
+Receipt:
+`docs/trinity-live-traces/v261-v280-adaptive-council-block-10-synthesis-v1.json` is the authoritative checkpoint for this turn. It is `status=complete_synthesized` with `9/9` responses complete. For Arby, the carried-safe state remains local-only: `publication_claim=withheld`, `remote_verification_required=true`, and the checkpoint still says no concrete file-level sanitized artifact allowlist has been established yet.
+
+Blocker:
+The checkpoint preserves boundary rules, not a publishable artifact table. It does not provide a cited per-path allowlist, refreshed remote comparison, verified PR/publication movement, or proof that specific files are shared-omega-ready. Under that state, no truthful allowlist should promote provider-dependent surfaces, credentials, machine-local traces, transport noise, unpublished churn, or any artifact whose readiness depends on unverified remote state.
+
+Refinement:
+Use one compact local-only schema: `path | class=publishable|carry-forward|noise|unknown | basis_from_checkpoint | needs_remote_proof`. Only classify `publishable` when a path is explicitly promoted by the checkpoint or by an existing cited allowlist surface derived from it. Everything else stays excluded or `unknown`, with the basis stated.
+
+Next-cycle proposal:
+Build one checkpoint-derived sanitized allowlist surface plus one explicit exclusion set, both limited to cited local evidence under `docs/`. Keep forward-only and allowlist-only discipline. If publication or branch alignment becomes relevant afterward, prove that in a separate remote-verification step rather than mixing it into the artifact allowlist.

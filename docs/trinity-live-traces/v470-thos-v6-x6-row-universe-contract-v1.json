@@ -1,0 +1,57 @@
+{
+  "artifact_id": "v470-thos-v6-x6-row-universe-contract-v1",
+  "phase": "v470_THOS_v6_x6",
+  "created_at_nz": "2026-06-02T17:13:52+12:00",
+  "contract_scope": "local_THOS_row_universe_integrity",
+  "canonical_tuple_fields": [
+    "row_id",
+    "family",
+    "status",
+    "surface",
+    "source_row_id"
+  ],
+  "digest_versions": {
+    "row_identity_digest": {
+      "version": "row_id_membership_v1",
+      "algorithm": "sha256_lf_join_sorted_row_ids",
+      "purpose": "detect row-universe membership drift"
+    },
+    "row_content_digest": {
+      "version": "canonical_tuple_v2",
+      "algorithm": "sha256_lf_join_sorted_json_canonical_tuples",
+      "purpose": "detect status, family, surface, or source-row provenance drift"
+    }
+  },
+  "normalization_policy": {
+    "string_case": "case_sensitive",
+    "whitespace": "preserved_after_json_parse",
+    "missing_or_blank_required_field": "reject_row",
+    "unknown_status": "reject_row",
+    "duplicate_row_id": "reject_duplicate_row",
+    "row_order": "sort_by_row_id_for_digest"
+  },
+  "required_invariants": [
+    "source_row_count equals canonical_row_count plus rejected_row_count",
+    "canonical_rows and rejected_rows are disjoint",
+    "rejected_rows remain counted in source-side accounting",
+    "row_identity_digest and row_content_digest are versioned separately",
+    "visualization must project from canonical rows rather than define the row universe",
+    "all GMUT gate effects remain none_open_not_tested"
+  ],
+  "blocker_taxonomy": [
+    "duplicate_row_id",
+    "missing_required:row_id",
+    "missing_required:family",
+    "missing_required:status",
+    "missing_required:surface",
+    "missing_required:source_row_id",
+    "unknown_status",
+    "non_object_row",
+    "visualization_defines_row_universe",
+    "gmUT_gate_effect_non_none"
+  ],
+  "claim_boundary": "Digest equality is a local row-universe receipt only. It is not truth certification, safety proof, connector approval, publication proof, GMUT validation, or gate closure.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}

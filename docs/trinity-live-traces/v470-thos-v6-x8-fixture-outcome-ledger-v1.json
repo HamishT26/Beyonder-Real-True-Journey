@@ -1,0 +1,36 @@
+{
+  "artifact_id": "v470-thos-v6-x8-fixture-outcome-ledger-v1",
+  "phase": "v470_THOS_v6_x8",
+  "created_at_nz": "2026-06-02T17:32:47+12:00",
+  "validator": "scripts/thos_visualization_binding_check.py",
+  "status_precedence": "FAIL_BLOCKER overrides OPEN_GAP; OPEN_GAP overrides PASS_SHAPE_ONLY",
+  "outcomes": [
+    {
+      "case_id": "clean_digest_ref_pass_fixture",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "actual_status": "PASS_SHAPE_ONLY",
+      "structural_binding_status": "PASS_SHAPE_ONLY",
+      "digest_evidence_status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "case_id": "isolated_missing_digest_ref_open_gap",
+      "expected_status": "OPEN_GAP",
+      "actual_status": "OPEN_GAP",
+      "structural_binding_status": "PASS_SHAPE_ONLY",
+      "digest_evidence_status": "OPEN_GAP"
+    },
+    {
+      "case_id": "orphan_plus_missing_digest_ref_precedence",
+      "expected_status": "FAIL_BLOCKER",
+      "actual_status": "FAIL_BLOCKER",
+      "structural_binding_status": "FAIL_BLOCKER",
+      "digest_evidence_status": "OPEN_GAP",
+      "dominant_failure_code": "ORPHAN_VISUALIZATION_ROW",
+      "precedence_reason": "structural blocker dominates digest-reference evidence gap"
+    }
+  ],
+  "claim_boundary": "These are local THOS fixture outcomes only. They do not certify safety, publication, connector action, GMUT validity, or gate closure.",
+  "connector_write_performed": false,
+  "external_mutations_performed": false,
+  "gmut_gate_effect": "none_open_not_tested"
+}

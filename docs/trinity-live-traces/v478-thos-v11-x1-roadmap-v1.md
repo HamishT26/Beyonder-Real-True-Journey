@@ -1,0 +1,66 @@
+# v478 THOS v11 x1 Roadmap
+
+- generated_nz: `2026-06-04T14:44:00+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V11X1-01` (source_freshness): Advance v478 v11 x1 source freshness with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-02` (app_lane): Advance v478 v11 x1 app lane with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-03` (cli_gap): Advance v478 v11 x1 cli gap with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-04` (sandbox): Advance v478 v11 x1 sandbox with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-05` (mcp_trust): Advance v478 v11 x1 mcp trust with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-06` (windows_isolation): Advance v478 v11 x1 windows isolation with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-07` (google_agents): Advance v478 v11 x1 google agents with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-08` (nvidia_compute): Advance v478 v11 x1 nvidia compute with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-09` (github_security): Advance v478 v11 x1 github security with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-10` (observability): Advance v478 v11 x1 observability with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-11` (governance): Advance v478 v11 x1 governance with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-12` (handoff): Advance v478 v11 x1 handoff with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-13` (source_freshness): Advance v478 v11 x1 source freshness with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-14` (app_lane): Advance v478 v11 x1 app lane with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-15` (cli_gap): Advance v478 v11 x1 cli gap with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-16` (sandbox): Advance v478 v11 x1 sandbox with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-17` (mcp_trust): Advance v478 v11 x1 mcp trust with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-18` (windows_isolation): Advance v478 v11 x1 windows isolation with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-19` (google_agents): Advance v478 v11 x1 google agents with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-20` (nvidia_compute): Advance v478 v11 x1 nvidia compute with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-21` (github_security): Advance v478 v11 x1 github security with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-22` (observability): Advance v478 v11 x1 observability with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-23` (governance): Advance v478 v11 x1 governance with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-24` (handoff): Advance v478 v11 x1 handoff with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-25` (source_freshness): Advance v478 v11 x1 source freshness with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-26` (app_lane): Advance v478 v11 x1 app lane with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-27` (cli_gap): Advance v478 v11 x1 cli gap with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-28` (sandbox): Advance v478 v11 x1 sandbox with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-29` (mcp_trust): Advance v478 v11 x1 mcp trust with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-30` (windows_isolation): Advance v478 v11 x1 windows isolation with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-31` (google_agents): Advance v478 v11 x1 google agents with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-32` (nvidia_compute): Advance v478 v11 x1 nvidia compute with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-33` (github_security): Advance v478 v11 x1 github security with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-34` (observability): Advance v478 v11 x1 observability with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-35` (governance): Advance v478 v11 x1 governance with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-36` (handoff): Advance v478 v11 x1 handoff with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-37` (source_freshness): Advance v478 v11 x1 source freshness with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-38` (app_lane): Advance v478 v11 x1 app lane with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-39` (cli_gap): Advance v478 v11 x1 cli gap with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-40` (sandbox): Advance v478 v11 x1 sandbox with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-41` (mcp_trust): Advance v478 v11 x1 mcp trust with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-42` (windows_isolation): Advance v478 v11 x1 windows isolation with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-43` (google_agents): Advance v478 v11 x1 google agents with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-44` (nvidia_compute): Advance v478 v11 x1 nvidia compute with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-45` (github_security): Advance v478 v11 x1 github security with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-46` (observability): Advance v478 v11 x1 observability with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-47` (governance): Advance v478 v11 x1 governance with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-48` (handoff): Advance v478 v11 x1 handoff with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-49` (source_freshness): Advance v478 v11 x1 source freshness with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-50` (app_lane): Advance v478 v11 x1 app lane with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-51` (cli_gap): Advance v478 v11 x1 cli gap with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-52` (sandbox): Advance v478 v11 x1 sandbox with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-53` (mcp_trust): Advance v478 v11 x1 mcp trust with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-54` (windows_isolation): Advance v478 v11 x1 windows isolation with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-55` (google_agents): Advance v478 v11 x1 google agents with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-56` (nvidia_compute): Advance v478 v11 x1 nvidia compute with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-57` (github_security): Advance v478 v11 x1 github security with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-58` (observability): Advance v478 v11 x1 observability with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-59` (governance): Advance v478 v11 x1 governance with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.
+- `V478V11X1-60` (handoff): Advance v478 v11 x1 handoff with council notifier reuse, compact receipts, CLI gap tracking, source drift checks, and open GMUT gates.

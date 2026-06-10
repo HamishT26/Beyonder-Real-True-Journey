@@ -1,0 +1,39 @@
+{
+  "artifact_type": "runner_hardening_note",
+  "phase_slug": "v478-thos-v14-x7-start",
+  "generated_utc": "2026-06-04T23:00:00Z",
+  "generated_nz": "2026-06-05T11:00:00+12:00",
+  "overall_status": "PASS_DIRECT_CAPPED_CLI_HARDENING_NOTE",
+  "hardening_observations": [
+    {
+      "id": "direct-capped-synthesis",
+      "status": "preferred",
+      "reason": "x6 closeout completed Arby and Aster Vale under the soft baseline with smaller final-message artifacts and no marker review.",
+      "next_action": "Use direct capped prompts for synthesis-only advisory asks."
+    },
+    {
+      "id": "standard-read-only-cli",
+      "status": "conditional",
+      "reason": "Standard read-only CLI remains useful when local tool or file work is required, but x6 start showed it can drift into over-window TUI behavior.",
+      "next_action": "Use only when local tool work is needed and explicitly approved."
+    },
+    {
+      "id": "plugin-sync-warning",
+      "status": "watch",
+      "reason": "Plugin sync warnings appeared in x6 closeout stderr metadata but did not block final-message files.",
+      "next_action": "Escalate only if final-message production fails or repeated warning evidence crosses stale-flow threshold."
+    },
+    {
+      "id": "baseline-foothold",
+      "status": "active",
+      "reason": "The 312.832 second baseline is useful as a check-in point but not as completion proof.",
+      "next_action": "Continue recording post-baseline observations separately."
+    }
+  ],
+  "claim_boundary": {
+    "scope": "runner hardening note only",
+    "script_mutation_performed": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

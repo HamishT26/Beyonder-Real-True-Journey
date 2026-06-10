@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>THOS Reason Dashboard Render - v470-thos-v8-x5</title>
+    <style>
+      :root {
+        --ink: #1b1f24;
+        --paper: #f8f5ee;
+        --panel: #fffdf8;
+        --line: #d8cfbf;
+        --clean: #116b4f;
+        --blocked: #9b2c2c;
+        --open: #856404;
+        --idle: #56616d;
+      }
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        margin: 0;
+      }
+      main {
+        margin: 0 auto;
+        max-width: 1180px;
+        padding: 32px 18px 48px;
+      }
+      header, section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 16px 40px rgba(36, 31, 23, 0.08);
+        margin-bottom: 18px;
+        padding: 22px;
+      }
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.8rem);
+        line-height: 0.95;
+        margin: 0 0 10px;
+      }
+      .lede {
+        font-size: 1.08rem;
+        margin: 0;
+        max-width: 820px;
+      }
+      .metrics {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+      .metric {
+        border-left: 5px solid var(--clean);
+        padding: 10px 12px;
+      }
+      .metric strong {
+        display: block;
+        font-size: 1.55rem;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        min-width: 980px;
+        width: 100%;
+      }
+      caption {
+        font-weight: 700;
+        padding: 0 0 12px;
+        text-align: left;
+      }
+      th, td {
+        border-bottom: 1px solid var(--line);
+        padding: 10px 9px;
+        text-align: left;
+        vertical-align: top;
+      }
+      thead th {
+        background: #efe7d7;
+        position: sticky;
+        top: 0;
+      }
+      .badge {
+        border-radius: 999px;
+        color: white;
+        display: inline-block;
+        font: 700 0.78rem/1.1 Verdana, sans-serif;
+        letter-spacing: 0.02em;
+        padding: 6px 9px;
+      }
+      .badge.clean { background: var(--clean); }
+      .badge.blocked { background: var(--blocked); }
+      .badge.open { background: var(--open); color: #1b1f24; }
+      .badge.idle { background: var(--idle); }
+      .note {
+        font-size: 0.96rem;
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <main data-phase-slug="v470-thos-v8-x5" data-case-count="18">
+      <header>
+        <p class="note">Local non-mutating renderer</p>
+        <h1>THOS Reason Dashboard</h1>
+        <p class="lede">Renderer preflight output for v470-thos-v8-x5. This artifact shows guard decisions, dominant reason counts, and required-code parity from the compact THOS fixture. All six GMUT gates remain open.</p>
+      </header>
+      <section aria-label="Dashboard summary">
+        <div class="metrics">
+          <div class="metric"><span>Fixture status</span><strong>PASS_SHAPE_ONLY</strong></div>
+          <div class="metric"><span>Fixture assertion status</span><strong>PASS_SHAPE_ONLY</strong></div>
+          <div class="metric"><span>Case count</span><strong>18</strong></div>
+          <div class="metric"><span>Renderer migration</span><strong>blocked_pending_rendered_artifact</strong></div>
+        </div>
+      </section>
+      <section aria-label="Reason dashboard rows">
+        <div class="table-wrap">
+          <table>
+            <caption>Reason-code guard rows</caption>
+            <thead>
+              <tr>
+                <th scope="col">Case ID</th>
+                <th scope="col">Row Status</th>
+                <th scope="col">Guard Status</th>
+                <th scope="col">Guard Decision</th>
+                <th scope="col">Dominant Reason</th>
+                <th scope="col">Reason Codes</th>
+                <th scope="col">Required Codes</th>
+                <th scope="col">Missing Required</th>
+                <th scope="col">Allowed Extras</th>
+                <th scope="col">Unexpected Extras</th>
+              </tr>
+            </thead>
+            <tbody>
+          <tr data-case-id="happy_manifest_allows">
+            <th scope="row">happy_manifest_allows</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>PASS_SHAPE_ONLY</td>
+            <td>allow</td>
+            <td></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="missing_manifest_required">
+            <th scope="row">missing_manifest_required</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_REQUIRED_MISSING</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="malformed_manifest_json">
+            <th scope="row">malformed_manifest_json</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_JSON_UNREADABLE</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="unknown_manifest_schema_rejected">
+            <th scope="row">unknown_manifest_schema_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_SCHEMA_INVALID</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="path_list_mismatch">
+            <th scope="row">path_list_mismatch</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_PATH_LIST_MISMATCH</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="unknown_path_list_schema_rejected">
+            <th scope="row">unknown_path_list_schema_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>PATH_LIST_SCHEMA_INVALID</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="absolute_path_rejected">
+            <th scope="row">absolute_path_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_PATH_INVALID</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="traversal_path_rejected">
+            <th scope="row">traversal_path_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_PATH_INVALID</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="duplicate_normalized_path_rejected">
+            <th scope="row">duplicate_normalized_path_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_PATH_DUPLICATE</td>
+            <td>3</td>
+            <td>1</td>
+            <td>0</td>
+            <td>2</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="windows_case_collision_path_rejected">
+            <th scope="row">windows_case_collision_path_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_PATH_CASE_COLLISION</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="unexpected_role_enum_rejected">
+            <th scope="row">unexpected_role_enum_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_ROLE_INVALID</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="missing_artifact_rejected">
+            <th scope="row">missing_artifact_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>ASSERTION_ARTIFACT_MISSING</td>
+            <td>5</td>
+            <td>1</td>
+            <td>0</td>
+            <td>3</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="expectation_status_mismatch">
+            <th scope="row">expectation_status_mismatch</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>ASSERTION_STATUS_MISMATCH</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="expected_negative_unexpected_pass">
+            <th scope="row">expected_negative_unexpected_pass</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL</td>
+            <td>3</td>
+            <td>2</td>
+            <td>0</td>
+            <td>1</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="boundary_drift_rejected">
+            <th scope="row">boundary_drift_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>ASSERTION_BOUNDARY_INVALID</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="coverage_gap_rejected">
+            <th scope="row">coverage_gap_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>ASSERTION_COVERAGE_MISSING</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="stray_assertion_rejected">
+            <th scope="row">stray_assertion_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_CLOSED_WORLD_STRAY</td>
+            <td>1</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+          <tr data-case-id="duplicate_artifact_id_rejected">
+            <th scope="row">duplicate_artifact_id_rejected</th>
+            <td><span class="badge clean">PASS_SHAPE_ONLY</span></td>
+            <td>FAIL_BLOCKER</td>
+            <td>deny</td>
+            <td>MANIFEST_ARTIFACT_ID_DUPLICATE</td>
+            <td>4</td>
+            <td>1</td>
+            <td>0</td>
+            <td>3</td>
+            <td>0</td>
+          </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">Generated at 2026-06-02T09:11:07+00:00. No connector write, cloud write, destructive cleanup, publication authority change, or GMUT gate movement is represented by this local artifact.</p>
+      </section>
+      <script type="application/json" id="thos-render-data">[{"allowed_extra_count": 0, "case_id": "happy_manifest_allows", "dominant_reason": null, "guard_decision": "allow", "guard_status": "PASS_SHAPE_ONLY", "matched_required_count": 0, "missing_required_count": 0, "reason_code_count": 0, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 0, "case_id": "missing_manifest_required", "dominant_reason": "MANIFEST_REQUIRED_MISSING", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 1, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 0, "case_id": "malformed_manifest_json", "dominant_reason": "MANIFEST_JSON_UNREADABLE", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 1, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "unknown_manifest_schema_rejected", "dominant_reason": "MANIFEST_SCHEMA_INVALID", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 0, "case_id": "path_list_mismatch", "dominant_reason": "MANIFEST_PATH_LIST_MISMATCH", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 1, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "unknown_path_list_schema_rejected", "dominant_reason": "PATH_LIST_SCHEMA_INVALID", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "absolute_path_rejected", "dominant_reason": "MANIFEST_PATH_INVALID", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "traversal_path_rejected", "dominant_reason": "MANIFEST_PATH_INVALID", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 2, "case_id": "duplicate_normalized_path_rejected", "dominant_reason": "MANIFEST_PATH_DUPLICATE", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 3, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "windows_case_collision_path_rejected", "dominant_reason": "MANIFEST_PATH_CASE_COLLISION", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "unexpected_role_enum_rejected", "dominant_reason": "MANIFEST_ROLE_INVALID", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 3, "case_id": "missing_artifact_rejected", "dominant_reason": "ASSERTION_ARTIFACT_MISSING", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 5, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "expectation_status_mismatch", "dominant_reason": "ASSERTION_STATUS_MISMATCH", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 2, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 1, "case_id": "expected_negative_unexpected_pass", "dominant_reason": "ASSERTION_EXPECTED_NEGATIVE_DID_NOT_FAIL", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 2, "missing_required_count": 0, "reason_code_count": 3, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 0, "case_id": "boundary_drift_rejected", "dominant_reason": "ASSERTION_BOUNDARY_INVALID", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 1, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 0, "case_id": "coverage_gap_rejected", "dominant_reason": "ASSERTION_COVERAGE_MISSING", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 1, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 0, "case_id": "stray_assertion_rejected", "dominant_reason": "MANIFEST_CLOSED_WORLD_STRAY", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 1, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}, {"allowed_extra_count": 3, "case_id": "duplicate_artifact_id_rejected", "dominant_reason": "MANIFEST_ARTIFACT_ID_DUPLICATE", "guard_decision": "deny", "guard_status": "FAIL_BLOCKER", "matched_required_count": 1, "missing_required_count": 0, "reason_code_count": 4, "renderer_row_class": "clean", "row_status": "PASS_SHAPE_ONLY", "unexpected_extra_count": 0}]</script>
+    </main>
+  </body>
+</html>

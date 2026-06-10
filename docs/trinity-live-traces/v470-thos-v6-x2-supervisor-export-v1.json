@@ -1,0 +1,173 @@
+{
+  "aggregate_status": "FAIL_BLOCKER",
+  "connector_write_performed": false,
+  "gmUT_gate_effect": "none_open_not_tested",
+  "input_file": "docs/trinity-live-traces/v470-thos-v5-x1-supervisor-fixtures-v1.json",
+  "mutation_performed": false,
+  "rows": [
+    {
+      "authority_route": "local_repo_read",
+      "connector_write_performed": false,
+      "expected_failure": false,
+      "expected_interpretation": "expected_pass_matched",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "gate_result": "watch_only",
+      "matches_expected": true,
+      "mutation_class": "read_only",
+      "mutation_performed": false,
+      "operation": "list",
+      "reason_code": "observe_or_dry_validate_only",
+      "request_id": "read_skill_inventory",
+      "rule_map_id": "THOS-RULE-READ-ONLY-INVENTORY",
+      "status": "PASS_SHAPE_ONLY",
+      "surface": "skill",
+      "validator_refs": [
+        "path_guard"
+      ]
+    },
+    {
+      "authority_route": "local_validator_only",
+      "connector_write_performed": false,
+      "expected_failure": false,
+      "expected_interpretation": "expected_pass_matched",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "gate_result": "dry_run_only",
+      "matches_expected": true,
+      "mutation_class": "dry_validate",
+      "mutation_performed": false,
+      "operation": "validate",
+      "reason_code": "observe_or_dry_validate_only",
+      "request_id": "dry_publication_validator",
+      "rule_map_id": "THOS-RULE-DRY-VALIDATOR",
+      "status": "PASS_SHAPE_ONLY",
+      "surface": "local_repo",
+      "validator_refs": [
+        "thos_publication_guard"
+      ]
+    },
+    {
+      "authority_route": "approved_local_write_shape_only",
+      "connector_write_performed": false,
+      "expected_failure": false,
+      "expected_interpretation": "expected_pass_matched",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "gate_result": "dry_run_only",
+      "matches_expected": true,
+      "mutation_class": "local_write",
+      "mutation_performed": false,
+      "operation": "create",
+      "reason_code": "local_write_shape_only_approved_but_not_executed",
+      "request_id": "curated_artifact_write_shape",
+      "rule_map_id": "THOS-RULE-CURATED-LOCAL-WRITE-SHAPE",
+      "status": "PASS_SHAPE_ONLY",
+      "surface": "local_repo",
+      "validator_refs": [
+        "json_parse",
+        "path_guard",
+        "credential_guard",
+        "staged_allowlist"
+      ]
+    },
+    {
+      "authority_route": "connector_mutation_requires_named_target",
+      "connector_write_performed": false,
+      "expected_failure": true,
+      "expected_interpretation": "expected_failure_matched",
+      "expected_status": "OPEN_GAP",
+      "gate_result": "handoff",
+      "matches_expected": true,
+      "mutation_class": "connector_mutate",
+      "mutation_performed": false,
+      "operation": "batchUpdate",
+      "reason_code": "scope_not_bounded",
+      "request_id": "drive_batch_update_without_named_target",
+      "rule_map_id": "THOS-RULE-DOCS-EDIT-NO-APPROVAL",
+      "status": "OPEN_GAP",
+      "surface": "google_docs",
+      "validator_refs": [
+        "connector_mutation_gate"
+      ]
+    },
+    {
+      "authority_route": "destructive_request_refusal",
+      "connector_write_performed": false,
+      "expected_failure": true,
+      "expected_interpretation": "expected_failure_matched",
+      "expected_status": "FAIL_BLOCKER",
+      "gate_result": "refuse",
+      "matches_expected": true,
+      "mutation_class": "destructive",
+      "mutation_performed": false,
+      "operation": "delete",
+      "reason_code": "destructive_request_not_allowed_by_dry_gate",
+      "request_id": "cleanup_delete_request",
+      "rule_map_id": "THOS-RULE-DESTRUCTIVE-CLEANUP-BLOCK",
+      "status": "FAIL_BLOCKER",
+      "surface": "shell",
+      "validator_refs": [
+        "destructive_guard"
+      ]
+    },
+    {
+      "authority_route": "split_read_write_before_connector_gate",
+      "connector_write_performed": false,
+      "expected_failure": true,
+      "expected_interpretation": "expected_failure_matched",
+      "expected_status": "OPEN_GAP",
+      "gate_result": "handoff",
+      "matches_expected": true,
+      "mutation_class": "mixed",
+      "mutation_performed": false,
+      "operation": "search_and_update",
+      "reason_code": "mixed_read_write_request_must_be_split",
+      "request_id": "mixed_connector_read_write",
+      "rule_map_id": "THOS-RULE-MIXED-REQUEST-SPLIT",
+      "status": "OPEN_GAP",
+      "surface": "connector",
+      "validator_refs": [
+        "split_request_guard"
+      ]
+    },
+    {
+      "authority_route": "observer_only_local_runtime",
+      "connector_write_performed": false,
+      "expected_failure": false,
+      "expected_interpretation": "expected_pass_matched",
+      "expected_status": "PASS_SHAPE_ONLY",
+      "gate_result": "watch_only",
+      "matches_expected": true,
+      "mutation_class": "observe",
+      "mutation_performed": false,
+      "operation": "inspect",
+      "reason_code": "observe_or_dry_validate_only",
+      "request_id": "watcher_observe_phase_status",
+      "rule_map_id": "THOS-RULE-WATCHER-OBSERVE-ONLY",
+      "status": "PASS_SHAPE_ONLY",
+      "surface": "local_runtime",
+      "validator_refs": [
+        "observer_only_guard"
+      ]
+    },
+    {
+      "authority_route": "github_write_requires_named_target",
+      "connector_write_performed": false,
+      "expected_failure": true,
+      "expected_interpretation": "expected_failure_matched",
+      "expected_status": "OPEN_GAP",
+      "gate_result": "handoff",
+      "matches_expected": true,
+      "mutation_class": "remote_write",
+      "mutation_performed": false,
+      "operation": "comment",
+      "reason_code": "scope_not_bounded",
+      "request_id": "github_comment_mutation",
+      "rule_map_id": "THOS-RULE-GITHUB-WRITE-NO-APPROVAL",
+      "status": "OPEN_GAP",
+      "surface": "github",
+      "validator_refs": [
+        "connector_mutation_gate"
+      ]
+    }
+  ],
+  "validator_mode": "local_non_mutating_supervisor_gate"
+}

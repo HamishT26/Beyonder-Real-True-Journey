@@ -1,0 +1,36 @@
+{
+  "artifact": "v468A_THOS_v4_x2_fixture_results_v1",
+  "phase": "v468A_THOS_v4_x2",
+  "prepared_nz": "2026-06-01T23:38:38.4165048+12:00",
+  "status": "pass",
+  "checks": [
+    {
+      "name": "pass_manifest",
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "ok": true,
+      "output": "THOS_PHASE_MANIFEST_OK docs/trinity-live-traces/v468A-thos-v4-x2-fixture-pass-manifest-v1.json"
+    },
+    {
+      "name": "fail_missing_head",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "ok": true,
+      "output": "manifest missing required fields: live_upstream_head"
+    },
+    {
+      "name": "fail_overclaim",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "ok": true,
+      "output": "manifest contains forbidden claim pattern: GMUT validated"
+    },
+    {
+      "name": "fail_drift",
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "ok": true,
+      "output": "manifest.drift must be 0 0"
+    }
+  ]
+}

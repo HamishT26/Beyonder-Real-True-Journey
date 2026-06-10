@@ -1,0 +1,52 @@
+{
+  "artifact_type": "phase_start_prep_handoff",
+  "phase_slug": "v478-thos-v14-x6-start",
+  "generated_utc": "2026-06-04T21:57:08Z",
+  "generated_nz": "2026-06-05T09:57:08+12:00",
+  "overall_status": "PASS_PREP_DURING_FIVE_LANE_START_WAIT",
+  "inputs": {
+    "x5_closeout_synthesis": "v478-thos-v14-x5-closeout-synthesis-v1.json",
+    "three_run_baseline": "v478-thos-v14-five-lane-timing-baseline-v1.json",
+    "x6_source_refresh": "v478-thos-v14-x6-start-source-refresh-v1.json"
+  },
+  "state_reading": [
+    {
+      "surface": "five_lane_roster",
+      "status": "active",
+      "evidence": "x6 start launched app-server lanes and read-only CLI lanes through existing routes.",
+      "next_action": "Fold completion and final-marker receipts into x6 start synthesis when watchers finish."
+    },
+    {
+      "surface": "timing_baseline",
+      "status": "ready_soft_wait_foothold",
+      "evidence": "Three-run baseline average is 312.832 seconds across 15 lane observations.",
+      "next_action": "Use as a check-in point only; do not treat it as a completion substitute."
+    },
+    {
+      "surface": "stale_flow",
+      "status": "watching",
+      "evidence": "Known stale-watch classes include CLI final markers, app-server waits, sandbox warnings, command-index old-contract gap, and connector drift.",
+      "next_action": "Generate x6 stale-flow refresh after lane receipts land."
+    },
+    {
+      "surface": "source_refresh",
+      "status": "compact_primary_sources_ready",
+      "evidence": "x6 start official-source ledger is available.",
+      "next_action": "Carry source notes into x6 synthesis and x6 closeout handoff."
+    }
+  ],
+  "useful_wait_tasks": [
+    "Prepare x6 synthesis shell while watchers run.",
+    "Keep command-index repair and v54/v55 handoff surfaces on the next roster.",
+    "Review stale-flow candidates only through status receipts.",
+    "Avoid publishing local output folders, raw lane body text, or transport logs.",
+    "If any lane remains open past the soft baseline, continue approved prep until either completion or a blocker receipt exists."
+  ],
+  "claim_boundary": {
+    "scope": "x6 start prep during active five-lane wait",
+    "x6_lane_completion": "not_claimed_here",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "artifact_type": "stale_flow_refresh_runner",
+  "phase_slug": "v478-thos-v12-x1",
+  "generated_utc": "2026-06-04T14:17:37+00:00",
+  "generated_nz": "2026-06-05T02:17:37+12:00",
+  "threshold": 3,
+  "overall_status": "STALE_FLOWS_DETECTED",
+  "notify_aletheon": true,
+  "flow_count": 4,
+  "stale_flow_count": 3,
+  "flows": [
+    {
+      "id": "STALE-BACKGROUND-PARTIAL",
+      "surface": "background_sibling_notifier",
+      "status": "partial_open",
+      "observed_count": 1,
+      "threshold": 3,
+      "notify_aletheon": true,
+      "evidence": "background notifier completed app lanes while CLI final markers remained open",
+      "next_action": "preserve split app/CLI status and continue other approved work"
+    },
+    {
+      "id": "STALE-MULTIPLEX-CLI-OPEN",
+      "surface": "multiplex_status_board",
+      "status": "visible_open",
+      "observed_count": 1,
+      "threshold": 3,
+      "notify_aletheon": true,
+      "evidence": "multiplex board displays app readiness with CLI lanes still open",
+      "next_action": "keep board active and route repair planning through Fix-Enhancement Updater"
+    },
+    {
+      "id": "STALE-FIX-ENHANCEMENT-OPEN-ISSUES",
+      "surface": "fix_enhancement_updater",
+      "status": "plan_ready_open",
+      "observed_count": 2,
+      "threshold": 3,
+      "notify_aletheon": true,
+      "evidence": "fix-enhancement receipt retains open issue rows for approved repair planning",
+      "next_action": "convert repeated open rows into exact packet tasks or bounded runner changes"
+    },
+    {
+      "id": "READY-SKILL-EVOLUTION",
+      "surface": "multi_agent_orchestrator_skill",
+      "status": "ready_verified",
+      "observed_count": 1,
+      "threshold": 3,
+      "notify_aletheon": false,
+      "evidence": "live skill evolution receipt verifies draft match and frontmatter",
+      "next_action": "use evolved skill rules for future sibling-lane orchestration"
+    }
+  ],
+  "policy": {
+    "status_only": true,
+    "live_lane_mutation_performed": false,
+    "new_thread_created": false,
+    "old_style_subagent_spawned": false,
+    "external_account_changed": false
+  },
+  "claim_boundary": {
+    "scope": "stale-flow detection and next-action planning",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

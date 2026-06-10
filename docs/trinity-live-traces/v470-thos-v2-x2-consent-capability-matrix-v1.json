@@ -1,0 +1,116 @@
+{
+  "artifact": "v470_THOS_v2_x2_consent_capability_matrix_v1",
+  "phase": "v470_THOS_v2_x2",
+  "classification": "evidence",
+  "claim_ceiling": "matrix_design_only_no_connector_mutation",
+  "gmut_gate_effect": "none_open_not_tested",
+  "policy": {
+    "capability_rule": "tool_or_connector_capability_does_not_create_consent",
+    "consent_rule": "consent_does_not_create_capability",
+    "approval_rule": "write_external_git_or_destructive_action_requires_explicit_separate_approval_packet",
+    "default_for_unknown": "blocked_or_open_gap",
+    "advisory_lane_rule": "advisory_lanes_may_recommend_but_not_mutate_or_publish"
+  },
+  "matrix_rows": [
+    {
+      "row_id": "CCM-001",
+      "actor": "Aletheon",
+      "surface": "local_shell",
+      "operation_type": "read_or_validator",
+      "capability": "available",
+      "consent_source": "current_user_request",
+      "approval_status": "not_required_for_read_only",
+      "allowed_result": "inspect_parse_validate_or_publish_curated_artifacts_only_when_guarded"
+    },
+    {
+      "row_id": "CCM-002",
+      "actor": "Aletheon",
+      "surface": "local_shell",
+      "operation_type": "destructive_cleanup",
+      "capability": "technically_possible",
+      "consent_source": "not_granted_for_this_phase",
+      "approval_status": "blocked",
+      "allowed_result": "inventory_or_propose_only"
+    },
+    {
+      "row_id": "CCM-003",
+      "actor": "Aletheon",
+      "surface": "git",
+      "operation_type": "curated_stage_commit_push",
+      "capability": "available",
+      "consent_source": "phase_publication_request",
+      "approval_status": "allowed_with_guard_sequence",
+      "allowed_result": "current_phase_curated_artifacts_only"
+    },
+    {
+      "row_id": "CCM-004",
+      "actor": "Arby",
+      "surface": "codex_cli_lane",
+      "operation_type": "advisory_read_only",
+      "capability": "limited_by_windows_sandbox_spawn_setup_refresh",
+      "consent_source": "current_user_request",
+      "approval_status": "advisory_only",
+      "allowed_result": "constrained_rubric_not_artifact_validation_claim"
+    },
+    {
+      "row_id": "CCM-005",
+      "actor": "Aster_Vale",
+      "surface": "codex_cli_lane",
+      "operation_type": "advisory_read_only",
+      "capability": "limited_by_windows_sandbox_spawn_setup_refresh",
+      "consent_source": "current_user_request",
+      "approval_status": "advisory_only",
+      "allowed_result": "constrained_rubric_not_artifact_validation_claim"
+    },
+    {
+      "row_id": "CCM-006",
+      "actor": "Cicero",
+      "surface": "app_lane",
+      "operation_type": "advisory",
+      "capability": "available",
+      "consent_source": "current_user_request",
+      "approval_status": "advisory_only",
+      "allowed_result": "validation_predicates_and_blockers"
+    },
+    {
+      "row_id": "CCM-007",
+      "actor": "Kierkegaard",
+      "surface": "app_lane",
+      "operation_type": "advisory",
+      "capability": "available",
+      "consent_source": "current_user_request",
+      "approval_status": "advisory_only",
+      "allowed_result": "overclaim_lints_and_consent_blockers"
+    },
+    {
+      "row_id": "CCM-008",
+      "actor": "Aristotle",
+      "surface": "app_lane",
+      "operation_type": "advisory",
+      "capability": "available",
+      "consent_source": "current_user_request",
+      "approval_status": "advisory_only",
+      "allowed_result": "schema_and_enum_validator_advice"
+    },
+    {
+      "row_id": "CCM-009",
+      "actor": "Aletheon",
+      "surface": "github_or_google_drive_connector",
+      "operation_type": "external_write",
+      "capability": "possible_if_connector_available",
+      "consent_source": "not_scoped_for_v470_THOS_v2_x2",
+      "approval_status": "blocked_without_packet",
+      "allowed_result": "source_reference_or_proposal_only"
+    },
+    {
+      "row_id": "CCM-010",
+      "actor": "Aletheon",
+      "surface": "automation_or_thread_management",
+      "operation_type": "external_or_app_mutation",
+      "capability": "possible_if_tool_exposed",
+      "consent_source": "not_active_for_this_phase",
+      "approval_status": "blocked_without_explicit_phase_packet",
+      "allowed_result": "do_not_mutate"
+    }
+  ]
+}

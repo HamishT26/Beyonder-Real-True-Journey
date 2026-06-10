@@ -1,0 +1,51 @@
+{
+  "generated_utc": "2026-05-20T04:21:18Z",
+  "handoff_id": "v361-v370-final-handoff-v1",
+  "handoff_state": "ready_for_v361_v370",
+  "source_phase_range": "v281-v360",
+  "target_phase_range": "v361-v370",
+  "lead": "Aletheon",
+  "supporting_siblings_and_helpers": [
+    "Arby",
+    "Kimi",
+    "Aster Vale",
+    "Supervisor helper",
+    "v2 Watcher helper",
+    "Recovery Watchdog helper"
+  ],
+  "gate_evidence": {
+    "v281_v360": {
+      "status": "complete",
+      "published_commit": "1b0d0c69df",
+      "closeout_declaration": "docs/trinity-live-traces/v281-v360-closeout-declaration-v1.json"
+    },
+    "health_check": {
+      "status": "v281_v360_complete",
+      "path": "docs/trinity-live-traces/v281-v360-automation-health-check-v1.json"
+    }
+  },
+  "v361_v370_start_conditions": [
+    "Use only v361-v370 bounded successor scripts for v361-v370 work.",
+    "Run one active phase at a time from durable v361-v370 run-status.",
+    "Use real CLI sibling lanes for Arby, Kimi, and Aster Vale; never local placeholders.",
+    "Use 2000 maximum useful steps per lane where the real CLI supports it.",
+    "Prefer codex-cli 0.132.0 or newer from v363 onward, with codex update, codex exec resume --help, and codex doctor verification before new Codex CLI launches.",
+    "Use recorded Codex CLI sessions for resume-capable lanes when the same phase/lane session identity is proven.",
+    "Short 30-minute heartbeat wakes are observation checkpoints, not phase boundaries.",
+    "Do not mark a phase complete until real CLI receipts exist or an explicit blocker decision is recorded."
+  ],
+  "staging_boundaries": [
+    "Stage only curated health-check, run-status, start, completion, v1/v2 report, source capsule, source-script, handoff, closeout, automation-prompt, and curated CLI sibling receipt artifacts.",
+    "Never stage raw replies, stdout/stderr logs, live .log files, active partial lane files, scratch probes, pycache files, secrets, or unrelated carried-forward churn.",
+    "Before every commit or push, fetch and verify branch drift; use forward-only merge only if the remote advanced."
+  ],
+  "truth_boundaries": [
+    "The Multiplex TUI is observability, not authority.",
+    "Authority remains in durable artifacts, health checks, lane receipts, and Aletheon-reviewed commits.",
+    "codex exec resume is allowed only for a proven matching phase/lane session; stale or unknown session identity must not be resumed.",
+    "Cloud, MCP, API, and paid-provider expansion remains exploratory until secrets, scopes, rollback, and spend limits are explicit.",
+    "If C:/ and //?/C:/ identify the same Codex session JSONL, treat it as app resume-path vitality, not repo failure."
+  ],
+  "recommended_next_automation": "docs/trinity-live-traces/v361-v370-cli-multiplex-recovery-wake-bridge-prompt-v1.md",
+  "next_action": "Create and commit the bounded v361-v370 successor scripts, then start v361 from the v361-v370 phase-start runner."
+}

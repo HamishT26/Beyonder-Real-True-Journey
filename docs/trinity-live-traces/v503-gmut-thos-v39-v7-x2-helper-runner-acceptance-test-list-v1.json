@@ -1,0 +1,52 @@
+{
+  "artifact_type": "helper_runner_acceptance_test_list",
+  "phase_slug": "v503-gmut-thos-v39-v7-x2",
+  "generated_utc": "2026-06-08T20:33:03Z",
+  "overall_status": "PASS_HELPER_RUNNER_ACCEPTANCE_TEST_LIST_BUILT",
+  "acceptance_tests": [
+    {
+      "test": "status_only_publication",
+      "pass_condition": "Receipt contains statuses, counts, hashes, timestamps, and filenames only."
+    },
+    {
+      "test": "no_private_material",
+      "pass_condition": "Receipt excludes raw lane text, raw prompts, private traces, credentials, screenshots, and local absolute paths."
+    },
+    {
+      "test": "cadence_before_harvest",
+      "pass_condition": "Status-check cadence guard passes before lane harvest."
+    },
+    {
+      "test": "existing_lanes_only",
+      "pass_condition": "No new sibling, thread, or old-style subagent is created."
+    },
+    {
+      "test": "redaction_before_gate",
+      "pass_condition": "App receipts pass redaction before direct repair gate."
+    },
+    {
+      "test": "cli_quality_before_normalizer",
+      "pass_condition": "CLI quality and marker review pass before five-lane normalizer."
+    },
+    {
+      "test": "phase_advance_after_five_lane",
+      "pass_condition": "Phase-advance verifier passes only after app, CLI, classifier, exposure, closeout, and next-prep receipts are present."
+    },
+    {
+      "test": "open_claim_gates",
+      "pass_condition": "GMUT, canon, consciousness, and final-physics gates remain open unless exact closure artifacts exist."
+    }
+  ],
+  "next_use": [
+    "Run this acceptance list against v8 launch and closeout packages.",
+    "Use failed acceptance tests as repair tasks, not as reasons for broad mutation.",
+    "Keep helper changes repo-scoped and exact-staged."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "private_runtime_traces_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

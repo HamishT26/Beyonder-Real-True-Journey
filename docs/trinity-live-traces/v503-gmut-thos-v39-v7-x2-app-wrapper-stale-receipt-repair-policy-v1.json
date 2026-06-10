@@ -1,0 +1,57 @@
+{
+  "artifact_type": "app_wrapper_stale_receipt_repair_policy",
+  "phase_slug": "v503-gmut-thos-v39-v7-x2",
+  "generated_utc": "2026-06-08T20:33:03Z",
+  "overall_status": "PASS_APP_WRAPPER_STALE_RECEIPT_REPAIR_POLICY_BUILT",
+  "policy_steps": [
+    {
+      "step": "Wait for cadence gate",
+      "condition": "background watcher has not published completion receipt",
+      "required_receipt": "status_check_cadence_guard"
+    },
+    {
+      "step": "Probe existing app lanes",
+      "condition": "only existing Cicero, Kierkegaard, Aristotle callable routes are used",
+      "required_receipt": "app_lane_probe_repair_diagnostic"
+    },
+    {
+      "step": "Redact probe",
+      "condition": "probe output must be sanitized before publication",
+      "required_receipt": "app_lane_probe_redactor"
+    },
+    {
+      "step": "Direct notify existing lanes once",
+      "condition": "probe passed and no new threads or replacement agents are created",
+      "required_receipt": "council_app_lane_completion_notifier"
+    },
+    {
+      "step": "Redact notifier receipt",
+      "condition": "notifier receipt is sanitized before gate promotion",
+      "required_receipt": "app_receipt_thread_redactor"
+    },
+    {
+      "step": "Run direct repair gate",
+      "condition": "redacted direct notifier evidence is available",
+      "required_receipt": "council_app_lane_direct_repair_gate"
+    },
+    {
+      "step": "Normalize all five lanes",
+      "condition": "app gate and CLI quality/marker review are ready",
+      "required_receipt": "five_lane_status_normalizer"
+    }
+  ],
+  "non_goals": [
+    "No new app threads.",
+    "No old-style subagent spawning.",
+    "No raw app thread publication.",
+    "No account or plugin-cache mutation.",
+    "No phase advancement from duration alone."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "private_runtime_traces_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

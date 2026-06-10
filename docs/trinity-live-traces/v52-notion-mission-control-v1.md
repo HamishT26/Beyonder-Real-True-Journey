@@ -1,0 +1,8 @@
+# V52 Notion Mission Control
+
+- Generated UTC: `2026-04-24T11:18:10+00:00`
+
+- `notion_mission_control_state`: `live_page_created`
+- `notion_mission_control_url`: `https://www.notion.so/34c9d1fae9cc81b4861bedc7c687624b`
+- `local_dashboard_path`: `D:\GHC-Archives\worktrees\v52-omega\docs\v52-mission-control-dashboard.html`
+- `iab_state`: `browser_use_blocked_missing_kernel_assets`

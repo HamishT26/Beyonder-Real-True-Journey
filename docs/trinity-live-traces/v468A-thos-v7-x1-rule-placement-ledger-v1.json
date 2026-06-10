@@ -1,0 +1,40 @@
+{
+  "artifact": "v468A_THOS_v7_x1_rule_placement_ledger_v1",
+  "phase": "v468A_THOS_v7_x1",
+  "json_schema_rules": [
+    "required field presence",
+    "allowed phase_type values",
+    "40-hex-character head shape",
+    "0 0 drift string shape",
+    "non-empty artifact list",
+    "non-empty blocked action list",
+    "non-empty validation chain",
+    "open GMUT gate boundary constant",
+    "operational_scaffold_only THOS claim constant",
+    "no undeclared top-level fields"
+  ],
+  "python_validator_rules": [
+    "local head equals upstream head inside manifest",
+    "drift normalizes to 0 0",
+    "blocked actions mention the GMUT validation boundary",
+    "validation chain mentions remote equality verification",
+    "forbidden overclaim patterns are rejected",
+    "artifact paths stay inside repo root",
+    "artifact paths exist when check-artifacts is enabled",
+    "manifest heads match live git refs when check-live-git is enabled"
+  ],
+  "publication_procedure_rules": [
+    "fetch before shared commit",
+    "forward-only merge if behind",
+    "curated stage only",
+    "review staged diff",
+    "push explicitly to the shared omega line when needed",
+    "verify remote equals local after push",
+    "never stage unprocessed traces, session captures, image captures, private auth material, or unrelated dirty files"
+  ],
+  "human_review_rules": [
+    "classify claims as evidence, context, hypothesis, blocker, advisory, open_gap, or journey_context_not_canon",
+    "do not promote Journey context into physics validation",
+    "do not fabricate sibling advisories when only completion markers are exposed"
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "artifact_type": "phase_closeout_synthesis",
+  "phase_slug": "v478-thos-v14-x6-closeout",
+  "generated_utc": "2026-06-04T22:52:00Z",
+  "generated_nz": "2026-06-05T10:52:00+12:00",
+  "overall_status": "PASS_X6_CLOSEOUT_WITH_DIRECT_CAPPED_CLI_PATTERN",
+  "evidence": {
+    "app_lanes": {
+      "receipt": "v478-thos-v14-x6-closeout-background-council-app-completion-v1.json",
+      "status": "PASS",
+      "lanes": [
+        {
+          "lane": "Cicero",
+          "duration_seconds": 222.36,
+          "completion": "completed"
+        },
+        {
+          "lane": "Kierkegaard",
+          "duration_seconds": 56.64,
+          "completion": "completed"
+        },
+        {
+          "lane": "Aristotle",
+          "duration_seconds": 59.094,
+          "completion": "completed"
+        }
+      ]
+    },
+    "cli_lanes": {
+      "receipt": "v478-thos-v14-x6-closeout-cli-completion-v1.json",
+      "status": "FINAL_MESSAGES_READY",
+      "lanes": [
+        {
+          "lane": "Arby",
+          "duration_seconds": 240.966,
+          "final_message_bytes": 1349,
+          "final_message_hash": "236b6d92fd44b281b17d84a6c25cf95e085be425d3fddd653797b335ddfb992c",
+          "marker_review_required": false
+        },
+        {
+          "lane": "Aster Vale",
+          "duration_seconds": 226.098,
+          "final_message_bytes": 1574,
+          "final_message_hash": "fd1d70fc822f1aa5ce3f37a6d2814b7266fcb9820fef349f82372a5b238a0a23",
+          "marker_review_required": false
+        }
+      ],
+      "body_text_boundary": "temp_only_not_published"
+    },
+    "timing": {
+      "receipt": "v478-thos-v14-x6-closeout-five-lane-timing-v1.json",
+      "observation_run_index_today": 5,
+      "observation_window_seconds": 1800,
+      "average_response_seconds_this_run": 161.032,
+      "soft_wait_baseline_seconds": 312.832,
+      "interpretation": "post-baseline direct capped CLI pattern completed under baseline"
+    },
+    "multiplex": {
+      "receipt": "v478-thos-v14-x6-closeout-local-multiplex-tui-app-server-runner-v1.json",
+      "status": "ALL_LANES_READY"
+    },
+    "stale_flow": {
+      "receipt": "v478-thos-v14-x6-closeout-stale-flow-refresh-v1.json",
+      "status": "READY_NO_STALE_FLOWS"
+    },
+    "prep": {
+      "receipt": "v478-thos-v14-x6-closeout-prep-handoff-v1.json",
+      "status": "PASS_PREP_DURING_X6_CLOSEOUT_WAIT"
+    },
+    "cli_pattern": {
+      "receipt": "v478-thos-v14-x6-closeout-cli-pattern-comparison-v1.json",
+      "status": "PASS_DIRECT_CAPPED_CLI_PATTERN_IMPROVED"
+    },
+    "x7_seed": {
+      "receipt": "v478-thos-v14-x6-closeout-x7-seed-roadmap-v1.json",
+      "status": "PASS_X7_SEED_ROADMAP_DURING_CLOSEOUT_WAIT"
+    }
+  },
+  "x6_closeout_lessons": [
+    "The five-lane roster completed at x6 closeout through existing lanes only.",
+    "The direct capped CLI prompt shape completed Arby and Aster Vale under the 312.832 second soft wait foothold.",
+    "No final-message marker review was needed for x6 closeout CLI lanes.",
+    "Plugin sync warnings remained in CLI stderr metadata, but they did not block final-message production.",
+    "The x6 start over-window behavior is best treated as prompt-shape and TUI/watcher drift evidence, not as a sibling failure.",
+    "x7 should prefer direct capped CLI advisory prompts when Arby and Aster Vale are being asked for synthesis rather than local tool execution."
+  ],
+  "x7_handoff": [
+    "Use direct capped CLI advisory for synthesis-only CLI lanes.",
+    "Keep standard read-only CLI only when local tool or file work is actually needed and explicitly approved.",
+    "Continue every-second-session five-lane discipline and exact status-only publication.",
+    "Carry command-index v6 alias compatibility and v54/v55 handoff status as known surfaces.",
+    "Keep the three-run 312.832 second baseline as a check-in foothold while recording later observations separately."
+  ],
+  "claim_boundary": {
+    "scope": "v478 THOS v14 x6 closeout synthesis and x7 handoff only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false,
+    "raw_output_published": false
+  }
+}

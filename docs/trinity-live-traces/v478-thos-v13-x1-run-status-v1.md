@@ -1,0 +1,8 @@
+# v478-thos-v13-x1 Run Status
+
+- generated_nz: `2026-06-05T03:07:51+12:00`
+- overall_status: `PASS_X1_CONTINUATION_WITH_CLI_FINAL_MARKER_OPEN`
+- next_expected_phase: `v478-thos-v13-x2`
+- app_lane_status: `READY_OR_RECEIPT_PENDING`
+- cli_lane_status: `FINAL_MARKER_OPEN_CARRIED_FORWARD`
+- GMUT gates: all remain `OPEN`.

@@ -1,0 +1,84 @@
+{
+  "artifact_id": "v462A-gmut-deep-remaster-v2-null-recovery-design-v1",
+  "generated_utc": "2026-05-29T08:24:00Z",
+  "generated_nz": "2026-05-29T20:24:00+12:00",
+  "phase_version": "v462A_GMUT_v2",
+  "status": "null_recovery_design_seeded_not_executed",
+  "scope": "Design only. No symbolic derivation, executable fixture, or pass verdict is claimed.",
+  "baseline_target": {
+    "classification": "context",
+    "target_equation_form": "G_mu_nu + Lambda g_mu_nu = (8 pi G / c^4) (T_SM_mu_nu + T_DM_mu_nu)",
+    "baseline_surfaces": [
+      "latex/grand_mandala.tex",
+      "docs/grand-mandala-equation-registry-v1.json"
+    ],
+    "candidate_extension_surface": "docs/trinity-live-traces/v462A-gmut-equation-family-v1.md"
+  },
+  "fixtures": [
+    {
+      "fixture_id": "A_hard_null_spacetime_extension",
+      "classification": "advisory",
+      "substitutions": [
+        "alpha_Psi = 0",
+        "alpha_B = 0",
+        "remove or decouple T_Psi_mu_nu",
+        "remove or decouple B_Psi_mu_nu",
+        "no extra source or exchange term"
+      ],
+      "expected_reduced_equation": "G_mu_nu + Lambda g_mu_nu = (8 pi G / c^4) (T_SM_mu_nu + T_DM_mu_nu)",
+      "pass_condition_for_future_phase": "A future derivation or deterministic fixture shows exact reduction to the declared baseline with no residual candidate-extension term.",
+      "reject_conditions": [
+        "any residual alpha_Psi source remains in hard-null limit",
+        "any residual alpha_B backreaction remains in hard-null limit",
+        "baseline source terms are altered without an explicit comparator rule",
+        "dimensions are not ledgered term by term"
+      ],
+      "status": "designed_not_executed"
+    },
+    {
+      "fixture_id": "B_decoupled_scalar_limit",
+      "classification": "advisory",
+      "substitutions": [
+        "alpha_B = 0",
+        "define Psi field dimensions",
+        "define V(Psi)",
+        "define scalar source behavior",
+        "declare whether scalar sector is separately conserved or absent from the spacetime equation in the null limit"
+      ],
+      "expected_reduced_equation": "Baseline spacetime equation remains unchanged while scalar-sector residuals are separately classified and cannot masquerade as baseline recovery.",
+      "pass_condition_for_future_phase": "A future derivation shows the scalar sector either fully decouples from the spacetime equation or is explicitly classified as an allowed separate sector with no hidden baseline deformation.",
+      "reject_conditions": [
+        "undefined V(Psi)",
+        "undefined scalar source",
+        "ambiguous residual scalar stress-energy",
+        "hidden coupling through alpha_B or another unlabeled coefficient"
+      ],
+      "status": "designed_not_executed"
+    }
+  ],
+  "required_columns_for_future_fixture": [
+    "fixture_id",
+    "baseline_surface",
+    "candidate_surface",
+    "substitutions",
+    "allowed_residual_terms",
+    "expected_reduced_equation",
+    "dimensional_checks",
+    "conservation_checks",
+    "observable_comparators",
+    "reject_conditions",
+    "result"
+  ],
+  "gate_status": {
+    "null_recovery": "open_design_seeded_not_executed",
+    "dimensional_consistency": "open_depends_on_unit_ledger",
+    "conservation_or_exchange_law": "open_not_attempted",
+    "baseline_recovery": "open_not_attempted",
+    "fifth_force_equivalence_constraints": "open_not_attempted",
+    "consciousness_measurement_bridge": "open_not_attempted"
+  },
+  "handoff": {
+    "next_phase_version": "v462A_GMUT_v3",
+    "recommended_action": "Materialize Fixture A and Fixture B as a deterministic symbolic receipt or fixture table, without claiming pass until checks are complete."
+  }
+}

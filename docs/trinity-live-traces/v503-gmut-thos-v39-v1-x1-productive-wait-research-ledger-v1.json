@@ -1,0 +1,65 @@
+{
+  "artifact_type": "productive_wait_research_ledger",
+  "phase_slug": "v503-gmut-thos-v39-v1-x1",
+  "generated_utc": "2026-06-08T12:59:11Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_RESEARCH_RECORDED",
+  "lane_supervision_policy": {
+    "manual_babysitting_before_gate": false,
+    "watcher_and_notifier_supervision": true,
+    "phase_advance_requires_all_five_responses": true,
+    "duration_is_completion_proof": false
+  },
+  "source_findings": [
+    {
+      "source": "OpenAI Codex app announcement",
+      "url": "https://openai.com/index/introducing-the-codex-app/",
+      "finding": "Codex is available across app, CLI, IDE, and cloud surfaces, making cross-surface status receipts useful for continuity.",
+      "application": "Keep app-lane and CLI-lane evidence harmonized through the same dashboard and phase-advance surfaces."
+    },
+    {
+      "source": "OpenAI Codex releases",
+      "url": "https://github.com/openai/codex/releases",
+      "finding": "Codex release cadence keeps app/CLI behaviors moving; helper scripts should remain modular and receipt-driven.",
+      "application": "Use compact verifier and classifier extensions rather than broad rewrites when surfaces drift."
+    },
+    {
+      "source": "Running Codex safely at OpenAI",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "finding": "Safe agent operation benefits from layered controls and cautious treatment of tool and environment effects.",
+      "application": "Keep watcher lanes status-only and require exact phase gates before advancement."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "finding": "MCP guidance emphasizes minimizing authority and avoiding confused-deputy behavior.",
+      "application": "Keep connector and local tool activity read-scoped unless an exact mutation packet exists."
+    },
+    {
+      "source": "OWASP Logging and Secrets Management cheat sheets",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "finding": "Logs and diagnostic records can leak sensitive information and should be sanitized and controlled.",
+      "application": "Keep raw sibling outputs temp-only; publish only hashes, counts, statuses, and redaction/exposure receipts."
+    }
+  ],
+  "x2_build_implications": [
+    "Treat app gate and app redaction as serial steps to avoid read/write races.",
+    "Use phase dashboard receipt as the v503 x2 gate summary.",
+    "Add a race-correction note to the implementation ledger.",
+    "Carry direct bridge and app watcher continuity into v503 v2 x1 prep."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

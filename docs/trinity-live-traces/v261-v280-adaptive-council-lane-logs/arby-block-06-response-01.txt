@@ -1,0 +1,11 @@
+Receipt:
+Authoritative checkpoint remains `docs/trinity-live-traces/v261-v280-adaptive-council-block-05-synthesis-v1.json` (`status=complete_synthesized`, `9/9` responses). Local-only Git receipt: branch `codex/GHC-Family/v58-omega-exec`; `git log -1 --decorate` shows both `HEAD` and cached `origin/codex/GHC-Family/beyonder-shared-omega-line` at `dc4e7587a2` (`Add v261 adaptive council checkpoint`).
+
+Blocker:
+No live fetch or remote/PR verification was performed, so remote drift is still unverified in provider terms. The worktree is also dirty with many modified files, so no clean forward-only publication receipt is earned here.
+
+Refinement:
+Use a narrow receipt schema that separates cached local Git facts from remote truth: `checkpoint_path`, `branch`, `local_head`, `cached_upstream_ref`, `cached_alignment=same|ahead|behind|diverged|unknown`, `worktree_clean=false`, `remote_verification_required=true`, `publication_claim=withheld`.
+
+Next-cycle proposal:
+Run one bounded read-only preflight only: `git fetch`, compare `HEAD` vs refreshed upstream, record `same|ahead|behind|diverged`, and keep the forward-only rule explicit: if action is later needed, merge forward from upstream; never reset, rebase, or force-push. Only after that preflight should a real publication receipt be considered.

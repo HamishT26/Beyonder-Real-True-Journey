@@ -1,0 +1,100 @@
+{
+  "generated_utc": "2026-06-03T13:58:02+00:00",
+  "session_start_nz": "2026-06-04T00:24:27+12:00",
+  "phase": "v477_thos_v2_x2",
+  "local_head_before_receipt": "26d4db7f0003ccbffe3b0390605d7c1bebe71660",
+  "remote_head_before_receipt": "26d4db7f0003ccbffe3b0390605d7c1bebe71660",
+  "drift_before_receipt": "0\t0",
+  "claim_boundary": {
+    "domain": "THOS Codex App/CLI sandbox readiness diagnostics only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  },
+  "artifact_type": "v477_thos_windows_sandbox_repair_confirmation",
+  "overall_status": "PASS",
+  "prior_state": {
+    "artifact": "v477-thos-v2-x1-codex-cli-app-readiness-v1.json",
+    "sandbox_probe_status": "FAIL",
+    "representative_blocker": "windows sandbox failed: spawn setup refresh"
+  },
+  "current_codex_version": "codex-cli 0.136.0",
+  "current_config_state": {
+    "config_present": true,
+    "windows_sandbox": "unelevated",
+    "fast_mode": false,
+    "raw_path_published": false
+  },
+  "current_feature_state": {
+    "command_status": "ok",
+    "fast_mode": "false",
+    "computer_use": "true",
+    "multi_agent": "true",
+    "browser_use": "true"
+  },
+  "sandbox_probes": [
+    {
+      "label": "CODEX_SANDBOX_CMD_OK",
+      "status": "PASS",
+      "exit_code": 0,
+      "timed_out": false,
+      "sanitized_result": "CODEX_SANDBOX_CMD_OK"
+    },
+    {
+      "label": "CODEX_SANDBOX_POWERSHELL_OK",
+      "status": "PASS",
+      "exit_code": 0,
+      "timed_out": false,
+      "sanitized_result": "CODEX_SANDBOX_POWERSHELL_OK"
+    }
+  ],
+  "doctor_summary": {
+    "command_status": "timeout",
+    "exit_code": null,
+    "raw_output_published": false,
+    "counts": {
+      "ok": 17,
+      "idle": 1,
+      "notes": 2,
+      "warn": 0,
+      "fail": 0
+    }
+  },
+  "app_server_state": {
+    "app_server_daemon": "windows_daemon_lifecycle_unsupported",
+    "remote_control_start": "windows_daemon_lifecycle_unsupported",
+    "send_message_v2_help": "available",
+    "send_message_v2_has_lane_id_argument": false,
+    "raw_output_published": false
+  },
+  "source_backing": [
+    {
+      "type": "official_context",
+      "url": "https://openai.com/index/building-codex-windows-sandbox/",
+      "summary": "OpenAI describes Windows sandbox design tradeoffs, including unelevated and elevated sandbox paths."
+    },
+    {
+      "type": "primary_issue",
+      "url": "https://github.com/openai/codex/issues/24098",
+      "summary": "An openai/codex issue reports elevated Windows sandbox setup-refresh failure while unelevated sandbox succeeds."
+    },
+    {
+      "type": "primary_issue",
+      "url": "https://github.com/openai/codex/issues/23587",
+      "summary": "A related openai/codex issue records mitigation by switching Windows sandbox settings and restarting Codex."
+    }
+  ],
+  "repair_result": {
+    "windows_sandbox_mode": "unelevated",
+    "fast_mode": "disabled",
+    "default_sandbox_cmd_probe": "PASS",
+    "default_sandbox_powershell_probe": "PASS",
+    "raw_local_paths_published": false,
+    "raw_logs_published": false
+  },
+  "remaining_blockers": [
+    "Codex app-server daemon lifecycle reports unsupported on Windows for local daemon start/version probes.",
+    "No exposed app-lane message tool with lane/thread id arguments is available in this session.",
+    "Plugin skill loader errors were observed in a prior app-server debug probe, but plugin-cache mutation is outside this repair confirmation."
+  ],
+  "next_expected_phase": "v477_thos_v3_x1_or_v477_thos_v2_x3_if_deeper_lane_repair_is_needed"
+}

@@ -1,0 +1,55 @@
+{
+  "artifact_type": "app_watcher_freshness_guard_design",
+  "phase_slug": "v502-gmut-thos-v38-v4-x1",
+  "generated_utc": "2026-06-08T07:17:37Z",
+  "overall_status": "PASS_APP_WATCHER_FRESHNESS_GUARD_DESIGN_READY",
+  "phase_boundary": {
+    "design_only": true,
+    "full_x2_build_allowed": false,
+    "blocked_until_arby_final_message": true
+  },
+  "design_goal": "Create a future guard that compares app watcher expected receipts, generation timestamps, lane completion summaries, redaction status, and exposure-guard status before any app-lane completion claim is used for phase advance.",
+  "proposed_checks": [
+    "Runner receipt exists and records PASS_BACKGROUND_WATCH_STARTED or an explicit open gap.",
+    "Watch launcher receipt exists before completion gate is evaluated.",
+    "Completion notifier receipt exists before completion gate claims pass.",
+    "Completion notifier receipt is redacted before exposure publication.",
+    "Completion gate references expected lanes only.",
+    "Completion gate records all app lanes as completed before next phase approval.",
+    "Generated timestamps are monotonic enough for the phase cadence.",
+    "Exposure guard has zero findings after redaction.",
+    "No raw advisory bodies or app transport are published.",
+    "Duration is not completion proof."
+  ],
+  "future_cli": {
+    "script_candidate": "scripts/thos_app_watcher_freshness_guard.py",
+    "inputs": [
+      "phase slug",
+      "app runner receipt",
+      "watch launcher receipt",
+      "completion notifier receipt",
+      "completion gate receipt",
+      "redaction receipt",
+      "exposure guard receipt"
+    ],
+    "outputs": [
+      "status-only JSON receipt",
+      "status-only Markdown receipt"
+    ],
+    "return_policy": "nonzero on missing, stale, unredacted, or raw-publication open gap"
+  },
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

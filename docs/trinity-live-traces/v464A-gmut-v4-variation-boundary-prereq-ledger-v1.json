@@ -1,0 +1,74 @@
+{
+  "artifact_id": "v464A-gmut-v4-variation-boundary-prereq-ledger-v1",
+  "artifact_kind": "variation_boundary_prerequisite_ledger",
+  "phase": "v464A_GMUT_v4",
+  "status": "variation_prerequisites_held",
+  "claim_boundary": "This artifact records variation and boundary prerequisites only. It does not vary S_Psi with respect to Psi or the metric and does not derive any field equation or stress tensor.",
+  "variation_prerequisites": [
+    {
+      "row_id": "GMUT-V464A-V4-VAR-001",
+      "variation_target": "Psi",
+      "held_fixed_terms": [
+        "metric",
+        "background assumptions",
+        "boundary data"
+      ],
+      "varied_terms": [],
+      "boundary_terms_policy": "undefined",
+      "integration_by_parts_policy": "undefined",
+      "not_derived_here": true,
+      "blockers": [
+        "V(Psi) unspecified",
+        "dV_dPsi not evaluated",
+        "field normalization unresolved",
+        "boundary completion missing"
+      ]
+    },
+    {
+      "row_id": "GMUT-V464A-V4-VAR-002",
+      "variation_target": "inverse_metric_candidate",
+      "held_fixed_terms": [],
+      "varied_terms": [],
+      "boundary_terms_policy": "undefined",
+      "integration_by_parts_policy": "undefined",
+      "not_derived_here": true,
+      "blockers": [
+        "sector action not accepted",
+        "held-fixed term list missing",
+        "metric variation policy not finalized",
+        "nonminimal coupling policy remains absent/held"
+      ]
+    }
+  ],
+  "forbidden_inferences": [
+    "EOM_Psi derived",
+    "T_Psi_mu_nu derived",
+    "boundary terms negligible",
+    "well-posed variational principle",
+    "on-shell conservation",
+    "separate sector conservation"
+  ],
+  "safe_wording": [
+    "The variation target remains deferred; no variation with respect to Psi, g_mu_nu, or g^mu_nu is performed here.",
+    "Boundary terms cannot be silently dropped. They remain explicitly deferred or bundled into an unspecified boundary functional.",
+    "T_Psi_mu_nu remains a future target for metric variation, not an accepted tensor."
+  ],
+  "publication_gate": {
+    "HOLD": [
+      "variation target is implied rather than declared",
+      "integration by parts is used without a boundary policy",
+      "T_Psi_mu_nu follows from the template by assertion",
+      "EOM_Psi is named as a derived result"
+    ],
+    "ALLOW_WITH_WARNINGS": [
+      "variation rows are explicit and not_derived_here remains true"
+    ],
+    "ALLOW": [
+      "publication as prerequisite ledger only"
+    ]
+  },
+  "gate_verdict": {
+    "dimensional_si_consistency": "open",
+    "conservation_or_exchange_law": "open"
+  }
+}

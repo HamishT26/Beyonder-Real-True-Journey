@@ -1,0 +1,67 @@
+{
+  "artifact_type": "productive_wait_research_ledger",
+  "phase_slug": "v503-gmut-thos-v39-v2-x1",
+  "generated_utc": "2026-06-08T13:55:10Z",
+  "overall_status": "PASS_PRODUCTIVE_WAIT_RESEARCH_RECORDED",
+  "lane_supervision_policy": {
+    "manual_babysitting_before_gate": false,
+    "watcher_and_notifier_supervision": true,
+    "phase_advance_requires_all_five_responses": true,
+    "status_check_only_after_gate": true,
+    "duration_is_completion_proof": false
+  },
+  "source_findings": [
+    {
+      "source": "OpenAI Codex app announcement",
+      "url": "https://openai.com/index/introducing-the-codex-app/",
+      "finding": "Codex work spans app, CLI, IDE, and cloud surfaces, so multi-surface status continuity needs shared receipts.",
+      "application": "Keep app and CLI lanes normalized through one five-lane board before phase advancement."
+    },
+    {
+      "source": "OpenAI Codex releases",
+      "url": "https://github.com/openai/codex/releases",
+      "finding": "Codex surfaces change quickly enough that helper behavior should be receipt-driven and modular.",
+      "application": "Prefer small watcher, classifier, normalizer, and dashboard receipts over broad runtime rewrites."
+    },
+    {
+      "source": "Running Codex safely at OpenAI",
+      "url": "https://openai.com/index/running-codex-safely/",
+      "finding": "Safe agent operation benefits from layered controls, constrained tool use, and clear review boundaries.",
+      "application": "Use exact gates, redaction, exposure checks, and status-only publication for sibling outputs."
+    },
+    {
+      "source": "MCP security best practices",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
+      "finding": "Least authority and confused-deputy avoidance are central for connector and tool orchestration.",
+      "application": "Keep external and connector surfaces read-scoped unless an exact live mutation packet exists."
+    },
+    {
+      "source": "OWASP Logging and Secrets Management cheat sheets",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html",
+      "finding": "Diagnostics can leak secrets or private context if raw material is published.",
+      "application": "Publish hashes, counts, pass/fail states, and sanitized summaries instead of raw lane text or logs."
+    }
+  ],
+  "x2_build_implications": [
+    "Make watcher trust explicit: do not check sibling status before configured x1 and x2 marks.",
+    "Carry app redaction before app gate as a serial safety invariant.",
+    "Use quality gates to distinguish real CLI blockers from false-positive generic marker warnings.",
+    "Turn Arby and Aster Vale long-form outputs into x2 build queue items without publishing raw text.",
+    "Keep GMUT, canon, consciousness, and final-physics gates open unless exact closure artifacts exist."
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

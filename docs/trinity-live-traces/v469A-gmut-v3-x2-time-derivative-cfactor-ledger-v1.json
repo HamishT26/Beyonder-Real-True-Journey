@@ -1,0 +1,59 @@
+{
+  "artifact": "v469A_GMUT_v3_x2_time_derivative_cfactor_ledger_v1",
+  "phase": "v469A_GMUT_v3_x2",
+  "classification": "open_gap",
+  "route": "Route A dt d3x candidate",
+  "claim_ceiling": "This ledger identifies c-factor obligations. It does not prove dimensional consistency.",
+  "ledger_rows": [
+    {
+      "row": "coordinate_choice",
+      "candidate": "x0 = ct rewritten as dx0 = c dt",
+      "status": "HOLD_OPEN_GAP",
+      "risk": "Using x0 = t and x0 = ct interchangeably can create a hidden c-factor error."
+    },
+    {
+      "row": "measure_conversion",
+      "candidate": "d4x_length = dx0 d3x = c dt d3x",
+      "status": "PASS_ROW_READY",
+      "risk": "Ready only as an algebraic bookkeeping row; it does not define scalar dynamics."
+    },
+    {
+      "row": "prefactor_conversion",
+      "candidate": "c3/G with dx0 d3x maps to c4/G with dt d3x",
+      "status": "PASS_ROW_READY",
+      "risk": "Fails if c4/G is used with a length-normalized d4x without the measure conversion."
+    },
+    {
+      "row": "partial_operator",
+      "candidate": "partial_0 = (1/c) partial_t when x0 = ct",
+      "status": "HOLD_OPEN_GAP",
+      "risk": "Scalar kinetic temporal terms need explicit derivative conversion."
+    },
+    {
+      "row": "metric_components",
+      "candidate": "mostly-plus signature with explicit temporal c-factor policy",
+      "status": "HOLD_OPEN_GAP",
+      "risk": "g00, g^00, line-element convention, and inverse-metric units remain unstated."
+    },
+    {
+      "row": "scalar_kinetic_density",
+      "candidate": "symbolic until Psi units and derivative convention are fixed",
+      "status": "HOLD_OPEN_GAP",
+      "risk": "Temporal kinetic sign and c-factor placement are not auditable yet."
+    },
+    {
+      "row": "stress_energy_units",
+      "candidate": "symbolic until L_m and variation convention are fixed",
+      "status": "HOLD_OPEN_GAP",
+      "risk": "T_mu_nu dimensional rows cannot be closed from prefactor bookkeeping alone."
+    }
+  ],
+  "v4_x1_required_output": [
+    "Coordinate convention card.",
+    "Measure conversion card.",
+    "Derivative operator card.",
+    "Metric component card.",
+    "Scalar kinetic unit card.",
+    "Stress-energy definition card."
+  ]
+}

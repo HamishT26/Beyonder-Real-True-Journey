@@ -1,0 +1,66 @@
+# v478 THOS v2 x2 Roadmap
+
+- generated_nz: `2026-06-04T09:28:58+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V2X2-01` (lane): Carry v2 x1 app-lane PASS into x2 synthesis.
+- `V478V2X2-02` (lane): Retry Arby/Aster watcher once only if fresh CLI evidence is needed.
+- `V478V2X2-03` (lane): Keep CLI final-marker timeout as open_gap if unchanged.
+- `V478V2X2-04` (lane): Compare v2 x1 app durations with v1 x2 durations.
+- `V478V2X2-05` (lane): Record status-only lane board.
+- `V478V2X2-06` (command): Rank 30 command receipt rows by dry-run readiness.
+- `V478V2X2-07` (command): Select safest no-execution rows for future P1 proof.
+- `V478V2X2-08` (command): Hold live and connector rows.
+- `V478V2X2-09` (command): Attach source IDs to command rows.
+- `V478V2X2-10` (command): Draft command dry-run stop conditions.
+- `V478V2X2-11` (skill): Rank 30 skill route rows by actionability.
+- `V478V2X2-12` (skill): Identify duplicate family routes.
+- `V478V2X2-13` (skill): Keep body text unpublished.
+- `V478V2X2-14` (skill): Hold body or cache edits.
+- `V478V2X2-15` (skill): Draft skill route acceptance checks.
+- `V478V2X2-16` (expansion): Rank 30 expansion review rows.
+- `V478V2X2-17` (expansion): Select no-write candidates for future review.
+- `V478V2X2-18` (expansion): Hold install candidates.
+- `V478V2X2-19` (expansion): Attach source IDs to expansion rows.
+- `V478V2X2-20` (expansion): Draft expansion review stop conditions.
+- `V478V2X2-21` (source): Review source refresh ledger for drift.
+- `V478V2X2-22` (source): Preserve implementation/governance/expansion separation.
+- `V478V2X2-23` (source): Do not use sources for GMUT closure.
+- `V478V2X2-24` (source): Add source freshness notes.
+- `V478V2X2-25` (source): Decide whether x2 needs more searches.
+- `V478V2X2-26` (watcher): Reuse watcher interface notes.
+- `V478V2X2-27` (watcher): Keep app completion separate from CLI closure.
+- `V478V2X2-28` (watcher): Keep temp-only watcher outputs unpublished.
+- `V478V2X2-29` (watcher): Avoid duplicate polling loops.
+- `V478V2X2-30` (watcher): Draft reusable notifier interface.
+- `V478V2X2-31` (schema): Parse every generated JSON artifact.
+- `V478V2X2-32` (schema): Check required top-level fields.
+- `V478V2X2-33` (schema): Check next_expected consistency.
+- `V478V2X2-34` (schema): Run publication guard scan.
+- `V478V2X2-35` (schema): Review overclaim language.
+- `V478V2X2-36` (safety): Fetch and drift-check before publication.
+- `V478V2X2-37` (safety): Exact-stage only v478 v2 x2 scoped files.
+- `V478V2X2-38` (safety): Reject unpublished local dumps and transport payloads.
+- `V478V2X2-39` (safety): Run whitespace and staged diff review.
+- `V478V2X2-40` (safety): Push and remote-verify equals local.
+- `V478V2X2-41` (claim): Keep all six GMUT gates open.
+- `V478V2X2-42` (claim): Do not claim THOS validates GMUT.
+- `V478V2X2-43` (claim): Do not claim consciousness proof.
+- `V478V2X2-44` (claim): Keep Journey context non-canon if referenced.
+- `V478V2X2-45` (claim): Use open_gap for unresolved CLI closure.
+- `V478V2X2-46` (handoff): Decide whether v478 v2 needs x3 from blocker dominance.
+- `V478V2X2-47` (handoff): Prepare v478 v3 x1 roadmap if no x3 is needed.
+- `V478V2X2-48` (handoff): Carry command, skill, and expansion boards forward.
+- `V478V2X2-49` (handoff): Keep status-only lane evidence.
+- `V478V2X2-50` (handoff): Maintain exact publication discipline.
+- `V478V2X2-51` (thos): Draft command-index repair notes.
+- `V478V2X2-52` (thos): Draft connector boundary board.
+- `V478V2X2-53` (thos): Draft app-lane health rows.
+- `V478V2X2-54` (thos): Draft skill route schema.
+- `V478V2X2-55` (thos): Draft expansion review schema.
+- `V478V2X2-56` (quality): Validate x2 artifacts before staging.
+- `V478V2X2-57` (quality): Keep file names phase-consistent.
+- `V478V2X2-58` (quality): Ignore unrelated worktree noise.
+- `V478V2X2-59` (quality): Publish concise closeout.
+- `V478V2X2-60` (quality): Keep larger v490 goal active.

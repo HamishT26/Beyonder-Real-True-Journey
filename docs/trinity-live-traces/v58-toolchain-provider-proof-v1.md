@@ -1,0 +1,105 @@
+# V58 Toolchain Provider Proof
+
+```json
+{
+  "generated_utc": "2026-04-28T17:34:14+00:00",
+  "phase": "v58_omega",
+  "api_bank": {
+    "state": "present_redacted",
+    "path": "C:\\Users\\hamis\\GHC Family Beyonder-Real-True-Journey API Key bank (Cleaned up) (3).txt",
+    "last_write_time": "2026-04-28T11:44:46.682881+00:00",
+    "labels_present": [
+      "Notion",
+      "Expo",
+      "Render",
+      "Vercel",
+      "Cloudflare",
+      "Neon",
+      "Oracle",
+      "GitHub",
+      "CircleCI",
+      "Kimi"
+    ],
+    "sha256_12": "af9e2658d65b",
+    "secret_policy": "raw_values_read_only_for_presence_detection_never_written_to_repo"
+  },
+  "commands": {
+    "kubectl": {
+      "available": true,
+      "path": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.EXE"
+    },
+    "docker": {
+      "available": true,
+      "path": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.EXE"
+    },
+    "node": {
+      "available": true,
+      "path": "C:\\Program Files\\nodejs\\node.EXE"
+    },
+    "npm": {
+      "available": true,
+      "path": "C:\\Program Files\\nodejs\\npm.CMD"
+    },
+    "npx": {
+      "available": true,
+      "path": "C:\\Program Files\\nodejs\\npx.CMD"
+    },
+    "gh": {
+      "available": true,
+      "path": "C:\\Program Files\\GitHub CLI\\gh.EXE"
+    },
+    "wrangler": {
+      "available": false,
+      "path": ""
+    },
+    "vercel": {
+      "available": false,
+      "path": ""
+    },
+    "neonctl": {
+      "available": false,
+      "path": ""
+    },
+    "render": {
+      "available": false,
+      "path": ""
+    },
+    "expo": {
+      "available": false,
+      "path": ""
+    },
+    "eas": {
+      "available": false,
+      "path": ""
+    },
+    "oci": {
+      "available": false,
+      "path": ""
+    },
+    "helm": {
+      "available": false,
+      "path": ""
+    },
+    "kustomize": {
+      "available": false,
+      "path": ""
+    },
+    "stern": {
+      "available": false,
+      "path": ""
+    }
+  },
+  "notion_source_truth": {
+    "create_page_requires_parent_for_internal_integrations": true,
+    "source": "https://developers.notion.com/reference/post-page"
+  },
+  "expo_source_truth": {
+    "expo_go_start_command": "npx expo start",
+    "source": "https://docs.expo.dev/get-started/start-developing/"
+  },
+  "render_source_truth": {
+    "list_services_validates_api_key_with_200_response": true,
+    "source": "https://render.com/docs/api"
+  }
+}
+```

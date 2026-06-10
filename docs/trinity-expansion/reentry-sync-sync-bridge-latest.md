@@ -1,6 +1,6 @@
 # Trinity Expansion Result: reentry_sync_sync_bridge
 
-- generated_utc: `2026-04-10T16:01:03+00:00`
+- generated_utc: `2026-05-01T05:08:26+00:00`
 - pillar: `trinity`
 - overall_status: **PASS**
 - effective_success: `True`
@@ -9,7 +9,7 @@
 | name | status | detail |
 |---|---|---|
 | suite_status_present | PASS | present |
-| git_remote_live | PASS | git ls-remote origin main |
+| git_remote_available | PASS | git ls-remote origin refs/heads/codex/GHC-Family/beyonder-shared-omega-line |
 | docker_container_running | PASS | bounded fallback from prior runtime proof |
 | postgres_ready | PASS | bounded fallback from prior runtime proof |
 
@@ -19,8 +19,10 @@
   "current_session_surface": {
     "docker_cli": true,
     "docker_container_running": true,
-    "gh_available": false,
+    "gh_available": true,
+    "git_remote_available": true,
     "git_remote_live": true,
+    "git_remote_mode": "live_probe",
     "node_available": true,
     "npx_available": true,
     "postgres_ready": true

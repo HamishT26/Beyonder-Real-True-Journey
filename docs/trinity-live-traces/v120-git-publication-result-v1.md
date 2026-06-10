@@ -1,0 +1,12 @@
+# v120-git-publication-result-v1
+
+```json
+{
+  "generated_utc": "2026-05-05T12:43:40+00:00",
+  "phase": "v120",
+  "publication_branch": "codex/GHC-Family/beyonder-shared-omega-line",
+  "local_head_at_receipt_generation": "8b19f428b91ffe6601fa509e7fd99c3172ba9bf7",
+  "remote_head_verified": "8b19f428b91ffe6601fa509e7fd99c3172ba9bf7",
+  "remote_matches_local": true
+}
+```

@@ -1,0 +1,961 @@
+{
+  "artifact_type": "command_approval_queues",
+  "phase": "v477_thos_v5_x2",
+  "command_count": 684,
+  "queues": {
+    "live_write_approval_required": [
+      {
+        "command_id": "suite_run_collab",
+        "intent": "Run collaboration-safe live reads only.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_run_materialize_l1",
+        "intent": "Run materialize at disposable staging.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_run_materialize_l2",
+        "intent": "Run materialize at persistent dev.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_github_read_proof",
+        "intent": "Refresh GitHub live-read proof.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_github_write_proof",
+        "intent": "Run GitHub write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_notion_read_proof",
+        "intent": "Refresh Notion read bridge.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_notion_write_proof",
+        "intent": "Run Notion write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_linear_read_proof",
+        "intent": "Refresh Linear collaboration bridge.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_linear_write_proof",
+        "intent": "Run Linear write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_postgres_read_proof",
+        "intent": "Refresh Postgres local runtime bridge.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_postgres_write_proof",
+        "intent": "Run Postgres write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_figma_read_refresh",
+        "intent": "Refresh Figma read-live cache.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_run_benchmark_refresh",
+        "intent": "Refresh v7 benchmark sources.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_search_arxiv_lane",
+        "intent": "Refresh the Mind arXiv/OpenAlex lane.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_refresh_governance_standards",
+        "intent": "Refresh governance standard anchors.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_refresh_command_surface",
+        "intent": "Refresh the command-surface research cache.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_knowledge_graph",
+        "intent": "Refresh the code knowledge graph lane.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_docker_pilot",
+        "intent": "Run the Docker pilot lane.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "ladder_materialize_l2_persistent",
+        "intent": "ladder materialize l2 persistent",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "ladder_materialize_l3_uat",
+        "intent": "ladder materialize l3 uat",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "ladder_materialize_l4_standard_prod",
+        "intent": "ladder materialize l4 standard prod",
+        "mode": "materialize",
+        "risk_class": "critical",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "ladder_materialize_l5_ha_prod",
+        "intent": "ladder materialize l5 ha prod",
+        "mode": "materialize",
+        "risk_class": "critical",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_refresh_github_dev",
+        "intent": "connector refresh github dev",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_refresh_linear_dev",
+        "intent": "connector refresh linear dev",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_refresh_notion_dev",
+        "intent": "connector refresh notion dev",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_refresh_postgres_dev",
+        "intent": "connector refresh postgres dev",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_refresh_figma_read",
+        "intent": "connector refresh figma read",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "council_sync_notion_rollup",
+        "intent": "Mirror council proof summaries into the bounded Notion rollup lane.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "council_refresh_postgres_memory_graph",
+        "intent": "Refresh the Postgres-backed council memory graph view.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "sync_github_dev_branch",
+        "intent": "Refresh the bounded GitHub dev branch proof path for v9 live sync.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      }
+    ],
+    "connector_approval_required": [
+      {
+        "command_id": "suite_run_collab",
+        "intent": "Run collaboration-safe live reads only.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_run_materialize_l1",
+        "intent": "Run materialize at disposable staging.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_run_materialize_l2",
+        "intent": "Run materialize at persistent dev.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_github_read_proof",
+        "intent": "Refresh GitHub live-read proof.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_github_write_proof",
+        "intent": "Run GitHub write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_notion_read_proof",
+        "intent": "Refresh Notion read bridge.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_notion_write_proof",
+        "intent": "Run Notion write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_linear_read_proof",
+        "intent": "Refresh Linear collaboration bridge.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_linear_write_proof",
+        "intent": "Run Linear write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_postgres_read_proof",
+        "intent": "Refresh Postgres local runtime bridge.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_postgres_write_proof",
+        "intent": "Run Postgres write tracer in approved scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_figma_read_refresh",
+        "intent": "Refresh Figma read-live cache.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_inspect_pg_container",
+        "intent": "Check Postgres runtime health.",
+        "mode": "offline",
+        "risk_class": "medium",
+        "requires_live": false,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_knowledge_graph",
+        "intent": "Refresh the code knowledge graph lane.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_docker_pilot",
+        "intent": "Run the Docker pilot lane.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "council_sync_notion_rollup",
+        "intent": "Mirror council proof summaries into the bounded Notion rollup lane.",
+        "mode": "collab",
+        "risk_class": "medium",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "council_refresh_postgres_memory_graph",
+        "intent": "Refresh the Postgres-backed council memory graph view.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "sync_github_dev_branch",
+        "intent": "Refresh the bounded GitHub dev branch proof path for v9 live sync.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "sync_linear_review_queue",
+        "intent": "Refresh the Linear review and task decomposition queue for the council.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "sync_notion_dashboard",
+        "intent": "Refresh the Notion induction dashboard and reflection rollup.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "sync_postgres_mesh_state",
+        "intent": "Refresh the Postgres synthetic mesh and council operational state.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "sync_figma_context_refresh",
+        "intent": "Refresh Figma read-only context for council design support.",
+        "mode": "collab",
+        "risk_class": "low",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "mesh_promote_l3_synthetic",
+        "intent": "Promote L3 to synthetic_local_mesh when local proof passes.",
+        "mode": "materialize",
+        "risk_class": "critical",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "mesh_promote_l4_synthetic",
+        "intent": "Promote L4 to synthetic_local_prod when contract promotion proof passes.",
+        "mode": "materialize",
+        "risk_class": "critical",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "mesh_promote_l5_synthetic",
+        "intent": "Promote L5 to synthetic_local_ha when failover drill proof passes.",
+        "mode": "materialize",
+        "risk_class": "critical",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "mesh_replay_fullshape_dataset",
+        "intent": "Replay full-shape synthetic data through the local mesh proof path.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "rollback_restore_synthetic_mesh",
+        "intent": "Restore the synthetic mesh to the last validated dev or synthetic checkpoint.",
+        "mode": "materialize",
+        "risk_class": "critical",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "k8s_probe_runtime_recovery",
+        "intent": "Probe Docker Desktop Kubernetes recovery in bounded simulation scope.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "rollback_snapshot_l2_state",
+        "intent": "Snapshot the current L2 persistent-dev state before higher synthetic promotion attempts.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "council_export_postgres_chat_index",
+        "intent": "Export the Postgres-queryable council chat index to the repo report lane.",
+        "mode": "materialize",
+        "risk_class": "high",
+        "requires_live": true,
+        "requires_connector": true,
+        "resume_safe": true,
+        "proof_required": false
+      }
+    ],
+    "offline_low_risk_candidate_sample": [
+      {
+        "command_id": "suite_run_standard",
+        "intent": "Run the standard Trinity suite.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_run_deep",
+        "intent": "Run the deep Trinity suite.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_validate_manifest",
+        "intent": "Validate the v7 manifest.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_validate_extensions",
+        "intent": "Validate the v7 extension catalog.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_validate_command_book",
+        "intent": "Validate the command system.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_validate_ladder",
+        "intent": "Validate the materialization ladder.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "suite_render_scoreboard",
+        "intent": "Render the mandala scoreboard.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "connector_status_board",
+        "intent": "Inspect connector state through the command layer.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_refresh_public_registry",
+        "intent": "Validate the public research registry.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_run_mind_board",
+        "intent": "Render the Mind theory signal board.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_run_body_board",
+        "intent": "Render the Body compute signal board.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_run_heart_board",
+        "intent": "Render the Heart governance signal board.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "research_run_api_constellation",
+        "intent": "Render the API constellation board.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_reentry_sync",
+        "intent": "Record a system wake and drift note.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_inspect_system_wake",
+        "intent": "Inspect the current system wake artifact.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_inspect_command_ledger",
+        "intent": "Inspect the command execution ledger.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_inspect_materialization_ledger",
+        "intent": "Inspect the materialization ledger.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_verify_caches",
+        "intent": "Verify all expansion caches and results.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "recovery_validate_control_tower",
+        "intent": "Validate the control tower pack state.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_write_reflection_entry",
+        "intent": "Refresh the Aletheon reflection lane.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_validate_log",
+        "intent": "Validate the Aletheon memory log.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_refresh_personal_statement",
+        "intent": "Refresh the personal statement lane.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_refresh_next_plan",
+        "intent": "Refresh the next-plan lane.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_inspect_authority_registry",
+        "intent": "Inspect the identity authority registry.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_inspect_memory_graph",
+        "intent": "Inspect the memory mirror graph.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_inspect_corpus_index",
+        "intent": "Inspect the journey corpus index.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "memory_inspect_control_tower",
+        "intent": "Inspect the v7 control tower board.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_dashboard_refresh",
+        "intent": "Refresh the dashboard lane.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_future_readiness",
+        "intent": "Refresh the future readiness lane.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      },
+      {
+        "command_id": "autonomy_run_command_pack_gates",
+        "intent": "Validate all v7 command packs.",
+        "mode": "offline",
+        "risk_class": "low",
+        "requires_live": false,
+        "requires_connector": false,
+        "resume_safe": true,
+        "proof_required": false
+      }
+    ]
+  },
+  "queue_counts": {
+    "live_write_approval_required": 88,
+    "connector_approval_required": 76,
+    "offline_low_risk_candidate": 216
+  },
+  "risk_mode_heatmap": [
+    {
+      "mode": "collab",
+      "risk_class": "high",
+      "count": 4
+    },
+    {
+      "mode": "collab",
+      "risk_class": "low",
+      "count": 2
+    },
+    {
+      "mode": "collab",
+      "risk_class": "medium",
+      "count": 20
+    },
+    {
+      "mode": "materialize",
+      "risk_class": "critical",
+      "count": 11
+    },
+    {
+      "mode": "materialize",
+      "risk_class": "high",
+      "count": 51
+    },
+    {
+      "mode": "offline",
+      "risk_class": "high",
+      "count": 12
+    },
+    {
+      "mode": "offline",
+      "risk_class": "low",
+      "count": 216
+    },
+    {
+      "mode": "offline",
+      "risk_class": "medium",
+      "count": 368
+    }
+  ],
+  "execution_policy": "metadata_only_no_command_execution"
+}

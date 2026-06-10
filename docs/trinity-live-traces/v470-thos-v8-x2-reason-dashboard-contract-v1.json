@@ -1,0 +1,32 @@
+{
+  "artifact_id": "v470-thos-v8-x2-reason-dashboard-contract-v1",
+  "captured_at_nz": "2026-06-02T20:40:20+12:00",
+  "connector_write_performed": false,
+  "contract_status": "PASS_SHAPE_ONLY",
+  "fixture_id": "thos_reason_code_dashboard_fixture_v1",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "mutation_performed": false,
+  "phase": "v470_THOS_v8_x2",
+  "required_row_fields": [
+    "case_id",
+    "expected_reason_codes",
+    "matched_reason_codes",
+    "missing_required_reason_codes",
+    "allowed_extra_reason_codes",
+    "unexpected_extra_reason_codes",
+    "reason_codes",
+    "expected_dominant_reason_code",
+    "observed_dominant_reason_code",
+    "primary_selection_mode",
+    "matches_expected",
+    "row_status"
+  ],
+  "rules": [
+    "Each fixture row must preserve full reason_codes.",
+    "Each fixture row must expose missing_required_reason_codes even when empty.",
+    "Each fixture row must expose unexpected_extra_reason_codes even when empty.",
+    "primary_selection_mode is priority_table when a dominant reason exists and none otherwise.",
+    "Renderer migration remains blocked until the compact fixture has its own assertion pass."
+  ],
+  "validator_mode": "local_non_mutating"
+}

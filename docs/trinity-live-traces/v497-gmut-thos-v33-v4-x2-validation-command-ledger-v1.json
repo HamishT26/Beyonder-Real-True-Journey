@@ -1,0 +1,70 @@
+{
+  "artifact_type": "x2_validation_command_ledger",
+  "phase_slug": "v497-gmut-thos-v33-v4-x2",
+  "generated_utc": "2026-06-06T18:26:10Z",
+  "overall_status": "PASS_VALIDATION_COMMAND_LEDGER_READY",
+  "commands": [
+    {
+      "order": 1,
+      "purpose": "script compile",
+      "command_summary": "compile v497 v4 closeout/x2 builder and shared helper scripts",
+      "must_pass": true
+    },
+    {
+      "order": 2,
+      "purpose": "x2 prep cadence gate",
+      "command_summary": "run thos_status_check_cadence_guard for v497 v4 x2 after 10 minutes",
+      "must_pass": true
+    },
+    {
+      "order": 3,
+      "purpose": "builder execution",
+      "command_summary": "run thos_v497_v4_x1_closeout_x2_builder.py after both gates pass",
+      "must_pass": true
+    },
+    {
+      "order": 4,
+      "purpose": "JSON parse",
+      "command_summary": "parse all generated v497 v4 x1 closeout and v4 x2 JSON outputs",
+      "must_pass": true
+    },
+    {
+      "order": 5,
+      "purpose": "raw/private guard",
+      "command_summary": "scan generated artifacts for local absolute paths, session streams, screenshots, credentials, and private key patterns",
+      "must_pass": true
+    },
+    {
+      "order": 6,
+      "purpose": "no-overclaim guard",
+      "command_summary": "run no-overclaim guard across x2 outputs",
+      "must_pass": true
+    },
+    {
+      "order": 7,
+      "purpose": "whitespace and staged diff",
+      "command_summary": "run cached diff whitespace check after exact staging",
+      "must_pass": true
+    },
+    {
+      "order": 8,
+      "purpose": "remote publication",
+      "command_summary": "commit, push, ls-remote verify, and confirm drift 0 0",
+      "must_pass": true
+    }
+  ],
+  "not_allowed": [
+    "broad staging",
+    "raw lane output publication",
+    "plugin-cache or user-skill mutation",
+    "reset, rebase, force-push",
+    "external account mutation",
+    "GMUT/canon closure claims"
+  ],
+  "claim_boundary": {
+    "builder_run": false,
+    "phase_advance_claimed": false,
+    "raw_lane_text_published": false,
+    "gmut_gate_state": "all_gmut_gates_remain_open"
+  }
+}

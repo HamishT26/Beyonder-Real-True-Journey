@@ -1,0 +1,49 @@
+{
+  "artifact": "v469A_GMUT_v4_x2_adm_measure_identity_card_v1",
+  "phase": "v469A_GMUT_v4_x2",
+  "classification": "hypothesis",
+  "route_status": "symbolic_requirement_only",
+  "identity_candidate": "sqrt(-g) d4x = N sqrt(h) dt d3x",
+  "claim_ceiling": "The identity is a requirement card for future derivation. It is not a completed GMUT reformulation.",
+  "required_symbols": [
+    {
+      "symbol": "N",
+      "meaning": "lapse function",
+      "status": "must_be_declared"
+    },
+    {
+      "symbol": "N^i",
+      "meaning": "shift vector",
+      "status": "must_be_declared_if_metric_split_used"
+    },
+    {
+      "symbol": "h_ij",
+      "meaning": "spatial metric on hypersurfaces",
+      "status": "must_be_declared"
+    },
+    {
+      "symbol": "h",
+      "meaning": "determinant of h_ij",
+      "status": "must_be_declared"
+    },
+    {
+      "symbol": "K_ij",
+      "meaning": "extrinsic curvature or equivalent split variable",
+      "status": "needed_for_curvature_bulk_boundary_split"
+    }
+  ],
+  "route_a_upgrade": [
+    "Replace bare dt d3x wording with N sqrt(h) dt d3x where ADM split is intended.",
+    "Keep c4/G prefactor route conditional on the x0=ct to t measure conversion.",
+    "Do not drop total derivatives unless boundary policy is explicit.",
+    "Do not absorb boundary residue into B_Psi without a B_Psi definition artifact.",
+    "Do not use ADM identity as a scalar EOM derivation."
+  ],
+  "failure_conditions": [
+    "Bare dt d3x measure is used as if complete.",
+    "N or sqrt(h) is omitted without a gauge declaration.",
+    "Shift terms are ignored without a static or zero-shift assumption.",
+    "Boundary terms are discarded without a boundary class.",
+    "Measure identity is treated as null recovery or baseline recovery."
+  ]
+}

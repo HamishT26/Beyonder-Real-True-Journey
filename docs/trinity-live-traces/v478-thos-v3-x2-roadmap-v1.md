@@ -1,0 +1,66 @@
+# v478 THOS v3 x2 Roadmap
+
+- generated_nz: `2026-06-04T10:31:09+12:00`
+- task_count: `60`
+
+## Tasks
+- `V478V3X2-01` (lane): Use v478 v3 x2 to harden lane evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-02` (cli): Use v478 v3 x2 to harden cli evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-03` (system): Use v478 v3 x2 to harden system evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-04` (command): Use v478 v3 x2 to harden command evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-05` (skill): Use v478 v3 x2 to harden skill evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-06` (source): Use v478 v3 x2 to harden source evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-07` (journey): Use v478 v3 x2 to harden journey evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-08` (governance): Use v478 v3 x2 to harden governance evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-09` (simulation): Use v478 v3 x2 to harden simulation evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-10` (schema): Use v478 v3 x2 to harden schema evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-11` (safety): Use v478 v3 x2 to harden safety evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-12` (handoff): Use v478 v3 x2 to harden handoff evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-13` (lane): Use v478 v3 x2 to harden lane evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-14` (cli): Use v478 v3 x2 to harden cli evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-15` (system): Use v478 v3 x2 to harden system evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-16` (command): Use v478 v3 x2 to harden command evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-17` (skill): Use v478 v3 x2 to harden skill evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-18` (source): Use v478 v3 x2 to harden source evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-19` (journey): Use v478 v3 x2 to harden journey evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-20` (governance): Use v478 v3 x2 to harden governance evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-21` (simulation): Use v478 v3 x2 to harden simulation evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-22` (schema): Use v478 v3 x2 to harden schema evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-23` (safety): Use v478 v3 x2 to harden safety evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-24` (handoff): Use v478 v3 x2 to harden handoff evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-25` (lane): Use v478 v3 x2 to harden lane evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-26` (cli): Use v478 v3 x2 to harden cli evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-27` (system): Use v478 v3 x2 to harden system evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-28` (command): Use v478 v3 x2 to harden command evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-29` (skill): Use v478 v3 x2 to harden skill evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-30` (source): Use v478 v3 x2 to harden source evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-31` (journey): Use v478 v3 x2 to harden journey evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-32` (governance): Use v478 v3 x2 to harden governance evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-33` (simulation): Use v478 v3 x2 to harden simulation evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-34` (schema): Use v478 v3 x2 to harden schema evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-35` (safety): Use v478 v3 x2 to harden safety evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-36` (handoff): Use v478 v3 x2 to harden handoff evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-37` (lane): Use v478 v3 x2 to harden lane evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-38` (cli): Use v478 v3 x2 to harden cli evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-39` (system): Use v478 v3 x2 to harden system evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-40` (command): Use v478 v3 x2 to harden command evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-41` (skill): Use v478 v3 x2 to harden skill evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-42` (source): Use v478 v3 x2 to harden source evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-43` (journey): Use v478 v3 x2 to harden journey evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-44` (governance): Use v478 v3 x2 to harden governance evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-45` (simulation): Use v478 v3 x2 to harden simulation evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-46` (schema): Use v478 v3 x2 to harden schema evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-47` (safety): Use v478 v3 x2 to harden safety evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-48` (handoff): Use v478 v3 x2 to harden handoff evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-49` (lane): Use v478 v3 x2 to harden lane evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-50` (cli): Use v478 v3 x2 to harden cli evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-51` (system): Use v478 v3 x2 to harden system evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-52` (command): Use v478 v3 x2 to harden command evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-53` (skill): Use v478 v3 x2 to harden skill evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-54` (source): Use v478 v3 x2 to harden source evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-55` (journey): Use v478 v3 x2 to harden journey evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-56` (governance): Use v478 v3 x2 to harden governance evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-57` (simulation): Use v478 v3 x2 to harden simulation evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-58` (schema): Use v478 v3 x2 to harden schema evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-59` (safety): Use v478 v3 x2 to harden safety evidence while preserving status-only receipts and open GMUT gates.
+- `V478V3X2-60` (handoff): Use v478 v3 x2 to harden handoff evidence while preserving status-only receipts and open GMUT gates.

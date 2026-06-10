@@ -1,0 +1,11 @@
+Receipt: Acknowledged v283:eureka-07 in Kimi lane. Task scoped to C and D drive cleanup via non-destructive staging.
+
+Beta: Propose staging all deletable artifacts (>30 days old logs, temp caches, redundant build outputs) into `D:\GHC-Archives\staging\v283-cleanup` with manifest checksums. C drive targets: `%TEMP%`, old MSI caches, unused control-plane versions prior to v55. D drive targets: orphaned docs snapshots, duplicate PDFs, superseded `.codex` skill caches. Zero deletion before operator review.
+
+Alpha: Validation gate requires manifest diff against live dependency file before any move. Atomic `robocopy /MOV` into dated staging folders. Post-move, run trinity-background dry-cycle to confirm no runtime paths broken.
+
+Omega: Final cutover only after manual receipt confirmation. Staging retention: 7-day hold with automatic restore-on-failure. Post-cleanup delta report feeds into `trinity-live-traces` as v283 artifact.
+
+Blocker: Pending read access to `docs/trinity-live-traces/v281-v300-double-trinity-phase-v282-v1-prompts-v1.json` to confirm protected path exclusions and avoid sweeping active v282 prompts.
+
+Next-phase handoff: Awaiting dependency resolution to transition from proposal to staged execution. Once unblocked, hand to execution lane for manifest generation and dry-run.

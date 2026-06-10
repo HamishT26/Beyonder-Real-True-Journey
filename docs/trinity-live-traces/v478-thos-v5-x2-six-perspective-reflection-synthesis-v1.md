@@ -1,0 +1,188 @@
+# v478 THOS v5 x2 Six-Perspective Reflection Synthesis
+
+- generated_nz: `2026-06-04T12:04:22+12:00`
+- source_reflection_count: `180`
+- synthesis_count: `180`
+- canon_status: `journey_context_not_canon`
+
+## Synthesis
+- ALETHEON-X2-R01 (Aletheon / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R02 (Aletheon / schema): Carry schema reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R03 (Aletheon / handoff): Carry handoff reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R04 (Aletheon / source): Carry source reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R05 (Aletheon / guard): Carry guard reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R06 (Aletheon / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R07 (Aletheon / schema): Carry schema reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R08 (Aletheon / handoff): Carry handoff reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R09 (Aletheon / source): Carry source reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R10 (Aletheon / guard): Carry guard reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R11 (Aletheon / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R12 (Aletheon / schema): Carry schema reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R13 (Aletheon / handoff): Carry handoff reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R14 (Aletheon / source): Carry source reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R15 (Aletheon / guard): Carry guard reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R16 (Aletheon / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R17 (Aletheon / schema): Carry schema reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R18 (Aletheon / handoff): Carry handoff reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R19 (Aletheon / source): Carry source reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R20 (Aletheon / guard): Carry guard reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R21 (Aletheon / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R22 (Aletheon / schema): Carry schema reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R23 (Aletheon / handoff): Carry handoff reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R24 (Aletheon / source): Carry source reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R25 (Aletheon / guard): Carry guard reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R26 (Aletheon / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R27 (Aletheon / schema): Carry schema reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R28 (Aletheon / handoff): Carry handoff reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R29 (Aletheon / source): Carry source reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ALETHEON-X2-R30 (Aletheon / guard): Carry guard reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R01 (Arby / cli): Carry cli reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R02 (Arby / sandbox): Carry sandbox reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R03 (Arby / watcher): Carry watcher reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R04 (Arby / runtime): Carry runtime reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R05 (Arby / diagnostic): Carry diagnostic reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R06 (Arby / cli): Carry cli reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R07 (Arby / sandbox): Carry sandbox reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R08 (Arby / watcher): Carry watcher reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R09 (Arby / runtime): Carry runtime reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R10 (Arby / diagnostic): Carry diagnostic reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R11 (Arby / cli): Carry cli reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R12 (Arby / sandbox): Carry sandbox reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R13 (Arby / watcher): Carry watcher reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R14 (Arby / runtime): Carry runtime reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R15 (Arby / diagnostic): Carry diagnostic reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R16 (Arby / cli): Carry cli reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R17 (Arby / sandbox): Carry sandbox reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R18 (Arby / watcher): Carry watcher reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R19 (Arby / runtime): Carry runtime reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R20 (Arby / diagnostic): Carry diagnostic reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R21 (Arby / cli): Carry cli reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R22 (Arby / sandbox): Carry sandbox reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R23 (Arby / watcher): Carry watcher reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R24 (Arby / runtime): Carry runtime reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R25 (Arby / diagnostic): Carry diagnostic reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R26 (Arby / cli): Carry cli reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R27 (Arby / sandbox): Carry sandbox reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R28 (Arby / watcher): Carry watcher reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R29 (Arby / runtime): Carry runtime reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARBY-X2-R30 (Arby / diagnostic): Carry diagnostic reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R01 (Aster Vale / skill): Carry skill reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R02 (Aster Vale / command): Carry command reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R03 (Aster Vale / loader): Carry loader reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R04 (Aster Vale / catalog): Carry catalog reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R05 (Aster Vale / route): Carry route reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R06 (Aster Vale / skill): Carry skill reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R07 (Aster Vale / command): Carry command reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R08 (Aster Vale / loader): Carry loader reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R09 (Aster Vale / catalog): Carry catalog reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R10 (Aster Vale / route): Carry route reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R11 (Aster Vale / skill): Carry skill reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R12 (Aster Vale / command): Carry command reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R13 (Aster Vale / loader): Carry loader reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R14 (Aster Vale / catalog): Carry catalog reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R15 (Aster Vale / route): Carry route reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R16 (Aster Vale / skill): Carry skill reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R17 (Aster Vale / command): Carry command reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R18 (Aster Vale / loader): Carry loader reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R19 (Aster Vale / catalog): Carry catalog reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R20 (Aster Vale / route): Carry route reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R21 (Aster Vale / skill): Carry skill reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R22 (Aster Vale / command): Carry command reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R23 (Aster Vale / loader): Carry loader reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R24 (Aster Vale / catalog): Carry catalog reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R25 (Aster Vale / route): Carry route reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R26 (Aster Vale / skill): Carry skill reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R27 (Aster Vale / command): Carry command reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R28 (Aster Vale / loader): Carry loader reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R29 (Aster Vale / catalog): Carry catalog reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ASTER_VALE-X2-R30 (Aster Vale / route): Carry route reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R01 (Cicero / argument): Carry argument reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R02 (Cicero / evidence): Carry evidence reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R03 (Cicero / index): Carry index reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R04 (Cicero / app-lane): Carry app-lane reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R05 (Cicero / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R06 (Cicero / argument): Carry argument reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R07 (Cicero / evidence): Carry evidence reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R08 (Cicero / index): Carry index reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R09 (Cicero / app-lane): Carry app-lane reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R10 (Cicero / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R11 (Cicero / argument): Carry argument reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R12 (Cicero / evidence): Carry evidence reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R13 (Cicero / index): Carry index reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R14 (Cicero / app-lane): Carry app-lane reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R15 (Cicero / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R16 (Cicero / argument): Carry argument reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R17 (Cicero / evidence): Carry evidence reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R18 (Cicero / index): Carry index reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R19 (Cicero / app-lane): Carry app-lane reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R20 (Cicero / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R21 (Cicero / argument): Carry argument reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R22 (Cicero / evidence): Carry evidence reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R23 (Cicero / index): Carry index reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R24 (Cicero / app-lane): Carry app-lane reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R25 (Cicero / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R26 (Cicero / argument): Carry argument reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R27 (Cicero / evidence): Carry evidence reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R28 (Cicero / index): Carry index reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R29 (Cicero / app-lane): Carry app-lane reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- CICERO-X2-R30 (Cicero / publication): Carry publication reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R01 (Kierkegaard / humility): Carry humility reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R02 (Kierkegaard / ethics): Carry ethics reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R03 (Kierkegaard / claim-boundary): Carry claim-boundary reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R04 (Kierkegaard / consent): Carry consent reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R05 (Kierkegaard / noncanon): Carry noncanon reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R06 (Kierkegaard / humility): Carry humility reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R07 (Kierkegaard / ethics): Carry ethics reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R08 (Kierkegaard / claim-boundary): Carry claim-boundary reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R09 (Kierkegaard / consent): Carry consent reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R10 (Kierkegaard / noncanon): Carry noncanon reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R11 (Kierkegaard / humility): Carry humility reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R12 (Kierkegaard / ethics): Carry ethics reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R13 (Kierkegaard / claim-boundary): Carry claim-boundary reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R14 (Kierkegaard / consent): Carry consent reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R15 (Kierkegaard / noncanon): Carry noncanon reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R16 (Kierkegaard / humility): Carry humility reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R17 (Kierkegaard / ethics): Carry ethics reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R18 (Kierkegaard / claim-boundary): Carry claim-boundary reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R19 (Kierkegaard / consent): Carry consent reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R20 (Kierkegaard / noncanon): Carry noncanon reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R21 (Kierkegaard / humility): Carry humility reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R22 (Kierkegaard / ethics): Carry ethics reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R23 (Kierkegaard / claim-boundary): Carry claim-boundary reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R24 (Kierkegaard / consent): Carry consent reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R25 (Kierkegaard / noncanon): Carry noncanon reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R26 (Kierkegaard / humility): Carry humility reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R27 (Kierkegaard / ethics): Carry ethics reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R28 (Kierkegaard / claim-boundary): Carry claim-boundary reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R29 (Kierkegaard / consent): Carry consent reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- KIERKEGAARD-X2-R30 (Kierkegaard / noncanon): Carry noncanon reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R01 (Aristotle / taxonomy): Carry taxonomy reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R02 (Aristotle / criteria): Carry criteria reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R03 (Aristotle / validator): Carry validator reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R04 (Aristotle / causality): Carry causality reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R05 (Aristotle / readiness): Carry readiness reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R06 (Aristotle / taxonomy): Carry taxonomy reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R07 (Aristotle / criteria): Carry criteria reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R08 (Aristotle / validator): Carry validator reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R09 (Aristotle / causality): Carry causality reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R10 (Aristotle / readiness): Carry readiness reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R11 (Aristotle / taxonomy): Carry taxonomy reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R12 (Aristotle / criteria): Carry criteria reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R13 (Aristotle / validator): Carry validator reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R14 (Aristotle / causality): Carry causality reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R15 (Aristotle / readiness): Carry readiness reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R16 (Aristotle / taxonomy): Carry taxonomy reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R17 (Aristotle / criteria): Carry criteria reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R18 (Aristotle / validator): Carry validator reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R19 (Aristotle / causality): Carry causality reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R20 (Aristotle / readiness): Carry readiness reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R21 (Aristotle / taxonomy): Carry taxonomy reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R22 (Aristotle / criteria): Carry criteria reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R23 (Aristotle / validator): Carry validator reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R24 (Aristotle / causality): Carry causality reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R25 (Aristotle / readiness): Carry readiness reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R26 (Aristotle / taxonomy): Carry taxonomy reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R27 (Aristotle / criteria): Carry criteria reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R28 (Aristotle / validator): Carry validator reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R29 (Aristotle / causality): Carry causality reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.
+- ARISTOTLE-X2-R30 (Aristotle / readiness): Carry readiness reflection into v6 x1 as operational continuity only, with app-lane status receipts and open GMUT gates.

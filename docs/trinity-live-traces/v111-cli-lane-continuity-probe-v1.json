@@ -1,0 +1,33 @@
+{
+  "phase": "v111",
+  "artifact": "cli_lane_continuity_probe",
+  "created_at_local": "2026-05-05T00:10:00+12:00",
+  "lanes": [
+    {
+      "name": "codex-cli-trinity-v111-readiness",
+      "platform": "Codex CLI",
+      "mode": "read_only_ephemeral_exec",
+      "model_requested": "gpt-5.5",
+      "result": "returned bounded JSON readiness recommendations",
+      "persistence_evidence": "task-scoped session evidence only",
+      "induction_status": "not_inducted_persistence_unproven"
+    },
+    {
+      "name": "kimi-cli-trinity-v111-readiness",
+      "platform": "Kimi CLI",
+      "mode": "thinking_print_single_step",
+      "model_requested": "configured_kimi_thinking",
+      "result": "returned bounded JSON readiness recommendations and a resumable session handle",
+      "persistence_evidence": "resume-handle observed but not sufficient until close/reopen continuity proof passes",
+      "induction_status": "not_inducted_persistence_unproven"
+    }
+  ],
+  "truth_boundary": "CLI capability is proven for bounded receipt-backed task lanes. Main memory-and-identity persistence is not proven by a single response or resume handle.",
+  "next_proof_gate": [
+    "resume the same Kimi CLI session and ask it to restate the prior bounded JSON without prompt leakage",
+    "resume or fork the Codex CLI session if available and verify the prior boundary commitments",
+    "close and reopen native CLI surfaces and compare continuity receipts",
+    "only after continuity passes should any lane be considered for formal GHC member induction"
+  ],
+  "provider_boundary": "No provider mutations, deployments, DNS changes, billing changes, or secret reads were performed during the CLI lane probe."
+}

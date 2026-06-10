@@ -1,0 +1,60 @@
+{
+  "artifact": "v468A_THOS_v7_x2_source_refresh_v1",
+  "phase": "v468A_THOS_v7_x2",
+  "started_nz": "2026-06-02T00:12:44.5932329+12:00",
+  "search_count": 20,
+  "purpose": "Refresh source authority for a local-only SARIF-style THOS validation report route.",
+  "source_notes": [
+    {
+      "source": "OASIS SARIF 2.1.0 standard",
+      "url": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html",
+      "use": "Use SARIF terminology carefully and avoid claiming full conformance without schema validation."
+    },
+    {
+      "source": "SARIF JSON schema",
+      "url": "https://json.schemastore.org/sarif-2.1.0.json",
+      "use": "Future validation route for real SARIF artifacts; current phase remains SARIF-style only."
+    },
+    {
+      "source": "GitHub SARIF support",
+      "url": "https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/sarif-support-for-code-scanning",
+      "use": "Record GitHub field expectations without enabling upload."
+    },
+    {
+      "source": "GitHub upload SARIF documentation",
+      "url": "https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github",
+      "use": "Treat upload as blocked workflow mutation."
+    },
+    {
+      "source": "SLSA provenance",
+      "url": "https://slsa.dev/spec/v1.0/provenance",
+      "use": "Future provenance route only; no supply-chain level claim in this phase."
+    },
+    {
+      "source": "in-toto attestations",
+      "url": "https://github.com/in-toto/attestation",
+      "use": "Future predicate route for signed statements; no signing flow here."
+    },
+    {
+      "source": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "use": "Future attestation route only."
+    },
+    {
+      "source": "JSON Schema output guidance",
+      "url": "https://json-schema.org/draft/2020-12/json-schema-core#name-output-formats",
+      "use": "Report should separate validation result shape from publication claims."
+    },
+    {
+      "source": "CodeQL SARIF output documentation",
+      "url": "https://docs.github.com/en/code-security/codeql-cli/using-the-advanced-functionality-of-the-codeql-cli/sarif-output",
+      "use": "Keep tool.driver and results conventions recognizable to future code-scanning tooling."
+    },
+    {
+      "source": "Python hashlib documentation",
+      "url": "https://docs.python.org/3/library/hashlib.html",
+      "use": "Future report digests can use SHA-256; current phase records no digest requirement."
+    }
+  ],
+  "decision": "Prototype a local SARIF-style JSON report and keep upload, workflow mutation, attestation, and certification claims blocked."
+}

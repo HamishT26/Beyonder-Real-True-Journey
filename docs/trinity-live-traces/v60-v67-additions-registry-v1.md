@@ -1,0 +1,112 @@
+# V60-V67 Additions Registry
+
+```json
+{
+  "generated_utc": "2026-04-30T04:01:32+00:00",
+  "phase": "v61_v65_hybrid_omega",
+  "additions_total": 60,
+  "policy": "evidence_first_no_secret_no_unconfirmed_install",
+  "phases": [
+    {
+      "phase": "v61",
+      "eureka_gate": "mandatory",
+      "suite_pair": "deep_plus_l5_when_load_gate_open",
+      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
+      "additions": [
+        "cli_agent_receipt_protocol",
+        "kimi_codex_data_boundary",
+        "visible_terminal_command_board",
+        "host_cooldown_ledger",
+        "local_runtime_budget",
+        "e2b_sandbox_feasibility_gate",
+        "oci_oke_readonly_feasibility_gate",
+        "api_bank_presence_redaction_board",
+        "browser_use_local_probe_receipt",
+        "docker_kubernetes_standby_receipt",
+        "notion_expo_dashboard_fallback_contract",
+        "v62_eureka_seed_board"
+      ]
+    },
+    {
+      "phase": "v62",
+      "eureka_gate": "mandatory",
+      "suite_pair": "deep_plus_l5_when_load_gate_open",
+      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
+      "additions": [
+        "v58_v62_rollup_index",
+        "suite_ladder_delta_digest",
+        "additions_promotion_board",
+        "blocker_retirement_board",
+        "workbench_guarded_skill_package",
+        "v6_surface_truth_drift_audit",
+        "v3_v6_contract_jump_trace",
+        "curated_publication_allowlist_v62",
+        "publication_result_validator",
+        "phase_handoff_triplet",
+        "local_cloud_nexus_os_contract",
+        "v63_mobile_dashboard_decision_board"
+      ]
+    },
+    {
+      "phase": "v63",
+      "eureka_gate": "mandatory",
+      "suite_pair": "deep_plus_l5_when_load_gate_open",
+      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
+      "additions": [
+        "expo_go_qr_lane",
+        "expo_web_preview_smoke",
+        "phone_dashboard_contract",
+        "mobile_truth_cards",
+        "offline_dashboard_bundle",
+        "dashboard_a11y_smoke",
+        "browser_fallback_probe",
+        "dashboard_screenshot_receipt",
+        "notion_parent_binding_gate",
+        "local_html_dashboard_refresh",
+        "dashboard_token_usage_placeholder",
+        "v64_provider_probe_decision_board"
+      ]
+    },
+    {
+      "phase": "v64",
+      "eureka_gate": "mandatory",
+      "suite_pair": "deep_plus_l5_when_load_gate_open",
+      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
+      "additions": [
+        "wrangler_readonly_probe",
+        "cloudflare_pages_probe",
+        "d1_schema_dry_run",
+        "r2_inventory_probe",
+        "workers_ai_capability_card",
+        "vercel_static_probe",
+        "render_static_probe",
+        "neon_readonly_state",
+        "circleci_config_probe",
+        "github_pr_truth_sync_readonly",
+        "google_drive_operator_hold_receipt",
+        "v65_science_probe_decision_board"
+      ]
+    },
+    {
+      "phase": "v65",
+      "eureka_gate": "mandatory",
+      "suite_pair": "deep_plus_l5_when_load_gate_open",
+      "audit_lane": "standard_l4_every_fifth_phase_or_failure; mcp_every_third_phase_or_connector_change",
+      "additions": [
+        "qcit_gmut_delta_probe_v2",
+        "qcit_seed_sweep_v2",
+        "latex_gmut_digest",
+        "claim_checker_matrix",
+        "life_science_matrix",
+        "kairotic_regression",
+        "quantum_energy_probe",
+        "public_source_claim_board",
+        "freedid_min_disclosure_refresh",
+        "cosmic_bill_rights_trace",
+        "standard_l4_audit_reintroduction",
+        "v66_phase_proposal_pack"
+      ]
+    }
+  ]
+}
+```

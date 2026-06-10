@@ -1,0 +1,35 @@
+{
+  "artifact_type": "command_surface_compatibility_queue",
+  "phase_slug": "v504-gmut-thos-v40-v1-x2",
+  "generated_utc": "2026-06-08T22:49:18Z",
+  "overall_status": "PASS_COMMAND_SURFACE_COMPATIBILITY_QUEUE_BUILT",
+  "policy_name": "stable_versus_prerelease_cli_readiness",
+  "rules": [
+    "Treat Codex CLI stable releases as default runner targets.",
+    "Treat prerelease versions as research signals only until separately approved.",
+    "Record release-channel observations in source ledgers before changing runner assumptions.",
+    "Keep CLI output temp-only and publish status metrics, hashes, word counts, item counts, and quality status.",
+    "If a stable release changes command behavior, run non-destructive help and sandbox probes before updating launchers."
+  ],
+  "surface_rows": [
+    {
+      "surface": "cli_release_channel",
+      "status": "stable_default_prerelease_watch_only"
+    },
+    {
+      "surface": "cli_direct_bridge",
+      "status": "works_with_r2_long_form_repair"
+    },
+    {
+      "surface": "app_wrapper",
+      "status": "requires_direct_repair_fallback_when_completion_receipt_missing"
+    }
+  ],
+  "publication_boundary": {
+    "status_only": true,
+    "raw_logs_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open"
+  }
+}

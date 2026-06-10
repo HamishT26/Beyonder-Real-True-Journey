@@ -1,0 +1,64 @@
+{
+  "artifact_type": "watcher_template",
+  "phase": "v478_thos_v1_x1",
+  "generated_utc": "2026-06-03T20:49:34+00:00",
+  "generated_nz": "2026-06-04T08:49:34+12:00",
+  "template_version": "v478-v1",
+  "overall_status": "PASS_WITH_CLI_OPEN_GAP",
+  "rows": [
+    {
+      "id": "app_probe",
+      "criterion": "run app-lane probe before notify",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "app_notify",
+      "criterion": "send existing-thread notify only after probe passes",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "app_completion",
+      "criterion": "observe turn completion per app lane",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "cli_single_poll",
+      "criterion": "run one bounded CLI poll per phase closeout",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "cli_final_marker",
+      "criterion": "require final-message marker for CLI closure",
+      "requirement": "required_for_cli_closure",
+      "status": "OPEN_GAP"
+    },
+    {
+      "id": "temp_only",
+      "criterion": "keep CLI watcher output temp-only",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "transport_summary_only",
+      "criterion": "publish status summaries only",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "retry_rule",
+      "criterion": "retry only when a new blocker class appears",
+      "requirement": "required",
+      "status": "PASS"
+    },
+    {
+      "id": "x_overlay_rule",
+      "criterion": "add x3 only when blocker dominance justifies it",
+      "requirement": "required",
+      "status": "PASS"
+    }
+  ]
+}

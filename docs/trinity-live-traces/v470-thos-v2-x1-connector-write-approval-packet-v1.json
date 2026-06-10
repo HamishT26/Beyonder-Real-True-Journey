@@ -1,0 +1,35 @@
+{
+  "artifact": "v470_THOS_v2_x1_connector_write_approval_packet_v1",
+  "phase": "v470_THOS_v2_x1",
+  "classification": "evidence",
+  "template": {
+    "request_id": "string",
+    "connector_id": "string",
+    "connector_name": "string",
+    "requested_write_action": "string",
+    "target_resource": "string",
+    "actor": "string",
+    "user_intent": "string",
+    "reason": "string",
+    "capability_basis": "string",
+    "consent_artifact": "string|required",
+    "consent_scope": "string",
+    "consent_expiry": "single_use|time_limited|not_granted",
+    "write_scope": "string",
+    "data_touched": ["string"],
+    "privacy_impact": "none|low|medium|high|unknown",
+    "risk_class": "low|medium|high|unknown",
+    "rollback_or_repair_plan": "string|required",
+    "source_links": ["string"],
+    "approver": "string|required",
+    "decision": "approved|rejected|not_requested",
+    "decision_reason": "string",
+    "decided_at": "timestamp|null"
+  },
+  "rules": [
+    "Connector writes are blocked unless this packet is complete and approved.",
+    "Approval is scoped and single-use unless explicitly stated otherwise.",
+    "Automation edits, Drive/cloud writes, account changes, and credential changes require packets.",
+    "No v2 x1 connector write is approved or performed."
+  ]
+}

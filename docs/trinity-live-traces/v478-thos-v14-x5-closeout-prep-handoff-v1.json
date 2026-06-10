@@ -1,0 +1,53 @@
+{
+  "artifact_type": "phase_closeout_prep_handoff",
+  "phase_slug": "v478-thos-v14-x5-closeout",
+  "generated_utc": "2026-06-04T21:28:00Z",
+  "generated_nz": "2026-06-05T09:28:00+12:00",
+  "overall_status": "PASS_PREP_DURING_FIVE_LANE_CLOSEOUT_WAIT",
+  "inputs": {
+    "x5_start_synthesis": "v478-thos-v14-x5-start-synthesis-v1.json",
+    "x5_start_timing": "v478-thos-v14-x5-start-five-lane-timing-v1.json",
+    "two_run_baseline": "v478-thos-v14-five-lane-timing-baseline-v1.json",
+    "x5_start_source_refresh": "v478-thos-v14-x5-start-source-refresh-v1.json"
+  },
+  "state_reading": [
+    {
+      "surface": "timing_baseline",
+      "status": "pending_run_3",
+      "evidence": "x4 closeout and x5 start provide two complete five-lane observations.",
+      "next_action": "Use x5 closeout as observation run 3 if all five lanes complete or produce explicit blocker receipts."
+    },
+    {
+      "surface": "app_server_lanes",
+      "status": "running",
+      "evidence": "x5 closeout app notifier has been launched through existing local app-server routes.",
+      "next_action": "Wait for completion receipt; do not publish body text."
+    },
+    {
+      "surface": "cli_lanes",
+      "status": "running",
+      "evidence": "Arby and Aster Vale were launched read-only and non-ephemeral into fresh temp-only output.",
+      "next_action": "Wait for final-message hashes or timeout receipt."
+    },
+    {
+      "surface": "x6_handoff",
+      "status": "prepare_after_run_3",
+      "evidence": "If x5 closeout completes, the baseline can be promoted from pending to ready.",
+      "next_action": "Only after run 3, compute average and use it as soft wait guidance, never as completion proof."
+    }
+  ],
+  "closeout_wait_tasks": [
+    "Keep all five lanes on the roster until actual completion or explicit blocker evidence.",
+    "If x5 closeout completes, synthesize observation run 3 and rerun the baseline aggregator.",
+    "If any lane remains open at 30 minutes, record an open-gap receipt and keep it on the next roster.",
+    "Carry official-source x5 start security and agent-governance notes into x6 planning.",
+    "Maintain exact publication gates and avoid staging raw transport or temp output."
+  ],
+  "claim_boundary": {
+    "scope": "x5 closeout prep during active five-lane wait",
+    "x5_closeout_lane_completion": "not_claimed_here",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed",
+    "lane_body_text_published": false
+  }
+}

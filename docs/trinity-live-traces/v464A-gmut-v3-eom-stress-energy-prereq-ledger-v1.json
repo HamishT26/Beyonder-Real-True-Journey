@@ -1,0 +1,96 @@
+{
+  "artifact_id": "v464A-gmut-v3-eom-stress-energy-prereq-ledger-v1",
+  "artifact_kind": "eom_stress_energy_prerequisite_ledger",
+  "phase": "v464A_GMUT_v3",
+  "status": "prerequisites_recorded_no_eom_or_tensor_derived",
+  "claim_boundary": "This artifact records prerequisites only. It does not derive the scalar EOM, accept T_Psi_mu_nu, prove conservation, or close dimensional/SI consistency.",
+  "scalar_eom_prerequisites": {
+    "required_fields": [
+      "scalar_field_ref",
+      "sector_action_ref",
+      "lagrangian_density_ref",
+      "field_dimension_ref",
+      "kinetic_normalization_ref",
+      "V_Psi_rule",
+      "dV_dPsi_rule",
+      "boundary_terms_policy",
+      "integration_by_parts_policy",
+      "variation_policy_ref",
+      "unit_ledger_refs"
+    ],
+    "current_rows": [
+      {
+        "row_id": "GMUT-V464A-V3-EOM-001",
+        "scalar_field_ref": "Psi",
+        "sector_action_ref": "missing",
+        "lagrangian_density_ref": "template_only",
+        "field_dimension_ref": "missing",
+        "kinetic_normalization_ref": "Z_Psi symbolic",
+        "V_Psi_rule": "symbolic_only",
+        "dV_dPsi_rule": "not_available",
+        "boundary_terms_policy": "not_declared",
+        "integration_by_parts_policy": "not_declared",
+        "variation_policy_ref": "missing",
+        "unit_ledger_refs": [
+          "v464A-gmut-v2-coefficient-si-row-hardening-v1"
+        ],
+        "candidate_EOM_not_derived": true,
+        "blocker": "EOM cannot be derived until action, potential policy, field dimension, and boundary assumptions are fixed"
+      }
+    ]
+  },
+  "stress_energy_prerequisites": {
+    "required_fields": [
+      "action_ref",
+      "lagrangian_ref",
+      "metric_ref",
+      "variation_target",
+      "held_fixed_terms",
+      "varied_terms",
+      "stress_energy_convention_ref",
+      "expected_tensor_rank",
+      "expected_dimension_ref",
+      "nonminimal_coupling_policy"
+    ],
+    "current_rows": [
+      {
+        "row_id": "GMUT-V464A-V3-TPSI-001",
+        "action_ref": "missing",
+        "lagrangian_ref": "template_only",
+        "metric_ref": "candidate mostly-plus packet only",
+        "variation_target": "inverse_metric_candidate_not_final",
+        "held_fixed_terms": [],
+        "varied_terms": [],
+        "stress_energy_convention_ref": "candidate Hilbert definition only",
+        "expected_tensor_rank": "2",
+        "expected_dimension_ref": "stress-energy density after derivation, not established",
+        "nonminimal_coupling_policy": "not present in decoupled pilot; would reopen variation and constraints",
+        "candidate_T_not_derived": true,
+        "blocker": "T_Psi_mu_nu remains held until metric variation is explicitly performed and reviewed"
+      }
+    ]
+  },
+  "safe_wording": [
+    "A scalar equation of motion is asserted only for an explicitly chosen action and boundary conditions; in the spectator limit, no independent physical scalar dynamics is claimed.",
+    "T_Psi_mu_nu denotes a future target for the Hilbert stress tensor associated with a chosen candidate Psi-sector action under a stated metric-variation convention. It should not be read as separately conserved or directly observable unless no-exchange conditions are independently shown."
+  ],
+  "publication_gate": {
+    "HOLD": [
+      "EOM is described as derived without an explicit derivation artifact",
+      "T_Psi_mu_nu is treated as accepted without metric variation",
+      "flat-space canonical stress-energy is substituted for curved metric variation",
+      "field normalization is treated as physical identification"
+    ],
+    "ALLOW_WITH_WARNINGS": [
+      "prerequisite rows are complete enough to route blockers",
+      "EOM and stress-energy remain readiness targets only"
+    ],
+    "ALLOW": [
+      "publication of this ledger as pre-derivation blocker routing"
+    ]
+  },
+  "gate_verdict": {
+    "dimensional_si_consistency": "open",
+    "conservation_or_exchange_law": "open"
+  }
+}

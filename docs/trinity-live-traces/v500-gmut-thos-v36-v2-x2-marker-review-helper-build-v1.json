@@ -1,0 +1,42 @@
+{
+  "artifact_type": "marker_review_helper_build",
+  "phase_slug": "v500-gmut-thos-v36-v2-x2",
+  "generated_utc": "2026-06-07T13:00:02Z",
+  "overall_status": "PASS_MARKER_REVIEW_HELPER_BUILT_AND_USED",
+  "helper_script": "scripts/thos_cli_marker_review_ledger.py",
+  "validated_surfaces": [
+    "python_compile",
+    "help_surface",
+    "live_v500_v2_x1_receipt_run"
+  ],
+  "live_receipts": {
+    "marker_review_ledger_json": "v500-gmut-thos-v36-v2-x2-marker-review-ledger-v1.json",
+    "marker_review_ledger_md": "v500-gmut-thos-v36-v2-x2-marker-review-ledger-v1.md"
+  },
+  "lane_decisions": [
+    {
+      "lane": "Arby",
+      "decision": "PASS_FALSE_POSITIVE_GENERIC_MARKER_REVIEW",
+      "generic_marker_count": 1,
+      "strict_sensitive_or_path_marker_count": 0,
+      "quality_status": "PASS_ELABORATION_GATE"
+    },
+    {
+      "lane": "Aster Vale",
+      "decision": "PASS_FALSE_POSITIVE_GENERIC_MARKER_REVIEW",
+      "generic_marker_count": 2,
+      "strict_sensitive_or_path_marker_count": 0,
+      "quality_status": "PASS_ELABORATION_GATE"
+    }
+  ],
+  "use_policy": [
+    "run after CLI notifier and quality gate when generic marker-review warnings appear",
+    "trust strict quality results only when strict sensitive/path markers are zero and quality passes",
+    "do not read or publish raw lane text",
+    "leave unresolved marker reviews open if strict markers are nonzero or quality fails"
+  ],
+  "claim_boundary": {
+    "raw_lane_text_published": false,
+    "canon_promotion": "not_claimed"
+  }
+}

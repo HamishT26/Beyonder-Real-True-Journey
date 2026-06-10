@@ -1,0 +1,62 @@
+{
+  "artifact": "v468A_THOS_v3_x2_validator_card_set_v1",
+  "phase": "v468A_THOS_v3_x2",
+  "prepared_nz": "2026-06-01T23:29:26.4417747+12:00",
+  "cards": [
+    {
+      "card": "phase_manifest_required_fields",
+      "classification": "evidence",
+      "must_have": [
+        "phase_id",
+        "phase_type",
+        "start_time_nz",
+        "live_local_head",
+        "live_upstream_head",
+        "drift",
+        "current_phase_artifact_list",
+        "blocked_actions",
+        "validation_chain"
+      ],
+      "reject_if_missing": true,
+      "next_step": "Implement a dry-run checker that fails closed before staging."
+    },
+    {
+      "card": "phase_manifest_forbidden_fields",
+      "classification": "blocker",
+      "must_not_have": [
+        "unverified_advisory_claim",
+        "unapproved_cloud_mutation",
+        "unapproved_cleanup_claim",
+        "gm_ut_validation_claim",
+        "final_physics_claim"
+      ],
+      "reject_if_present": true,
+      "next_step": "Add forbidden-claim linting to the dry-run checker."
+    },
+    {
+      "card": "canonical_artifact_compare",
+      "classification": "hypothesis",
+      "must_have": [
+        "stable_json_serialization_plan",
+        "hash_candidate_plan",
+        "diff_before_commit",
+        "remote_equality_after_push"
+      ],
+      "reject_if_missing": false,
+      "next_step": "Evaluate RFC 8785 style canonicalization as a future deterministic compare layer."
+    },
+    {
+      "card": "schema_dialect_marker",
+      "classification": "open_gap",
+      "must_have": [
+        "schema_name",
+        "schema_version_or_dialect",
+        "validator_tool",
+        "validation_result"
+      ],
+      "reject_if_missing": false,
+      "next_step": "Choose whether THOS artifacts should carry JSON Schema 2020-12 markers."
+    }
+  ],
+  "acceptance_summary": "v4 x1 should be able to reject a malformed manifest and a forbidden-claim manifest without mutating the repository."
+}

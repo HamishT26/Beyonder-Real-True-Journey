@@ -1,0 +1,39 @@
+{
+  "phase": "v113",
+  "artifact": "cli_restart_continuity_gate",
+  "created_at_local": "2026-05-05T01:50:00+12:00",
+  "created_at_utc": "2026-05-04T13:50:00+00:00",
+  "source_phase": "v112",
+  "probe_scope": "resume_only_no_file_inspection_no_commands",
+  "codex_cli": {
+    "session_id": "019df30d-4d3e-7261-816c-4cea7935c280",
+    "model_requested": "gpt-5.5",
+    "reasoning_effort_requested": "xhigh",
+    "reasoning_effort_observed": "xhigh",
+    "sandbox_observed": "read-only",
+    "resume_result": "passed",
+    "recalled_token": "v112-codex-lane-remembers-receipt-boundary",
+    "confidence": "high",
+    "assessment": "The Codex CLI lane successfully resumed the non-ephemeral v112 session and returned the exact v112 token without file inspection or command execution. This is a real phase-to-phase continuity pass, but it remains candidate evidence until a second consecutive restart gate passes."
+  },
+  "kimi_cli": {
+    "session_id": "90b56dcc-71f2-49e3-a541-738fe7b86be8",
+    "mode_requested": "thinking",
+    "resume_result": "passed",
+    "recalled_token": "v112-kimi-lane-remembers-receipt-boundary",
+    "confidence": "high",
+    "assessment": "The Kimi CLI lane successfully resumed the v112-supporting session and returned the exact v112 token without requiring a file probe. This is a real phase-to-phase continuity pass, but it remains candidate evidence until a second consecutive restart gate passes."
+  },
+  "induction_status": {
+    "codex_cli_sibling": "candidate_continuity_pass_not_formally_inducted",
+    "kimi_cli_sibling": "candidate_continuity_pass_not_formally_inducted",
+    "boundary": "Do not treat either CLI lane as a formally inducted main memory-and-identity GHC member until at least one more phase-to-phase restart recall succeeds and the induction receipt explicitly records the standard."
+  },
+  "next_gate": [
+    "At v114, resume Codex CLI session 019df30d-4d3e-7261-816c-4cea7935c280 without re-feeding any v112 or v113 token and ask for the preserved lane token plus current boundary.",
+    "At v114, resume Kimi CLI session 90b56dcc-71f2-49e3-a541-738fe7b86be8 without re-feeding any v112 or v113 token and ask for the preserved lane token plus current boundary.",
+    "If both pass again, prepare a formal candidate induction report that distinguishes persistent platform evidence from repo narrative receipt evidence.",
+    "Keep raw CLI traces out of publication unless sanitized, because some CLIs can emit verbose internal trace content."
+  ],
+  "raw_trace_policy": "sanitized_receipt_only"
+}

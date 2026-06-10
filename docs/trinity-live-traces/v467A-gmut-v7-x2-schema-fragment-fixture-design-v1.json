@@ -1,0 +1,59 @@
+{
+  "artifact_id": "v467A_GMUT_v7_x2_schema_fragment_fixture_design_v1",
+  "phase": "v467A_GMUT_v7_x2",
+  "prepared_at_nz": "2026-06-01T22:23:17+12:00",
+  "claim_taxonomy": "advisory",
+  "design_status": "SCHEMA_AND_FIXTURE_DESIGN_ONLY_NOT_EXECUTED",
+  "schema_fragments": [
+    "manifest_envelope",
+    "literal_input_row",
+    "derived_lint_report",
+    "identity_record",
+    "reference_handle",
+    "coefficient_unit_quantity",
+    "residual_adjudication",
+    "provenance_triple",
+    "gate_carry_report",
+    "no_result_envelope"
+  ],
+  "fixture_bundle_states": [
+    {
+      "state": "clean",
+      "meaning": "schema fields complete and no conflicts, but execution_status remains not_run and result_status remains no_result"
+    },
+    {
+      "state": "conflicted",
+      "meaning": "required rows exist but conflict, such as disabled/held overlap or source-role mismatch"
+    },
+    {
+      "state": "quarantined",
+      "meaning": "row family blocked by unresolved definition or overclaim risk"
+    },
+    {
+      "state": "no_result_heavy",
+      "meaning": "many rows are structurally present but lack exact artifacts, comparison rules, or measurement inputs"
+    }
+  ],
+  "test_designs_not_run": [
+    "canonicalization_golden_tests",
+    "cross_manifest_reference_integrity_tests",
+    "identity_ambiguity_tests",
+    "diff_merge_conflict_fixtures",
+    "coefficient_SI_failure_fixtures",
+    "residual_adjudication_fixtures",
+    "conservation_exchange_table_fixtures",
+    "overhang_proxy_falsifier_lint_cases",
+    "readiness_memo_generation_cases"
+  ],
+  "hard_constraints": [
+    "additionalProperties_false_in_future_schema_fragments_where_appropriate",
+    "execution_status_constrained_to_not_run",
+    "result_status_constrained_to_no_result",
+    "all_gate_rows_constrained_to_OPEN_NOT_TESTED"
+  ],
+  "non_implications": [
+    "No fixture bundle was executed.",
+    "No schema fragment validates physics.",
+    "No clean fixture state closes a gate."
+  ]
+}

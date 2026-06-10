@@ -1,0 +1,19 @@
+1. Receipt: Constraint set received for read-only v201-v220 council lane (no file edits, no commits, no spending, no browser storage/secrets access). Risk: Scope drift into prohibited actions if task language is ambiguous. Recommendation: Keep all outputs advisory-only and require explicit re-authorization before any state-changing step.
+
+2. Receipt: Read-only operating mode acknowledged. Risk: Accidental mutation via indirect tooling or scripted side effects. Recommendation: Use inspection-only commands and explicitly avoid any command that writes, stages, or synchronizes state.
+
+3. Receipt: “Do not edit files” acknowledged. Risk: Even temporary/generated artifacts could violate lane policy. Recommendation: Restrict to analysis and reporting; no patch generation, no redirection operators, no temp file workflows.
+
+4. Receipt: “Do not commit” acknowledged. Risk: History contamination or misleading publication state. Recommendation: Keep all findings uncommitted and present proposed diffs as conceptual guidance only.
+
+5. Receipt: “Do not spend money” acknowledged. Risk: Triggering paid APIs/services unintentionally through automation paths. Recommendation: Avoid all paid endpoints/actions and keep recommendations limited to zero-cost, already-local inspection steps.
+
+6. Receipt: “Do not access browser storage” acknowledged. Risk: Exposure of local/session artifacts (cookies, localStorage, indexedDB). Recommendation: Do not open browser automation paths that enumerate or read client storage surfaces.
+
+7. Receipt: “Do not access secrets” acknowledged. Risk: Leakage from env vars, key stores, or config files with credentials. Recommendation: Mask/avoid secret-bearing locations and treat unknown tokens as sensitive by default.
+
+8. Receipt: Ten-touchpoint response format requirement acknowledged. Risk: Missing required fields (receipt, risk, recommendation) per touchpoint. Recommendation: Maintain strict per-item structure validation before finalizing.
+
+9. Receipt: Council-lane governance framing acknowledged. Risk: Overstepping from assessment into execution authority. Recommendation: Provide risk-ranked assessments and explicit decision gates for any future execution lane handoff.
+
+10. Receipt: Current request completed as policy-constrained acknowledgment set. Risk: Future prompts may conflict with this constraint baseline. Recommendation: Reassert these guardrails at the start of each subsequent turn unless explicitly superseded by authorized policy change.

@@ -1,0 +1,48 @@
+# v478 THOS v1 x2 Source Drift Review
+
+- generated_nz: `2026-06-04T09:05:28+12:00`
+- search_count: `40`
+- source_count: `40`
+- boundary: sources inform THOS infrastructure only; they do not close GMUT gates.
+
+## Sources
+- S01: [OpenAI Codex app-server README](https://github.com/openai/codex/blob/main/codex-rs/app-server/README.md) — `implementation`.
+- S02: [OpenAI Codex CLI help](https://help.openai.com/en/articles/11096431) — `implementation`.
+- S03: [OpenAI Codex releases](https://github.com/openai/codex/releases) — `implementation`.
+- S04: [OpenAI Windows sandbox design](https://openai.com/index/building-codex-windows-sandbox/) — `implementation`.
+- S05: [OpenAI Codex for almost everything](https://openai.com/index/codex-for-almost-everything/) — `implementation`.
+- S06: [MCP tools specification](https://modelcontextprotocol.io/specification/2025-06-18/server/tools) — `implementation`.
+- S07: [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization) — `implementation`.
+- S08: [MCP security best practices](https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices) — `implementation`.
+- S09: [MCP SDK documentation](https://modelcontextprotocol.io/docs/sdk) — `implementation`.
+- S10: [MCP TypeScript SDK docs](https://ts.sdk.modelcontextprotocol.io/) — `implementation`.
+- S11: [OpenAI Agents SDK guide](https://platform.openai.com/docs/guides/agents-sdk/) — `implementation`.
+- S12: [OpenAI Agents SDK tracing](https://openai.github.io/openai-agents-python/tracing/) — `implementation`.
+- S13: [OpenAI Agents SDK handoffs](https://openai.github.io/openai-agents-js/guides/handoffs/) — `implementation`.
+- S14: [OpenAI structured outputs](https://platform.openai.com/docs/guides/structured-outputs) — `implementation`.
+- S15: [OpenAI Apps SDK help](https://help.openai.com/en/articles/12515353-build-with-the-apps-sdk) — `implementation`.
+- S16: [GitHub Actions hardening](https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions) — `implementation`.
+- S17: [GitHub push protection](https://docs.github.com/en/code-security/secret-scanning/introduction/about-push-protection) — `implementation`.
+- S18: [GitHub SARIF support](https://docs.github.com/en/code-security/reference/code-scanning/sarif-files/sarif-support-for-code-scanning) — `implementation`.
+- S19: [GitHub SARIF limits](https://docs.github.com/en/code-security/reference/code-scanning/sarif-files/troubleshoot-sarif-uploads/results-exceed-limit) — `implementation`.
+- S20: [GitHub MCP server in IDE](https://docs.github.com/en/copilot/how-tos/provide-context/use-mcp-in-your-ide/use-the-github-mcp-server) — `implementation`.
+- S21: [Microsoft Windows Sandbox WSB](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-configure-using-wsb-file) — `implementation`.
+- S22: [Microsoft Mandatory Integrity Control](https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control) — `implementation`.
+- S23: [Microsoft app isolation](https://learn.microsoft.com/en-gb/windows/security/book/application-security-application-isolation) — `implementation`.
+- S24: [PowerShell redirection](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_redirection) — `implementation`.
+- S25: [Python subprocess](https://docs.python.org/3.12/library/subprocess.html) — `implementation`.
+- S26: [Python tempfile](https://docs.python.org/3.12/library/tempfile.html) — `implementation`.
+- S27: [Python json](https://docs.python.org/3.12/library/json.html) — `implementation`.
+- S28: [OpenTelemetry signals](https://opentelemetry.io/docs/concepts/signals/) — `implementation`.
+- S29: [OpenTelemetry logs](https://opentelemetry.io/docs/specs/otel/logs/) — `implementation`.
+- S30: [Docker Compose Watch](https://docs.docker.com/compose/how-tos/file-watch/) — `implementation`.
+- S31: [Kubernetes Job API](https://kubernetes.io/docs/reference/kubernetes-api/batch/job-v1/) — `implementation`.
+- S32: [Vertex AI Agent Engine](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/reasoning-engine) — `expansion_context`.
+- S33: [Gemini API File Search](https://ai.google.dev/gemini-api/docs/file-search) — `expansion_context`.
+- S34: [NVIDIA NIM](https://docs.nvidia.com/nim/) — `expansion_context`.
+- S35: [NVIDIA DGX Spark](https://docs.nvidia.com/dgx/dgx-spark/index.html) — `expansion_context`.
+- S36: [NVIDIA Omniverse](https://docs.nvidia.com/omniverse/index.html) — `expansion_context`.
+- S37: [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework) — `governance`.
+- S38: [UNESCO AI ethics recommendation](https://www.unesco.org/en/articles/recommendation-ethics-artificial-intelligence) — `governance`.
+- S39: [OECD AI principles](https://www.oecd.org/en/topics/ai-principles.html) — `governance`.
+- S40: [EU AI Act timeline](https://ai-act-service-desk.ec.europa.eu/en/ai-act/eu-ai-act-implementation-timeline) — `governance`.

@@ -1,0 +1,52 @@
+{
+  "artifact_type": "cli_repair_quality_ladder",
+  "phase_slug": "v502-gmut-thos-v38-v1-x1",
+  "generated_utc": "2026-06-08T04:27:22Z",
+  "overall_status": "PASS_CLI_REPAIR_QUALITY_LADDER_READY",
+  "ladder": [
+    {
+      "step": "initial_completion_notice",
+      "purpose": "Confirm final-message files exist without publishing raw text.",
+      "advance_condition": "All lanes show FINAL_MESSAGE_READY and no strict marker blocker remains."
+    },
+    {
+      "step": "elaboration_quality_gate",
+      "purpose": "Separate structural correctness from enough depth for x2 use.",
+      "advance_condition": "Minimum headings, item counts, and word threshold pass."
+    },
+    {
+      "step": "strict_marker_review",
+      "purpose": "Resolve generic marker warnings as true blockers or false positives.",
+      "advance_condition": "Sensitive/path/raw markers are zero after strict review."
+    },
+    {
+      "step": "repair_prompt_launch",
+      "purpose": "Relaunch only the lanes that failed quality, with stronger prompt constraints.",
+      "advance_condition": "Repair launch receipt has heading contract, temp-only output, and a next-check gate."
+    },
+    {
+      "step": "repair_productive_wait",
+      "purpose": "Avoid babysitting while repairs run.",
+      "advance_condition": "Productive-wait verifier passes for the repair launch."
+    },
+    {
+      "step": "repair_quality_gate",
+      "purpose": "Confirm repaired artifacts are deep enough for x2 build synthesis.",
+      "advance_condition": "Both CLI lanes pass final-message, marker, and elaboration quality gates."
+    }
+  ],
+  "current_repair": {
+    "repair_id": "repair1",
+    "lanes": [
+      "Arby",
+      "Aster Vale"
+    ],
+    "manual_status_check_not_before_utc": "2026-06-08T04:31:34Z",
+    "reason": "Initial artifacts were structurally valid but below elaboration threshold."
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "raw_lane_text_published": false
+  }
+}

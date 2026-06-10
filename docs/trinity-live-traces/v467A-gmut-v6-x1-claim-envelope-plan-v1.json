@@ -1,0 +1,60 @@
+{
+  "artifact_id": "v467A_GMUT_v6_x1_claim_envelope_plan_v1",
+  "phase": "v467A_GMUT_v6_x1",
+  "prepared_at_nz": "2026-06-01T21:44:49+12:00",
+  "claim_taxonomy": "advisory",
+  "plan_status": "CLAIM_ENVELOPE_DESIGN_READY_NOT_IMPLEMENTED",
+  "envelope_fields": [
+    "record_id",
+    "schema_version",
+    "claim_id",
+    "claim_text",
+    "classification",
+    "status",
+    "source_routes",
+    "source_authority_class",
+    "provenance_triple",
+    "witness_bundle",
+    "normalized_key",
+    "raw_source_text_ref",
+    "derivation_depth",
+    "comparison_scope",
+    "comparability_status",
+    "conflict_state",
+    "refusal_code",
+    "open_gaps",
+    "confidence_band",
+    "non_implications"
+  ],
+  "finite_gap_taxonomy": [
+    "missing_literal",
+    "missing_provenance",
+    "identity_ambiguous",
+    "type_unresolved",
+    "unit_unresolved",
+    "comparison_blocked",
+    "conflict_unresolved",
+    "derivation_unsupported",
+    "test_not_run"
+  ],
+  "closed_refusal_vocabulary": [
+    "unsupported_authority",
+    "missing_provenance",
+    "conflicting_authority",
+    "comparison_leakage_risk",
+    "out_of_scope",
+    "insufficient_evidence",
+    "unsafe_to_promote"
+  ],
+  "implementation_rules": [
+    "Normalize only for lookup and dedupe, never for display or meaning.",
+    "Separate record identity from semantic identity.",
+    "Keep literals immutable and keep derived claims in a separate lane.",
+    "Typed comparison requires declared type, parse status, unit/domain normalization, and comparability verdict.",
+    "Preserve conflicts losslessly.",
+    "Do not merge entities from name similarity alone.",
+    "Do not infer absence from silence.",
+    "Do not close gaps from derived output.",
+    "Refusal blocks promotion but does not erase the input."
+  ]
+}

@@ -1,0 +1,22 @@
+Receipt:
+Using `docs/trinity-live-traces/v261-v280-adaptive-council-seed-synthesis-v1.json` as the checkpoint, the lane is ready for a bounded `v282-v300` runtime-health pass. The seed synthesis records `status=seed_complete_synthesized`, `15/15` seed replies complete, and the Aster Vale carry-forward boundary is explicit: judge runtime health from local receipts only, keep provider/web/publication state unverified unless separately proved, and expand in small adaptive blocks.
+
+Blocker:
+The seed synthesis still shows the main uncertainty is inspection reliability, not proven runtime failure. Aster Vale recorded policy rejections/timeouts on benign read probes, and cross-lane findings say response text must be separated from transport noise before receipts count as proof. That means `runtime healthy` cannot yet mean more than `locally observable and writing clean receipts`.
+
+Refinement:
+For `v282-v300`, use a strict local checklist:
+1. `response artifact exists`
+2. `transport/log noise isolated`
+3. `last successful write timestamp present`
+4. `lane classified as alive and writing | alive but silent | exited without response`
+5. `sandbox boundary recorded`
+6. `remote/provider/publication left as unverified unless directly checked`
+Treat TUI health and proof receipts as separate surfaces.
+
+Next-cycle proposal:
+Run one small failure-mode rehearsal block with three prompts only:
+1. clean-receipt probe
+2. silent-lane classification probe
+3. sandbox-readability probe
+Expected outputs should be one compact health board per lane with: `status`, `evidence path`, `missing proof`, `safe next probe`. If any probe times out or contaminates receipts, shrink again rather than broadening scope.

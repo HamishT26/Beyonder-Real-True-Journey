@@ -1,0 +1,35 @@
+{
+  "artifact_id": "v470-thos-v6-x1-report-export-contract-v1",
+  "phase": "v470_THOS_v6_x1",
+  "created_at_nz": "2026-06-02T15:44:10+12:00",
+  "script_update": "scripts/thos_supervisor_gate.py now accepts optional --output for JSON report export",
+  "export_contract": {
+    "canonical_machine_format": "json",
+    "optional_follow_on_formats": [
+      "jsonl",
+      "csv",
+      "markdown_summary"
+    ],
+    "required_report_fields": [
+      "validator_mode",
+      "aggregate_status",
+      "input_file",
+      "mutation_performed",
+      "connector_write_performed",
+      "gmUT_gate_effect",
+      "rows"
+    ],
+    "required_row_fields": [
+      "request_id",
+      "rule_map_id",
+      "authority_route",
+      "status",
+      "gate_result",
+      "expected_status",
+      "expected_failure",
+      "matches_expected",
+      "expected_interpretation"
+    ]
+  },
+  "write_boundary": "only explicit --output writes a local JSON report; no connector writes or command execution are performed"
+}

@@ -1,0 +1,7 @@
+Receipt: Receipt of v261-v280-adaptive-council block 11 synthesis confirmed. Kimi lane acknowledges the provider-health evidence checkpoint. No live billing or app-access assertions are introduced. Cost posture remains bounded to previously cached provider-readiness metrics.
+
+Blocker: The primary blocker is the absence of real-time billing API verification; therefore, any provider spend or cost projections must be treated as stale unless explicitly refreshed via approved sandbox gates. Live provider health cannot be asserted from CLI relay telemetry alone.
+
+Refinement: All provider-health claims should be scoped to "last known state" from the block 11 synthesis. Remove any language implying guaranteed app access or active subscription status. Cost references should use "observed" or "cached" qualifiers. Maintain the boundary that Kimi CLI reports readiness signals, not financial truth.
+
+Next-cycle proposal: In the next cycle, propose running a lightweight provider-spend sandbox gate (read-only) against cached logs to refresh cost telemetry without triggering live billing mutations. Validate that any publication or deployment claims pass through the provider-readiness filter before entering the council synthesis.

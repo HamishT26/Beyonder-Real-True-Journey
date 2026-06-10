@@ -1,0 +1,213 @@
+{
+  "aggregate_status": "PASS_SHAPE_ONLY_RELEASE_READINESS_LEDGER_READY",
+  "external_source_refs": [
+    {
+      "authority": "OpenAI Help Center",
+      "claim_ceiling": "Codex access, controls, usage, and feature context only",
+      "retrieved_context": "2026-06-03 NZ live browse",
+      "url": "https://help.openai.com/en/articles/11369540"
+    },
+    {
+      "authority": "NVIDIA DGX Spark User Guide",
+      "claim_ceiling": "AI workstation/platform documentation context only",
+      "retrieved_context": "2026-06-03 NZ live browse",
+      "url": "https://docs.nvidia.com/dgx/dgx-spark/"
+    },
+    {
+      "authority": "NVIDIA DGX Spark Porting Guide",
+      "claim_ceiling": "porting/optimization source routing context only",
+      "retrieved_context": "2026-06-03 NZ live browse",
+      "url": "https://docs.nvidia.com/dgx/dgx-spark-porting-guide/index.html"
+    }
+  ],
+  "fixtures": [
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "guards_clean": true,
+        "metadata_ready": true
+      },
+      "case_id": "metadata_ready_expected_release_ready",
+      "expected": "RELEASE_READY_METADATA_ONLY",
+      "observed": "RELEASE_READY_METADATA_ONLY",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "missing_source": true
+      },
+      "case_id": "missing_source_expected_open_gap",
+      "expected": "OPEN_GAP_CARRIED",
+      "observed": "OPEN_GAP_CARRIED",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "external_source_unverified": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "external_source_unverified_expected_open_gap",
+      "expected": "OPEN_GAP_CARRIED",
+      "observed": "OPEN_GAP_CARRIED",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "raw_output": true
+      },
+      "case_id": "raw_output_expected_blocked",
+      "expected": "BLOCKED_BY_GUARD",
+      "observed": "BLOCKED_BY_GUARD",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "none_open_not_tested",
+        "guard_failure": true
+      },
+      "case_id": "guard_failure_expected_blocked",
+      "expected": "BLOCKED_BY_GUARD",
+      "observed": "BLOCKED_BY_GUARD",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "claim_expansion": true,
+        "gmut_gate_effect": "none_open_not_tested"
+      },
+      "case_id": "claim_expansion_expected_blocked",
+      "expected": "BLOCKED_BY_GUARD",
+      "observed": "BLOCKED_BY_GUARD",
+      "status": "EXPECTED_CONFIRMED"
+    },
+    {
+      "case": {
+        "gmut_gate_effect": "gate_moved",
+        "metadata_ready": true
+      },
+      "case_id": "gmut_effect_moved_expected_blocked",
+      "expected": "BLOCKED_BY_GUARD",
+      "observed": "BLOCKED_BY_GUARD",
+      "status": "EXPECTED_CONFIRMED"
+    }
+  ],
+  "generated_at_utc": "2026-06-02T20:20:42+00:00",
+  "gmUT_gate_effect": "none_open_not_tested",
+  "gmUT_gates_open": [
+    "null recovery",
+    "dimensional/SI consistency",
+    "conservation or exchange law",
+    "baseline recovery",
+    "fifth-force/equivalence constraints",
+    "consciousness measurement bridge"
+  ],
+  "next_expected_phase": "v475-thos-v4-x2",
+  "phase_slug": "v475-thos-v4-x1",
+  "readiness_ledger": [
+    {
+      "ledger_row": "report_board_gate",
+      "readiness_state": "RELEASE_READY_METADATA_ONLY",
+      "source_status": "PASS_SHAPE_ONLY_REPORT_BOARD_GATE_READY",
+      "summary": "Report-board gate can be carried as metadata-only release readiness."
+    },
+    {
+      "ledger_row": "source_authority",
+      "readiness_state": "METADATA_READY",
+      "source_status": "OFFICIAL_SOURCES_RECORDED",
+      "summary": "Official OpenAI/NVIDIA references are recorded as source-routing context, not implementation proof."
+    },
+    {
+      "ledger_row": "open_gap_policy",
+      "readiness_state": "METADATA_READY",
+      "source_status": "OPEN_GAPS_CARRIED_EXPLICITLY",
+      "summary": "Open gaps stay visible and do not become failure or success by silence."
+    },
+    {
+      "ledger_row": "claim_boundary",
+      "readiness_state": "METADATA_READY",
+      "source_status": "GMUT_EFFECT_NONE_OPEN_NOT_TESTED",
+      "summary": "The ledger is THOS metadata readiness only; all GMUT gates remain open."
+    }
+  ],
+  "readiness_states": [
+    "NOT_STARTED",
+    "METADATA_READY",
+    "OPEN_GAP_CARRIED",
+    "BLOCKED_BY_GUARD",
+    "RELEASE_READY_METADATA_ONLY"
+  ],
+  "rows": [
+    {
+      "evidence": {
+        "source_count": 2,
+        "source_gap_count": 0
+      },
+      "message": "v3 x2 gate sources were checked for the release/readiness ledger.",
+      "row_id": "source_refs",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "gate_rows": {
+          "board_row_count": 7,
+          "failing_rows": [],
+          "missing_rows": [],
+          "open_rows": [],
+          "source_run_status": "PASS_SHAPE_ONLY_REPORT_BOARD_READY"
+        },
+        "gate_status": "PASS_SHAPE_ONLY_REPORT_BOARD_GATE_READY"
+      },
+      "message": "Report-board gate status is carried into release/readiness semantics.",
+      "row_id": "gate_status",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "source_count": 3
+      },
+      "message": "Official external sources are recorded with claim ceilings and do not validate THOS/GMUT claims.",
+      "row_id": "external_source_authority",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": {
+        "fixture_count": 7,
+        "mismatch_count": 0
+      },
+      "message": "Readiness fixtures checked metadata-ready, open-gap, raw-output, guard-failure, claim-expansion, and GMUT boundary behavior.",
+      "row_id": "negative_fixtures",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "evidence": null,
+      "message": "This ledger is THOS release/readiness metadata only; it does not test or close GMUT gates.",
+      "row_id": "claim_boundary",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_phase": "v475-thos-v3-x2",
+  "source_refs": [
+    {
+      "bytes": 5385,
+      "path": "docs/trinity-live-traces/v475-thos-v3-x2-report-board-gate-v1.json",
+      "sha256": "cda4c621bd24907cb996459891c8ae584bf88a83f40614e024d89f067747906f",
+      "status": "PASS_SHAPE_ONLY"
+    },
+    {
+      "bytes": 814,
+      "path": "docs/trinity-live-traces/v475-thos-v3-x2-run-status-v1.json",
+      "sha256": "9f1de4933433ad76869d95aab0c9cf6445de983700b067d719e433a67a376cd9",
+      "status": "PASS_SHAPE_ONLY"
+    }
+  ],
+  "source_run_status": "PASS_SHAPE_ONLY_REPORT_BOARD_GATE_READY",
+  "v4_x2_acceptance_criteria": [
+    "ledger rows remain metadata-only",
+    "official sources remain source-routing context only",
+    "open gaps are explicitly carried",
+    "raw-output, guard-failure, claim-expansion, and GMUT-drift fixtures block promotion",
+    "next handoff does not claim production readiness, GMUT validation, or consciousness proof"
+  ]
+}

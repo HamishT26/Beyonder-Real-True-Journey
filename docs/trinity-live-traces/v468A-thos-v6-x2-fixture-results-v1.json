@@ -1,0 +1,61 @@
+{
+  "generated_utc": "2026-06-01T12:06:58+00:00",
+  "schema": "docs/trinity-live-traces/v468A-thos-v6-x1-phase-manifest-schema-v1.json",
+  "status": "PASS",
+  "validator": "jsonschema.Draft202012Validator",
+  "cases": [
+    {
+      "case": "pass_manifest",
+      "path": "docs/trinity-live-traces/v468A-thos-v6-x2-fixture-pass-manifest-v1.json",
+      "expected": "pass",
+      "actual": "pass",
+      "matched": true,
+      "error_count": 0,
+      "errors": []
+    },
+    {
+      "case": "fail_missing_upstream",
+      "path": "docs/trinity-live-traces/v468A-thos-v6-x2-fixture-fail-missing-upstream-v1.json",
+      "expected": "fail",
+      "actual": "fail",
+      "matched": true,
+      "error_count": 1,
+      "errors": [
+        "'live_upstream_head' is a required property"
+      ]
+    },
+    {
+      "case": "fail_bad_head",
+      "path": "docs/trinity-live-traces/v468A-thos-v6-x2-fixture-fail-bad-head-v1.json",
+      "expected": "fail",
+      "actual": "fail",
+      "matched": true,
+      "error_count": 1,
+      "errors": [
+        "'not-a-git-head' does not match '^[0-9a-f]{40}$'"
+      ]
+    },
+    {
+      "case": "fail_boundary_closed",
+      "path": "docs/trinity-live-traces/v468A-thos-v6-x2-fixture-fail-boundary-closed-v1.json",
+      "expected": "fail",
+      "actual": "fail",
+      "matched": true,
+      "error_count": 1,
+      "errors": [
+        "'open' was expected"
+      ]
+    },
+    {
+      "case": "fail_extra_property",
+      "path": "docs/trinity-live-traces/v468A-thos-v6-x2-fixture-fail-extra-property-v1.json",
+      "expected": "fail",
+      "actual": "fail",
+      "matched": true,
+      "error_count": 1,
+      "errors": [
+        "Additional properties are not allowed ('unapproved_field' was unexpected)"
+      ]
+    }
+  ]
+}

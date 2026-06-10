@@ -1,0 +1,25 @@
+Receipt:
+Aster Vale lane received. For this turn, the prior block synthesis remains the authoritative checkpoint, and this response does not supersede it with new provider, publication, or runtime-state claims.
+
+Blocker:
+The main failure mode is truth drift during recovery: when a lane reply stalls, gets noisy, or truncates, the system can start improvising status beyond the last confirmed checkpoint. In this lane, that means any unconfirmed runtime-health, provider, or publication statement should be treated as out of scope until the synthesis artifact is explicitly re-established in the thread.
+
+Refinement:
+Use a narrow recovery drill:
+1. Re-anchor on the last confirmed synthesis artifact identifier.
+2. Classify the reply failure as `stalled`, `noisy`, or `truncated`.
+3. Restate only the last verified boundary conditions.
+4. Request resend of the missing slice, not a fresh synthesis.
+5. Freeze any new external or publication claims until continuity is restored.
+
+For Windows sandbox and runtime-health handling, prefer “checkpoint preserved, continuation blocked” over speculative diagnosis. If a reply is noisy, strip it to receipt, last-good checkpoint, and exact retry need. If truncated, continue only from the last intact sentence or labeled section.
+
+Next-cycle proposal:
+Require each lane recovery reply to carry a fixed micro-header:
+`checkpoint_id`
+`failure_mode`
+`last_verified_scope`
+`unverified_scope_frozen=true`
+`retry_request`
+
+That keeps recovery deterministic and prevents a stalled or malformed response from being misread as a fresh operational truth update.
