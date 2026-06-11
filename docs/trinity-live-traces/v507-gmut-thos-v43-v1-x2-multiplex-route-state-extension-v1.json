@@ -1,0 +1,73 @@
+{
+  "artifact_type": "ghc_multiplex_route_state_extension",
+  "phase": "v507-gmut-thos-v43-v1-x2",
+  "generated_utc": "2026-06-11T08:15:31Z",
+  "extends": "v506-gmut-thos-v42-v1-x1-multiplex-ipc-bus-v1",
+  "route_state_contract": {
+    "states": [
+      "prepared",
+      "sent",
+      "generating",
+      "complete",
+      "blocker",
+      "synthesized"
+    ],
+    "transitions": [
+      {
+        "from": "prepared",
+        "to": "sent",
+        "evidence": "message send receipt"
+      },
+      {
+        "from": "sent",
+        "to": "generating",
+        "evidence": "generation active signal"
+      },
+      {
+        "from": "generating",
+        "to": "complete",
+        "evidence": "completion marker or explicit completion signal"
+      },
+      {
+        "from": "generating",
+        "to": "blocker",
+        "evidence": "bounded blocker receipt"
+      },
+      {
+        "from": "complete",
+        "to": "synthesized",
+        "evidence": "sanitized synthesis receipt"
+      },
+      {
+        "from": "blocker",
+        "to": "synthesized",
+        "evidence": "blocker synthesis receipt"
+      }
+    ]
+  },
+  "required_route_receipt_fields": [
+    "phase",
+    "lane",
+    "surface",
+    "state",
+    "generated_utc",
+    "marker_expected",
+    "marker_observed",
+    "raw_boundary",
+    "next_action"
+  ],
+  "forbidden_publication_fields": [
+    "raw response body",
+    "raw transcript body",
+    "credential material",
+    "browser hidden state",
+    "screenshot payload",
+    "session stream payload"
+  ],
+  "validation_script": "scripts/ghc_route_state_validator.mjs",
+  "daemon_started": false,
+  "mutation_performed": false,
+  "raw_transcript_published": false,
+  "credentials_published": false,
+  "gmut_gate_state": "all_gmut_gates_remain_open"
+}
