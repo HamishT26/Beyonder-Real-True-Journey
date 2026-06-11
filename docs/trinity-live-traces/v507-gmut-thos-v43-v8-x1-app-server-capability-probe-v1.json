@@ -1,0 +1,140 @@
+{
+  "artifact_type": "ghc_app_server_capability_probe",
+  "generated_utc": "2026-06-11T16:16:46Z",
+  "phase_slug": "v507-gmut-thos-v43-v8-x1",
+  "overall_status": "OPEN_GAP_APP_SERVER_DISCOVERY_SURFACE_NOT_EXPOSED",
+  "timeout_ms": 5000,
+  "duration_ms": 7933,
+  "candidate_method_count": 10,
+  "methods": [
+    {
+      "method": "initialize",
+      "status": "ok",
+      "result_shape": {
+        "type": "object",
+        "keys": [
+          "codexHome",
+          "platformFamily",
+          "platformOs",
+          "userAgent"
+        ],
+        "nested": {
+          "codexHome": {
+            "type": "string"
+          },
+          "platformFamily": {
+            "type": "string"
+          },
+          "platformOs": {
+            "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
+          }
+        }
+      },
+      "error_class": null
+    },
+    {
+      "method": "thread/list",
+      "status": "timeout",
+      "result_shape": null,
+      "error_class": null
+    },
+    {
+      "method": "threads/list",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "invalid_params",
+      "error_code_present": true
+    },
+    {
+      "method": "conversation/list",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "invalid_params",
+      "error_code_present": true
+    },
+    {
+      "method": "conversations/list",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "invalid_params",
+      "error_code_present": true
+    },
+    {
+      "method": "session/list",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "invalid_params",
+      "error_code_present": true
+    },
+    {
+      "method": "sessions/list",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "invalid_params",
+      "error_code_present": true
+    },
+    {
+      "method": "thread/search",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "missing_required_param",
+      "error_code_present": true
+    },
+    {
+      "method": "threads/search",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "invalid_params",
+      "error_code_present": true
+    },
+    {
+      "method": "thread/read",
+      "status": "error",
+      "result_shape": null,
+      "error_class": "missing_required_param",
+      "error_code_present": true
+    }
+  ],
+  "safe_discovery_surface": {
+    "discovered": false,
+    "ok_methods": [],
+    "thread_read_requires_private_id": true
+  },
+  "transport_summary": {
+    "spawn_entrypoint": "node_wrapper_windows_cmd_fallback",
+    "observed_notification_methods": [
+      "remoteControl/status/changed"
+    ],
+    "stderr_bytes_observed_not_published": 558,
+    "stdout_non_json_line_count": 0
+  },
+  "retry_guidance": {
+    "if_discovery_present": "Use only redacted/status-only discovery outputs and never publish raw thread IDs, titles, or app state.",
+    "if_discovery_absent": "Restore THOS_APP_LANE_IDS_JSON in the running process or wait for official thread tools to be exposed.",
+    "forbidden_fallbacks": [
+      "old-style subagent spawn",
+      "replacement sibling creation",
+      "raw app-state scraping",
+      "private ID publication"
+    ]
+  },
+  "publication_boundary": {
+    "raw_app_server_result_published": false,
+    "raw_app_server_error_published": false,
+    "raw_thread_ids_published": false,
+    "raw_thread_titles_published": false,
+    "raw_lane_text_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "scope": "Codex app-server method-shape probing only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "phase_completion": "not_claimed"
+  }
+}
