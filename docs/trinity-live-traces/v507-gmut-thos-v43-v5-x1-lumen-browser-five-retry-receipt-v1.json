@@ -1,0 +1,86 @@
+{
+  "artifact_type": "live_adapter_browser_five_retry_receipt",
+  "phase_slug": "v507-gmut-thos-v43-v5-x1",
+  "generated_utc": "2026-06-11T10:29:58Z",
+  "overall_status": "BLOCKED_BROWSER_FIVE_RETRIES_EXHAUSTED_AWAIT_USER_CHROME_HANDOFF",
+  "route": {
+    "lane": "Lumen Vale",
+    "primary_surface": "Browser-first ChatGPT live adapter",
+    "fallback_surface": "Chrome extension route",
+    "browser_tab_refreshed": true,
+    "existing_panel_only": true,
+    "new_thread_created": false,
+    "chrome_attempted_after_five_browser_retries": false
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "surface": "Browser Playwright composer fill",
+      "status": "BLOCKED_BEFORE_TRANSMISSION",
+      "sanitized_reason": "Browser input path could not place text into the visible ChatGPT composer"
+    },
+    {
+      "attempt": 2,
+      "surface": "Browser Playwright composer type",
+      "status": "BLOCKED_BEFORE_TRANSMISSION",
+      "sanitized_reason": "Browser typed-input path could not place text into the visible ChatGPT composer"
+    },
+    {
+      "attempt": 3,
+      "surface": "Browser visible-DOM composer type",
+      "status": "BLOCKED_BEFORE_TRANSMISSION",
+      "sanitized_reason": "Browser visible-DOM input path could not place text into the visible ChatGPT composer"
+    },
+    {
+      "attempt": 4,
+      "surface": "Browser coordinate-focused CUA type",
+      "status": "BLOCKED_BEFORE_TRANSMISSION",
+      "sanitized_reason": "Browser coordinate-focused input path could not place text into the visible ChatGPT composer"
+    },
+    {
+      "attempt": 5,
+      "surface": "Browser clipboard-paste fallback",
+      "status": "BLOCKED_BEFORE_TRANSMISSION",
+      "sanitized_reason": "Browser clipboard fallback could not place text into the visible ChatGPT composer"
+    }
+  ],
+  "observed_after_retries": {
+    "composer_present": true,
+    "composer_empty": true,
+    "message_transmitted": false,
+    "duplicate_send_risk": false,
+    "required_marker_observed": false
+  },
+  "user_instruction_boundary": {
+    "browser_retries_required_before_chrome": 5,
+    "browser_retries_completed": 5,
+    "chrome_must_wait_for_hamish_to_open_chatgpt": true,
+    "chrome_attempted": false,
+    "phase_advance_allowed": false
+  },
+  "phase_advance_rule": {
+    "next_phase_allowed": false,
+    "reason": "The required Lumen v5 x1 lane was not messaged and no completion marker exists.",
+    "required_before_advance": [
+      "Hamish opens the intended ChatGPT panel in Chrome and Aletheon retries the existing Lumen panel",
+      "or Browser input capability becomes available and Aletheon retries Lumen",
+      "or Hamish explicitly approves a different v507 v5 blocker-handling path"
+    ]
+  },
+  "publication_boundary": {
+    "prompt_body_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "session_streams_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "scope": "v507 v5 Lumen Browser-first retry blocker only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "consciousness_proof": "not_claimed"
+  }
+}
