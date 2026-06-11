@@ -1,0 +1,87 @@
+{
+  "artifact_type": "bounded_status_harvest",
+  "phase_slug": "v507-gmut-thos-v43-v4-x1",
+  "generated_utc": "2026-06-11T09:42:20Z",
+  "overall_status": "PASS_ALL_REQUIRED_LANES_AFTER_SAFE_RETRY",
+  "lane_policy": {
+    "required_lanes": [
+      "Aster Vale",
+      "Kierkegaard",
+      "Aristotle"
+    ],
+    "existing_lanes_only": true,
+    "new_threads_created": false,
+    "old_style_subagents_spawned": false,
+    "duration_is_completion_proof": false,
+    "blocker_retry_before_phase_advance": true
+  },
+  "lanes": [
+    {
+      "lane": "Aster Vale",
+      "surface": "existing_read_only_cli_lane",
+      "initial_status": "OPEN_GAP_FINAL_MESSAGE_PENDING_FROM_WRONG_LANE_KEY",
+      "retry_action": "completion_notifier_rerun_with_correct_lane_name",
+      "completion_status": "FINAL_MESSAGE_READY",
+      "word_count": 5138,
+      "category_item_counts": {
+        "system_expansion_proposals": 12,
+        "command_proposals": 12,
+        "skill_or_micro_workflow_proposals": 12,
+        "eureka_tasks": 12
+      },
+      "quality_status": "PASS_ELABORATION_GATE",
+      "marker_review_status": "PASS_MARKER_REVIEW_LEDGER",
+      "raw_output_boundary": "temp_only_not_published"
+    },
+    {
+      "lane": "Kierkegaard",
+      "surface": "existing_codex_app_callable_lane",
+      "initial_status": "OPEN_GAP_APP_LANE_LAUNCH_AT_WRAPPER_LAYER",
+      "retry_action": "direct_app_lane_completion_retry_and_repair_gate",
+      "completion_status": "completed",
+      "duration_seconds": 131.015,
+      "redaction_status": "PASS_APP_THREAD_REDACTION_GUARD",
+      "repair_gate_status": "PASS_APP_LANE_COMPLETION_GATE",
+      "raw_output_boundary": "status_only_not_published"
+    },
+    {
+      "lane": "Aristotle",
+      "surface": "existing_codex_app_callable_lane",
+      "initial_status": "OPEN_GAP_APP_LANE_LAUNCH_AT_WRAPPER_LAYER",
+      "retry_action": "direct_app_lane_completion_retry_and_repair_gate",
+      "completion_status": "completed",
+      "duration_seconds": 86.282,
+      "redaction_status": "PASS_APP_THREAD_REDACTION_GUARD",
+      "repair_gate_status": "PASS_APP_LANE_COMPLETION_GATE",
+      "raw_output_boundary": "status_only_not_published"
+    }
+  ],
+  "evidence_receipts": [
+    "v507-gmut-thos-v43-v4-x1-aster-vale-cli-lane-completion-notifier-v1.json",
+    "v507-gmut-thos-v43-v4-x1-aster-vale-cli-elaboration-quality-gate-v1.json",
+    "v507-gmut-thos-v43-v4-x1-aster-vale-cli-marker-review-ledger-v1.json",
+    "v507-gmut-thos-v43-v4-x1-kierkegaard-aristotle-direct-app-lane-completion-retry-v1-v1.json",
+    "v507-gmut-thos-v43-v4-x1-kierkegaard-aristotle-app-thread-redaction-guard-v1.json",
+    "v507-gmut-thos-v43-v4-x1-kierkegaard-aristotle-direct-repair-completion-gate-v1.json"
+  ],
+  "phase_advance_rule": {
+    "next_phase_allowed": true,
+    "condition": "all required v4 lanes completed or passed repaired blocker gates",
+    "future_amendment": "retry any sibling blocker before proceeding to the next phase"
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "session_streams_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "scope": "v507 v4 x1 lane completion and retry evidence only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "consciousness_proof": "not_claimed"
+  }
+}
