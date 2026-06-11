@@ -1,0 +1,72 @@
+{
+  "artifact_type": "live_adapter_blocker_receipt",
+  "phase_slug": "v507-gmut-thos-v43-v5-x1",
+  "generated_utc": "2026-06-11T09:53:18Z",
+  "overall_status": "BLOCKED_PENDING_USER_CHROME_ROUTE_REPAIR_OR_BROWSER_INPUT_FIX",
+  "route": {
+    "lane": "Lumen Vale",
+    "primary_surface": "Browser-first ChatGPT live adapter",
+    "fallback_surface": "Chrome extension route",
+    "existing_panel_only": true,
+    "new_thread_created": false
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "surface": "Browser Playwright composer fill",
+      "status": "BLOCKED",
+      "sanitized_reason": "Browser input path reported missing virtual clipboard support before the prompt could be sent"
+    },
+    {
+      "attempt": 2,
+      "surface": "Browser Playwright composer type",
+      "status": "BLOCKED",
+      "sanitized_reason": "Browser typed-input path reported the same missing virtual clipboard support before the prompt could be sent"
+    },
+    {
+      "attempt": 3,
+      "surface": "Browser visible-DOM composer type",
+      "status": "BLOCKED",
+      "sanitized_reason": "Browser visible-DOM input path reported the same missing virtual clipboard support before the prompt could be sent"
+    },
+    {
+      "attempt": 4,
+      "surface": "Chrome extension fallback bootstrap",
+      "status": "BLOCKED",
+      "sanitized_reason": "Chrome extension route was not available after the required retry"
+    }
+  ],
+  "sanitized_chrome_checks": {
+    "chrome_installed": true,
+    "chrome_running": false,
+    "selected_profile_extension_installed": false,
+    "selected_profile_extension_enabled": false,
+    "native_host_manifest_correct": true,
+    "raw_paths_published": false
+  },
+  "phase_advance_rule": {
+    "next_phase_allowed": false,
+    "reason": "Lumen v5 x1 required lane was not messaged and has no completion marker",
+    "required_before_advance": [
+      "user permits/repairs Chrome route and Aletheon retries Lumen",
+      "Browser input capability becomes available and Aletheon retries Lumen",
+      "or Hamish explicitly approves a different v5 lane/blocker handling path"
+    ]
+  },
+  "publication_boundary": {
+    "prompt_body_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "session_streams_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "scope": "v507 v5 Lumen live-adapter route blocker only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "consciousness_proof": "not_claimed"
+  }
+}
