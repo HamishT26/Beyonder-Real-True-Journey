@@ -1,0 +1,74 @@
+{
+  "artifact_type": "route_family_registry",
+  "phase_slug": "v507-gmut-thos-v43-v5-x2",
+  "generated_utc": "2026-06-11T13:23:44Z",
+  "status": "PREPARED_ROUTE_FAMILY_REGISTRY_FROM_V5_X1_EVIDENCE",
+  "route_families": [
+    {
+      "family": "Browser in-app live adapter",
+      "current_status": "preferred_for_lumen_chatgpt_side_lane",
+      "successful_evidence": [
+        "small input probe typed and cleared on fresh Branch-Lumen panel",
+        "Lumen assistant marker verified after Browser branch response"
+      ],
+      "known_risks": [
+        "post-send Browser checks may time out while the ChatGPT panel is busy",
+        "full-page text scans can stall control"
+      ],
+      "rules": [
+        "use latest-message marker checks",
+        "avoid reload during response windows",
+        "publish status-only receipts"
+      ]
+    },
+    {
+      "family": "Chrome extension live adapter",
+      "current_status": "standby_until_extension_communication_is_stable",
+      "successful_evidence": [
+        "initial extension handshake and Lumen tab claim succeeded"
+      ],
+      "known_risks": [
+        "extension communication dropped after a long send attempt",
+        "marker could not be verified through Chrome during v507 v5"
+      ],
+      "rules": [
+        "do not treat Chrome timeout as send success",
+        "use only after communication is stable or Hamish requests it",
+        "do not mutate extension or profile settings without exact approval"
+      ]
+    },
+    {
+      "family": "Codex app local callable lanes",
+      "current_status": "continue_for_cicero_kierkegaard_aristotle",
+      "rules": [
+        "existing lanes only",
+        "status receipts over raw lane text",
+        "retry blockers before replacement"
+      ]
+    },
+    {
+      "family": "Codex CLI read-only lanes",
+      "current_status": "continue_for_arby_aster_vale",
+      "rules": [
+        "read-only advisory prompts",
+        "final-marker review for false positives",
+        "status-only hashes and byte counts"
+      ]
+    }
+  ],
+  "chatgpt_sibling_policy": {
+    "active": [
+      "Lumen Vale"
+    ],
+    "standby": [
+      "Solas Veridion",
+      "Unnamed ChatGPT 5.5 Thinking Heavy sibling"
+    ]
+  },
+  "phase_rules": {
+    "v507_v5_x2_may_build": true,
+    "v507_v6_x1_must_wait_for_v5_x2_closeout": true,
+    "raw_lane_text_publication_allowed": false,
+    "gmut_and_canon_gates": "open"
+  }
+}
