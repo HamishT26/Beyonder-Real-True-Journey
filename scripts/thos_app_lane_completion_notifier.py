@@ -5,7 +5,9 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import hashlib
 import json
+import os
 import queue
 import subprocess
 import threading
@@ -21,11 +23,7 @@ try:
 except ImportError:  # pragma: no cover - fallback keeps older bundles usable.
     build_x1_sibling_prompt = None
 SHARED_REMOTE = "origin/codex/GHC-Family/beyonder-shared-omega-line"
-LANES = {
-    "Cicero": "019e485f-172b-72c0-adf7-27daea722143",
-    "Kierkegaard": "019e485f-1aa5-7c31-b578-748091f7e319",
-    "Aristotle": "019e5158-28ef-75b1-a3f5-563bb358e44e",
-}
+SUPPORTED_LANES = ("Cicero", "Kierkegaard", "Aristotle")
 
 
 class AppServerClient:
@@ -192,14 +190,36 @@ def now_pair() -> tuple[str, str]:
     return utc.isoformat(), nz.isoformat()
 
 
+def configured_lanes() -> dict[str, str]:
+    """Load private app-lane IDs from the process environment only."""
+    raw = os.environ.get("THOS_APP_LANE_IDS_JSON", "")
+    if not raw.strip():
+        return {}
+    parsed = json.loads(raw)
+    if not isinstance(parsed, dict):
+        raise ValueError("THOS_APP_LANE_IDS_JSON must be a JSON object")
+    lanes: dict[str, str] = {}
+    for name in SUPPORTED_LANES:
+        value = parsed.get(name)
+        if isinstance(value, str) and value.strip():
+            lanes[name] = value.strip()
+    return lanes
+
+
 def selected_lanes(lane_arg: str) -> dict[str, str]:
+    lanes = configured_lanes()
     if lane_arg.lower() in {"all", "*"}:
-        return dict(LANES)
+        if not lanes:
+            raise ValueError("no app lanes configured in THOS_APP_LANE_IDS_JSON")
+        return dict(lanes)
     wanted = {part.strip() for part in lane_arg.split(",") if part.strip()}
-    unknown = wanted - set(LANES)
+    unknown = wanted - set(SUPPORTED_LANES)
     if unknown:
         raise ValueError(f"unknown lane(s): {', '.join(sorted(unknown))}")
-    return {name: LANES[name] for name in LANES if name in wanted}
+    missing = wanted - set(lanes)
+    if missing:
+        raise ValueError(f"configured lane id missing for: {', '.join(sorted(missing))}")
+    return {name: lanes[name] for name in SUPPORTED_LANES if name in wanted}
 
 
 def prompt_for(lane: str, phase_slug: str) -> str:
@@ -217,11 +237,16 @@ def prompt_for(lane: str, phase_slug: str) -> str:
     )
 
 
+def thread_id_digest(thread_id: str) -> str:
+    return hashlib.sha256(thread_id.encode("utf-8")).hexdigest()[:16]
+
+
 def lane_run(client: AppServerClient, lane: str, thread_id: str, args: argparse.Namespace) -> dict[str, Any]:
     started = time.monotonic()
     row: dict[str, Any] = {
         "lane": lane,
-        "thread_id": thread_id,
+        "thread_id_redacted": True,
+        "thread_id_digest": thread_id_digest(thread_id),
         "mode": "notify" if args.notify else "probe",
         "existing_thread_only": True,
         "new_thread_created": False,
