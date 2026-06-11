@@ -1,0 +1,65 @@
+{
+  "artifact_type": "v507_v2_x1_bounded_status_harvest",
+  "phase_slug": "v507-gmut-thos-v43-v2-x1",
+  "generated_utc": "2026-06-11T08:37:00+00:00",
+  "generated_nz": "2026-06-11T20:37:00+12:00",
+  "amended_utc": "2026-06-11T08:41:00+00:00",
+  "amended_nz": "2026-06-11T20:41:00+12:00",
+  "route": {
+    "retimed_from": "v508",
+    "active_boundary": "v507 v2 x1",
+    "expected_lanes": [
+      "Arby",
+      "Cicero"
+    ],
+    "x2_followup": "v507-gmut-thos-v43-v2-x2"
+  },
+  "lane_status": [
+    {
+      "lane": "Arby",
+      "lane_type": "codex_cli_read_only",
+      "route_status": "accepted_status_only",
+      "completion_receipt": "v507-gmut-thos-v43-v2-x1-arby-cli-lane-completion-notifier-v1.json",
+      "quality_receipt": "v507-gmut-thos-v43-v2-x1-arby-cli-elaboration-quality-gate-v1.json",
+      "marker_review_receipt": "v507-gmut-thos-v43-v2-x1-arby-cli-marker-review-ledger-v1.json",
+      "word_count": 5330,
+      "required_sections_present": true,
+      "strict_sensitive_or_path_marker_count": 0,
+      "generic_marker_review": "pass_false_positive_generic_marker_review",
+      "raw_output_published": false
+    },
+    {
+      "lane": "Cicero",
+      "lane_type": "codex_app_existing_callable_route",
+      "route_status": "completed_after_direct_retry",
+      "gate_receipt": "v507-gmut-thos-v43-v2-x1-cicero-council-app-lane-completion-gate-notify-v1.json",
+      "direct_retry_receipt": "v507-gmut-thos-v43-v2-x1-cicero-direct-app-lane-completion-retry-v1-v1.json",
+      "redaction_receipt": "v507-gmut-thos-v43-v2-x1-cicero-app-thread-redaction-guard-v1.json",
+      "direct_repair_gate": "v507-gmut-thos-v43-v2-x1-cicero-direct-repair-completion-gate-v1.json",
+      "prior_blocked_stage": "resume",
+      "completion_status": "completed",
+      "thread_id_redacted": true,
+      "raw_output_published": false
+    }
+  ],
+  "phase_advance_rule": {
+    "duration_is_completion_proof": false,
+    "all_expected_lanes_attempted": true,
+    "all_expected_lanes_complete": true,
+    "next_x2_allowed": true,
+    "next_x2_condition": "proceed_using_arby_cli_acceptance_and_cicero_direct_retry_completion_gate"
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "screenshots_published": false,
+    "credentials_published": false
+  },
+  "claim_boundary": {
+    "scope": "THOS route-state and build-prep status only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_or_consciousness_claim": "not_claimed"
+  }
+}

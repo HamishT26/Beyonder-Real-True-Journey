@@ -1,0 +1,74 @@
+{
+  "artifact_type": "app_lane_completion_notifier",
+  "generated_nz": "2026-06-11T20:27:34+12:00",
+  "generated_utc": "2026-06-11T08:27:34+00:00",
+  "phase_slug": "v507-gmut-thos-v43-v2-x1",
+  "overall_status": "OPEN_GAP_APP_LANE_WAIT",
+  "local_head_before_run": "0dc4072109103186be664a1cb697389bd453e4dc",
+  "remote_head_before_run": "0dc4072109103186be664a1cb697389bd453e4dc",
+  "drift_before_run": "0\t0",
+  "policy": {
+    "existing_threads_only": true,
+    "old_style_spawn_used": false,
+    "new_threads_created": false,
+    "read_only_sandbox_requested": true,
+    "approval_policy_requested": "never",
+    "unfiltered_transport_published": false,
+    "retry_attempts_per_operation": 2
+  },
+  "init": {
+    "status": "ok",
+    "attempt": 1,
+    "result_keys": [
+      "codexHome",
+      "platformFamily",
+      "platformOs",
+      "userAgent"
+    ]
+  },
+  "lanes": [
+    {
+      "lane": "Cicero",
+      "thread_id": "<redacted_app_thread_id>",
+      "mode": "notify",
+      "existing_thread_only": true,
+      "new_thread_created": false,
+      "unfiltered_transport_published": false,
+      "read": {
+        "status": "ok",
+        "attempt": 1,
+        "observed_methods": [
+          "remoteControl/status/changed"
+        ],
+        "result_keys": [
+          "thread"
+        ]
+      },
+      "resume": {
+        "status": "failed",
+        "attempt": null,
+        "failures": [
+          {
+            "attempt": 1,
+            "status": "timeout",
+            "message_class": "none",
+            "observed_methods": []
+          },
+          {
+            "attempt": 2,
+            "status": "timeout",
+            "message_class": "none",
+            "observed_methods": []
+          }
+        ]
+      },
+      "overall_status": "blocked_resume",
+      "duration_seconds": 43.766
+    }
+  ],
+  "claim_boundary": {
+    "scope": "THOS app-lane completion notification and coordination only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}

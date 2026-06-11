@@ -1,0 +1,94 @@
+{
+  "artifact_type": "ghc_multiplex_route_state_extension",
+  "phase": "v507-gmut-thos-v43-v2-x1-x2",
+  "generated_utc": "2026-06-11T08:45:00Z",
+  "extends": "v507-gmut-thos-v43-v1-x2-multiplex-route-state-extension-v1",
+  "route_state_contract": {
+    "states": [
+      "prepared",
+      "sent",
+      "generating",
+      "complete",
+      "blocker",
+      "synthesized"
+    ],
+    "transitions": [
+      {
+        "from": "prepared",
+        "to": "sent",
+        "evidence": "message send or launcher receipt"
+      },
+      {
+        "from": "sent",
+        "to": "generating",
+        "evidence": "generation active signal, background watcher, or bounded wait receipt"
+      },
+      {
+        "from": "generating",
+        "to": "complete",
+        "evidence": "completion marker, strict CLI quality pass, app completion gate, or explicit completion signal"
+      },
+      {
+        "from": "generating",
+        "to": "blocker",
+        "evidence": "bounded blocker receipt with retry path"
+      },
+      {
+        "from": "complete",
+        "to": "synthesized",
+        "evidence": "sanitized x2 synthesis or build-prep receipt"
+      },
+      {
+        "from": "blocker",
+        "to": "synthesized",
+        "evidence": "blocker retry, blocker repair, or blocker carryover synthesis receipt"
+      }
+    ]
+  },
+  "v507_v2_lanes": [
+    {
+      "lane": "Arby",
+      "surface": "codex_cli_read_only",
+      "state": "complete",
+      "evidence": "v507-gmut-thos-v43-v2-x1-arby-cli-elaboration-quality-gate-v1.json"
+    },
+    {
+      "lane": "Cicero",
+      "surface": "codex_app_existing_callable_route",
+      "state": "complete",
+      "evidence": "v507-gmut-thos-v43-v2-x1-cicero-direct-repair-completion-gate-v1.json",
+      "prior_state": "blocker",
+      "prior_evidence": "v507-gmut-thos-v43-v2-x1-cicero-council-app-lane-completion-gate-notify-v1.json"
+    }
+  ],
+  "required_route_receipt_fields": [
+    "phase",
+    "lane",
+    "surface",
+    "state",
+    "generated_utc",
+    "marker_expected",
+    "marker_observed",
+    "raw_boundary",
+    "next_action"
+  ],
+  "forbidden_publication_fields": [
+    "raw response body",
+    "raw transcript body",
+    "credential material",
+    "browser hidden state",
+    "screenshot payload",
+    "session stream payload"
+  ],
+  "phase_advance_policy": {
+    "retry_blockers_before_next_phase": true,
+    "duration_is_completion_proof": false,
+    "x2_allowed_after_retry_success": true,
+    "next_phase_allowed_without_all_expected_lanes": false
+  },
+  "daemon_started": false,
+  "mutation_performed": false,
+  "raw_transcript_published": false,
+  "credentials_published": false,
+  "gmut_gate_state": "all_gmut_gates_remain_open"
+}
