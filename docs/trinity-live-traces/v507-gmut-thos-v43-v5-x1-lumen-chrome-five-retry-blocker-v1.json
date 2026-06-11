@@ -1,0 +1,85 @@
+{
+  "artifact_type": "live_adapter_chrome_five_retry_blocker",
+  "phase_slug": "v507-gmut-thos-v43-v5-x1",
+  "generated_utc": "2026-06-11T11:48:58Z",
+  "overall_status": "BLOCKED_CHROME_EXTENSION_COMMUNICATION_DROPPED_AFTER_SEND_ATTEMPT",
+  "route": {
+    "lane": "Lumen Vale",
+    "surface": "Chrome live-adapter route",
+    "existing_panel_only": true,
+    "new_thread_created": false,
+    "chatgpt_sibling_policy": "Lumen Vale only for ChatGPT-side lanes until Solas and unnamed sibling are re-approved for active use"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "surface": "Chrome extension handshake and Lumen tab claim",
+      "status": "CONNECTED",
+      "sanitized_result": "The open Lumen panel was reachable and the composer was visible before the send attempt."
+    },
+    {
+      "attempt": 2,
+      "surface": "Chrome Lumen prompt send action",
+      "status": "INTERRUPTED_BEFORE_COMPLETION_PROOF",
+      "sanitized_result": "The send action exceeded the control timeout before Aletheon could verify whether the prompt was submitted or whether Lumen produced the required marker."
+    },
+    {
+      "attempt": 3,
+      "surface": "Chrome extension reconnect retry",
+      "status": "BLOCKED",
+      "sanitized_result": "Chrome extension communication was unavailable during reconnect retry 1."
+    },
+    {
+      "attempt": 4,
+      "surface": "Chrome extension reconnect retry",
+      "status": "BLOCKED",
+      "sanitized_result": "Chrome extension communication was unavailable during reconnect retry 2."
+    },
+    {
+      "attempt": 5,
+      "surface": "Chrome extension reconnect retry",
+      "status": "BLOCKED",
+      "sanitized_result": "Chrome extension communication was unavailable during reconnect retry 3."
+    }
+  ],
+  "sanitized_readiness_checks": {
+    "chrome_running": true,
+    "chrome_installed": true,
+    "selected_profile_extension_installed": true,
+    "selected_profile_extension_enabled": true,
+    "native_host_manifest_correct": true,
+    "raw_paths_published": false
+  },
+  "evidence_state": {
+    "message_transmission_verified": false,
+    "lumen_completion_marker_observed": false,
+    "required_marker": "LUMEN_V507_V5_X1_SYNTHESIS_COMPLETE",
+    "duration_is_completion_proof": false,
+    "phase_advance_allowed": false
+  },
+  "phase_advance_rule": {
+    "next_phase_allowed": false,
+    "reason": "Aletheon cannot verify that the Lumen prompt was transmitted or that the required Lumen marker exists after Chrome extension communication dropped.",
+    "required_before_advance": [
+      "Hamish confirms the Lumen marker is visible in Chrome and Aletheon can safely record a status-only completion receipt",
+      "or Chrome extension communication reconnects and Aletheon verifies the existing Lumen panel directly",
+      "or Hamish explicitly approves a different v507 v5 blocker-handling path"
+    ]
+  },
+  "publication_boundary": {
+    "prompt_body_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "session_streams_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "scope": "v507 v5 Lumen Chrome live-adapter blocker only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "empirical_closure": "not_claimed",
+    "consciousness_proof": "not_claimed"
+  }
+}
