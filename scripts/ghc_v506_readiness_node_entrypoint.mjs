@@ -147,7 +147,7 @@ const receipt = {
     "Use Node entrypoint receipts for phase-start state instead of broad recursive shell scans.",
     "Treat Codex session history as backup-first only.",
     "Treat Codex temporary staging cleanup as exact-candidate and backup-first only.",
-    "Keep Browser-first ChatGPT panel work gated to v508+ or explicit immediate user request.",
+    "Keep Browser-first ChatGPT panel work gated to the approved v507 live-adapter boundary or explicit immediate user request.",
   ],
 };
 
