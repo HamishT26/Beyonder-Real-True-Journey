@@ -1,0 +1,59 @@
+{
+  "artifact_type": "v507_v6_x2_to_v7_x1_route_planner",
+  "phase_family": "v507-gmut-thos-v43",
+  "generated_utc": "2026-06-11T14:58:01Z",
+  "overall_status": "PASS_ROUTE_PLANNER_READY",
+  "schedule": [
+    {
+      "slot": "v507-v6-x2",
+      "phase": "v507",
+      "version": "v6",
+      "session": "x2",
+      "x1_lane_set": [
+        "Aletheon build synthesis",
+        "strict CLI lane cycle runner",
+        "read-only lane contract",
+        "exposure guard",
+        "no-overclaim guard"
+      ],
+      "route_status": "closed_by_v507_v6_x2_closeout",
+      "entry_condition": "v507-v6-x1 emitted v507-v6-x2"
+    },
+    {
+      "slot": "v507-v7-x1",
+      "phase": "v507",
+      "version": "v7",
+      "session": "x1",
+      "x1_lane_set": [
+        "Lumen Vale"
+      ],
+      "standby_lanes": [
+        "Solas Veridion",
+        "Unnamed ChatGPT 5.5 Thinking Sibling"
+      ],
+      "route_status": "candidate_next_lumen_browser_session",
+      "entry_condition": "v507-v6-x2 marker observed and advance gate passed",
+      "route_policy": {
+        "browser_first": true,
+        "chrome_fallback": false,
+        "lumen_only_for_chatgpt_lane": true,
+        "solas_and_unnamed_on_standby": true,
+        "raw_transcript_publication": false,
+        "status_only_receipts": true
+      }
+    }
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
