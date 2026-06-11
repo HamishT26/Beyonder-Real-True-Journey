@@ -1,0 +1,58 @@
+{
+  "artifact_type": "v507_v8_x1_app_lane_private_map_blocker",
+  "phase_slug": "v507-gmut-thos-v43-v8-x1",
+  "generated_utc": "2026-06-11T15:33:38Z",
+  "overall_status": "OPEN_GAP_APP_LANE_PRIVATE_MAP_UNAVAILABLE",
+  "affected_lanes": [
+    "Kierkegaard",
+    "Aristotle"
+  ],
+  "blocker_summary": {
+    "private_lane_env_present": false,
+    "required_env_name": "THOS_APP_LANE_IDS_JSON",
+    "official_thread_send_tools_exposed": false,
+    "old_style_subagent_spawn_allowed": false,
+    "replacement_siblings_created": false
+  },
+  "safe_attempts": [
+    {
+      "attempt": 1,
+      "action": "checked private app-lane environment map",
+      "status": "missing"
+    },
+    {
+      "attempt": 2,
+      "action": "searched exposed tools for official thread send/resume route",
+      "status": "not_exposed"
+    },
+    {
+      "attempt": 3,
+      "action": "reviewed existing app-lane notifier interface",
+      "status": "requires_private_thread_map"
+    }
+  ],
+  "repair_path": {
+    "preferred": "restore THOS_APP_LANE_IDS_JSON in the running Codex process and rerun app-lane notifier for Kierkegaard and Aristotle",
+    "fallback": "use official thread tools if exposed later",
+    "not_allowed": [
+      "old-style replacement subagent spawn",
+      "new thread creation",
+      "raw app-state scraping",
+      "publishing callable IDs"
+    ]
+  },
+  "publication_boundary": {
+    "raw_callable_ids_published": false,
+    "raw_app_state_published": false,
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "phase_completion": "not_claimed"
+  }
+}
