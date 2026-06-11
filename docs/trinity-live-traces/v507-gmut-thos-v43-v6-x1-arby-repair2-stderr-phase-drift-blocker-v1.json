@@ -1,0 +1,41 @@
+{
+  "artifact_type": "cli_repair_stderr_phase_drift_blocker",
+  "phase_slug": "v507-gmut-thos-v43-v6-x1",
+  "generated_utc": "2026-06-11T14:31:00Z",
+  "overall_status": "OPEN_GAP_REPAIR2_STDERR_PHASE_DRIFT",
+  "lane": "Arby",
+  "repair_attempt": "repair2",
+  "observed_status": {
+    "process_stopped": true,
+    "expected_last_message_file_ready": false,
+    "stdout_bytes": 0,
+    "stderr_bytes_recorded": 2534134,
+    "stderr_stream_stopped_growing": true,
+    "raw_stderr_published": false
+  },
+  "quality_classification": {
+    "required_v507_headings_present_in_stream": false,
+    "phase_drift_observed": true,
+    "valid_v507_elaboration_repair": false,
+    "reason": "The temp-only stderr stream contained older advisory material and no required v507 v6 x1 heading set, while the expected last-message file remained empty."
+  },
+  "next_retry_decision": {
+    "use_strict_stdin_launcher": true,
+    "keep_read_only_authorization": true,
+    "disable_plugins_for_retry": true,
+    "publish_status_only": true
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "raw_stderr_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "scope": "repair2 blocker classification only",
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
