@@ -1,0 +1,67 @@
+{
+  "artifact_type": "current_source_repair_ledger",
+  "phase_slug": "v507-gmut-thos-v43-v5-x1",
+  "generated_utc": "2026-06-11T10:01:06Z",
+  "status": "PREPARED_FOR_LUMEN_ROUTE_REPAIR_WITHOUT_PHASE_ADVANCE",
+  "sources": [
+    {
+      "source_id": "openai_codex_changelog_2026_06_09",
+      "title": "Codex changelog - OpenAI Developers",
+      "url": "https://developers.openai.com/codex/changelog",
+      "relevance": [
+        "Codex app 26.608 plugin/settings UI changes help explain where Chrome plugin setup should be checked by the user.",
+        "Codex CLI 0.139.0 web search, MCP schema, doctor-report, plugin-marketplace, resume/fork, MCP warning, and sandbox fixes map directly to safer v507-v515 route diagnostics."
+      ]
+    },
+    {
+      "source_id": "openai_codex_github_release_0_139_0",
+      "title": "OpenAI Codex GitHub release 0.139.0",
+      "url": "https://github.com/openai/codex/releases",
+      "relevance": [
+        "Confirms 0.139.0 as the latest stable release in the checked release list while 0.140.0-alpha.4 is a pre-release.",
+        "Confirms web search, MCP schema preservation, doctor report, plugin marketplace, resume/fork, MCP startup, image path, URL linkification, and sandbox execution improvements."
+      ]
+    },
+    {
+      "source_id": "openai_codex_chrome_extension_docs",
+      "title": "Codex Chrome extension - OpenAI Developers",
+      "url": "https://developers.openai.com/codex/app/chrome-extension",
+      "relevance": [
+        "Confirms Chrome is for signed-in browser state while in-app Browser is preferred for pages that do not need Chrome profile state.",
+        "Confirms setup requires the Chrome plugin, Codex Chrome Extension install, permission prompts, and Connected status.",
+        "Confirms troubleshooting steps: ensure Chrome profile with extension installed/enabled, Chrome plugin on, restart/new thread if needed, and re-add plugin if native host or connection remains broken."
+      ]
+    }
+  ],
+  "local_blocker_mapping": {
+    "browser_input_blocker": {
+      "observed": true,
+      "safe_next_action": "retry Browser only if input capability becomes available; do not claim sent state until marker or send receipt exists"
+    },
+    "chrome_fallback_blocker": {
+      "observed": true,
+      "local_status": {
+        "chrome_installed": true,
+        "chrome_running": false,
+        "selected_profile_extension_installed": false,
+        "selected_profile_extension_enabled": false,
+        "native_host_manifest_correct": true
+      },
+      "source_aligned_next_action": "Hamish opens Chrome in the intended profile, ensures Codex Chrome Extension is installed/enabled and Connected, then Aletheon retries the existing Lumen panel"
+    }
+  },
+  "repair_constraints": {
+    "ask_before_launching_chrome": true,
+    "no_extension_install_by_agent": true,
+    "no_cookie_or_profile_secret_inspection": true,
+    "no_new_chatgpt_thread": true,
+    "no_phase_advance_without_lumen_marker_or_explicit_user_redirect": true
+  },
+  "publication_boundary": {
+    "raw_browser_errors_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}
