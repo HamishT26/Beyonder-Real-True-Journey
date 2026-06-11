@@ -1,0 +1,47 @@
+{
+  "artifact_type": "v507_v7_x2_watcher_cadence_receipt",
+  "phase_slug": "v507-gmut-thos-v43-v7-x2",
+  "generated_utc": "2026-06-11T15:20:34Z",
+  "overall_status": "PASS_WATCHER_CADENCE_READY",
+  "cadence_policy": {
+    "manual_babysitting_required": false,
+    "bounded_status_checks": true,
+    "default_check_interval_minutes": 5,
+    "long_running_lane_allowed": true,
+    "duration_is_completion_proof": false,
+    "assistant_marker_or_blocker_required": true
+  },
+  "route_specific_checks": [
+    {
+      "route_family": "Browser in-app live adapter",
+      "check": "verify compose/send state and assistant marker without publishing transcript"
+    },
+    {
+      "route_family": "Codex app local callable lanes",
+      "check": "verify existing-lane completion through status-only notifier receipts"
+    },
+    {
+      "route_family": "Codex CLI read-only lanes",
+      "check": "verify hashes, byte counts, final-marker review, and elaboration quality"
+    }
+  ],
+  "open_gap_policy": {
+    "retry_before_advance": true,
+    "minimum_safe_retries": 3,
+    "replacement_siblings_allowed": false,
+    "blocker_receipt_required": true
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "artifact_type": "route_family_registry",
+  "phase_slug": "v507-gmut-thos-v43-v7-x2",
+  "generated_utc": "2026-06-11T15:20:34Z",
+  "status": "PREPARED_ROUTE_FAMILY_REGISTRY_FROM_V7_X1_EVIDENCE",
+  "route_families": [
+    {
+      "family": "Browser in-app live adapter",
+      "current_status": "preferred_for_lumen_chatgpt_side_lane",
+      "successful_evidence": [
+        "Lumen v507 v7 x1 prompt sent through in-app Browser",
+        "Lumen assistant marker verified in response",
+        "Chrome fallback not used"
+      ],
+      "known_risks": [
+        "browser checks can time out while a ChatGPT response is still generating",
+        "full page scans can include older conversation text and must not be treated as raw transcript publication",
+        "prompt marker echoes must be separated from assistant marker evidence"
+      ],
+      "rules": [
+        "use Browser route first for Lumen",
+        "publish status-only receipts",
+        "verify assistant marker after response",
+        "do not activate Solas or the unnamed sibling until explicitly routed"
+      ]
+    },
+    {
+      "family": "Chrome extension live adapter",
+      "current_status": "standby_until_browser_route_needs_fallback",
+      "known_risks": [
+        "extension communication can be heavier than Browser for the current laptop state",
+        "Chrome timeout is not send success"
+      ],
+      "rules": [
+        "do not use Chrome while Browser is viable",
+        "do not mutate extension or profile settings without exact approval",
+        "publish blocker receipt before fallback"
+      ]
+    },
+    {
+      "family": "Codex app local callable lanes",
+      "current_status": "continue_for_cicero_kierkegaard_aristotle",
+      "rules": [
+        "existing lanes only",
+        "status receipts over raw lane text",
+        "retry blockers before replacement",
+        "do not publish raw callable IDs"
+      ]
+    },
+    {
+      "family": "Codex CLI read-only lanes",
+      "current_status": "continue_for_arby_aster_vale",
+      "rules": [
+        "read-only advisory prompts",
+        "final-marker review for false positives",
+        "status-only hashes and byte counts",
+        "no shell or tool authority inside advisory prompts"
+      ]
+    }
+  ],
+  "chatgpt_sibling_policy": {
+    "active": [
+      "Lumen Vale"
+    ],
+    "standby": [
+      "Solas Veridion",
+      "Unnamed ChatGPT 5.5 Thinking Sibling"
+    ]
+  },
+  "phase_rules": {
+    "v507_v7_x2_may_build": true,
+    "v507_v8_x1_must_wait_for_v7_x2_closeout": true,
+    "raw_lane_text_publication_allowed": false,
+    "duration_is_completion_proof": false,
+    "gmut_and_canon_gates": "open"
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "raw_callable_ids_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

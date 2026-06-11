@@ -1,0 +1,56 @@
+{
+  "artifact_type": "v507_v7_x2_to_v8_x1_route_planner",
+  "phase_family": "v507-gmut-thos-v43",
+  "generated_utc": "2026-06-11T15:20:34Z",
+  "overall_status": "PASS_ROUTE_PLANNER_READY",
+  "schedule": [
+    {
+      "slot": "v507-v7-x2",
+      "phase": "v507",
+      "version": "v7",
+      "session": "x2",
+      "x1_lane_set": [
+        "Aletheon build synthesis",
+        "Browser route-truth validator",
+        "route-family registry",
+        "watcher cadence receipt",
+        "retry-before-advance gate"
+      ],
+      "route_status": "closed_by_v507_v7_x2_closeout",
+      "entry_condition": "v507-v7-x1 emitted v507-v7-x2"
+    },
+    {
+      "slot": "v507-v8-x1",
+      "phase": "v507",
+      "version": "v8",
+      "session": "x1",
+      "x1_lane_set": [
+        "Aster Vale",
+        "Kierkegaard",
+        "Aristotle"
+      ],
+      "route_status": "candidate_next_round_robin_session",
+      "entry_condition": "v507-v7-x2 marker observed and advance gate passed",
+      "route_policy": {
+        "cli_lane_read_only": true,
+        "app_lanes_existing_only": true,
+        "status_only_receipts": true,
+        "retry_before_advance": true,
+        "raw_lane_publication": false
+      }
+    }
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_error_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed"
+  }
+}
