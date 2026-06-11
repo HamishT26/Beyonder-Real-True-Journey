@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "artifact": "v507-gmut-thos-v43-v8-x2-to-v508-read-only-lane-authorization-v1",
+  "phase": "v507-gmut-thos-v43-v8-x2-to-v508",
+  "created_at": "2026-06-12T04:40:57+12:00",
+  "purpose": "Record Hamish's read-only authorization for existing sibling lanes while preserving open phase guardrails.",
+  "user_authorization_summary": {
+    "authorization_type": "read_only_existing_lane_permission",
+    "applies_to_existing_lanes_only": true,
+    "authorized_lanes": [
+      "Arby",
+      "Aster Vale",
+      "Cicero",
+      "Kierkegaard",
+      "Aristotle",
+      "Lumen Vale"
+    ],
+    "authorization_note": "Existing sibling lanes may continue in read-only advisory mode. This does not approve new sibling creation, replacement lanes, old-style subagent spawning, raw transcript publication, external account mutation, or private identifier publication."
+  },
+  "read_only_lane_contract": {
+    "allowed": [
+      "status-only advisory prompts",
+      "bounded read-only inspections needed for the active phase",
+      "sanitized completion or blocker receipts",
+      "route health checks that do not reveal private callable identifiers",
+      "phase planning, reflection, and handoff synthesis"
+    ],
+    "not_allowed": [
+      "new thread or replacement sibling creation",
+      "old-style subagent spawning",
+      "external account changes",
+      "raw lane text publication",
+      "private thread or callable identifier publication",
+      "session stream publication",
+      "credential, screenshot, or local private dump publication",
+      "destructive cleanup"
+    ],
+    "repo_publication_boundary": "Only curated status receipts, ledgers, validators, and planning artifacts may be committed after validation and exact staging."
+  },
+  "current_phase_state": {
+    "v507_v8_x1_state": "open",
+    "v507_v8_x2_state": "held_prep_only",
+    "completed_or_observed_lanes": [
+      "Aster Vale",
+      "Lumen Vale"
+    ],
+    "open_lanes": [
+      "Kierkegaard",
+      "Aristotle"
+    ],
+    "known_open_blocker_summary": "App-lane private map remains unavailable through exposed safe surfaces; existing route discovery is insufficient for the open app lanes.",
+    "advance_rule": "Do not move into the next phase boundary from v507 v8 until required lane evidence is recovered or Hamish approves an explicit blocker-boundary override."
+  },
+  "claim_boundary": {
+    "gmut_empirical_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "phase_completion": "not_claimed",
+    "browser_route_success_equals_local_app_success": false,
+    "duration_equals_completion_proof": false
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_callable_ids_published": false,
+    "raw_thread_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  }
+}

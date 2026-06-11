@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "artifact": "v507-gmut-thos-v43-v8-x2-to-v508-source-refresh-ledger-v1",
+  "phase": "v507-gmut-thos-v43-v8-x2-to-v508",
+  "created_at": "2026-06-12T04:40:57+12:00",
+  "purpose": "Capture current-source guidance for the held v507 v8 x2 preparation layer and the v508 live-adapter recovery plan.",
+  "source_refresh": [
+    {
+      "source": "OpenAI Codex changelog",
+      "url": "https://developers.openai.com/codex/changelog",
+      "relevance": "Codex app and CLI release notes inform Windows attachment handling, inline skills/plugins, queued prompt visibility, and CLI 0.139.0 upgrade posture.",
+      "operational_takeaway": "Use updated Codex surfaces for status-only diagnostics, but keep exact validation and publication gates unchanged."
+    },
+    {
+      "source": "OpenAI Codex GitHub releases",
+      "url": "https://github.com/openai/codex/releases",
+      "relevance": "CLI 0.139.0 notes mention direct code-mode web search, richer schema preservation, doctor redaction, and sandbox behavior improvements.",
+      "operational_takeaway": "Treat direct web search and richer tool schemas as useful for phase research and MCP compatibility, not as proof that blocked private app lanes are recovered."
+    },
+    {
+      "source": "Model Context Protocol specification",
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18",
+      "relevance": "MCP standardizes tool and context integration through explicit protocol surfaces.",
+      "operational_takeaway": "Use exposed tool schemas and route metadata as the authority; do not infer hidden callable IDs or force private route discovery."
+    },
+    {
+      "source": "Model Context Protocol tools specification",
+      "url": "https://modelcontextprotocol.io/specification/draft/server/tools",
+      "relevance": "Tool exposure depends on named tools and schemas, with external-system actions mediated by explicit tool boundaries.",
+      "operational_takeaway": "Only call sibling lanes through exposed safe tools; if a send or wait surface is absent, publish a blocker receipt instead of creating replacements."
+    },
+    {
+      "source": "OWASP Agentic AI Threats and Mitigations",
+      "url": "https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/",
+      "relevance": "Agentic systems require threat-model-aware least privilege, access control, monitoring, and safe operational boundaries.",
+      "operational_takeaway": "Keep sibling permissions read-only by default, avoid raw private-data publication, and preserve human approval for higher-risk repair or mutation."
+    },
+    {
+      "source": "NVIDIA DGX Spark official product page",
+      "url": "https://www.nvidia.com/en-us/products/workstations/dgx-spark/",
+      "relevance": "Local agent development benefits from high-memory local AI workstations and a migration path from local prototype to accelerated infrastructure.",
+      "operational_takeaway": "Use local-first and status-only patterns as design inspiration, but do not claim the current laptop has DGX-class capability."
+    },
+    {
+      "source": "Google Cloud Gemini Enterprise Agent Platform",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform",
+      "relevance": "Enterprise agent platforms emphasize building, scaling, governing, and optimizing agents grounded in enterprise data.",
+      "operational_takeaway": "Map THOS future architecture toward governance, observability, route identity, and managed lifecycle records."
+    },
+    {
+      "source": "Google Cloud Agent Development Kit",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/adk",
+      "relevance": "ADK is positioned for building, debugging, and deploying reliable agents and multi-agent systems.",
+      "operational_takeaway": "Use ADK-style lifecycle ideas to shape future runner design, while keeping current repo actions bounded to approved local artifacts."
+    },
+    {
+      "source": "Google Cloud Agent Platform scale guidance",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale",
+      "relevance": "Production agent scaling requires testing, release management, reliability, and continuous improvement.",
+      "operational_takeaway": "Carry forward phase gates, retry receipts, watcher cadence, and exact publication checks as reliability primitives."
+    }
+  ],
+  "synthesis": {
+    "primary_design_rule": "Existing route exposure is the source of truth; read-only approval does not bypass route availability or publication guards.",
+    "security_rule": "Least privilege remains the default for all sibling lanes and helpers.",
+    "phase_rule": "v507 v8 x2 may continue as preparation-only while app-lane recovery remains open.",
+    "research_rule": "Current-source research should refine runner design, not inflate claims."
+  },
+  "publication_boundary": {
+    "raw_source_dumps_published": false,
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "gmut_empirical_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "phase_completion": "not_claimed",
+    "source_refresh_completes_blocked_lanes": false
+  }
+}
