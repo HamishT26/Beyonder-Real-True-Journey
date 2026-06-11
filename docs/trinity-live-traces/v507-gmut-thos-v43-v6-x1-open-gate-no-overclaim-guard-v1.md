@@ -1,7 +1,7 @@
 # v507-gmut-thos-v43-v6-x1-open-gate-publication No-Overclaim Guard
 
 - Status: `PASS_NO_OVERCLAIM_GUARD`
-- Checked files: `30`
+- Checked files: `40`
 - Blocker hits: `0`
 - Guarded or negated mentions: `0`
 - Mutation performed: `false`
