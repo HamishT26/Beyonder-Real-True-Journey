@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "artifact": "v507-gmut-thos-v43-v8-x2-route-recovery-workbench-v1",
+  "phase": "v507-gmut-thos-v43-v8-x2",
+  "created_at": "2026-06-12T04:57:31+12:00",
+  "purpose": "Convert the current v507 v8 app-lane blocker into a practical, bounded recovery workbench for v507 v8 x2 and v508 preparation.",
+  "evidence_inputs": [
+    "v507-gmut-thos-v43-v8-x1-round-robin-open-status-r4-v1.json",
+    "v507-gmut-thos-v43-v8-x1-phase-advance-guard-v1.json",
+    "v507-gmut-thos-v43-v8-x2-app-lane-private-map-preflight-v1.json",
+    "v507-gmut-thos-v43-v8-x2-app-server-capability-probe-v1.json",
+    "v507-gmut-thos-v43-v8-x2-lumen-browser-send-receipt-v1.json"
+  ],
+  "proven_state": {
+    "head_state": "v507 v8 x1 open; v507 v8 x2 held as preparation-only",
+    "lumen_v507_v8_x2_prompt_sent": true,
+    "private_app_lane_map_present": false,
+    "app_server_safe_discovery_surface_exposed": false,
+    "thread_read_requires_private_id": true,
+    "node_entrypoint_fallback_available_for_probe": true
+  },
+  "open_gaps": [
+    {
+      "gap": "Kierkegaard existing app lane",
+      "status": "OPEN_GAP_PRIVATE_MAP_OR_OFFICIAL_THREAD_TOOL_REQUIRED",
+      "safe_next_action": "Restore private app-lane map in-process or wait for official thread send tooling; do not infer hidden IDs."
+    },
+    {
+      "gap": "Aristotle existing app lane",
+      "status": "OPEN_GAP_PRIVATE_MAP_OR_OFFICIAL_THREAD_TOOL_REQUIRED",
+      "safe_next_action": "Restore private app-lane map in-process or wait for official thread send tooling; do not create replacement lane."
+    },
+    {
+      "gap": "v507 to v508 phase advance",
+      "status": "BLOCKED_BY_REQUIRED_LANE_EVIDENCE",
+      "safe_next_action": "Continue preparation, recovery design, and approval drafting until lane evidence is recovered or user approves explicit blocker-boundary override."
+    }
+  ],
+  "recovery_ladder": [
+    {
+      "step": 1,
+      "name": "Browser Lumen wait cycle",
+      "action": "Check for LUMEN_V507_V8_X2_ADVISORY_COMPLETE after a useful interval and record only marker status.",
+      "mutation_required": false
+    },
+    {
+      "step": 2,
+      "name": "Private-map preflight retry",
+      "action": "Rerun private-map preflight if the running environment changes or user supplies a safe in-process route restoration.",
+      "mutation_required": false
+    },
+    {
+      "step": 3,
+      "name": "Official thread-tool discovery",
+      "action": "Retry tool discovery for official Codex thread send/list/read surfaces; use them only if exposed.",
+      "mutation_required": false
+    },
+    {
+      "step": 4,
+      "name": "App-server shape probe",
+      "action": "Rerun app-server method-shape probe after Codex app/CLI updates or route changes, publishing only redacted shapes.",
+      "mutation_required": false
+    },
+    {
+      "step": 5,
+      "name": "Explicit override packet",
+      "action": "If the app lanes remain unavailable but Hamish wants the phase train to move, draft a blocker-boundary override packet that preserves open-lane status.",
+      "mutation_required": false
+    }
+  ],
+  "x2_build_candidates": [
+    "Implement a route-family status board that separates Browser, CLI, app-server, and official thread tools.",
+    "Add a no-replacement-sibling validator for phase closeout ledgers.",
+    "Add a phase-advance guard input normalizer for partial boards.",
+    "Create a redacted Lumen marker observer receipt template.",
+    "Create a five-minute check cadence ledger with no busy-waiting.",
+    "Create a ten-minute x2 preparation timer ledger that can run while sibling lanes work.",
+    "Extend app-server probe method catalog with only redacted shape outputs.",
+    "Add a safe override packet template for blocked app-lane advancement.",
+    "Add source-backed runner design notes for Browser and MCP schema compatibility.",
+    "Add exact-staging checklist reuse for v508-v515 phase packets.",
+    "Create a route-specific completion vocabulary so Browser success is never mistaken for app-lane success.",
+    "Create a compact-refresh card generator for phase starts and goal continuations."
+  ],
+  "forbidden_shortcuts": [
+    "Publish raw Lumen or app-lane transcript text",
+    "Publish private thread IDs or callable IDs",
+    "Create replacement Kierkegaard or Aristotle lanes",
+    "Use old-style subagent spawning as a repair",
+    "Claim v507 v8 completion without required lane evidence",
+    "Treat elapsed time or advisory intent as completion proof"
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_app_server_result_published": false,
+    "raw_app_server_error_published": false,
+    "raw_callable_ids_published": false,
+    "raw_thread_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}

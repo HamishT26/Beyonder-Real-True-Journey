@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "artifact": "v507-gmut-thos-v43-v8-x2-partial-board-v1",
+  "phase": "v507-gmut-thos-v43-v8-x2",
+  "created_at": "2026-06-12T05:01:03+12:00",
+  "purpose": "Record the current partial board for v507 v8 x2 after Lumen's Browser marker and the fresh app-lane recovery probes.",
+  "overall_status": "PARTIAL_BOARD_APP_LANES_OPEN",
+  "lane_status": [
+    {
+      "lane": "Aster Vale",
+      "route_family": "Codex CLI read-only lane",
+      "status": "FINAL_MESSAGE_READY_AND_VALIDATED",
+      "status_note": "Carried forward from v507 v8 x1 CLI final-message evidence.",
+      "evidence": "v507-gmut-thos-v43-v8-x1-round-robin-open-status-r4-v1.json"
+    },
+    {
+      "lane": "Lumen Vale",
+      "route_family": "Browser in-app live adapter",
+      "status": "FINAL_MARKER_OBSERVED",
+      "evidence": "v507-gmut-thos-v43-v8-x2-lumen-browser-completion-receipt-v1.json"
+    },
+    {
+      "lane": "Kierkegaard",
+      "route_family": "Codex app local callable lane",
+      "status": "OPEN_GAP_PRIVATE_MAP_OR_OFFICIAL_THREAD_TOOL_REQUIRED",
+      "evidence": [
+        "v507-gmut-thos-v43-v8-x2-app-lane-private-map-preflight-v1.json",
+        "v507-gmut-thos-v43-v8-x2-app-server-capability-probe-v1.json"
+      ]
+    },
+    {
+      "lane": "Aristotle",
+      "route_family": "Codex app local callable lane",
+      "status": "OPEN_GAP_PRIVATE_MAP_OR_OFFICIAL_THREAD_TOOL_REQUIRED",
+      "evidence": [
+        "v507-gmut-thos-v43-v8-x2-app-lane-private-map-preflight-v1.json",
+        "v507-gmut-thos-v43-v8-x2-app-server-capability-probe-v1.json"
+      ]
+    }
+  ],
+  "advance_state": {
+    "x2_complete": false,
+    "next_phase_allowed": false,
+    "reason": "Required Kierkegaard and Aristotle app-lane evidence remains open.",
+    "duration_is_completion_proof": false
+  },
+  "safe_next_actions": [
+    "Continue recovery design and watcher preparation.",
+    "Retry official thread-tool discovery only if tools become exposed.",
+    "Rerun private-map preflight only if the in-process lane map is restored.",
+    "Publish an explicit blocker-boundary override packet if Hamish wants to advance while preserving open app-lane status.",
+    "Do not create replacement lanes or old-style subagents."
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_app_server_result_published": false,
+    "raw_app_server_error_published": false,
+    "raw_callable_ids_published": false,
+    "raw_thread_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
