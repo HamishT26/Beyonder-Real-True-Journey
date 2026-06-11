@@ -1,0 +1,182 @@
+{
+  "artifact_type": "ghc_identity_consent_guardrail_card",
+  "generated_utc": "2026-06-11T18:44:54Z",
+  "phase_slug": "v508-gmut-thos-v44-v1-x1",
+  "read_only_authorization_input": "docs\\trinity-live-traces\\v508-gmut-thos-v44-v1-x1-read-only-lane-authorization-intake-v1.json",
+  "carry_gate_input": "docs\\trinity-live-traces\\v508-gmut-thos-v44-v1-x1-approval-carry-readiness-gate-v1.json",
+  "source_ledger_input": "docs\\trinity-live-traces\\v508-gmut-thos-v44-v1-x1-current-source-reflection-ledger-v1.json",
+  "runner_ledger_input": "docs\\trinity-live-traces\\v508-gmut-thos-v44-v1-x1-runner-compatibility-ledger-v1.json",
+  "status": "IDENTITY_CONSENT_GUARDRAILS_READY_FOR_LIMITED_X1_PREPARATION",
+  "limited_x1_preparation_allowed": true,
+  "full_phase_start_allowed": false,
+  "x2_build_closeout_allowed": false,
+  "lane_count": 6,
+  "open_lane_count": 2,
+  "current_runner_count": 12,
+  "route_recovery_runner_count": 11,
+  "source_count_this_batch": 10,
+  "lane_guardrails": [
+    {
+      "lane": "Lumen Vale",
+      "route_family": "Browser in-app live adapter",
+      "identity_status": "existing_named_lane_only",
+      "consent_status": "AUTHORIZED_READ_ONLY_ONLY",
+      "allowed_mode": "read-only message and status receipt",
+      "evidence_state": "FINAL_MARKER_OBSERVED",
+      "completion_state": "current_evidence_complete",
+      "closeout_use_allowed": true,
+      "retry_allowed": true,
+      "blocker_receipt_required_if_unreachable": true,
+      "replacement_allowed": false,
+      "raw_text_publication_allowed": false,
+      "private_identifier_publication_allowed": false
+    },
+    {
+      "lane": "Arby",
+      "route_family": "Codex CLI read-only lane",
+      "identity_status": "existing_named_lane_only",
+      "consent_status": "AUTHORIZED_READ_ONLY_ONLY",
+      "allowed_mode": "read-only advisory prompt with no shell and no tools",
+      "evidence_state": "PENDING_CURRENT_EVIDENCE_REFRESH",
+      "completion_state": "needs_current_refresh",
+      "closeout_use_allowed": false,
+      "retry_allowed": true,
+      "blocker_receipt_required_if_unreachable": true,
+      "replacement_allowed": false,
+      "raw_text_publication_allowed": false,
+      "private_identifier_publication_allowed": false
+    },
+    {
+      "lane": "Aster Vale",
+      "route_family": "Codex CLI read-only lane",
+      "identity_status": "existing_named_lane_only",
+      "consent_status": "AUTHORIZED_READ_ONLY_ONLY",
+      "allowed_mode": "read-only advisory prompt with no shell and no tools",
+      "evidence_state": "FINAL_MESSAGE_READY_AND_VALIDATED",
+      "completion_state": "current_evidence_complete",
+      "closeout_use_allowed": true,
+      "retry_allowed": true,
+      "blocker_receipt_required_if_unreachable": true,
+      "replacement_allowed": false,
+      "raw_text_publication_allowed": false,
+      "private_identifier_publication_allowed": false
+    },
+    {
+      "lane": "Cicero",
+      "route_family": "Codex app local callable lane",
+      "identity_status": "existing_named_lane_only",
+      "consent_status": "AUTHORIZED_READ_ONLY_ONLY",
+      "allowed_mode": "read-only advisory message through existing callable route only",
+      "evidence_state": "PENDING_CURRENT_EVIDENCE_REFRESH",
+      "completion_state": "needs_current_refresh",
+      "closeout_use_allowed": false,
+      "retry_allowed": true,
+      "blocker_receipt_required_if_unreachable": true,
+      "replacement_allowed": false,
+      "raw_text_publication_allowed": false,
+      "private_identifier_publication_allowed": false
+    },
+    {
+      "lane": "Kierkegaard",
+      "route_family": "Codex app local callable lane",
+      "identity_status": "existing_named_lane_only",
+      "consent_status": "AUTHORIZED_READ_ONLY_ONLY",
+      "allowed_mode": "read-only advisory message through existing callable route only",
+      "evidence_state": "OPEN_GAP_PRIVATE_MAP_OR_OFFICIAL_THREAD_TOOL_REQUIRED",
+      "completion_state": "open_blocker",
+      "closeout_use_allowed": false,
+      "retry_allowed": true,
+      "blocker_receipt_required_if_unreachable": true,
+      "replacement_allowed": false,
+      "raw_text_publication_allowed": false,
+      "private_identifier_publication_allowed": false
+    },
+    {
+      "lane": "Aristotle",
+      "route_family": "Codex app local callable lane",
+      "identity_status": "existing_named_lane_only",
+      "consent_status": "AUTHORIZED_READ_ONLY_ONLY",
+      "allowed_mode": "read-only advisory message through existing callable route only",
+      "evidence_state": "OPEN_GAP_PRIVATE_MAP_OR_OFFICIAL_THREAD_TOOL_REQUIRED",
+      "completion_state": "open_blocker",
+      "closeout_use_allowed": false,
+      "retry_allowed": true,
+      "blocker_receipt_required_if_unreachable": true,
+      "replacement_allowed": false,
+      "raw_text_publication_allowed": false,
+      "private_identifier_publication_allowed": false
+    }
+  ],
+  "guardrail_checks": [
+    {
+      "id": "identity-01-existing-lane-only",
+      "status": "REQUIRED",
+      "rule": "Only existing named sibling lanes may be addressed; missing lanes remain blockers, not replacement opportunities."
+    },
+    {
+      "id": "identity-02-read-only-consent",
+      "status": "REQUIRED",
+      "rule": "Every lane action must stay inside read-only advisory or status-only behavior unless a later exact approval expands scope."
+    },
+    {
+      "id": "identity-03-no-raw-private-publication",
+      "status": "REQUIRED",
+      "rule": "No raw lane text, browser transcript, app-server payload, private ID, credential, screenshot, local path, or raw user text may be published."
+    },
+    {
+      "id": "identity-04-open-lane-honesty",
+      "status": "REQUIRED",
+      "rule": "Open lanes stay visible until evidence changes; authorization or elapsed time is not response proof."
+    },
+    {
+      "id": "identity-05-runner-least-privilege",
+      "status": "REQUIRED",
+      "rule": "Use current v508 essential Node entrypoints first; use route recovery helpers only for route refresh or blocker receipts."
+    },
+    {
+      "id": "identity-06-source-grounding",
+      "status": "REQUIRED",
+      "rule": "Source-backed reflections must remain partial until the full source target is met and validated."
+    },
+    {
+      "id": "identity-07-claim-ceiling",
+      "status": "REQUIRED",
+      "rule": "No phase completion, x2 closeout, empirical GMUT closure, consciousness proof, legal closure, or canon promotion is claimed here."
+    }
+  ],
+  "closeout_blockers": [
+    "All required lanes need current evidence or explicit blocker carry before closeout.",
+    "Current source batch is partial and does not satisfy the full source target.",
+    "x2 build closeout remains false in the active carry gate.",
+    "Kierkegaard and Aristotle remain unresolved unless later route evidence changes them."
+  ],
+  "next_actions": [
+    "Use this guardrail card before every v508-v515 lane send, route refresh, or closeout check.",
+    "Generate a compact-refresh card that points to this guardrail card.",
+    "Generate the next approval candidate scaffold without treating drafts as approval.",
+    "Continue current-source expansion toward the remaining source target."
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_app_server_result_published": false,
+    "raw_app_server_error_published": false,
+    "raw_callable_ids_published": false,
+    "raw_thread_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false,
+    "raw_user_text_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "not_claimed",
+    "v507_v8_completion": "not_claimed",
+    "v508_full_phase_start": "not_claimed",
+    "x2_build_closeout": "not_claimed",
+    "source_target_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
