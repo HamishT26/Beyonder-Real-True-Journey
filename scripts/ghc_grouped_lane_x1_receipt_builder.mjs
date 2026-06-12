@@ -81,6 +81,11 @@ function routeForLane(lane) {
   return "existing app lane through recovered map runner";
 }
 
+function cliQualityLaneAliases(lane) {
+  if (lane === "Aster Vale") return ["Aster Vale", "Aster"];
+  return [lane];
+}
+
 const generatedUtc = utcNow();
 const prep = readJsonMaybe(prepJson);
 const cliQuality = readJsonMaybe(cliQualityJson);
@@ -120,7 +125,8 @@ const laneSummary = activeLanes.map((lane) => {
     };
   }
   if (lane === "Arby" || lane === "Aster Vale") {
-    const row = cliRows.find((candidate) => candidate.lane === lane);
+    const aliases = cliQualityLaneAliases(lane);
+    const row = cliRows.find((candidate) => aliases.includes(candidate.lane));
     return {
       lane,
       route_family: routeForLane(lane),
