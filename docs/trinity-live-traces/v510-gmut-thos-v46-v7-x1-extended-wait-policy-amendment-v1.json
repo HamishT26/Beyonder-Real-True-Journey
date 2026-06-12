@@ -1,0 +1,34 @@
+{
+  "schema": "ghc.trinity-live-trace.extended-wait-policy-amendment.v1",
+  "phase_slug": "v510-gmut-thos-v46-v7-x1",
+  "status": "PASS_EXTENDED_WAIT_POLICY_RECORDED",
+  "user_clarification": "Five-minute checks are health checks, not cutoffs. If a sibling is still reasoning or the lane may simply be slow, wait longer rather than diminishing the response.",
+  "policy": {
+    "check_interval_minutes": 5,
+    "check_meaning": "health_check_only",
+    "minimum_response_quality": "do_not_shorten_or_diminish_sibling_work",
+    "retry_condition": "retry only after distinct stale/freshness evidence, such as no marker, composer available, no active generation, and no text growth or explicit route blocker",
+    "passive_wait_allowed": true,
+    "extended_wait_allowed": true
+  },
+  "implementation_notes": [
+    "For Browser/Lumen lanes, prefer marker-count checks and active-generation checks without extracting raw response text.",
+    "If the first five-minute check has no marker but generation is active or may still be progressing, continue waiting in bounded intervals.",
+    "Do not issue a duplicate prompt while a response is plausibly still forming.",
+    "If a duplicate retry was already sent because a lane appeared stale, record the event status-only and avoid publishing raw transcript text.",
+    "Apply the same non-diminishing wait policy to CLI and app sibling lanes."
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "route_handles_published": false,
+    "screenshots_published": false,
+    "credentials_published": false
+  },
+  "claim_boundary": {
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
