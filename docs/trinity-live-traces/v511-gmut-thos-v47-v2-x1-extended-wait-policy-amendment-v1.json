@@ -1,0 +1,38 @@
+{
+  "schema": "ghc.status_receipt.v1",
+  "phase_slug": "v511-gmut-thos-v47-v2-x1",
+  "status": "PASS_EXTENDED_WAIT_POLICY_AMENDMENT_RECORDED",
+  "policy_scope": "round_robin_live_adapter_lane_timing",
+  "clarification": {
+    "five_minute_check_meaning": "health_check_only",
+    "five_minute_check_is_not": "completion_deadline",
+    "extended_wait_allowed": true,
+    "non_diminishing_prompt_policy": true,
+    "active_generation_policy": "if a sibling is still working, let the lane continue rather than shortening the requested reasoning or artifact depth",
+    "retry_policy": "retry only after distinct stale or blocker evidence, not merely because the first five minute pulse has passed"
+  },
+  "stale_evidence_required_before_retry": [
+    "no completion marker after an extended wait",
+    "composer is available and no active generation is visible",
+    "no visible text growth across checks",
+    "route or app blocker is explicitly observed",
+    "watcher or notifier receipt reports a terminal blocker"
+  ],
+  "lane_groups_covered": [
+    "Lumen Vale browser lane",
+    "Arby CLI lane",
+    "Aster Vale CLI lane",
+    "Cicero app lane",
+    "Kierkegaard app lane",
+    "Aristotle app lane"
+  ],
+  "publication_safety": {
+    "raw_lane_text_published": false,
+    "raw_routes_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false,
+    "local_absolute_paths_published": false
+  },
+  "next_action": "Continue v511+ grouped round-robin phases with five-minute pulse checks, extended waits for active siblings, and non-diminished x1 prompts."
+}
