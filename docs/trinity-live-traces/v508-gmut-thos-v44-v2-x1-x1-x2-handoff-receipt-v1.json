@@ -1,0 +1,396 @@
+{
+  "artifact_type": "ghc_v508_v2_x1_x2_handoff",
+  "generated_utc": "2026-06-12T01:55:27Z",
+  "phase_slug": "v508-gmut-thos-v44-v2-x1",
+  "status": "V508_V2_X1_GROUP_READY_FOR_X2_PREP",
+  "input_refs": {
+    "arby_quality": "v508-gmut-thos-v44-v2-x1-arby-strict-cli-cycle-quality-v1.json",
+    "arby_marker_review": "v508-gmut-thos-v44-v2-x1-arby-strict-cli-cycle-marker-review-v1.json",
+    "cicero_completion_gate": "v508-gmut-thos-v44-v2-x1-cicero-recovered-map-completion-gate-v1.json",
+    "cicero_notifier": "v508-gmut-thos-v44-v2-x1-cicero-recovered-map-completion-notifier-v1.json",
+    "workflow_receipt": "v508-gmut-thos-v44-v1-x1-live-workflow-update-receipt-v1.json"
+  },
+  "group_lane_summary": [
+    {
+      "lane": "Arby",
+      "route_family": "read-only CLI lane",
+      "evidence_status": "PASS_ELABORATE_CLI_RECEIPT_AND_MARKER_REVIEW",
+      "word_count": 4327,
+      "category_counts_present": true,
+      "raw_lane_text_published": false
+    },
+    {
+      "lane": "Cicero",
+      "route_family": "existing app-lane route recovered in-process",
+      "evidence_status": "PASS_APP_LANE_COMPLETION_GATE",
+      "completion_status": "completed",
+      "thread_id_redacted": true,
+      "raw_lane_text_published": false
+    }
+  ],
+  "x2_build_task_count": 20,
+  "x2_build_tasks": [
+    {
+      "id": "x2-01",
+      "title": "Route recovery codification",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Turn the recovered Cicero route flow into a reusable status-only preflight pattern with no raw ID publication.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-02",
+      "title": "Private-map source boundary card",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Document how old policy artifacts may be used internally for recovery while receipts publish only digests and statuses.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-03",
+      "title": "Arby proposal reducer",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Convert Arby's validated long-form proposal counts into a structured task ledger without copying raw lane text.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-04",
+      "title": "Cicero app-lane digest board",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Build a digest-only board that records read, resume, turn, completion, and gate state for app lanes.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-05",
+      "title": "No-limited-phase language lint",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Scan new phase receipts for user-facing limited-phase labels and replace them with gate-protected preparation language when needed.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-06",
+      "title": "Five-minute check scheduler",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Create a status-only scheduler card that checks lanes every five minutes without interrupting long-running work.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-07",
+      "title": "Browser route retry template",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Use the Lumen Browser route success as a template for future status-only Browser retries.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-08",
+      "title": "CLI marker false-positive classifier",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Preserve the marker-review logic that treats ordinary generic marker wording separately from strict sensitive/path markers.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-09",
+      "title": "X1 group completion reducer",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Reduce each round-robin group to ready, blocked, or carry-forward using only validated receipts.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-10",
+      "title": "X2 build gate board",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Require each x2 build/use artifact to cite its x1 evidence inputs and open claim boundaries.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-11",
+      "title": "App-server protocol watch",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Track app-server daemon/proxy/help changes separately from lane-map availability.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-12",
+      "title": "Vision MD compact card refresh",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Add the v508 full-phase policy, Lumen marker, Arby pass, and Cicero recovery into the next compact refresh card.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-13",
+      "title": "Sibling route-family manifest",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Keep Lumen, Arby, Aster Vale, Cicero, Kierkegaard, and Aristotle separated by route family and evidence level.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-14",
+      "title": "Approval-candidate carry ledger",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Carry forward the next ten x2 approval candidates without treating them as already approved.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-15",
+      "title": "Journey pointer shortlist",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Build a short reference list of Journey docs relevant to v508-v515 without copying private text.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-16",
+      "title": "GMUT evidence firewall",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Keep DESI, Euclid, LVK, CERN/LHC, and other physics sources as open evidence gates, not validation closure.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-17",
+      "title": "Freed ID consent boundary",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Ensure every sibling and helper receipt keeps advisory identity, consent, and no-replacement language explicit.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-18",
+      "title": "THOS runner freshness board",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Rank current Node entrypoints and Python fallbacks as current, fallback, legacy, or blocked.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-19",
+      "title": "Dual-omega push preflight",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Turn the repeated fetch, exact-stage, push, and remote-equals-local sequence into a compact status receipt.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    },
+    {
+      "id": "x2-20",
+      "title": "v508 v3 x1 preparation card",
+      "status": "X2_BUILD_USE_CANDIDATE",
+      "action": "Prepare the next active group without claiming v508 v2 x2 closeout or v508 v3 start before x2 evidence exists.",
+      "requires_validation": [
+        "script_check",
+        "json_parse",
+        "exposure_scan",
+        "no_overclaim_scan",
+        "exact_staging"
+      ]
+    }
+  ],
+  "approval_candidate_count": 10,
+  "approval_candidates": [
+    {
+      "id": "approval-v508-v2-x2-01",
+      "title": "Recovered app-lane map preflight hardening",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-02",
+      "title": "Arby proposal reducer and digest-only task extraction",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-03",
+      "title": "Cicero route recovery replay for Kierkegaard and Aristotle",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-04",
+      "title": "Five-minute status check board",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-05",
+      "title": "No-limited-phase language lint",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-06",
+      "title": "Round-robin group completion reducer",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-07",
+      "title": "Browser route retry template expansion",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-08",
+      "title": "X2 build/use gate board",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-09",
+      "title": "Runner freshness board",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    },
+    {
+      "id": "approval-v508-v2-x2-10",
+      "title": "v508 v3 x1 preparation card",
+      "status": "PENDING_USER_APPROVAL_OR_ALREADY_COVERED_BY_ACTIVE_PACKET_REVIEW_REQUIRED",
+      "raw_private_material_required": false
+    }
+  ],
+  "policy_alignment": {
+    "user_facing_default": "full_phase_progression",
+    "limited_phase_label_used_as_completion_mode": false,
+    "gate_protected_preparation_allowed_when_evidence_missing": true,
+    "five_minute_checks": true,
+    "existing_lanes_only": true,
+    "replacement_siblings_created": false
+  },
+  "next_safe_actions": [
+    "Use the v508 v2 x2 session for build, run, test, install, and use work derived from this handoff.",
+    "Retry recovered-map flow for Kierkegaard and Aristotle only through existing route handles and redacted receipts.",
+    "Do not advance to v508 v3 as complete until the v2 x2 build/use evidence exists.",
+    "Keep Lumen-only ChatGPT panel work active by Browser route with status-only receipts."
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_outbound_message_published": false,
+    "raw_app_server_result_published": false,
+    "raw_app_server_error_published": false,
+    "raw_callable_ids_published": false,
+    "raw_thread_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false,
+    "raw_user_text_published": false
+  },
+  "claim_boundary": {
+    "v508_v2_x1_group": "group_ready_for_x2_prep",
+    "v508_v2_x2_closeout": "not_claimed",
+    "v508_v3_start": "not_claimed",
+    "v508_full_phase_completion": "not_claimed",
+    "v515_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
