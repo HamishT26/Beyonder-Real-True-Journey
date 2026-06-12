@@ -1,0 +1,54 @@
+{
+  "artifact_type": "aletheon_wait_prep_card",
+  "generated_utc": "2026-06-12T15:16:02Z",
+  "phase_slug": "v513-gmut-thos-v49-v6-x1",
+  "status": "X2_LANDING_PREPARED_WHILE_GROUP_WORKS",
+  "active_lanes": [
+    "Arby",
+    "Cicero"
+  ],
+  "wait_policy": {
+    "health_pulse_minutes": 5,
+    "first_pulse_is_deadline": false,
+    "healthy_lanes_can_continue": true,
+    "aletheon_does_not_babysit": true
+  },
+  "x2_landing_zones": [
+    {
+      "zone": "cli_quality_guard",
+      "purpose": "Confirm Arby's final message quality through status-only CLI receipts."
+    },
+    {
+      "zone": "app_completion_gate",
+      "purpose": "Confirm Cicero completion through status-only app-lane receipts."
+    },
+    {
+      "zone": "v513_v7_lumen_handoff",
+      "purpose": "Prepare the next Lumen-only slot after v513 v6 x2 closes."
+    },
+    {
+      "zone": "round_robin_cadence_guard",
+      "purpose": "Preserve Lumen, Arby+Cicero, Lumen, Aster+Kierkegaard+Aristotle cadence."
+    },
+    {
+      "zone": "open_claim_gate",
+      "purpose": "Keep empirical, physics, consciousness, legal, and canon claims open."
+    }
+  ],
+  "next_safe_actions": [
+    "Perform first five-minute health pulse.",
+    "If all active lane receipts are ready, reduce grouped x1 into handoff and guard files.",
+    "If a lane is still healthy but working, keep preparing x2 work.",
+    "If a lane blocks, retry with a different safe route before publishing a blocker receipt."
+  ],
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_cli_output_published": false,
+    "raw_app_payload_published": false,
+    "raw_route_handles_published": false,
+    "raw_thread_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  }
+}
