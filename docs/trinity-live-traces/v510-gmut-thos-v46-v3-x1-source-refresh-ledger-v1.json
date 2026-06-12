@@ -1,0 +1,50 @@
+{
+  "schema": "ghc.trinity-live-trace.source-refresh-ledger.v1",
+  "phase_slug": "v510-gmut-thos-v46-v3-x1",
+  "status": "PASS_STATUS_ONLY_SOURCE_REFRESH",
+  "created_for": "grouped round-robin Lumen-only x1 while Lumen response is in progress",
+  "source_policy": {
+    "allowed": [
+      "public official Codex changelog",
+      "public official/open-source Codex release notes",
+      "status-only synthesis"
+    ],
+    "excluded": [
+      "raw chat transcripts",
+      "private route handles",
+      "screenshots",
+      "credentials",
+      "session streams",
+      "private connector payloads"
+    ]
+  },
+  "sources": [
+    {
+      "id": "openai-codex-changelog-2026-06-11",
+      "url": "https://developers.openai.com/codex/changelog",
+      "source_type": "official_changelog",
+      "observed_update": "Codex app 26.609, dated 2026-06-11",
+      "phase_use": "Treat Browser Developer Mode and faster Browser use as a candidate improvement for Lumen live-adapter retries, but do not assume a CDP route exists unless the active Browser surface exposes it."
+    },
+    {
+      "id": "openai-codex-release-0-139-0",
+      "url": "https://github.com/openai/codex/releases",
+      "source_type": "official_open_source_release",
+      "observed_update": "Codex CLI 0.139.0, marked latest stable on the public release page during this run",
+      "phase_use": "Use 0.139.0 as the stable CLI baseline for read-only web/GitHub advisory prompts, schema-preserving tool compatibility, doctor redaction expectations, and sandbox consistency checks."
+    }
+  ],
+  "operational_implications": [
+    "Prompt sibling lanes to use read-only web and GitHub context only if their surface exposes it.",
+    "Keep external lanes advisory: Aletheon executes repo writes locally under validation guards.",
+    "Prefer Browser over Chrome for Lumen until the Browser route is stable and user explicitly opens Chrome again.",
+    "Record marker counts and status receipts only; never publish raw Lumen text or private browser state.",
+    "Do not move to alpha CLI lines without a separate exact approval packet."
+  ],
+  "gates": {
+    "gmut_empirical_gate": "OPEN",
+    "final_physics_gate": "OPEN",
+    "consciousness_proof_gate": "OPEN",
+    "canon_promotion_gate": "OPEN"
+  }
+}
