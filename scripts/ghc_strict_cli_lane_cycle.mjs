@@ -99,7 +99,7 @@ function writeMd(path, payload) {
     `- overall_status: \`${payload.overall_status}\``,
     `- execute: \`${payload.execute}\``,
     `- lanes: \`${payload.lanes.join(", ")}\``,
-    "- raw boundary: temp-only; no prompt body, raw lane text, stdout, stderr, local paths, screenshots, or credentials are published.",
+    "- raw boundary: temp-only; no prompt body, unredacted lane transcript, stdout, stderr, local paths, screenshots, or credentials are published.",
     "",
     "## Receipts",
   ];
