@@ -1,0 +1,71 @@
+{
+  "artifact_type": "x2_build_run_use_closeout",
+  "phase_slug": "v502-gmut-thos-v38-v4-x2",
+  "generated_utc": "2026-06-08T08:13:04Z",
+  "overall_status": "PASS_V502_V4_X2_BUILD_RUN_USE_CLOSEOUT",
+  "build_run_test_install_use_summary": {
+    "built": [
+      "scripts/thos_phase_advance_gate_verifier.py"
+    ],
+    "updated": [
+      "scripts/thos_phase_artifact_cadence_classifier.py",
+      "scripts/thos_cli_elaboration_quality_gate.py"
+    ],
+    "ran": [
+      "scripts/thos_status_check_cadence_guard.py",
+      "scripts/thos_phase_advance_gate_verifier.py",
+      "scripts/thos_cli_elaboration_quality_gate.py",
+      "scripts/thos_cli_marker_review_ledger.py",
+      "scripts/thos_five_lane_status_normalizer.py"
+    ],
+    "used_for_current_phase": [
+      "Verified v4 x1 all five lanes after Arby repair R2.",
+      "Verified v4 x1 phase advance gate as PASS_PHASE_ADVANCE_GATE.",
+      "Prepared v502 v5 x1 launch only after all five lanes and exposure gates passed."
+    ]
+  },
+  "required_receipts": [
+    {
+      "receipt": "v502-gmut-thos-v38-v4-x2-x2-10m-cadence-guard-v1.json",
+      "status": "PASS_STATUS_CHECK_ALLOWED"
+    },
+    {
+      "receipt": "v502-gmut-thos-v38-v4-x2-phase-advance-gate-verifier-v1.json",
+      "status": "PASS_PHASE_ADVANCE_GATE"
+    },
+    {
+      "receipt": "v502-gmut-thos-v38-v4-x1-closeout-v1.json",
+      "status": "PASS_V502_V4_X1_CLOSEOUT_FIVE_LANE_READY"
+    }
+  ],
+  "next_phase": {
+    "phase_slug": "v502-gmut-thos-v38-v5-x1",
+    "required_mode": "five_lane_launch_with_background_watchers_and_phase_advance_gate",
+    "must_run_before_phase_advance": [
+      "launch checklist verifier",
+      "productive wait verifier",
+      "app completion gate",
+      "CLI quality gate",
+      "marker review ledger",
+      "five-lane normalizer",
+      "phase advance gate verifier",
+      "classifier",
+      "exposure guard"
+    ]
+  },
+  "publication_boundary": {
+    "status_only": true,
+    "raw_lane_text_published": false,
+    "raw_logs_published": false,
+    "prompt_body_published": false,
+    "local_absolute_paths_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_gate_state": "open",
+    "canon_promotion": "not_claimed",
+    "duration_is_completion_proof": false
+  }
+}

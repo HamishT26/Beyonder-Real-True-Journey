@@ -1,0 +1,46 @@
+{
+  "artifact_type": "deterministic_phase_manifest",
+  "phase_slug": "v497-gmut-thos-v33-v7-x1",
+  "generated_utc": "2026-06-06T22:03:20Z",
+  "overall_status": "PASS_DETERMINISTIC_PHASE_MANIFEST_READY",
+  "lane_status_harvested": false,
+  "states": [
+    {
+      "state": "x1_prompt_policy",
+      "status": "published",
+      "advance_condition": "five lane prompts exist"
+    },
+    {
+      "state": "x1_lane_launch",
+      "status": "published",
+      "advance_condition": "app watcher and cli launch receipts exist"
+    },
+    {
+      "state": "x1_productive_wait",
+      "status": "published",
+      "advance_condition": "wait artifacts exist without lane polling"
+    },
+    {
+      "state": "x1_cadence_gate",
+      "status": "passed",
+      "advance_condition": "15 minute gate passed"
+    },
+    {
+      "state": "x1_completion_gate",
+      "status": "open_gap_app_lanes",
+      "advance_condition": "all app and cli lanes ready"
+    },
+    {
+      "state": "app_retry2",
+      "status": "running_or_pending_receipt",
+      "advance_condition": "retry2 completion notifier appears and gate passes"
+    },
+    {
+      "state": "x2_candidate_matrix",
+      "status": "held",
+      "advance_condition": "x1 completion gate passes"
+    }
+  ],
+  "phase_advance_allowed": false,
+  "next_allowed_app_retry_check_utc": "2026-06-06T22:09:24Z"
+}

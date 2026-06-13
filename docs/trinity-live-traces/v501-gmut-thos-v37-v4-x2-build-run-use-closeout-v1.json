@@ -1,0 +1,34 @@
+{
+  "artifact_type": "v501_v4_x2_build_run_use_closeout",
+  "claim_boundary": {
+    "canon_promotion": "not_claimed",
+    "gmut_gate_state": "open"
+  },
+  "generated_at_utc": "2026-06-08T00:25:20Z",
+  "happy_path_checklist": [
+    "Confirm x1 cadence gate is passed before reading completion status.",
+    "Harvest app lanes through notify-prefix gate only.",
+    "Run CLI completion notifier against normalized lane aliases.",
+    "Verify normalized aliases exist before invoking bridge repair.",
+    "If aliases exist and quality gates pass, record bridge_repair_needed=false.",
+    "Use strict quality gates and marker ledger before treating generic marker warnings as false positives.",
+    "Publish status-only receipts; never publish raw CLI/app lane text or local temp paths.",
+    "Commit only after JSON parse, classifier, exposure guard, drift check, staged diff review, push, and remote verification."
+  ],
+  "overall_status": "PASS_X2_ALIAS_PROOF_FIRST_CHECKLIST_BUILT",
+  "phase_slug": "v501-gmut-thos-v37-v4-x2",
+  "status_only": true,
+  "use_result": [
+    "v501 v3 x1 and v501 v4 x1 both proved the normalized CLI alias happy path.",
+    "Bridge repair is now explicitly fallback-only for future x1 harvests.",
+    "The checklist converts repeated empirical workflow evidence into a reusable phase operation surface.",
+    "The build preserves GMUT/THOS claim gates as open and publishes only status-level metadata."
+  ],
+  "validation_checks": {
+    "app_gate_passed": true,
+    "cli_quality_passed": true,
+    "five_lane_normalizer_passed": true,
+    "marker_review_passed": true,
+    "x2_cadence_gate_passed": true
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "artifact_type": "x1_build_validation",
+  "phase_slug": "v496-gmut-thos-v32-v8-x1",
+  "generated_utc": "2026-06-06T11:25:00Z",
+  "overall_status": "PASS_BUILD_VALIDATION_READY_FOR_EXACT_PUBLICATION",
+  "validated_scope": {
+    "exact_file_count_before_validation_receipt": 39,
+    "repo_script_modified": "scripts/thos_wait_policy_guard.py",
+    "raw_lane_text_published": false,
+    "raw_transport_published": false,
+    "real_user_skill_mutation_performed": false,
+    "plugin_cache_mutation_performed": false
+  },
+  "checks": [
+    {
+      "check": "script_compile",
+      "status": "PASS",
+      "evidence": "changed and relevant Python helper scripts compiled"
+    },
+    {
+      "check": "json_parse",
+      "status": "PASS",
+      "evidence": "19 v8 x1 and v8 x2 handoff JSON receipts parsed"
+    },
+    {
+      "check": "sensitive_path_raw_scan",
+      "status": "PASS",
+      "evidence": "39 exact files scanned for local paths, session streams, screenshots, private keys, and API key patterns"
+    },
+    {
+      "check": "trailing_whitespace_scan",
+      "status": "PASS",
+      "evidence": "39 exact files scanned with no trailing whitespace hits"
+    },
+    {
+      "check": "phase_sequence_guard",
+      "status": "PASS",
+      "evidence": "v496-gmut-thos-v32-v8-x1 may advance only to v496-gmut-thos-v32-v8-x2"
+    },
+    {
+      "check": "wait_policy_guard",
+      "status": "PASS",
+      "evidence": "32 searches, 12 draft skill workflows, 30 reflections, 20 x2 tasks, 15-minute cadence gate"
+    },
+    {
+      "check": "no_overclaim_guard",
+      "status": "PASS",
+      "evidence": "34 v8 x1 files scanned with zero blocker hits"
+    },
+    {
+      "check": "blocker_repair_ladder",
+      "status": "PASS",
+      "evidence": "wait-policy schema blocker repaired after five safe attempts"
+    }
+  ],
+  "known_warnings": [
+    {
+      "warning": "git_crlf_normalization",
+      "status": "NON_BLOCKING",
+      "evidence": "Git reports LF will be replaced by CRLF for the edited Python script when Git touches it"
+    }
+  ],
+  "next_publication_steps": [
+    "fetch and drift-check",
+    "exact stage only",
+    "staged diff review",
+    "commit",
+    "push",
+    "remote-equals-local verification"
+  ],
+  "claim_boundary": {
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}
