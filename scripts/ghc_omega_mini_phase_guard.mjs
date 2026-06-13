@@ -29,6 +29,7 @@ const ledgerJson = args.get("--ledger-json");
 const ledgerMd = args.get("--ledger-md");
 const prepJson = args.get("--prep-json");
 const prepMd = args.get("--prep-md");
+const prepPhaseSlug = args.get("--prep-phase-slug") || nextScope.replace(/-x2$/, "-x1");
 const closeoutJson = args.get("--closeout-json");
 const closeoutMd = args.get("--closeout-md");
 
@@ -219,8 +220,8 @@ const taskRows = [
   ["x2-15", "Redaction regression test", "IMPLEMENTED", "Exposure hits block guard pass."],
   ["x2-16", "Binary document risk note", "AVAILABLE", "Journey binary/text distinction remains represented in mini manifests."],
   ["x2-17", "X2 evidence closeout template", "IMPLEMENTED", "This script emits the x2 closeout pair."],
-  ["x2-18", "V520 v8 prep card", "IMPLEMENTED", "Next active group prep is emitted for Aster Vale, Kierkegaard, and Aristotle."],
-  ["x2-19", "V7 mirror to mini", "IMPLEMENTED", "Guard proves whether the latest v7 files are present in mini."],
+  ["x2-18", "Next group prep card", "IMPLEMENTED", "Next active group prep is emitted from the supplied active group list."],
+  ["x2-19", "Latest phase mirror to mini", "IMPLEMENTED", "Guard proves whether the latest expected phase files are present in mini."],
   ["x2-20", "Open claim gates", "IMPLEMENTED", "All empirical and canon closure gates remain open."],
 ].map(([id, title, status, evidence]) => ({ id, title, status, evidence }));
 
@@ -238,7 +239,7 @@ const ledger = {
 const nextPrep = {
   schema: "ghc.next_group_prep_card.v1",
   generated_utc: generatedUtc,
-  phase_slug: nextScope.replace(/-x2$/, "-x1"),
+  phase_slug: prepPhaseSlug,
   status: allPass ? "READY_NEXT_GROUP_X1" : "READY_WITH_GUARD_OPEN_GAP",
   active_group: nextGroup,
   corrected_round_robin: cadence,
@@ -278,7 +279,7 @@ const closeout = {
     mini_file_count: miniStats.file_count,
   },
   carry_forward: [
-    "Next x1 group is Aster Vale, Kierkegaard, and Aristotle.",
+    `Next x1 group is ${nextGroup.join(", ") || "not specified"}.`,
     "Continue paired full omega and omega-mini publication.",
     "Use mini-first phase-start checks before lane calls.",
     "Keep raw reply text and private route material out of repo artifacts.",
