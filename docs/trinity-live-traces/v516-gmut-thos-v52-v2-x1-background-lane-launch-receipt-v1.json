@@ -1,0 +1,46 @@
+{
+  "schema": "ghc.grouped_lane_background_launch.v1",
+  "phase": "v516-gmut-thos-v52-v2-x1",
+  "timestamp_utc": "2026-06-13T02:19:11.014Z",
+  "timestamp_nz": "Saturday, 13 June 2026 at 2:19:11 pm NZST",
+  "active_lanes": [
+    "Arby",
+    "Cicero"
+  ],
+  "launch_mode": "background-supervised existing lanes only",
+  "launched": [
+    {
+      "label": "Arby read-only CLI lane",
+      "process_id_observed": 5164,
+      "command_family": "node-script",
+      "script": "scripts/ghc_strict_cli_lane_cycle.mjs"
+    },
+    {
+      "label": "Cicero existing app lane",
+      "process_id_observed": 13596,
+      "command_family": "node-script",
+      "script": "scripts/ghc_recovered_app_lane_map_runner.mjs"
+    }
+  ],
+  "cadence": "five-minute health pulse; continue preparing between checks",
+  "prompt_contract": {
+    "arby": "strict read-only CLI advisory; no tools, no shell, no repo mutation; minimum 4000 words requested; final marker required by CLI contract",
+    "cicero": "existing app-lane callable route through recovered map runner; status-only receipts; no raw IDs or raw lane text"
+  },
+  "publication_boundary": {
+    "raw_prompt_published": false,
+    "raw_lane_text_published": false,
+    "raw_stdout_stderr_published": false,
+    "raw_route_ids_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "phase_completion_claimed": false,
+    "gmut_validation_claimed": false,
+    "final_physics_claimed": false,
+    "consciousness_proof_claimed": false,
+    "canon_closure_claimed": false
+  }
+}
