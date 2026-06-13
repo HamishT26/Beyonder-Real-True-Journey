@@ -31,5 +31,5 @@ Validation:
 Policy:
 
 - Omega-Mini is a compact continuity companion, not a replacement for the full omega branch.
-- Raw logs, session streams, screenshots, route IDs, callable IDs, and private browser URLs were excluded or redacted.
+- Unredacted logs, live transcript files, screenshots, route IDs, callable IDs, and private browser URLs were excluded or redacted.
 - Next phase remains `v520-gmut-thos-v56-v7-x1` with the Lumen solo lane.
