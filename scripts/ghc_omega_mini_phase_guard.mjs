@@ -257,11 +257,14 @@ const nextPrep = {
   ],
 };
 
+const closeoutPassStatus = `PASS_${phaseSlug.replace(/[^A-Za-z0-9]+/g, "_").toUpperCase()}_BUILD_USE_CLOSEOUT`;
+const closeoutOpenGapStatus = `OPEN_GAP_${phaseSlug.replace(/[^A-Za-z0-9]+/g, "_").toUpperCase()}_BUILD_USE_CLOSEOUT`;
+
 const closeout = {
   schema: "ghc.x2_closeout.v1",
   generated_utc: generatedUtc,
   phase_slug: nextScope,
-  status: allPass ? "PASS_V520_V7_X2_BUILD_USE_CLOSEOUT" : "OPEN_GAP_V520_V7_X2_BUILD_USE_CLOSEOUT",
+  status: allPass ? closeoutPassStatus : closeoutOpenGapStatus,
   implemented_artifacts: [
     "ghc_omega_mini_phase_guard.mjs",
     receiptJson.split(/[\\/]/).pop(),
