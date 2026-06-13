@@ -1,9 +1,9 @@
 # v520-gmut-thos-v56-v8-x1 Recovered App-Lane Map Runner
 
-Generated UTC: `2026-06-13T14:10:59Z`
+Generated UTC: `2026-06-13T14:18:46Z`
 
-Status: `PASS_RECOVERED_MAP_PREFLIGHT`
-Mode: `preflight`
+Status: `PASS_RECOVERED_APP_LANE_RUN`
+Mode: `notify`
 Lanes: `Kierkegaard, Aristotle`
 
 ## Source Boundary
@@ -15,14 +15,16 @@ Lanes: `Kierkegaard, Aristotle`
 ## Steps
 
 - private_map_preflight: status `0`, stdout status `unparsed`, stdout bytes `73`, stderr bytes `0`.
+- app_lane_notifier: status `0`, stdout status `unparsed`, stdout bytes `71`, stderr bytes `0`.
+- completion_gate: status `0`, stdout status `unparsed`, stdout bytes `96`, stderr bytes `0`.
 
 ## Child Receipts
 
 - preflight: `v520-gmut-thos-v56-v8-x1-kierkegaard-aristotle-app-lane-map-preflight-v1.json`
 - preflight_md: `v520-gmut-thos-v56-v8-x1-kierkegaard-aristotle-app-lane-map-preflight-v1.md`
-- notifier: `not_written`
-- launcher: `not_written`
-- completion_gate: `not_written`
+- notifier: `v520-gmut-thos-v56-v8-x1-kierkegaard-aristotle-app-lane-map-notifier-v1.json`
+- launcher: `v520-gmut-thos-v56-v8-x1-kierkegaard-aristotle-app-lane-map-watch-launcher-v1.json`
+- completion_gate: `v520-gmut-thos-v56-v8-x1-kierkegaard-aristotle-app-lane-map-completion-gate-v1.json`
 
 ## Boundary
 
