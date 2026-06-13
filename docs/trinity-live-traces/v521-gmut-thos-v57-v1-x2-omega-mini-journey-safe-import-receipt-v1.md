@@ -1,6 +1,6 @@
 # v521-gmut-thos-v57-v1-x2 Omega-Mini Journey Safe Import Receipt
 
-Generated UTC: `2026-06-13T15:09:33.667Z`
+Generated UTC: `2026-06-13T15:14:23.238Z`
 
 Status: `PASS_SAFE_JOURNEY_IMPORT_RECEIPT`
 
@@ -10,8 +10,8 @@ Imported Journey text files: `45`
 
 - token_shape: `18`
 - private_chatgpt_url: `0`
-- local_absolute_path: `393`
-- session_stream_extension: `105`
+- local_absolute_path: `1249`
+- session_stream_extension: `103`
 
 ## Carry Forward
 

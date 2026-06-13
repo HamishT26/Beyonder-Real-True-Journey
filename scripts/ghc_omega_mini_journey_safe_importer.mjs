@@ -71,7 +71,7 @@ const redactionRules = [
   },
   {
     id: "local_absolute_path",
-    pattern: /[A-Z]:\\(?:Users\\hamis|GHC-Archives)\\[^\s"'<>)]*/gi,
+    pattern: /[A-Z]:[\\/](?:Users[\\/]hamis|GHC-Archives)[\\/][^\s"'<>)]*/gi,
     replacement: "[REDACTED_LOCAL_PATH]",
   },
   {
@@ -90,6 +90,7 @@ function redact(text) {
       return rule.replacement;
     });
   }
+  safe = `${safe.replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/[ \t]+$/gm, "").replace(/\n+$/g, "")}\n`;
   return { safe, counts };
 }
 
