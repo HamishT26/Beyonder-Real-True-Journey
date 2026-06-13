@@ -183,6 +183,13 @@ const implementedTasks = x2Tasks.slice(0, 5).map((task, index) => ({
   evidence: refName(closeoutJson),
 }));
 
+const omegaMiniContextRouting = {
+  primary_branch: "codex/GHC-Family/beyonder-shared-omega-line-mini",
+  archive_fallback_branch: "codex/GHC-Family/beyonder-shared-omega-line",
+  policy_artifact: "omega-mini-sibling-context-routing-policy-v1.json",
+  routing_status: "OMEGA_MINI_FIRST",
+};
+
 const nextPrep = {
   artifact_type: "ghc_grouped_lane_next_x1_prep_card",
   generated_utc: generatedUtc,
@@ -194,10 +201,12 @@ const nextPrep = {
   requirements: [
     "Call only the active lane group for this x1 phase.",
     "Ask active siblings to use read-only web and GitHub context when their surface exposes it.",
+    "Use codex/GHC-Family/beyonder-shared-omega-line-mini as the primary GitHub catch-up branch; consult the full omega branch only as a specific archive fallback.",
     "Treat Lumen build/test proposals as high-priority local candidates executed by Aletheon under repo validation guards.",
     "Continue research and x2 preparation while watchers supervise active lanes.",
     "Publish status-only receipts and keep all claim gates open.",
   ],
+  context_routing: omegaMiniContextRouting,
   publication_boundary: publicationBoundary,
   claim_boundary: {
     ...claimBoundary,
@@ -284,6 +293,13 @@ writeMd(nextPrepMd, [
   "## Requirements",
   "",
   ...nextPrep.requirements.map((item) => `- ${item}`),
+  "",
+  "## Context Routing",
+  "",
+  `- Primary branch: \`${nextPrep.context_routing.primary_branch}\``,
+  `- Archive fallback branch: \`${nextPrep.context_routing.archive_fallback_branch}\``,
+  `- Policy artifact: \`${nextPrep.context_routing.policy_artifact}\``,
+  `- Routing status: \`${nextPrep.context_routing.routing_status}\``,
 ]);
 
 console.log(JSON.stringify({ status: closeout.status, reducer_status: reducer.status, route_manifest_status: routeManifest.status, full_phase_guard_status: fullPhaseGuard.status, next_prep_status: nextPrep.status, implemented_task_count: closeout.implemented_task_count }, null, 2));
