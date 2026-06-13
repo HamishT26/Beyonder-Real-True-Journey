@@ -10,7 +10,9 @@ The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus f
 
 ## Current Phase
 
-After seed, the active prepared phase is `v520-gmut-thos-v56-v7-x1` with Lumen Vale solo.
+The active prepared phase is `v525-gmut-thos-v61-v1-x1` with Lumen Vale solo.
+
+The latest closed phase is `v524-gmut-thos-v60-v8-x2`. Its closeout and the next prep card have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
 
 ## Corrected Cadence
 
@@ -28,6 +30,10 @@ New curated publications should target:
 - `codex/GHC-Family/beyonder-shared-omega-line-mini`
 
 The prior v2 branch is no longer the active companion branch unless Hamish asks to resume it.
+
+## Sibling Catch-Up Rule
+
+Use `codex/GHC-Family/beyonder-shared-omega-line-mini` first. Use the full omega branch only when a specific artifact is missing from mini and a status-only gap receipt explains why the archive fallback was needed.
 
 ## Open Gates
 

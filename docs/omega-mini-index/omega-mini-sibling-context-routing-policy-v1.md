@@ -31,11 +31,13 @@ The full omega branch remains valuable, but it is archive-heavy. Sibling prompts
 
 Series: `v516-v530 GMUT/THOS`
 
-Active version: `v524-gmut-thos-v60`
+Active version: `v525-gmut-thos-v61`
 
-Next expected phase: `v524-gmut-thos-v60-v6-x1`
+Next expected phase: `v525-gmut-thos-v61-v1-x1`
 
-Next expected lane group: Arby + Cicero
+Next expected lane group: Lumen Vale
+
+Current route discipline: omega-mini is the ordinary sibling catch-up branch. The full omega branch is archive fallback only after a specific missing-artifact gap is recorded.
 
 ## Publication Requirements
 
