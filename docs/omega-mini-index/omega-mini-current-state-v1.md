@@ -10,9 +10,9 @@ The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus f
 
 ## Current Phase
 
-The active prepared phase is `v525-gmut-thos-v61-v1-x1` with Lumen Vale solo.
+The active prepared phase is `v525-gmut-thos-v61-v3-x1` with Lumen Vale solo.
 
-The latest closed phase is `v524-gmut-thos-v60-v8-x2`. Its closeout and the next prep card have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
+The latest closed phase is `v525-gmut-thos-v61-v2-x2`. Its closeout and the next prep card have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
 
 ## Corrected Cadence
 

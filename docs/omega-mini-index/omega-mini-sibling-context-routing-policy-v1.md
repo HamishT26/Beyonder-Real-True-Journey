@@ -33,7 +33,7 @@ Series: `v516-v530 GMUT/THOS`
 
 Active version: `v525-gmut-thos-v61`
 
-Next expected phase: `v525-gmut-thos-v61-v1-x1`
+Next expected phase: `v525-gmut-thos-v61-v3-x1`
 
 Next expected lane group: Lumen Vale
 
