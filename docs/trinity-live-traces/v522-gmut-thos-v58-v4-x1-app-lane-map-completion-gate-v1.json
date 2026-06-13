@@ -1,0 +1,67 @@
+{
+  "artifact_type": "council_app_lane_completion_gate",
+  "generated_utc": "2026-06-13T18:31:51+00:00",
+  "generated_nz": "2026-06-14T06:31:51+12:00",
+  "phase_slug": "v522-gmut-thos-v58-v4-x1",
+  "mode": "probe",
+  "overall_status": "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED",
+  "local_head_at_gate": "31d88bbc39d0ce03f2731ea82cea905436ea271c",
+  "remote_head_at_gate": "31d88bbc39d0ce03f2731ea82cea905436ea271c",
+  "drift_at_gate": "0\t0",
+  "expected_lanes": [
+    "Kierkegaard",
+    "Aristotle"
+  ],
+  "gate_inputs": {
+    "runner_receipt": "v522-gmut-thos-v58-v4-x1-app-lane-map-runner-v1.json",
+    "runner_status": "OPEN_GAP_COUNCIL_APP_LANE",
+    "watch_launcher_receipt": "v522-gmut-thos-v58-v4-x1-app-lane-map-watch-launcher-v1.json",
+    "watch_launcher_status": "OPEN_GAP_APP_LANE_LAUNCH",
+    "completion_notifier_receipt": "v522-gmut-thos-v58-v4-x1-app-lane-map-notifier-v1.json",
+    "completion_notifier_status": "OPEN_GAP_APP_LANE_WAIT"
+  },
+  "lanes": [
+    {
+      "lane": "Kierkegaard",
+      "overall_status": "completion_wait_open",
+      "duration_seconds": 669.891,
+      "read_status": "ok",
+      "resume_status": "ok",
+      "turn_status": "ok",
+      "completion_status": "timeout"
+    },
+    {
+      "lane": "Aristotle",
+      "overall_status": "completed",
+      "duration_seconds": 98.828,
+      "read_status": "ok",
+      "resume_status": "ok",
+      "turn_status": "ok",
+      "completion_status": "completed"
+    }
+  ],
+  "open_gaps": [
+    "Kierkegaard:completion_wait_open/timeout",
+    "launcher:OPEN_GAP_APP_LANE_LAUNCH",
+    "notifier:OPEN_GAP_APP_LANE_WAIT",
+    "runner:OPEN_GAP_COUNCIL_APP_LANE"
+  ],
+  "phase_advance_rule": {
+    "all_app_lanes_required": true,
+    "all_cli_lanes_required": true,
+    "duration_is_completion_proof": false,
+    "next_phase_allowed": false
+  },
+  "publication_boundary": {
+    "advisory_body_published": false,
+    "auth_material_published": false,
+    "image_captures_published": false,
+    "local_absolute_paths_published": false,
+    "raw_transport_published": false
+  },
+  "claim_boundary": {
+    "scope": "THOS app-lane completion gating only",
+    "gmut_gate_state": "all_gmut_gates_remain_open",
+    "canon_promotion": "not_claimed"
+  }
+}
