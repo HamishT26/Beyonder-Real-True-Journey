@@ -109,7 +109,8 @@ const appRequired = activeLanes.some((lane) => lane === "Cicero" || lane === "Ki
 const appRunnerPass =
   !appRequired ||
   appRunner?.status === "PASS_RECOVERED_APP_LANE_RUN" ||
-  appRunner?.overall_status === "PASS_RECOVERED_APP_LANE_RUN";
+  appRunner?.overall_status === "PASS_RECOVERED_APP_LANE_RUN" ||
+  appRunner?.overall_status === "PASS";
 const appGatePass =
   !appRequired ||
   appGate?.status === "PASS_APP_LANE_COMPLETION_GATE" ||
