@@ -10,9 +10,9 @@ The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus f
 
 ## Current Phase
 
-The active prepared phase is `v527-gmut-thos-v63-v2-x1` for the Arby and Cicero round-robin lane group.
+The active prepared phase is `v527-gmut-thos-v63-v3-x1` for the Lumen Vale solo round-robin lane group.
 
-The latest closed phase is `v527-gmut-thos-v63-v1-x2`. Its Lumen-to-build/use closeout and v2 prep have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
+The latest closed phase is `v527-gmut-thos-v63-v2-x2`. Its Arby-and-Cicero-to-build/use closeout and v3 Lumen prep have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
 
 ## Corrected Cadence
 
