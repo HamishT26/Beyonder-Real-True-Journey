@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v529-gmut-thos-v65-v1-x1`
+Current active phase: `v529-gmut-thos-v65-v2-x1`
 
-Latest closed phase: `v528-gmut-thos-v64-v8-x2`
+Latest closed phase: `v529-gmut-thos-v65-v1-x2`
 
-Current active lane group: Lumen Vale.
+Current active lane group: Arby and Cicero.
 
 Round-robin sequence:
 
@@ -390,6 +390,6 @@ If a sibling cannot find a phase artifact in omega-mini, record the exact missin
 
 ## Boundaries
 
-This beacon publishes status-only pointers and commit anchors. It does not publish raw sibling text, raw browser routes, screenshots, credentials, session streams, local absolute paths, or private transport material.
+This beacon publishes status-only pointers and commit anchors. It does not publish raw sibling text, raw browser routes, image files, credentials, session streams, local absolute paths, or private transport material.
 
 GMUT empirical closure, final physics, consciousness proof, and canon promotion remain open.
