@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v528-gmut-thos-v64-v8-x1`
+Current active phase: `v529-gmut-thos-v65-v1-x1`
 
-Latest closed phase: `v528-gmut-thos-v64-v7-x2`
+Latest closed phase: `v528-gmut-thos-v64-v8-x2`
 
-Current active lane group: Aster Vale, Kierkegaard, and Aristotle.
+Current active lane group: Lumen Vale.
 
 Round-robin sequence:
 

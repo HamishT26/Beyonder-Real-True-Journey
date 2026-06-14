@@ -28,49 +28,79 @@ SUPPORTED_LANES = ("Cicero", "Kierkegaard", "Aristotle")
 
 class AppServerClient:
     def __init__(self) -> None:
-        self.proc = subprocess.Popen(
-            ["cmd", "/c", "codex", "app-server", "--stdio"],
-            cwd=str(ROOT),
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            bufsize=1,
-        )
+        self.launch_mode = "unstarted"
+        self.proc = self._start_process()
         self.stdout: queue.Queue[str] = queue.Queue()
         self.stderr: queue.Queue[str] = queue.Queue()
         self.next_id = 1
         threading.Thread(target=self._reader, args=(self.proc.stdout, self.stdout), daemon=True).start()
         threading.Thread(target=self._reader, args=(self.proc.stderr, self.stderr), daemon=True).start()
 
+    def _start_process(self) -> subprocess.Popen:
+        """Start app-server directly when possible, with cmd fallback for Windows shims."""
+        candidates = [
+            ("direct", ["codex", "app-server", "--stdio"]),
+            ("cmd_fallback", ["cmd", "/c", "codex", "app-server", "--stdio"]),
+        ]
+        last_error: OSError | None = None
+        for launch_mode, command in candidates:
+            try:
+                proc = subprocess.Popen(
+                    command,
+                    cwd=str(ROOT),
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                    bufsize=1,
+                )
+                self.launch_mode = launch_mode
+                return proc
+            except OSError as exc:
+                last_error = exc
+        raise RuntimeError("app-server launch unavailable") from last_error
+
     @staticmethod
     def _reader(stream: Any, target: queue.Queue[str]) -> None:
+        if stream is None:
+            return
         for line in stream:
             target.put(line)
 
     def close(self) -> None:
         if self.proc.poll() is None:
-            self.proc.terminate()
+            try:
+                self.proc.terminate()
+            except OSError:
+                return
             try:
                 self.proc.wait(timeout=5)
             except subprocess.TimeoutExpired:
                 self.proc.kill()
 
     def request(self, method: str, params: dict[str, Any]) -> int:
+        if self.proc.poll() is not None:
+            raise RuntimeError("app-server transport exited")
         if self.proc.stdin is None:
             raise RuntimeError("app-server stdin unavailable")
         request_id = self.next_id
         self.next_id += 1
-        self.proc.stdin.write(json.dumps({"id": request_id, "method": method, "params": params}, separators=(",", ":")) + "\n")
-        self.proc.stdin.flush()
+        try:
+            self.proc.stdin.write(json.dumps({"id": request_id, "method": method, "params": params}, separators=(",", ":")) + "\n")
+            self.proc.stdin.flush()
+        except (BrokenPipeError, OSError, ValueError) as exc:
+            raise RuntimeError("app-server transport unavailable") from exc
         return request_id
 
     def wait_response(self, request_id: int, timeout_seconds: int) -> tuple[dict[str, Any] | None, list[str]]:
         deadline = time.time() + timeout_seconds
         observed: list[str] = []
         while time.time() < deadline:
+            if self.proc.poll() is not None and self.stdout.empty():
+                observed.append("app_server_exited")
+                break
             try:
                 line = self.stdout.get(timeout=0.5).strip()
             except queue.Empty:
@@ -92,7 +122,19 @@ class AppServerClient:
     def call(self, method: str, params: dict[str, Any], *, retries: int, timeout_seconds: int) -> dict[str, Any]:
         failures: list[dict[str, Any]] = []
         for attempt in range(1, retries + 1):
-            request_id = self.request(method, params)
+            try:
+                request_id = self.request(method, params)
+            except RuntimeError as exc:
+                failures.append(
+                    {
+                        "attempt": attempt,
+                        "status": "transport_unavailable",
+                        "message_class": classify_transport_failure(exc),
+                        "observed_methods": [],
+                    }
+                )
+                time.sleep(min(attempt, 3))
+                continue
             response, observed = self.wait_response(request_id, timeout_seconds)
             if response and "result" in response:
                 return {
@@ -120,6 +162,15 @@ class AppServerClient:
         for attempt in range(1, retries + 1):
             deadline = time.time() + per_attempt
             while time.time() < deadline:
+                if self.proc.poll() is not None and self.stdout.empty():
+                    observed.append("app_server_exited")
+                    return {
+                        "status": "transport_unavailable",
+                        "attempt": attempt,
+                        "observed_methods": sorted(set(observed))[:32],
+                        "turn_started_observed": started_signal,
+                        "assistant_signal_observed": assistant_signal,
+                    }
                 try:
                     line = self.stdout.get(timeout=0.5).strip()
                 except queue.Empty:
@@ -155,6 +206,17 @@ class AppServerClient:
             "turn_started_observed": started_signal,
             "assistant_signal_observed": assistant_signal,
         }
+
+
+def classify_transport_failure(exc: RuntimeError) -> str:
+    message = str(exc).lower()
+    if "stdin" in message:
+        return "stdin_unavailable"
+    if "exited" in message:
+        return "process_exited"
+    if "launch" in message:
+        return "launch_unavailable"
+    return "transport_unavailable"
 
 
 def classify_error(response: dict[str, Any] | None) -> str:
@@ -365,6 +427,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             "approval_policy_requested": "never",
             "unfiltered_transport_published": False,
             "retry_attempts_per_operation": args.retries,
+            "app_server_launch_mode": client.launch_mode,
         },
         "init": summarize_call(init),
         "lanes": lanes,
