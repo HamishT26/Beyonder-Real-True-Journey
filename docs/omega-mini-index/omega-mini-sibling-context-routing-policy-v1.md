@@ -33,9 +33,9 @@ Series: `v516-v530 GMUT/THOS`
 
 Active version: `v527-gmut-thos-v63`
 
-Next expected phase: `v527-gmut-thos-v63-v4-x1`
+Next expected phase: `v527-gmut-thos-v63-v5-x1`
 
-Next expected lane group: Aster Vale + Kierkegaard + Aristotle
+Next expected lane group: Lumen Vale
 
 Current route discipline: omega-mini is the ordinary sibling catch-up branch. The full omega branch is archive fallback only after a specific missing-artifact gap is recorded.
 
