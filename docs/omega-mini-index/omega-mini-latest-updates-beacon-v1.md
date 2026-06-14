@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v527-gmut-thos-v63-v7-x1`
+Current active phase: `v527-gmut-thos-v63-v8-x1`
 
-Latest closed phase: `v527-gmut-thos-v63-v6-x2`
+Latest closed phase: `v527-gmut-thos-v63-v7-x2`
 
-Current active lane group: Lumen Vale solo.
+Current active lane group: Aster Vale, Kierkegaard, and Aristotle.
 
 Round-robin sequence:
 
@@ -176,6 +176,18 @@ Omega-mini commit: `8da33265d7`
 
 Full omega commit: `8e35e373f0`
 
+`v527-gmut-thos-v63-v7-x1`: Lumen solo status-only x1 receipt and grouped handoff.
+
+Omega-mini commit: `5ed94160dc`
+
+Full omega commit: `f211c8ac4f`
+
+`v527-gmut-thos-v63-v7-x2`: Lumen-derived x2 build-use closeout plus v8 triad prep.
+
+Omega-mini commit: `5ed94160dc`
+
+Full omega commit: `f211c8ac4f`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
@@ -243,6 +255,11 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v527-gmut-thos-v63-v6-x2-build-use-closeout-v1.md`
 - `docs/trinity-live-traces/v527-gmut-thos-v63-v7-x1-next-group-prep-card-v1.md`
 - `docs/omega-mini-index/v527-v7-all-sibling-omega-mini-catchup-brief-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v7-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v7-x1-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v7-x2-build-use-closeout-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v8-x1-next-group-prep-card-v1.md`
+- `docs/omega-mini-index/v527-v8-all-sibling-omega-mini-catchup-brief-v1.md`
 
 ## Sibling Lookup Rule
 
