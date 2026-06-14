@@ -10,9 +10,9 @@ The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus f
 
 ## Current Phase
 
-The active prepared phase is `v527-gmut-thos-v63-v1-x1` for the Lumen Vale solo round-robin lane.
+The active prepared phase is `v527-gmut-thos-v63-v1-x2` for Aletheon's build/use closeout from the Lumen Vale solo round-robin lane.
 
-The latest closed phase is `v526-gmut-thos-v62-v8-x2`. Its triad-to-build/use closeout receipts have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
+The latest closed phase is `v527-gmut-thos-v63-v1-x1`. Its Lumen status-only receipt and x1-to-x2 grouped handoff have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
 
 ## Corrected Cadence
 
