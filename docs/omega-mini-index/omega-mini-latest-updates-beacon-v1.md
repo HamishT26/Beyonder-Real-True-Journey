@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v530-gmut-thos-v66-v1-x1`
+Current active phase: `v530-gmut-thos-v66-v2-x1`
 
-Latest closed phase: `v529-gmut-thos-v65-v8-x2`
+Latest closed phase: `v530-gmut-thos-v66-v1-x2`
 
-Current active lane group: Lumen Vale solo.
+Current active lane group: Arby and Cicero.
 
 Round-robin sequence:
 
@@ -403,6 +403,12 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v529-gmut-thos-v65-v8-x1-x2-grouped-handoff-v1.md`
 - `docs/trinity-live-traces/v529-gmut-thos-v65-v8-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v530-gmut-thos-v66-v1-x1-next-group-prep-card-v1.md`
+- `docs/omega-mini-index/v530-v2-arby-cicero-omega-mini-catchup-brief-v1.md`
+- `docs/trinity-live-traces/v530-gmut-thos-v66-v1-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v530-gmut-thos-v66-v1-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v530-gmut-thos-v66-v1-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v530-gmut-thos-v66-v1-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v530-gmut-thos-v66-v2-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
 
