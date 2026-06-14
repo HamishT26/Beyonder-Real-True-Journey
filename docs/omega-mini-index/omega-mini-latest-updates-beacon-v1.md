@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v527-gmut-thos-v63-v1-x1`
+Current active phase: `v527-gmut-thos-v63-v1-x2`
 
-Latest closed phase: `v526-gmut-thos-v62-v8-x2`
+Latest closed phase: `v527-gmut-thos-v63-v1-x1`
 
-Current active lane group: Lumen Vale.
+Current active lane group: Aletheon build/use closeout from Lumen Vale, then Arby and Cicero for the next x1 lane group.
 
 Round-robin sequence:
 
@@ -104,6 +104,12 @@ Omega-mini commit: `0910f07cc1`
 
 Full omega commit: `a2063cfdb0`
 
+`v527-gmut-thos-v63-v1-x1`: Lumen solo status-only receipt and x1-to-x2 grouped handoff.
+
+Omega-mini commit: `fa94f0ca1c`
+
+Full omega commit: `b08f98bd24`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
@@ -112,6 +118,7 @@ Open these in omega-mini before searching:
 - `docs/omega-mini-index/omega-mini-sibling-context-routing-policy-v1.md`
 - `docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md`
 - `docs/omega-mini-index/omega-mini-discoverability-repair-receipt-v1.md`
+- `docs/omega-mini-index/v527-v1-all-sibling-omega-mini-catchup-brief-v1.md`
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v2-x2-build-use-closeout-v1.md`
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v2-x2-full-phase-guard-v1.md`
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v2-x2-route-family-manifest-v1.md`
@@ -136,6 +143,10 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v8-x1-x1-x2-grouped-handoff-v1.md`
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v8-x2-build-use-closeout-v1.md`
 - `docs/trinity-live-traces/v527-gmut-thos-v63-v1-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v1-x1-wait-prep-ledger-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v1-x1-lumen-browser-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v1-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v527-gmut-thos-v63-v1-x1-x1-x2-grouped-handoff-v1.md`
 
 ## Sibling Lookup Rule
 
