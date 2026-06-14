@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v526-gmut-thos-v62-v5-x1`
+Current active phase: `v526-gmut-thos-v62-v6-x1`
 
-Latest closed phase: `v526-gmut-thos-v62-v4-x2`
+Latest closed phase: `v526-gmut-thos-v62-v5-x2`
 
-Current active lane group: Lumen Vale.
+Current active lane group: Arby and Cicero.
 
 Round-robin sequence:
 
@@ -56,6 +56,12 @@ Omega-mini commit: `09ddebc6d3`
 
 Full omega commit: `0df4ce5bdb`
 
+`v526-gmut-thos-v62-v5-x1`: Lumen v5 x1 status-only receipt and x1-to-x2 handoff.
+
+Omega-mini commit: `4601db07da`
+
+Full omega commit: `fe9af978d8`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
@@ -72,7 +78,10 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v4-x1-grouped-lane-receipt-v1.md`
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v4-x1-x1-x2-grouped-handoff-v1.md`
 - `docs/trinity-live-traces/v526-gmut-thos-v62-v4-x2-build-use-closeout-v1.md`
-- `docs/trinity-live-traces/v526-gmut-thos-v62-v5-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v526-gmut-thos-v62-v5-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v526-gmut-thos-v62-v5-x1-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v526-gmut-thos-v62-v5-x2-build-use-closeout-v1.md`
+- `docs/trinity-live-traces/v526-gmut-thos-v62-v6-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
 
