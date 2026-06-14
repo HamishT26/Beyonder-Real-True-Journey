@@ -62,6 +62,12 @@ Omega-mini commit: `4601db07da`
 
 Full omega commit: `fe9af978d8`
 
+`v526-gmut-thos-v62-v5-x2`: Lumen v5 x2 build-use closeout plus v6 Arby and Cicero prep.
+
+Omega-mini commit: `84011588b2`
+
+Full omega commit: `742d17e5fe`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
