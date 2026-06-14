@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v529-gmut-thos-v65-v2-x1`
+Current active phase: `v529-gmut-thos-v65-v3-x1`
 
-Latest closed phase: `v529-gmut-thos-v65-v1-x2`
+Latest closed phase: `v529-gmut-thos-v65-v2-x2`
 
-Current active lane group: Arby and Cicero.
+Current active lane group: Lumen Vale solo.
 
 Round-robin sequence:
 
