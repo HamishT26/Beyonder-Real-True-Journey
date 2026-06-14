@@ -6,13 +6,13 @@
 
 ## Seed Scope
 
-The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus focused sibling status receipts. It excludes raw logs, screenshots, session streams, private route handles, historic bulk archives, plugin cache, user skills, local absolute paths, and credentials.
+The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus focused sibling status receipts. It excludes raw logs, image files, session streams, private route handles, historic bulk archives, plugin cache, user skills, local absolute paths, and credentials.
 
 ## Current Phase
 
-The active prepared phase is `v529-gmut-thos-v65-v1-x1` for the Lumen Vale solo round-robin lane.
+The active prepared phase is `v529-gmut-thos-v65-v2-x1` for the Arby and Cicero round-robin lane group.
 
-The latest closed phase is `v528-gmut-thos-v64-v8-x2`. Its Aster Vale, Kierkegaard, and Aristotle grouped x1 receipt, app-lane retry9 completion, transport repair receipt, x2 build/use closeout, and v529 v1 Lumen prep have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
+The latest closed phase is `v529-gmut-thos-v65-v1-x2`. Its Lumen solo x1 receipt, x2 build/use closeout, productive-wait x2 candidate ledger, and v529 v2 Arby+Cicero prep have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
 
 The active long-run envelope is now `v516-v550 v1-v8 GMUT/THOS x1-x2`, with omega-mini remaining the lightweight sibling-facing continuity surface.
 
