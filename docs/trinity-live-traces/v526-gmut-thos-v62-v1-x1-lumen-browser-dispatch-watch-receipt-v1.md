@@ -1,16 +1,15 @@
 # v526-gmut-thos-v62-v1-x1 Lumen Browser Dispatch Watch Receipt
 
-Status: `OPEN_WATCH_BROWSER_DISPATCH_VERIFICATION_PENDING`
+Status: `RESOLVED_BY_LUMEN_BROWSER_MARKER_RECEIPT`
 
-The v526 v1 x1 Lumen prompt was prepared, placed into the visible Lumen composer, and a send action was attempted. Post-send verification is still pending because the Browser control surface slowed during the follow-up check.
+The v526 v1 x1 Lumen prompt was prepared, placed into the visible Lumen composer, and a send action was attempted. Initial post-send verification was delayed because the Browser control surface slowed during the follow-up check.
 
-This is intentionally a watch receipt, not a completion claim. The Lumen panel may be refreshed or branched by Hamish, and that should be treated as intentional context renewal rather than route failure.
+A later scoped Browser check verified the Lumen final marker, so this watch item is resolved by the companion marker receipt. The Lumen panel may be refreshed or branched by Hamish, and that remains intentional context renewal rather than route failure.
 
 Next actions:
 
-- Recheck the visible Lumen panel before resending.
-- Do not duplicate-send unless the prompt is visibly still unsent.
-- If the final marker appears, record a status-only marker receipt.
-- If the route remains slow, continue local x2 preparation and retry with a fresh browser check later.
+- Use the Lumen marker receipt as the v526 v1 x1 browser-lane evidence.
+- Proceed to grouped x1 reduction before any v526 v1 x2 closeout.
+- Continue duplicate-send prevention for future Browser lanes.
 
 Open gates remain open for GMUT empirical closure, final physics, consciousness proof, and canon promotion.
