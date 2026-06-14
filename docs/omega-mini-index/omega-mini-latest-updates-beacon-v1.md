@@ -74,6 +74,12 @@ Omega-mini commit: `940b6fe367`
 
 Full omega commit: `f78b4b1c64`
 
+`v526-gmut-thos-v62-v6-x2`: Arby and Cicero x2 build-use closeout plus v7 Lumen prep.
+
+Omega-mini commit: `3b5d917edd`
+
+Full omega commit: `d1460cbae8`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
