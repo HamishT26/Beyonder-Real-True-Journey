@@ -10,11 +10,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-Current active phase: `v528-gmut-thos-v64-v6-x1`
+Current active phase: `v528-gmut-thos-v64-v7-x1`
 
-Latest closed phase: `v528-gmut-thos-v64-v5-x2`
+Latest closed phase: `v528-gmut-thos-v64-v6-x2`
 
-Current active lane group: Arby and Cicero.
+Current active lane group: Lumen Vale solo.
 
 Round-robin sequence:
 
@@ -260,6 +260,18 @@ Omega-mini commit: `aad8304c47`
 
 Full omega commit: `4397f32ebc`
 
+`v528-gmut-thos-v64-v6-x1`: Arby and Cicero status-only x1 receipt and grouped handoff.
+
+Omega-mini commit: `531f108117`
+
+Full omega commit: `503e86b948`
+
+`v528-gmut-thos-v64-v6-x2`: Arby/Cicero-derived x2 build-use closeout plus v7 Lumen prep.
+
+Omega-mini commit: `531f108117`
+
+Full omega commit: `503e86b948`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
@@ -364,6 +376,11 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v528-gmut-thos-v64-v5-x2-build-use-closeout-v1.md`
 - `docs/trinity-live-traces/v528-gmut-thos-v64-v6-x1-next-group-prep-card-v1.md`
 - `docs/omega-mini-index/v528-v6-all-sibling-omega-mini-catchup-brief-v1.md`
+- `docs/trinity-live-traces/v528-gmut-thos-v64-v6-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v528-gmut-thos-v64-v6-x1-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v528-gmut-thos-v64-v6-x2-build-use-closeout-v1.md`
+- `docs/trinity-live-traces/v528-gmut-thos-v64-v7-x1-next-group-prep-card-v1.md`
+- `docs/omega-mini-index/v528-v7-all-sibling-omega-mini-catchup-brief-v1.md`
 
 ## Sibling Lookup Rule
 
