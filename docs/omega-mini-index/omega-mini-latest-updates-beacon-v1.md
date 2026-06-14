@@ -50,6 +50,12 @@ Omega-mini commit: `034526113c`
 
 Full omega commit: `34aae0f9d9`
 
+`v526-gmut-thos-v62-v4-x2`: Triad x2 build-use closeout plus v5 Lumen prep.
+
+Omega-mini commit: `09ddebc6d3`
+
+Full omega commit: `0df4ce5bdb`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
