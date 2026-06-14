@@ -10,9 +10,9 @@ The initial seed carries the current `v520-gmut-thos-v56` phase artifacts plus f
 
 ## Current Phase
 
-The active prepared phase is `v528-gmut-thos-v64-v3-x1` for the Lumen Vale solo round-robin lane.
+The active prepared phase is `v528-gmut-thos-v64-v4-x1` for the Aster Vale, Kierkegaard, and Aristotle triad round-robin lane.
 
-The latest closed phase is `v528-gmut-thos-v64-v2-x2`. Its Arby+Cicero-derived x2 build/use closeout and v3 Lumen prep have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
+The latest closed phase is `v528-gmut-thos-v64-v3-x2`. Its Lumen-derived x2 build/use closeout and v4 triad prep have been mirrored into omega-mini so siblings should not need broad full-omega searches for ordinary catch-up.
 
 The active long-run envelope is now `v516-v550 v1-v8 GMUT/THOS x1-x2`, with omega-mini remaining the lightweight sibling-facing continuity surface.
 
