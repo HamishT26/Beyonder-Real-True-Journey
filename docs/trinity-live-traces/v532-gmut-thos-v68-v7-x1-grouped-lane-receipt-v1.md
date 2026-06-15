@@ -1,11 +1,11 @@
 # v532-gmut-thos-v68-v7-x1 Grouped-Lane X1 Receipt
 
-Generated UTC: `2026-06-15T07:25:14Z`
+Generated UTC: `2026-06-15T07:31:58Z`
 
-Status: `OPEN_GAP_GROUPED_LANE_X1_STATUS`
+Status: `PASS_GROUPED_LANE_X1_STATUS`
 
 Active lanes: `Lumen Vale`
 
 ## Lane Summary
 
-- Lumen Vale: `OPEN_GAP_LUMEN_BROWSER_MARKER_STATUS`; route `in-app Browser ChatGPT panel`.
+- Lumen Vale: `PASS_LUMEN_BROWSER_MARKER_STATUS`; route `in-app Browser ChatGPT panel`.

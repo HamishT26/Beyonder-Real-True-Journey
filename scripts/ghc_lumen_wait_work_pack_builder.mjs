@@ -12,6 +12,9 @@ const nextScope = args.get("--next-scope");
 const markerCount = Number(args.get("--marker-count") || "0");
 const promptChars = Number(args.get("--prompt-chars") || "0");
 const checkCount = Number(args.get("--check-count") || "0");
+const finalMessageChars = Number(args.get("--final-message-chars") || "0");
+const finalMessageWords = Number(args.get("--final-message-words") || "0");
+const finalMessageHash = args.get("--final-message-hash") || null;
 const sourceJson = args.get("--source-json");
 const sourceMd = args.get("--source-md");
 const waitJson = args.get("--wait-json");
@@ -209,6 +212,12 @@ const waitReceipt = {
   prompt_chars: promptChars,
   marker_count: markerCount,
   check_count: checkCount,
+  final_message_metadata: {
+    chars: finalMessageChars,
+    words: finalMessageWords,
+    hash: finalMessageHash,
+    raw_reply_text_published: false,
+  },
   duplicate_send_avoided: true,
   completion_gate: "marker_count_must_be_at_least_2",
   eureka_task_count: eurekaTasks.length,
@@ -281,6 +290,8 @@ writeMd(waitMd, [
   `- Prompt chars: \`${promptChars}\``,
   `- Marker count: \`${markerCount}\``,
   `- Check count: \`${checkCount}\``,
+  `- Final message words: \`${finalMessageWords}\``,
+  `- Final message hash: \`${finalMessageHash || "not-recorded"}\``,
   "- Duplicate send avoided: `true`",
   "",
   "## Eureka Tasks",
