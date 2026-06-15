@@ -17,9 +17,10 @@ const phaseSlug = args.get("--phase-slug");
 const lanesArg = args.get("--lanes") || "Cicero,Kierkegaard,Aristotle";
 const mode = args.get("--mode") || "preflight";
 const receiptPrefix = args.get("--receipt-prefix") || `${phaseSlug}-recovered-app-lane-map-runner`;
+const backgroundWatch = args.has("--background-watch");
 
 if (!phaseSlug || !["preflight", "probe", "notify"].includes(mode)) {
-  console.error("Usage: node ghc_recovered_app_lane_map_runner.mjs --phase-slug <slug> [--lanes <csv>] [--mode preflight|probe|notify] [--receipt-prefix <prefix>]");
+  console.error("Usage: node ghc_recovered_app_lane_map_runner.mjs --phase-slug <slug> [--lanes <csv>] [--mode preflight|probe|notify] [--receipt-prefix <prefix>] [--background-watch]");
   process.exit(2);
 }
 
@@ -65,7 +66,15 @@ function runStep(label, command, commandArgs, env, allowFailure = true) {
     maxBuffer: 1024 * 1024,
   });
   let stdoutStatus = "unparsed";
-  for (const line of (proc.stdout || "").split(/\r?\n/).filter(Boolean).reverse()) {
+  try {
+    const parsed = JSON.parse(proc.stdout || "");
+    if (parsed && typeof parsed === "object") {
+      stdoutStatus = parsed.status || parsed.overall_status || parsed.aggregate_status || "json_status_missing";
+    }
+  } catch {
+    // Fall through to line-wise parsing for tools that emit single-line JSON amid other output.
+  }
+  for (const line of stdoutStatus === "unparsed" ? (proc.stdout || "").split(/\r?\n/).filter(Boolean).reverse() : []) {
     try {
       const parsed = JSON.parse(line);
       if (parsed && typeof parsed === "object") {
@@ -198,41 +207,51 @@ if (mode !== "preflight" && missing.length === 0) {
   if (mode === "notify") {
     notifierArgs.push("--notify");
   }
+  if (backgroundWatch) {
+    notifierArgs.push("--background-watch");
+  }
   steps.push(runStep("app_lane_notifier", "python", notifierArgs, env));
-  steps.push(
-    runStep(
-      "completion_gate",
-      "python",
-      [
-        "scripts/thos_council_app_lane_notifier_runner.py",
-        "--phase-slug",
-        phaseSlug,
-        "--lanes",
-        lanes.join(","),
-        "--gate-only",
-        "--runner-prefix",
-        `${receiptPrefix}-runner`,
-        "--artifact-prefix",
-        notifierPrefix,
-        "--launcher-prefix",
-        launcherPrefix,
-        "--gate-prefix",
-        gatePrefix,
-      ],
-      env,
-    ),
-  );
+  if (!backgroundWatch) {
+    steps.push(
+      runStep(
+        "completion_gate",
+        "python",
+        [
+          "scripts/thos_council_app_lane_notifier_runner.py",
+          "--phase-slug",
+          phaseSlug,
+          "--lanes",
+          lanes.join(","),
+          "--gate-only",
+          "--runner-prefix",
+          `${receiptPrefix}-runner`,
+          "--artifact-prefix",
+          notifierPrefix,
+          "--launcher-prefix",
+          launcherPrefix,
+          "--gate-prefix",
+          gatePrefix,
+        ],
+        env,
+      ),
+    );
+  }
 }
 
 const preflight = readJsonIfExists(preflightJson);
 const gate = readJsonIfExists(join(TRACE_DIR, `${gatePrefix}-v1.json`));
 const preflightPassed = preflight?.overall_status === "PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT";
 const gatePassed = mode === "preflight" ? true : gate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE";
+const backgroundStarted =
+  backgroundWatch &&
+  steps.some((step) => step.label === "app_lane_notifier" && step.stdout_status === "PASS_BACKGROUND_WATCH_STARTED");
 const overallStatus =
-  missing.length === 0 && preflightPassed && gatePassed
+  missing.length === 0 && preflightPassed && (gatePassed || backgroundStarted)
     ? mode === "preflight"
       ? "PASS_RECOVERED_MAP_PREFLIGHT"
-      : "PASS_RECOVERED_APP_LANE_RUN"
+      : backgroundStarted
+        ? "PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED"
+        : "PASS_RECOVERED_APP_LANE_RUN"
     : "OPEN_GAP_RECOVERED_APP_LANE_RUN";
 
 const receipt = {
@@ -240,6 +259,7 @@ const receipt = {
   generated_utc: generatedUtc,
   phase_slug: phaseSlug,
   mode,
+  background_watch_requested: backgroundWatch,
   overall_status: overallStatus,
   lanes,
   recovered_handle_count: Object.keys(map).length,

@@ -106,15 +106,17 @@ const cliMarkerPass =
   cliMarker?.status === "PASS_MARKER_REVIEW_LEDGER" ||
   cliMarker?.overall_status === "PASS_MARKER_REVIEW_LEDGER";
 const appRequired = activeLanes.some((lane) => lane === "Cicero" || lane === "Kierkegaard" || lane === "Aristotle");
-const appRunnerPass =
-  !appRequired ||
-  appRunner?.status === "PASS_RECOVERED_APP_LANE_RUN" ||
-  appRunner?.overall_status === "PASS_RECOVERED_APP_LANE_RUN" ||
-  appRunner?.overall_status === "PASS";
 const appGatePass =
   !appRequired ||
   appGate?.status === "PASS_APP_LANE_COMPLETION_GATE" ||
   appGate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE";
+const appRunnerPass =
+  !appRequired ||
+  appRunner?.status === "PASS_RECOVERED_APP_LANE_RUN" ||
+  appRunner?.overall_status === "PASS_RECOVERED_APP_LANE_RUN" ||
+  appRunner?.overall_status === "PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED" ||
+  appRunner?.overall_status === "PASS" ||
+  (appRunner?.background_watch_requested === true && appGatePass);
 
 const laneSummary = activeLanes.map((lane) => {
   if (lane === "Lumen Vale") {
