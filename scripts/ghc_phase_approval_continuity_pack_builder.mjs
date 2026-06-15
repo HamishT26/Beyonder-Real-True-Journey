@@ -17,6 +17,7 @@ const eurekaJson = args.get("--eureka-json");
 const eurekaMd = args.get("--eureka-md");
 const handoffJson = args.get("--handoff-json");
 const handoffMd = args.get("--handoff-md");
+const nextGroup = splitCsv(args.get("--next-group"));
 
 if (
   !phaseSlug ||
@@ -38,6 +39,13 @@ if (
 
 function utcNow() {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
+}
+
+function splitCsv(value) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function writeJson(path, payload) {
@@ -264,7 +272,7 @@ const handoff = {
   generated_utc: generatedUtc,
   phase_slug: phaseSlug,
   next_phase_slug: nextPhaseSlug,
-  status: "READY_FOR_NEXT_LUMEN_SOLO_X1",
+  status: "READY_FOR_NEXT_GROUPED_X1",
   active_memory_cue: "v532-live-state",
   stale_memory_policy: "omega44 historical-only unless Hamish explicitly asks for it",
   current_phase_result: [
@@ -272,7 +280,7 @@ const handoff = {
     "Grouped x2 build/use core artifacts passed.",
     "This pack adds current-source, approval, eureka, and compact-continuity layers.",
   ],
-  next_round_robin_group: ["Lumen Vale"],
+  next_round_robin_group: nextGroup.length ? nextGroup : ["Lumen Vale"],
   required_next_actions: [
     "Use omega-mini first for sibling catch-up.",
     "Run Lumen solo through Browser where available.",
