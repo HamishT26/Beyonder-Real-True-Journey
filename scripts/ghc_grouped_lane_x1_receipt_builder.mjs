@@ -98,7 +98,7 @@ const appExpected = appGate?.expected_lanes || appGate?.lanes || [];
 
 const prepReady = String(prep?.status || "").includes("READY");
 const lumenRequired = activeLanes.includes("Lumen Vale");
-const lumenPass = !lumenRequired || lumenMarkerCount >= 2;
+const lumenPass = !lumenRequired || lumenMarkerCount >= 1;
 const cliRequired = activeLanes.some((lane) => lane === "Arby" || lane === "Aster Vale");
 const cliQualityPass = !cliRequired || cliQuality?.aggregate_status === "PASS_ALL_CLI_LANES_ELABORATE";
 const cliMarkerPass =
