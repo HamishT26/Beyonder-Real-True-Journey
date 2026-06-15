@@ -1,8 +1,8 @@
 # v532-gmut-thos-v68-v7-x1 Grouped X1 to X2 Handoff
 
-Generated UTC: `2026-06-15T07:25:14Z`
+Generated UTC: `2026-06-15T07:31:58Z`
 
-Status: `OPEN_GAP_BEFORE_GROUPED_X2_BUILD_USE`
+Status: `READY_FOR_GROUPED_X2_BUILD_USE`
 
 ## X2 Build Use Candidates
 
