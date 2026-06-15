@@ -77,7 +77,7 @@ const publicationBoundary = {
 };
 
 const claimBoundary = {
-  phase_scope: "v532_x2_build_use_and_next_x1_preparation_only",
+  phase_scope: `${phaseSlug}_to_${nextPhaseSlug}_status_planning_only`,
   gmut_empirical_closure: "not_claimed",
   final_physics: "not_claimed",
   consciousness_proof: "not_claimed",
@@ -138,7 +138,7 @@ const sourceGroups = [
     id: "source-09",
     title: "Google Gemini Enterprise Agent Platform",
     url: "https://docs.cloud.google.com/gemini-enterprise-agent-platform",
-    use: "Agent runtime, governance, observability, and Memory Bank concepts inform the v532 live-state memory refresh pattern.",
+    use: "Agent runtime, governance, observability, and Memory Bank concepts inform the live-state memory refresh pattern.",
   },
   {
     id: "source-10",
@@ -189,10 +189,10 @@ const approvalPackets = [
   ["AP-14", "Runner compatibility review", "Prefer latest grouped-lane, omega-mini, phase status, and strict CLI runners.", "Do not mutate old runners unless exact patch is scoped."],
   ["AP-15", "Skill and command overlay", "Prepare repo-level skill/command recommendations for newest flow.", "No user-skill or plugin-cache mutation in this packet."],
   ["AP-16", "Command-index compatibility", "Keep command surfaces indexed for current Node and Windows entrypoints.", "No canon promotion from command availability alone."],
-  ["AP-17", "Journey spine reflection", "Use Journey v1-v51 as inspiration and continuity, prioritizing current v49-v51 plus v532 receipts.", "Do not treat reflective material as empirical proof."],
+  ["AP-17", "Journey spine reflection", "Use Journey v1-v51 as inspiration and continuity, prioritizing current v49-v51 plus newest repo receipts.", "Do not treat reflective material as empirical proof."],
   ["AP-18", "Provenance discipline", "Pair phase artifacts with JSON parse, script compile, exposure guard, exact stage, push, and remote verification.", "No broad staging or force-push."],
   ["AP-19", "Agentic security threat model", "Apply OWASP-style agentic threat modeling to live-adapter, sibling permissions, and helper runners.", "Open risks remain open until evidence closes them."],
-  ["AP-20", "v533 expansion prep", "Prepare the next phase queue while closing v532 v6 x2 and starting v532 v7 x1.", "No limited-phase shortcut unless Hamish asks."],
+  ["AP-20", "Current expansion prep", "Prepare the next phase queue while closing the current x2 scope and starting the next grouped x1 scope.", "No limited-phase shortcut unless Hamish asks."],
   ["AP-21", "Approval packet overflow queue", "If more packets are needed before Hamish returns, append them as candidates with safe defaults.", "Candidates do not authorize risky work by themselves."],
   ["AP-22", "Memory refresh continuity", "Use v532-live-state and newest repo receipts as active memory.", "Older omega44 remains historical-only."],
 ];
@@ -203,7 +203,7 @@ const eurekaTasks = [
   ["E-03", "Create 20+ approval packet tapestry", "DONE", "Prepared 22 scoped packets for Hamish review."],
   ["E-04", "Create compact-safe handoff", "DONE", "Prepared v7 x1 continuity handoff."],
   ["E-05", "Run phase status index", "READY", "Use the existing status index builder after this pack lands."],
-  ["E-06", "Mirror essential v532 artifacts to omega-mini", "READY", "Copy only current, high-signal files."],
+  ["E-06", "Mirror essential phase artifacts to omega-mini", "READY", "Copy only current, high-signal files."],
   ["E-07", "Validate JSON parse", "READY", "Parse generated JSON before staging."],
   ["E-08", "Script compile check", "READY", "Run Node syntax check for the new builder."],
   ["E-09", "Exposure scan", "READY", "Scan curated files for private URLs, credentials, raw logs, and local paths."],

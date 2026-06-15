@@ -112,7 +112,7 @@ const publicationBoundary = {
 const claimBoundary = {
   x2_closeout: allInputsReady ? "closed_for_build_use_scope_only" : "open_gap",
   next_x1_start: "prepared_not_started",
-  v515_completion: "not_claimed",
+  campaign_completion: "not_claimed",
   gmut_empirical_closure: "not_claimed",
   final_physics: "not_claimed",
   consciousness_proof: "not_claimed",

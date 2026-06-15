@@ -167,7 +167,7 @@ const publicationBoundary = {
 const claimBoundary = {
   x1_status_scope: allPass ? "closed_for_status_scope_only" : "open_gap",
   x2_closeout: "not_claimed",
-  v515_completion: "not_claimed",
+  campaign_completion: "not_claimed",
   gmut_empirical_closure: "not_claimed",
   final_physics: "not_claimed",
   consciousness_proof: "not_claimed",
