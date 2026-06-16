@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_V541_V5_X1_LUMEN`
 
-Generated UTC: `2026-06-16T08:59:01Z`
+Generated UTC: `2026-06-16T09:04:32Z`
 
 Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v539/v540 phase receipts without broad searches.
 

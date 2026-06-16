@@ -2,7 +2,7 @@
 
 Status: `ACTIVE_BEACON_CURRENT_TO_V541_V5_X1_LUMEN`
 
-Updated: `2026-06-16T20:59:01.1598023+12:00`
+Updated: `2026-06-16T21:04:32.4518319+12:00`
 
 ## Active Routing
 
@@ -10,7 +10,7 @@ Updated: `2026-06-16T20:59:01.1598023+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary context branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Latest remote-verified closeout before this v541 work: `v541-gmut-thos-v77-v2-x2`
+- Latest remote-verified closeout before this v541 work: `v541-gmut-thos-v77-v4-x2`
 - Latest local closeout pending publication anchor: `v541-gmut-thos-v77-v4-x2`
 - Active local phase: `v541-gmut-thos-v77-v5-x1`
 - Next prepared phase: `v541-gmut-thos-v77-v5-x1`
@@ -49,6 +49,12 @@ Updated: `2026-06-16T20:59:01.1598023+12:00`
 - `v541-gmut-thos-v77-v4-x2-full-phase-guard-v1.md`
 - `v541-gmut-thos-v77-v4-x2-closeout-v1.md`
 - `v541-gmut-thos-v77-v5-x1-next-group-prep-card-v1.md`
+
+
+## Remote-Verified Heads
+
+- Full omega: $full
+- Omega-mini: $mini
 
 ## Browser Developer Mode Rule
 
