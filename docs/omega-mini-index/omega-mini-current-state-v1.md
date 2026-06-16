@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_V541_V6_X1_ARBY_CICERO`
 
-Updated: `2026-06-16T21:19:23.6854876+12:00`
+Updated: `2026-06-16T21:28:04.0331153+12:00`
 
 ## Active Routing
 
@@ -22,8 +22,8 @@ Updated: `2026-06-16T21:19:23.6854876+12:00`
 
 ## Latest Remote-Verified Heads
 
-- Full omega: $full
-- Omega-mini: $mini
+- Full omega: `43825365ec06808f1b86c860c84190619003d0a3`
+- Omega-mini: `4e3c87fe649e805606244a009829761253707b03`
 
 ## Round-Robin Cadence
 

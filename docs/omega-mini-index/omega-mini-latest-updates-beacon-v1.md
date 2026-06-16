@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_V541_V6_X1_ARBY_CICERO`
 
-Generated UTC: `2026-06-16T09:19:23Z`
+Generated UTC: `2026-06-16T09:28:04Z`
 
 Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v539/v540 phase receipts without broad searches.
 
@@ -35,7 +35,8 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - `v541-gmut-thos-v77-v2-x2`: Arby and Cicero v2 x1 completion, v2 x2 build/use closeout, and Lumen v3 x1 prep (omega-mini: `ad0eb613b6e2a369b5d238241f3fb44c83511778`, full omega: `ed5599b521b4da100df44aef7d0fefeebc216535`).
 - `v541-gmut-thos-v77-v3-x2`: Lumen v3 x1 completion, v3 x2 build/use closeout, and Aster/Kierkegaard/Aristotle v4 x1 prep (omega-mini: `ec460d769ff1f29690b901a2966952be577bd199`, full omega: `65d12df8433d0a81829f60a62c4db69ea8230d2a`).
 
-- 541-gmut-thos-v77-v5-x1-wait-pack: Lumen v5 x1 prompt transmitted; source ledger, wait-work receipt, approval packet queue, and continuity handoff published while Lumen continues reasoning (omega-mini: $mini, full omega: $full).
+- `v541-gmut-thos-v77-v5-x1-wait-pack`: Lumen v5 x1 prompt transmitted; source ledger, wait-work receipt, approval packet queue, and continuity handoff published while Lumen continues reasoning (omega-mini: `1ae9bd0b9b13e39f564da4dfb43ef71b82c49d47`, full omega: `776d2baa7d9f2576f5b72a8d93086a4dde3d147e`).
+- `v541-gmut-thos-v77-v5-x2`: Lumen v5 x1 completion, v5 x2 build/use closeout, Lumen eureka execution ledger, user authorization carry receipt, and Arby/Cicero v6 x1 prep (omega-mini: `4e3c87fe649e805606244a009829761253707b03`, full omega: `43825365ec06808f1b86c860c84190619003d0a3`).
 
 ## Exact Lookup Files
 
