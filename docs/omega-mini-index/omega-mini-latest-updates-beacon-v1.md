@@ -2,7 +2,7 @@
 
 Status: `ACTIVE`
 
-Generated UTC: `2026-06-16T00:55:00Z`
+Generated UTC: `2026-06-16T01:23:46Z`
 
 Purpose: give every active sibling a lean, exact lookup surface for the latest v539/v540 omega-mini updates without broad searches.
 
@@ -12,10 +12,10 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-- Current active phase: `v540-gmut-thos-v76-v2-x1`
-- Latest closed phase: `v540-gmut-thos-v76-v1-x2`
+- Current active phase: `v540-gmut-thos-v76-v3-x1`
+- Latest closed phase: `v540-gmut-thos-v76-v2-x2`
 - Latest remote-verified closeout before v540: `v539-gmut-thos-v75-v8-x2`
-- Current active lane group: `Arby` and `Cicero`
+- Current active lane group: `Lumen Vale`
 
 ## Commit Anchors
 
@@ -28,6 +28,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 - Omega-mini commit: `18326595aff13a73a6acfe9b3c7cce30d5f303eb`
 - Full omega commit: `419d1c1160acdc5d0174fbc9e95b7aaa6428b87a`
+
+`v540-gmut-thos-v76-v2-x2`: Arby and Cicero v2 x1 completion, v2 x2 build/use closeout, and Lumen v3 x1 prep.
+
+- Omega-mini commit: `c7ebc90c1f34dceb1836a6caef9e8422ea854d63`
+- Full omega commit: `c67f47094a4143de8999dff9c15e9af2049fb130`
 
 ## Exact Lookup Files
 
@@ -42,6 +47,9 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v1-x2-sibling-catch-up-card-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v2-x1-next-group-prep-card-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v2-x1-arby-cicero-handoff-packet-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v2-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v2-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v3-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
 
