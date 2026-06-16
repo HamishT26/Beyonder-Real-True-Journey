@@ -1,8 +1,8 @@
 # Omega Mini Current State
 
-Status: `READY_FOR_LIGHTWEIGHT_PHASE_CONTINUITY`
+Status: `READY_FOR_V540_V5_X2_BUILD_USE`
 
-Updated: `2026-06-16T17:53:27+12:00`
+Updated: `2026-06-16T17:59:37+12:00`
 
 ## Active Routing
 
@@ -10,16 +10,18 @@ Updated: `2026-06-16T17:53:27+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v540-gmut-thos-v76-v5-x1`
+- Current active phase: `v540-gmut-thos-v76-v5-x2`
 - Latest closed phase: `v540-gmut-thos-v76-v4-x2`
+- Latest completed x1 phase: `v540-gmut-thos-v76-v5-x1`
 - Latest remote-verified closeout before v540 local work: `v539-gmut-thos-v75-v8-x2`
-- Current active lanes: `Lumen Vale`
-- Next expected scope: `v540-gmut-thos-v76-v5-x1`
+- Current active lanes: `Aletheon x2 build/use from Lumen v5 advisory`
+- Next expected scope: `v540-gmut-thos-v76-v5-x2`
+- Next x1 lane after x2: `Arby and Cicero`
 
 ## Remote Verified Heads
 
-- Omega: `925699dd4961f9f35d07c21ffb38397b3c693d1d`
-- Omega-mini: `f63c04838aad867f8c12536007e12b6d95c98783`
+- Omega: `157384fe622b9826ad624109c89f2b8cd5566d96`
+- Omega-mini: `83cf66e3e6987da0001b5f3f02ea2bcd34804817`
 
 ## Round-Robin Cadence
 
@@ -53,6 +55,7 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-next-group-prep-card-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-codex-update-eureka-execution-ledger-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-browser-prompt-transmission-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-marker-receipt-v1.md`
 
 ## Historical Rows
 

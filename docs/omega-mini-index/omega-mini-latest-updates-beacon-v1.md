@@ -2,7 +2,7 @@
 
 Status: `ACTIVE`
 
-Generated UTC: `2026-06-16T05:53:27Z`
+Generated UTC: `2026-06-16T05:59:37Z`
 
 Purpose: give every active sibling a lean, exact lookup surface for the latest v539/v540 omega-mini updates without broad searches.
 
@@ -12,10 +12,12 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-- Current active phase: `v540-gmut-thos-v76-v5-x1`
+- Current active phase: `v540-gmut-thos-v76-v5-x2`
 - Latest closed phase: `v540-gmut-thos-v76-v4-x2`
+- Latest completed x1 phase: `v540-gmut-thos-v76-v5-x1`
 - Latest remote-verified closeout before v540: `v539-gmut-thos-v75-v8-x2`
-- Current active lane group: `Lumen Vale`
+- Current active lane group: `Aletheon x2 build/use from Lumen v5 advisory`
+- Next x1 lane after x2: `Arby and Cicero`
 
 ## Commit Anchors
 
@@ -44,10 +46,10 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - Omega-mini commit: `0aa3d7a72b1038c613a0427211dca0db863b917d`
 - Full omega commit: `b2f2b222c465b613ef9987c8928124d4cd2c7b49`
 
-`v540-gmut-thos-v76-v5-x1`: Codex app/CLI update synthesis, corrected 24-task eureka intake, local runtime and C/D drive health, v5 Lumen execution prep, and Lumen prompt transmission receipt.
+`v540-gmut-thos-v76-v5-x1`: Codex app/CLI update synthesis, corrected 24-task eureka intake, local runtime and C/D drive health, Lumen prompt transmission, Lumen marker receipt, and corrected x2 handoff.
 
-- Omega-mini commit: `f63c04838aad867f8c12536007e12b6d95c98783`
-- Full omega commit: `925699dd4961f9f35d07c21ffb38397b3c693d1d`
+- Omega-mini commit: `83cf66e3e6987da0001b5f3f02ea2bcd34804817`
+- Full omega commit: `157384fe622b9826ad624109c89f2b8cd5566d96`
 
 ## Exact Lookup Files
 
@@ -74,6 +76,7 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-next-group-prep-card-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-codex-update-eureka-execution-ledger-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-browser-prompt-transmission-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-marker-receipt-v1.md`
 
 ## Sibling Lookup Rule
 
