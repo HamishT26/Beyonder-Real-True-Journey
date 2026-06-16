@@ -31,7 +31,7 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - `v540-gmut-thos-v76-v5-x2`: Built omega-mini current-state guard, fixed stale historical pointer row, closed v5 x2, queued 20 approval packets, and prepared Arby/Cicero v6 x1 (omega-mini: `274cfbc654b71b45deef2e5f649e120722621ea5`, full omega: `1ef79701422e1a2fe9c2438ef863b30d609a6d30`).
 - `v540-gmut-thos-v76-v6-x2`: Arby and Cicero v6 x1 completion, Cicero resume retry repair, v6 x2 build/use closeout, and Lumen v7 x1 prep (omega-mini: `c03ebb349d002b8a79d6ea65c7109c6615752335`, full omega: `c9c7c0011b4c896c29f8ca0136c76203f13220f5`).
 - `v540-gmut-thos-v76-v8-x2`: Arby and Cicero v8 x1 completion, Cicero foreground retry repair, v8 x2 build/use closeout, and v541 Lumen v1 x1 prep (omega-mini: `169e0ee8e4a49b41d0d0f7db8bda1d4428a0a1e1`, full omega: `d94a890e27dd173c82f27e0aee21c01cab87cf20`).
-- `v541-gmut-thos-v77-v1-x2`: Lumen v541 v1 x1 completion, Lumen eureka execution ledger, v1 x2 build/use closeout, and Arby+Cicero v2 prep (omega-mini: `pending-publication`, full omega: `pending-publication`).
+- `v541-gmut-thos-v77-v1-x2`: Lumen v541 v1 x1 completion, Lumen eureka execution ledger, v1 x2 build/use closeout, and Arby+Cicero v2 prep (omega-mini: `58307d2a0e0571218d72781cd110c632da8ec115`, full omega: `61ed7fe5f37b916b76ac3c376260d06cbd41a97b`).
 
 ## Exact Lookup Files
 
@@ -114,6 +114,7 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-route-family-manifest-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-full-phase-guard-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-publication-anchor-receipt-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
