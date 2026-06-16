@@ -59,7 +59,7 @@ Use these omega-mini files before broad searching:
 
 ## Historical Rows
 
-The v529 and v530 omega-mini catch-up briefs remain useful history only. They are no longer the active current-state pointer.
+The v529 and v530 omega-mini catch-up briefs remain useful history only. They are no longer the active current-state pointer; the active pointer is `v540-gmut-thos-v76-v5-x2`.
 
 ## Sibling Catch-Up Rule
 
