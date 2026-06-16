@@ -94,7 +94,11 @@ const appRunner = readJsonMaybe(appRunnerJson);
 const appGate = readJsonMaybe(appGateJson);
 
 const cliRows = Array.isArray(cliQuality?.lanes) ? cliQuality.lanes : [];
-const appExpected = appGate?.expected_lanes || appGate?.lanes || [];
+const appExpected = appGate?.expected_lanes || (Array.isArray(appGate?.lanes) ? appGate.lanes.map((lane) => lane.lane).filter(Boolean) : []);
+const appRowsCompleted =
+  Array.isArray(appGate?.lanes) &&
+  appGate.lanes.length > 0 &&
+  appGate.lanes.every((lane) => lane.overall_status === "completed" || lane.status === "completed" || String(lane.overall_status || "").startsWith("PASS"));
 
 const prepReady = String(prep?.status || "").includes("READY");
 const lumenRequired = activeLanes.includes("Lumen Vale");
@@ -109,7 +113,8 @@ const appRequired = activeLanes.some((lane) => lane === "Cicero" || lane === "Ki
 const appGatePass =
   !appRequired ||
   appGate?.status === "PASS_APP_LANE_COMPLETION_GATE" ||
-  appGate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE";
+  appGate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE" ||
+  (appGate?.overall_status === "PASS" && appRowsCompleted);
 const appRunnerPass =
   !appRequired ||
   appRunner?.status === "PASS_RECOVERED_APP_LANE_RUN" ||
@@ -225,7 +230,17 @@ const x2Tasks = [
   ["x2-08", "x2 build/test/use ledger", "Record build, run, test, install, use, and defer outcomes from the active-group proposals."],
   ["x2-09", "Context compact reminder", "Include the grouped cadence, open gates, and no-raw-publication policy in handoffs."],
   ["x2-10", "Next active group prep", "Prepare the next grouped x1 lane set rather than a six-lane default."],
-].map(([id, title, action]) => ({ id, title, status: "X2_BUILD_USE_CANDIDATE", action }));
+  ["x2-11", "Approval checklist continuation", "Refresh approval scope and completion rows after the grouped x1 lane finishes."],
+  ["x2-12", "Eureka tracker continuation", "Track active-group x2 candidates as completed, uncompleted, deferred, blocked, or exact-packet gated."],
+  ["x2-13", "Omega-mini lookup hardening", "Keep exact omega-mini lookup files fresh and avoid broad archive searches for active siblings."],
+  ["x2-14", "D-drive-first runtime check", "Record status-only evidence that active generated artifacts stay in the D-drive worktrees."],
+  ["x2-15", "Runner placement repair", "Detect and repair path-prefix mistakes before publication, using exact file moves only."],
+  ["x2-16", "App notifier schema compatibility", "Keep recovered app-lane completion evidence compatible with grouped receipt builders."],
+  ["x2-17", "CLI marker false-positive policy", "Preserve marker-review ledgers so generic wording does not block valid CLI advisory output."],
+  ["x2-18", "Sibling evidence digest", "Summarize word counts, completion status, and safe proposal counts without publishing raw responses."],
+  ["x2-19", "Next Lumen solo prep", "Prepare Lumen's next solo x1 lookup bundle after the v4 x2 closeout."],
+  ["x2-20", "Open-gate continuity rail", "Carry all empirical, legal, canon, deployment, purchase, and account-mutation gates forward as open unless exact evidence changes them."],
+].map(([id, title, action]) => ({ id, title, status: "safe_now", action }));
 
 const handoff = {
   artifact_type: "ghc_grouped_lane_x1_x2_handoff",

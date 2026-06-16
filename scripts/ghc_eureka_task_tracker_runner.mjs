@@ -128,7 +128,7 @@ function taskAction(value) {
 }
 
 function collectArrayTasks(payload, sourceRef) {
-  const fields = ["eureka_tasks", "implemented_tasks", "tasks"];
+  const fields = ["eureka_tasks", "implemented_tasks", "x2_tasks", "tasks"];
   const rows = [];
   for (const field of fields) {
     const value = payload[field];

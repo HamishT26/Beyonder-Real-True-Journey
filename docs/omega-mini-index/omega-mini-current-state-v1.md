@@ -1,11 +1,11 @@
 # Omega-Mini Current State
 
-Status: PASS_V542_V3_X2_BUILD_USE_CLOSEOUT_V4_X1_READY
-Current active phase: v542-gmut-thos-v78-v4-x1
-Latest closed phase: v542-gmut-thos-v78-v3-x2
-Latest completed x1: v542-gmut-thos-v78-v3-x1
+Status: PASS_V542_V4_X2_APPROVAL_EUREKA_STACK_READY
+Current active phase: v542-gmut-thos-v78-v4-x2
+Latest closed phase: v542-gmut-thos-v78-v4-x1
+Latest completed x1: v542-gmut-thos-v78-v4-x1
 Latest completed x2: v542-gmut-thos-v78-v3-x2
-Current lanes: Aster Vale, Kierkegaard, Aristotle
+Current lanes: Aletheon x2 build-use
 Next x2 scope: v542-gmut-thos-v78-v4-x2
 Next x1 lane after x2: Lumen Vale
 
@@ -16,21 +16,23 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-build-use-closeout-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-build-use-closeout-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-aster-kierkegaard-aristotle-handoff-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-aster-kierkegaard-aristotle-handoff-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-20-approval-candidate-bundle-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-20-approval-candidate-bundle-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-task-tracker-v2.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-task-tracker-v2.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-approval-packet-checklist-v2.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-approval-packet-checklist-v2.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-eureka-task-tracker-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-eureka-task-tracker-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-approval-packet-checklist-v3.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-approval-packet-checklist-v3.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-eureka-build-queue-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-eureka-build-queue-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-approval-eureka-stack-ledger-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-approval-eureka-stack-ledger-v1.json
 
 ## Latest Action Summary
-- Closed v542 v3 x2 status-only build/use for 16 queued Eureka tasks
-- Prepared v542 v4 x1 Aster/Kierkegaard/Aristotle handoff
-- Prepared 20 safe-now approval candidates and refreshed trackers
+- Mirrored v542 v4 x1 active-lane receipts to omega-mini
+- Built cumulative approval and Eureka stack ledger with 233 approval rows and 208 Eureka rows
+- Current x2 queue remains active for safe-now build/use execution
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
