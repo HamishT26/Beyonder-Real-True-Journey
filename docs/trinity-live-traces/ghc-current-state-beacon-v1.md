@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: PASS_V542_V3_X2_EUREKA_BUILD_QUEUE_READY
+Status: PASS_V542_V3_X2_BUILD_USE_CLOSEOUT_V4_X1_READY
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v542-gmut-thos-v78-v3-x2
-Latest closed phase: v542-gmut-thos-v78-v2-x2
+Current active phase: v542-gmut-thos-v78-v4-x1
+Latest closed phase: v542-gmut-thos-v78-v3-x2
 Latest completed x1: v542-gmut-thos-v78-v3-x1
-Latest completed x2: v542-gmut-thos-v78-v2-x2
-Current lanes: Aletheon x2 build-use
+Latest completed x2: v542-gmut-thos-v78-v3-x2
+Current lanes: Aster Vale, Kierkegaard, Aristotle
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,12 +19,16 @@ Current lanes: Aletheon x2 build-use
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-approval-packet-checklist-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-approval-packet-checklist-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-eureka-task-tracker-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-eureka-task-tracker-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-build-queue-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-build-queue-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-build-use-closeout-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-build-use-closeout-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-aster-kierkegaard-aristotle-handoff-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-aster-kierkegaard-aristotle-handoff-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-20-approval-candidate-bundle-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-20-approval-candidate-bundle-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-task-tracker-v2.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x2-eureka-task-tracker-v2.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-approval-packet-checklist-v2.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x1-approval-packet-checklist-v2.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
