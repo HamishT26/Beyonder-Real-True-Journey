@@ -99,7 +99,7 @@ function writeMd(path, payload) {
     `- overall_status: \`${payload.overall_status}\``,
     `- execute: \`${payload.execute}\``,
     `- lanes: \`${payload.lanes.join(", ")}\``,
-    "- raw boundary: temp-only; no prompt body, unredacted lane transcript, stdout, stderr, local paths, screenshots, or credentials are published.",
+    "- raw boundary: temp-only; no prompt body, unredacted lane content, stdout, stderr, local paths, screen-capture files, or credentials are published.",
     "",
     "## Receipts",
   ];
@@ -263,10 +263,10 @@ async function main() {
     marker_status: marker?.overall_status || null,
     publication_boundary: {
       prompt_body_published: false,
-      raw_lane_text_published: false,
+      raw_lane_content_published: false,
       raw_transport_published: false,
       local_absolute_paths_published: false,
-      screenshots_published: false,
+      screen_capture_files_published: false,
       credentials_published: false,
     },
     claim_boundary: {

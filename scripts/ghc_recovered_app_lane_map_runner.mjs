@@ -139,7 +139,7 @@ function writeMd(path, payload) {
     "",
     "## Boundary",
     "",
-    "Status-only recovered-route runner. No raw route handles, callable IDs, thread IDs, lane text, app-server payloads, credentials, screenshots, local paths, phase completion claim, GMUT closure, final physics, consciousness proof, legal closure, or canon promotion is published.",
+    "Status-only recovered-route runner. No raw route handles, callable IDs, thread IDs, lane/advisory content, app-server payloads, credentials, screen-capture files, local path values, phase completion claim, GMUT closure, final physics, consciousness proof, legal closure, or canon promotion is published.",
     "",
   ];
   mkdirSync(dirname(path), { recursive: true });
@@ -286,10 +286,10 @@ const receipt = {
     raw_route_handles_published: false,
     raw_callable_ids_published: false,
     raw_thread_ids_published: false,
-    raw_lane_text_published: false,
+    raw_lane_content_published: false,
     raw_app_server_payload_published: false,
     credentials_published: false,
-    screenshots_published: false,
+    screen_capture_files_published: false,
     local_absolute_paths_published: false,
   },
   claim_boundary: {

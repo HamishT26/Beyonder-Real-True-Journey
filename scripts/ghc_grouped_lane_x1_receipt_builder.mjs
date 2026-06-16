@@ -124,7 +124,7 @@ const laneSummary = activeLanes.map((lane) => {
       lane,
       route_family: routeForLane(lane),
       status: lumenPass ? "PASS_LUMEN_BROWSER_MARKER_STATUS" : "OPEN_GAP_LUMEN_BROWSER_MARKER_STATUS",
-      raw_reply_text_published: false,
+      raw_reply_content_published: false,
     };
   }
   if (lane === "Arby" || lane === "Aster Vale") {
@@ -136,14 +136,14 @@ const laneSummary = activeLanes.map((lane) => {
       status: row?.quality_status || "MISSING_CLI_QUALITY",
       word_count: row?.word_count || null,
       final_message_hash: row?.final_message_hash || null,
-      raw_reply_text_published: false,
+      raw_reply_content_published: false,
     };
   }
   return {
     lane,
     route_family: routeForLane(lane),
     status: appGatePass && (appExpected.length === 0 || appExpected.includes(lane)) ? "PASS_APP_LANE_COMPLETION_GATE" : "OPEN_GAP_APP_LANE",
-    raw_reply_text_published: false,
+    raw_reply_content_published: false,
     raw_route_handle_published: false,
   };
 });
@@ -152,7 +152,7 @@ const allLaneStatusesPass = laneSummary.every((lane) => String(lane.status || ""
 const allPass = prepReady && lumenPass && cliQualityPass && cliMarkerPass && appRunnerPass && appGatePass && allLaneStatusesPass;
 
 const publicationBoundary = {
-  raw_lane_text_published: false,
+  raw_lane_content_published: false,
   raw_chatgpt_transcript_published: false,
   raw_route_handles_published: false,
   raw_app_server_payload_published: false,
