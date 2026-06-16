@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_LIGHTWEIGHT_PHASE_CONTINUITY`
 
-Updated: `2026-06-16T13:58:59+12:00`
+Updated: `2026-06-16T14:26:30+12:00`
 
 ## Active Routing
 
@@ -10,16 +10,16 @@ Updated: `2026-06-16T13:58:59+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v540-gmut-thos-v76-v4-x1`
-- Latest closed phase: `v540-gmut-thos-v76-v3-x2`
+- Current active phase: `v540-gmut-thos-v76-v5-x1`
+- Latest closed phase: `v540-gmut-thos-v76-v4-x2`
 - Latest remote-verified closeout before v540 local work: `v539-gmut-thos-v75-v8-x2`
-- Current active lanes: `Aster Vale`, `Kierkegaard`, `Aristotle`
-- Next expected scope: `v540-gmut-thos-v76-v4-x1`
+- Current active lanes: `Lumen Vale`
+- Next expected scope: `v540-gmut-thos-v76-v5-x1`
 
 ## Remote Verified Heads
 
-- Omega: `daf0ce63af8af94432ede6001716d9b75ad568d9`
-- Omega-mini: `60aadf477106a1b62c349b1b7a171661a602b9b6`
+- Omega: `b2f2b222c465b613ef9987c8928124d4cd2c7b49`
+- Omega-mini: `0aa3d7a72b1038c613a0427211dca0db863b917d`
 
 ## Round-Robin Cadence
 
@@ -48,6 +48,9 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v3-x1-grouped-lane-receipt-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v3-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v4-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v4-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v4-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
 
