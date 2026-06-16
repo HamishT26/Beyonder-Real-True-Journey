@@ -1,6 +1,6 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: OPEN_V544_V5_X1_LUMEN_READY_AFTER_ARBY_CICERO_X2
+Status: OPEN_V544_V5_X1_LUMEN_WORKING_735_QUEUE_THROUGH_290
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Current active phase: v544-gmut-thos-v80-v5-x1
@@ -19,6 +19,14 @@ Current lanes: Lumen Vale
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-735-next-slice-prep-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-735-next-slice-prep-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-lumen-30min-check-receipt-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-lumen-30min-check-receipt-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-735-authorized-slice-279-290-execution-receipt-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-735-authorized-slice-279-290-execution-receipt-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-status-publication-exposure-guard-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-status-publication-exposure-guard-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
