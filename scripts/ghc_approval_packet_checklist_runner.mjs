@@ -183,7 +183,8 @@ for (const sourceJson of sourceJsons) {
     continue;
   }
   const payload = readJson(sourceJson);
-  const extracted = [...collectArrayPackets(payload, sourceRef), ...collectTopLevelPacket(payload, sourceRef)];
+  const arrayPackets = collectArrayPackets(payload, sourceRef);
+  const extracted = arrayPackets.length > 0 ? arrayPackets : collectTopLevelPacket(payload, sourceRef);
   extracted.forEach((packet) => {
     const scope_bucket = normalizeScopeBucket(packet);
     const completion_bucket = normalizeCompletionBucket(packet);
