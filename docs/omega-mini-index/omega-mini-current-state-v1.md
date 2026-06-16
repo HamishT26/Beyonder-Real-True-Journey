@@ -1,11 +1,11 @@
 # Omega-Mini Current State
 
-Status: OPEN_V543_V5_X1_LUMEN_READY
-Current active phase: v543-gmut-thos-v79-v5-x1
-Latest closed phase: v543-gmut-thos-v79-v4-x2
-Latest completed x1: v543-gmut-thos-v79-v4-x1
+Status: OPEN_V543_V5_X2_BUILD_USE_READY
+Current active phase: v543-gmut-thos-v79-v5-x2
+Latest closed phase: v543-gmut-thos-v79-v5-x1
+Latest completed x1: v543-gmut-thos-v79-v5-x1
 Latest completed x2: v543-gmut-thos-v79-v4-x2
-Current lanes: Lumen Vale
+Current lanes: Aletheon
 Next x2 scope: v543-gmut-thos-v79-v5-x2
 Next x1 lane after x2: Arby and Cicero
 
@@ -16,22 +16,22 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-build-use-closeout-v1.md
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-build-use-closeout-v1.json
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-full-phase-guard-v1.md
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-full-phase-guard-v1.json
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-grouped-lane-state-reducer-v1.md
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-grouped-lane-state-reducer-v1.json
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-route-family-manifest-v1.md
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x2-route-family-manifest-v1.json
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-lumen-browser-completion-v1.md
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-lumen-browser-completion-v1.json
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-lumen-browser-marker-receipt-v1.md
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-lumen-browser-marker-receipt-v1.json
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-grouped-lane-guard-v1.md
+- docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-grouped-lane-guard-v1.json
 - docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-lumen-prep-card-v1.md
 - docs/trinity-live-traces/v543-gmut-thos-v79-v5-x1-lumen-prep-card-v1.json
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x1-grouped-lane-receipt-v1.md
-- docs/trinity-live-traces/v543-gmut-thos-v79-v4-x1-grouped-lane-receipt-v1.json
 
 ## Latest Action Summary
-- v543 v4 x2 build/use closeout passed with 20 implemented task rows
-- v543 v5 x1 Lumen prep card is ready
+- Lumen v543 v5 x1 assistant marker verified
+- Grouped x1 receipt and handoff are ready for v543 v5 x2 build/use
 - Next x1 lane after v5 x2 is Arby and Cicero
 
 ## Safety Boundary
