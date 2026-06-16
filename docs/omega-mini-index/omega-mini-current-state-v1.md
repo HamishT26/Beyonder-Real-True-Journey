@@ -1,8 +1,8 @@
 # Omega Mini Current State
 
-Status: `RUNNING_V541_V1_X1_LUMEN_BROWSER`
+Status: `READY_FOR_V541_V2_X1_ARBY_CICERO`
 
-Updated: `2026-06-16T19:30:57+12:00`
+Updated: `2026-06-16T19:36:58+12:00`
 
 ## Active Routing
 
@@ -10,14 +10,14 @@ Updated: `2026-06-16T19:30:57+12:00`
 - Stale memory policy: `omega44 is historical-only unless Hamish explicitly asks for it`.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v541-gmut-thos-v77-v1-x1`
-- Latest closed phase: `v540-gmut-thos-v76-v8-x2`
-- Latest completed x1 phase: `v540-gmut-thos-v76-v8-x1`
-- Latest completed x2 phase: `v540-gmut-thos-v76-v8-x2`
-- Current active lanes: `Lumen Vale`
-- Next expected scope: `v541-gmut-thos-v77-v1-x1`
-- Next x2 scope: `v541-gmut-thos-v77-v1-x2`
-- Next x1 lane after x2: `Arby and Cicero`
+- Current active phase: `v541-gmut-thos-v77-v2-x1`
+- Latest closed phase: `v541-gmut-thos-v77-v1-x2`
+- Latest completed x1 phase: `v541-gmut-thos-v77-v1-x1`
+- Latest completed x2 phase: `v541-gmut-thos-v77-v1-x2`
+- Current active lanes: `Arby, Cicero`
+- Next expected scope: `v541-gmut-thos-v77-v2-x1`
+- Next x2 scope: `v541-gmut-thos-v77-v2-x2`
+- Next x1 lane after x2: `Lumen Vale`
 
 ## Round-Robin Cadence
 
@@ -98,6 +98,16 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-source-ledger-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-approval-packets-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-continuity-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-lumen-eureka-execution-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
 

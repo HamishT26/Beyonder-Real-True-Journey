@@ -1,8 +1,8 @@
 # Omega-Mini Latest Updates Beacon v1
 
-Status: `RUNNING_V541_V1_X1_LUMEN_BROWSER`
+Status: `READY_FOR_V541_V2_X1_ARBY_CICERO`
 
-Generated UTC: `2026-06-16T07:30:57Z`
+Generated UTC: `2026-06-16T07:36:58Z`
 
 Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v539/v540 phase receipts without broad searches.
 
@@ -12,13 +12,13 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-- Current active phase: `v541-gmut-thos-v77-v1-x1`
-- Latest closed phase: `v540-gmut-thos-v76-v8-x2`
-- Latest completed x1 phase: `v540-gmut-thos-v76-v8-x1`
-- Latest completed x2 phase: `v540-gmut-thos-v76-v8-x2`
-- Current active lane group: `Lumen Vale`
-- Next x2 scope: `v541-gmut-thos-v77-v1-x2`
-- Next x1 lane after x2: `Arby and Cicero`
+- Current active phase: `v541-gmut-thos-v77-v2-x1`
+- Latest closed phase: `v541-gmut-thos-v77-v1-x2`
+- Latest completed x1 phase: `v541-gmut-thos-v77-v1-x1`
+- Latest completed x2 phase: `v541-gmut-thos-v77-v1-x2`
+- Current active lane group: `Arby, Cicero`
+- Next x2 scope: `v541-gmut-thos-v77-v2-x2`
+- Next x1 lane after x2: `Lumen Vale`
 
 ## Commit Anchors
 
@@ -31,6 +31,7 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - `v540-gmut-thos-v76-v5-x2`: Built omega-mini current-state guard, fixed stale historical pointer row, closed v5 x2, queued 20 approval packets, and prepared Arby/Cicero v6 x1 (omega-mini: `274cfbc654b71b45deef2e5f649e120722621ea5`, full omega: `1ef79701422e1a2fe9c2438ef863b30d609a6d30`).
 - `v540-gmut-thos-v76-v6-x2`: Arby and Cicero v6 x1 completion, Cicero resume retry repair, v6 x2 build/use closeout, and Lumen v7 x1 prep (omega-mini: `c03ebb349d002b8a79d6ea65c7109c6615752335`, full omega: `c9c7c0011b4c896c29f8ca0136c76203f13220f5`).
 - `v540-gmut-thos-v76-v8-x2`: Arby and Cicero v8 x1 completion, Cicero foreground retry repair, v8 x2 build/use closeout, and v541 Lumen v1 x1 prep (omega-mini: `169e0ee8e4a49b41d0d0f7db8bda1d4428a0a1e1`, full omega: `d94a890e27dd173c82f27e0aee21c01cab87cf20`).
+- `v541-gmut-thos-v77-v1-x2`: Lumen v541 v1 x1 completion, Lumen eureka execution ledger, v1 x2 build/use closeout, and Arby+Cicero v2 prep (omega-mini: `pending-publication`, full omega: `pending-publication`).
 
 ## Exact Lookup Files
 
@@ -104,6 +105,16 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-source-ledger-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-approval-packets-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-continuity-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-lumen-eureka-execution-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
 
