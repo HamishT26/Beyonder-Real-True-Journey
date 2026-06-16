@@ -1,74 +1,59 @@
 # GHC Current State Beacon
 
-Status: `ACTIVE_BEACON_CURRENT_TO_V541_V7_X1_LUMEN`
+Status: `ACTIVE_BEACON_READY_FOR_V541_V8_X1_ARBY_CICERO`
 
-Updated: `2026-06-16T21:49:30.4271033+12:00`
+Generated UTC: `2026-06-16T10:31:13Z`
 
 ## Active Routing
 
 - Active memory cue: `v532-live-state`
-- Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
+- Stale memory policy: `omega44 is historical-only unless Hamish explicitly asks for it`.
 - Primary context branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Latest remote-verified closeout for this v541 work: `v541-gmut-thos-v77-v6-x2`
-- Latest local closeout publication anchor: `v541-gmut-thos-v77-v6-x2`
-- Active local phase: `v541-gmut-thos-v77-v7-x1`
-- Next prepared phase: `v541-gmut-thos-v77-v7-x1`
-- Next active lanes: `Lumen Vale`
-
-## Round Robin Pattern
-
-- `Lumen Vale`
-- `Arby + Cicero`
-- `Lumen Vale`
-- `Aster Vale + Kierkegaard + Aristotle`
-
-## Current v541 Local Artifacts
-
-- `v541-gmut-thos-v77-v3-x1-lumen-marker-receipt-v1`
-- `v541-gmut-thos-v77-v3-x1-grouped-lane-receipt-v1`
-- `v541-gmut-thos-v77-v3-x1-x2-grouped-handoff-v1`
-- `v541-gmut-thos-v77-v3-x2-lane-state-reducer-v1`
-- `v541-gmut-thos-v77-v3-x2-route-family-manifest-v1`
-- `v541-gmut-thos-v77-v3-x2-full-phase-guard-v1`
-- `v541-gmut-thos-v77-v3-x2-closeout-v1`
-- `v541-gmut-thos-v77-v4-x1-next-group-prep-card-v1`
-
-
-## Fresh v541 v4 to v5 Artifacts
-
-- `v541-gmut-thos-v77-v4-x1-strict-cli-lane-cycle-completion-v2.md`
-- `v541-gmut-thos-v77-v4-x1-strict-cli-lane-cycle-quality-v1.md`
-- `v541-gmut-thos-v77-v4-x1-strict-cli-lane-cycle-marker-review-v1.md`
-- `v541-gmut-thos-v77-v4-x1-kierkegaard-aristotle-recovered-completion-gate-v1.md`
-- `v541-gmut-thos-v77-v4-x1-grouped-lane-receipt-v1.md`
-- `v541-gmut-thos-v77-v4-x1-grouped-lane-guard-v1.md`
-- `v541-gmut-thos-v77-v4-x1-x2-grouped-handoff-v1.md`
-- `v541-gmut-thos-v77-v4-x2-lane-state-reducer-v1.md`
-- `v541-gmut-thos-v77-v4-x2-route-family-manifest-v1.md`
-- `v541-gmut-thos-v77-v4-x2-full-phase-guard-v1.md`
-- `v541-gmut-thos-v77-v4-x2-closeout-v1.md`
-- `v541-gmut-thos-v77-v5-x1-next-group-prep-card-v1.md`
-
+- Latest remote-verified closeout: `v541-gmut-thos-v77-v7-x2`
+- Active local phase: `v541-gmut-thos-v77-v8-x1`
+- Next prepared phase: `v541-gmut-thos-v77-v8-x1`
+- Next active lanes: `Arby, Cicero`
 
 ## Remote-Verified Heads
 
-- Full omega: `ae65c623a3366dd29ba545179d2d7ac94631bdd1`
-- Omega-mini: `d2f5f0f31d865190d809e3b354ae2ffe0f47ac4e`
+- Full omega: `15762cf8220fe678af3977dd016cfcf94a91c190`
+- Omega-mini: `fc52c6c66b1dc54218149c0f08f74df3ca26b403`
 
+## Round Robin Pattern
 
-## Fresh v541 v5 to v6 Artifacts
+- `Lumen Vale solo`
+- `Arby and Cicero`
+- `Lumen Vale solo`
+- `Aster Vale, Kierkegaard, and Aristotle`
 
-- `v541-gmut-thos-v77-v5-x1-lumen-marker-receipt-v1.md`
-- `v541-gmut-thos-v77-v5-x1-grouped-lane-receipt-v1.md`
-- `v541-gmut-thos-v77-v5-x1-grouped-lane-guard-v1.md`
-- `v541-gmut-thos-v77-v5-x1-x2-grouped-handoff-v1.md`
-- `v541-gmut-thos-v77-v5-x2-lumen-eureka-execution-ledger-v1.md`
-- `v541-gmut-thos-v77-v5-x2-lane-state-reducer-v1.md`
-- `v541-gmut-thos-v77-v5-x2-route-family-manifest-v1.md`
-- `v541-gmut-thos-v77-v5-x2-full-phase-guard-v1.md`
-- `v541-gmut-thos-v77-v5-x2-closeout-v1.md`
-- `v541-gmut-thos-v77-v6-x1-next-group-prep-card-v1.md`
+## Current v541 Local Artifacts
+
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-browser-send-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-browser-send-exposure-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-source-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-approval-continuity-pack-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-eureka-continuity-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-to-v7-x2-continuity-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-browser-five-minute-check-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-response-hash-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-normalized-action-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-closeout-exposure-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-lumen-v7-x2-action-execution-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-lumen-action-completion-reconciliation-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-final-exposure-guard-v1.md`
+
+## Next Phase Artifacts
+
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-next-group-prep-card-v1.md`
 
 ## Browser Developer Mode Rule
 
@@ -76,7 +61,7 @@ Use high-level Browser actions for ordinary Lumen messaging. Use CDP for read-on
 
 ## Storage Rule
 
-Use the D drive first for workspaces, phase artifacts, and scratch outputs. Use the C drive only for essential platform locations.
+D-drive-first for workspaces, phase artifacts, and scratch outputs; C drive only for essential platform locations.
 
 ## Open Gates
 
