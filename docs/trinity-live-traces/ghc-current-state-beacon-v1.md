@@ -1,8 +1,8 @@
 # GHC Current State Beacon
 
-Status: `ACTIVE_BEACON_CURRENT_TO_V540_V1_X2_LOCAL`
+Status: `ACTIVE_BEACON_CURRENT_TO_V541_V4_X1_TRIAD`
 
-Updated: `2026-06-16T12:31:47.4658503+12:00`
+Updated: `2026-06-16T20:27:30+12:00`
 
 ## Active Routing
 
@@ -10,10 +10,11 @@ Updated: `2026-06-16T12:31:47.4658503+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary context branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Latest remote-verified closeout before this local v540 work: `v539-gmut-thos-v75-v8-x2`
-- Active local phase: `v540-gmut-thos-v76-v1-x2`
-- Next prepared phase: `v540-gmut-thos-v76-v2-x1`
-- Next active lanes: `Arby`, `Cicero`
+- Latest remote-verified closeout before this v541 work: `v541-gmut-thos-v77-v2-x2`
+- Latest local closeout pending publication anchor: `v541-gmut-thos-v77-v3-x2`
+- Active local phase: `v541-gmut-thos-v77-v4-x1`
+- Next prepared phase: `v541-gmut-thos-v77-v4-x1`
+- Next active lanes: `Aster Vale`, `Kierkegaard`, `Aristotle`
 
 ## Round Robin Pattern
 
@@ -22,14 +23,16 @@ Updated: `2026-06-16T12:31:47.4658503+12:00`
 - `Lumen Vale`
 - `Aster Vale + Kierkegaard + Aristotle`
 
-## Current v540 Local Artifacts
+## Current v541 Local Artifacts
 
-- `v540-gmut-thos-v76-v1-x1-lumen-browser-send-receipt-v1`
-- `v540-gmut-thos-v76-v1-x1-lumen-proposal-digest-v1`
-- `v540-gmut-thos-v76-v1-x1-grouped-lane-receipt-v1`
-- `v540-gmut-thos-v76-v1-x2-closeout-v1`
-- `v540-gmut-thos-v76-v1-x2-browser-developer-mode-cdp-followup-v1`
-- `v540-gmut-thos-v76-v2-x1-next-group-prep-card-v1`
+- `v541-gmut-thos-v77-v3-x1-lumen-marker-receipt-v1`
+- `v541-gmut-thos-v77-v3-x1-grouped-lane-receipt-v1`
+- `v541-gmut-thos-v77-v3-x1-x2-grouped-handoff-v1`
+- `v541-gmut-thos-v77-v3-x2-lane-state-reducer-v1`
+- `v541-gmut-thos-v77-v3-x2-route-family-manifest-v1`
+- `v541-gmut-thos-v77-v3-x2-full-phase-guard-v1`
+- `v541-gmut-thos-v77-v3-x2-closeout-v1`
+- `v541-gmut-thos-v77-v4-x1-next-group-prep-card-v1`
 
 ## Browser Developer Mode Rule
 
