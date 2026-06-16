@@ -2,7 +2,7 @@
 
 Status: `ACTIVE`
 
-Generated UTC: `2026-06-16T05:59:37Z`
+Generated UTC: `2026-06-16T06:10:52Z`
 
 Purpose: give every active sibling a lean, exact lookup surface for the latest v539/v540 omega-mini updates without broad searches.
 
@@ -12,12 +12,14 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-- Current active phase: `v540-gmut-thos-v76-v5-x2`
-- Latest closed phase: `v540-gmut-thos-v76-v4-x2`
+- Current active phase: `v540-gmut-thos-v76-v6-x1`
+- Latest closed phase: `v540-gmut-thos-v76-v5-x2`
 - Latest completed x1 phase: `v540-gmut-thos-v76-v5-x1`
+- Latest completed x2 phase: `v540-gmut-thos-v76-v5-x2`
 - Latest remote-verified closeout before v540: `v539-gmut-thos-v75-v8-x2`
-- Current active lane group: `Aletheon x2 build/use from Lumen v5 advisory`
-- Next x1 lane after x2: `Arby and Cicero`
+- Current active lane group: `Arby and Cicero`
+- Next x2 scope: `v540-gmut-thos-v76-v6-x2`
+- Next x1 lane after x2: `Lumen Vale`
 
 ## Commit Anchors
 
@@ -51,6 +53,11 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - Omega-mini commit: `83cf66e3e6987da0001b5f3f02ea2bcd34804817`
 - Full omega commit: `157384fe622b9826ad624109c89f2b8cd5566d96`
 
+`v540-gmut-thos-v76-v5-x2`: Built omega-mini current-state guard, fixed stale historical pointer row, closed v5 x2, queued 20 approval packets, and prepared Arby/Cicero v6 x1.
+
+- Omega-mini commit: `274cfbc654b71b45deef2e5f649e120722621ea5`
+- Full omega commit: `1ef79701422e1a2fe9c2438ef863b30d609a6d30`
+
 ## Exact Lookup Files
 
 Open these in omega-mini before searching:
@@ -77,6 +84,9 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-codex-update-eureka-execution-ledger-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-browser-prompt-transmission-receipt-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x2-approval-packet-set-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-arby-cicero-handoff-packet-v1.md`
 
 ## Sibling Lookup Rule
 
