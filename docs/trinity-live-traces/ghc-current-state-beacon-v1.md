@@ -1,8 +1,8 @@
 # GHC Current State Beacon
 
-Status: `ACTIVE_BEACON_CURRENT_TO_V541_V5_X1_LUMEN`
+Status: `ACTIVE_BEACON_CURRENT_TO_V541_V6_X1_ARBY_CICERO`
 
-Updated: `2026-06-16T21:13:27.9816609+12:00`
+Updated: `2026-06-16T21:19:23.6854876+12:00`
 
 ## Active Routing
 
@@ -11,10 +11,10 @@ Updated: `2026-06-16T21:13:27.9816609+12:00`
 - Primary context branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - Latest remote-verified closeout before this v541 work: `v541-gmut-thos-v77-v4-x2`
-- Latest local closeout pending publication anchor: `v541-gmut-thos-v77-v4-x2`
-- Active local phase: `v541-gmut-thos-v77-v5-x1`
-- Next prepared phase: `v541-gmut-thos-v77-v5-x1`
-- Next active lanes: `Lumen Vale`
+- Latest local closeout pending publication anchor: `v541-gmut-thos-v77-v5-x2`
+- Active local phase: `v541-gmut-thos-v77-v6-x1`
+- Next prepared phase: `v541-gmut-thos-v77-v6-x1`
+- Next active lanes: `Arby`, `Cicero`
 
 ## Round Robin Pattern
 
@@ -55,6 +55,20 @@ Updated: `2026-06-16T21:13:27.9816609+12:00`
 
 - Full omega: $full
 - Omega-mini: $mini
+
+
+## Fresh v541 v5 to v6 Artifacts
+
+- `v541-gmut-thos-v77-v5-x1-lumen-marker-receipt-v1.md`
+- `v541-gmut-thos-v77-v5-x1-grouped-lane-receipt-v1.md`
+- `v541-gmut-thos-v77-v5-x1-grouped-lane-guard-v1.md`
+- `v541-gmut-thos-v77-v5-x1-x2-grouped-handoff-v1.md`
+- `v541-gmut-thos-v77-v5-x2-lumen-eureka-execution-ledger-v1.md`
+- `v541-gmut-thos-v77-v5-x2-lane-state-reducer-v1.md`
+- `v541-gmut-thos-v77-v5-x2-route-family-manifest-v1.md`
+- `v541-gmut-thos-v77-v5-x2-full-phase-guard-v1.md`
+- `v541-gmut-thos-v77-v5-x2-closeout-v1.md`
+- `v541-gmut-thos-v77-v6-x1-next-group-prep-card-v1.md`
 
 ## Browser Developer Mode Rule
 
