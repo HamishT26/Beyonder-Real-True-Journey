@@ -1,8 +1,8 @@
 # Omega-Mini Latest Updates Beacon v1
 
-Status: `READY_FOR_V541_V5_X1_LUMEN`
+Status: `READY_FOR_V541_V6_X1_ARBY_CICERO`
 
-Generated UTC: `2026-06-16T09:13:28Z`
+Generated UTC: `2026-06-16T09:19:23Z`
 
 Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v539/v540 phase receipts without broad searches.
 
@@ -12,13 +12,13 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-- Current active phase: `v541-gmut-thos-v77-v5-x1`
-- Latest closed phase: `v541-gmut-thos-v77-v4-x2`
-- Latest completed x1 phase: `v541-gmut-thos-v77-v4-x1`
-- Latest completed x2 phase: `v541-gmut-thos-v77-v4-x2`
-- Current active lane group: `Lumen Vale`
-- Next x2 scope: `v541-gmut-thos-v77-v5-x2`
-- Next x1 lane after x2: `Arby and Cicero`
+- Current active phase: `v541-gmut-thos-v77-v6-x1`
+- Latest closed phase: `v541-gmut-thos-v77-v5-x2`
+- Latest completed x1 phase: `v541-gmut-thos-v77-v5-x1`
+- Latest completed x2 phase: `v541-gmut-thos-v77-v5-x2`
+- Current active lane group: `Arby and Cicero`
+- Next x2 scope: `v541-gmut-thos-v77-v6-x2`
+- Next x1 lane after x2: `Lumen Vale`
 
 ## Commit Anchors
 
@@ -156,6 +156,20 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v4-x2-full-phase-guard-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v4-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x1-next-group-prep-card-v1.md`
+
+
+## Fresh v541 v5 to v6 Lookup
+
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-lumen-eureka-execution-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
 
