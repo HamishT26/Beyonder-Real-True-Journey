@@ -1,0 +1,57 @@
+{
+  "schema": "ghc.status_receipt.v1",
+  "phase_slug": "v540-gmut-thos-v76-v1-x2",
+  "artifact_slug": "browser-developer-mode-cdp-followup",
+  "created_at": "2026-06-16T12:21:24.6954775+12:00",
+  "status": "PASS_BROWSER_DEVELOPER_MODE_CDP_FOLLOWUP",
+  "scope": {
+    "surface": "Codex in-app Browser developer mode",
+    "target_host": "chatgpt.com",
+    "lane": "Lumen Vale",
+    "mode": "read-only capability and profiling probe"
+  },
+  "capabilities_confirmed": {
+    "browser_visibility_control": true,
+    "browser_viewport_control": true,
+    "tab_page_assets": true,
+    "tab_cdp": true,
+    "tab_dev_logs": true,
+    "playwright_read_only_evaluate": true
+  },
+  "cdp_probe": {
+    "runtime_evaluate": "PASS",
+    "document_ready_state": "complete",
+    "composer_textareas": 1,
+    "composer_textboxes": 1,
+    "cdp_event_cursor": 0,
+    "cdp_event_count": 0,
+    "browser_get_version_supported": false,
+    "browser_get_version_note": "Browser.getVersion is not supported through the raw CDP bridge.",
+    "performance_metric_count": 0,
+    "profiler_enable": "PASS",
+    "best_effort_coverage_function_count": 319
+  },
+  "page_assets_probe": {
+    "inventory_id_present": true,
+    "total_count": 37,
+    "inline_svg_count": 973,
+    "by_kind": {
+      "font": 0,
+      "image": 1,
+      "other": 36,
+      "script": 0,
+      "stylesheet": 0,
+      "video": 0
+    }
+  },
+  "safe_usage_rule": [
+    "Use high-level Browser actions for ordinary Lumen messaging.",
+    "Use CDP for read-only route verification, page readiness checks, event watching, console/log inspection, asset inventory, and profiling diagnostics.",
+    "Do not use CDP to directly mutate page content or browser state unless an exact future approval packet authorizes that action.",
+    "Do not publish raw browser URLs, raw message text, screenshots, credentials, session streams, or private connector payloads."
+  ],
+  "publication_state": {
+    "commit_status": "NOT_COMMITTED_THIS_TURN",
+    "reason": "Repo status checks showed unrelated modified phase files; this receipt is ready for the next exact-stage publication batch."
+  }
+}

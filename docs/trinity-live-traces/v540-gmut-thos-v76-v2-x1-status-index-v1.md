@@ -1,0 +1,21 @@
+# v540-gmut-thos-v76-v2-x1 Phase Status Index
+
+Generated UTC: `2026-06-16T00:35:09Z`
+
+Status: `PASS_PHASE_STATUS_INDEX`
+
+Scanned JSON files: `2`
+
+## Status Counts
+
+- READY_FOR_ARBY_CICERO_X1: `1`
+- READY_FOR_GROUPED_ROUND_ROBIN_X1: `1`
+
+## Rows
+
+- v540-gmut-thos-v76-v2-x1-arby-cicero-handoff-packet-v1.json: `READY_FOR_ARBY_CICERO_X1`; lanes `Arby, Cicero`; private flag `false`
+- v540-gmut-thos-v76-v2-x1-next-group-prep-card-v1.json: `READY_FOR_GROUPED_ROUND_ROBIN_X1`; lanes `Arby, Cicero`; private flag `false`
+
+## Boundary
+
+This index publishes status rows only. It does not publish raw receipt payloads, sibling text, private browser URLs, route or callable IDs, credentials, screenshots, or local absolute paths.
