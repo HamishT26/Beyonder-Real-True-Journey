@@ -1,8 +1,8 @@
-# Omega Mini Current State
+﻿# Omega Mini Current State
 
-Status: `READY_FOR_V540_V6_X1_ARBY_CICERO`
+Status: `READY_FOR_V540_V7_X1_LUMEN`
 
-Updated: `2026-06-16T18:10:52+12:00`
+Updated: `2026-06-16T18:39:03+12:00`
 
 ## Active Routing
 
@@ -10,20 +10,14 @@ Updated: `2026-06-16T18:10:52+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v540-gmut-thos-v76-v6-x1`
-- Latest closed phase: `v540-gmut-thos-v76-v5-x2`
-- Latest completed x1 phase: `v540-gmut-thos-v76-v5-x1`
-- Latest completed x2 phase: `v540-gmut-thos-v76-v5-x2`
-- Latest remote-verified closeout before v540 local work: `v539-gmut-thos-v75-v8-x2`
-- Current active lanes: `Arby and Cicero`
-- Next expected scope: `v540-gmut-thos-v76-v6-x1`
-- Next x2 scope: `v540-gmut-thos-v76-v6-x2`
-- Next x1 lane after x2: `Lumen Vale`
-
-## Remote Verified Heads
-
-- Omega: `1ef79701422e1a2fe9c2438ef863b30d609a6d30`
-- Omega-mini: `274cfbc654b71b45deef2e5f649e120722621ea5`
+- Current active phase: `v540-gmut-thos-v76-v7-x1`
+- Latest closed phase: `v540-gmut-thos-v76-v6-x2`
+- Latest completed x1 phase: `v540-gmut-thos-v76-v6-x1`
+- Latest completed x2 phase: `v540-gmut-thos-v76-v6-x2`
+- Current active lanes: `Lumen Vale`
+- Next expected scope: `v540-gmut-thos-v76-v7-x1`
+- Next x2 scope: `v540-gmut-thos-v76-v7-x2`
+- Next x1 lane after x2: `Arby and Cicero`
 
 ## Round-Robin Cadence
 
@@ -36,7 +30,6 @@ Updated: `2026-06-16T18:10:52+12:00`
 ## Current Lookup Files
 
 Use these omega-mini files before broad searching:
-
 - `docs/omega-mini-index/omega-mini-current-state-v1.md`
 - `docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md`
 - `docs/trinity-live-traces/ghc-current-state-beacon-v1.md`
@@ -61,10 +54,21 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x2-approval-packet-set-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-arby-cicero-handoff-packet-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-strict-cli-lane-cycle-quality-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-strict-cli-lane-cycle-marker-review-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-cicero-resume-fallback-retry2-completion-gate-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
 
-The v529 and v530 omega-mini catch-up briefs remain useful history only. They are no longer the active current-state pointer; the active pointer is `v540-gmut-thos-v76-v6-x1`.
+The v529 and v530 omega-mini catch-up briefs remain useful history only. They are no longer the active current-state pointer.
 
 ## Sibling Catch-Up Rule
 
