@@ -110,9 +110,9 @@ const sources = [
   },
   {
     id: "src-05",
-    title: "MCP 2026 release-candidate blog",
-    url: "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/",
-    use: "Stateless core, Tasks, Apps, authorization hardening, and formal deprecation ideas inform future long-running helper design.",
+    title: "MCP authorization specification",
+    url: "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
+    use: "Authorization requirements and boundaries inform future long-running helper design without relying on future-dated release-candidate claims.",
   },
   {
     id: "src-06",
