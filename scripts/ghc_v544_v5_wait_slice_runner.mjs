@@ -53,6 +53,10 @@ function relExists(root, relPath) {
   return existsSync(join(root, relPath));
 }
 
+function queueNumber(key) {
+  return Number(queue?.row_counts?.[key] || 0);
+}
+
 function sanitizeRow(row) {
   return {
     execution_order: row.execution_order,
@@ -65,6 +69,7 @@ function sanitizeRow(row) {
 
 const generatedUtc = utcNow();
 const queue = readJson(fullRoot, sourceQueueRel);
+const priorCompleted = Number(args.get("--prior-completed") || Math.max(queueNumber("completed"), sliceStart - 1));
 const sourceOrderRel = queue.source_order_ref;
 const sourceOrder = readJson(fullRoot, sourceOrderRel);
 const currentState = readJson(miniRoot, "docs/omega-mini-index/omega-mini-current-state-v1.json");
@@ -125,7 +130,7 @@ const sliceReceipt = {
   schema: "ghc.authorized_735_slice_execution_receipt.v1",
   generated_utc: generatedUtc,
   phase_slug: phaseSlug,
-  status: "PASS_735_AUTHORIZED_SLICE_255_266_STATUS_COMPLETED",
+  status: `PASS_735_AUTHORIZED_SLICE_${sliceStart}_${sliceEnd}_STATUS_COMPLETED`,
   source_queue_ref: sourceQueueRel,
   source_order_ref: sourceOrderRel,
   executed_slice: {
@@ -135,10 +140,10 @@ const sliceReceipt = {
     rows: sliceRows,
   },
   completion_effect: {
-    prior_completed_rows: queue.row_counts.completed,
+    prior_completed_rows: priorCompleted,
     newly_status_completed_rows: sliceRows.length,
-    completed_rows_after_slice: queue.row_counts.completed + sliceRows.length,
-    uncompleted_rows_after_slice: queue.row_counts.uncompleted - sliceRows.length,
+    completed_rows_after_slice: priorCompleted + sliceRows.length,
+    uncompleted_rows_after_slice: Math.max(0, queueNumber("total") - (priorCompleted + sliceRows.length)),
   },
   implemented_checks: {
     omega_mini_current_state_present: currentStatePresent,
