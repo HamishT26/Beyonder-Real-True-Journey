@@ -1,8 +1,8 @@
 # Omega Mini Current State
 
-Status: `READY_FOR_V541_V6_X1_ARBY_CICERO`
+Status: `READY_FOR_V541_V7_X1_LUMEN`
 
-Updated: `2026-06-16T21:28:04.0331153+12:00`
+Updated: `2026-06-16T21:44:18.8869868+12:00`
 
 ## Active Routing
 
@@ -10,20 +10,20 @@ Updated: `2026-06-16T21:28:04.0331153+12:00`
 - Stale memory policy: `omega44 is historical-only unless Hamish explicitly asks for it`.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v541-gmut-thos-v77-v6-x1`
-- Latest closed phase: `v541-gmut-thos-v77-v5-x2`
-- Latest completed x1 phase: `v541-gmut-thos-v77-v5-x1`
-- Latest completed x2 phase: `v541-gmut-thos-v77-v5-x2`
-- Current active lanes: `Arby and Cicero`
-- Next expected scope: `v541-gmut-thos-v77-v6-x1`
-- Next x2 scope: `v541-gmut-thos-v77-v6-x2`
-- Next x1 lane after x2: `Lumen Vale`
+- Current active phase: `v541-gmut-thos-v77-v7-x1`
+- Latest closed phase: `v541-gmut-thos-v77-v6-x2`
+- Latest completed x1 phase: `v541-gmut-thos-v77-v6-x1`
+- Latest completed x2 phase: `v541-gmut-thos-v77-v6-x2`
+- Current active lanes: `Lumen Vale`
+- Next expected scope: `v541-gmut-thos-v77-v7-x1`
+- Next x2 scope: `v541-gmut-thos-v77-v7-x2`
+- Next x1 lane after x2: `Arby and Cicero`
 
 
 ## Latest Remote-Verified Heads
 
-- Full omega: `43825365ec06808f1b86c860c84190619003d0a3`
-- Omega-mini: `4e3c87fe649e805606244a009829761253707b03`
+- Full omega: `7433c2405a69cf5f4d6ce1acba6d881b97a32a0f`
+- Omega-mini: `f4078fc990e29bbec3eff7f5fa88c867c923472f`
 
 ## Round-Robin Cadence
 
@@ -163,6 +163,12 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-full-phase-guard-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v5-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x2-eureka-action-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v6-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
 
