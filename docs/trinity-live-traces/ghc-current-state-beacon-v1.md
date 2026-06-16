@@ -1,8 +1,8 @@
 # GHC Current State Beacon
 
-Status: `ACTIVE_BEACON_CURRENT_TO_V541_V6_X1_ARBY_CICERO`
+Status: `ACTIVE_BEACON_CURRENT_TO_V541_V7_X1_LUMEN`
 
-Updated: `2026-06-16T21:28:04.0331153+12:00`
+Updated: `2026-06-16T21:44:18.8869868+12:00`
 
 ## Active Routing
 
@@ -10,11 +10,11 @@ Updated: `2026-06-16T21:28:04.0331153+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary context branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Latest remote-verified closeout for this v541 work: `v541-gmut-thos-v77-v5-x2`
-- Latest local closeout publication anchor: `v541-gmut-thos-v77-v5-x2`
-- Active local phase: `v541-gmut-thos-v77-v6-x1`
-- Next prepared phase: `v541-gmut-thos-v77-v6-x1`
-- Next active lanes: `Arby`, `Cicero`
+- Latest remote-verified closeout for this v541 work: `v541-gmut-thos-v77-v6-x2`
+- Latest local closeout publication anchor: `v541-gmut-thos-v77-v6-x2`
+- Active local phase: `v541-gmut-thos-v77-v7-x1`
+- Next prepared phase: `v541-gmut-thos-v77-v7-x1`
+- Next active lanes: `Lumen Vale`
 
 ## Round Robin Pattern
 
@@ -53,8 +53,8 @@ Updated: `2026-06-16T21:28:04.0331153+12:00`
 
 ## Remote-Verified Heads
 
-- Full omega: `43825365ec06808f1b86c860c84190619003d0a3`
-- Omega-mini: `4e3c87fe649e805606244a009829761253707b03`
+- Full omega: `7433c2405a69cf5f4d6ce1acba6d881b97a32a0f`
+- Omega-mini: `f4078fc990e29bbec3eff7f5fa88c867c923472f`
 
 
 ## Fresh v541 v5 to v6 Artifacts
