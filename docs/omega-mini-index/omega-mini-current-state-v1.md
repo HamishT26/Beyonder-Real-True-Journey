@@ -1,10 +1,10 @@
 # Omega-Mini Current State
 
-Status: OPEN_V544_V3_X1_LUMEN_READY
+Status: OPEN_V544_V3_X1_LUMEN_READY_AFTER_BACKLOG
 Current active phase: v544-gmut-thos-v80-v3-x1
-Latest closed phase: v544-gmut-thos-v80-v2-x2
+Latest closed phase: v544-gmut-thos-v80-v3-x2-backlog-build-use
 Latest completed x1: v544-gmut-thos-v80-v2-x1
-Latest completed x2: v544-gmut-thos-v80-v2-x2
+Latest completed x2: v544-gmut-thos-v80-v3-x2-backlog-build-use
 Current lanes: Lumen Vale
 Next x2 scope: v544-gmut-thos-v80-v3-x2
 Next x1 lane after x2: Arby,Cicero
@@ -18,9 +18,10 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
 
 ## Latest Action Summary
-- closed v544 v2 x2 build-use package
-- prepared v544 v3 x1 Lumen solo lane
-- kept grouped round-robin cadence
+- authorized 735-row approval/eureka stack
+- executed 139 safe-now Eureka backlog rows status-only
+- held candidate/defer/blocked/exact-packet rows from execution
+- kept v544 v3 x1 Lumen ready
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
