@@ -25,11 +25,13 @@ The marker position confirms lane completion for status purposes. The full Lumen
 - Requested eureka task count: `24`
 - Correction status: `carried_into_lumen_prompt_and_marker_review`
 
-## Next Round-Robin Step
+## Next Phase Queue
 
-- Next expected lane group: `Arby and Cicero`
-- Next expected scope: `v540-gmut-thos-v76-v6-x1`
-- Handoff basis: Lumen v5 assistant marker observed; use status-only synthesis before x2 build/use planning.
+- Immediate next scope: `v540-gmut-thos-v76-v5-x2`
+- Immediate next mode: `build_test_use_from_lumen_v5_x1_advisory`
+- Next x1 lane group after x2: `Arby and Cicero`
+- Next x1 scope after x2: `v540-gmut-thos-v76-v6-x1`
+- Handoff basis: Lumen v5 assistant marker observed; run status-only synthesis before x2 build/use planning.
 
 ## Boundaries
 
