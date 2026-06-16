@@ -1,101 +1,62 @@
-# Omega Mini Current State
+# Omega-Mini Current State
 
-Status: `READY_FOR_V542_V1_X1_LUMEN`
+Status: READY_FOR_V542_V2_X1_ARBY_CICERO
+Current active phase: v542-gmut-thos-v78-v2-x1
+Latest closed phase: v542-gmut-thos-v78-v1-x2
+Latest completed x1: v542-gmut-thos-v78-v1-x1
+Latest completed x2: v542-gmut-thos-v78-v1-x2
+Current lanes: Arby, Cicero
+Next x2 scope: v542-gmut-thos-v78-v2-x2
+Next x1 lane after x2: Lumen Vale
 
-Generated UTC: `2026-06-16T11:01:06Z`
-
-## Active Routing
-
-- Active memory cue: `v532-live-state`
-- Stale memory policy: `omega44 is historical-only unless Hamish explicitly asks for it`.
-- Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
-- Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v542-gmut-thos-v78-v1-x1`
-- Latest closed phase: `v541-gmut-thos-v77-v8-x2`
-- Latest completed x1 phase: `v541-gmut-thos-v77-v8-x1`
-- Latest completed x2 phase: `v541-gmut-thos-v77-v8-x2`
-- Current active lanes: `Lumen Vale`
-- Next expected scope: `v542-gmut-thos-v78-v1-x1`
-- Next x2 scope: `v542-gmut-thos-v78-v1-x2`
-- Next x1 lane after x2: `Arby and Cicero`
-
-## Latest Remote-Verified Heads
-
-- Full omega: `08fb97163583f52451ab0af0d60af0cabb564c5a`
-- Omega-mini: `e784b1ec78e836635044995521d41ca54216df56`
-
-## Round-Robin Cadence
-
-1. Lumen Vale solo.
-2. Arby and Cicero.
-3. Lumen Vale solo.
-4. Aster Vale, Kierkegaard, and Aristotle.
-5. Repeat.
-
-## Latest Action Summary
-
-- Arby v8 x1 passed strict CLI quality and marker review with status-only evidence.
-- Cicero v8 x1 completed through the recovered app lane and passed the direct completion gate.
-- v8 x2 build/use closeout passed and prepared the next Lumen solo start.
-- Next grouped x1 is Lumen Vale solo through the Browser live-adapter route.
-
-## Current Lookup Files
-
-Use these omega-mini files before broad searching:
-- `docs/omega-mini-index/omega-mini-current-state-v1.md`
-- `docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md`
-- `docs/trinity-live-traces/ghc-current-state-beacon-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-browser-send-receipt-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-browser-send-exposure-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-source-ledger-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-approval-continuity-pack-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-eureka-continuity-ledger-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-to-v7-x2-continuity-handoff-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-browser-five-minute-check-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-marker-receipt-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-response-hash-receipt-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-lumen-normalized-action-ledger-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-closeout-exposure-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-grouped-lane-receipt-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-grouped-lane-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x1-x2-grouped-handoff-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-lane-state-reducer-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-route-family-manifest-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-full-phase-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-closeout-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-lumen-v7-x2-action-execution-ledger-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-lumen-action-completion-reconciliation-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-final-exposure-guard-v1.md`
-- `docs/omega-mini-index/v541-v7-lumen-omega-mini-catchup-brief-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-next-group-prep-card-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-source-ledger-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-approval-continuity-pack-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-eureka-continuity-ledger-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-to-v8-x2-continuity-handoff-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-arby-five-minute-check-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-strict-cli-lane-cycle-quality-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-strict-cli-lane-cycle-marker-review-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-recovered-notifier-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-app-redaction-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-recovered-completion-gate-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-grouped-lane-receipt-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-grouped-lane-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-x2-grouped-handoff-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-lane-state-reducer-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-route-family-manifest-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-full-phase-guard-v1.md`
-- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-closeout-v1.md`
-- `docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-next-group-prep-card-v1.md`
-
-## Historical Rows
-
-- v529, v530, and earlier v540/v541 rows remain historical reference rows only.
-- The active pointer is v542-gmut-thos-v78-v1-x1, not v530 or v541 v8 x1.
-
-## Sibling Catch-Up Rule
-
+## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
 
-## Open Gates
+## Current Lookup Files
+- docs/omega-mini-index/omega-mini-current-state-v1.md
+- docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
+- docs/trinity-live-traces/ghc-current-state-beacon-v1.md
+- docs/omega-mini-index/v542-v1-lumen-omega-mini-catchup-brief-v1.md
+- docs/omega-mini-index/v542-v1-lumen-omega-mini-catchup-brief-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-lumen-marker-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-lumen-marker-receipt-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-lumen-response-hash-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-lumen-response-hash-receipt-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-lumen-normalized-action-ledger-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-lumen-normalized-action-ledger-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-lumen-task-materialization-summary-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-lumen-task-materialization-summary-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-lumen-action-execution-ledger-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-lumen-action-execution-ledger-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-lane-state-reducer-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-lane-state-reducer-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-route-family-manifest-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-route-family-manifest-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-full-phase-guard-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-full-phase-guard-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-closeout-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v1-x2-closeout-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-next-group-prep-card-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-next-group-prep-card-v1.json
+- docs/trinity-live-traces/v542-v1-x2-omega-mini-head-reconciliation-receipt-v1.md
+- docs/trinity-live-traces/v542-v1-x2-omega-mini-head-reconciliation-receipt-v1.json
+- docs/trinity-live-traces/v542-v1-x2-omega-mini-current-state-freshness-guard-v1.md
+- docs/trinity-live-traces/v542-v1-x2-omega-mini-current-state-freshness-guard-v1.json
+- docs/trinity-live-traces/v542-v1-x2-arby-cicero-v2-handoff-packet-v1.md
+- docs/trinity-live-traces/v542-v1-x2-arby-cicero-v2-handoff-packet-v1.json
+- docs/trinity-live-traces/v542-v1-x2-open-gate-rail-v1.md
+- docs/trinity-live-traces/v542-v1-x2-open-gate-rail-v1.json
 
-GMUT empirical closure, final physics, consciousness proof, legal closure, and canon promotion remain open.
+## Latest Action Summary
+- Lumen v542 v1 x1 completed with a status-only marker receipt and normalized action ledger.
+- v542 v1 x2 materialized sixteen Lumen eureka tasks into bounded repo artifacts.
+- v542 v1 x2 build/use ledger recorded built, validated, and guarded actions without raw private material.
+- Next grouped x1 is Arby and Cicero, followed by Lumen Vale after the v2 x2 handoff.
+
+## Safety Boundary
+- Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
+- GMUT empirical closure, final physics, consciousness proof, legal closure, and canon promotion remain open.
