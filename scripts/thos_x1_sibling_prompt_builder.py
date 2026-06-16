@@ -10,7 +10,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-EXTENDED_GMUT_THOS_RE = re.compile(r"^v(?P<phase>49[7-9]|50[0-9]|51[0-5])-gmut-thos-v\d+-v(?P<version>[1-8])-x1$")
+EXTENDED_GMUT_THOS_RE = re.compile(
+    r"^v(?P<phase>49[7-9]|50[0-9]|51[0-9]|52[0-9]|53[0-9]|54[0-9]|550)-gmut-thos-v\d+-v(?P<version>[1-8])-x1$"
+)
 
 
 def extended_gmut_thos_packet_active(phase_slug: str) -> bool:

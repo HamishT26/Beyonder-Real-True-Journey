@@ -176,7 +176,7 @@ const fullPhaseGuard = {
   claim_boundary: claimBoundary,
 };
 
-const implementedTasks = x2Tasks.slice(0, 5).map((task, index) => ({
+const implementedTasks = x2Tasks.map((task, index) => ({
   id: `grouped-x2-built-${String(index + 1).padStart(2, "0")}`,
   source_task: task.title,
   result: `${task.title} carried into the grouped x2 build/use ledger under status-only publication rules.`,

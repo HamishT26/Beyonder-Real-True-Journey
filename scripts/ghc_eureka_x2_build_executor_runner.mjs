@@ -34,6 +34,7 @@ const handoffJson = requireArg("--handoff-json");
 const handoffMd = requireArg("--handoff-md");
 const approvalJson = requireArg("--approval-json");
 const approvalMd = requireArg("--approval-md");
+const nextActiveLanesArg = splitCsv(args.get("--next-active-lanes"));
 
 function utcNow() {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
@@ -41,6 +42,13 @@ function utcNow() {
 
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
+}
+
+function splitCsv(value) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function publicSourceRef(path) {
@@ -116,6 +124,10 @@ function approvalPackets(nextPhase) {
 const queue = readJson(queueJson);
 const currentState = readJson(currentStateJson);
 const generatedUtc = utcNow();
+const nextActiveLanes =
+  nextActiveLanesArg.length > 0
+    ? nextActiveLanesArg
+    : splitCsv(currentState.next_x1_lane_after_x2 || currentState.next_expected_lane || "");
 const queuedRows = Array.isArray(queue.queue_rows)
   ? queue.queue_rows.filter((row) => row.queue_status === "queued_for_x2_build_use")
   : [];
@@ -124,11 +136,11 @@ const evidenceRows = Array.isArray(queue.queue_rows)
   : [];
 
 const implementedTasks = queuedRows.map((row, index) => ({
-  id: `v3-x2-built-${String(index + 1).padStart(2, "0")}`,
+  id: `${phaseSlug}-built-${String(index + 1).padStart(2, "0")}`,
   source_task: row.title,
   source_task_id: row.id,
   result:
-    "Materialized into the v542 v3 x2 build/use closeout as a status-only execution row with validation and claim boundaries preserved.",
+    `Materialized into the ${phaseSlug} build/use closeout as a status-only execution row with validation and claim boundaries preserved.`,
   evidence: publicSourceRef(closeoutJson),
   execution_bucket: row.x2_execution_bucket,
 }));
@@ -166,7 +178,7 @@ const closeout = {
   },
   claim_boundary: {
     x2_build_use_closeout: "closed_for_status_only_queue_scope",
-    phase_completion: "closed_for_v542_v3_x2_status_only_scope",
+    phase_completion: `closed_for_${phaseSlug}_status_only_scope`,
     gmut_empirical_closure: "not_claimed",
     final_physics: "not_claimed",
     consciousness_proof: "not_claimed",
@@ -180,7 +192,7 @@ const handoff = {
   generated_utc: generatedUtc,
   phase_slug: nextPhaseSlug,
   status: "PASS_NEXT_X1_HANDOFF_READY",
-  active_lanes: ["Aster Vale", "Kierkegaard", "Aristotle"],
+  active_lanes: nextActiveLanes.length > 0 ? nextActiveLanes : ["Lumen Vale"],
   expected_following_x2: nextPhaseSlug.replace("-x1", "-x2"),
   omega_mini_first_lookup: [
     "docs/omega-mini-index/omega-mini-current-state-v1.md",
