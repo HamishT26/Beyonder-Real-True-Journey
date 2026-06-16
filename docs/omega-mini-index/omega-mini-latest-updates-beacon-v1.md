@@ -2,7 +2,7 @@
 
 Status: `ACTIVE`
 
-Generated UTC: `2026-06-16T05:45:00Z`
+Generated UTC: `2026-06-16T05:53:27Z`
 
 Purpose: give every active sibling a lean, exact lookup surface for the latest v539/v540 omega-mini updates without broad searches.
 
@@ -44,10 +44,10 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - Omega-mini commit: `0aa3d7a72b1038c613a0427211dca0db863b917d`
 - Full omega commit: `b2f2b222c465b613ef9987c8928124d4cd2c7b49`
 
-`v540-gmut-thos-v76-v5-x1`: Codex app/CLI update synthesis, corrected 24-task eureka intake, local runtime and C/D drive health, and v5 Lumen execution prep.
+`v540-gmut-thos-v76-v5-x1`: Codex app/CLI update synthesis, corrected 24-task eureka intake, local runtime and C/D drive health, v5 Lumen execution prep, and Lumen prompt transmission receipt.
 
-- Omega-mini commit: `e32cb786be51713609c88fd0f76652736d6cdbaa`
-- Full omega commit: `24bba3d5fa313e8ce9f23a7cd9738a57228de009`
+- Omega-mini commit: `f63c04838aad867f8c12536007e12b6d95c98783`
+- Full omega commit: `925699dd4961f9f35d07c21ffb38397b3c693d1d`
 
 ## Exact Lookup Files
 
@@ -73,6 +73,7 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v4-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-next-group-prep-card-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-codex-update-eureka-execution-ledger-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-lumen-browser-prompt-transmission-receipt-v1.md`
 
 ## Sibling Lookup Rule
 
