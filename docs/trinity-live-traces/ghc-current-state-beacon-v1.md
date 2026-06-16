@@ -2,7 +2,7 @@
 
 Status: `ACTIVE_BEACON_CURRENT_TO_V541_V7_X1_LUMEN`
 
-Updated: `2026-06-16T21:44:18.8869868+12:00`
+Updated: `2026-06-16T21:49:30.4271033+12:00`
 
 ## Active Routing
 
@@ -53,8 +53,8 @@ Updated: `2026-06-16T21:44:18.8869868+12:00`
 
 ## Remote-Verified Heads
 
-- Full omega: `7433c2405a69cf5f4d6ce1acba6d881b97a32a0f`
-- Omega-mini: `f4078fc990e29bbec3eff7f5fa88c867c923472f`
+- Full omega: `ae65c623a3366dd29ba545179d2d7ac94631bdd1`
+- Omega-mini: `d2f5f0f31d865190d809e3b354ae2ffe0f47ac4e`
 
 
 ## Fresh v541 v5 to v6 Artifacts
