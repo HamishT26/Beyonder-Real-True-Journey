@@ -1,9 +1,9 @@
 # v544-gmut-thos-v80-v7-x1 Status Receipt Exposure Guard
 
-- generated_utc: `2026-06-16T22:09:37Z`
+- generated_utc: `2026-06-16T22:16:38Z`
 - overall_status: `PASS_EXPOSURE_GUARD`
-- files_requested: `64`
-- files_scanned: `64`
+- files_requested: `14`
+- files_scanned: `14`
 - missing_files_count: `0`
 - findings_count: `0`
 
