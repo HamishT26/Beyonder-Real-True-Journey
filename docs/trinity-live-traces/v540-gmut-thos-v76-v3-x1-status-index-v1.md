@@ -1,22 +1,18 @@
 # v540-gmut-thos-v76-v3-x1 Phase Status Index
 
-Generated UTC: `2026-06-16T01:16:45Z`
+Generated UTC: `2026-06-16T01:15:30Z`
 
 Status: `PASS_PHASE_STATUS_INDEX`
 
-Scanned JSON files: `3`
+Scanned JSON files: `1`
 
 ## Status Counts
 
-- PASS_EXPOSURE_GUARD: `1`
-- PASS_PHASE_STATUS_INDEX: `1`
 - READY_FOR_GROUPED_ROUND_ROBIN_X1: `1`
 
 ## Rows
 
-- v540-gmut-thos-v76-v3-x1-exposure-guard-v1.json: `PASS_EXPOSURE_GUARD`; lanes `none`; private flag `false`
 - v540-gmut-thos-v76-v3-x1-next-group-prep-card-v1.json: `READY_FOR_GROUPED_ROUND_ROBIN_X1`; lanes `Lumen Vale`; private flag `false`
-- v540-gmut-thos-v76-v3-x1-status-index-v1.json: `PASS_PHASE_STATUS_INDEX`; lanes `none`; private flag `false`
 
 ## Boundary
 
