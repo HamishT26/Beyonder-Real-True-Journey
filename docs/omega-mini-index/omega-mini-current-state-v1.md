@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_V541_V5_X1_LUMEN`
 
-Updated: `2026-06-16T20:59:01.1598023+12:00`
+Updated: `2026-06-16T21:04:32.4518319+12:00`
 
 ## Active Routing
 
@@ -18,6 +18,12 @@ Updated: `2026-06-16T20:59:01.1598023+12:00`
 - Next expected scope: `v541-gmut-thos-v77-v5-x1`
 - Next x2 scope: `v541-gmut-thos-v77-v5-x2`
 - Next x1 lane after x2: `Arby and Cicero`
+
+
+## Latest Remote-Verified Heads
+
+- Full omega: $full
+- Omega-mini: $mini
 
 ## Round-Robin Cadence
 
