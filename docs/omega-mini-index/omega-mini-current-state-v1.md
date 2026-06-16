@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_LIGHTWEIGHT_PHASE_CONTINUITY`
 
-Updated: `2026-06-16T14:26:30+12:00`
+Updated: `2026-06-16T17:45:00+12:00`
 
 ## Active Routing
 
@@ -18,8 +18,8 @@ Updated: `2026-06-16T14:26:30+12:00`
 
 ## Remote Verified Heads
 
-- Omega: `b2f2b222c465b613ef9987c8928124d4cd2c7b49`
-- Omega-mini: `0aa3d7a72b1038c613a0427211dca0db863b917d`
+- Omega: `24bba3d5fa313e8ce9f23a7cd9738a57228de009`
+- Omega-mini: `e32cb786be51713609c88fd0f76652736d6cdbaa`
 
 ## Round-Robin Cadence
 
@@ -51,6 +51,7 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v4-x1-grouped-lane-receipt-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v4-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v5-x1-codex-update-eureka-execution-ledger-v1.md`
 
 ## Historical Rows
 
