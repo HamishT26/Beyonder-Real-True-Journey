@@ -1,0 +1,129 @@
+{
+  "schema": "ghc.route_family_registry.v1",
+  "generated_utc": "2026-06-16T13:18:40Z",
+  "phase_slug": "v542-gmut-thos-v78-v5-x1",
+  "status": "PASS_ROUTE_FAMILY_REGISTRY_READY_WITH_LUMEN_ROUTE_OPEN",
+  "purpose": "Keep the v542 v5 Lumen live-adapter path explicit while the direct Browser send route remains unavailable, without blocking repo-side preparation work.",
+  "route_families": [
+    {
+      "family": "Browser in-app live adapter",
+      "active_lanes": [
+        "Lumen Vale"
+      ],
+      "status": "prepared_route_open",
+      "rules": [
+        "Status-only Browser lane receipts are allowed; raw ChatGPT transcripts, raw routes, screenshots, private IDs, and hidden browser state are not published.",
+        "Only Lumen Vale is active for ChatGPT Browser live-adapter work in this phase; Solas Veridion and the Unnamed ChatGPT 5.5 Thinking Sibling remain on standby.",
+        "A prepared route is not a sent message, and duration is never completion proof.",
+        "If a safe direct send control becomes exposed, send only the bounded Lumen prompt and record a status-only marker receipt."
+      ]
+    },
+    {
+      "family": "Codex app local callable lanes",
+      "active_lanes": [
+        "Cicero",
+        "Kierkegaard",
+        "Aristotle"
+      ],
+      "status": "standby_for_round_robin",
+      "rules": [
+        "Use existing app lanes only; do not create new threads, replacements, or old-style subagents.",
+        "Publish status-only completion or blocker receipts, never raw lane text or callable IDs.",
+        "Keep app-lane preparation available for the next scheduled Arby/Cicero or triad phase after Lumen is resolved."
+      ]
+    },
+    {
+      "family": "Codex CLI read-only lanes",
+      "active_lanes": [
+        "Arby",
+        "Aster Vale"
+      ],
+      "status": "standby_for_round_robin",
+      "rules": [
+        "Use read-only CLI advisory lanes unless a separate exact packet authorizes mutation.",
+        "Publish hashes, byte counts, marker review, and status-only receipts; do not publish raw CLI output.",
+        "Keep final-marker gaps as blockers until marker review distinguishes ordinary wording from real exposure risk."
+      ]
+    },
+    {
+      "family": "Chrome extension live adapter",
+      "active_lanes": [],
+      "status": "standby_not_primary",
+      "rules": [
+        "Use Chrome only if explicitly re-approved or Browser remains unavailable after fresh safe retries.",
+        "No raw Chrome profile, cookies, browser state, screenshots, or account settings are published.",
+        "Browser remains the primary ChatGPT live-adapter path for this phase."
+      ]
+    }
+  ],
+  "chatgpt_sibling_policy": {
+    "active": [
+      "Lumen Vale"
+    ],
+    "standby": [
+      "Solas Veridion",
+      "Unnamed ChatGPT 5.5 Thinking Sibling"
+    ],
+    "rule": "Do not message Solas or the unnamed sibling during this phase unless Hamish explicitly changes the live-adapter plan."
+  },
+  "route_state_contract": {
+    "states": [
+      "prepared",
+      "sent",
+      "generating",
+      "complete",
+      "blocker",
+      "synthesized"
+    ],
+    "transitions": [
+      {
+        "from": "prepared",
+        "to": "sent"
+      },
+      {
+        "from": "sent",
+        "to": "generating"
+      },
+      {
+        "from": "generating",
+        "to": "complete"
+      },
+      {
+        "from": "generating",
+        "to": "blocker"
+      },
+      {
+        "from": "complete",
+        "to": "synthesized"
+      },
+      {
+        "from": "blocker",
+        "to": "synthesized"
+      }
+    ]
+  },
+  "current_route_state": {
+    "lane": "Lumen Vale",
+    "state": "blocker",
+    "blocker_summary": "Direct Browser send control is not exposed in the current tool surface; Lumen prompt remains prepared and unsent.",
+    "next_safe_action": "Continue productive repo-side wait work and retry only if a safe Browser send control becomes exposed."
+  },
+  "publication_boundary": {
+    "raw_lane_text_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_routes_published": false,
+    "raw_route_handles_published": false,
+    "screen_capture_files_published": false,
+    "session_trace_files_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}

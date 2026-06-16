@@ -1,0 +1,292 @@
+{
+  "schema": "ghc.eureka_task_tracker.v1",
+  "generated_utc": "2026-06-16T13:19:06Z",
+  "phase_slug": "v542-gmut-thos-v78-v5-x1",
+  "status": "PASS_EUREKA_TASK_TRACKER_READY",
+  "task_count": 20,
+  "scope_counts": {
+    "safe_now": 16,
+    "candidate": 4,
+    "defer": 0,
+    "blocked": 0,
+    "needs_exact_packet": 0
+  },
+  "completion_counts": {
+    "completed": 0,
+    "uncompleted": 20
+  },
+  "source_reports": [
+    {
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "status": "READ",
+      "task_count": 20
+    }
+  ],
+  "tasks": [
+    {
+      "order": 1,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-01-registry-validator-run",
+      "title": "Run route-family validator",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 1,
+      "action": "Run the route-family validator and treat failures as open gaps, not proof of phase failure."
+    },
+    {
+      "order": 2,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-02-state-validator-run",
+      "title": "Run route-state validator",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 2,
+      "action": "Run the route-state validator against the v5 registry."
+    },
+    {
+      "order": 3,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-03-board-open-gap-run",
+      "title": "Run route board open-gap receipt",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 3,
+      "action": "Run the route board and capture expected open-gap status for Lumen."
+    },
+    {
+      "order": 4,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-04-approval-checklist-run",
+      "title": "Run approval checklist",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 4,
+      "action": "Generate v5 approval checklist from the candidate bundle and recovery ledger."
+    },
+    {
+      "order": 5,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-05-eureka-tracker-run",
+      "title": "Run Eureka tracker",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 5,
+      "action": "Generate v5 Eureka tracker from recovery ledger tasks."
+    },
+    {
+      "order": 6,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-06-stack-run",
+      "title": "Run cumulative stack refresh",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 6,
+      "action": "Generate v5 combined stack from prior stack plus new recovery ledger."
+    },
+    {
+      "order": 7,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-07-mini-copy",
+      "title": "Copy curated files to omega-mini",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 7,
+      "action": "Mirror only exact v5 route/stack/current-state files."
+    },
+    {
+      "order": 8,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-08-current-state-run",
+      "title": "Run current-state refresher",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 8,
+      "action": "Refresh omega-mini and full-omega current-state files using the v5 lookup prefixes."
+    },
+    {
+      "order": 9,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-09-json-parse",
+      "title": "Parse all new JSON",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 9,
+      "action": "Parse every exact new JSON artifact in both worktrees."
+    },
+    {
+      "order": 10,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-10-node-check",
+      "title": "Check runner syntax",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 10,
+      "action": "Run node --check on route, checklist, stack, and state scripts."
+    },
+    {
+      "order": 11,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-11-mini-guard",
+      "title": "Run omega-mini current-state guard",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 11,
+      "action": "Confirm omega-mini points to v5 x1, v4 x1, and Arby/Cicero next lane."
+    },
+    {
+      "order": 12,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-12-exposure-scan",
+      "title": "Run exposure scan",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 12,
+      "action": "Scan exact new files for forbidden private material patterns."
+    },
+    {
+      "order": 13,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-13-diff-review",
+      "title": "Review exact staged diff",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 13,
+      "action": "Review only staged diff before commit."
+    },
+    {
+      "order": 14,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-14-commit-omega",
+      "title": "Commit full omega artifacts",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 14,
+      "action": "Commit only curated v5 route recovery and stack files."
+    },
+    {
+      "order": 15,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-15-commit-mini",
+      "title": "Commit omega-mini artifacts",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 15,
+      "action": "Commit only mirrored v5 route recovery and stack files."
+    },
+    {
+      "order": 16,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-16-push-verify",
+      "title": "Push and remote verify",
+      "status": "safe_now",
+      "scope_bucket": "safe_now",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 16,
+      "action": "Verify remote equals local for both branches."
+    },
+    {
+      "order": 17,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-17-lumen-unsent-note",
+      "title": "Record Lumen unsent status",
+      "status": "candidate",
+      "scope_bucket": "candidate",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 17,
+      "action": "Keep Lumen status as prepared-not-sent until actual message evidence exists."
+    },
+    {
+      "order": 18,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-18-x2-prep-hold",
+      "title": "Prepare x2 without advancing",
+      "status": "candidate",
+      "scope_bucket": "candidate",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 18,
+      "action": "Prepare x2 build/use queue while holding completion gate open."
+    },
+    {
+      "order": 19,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-19-sibling-brief-next",
+      "title": "Prepare next sibling brief",
+      "status": "candidate",
+      "scope_bucket": "candidate",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 19,
+      "action": "Draft Arby/Cicero brief gated behind Lumen receipt or exact override."
+    },
+    {
+      "order": 20,
+      "id": "v542-gmut-thos-v78-v5-x1-eureka-20-handoff-capsule",
+      "title": "Create compact handoff capsule",
+      "status": "candidate",
+      "scope_bucket": "candidate",
+      "completion_bucket": "uncompleted",
+      "source_ref": "docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json",
+      "source_field": "eureka_tasks",
+      "source_order": 20,
+      "action": "Summarize current phase state, route blocker, counts, and next safe actions."
+    }
+  ],
+  "next_actions": [
+    "Use completed rows as build/use evidence only within their recorded source scope.",
+    "Use safe_now uncompleted rows as next x2 implementation candidates.",
+    "Keep candidate, defer, blocked, and needs_exact_packet rows queued until their scope is resolved.",
+    "Refresh this tracker whenever a sibling proposes, completes, defers, or blocks a Eureka task."
+  ],
+  "publication_boundary": {
+    "raw_lane_content_published": false,
+    "raw_chatgpt_transcript_published": false,
+    "raw_browser_routes_published": false,
+    "raw_route_handles_published": false,
+    "screen_capture_files_published": false,
+    "session_trace_files_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "eureka_completion": "status_only_from_sources",
+    "phase_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
