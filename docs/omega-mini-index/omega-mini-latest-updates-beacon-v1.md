@@ -136,6 +136,7 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v3-x1-grouped-lane-receipt-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v3-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v3-x2-publication-anchor-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v3-x2-lumen-eureka-execution-ledger-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v4-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
