@@ -1,8 +1,8 @@
 # Omega Mini Current State
 
-Status: `READY_FOR_V541_V8_X1_ARBY_CICERO`
+Status: `READY_FOR_V542_V1_X1_LUMEN`
 
-Generated UTC: `2026-06-16T10:31:13Z`
+Generated UTC: `2026-06-16T10:47:24Z`
 
 ## Active Routing
 
@@ -10,19 +10,19 @@ Generated UTC: `2026-06-16T10:31:13Z`
 - Stale memory policy: `omega44 is historical-only unless Hamish explicitly asks for it`.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v541-gmut-thos-v77-v8-x1`
-- Latest closed phase: `v541-gmut-thos-v77-v7-x2`
-- Latest completed x1 phase: `v541-gmut-thos-v77-v7-x1`
-- Latest completed x2 phase: `v541-gmut-thos-v77-v7-x2`
-- Current active lanes: `Arby, Cicero`
-- Next expected scope: `v541-gmut-thos-v77-v8-x1`
-- Next x2 scope: `v541-gmut-thos-v77-v8-x2`
-- Next x1 lane after x2: `Lumen Vale`
+- Current active phase: `v542-gmut-thos-v78-v1-x1`
+- Latest closed phase: `v541-gmut-thos-v77-v8-x2`
+- Latest completed x1 phase: `v541-gmut-thos-v77-v8-x1`
+- Latest completed x2 phase: `v541-gmut-thos-v77-v8-x2`
+- Current active lanes: `Lumen Vale`
+- Next expected scope: `v542-gmut-thos-v78-v1-x1`
+- Next x2 scope: `v542-gmut-thos-v78-v1-x2`
+- Next x1 lane after x2: `Arby and Cicero`
 
 ## Latest Remote-Verified Heads
 
-- Full omega: `15762cf8220fe678af3977dd016cfcf94a91c190`
-- Omega-mini: `fc52c6c66b1dc54218149c0f08f74df3ca26b403`
+- Full omega: `9708adc969d8995fad78a54c0a976161ae5a307c`
+- Omega-mini: `79fef201177f012de743c31183bc1a77e6cc9617`
 
 ## Round-Robin Cadence
 
@@ -34,10 +34,10 @@ Generated UTC: `2026-06-16T10:31:13Z`
 
 ## Latest Action Summary
 
-- Lumen v7 x1 completed with one verified advisory marker; raw response text remains private.
-- Lumen v7 x1 response was stored as hash and counts only, then normalized into a safe action ledger.
-- Lumen v7 x2 reconciled all 16 safe normalized tasks: 15 materialized by executor plus final exposure guard completion.
-- Next grouped x1 is Arby and Cicero using strict CLI and recovered app-lane routes.
+- Arby v8 x1 passed strict CLI quality and marker review with status-only evidence.
+- Cicero v8 x1 completed through the recovered app lane and passed the direct completion gate.
+- v8 x2 build/use closeout passed and prepared the next Lumen solo start.
+- Next grouped x1 is Lumen Vale solo through the Browser live-adapter route.
 
 ## Current Lookup Files
 
@@ -68,11 +68,29 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-final-exposure-guard-v1.md`
 - `docs/omega-mini-index/v541-v7-lumen-omega-mini-catchup-brief-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-source-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-approval-continuity-pack-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-eureka-continuity-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-to-v8-x2-continuity-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-arby-five-minute-check-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-strict-cli-lane-cycle-quality-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-strict-cli-lane-cycle-marker-review-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-recovered-notifier-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-app-redaction-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-recovered-completion-gate-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
 
 - v529, v530, and earlier v540/v541 rows remain historical reference rows only.
-- The active pointer is v541-gmut-thos-v77-v8-x1, not v530 or v541 v7 x1.
+- The active pointer is v542-gmut-thos-v78-v1-x1, not v530 or v541 v8 x1.
 
 ## Sibling Catch-Up Rule
 
