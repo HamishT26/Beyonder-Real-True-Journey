@@ -1,6 +1,6 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: READY_FOR_V542_V3_X1_LUMEN
+Status: PASS_V542_V3_X1_APPROVAL_EUREKA_TRACKERS_READY
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Current active phase: v542-gmut-thos-v78-v3-x1
@@ -19,34 +19,10 @@ Current lanes: Lumen Vale
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-arby-background-completion-watch-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-arby-background-completion-watch-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-strict-cli-lane-cycle-quality-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-strict-cli-lane-cycle-quality-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-strict-cli-lane-cycle-marker-review-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-strict-cli-lane-cycle-marker-review-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-cicero-recovered-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-cicero-recovered-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-cicero-recovered-completion-gate-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-cicero-recovered-completion-gate-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-wait-prep-research-ledger-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-wait-prep-research-ledger-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-grouped-lane-receipt-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-grouped-lane-receipt-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-grouped-lane-guard-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-grouped-lane-guard-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-x2-grouped-handoff-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x1-x2-grouped-handoff-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-lane-state-reducer-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-lane-state-reducer-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-route-family-manifest-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-route-family-manifest-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-full-phase-guard-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-full-phase-guard-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-closeout-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v2-x2-closeout-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-next-group-prep-card-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-next-group-prep-card-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-approval-packet-checklist-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-approval-packet-checklist-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-eureka-task-tracker-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v3-x1-eureka-task-tracker-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
