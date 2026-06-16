@@ -1,10 +1,10 @@
-﻿# Omega-Mini Latest Updates Beacon v1
+# Omega-Mini Latest Updates Beacon v1
 
 Status: `ACTIVE`
 
-Generated UTC: `2026-06-16T06:39:03Z`
+Generated UTC: `2026-06-16T07:02:00Z`
 
-Purpose: give every active sibling a lean, exact lookup surface for the latest v539/v540 omega-mini updates without broad searches.
+Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v539/v540 phase receipts without broad searches.
 
 Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 
@@ -12,13 +12,13 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 
 ## Current State
 
-- Current active phase: `v540-gmut-thos-v76-v7-x1`
-- Latest closed phase: `v540-gmut-thos-v76-v6-x2`
-- Latest completed x1 phase: `v540-gmut-thos-v76-v6-x1`
-- Latest completed x2 phase: `v540-gmut-thos-v76-v6-x2`
-- Current active lane group: `Lumen Vale`
-- Next x2 scope: `v540-gmut-thos-v76-v7-x2`
-- Next x1 lane after x2: `Arby and Cicero`
+- Current active phase: `v540-gmut-thos-v76-v8-x1`
+- Latest closed phase: `v540-gmut-thos-v76-v7-x2`
+- Latest completed x1 phase: `v540-gmut-thos-v76-v7-x1`
+- Latest completed x2 phase: `v540-gmut-thos-v76-v7-x2`
+- Current active lane group: `Arby, Cicero`
+- Next x2 scope: `v540-gmut-thos-v76-v8-x2`
+- Next x1 lane after x2: `Lumen Vale`
 
 ## Commit Anchors
 
@@ -29,7 +29,7 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - `v540-gmut-thos-v76-v4-x2`: Aster/Kierkegaard/Aristotle v4 x1 completion, v4 x2 build/use closeout, and Lumen v5 x1 prep (omega-mini: `0aa3d7a72b1038c613a0427211dca0db863b917d`, full omega: `b2f2b222c465b613ef9987c8928124d4cd2c7b49`).
 - `v540-gmut-thos-v76-v5-x1`: Codex app/CLI update synthesis, corrected 24-task eureka intake, local runtime and C/D drive health, Lumen prompt transmission, Lumen marker receipt, and corrected x2 handoff (omega-mini: `83cf66e3e6987da0001b5f3f02ea2bcd34804817`, full omega: `157384fe622b9826ad624109c89f2b8cd5566d96`).
 - `v540-gmut-thos-v76-v5-x2`: Built omega-mini current-state guard, fixed stale historical pointer row, closed v5 x2, queued 20 approval packets, and prepared Arby/Cicero v6 x1 (omega-mini: `274cfbc654b71b45deef2e5f649e120722621ea5`, full omega: `1ef79701422e1a2fe9c2438ef863b30d609a6d30`).
-- `v540-gmut-thos-v76-v6-x2`: Arby and Cicero v6 x1 completion, Cicero resume retry repair, v6 x2 build/use closeout, and Lumen v7 x1 prep (omega-mini: `pending-publication`, full omega: `pending-publication`).
+- `v540-gmut-thos-v76-v6-x2`: Arby and Cicero v6 x1 completion, Cicero resume retry repair, v6 x2 build/use closeout, and Lumen v7 x1 prep (omega-mini: `c03ebb349d002b8a79d6ea65c7109c6615752335`, full omega: `c9c7c0011b4c896c29f8ca0136c76203f13220f5`).
 
 ## Exact Lookup Files
 
@@ -70,12 +70,24 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x2-full-phase-guard-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v6-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-source-ledger-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-lumen-browser-wait-work-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-lumen-wait-work-approval-packets-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-lumen-wait-continuity-handoff-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-lumen-marker-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-lane-state-reducer-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-route-family-manifest-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-full-phase-guard-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-lumen-eureka-execution-ledger-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v8-x1-next-group-prep-card-v1.md`
 
 ## Sibling Lookup Rule
 
-Use omega-mini first. Read the current-state file, then this beacon, then the exact relative files listed above. Do not run broad full-omega searches unless omega-mini is missing a named artifact.
-
-If a sibling cannot find a phase artifact in omega-mini, record the exact missing relative filename and phase slug before using archive fallback.
+Open omega-mini current state first, then this beacon, then the exact relative files named here. Do not run broad full-omega searches unless a named mini artifact is missing.
 
 ## Boundaries
 
