@@ -30,8 +30,8 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/v543-gmut-thos-v79-v2-x1-grouped-lane-receipt-v1.json
 
 ## Latest Action Summary
-- v543 v2 x2 grouped build/use closeout passed with 20 implemented task rows
-- Lumen prep card is ready for v543 v3 x1
+- Current-state beacon refreshed after v543 v2 x2 remote verification
+- Lumen prep card remains ready for v543 v3 x1
 - Next lane after v3 x2 is Aster Vale, Kierkegaard, and Aristotle
 
 ## Safety Boundary
