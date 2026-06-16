@@ -1,9 +1,9 @@
 # Omega-Mini Current State
 
-Status: OPEN_V543_V6_X1_ARBY_CICERO_READY
-Current active phase: v543-gmut-thos-v79-v6-x1
-Latest closed phase: v543-gmut-thos-v79-v5-x2
-Latest completed x1: v543-gmut-thos-v79-v5-x1
+Status: OPEN_V543_V6_X2_BUILD_USE_READY
+Current active phase: v543-gmut-thos-v79-v6-x2
+Latest closed phase: v543-gmut-thos-v79-v6-x1
+Latest completed x1: v543-gmut-thos-v79-v6-x1
 Latest completed x2: v543-gmut-thos-v79-v5-x2
 Current lanes: Arby, Cicero
 Next x2 scope: v543-gmut-thos-v79-v6-x2
@@ -18,9 +18,9 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
 
 ## Latest Action Summary
-- v5 x1 Lumen assistant-marker verified
-- v5 x2 build/use closeout produced 20 implemented tasks
-- v6 x1 Arby/Cicero prep card ready
+- v6 x1 Arby strict CLI passed
+- v6 x1 Cicero recovered app lane passed
+- v6 x2 grouped build/use is ready
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
