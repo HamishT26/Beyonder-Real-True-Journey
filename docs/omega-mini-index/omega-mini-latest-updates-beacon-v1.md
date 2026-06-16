@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: OPEN_V544_V7_X1_LUMEN_READY
+Status: OPEN_V544_V8_X1_TRIAD_READY
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v544-gmut-thos-v80-v7-x1
-Latest closed phase: v544-gmut-thos-v80-v6-x2
-Latest completed x1: v544-gmut-thos-v80-v6-x1
-Latest completed x2: v544-gmut-thos-v80-v6-x2
-Current lanes: Lumen Vale solo pending browser x1
+Current active phase: v544-gmut-thos-v80-v8-x1
+Latest closed phase: v544-gmut-thos-v80-v7-x2
+Latest completed x1: v544-gmut-thos-v80-v7-x1
+Latest completed x2: v544-gmut-thos-v80-v7-x2
+Current lanes: Aster Vale, Kierkegaard, Aristotle
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,14 +19,22 @@ Current lanes: Lumen Vale solo pending browser x1
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x2-closeout-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x2-closeout-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-prompt-card-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-prompt-card-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x2-735-authorized-slice-304-305-execution-receipt-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x2-735-authorized-slice-304-305-execution-receipt-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x2-735-next-slice-prep-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x2-735-next-slice-prep-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-completion-receipt-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-completion-receipt-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-derived-approval-eureka-stack-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-derived-approval-eureka-stack-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-lumen-derived-approval-eureka-checklist-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-lumen-derived-approval-eureka-checklist-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-row-306-held-blocked-firewall-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-row-306-held-blocked-firewall-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-slice-304-305-reconciliation-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-slice-304-305-reconciliation-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-non-contiguous-slice-307-318-execution-ledger-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-non-contiguous-slice-307-318-execution-ledger-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-closeout-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-closeout-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-triad-handoff-prompt-card-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-triad-handoff-prompt-card-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
