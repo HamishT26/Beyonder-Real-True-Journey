@@ -1,6 +1,6 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: PASS_V542_V7_X1_APPROVAL_EUREKA_STACK_READY
+Status: OPEN_V542_V7_X1_LUMEN_SENT_AND_GENERATING
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Current active phase: v542-gmut-thos-v78-v7-x1
@@ -19,6 +19,8 @@ Current lanes: Lumen Vale
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-lumen-browser-send-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-lumen-browser-send-receipt-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-current-session-approval-eureka-overlay-v1.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-current-session-approval-eureka-overlay-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-approval-eureka-stack-ledger-v1.md
@@ -27,8 +29,6 @@ Current lanes: Lumen Vale
 - docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-approval-eureka-checklist-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-lumen-prep-card-v1.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v7-x1-lumen-prep-card-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v6-x2-build-use-closeout-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v6-x2-build-use-closeout-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
