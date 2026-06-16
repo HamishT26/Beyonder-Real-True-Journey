@@ -334,13 +334,25 @@ def lane_run(client: AppServerClient, lane: str, thread_id: str, args: argparse.
         timeout_seconds=args.call_timeout_seconds,
     )
     row["resume"] = summarize_call(resume)
-    if resume.get("status") != "ok":
+    resume_ok = resume.get("status") == "ok"
+    row["resume_fallback"] = {
+        "allowed": bool(args.allow_turn_start_after_resume_timeout),
+        "used": False,
+        "reason": None,
+    }
+    if not resume_ok and not args.allow_turn_start_after_resume_timeout:
         row["overall_status"] = "blocked_resume"
         row["duration_seconds"] = round(time.monotonic() - started, 3)
         return row
+    if not resume_ok:
+        row["resume_fallback"] = {
+            "allowed": True,
+            "used": True,
+            "reason": "read_ok_resume_timeout_turn_start_direct_probe",
+        }
 
     if not args.notify:
-        row["overall_status"] = "read_resume_ok_probe_only"
+        row["overall_status"] = "read_resume_ok_probe_only" if resume_ok else "read_ok_resume_fallback_probe_only"
         row["duration_seconds"] = round(time.monotonic() - started, 3)
         return row
 
@@ -404,7 +416,11 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
         client.close()
 
     completed = sum(1 for lane in lanes if lane.get("overall_status") == "completed")
-    probed = sum(1 for lane in lanes if lane.get("overall_status") == "read_resume_ok_probe_only")
+    probed = sum(
+        1
+        for lane in lanes
+        if lane.get("overall_status") in {"read_resume_ok_probe_only", "read_ok_resume_fallback_probe_only"}
+    )
     if args.notify:
         overall_status = "PASS" if completed == len(lanes) else "OPEN_GAP_APP_LANE_WAIT"
     else:
@@ -428,6 +444,7 @@ def build_result(args: argparse.Namespace) -> dict[str, Any]:
             "unfiltered_transport_published": False,
             "retry_attempts_per_operation": args.retries,
             "app_server_launch_mode": client.launch_mode,
+            "turn_start_after_resume_timeout_fallback_allowed": bool(args.allow_turn_start_after_resume_timeout),
         },
         "init": summarize_call(init),
         "lanes": lanes,
@@ -478,6 +495,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--retries", type=int, default=5)
     parser.add_argument("--call-timeout-seconds", type=int, default=90)
     parser.add_argument("--turn-timeout-seconds", type=int, default=900)
+    parser.add_argument(
+        "--allow-turn-start-after-resume-timeout",
+        action="store_true",
+        help="After thread/read succeeds but thread/resume times out, try turn/start directly and record the fallback in the receipt.",
+    )
     return parser.parse_args()
 
 

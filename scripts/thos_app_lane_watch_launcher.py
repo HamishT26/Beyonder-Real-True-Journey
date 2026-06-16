@@ -74,6 +74,8 @@ def build_command(args: argparse.Namespace) -> list[str]:
     ]
     if args.notify:
         command.append("--notify")
+    if args.allow_turn_start_after_resume_timeout:
+        command.append("--allow-turn-start-after-resume-timeout")
     return command
 
 
@@ -186,6 +188,7 @@ def build_receipt(args: argparse.Namespace) -> dict[str, Any]:
             "notify_mode": args.notify,
             "lanes": [part.strip() for part in args.lanes.split(",") if part.strip()],
             "retry_attempts_per_operation": args.retries,
+            "turn_start_after_resume_timeout_fallback_allowed": bool(args.allow_turn_start_after_resume_timeout),
         },
         "notifier": {
             "script_available": NOTIFIER.exists(),
@@ -269,6 +272,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--call-timeout-seconds", type=int, default=90)
     parser.add_argument("--turn-timeout-seconds", type=int, default=900)
     parser.add_argument("--launch-timeout-seconds", type=int, default=3600)
+    parser.add_argument(
+        "--allow-turn-start-after-resume-timeout",
+        action="store_true",
+        help="Allow notifier fallback from read-ok/resume-timeout to direct turn/start, with status-only receipt metadata.",
+    )
     return parser.parse_args()
 
 

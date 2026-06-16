@@ -170,6 +170,8 @@ def run_watch_launcher(args: argparse.Namespace, artifact_prefix: str, launcher_
         "--launch-timeout-seconds",
         str(args.launch_timeout_seconds),
     ]
+    if args.allow_turn_start_after_resume_timeout:
+        command.append("--allow-turn-start-after-resume-timeout")
     if args.notify:
         command.append("--notify")
     if args.execute:
@@ -289,6 +291,7 @@ def build_payload(args: argparse.Namespace) -> dict[str, Any]:
             "unfiltered_transport_published": False,
             "retry_attempts_per_operation": args.retries,
             "background_watch_requested": args.background_watch,
+            "turn_start_after_resume_timeout_fallback_allowed": bool(args.allow_turn_start_after_resume_timeout),
             "work_while_waiting_required": args.background_watch,
             "phase_advance_requires_all_five_responses": True,
         },
@@ -416,6 +419,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--call-timeout-seconds", type=int, default=90)
     parser.add_argument("--turn-timeout-seconds", type=int, default=900)
     parser.add_argument("--launch-timeout-seconds", type=int, default=3600)
+    parser.add_argument(
+        "--allow-turn-start-after-resume-timeout",
+        action="store_true",
+        help="Allow notifier fallback from read-ok/resume-timeout to direct turn/start, with status-only receipt metadata.",
+    )
     parser.add_argument(
         "--background-watch",
         action="store_true",

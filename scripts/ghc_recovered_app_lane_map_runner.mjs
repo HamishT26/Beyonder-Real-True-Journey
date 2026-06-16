@@ -18,6 +18,7 @@ const lanesArg = args.get("--lanes") || "Cicero,Kierkegaard,Aristotle";
 const mode = args.get("--mode") || "preflight";
 const receiptPrefix = args.get("--receipt-prefix") || `${phaseSlug}-recovered-app-lane-map-runner`;
 const backgroundWatch = args.has("--background-watch");
+const allowTurnStartAfterResumeTimeout = args.has("--allow-turn-start-after-resume-timeout");
 
 if (!phaseSlug || !["preflight", "probe", "notify"].includes(mode)) {
   console.error("Usage: node ghc_recovered_app_lane_map_runner.mjs --phase-slug <slug> [--lanes <csv>] [--mode preflight|probe|notify] [--receipt-prefix <prefix>] [--background-watch]");
@@ -210,6 +211,9 @@ if (mode !== "preflight" && missing.length === 0) {
   if (backgroundWatch) {
     notifierArgs.push("--background-watch");
   }
+  if (allowTurnStartAfterResumeTimeout) {
+    notifierArgs.push("--allow-turn-start-after-resume-timeout");
+  }
   steps.push(runStep("app_lane_notifier", "python", notifierArgs, env));
   if (!backgroundWatch) {
     steps.push(
@@ -260,6 +264,7 @@ const receipt = {
   phase_slug: phaseSlug,
   mode,
   background_watch_requested: backgroundWatch,
+  turn_start_after_resume_timeout_fallback_requested: allowTurnStartAfterResumeTimeout,
   overall_status: overallStatus,
   lanes,
   recovered_handle_count: Object.keys(map).length,
