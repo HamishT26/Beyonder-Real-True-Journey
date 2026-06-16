@@ -100,7 +100,9 @@ const appRowsCompleted =
   appGate.lanes.length > 0 &&
   appGate.lanes.every((lane) => lane.overall_status === "completed" || lane.status === "completed" || String(lane.overall_status || "").startsWith("PASS"));
 
-const prepReady = String(prep?.status || "").includes("READY");
+const prepReady =
+  String(prep?.status || "").includes("READY") ||
+  prep?.overall_status === "PASS_PROMPTS_BUILT";
 const lumenRequired = activeLanes.includes("Lumen Vale");
 const lumenPass = !lumenRequired || lumenMarkerCount >= 1;
 const cliRequired = activeLanes.some((lane) => lane === "Arby" || lane === "Aster Vale");
