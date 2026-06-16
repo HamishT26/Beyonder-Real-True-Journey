@@ -78,6 +78,7 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-full-phase-guard-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-lumen-eureka-execution-ledger-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v540-gmut-thos-v76-v7-x2-publication-anchor-receipt-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v8-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
