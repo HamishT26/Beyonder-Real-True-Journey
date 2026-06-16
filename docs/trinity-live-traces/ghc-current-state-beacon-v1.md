@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: OPEN_V544_V5_X2_BUILD_USE_AFTER_LUMEN_VISIBLE_RESPONSE
+Status: OPEN_V544_V6_X1_ARBY_CICERO_ROUND_ROBIN_PREP
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v544-gmut-thos-v80-v5-x2
-Latest closed phase: v544-gmut-thos-v80-v5-x1
+Current active phase: v544-gmut-thos-v80-v6-x1
+Latest closed phase: v544-gmut-thos-v80-v5-x2
 Latest completed x1: v544-gmut-thos-v80-v5-x1
-Latest completed x2: v544-gmut-thos-v80-v4-x2
-Current lanes: Aletheon x2 build-use
+Latest completed x2: v544-gmut-thos-v80-v5-x2
+Current lanes: Arby and Cicero x1 prepared
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,12 +19,14 @@ Current lanes: Aletheon x2 build-use
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-lumen-visible-response-receipt-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-lumen-visible-response-receipt-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-lumen-x1-closeout-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-lumen-x1-closeout-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-735-next-slice-prep-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x1-735-next-slice-prep-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x2-authorized-slice-291-303-execution-receipt-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x2-authorized-slice-291-303-execution-receipt-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x2-closeout-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v5-x2-closeout-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x1-arby-cicero-prompt-card-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x1-arby-cicero-prompt-card-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x1-current-state-forward-pointer-exposure-guard-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v6-x1-current-state-forward-pointer-exposure-guard-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
