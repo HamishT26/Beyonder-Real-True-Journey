@@ -1,6 +1,6 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: PASS_V542_V4_X2_CLOSED_V5_X1_LUMEN_PREPARED_ROUTE_OPEN
+Status: PASS_V542_V5_X1_STACKED_ROUTE_RECOVERY_READY_LUMEN_ROUTE_OPEN
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Current active phase: v542-gmut-thos-v78-v5-x1
@@ -19,24 +19,28 @@ Current lanes: Lumen Vale
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-grouped-build-use-closeout-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-grouped-build-use-closeout-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-eureka-build-use-closeout-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-eureka-build-use-closeout-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-eureka-task-tracker-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-eureka-task-tracker-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-approval-packet-checklist-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-approval-packet-checklist-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-approval-eureka-stack-ledger-v2.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v4-x2-approval-eureka-stack-ledger-v2.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-family-registry-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-family-registry-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-family-validator-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-family-validator-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-state-validator-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-state-validator-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-family-status-board-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-route-family-status-board-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-wait-work-recovery-ledger-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-packet-checklist-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-packet-checklist-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-eureka-task-tracker-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-eureka-task-tracker-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-eureka-stack-ledger-v3.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-eureka-stack-ledger-v3.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-stack-route-recovery-exposure-guard-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-stack-route-recovery-exposure-guard-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-prep-card-v1.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-prep-card-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-handoff-v1.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-handoff-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-20-approval-candidate-bundle-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-20-approval-candidate-bundle-v1.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-prompt-policy-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-prompt-policy-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-browser-route-status-v1.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-browser-route-status-v1.json
 
