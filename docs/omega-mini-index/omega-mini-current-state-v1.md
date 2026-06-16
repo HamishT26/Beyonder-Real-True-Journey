@@ -1,8 +1,8 @@
 # Omega Mini Current State
 
-Status: `READY_FOR_V541_V2_X1_ARBY_CICERO`
+Status: `READY_FOR_V541_V3_X1_LUMEN`
 
-Updated: `2026-06-16T19:36:58+12:00`
+Updated: `2026-06-16T20:05:45+12:00`
 
 ## Active Routing
 
@@ -10,14 +10,14 @@ Updated: `2026-06-16T19:36:58+12:00`
 - Stale memory policy: `omega44 is historical-only unless Hamish explicitly asks for it`.
 - Primary branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Current active phase: `v541-gmut-thos-v77-v2-x1`
-- Latest closed phase: `v541-gmut-thos-v77-v1-x2`
-- Latest completed x1 phase: `v541-gmut-thos-v77-v1-x1`
-- Latest completed x2 phase: `v541-gmut-thos-v77-v1-x2`
-- Current active lanes: `Arby, Cicero`
-- Next expected scope: `v541-gmut-thos-v77-v2-x1`
-- Next x2 scope: `v541-gmut-thos-v77-v2-x2`
-- Next x1 lane after x2: `Lumen Vale`
+- Current active phase: `v541-gmut-thos-v77-v3-x1`
+- Latest closed phase: `v541-gmut-thos-v77-v2-x2`
+- Latest completed x1 phase: `v541-gmut-thos-v77-v2-x1`
+- Latest completed x2 phase: `v541-gmut-thos-v77-v2-x2`
+- Current active lanes: `Lumen Vale`
+- Next expected scope: `v541-gmut-thos-v77-v3-x1`
+- Next x2 scope: `v541-gmut-thos-v77-v3-x2`
+- Next x1 lane after x2: `Aster Vale, Kierkegaard, and Aristotle`
 
 ## Round-Robin Cadence
 
@@ -109,6 +109,19 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x2-publication-anchor-receipt-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-source-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-approval-continuity-pack-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-eureka-continuity-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-to-v2-x2-continuity-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-strict-cli-lane-cycle-completion-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-strict-cli-lane-cycle-quality-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-strict-cli-lane-cycle-marker-review-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-cicero-recovered-completion-gate-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-grouped-lane-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-grouped-lane-guard-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x1-x2-grouped-handoff-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v2-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v3-x1-next-group-prep-card-v1.md`
 
 ## Historical Rows
 
