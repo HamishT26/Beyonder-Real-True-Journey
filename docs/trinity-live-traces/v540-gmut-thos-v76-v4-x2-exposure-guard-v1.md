@@ -1,8 +1,8 @@
-# v540-gmut-thos-v76-v4-x1 Status Receipt Exposure Guard
+# v540-gmut-thos-v76-v4-x2 Status Receipt Exposure Guard
 
-- generated_utc: `2026-06-16T02:24:42+00:00`
+- generated_utc: `2026-06-16T02:24:47+00:00`
 - overall_status: `PASS_EXPOSURE_GUARD`
-- files_scanned: `18`
+- files_scanned: `5`
 - findings_count: `0`
 
 ## Findings
