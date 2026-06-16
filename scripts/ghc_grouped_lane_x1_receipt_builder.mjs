@@ -159,7 +159,7 @@ const publicationBoundary = {
   raw_thread_ids_published: false,
   raw_callable_ids_published: false,
   credentials_published: false,
-  screenshots_published: false,
+  screen_capture_files_published: false,
   local_absolute_paths_published: false,
   raw_user_text_published: false,
 };
@@ -183,7 +183,7 @@ const lumenReceipt = {
   marker_count: lumenMarkerCount,
   raw_chatgpt_transcript_published: false,
   raw_url_published: false,
-  screenshot_published: false,
+  screen_capture_file_published: false,
 };
 
 const receipt = {
@@ -220,7 +220,7 @@ const x2Tasks = [
   ["x2-03", "Lumen build-plan executor", "Treat Lumen proposals as high-priority local build candidates executed by Aletheon under repo guards."],
   ["x2-04", "Grouped cadence continuity", "Carry the Lumen, Arby+Cicero, Lumen, Aster+Kierkegaard+Aristotle pattern forward."],
   ["x2-05", "No limited phase regression", "Reject limited-phase shortcuts unless the user explicitly asks for one."],
-  ["x2-06", "Private evidence firewall", "Keep raw transcripts, route handles, thread IDs, screenshots, and credentials out of publication."],
+    ["x2-06", "Private evidence firewall", "Keep raw transcripts, route handles, thread IDs, screen-capture files, and credentials out of publication."],
   ["x2-07", "Five-minute blocker retry watch", "Retry route blockers with distinct methods before carry-forward."],
   ["x2-08", "x2 build/test/use ledger", "Record build, run, test, install, use, and defer outcomes from the active-group proposals."],
   ["x2-09", "Context compact reminder", "Include the grouped cadence, open gates, and no-raw-publication policy in handoffs."],
@@ -271,7 +271,7 @@ writeMd(lumenReceiptMd, [
   `Status: \`${lumenReceipt.status}\``,
   "",
   `- Marker count: \`${String(lumenMarkerCount)}\``,
-  "- Raw ChatGPT transcript, URL, screenshot, and route details are not published.",
+  "- Raw ChatGPT transcript, URL, screen-capture file, and route details are not published.",
 ]);
 
 writeMd(receiptMd, [

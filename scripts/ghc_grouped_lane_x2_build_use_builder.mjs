@@ -104,7 +104,7 @@ const publicationBoundary = {
   raw_thread_ids_published: false,
   raw_callable_ids_published: false,
   credentials_published: false,
-  screenshots_published: false,
+  screen_capture_files_published: false,
   local_absolute_paths_published: false,
   raw_user_text_published: false,
 };

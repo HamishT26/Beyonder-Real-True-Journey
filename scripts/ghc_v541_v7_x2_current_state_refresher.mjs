@@ -69,14 +69,14 @@ function uniqueExisting(root, relPaths) {
 const fullHead = git(fullRoot, ["rev-parse", "HEAD"]);
 const miniHead = git(miniRoot, ["rev-parse", "HEAD"]);
 
-const status = "READY_FOR_V541_V8_X1_ARBY_CICERO";
-const currentActivePhase = "v541-gmut-thos-v77-v8-x1";
-const latestClosedPhase = "v541-gmut-thos-v77-v7-x2";
-const latestCompletedX1 = "v541-gmut-thos-v77-v7-x1";
-const latestCompletedX2 = "v541-gmut-thos-v77-v7-x2";
-const nextX2Scope = "v541-gmut-thos-v77-v8-x2";
-const nextAfterX2 = "Lumen Vale";
-const activeLanes = ["Arby", "Cicero"];
+const status = "READY_FOR_V542_V1_X1_LUMEN";
+const currentActivePhase = "v542-gmut-thos-v78-v1-x1";
+const latestClosedPhase = "v541-gmut-thos-v77-v8-x2";
+const latestCompletedX1 = "v541-gmut-thos-v77-v8-x1";
+const latestCompletedX2 = "v541-gmut-thos-v77-v8-x2";
+const nextX2Scope = "v542-gmut-thos-v78-v1-x2";
+const nextAfterX2 = "Arby and Cicero";
+const activeLanes = ["Lumen Vale"];
 const roundRobin = [
   "Lumen Vale solo",
   "Arby and Cicero",
@@ -130,6 +130,24 @@ const lookupCandidates = [
   "docs/trinity-live-traces/v541-gmut-thos-v77-v7-x2-final-exposure-guard-v1.md",
   "docs/omega-mini-index/v541-v7-lumen-omega-mini-catchup-brief-v1.md",
   "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-next-group-prep-card-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-source-ledger-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-approval-continuity-pack-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-eureka-continuity-ledger-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-to-v8-x2-continuity-handoff-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-arby-five-minute-check-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-strict-cli-lane-cycle-quality-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-strict-cli-lane-cycle-marker-review-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-recovered-notifier-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-app-redaction-guard-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-cicero-recovered-completion-gate-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-grouped-lane-receipt-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-grouped-lane-guard-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x1-x2-grouped-handoff-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-lane-state-reducer-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-route-family-manifest-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-full-phase-guard-v1.md",
+  "docs/trinity-live-traces/v541-gmut-thos-v77-v8-x2-closeout-v1.md",
+  "docs/trinity-live-traces/v542-gmut-thos-v78-v1-x1-next-group-prep-card-v1.md",
 ];
 
 const currentLookup = uniqueExisting(miniRoot, lookupCandidates);
@@ -161,7 +179,7 @@ const commitAnchors = [
   },
   {
     phase: latestCompletedX2,
-    meaning: "Lumen v7 x2 safe task execution, closeout, catch-up brief, and Arby/Cicero v8 prep.",
+    meaning: "Arby/Cicero v8 x1 status closeout, v8 x2 build/use closeout, and Lumen v542 v1 x1 prep.",
     omega_mini_commit: miniHead,
     full_omega_commit: fullHead,
   },
@@ -196,14 +214,14 @@ function currentStatePayload() {
       "Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.",
     current_lookup_files: currentLookup,
     latest_action_summary: [
-      "Lumen v7 x1 completed with one verified advisory marker; raw response text remains private.",
-      "Lumen v7 x1 response was stored as hash and counts only, then normalized into a safe action ledger.",
-      "Lumen v7 x2 reconciled all 16 safe normalized tasks: 15 materialized by executor plus final exposure guard completion.",
-      "Next grouped x1 is Arby and Cicero using strict CLI and recovered app-lane routes.",
+      "Arby v8 x1 passed strict CLI quality and marker review with status-only evidence.",
+      "Cicero v8 x1 completed through the recovered app lane and passed the direct completion gate.",
+      "v8 x2 build/use closeout passed and prepared the next Lumen solo start.",
+      "Next grouped x1 is Lumen Vale solo through the Browser live-adapter route.",
     ],
     historical_rows: [
       "v529, v530, and earlier v540/v541 rows remain historical reference rows only.",
-      `The active pointer is ${currentActivePhase}, not v530 or v541 v7 x1.`,
+      `The active pointer is ${currentActivePhase}, not v530 or v541 v8 x1.`,
     ],
     publication_pair_from_now: [
       "codex/GHC-Family/beyonder-shared-omega-line",
@@ -248,7 +266,7 @@ function ghcBeaconPayload() {
     schema: "ghc.current_state_beacon.v1",
     updated_at: `${generatedNz}+12:00`,
     generated_utc: generatedUtc,
-    status: "ACTIVE_BEACON_READY_FOR_V541_V8_X1_ARBY_CICERO",
+    status: "ACTIVE_BEACON_READY_FOR_V542_V1_X1_LUMEN",
     active_memory_cue: "v532-live-state",
     stale_memory_policy: "omega44 is historical-only unless Hamish explicitly asks for it",
     primary_context_branch: "codex/GHC-Family/beyonder-shared-omega-line-mini",
@@ -264,8 +282,8 @@ function ghcBeaconPayload() {
     next_x2_scope: nextX2Scope,
     next_active_lanes: activeLanes,
     round_robin_pattern: roundRobin,
-    current_v541_local_artifacts: currentLookup.filter((item) => item.includes("v541-gmut-thos-v77-v7")),
-    next_phase_artifacts: currentLookup.filter((item) => item.includes("v541-gmut-thos-v77-v8")),
+    current_v541_local_artifacts: currentLookup.filter((item) => item.includes("v541-gmut-thos-v77-v8")),
+    next_phase_artifacts: currentLookup.filter((item) => item.includes("v542-gmut-thos-v78-v1")),
     browser_developer_mode_rule: {
       high_level_browser_actions_for_messaging: true,
       cdp_read_only_verification_and_profiling: true,
@@ -484,9 +502,9 @@ function writeAll(root) {
     publication_boundary: boundary,
     claim_boundary: claimBoundary,
   };
-  writeJson(root, "docs/omega-mini-index/v541-gmut-thos-v77-v7-x2-current-state-forward-pointer-exposure-guard-v1.json", guard);
-  writeMd(root, "docs/omega-mini-index/v541-gmut-thos-v77-v7-x2-current-state-forward-pointer-exposure-guard-v1.md", [
-    "# v541 v7 x2 Current-State Forward Pointer Exposure Guard",
+  writeJson(root, "docs/omega-mini-index/v541-gmut-thos-v77-v8-x2-current-state-forward-pointer-exposure-guard-v1.json", guard);
+  writeMd(root, "docs/omega-mini-index/v541-gmut-thos-v77-v8-x2-current-state-forward-pointer-exposure-guard-v1.md", [
+    "# v541 v8 x2 Current-State Forward Pointer Exposure Guard",
     "",
     `Generated UTC: \`${generatedUtc}\``,
     "",
@@ -519,8 +537,8 @@ const result = {
   status:
     fullResult.guard.status === "PASS_CURRENT_STATE_FORWARD_POINTER_GUARD" &&
     miniResult.guard.status === "PASS_CURRENT_STATE_FORWARD_POINTER_GUARD"
-      ? "PASS_REFRESHED_CURRENT_STATE_TO_V541_V8_X1"
-      : "FAIL_REFRESHED_CURRENT_STATE_TO_V541_V8_X1",
+      ? "PASS_REFRESHED_CURRENT_STATE_TO_V542_V1_X1"
+      : "FAIL_REFRESHED_CURRENT_STATE_TO_V542_V1_X1",
   full_head: fullHead,
   mini_head: miniHead,
   next_phase: miniCurrent.current_active_phase,
