@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: PASS_V542_V5_X1_STACKED_ROUTE_RECOVERY_READY_LUMEN_ROUTE_OPEN
+Status: PASS_V542_V5_X1_LUMEN_COMPLETE_V5_X2_READY
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v542-gmut-thos-v78-v5-x1
-Latest closed phase: v542-gmut-thos-v78-v4-x2
-Latest completed x1: v542-gmut-thos-v78-v4-x1
+Current active phase: v542-gmut-thos-v78-v5-x2
+Latest closed phase: v542-gmut-thos-v78-v5-x1
+Latest completed x1: v542-gmut-thos-v78-v5-x1
 Latest completed x2: v542-gmut-thos-v78-v4-x2
-Current lanes: Lumen Vale
+Current lanes: Aletheon build-use x2
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -35,8 +35,16 @@ Current lanes: Lumen Vale
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-eureka-task-tracker-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-eureka-stack-ledger-v3.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-eureka-stack-ledger-v3.json
-- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-stack-route-recovery-exposure-guard-v1.md
-- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-stack-route-recovery-exposure-guard-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-browser-send-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-browser-send-receipt-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-eureka-authorization-checkpoint-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-approval-eureka-authorization-checkpoint-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-send-authorization-exposure-guard-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-send-authorization-exposure-guard-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-response-completion-receipt-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-response-completion-receipt-v1.json
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-closeout-v5-x2-handoff-v1.md
+- docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-closeout-v5-x2-handoff-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-prep-card-v1.md
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-prep-card-v1.json
 - docs/trinity-live-traces/v542-gmut-thos-v78-v5-x1-lumen-handoff-v1.md
