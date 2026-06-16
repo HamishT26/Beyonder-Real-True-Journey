@@ -2,7 +2,7 @@
 
 Status: `ACTIVE_BEACON_CURRENT_TO_V541_V6_X1_ARBY_CICERO`
 
-Updated: `2026-06-16T21:19:23.6854876+12:00`
+Updated: `2026-06-16T21:28:04.0331153+12:00`
 
 ## Active Routing
 
@@ -10,8 +10,8 @@ Updated: `2026-06-16T21:19:23.6854876+12:00`
 - Stale memory policy: `omega44` is historical-only unless Hamish explicitly asks for it.
 - Primary context branch: `codex/GHC-Family/beyonder-shared-omega-line-mini`
 - Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
-- Latest remote-verified closeout before this v541 work: `v541-gmut-thos-v77-v4-x2`
-- Latest local closeout pending publication anchor: `v541-gmut-thos-v77-v5-x2`
+- Latest remote-verified closeout for this v541 work: `v541-gmut-thos-v77-v5-x2`
+- Latest local closeout publication anchor: `v541-gmut-thos-v77-v5-x2`
 - Active local phase: `v541-gmut-thos-v77-v6-x1`
 - Next prepared phase: `v541-gmut-thos-v77-v6-x1`
 - Next active lanes: `Arby`, `Cicero`
@@ -53,8 +53,8 @@ Updated: `2026-06-16T21:19:23.6854876+12:00`
 
 ## Remote-Verified Heads
 
-- Full omega: $full
-- Omega-mini: $mini
+- Full omega: `43825365ec06808f1b86c860c84190619003d0a3`
+- Omega-mini: `4e3c87fe649e805606244a009829761253707b03`
 
 
 ## Fresh v541 v5 to v6 Artifacts
