@@ -1,0 +1,97 @@
+{
+  "schema": "ghc.phase.closeout.v1",
+  "generated_utc": "2026-06-16T06:04:56Z",
+  "phase": "v540-gmut-thos-v76-v5-x2",
+  "status": "CLOSED_READY_FOR_V540_V6_X1",
+  "basis": {
+    "completed_x1": "v540-gmut-thos-v76-v5-x1",
+    "completed_x1_lane": "Lumen Vale",
+    "completed_x1_marker": "LUMEN_V540_V5_X1_ADVISORY_COMPLETE",
+    "corrected_eureka_task_count": 24,
+    "curated_execution_surface_count": 40
+  },
+  "x2_build_use_results": [
+    {
+      "id": "X2-01",
+      "result": "Built omega_mini_current_state_guard.py for current-state and beacon validation.",
+      "evidence": "scripts/omega_mini_current_state_guard.py"
+    },
+    {
+      "id": "X2-02",
+      "result": "Compiled the guard runner in both omega and omega-mini worktrees.",
+      "evidence": "python -m py_compile scripts/omega_mini_current_state_guard.py"
+    },
+    {
+      "id": "X2-03",
+      "result": "Used the guard to catch the stale historical row that still named v540 v5 x1 as active.",
+      "evidence": "first guard result status FAIL with one stale-row issue"
+    },
+    {
+      "id": "X2-04",
+      "result": "Patched omega-mini current-state historical text so the active pointer names v540 v5 x2.",
+      "evidence": "docs/omega-mini-index/omega-mini-current-state-v1.json and .md"
+    },
+    {
+      "id": "X2-05",
+      "result": "Reran the guard cleanly after patching the pointer.",
+      "evidence": "guard result status PASS, lookup counts current=21 and beacon=22"
+    },
+    {
+      "id": "X2-06",
+      "result": "Kept omega-mini as the first sibling lookup surface and full omega as named fallback only.",
+      "evidence": "omega-mini current-state and beacon sibling lookup rules"
+    },
+    {
+      "id": "X2-07",
+      "result": "Preserved the 24-task correction and avoided the earlier 245-task misread.",
+      "evidence": "v540 v5 x1 Codex update eureka ledger and marker receipt"
+    },
+    {
+      "id": "X2-08",
+      "result": "Kept GMUT empirical validation, final physics, consciousness, and canon promotion gates open.",
+      "evidence": "claim_boundary fields in closeout and pointer files"
+    },
+    {
+      "id": "X2-09",
+      "result": "Prepared the next x1 lane as Arby and Cicero instead of looping back into Lumen.",
+      "evidence": "v540 v6 x1 handoff packet"
+    },
+    {
+      "id": "X2-10",
+      "result": "Queued 20 bounded approval packet candidates for the next phase cadence.",
+      "evidence": "v540-gmut-thos-v76-v5-x2-approval-packet-set-v1.md"
+    }
+  ],
+  "guard_result": {
+    "runner": "scripts/omega_mini_current_state_guard.py",
+    "status": "PASS",
+    "expected_phase": "v540-gmut-thos-v76-v5-x2",
+    "expected_completed_x1": "v540-gmut-thos-v76-v5-x1",
+    "expected_next_x1_lane": "Arby and Cicero",
+    "issues": [],
+    "lookup_file_count": {
+      "current": 21,
+      "beacon": 22
+    }
+  },
+  "next_phase": {
+    "phase": "v540-gmut-thos-v76-v6-x1",
+    "lane_group": "Arby and Cicero",
+    "mode": "x1 advisory and eureka intake",
+    "handoff_file": "docs/trinity-live-traces/v540-gmut-thos-v76-v6-x1-arby-cicero-handoff-packet-v1.md"
+  },
+  "publication_boundary": {
+    "raw_lumen_text_published": false,
+    "raw_browser_routes_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false
+  },
+  "claim_boundary": {
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
