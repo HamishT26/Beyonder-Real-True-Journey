@@ -1,10 +1,10 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: OPEN_V544_V3_X1_LUMEN_READY_AFTER_FULL_735_AUTH
+Status: OPEN_V544_V3_X1_LUMEN_PENDING_X2_SLICE_READY
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Current active phase: v544-gmut-thos-v80-v3-x1
-Latest closed phase: v544-gmut-thos-v80-v3-x1-full-735-authorization
+Latest closed phase: v544-gmut-thos-v80-v3-x1-lumen-wait-x2-execution-slice
 Latest completed x1: v544-gmut-thos-v80-v2-x1
 Latest completed x2: v544-gmut-thos-v80-v3-x2-backlog-build-use
 Current lanes: Lumen Vale
