@@ -1,8 +1,8 @@
 # Omega Mini Current State
 
-Status: `READY_FOR_V541_V1_X1_LUMEN`
+Status: `RUNNING_V541_V1_X1_LUMEN_BROWSER`
 
-Updated: `2026-06-16T19:22:00+12:00`
+Updated: `2026-06-16T19:30:57+12:00`
 
 ## Active Routing
 
@@ -94,6 +94,10 @@ Use these omega-mini files before broad searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v8-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v8-x2-publication-anchor-receipt-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-browser-wait-work-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-source-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-approval-packets-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-continuity-handoff-v1.md`
 
 ## Historical Rows
 

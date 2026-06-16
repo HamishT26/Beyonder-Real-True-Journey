@@ -1,8 +1,8 @@
 # Omega-Mini Latest Updates Beacon v1
 
-Status: `ACTIVE`
+Status: `RUNNING_V541_V1_X1_LUMEN_BROWSER`
 
-Generated UTC: `2026-06-16T07:22:00Z`
+Generated UTC: `2026-06-16T07:30:57Z`
 
 Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v539/v540 phase receipts without broad searches.
 
@@ -100,6 +100,10 @@ Open these in omega-mini before searching:
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v8-x2-closeout-v1.md`
 - `docs/trinity-live-traces/v540-gmut-thos-v76-v8-x2-publication-anchor-receipt-v1.md`
 - `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-next-group-prep-card-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-browser-wait-work-receipt-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-source-ledger-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-approval-packets-v1.md`
+- `docs/trinity-live-traces/v541-gmut-thos-v77-v1-x1-lumen-wait-continuity-handoff-v1.md`
 
 ## Sibling Lookup Rule
 

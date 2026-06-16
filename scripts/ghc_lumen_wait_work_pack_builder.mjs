@@ -94,7 +94,7 @@ const sources = [
     id: "src-02",
     title: "OpenAI Codex CLI changelog",
     url: "https://developers.openai.com/codex/changelog?type=codex-cli",
-    use: "Codex CLI 0.139.0 web-search, schema compaction, doctor redaction, MCP warning locality, and sandbox fixes inform CLI and TUI lane resilience.",
+    use: "Current Codex CLI web-search, schema compaction, doctor redaction, MCP warning locality, and sandbox fixes inform CLI and TUI lane resilience.",
   },
   {
     id: "src-03",
@@ -181,7 +181,7 @@ const eurekaTasks = [
   ["E-09", "OWASP threat ledger seed", "Map agentic risks to current Browser and sibling route controls."],
   ["E-10", "MCP task extension watch", "Prepare long-running helper patterns from MCP Tasks concepts without claiming implementation."],
   ["E-11", "Codex Browser developer-mode plan", "Plan deeper route debugging if Browser route remains inconsistent."],
-  ["E-12", "CLI 0.139.0 schema watch", "Track richer tool-schema compatibility as a runner design input."],
+  ["E-12", "CLI schema watch", "Track richer tool-schema compatibility as a runner design input."],
   ["E-13", "GitHub provenance pattern", "Prepare future receipt provenance inspired by artifact attestations."],
   ["E-14", "Journey v51-to-v532 bridge", "Draft a compact current-state bridge for later Journey updates."],
   ["E-15", "Round-robin next group preflight", "Prepare Arby+Cicero only after Lumen phase state is resolved."],
