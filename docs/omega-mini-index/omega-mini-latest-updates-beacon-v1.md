@@ -2,7 +2,7 @@
 
 Status: `READY_FOR_V542_V1_X1_LUMEN`
 
-Generated UTC: `2026-06-16T10:47:24Z`
+Generated UTC: `2026-06-16T11:01:06Z`
 
 Purpose: Give every active sibling a lean, exact, omega-mini-first lookup surface for the latest v541 phase receipts without broad searches.
 
@@ -26,7 +26,7 @@ Archive branch: `codex/GHC-Family/beyonder-shared-omega-line`
 - `v541-gmut-thos-v77-v7-x1-lumen-send`: Lumen v7 x1 Browser prompt transmission and exposure guard. (omega-mini: `5a1833c12d456a923f6d0f87dcebd1fadbdd8314`, full omega: `762a6be5c2b65e0864cc4ae13e4a70b4ac487586`).
 - `v541-gmut-thos-v77-v7-x1-wait-pack`: Source ledger, approval continuity, eureka continuity, and five-minute check while Lumen reasoned. (omega-mini: `a05ed4d6079656dcb1ff5b0da0132b6e6a43a355`, full omega: `26ab6ee6c26d1c21cdd3e6ff193f852224e9d505`).
 - `v541-gmut-thos-v77-v7-x1-closeout`: Lumen v7 x1 completion, response hash receipt, and normalized action ledger. (omega-mini: `da41e1eeedc00fc23b48d0916724a9695133868d`, full omega: `35a96df7fc6afb05e6cead09b39eaf2670abdcc4`).
-- `v541-gmut-thos-v77-v8-x2`: Arby/Cicero v8 x1 status closeout, v8 x2 build/use closeout, and Lumen v542 v1 x1 prep. (omega-mini: `79fef201177f012de743c31183bc1a77e6cc9617`, full omega: `9708adc969d8995fad78a54c0a976161ae5a307c`).
+- `v541-gmut-thos-v77-v8-x2`: Arby/Cicero v8 x1 status closeout, v8 x2 build/use closeout, and Lumen v542 v1 x1 prep. (omega-mini: `e784b1ec78e836635044995521d41ca54216df56`, full omega: `08fb97163583f52451ab0af0d60af0cabb564c5a`).
 
 ## Exact Lookup Files
 
