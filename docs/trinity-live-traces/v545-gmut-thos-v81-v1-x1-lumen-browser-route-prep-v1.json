@@ -1,0 +1,70 @@
+{
+  "schema": "ghc.lumen_browser_route_prep.v1",
+  "generated_utc": "2026-06-17T02:38:00Z",
+  "generated_nz": "2026-06-17T14:38:00+12:00",
+  "phase_slug": "v545-gmut-thos-v81-v1-x1",
+  "status": "READY_AFTER_V544_V8_X2_CLOSEOUT",
+  "depends_on": [
+    "v544-gmut-thos-v80-v8-x1 completion gate",
+    "v544-gmut-thos-v80-v8-x2 build closeout"
+  ],
+  "target_lane": "Lumen Vale",
+  "route_preference": [
+    "in-app Browser current ChatGPT panel",
+    "refresh current Browser tab before retry if branched panel is stale",
+    "use Browser developer-mode/CDP capability only if exposed by the Browser runtime",
+    "do not use Chrome unless a later exact fallback condition is met"
+  ],
+  "retry_ladder": [
+    {
+      "attempt": 1,
+      "method": "read visible state and type/send from current Browser panel"
+    },
+    {
+      "attempt": 2,
+      "method": "Browser refresh, then re-read visible state and retry send"
+    },
+    {
+      "attempt": 3,
+      "method": "DOM locator fallback for composer and send control"
+    },
+    {
+      "attempt": 4,
+      "method": "Playwright keyboard fallback using the focused composer"
+    },
+    {
+      "attempt": 5,
+      "method": "record blocker receipt and ask Hamish for manual refresh if Browser remains blocked"
+    }
+  ],
+  "message_boundary": {
+    "raw_user_prompt_published": false,
+    "raw_lumen_reply_published": false,
+    "raw_browser_url_published": false,
+    "raw_route_handles_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  },
+  "prompt_shape": {
+    "minimum_runtime_minutes": 5,
+    "allow_longer_runtime": true,
+    "requested_sections": [
+      "current-state confirmation",
+      "omega-mini lookup sanity",
+      "20+ approval/eureka candidates",
+      "x2 build/run/test/use priorities",
+      "open gate and no-overclaim audit",
+      "Lumen-specific route health advice"
+    ],
+    "expected_marker": "LUMEN_V545_V1_X1_ADVISORY_COMPLETE"
+  },
+  "claim_boundary": {
+    "phase_started": "not_yet",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
