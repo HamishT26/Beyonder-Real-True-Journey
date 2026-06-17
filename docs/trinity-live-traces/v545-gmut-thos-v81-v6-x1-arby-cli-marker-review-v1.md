@@ -1,0 +1,9 @@
+# v545-gmut-thos-v81-v6-x1 CLI Marker Review Ledger
+
+Generated UTC: `2026-06-17T09:03:33+00:00`
+Status: `PASS_MARKER_REVIEW_LEDGER`
+
+Lane marker review:
+- Arby: `PASS_NO_MARKERS`, generic `0`, strict `0`, quality `PASS_ELABORATION_GATE`
+
+This ledger reads curated notifier and quality receipts only. It does not read or publish raw lane text.
