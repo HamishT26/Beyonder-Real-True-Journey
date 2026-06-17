@@ -1,13 +1,13 @@
 # Omega-Mini Current State
 
-Status: READY_V545_V5_X1_LUMEN
-Current active phase: v545-gmut-thos-v81-v5-x1
-Latest closed phase: v545-gmut-thos-v81-v4-x2
-Latest completed x1: v545-gmut-thos-v81-v4-x1
-Latest completed x2: v545-gmut-thos-v81-v4-x2
-Current lanes: Lumen Vale
-Next x2 scope: v545-gmut-thos-v81-v5-x2
-Next x1 lane after x2: Arby and Cicero
+Status: READY_V545_V6_X1_ARBY_CICERO
+Current active phase: v545-gmut-thos-v81-v6-x1
+Latest closed phase: v545-gmut-thos-v81-v5-x2
+Latest completed x1: v545-gmut-thos-v81-v5-x1
+Latest completed x2: v545-gmut-thos-v81-v5-x2
+Current lanes: Arby, Cicero
+Next x2 scope: v545-gmut-thos-v81-v6-x2
+Next x1 lane after x2: Lumen Vale
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -16,23 +16,23 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x1-grouped-lane-receipt-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x1-grouped-lane-receipt-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x1-x2-grouped-handoff-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x1-x2-grouped-handoff-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x2-closeout-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x2-closeout-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x2-safe-now-build-queue-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x2-safe-now-build-queue-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x2-20-approval-packet-candidates-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v4-x2-20-approval-packet-candidates-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x1-lumen-handoff-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x1-lumen-handoff-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x1-lumen-marker-receipt-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x1-lumen-marker-receipt-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x1-lumen-normalized-task-ledger-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x1-lumen-normalized-task-ledger-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x2-closeout-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x2-closeout-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x2-safe-now-build-queue-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v5-x2-safe-now-build-queue-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-arby-cicero-handoff-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-arby-cicero-handoff-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-arby-cicero-handoff-packet-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-arby-cicero-handoff-packet-v1.json
 
 ## Latest Action Summary
-- v545 v4 x2 executed 20 status-only safe-now build/use rows.
-- v545 v5 x1 returns to Lumen solo per round-robin cadence.
-- Aster CLI and app triad completion gates remain open-gap receipts, not closure claims.
+- v545 v5 x1 Lumen returned a validated marker and normalized task ledger.
+- v545 v5 x2 materialized 20 Lumen-derived safe-now build/use rows with open claim gates.
+- v545 v6 x1 moves to Arby and Cicero per round-robin cadence.
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
