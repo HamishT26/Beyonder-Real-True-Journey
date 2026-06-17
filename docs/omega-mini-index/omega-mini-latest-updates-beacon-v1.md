@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: READY_FOR_V548_V7_X1
+Status: READY_FOR_V548_V8_X1
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v548-gmut-thos-v84-v7-x1
-Latest closed phase: v548-gmut-thos-v84-v6-x2
-Latest completed x1: v548-gmut-thos-v84-v6-x1
-Latest completed x2: v548-gmut-thos-v84-v6-x2
-Current lanes: Lumen Vale
+Current active phase: v548-gmut-thos-v84-v8-x1
+Latest closed phase: v548-gmut-thos-v84-v7-x2
+Latest completed x1: v548-gmut-thos-v84-v7-x1
+Latest completed x2: v548-gmut-thos-v84-v7-x2
+Current lanes: Aster Vale, Kierkegaard, Aristotle
 
 ## Round Robin
 - 1. Lumen Vale solo
