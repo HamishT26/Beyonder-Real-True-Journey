@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: READY_FOR_V551_V4_X1_ASTER_KIERKEGAARD_ARISTOTLE
+Status: READY_FOR_V551_V5_X1_LUMEN
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v551-gmut-thos-v87-v4-x1
-Latest closed phase: v551-gmut-thos-v87-v3-x2
-Latest completed x1: v551-gmut-thos-v87-v3-x1
-Latest completed x2: v551-gmut-thos-v87-v3-x2
-Current lanes: Aster Vale, Kierkegaard, Aristotle
+Current active phase: v551-gmut-thos-v87-v5-x1
+Latest closed phase: v551-gmut-thos-v87-v4-x2
+Latest completed x1: v551-gmut-thos-v87-v4-x1
+Latest completed x2: v551-gmut-thos-v87-v4-x2
+Current lanes: Lumen Vale
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,6 +19,12 @@ Current lanes: Aster Vale, Kierkegaard, Aristotle
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
+- docs/trinity-live-traces/v551-gmut-thos-v87-v4-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v551-gmut-thos-v87-v4-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v551-gmut-thos-v87-v4-x2-closeout-v1.md
+- docs/trinity-live-traces/v551-gmut-thos-v87-v4-x2-closeout-v1.json
+- docs/trinity-live-traces/v551-gmut-thos-v87-v4-x2-eureka-executor-closeout-v1.md
+- docs/trinity-live-traces/v551-gmut-thos-v87-v4-x2-eureka-executor-closeout-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
