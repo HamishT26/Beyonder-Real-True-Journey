@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: READY_FOR_V550_V2_X1
+Status: READY_FOR_V550_V3_X1
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v550-gmut-thos-v86-v2-x1
-Latest closed phase: v550-gmut-thos-v86-v1-x2
-Latest completed x1: v550-gmut-thos-v86-v1-x1
-Latest completed x2: v550-gmut-thos-v86-v1-x2
-Current lanes: Arby, Cicero
+Current active phase: v550-gmut-thos-v86-v3-x1
+Latest closed phase: v550-gmut-thos-v86-v2-x2
+Latest completed x1: v550-gmut-thos-v86-v2-x1
+Latest completed x2: v550-gmut-thos-v86-v2-x2
+Current lanes: Lumen Vale
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,6 +19,16 @@ Current lanes: Arby, Cicero
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x2-closeout-v1.md
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x2-closeout-v1.json
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x2-eureka-executor-closeout-v1.md
+- docs/trinity-live-traces/v550-gmut-thos-v86-v2-x2-eureka-executor-closeout-v1.json
+- docs/trinity-live-traces/v550-gmut-thos-v86-v3-x1-next-group-prep-card-v1.md
+- docs/trinity-live-traces/v550-gmut-thos-v86-v3-x1-next-group-prep-card-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
