@@ -1,13 +1,13 @@
 # Omega-Mini Current State
 
-Status: READY_FOR_V547_V5_X1_LUMEN
-Current active phase: v547-gmut-thos-v83-v5-x1
-Latest closed phase: v547-gmut-thos-v83-v4-x2
-Latest completed x1: v547-gmut-thos-v83-v4-x1
-Latest completed x2: v547-gmut-thos-v83-v4-x2
-Current lanes: Lumen Vale
-Next x2 scope: v547-gmut-thos-v83-v5-x2
-Next x1 lane after x2: Arby,Cicero
+Status: READY_FOR_V547_V6_X1
+Current active phase: v547-gmut-thos-v83-v6-x1
+Latest closed phase: v547-gmut-thos-v83-v5-x2
+Latest completed x1: v547-gmut-thos-v83-v5-x1
+Latest completed x2: v547-gmut-thos-v83-v5-x2
+Current lanes: Arby, Cicero
+Next x2 scope: v547-gmut-thos-v83-v6-x2
+Next x1 lane after x2: Lumen Vale
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -18,10 +18,9 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
 
 ## Latest Action Summary
-- v547 v4 x1 Aster+Kierkegaard+Aristotle passed
-- v547 v4 x2 build/use closeout passed
-- v547 v5 x1 Lumen prep ready
-- Omega-mini remains primary sibling lookup surface
+- Closed v547 v5 x1 Lumen status receipt
+- Built v547 v5 x2 status-scope tasks
+- Prepared v547 v6 x1 Arby+Cicero lane
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
