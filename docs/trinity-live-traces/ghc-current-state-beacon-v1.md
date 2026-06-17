@@ -1,14 +1,14 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: OPEN_V544_V8_X1_KIERKEGAARD_FALLBACK_WATCH
+Status: READY_V544_V8_X2_BUILD_USE
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v544-gmut-thos-v80-v8-x1
+Current active phase: v544-gmut-thos-v80-v8-x2
 Latest closed phase: v544-gmut-thos-v80-v7-x2
-Latest completed x1: v544-gmut-thos-v80-v7-x1
+Latest completed x1: v544-gmut-thos-v80-v8-x1
 Latest completed x2: v544-gmut-thos-v80-v7-x2
 Current lanes: Aster Vale, Kierkegaard, Aristotle
-Phase advance allowed: false
+Phase advance allowed: true
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -42,6 +42,16 @@ Phase advance allowed: false
 - docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-aletheon-approval-eureka-stack-v1.json
 - docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-lumen-browser-route-prep-v1.md
 - docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-lumen-browser-route-prep-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-mixed-route-completion-gate-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-mixed-route-completion-gate-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-guard-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-guard-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-closeout-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-closeout-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
