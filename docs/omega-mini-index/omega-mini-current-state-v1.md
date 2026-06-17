@@ -1,14 +1,14 @@
 # Omega-Mini Current State
 
-Status: OPEN_V544_V8_X1_KIERKEGAARD_FALLBACK_WATCH
-Current active phase: v544-gmut-thos-v80-v8-x1
+Status: READY_V544_V8_X2_BUILD_USE
+Current active phase: v544-gmut-thos-v80-v8-x2
 Latest closed phase: v544-gmut-thos-v80-v7-x2
-Latest completed x1: v544-gmut-thos-v80-v7-x1
+Latest completed x1: v544-gmut-thos-v80-v8-x1
 Latest completed x2: v544-gmut-thos-v80-v7-x2
 Current lanes: Aster Vale, Kierkegaard, Aristotle
 Next x2 scope: v544-gmut-thos-v80-v8-x2
 Next x1 lane after x2: Lumen Vale solo
-Phase advance allowed: false
+Phase advance allowed: true
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -39,13 +39,23 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-aletheon-approval-eureka-stack-v1.json
 - docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-lumen-browser-route-prep-v1.md
 - docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-lumen-browser-route-prep-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-mixed-route-completion-gate-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-mixed-route-completion-gate-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-guard-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-guard-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-closeout-v1.md
+- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-closeout-v1.json
 
 ## Latest Action Summary
 - Lumen v544 v7 x1 completed with status-only marker receipt
 - Rows 304-305 complete; row 306 remains held-blocked
 - Rows 307-318 executed as a non-contiguous status-only x2 slice
-- v544 v8 x1 triad is running: Aster Vale passed CLI quality and marker review; Aristotle completed app-lane; Kierkegaard fallback watch remains open
-- v544 v8 x2 is not started and phase advance is not allowed until Kierkegaard resolves or a later exact blocker override exists
+- v544 v8 x1 closed for status scope: Aster Vale, Kierkegaard, and Aristotle all have completion evidence
+- v544 v8 x2 is ready for build, run, test, install, use, checklist reconciliation, and v545 Lumen prep
 - v545 v1 x1 Lumen Browser route prep is ready only after v544 v8 x2 closes
 - Omega-mini remains the first lookup surface; full omega is archive fallback only
 
