@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: READY_FOR_V546_V6_X1_ARBY_CICERO
+Status: READY_FOR_V546_V7_X1_LUMEN
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v546-gmut-thos-v82-v6-x1
-Latest closed phase: v546-gmut-thos-v82-v5-x2
-Latest completed x1: v546-gmut-thos-v82-v5-x1
-Latest completed x2: v546-gmut-thos-v82-v5-x2
-Current lanes: Arby, Cicero
+Current active phase: v546-gmut-thos-v82-v7-x1
+Latest closed phase: v546-gmut-thos-v82-v6-x2
+Latest completed x1: v546-gmut-thos-v82-v6-x1
+Latest completed x2: v546-gmut-thos-v82-v6-x2
+Current lanes: Lumen Vale
 
 ## Round Robin
 - 1. Lumen Vale solo
