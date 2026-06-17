@@ -1,13 +1,13 @@
 # Omega-Mini Current State
 
-Status: READY_V545_V7_X1_LUMEN
-Current active phase: v545-gmut-thos-v81-v7-x1
-Latest closed phase: v545-gmut-thos-v81-v6-x2
-Latest completed x1: v545-gmut-thos-v81-v6-x1
-Latest completed x2: v545-gmut-thos-v81-v6-x2
-Current lanes: Lumen Vale
-Next x2 scope: v545-gmut-thos-v81-v7-x2
-Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
+Status: READY_V545_V8_X1_ASTER_KIERKEGAARD_ARISTOTLE
+Current active phase: v545-gmut-thos-v81-v8-x1
+Latest closed phase: v545-gmut-thos-v81-v7-x2
+Latest completed x1: v545-gmut-thos-v81-v7-x1
+Latest completed x2: v545-gmut-thos-v81-v7-x2
+Current lanes: Aster Vale, Kierkegaard, Aristotle
+Next x2 scope: v545-gmut-thos-v81-v8-x2
+Next x1 lane after x2: Lumen Vale
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -16,21 +16,15 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-grouped-lane-receipt-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-grouped-lane-receipt-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-x2-grouped-handoff-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x1-x2-grouped-handoff-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x2-closeout-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x2-closeout-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x2-route-family-manifest-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v6-x2-route-family-manifest-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v7-x1-lumen-prep-card-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v7-x1-lumen-prep-card-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v7-x1-lumen-marker-receipt-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v7-x1-lumen-normalized-task-ledger-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v7-x2-closeout-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v8-x1-aster-kierkegaard-aristotle-prep-card-v1.md
 
 ## Latest Action Summary
-- v545 v6 x1 Arby and Cicero completed grouped lane receipt with Arby quality pass and Cicero app-lane pass.
-- v545 v6 x2 executed 20 grouped build/use rows and prepared next Lumen solo run.
-- v545 v7 x1 returns to Lumen Vale solo per round-robin cadence.
+- Lumen v7 x1 marker passed with status-only hash/count receipt
+- v7 x2 materialized 20 tasks and closed out without raw Lumen text
+- Next grouped x1 is Aster Vale, Kierkegaard, and Aristotle
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
