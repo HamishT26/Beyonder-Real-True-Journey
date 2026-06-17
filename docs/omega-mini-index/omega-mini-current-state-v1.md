@@ -1,14 +1,13 @@
 # Omega-Mini Current State
 
-Status: READY_V545_V1_X1_LUMEN_BROWSER
-Current active phase: v545-gmut-thos-v81-v1-x1
-Latest closed phase: v544-gmut-thos-v80-v8-x2
-Latest completed x1: v544-gmut-thos-v80-v8-x1
-Latest completed x2: v544-gmut-thos-v80-v8-x2
+Status: READY_V545_V3_X1_LUMEN
+Current active phase: v545-gmut-thos-v81-v3-x1
+Latest closed phase: v545-gmut-thos-v81-v2-x2
+Latest completed x1: v545-gmut-thos-v81-v2-x1
+Latest completed x2: v545-gmut-thos-v81-v2-x2
 Current lanes: Lumen Vale
-Next x2 scope: v545-gmut-thos-v81-v1-x2
-Next x1 lane after x2: Arby and Cicero
-Phase advance allowed: true
+Next x2 scope: v545-gmut-thos-v81-v3-x2
+Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -17,58 +16,23 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-completion-receipt-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-completion-receipt-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-derived-approval-eureka-stack-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x1-lumen-derived-approval-eureka-stack-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-lumen-derived-approval-eureka-checklist-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-lumen-derived-approval-eureka-checklist-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-row-306-held-blocked-firewall-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-row-306-held-blocked-firewall-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-slice-304-305-reconciliation-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-slice-304-305-reconciliation-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-non-contiguous-slice-307-318-execution-ledger-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-735-non-contiguous-slice-307-318-execution-ledger-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-closeout-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v7-x2-closeout-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-triad-handoff-prompt-card-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-triad-handoff-prompt-card-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-live-status-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-live-status-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-aletheon-approval-eureka-stack-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-aletheon-approval-eureka-stack-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-lumen-browser-route-prep-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-lumen-browser-route-prep-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-mixed-route-completion-gate-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-mixed-route-completion-gate-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-receipt-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-receipt-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-guard-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-grouped-lane-guard-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-x2-grouped-handoff-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-x2-grouped-handoff-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-closeout-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x1-closeout-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-lane-state-reducer-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-lane-state-reducer-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-route-family-manifest-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-route-family-manifest-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-full-phase-guard-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-full-phase-guard-v1.json
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-closeout-v1.md
-- docs/trinity-live-traces/v544-gmut-thos-v80-v8-x2-closeout-v1.json
-- docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-next-group-prep-card-v1.md
-- docs/trinity-live-traces/v545-gmut-thos-v81-v1-x1-next-group-prep-card-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x1-grouped-lane-receipt-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x1-grouped-lane-receipt-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x1-x2-grouped-handoff-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x1-x2-grouped-handoff-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x2-safe-now-build-queue-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x2-safe-now-build-queue-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x2-closeout-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x2-closeout-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x2-20-approval-packet-candidates-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v2-x2-20-approval-packet-candidates-v1.json
+- docs/trinity-live-traces/v545-gmut-thos-v81-v3-x1-lumen-handoff-v1.md
+- docs/trinity-live-traces/v545-gmut-thos-v81-v3-x1-lumen-handoff-v1.json
 
 ## Latest Action Summary
-- Lumen v544 v7 x1 completed with status-only marker receipt
-- Rows 304-305 complete; row 306 remains held-blocked
-- Rows 307-318 executed as a non-contiguous status-only x2 slice
-- v544 v8 x1 closed for status scope: Aster Vale, Kierkegaard, and Aristotle all have completion evidence
-- v544 v8 x2 closed with 20 implemented grouped build/use rows
-- v545 v1 x1 is ready for Lumen Vale solo through the in-app Browser route
-- v545 v1 x1 Lumen Browser route prep is ready only after v544 v8 x2 closes
-- Omega-mini remains the first lookup surface; full omega is archive fallback only
+- v545 v2 x1 published as open-gap grouped lane status: Arby pending final marker, Cicero background watcher started.
+- v545 v2 x2 materialized 20 safe-now handoff tasks as status-only build/use evidence.
+- Next active x1 lane is Lumen Vale; keep raw ChatGPT/browser content private and publish marker/blocker receipts only.
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
