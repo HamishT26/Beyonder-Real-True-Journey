@@ -1,6 +1,7 @@
 # Omega-Mini Current State
 
 Status: V552_V3_X1_LUMEN_DOC_ADVISORY_READY_BROWSER_SEND_BLOCKED_POINTER_CORRECTED
+Remote verified omega-mini-2 head: `1980d61f480e38e5357426fe9d84ae3e8b1c4b09`
 Current active phase: v552-gmut-thos-v88-v3-x1
 Latest closed phase: v552-gmut-thos-v88-v2-x2
 Latest completed x1: v552-gmut-thos-v88-v2-x1
@@ -36,6 +37,8 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-round-robin-correction-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-to-v552-v3-x2-handoff-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-to-v552-v3-x2-handoff-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-remote-publish-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-remote-publish-receipt-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-build-use-action-ledger-v1.md
@@ -56,6 +59,7 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - Lumen browser prompt is ready but not delivered because the in-app browser control bridge is unavailable before page interaction
 - v552 v3 x2 has 40 Eureka tasks and 24 approval packets ready for selection
 - Next x1 after v552 v3 x2 is corrected to Aster Vale, Kierkegaard, and Aristotle
+- v552 v3 x1 checkpoint was pushed and remote-verified on omega-mini-2 at `1980d61f480e38e5357426fe9d84ae3e8b1c4b09`
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no private lane/advisory body content, no credentials, no local absolute paths.
