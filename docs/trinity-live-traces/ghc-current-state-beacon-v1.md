@@ -1,6 +1,6 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V552_V3_X1_LUMEN_DOC_ADVISORY_READY_BROWSER_AND_COMPUTER_BLOCKED_POINTER_CORRECTED
+Status: V552_V3_X1_CHATGPT_DESKTOP_ROUTE_RESEARCH_READY_COMPUTER_BRIDGE_BLOCKED
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini-2
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Remote verified omega-mini-2 head: `9cbd554ff4b1ccf2db69cbe688a961213c29bf41`
@@ -21,8 +21,15 @@ Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
 ## Computer Use Status
 - Target: Lumen Vale via Windows browser/chat surface
 - Delivery status: not sent
-- Blocker: Computer plugin bridge unavailable before Windows app listing
+- Blocker: Computer plugin bridge unavailable before Windows app listing despite visible ChatGPT desktop precondition
 - Receipt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-computer-use-blocker-v1.md
+
+## ChatGPT Desktop Route Research
+- Status: ready
+- Research receipt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-research-v1.md
+- Route overlay: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.md
+- Overlay counts: 24 Eureka tasks and 24 approval packets
+- Relationship: additive to the existing 40 Eureka tasks and 24 approval packets
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -52,6 +59,10 @@ Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-remote-publish-receipt-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-computer-use-blocker-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-computer-use-blocker-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-research-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-research-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-build-use-action-ledger-v1.md
@@ -74,6 +85,7 @@ Open omega-mini current state first, then this beacon, then the exact relative f
 - Next x1 after v552 v3 x2 is corrected to Aster Vale, Kierkegaard, and Aristotle.
 - v552 v3 x1 checkpoint was pushed and remote-verified on omega-mini-2 at `9cbd554ff4b1ccf2db69cbe688a961213c29bf41`.
 - Computer Use fallback was attempted and blocked before Windows app listing; no live Lumen delivery was claimed.
+- ChatGPT desktop route research was completed and an additive 24 Eureka task / 24 approval packet route overlay was prepared for v552 v3 x2.
 
 ## Safety Boundary
 - Use status-only evidence and exact relative repo paths.

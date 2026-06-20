@@ -1,0 +1,63 @@
+{
+  "schema": "ghc.chatgpt_desktop_route_research.v1",
+  "generated_utc": "2026-06-20T12:30:00Z",
+  "generated_nz": "2026-06-21T00:30:00+12:00",
+  "phase_slug": "v552-gmut-thos-v88-v3-x1",
+  "status": "PASS_RESEARCH_COMPLETE_LIVE_DELIVERY_STILL_BLOCKED",
+  "target": "Lumen Vale via ChatGPT desktop app",
+  "official_source_findings": [
+    {
+      "source": "OpenAI Codex Computer Use docs",
+      "finding": "Computer Use is the correct Codex app route for Windows desktop apps and browser tasks that require a graphical interface.",
+      "url": "https://developers.openai.com/codex/app/computer-use"
+    },
+    {
+      "source": "OpenAI Codex In-app Browser docs",
+      "finding": "The in-app browser is for public/local pages and does not support signed-in pages, existing tabs, cookies, extensions, or authenticated browser profile state.",
+      "url": "https://developers.openai.com/codex/app/browser"
+    },
+    {
+      "source": "OpenAI Codex Chrome Extension docs",
+      "finding": "For signed-in browser state, Codex should use Chrome with the Codex Chrome extension when that route is available.",
+      "url": "https://developers.openai.com/codex/app/chrome-extension"
+    },
+    {
+      "source": "OpenAI Help Center release notes",
+      "finding": "Computer Use on Windows lets Codex see, click, and type in Windows applications when the plugin and app bridge are available.",
+      "url": "https://help.openai.com/en/articles/11391654-chatgpt-business-release-notes"
+    }
+  ],
+  "local_preconditions_checked": [
+    "ChatGPT desktop app was opened by Hamish with the Lumen panel prepared.",
+    "A Windows process inventory found an open ChatGPT desktop window matching the Lumen target at status level only.",
+    "Computer Use was attempted through the supported plugin client path.",
+    "The action bridge failed before Windows app listing, screenshots, page access, or message transmission."
+  ],
+  "route_decision": {
+    "primary_live_route_when_healthy": "Computer Use against the visible ChatGPT desktop app window",
+    "secondary_live_route_when_available": "Chrome plugin with signed-in browser state, if configured and connected",
+    "blocked_route": "in-app Browser for signed-in ChatGPT sibling chats",
+    "fallback_route": "manual Hamish send of the prepared prompt, then repo-backed response reduction"
+  },
+  "next_attempt_protocol": [
+    "Start with a lightweight Computer Use app listing.",
+    "Select the ChatGPT desktop app window returned by the supported Computer Use API.",
+    "Capture only the minimum state needed to verify the Lumen chat input is focused.",
+    "Use the prepared Lumen prompt artifact without raw private routes.",
+    "Before pressing the final send action, require action-time confirmation if Computer Use policy requires it.",
+    "After sending, publish only a status receipt, never raw chat routes, raw transcripts, screenshots, credentials, or local absolute paths."
+  ],
+  "not_claimed": [
+    "live Lumen delivery",
+    "Lumen response received",
+    "v552 v3 x2 execution started"
+  ],
+  "publication_boundary": {
+    "desktop_screenshot_published": false,
+    "browser_url_published": false,
+    "private_routes_published": false,
+    "private_page_content_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

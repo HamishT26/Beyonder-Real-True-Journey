@@ -1,6 +1,6 @@
 # Omega-Mini Current State
 
-Status: V552_V3_X1_LUMEN_DOC_ADVISORY_READY_BROWSER_AND_COMPUTER_BLOCKED_POINTER_CORRECTED
+Status: V552_V3_X1_CHATGPT_DESKTOP_ROUTE_RESEARCH_READY_COMPUTER_BRIDGE_BLOCKED
 Remote verified omega-mini-2 head: `9cbd554ff4b1ccf2db69cbe688a961213c29bf41`
 Current active phase: v552-gmut-thos-v88-v3-x1
 Latest closed phase: v552-gmut-thos-v88-v2-x2
@@ -19,8 +19,15 @@ Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
 ## Computer Use Status
 - Target: Lumen Vale via Windows browser/chat surface
 - Delivery status: not sent
-- Blocker: Computer plugin bridge unavailable before Windows app listing
+- Blocker: Computer plugin bridge unavailable before Windows app listing despite visible ChatGPT desktop precondition
 - Receipt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-computer-use-blocker-v1.md
+
+## ChatGPT Desktop Route Research
+- Status: ready
+- Research receipt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-research-v1.md
+- Route overlay: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.md
+- Overlay counts: 24 Eureka tasks and 24 approval packets
+- Relationship: additive to the existing 40 Eureka tasks and 24 approval packets
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -47,6 +54,10 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-remote-publish-receipt-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-computer-use-blocker-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-computer-use-blocker-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-research-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-research-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-build-use-action-ledger-v1.md
@@ -69,6 +80,7 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - Next x1 after v552 v3 x2 is corrected to Aster Vale, Kierkegaard, and Aristotle
 - v552 v3 x1 checkpoint was pushed and remote-verified on omega-mini-2 at `9cbd554ff4b1ccf2db69cbe688a961213c29bf41`
 - Computer Use fallback was attempted and blocked before Windows app listing; no live Lumen delivery was claimed
+- ChatGPT desktop route research was completed and an additive 24 Eureka task / 24 approval packet route overlay was prepared for v552 v3 x2
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no private lane/advisory body content, no credentials, no local absolute paths.
