@@ -1,9 +1,9 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V552_V3_X1_CHATGPT_DESKTOP_ROUTE_RESEARCH_READY_COMPUTER_BRIDGE_BLOCKED
+Status: V552_V3_X1_LUMEN_BROWSER_ADVISORY_RECEIVED_READY_FOR_V3_X2
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini-2
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Remote verified omega-mini-2 head: `57a803c63dbd78f754499561977382e63c047ab1`
+Remote verified omega-mini-2 head: `806dd6626ee0740497aeb63b43eb22a74befe397`
 Current active phase: v552-gmut-thos-v88-v3-x1
 Latest closed phase: v552-gmut-thos-v88-v2-x2
 Latest completed x1: v552-gmut-thos-v88-v2-x1
@@ -15,8 +15,11 @@ Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
 ## Browser Message Status
 - Target: Lumen Vale
 - Prepared prompt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-message-prompt-v1.md
-- Delivery status: not sent
-- Blocker: Browser and Computer plugin action bridges unavailable before page or desktop interaction
+- Delivery status: sent after Hamish confirmation
+- Blocker: none for Browser connection
+- Retry receipt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-browser-reconnected-send-pending-v1.md
+- Send receipt: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-browser-send-receipt-v1.md
+- Advisory reduction: docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-browser-advisory-reduction-v1.md
 
 ## Computer Use Status
 - Target: Lumen Vale via Windows browser/chat surface
@@ -65,6 +68,12 @@ Next x1 lane after x2: Aster Vale, Kierkegaard, and Aristotle
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-overlay-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-remote-publish-receipt-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-chatgpt-desktop-route-remote-publish-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-browser-reconnected-send-pending-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-browser-reconnected-send-pending-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-browser-send-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-browser-send-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-browser-advisory-reduction-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v3-x1-lumen-browser-advisory-reduction-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-route-strength-ledger-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v2-x2-aevren-build-use-action-ledger-v1.md
@@ -89,6 +98,8 @@ Open omega-mini current state first, then this beacon, then the exact relative f
 - Computer Use fallback was attempted and blocked before Windows app listing; no live Lumen delivery was claimed.
 - ChatGPT desktop route research was completed and an additive 24 Eureka task / 24 approval packet route overlay was prepared for v552 v3 x2.
 - ChatGPT desktop route research checkpoint was pushed and remote-verified on omega-mini-2 at `57a803c63dbd78f754499561977382e63c047ab1`.
+- Codex in-app Browser reconnected to the Lumen Vale ChatGPT tab and composer; prepared message was sent after Hamish confirmation.
+- Lumen browser advisory was received and reduced into 36 Eureka tasks plus 54 approval packets for v552 v3 x2.
 
 ## Safety Boundary
 - Use status-only evidence and exact relative repo paths.
