@@ -2,11 +2,18 @@
 
 Generated UTC: `2026-06-22T03:12:00Z`
 
-Status: `PASS_60_SAFE_NOW_EUREKA_TASKS_READY_FOR_LUMEN_REDUCTION`
+Status: `PASS_60_SAFE_NOW_EUREKA_TASKS_WITH_LUMEN_REDUCTION`
 
 Target x2 phase: `v552-gmut-thos-v88-v5-x2`
 
-Source status: Aevren draft complete; Lumen message sent; Lumen response reduction pending.
+Source status: Aevren draft complete; Lumen message sent; Lumen response reduction complete. Lumen supplied a 55 safe-now advisory that aligns with the 60-task Aevren queue.
+
+## Lumen Alignment Summary
+
+- Lumen aligned v5 x2 as the next target from v5 x1.
+- Lumen confirmed Arby and Cicero should follow after v5 x2 unless Hamish redirects.
+- Lumen preserved omega-mini-2 as primary, omega-mini as historical baseline, and full omega as exact fallback only.
+- Lumen preserved held sibling, no-new-agent, exact-staging, privacy, D-drive-first, watcher/notifier, and open-gate boundaries.
 
 ## Safe-Now Tasks
 

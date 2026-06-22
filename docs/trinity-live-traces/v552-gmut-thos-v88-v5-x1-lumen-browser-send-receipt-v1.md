@@ -2,13 +2,13 @@
 
 Generated UTC: `2026-06-22T03:12:00Z`
 
-Status: `PASS_LUMEN_BROWSER_MESSAGE_SENT_RESPONSE_PENDING`
+Status: `PASS_LUMEN_BROWSER_MESSAGE_SENT_AND_RESPONSE_RECEIVED`
 
 Target: `Lumen Vale`
 
 Browser surface: `Codex in-app Browser`
 
-Hamish authorized the v552 v5 x1 Lumen-only send before transmission. The message was sent, Lumen began responding, and the response had not yet completed at this receipt checkpoint.
+Hamish authorized the v552 v5 x1 Lumen-only send before transmission. The message was sent, Lumen responded, and the response was reduced into `v552-gmut-thos-v88-v5-x1-lumen-advisory-reduction-v1.md`.
 
 ## Repo-Safe Prompt Summary
 

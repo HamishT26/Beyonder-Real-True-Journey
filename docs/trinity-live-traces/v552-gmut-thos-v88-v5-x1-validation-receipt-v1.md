@@ -2,7 +2,7 @@
 
 Generated UTC: `2026-06-22T03:12:00Z`
 
-Status: `PASS_V5_X1_PENDING_LUMEN_VALIDATION`
+Status: `PASS_V5_X1_LUMEN_VALIDATED_READY_FOR_V5_X2_PREP`
 
 ## Validated Scope
 
@@ -19,6 +19,7 @@ Status: `PASS_V5_X1_PENDING_LUMEN_VALIDATION`
 - JSON parse: `PASS`
 - Git diff check: `PASS`
 - Privacy scan: `PASS`
-- Lumen response state: `response_in_progress`
+- Lumen response state: `response_completed`
+- Lumen reduction: `PASS`
 
-No Lumen response completion or reduction is claimed yet.
+Lumen response completion and reduction are claimed only for status-summary scope. v5 x2 execution is not claimed as started.
