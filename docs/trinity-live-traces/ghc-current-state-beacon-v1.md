@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V552_V4_X1_FIVE_LANE_CLOSED_READY_FOR_V4_X2
+Status: V552_V4_X2_BUILD_USE_CLOSED_READY_FOR_V5_X1_LUMEN
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini-2
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
-Current active phase: v552-gmut-thos-v88-v4-x2
-Latest closed phase: v552-gmut-thos-v88-v4-x1
+Current active phase: v552-gmut-thos-v88-v5-x1
+Latest closed phase: v552-gmut-thos-v88-v4-x2
 Latest completed x1: v552-gmut-thos-v88-v4-x1
-Latest completed x2: v552-gmut-thos-v88-v3-x2
-Current lanes: Aevren, v4-x2-build-use
+Latest completed x2: v552-gmut-thos-v88-v4-x2
+Current lanes: Lumen Vale, v5-x1-lumen
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,26 +19,26 @@ Current lanes: Aevren, v4-x2-build-use
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-five-lane-correction-prep-card-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-five-lane-correction-prep-card-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-app-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-app-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-app-completion-gate-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-app-completion-gate-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-cli-receipt-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-cli-receipt-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-cli-quality-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-cli-quality-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-cli-marker-review-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-aevren-five-lane-cli-marker-review-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-five-lane-grouped-lane-receipt-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-five-lane-grouped-lane-receipt-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-five-lane-grouped-lane-guard-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-five-lane-grouped-lane-guard-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-to-v552-v4-x2-five-lane-handoff-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-to-v552-v4-x2-five-lane-handoff-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-phase-status-index-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x1-phase-status-index-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-lane-state-reducer-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-lane-state-reducer-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-route-family-manifest-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-route-family-manifest-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-full-phase-guard-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-full-phase-guard-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-closeout-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-closeout-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-to-v552-v5-x1-lumen-prep-card-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-to-v552-v5-x1-lumen-prep-card-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-aevren-memory-refresh-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-aevren-memory-refresh-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-aletheon-workflow-reflection-ledger-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-aletheon-workflow-reflection-ledger-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-approval-eureka-activation-ledger-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-approval-eureka-activation-ledger-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-drive-bank-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-drive-bank-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-phase-status-index-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v4-x2-phase-status-index-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.
