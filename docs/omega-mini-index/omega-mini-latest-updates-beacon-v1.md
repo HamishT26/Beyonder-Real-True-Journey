@@ -1,13 +1,13 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V552_V5_X2_CLOSED_READY_FOR_V6_X1_ARBY_CICERO
+Status: V552_V6_X1_ACTIVE_ARBY_COMPLETE_CICERO_RECOVERABLE_OPEN
 Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini-2
 Archive branch: codex/GHC-Family/beyonder-shared-omega-line
 Current active phase: v552-gmut-thos-v88-v6-x1
 Latest closed phase: v552-gmut-thos-v88-v5-x2
 Latest completed x1: v552-gmut-thos-v88-v5-x1
 Latest completed x2: v552-gmut-thos-v88-v5-x2
-Current lanes: Arby, Cicero, v6-x1-prepared-not-started
+Current lanes: Arby, Cicero, Arby-complete, Cicero-recoverable-open
 
 ## Round Robin
 - 1. Lumen Vale solo
@@ -19,24 +19,22 @@ Current lanes: Arby, Cicero, v6-x1-prepared-not-started
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-approved-scope-reduction-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-approved-scope-reduction-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-pack-receipt-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-pack-receipt-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-use-ledger-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-use-ledger-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-safe-candidate-execution-ledger-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-safe-candidate-execution-ledger-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-branch-context-preserver-card-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-branch-context-preserver-card-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-plugin-boundary-map-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-plugin-boundary-map-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-runtime-drive-diagnostic-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-runtime-drive-diagnostic-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-closeout-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-closeout-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-phase-status-index-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-phase-status-index-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-scope-approval-start-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-scope-approval-start-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-skill-pack-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-skill-pack-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-memory-bank-refresh-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-memory-bank-refresh-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-arby-advisory-reduction-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-arby-advisory-reduction-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-cicero-recoverable-gap-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-cicero-recoverable-gap-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-x2-build-queue-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-x2-build-queue-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-runtime-drive-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-runtime-drive-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-phase-status-index-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v6-x1-phase-status-index-v1.json
 
 ## Sibling Lookup Rule
 Open omega-mini current state first, then this beacon, then the exact relative files named here.

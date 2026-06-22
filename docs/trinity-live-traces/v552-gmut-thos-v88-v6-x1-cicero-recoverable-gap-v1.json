@@ -1,0 +1,46 @@
+{
+  "schema": "ghc.sibling_gap_recovery_receipt.v1",
+  "artifact_type": "sibling_gap_recovery_receipt",
+  "generated_utc": "2026-06-22T04:39:34Z",
+  "phase": "v552-gmut-thos-v88-v6-x1",
+  "lane": "Cicero",
+  "status": "OPEN_GAP_CICERO_APP_LANE_RECOVERABLE",
+  "route": "existing Codex app lane through recovered app lane-map runner",
+  "observed_receipts": {
+    "runner": "PASS_BACKGROUND_WATCH_STARTED",
+    "watch_launcher": "OPEN_GAP_APP_LANE_LAUNCH",
+    "notifier": "missing",
+    "completion_gate": "OPEN_GAP_APP_LANE_COMPLETION_REQUIRED"
+  },
+  "open_gaps": [
+    "Cicero:missing",
+    "launcher:OPEN_GAP_APP_LANE_LAUNCH",
+    "notifier:missing"
+  ],
+  "next_safe_retry": [
+    "restore or re-expose the private app-lane map to the running process",
+    "rerun the recovered app lane-map watcher for Cicero",
+    "rerun the completion gate before any phase advance"
+  ],
+  "forbidden_fallbacks": [
+    "old-style subagent spawn",
+    "replacement sibling creation",
+    "sibling identity merge",
+    "raw app-state scraping",
+    "private callable ID publication"
+  ],
+  "publication_boundary": {
+    "raw_thread_id_published": false,
+    "private_callable_id_published": false,
+    "raw_app_server_payload_published": false,
+    "raw_advisory_text_published": false,
+    "credentials_published": false,
+    "screenshots_published": false,
+    "local_absolute_paths_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "canon_promotion": "not_claimed"
+  }
+}
