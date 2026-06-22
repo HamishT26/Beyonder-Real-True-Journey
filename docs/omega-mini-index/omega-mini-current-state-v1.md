@@ -1,13 +1,13 @@
 # Omega-Mini Current State
 
-Status: V552_V5_X1_LUMEN_CLOSED_READY_FOR_V5_X2
-Current active phase: v552-gmut-thos-v88-v5-x2
-Latest closed phase: v552-gmut-thos-v88-v5-x1
+Status: V552_V5_X2_CLOSED_READY_FOR_V6_X1_ARBY_CICERO
+Current active phase: v552-gmut-thos-v88-v6-x1
+Latest closed phase: v552-gmut-thos-v88-v5-x2
 Latest completed x1: v552-gmut-thos-v88-v5-x1
-Latest completed x2: v552-gmut-thos-v88-v4-x2
-Current lanes: Aevren, v5-x2-build-use
-Next x2 scope: v552-gmut-thos-v88-v5-x2
-Next x1 lane after x2: Arby and Cicero after v552 v5 x2 unless Hamish redirects
+Latest completed x2: v552-gmut-thos-v88-v5-x2
+Current lanes: Arby, Cicero, v6-x1-prepared-not-started
+Next x2 scope: v552-gmut-thos-v88-v6-x2
+Next x1 lane after x2: Lumen Vale solo after v552 v6 x2 unless Hamish redirects
 
 ## Lookup Rule
 Use full omega only when a specific artifact is missing from mini and a status-only gap receipt records the exact missing relative file.
@@ -16,31 +16,31 @@ Use full omega only when a specific artifact is missing from mini and a status-o
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
 - docs/trinity-live-traces/ghc-current-state-beacon-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-lumen-browser-send-receipt-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-lumen-browser-send-receipt-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-lumen-advisory-reduction-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-lumen-advisory-reduction-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-aevren-safe-now-eureka-queue-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-aevren-safe-now-eureka-queue-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-approval-packet-split-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-approval-packet-split-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-wait-time-runner-ledger-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-wait-time-runner-ledger-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-round-robin-continuity-prep-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-round-robin-continuity-prep-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-drive-bank-receipt-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-drive-bank-receipt-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-validation-receipt-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-validation-receipt-v1.json
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-phase-status-index-v1.md
-- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x1-phase-status-index-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-approved-scope-reduction-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-approved-scope-reduction-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-pack-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-pack-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-use-ledger-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-skill-use-ledger-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-safe-candidate-execution-ledger-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-safe-candidate-execution-ledger-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-branch-context-preserver-card-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-branch-context-preserver-card-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-plugin-boundary-map-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-plugin-boundary-map-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-runtime-drive-diagnostic-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-runtime-drive-diagnostic-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-closeout-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-closeout-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-phase-status-index-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v5-x2-phase-status-index-v1.json
 
 ## Latest Action Summary
-- v552 v5 x1 messaged Lumen through the Codex in-app Browser and reduced the completed advisory without raw transcript publication.
-- Aevren and Lumen produced a v5 x2-ready safe-now surface: 60 Aevren safe-now tasks aligned with Lumen's 55 safe-now advisory.
-- Approval packet split is ready with 60 safe-now, 18 candidate, 14 exact-approval-needed, and 8 blocked rows.
-- Blocked tasks, no-new-agent guard, held sibling guard, D-drive-first policy, exact staging, privacy scan, and open proof/canon/legal/deployment/account/API-key gates remain preserved.
-- v552 v5 x2 is prepared as Aevren build-use scope; after v5 x2, Arby and Cicero are the next grouped x1 unless Hamish redirects.
+- v552 v5 x2 materialized Hamish-approved 26 safe-now tasks and 14 candidate designs.
+- Created, validated, and used 10 exact-approved local GHC skills for phase closeout, Lumen reduction, approval split, round-robin routing, private firewall, omega-mini current-state, watcher cadence, drive banking, skill validation, and Codex branch context preservation.
+- Other exact packets and all blocked packets remain held; sibling identity replacement or merging remains blocked indefinitely.
+- Codex CLI version check passed at 0.140.0; codex doctor timed out after 120 seconds and repo validation remained authoritative.
+- v552 v6 x1 is prepared, not started, for Arby and Cicero unless Hamish redirects.
 
 ## Safety Boundary
 - Status-only receipts, no private route data, no raw lane/advisory content, no credentials, no local absolute paths.
