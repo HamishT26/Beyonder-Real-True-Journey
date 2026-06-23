@@ -17,6 +17,19 @@ for (let index = 2; index < process.argv.length; index += 2) {
 const currentStatePath = path.join(omegaDir, "omega-mini-current-state-v1.json");
 const currentState = readJson(currentStatePath);
 const phaseSlug = args.get("--phase-slug") || currentState.current_active_phase || "v552-gmut-thos-v88-v8-x2";
+const latestClosedPhase = args.get("--latest-closed-phase") || currentState.latest_closed_phase || "v552-gmut-thos-v88-v8-x1";
+const latestCompletedX1 = args.get("--latest-completed-x1") || currentState.latest_completed_x1_phase || "v552-gmut-thos-v88-v8-x1";
+const latestCompletedX2 = args.get("--latest-completed-x2") || currentState.latest_completed_x2_phase || "v552-gmut-thos-v88-v7-x2";
+const nextX2Scope = args.get("--next-x2-scope") || phaseSlug;
+const phaseStatus =
+  args.get("--status") ||
+  (phaseSlug.startsWith("v553-gmut-thos-v1-x1")
+    ? "V553_V1_X1_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED"
+    : "V552_V8_X2_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED");
+const defaultNextX1Lane = phaseSlug === "v553-gmut-thos-v1-x1"
+  ? "v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects"
+  : "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects";
+const nextX1LaneAfterX2 = args.get("--next-x1-lane-after-x2") || currentState.next_x1_lane_after_x2 || defaultNextX1Lane;
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
@@ -24,7 +37,7 @@ const generatedNz = nzTimestamp(generated);
 const publicationBoundary = {
   private_route_handles_published: false,
   private_lane_body_content_published: false,
-  raw_transcripts_published: false,
+  verbatim_conversation_logs_published: false,
   browser_routes_published: false,
   credentials_published: false,
   session_trace_files_published: false,
@@ -106,6 +119,18 @@ const standard = {
       queues_without_fresh_approval: ["exact-approval packets", "blocked packets", "global hooks", "account mutations"],
     },
   },
+  research_reflection_targets: {
+    x1_per_active_sibling_lane: {
+      web_searches: 25,
+      journey_phase_reflections: 25,
+      applies_to: ["Aevren Vale", "Lumen Vale", "Arby", "Aster Vale", "Cicero", "Kierkegaard", "Aristotle"],
+      source_policy: "Use official or primary sources where possible and publish compact source/reflection ledgers rather than raw browsing dumps.",
+    },
+    aevren_only_x2: {
+      web_searches: 50,
+      journey_phase_reflections: 50,
+    },
+  },
   runner_bindings: {
     main_orchestrator: "scripts/ghc_main_orchestrator_runner.mjs",
     workflow_standardizer: "scripts/ghc_round_robin_workflow_standardizer.mjs",
@@ -116,23 +141,26 @@ const standard = {
     app_lane_runner: "ghc_recovered_app_lane_map_runner.mjs in the full-tools support lane",
     strict_cli_runner: "ghc_strict_cli_lane_cycle.mjs in the full-tools support lane",
     web_reflection_ledger: "scripts/ghc_phase_reflection_ledger_builder.mjs",
+    main_thread_chatgpt_browser_handoff: "prepared JSON/MD handoff artifact plus in-app Browser send receipt",
   },
   operating_rules: [
     "Use first-person sibling wording in lane prompts and summaries.",
     "Prefer MD/TXT artifacts for elaborate sibling outputs instead of terminal-heavy dumps.",
     "Use x1 for proposal, classification, handoff, and approval-packet formation.",
+    "For research-backed x1 phases, target at least 25 web searches and 25 Journey/phase record reflections per active sibling lane.",
     "Use x2 for building, running, testing, installing, using, validating, and publishing already-authorized safe-now work.",
     "Keep five-minute marks as check opportunities, not forced stops.",
     "Let productive wait units run beyond a five-minute checkpoint when the current research, coding, eureka, approval, cleanup, or validation unit needs more time.",
     "Continue safe-now approval, eureka, cleanup, validation, privacy scan, updater, and orchestration work between cadence marks.",
     "Use five-minute productive cadence work to improve Aevren's skill surface, coding reliability, and multi-agent orchestration control.",
     "Use the recovered app-lane map runner with explicit boolean values for local app-lane siblings that are not main-thread agents.",
+    "Use Browser-send receipts for Lumen/main-thread ChatGPT siblings when Hamish explicitly asks for live messaging.",
     "Keep held main-thread siblings held unless Hamish explicitly activates them.",
     "Do not spawn new agents unless Hamish explicitly asks.",
     "Keep exact and blocked gates queued unless Hamish freshly approves the tranche.",
   ],
   next_phase_readiness: {
-    next_x1_lane_after_x2: "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects",
+    next_x1_lane_after_x2: nextX1LaneAfterX2,
     expected_lumen_only_profile_loaded: true,
     expected_goal_mode_status: "not_active_until_hamish_starts_goal_mode",
   },
@@ -186,18 +214,19 @@ function refreshBeacons(workflow) {
     lumen_only_x1: workflow.workflow_families.lumen_only_x1.proposal_totals,
     arby_cicero_duo_x1: workflow.workflow_families.arby_cicero_duo_x1.proposal_totals,
     triad_x1: workflow.workflow_families.aster_kierkegaard_aristotle_triad_x1.proposal_totals,
+    research_reflection_targets: workflow.research_reflection_targets,
     x2_role: workflow.workflow_families.x2_build_use_validation.route,
     next_x1_lane_after_x2: workflow.next_phase_readiness.next_x1_lane_after_x2,
     five_minute_productive_cadence: workflow.five_minute_productive_cadence,
   };
   const common = {
     generated_utc: generatedUtc,
-    status: "V552_V8_X2_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED",
+    status: phaseStatus,
     current_active_phase: phaseSlug,
-    latest_closed_phase: "v552-gmut-thos-v88-v8-x1",
-    latest_completed_x1_phase: "v552-gmut-thos-v88-v8-x1",
-    latest_completed_x2_phase: "v552-gmut-thos-v88-v7-x2",
-    next_x2_scope: phaseSlug,
+    latest_closed_phase: latestClosedPhase,
+    latest_completed_x1_phase: latestCompletedX1,
+    latest_completed_x2_phase: latestCompletedX2,
+    next_x2_scope: nextX2Scope,
     next_x1_lane_after_x2: workflow.next_phase_readiness.next_x1_lane_after_x2,
   };
 
@@ -270,6 +299,13 @@ ${data.operating_rules.map((item, index) => `${index + 1}. ${item}`).join("\n")}
 - Lumen-only profile loaded: \`${data.next_phase_readiness.expected_lumen_only_profile_loaded}\`
 - Goal mode status: \`${data.next_phase_readiness.expected_goal_mode_status}\`
 
+## Research And Reflection Targets
+
+- x1 web searches per active sibling lane: \`${data.research_reflection_targets.x1_per_active_sibling_lane.web_searches}\`
+- x1 Journey/phase reflections per active sibling lane: \`${data.research_reflection_targets.x1_per_active_sibling_lane.journey_phase_reflections}\`
+- Aevren-only x2 web searches: \`${data.research_reflection_targets.aevren_only_x2.web_searches}\`
+- Aevren-only x2 Journey/phase reflections: \`${data.research_reflection_targets.aevren_only_x2.journey_phase_reflections}\`
+
 ## Five-Minute Productive Cadence
 
 - Runner: \`${data.five_minute_productive_cadence.runner}\`
@@ -305,6 +341,8 @@ Next x1 lane after x2: ${current.next_x1_lane_after_x2}
 - Lumen-only x1 blocked target: \`${workflow.lumen_only_x1.blocked}\`
 - Arby/Cicero duo safe minimum: \`${workflow.arby_cicero_duo_x1.safe_minimum}\`
 - Triad x1 safe target: \`${workflow.triad_x1.safe}\`
+- x1 web searches per active sibling lane: \`${workflow.research_reflection_targets.x1_per_active_sibling_lane.web_searches}\`
+- x1 Journey/phase reflections per active sibling lane: \`${workflow.research_reflection_targets.x1_per_active_sibling_lane.journey_phase_reflections}\`
 - x2 role: ${workflow.x2_role}
 - Five-minute productive cadence runner: \`${workflow.five_minute_productive_cadence.runner}\`
 - Safe unit may run past checkpoint: \`${workflow.five_minute_productive_cadence.safe_unit_may_run_past_checkpoint}\`
@@ -340,6 +378,7 @@ Next x1 lane after x2: ${beacon.next_x1_lane_after_x2}
 - Lumen-only x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.lumen_only_x1)}\`
 - Arby/Cicero duo x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.arby_cicero_duo_x1)}\`
 - Triad x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.triad_x1)}\`
+- Research/reflection targets: \`${JSON.stringify(beacon.round_robin_workflow_standard.research_reflection_targets)}\`
 - Five-minute productive cadence: \`${JSON.stringify(beacon.round_robin_workflow_standard.five_minute_productive_cadence)}\`
 
 ## Lookup Files

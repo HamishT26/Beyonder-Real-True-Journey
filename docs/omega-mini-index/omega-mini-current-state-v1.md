@@ -1,21 +1,37 @@
 # Omega-Mini Current State
 
-Status: V552_V8_X2_ACTIVE_PRODUCTIVE_CADENCE_READY
-Current active phase: v552-gmut-thos-v88-v8-x2
-Latest closed phase: v552-gmut-thos-v88-v8-x1
+Status: V553_V1_X1_ACTIVE_PRODUCTIVE_CADENCE_READY
+Current active phase: v553-gmut-thos-v1-x1
+Latest closed phase: v552-gmut-thos-v88-v8-x2
 Latest completed x1: v552-gmut-thos-v88-v8-x1
-Latest completed x2: v552-gmut-thos-v88-v7-x2
-Current lanes: v8-x2-active-skill-build-run; ghc-main-orchestration-memory-created-and-used; ghc-full-tools-skill-bank-created-and-used; main-orchestrator-route-available; full-tools-support-available; round-robin-workflow-standard-loaded; v553-lumen-only-x1-profile-loaded; five-minute-productive-cadence-ready; safe-wait-workbench-enabled
-Next x2 scope: v552-gmut-thos-v88-v8-x2
-Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
+Latest completed x2: v552-gmut-thos-v88-v8-x2
+Current lanes: v553-v1-x1-lumen-only; aevren-lumen-advisory; v8-x2-active-skill-build-run; ghc-main-orchestration-memory-created-and-used; ghc-full-tools-skill-bank-created-and-used; main-orchestrator-route-available; full-tools-support-available; round-robin-workflow-standard-loaded; v553-lumen-only-x1-profile-loaded; five-minute-productive-cadence-ready; safe-wait-workbench-enabled; round-robin-workflow-standard-promoted
+Next x2 scope: v553-gmut-thos-v1-x2
+Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects
+
+## v553 v1 x1 Lumen Startup
+
+- Status: `PASS_V553_V1_X1_LUMEN_STARTUP_READY`
+- Active lanes: `Aevren Vale, Lumen Vale`
+- Safe packets target: `50`
+- Candidate packets target: `30`
+- Exact packets target: `20`
+- Blocked packets target: `10`
+- x1 web searches per active lane: `25`
+- x1 Journey/phase reflections per active lane: `25`
+- Lumen handoff: `browser_send_submitted_response_active`
+
+## Lumen Browser Send
+
+- Status: `PASS_LUMEN_BROWSER_HANDOFF_SUBMITTED`
+- Send status: `browser_send_submitted_response_active`
+- Verification: `composer_cleared_and_response_control_visible`
 
 ## Five-Minute Productive Cadence
 
 - Status: `PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED`
 - Safe unit may run past checkpoint: `true`
-- Wait work queues: `7`
-- Wait work lanes: `research_and_reflection, safe_eureka_tasks, approval_packet_work, cleanup_and_refinement, skill_and_control_growth, coding_and_multi_agent_orchestration, validation_and_publication_hygiene`
-- Harvest rule: If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause.
+- Wait work queues: `8`
 
 ## Current Lookup Files
 
@@ -75,11 +91,53 @@ Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-round-robin-workflow-standard-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-five-minute-productive-cadence-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-five-minute-productive-cadence-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-context-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-context-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-handoff-message-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-handoff-message-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-journey-phase-reflection-seed-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-journey-phase-reflection-seed-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-proposal-queue-targets-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-proposal-queue-targets-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-aevren-25-web-reflection-ledger-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-aevren-25-web-reflection-ledger-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-round-robin-workflow-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-round-robin-workflow-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-five-minute-productive-cadence-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-five-minute-productive-cadence-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-updater-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-updater-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-phase-status-index-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-phase-status-index-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-startup-context-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-startup-context-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-reflection-ledger-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-reflection-ledger-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-startup-snapshot-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-startup-snapshot-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md
 
 ## Latest Action Summary
 
+- Submitted the v553 v1 x1 Lumen handoff through the in-app browser and recorded a sanitized send receipt.
 - Added five-minute productive wait work: research, eureka, approval, cleanup, skill/control, coding, orchestration, validation, and lane harvest.
 - Confirmed five-minute marks are check opportunities, not hard stops; safe units may run past the checkpoint.
+- Promoted the reusable GHC round-robin workflow standard into v8 x2.
+- Loaded the v553 Lumen-only x1 proposal profile.
+- Loaded the Arby/Cicero duo x1 proposal profile.
+- Loaded the Aster Vale/Kierkegaard/Aristotle triad x1 proposal profile.
+- Kept x2 as the build/use/validate lane for already-authorized safe-now work.
+- Started v553 v1 x1 as the Lumen-only x1 advisory and proposal phase.
+- Prepared the Lumen handoff message, 25-source research seed, 25-row Journey/phase reflection seed, and full proposal queue target artifact.
+- Promoted x1 research/reflection target to 25 web searches and 25 Journey/phase reflections per active sibling lane.
+- Kept Aevren-only x2 target at 50 web searches and 50 Journey/phase reflections.
 - v552 v8 x2 started as an active skill build run.
 - Created and validated ghc-main-orchestration-memory.
 - Created and validated ghc-full-tools-skill-bank.
@@ -92,4 +150,4 @@ Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 
 ## Safety Boundary
 
-Status-only receipts. No private route handles, private lane body content, credentials, verbatim conversation logs, browser routes, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.
+No private route handles, private lane body content, verbatim conversation logs, browser routes, credentials, local absolute paths, screenshots, proof closure, canon promotion, legal closure, deployment closure, account mutation, or API-key creation are published.

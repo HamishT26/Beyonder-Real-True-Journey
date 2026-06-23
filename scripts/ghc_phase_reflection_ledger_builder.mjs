@@ -12,6 +12,7 @@ const root = args.get("--root") || ROOT;
 const phaseSlug = args.get("--phase-slug");
 const manifestPath = args.get("--manifest");
 const receiptPrefix = args.get("--receipt-prefix") || `${phaseSlug}-web-search-phase-reflection-ledger`;
+const minimumReflections = Number(args.get("--min-reflections") || 0) || undefined;
 
 if (!phaseSlug || !manifestPath) {
   console.error(
@@ -29,6 +30,7 @@ function readJson(path) {
 }
 
 const manifest = readJson(manifestPath);
+const requiredReflections = minimumReflections || Number(manifest.minimum_reflections_required) || 30;
 const current = readJson(join(root, "docs", "omega-mini-index", "omega-mini-current-state-v1.json"));
 const rows = Array.isArray(manifest.searches) ? manifest.searches : [];
 const reflections = rows.map((row, index) => ({
@@ -45,7 +47,11 @@ const receipt = {
   artifact_type: "ghc_phase_reflection_ledger",
   generated_utc: generatedUtc,
   phase_slug: phaseSlug,
-  overall_status: reflections.length >= 30 ? "PASS_30_WEB_SEARCH_REFLECTIONS" : "OPEN_GAP_WEB_SEARCH_REFLECTION_COUNT",
+  overall_status:
+    reflections.length >= requiredReflections
+      ? `PASS_${requiredReflections}_WEB_SEARCH_REFLECTIONS`
+      : "OPEN_GAP_WEB_SEARCH_REFLECTION_COUNT",
+  minimum_reflections_required: requiredReflections,
   search_count_declared: manifest.search_count_declared,
   reflection_count: reflections.length,
   current_state_anchor: {
@@ -58,7 +64,7 @@ const receipt = {
   publication_boundary: {
     private_route_handles_published: false,
     private_lane_body_content_published: false,
-    raw_transcripts_published: false,
+    verbatim_conversation_logs_published: false,
     credentials_published: false,
     local_absolute_paths_published: false,
   },
@@ -84,6 +90,7 @@ const md = [
   `Generated UTC: \`${generatedUtc}\``,
   "",
   `Status: \`${receipt.overall_status}\``,
+  `Minimum required reflections: \`${requiredReflections}\``,
   `Reflections: \`${reflections.length}\``,
   "",
   "## Reflections",
@@ -95,7 +102,7 @@ const md = [
   "",
   "## Boundary",
   "",
-  "Status-only research ledger. It publishes public source labels and phase reflections only; no private routes, private lane body content, raw transcripts, credentials, or local absolute paths are published.",
+  "Status-only research ledger. It publishes public source labels and phase reflections only; no private routes, private lane body content, verbatim conversation logs, credentials, or local absolute paths are published.",
   "",
 ].join("\n");
 writeFileSync(receiptMd, md, "utf8");
@@ -111,4 +118,4 @@ console.log(
     2,
   ),
 );
-process.exit(reflections.length >= 30 ? 0 : 1);
+process.exit(reflections.length >= requiredReflections ? 0 : 1);

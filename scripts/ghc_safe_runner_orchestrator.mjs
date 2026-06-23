@@ -13,6 +13,7 @@ const root = args.get("--root") || ROOT;
 const phaseSlug = args.get("--phase-slug");
 const manifest = args.get("--manifest");
 const receiptPrefix = args.get("--receipt-prefix") || `${phaseSlug}-safe-runner-orchestrator`;
+const minReflections = args.get("--min-reflections");
 
 if (!phaseSlug || !manifest) {
   console.error("Usage: node ghc_safe_runner_orchestrator.mjs --phase-slug <slug> --manifest <json>");
@@ -73,6 +74,7 @@ const steps = [
     manifest,
     "--receipt-prefix",
     `${receiptPrefix}-reflection-ledger`,
+    ...(minReflections ? ["--min-reflections", minReflections] : []),
   ]),
   run("compact_pause_context_update", [
     join(root, "scripts", "ghc_context_compact_pause_updater.mjs"),
@@ -105,7 +107,7 @@ const receipt = {
   publication_boundary: {
     private_route_handles_published: false,
     private_lane_body_content_published: false,
-    raw_transcripts_published: false,
+    verbatim_conversation_logs_published: false,
     credentials_published: false,
     local_absolute_paths_published: false,
   },
@@ -136,7 +138,7 @@ writeFileSync(
     "",
     "## Boundary",
     "",
-    "Status-only runner orchestrator. No new agents, account mutations, deployments, global hooks, private routes, raw transcripts, credentials, or local absolute paths are published.",
+    "Status-only runner orchestrator. No new agents, account mutations, deployments, global hooks, private routes, verbatim conversation logs, credentials, or local absolute paths are published.",
     "",
   ].join("\n"),
   "utf8",

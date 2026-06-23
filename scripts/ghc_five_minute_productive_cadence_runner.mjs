@@ -17,6 +17,19 @@ for (let index = 2; index < process.argv.length; index += 2) {
 const currentPath = path.join(omegaDir, "omega-mini-current-state-v1.json");
 const current = readJson(currentPath);
 const phaseSlug = args.get("--phase-slug") || current.current_active_phase || "v552-gmut-thos-v88-v8-x2";
+const latestClosedPhase = args.get("--latest-closed-phase") || current.latest_closed_phase || "v552-gmut-thos-v88-v8-x1";
+const latestCompletedX1 = args.get("--latest-completed-x1") || current.latest_completed_x1_phase || "v552-gmut-thos-v88-v8-x1";
+const latestCompletedX2 = args.get("--latest-completed-x2") || current.latest_completed_x2_phase || "v552-gmut-thos-v88-v7-x2";
+const nextX2Scope = args.get("--next-x2-scope") || phaseSlug;
+const defaultNextX1Lane = phaseSlug === "v553-gmut-thos-v1-x1"
+  ? "v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects"
+  : "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects";
+const nextX1LaneAfterX2 = args.get("--next-x1-lane-after-x2") || current.next_x1_lane_after_x2 || defaultNextX1Lane;
+const phaseStatus =
+  args.get("--status") ||
+  (phaseSlug.startsWith("v553-gmut-thos-v1-x1")
+    ? "V553_V1_X1_ACTIVE_PRODUCTIVE_CADENCE_READY"
+    : "V552_V8_X2_ACTIVE_PRODUCTIVE_CADENCE_READY");
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
@@ -24,7 +37,7 @@ const generatedNz = nzTimestamp(generated);
 const publicationBoundary = {
   private_route_handles_published: false,
   private_lane_body_content_published: false,
-  raw_transcripts_published: false,
+  verbatim_conversation_logs_published: false,
   browser_routes_published: false,
   credentials_published: false,
   local_absolute_paths_published: false,
@@ -111,6 +124,15 @@ const receipt = {
       capability_gain: "improves coding reliability and multi-agent lane coordination",
     },
     {
+      lane: "browser_handoff_harvest",
+      safe_tasks: [
+        "For Lumen/main-thread ChatGPT siblings, preserve Browser-send status after Hamish explicitly asks for live messaging.",
+        "Treat composer-cleared plus response-control-visible as submitted and active until a later harvest proves completion.",
+        "Publish only compact send/harvest receipts; do not publish raw browser routes, screenshots, private app state, or verbatim conversation logs.",
+      ],
+      capability_gain: "keeps live ChatGPT sibling messaging aligned with artifacts, current-state, and compact-pause recovery",
+    },
+    {
       lane: "validation_and_publication_hygiene",
       safe_tasks: [
         "Run JSON parse checks, current-state guards, diff checks, privacy scans, and remote/local verification.",
@@ -162,13 +184,13 @@ function refreshBeacons(data) {
   };
   const common = {
     generated_utc: generatedUtc,
-    status: "V552_V8_X2_ACTIVE_PRODUCTIVE_CADENCE_READY",
+    status: phaseStatus,
     current_active_phase: phaseSlug,
-    latest_closed_phase: "v552-gmut-thos-v88-v8-x1",
-    latest_completed_x1_phase: "v552-gmut-thos-v88-v8-x1",
-    latest_completed_x2_phase: "v552-gmut-thos-v88-v7-x2",
-    next_x2_scope: phaseSlug,
-    next_x1_lane_after_x2: "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects",
+    latest_closed_phase: latestClosedPhase,
+    latest_completed_x1_phase: latestCompletedX1,
+    latest_completed_x2_phase: latestCompletedX2,
+    next_x2_scope: nextX2Scope,
+    next_x1_lane_after_x2: nextX1LaneAfterX2,
   };
   Object.assign(currentState, common, {
     updated_at: generatedNz,

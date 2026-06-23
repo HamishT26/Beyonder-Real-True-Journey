@@ -77,7 +77,7 @@ const receipt = {
   publication_boundary: {
     private_route_handles_published: false,
     private_lane_body_content_published: false,
-    raw_transcripts_published: false,
+    verbatim_conversation_logs_published: false,
     credentials_published: false,
     local_absolute_paths_published: false,
   },
@@ -110,7 +110,7 @@ writeFileSync(
     "",
     "## Boundary",
     "",
-    "Status-only compact updater. No private routes, private lane body content, raw transcripts, credentials, or local absolute paths are published.",
+    "Status-only compact updater. No private routes, private lane body content, verbatim conversation logs, credentials, or local absolute paths are published.",
     "",
   ].join("\n"),
   "utf8",
