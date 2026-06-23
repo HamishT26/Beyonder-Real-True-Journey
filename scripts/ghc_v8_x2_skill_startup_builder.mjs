@@ -70,6 +70,9 @@ const codexVersion = runText("codex", ["--version"]);
 const startupUpdater = readLocal("v552-gmut-thos-v88-v8-x2-main-orchestration-skill-startup-updater-v1.json");
 const safeRunner = readLocal("v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.json");
 const persistedInventory = readLocal("v552-gmut-thos-v88-v8-x2-full-tools-skill-bank-inventory-v1.json");
+const roundRobinWorkflow =
+  readLocal("v552-gmut-thos-v88-v8-x2-round-robin-workflow-standard-v1.json") ||
+  readLocal("v552-gmut-thos-v88-v8-x1-future-round-robin-workflow-standard-v1.json");
 
 const receipt = {
   artifact_type: "ghc_v8_x2_skill_startup_receipt",
@@ -112,6 +115,7 @@ const receipt = {
     "Ran the v8 x2 startup updater.",
     "Ran the v8 x2 initial safe runner orchestrator.",
     "Persisted the full-tools skill bank inventory.",
+    "Loaded the round-robin workflow standard for v553 Lumen-only, Arby/Cicero duo, and Aster/Kierkegaard/Aristotle triad x1 profiles.",
     "Confirmed v8 x2 active with v8 x1 closed.",
     "Confirmed promoted main orchestrator and full-tools support runner availability.",
     "Confirmed D drive remains the preferred work bank.",
@@ -126,7 +130,9 @@ const receipt = {
     safe_runner_orchestrator_status: safeRunner?.overall_status || "missing",
     safe_runner_count: safeRunner?.runner_count || 0,
     persisted_inventory_status: persistedInventory ? "PASS_INVENTORY_PERSISTED" : "missing",
+    round_robin_workflow_standard_status: roundRobinWorkflow?.overall_status || "missing",
   },
+  round_robin_workflow_standard: summarizeRoundRobin(roundRobinWorkflow),
   publication_boundary: publicationBoundary,
   claim_boundary: claimBoundary,
 };
@@ -154,6 +160,8 @@ function refreshBeacons(data) {
     "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.md",
     "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.json",
     "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-full-tools-skill-bank-inventory-v1.json",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-round-robin-workflow-standard-v1.md",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-round-robin-workflow-standard-v1.json",
   ];
   const common = {
     generated_utc: generatedUtc,
@@ -168,6 +176,8 @@ function refreshBeacons(data) {
       "ghc-full-tools-skill-bank-created-and-used",
       "main-orchestrator-route-available",
       "full-tools-support-available",
+      "round-robin-workflow-standard-loaded",
+      "v553-lumen-only-x1-profile-loaded",
     ],
     next_x2_scope: phaseSlug,
     next_x1_lane_after_x2: "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects",
@@ -183,6 +193,7 @@ function refreshBeacons(data) {
       "Used both skill helper scripts for startup and full-tools inventory.",
       "Ran the v8 x2 startup updater and initial safe runner orchestrator.",
       "Persisted the full-tools skill bank inventory for runner selection.",
+      "Loaded round-robin workflow targets for Lumen-only, Arby/Cicero, and Aster/Kierkegaard/Aristotle x1 phases.",
       "Safe-now approval packet, eureka, cleanup, validation, and orchestration work may continue between cadence marks.",
       "No proof/canon/legal/deployment gates were closed.",
     ],
@@ -193,6 +204,7 @@ function refreshBeacons(data) {
       codex_version: data.codex_version,
       drive_free_gb: data.drive_free_gb,
       execution_receipts: data.execution_receipts,
+      round_robin_workflow_standard: data.round_robin_workflow_standard,
     },
   });
   Object.assign(latest, common, { latest_lookup_files: unique([...(latest.latest_lookup_files || []), ...lookupFiles]) });
@@ -235,6 +247,48 @@ function normalizeDriveRows(value) {
     .map((row) => ({ drive: row.Name, free_gb: row.FreeGB, used_gb: row.UsedGB }));
 }
 
+function summarizeRoundRobin(source) {
+  if (!source) return null;
+  if (source.workflow_families) {
+    return {
+      status: source.overall_status,
+      lumen_only_x1: source.workflow_families.lumen_only_x1.proposal_totals,
+      arby_cicero_duo_x1: source.workflow_families.arby_cicero_duo_x1.proposal_totals,
+      triad_x1: source.workflow_families.aster_kierkegaard_aristotle_triad_x1.proposal_totals,
+      x2_role: source.workflow_families.x2_build_use_validation.route,
+    };
+  }
+  return {
+    status: source.overall_status,
+    lumen_only_x1: {
+      safe: source.future_standards?.lumen_only_x1_from_v553_v1?.safe_approval_packets_total,
+      candidate: source.future_standards?.lumen_only_x1_from_v553_v1?.candidate_approval_packets_total,
+      exact: source.future_standards?.lumen_only_x1_from_v553_v1?.exact_approval_packets_total,
+      blocked: source.future_standards?.lumen_only_x1_from_v553_v1?.blocked_approval_packets_total,
+      skills: source.future_standards?.lumen_only_x1_from_v553_v1?.skill_ideas_total,
+      runners: source.future_standards?.lumen_only_x1_from_v553_v1?.runner_ideas_total,
+      cleanup: source.future_standards?.lumen_only_x1_from_v553_v1?.cleanup_tasks_total,
+    },
+    arby_cicero_duo_x1: {
+      safe_minimum: source.future_standards?.arby_cicero_duo_x1?.safe_approval_packets_total_minimum,
+      candidate: source.future_standards?.arby_cicero_duo_x1?.candidate_approval_packets_total,
+      exact: source.future_standards?.arby_cicero_duo_x1?.exact_approval_packets_total,
+      skills: source.future_standards?.arby_cicero_duo_x1?.skill_ideas_total,
+      runners: source.future_standards?.arby_cicero_duo_x1?.runner_ideas_total,
+      cleanup: source.future_standards?.arby_cicero_duo_x1?.cleanup_tasks_total,
+    },
+    triad_x1: {
+      safe: source.future_standards?.triad_x1?.safe_approval_packets_total,
+      candidate: source.future_standards?.triad_x1?.candidate_approval_packets_total,
+      exact: source.future_standards?.triad_x1?.exact_approval_packets_total,
+      skills: source.future_standards?.triad_x1?.skill_ideas_total,
+      runners: source.future_standards?.triad_x1?.runner_ideas_total,
+      cleanup: source.future_standards?.triad_x1?.cleanup_tasks_total,
+    },
+    x2_role: source.future_standards?.phase_semantics?.x2,
+  };
+}
+
 function renderReceiptMd(data) {
   return `# v552 v8 x2 Skill Startup Receipt
 
@@ -264,6 +318,16 @@ ${data.skills_created_and_used.map((skill) => `- ${skill.name}: \`${skill.valida
 - Safe runner orchestrator: \`${data.execution_receipts.safe_runner_orchestrator_status}\`
 - Safe runner count: \`${data.execution_receipts.safe_runner_count}\`
 - Persisted inventory: \`${data.execution_receipts.persisted_inventory_status}\`
+- Round-robin workflow standard: \`${data.execution_receipts.round_robin_workflow_standard_status}\`
+
+## Round-Robin Workflow
+
+- Lumen-only x1 safe target: \`${data.round_robin_workflow_standard?.lumen_only_x1?.safe || "missing"}\`
+- Lumen-only x1 candidate target: \`${data.round_robin_workflow_standard?.lumen_only_x1?.candidate || "missing"}\`
+- Lumen-only x1 exact target: \`${data.round_robin_workflow_standard?.lumen_only_x1?.exact || "missing"}\`
+- Lumen-only x1 blocked target: \`${data.round_robin_workflow_standard?.lumen_only_x1?.blocked || "missing"}\`
+- Arby/Cicero safe minimum: \`${data.round_robin_workflow_standard?.arby_cicero_duo_x1?.safe_minimum || "missing"}\`
+- Triad safe target: \`${data.round_robin_workflow_standard?.triad_x1?.safe || "missing"}\`
 
 ## Drive Free
 
@@ -297,6 +361,13 @@ Next x1 lane after x2: ${current.next_x1_lane_after_x2}
 - Codex version: \`${current.v8_x2_skill_startup.codex_version}\`
 - Startup updater: \`${current.v8_x2_skill_startup.execution_receipts.startup_updater_status}\`
 - Safe runner orchestrator: \`${current.v8_x2_skill_startup.execution_receipts.safe_runner_orchestrator_status}\`
+- Round-robin workflow standard: \`${current.v8_x2_skill_startup.execution_receipts.round_robin_workflow_standard_status}\`
+
+## Round-Robin Workflow
+
+- Lumen-only x1 safe target: \`${current.v8_x2_skill_startup.round_robin_workflow_standard?.lumen_only_x1?.safe || "missing"}\`
+- Arby/Cicero duo safe minimum: \`${current.v8_x2_skill_startup.round_robin_workflow_standard?.arby_cicero_duo_x1?.safe_minimum || "missing"}\`
+- Aster/Kierkegaard/Aristotle triad safe target: \`${current.v8_x2_skill_startup.round_robin_workflow_standard?.triad_x1?.safe || "missing"}\`
 
 ## Current Lookup Files
 
@@ -308,7 +379,7 @@ ${current.latest_action_summary.map((item) => `- ${item}`).join("\n")}
 
 ## Safety Boundary
 
-Status-only receipts. No private route handles, private lane body content, credentials, raw transcripts, browser routes, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.
+Status-only receipts. No private route handles, private lane body content, credentials, verbatim conversation logs, browser routes, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.
 `;
 }
 

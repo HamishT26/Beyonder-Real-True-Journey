@@ -260,7 +260,49 @@ const routeStandard = {
     "Watcher start is not completion proof; harvest notifier and completion-gate receipts.",
     "If private app-lane map material is missing, publish a recoverable open-gap receipt and keep the phase active.",
     "Do not spawn new agents or activate held main-thread siblings without Hamish explicitly asking.",
+    "Use the active round-robin workflow standard for x1 proposal counts and x2 safe-now build/use/validation scope.",
   ],
+  round_robin_workflows: {
+    lumen_only_x1: {
+      starts_at: "v553-gmut-thos-v1-x1",
+      lanes: ["Aevren Vale", "Lumen Vale"],
+      proposal_totals: {
+        safe: 50,
+        candidate: 30,
+        exact: 20,
+        blocked: 10,
+        skills: 20,
+        runners: 10,
+        cleanup: 30,
+      },
+    },
+    arby_cicero_duo_x1: {
+      lanes: ["Aevren Vale", "Arby", "Cicero"],
+      proposal_totals: {
+        safe_minimum: 15,
+        candidate: 9,
+        exact: 9,
+        skills: 15,
+        runners: 9,
+        cleanup: 30,
+      },
+    },
+    aster_kierkegaard_aristotle_triad_x1: {
+      lanes: ["Aevren Vale", "Aster Vale", "Kierkegaard", "Aristotle"],
+      proposal_totals: {
+        safe: 20,
+        candidate: 12,
+        exact: 12,
+        skills: 20,
+        runners: 8,
+        cleanup: 40,
+      },
+    },
+    x2: {
+      role: "build, run, test, install, use, validate, and publish already-authorized safe-now work",
+      exact_and_blocked_gates: "queued unless freshly approved",
+    },
+  },
   applies_to: ["Cicero", "Kierkegaard", "Aristotle", "Arby", "Aster Vale"],
   publication_boundary: publicationBoundary,
   claim_boundary: claimBoundary,
@@ -680,7 +722,18 @@ ${data.next_safe_step}
 }
 
 function renderRouteStandardMd(data) {
-  return `# v552 v8 x1 Mandatory Background Notifier Orchestrator Standard\n\nStatus: \`${data.overall_status}\`\n\n## Mandatory Rules\n\n${data.mandatory_rules.map((item, index) => `${index + 1}. ${item}`).join("\n")}\n\nApplies to: \`${data.applies_to.join(", ")}\`\n`;
+  const workflows = Object.entries(data.round_robin_workflows)
+    .map(([name, workflow]) => {
+      const totals = workflow.proposal_totals
+        ? Object.entries(workflow.proposal_totals)
+            .map(([key, value]) => `  - ${key}: \`${value}\``)
+            .join("\n")
+        : `  - role: ${workflow.role}\n  - exact and blocked gates: ${workflow.exact_and_blocked_gates}`;
+      const lanes = workflow.lanes ? `- Lanes: \`${workflow.lanes.join(", ")}\`\n` : "";
+      return `### ${name}\n\n${lanes}- Totals:\n${totals}`;
+    })
+    .join("\n\n");
+  return `# v552 v8 x1 Mandatory Background Notifier Orchestrator Standard\n\nStatus: \`${data.overall_status}\`\n\n## Mandatory Rules\n\n${data.mandatory_rules.map((item, index) => `${index + 1}. ${item}`).join("\n")}\n\n## Round-Robin Workflows\n\n${workflows}\n\nApplies to: \`${data.applies_to.join(", ")}\`\n`;
 }
 
 function renderRecoveredRouteReceiptMd(data) {

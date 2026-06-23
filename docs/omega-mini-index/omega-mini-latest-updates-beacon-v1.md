@@ -1,12 +1,18 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V552_V8_X2_ACTIVE_SKILL_BUILD_RUN
+Status: V552_V8_X2_ACTIVE_PRODUCTIVE_CADENCE_READY
 Current active phase: v552-gmut-thos-v88-v8-x2
 Latest closed phase: v552-gmut-thos-v88-v8-x1
 Latest completed x1: v552-gmut-thos-v88-v8-x1
 Latest completed x2: v552-gmut-thos-v88-v7-x2
 Next x2 scope: v552-gmut-thos-v88-v8-x2
 Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
+
+## Five-Minute Productive Cadence
+
+- Status: `PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED`
+- Safe unit may run past checkpoint: `true`
+- Wait work queues: `7`
 
 ## Lookup Files
 
@@ -62,7 +68,11 @@ Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-full-tools-skill-bank-inventory-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-round-robin-workflow-standard-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-round-robin-workflow-standard-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-five-minute-productive-cadence-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-five-minute-productive-cadence-v1.md
 
 ## Boundary
 
-Status-only beacon. No private route data, raw app-lane content, credentials, private paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.
+Status-only beacon. No private route data, private lane body content, credentials, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.

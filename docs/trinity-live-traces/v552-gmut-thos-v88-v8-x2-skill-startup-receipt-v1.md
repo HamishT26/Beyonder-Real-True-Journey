@@ -27,10 +27,20 @@ Status: `PASS_V8_X2_SKILL_STARTUP_READY`
 - Safe runner orchestrator: `PASS_SAFE_RUNNER_ORCHESTRATION`
 - Safe runner count: `3`
 - Persisted inventory: `PASS_INVENTORY_PERSISTED`
+- Round-robin workflow standard: `PASS_ROUND_ROBIN_WORKFLOW_STANDARD_PROMOTED`
+
+## Round-Robin Workflow
+
+- Lumen-only x1 safe target: `50`
+- Lumen-only x1 candidate target: `30`
+- Lumen-only x1 exact target: `20`
+- Lumen-only x1 blocked target: `10`
+- Arby/Cicero safe minimum: `15`
+- Triad safe target: `20`
 
 ## Drive Free
 
-- C: `27.32 GB free`
+- C: `27.45 GB free`
 - D: `606.31 GB free`
 
 ## Continuous Safe Work
