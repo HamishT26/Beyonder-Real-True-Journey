@@ -71,9 +71,12 @@ Status: `PASS_ROUND_ROBIN_WORKFLOW_STANDARD_PROMOTED`
 9. Use five-minute productive cadence work to improve Aevren's skill surface, coding reliability, and multi-agent orchestration control.
 10. Use the recovered app-lane map runner with explicit boolean values for local app-lane siblings that are not main-thread agents.
 11. Use Browser-send receipts for Lumen/main-thread ChatGPT siblings when Hamish explicitly asks for live messaging.
-12. Keep held main-thread siblings held unless Hamish explicitly activates them.
-13. Do not spawn new agents unless Hamish explicitly asks.
-14. Keep exact and blocked gates queued unless Hamish freshly approves the tranche.
+12. Do not declare a sibling session or phase closed while any messaged sibling lane is still active; continue productive five-minute improvement/research work until completion-ready or formal open-gap.
+13. When a sibling-message route or core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops the work or the next step crosses a safety/exact-approval gate.
+14. Each blocker retry session must reflect on the 10 most recent relevant sessions/receipts, run or queue 20 web-search reflections, and run or queue 20 Journey/phase-document reflections.
+15. Keep held main-thread siblings held unless Hamish explicitly activates them.
+16. Do not spawn new agents unless Hamish explicitly asks.
+17. Keep exact and blocked gates queued unless Hamish freshly approves the tranche.
 
 ## Next Phase Readiness
 
@@ -88,11 +91,21 @@ Status: `PASS_ROUND_ROBIN_WORKFLOW_STANDARD_PROMOTED`
 - Aevren-only x2 web searches: `50`
 - Aevren-only x2 Journey/phase reflections: `50`
 
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: `3`
+- Recent sessions or receipts reflected per retry: `10`
+- Web-search reflections per retry: `20`
+- Journey/phase-document reflections per retry: `20`
+- Never close active sibling lane: `true`
+- Productive five-minute waits required: `true`
+- Pause policy: If Hamish pauses/stops, a compact event happens, or the next action crosses a safety/exact-approval gate, publish an active/open handoff rather than declaring the sibling lane or phase closed.
+
 ## Five-Minute Productive Cadence
 
 - Runner: `scripts/ghc_five_minute_productive_cadence_runner.mjs`
 - Safe unit may run past checkpoint: `true`
-- Wait work lanes: `research_and_reflection, safe_eureka_tasks, approval_packet_work, cleanup_and_refinement, skill_and_control_growth, coding_and_multi_agent_orchestration, validation_and_publication_hygiene`
+- Wait work lanes: `research_and_reflection, safe_eureka_tasks, approval_packet_work, cleanup_and_refinement, skill_and_control_growth, coding_and_multi_agent_orchestration, validation_and_publication_hygiene, blocker_retry_research_and_improvement`
 - Harvest rule: finish the current safe unit, then harvest sibling status at the next natural safe pause
 
 ## Boundary

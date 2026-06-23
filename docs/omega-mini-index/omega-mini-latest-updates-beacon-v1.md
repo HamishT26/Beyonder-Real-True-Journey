@@ -1,6 +1,6 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V553_V1_X1_ACTIVE_PRODUCTIVE_CADENCE_READY
+Status: V553_V1_X1_ACTIVE_BLOCKER_RETRY_STANDARD_READY
 Current active phase: v553-gmut-thos-v1-x1
 Latest closed phase: v552-gmut-thos-v88-v8-x2
 Latest completed x1: v552-gmut-thos-v88-v8-x1
@@ -8,19 +8,17 @@ Latest completed x2: v552-gmut-thos-v88-v8-x2
 Next x2 scope: v553-gmut-thos-v1-x2
 Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects
 
-## v553 v1 x1 Lumen Startup
+## Blocker Retry Standard
 
-- Status: `PASS_V553_V1_X1_LUMEN_STARTUP_READY`
-- Active lanes: `Aevren Vale, Lumen Vale`
-- Web search seed rows: `25`
-- Journey/phase reflection seed rows: `25`
-- Lumen handoff: `browser_send_submitted_response_active`
+- Status: `PASS_BLOCKER_RETRY_STANDARD_RECORDED`
+- Never close while sibling active: `true`
+- Minimum retry sessions before pause: `3`
+- Web-search reflections per retry: `20`
+- Journey/phase-document reflections per retry: `20`
 
 ## Lumen Browser Send
 
-- Status: `PASS_LUMEN_BROWSER_HANDOFF_SUBMITTED`
 - Send status: `browser_send_submitted_response_active`
-- Verification: `composer_cleared_and_response_control_visible`
 
 ## Lookup Files
 
@@ -112,7 +110,9 @@ Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish r
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-startup-snapshot-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md
 
 ## Boundary
 
-No private route handles, private lane body content, verbatim conversation logs, browser routes, credentials, local absolute paths, screenshots, proof closure, canon promotion, legal closure, deployment closure, account mutation, or API-key creation are published.
+Status-only beacon. No private route data, private lane body content, credentials, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.

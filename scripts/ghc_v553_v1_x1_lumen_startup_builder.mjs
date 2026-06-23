@@ -47,6 +47,25 @@ const researchTargets = {
   },
 };
 
+const blockerRetryStandard = {
+  minimum_retry_sessions_before_pause: 3,
+  recent_session_reflections_per_retry: 10,
+  web_search_reflections_per_retry: 20,
+  journey_phase_reflections_per_retry: 20,
+  productive_five_minute_waits_required: true,
+  never_close_active_sibling_lane: true,
+  applies_to: [
+    "sibling_messaging_blockers",
+    "sibling_harvest_blockers",
+    "browser_handoff_blockers",
+    "app_lane_runner_blockers",
+    "strict_cli_lane_blockers",
+    "core_system_blockers",
+  ],
+  pause_policy:
+    "Run three structured retry sessions before pausing unless Hamish explicitly stops the work or the next step crosses a safety/exact-approval gate; if forced to pause, publish active/open status rather than closed.",
+};
+
 const lookupFiles = [
   `docs/trinity-live-traces/${phaseSlug}-startup-context-v1.json`,
   `docs/trinity-live-traces/${phaseSlug}-startup-context-v1.md`,
@@ -54,6 +73,8 @@ const lookupFiles = [
   `docs/trinity-live-traces/${phaseSlug}-lumen-handoff-message-v1.md`,
   `docs/trinity-live-traces/${phaseSlug}-lumen-browser-send-receipt-v1.json`,
   `docs/trinity-live-traces/${phaseSlug}-lumen-browser-send-receipt-v1.md`,
+  `docs/trinity-live-traces/${phaseSlug}-blocker-retry-standard-v1.json`,
+  `docs/trinity-live-traces/${phaseSlug}-blocker-retry-standard-v1.md`,
   `docs/trinity-live-traces/${phaseSlug}-research-seed-manifest-v1.json`,
   `docs/trinity-live-traces/${phaseSlug}-research-seed-manifest-v1.md`,
   `docs/trinity-live-traces/${phaseSlug}-journey-phase-reflection-seed-v1.json`,
@@ -348,6 +369,7 @@ const startupContext = {
   },
   proposal_targets: proposalTargets,
   research_targets: researchTargets,
+  blocker_retry_standard: blockerRetryStandard,
   continuity_changes_since_v7_x2: [
     "Twenty validated local skills and ten runners were promoted as the current continuity pack.",
     "Main orchestration, full-tools skill bank, compact-pause updater, web-reflection ledger, and safe-runner orchestrator skills are active.",
@@ -356,6 +378,7 @@ const startupContext = {
     "Recovered app-lane background runner remains mandatory for non-main-thread app siblings.",
     "Every active x1 sibling lane now targets 25 public web searches and 25 Journey/phase reflections when the phase asks for research-backed planning.",
     "Aevren-only x2 phases keep the 50 web-search and 50 Journey/phase reflection target.",
+    "Sibling lanes must not be declared closed while active; blockers require 3 retry sessions with 10 recent-session reflections, 20 web-search reflections, and 20 Journey/phase-document reflections per retry before pausing.",
   ],
   open_boundaries: openBoundaries(),
   lookup_files: lookupFiles,
@@ -436,6 +459,7 @@ const phaseStatusIndex = {
     public_web_search_seed_rows: webSearchRows.length,
     journey_phase_reflection_seed_rows: journeyReflectionRows.length,
   },
+  blocker_retry_standard: blockerRetryStandard,
   open_boundaries: openBoundaries(),
   publication_boundary: publicationBoundary(),
 };
@@ -552,6 +576,7 @@ function refreshBeacons() {
     active_lanes: startupContext.active_lanes,
     proposal_targets: proposalTargets,
     research_targets: researchTargets,
+    blocker_retry_standard: blockerRetryStandard,
     handoff_message_status: lumenHandoff.live_send_status,
     web_search_seed_rows: webSearchRows.length,
     journey_phase_reflection_seed_rows: journeyReflectionRows.length,
@@ -619,6 +644,16 @@ ${Object.entries(data.proposal_targets).map(([key, value]) => `- ${key}: \`${val
 - x1 Journey/phase reflections per active sibling lane: \`${data.research_targets.x1_per_active_sibling_lane.journey_phase_reflections}\`
 - Aevren-only x2 web searches: \`${data.research_targets.aevren_only_x2.web_searches}\`
 - Aevren-only x2 Journey/phase reflections: \`${data.research_targets.aevren_only_x2.journey_phase_reflections}\`
+
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: \`${data.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Recent sessions or receipts reflected per retry: \`${data.blocker_retry_standard.recent_session_reflections_per_retry}\`
+- Web-search reflections per retry: \`${data.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Journey/phase-document reflections per retry: \`${data.blocker_retry_standard.journey_phase_reflections_per_retry}\`
+- Never close active sibling lane: \`${data.blocker_retry_standard.never_close_active_sibling_lane}\`
+- Productive five-minute waits required: \`${data.blocker_retry_standard.productive_five_minute_waits_required}\`
+- Pause policy: ${data.blocker_retry_standard.pause_policy}
 
 ## Changes Since v7 x2
 
@@ -729,6 +764,14 @@ ${Object.entries(data.queue_counts).map(([key, value]) => `- ${key}: \`${value}\
 - Public web search seed rows: \`${data.research_counts.public_web_search_seed_rows}\`
 - Journey/phase reflection seed rows: \`${data.research_counts.journey_phase_reflection_seed_rows}\`
 
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: \`${data.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Recent sessions or receipts reflected per retry: \`${data.blocker_retry_standard.recent_session_reflections_per_retry}\`
+- Web-search reflections per retry: \`${data.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Journey/phase-document reflections per retry: \`${data.blocker_retry_standard.journey_phase_reflections_per_retry}\`
+- Never close active sibling lane: \`${data.blocker_retry_standard.never_close_active_sibling_lane}\`
+
 ## Lookup Files
 
 ${data.artifacts.map((item) => `- ${item}`).join("\n")}
@@ -761,6 +804,9 @@ Next x1 lane after x2: ${current.next_x1_lane_after_x2}
 - Blocked packets target: \`${current.v553_v1_x1_lumen_startup.proposal_targets.blocked}\`
 - x1 web searches per active lane: \`${current.v553_v1_x1_lumen_startup.research_targets.x1_per_active_sibling_lane.web_searches}\`
 - x1 Journey/phase reflections per active lane: \`${current.v553_v1_x1_lumen_startup.research_targets.x1_per_active_sibling_lane.journey_phase_reflections}\`
+- Blocker retry minimum sessions before pause: \`${current.v553_v1_x1_lumen_startup.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Blocker retry web-search reflections: \`${current.v553_v1_x1_lumen_startup.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Blocker retry Journey/phase reflections: \`${current.v553_v1_x1_lumen_startup.blocker_retry_standard.journey_phase_reflections_per_retry}\`
 - Lumen handoff: \`${current.v553_v1_x1_lumen_startup.handoff_message_status}\`
 
 ## Current Lookup Files
@@ -794,6 +840,7 @@ Next x1 lane after x2: ${beacon.next_x1_lane_after_x2}
 - Active lanes: \`${beacon.v553_v1_x1_lumen_startup.active_lanes.join(", ")}\`
 - Web search seed rows: \`${beacon.v553_v1_x1_lumen_startup.web_search_seed_rows}\`
 - Journey/phase reflection seed rows: \`${beacon.v553_v1_x1_lumen_startup.journey_phase_reflection_seed_rows}\`
+- Blocker retry minimum sessions before pause: \`${beacon.v553_v1_x1_lumen_startup.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
 - Lumen handoff: \`${beacon.v553_v1_x1_lumen_startup.handoff_message_status}\`
 
 ## Lookup Files

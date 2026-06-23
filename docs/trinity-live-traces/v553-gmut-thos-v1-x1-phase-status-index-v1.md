@@ -24,6 +24,14 @@ Status: `PASS_V553_V1_X1_STATUS_INDEX_READY`
 - Public web search seed rows: `25`
 - Journey/phase reflection seed rows: `25`
 
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: `3`
+- Recent sessions or receipts reflected per retry: `10`
+- Web-search reflections per retry: `20`
+- Journey/phase-document reflections per retry: `20`
+- Never close active sibling lane: `true`
+
 ## Lookup Files
 
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-context-v1.json
@@ -32,6 +40,8 @@ Status: `PASS_V553_V1_X1_STATUS_INDEX_READY`
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-handoff-message-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-journey-phase-reflection-seed-v1.json

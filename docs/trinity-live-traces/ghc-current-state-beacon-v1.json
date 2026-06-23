@@ -1,7 +1,7 @@
 {
   "schema": "ghc.current_state.beacon.v1",
-  "status": "V553_V1_X1_ACTIVE_PRODUCTIVE_CADENCE_READY",
-  "generated_utc": "2026-06-23T12:50:10.834Z",
+  "status": "V553_V1_X1_ACTIVE_BLOCKER_RETRY_STANDARD_READY",
+  "generated_utc": "2026-06-23T13:00:30.521Z",
   "primary_branch": "codex/GHC-Family/beyonder-shared-omega-line-mini-2",
   "archive_branch": "codex/GHC-Family/beyonder-shared-omega-line",
   "current_active_phase": "v553-gmut-thos-v1-x1",
@@ -98,7 +98,9 @@
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-startup-snapshot-v1.json",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-startup-safe-runner-orchestrator-compact-pause-startup-snapshot-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json",
-    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md"
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md",
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json",
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md"
   ],
   "publication_boundary": {
     "private_lane_body_content_published": false,
@@ -172,6 +174,15 @@
         "journey_phase_reflections": 50
       }
     },
+    "blocker_retry_standard": {
+      "minimum_retry_sessions_before_pause": 3,
+      "recent_session_reflections_per_retry": 10,
+      "web_search_reflections_per_retry": 20,
+      "journey_phase_reflections_per_retry": 20,
+      "never_close_active_sibling_lane": true,
+      "productive_five_minute_waits_required": true,
+      "pause_policy": "If Hamish pauses/stops, a compact event happens, or the next action crosses a safety/exact-approval gate, publish an active/open handoff rather than declaring the sibling lane or phase closed."
+    },
     "x2_role": "safe-now build, run, test, install, use, validate, publish",
     "next_x1_lane_after_x2": "v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects",
     "five_minute_productive_cadence": {
@@ -184,7 +195,8 @@
         "cleanup_and_refinement",
         "skill_and_control_growth",
         "coding_and_multi_agent_orchestration",
-        "validation_and_publication_hygiene"
+        "validation_and_publication_hygiene",
+        "blocker_retry_research_and_improvement"
       ],
       "harvest_rule": "finish the current safe unit, then harvest sibling status at the next natural safe pause"
     }
@@ -193,7 +205,7 @@
     "status": "PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED",
     "five_minute_mark_is_check_opportunity": true,
     "safe_unit_may_run_past_checkpoint": true,
-    "wait_work_queue_count": 8,
+    "wait_work_queue_count": 9,
     "wait_work_lanes": [
       "research_and_reflection",
       "safe_eureka_tasks",
@@ -202,9 +214,30 @@
       "skill_and_control_growth",
       "coding_and_multi_agent_orchestration",
       "browser_handoff_harvest",
+      "blocker_retry_research_and_improvement",
       "validation_and_publication_hygiene"
     ],
-    "next_harvest_rule": "If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause."
+    "next_harvest_rule": "If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause; do not close the session while a sibling lane is active.",
+    "blocker_retry_standard": {
+      "minimum_retry_sessions_before_pause": 3,
+      "recent_session_reflections_per_retry": 10,
+      "web_search_reflections_per_retry": 20,
+      "journey_phase_reflections_per_retry": 20,
+      "applies_to": [
+        "sibling_messaging_blockers",
+        "sibling_harvest_blockers",
+        "browser_handoff_blockers",
+        "app_lane_runner_blockers",
+        "strict_cli_lane_blockers",
+        "core_system_blockers"
+      ],
+      "pause_exceptions": [
+        "Hamish explicit pause/stop",
+        "safety boundary",
+        "fresh exact approval required",
+        "app compact or interruption"
+      ]
+    }
   },
   "v553_v1_x1_lumen_startup": {
     "status": "PASS_V553_V1_X1_LUMEN_STARTUP_READY",
@@ -231,6 +264,14 @@
         "journey_phase_reflections": 50
       }
     },
+    "blocker_retry_standard": {
+      "minimum_retry_sessions_before_pause": 3,
+      "recent_session_reflections_per_retry": 10,
+      "web_search_reflections_per_retry": 20,
+      "journey_phase_reflections_per_retry": 20,
+      "productive_five_minute_waits_required": true,
+      "never_close_active_sibling_lane": true
+    },
     "handoff_message_status": "browser_send_submitted_response_active",
     "web_search_seed_rows": 25,
     "journey_phase_reflection_seed_rows": 25
@@ -243,6 +284,60 @@
       "composer_cleared": true,
       "response_control_visible_after_send": true,
       "verification": "composer_cleared_and_response_control_visible"
+    }
+  },
+  "blocker_retry_standard": {
+    "status": "PASS_BLOCKER_RETRY_STANDARD_RECORDED",
+    "mandatory_sibling_completion": {
+      "never_close_session_while_sibling_active": true,
+      "completion_states": [
+        "completed_ready_for_harvest",
+        "completion_gate_passed"
+      ],
+      "noncompletion_states": [
+        "active_fresh",
+        "active_stale",
+        "retrying",
+        "formal_open_gap"
+      ],
+      "pause_policy": "If Hamish explicitly pauses/stops, a compact event happens, or an exact/safety gate blocks continuation, publish an active/open handoff rather than a closed session."
+    },
+    "blocker_retry_protocol": {
+      "minimum_retry_sessions_before_pause": 3,
+      "recent_session_reflections_per_retry": 10,
+      "web_search_reflections_per_retry": 20,
+      "journey_phase_reflections_per_retry": 20,
+      "productive_five_minute_waits_required": true,
+      "retry_receipt_required": true,
+      "applies_to": [
+        "sibling_messaging_blockers",
+        "sibling_harvest_blockers",
+        "browser_handoff_blockers",
+        "app_lane_runner_blockers",
+        "strict_cli_lane_blockers",
+        "core_system_blockers"
+      ],
+      "pause_exceptions": [
+        "Hamish explicit pause/stop",
+        "safety boundary",
+        "fresh exact approval required",
+        "app compact or interruption"
+      ]
+    },
+    "productive_wait_standard": {
+      "five_minute_marks_are_checkpoints_not_hard_stops": true,
+      "safe_units_may_run_past_checkpoint": true,
+      "improvement_lanes": [
+        "research_and_reflection",
+        "safe_eureka_tasks",
+        "approval_packet_work",
+        "cleanup_and_refinement",
+        "skill_and_control_growth",
+        "coding_and_multi_agent_orchestration",
+        "browser_handoff_harvest",
+        "blocker_retry_research_and_improvement",
+        "validation_and_publication_hygiene"
+      ]
     }
   }
 }

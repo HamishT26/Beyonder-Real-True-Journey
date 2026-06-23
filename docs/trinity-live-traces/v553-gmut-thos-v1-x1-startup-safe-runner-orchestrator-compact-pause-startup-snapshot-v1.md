@@ -1,7 +1,7 @@
 # v553-gmut-thos-v1-x1 Startup Context Updater
 
-Generated UTC: `2026-06-23T12:50:09Z`
-Generated NZ: `2026-06-24T00:50:09+12:00`
+Generated UTC: `2026-06-23T13:00:29Z`
+Generated NZ: `2026-06-24T01:00:29+12:00`
 
 Status: `PASS_STARTUP_CONTEXT_UPDATED`
 Event: `compact-pause`
@@ -21,6 +21,10 @@ Agent: `Aevren Vale`
 - no new agents without explicit request: `true`
 - watcher-start is completion proof: `false`
 - main-thread ChatGPT Browser handoff supported when Hamish explicitly asks: `true`
+- never close while sibling active: `true`
+- blocker retry minimum sessions before pause: `3`
+- blocker retry web-search reflections per retry: `20`
+- blocker retry Journey/phase reflections per retry: `20`
 - proof/canon/legal/deployment gates remain open: `true`
 
 ## Boundary

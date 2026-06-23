@@ -66,6 +66,23 @@ const receipt = {
     harvest_status_at_next_natural_safe_pause: true,
     do_not_babysit_background_lanes: true,
     do_not_poll_early_repeatedly: true,
+    never_close_session_while_sibling_active: true,
+    blocker_requires_three_retry_sessions_before_pause: true,
+  },
+  blocker_retry_standard: {
+    minimum_retry_sessions_before_pause: 3,
+    recent_session_reflections_per_retry: 10,
+    web_search_reflections_per_retry: 20,
+    journey_phase_reflections_per_retry: 20,
+    applies_to: [
+      "sibling_messaging_blockers",
+      "sibling_harvest_blockers",
+      "browser_handoff_blockers",
+      "app_lane_runner_blockers",
+      "strict_cli_lane_blockers",
+      "core_system_blockers",
+    ],
+    pause_exceptions: ["Hamish explicit pause/stop", "safety boundary", "fresh exact approval required", "app compact or interruption"],
   },
   status_classes: ["active_fresh", "active_stale", "completed_ready_for_harvest", "open_gap"],
   wait_work_queues: [
@@ -133,6 +150,16 @@ const receipt = {
       capability_gain: "keeps live ChatGPT sibling messaging aligned with artifacts, current-state, and compact-pause recovery",
     },
     {
+      lane: "blocker_retry_research_and_improvement",
+      safe_tasks: [
+        "When messaging, harvesting, or a core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops or a safety/exact-approval gate blocks the next step.",
+        "For each retry session, reflect on the 10 most recent relevant sessions or receipts.",
+        "For each retry session, run or queue at least 20 web-search reflections and 20 Journey/phase-document reflections tied to the blocker.",
+        "Continue safe five-minute improvement work between retries and publish compact retry receipts with route tried, counts, safe changes, remaining gap, and next retry/harvest point.",
+      ],
+      capability_gain: "turns blockers into structured improvement cycles instead of early stops",
+    },
+    {
       lane: "validation_and_publication_hygiene",
       safe_tasks: [
         "Run JSON parse checks, current-state guards, diff checks, privacy scans, and remote/local verification.",
@@ -143,7 +170,7 @@ const receipt = {
     },
   ],
   next_harvest_rule:
-    "If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause.",
+    "If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause; do not close the session while a sibling lane is active.",
   publication_boundary: publicationBoundary,
   claim_boundary: claimBoundary,
 };
@@ -181,6 +208,7 @@ function refreshBeacons(data) {
     wait_work_queue_count: data.wait_work_queues.length,
     wait_work_lanes: data.wait_work_queues.map((queue) => queue.lane),
     next_harvest_rule: data.next_harvest_rule,
+    blocker_retry_standard: data.blocker_retry_standard,
   };
   const common = {
     generated_utc: generatedUtc,
@@ -241,6 +269,14 @@ Status: \`${data.overall_status}\`
 - Safe unit may run past checkpoint: \`${data.cadence_policy.safe_unit_may_run_past_checkpoint}\`
 - Harvest at next natural safe pause: \`${data.cadence_policy.harvest_status_at_next_natural_safe_pause}\`
 - Do not babysit background lanes: \`${data.cadence_policy.do_not_babysit_background_lanes}\`
+- Never close while sibling active: \`${data.cadence_policy.never_close_session_while_sibling_active}\`
+
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: \`${data.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Recent session reflections per retry: \`${data.blocker_retry_standard.recent_session_reflections_per_retry}\`
+- Web-search reflections per retry: \`${data.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Journey/phase-document reflections per retry: \`${data.blocker_retry_standard.journey_phase_reflections_per_retry}\`
 
 ## Wait Work Queues
 
@@ -280,6 +316,9 @@ Next x1 lane after x2: ${currentState.next_x1_lane_after_x2}
 - Wait work queues: \`${currentState.five_minute_productive_cadence.wait_work_queue_count}\`
 - Wait work lanes: \`${currentState.five_minute_productive_cadence.wait_work_lanes.join(", ")}\`
 - Harvest rule: ${currentState.five_minute_productive_cadence.next_harvest_rule}
+- Blocker retry minimum sessions before pause: \`${currentState.five_minute_productive_cadence.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Blocker retry web-search reflections: \`${currentState.five_minute_productive_cadence.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Blocker retry Journey/phase reflections: \`${currentState.five_minute_productive_cadence.blocker_retry_standard.journey_phase_reflections_per_retry}\`
 
 ## Current Lookup Files
 

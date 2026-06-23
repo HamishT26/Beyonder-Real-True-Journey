@@ -1,7 +1,7 @@
 {
   "artifact_type": "ghc_v553_v1_x1_phase_status_index",
-  "generated_utc": "2026-06-23T12:50:02.414Z",
-  "generated_nz": "2026-06-24T00:50:02+12:00",
+  "generated_utc": "2026-06-23T13:00:24.968Z",
+  "generated_nz": "2026-06-24T01:00:24+12:00",
   "phase_slug": "v553-gmut-thos-v1-x1",
   "overall_status": "PASS_V553_V1_X1_STATUS_INDEX_READY",
   "active_phase": "v553-gmut-thos-v1-x1",
@@ -17,6 +17,8 @@
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-handoff-message-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md",
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json",
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.json",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-journey-phase-reflection-seed-v1.json",
@@ -56,6 +58,23 @@
   "research_counts": {
     "public_web_search_seed_rows": 25,
     "journey_phase_reflection_seed_rows": 25
+  },
+  "blocker_retry_standard": {
+    "minimum_retry_sessions_before_pause": 3,
+    "recent_session_reflections_per_retry": 10,
+    "web_search_reflections_per_retry": 20,
+    "journey_phase_reflections_per_retry": 20,
+    "productive_five_minute_waits_required": true,
+    "never_close_active_sibling_lane": true,
+    "applies_to": [
+      "sibling_messaging_blockers",
+      "sibling_harvest_blockers",
+      "browser_handoff_blockers",
+      "app_lane_runner_blockers",
+      "strict_cli_lane_blockers",
+      "core_system_blockers"
+    ],
+    "pause_policy": "Run three structured retry sessions before pausing unless Hamish explicitly stops the work or the next step crosses a safety/exact-approval gate; if forced to pause, publish active/open status rather than closed."
   },
   "open_boundaries": {
     "gmut_empirical_closure": "open_not_claimed",

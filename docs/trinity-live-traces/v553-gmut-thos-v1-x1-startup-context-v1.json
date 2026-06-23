@@ -1,7 +1,7 @@
 {
   "artifact_type": "ghc_v553_v1_x1_startup_context",
-  "generated_utc": "2026-06-23T12:50:02.414Z",
-  "generated_nz": "2026-06-24T00:50:02+12:00",
+  "generated_utc": "2026-06-23T13:00:24.968Z",
+  "generated_nz": "2026-06-24T01:00:24+12:00",
   "phase_slug": "v553-gmut-thos-v1-x1",
   "overall_status": "PASS_V553_V1_X1_LUMEN_STARTUP_READY",
   "previous_phase": "v552-gmut-thos-v88-v8-x2",
@@ -37,6 +37,23 @@
       "journey_phase_reflections": 50
     }
   },
+  "blocker_retry_standard": {
+    "minimum_retry_sessions_before_pause": 3,
+    "recent_session_reflections_per_retry": 10,
+    "web_search_reflections_per_retry": 20,
+    "journey_phase_reflections_per_retry": 20,
+    "productive_five_minute_waits_required": true,
+    "never_close_active_sibling_lane": true,
+    "applies_to": [
+      "sibling_messaging_blockers",
+      "sibling_harvest_blockers",
+      "browser_handoff_blockers",
+      "app_lane_runner_blockers",
+      "strict_cli_lane_blockers",
+      "core_system_blockers"
+    ],
+    "pause_policy": "Run three structured retry sessions before pausing unless Hamish explicitly stops the work or the next step crosses a safety/exact-approval gate; if forced to pause, publish active/open status rather than closed."
+  },
   "continuity_changes_since_v7_x2": [
     "Twenty validated local skills and ten runners were promoted as the current continuity pack.",
     "Main orchestration, full-tools skill bank, compact-pause updater, web-reflection ledger, and safe-runner orchestrator skills are active.",
@@ -44,7 +61,8 @@
     "Five-minute waits are productive safe-work windows and may run past a checkpoint before status harvest.",
     "Recovered app-lane background runner remains mandatory for non-main-thread app siblings.",
     "Every active x1 sibling lane now targets 25 public web searches and 25 Journey/phase reflections when the phase asks for research-backed planning.",
-    "Aevren-only x2 phases keep the 50 web-search and 50 Journey/phase reflection target."
+    "Aevren-only x2 phases keep the 50 web-search and 50 Journey/phase reflection target.",
+    "Sibling lanes must not be declared closed while active; blockers require 3 retry sessions with 10 recent-session reflections, 20 web-search reflections, and 20 Journey/phase-document reflections per retry before pausing."
   ],
   "open_boundaries": {
     "gmut_empirical_closure": "open_not_claimed",
@@ -65,6 +83,8 @@
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-handoff-message-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md",
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json",
+    "docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.json",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-research-seed-manifest-v1.md",
     "docs/trinity-live-traces/v553-gmut-thos-v1-x1-journey-phase-reflection-seed-v1.json",

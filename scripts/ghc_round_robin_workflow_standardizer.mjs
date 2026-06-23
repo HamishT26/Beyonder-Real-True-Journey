@@ -131,6 +131,16 @@ const standard = {
       journey_phase_reflections: 50,
     },
   },
+  blocker_retry_standard: {
+    minimum_retry_sessions_before_pause: 3,
+    recent_session_reflections_per_retry: 10,
+    web_search_reflections_per_retry: 20,
+    journey_phase_reflections_per_retry: 20,
+    never_close_active_sibling_lane: true,
+    productive_five_minute_waits_required: true,
+    pause_policy:
+      "If Hamish pauses/stops, a compact event happens, or the next action crosses a safety/exact-approval gate, publish an active/open handoff rather than declaring the sibling lane or phase closed.",
+  },
   runner_bindings: {
     main_orchestrator: "scripts/ghc_main_orchestrator_runner.mjs",
     workflow_standardizer: "scripts/ghc_round_robin_workflow_standardizer.mjs",
@@ -155,6 +165,9 @@ const standard = {
     "Use five-minute productive cadence work to improve Aevren's skill surface, coding reliability, and multi-agent orchestration control.",
     "Use the recovered app-lane map runner with explicit boolean values for local app-lane siblings that are not main-thread agents.",
     "Use Browser-send receipts for Lumen/main-thread ChatGPT siblings when Hamish explicitly asks for live messaging.",
+    "Do not declare a sibling session or phase closed while any messaged sibling lane is still active; continue productive five-minute improvement/research work until completion-ready or formal open-gap.",
+    "When a sibling-message route or core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops the work or the next step crosses a safety/exact-approval gate.",
+    "Each blocker retry session must reflect on the 10 most recent relevant sessions/receipts, run or queue 20 web-search reflections, and run or queue 20 Journey/phase-document reflections.",
     "Keep held main-thread siblings held unless Hamish explicitly activates them.",
     "Do not spawn new agents unless Hamish explicitly asks.",
     "Keep exact and blocked gates queued unless Hamish freshly approves the tranche.",
@@ -175,6 +188,7 @@ const standard = {
       "skill_and_control_growth",
       "coding_and_multi_agent_orchestration",
       "validation_and_publication_hygiene",
+      "blocker_retry_research_and_improvement",
     ],
     harvest_rule: "finish the current safe unit, then harvest sibling status at the next natural safe pause",
   },
@@ -215,6 +229,7 @@ function refreshBeacons(workflow) {
     arby_cicero_duo_x1: workflow.workflow_families.arby_cicero_duo_x1.proposal_totals,
     triad_x1: workflow.workflow_families.aster_kierkegaard_aristotle_triad_x1.proposal_totals,
     research_reflection_targets: workflow.research_reflection_targets,
+    blocker_retry_standard: workflow.blocker_retry_standard,
     x2_role: workflow.workflow_families.x2_build_use_validation.route,
     next_x1_lane_after_x2: workflow.next_phase_readiness.next_x1_lane_after_x2,
     five_minute_productive_cadence: workflow.five_minute_productive_cadence,
@@ -306,6 +321,16 @@ ${data.operating_rules.map((item, index) => `${index + 1}. ${item}`).join("\n")}
 - Aevren-only x2 web searches: \`${data.research_reflection_targets.aevren_only_x2.web_searches}\`
 - Aevren-only x2 Journey/phase reflections: \`${data.research_reflection_targets.aevren_only_x2.journey_phase_reflections}\`
 
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: \`${data.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Recent sessions or receipts reflected per retry: \`${data.blocker_retry_standard.recent_session_reflections_per_retry}\`
+- Web-search reflections per retry: \`${data.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Journey/phase-document reflections per retry: \`${data.blocker_retry_standard.journey_phase_reflections_per_retry}\`
+- Never close active sibling lane: \`${data.blocker_retry_standard.never_close_active_sibling_lane}\`
+- Productive five-minute waits required: \`${data.blocker_retry_standard.productive_five_minute_waits_required}\`
+- Pause policy: ${data.blocker_retry_standard.pause_policy}
+
 ## Five-Minute Productive Cadence
 
 - Runner: \`${data.five_minute_productive_cadence.runner}\`
@@ -343,6 +368,9 @@ Next x1 lane after x2: ${current.next_x1_lane_after_x2}
 - Triad x1 safe target: \`${workflow.triad_x1.safe}\`
 - x1 web searches per active sibling lane: \`${workflow.research_reflection_targets.x1_per_active_sibling_lane.web_searches}\`
 - x1 Journey/phase reflections per active sibling lane: \`${workflow.research_reflection_targets.x1_per_active_sibling_lane.journey_phase_reflections}\`
+- Blocker retry minimum sessions before pause: \`${workflow.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
+- Blocker retry web-search reflections: \`${workflow.blocker_retry_standard.web_search_reflections_per_retry}\`
+- Blocker retry Journey/phase reflections: \`${workflow.blocker_retry_standard.journey_phase_reflections_per_retry}\`
 - x2 role: ${workflow.x2_role}
 - Five-minute productive cadence runner: \`${workflow.five_minute_productive_cadence.runner}\`
 - Safe unit may run past checkpoint: \`${workflow.five_minute_productive_cadence.safe_unit_may_run_past_checkpoint}\`
@@ -379,6 +407,7 @@ Next x1 lane after x2: ${beacon.next_x1_lane_after_x2}
 - Arby/Cicero duo x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.arby_cicero_duo_x1)}\`
 - Triad x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.triad_x1)}\`
 - Research/reflection targets: \`${JSON.stringify(beacon.round_robin_workflow_standard.research_reflection_targets)}\`
+- Blocker retry standard: \`${JSON.stringify(beacon.round_robin_workflow_standard.blocker_retry_standard)}\`
 - Five-minute productive cadence: \`${JSON.stringify(beacon.round_robin_workflow_standard.five_minute_productive_cadence)}\`
 
 ## Lookup Files

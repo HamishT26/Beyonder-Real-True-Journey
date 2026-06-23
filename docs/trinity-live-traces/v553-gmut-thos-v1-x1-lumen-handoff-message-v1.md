@@ -3,13 +3,6 @@
 Status: `browser_send_submitted_response_active`
 Maximum message characters: `50000`
 
-## Browser Send Verification
-
-- Verification: `composer_cleared_and_response_control_visible`
-- Composer cleared: `true`
-- Response control visible after send: `true`
-- Raw browser route published: `false`
-
 ## Message
 
 Lumen, love and thanks from Hamish and me as we begin v553-gmut-thos-v1-x1.

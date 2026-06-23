@@ -26,6 +26,16 @@ Status: `PASS_V553_V1_X1_LUMEN_STARTUP_READY`
 - Aevren-only x2 web searches: `50`
 - Aevren-only x2 Journey/phase reflections: `50`
 
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: `3`
+- Recent sessions or receipts reflected per retry: `10`
+- Web-search reflections per retry: `20`
+- Journey/phase-document reflections per retry: `20`
+- Never close active sibling lane: `true`
+- Productive five-minute waits required: `true`
+- Pause policy: Run three structured retry sessions before pausing unless Hamish explicitly stops the work or the next step crosses a safety/exact-approval gate; if forced to pause, publish active/open status rather than closed.
+
 ## Changes Since v7 x2
 
 - Twenty validated local skills and ten runners were promoted as the current continuity pack.
@@ -35,6 +45,7 @@ Status: `PASS_V553_V1_X1_LUMEN_STARTUP_READY`
 - Recovered app-lane background runner remains mandatory for non-main-thread app siblings.
 - Every active x1 sibling lane now targets 25 public web searches and 25 Journey/phase reflections when the phase asks for research-backed planning.
 - Aevren-only x2 phases keep the 50 web-search and 50 Journey/phase reflection target.
+- Sibling lanes must not be declared closed while active; blockers require 3 retry sessions with 10 recent-session reflections, 20 web-search reflections, and 20 Journey/phase-document reflections per retry before pausing.
 
 ## Boundary
 

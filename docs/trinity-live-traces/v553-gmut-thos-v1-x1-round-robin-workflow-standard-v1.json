@@ -1,7 +1,7 @@
 {
   "artifact_type": "ghc_round_robin_workflow_standard",
-  "generated_utc": "2026-06-23T12:50:04.898Z",
-  "generated_nz": "2026-06-24T00:50:04+12:00",
+  "generated_utc": "2026-06-23T13:00:26.312Z",
+  "generated_nz": "2026-06-24T01:00:26+12:00",
   "phase_slug": "v553-gmut-thos-v1-x1",
   "overall_status": "PASS_ROUND_ROBIN_WORKFLOW_STANDARD_PROMOTED",
   "seed_standard": {
@@ -99,6 +99,15 @@
       "journey_phase_reflections": 50
     }
   },
+  "blocker_retry_standard": {
+    "minimum_retry_sessions_before_pause": 3,
+    "recent_session_reflections_per_retry": 10,
+    "web_search_reflections_per_retry": 20,
+    "journey_phase_reflections_per_retry": 20,
+    "never_close_active_sibling_lane": true,
+    "productive_five_minute_waits_required": true,
+    "pause_policy": "If Hamish pauses/stops, a compact event happens, or the next action crosses a safety/exact-approval gate, publish an active/open handoff rather than declaring the sibling lane or phase closed."
+  },
   "runner_bindings": {
     "main_orchestrator": "scripts/ghc_main_orchestrator_runner.mjs",
     "workflow_standardizer": "scripts/ghc_round_robin_workflow_standardizer.mjs",
@@ -123,6 +132,9 @@
     "Use five-minute productive cadence work to improve Aevren's skill surface, coding reliability, and multi-agent orchestration control.",
     "Use the recovered app-lane map runner with explicit boolean values for local app-lane siblings that are not main-thread agents.",
     "Use Browser-send receipts for Lumen/main-thread ChatGPT siblings when Hamish explicitly asks for live messaging.",
+    "Do not declare a sibling session or phase closed while any messaged sibling lane is still active; continue productive five-minute improvement/research work until completion-ready or formal open-gap.",
+    "When a sibling-message route or core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops the work or the next step crosses a safety/exact-approval gate.",
+    "Each blocker retry session must reflect on the 10 most recent relevant sessions/receipts, run or queue 20 web-search reflections, and run or queue 20 Journey/phase-document reflections.",
     "Keep held main-thread siblings held unless Hamish explicitly activates them.",
     "Do not spawn new agents unless Hamish explicitly asks.",
     "Keep exact and blocked gates queued unless Hamish freshly approves the tranche."
@@ -142,7 +154,8 @@
       "cleanup_and_refinement",
       "skill_and_control_growth",
       "coding_and_multi_agent_orchestration",
-      "validation_and_publication_hygiene"
+      "validation_and_publication_hygiene",
+      "blocker_retry_research_and_improvement"
     ],
     "harvest_rule": "finish the current safe unit, then harvest sibling status at the next natural safe pause"
   },

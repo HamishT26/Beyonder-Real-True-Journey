@@ -9,6 +9,14 @@ Status: `PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED`
 - Safe unit may run past checkpoint: `true`
 - Harvest at next natural safe pause: `true`
 - Do not babysit background lanes: `true`
+- Never close while sibling active: `true`
+
+## Blocker Retry Standard
+
+- Minimum retry sessions before pause: `3`
+- Recent session reflections per retry: `10`
+- Web-search reflections per retry: `20`
+- Journey/phase-document reflections per retry: `20`
 
 ## Wait Work Queues
 
@@ -68,6 +76,15 @@ Capability gain: improves coding reliability and multi-agent lane coordination
 
 Capability gain: keeps live ChatGPT sibling messaging aligned with artifacts, current-state, and compact-pause recovery
 
+### blocker_retry_research_and_improvement
+
+- When messaging, harvesting, or a core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops or a safety/exact-approval gate blocks the next step.
+- For each retry session, reflect on the 10 most recent relevant sessions or receipts.
+- For each retry session, run or queue at least 20 web-search reflections and 20 Journey/phase-document reflections tied to the blocker.
+- Continue safe five-minute improvement work between retries and publish compact retry receipts with route tried, counts, safe changes, remaining gap, and next retry/harvest point.
+
+Capability gain: turns blockers into structured improvement cycles instead of early stops
+
 ### validation_and_publication_hygiene
 
 - Run JSON parse checks, current-state guards, diff checks, privacy scans, and remote/local verification.
@@ -78,7 +95,7 @@ Capability gain: improves publishable truth and reduces overclaim risk
 
 ## Harvest Rule
 
-If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause.
+If the safe unit runs past a five-minute checkpoint, finish that unit, then harvest sibling lane status at the next natural safe pause; do not close the session while a sibling lane is active.
 
 ## Boundary
 

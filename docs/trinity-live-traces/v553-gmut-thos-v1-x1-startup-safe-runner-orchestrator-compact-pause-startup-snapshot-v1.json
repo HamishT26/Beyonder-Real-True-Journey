@@ -1,7 +1,7 @@
 {
   "artifact_type": "ghc_phase_startup_context_updater",
-  "generated_utc": "2026-06-23T12:50:09Z",
-  "generated_nz": "2026-06-24T00:50:09+12:00",
+  "generated_utc": "2026-06-23T13:00:29Z",
+  "generated_nz": "2026-06-24T01:00:29+12:00",
   "phase_slug": "v553-gmut-thos-v1-x1",
   "event": "compact-pause",
   "agent": "Aevren Vale",
@@ -9,8 +9,8 @@
   "timestamp_flow": {
     "recorded_agent_start": false,
     "recorded_compact_pause": true,
-    "utc": "2026-06-23T12:50:09Z",
-    "nz": "2026-06-24T00:50:09+12:00"
+    "utc": "2026-06-23T13:00:29Z",
+    "nz": "2026-06-24T01:00:29+12:00"
   },
   "current_state_snapshot": {
     "current_active_phase": "v553-gmut-thos-v1-x1",
@@ -48,6 +48,27 @@
     "no_new_agents_without_explicit_request": true,
     "watcher_start_is_completion_proof": false,
     "main_thread_chatgpt_browser_handoff_supported": true,
+    "never_close_session_while_sibling_active": true,
+    "blocker_retry_standard": {
+      "minimum_retry_sessions_before_pause": 3,
+      "recent_session_reflections_per_retry": 10,
+      "web_search_reflections_per_retry": 20,
+      "journey_phase_reflections_per_retry": 20,
+      "applies_to": [
+        "sibling_messaging_blockers",
+        "sibling_harvest_blockers",
+        "browser_handoff_blockers",
+        "app_lane_runner_blockers",
+        "strict_cli_lane_blockers",
+        "core_system_blockers"
+      ],
+      "pause_exceptions": [
+        "Hamish explicit pause/stop",
+        "safety boundary",
+        "fresh exact approval required",
+        "app compact or interruption"
+      ]
+    },
     "proof_and_deployment_gates_remain_open": true
   },
   "lookup_statuses": [
