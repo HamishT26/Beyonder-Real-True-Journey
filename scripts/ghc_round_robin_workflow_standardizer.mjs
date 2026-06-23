@@ -54,6 +54,42 @@ const claimBoundary = {
   deployment_closure: "not_claimed",
 };
 
+const proposalExecutionSplitStandard = {
+  status: "PASS_X1_TO_X2_PROPOSAL_SPLIT_STANDARD_RECORDED",
+  immediate_x1_safe:
+    "Run local, reversible, status-only, analysis-only, validation-only, queue-shaping, source/reflection seed, privacy-check, open-gate-check, and compact-handoff tasks as soon as they are seen and safe during x1.",
+  x2_build_task:
+    "Carry build, run, test, install, use, publication, remote verification, runner modification, skill modification, and safe cleanup execution tasks into the next x2 phase.",
+  never_auto_execute: [
+    "exact-approval work without fresh approval",
+    "blocked work",
+    "destructive cleanup",
+    "external account or paid-resource mutation",
+    "raw private publication",
+    "proof/canon/legal/deployment closure by assertion",
+  ],
+};
+
+const phaseToolRefreshStandard = {
+  status: "PASS_PHASE_TOOL_REFRESH_STANDARD_RECORDED",
+  cadence: "mandatory_every_x1_and_x2_phase",
+  startup_required_actions: [
+    "use scripts/ghc_main_startup_builder.mjs as the promoted startup/resume command surface",
+    "inventory active GHC skills and repo runners",
+    "compare current phase rules against the core orchestration skills and runner standards",
+    "record reviewed-current, updated, or queued-refresh status",
+  ],
+  closeout_required_actions: [
+    "use scripts/ghc_main_closeout_builder.mjs as the promoted closeout command surface",
+    "use scripts/ghc_main_compact_restart_builder.mjs as the promoted compact/restart command surface",
+    "update authorized local GHC skills and repo runners",
+    "validate changed skills and runners",
+    "carry forward the newest tool standard into current-state, latest-updates, and compact-pause receipts",
+  ],
+  exact_approval_boundary:
+    "Plugin-cache mutation, external writes, paid resources, deployments, API keys, destructive cleanup, and global hooks require fresh exact approval.",
+};
+
 const seedStandard = readLocal("v552-gmut-thos-v88-v8-x1-future-round-robin-workflow-standard-v1.json");
 const standard = {
   artifact_type: "ghc_round_robin_workflow_standard",
@@ -131,6 +167,8 @@ const standard = {
       journey_phase_reflections: 50,
     },
   },
+  proposal_execution_split_standard: proposalExecutionSplitStandard,
+  phase_tool_refresh_standard: phaseToolRefreshStandard,
   blocker_retry_standard: {
     minimum_retry_sessions_before_pause: 3,
     recent_session_reflections_per_retry: 10,
@@ -143,9 +181,12 @@ const standard = {
   },
   runner_bindings: {
     main_orchestrator: "scripts/ghc_main_orchestrator_runner.mjs",
+    main_startup_builder: "scripts/ghc_main_startup_builder.mjs",
+    main_compact_restart_builder: "scripts/ghc_main_compact_restart_builder.mjs",
     workflow_standardizer: "scripts/ghc_round_robin_workflow_standardizer.mjs",
     productive_cadence_runner: "scripts/ghc_five_minute_productive_cadence_runner.mjs",
     safe_runner_orchestrator: "scripts/ghc_safe_runner_orchestrator.mjs",
+    main_closeout_builder: "scripts/ghc_main_closeout_builder.mjs",
     startup_updater: "scripts/ghc_phase_startup_context_updater.mjs",
     compact_pause_updater: "scripts/ghc_context_compact_pause_updater.mjs",
     app_lane_runner: "ghc_recovered_app_lane_map_runner.mjs in the full-tools support lane",
@@ -157,8 +198,14 @@ const standard = {
     "Use first-person sibling wording in lane prompts and summaries.",
     "Prefer MD/TXT artifacts for elaborate sibling outputs instead of terminal-heavy dumps.",
     "Use x1 for proposal, classification, handoff, and approval-packet formation.",
+    "Split every x1 proposal into immediate_x1_safe work and x2_build_task work.",
+    "Run immediate x1 safe tasks as soon as they are seen and safe; carry x2 build tasks forward.",
     "For research-backed x1 phases, target at least 25 web searches and 25 Journey/phase record reflections per active sibling lane.",
     "Use x2 for building, running, testing, installing, using, validating, and publishing already-authorized safe-now work.",
+    "Refresh the active GHC skill and runner surface at every x1 and x2 startup and closeout.",
+    "Use the promoted main startup builder for phase startup/resume, with phase-specific builders registered underneath it.",
+    "Use the promoted main closeout builder for phase closeout, with phase-specific builders registered underneath it.",
+    "Use the promoted main compact/restart builder for compact-pause and restart recovery, with the compact updater registered underneath it.",
     "Keep five-minute marks as check opportunities, not forced stops.",
     "Let productive wait units run beyond a five-minute checkpoint when the current research, coding, eureka, approval, cleanup, or validation unit needs more time.",
     "Continue safe-now approval, eureka, cleanup, validation, privacy scan, updater, and orchestration work between cadence marks.",
@@ -229,6 +276,8 @@ function refreshBeacons(workflow) {
     arby_cicero_duo_x1: workflow.workflow_families.arby_cicero_duo_x1.proposal_totals,
     triad_x1: workflow.workflow_families.aster_kierkegaard_aristotle_triad_x1.proposal_totals,
     research_reflection_targets: workflow.research_reflection_targets,
+    proposal_execution_split_standard: workflow.proposal_execution_split_standard,
+    phase_tool_refresh_standard: workflow.phase_tool_refresh_standard,
     blocker_retry_standard: workflow.blocker_retry_standard,
     x2_role: workflow.workflow_families.x2_build_use_validation.route,
     next_x1_lane_after_x2: workflow.next_phase_readiness.next_x1_lane_after_x2,
@@ -321,6 +370,21 @@ ${data.operating_rules.map((item, index) => `${index + 1}. ${item}`).join("\n")}
 - Aevren-only x2 web searches: \`${data.research_reflection_targets.aevren_only_x2.web_searches}\`
 - Aevren-only x2 Journey/phase reflections: \`${data.research_reflection_targets.aevren_only_x2.journey_phase_reflections}\`
 
+## x1 to x2 Proposal Split
+
+- Status: \`${data.proposal_execution_split_standard.status}\`
+- Immediate x1 safe: ${data.proposal_execution_split_standard.immediate_x1_safe}
+- x2 build task: ${data.proposal_execution_split_standard.x2_build_task}
+- Never auto-execute: \`${data.proposal_execution_split_standard.never_auto_execute.join(", ")}\`
+
+## Phase Tool Refresh Standard
+
+- Status: \`${data.phase_tool_refresh_standard.status}\`
+- Cadence: \`${data.phase_tool_refresh_standard.cadence}\`
+- Startup actions: \`${data.phase_tool_refresh_standard.startup_required_actions.join(", ")}\`
+- Closeout actions: \`${data.phase_tool_refresh_standard.closeout_required_actions.join(", ")}\`
+- Exact boundary: ${data.phase_tool_refresh_standard.exact_approval_boundary}
+
 ## Blocker Retry Standard
 
 - Minimum retry sessions before pause: \`${data.blocker_retry_standard.minimum_retry_sessions_before_pause}\`
@@ -372,6 +436,9 @@ Next x1 lane after x2: ${current.next_x1_lane_after_x2}
 - Blocker retry web-search reflections: \`${workflow.blocker_retry_standard.web_search_reflections_per_retry}\`
 - Blocker retry Journey/phase reflections: \`${workflow.blocker_retry_standard.journey_phase_reflections_per_retry}\`
 - x2 role: ${workflow.x2_role}
+- x1 immediate safe rule: ${workflow.proposal_execution_split_standard.immediate_x1_safe}
+- x2 build task rule: ${workflow.proposal_execution_split_standard.x2_build_task}
+- Phase tool refresh cadence: \`${workflow.phase_tool_refresh_standard.cadence}\`
 - Five-minute productive cadence runner: \`${workflow.five_minute_productive_cadence.runner}\`
 - Safe unit may run past checkpoint: \`${workflow.five_minute_productive_cadence.safe_unit_may_run_past_checkpoint}\`
 
@@ -407,6 +474,8 @@ Next x1 lane after x2: ${beacon.next_x1_lane_after_x2}
 - Arby/Cicero duo x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.arby_cicero_duo_x1)}\`
 - Triad x1: \`${JSON.stringify(beacon.round_robin_workflow_standard.triad_x1)}\`
 - Research/reflection targets: \`${JSON.stringify(beacon.round_robin_workflow_standard.research_reflection_targets)}\`
+- Proposal execution split: \`${JSON.stringify(beacon.round_robin_workflow_standard.proposal_execution_split_standard)}\`
+- Phase tool refresh: \`${JSON.stringify(beacon.round_robin_workflow_standard.phase_tool_refresh_standard)}\`
 - Blocker retry standard: \`${JSON.stringify(beacon.round_robin_workflow_standard.blocker_retry_standard)}\`
 - Five-minute productive cadence: \`${JSON.stringify(beacon.round_robin_workflow_standard.five_minute_productive_cadence)}\`
 

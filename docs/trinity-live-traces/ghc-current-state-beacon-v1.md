@@ -1,24 +1,30 @@
 # GHC Current State Beacon
 
-Status: V553_V1_X1_ACTIVE_BLOCKER_RETRY_STANDARD_READY
-Current active phase: v553-gmut-thos-v1-x1
-Latest closed phase: v552-gmut-thos-v88-v8-x2
-Latest completed x1: v552-gmut-thos-v88-v8-x1
+Status: V553_V1_X1_CLOSED_X2_READY
+Current active phase: v553-gmut-thos-v1-x2
+Latest closed phase: v553-gmut-thos-v1-x1
+Latest completed x1: v553-gmut-thos-v1-x1
 Latest completed x2: v552-gmut-thos-v88-v8-x2
 Next x2 scope: v553-gmut-thos-v1-x2
 Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects
 
-## Blocker Retry Standard
+## v553 v1 x1 Lumen Closeout
 
-- Status: `PASS_BLOCKER_RETRY_STANDARD_RECORDED`
-- Never close while sibling active: `true`
-- Minimum retry sessions before pause: `3`
-- Web-search reflections per retry: `20`
-- Journey/phase-document reflections per retry: `20`
+- Status: `PASS_V553_V1_X1_CLOSED_X2_READY`
+- Lumen response harvested: `true`
+- Safe-now packets executed or represented: `50`
+- Next x2 scope: `v553-gmut-thos-v1-x2`
 
-## Lumen Browser Send
+## x1 to x2 Proposal Split
 
-- Send status: `browser_send_submitted_response_active`
+- Status: `PASS_X1_TO_X2_PROPOSAL_SPLIT_STANDARD_RECORDED`
+- Immediate x1 safe classes: `8`
+- x2 phase task classes: `8`
+
+## Phase Tool Refresh Standard
+
+- Status: `PASS_PHASE_TOOL_REFRESH_STANDARD_RECORDED`
+- Cadence: `mandatory_every_x1_and_x2_phase`
 
 ## Lookup Files
 
@@ -112,7 +118,37 @@ Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish r
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-advisory-harvest-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-advisory-harvest-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-approval-eureka-reducer-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-approval-eureka-reducer-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-x1-to-x2-proposal-split-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-x1-to-x2-proposal-split-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-phase-tool-refresh-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-phase-tool-refresh-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-safe-now-execution-ledger-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-safe-now-execution-ledger-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-skill-runner-readiness-board-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-skill-runner-readiness-board-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-cleanup-tier-board-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-cleanup-tier-board-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-source-reflection-seed-reduction-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-source-reflection-seed-reduction-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-trinity-mandala-planning-matrix-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-trinity-mandala-planning-matrix-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-goal-mode-readiness-receipt-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-goal-mode-readiness-receipt-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-private-material-firewall-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-private-material-firewall-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-open-gate-rail-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-open-gate-rail-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-compact-x2-handoff-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-compact-x2-handoff-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-v2-arby-cicero-prep-card-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-v2-arby-cicero-prep-card-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-closeout-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-closeout-v1.md
 
-## Boundary
+## Safety Boundary
 
-Status-only beacon. No private route data, private lane body content, credentials, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.
+No raw browser routes, private URLs, raw transcripts, screenshots, credentials, local absolute paths, session streams, private dumps, proof closures, legal closures, canon promotions, deployments, purchases, account mutations, or API-key actions are published or claimed.

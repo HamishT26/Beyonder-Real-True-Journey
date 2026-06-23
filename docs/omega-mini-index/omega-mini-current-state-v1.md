@@ -1,29 +1,37 @@
 # Omega-Mini Current State
 
-Status: V553_V1_X1_ACTIVE_BLOCKER_RETRY_STANDARD_READY
-Current active phase: v553-gmut-thos-v1-x1
-Latest closed phase: v552-gmut-thos-v88-v8-x2
-Latest completed x1: v552-gmut-thos-v88-v8-x1
+Status: V553_V1_X1_CLOSED_X2_READY
+Current active phase: v553-gmut-thos-v1-x2
+Latest closed phase: v553-gmut-thos-v1-x1
+Latest completed x1: v553-gmut-thos-v1-x1
 Latest completed x2: v552-gmut-thos-v88-v8-x2
+Current lanes: v553-v1-x2-aevren-only-ready; v553-v1-x2-reducer-and-readiness; approval-eureka-queue-reduction-ready; skill-runner-readiness-reduction-ready; cleanup-tier-reduction-ready; trinity-mandala-planning-ready; arby-cicero-v2-x1-prep-ready
 Next x2 scope: v553-gmut-thos-v1-x2
 Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects
 
-## Blocker Retry Standard
+## v553 v1 x1 Lumen Closeout
 
-- Status: `PASS_BLOCKER_RETRY_STANDARD_RECORDED`
-- Never close while sibling active: `true`
-- Minimum retry sessions before pause: `3`
-- Recent sessions or receipts reflected per retry: `10`
-- Web-search reflections per retry: `20`
-- Journey/phase-document reflections per retry: `20`
-- Productive five-minute waits required: `true`
+- Status: `PASS_V553_V1_X1_CLOSED_X2_READY`
+- Lumen response harvested: `true`
+- Safe-now packets executed or represented: `50`
+- Immediate x1 safe task classes: `8`
+- x2 phase task classes: `8`
+- Candidate packets queued: `30`
+- Exact packets queued: `20`
+- Blocked packets kept open: `10`
+- Next x2 scope: `v553-gmut-thos-v1-x2`
 
-## v553 v1 x1 Lumen Startup
+## Lumen Browser Send
 
-- Lumen handoff: `browser_send_submitted_response_active`
-- Lumen browser send: `browser_send_submitted_response_active`
-- Safe packets target: `50`
-- x1 web searches per active lane: `25`
+- Status: `PASS_LUMEN_RESPONSE_COMPLETED_HARVESTED`
+- Send status: `browser_response_completed_harvested`
+- Raw chat transcript published: `false`
+- Raw browser route published: `false`
+
+## Phase Tool Refresh Standard
+
+- Status: `PASS_PHASE_TOOL_REFRESH_STANDARD_RECORDED`
+- Cadence: `mandatory_every_x1_and_x2_phase`
 
 ## Current Lookup Files
 
@@ -117,9 +125,45 @@ Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish r
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v1-x1-blocker-retry-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-advisory-harvest-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-lumen-advisory-harvest-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-approval-eureka-reducer-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-approval-eureka-reducer-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-x1-to-x2-proposal-split-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-x1-to-x2-proposal-split-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-phase-tool-refresh-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-phase-tool-refresh-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-safe-now-execution-ledger-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-safe-now-execution-ledger-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-skill-runner-readiness-board-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-skill-runner-readiness-board-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-cleanup-tier-board-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-cleanup-tier-board-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-source-reflection-seed-reduction-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-source-reflection-seed-reduction-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-trinity-mandala-planning-matrix-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-trinity-mandala-planning-matrix-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-goal-mode-readiness-receipt-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-goal-mode-readiness-receipt-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-private-material-firewall-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-private-material-firewall-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-open-gate-rail-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-open-gate-rail-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-compact-x2-handoff-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-compact-x2-handoff-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-v2-arby-cicero-prep-card-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-v2-arby-cicero-prep-card-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-closeout-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v1-x1-closeout-v1.md
 
 ## Latest Action Summary
 
+- Harvested Lumen's v553 v1 x1 response through the in-app browser without publishing raw chat transcript or browser route.
+- Ran the Lumen-recommended safe-now reducer/readiness package for v553 v1 x1 closeout.
+- Closed v553 v1 x1 as a Lumen-only advisory phase and prepared v553 v1 x2 as a reducer-and-readiness phase.
+- Recorded mandatory x1 proposal splitting into immediate x1 safe tasks and x2 build tasks.
+- Recorded mandatory every-phase skill and runner refresh checks for x1 and x2 phases.
+- Queued candidate, exact, and blocked packets without crossing exact-approval or open-proof gates.
 - Recorded mandatory blocker retry standard: keep active sibling lanes open, run 3 retry sessions before pause, and use 10-session, 20-web, 20-Journey reflections per retry.
 - Added five-minute productive wait work: research, eureka, approval, cleanup, skill/control, coding, orchestration, validation, and lane harvest.
 - Confirmed five-minute marks are check opportunities, not hard stops; safe units may run past the checkpoint.
@@ -145,4 +189,4 @@ Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish r
 
 ## Safety Boundary
 
-Status-only receipts. No private route handles, private lane body content, credentials, verbatim conversation logs, browser routes, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.
+No raw browser routes, private URLs, raw transcripts, screenshots, credentials, local absolute paths, session streams, private dumps, proof closures, legal closures, canon promotions, deployments, purchases, account mutations, or API-key actions are published or claimed.
