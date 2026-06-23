@@ -1,17 +1,14 @@
 # Omega-Mini Latest Updates Beacon
 
-Status: V552_V8_X1_CLOSED_V8_X2_READY_NOT_STARTED
-Primary branch: codex/GHC-Family/beyonder-shared-omega-line-mini-2
-Archive branch: codex/GHC-Family/beyonder-shared-omega-line
+Status: V552_V8_X2_ACTIVE_SKILL_BUILD_RUN
 Current active phase: v552-gmut-thos-v88-v8-x2
 Latest closed phase: v552-gmut-thos-v88-v8-x1
 Latest completed x1: v552-gmut-thos-v88-v8-x1
 Latest completed x2: v552-gmut-thos-v88-v7-x2
-Current lanes: v8-x1-triad-completed; v8-x2-ready-not-started; Aster Vale strict CLI lane completed; Kierkegaard completed through recovered app-lane runner; Aristotle completed through fallback recovered app-lane runner; ghc-main-orchestrator-runner-promoted; ghc-recovered-app-lane-map-runner-default
 Next x2 scope: v552-gmut-thos-v88-v8-x2
 Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## Latest Lookup Files
+## Lookup Files
 
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
@@ -58,8 +55,14 @@ Next x1 lane after x2: v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-closeout-v1.json
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-compact-pause-startup-snapshot-v1.md
 - docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-compact-pause-startup-snapshot-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-skill-startup-receipt-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-skill-startup-receipt-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-main-orchestration-skill-startup-updater-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-main-orchestration-skill-startup-updater-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.md
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.json
+- docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-full-tools-skill-bank-inventory-v1.json
 
-## Safety Boundary
+## Boundary
 
-- Use status-only evidence and exact relative repo paths.
-- Do not publish private route data, private lane body content, credentials, screen-capture files, or private machine paths.
+Status-only beacon. No private route data, raw app-lane content, credentials, private paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, or deployment closure are published.

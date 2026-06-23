@@ -2,9 +2,9 @@
   "schema": "ghc.omega_mini.current_state.v2",
   "branch": "codex/GHC-Family/beyonder-shared-omega-line-mini-2",
   "full_archive_branch": "codex/GHC-Family/beyonder-shared-omega-line",
-  "updated_at": "2026-06-23T21:31:04+12:00",
-  "generated_utc": "2026-06-23T09:31:04.153Z",
-  "status": "V552_V8_X1_CLOSED_V8_X2_READY_NOT_STARTED",
+  "updated_at": "2026-06-23T23:04:44+12:00",
+  "generated_utc": "2026-06-23T11:04:44.590Z",
+  "status": "V552_V8_X2_ACTIVE_SKILL_BUILD_RUN",
   "active_memory_cue": "omega-mini-2-current-state",
   "stale_memory_policy": "omega44 is historical-only unless Hamish explicitly asks for it",
   "current_active_phase": "v552-gmut-thos-v88-v8-x2",
@@ -13,13 +13,11 @@
   "latest_completed_x2_phase": "v552-gmut-thos-v88-v7-x2",
   "latest_remote_verified_closeout_before_current": "7b62f2a72d5e4c78d049b899bdd5f4fc11539d3c",
   "current_active_lanes": [
-    "v8-x1-triad-completed",
-    "v8-x2-ready-not-started",
-    "Aster Vale strict CLI lane completed",
-    "Kierkegaard completed through recovered app-lane runner",
-    "Aristotle completed through fallback recovered app-lane runner",
-    "ghc-main-orchestrator-runner-promoted",
-    "ghc-recovered-app-lane-map-runner-default"
+    "v8-x2-active-skill-build-run",
+    "ghc-main-orchestration-memory-created-and-used",
+    "ghc-full-tools-skill-bank-created-and-used",
+    "main-orchestrator-route-available",
+    "full-tools-support-available"
   ],
   "just_closed_lanes": [
     "v552 v8 x1 effective triad completion gate closed",
@@ -121,21 +119,24 @@
     "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-closeout-v1.md",
     "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-closeout-v1.json",
     "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-compact-pause-startup-snapshot-v1.md",
-    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-compact-pause-startup-snapshot-v1.json"
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x1-compact-pause-startup-snapshot-v1.json",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-skill-startup-receipt-v1.md",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-skill-startup-receipt-v1.json",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-main-orchestration-skill-startup-updater-v1.md",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-main-orchestration-skill-startup-updater-v1.json",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.md",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-initial-safe-runner-orchestrator-v1.json",
+    "docs/trinity-live-traces/v552-gmut-thos-v88-v8-x2-full-tools-skill-bank-inventory-v1.json"
   ],
   "latest_action_summary": [
-    "Hamish made the background notifier/orchestrator route mandatory for existing app-lane siblings.",
-    "Aster Vale completed the strict CLI lane cycle for v8 x1.",
-    "Kierkegaard and Aristotle were launched through the council app-lane notifier runner in background-watch mode.",
-    "The safe runner orchestrator ran during background waiting.",
-    "The startup updater and five-minute cadence guard are part of the mandatory supervision route.",
-    "Kierkegaard and Aristotle were restarted through ghc_recovered_app_lane_map_runner.mjs in background-watch mode.",
-    "Kierkegaard completed in the recovered two-lane route.",
-    "Aristotle completed in an explicit fallback recovered route after the first resume timed out.",
-    "v552 v8 x1 is closed; v552 v8 x2 is ready and not started.",
-    "The full-tools support worktree is the preferred lane for private app-lane preflights, notifier runners, strict CLI cycles, and completion gates.",
-    "Private app-lane IDs remain local-only; omega-mini records sanitized presence/open-gap status only.",
-    "Next x2 is ready but not started."
+    "v552 v8 x2 started as an active skill build run.",
+    "Created and validated ghc-main-orchestration-memory.",
+    "Created and validated ghc-full-tools-skill-bank.",
+    "Used both skill helper scripts for startup and full-tools inventory.",
+    "Ran the v8 x2 startup updater and initial safe runner orchestrator.",
+    "Persisted the full-tools skill bank inventory for runner selection.",
+    "Safe-now approval packet, eureka, cleanup, validation, and orchestration work may continue between cadence marks.",
+    "No proof/canon/legal/deployment gates were closed."
   ],
   "historical_rows": [
     "v529, v530, v540, v541, and earlier v552 rows remain historical reference rows unless explicitly named.",
@@ -228,5 +229,32 @@
     "watcher_start_is_completion_proof": false,
     "phase_closed": true,
     "next_x2_ready": true
+  },
+  "v8_x2_skill_startup": {
+    "status": "PASS_V8_X2_SKILL_STARTUP_READY",
+    "skills_created_and_used": [
+      "ghc-main-orchestration-memory",
+      "ghc-full-tools-skill-bank"
+    ],
+    "full_tools_script_count": 852,
+    "codex_version": "unavailable",
+    "drive_free_gb": [
+      {
+        "drive": "C",
+        "free_gb": 27.32,
+        "used_gb": 89.65
+      },
+      {
+        "drive": "D",
+        "free_gb": 606.31,
+        "used_gb": 325.17
+      }
+    ],
+    "execution_receipts": {
+      "startup_updater_status": "PASS_STARTUP_CONTEXT_UPDATED",
+      "safe_runner_orchestrator_status": "PASS_SAFE_RUNNER_ORCHESTRATION",
+      "safe_runner_count": 3,
+      "persisted_inventory_status": "PASS_INVENTORY_PERSISTED"
+    }
   }
 }
