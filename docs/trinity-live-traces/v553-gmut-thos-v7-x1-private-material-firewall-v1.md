@@ -1,0 +1,23 @@
+# Private Material Firewall
+
+Status: `PASS_PRIVATE_MATERIAL_FIREWALL_RECORDED`
+
+```json
+{
+  "artifact_type": "ghc_v553_v7_x1_private_material_firewall",
+  "generated_utc": "2026-06-24T13:55:38.107Z",
+  "phase_slug": "v553-gmut-thos-v7-x1",
+  "overall_status": "PASS_PRIVATE_MATERIAL_FIREWALL_RECORDED",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false
+  }
+}
+```

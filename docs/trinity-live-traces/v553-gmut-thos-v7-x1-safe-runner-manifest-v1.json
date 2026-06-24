@@ -1,0 +1,231 @@
+{
+  "artifact_type": "ghc_v553_v7_x1_safe_runner_manifest",
+  "generated_utc": "2026-06-24T13:41:04.093Z",
+  "generated_nz": "2026-06-25T01:41:04+12:00",
+  "phase_slug": "v553-gmut-thos-v7-x1",
+  "minimum_reflections_required": 30,
+  "search_count_declared": 30,
+  "searches": [
+    {
+      "query": "OpenAI Codex Goals",
+      "source": "OpenAI Codex Goals",
+      "source_url": "https://developers.openai.com/codex/using-goals",
+      "phase_reflection": "Thread goals should keep a clear objective and not be marked done until the objective is genuinely complete.",
+      "runner_implication": "Keep the thread goal active while closing only phase-local receipts."
+    },
+    {
+      "query": "OpenAI Codex Skills",
+      "source": "OpenAI Codex Skills",
+      "source_url": "https://developers.openai.com/codex/skills",
+      "phase_reflection": "Skills package repeatable instructions and helper scripts.",
+      "runner_implication": "Keep Lumen launch, retry, startup, compact, closeout, and safe-runner routes skill-backed."
+    },
+    {
+      "query": "OpenAI Codex sandboxing",
+      "source": "OpenAI Codex sandboxing",
+      "source_url": "https://developers.openai.com/codex/sandbox",
+      "phase_reflection": "Sandbox and approval modes shape what an agent can safely do.",
+      "runner_implication": "Keep external writes and destructive work exact-gated even when local access is broad."
+    },
+    {
+      "query": "OpenAI Codex changelog",
+      "source": "OpenAI Codex changelog",
+      "source_url": "https://developers.openai.com/codex/changelog",
+      "phase_reflection": "Codex app and CLI behavior can change across updates.",
+      "runner_implication": "Verify Browser and CLI lanes at each startup before relying on stale behavior."
+    },
+    {
+      "query": "OpenAI Agents SDK",
+      "source": "OpenAI Agents SDK",
+      "source_url": "https://openai.github.io/openai-agents-python/",
+      "phase_reflection": "Agent frameworks emphasize explicit tools, handoffs, and guardrails.",
+      "runner_implication": "Keep sibling routes explicit, supervised, and receipt-backed."
+    },
+    {
+      "query": "Node child_process",
+      "source": "Node child_process",
+      "source_url": "https://nodejs.org/api/child_process.html",
+      "phase_reflection": "Node can spawn and supervise subprocesses.",
+      "runner_implication": "Use Node entrypoints for runner orchestration and summarize child output."
+    },
+    {
+      "query": "Node fs",
+      "source": "Node fs",
+      "source_url": "https://nodejs.org/api/fs.html",
+      "phase_reflection": "Filesystem writes should be explicit and deterministic.",
+      "runner_implication": "Generate compact JSON/MD receipts and parse them before commit."
+    },
+    {
+      "query": "Python subprocess",
+      "source": "Python subprocess",
+      "source_url": "https://docs.python.org/3/library/subprocess.html",
+      "phase_reflection": "Subprocess APIs make return code and output capture explicit.",
+      "runner_implication": "Keep app-lane/notifier helpers behind clear argument boundaries."
+    },
+    {
+      "query": "Git worktree",
+      "source": "Git worktree",
+      "source_url": "https://git-scm.com/docs/git-worktree",
+      "phase_reflection": "Worktrees isolate branch state.",
+      "runner_implication": "Keep omega-mini-2 sanitized and full-tools richer/private."
+    },
+    {
+      "query": "GitHub secret scanning",
+      "source": "GitHub secret scanning",
+      "source_url": "https://docs.github.com/code-security/secret-scanning/about-secret-scanning",
+      "phase_reflection": "Secret scanning reduces accidental credential exposure.",
+      "runner_implication": "Run privacy scans before pushing sanitized artifacts."
+    },
+    {
+      "query": "GitHub push protection",
+      "source": "GitHub push protection",
+      "source_url": "https://docs.github.com/code-security/secret-scanning/protecting-pushes-with-secret-scanning",
+      "phase_reflection": "Push protection blocks supported leaked secrets before they land.",
+      "runner_implication": "Treat raw private route material as never-publish, not just scan-and-fix."
+    },
+    {
+      "query": "GitHub artifact attestations",
+      "source": "GitHub artifact attestations",
+      "source_url": "https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds",
+      "phase_reflection": "Attestations help prove artifact provenance.",
+      "runner_implication": "Queue provenance design as candidate work, not active deployment closure."
+    },
+    {
+      "query": "MCP specification",
+      "source": "MCP specification",
+      "source_url": "https://modelcontextprotocol.io/specification",
+      "phase_reflection": "MCP standardizes tool and data connections for agents.",
+      "runner_implication": "Keep tool routing schemas explicit in receipts."
+    },
+    {
+      "query": "JSON Schema",
+      "source": "JSON Schema",
+      "source_url": "https://json-schema.org/draft/2020-12/json-schema-core",
+      "phase_reflection": "JSON Schema constrains structured data.",
+      "runner_implication": "Add schema-shaped validation to future phase artifacts."
+    },
+    {
+      "query": "OpenTelemetry",
+      "source": "OpenTelemetry",
+      "source_url": "https://opentelemetry.io/docs/specs/otel/",
+      "phase_reflection": "Telemetry specifications distinguish traces, metrics, logs, and resources.",
+      "runner_implication": "Design local observability before external telemetry."
+    },
+    {
+      "query": "SLSA provenance",
+      "source": "SLSA provenance",
+      "source_url": "https://slsa.dev/spec/v1.0/provenance",
+      "phase_reflection": "SLSA defines provenance metadata for build integrity.",
+      "runner_implication": "Keep runner provenance as a future safe x2/candidate lane."
+    },
+    {
+      "query": "NIST SSDF",
+      "source": "NIST SSDF",
+      "source_url": "https://csrc.nist.gov/Projects/ssdf",
+      "phase_reflection": "Secure software development needs repeatable practices.",
+      "runner_implication": "Make validation, diff checks, privacy scans, and guards part of closeout."
+    },
+    {
+      "query": "OWASP LLM Top 10",
+      "source": "OWASP LLM Top 10",
+      "source_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "phase_reflection": "Prompt injection and excessive agency are core LLM application risks.",
+      "runner_implication": "Treat external content as untrusted and keep exact gates in place."
+    },
+    {
+      "query": "NIST AI RMF",
+      "source": "NIST AI RMF",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "phase_reflection": "AI risk management benefits from mapped, measured, managed controls.",
+      "runner_implication": "Turn candidate packets into bounded risk statements."
+    },
+    {
+      "query": "NIST AI 600-1",
+      "source": "NIST AI 600-1",
+      "source_url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "phase_reflection": "Generative AI risk guidance calls for context-aware mitigations.",
+      "runner_implication": "Keep sibling route claims modest and evidence-backed."
+    },
+    {
+      "query": "W3C DID Core",
+      "source": "W3C DID Core",
+      "source_url": "https://www.w3.org/TR/did-core/",
+      "phase_reflection": "DIDs separate identifiers from centralized providers.",
+      "runner_implication": "Keep private IDs local and public route receipts sanitized."
+    },
+    {
+      "query": "W3C VC 2.0",
+      "source": "W3C VC 2.0",
+      "source_url": "https://www.w3.org/TR/vc-data-model-2.0/",
+      "phase_reflection": "Verifiable credentials need privacy-preserving evidence design.",
+      "runner_implication": "Queue Freed ID work as design/governance, not proof closure."
+    },
+    {
+      "query": "NIST SP 800-63-4",
+      "source": "NIST SP 800-63-4",
+      "source_url": "https://pages.nist.gov/800-63-4/",
+      "phase_reflection": "Identity proofing, authentication, and federation are separate concerns.",
+      "runner_implication": "Separate identity packets from account mutation and access control tasks."
+    },
+    {
+      "query": "OECD AI Principles",
+      "source": "OECD AI Principles",
+      "source_url": "https://www.oecd.org/en/topics/ai-principles.html",
+      "phase_reflection": "Trustworthy AI principles emphasize human-centered values.",
+      "runner_implication": "Keep dignity, recourse, and accountability visible in CBR proposals."
+    },
+    {
+      "query": "UNESCO AI ethics",
+      "source": "UNESCO AI ethics",
+      "source_url": "https://www.unesco.org/en/artificial-intelligence/recommendation-ethics",
+      "phase_reflection": "AI ethics guidance emphasizes dignity and human rights.",
+      "runner_implication": "Keep legal/canon claims open while planning governance artifacts."
+    },
+    {
+      "query": "arXiv API",
+      "source": "arXiv API",
+      "source_url": "https://info.arxiv.org/help/api/user-manual.html",
+      "phase_reflection": "arXiv supports reproducible scholarly discovery.",
+      "runner_implication": "Use source-labelled discovery rows rather than proof claims."
+    },
+    {
+      "query": "Crossref REST API",
+      "source": "Crossref REST API",
+      "source_url": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/",
+      "phase_reflection": "Crossref metadata can normalize DOI and publication records.",
+      "runner_implication": "Queue citation normalization as a future x2 support runner."
+    },
+    {
+      "query": "OpenAlex API",
+      "source": "OpenAlex API",
+      "source_url": "https://docs.openalex.org/",
+      "phase_reflection": "OpenAlex maps works, topics, sources, authors, and institutions.",
+      "runner_implication": "Use optional metadata enrichment behind provenance guards."
+    },
+    {
+      "query": "NIST constants",
+      "source": "NIST constants",
+      "source_url": "https://pml.nist.gov/cuu/Constants/",
+      "phase_reflection": "CODATA constants provide source-stamped fundamental values.",
+      "runner_implication": "Normalize numerical anchors with source year and uncertainty."
+    },
+    {
+      "query": "Particle Data Group",
+      "source": "Particle Data Group",
+      "source_url": "https://pdg.lbl.gov/",
+      "phase_reflection": "PDG reviews summarize particle physics constants and evidence.",
+      "runner_implication": "Treat GMUT comparison inputs as empirical anchors, not closure."
+    }
+  ],
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false
+  }
+}

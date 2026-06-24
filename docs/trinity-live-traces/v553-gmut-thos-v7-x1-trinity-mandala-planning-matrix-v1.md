@@ -1,0 +1,29 @@
+# Trinity Mandala Planning Matrix
+
+Status: `PASS_TRINITY_MANDALA_V7_PLANNING_MATRIX_REDUCED`
+
+```json
+{
+  "artifact_type": "ghc_v553_v7_x1_trinity_mandala_planning_matrix",
+  "generated_utc": "2026-06-24T13:55:38.107Z",
+  "phase_slug": "v553-gmut-thos-v7-x1",
+  "overall_status": "PASS_TRINITY_MANDALA_V7_PLANNING_MATRIX_REDUCED",
+  "matrix": [
+    {
+      "pillar": "GMUT / Mind",
+      "focus": "source-backed evidence hygiene and proof-ceiling discipline",
+      "closure_claimed": false
+    },
+    {
+      "pillar": "THOS / Body",
+      "focus": "Browser, CLI, app-lane, runner, startup, compact, closeout, and validation posture",
+      "closure_claimed": false
+    },
+    {
+      "pillar": "Freed ID / CBR / Heart",
+      "focus": "dignity, identity boundary, privacy, recourse, and non-merge governance",
+      "closure_claimed": false
+    }
+  ]
+}
+```

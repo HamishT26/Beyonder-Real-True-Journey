@@ -1,0 +1,14 @@
+# Cleanup Tier Board
+
+Status: `PASS_CLEANUP_PROPOSALS_TIERED_NON_DESTRUCTIVE`
+
+```json
+{
+  "artifact_type": "ghc_v553_v7_x1_cleanup_tier_board",
+  "generated_utc": "2026-06-24T13:55:38.107Z",
+  "phase_slug": "v553-gmut-thos-v7-x1",
+  "overall_status": "PASS_CLEANUP_PROPOSALS_TIERED_NON_DESTRUCTIVE",
+  "cleanup_proposal_count": 30,
+  "destructive_cleanup_requires_fresh_exact_approval": true
+}
+```
