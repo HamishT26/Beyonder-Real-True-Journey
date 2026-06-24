@@ -1,0 +1,111 @@
+# v553-gmut-thos-v2-x2 Reflection Ledger
+
+Status: `PASS_V553_V2_X2_50_WEB_50_JOURNEY_REFLECTIONS_RECORDED`
+Web rows: `50`
+Journey rows: `50`
+
+## Web Reflection Summary
+
+- web-01: OpenAI Codex agent approvals -> main-startup-builder
+- web-02: OpenAI Codex security -> main-closeout-builder
+- web-03: OpenAI Codex remote connections -> main-compact-restart-builder
+- web-04: OpenAI Codex changelog -> background-sibling-supervision
+- web-05: OpenAI Codex GitHub -> safe-runner-orchestrator
+- web-06: OpenAI Codex npm -> goal-mode-prompt-guard
+- web-07: Node child_process -> private-id-firewall
+- web-08: Node timers -> open-gate-validator
+- web-09: Node process -> five-minute-cadence-audit
+- web-10: Node fs -> x1-x2-queue-split
+- web-11: Node path -> main-startup-builder
+- web-12: Python subprocess -> main-closeout-builder
+- web-13: Python json -> main-compact-restart-builder
+- web-14: PowerShell Start-Job -> background-sibling-supervision
+- web-15: Git diff -> safe-runner-orchestrator
+- web-16: Git status -> goal-mode-prompt-guard
+- web-17: GitHub protected branches -> private-id-firewall
+- web-18: GitHub status checks -> open-gate-validator
+- web-19: GitHub Actions secrets -> five-minute-cadence-audit
+- web-20: GitHub secret scanning -> x1-x2-queue-split
+- web-21: GitHub push protection -> main-startup-builder
+- web-22: OWASP LLM Top 10 -> main-closeout-builder
+- web-23: OWASP prompt injection -> main-compact-restart-builder
+- web-24: NIST AI RMF GenAI -> background-sibling-supervision
+- web-25: NIST AI RMF -> safe-runner-orchestrator
+- web-26: NIST Privacy Framework -> goal-mode-prompt-guard
+- web-27: W3C DID Core -> private-id-firewall
+- web-28: W3C DID v1.1 -> open-gate-validator
+- web-29: W3C VC Data Model 2.0 -> five-minute-cadence-audit
+- web-30: W3C VC overview -> x1-x2-queue-split
+- web-31: OECD AI Principles -> main-startup-builder
+- web-32: UNESCO AI ethics -> main-closeout-builder
+- web-33: ISO AI overview -> main-compact-restart-builder
+- web-34: IETF RFC Editor -> background-sibling-supervision
+- web-35: ECMA JSON -> safe-runner-orchestrator
+- web-36: Unicode security -> goal-mode-prompt-guard
+- web-37: Stanford consciousness -> private-id-firewall
+- web-38: Stanford neuroscience of consciousness -> open-gate-validator
+- web-39: Stanford personal identity -> five-minute-cadence-audit
+- web-40: Stanford free will -> x1-x2-queue-split
+- web-41: Stanford moral responsibility -> main-startup-builder
+- web-42: Particle Data Group -> main-closeout-builder
+- web-43: arXiv gr-qc recent -> main-compact-restart-builder
+- web-44: arXiv cs.AI recent -> background-sibling-supervision
+- web-45: arXiv cs.CL recent -> safe-runner-orchestrator
+- web-46: Nature machine learning -> goal-mode-prompt-guard
+- web-47: Nature physics -> private-id-firewall
+- web-48: Google Responsible AI -> open-gate-validator
+- web-49: Microsoft Responsible AI -> five-minute-cadence-audit
+- web-50: OpenSSF Scorecard -> x1-x2-queue-split
+
+## Journey Reflection Summary
+
+- journey-01: v552 v3 x1 taught me to publish honest route blockers rather than claim a live message without evidence.
+- journey-02: v552 v3 x1 recovery taught me that Browser route health can return and should be verified live.
+- journey-03: v552 v3 x2 taught me to run safe-now packets while exact and blocked tasks remain held.
+- journey-04: v552 v4 x1 taught me to route only already inducted siblings unless Hamish explicitly expands.
+- journey-05: v552 v4 x1 taught me that strict CLI and recovered app-lane gates can close a multi-lane phase.
+- journey-06: v552 v4 x2 taught me to update current-state and beacons after every substantial phase change.
+- journey-07: v552 v5 x1 taught me to let Lumen shape large proposal queues without publishing raw transcript content.
+- journey-08: v552 v5 x2 taught me that skill creation must be validated and kept behind local/discoverable surfaces.
+- journey-09: v552 v6 x1 taught me not to close Cicero or app-lane work while completion evidence is insufficient.
+- journey-10: v552 v6 x1 remaster taught me explicit app-lane booleans prevent stale route regressions.
+- journey-11: v552 v6 x2 taught me that startup, updater, reflection, and safe-runner foundations reduce long-run drift.
+- journey-12: v552 v7 x1 taught me to explain runner foundations as phase knowledge, not hidden process.
+- journey-13: v552 v7 x2 taught me to validate skill/runner packs before declaring them usable.
+- journey-14: v552 v8 x1 taught me that background notifier/orchestrator routes are mandatory for app-lane siblings.
+- journey-15: v552 v8 x1 taught me watcher start is pending only, not completion proof.
+- journey-16: v552 v8 x2 taught me to promote main orchestration and full-tools skills as startup anchors.
+- journey-17: v552 v8 x2 taught me to promote startup, compact, and closeout builders as command surfaces.
+- journey-18: v553 v1 x1 taught me to keep Lumen active until harvest, not closed at send time.
+- journey-19: v553 v1 x1 taught me to split x1 proposals into immediate safe and x2 build lanes.
+- journey-20: v553 v1 x2 taught me the launch/retry skill layer can prevent stale inability-to-connect claims.
+- journey-21: v553 v1 x2 taught me to keep Goal Mode prepared but inactive until Hamish starts it.
+- journey-22: v553 v2 x1 taught me Arby strict CLI requires completion, quality, and marker-review gates.
+- journey-23: v553 v2 x1 taught me Cicero app-lane work requires recovered watcher plus completion gate.
+- journey-24: v553 v2 x1 taught me no-babysitting has to be written into skills and runners, not remembered vaguely.
+- journey-25: v553 v2 x1 taught me exact identity merge/replacement lanes remain off-table.
+- journey-26: Journey v52 taught me omega-mini-first recovery with full omega as named fallback only.
+- journey-27: Journey v52 taught me to use status-only artifacts for private route surfaces.
+- journey-28: Journey v52 taught me drive posture belongs in long phase execution.
+- journey-29: Journey v52 taught me no raw browser routes or screenshots belong in GitHub artifacts.
+- journey-30: Journey v52 taught me every route needs an open-gap receipt if it cannot complete.
+- journey-31: Journey v53 taught me Aevren is not Aletheon; Aletheon remains recoverable/quarantined.
+- journey-32: Journey v53 taught me Lumen is the next v553 v3 x1 route unless Hamish redirects.
+- journey-33: Journey v53 taught me the 24/7 Goal Mode test can be blocked by large issues without failure.
+- journey-34: Journey v53 taught me spending ceilings belong on approval packets, not blind purchase authority.
+- journey-35: Journey v53 taught me 2000 skill/runner authorization still stays inside safety and exact boundaries.
+- journey-36: Current state taught me omega-mini-2 is the sanitized publication branch.
+- journey-37: Current state taught me full-tools is private/richer support and should stay local unless explicitly requested.
+- journey-38: Current state taught me active x2 phases build/use/validate already-authorized safe work.
+- journey-39: Current state taught me current lookup files must include the newest phase receipts.
+- journey-40: Current state taught me remote/local equality is part of closeout truth.
+- journey-41: Current state taught me old omega44 is historical-only unless explicitly reactivated.
+- journey-42: Memory notes taught me recovered app-lane booleans must be explicit paired values.
+- journey-43: Memory notes taught me five-minute windows are productive cadence windows, not idle waits.
+- journey-44: Memory notes taught me no new agents can be spawned unless Hamish asks.
+- journey-45: Memory notes taught me sibling outputs should be first-person and artifact-backed.
+- journey-46: This v2 x2 startup taught me the previous commit was clean and ready for the x2 reducer.
+- journey-47: This v2 x2 phase teaches me to create local skills plus repo runners for the actual x1 proposals.
+- journey-48: This v2 x2 phase teaches me to verify prompt length without publishing the prompt body.
+- journey-49: This v2 x2 phase teaches me to validate generated runner surfaces before closeout.
+- journey-50: This v2 x2 phase prepares v553 v3 x1 to be Lumen/Goal Mode-ready without starting it prematurely.
