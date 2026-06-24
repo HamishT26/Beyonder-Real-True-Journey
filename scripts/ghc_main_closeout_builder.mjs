@@ -80,6 +80,15 @@ function builderForPhase(slug, explicitBuilder) {
   if (slug === "v553-gmut-thos-v4-x2") {
     return "ghc_v553_v4_x2_closeout_builder.mjs";
   }
+  if (slug === "v553-gmut-thos-v5-x1") {
+    return "ghc_v553_v5_x1_lumen_closeout_builder.mjs";
+  }
+  if (slug === "v553-gmut-thos-v5-x2") {
+    return "ghc_v553_v5_x2_closeout_builder.mjs";
+  }
+  if (slug === "v553-gmut-thos-v6-x1") {
+    return "ghc_v553_v6_x1_closeout_builder.mjs";
+  }
   return null;
 }
 

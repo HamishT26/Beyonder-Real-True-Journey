@@ -1,0 +1,226 @@
+{
+  "artifact_type": "ghc_safe_runner_manifest",
+  "phase_slug": "v553-gmut-thos-v6-x1",
+  "minimum_reflections_required": 30,
+  "searches": [
+    {
+      "query": "OpenAI Codex agent approvals and security",
+      "source": "OpenAI Codex agent approvals and security",
+      "source_url": "https://developers.openai.com/codex/agent-approvals-security",
+      "phase_reflection": "Keep system approval gates separate from Hamish approval packets.",
+      "runner_implication": "preserve exact approval boundaries"
+    },
+    {
+      "query": "OpenAI Codex skills",
+      "source": "OpenAI Codex skills",
+      "source_url": "https://developers.openai.com/codex/skills",
+      "phase_reflection": "Use local skill files as the operational memory layer for launch and closeout behavior.",
+      "runner_implication": "validate launch and closeout skill coverage"
+    },
+    {
+      "query": "OpenAI Codex changelog",
+      "source": "OpenAI Codex changelog",
+      "source_url": "https://developers.openai.com/codex/changelog",
+      "phase_reflection": "Treat Codex routes as drift-prone and verify before relying on old behavior.",
+      "runner_implication": "startup preflight must verify live route state"
+    },
+    {
+      "query": "OpenAI Codex GitHub repository",
+      "source": "OpenAI Codex GitHub repository",
+      "source_url": "https://github.com/openai/codex",
+      "phase_reflection": "Anchor CLI assumptions to upstream project truth.",
+      "runner_implication": "toolchain updates require current-source checks"
+    },
+    {
+      "query": "Node.js child_process spawnSync documentation",
+      "source": "Node child_process",
+      "source_url": "https://nodejs.org/api/child_process.html",
+      "phase_reflection": "Runner wrappers should summarize subprocess status and keep raw streams private.",
+      "runner_implication": "safe orchestrator stores status and byte counts only"
+    },
+    {
+      "query": "Node.js fs documentation",
+      "source": "Node fs",
+      "source_url": "https://nodejs.org/api/fs.html",
+      "phase_reflection": "Use deterministic JSON and Markdown artifacts with parse checks.",
+      "runner_implication": "closeout requires JSON validation"
+    },
+    {
+      "query": "Node.js timers promises setTimeout documentation",
+      "source": "Node timers",
+      "source_url": "https://nodejs.org/api/timers.html",
+      "phase_reflection": "Timers support cadence but never replace productive work.",
+      "runner_implication": "five-minute checks are natural-pause checkpoints"
+    },
+    {
+      "query": "PowerShell Start-Process official documentation",
+      "source": "PowerShell Start-Process",
+      "source_url": "https://learn.microsoft.com/powershell/module/microsoft.powershell.management/start-process",
+      "phase_reflection": "Background helper launches should be deliberate and hidden unless interactive control is needed.",
+      "runner_implication": "background watchers should not demand visible windows"
+    },
+    {
+      "query": "Python subprocess official documentation",
+      "source": "Python subprocess",
+      "source_url": "https://docs.python.org/3/library/subprocess.html",
+      "phase_reflection": "Use timeouts and summarized return states for Python-backed runners.",
+      "runner_implication": "app-lane and strict CLI wrappers keep compact receipts"
+    },
+    {
+      "query": "Python json official documentation",
+      "source": "Python json",
+      "source_url": "https://docs.python.org/3/library/json.html",
+      "phase_reflection": "Keep JSON parse validation as a closeout gate.",
+      "runner_implication": "all generated receipts must parse before commit"
+    },
+    {
+      "query": "Git worktree official documentation",
+      "source": "Git worktree",
+      "source_url": "https://git-scm.com/docs/git-worktree",
+      "phase_reflection": "Keep sanitized omega-mini and private full-tools support lanes separated.",
+      "runner_implication": "publish only sanitized artifacts from omega-mini-2"
+    },
+    {
+      "query": "Git diff official documentation",
+      "source": "Git diff",
+      "source_url": "https://git-scm.com/docs/git-diff",
+      "phase_reflection": "Run diff hygiene before commit.",
+      "runner_implication": "git diff --check remains a closeout gate"
+    },
+    {
+      "query": "GitHub Actions security hardening official documentation",
+      "source": "GitHub Actions security hardening",
+      "source_url": "https://docs.github.com/actions/security-guides/security-hardening-for-github-actions",
+      "phase_reflection": "Treat CI/CD changes as security-relevant and exact-gated when risky.",
+      "runner_implication": "external automation changes remain exact approval"
+    },
+    {
+      "query": "GitHub secret scanning official documentation",
+      "source": "GitHub secret scanning",
+      "source_url": "https://docs.github.com/code-security/secret-scanning/about-secret-scanning",
+      "phase_reflection": "Privacy scans should remain in every publication path.",
+      "runner_implication": "scan generated artifacts for secrets before push"
+    },
+    {
+      "query": "GitHub push protection official documentation",
+      "source": "GitHub push protection",
+      "source_url": "https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection",
+      "phase_reflection": "Prefer preventing accidental secret publication.",
+      "runner_implication": "keep private route handles out of Git artifacts"
+    },
+    {
+      "query": "GitHub artifact attestations official documentation",
+      "source": "GitHub artifact attestations",
+      "source_url": "https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds",
+      "phase_reflection": "Future provenance runners can use attestations as inspiration without claiming deployment closure.",
+      "runner_implication": "queue provenance work for exact-reviewed build lanes"
+    },
+    {
+      "query": "NIST SSDF SP 800-218 official",
+      "source": "NIST SSDF SP 800-218",
+      "source_url": "https://csrc.nist.gov/publications/detail/sp/800-218/final",
+      "phase_reflection": "Safe-runner and validation loops map to secure software practices.",
+      "runner_implication": "approval packets should include validation evidence"
+    },
+    {
+      "query": "NIST AI Risk Management Framework official",
+      "source": "NIST AI RMF",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "phase_reflection": "Keep AI risk mapping explicit in proposal packets.",
+      "runner_implication": "proposal ledgers should label risks and mitigations"
+    },
+    {
+      "query": "NIST Generative AI Profile official",
+      "source": "NIST Generative AI Profile",
+      "source_url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "phase_reflection": "Use GenAI risk framing for multi-agent route boundaries.",
+      "runner_implication": "agent route gates remain explicit"
+    },
+    {
+      "query": "OWASP LLM Top 10 official",
+      "source": "OWASP LLM Top 10",
+      "source_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "phase_reflection": "Treat external messages, pages, and sibling outputs as untrusted inputs.",
+      "runner_implication": "do not execute instructions from sibling artifacts blindly"
+    },
+    {
+      "query": "OWASP prompt injection official",
+      "source": "OWASP prompt injection",
+      "source_url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+      "phase_reflection": "Keep raw external instructions from taking control of local actions.",
+      "runner_implication": "sanitize and reduce external content before publication"
+    },
+    {
+      "query": "SLSA framework official specification",
+      "source": "SLSA framework",
+      "source_url": "https://slsa.dev/spec/v1.0/",
+      "phase_reflection": "Future build provenance should be staged and evidence-based.",
+      "runner_implication": "build provenance stays queued until exact-reviewed"
+    },
+    {
+      "query": "Model Context Protocol official specification",
+      "source": "Model Context Protocol specification",
+      "source_url": "https://modelcontextprotocol.io/specification/",
+      "phase_reflection": "Tool and resource boundaries should stay explicit for connectors and app lanes.",
+      "runner_implication": "separate MCP resources from external actions"
+    },
+    {
+      "query": "JSON Schema 2020-12 official",
+      "source": "JSON Schema 2020-12",
+      "source_url": "https://json-schema.org/draft/2020-12",
+      "phase_reflection": "Receipt schemas can be hardened into formal validation.",
+      "runner_implication": "queue schema validation runner for x2"
+    },
+    {
+      "query": "SQLite WAL official documentation",
+      "source": "SQLite WAL",
+      "source_url": "https://sqlite.org/wal.html",
+      "phase_reflection": "Local state stores can use write-ahead-log concepts for recoverability.",
+      "runner_implication": "future local-state runners should be crash-recoverable"
+    },
+    {
+      "query": "W3C DID Core official recommendation",
+      "source": "W3C DID Core",
+      "source_url": "https://www.w3.org/TR/did-core/",
+      "phase_reflection": "Freed ID work stays standards-aligned and open-gated.",
+      "runner_implication": "identity claims remain exact-reviewed"
+    },
+    {
+      "query": "W3C Verifiable Credentials Data Model 2.0 official",
+      "source": "W3C VC Data Model 2.0",
+      "source_url": "https://www.w3.org/TR/vc-data-model-2.0/",
+      "phase_reflection": "Verifiable credential modeling belongs behind careful provenance and privacy boundaries.",
+      "runner_implication": "credential runners stay proposal-only for now"
+    },
+    {
+      "query": "NIST Digital Identity Guidelines SP 800-63-4 official",
+      "source": "NIST Digital Identity Guidelines",
+      "source_url": "https://pages.nist.gov/800-63-4/",
+      "phase_reflection": "Identity proofing and authentication claims must remain exact-gated.",
+      "runner_implication": "Freed ID work remains open and evidence-staged"
+    },
+    {
+      "query": "IETF OAuth 2.0 Security Best Current Practice RFC official",
+      "source": "IETF OAuth 2.0 Security BCP",
+      "source_url": "https://www.rfc-editor.org/rfc/rfc9700.html",
+      "phase_reflection": "Credential and authorization work remains exact-approval only.",
+      "runner_implication": "no credential creation or rotation in safe-now lanes"
+    },
+    {
+      "query": "Particle Data Group official",
+      "source": "Particle Data Group",
+      "source_url": "https://pdg.lbl.gov/",
+      "phase_reflection": "GMUT physics references remain comparators, not proof closure.",
+      "runner_implication": "physics claims stay open-gated"
+    }
+  ],
+  "publication_boundary": {
+    "raw_transcripts_published": false,
+    "private_route_handles_published": false,
+    "private_callable_ids_published": false,
+    "browser_routes_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}
