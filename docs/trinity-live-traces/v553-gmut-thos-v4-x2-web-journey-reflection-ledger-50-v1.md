@@ -1,0 +1,111 @@
+# v553-gmut-thos-v4-x2 Web/Journey Reflection Ledger 50
+
+Status: `PASS_V4_X2_WEB_JOURNEY_REFLECTION_LEDGER_50`
+Web rows: `50`
+Journey rows: `50`
+
+## Web
+
+- WEB-01: OpenAI Codex subagents - Use specialized agents only with clear boundaries; this phase uses existing lanes and no new agents.
+- WEB-02: OpenAI Codex skills - Phase rules are now encoded in skills and runners so startup and compact resumes stay stable.
+- WEB-03: OpenAI Codex CLI reference - Strict CLI lanes need explicit flags and status receipts.
+- WEB-04: OpenAI Codex worktrees - omega-mini-2 remains the clean worktree for publication artifacts.
+- WEB-05: OpenAI Codex approvals and security - Safe-now approval does not erase account, deployment, key, or destructive gates.
+- WEB-06: OpenAI Codex computer use - Browser/computer surfaces remain route-specific and privacy bounded.
+- WEB-07: MCP tools spec - Tool use needs schemas, side-effect clarity, and consent boundaries.
+- WEB-08: NIST AI RMF - Governance stays risk-managed and open-gated.
+- WEB-09: NIST AI 600-1 - GenAI risk language strengthens exact/blocked packet classification.
+- WEB-10: Git worktree - Parallel support and publication lanes should remain isolated.
+- WEB-11: GitHub push protection - Push hygiene supports the private-material firewall.
+- WEB-12: Node child_process - Runner subprocesses should keep command boundaries and summarized outputs.
+- WEB-13: Python subprocess - Python support watchers should stay bounded and avoid raw stream publication.
+- WEB-14: W3C VC 2.0 - Freed ID planning needs verifiable claims and privacy controls.
+- WEB-15: W3C DID Core - DID planning remains design work, not deployment closure.
+- WEB-16: NIST SP 800-63-4 - Digital identity assurance remains a standard-aligned design lane.
+- WEB-17: CODATA constants - GMUT comparisons need official constants and no premature closure.
+- WEB-18: Particle Data Group - Physics claims remain comparator-grounded.
+- WEB-19: LIGO data - Gravity-related claims need reproducible datasets.
+- WEB-20: GWOSC - Open gravitational-wave data can seed future validation.
+- WEB-21: Planck 2018 - Cosmology baselines remain source rows until validation.
+- WEB-22: SEP consciousness - Consciousness remains open and conceptually complex.
+- WEB-23: SEP neuroscience consciousness - CBR planning should not overclaim neural evidence.
+- WEB-24: OECD AI Principles - Trustworthy AI values support the governance rail.
+- WEB-25: OpenAI Codex changelog - Tool behavior can drift; phase startup must verify current state.
+- WEB-26: OpenAI Codex subagents - Use specialized agents only with clear boundaries; this phase uses existing lanes and no new agents.
+- WEB-27: OpenAI Codex skills - Phase rules are now encoded in skills and runners so startup and compact resumes stay stable.
+- WEB-28: OpenAI Codex CLI reference - Strict CLI lanes need explicit flags and status receipts.
+- WEB-29: OpenAI Codex worktrees - omega-mini-2 remains the clean worktree for publication artifacts.
+- WEB-30: OpenAI Codex approvals and security - Safe-now approval does not erase account, deployment, key, or destructive gates.
+- WEB-31: OpenAI Codex computer use - Browser/computer surfaces remain route-specific and privacy bounded.
+- WEB-32: MCP tools spec - Tool use needs schemas, side-effect clarity, and consent boundaries.
+- WEB-33: NIST AI RMF - Governance stays risk-managed and open-gated.
+- WEB-34: NIST AI 600-1 - GenAI risk language strengthens exact/blocked packet classification.
+- WEB-35: Git worktree - Parallel support and publication lanes should remain isolated.
+- WEB-36: GitHub push protection - Push hygiene supports the private-material firewall.
+- WEB-37: Node child_process - Runner subprocesses should keep command boundaries and summarized outputs.
+- WEB-38: Python subprocess - Python support watchers should stay bounded and avoid raw stream publication.
+- WEB-39: W3C VC 2.0 - Freed ID planning needs verifiable claims and privacy controls.
+- WEB-40: W3C DID Core - DID planning remains design work, not deployment closure.
+- WEB-41: NIST SP 800-63-4 - Digital identity assurance remains a standard-aligned design lane.
+- WEB-42: CODATA constants - GMUT comparisons need official constants and no premature closure.
+- WEB-43: Particle Data Group - Physics claims remain comparator-grounded.
+- WEB-44: LIGO data - Gravity-related claims need reproducible datasets.
+- WEB-45: GWOSC - Open gravitational-wave data can seed future validation.
+- WEB-46: Planck 2018 - Cosmology baselines remain source rows until validation.
+- WEB-47: SEP consciousness - Consciousness remains open and conceptually complex.
+- WEB-48: SEP neuroscience consciousness - CBR planning should not overclaim neural evidence.
+- WEB-49: OECD AI Principles - Trustworthy AI values support the governance rail.
+- WEB-50: OpenAI Codex changelog - Tool behavior can drift; phase startup must verify current state.
+
+## Journey
+
+- JOURNEY-01: v4 x1 closed by strict CLI and recovered app-lane gates.
+- JOURNEY-02: v4 x2 is a build/use/reducer lane, not a sibling messaging lane.
+- JOURNEY-03: Aster strict CLI completion, quality, and marker-review gates are the CLI standard.
+- JOURNEY-04: Kierkegaard and Aristotle app-lane completion gates are the recovered app-lane standard.
+- JOURNEY-05: Productive cadence remains mandatory during background waits.
+- JOURNEY-06: No raw sibling output is published in omega-mini-2.
+- JOURNEY-07: No private callable IDs are published in omega-mini-2.
+- JOURNEY-08: No local absolute paths are published in omega-mini-2.
+- JOURNEY-09: Goal Mode is active as a thread objective but not a separate unattended automation claim.
+- JOURNEY-10: v5 x1 should return to Lumen unless Hamish redirects.
+- JOURNEY-11: v4 x1 closed by strict CLI and recovered app-lane gates.
+- JOURNEY-12: v4 x2 is a build/use/reducer lane, not a sibling messaging lane.
+- JOURNEY-13: Aster strict CLI completion, quality, and marker-review gates are the CLI standard.
+- JOURNEY-14: Kierkegaard and Aristotle app-lane completion gates are the recovered app-lane standard.
+- JOURNEY-15: Productive cadence remains mandatory during background waits.
+- JOURNEY-16: No raw sibling output is published in omega-mini-2.
+- JOURNEY-17: No private callable IDs are published in omega-mini-2.
+- JOURNEY-18: No local absolute paths are published in omega-mini-2.
+- JOURNEY-19: Goal Mode is active as a thread objective but not a separate unattended automation claim.
+- JOURNEY-20: v5 x1 should return to Lumen unless Hamish redirects.
+- JOURNEY-21: v4 x1 closed by strict CLI and recovered app-lane gates.
+- JOURNEY-22: v4 x2 is a build/use/reducer lane, not a sibling messaging lane.
+- JOURNEY-23: Aster strict CLI completion, quality, and marker-review gates are the CLI standard.
+- JOURNEY-24: Kierkegaard and Aristotle app-lane completion gates are the recovered app-lane standard.
+- JOURNEY-25: Productive cadence remains mandatory during background waits.
+- JOURNEY-26: No raw sibling output is published in omega-mini-2.
+- JOURNEY-27: No private callable IDs are published in omega-mini-2.
+- JOURNEY-28: No local absolute paths are published in omega-mini-2.
+- JOURNEY-29: Goal Mode is active as a thread objective but not a separate unattended automation claim.
+- JOURNEY-30: v5 x1 should return to Lumen unless Hamish redirects.
+- JOURNEY-31: v4 x1 closed by strict CLI and recovered app-lane gates.
+- JOURNEY-32: v4 x2 is a build/use/reducer lane, not a sibling messaging lane.
+- JOURNEY-33: Aster strict CLI completion, quality, and marker-review gates are the CLI standard.
+- JOURNEY-34: Kierkegaard and Aristotle app-lane completion gates are the recovered app-lane standard.
+- JOURNEY-35: Productive cadence remains mandatory during background waits.
+- JOURNEY-36: No raw sibling output is published in omega-mini-2.
+- JOURNEY-37: No private callable IDs are published in omega-mini-2.
+- JOURNEY-38: No local absolute paths are published in omega-mini-2.
+- JOURNEY-39: Goal Mode is active as a thread objective but not a separate unattended automation claim.
+- JOURNEY-40: v5 x1 should return to Lumen unless Hamish redirects.
+- JOURNEY-41: v4 x1 closed by strict CLI and recovered app-lane gates.
+- JOURNEY-42: v4 x2 is a build/use/reducer lane, not a sibling messaging lane.
+- JOURNEY-43: Aster strict CLI completion, quality, and marker-review gates are the CLI standard.
+- JOURNEY-44: Kierkegaard and Aristotle app-lane completion gates are the recovered app-lane standard.
+- JOURNEY-45: Productive cadence remains mandatory during background waits.
+- JOURNEY-46: No raw sibling output is published in omega-mini-2.
+- JOURNEY-47: No private callable IDs are published in omega-mini-2.
+- JOURNEY-48: No local absolute paths are published in omega-mini-2.
+- JOURNEY-49: Goal Mode is active as a thread objective but not a separate unattended automation claim.
+- JOURNEY-50: v5 x1 should return to Lumen unless Hamish redirects.
