@@ -1,27 +1,18 @@
 # Omega Mini Current State
 
-Status: PASS_V553_V3_X1_CLOSED_V3_X2_READY
-Current active phase: v553-gmut-thos-v3-x2
-Latest closed phase: v553-gmut-thos-v3-x1
+Status: PASS_V553_V3_X2_CLOSED_V4_X1_READY
+Current active phase: v553-gmut-thos-v4-x1
+Latest closed phase: v553-gmut-thos-v3-x2
 Latest completed x1: v553-gmut-thos-v3-x1
-Latest completed x2: v553-gmut-thos-v2-x2
-Next x2 scope: v553-gmut-thos-v3-x2
+Latest completed x2: v553-gmut-thos-v3-x2
 Next x1 lane after x2: v553-gmut-thos-v4-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects
 Goal Mode status: active_thread_goal_not_unattended_automation
 
-## v553 v3 x1 Lumen Closeout
+## v553 v3 x2 Closeout
 
-- status: PASS_V553_V3_X1_CLOSED_V3_X2_READY
-- Lumen response harvested: true
-- safe packets: 50
-- candidate packets: 30
-- exact packets: 20
-- blocked packets: 10
-
-## Goal Mode Reconciliation
-
-- status: PASS_THREAD_GOAL_MODE_RECONCILED_NOT_UNATTENDED_AUTOMATION
-- unattended automation claimed: false
+- status: PASS_V553_V3_X2_CLOSED_V4_X1_READY
+- web reflections: 50
+- Journey reflections: 51
 
 ## Lookup Files
 

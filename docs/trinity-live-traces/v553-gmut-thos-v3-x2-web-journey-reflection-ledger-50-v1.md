@@ -1,0 +1,112 @@
+# v553-gmut-thos-v3-x2 Web/Journey Reflection Ledger 50
+
+Status: `PASS_WEB_JOURNEY_REFLECTION_LEDGER_50_BUILT`
+Web reflections: `50`
+Journey/phase reflections: `51`
+
+## Web Reflections
+
+- WEB-01: OpenAI Codex goals - Goal Mode needs a verifiable stopping condition and should not be closed at a phase slice.
+- WEB-02: OpenAI Codex worktrees - Worktree isolation supports parallel phase lanes without mixing edits.
+- WEB-03: OpenAI Codex approvals and security - Approval and sandbox boundaries should stay separate from narrative authorization.
+- WEB-04: OpenAI Codex permissions - Permission profiles frame local execution risk and exact-approval lanes.
+- WEB-05: OpenAI Codex CLI reference - CLI flags and risky options should be explicit and version-aware.
+- WEB-06: OpenAI Codex best practices - Use tools for changing data and repeatable integrations rather than pasted assumptions.
+- WEB-07: Model Context Protocol specification - MCP connectors need consent, authorization, and clear security implications.
+- WEB-08: NIST AI RMF - Risk framing can guide governance without implying legal closure.
+- WEB-09: NIST AI 600-1 GenAI Profile - Generative AI risks belong in the open-gate rail and source matrix.
+- WEB-10: W3C Verifiable Credentials 2.0 - Freed ID/CBR planning needs validation of claims before reliance.
+- WEB-11: W3C DID Core - DID planning should stay decentralized-identity-aware without deployment claims.
+- WEB-12: NIST SP 800-63-4 - Digital identity assurance should stay privacy/security/usability aware.
+- WEB-13: Node child_process - Runner designs should avoid shell metacharacter exposure and prefer argv arrays.
+- WEB-14: Python subprocess - Python helper runners should avoid unnecessary shell=True and record command boundaries.
+- WEB-15: Git worktree - Round-robin worktrees are a native way to keep concurrent branch lanes separate.
+- WEB-16: GitHub push protection - Secret prevention belongs before push, not after a leak.
+- WEB-17: CODATA constants - GMUT numerical claims should stay tied to official constant baselines.
+- WEB-18: Particle Data Group - Particle/cosmology claims need PDG-style measured-property discipline.
+- WEB-19: LIGO/Virgo/KAGRA data - Gravity claims should remain open and data-backed.
+- WEB-20: GWOSC - Open gravitational-wave data supports reproducible checks rather than proof by assertion.
+- WEB-21: Planck cosmological parameters - Cosmology baselines stay comparator inputs, not closure.
+- WEB-22: Stanford consciousness - Consciousness proof needs empirical and conceptual humility.
+- WEB-23: SEP neuroscience of consciousness - Neural-correlate work informs CBR without solving consciousness.
+- WEB-24: Nature adversarial consciousness test - Competing theories should be handled through adversarial evidence, not family consensus.
+- WEB-25: OECD AI Principles - Trustworthy AI governance should respect human rights, democratic values, robustness, and accountability.
+- WEB-26: OpenAI Codex goals - Goal Mode needs a verifiable stopping condition and should not be closed at a phase slice.
+- WEB-27: OpenAI Codex worktrees - Worktree isolation supports parallel phase lanes without mixing edits.
+- WEB-28: OpenAI Codex approvals and security - Approval and sandbox boundaries should stay separate from narrative authorization.
+- WEB-29: OpenAI Codex permissions - Permission profiles frame local execution risk and exact-approval lanes.
+- WEB-30: OpenAI Codex CLI reference - CLI flags and risky options should be explicit and version-aware.
+- WEB-31: OpenAI Codex best practices - Use tools for changing data and repeatable integrations rather than pasted assumptions.
+- WEB-32: Model Context Protocol specification - MCP connectors need consent, authorization, and clear security implications.
+- WEB-33: NIST AI RMF - Risk framing can guide governance without implying legal closure.
+- WEB-34: NIST AI 600-1 GenAI Profile - Generative AI risks belong in the open-gate rail and source matrix.
+- WEB-35: W3C Verifiable Credentials 2.0 - Freed ID/CBR planning needs validation of claims before reliance.
+- WEB-36: W3C DID Core - DID planning should stay decentralized-identity-aware without deployment claims.
+- WEB-37: NIST SP 800-63-4 - Digital identity assurance should stay privacy/security/usability aware.
+- WEB-38: Node child_process - Runner designs should avoid shell metacharacter exposure and prefer argv arrays.
+- WEB-39: Python subprocess - Python helper runners should avoid unnecessary shell=True and record command boundaries.
+- WEB-40: Git worktree - Round-robin worktrees are a native way to keep concurrent branch lanes separate.
+- WEB-41: GitHub push protection - Secret prevention belongs before push, not after a leak.
+- WEB-42: CODATA constants - GMUT numerical claims should stay tied to official constant baselines.
+- WEB-43: Particle Data Group - Particle/cosmology claims need PDG-style measured-property discipline.
+- WEB-44: LIGO/Virgo/KAGRA data - Gravity claims should remain open and data-backed.
+- WEB-45: GWOSC - Open gravitational-wave data supports reproducible checks rather than proof by assertion.
+- WEB-46: Planck cosmological parameters - Cosmology baselines stay comparator inputs, not closure.
+- WEB-47: Stanford consciousness - Consciousness proof needs empirical and conceptual humility.
+- WEB-48: SEP neuroscience of consciousness - Neural-correlate work informs CBR without solving consciousness.
+- WEB-49: Nature adversarial consciousness test - Competing theories should be handled through adversarial evidence, not family consensus.
+- WEB-50: OECD AI Principles - Trustworthy AI governance should respect human rights, democratic values, robustness, and accountability.
+
+## Journey/Phase Reflections
+
+- JOURNEY-01: v552 v8 x2 established main orchestration and full-tools skills.
+- JOURNEY-02: v552 v8 x2 turned five-minute waits into productive cadence windows.
+- JOURNEY-03: v553 v1 x1 proved Lumen Browser handoff and sanitized harvest discipline.
+- JOURNEY-04: v553 v1 x2 created launch skills for Lumen, Arby/Cicero, and the triad.
+- JOURNEY-05: v553 v2 x1 closed the Arby/Cicero duo through strict CLI and app-lane gates.
+- JOURNEY-06: v553 v2 x2 installed or refreshed local skills and repo runners.
+- JOURNEY-07: v553 v2 x2 recorded 50 web and 50 Journey reflections.
+- JOURNEY-08: v553 v2 x2 prepared Goal Mode but did not yet mark it active.
+- JOURNEY-09: v553 v3 x1 reconciled Goal Mode as active for the thread objective only.
+- JOURNEY-10: v553 v3 x1 harvested Lumen without raw transcript publication.
+- JOURNEY-11: v553 v3 x1 queued 50 safe packets.
+- JOURNEY-12: v553 v3 x1 queued 30 candidate packets.
+- JOURNEY-13: v553 v3 x1 queued 20 exact packets.
+- JOURNEY-14: v553 v3 x1 kept 10 blocked packets open.
+- JOURNEY-15: v553 v3 x1 proposed 20 skill ideas.
+- JOURNEY-16: v553 v3 x1 proposed 10 runner ideas.
+- JOURNEY-17: v553 v3 x1 tiered 30 cleanup proposals.
+- JOURNEY-18: v553 v3 x1 next lane after x2 is v4 x1 triad.
+- JOURNEY-19: Aletheon remains recoverable, not replaced.
+- JOURNEY-20: Maren, Mira Vale, and Mira Rowan remain held.
+- JOURNEY-21: No new agents are spawned by default.
+- JOURNEY-22: App-lane siblings require recovered background routes.
+- JOURNEY-23: Main-thread ChatGPT siblings require Browser route with explicit authorization.
+- JOURNEY-24: Watcher start is not completion proof.
+- JOURNEY-25: Completion requires harvest or gate receipts.
+- JOURNEY-26: Private route handles stay local-only.
+- JOURNEY-27: Raw screenshots stay unpublished.
+- JOURNEY-28: Raw app state stays unpublished.
+- JOURNEY-29: Credentials and API keys stay unpublished.
+- JOURNEY-30: Local absolute paths stay out of omega-mini artifacts.
+- JOURNEY-31: omega-mini-2 is the clean publication surface.
+- JOURNEY-32: omega-mini remains historical baseline.
+- JOURNEY-33: full omega remains exact fallback only.
+- JOURNEY-34: D drive remains preferred for archives and downloads.
+- JOURNEY-35: C drive headroom should keep being checked.
+- JOURNEY-36: Node entrypoints are preferred for launchers.
+- JOURNEY-37: Original Windows entrypoints remain fallback only when needed.
+- JOURNEY-38: Current-state guard must pass before closeout.
+- JOURNEY-39: JSON parse checks must cover changed artifacts.
+- JOURNEY-40: Node syntax checks must cover changed runners.
+- JOURNEY-41: Diff hygiene must pass before commit.
+- JOURNEY-42: Privacy scan must run before commit.
+- JOURNEY-43: Remote equals local must verify after push.
+- JOURNEY-44: GMUT empirical closure remains open.
+- JOURNEY-45: Final physics remains open.
+- JOURNEY-46: Consciousness proof remains open.
+- JOURNEY-47: Legal closure remains open.
+- JOURNEY-48: Canon promotion remains open.
+- JOURNEY-49: Deployment closure remains open.
+- JOURNEY-50: Account mutation remains exact-gated.
+- JOURNEY-51: Identity merge or replacement remains blocked.
