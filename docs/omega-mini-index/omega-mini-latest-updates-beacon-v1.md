@@ -1,34 +1,21 @@
 # Omega-Mini Current State
 
-Status: PASS_V554_V3_X1_CLOSED_V3_X2_READY
-Current active phase: v554-gmut-thos-v3-x2
-Latest closed phase: v554-gmut-thos-v3-x1
+Status: PASS_V554_V3_X2_CLOSED_V4_X1_READY
+Current active phase: v554-gmut-thos-v4-x1
+Latest closed phase: v554-gmut-thos-v3-x2
 Latest completed x1: v554-gmut-thos-v3-x1
-Latest completed x2: v554-gmut-thos-v2-x2
-Next x2 scope: v554-gmut-thos-v3-x2
-Next x1 lane after x2: v554-gmut-thos-v4-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects
+Latest completed x2: v554-gmut-thos-v3-x2
+Next x2 scope: v554-gmut-thos-v4-x2
+Next x1 lane after x2: v554-gmut-thos-v5-x1 with Lumen Vale solo unless Hamish redirects
 Goal Mode status: active_thread_goal_not_unattended_automation
 
-## v554 v3 x1 Lumen Closeout
+## v554 v3 x2 Closeout
 
-- status: `PASS_V554_V3_X1_CLOSED_V3_X2_READY`
-- Lumen response harvested: `true`
+- status: `PASS_V554_V3_X2_CLOSED_V4_X1_READY`
 - full goal complete: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v553-gmut-thos-v7-x1-trinity-mandala-planning-matrix-v1.json
-- docs/trinity-live-traces/v553-gmut-thos-v7-x1-trinity-mandala-planning-matrix-v1.md
-- docs/trinity-live-traces/v553-gmut-thos-v7-x1-closeout-v1.json
-- docs/trinity-live-traces/v553-gmut-thos-v7-x1-closeout-v1.md
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-startup-context-v1.json
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-startup-context-v1.md
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-x2-safe-build-plan-v1.json
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-x2-safe-build-plan-v1.md
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-safe-runner-manifest-v1.json
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-safe-runner-manifest-v1.md
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-five-minute-productive-cadence-v1.json
-- docs/trinity-live-traces/v553-gmut-thos-v7-x2-five-minute-productive-cadence-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v7-x2-round-robin-workflow-standard-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v7-x2-round-robin-workflow-standard-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v7-x2-safe-execution-reducer-v1.json
@@ -177,7 +164,15 @@ Goal Mode status: active_thread_goal_not_unattended_automation
 - docs/trinity-live-traces/v554-gmut-thos-v3-x1-v4-x1-triad-prep-card-v1.md
 - docs/trinity-live-traces/v554-gmut-thos-v3-x1-closeout-v1.json
 - docs/trinity-live-traces/v554-gmut-thos-v3-x1-closeout-v1.md
-
-## Boundary
-
-No raw Browser route, private URL, raw transcript, screenshot, credential, local absolute path, session stream, private dump, private callable ID, hidden reasoning, proof closure, canon promotion, legal closure, deployment closure, account mutation, purchase, API-key creation, or sibling identity merge/replacement is published or claimed.
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-execution-index-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-execution-index-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-safe-execution-reducer-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-safe-execution-reducer-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-skill-runner-pack-install-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-skill-runner-pack-install-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-web-journey-reflection-ledger-50-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-web-journey-reflection-ledger-50-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-v4-triad-readiness-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-v4-triad-readiness-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-closeout-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v3-x2-closeout-v1.md
