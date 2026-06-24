@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 const args = new Map();
 for (let index = 2; index < process.argv.length; index += 2) args.set(process.argv[index], process.argv[index + 1]);
-const phaseSlug = args.get("--phase-slug") || "v554-gmut-thos-v4-x2";
+const phaseSlug = args.get("--phase-slug") || "v555-gmut-thos-v4-x2";
 console.log(JSON.stringify({
-  artifact_type: "ghc_v554_v4_x2_generated_runner_receipt",
+  artifact_type: "ghc_v555_v4_x2_generated_runner_receipt",
   runner_name: "aster_vale_runner_1_for_triad_x1_to_x2_continuity.mjs",
   generated_utc: new Date().toISOString(),
   phase_slug: phaseSlug,
-  overall_status: "PASS_V554_V4_X2_STATUS_RUNNER",
+  overall_status: "PASS_V555_V4_X2_STATUS_RUNNER",
   purpose: "Aster Vale runner 1 for triad x1 to x2 continuity",
-  source_id: "v554-gmut-thos-v4-x1-aster-vale-runner-01",
+  source_id: "v555-gmut-thos-v4-x1-aster-vale-runner-01",
   publication_boundary: {
     raw_browser_routes_published: false,
     private_urls_published: false,
