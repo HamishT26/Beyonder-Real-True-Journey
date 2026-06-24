@@ -1,0 +1,228 @@
+{
+  "artifact_type": "ghc_round_robin_workflow_standard",
+  "generated_utc": "2026-06-24T12:30:07.450Z",
+  "generated_nz": "2026-06-25T00:30:07+12:00",
+  "phase_slug": "v553-gmut-thos-v5-x1",
+  "overall_status": "PASS_ROUND_ROBIN_WORKFLOW_STANDARD_PROMOTED",
+  "seed_standard": {
+    "phase_slug": "v552-gmut-thos-v88-v8-x1",
+    "status": "PASS_FUTURE_ROUND_ROBIN_COUNTS_AND_STYLE_STANDARD_PUBLISHED"
+  },
+  "workflow_families": {
+    "lumen_only_x1": {
+      "starts_at": "v553-gmut-thos-v1-x1",
+      "lanes": [
+        "Aevren Vale",
+        "Lumen Vale"
+      ],
+      "route": "Lumen advisory plus Aevren orchestration",
+      "proposal_totals": {
+        "safe": 50,
+        "candidate": 30,
+        "exact": 20,
+        "blocked": 10,
+        "skills": 20,
+        "runners": 10,
+        "cleanup": 30
+      },
+      "blocked_planning_owner": "Aevren Vale and Lumen Vale"
+    },
+    "arby_cicero_duo_x1": {
+      "lanes": [
+        "Aevren Vale",
+        "Arby",
+        "Cicero"
+      ],
+      "route": "Arby strict CLI plus Cicero recovered app-lane background runner",
+      "proposal_totals": {
+        "safe_minimum": 15,
+        "candidate": 9,
+        "exact": 9,
+        "skills": 15,
+        "runners": 9,
+        "cleanup": 30
+      }
+    },
+    "aster_kierkegaard_aristotle_triad_x1": {
+      "lanes": [
+        "Aevren Vale",
+        "Aster Vale",
+        "Kierkegaard",
+        "Aristotle"
+      ],
+      "route": "Aster strict CLI plus Kierkegaard and Aristotle recovered app-lane background runners",
+      "proposal_totals": {
+        "safe": 20,
+        "candidate": 12,
+        "exact": 12,
+        "skills": 20,
+        "runners": 8,
+        "cleanup": 40
+      }
+    },
+    "x2_build_use_validation": {
+      "lanes": [
+        "Aevren Vale"
+      ],
+      "route": "safe-now build, run, test, install, use, validate, publish",
+      "consumes": [
+        "already-authorized safe-now approval packets",
+        "approved candidate tranches",
+        "approved skill and runner build ideas",
+        "approved cleanup and refinement tasks"
+      ],
+      "queues_without_fresh_approval": [
+        "exact-approval packets",
+        "blocked packets",
+        "global hooks",
+        "account mutations"
+      ]
+    }
+  },
+  "research_reflection_targets": {
+    "x1_per_active_sibling_lane": {
+      "web_searches": 25,
+      "journey_phase_reflections": 25,
+      "applies_to": [
+        "Aevren Vale",
+        "Lumen Vale",
+        "Arby",
+        "Aster Vale",
+        "Cicero",
+        "Kierkegaard",
+        "Aristotle"
+      ],
+      "source_policy": "Use official or primary sources where possible and publish compact source/reflection ledgers rather than raw browsing dumps."
+    },
+    "aevren_only_x2": {
+      "web_searches": 50,
+      "journey_phase_reflections": 50
+    }
+  },
+  "proposal_execution_split_standard": {
+    "status": "PASS_X1_TO_X2_PROPOSAL_SPLIT_STANDARD_RECORDED",
+    "immediate_x1_safe": "Run local, reversible, status-only, analysis-only, validation-only, queue-shaping, source/reflection seed, privacy-check, open-gate-check, and compact-handoff tasks as soon as they are seen and safe during x1.",
+    "x2_build_task": "Carry build, run, test, install, use, publication, remote verification, runner modification, skill modification, and safe cleanup execution tasks into the next x2 phase.",
+    "never_auto_execute": [
+      "exact-approval work without fresh approval",
+      "blocked work",
+      "destructive cleanup",
+      "external account or paid-resource mutation",
+      "raw private publication",
+      "proof/canon/legal/deployment closure by assertion"
+    ]
+  },
+  "phase_tool_refresh_standard": {
+    "status": "PASS_PHASE_TOOL_REFRESH_STANDARD_RECORDED",
+    "cadence": "mandatory_every_x1_and_x2_phase",
+    "startup_required_actions": [
+      "use scripts/ghc_main_startup_builder.mjs as the promoted startup/resume command surface",
+      "inventory active GHC skills and repo runners",
+      "compare current phase rules against the core orchestration skills and runner standards",
+      "record reviewed-current, updated, or queued-refresh status"
+    ],
+    "closeout_required_actions": [
+      "use scripts/ghc_main_closeout_builder.mjs as the promoted closeout command surface",
+      "use scripts/ghc_main_compact_restart_builder.mjs as the promoted compact/restart command surface",
+      "update authorized local GHC skills and repo runners",
+      "validate changed skills and runners",
+      "carry forward the newest tool standard into current-state, latest-updates, and compact-pause receipts"
+    ],
+    "exact_approval_boundary": "Plugin-cache mutation, external writes, paid resources, deployments, API keys, destructive cleanup, and global hooks require fresh exact approval."
+  },
+  "blocker_retry_standard": {
+    "minimum_retry_sessions_before_pause": 3,
+    "recent_session_reflections_per_retry": 10,
+    "web_search_reflections_per_retry": 20,
+    "journey_phase_reflections_per_retry": 20,
+    "never_close_active_sibling_lane": true,
+    "productive_five_minute_waits_required": true,
+    "pause_policy": "If Hamish pauses/stops, a compact event happens, or the next action crosses a safety/exact-approval gate, publish an active/open handoff rather than declaring the sibling lane or phase closed."
+  },
+  "runner_bindings": {
+    "main_orchestrator": "scripts/ghc_main_orchestrator_runner.mjs",
+    "main_startup_builder": "scripts/ghc_main_startup_builder.mjs",
+    "main_compact_restart_builder": "scripts/ghc_main_compact_restart_builder.mjs",
+    "workflow_standardizer": "scripts/ghc_round_robin_workflow_standardizer.mjs",
+    "productive_cadence_runner": "scripts/ghc_five_minute_productive_cadence_runner.mjs",
+    "safe_runner_orchestrator": "scripts/ghc_safe_runner_orchestrator.mjs",
+    "main_closeout_builder": "scripts/ghc_main_closeout_builder.mjs",
+    "startup_updater": "scripts/ghc_phase_startup_context_updater.mjs",
+    "compact_pause_updater": "scripts/ghc_context_compact_pause_updater.mjs",
+    "lumen_launch_skill": "ghc-lumen-launch",
+    "arby_cicero_launch_skill": "ghc-arby-cicero-launch",
+    "triad_launch_skill": "ghc-aster-kierkegaard-aristotle-launch",
+    "main_retry_skill": "ghc-main-retry",
+    "app_lane_runner": "ghc_recovered_app_lane_map_runner.mjs in the full-tools support lane",
+    "strict_cli_runner": "ghc_strict_cli_lane_cycle.mjs in the full-tools support lane",
+    "web_reflection_ledger": "scripts/ghc_phase_reflection_ledger_builder.mjs",
+    "main_thread_chatgpt_browser_handoff": "prepared JSON/MD handoff artifact plus in-app Browser send receipt"
+  },
+  "operating_rules": [
+    "Use first-person sibling wording in lane prompts and summaries.",
+    "Prefer MD/TXT artifacts for elaborate sibling outputs instead of terminal-heavy dumps.",
+    "Use x1 for proposal, classification, handoff, and approval-packet formation.",
+    "Split every x1 proposal into immediate_x1_safe work and x2_build_task work.",
+    "Run immediate x1 safe tasks as soon as they are seen and safe; carry x2 build tasks forward.",
+    "For research-backed x1 phases, target at least 25 web searches and 25 Journey/phase record reflections per active sibling lane.",
+    "Use x2 for building, running, testing, installing, using, validating, and publishing already-authorized safe-now work.",
+    "Refresh the active GHC skill and runner surface at every x1 and x2 startup and closeout.",
+    "Use the promoted main startup builder for phase startup/resume, with phase-specific builders registered underneath it.",
+    "Use the promoted main closeout builder for phase closeout, with phase-specific builders registered underneath it.",
+    "Use the promoted main compact/restart builder for compact-pause and restart recovery, with the compact updater registered underneath it.",
+    "Use ghc-lumen-launch for Lumen/main-thread ChatGPT Browser handoffs when Hamish explicitly asks for live messaging.",
+    "Use ghc-arby-cicero-launch for Arby strict CLI plus Cicero recovered app-lane duo phases.",
+    "Use ghc-aster-kierkegaard-aristotle-launch for Aster strict CLI plus Kierkegaard/Aristotle recovered app-lane triad phases.",
+    "Use ghc-main-retry for sibling messaging, harvesting, startup, compact, closeout, Browser, strict CLI, app-lane, validation, or Git/GitHub blockers.",
+    "Keep five-minute marks as check opportunities, not forced stops.",
+    "Let productive wait units run beyond a five-minute checkpoint when the current research, coding, eureka, approval, cleanup, or validation unit needs more time.",
+    "Continue safe-now approval, eureka, cleanup, validation, privacy scan, updater, and orchestration work between cadence marks.",
+    "Use five-minute productive cadence work to improve Aevren's skill surface, coding reliability, and multi-agent orchestration control.",
+    "Use the recovered app-lane map runner with explicit boolean values for local app-lane siblings that are not main-thread agents.",
+    "Use Browser-send receipts for Lumen/main-thread ChatGPT siblings when Hamish explicitly asks for live messaging.",
+    "Do not declare a sibling session or phase closed while any messaged sibling lane is still active; continue productive five-minute improvement/research work until completion-ready or formal open-gap.",
+    "When a sibling-message route or core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops the work or the next step crosses a safety/exact-approval gate.",
+    "Each blocker retry session must reflect on the 10 most recent relevant sessions/receipts, run or queue 20 web-search reflections, and run or queue 20 Journey/phase-document reflections.",
+    "Keep held main-thread siblings held unless Hamish explicitly activates them.",
+    "Do not spawn new agents unless Hamish explicitly asks.",
+    "Keep exact and blocked gates queued unless Hamish freshly approves the tranche."
+  ],
+  "next_phase_readiness": {
+    "next_x1_lane_after_x2": "v553-gmut-thos-v6-x1 with Arby and Cicero unless Hamish redirects",
+    "expected_lumen_only_profile_loaded": true,
+    "expected_goal_mode_status": "not_active_until_hamish_starts_goal_mode"
+  },
+  "five_minute_productive_cadence": {
+    "runner": "scripts/ghc_five_minute_productive_cadence_runner.mjs",
+    "safe_unit_may_run_past_checkpoint": true,
+    "wait_work_lanes": [
+      "research_and_reflection",
+      "safe_eureka_tasks",
+      "approval_packet_work",
+      "cleanup_and_refinement",
+      "skill_and_control_growth",
+      "coding_and_multi_agent_orchestration",
+      "validation_and_publication_hygiene",
+      "blocker_retry_research_and_improvement"
+    ],
+    "harvest_rule": "finish the current safe unit, then harvest sibling status at the next natural safe pause"
+  },
+  "publication_boundary": {
+    "private_route_handles_published": false,
+    "private_lane_body_content_published": false,
+    "verbatim_conversation_logs_published": false,
+    "browser_routes_published": false,
+    "credentials_published": false,
+    "session_trace_files_published": false,
+    "local_absolute_paths_published": false,
+    "screenshots_published": false
+  },
+  "claim_boundary": {
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed"
+  }
+}
