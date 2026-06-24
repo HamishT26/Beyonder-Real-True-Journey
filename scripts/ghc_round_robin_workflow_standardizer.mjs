@@ -26,10 +26,8 @@ const phaseStatus =
   (phaseSlug.startsWith("v553-gmut-thos-v1-x1")
     ? "V553_V1_X1_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED"
     : "V552_V8_X2_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED");
-const defaultNextX1Lane = phaseSlug === "v553-gmut-thos-v1-x1"
-  ? "v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects"
-  : "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects";
-const nextX1LaneAfterX2 = args.get("--next-x1-lane-after-x2") || currentState.next_x1_lane_after_x2 || defaultNextX1Lane;
+const defaultNextX1Lane = inferNextX1LaneAfterX2(phaseSlug);
+const nextX1LaneAfterX2 = args.get("--next-x1-lane-after-x2") || defaultNextX1Lane || currentState.next_x1_lane_after_x2;
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
@@ -509,6 +507,25 @@ function readJson(file) {
 
 function unique(values) {
   return [...new Set(values.filter(Boolean))];
+}
+
+function inferNextX1LaneAfterX2(slug) {
+  const match = /^v(\d+)-gmut-thos-v(\d+)-x[12]$/.exec(slug || "");
+  if (!match) {
+    return "v553-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects";
+  }
+  const major = Number(match[1]);
+  const subphase = Number(match[2]);
+  if (subphase >= 8) {
+    return `v${major + 1}-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects`;
+  }
+  if (subphase === 1) {
+    return `v${major}-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects`;
+  }
+  if (subphase % 2 === 0) {
+    return `v${major}-gmut-thos-v${subphase + 1}-x1 with Lumen Vale solo unless Hamish redirects`;
+  }
+  return `v${major}-gmut-thos-v${subphase + 1}-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects`;
 }
 
 function nzTimestamp(date) {
