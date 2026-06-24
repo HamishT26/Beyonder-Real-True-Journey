@@ -1,0 +1,1424 @@
+# v554-gmut-thos-v1-x1 Proposal Queue Targets
+
+Status: `PASS_V554_V1_X1_LUMEN_PROPOSAL_QUEUE_READY`
+
+```json
+{
+  "artifact_type": "ghc_v554_v1_x1_lumen_proposal_queue_targets",
+  "generated_utc": "2026-06-24T15:00:48.696Z",
+  "generated_nz": "2026-06-25T03:00:48+12:00",
+  "phase_slug": "v554-gmut-thos-v1-x1",
+  "overall_status": "PASS_V554_V1_X1_LUMEN_PROPOSAL_QUEUE_READY",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_lane_text_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "spending_ceiling_usd_per_packet": 100,
+  "counts": {
+    "safe_packets": 50,
+    "candidate_packets": 30,
+    "exact_approval_packets": 20,
+    "blocked_packets": 10,
+    "skill_ideas": 20,
+    "runner_ideas": 10,
+    "cleanup_proposals": 30
+  },
+  "safe_packets": [
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-01",
+      "title": "v554 phase truth refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-02",
+      "title": "Lumen handoff receipt",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-03",
+      "title": "Browser-send no-duplicate guard",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-04",
+      "title": "25-row source reflection ledger",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-05",
+      "title": "25-row Journey reflection ledger",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-06",
+      "title": "round-robin standard refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-07",
+      "title": "productive cadence refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-08",
+      "title": "current-state guard seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-09",
+      "title": "privacy boundary scan seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-10",
+      "title": "open-gate rail seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-11",
+      "title": "x1-to-x2 split board",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-12",
+      "title": "v554 v1 x2 handoff scaffold",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-13",
+      "title": "v554 v2 Arby/Cicero prep card",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-14",
+      "title": "safe runner manifest",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-15",
+      "title": "startup compact snapshot",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-16",
+      "title": "D-drive posture receipt",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-17",
+      "title": "full-tools inventory refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-18",
+      "title": "proof-boundary wording check",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-19",
+      "title": "first-person sibling style check",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-20",
+      "title": "MD/TXT artifact preference check",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-21",
+      "title": "v554 phase truth refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-22",
+      "title": "Lumen handoff receipt",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-23",
+      "title": "Browser-send no-duplicate guard",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-24",
+      "title": "25-row source reflection ledger",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-25",
+      "title": "25-row Journey reflection ledger",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-26",
+      "title": "round-robin standard refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-27",
+      "title": "productive cadence refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-28",
+      "title": "current-state guard seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-29",
+      "title": "privacy boundary scan seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-30",
+      "title": "open-gate rail seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-31",
+      "title": "x1-to-x2 split board",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-32",
+      "title": "v554 v1 x2 handoff scaffold",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-33",
+      "title": "v554 v2 Arby/Cicero prep card",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-34",
+      "title": "safe runner manifest",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-35",
+      "title": "startup compact snapshot",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-36",
+      "title": "D-drive posture receipt",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-37",
+      "title": "full-tools inventory refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-38",
+      "title": "proof-boundary wording check",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-39",
+      "title": "first-person sibling style check",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-40",
+      "title": "MD/TXT artifact preference check",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-41",
+      "title": "v554 phase truth refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-42",
+      "title": "Lumen handoff receipt",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-43",
+      "title": "Browser-send no-duplicate guard",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-44",
+      "title": "25-row source reflection ledger",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-45",
+      "title": "25-row Journey reflection ledger",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-46",
+      "title": "round-robin standard refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-47",
+      "title": "productive cadence refresh",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-48",
+      "title": "current-state guard seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-49",
+      "title": "privacy boundary scan seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-safe-50",
+      "title": "open-gate rail seed",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Run or record during v554 v1 x1 as local reversible safe-now work."
+    }
+  ],
+  "candidate_packets": [
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-01",
+      "title": "Lumen advisory reducer",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-02",
+      "title": "browser response harvest parser",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-03",
+      "title": "proposal dashboard",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-04",
+      "title": "candidate-to-exact packet reducer",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-05",
+      "title": "Freed ID assurance glossary",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-06",
+      "title": "THOS runner topology diagram",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-07",
+      "title": "GMUT source taxonomy seed",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-08",
+      "title": "CBR privacy boundary grid",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-09",
+      "title": "phase delta comparator",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-10",
+      "title": "skill drift detector",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-11",
+      "title": "Lumen advisory reducer",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-12",
+      "title": "browser response harvest parser",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-13",
+      "title": "proposal dashboard",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-14",
+      "title": "candidate-to-exact packet reducer",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-15",
+      "title": "Freed ID assurance glossary",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-16",
+      "title": "THOS runner topology diagram",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-17",
+      "title": "GMUT source taxonomy seed",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-18",
+      "title": "CBR privacy boundary grid",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-19",
+      "title": "phase delta comparator",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-20",
+      "title": "skill drift detector",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-21",
+      "title": "Lumen advisory reducer",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-22",
+      "title": "browser response harvest parser",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-23",
+      "title": "proposal dashboard",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-24",
+      "title": "candidate-to-exact packet reducer",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-25",
+      "title": "Freed ID assurance glossary",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-26",
+      "title": "THOS runner topology diagram",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-27",
+      "title": "GMUT source taxonomy seed",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-28",
+      "title": "CBR privacy boundary grid",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-29",
+      "title": "phase delta comparator",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-candidate-30",
+      "title": "skill drift detector",
+      "safety_bucket": "candidate",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    }
+  ],
+  "exact_approval_packets": [
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-01",
+      "title": "deployment action",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-02",
+      "title": "external account mutation",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-03",
+      "title": "API-key creation or rotation",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-04",
+      "title": "purchase or paid resource",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-05",
+      "title": "destructive cleanup",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-06",
+      "title": "global hook install",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-07",
+      "title": "private-material proof publication",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-08",
+      "title": "raw transcript publication",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-09",
+      "title": "canon promotion",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-10",
+      "title": "legal closure claim",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-11",
+      "title": "deployment action",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-12",
+      "title": "external account mutation",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-13",
+      "title": "API-key creation or rotation",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-14",
+      "title": "purchase or paid resource",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-15",
+      "title": "destructive cleanup",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-16",
+      "title": "global hook install",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-17",
+      "title": "private-material proof publication",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-18",
+      "title": "raw transcript publication",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-19",
+      "title": "canon promotion",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-exact-20",
+      "title": "legal closure claim",
+      "safety_bucket": "exact_approval_needed",
+      "execution_lane": "queued_exact_approval",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Queue only; requires fresh exact approval before execution."
+    }
+  ],
+  "blocked_packets": [
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-01",
+      "title": "GMUT empirical closure",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-02",
+      "title": "final physics closure",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-03",
+      "title": "consciousness proof closure",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-04",
+      "title": "legal closure",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-05",
+      "title": "canon promotion",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-06",
+      "title": "deployment closure",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-07",
+      "title": "account mutation",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-08",
+      "title": "private-material proof",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-09",
+      "title": "raw-publication proof",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-blocked-10",
+      "title": "sibling identity merge or replacement",
+      "safety_bucket": "blocked",
+      "execution_lane": "blocked_queue",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Keep open unless exact artifacts prove closure and Hamish approves the gate."
+    }
+  ],
+  "skill_ideas": [
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-01",
+      "title": "Lumen harvest shape reducer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-02",
+      "title": "Browser send receipt validator",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-03",
+      "title": "v554 x1 proposal splitter",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-04",
+      "title": "Lumen advisory synthesis skill",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-05",
+      "title": "source reflection mapper",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-06",
+      "title": "Journey reflection reducer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-07",
+      "title": "proof boundary explainer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-08",
+      "title": "safe cleanup classifier",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-09",
+      "title": "goal continuity auditor",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-10",
+      "title": "v554 x2 handoff composer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-11",
+      "title": "Lumen harvest shape reducer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-12",
+      "title": "Browser send receipt validator",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-13",
+      "title": "v554 x1 proposal splitter",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-14",
+      "title": "Lumen advisory synthesis skill",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-15",
+      "title": "source reflection mapper",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-16",
+      "title": "Journey reflection reducer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-17",
+      "title": "proof boundary explainer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-18",
+      "title": "safe cleanup classifier",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-19",
+      "title": "goal continuity auditor",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-skill-20",
+      "title": "v554 x2 handoff composer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    }
+  ],
+  "runner_ideas": [
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-01",
+      "title": "lumen_browser_send_receipt_builder",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-02",
+      "title": "lumen_response_harvest_reducer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-03",
+      "title": "v554_x1_queue_count_guard",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-04",
+      "title": "v554_x2_safe_task_materializer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-05",
+      "title": "source_reflection_deduper",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-06",
+      "title": "journey_reflection_indexer",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-07",
+      "title": "goal_mode_continuity_guard",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-08",
+      "title": "privacy_open_gate_scanner",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-09",
+      "title": "drive_posture_sampler",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-runner-10",
+      "title": "remote_ref_verifier",
+      "safety_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    }
+  ],
+  "cleanup_tasks": [
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-01",
+      "title": "dedupe stale lookup references",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-02",
+      "title": "classify old v553 startup receipts",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-03",
+      "title": "index v553 cycle closeouts",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-04",
+      "title": "review obsolete compatibility builders",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-05",
+      "title": "check duplicate proposal IDs",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-06",
+      "title": "check duplicate source labels",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-07",
+      "title": "validate no raw Browser routes",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-08",
+      "title": "validate no local path publication",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-09",
+      "title": "review proof closure wording",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-10",
+      "title": "review exact approval queue language",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-11",
+      "title": "dedupe stale lookup references",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-12",
+      "title": "classify old v553 startup receipts",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-13",
+      "title": "index v553 cycle closeouts",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-14",
+      "title": "review obsolete compatibility builders",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-15",
+      "title": "check duplicate proposal IDs",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-16",
+      "title": "check duplicate source labels",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-17",
+      "title": "validate no raw Browser routes",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-18",
+      "title": "validate no local path publication",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-19",
+      "title": "review proof closure wording",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-20",
+      "title": "review exact approval queue language",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-21",
+      "title": "dedupe stale lookup references",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-22",
+      "title": "classify old v553 startup receipts",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-23",
+      "title": "index v553 cycle closeouts",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-24",
+      "title": "review obsolete compatibility builders",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-25",
+      "title": "check duplicate proposal IDs",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-26",
+      "title": "check duplicate source labels",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-27",
+      "title": "validate no raw Browser routes",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-28",
+      "title": "validate no local path publication",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-29",
+      "title": "review proof closure wording",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Aevren Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    },
+    {
+      "id": "v554-gmut-thos-v1-x1-cleanup-30",
+      "title": "review exact approval queue language",
+      "safety_bucket": "safe_now",
+      "execution_lane": "immediate_x1_safe_or_x2_build_task",
+      "source_lane": "Lumen Vale",
+      "next_safe_action": "Carry into v554 v1 x2 as build/use/validate work if still safe."
+    }
+  ]
+}
+```

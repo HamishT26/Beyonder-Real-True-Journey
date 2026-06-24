@@ -1,37 +1,24 @@
 # GHC Current State Beacon
 
-Status: PASS_V553_V8_X2_CLOSED_V554_V1_X1_READY
-Current active phase: v554-gmut-thos-v1-x1
-Latest closed phase: v553-gmut-thos-v8-x2
-Latest completed x1: v553-gmut-thos-v8-x1
+Status: PASS_V554_V1_X1_CLOSED_V1_X2_READY
+Current active phase: v554-gmut-thos-v1-x2
+Latest closed phase: v554-gmut-thos-v1-x1
+Latest completed x1: v554-gmut-thos-v1-x1
 Latest completed x2: v553-gmut-thos-v8-x2
+Next expected scope: v554-gmut-thos-v1-x2
 Next x2 scope: v554-gmut-thos-v1-x2
-Next x1 lane after x2: v554-gmut-thos-v1-x1 with Lumen unless Hamish redirects
+Next x1 lane after x2: v554-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects
 Goal Mode status: active_thread_goal_not_unattended_automation
 
-## v553 v8 x2 Closeout
+## v554 v1 x1 Lumen Closeout
 
-- status: `PASS_V553_V8_X2_CLOSED_V554_V1_X1_READY`
-- next active phase: `v554-gmut-thos-v1-x1`
+- status: `PASS_V554_V1_X1_CLOSED_V1_X2_READY`
+- Lumen harvested: `true`
+- live web reflections: `32`
+- Journey reflections: `30`
 
 ## Lookup Files
 
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-v7-lumen-prep-card-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-v7-lumen-prep-card-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-private-open-gate-rail-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-private-open-gate-rail-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-phase-status-index-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-phase-status-index-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-safe-runner-manifest-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-safe-runner-manifest-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-closeout-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-closeout-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v7-x1-lumen-startup-context-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v7-x1-lumen-startup-context-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v7-x1-lumen-handoff-message-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v7-x1-lumen-handoff-message-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v7-x1-web-reflection-ledger-30-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v7-x1-web-reflection-ledger-30-v1.md`
 - `docs/trinity-live-traces/v553-gmut-thos-v7-x1-journey-phase-reflection-ledger-30-v1.json`
 - `docs/trinity-live-traces/v553-gmut-thos-v7-x1-journey-phase-reflection-ledger-30-v1.md`
 - `docs/trinity-live-traces/v553-gmut-thos-v7-x1-proposal-queue-targets-v1.json`
@@ -156,3 +143,39 @@ Goal Mode status: active_thread_goal_not_unattended_automation
 - `docs/trinity-live-traces/v553-gmut-thos-v8-x2-phase-status-index-v1.md`
 - `docs/trinity-live-traces/v553-gmut-thos-v8-x2-closeout-v1.json`
 - `docs/trinity-live-traces/v553-gmut-thos-v8-x2-closeout-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-startup-context-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-startup-context-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-lumen-handoff-message-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-lumen-handoff-message-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-proposal-queue-targets-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-proposal-queue-targets-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-web-reflection-ledger-25-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-web-reflection-ledger-25-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-journey-phase-reflection-ledger-25-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-journey-phase-reflection-ledger-25-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-safe-runner-manifest-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-safe-runner-manifest-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-active-open-handoff-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-active-open-handoff-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-round-robin-workflow-standard-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-round-robin-workflow-standard-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-five-minute-productive-cadence-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-five-minute-productive-cadence-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-live-web-search-reflection-ledger-32-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-live-web-search-reflection-ledger-32-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-lumen-browser-harvest-sanitized-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-lumen-browser-harvest-sanitized-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-approval-eureka-closeout-reducer-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-approval-eureka-closeout-reducer-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-v1-x2-readiness-handoff-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-v1-x2-readiness-handoff-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-v2-arby-cicero-prep-card-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-v2-arby-cicero-prep-card-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-phase-status-index-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-phase-status-index-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-closeout-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-closeout-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-journey-phase-reflection-ledger-30-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v1-x1-journey-phase-reflection-ledger-30-v1.md`

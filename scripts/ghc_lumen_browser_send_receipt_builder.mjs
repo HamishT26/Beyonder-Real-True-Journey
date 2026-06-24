@@ -136,10 +136,12 @@ function refreshBeacons(receipt) {
 }
 
 function renderHandoffMd(data) {
+  const message = data.message_text || data.message || "";
+  const maximumCharacters = data.maximum_message_characters || data.message_character_count || message.length;
   return `# ${data.phase_slug} Lumen Handoff Message
 
 Status: \`${data.live_send_status}\`
-Maximum message characters: \`${data.maximum_message_characters}\`
+Message characters: \`${maximumCharacters}\`
 
 ## Browser Send Verification
 
@@ -150,7 +152,7 @@ Maximum message characters: \`${data.maximum_message_characters}\`
 
 ## Message
 
-${data.message}
+${message}
 
 ## Boundary
 
@@ -189,7 +191,7 @@ Next expected scope: ${current.next_expected_scope}
 Next x2 scope: ${current.next_x2_scope}
 Next x1 lane after x2: ${current.next_x1_lane_after_x2}
 
-## v553 v3 x1 Lumen Startup
+## ${summaryKey.replaceAll("_", " ")}
 
 - Status: \`${summary.status || "not_recorded"}\`
 - Lumen handoff: \`${summary.handoff_message_status || "not_recorded"}\`
@@ -229,7 +231,7 @@ Next expected scope: ${beacon.next_expected_scope}
 Next x2 scope: ${beacon.next_x2_scope}
 Next x1 lane after x2: ${beacon.next_x1_lane_after_x2}
 
-## v553 v3 x1 Lumen Startup
+## ${summaryKey.replaceAll("_", " ")}
 
 - Status: \`${summary.status || "not_recorded"}\`
 - Lumen handoff: \`${summary.handoff_message_status || "not_recorded"}\`
