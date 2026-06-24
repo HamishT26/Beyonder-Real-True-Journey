@@ -1,0 +1,21 @@
+# v555-gmut-thos-v1-x1 Lumen Startup Context
+
+Status: `ACTIVE_OPEN_V555_V1_X1_LUMEN_BACKGROUND_RUNNING`
+Latest closed phase: `v554-gmut-thos-v8-x2`
+Next x2 scope: `v555-gmut-thos-v1-x2`
+Browser send status: `browser_send_submitted_response_active`
+Closeout allowed now: `false`
+
+## Proposal Targets
+
+- safe_packets: `50`
+- candidate_packets: `30`
+- exact_approval_packets: `20`
+- blocked_packets: `10`
+- skill_ideas: `20`
+- runner_ideas: `10`
+- cleanup_proposals: `30`
+
+## Boundary
+
+No raw Browser route, private URL, raw transcript, screenshot, credential, local absolute path, session stream, private dump, private callable ID, hidden reasoning, proof closure, canon promotion, legal closure, deployment closure, account mutation, purchase, API-key creation, destructive cleanup, or sibling identity merge/replacement is published or claimed.
