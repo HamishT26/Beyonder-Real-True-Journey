@@ -68,6 +68,9 @@ function builderForPhase(slug, explicit) {
   if (slug === "v553-gmut-thos-v1-x1") {
     return "ghc_v553_v1_x1_lumen_startup_builder.mjs";
   }
+  if (slug === "v553-gmut-thos-v3-x1") {
+    return "ghc_v553_v3_x1_lumen_startup_builder.mjs";
+  }
   return null;
 }
 
