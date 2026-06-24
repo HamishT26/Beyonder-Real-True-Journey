@@ -20,9 +20,13 @@ const phaseSlug = args.get("--phase-slug") || currentState.current_active_phase 
 const latestClosedPhase = args.get("--latest-closed-phase") || currentState.latest_closed_phase || "v552-gmut-thos-v88-v8-x1";
 const latestCompletedX1 = args.get("--latest-completed-x1") || currentState.latest_completed_x1_phase || "v552-gmut-thos-v88-v8-x1";
 const latestCompletedX2 = args.get("--latest-completed-x2") || currentState.latest_completed_x2_phase || "v552-gmut-thos-v88-v7-x2";
-const nextX2Scope = args.get("--next-x2-scope") || phaseSlug;
+const nextX2Scope =
+  args.get("--next-x2-scope") ||
+  (currentState.current_active_phase === phaseSlug ? currentState.next_x2_scope : null) ||
+  phaseSlug;
 const phaseStatus =
   args.get("--status") ||
+  (currentState.current_active_phase === phaseSlug ? currentState.status : null) ||
   (phaseSlug.startsWith("v553-gmut-thos-v1-x1")
     ? "V553_V1_X1_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED"
     : "V552_V8_X2_ACTIVE_ROUND_ROBIN_WORKFLOW_STANDARDIZED");
@@ -519,13 +523,14 @@ function inferNextX1LaneAfterX2(slug) {
   if (subphase >= 8) {
     return `v${major + 1}-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects`;
   }
-  if (subphase === 1) {
-    return `v${major}-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects`;
+  const nextSubphase = subphase + 1;
+  if ([2, 6].includes(nextSubphase)) {
+    return `v${major}-gmut-thos-v${nextSubphase}-x1 with Arby and Cicero unless Hamish redirects`;
   }
-  if (subphase % 2 === 0) {
-    return `v${major}-gmut-thos-v${subphase + 1}-x1 with Lumen Vale solo unless Hamish redirects`;
+  if ([4, 8].includes(nextSubphase)) {
+    return `v${major}-gmut-thos-v${nextSubphase}-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects`;
   }
-  return `v${major}-gmut-thos-v${subphase + 1}-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects`;
+  return `v${major}-gmut-thos-v${nextSubphase}-x1 with Lumen Vale solo unless Hamish redirects`;
 }
 
 function nzTimestamp(date) {
