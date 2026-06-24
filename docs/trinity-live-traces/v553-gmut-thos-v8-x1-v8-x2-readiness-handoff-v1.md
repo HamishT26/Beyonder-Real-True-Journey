@@ -1,0 +1,57 @@
+# v553-gmut-thos-v8-x1 v8 x2 Readiness Handoff
+
+Status: `PASS_V8_X2_READINESS_HANDOFF`
+
+```json
+{
+  "artifact_type": "ghc_v553_v8_x1_v8_x2_readiness_handoff",
+  "generated_utc": "2026-06-24T14:30:29.343Z",
+  "generated_nz": "2026-06-25T02:30:29+12:00",
+  "phase_slug": "v553-gmut-thos-v8-x1",
+  "overall_status": "PASS_V8_X2_READINESS_HANDOFF",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_lane_text_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "v553_v8_x1_only",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "source_phase": "v553-gmut-thos-v8-x1",
+  "target_phase": "v553-gmut-thos-v8-x2",
+  "target_lane": "Aevren-only x2 safe build, run, test, install, use, validate, and publish sanitized receipts.",
+  "ready_to_start": true,
+  "safe_build_inputs": {
+    "safe_packets": 20,
+    "candidate_packets_to_consider_after_authorization": 12,
+    "skill_ideas": 20,
+    "runner_ideas": 8,
+    "cleanup_proposals": 40
+  },
+  "mandatory_next_gates": [
+    "Use main startup builder.",
+    "Use safe-runner orchestrator.",
+    "Keep exact and blocked gates closed.",
+    "Run JSON, privacy, open-gate, current-state, drive-space, Git, and remote-ref validation before closeout."
+  ]
+}
+```
