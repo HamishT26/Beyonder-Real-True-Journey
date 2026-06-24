@@ -81,7 +81,7 @@ const artifacts = [
   writePair("skill-runner-readiness-board", skillRunnerReadinessBoard(), renderSimpleMd("Skill Runner Readiness Board", skillRunnerReadinessBoard())),
   writePair("cleanup-tier-board", cleanupTierBoard(), renderSimpleMd("Cleanup Tier Board", cleanupTierBoard())),
   writePair("v8-x2-readiness-handoff", v8X2ReadinessHandoff(), renderSimpleMd("v8 x2 Readiness Handoff", v8X2ReadinessHandoff())),
-  writePair("v554-lumen-prep-card", v554LumenPrepCard(), renderSimpleMd("v554 Lumen Prep Card", v554LumenPrepCard())),
+  writePair("v555-lumen-prep-card", v554LumenPrepCard(), renderSimpleMd("v555 Lumen Prep Card", v554LumenPrepCard())),
   writePair("private-open-gate-rail", privateOpenGateRail(), renderSimpleMd("Private Open Gate Rail", privateOpenGateRail())),
   writePair("phase-status-index", phaseStatusIndex(), renderSimpleMd("Phase Status Index", phaseStatusIndex())),
   writePair("closeout", closeoutArtifact(), renderCloseoutMd(closeoutArtifact())),
@@ -332,7 +332,7 @@ function refreshBeacons() {
       : file.includes("ghc-current-state")
         ? "lookup_files"
         : "current_lookup_files";
-    doc[key] = unique([...(doc[key] || []), ...lookup]);
+    doc[key] = unique([...(doc[key] || []), ...lookup]).filter((item) => !item.includes("v554-lumen-prep-card"));
     writeJson(file, doc);
     writeBeaconMd(file, doc, doc[key]);
   }

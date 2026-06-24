@@ -5,8 +5,8 @@ Status: `PASS_TRIAD_HARVEST_REDUCED`
 ```json
 {
   "artifact_type": "ghc_v554_v8_x1_triad_harvest_reducer",
-  "generated_utc": "2026-06-24T19:11:43.167Z",
-  "generated_nz": "2026-06-25T07:11:43+12:00",
+  "generated_utc": "2026-06-24T19:14:38.336Z",
+  "generated_nz": "2026-06-25T07:14:38+12:00",
   "phase_slug": "v554-gmut-thos-v8-x1",
   "overall_status": "PASS_TRIAD_HARVEST_REDUCED",
   "publication_boundary": {

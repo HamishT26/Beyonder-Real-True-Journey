@@ -150,11 +150,11 @@ Goal Mode status: active_thread_goal_not_unattended_automation
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-cleanup-tier-board-v1.md`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-v8-x2-readiness-handoff-v1.json`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-v8-x2-readiness-handoff-v1.md`
-- `docs/trinity-live-traces/v554-gmut-thos-v8-x1-v554-lumen-prep-card-v1.json`
-- `docs/trinity-live-traces/v554-gmut-thos-v8-x1-v554-lumen-prep-card-v1.md`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-private-open-gate-rail-v1.json`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-private-open-gate-rail-v1.md`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-phase-status-index-v1.json`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-phase-status-index-v1.md`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-closeout-v1.json`
 - `docs/trinity-live-traces/v554-gmut-thos-v8-x1-closeout-v1.md`
+- `docs/trinity-live-traces/v554-gmut-thos-v8-x1-v555-lumen-prep-card-v1.json`
+- `docs/trinity-live-traces/v554-gmut-thos-v8-x1-v555-lumen-prep-card-v1.md`
