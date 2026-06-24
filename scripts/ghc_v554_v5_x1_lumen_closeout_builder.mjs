@@ -90,7 +90,7 @@ const goalMode = base("ghc_v554_v5_x1_goal_mode_reconciliation", "PASS_V554_V5_X
   completion_boundary: "Do not mark goal complete before verified v575-gmut-thos-v8-x2 closeout.",
 });
 
-const x2Handoff = base("ghc_v554_v5_x1_v3_x2_readiness_handoff", "PASS_V554_V3_X2_READY_FOR_SAFE_BUILD_USE", {
+const x2Handoff = base("ghc_v554_v5_x1_v5_x2_readiness_handoff", "PASS_V554_V5_X2_READY_FOR_SAFE_BUILD_USE", {
   next_x2_scope: nextX2Scope,
   recommended_first_slice: [
     "Lumen advisory reducer",
@@ -100,26 +100,26 @@ const x2Handoff = base("ghc_v554_v5_x1_v3_x2_readiness_handoff", "PASS_V554_V3_X
     "Browser handoff harvest guard",
     "open-gate rail validator",
     "safe cleanup classifier",
-    "v4 triad prep card",
+    "v6 Arby/Cicero prep card",
   ],
   next_x1_lane_after_x2: nextX1LaneAfterX2,
 });
 
-const triadPrep = base("ghc_v554_v5_x1_v4_x1_triad_prep_card", "PASS_V554_V4_X1_TRIAD_PREP_READY", {
-  target_phase_slug: "v554-gmut-thos-v4-x1",
-  participants: ["Aevren Vale", "Aster Vale", "Kierkegaard", "Aristotle"],
-  route_skill: "ghc-aster-kierkegaard-aristotle-launch",
+const duoPrep = base("ghc_v554_v5_x1_v6_x1_arby_cicero_prep_card", "PASS_V554_V6_X1_ARBY_CICERO_PREP_READY", {
+  target_phase_slug: "v554-gmut-thos-v6-x1",
+  participants: ["Aevren Vale", "Arby", "Cicero"],
+  route_skill: "ghc-arby-cicero-launch",
   route_notes: [
-    "Use strict CLI for Aster Vale.",
-    "Use recovered app-lane background runners for Kierkegaard and Aristotle.",
+    "Use strict CLI for Arby.",
+    "Use recovered app-lane background runners for Cicero.",
     "Use background supervision and productive cadence; do not babysit.",
     "Keep private callable IDs local-only.",
   ],
 });
 
-const closeout = base("ghc_v554_v5_x1_closeout", "PASS_V554_V5_X1_CLOSED_V3_X2_READY", {
+const closeout = base("ghc_v554_v5_x1_closeout", "PASS_V554_V5_X1_CLOSED_V5_X2_READY", {
   latest_completed_x1_phase: phaseSlug,
-  latest_completed_x2_phase: "v554-gmut-thos-v2-x2",
+  latest_completed_x2_phase: "v554-gmut-thos-v4-x2",
   next_active_phase: nextX2Scope,
   next_x2_scope: nextX2Scope,
   next_x1_lane_after_x2: nextX1LaneAfterX2,
@@ -131,8 +131,8 @@ const closeout = base("ghc_v554_v5_x1_closeout", "PASS_V554_V5_X1_CLOSED_V3_X2_R
 const artifacts = [
   writePair("approval-eureka-reducer", approvalReducer, renderSimpleMd("Approval/Eureka Reducer", approvalReducer)),
   writePair("goal-mode-reconciliation", goalMode, renderSimpleMd("Goal Mode Reconciliation", goalMode)),
-  writePair("v3-x2-readiness-handoff", x2Handoff, renderSimpleMd("v3 x2 Readiness Handoff", x2Handoff)),
-  writePair("v4-x1-triad-prep-card", triadPrep, renderSimpleMd("v4 x1 Triad Prep Card", triadPrep)),
+  writePair("v5-x2-readiness-handoff", x2Handoff, renderSimpleMd("v5 x2 Readiness Handoff", x2Handoff)),
+  writePair("v6-x1-arby-cicero-prep-card", duoPrep, renderSimpleMd("v6 x1 Arby/Cicero Prep Card", duoPrep)),
   writePair("closeout", closeout, renderCloseoutMd(closeout)),
 ];
 
@@ -176,7 +176,7 @@ function refreshState(closeout, artifactRefs) {
     };
     doc[listKey] = unique([...(doc[listKey] || []), ...lookupFiles]);
     doc.latest_action_summary = unique([
-      "Closed v554 v5 x1 after sanitized Lumen harvest and prepared v554 v3 x2 safe build/use scope.",
+      "Closed v554 v5 x1 after sanitized Lumen harvest and prepared v554 v5 x2 safe build/use scope.",
       ...(doc.latest_action_summary || []),
     ]);
     writeJson(jsonFile, doc);
@@ -319,7 +319,7 @@ function publicationBoundary() {
 
 function claimBoundary(status) {
   return {
-    phase_completion: status === "PASS_V554_V5_X1_CLOSED_V3_X2_READY" ? phaseSlug : "not_claimed",
+    phase_completion: status === "PASS_V554_V5_X1_CLOSED_V5_X2_READY" ? phaseSlug : "not_claimed",
     full_goal_completion: "not_claimed",
     gmut_empirical_closure: "not_claimed",
     final_physics: "not_claimed",
