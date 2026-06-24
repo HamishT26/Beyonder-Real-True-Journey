@@ -1,0 +1,61 @@
+# v553-gmut-thos-v8-x2 Skill Runner Use Board
+
+Status: `PASS_V8_X2_SKILL_RUNNER_USE_BOARD`
+
+```json
+{
+  "artifact_type": "ghc_v553_v8_x2_skill_runner_use_board",
+  "generated_utc": "2026-06-24T14:47:25.590Z",
+  "generated_nz": "2026-06-25T02:47:25+12:00",
+  "phase_slug": "v553-gmut-thos-v8-x2",
+  "overall_status": "PASS_V8_X2_SKILL_RUNNER_USE_BOARD",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false
+  },
+  "claim_boundary": {
+    "phase_completion": "v553_v8_x2_only",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "created_or_used_runners": [
+    "ghc_v553_v8_x2_startup_builder.mjs",
+    "ghc_v553_v8_x2_closeout_builder.mjs",
+    "ghc_main_startup_builder.mjs registered v8 x2 delegate",
+    "ghc_main_closeout_builder.mjs registered v8 x2 delegate",
+    "ghc_safe_runner_orchestrator.mjs with 50-row manifest",
+    "ghc_round_robin_workflow_standardizer.mjs",
+    "ghc_five_minute_productive_cadence_runner.mjs",
+    "ghc_open_gate_claim_linter.mjs"
+  ],
+  "skills_confirmed_in_scope": [
+    "ghc-main-startup-builder",
+    "ghc-main-closeout-builder",
+    "ghc-main-compact-restart-builder",
+    "ghc-main-orchestration-memory",
+    "ghc-full-tools-skill-bank",
+    "ghc-web-reflection-ledger",
+    "ghc-safe-runner-orchestrator",
+    "ghc-main-retry",
+    "ghc-lumen-launch"
+  ],
+  "no_sibling_launch_in_this_x2": true
+}
+```
