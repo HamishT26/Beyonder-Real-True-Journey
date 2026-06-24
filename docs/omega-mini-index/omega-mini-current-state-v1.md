@@ -1,27 +1,21 @@
 # Omega-Mini Current State
 
-Status: PASS_V554_V6_X1_CLOSED_V6_X2_READY
-Current active phase: v554-gmut-thos-v6-x2
-Latest closed phase: v554-gmut-thos-v6-x1
+Status: PASS_V554_V6_X2_CLOSED_V7_X1_READY
+Current active phase: v554-gmut-thos-v7-x1
+Latest closed phase: v554-gmut-thos-v6-x2
 Latest completed x1: v554-gmut-thos-v6-x1
-Latest completed x2: v554-gmut-thos-v5-x2
-Next x2 scope: v554-gmut-thos-v6-x2
-Next x1 lane after x2: v554-gmut-thos-v7-x1 with Lumen Vale solo unless Hamish redirects
+Latest completed x2: v554-gmut-thos-v6-x2
+Next x2 scope: v554-gmut-thos-v7-x2
+Next x1 lane after x2: v554-gmut-thos-v8-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects
+Goal Mode status: active_thread_goal_not_unattended_automation
+
+## v554 v6 x2 Closeout
+
+- status: `PASS_V554_V6_X2_CLOSED_V7_X1_READY`
+- full goal complete: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-background-supervision-standard-v1.md
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-trinity-mandala-reducer-v1.json
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-trinity-mandala-reducer-v1.md
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-privacy-open-gate-rail-v1.json
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-privacy-open-gate-rail-v1.md
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-drive-posture-receipt-v1.json
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-drive-posture-receipt-v1.md
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-goal-mode-readiness-v1.json
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-goal-mode-readiness-v1.md
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-v2-arby-cicero-prep-card-v1.json
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-v2-arby-cicero-prep-card-v1.md
-- docs/trinity-live-traces/v554-gmut-thos-v1-x2-phase-status-index-v1.json
 - docs/trinity-live-traces/v554-gmut-thos-v1-x2-phase-status-index-v1.md
 - docs/trinity-live-traces/v554-gmut-thos-v1-x2-closeout-v1.json
 - docs/trinity-live-traces/v554-gmut-thos-v1-x2-closeout-v1.md
@@ -190,3 +184,15 @@ Next x1 lane after x2: v554-gmut-thos-v7-x1 with Lumen Vale solo unless Hamish r
 - docs/trinity-live-traces/v554-gmut-thos-v6-x1-phase-status-index-v1.md
 - docs/trinity-live-traces/v554-gmut-thos-v6-x1-closeout-v1.json
 - docs/trinity-live-traces/v554-gmut-thos-v6-x1-closeout-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-execution-index-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-execution-index-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-safe-execution-reducer-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-safe-execution-reducer-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-skill-runner-pack-install-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-skill-runner-pack-install-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-web-journey-reflection-ledger-50-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-web-journey-reflection-ledger-50-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-v7-lumen-readiness-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-v7-lumen-readiness-v1.md
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-closeout-v1.json
+- docs/trinity-live-traces/v554-gmut-thos-v6-x2-closeout-v1.md
