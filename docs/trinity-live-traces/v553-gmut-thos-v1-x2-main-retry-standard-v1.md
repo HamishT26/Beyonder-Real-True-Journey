@@ -1,0 +1,45 @@
+# ghc v553 v1 x2 main retry standard
+
+Status: `PASS_MAIN_RETRY_STANDARD_RECORDED`
+
+Phase: `v553-gmut-thos-v1-x2`
+
+## minimum_retry_sessions_before_pause
+
+3
+
+## recent_session_reflections_per_retry
+
+10
+
+## web_search_reflections_per_retry
+
+20
+
+## journey_phase_reflections_per_retry
+
+20
+
+## productive_five_minute_work_required
+
+true
+
+## completion_boundary
+
+Do not declare a sibling session, x1 phase, or x2 phase closed while a messaged sibling lane is active.
+
+## pause_exceptions
+
+1. Hamish explicit stop
+2. app compaction
+3. safety boundary
+4. fresh exact approval required
+
+## publication_boundary
+
+`{"private_lane_body_content_published":false,"chat_transcript_published":false,"browser_routes_published":false,"private_route_handles_published":false,"screen_capture_files_published":false,"credentials_published":false,"session_trace_files_published":false,"local_absolute_paths_published":false}`
+
+## claim_boundary
+
+`{"gmut_empirical_closure":"not_claimed","final_physics":"not_claimed","consciousness_proof":"not_claimed","legal_closure":"not_claimed","canon_promotion":"not_claimed","deployment_closure":"not_claimed"}`
+

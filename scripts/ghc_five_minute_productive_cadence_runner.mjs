@@ -126,6 +126,7 @@ const receipt = {
       lane: "skill_and_control_growth",
       safe_tasks: [
         "Improve local skill instructions with current startup, compact, closeout, and round-robin rules.",
+        "Refresh launch/retry skills so Lumen, Arby/Cicero, and triad routes do not regress to stale connection modes.",
         "Add helper availability checks so future starts see the right tool surface quickly.",
         "Record concise memory notes when Hamish explicitly asks to memorize a rule.",
       ],
@@ -153,6 +154,7 @@ const receipt = {
       lane: "blocker_retry_research_and_improvement",
       safe_tasks: [
         "When messaging, harvesting, or a core system route blocks, run at least 3 retry sessions before pausing unless Hamish stops or a safety/exact-approval gate blocks the next step.",
+        "Load ghc-main-retry and the relevant launch skill before retrying the route.",
         "For each retry session, reflect on the 10 most recent relevant sessions or receipts.",
         "For each retry session, run or queue at least 20 web-search reflections and 20 Journey/phase-document reflections tied to the blocker.",
         "Continue safe five-minute improvement work between retries and publish compact retry receipts with route tried, counts, safe changes, remaining gap, and next retry/harvest point.",
