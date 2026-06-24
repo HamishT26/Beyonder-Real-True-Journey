@@ -1,42 +1,21 @@
 # omega-mini-current-state-v1
 
-Status: PASS_V553_V6_X1_CLOSED_V6_X2_READY
-Current active phase: v553-gmut-thos-v6-x2
-Latest closed phase: v553-gmut-thos-v6-x1
+Status: PASS_V553_V6_X2_CLOSED_V7_X1_READY
+Current active phase: v553-gmut-thos-v7-x1
+Latest closed phase: v553-gmut-thos-v6-x2
 Latest completed x1: v553-gmut-thos-v6-x1
-Latest completed x2: v553-gmut-thos-v5-x2
-Next expected scope: v553-gmut-thos-v6-x2
-Next x2 scope: v553-gmut-thos-v6-x2
+Latest completed x2: v553-gmut-thos-v6-x2
+Next expected scope: v553-gmut-thos-v7-x1
+Next x2 scope: v553-gmut-thos-v7-x2
 Next x1 lane after x2: v553-gmut-thos-v7-x1 with Lumen unless Hamish redirects
 
-## v553 v6 x1 Closeout
+## v553 v6 x2 Closeout
 
-- status: `PASS_V553_V6_X1_CLOSED_V6_X2_READY`
-- Arby gate passed: `true`
-- Cicero gate passed: `true`
+- status: `PASS_V553_V6_X2_CLOSED_V7_X1_READY`
+- next active phase: `v553-gmut-thos-v7-x1`
 
 ## Lookup Files
 
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-goal-mode-reconciliation-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-phase-truth-card-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-lumen-advisory-reducer-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-approval-packet-ledger-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-skill-runner-readiness-board-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-cleanup-tier-board-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-web-journey-reflection-ledger-50-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-trinity-mandala-planning-matrix-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-private-material-firewall-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-open-gate-rail-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-v4-x1-triad-prep-card-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-execution-reducer-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-safe-runner-orchestrator-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-closeout-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v3-x2-closeout-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v4-x1-five-minute-productive-cadence-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v4-x1-five-minute-productive-cadence-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v4-x1-triad-background-launch-status-v1.json`
-- `docs/trinity-live-traces/v553-gmut-thos-v4-x1-triad-background-launch-status-v1.md`
-- `docs/trinity-live-traces/v553-gmut-thos-v4-x1-triad-proposal-scaffold-v1.json`
 - `docs/trinity-live-traces/v553-gmut-thos-v4-x1-triad-proposal-scaffold-v1.md`
 - `docs/trinity-live-traces/v553-gmut-thos-v4-x1-web-journey-reflection-ledger-30-v1.json`
 - `docs/trinity-live-traces/v553-gmut-thos-v4-x1-web-journey-reflection-ledger-30-v1.md`
@@ -137,6 +116,26 @@ Next x1 lane after x2: v553-gmut-thos-v7-x1 with Lumen unless Hamish redirects
 - `docs/trinity-live-traces/v553-gmut-thos-v6-x1-duo-phase-workbench-lane-launch-status-v1.md`
 - `docs/trinity-live-traces/v553-gmut-thos-v6-x1-closeout-v1.json`
 - `docs/trinity-live-traces/v553-gmut-thos-v6-x1-closeout-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-five-minute-productive-cadence-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-five-minute-productive-cadence-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-round-robin-workflow-standard-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-round-robin-workflow-standard-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-safe-execution-reducer-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-safe-execution-reducer-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-skill-runner-build-board-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-skill-runner-build-board-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-web-journey-reflection-ledger-50-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-web-journey-reflection-ledger-50-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-v7-lumen-prep-card-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-v7-lumen-prep-card-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-private-open-gate-rail-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-private-open-gate-rail-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-phase-status-index-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-phase-status-index-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-safe-runner-manifest-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-safe-runner-manifest-v1.md`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-closeout-v1.json`
+- `docs/trinity-live-traces/v553-gmut-thos-v6-x2-closeout-v1.md`
 
 ## Boundary
 

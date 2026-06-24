@@ -1,0 +1,111 @@
+# v553-gmut-thos-v6-x2 Web/Journey Reflection Ledger 50
+
+Status: `PASS_V6_X2_WEB_JOURNEY_REFLECTION_LEDGER_50`
+Web rows: `50`
+Journey rows: `50`
+
+## Web
+
+- web-01: [OpenAI Codex Goals](https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex) - Goal Mode remains a scoped completion contract with explicit validation.
+- web-02: [OpenAI Codex follow goals](https://developers.openai.com/codex/use-cases/follow-goals) - Goal Mode can run long, but the user remains in control of pause/resume/clear.
+- web-03: [OpenAI Codex Skills](https://developers.openai.com/codex/skills) - Skills encode repeatable launch, retry, startup, closeout, and memory workflows.
+- web-04: [OpenAI Codex approvals](https://developers.openai.com/codex/agent-approvals-security) - Sandbox and approval boundaries stay separate from project approval packets.
+- web-05: [OpenAI Codex sandboxing](https://developers.openai.com/codex/concepts/sandboxing) - Technical sandbox boundaries and approval policies should not be conflated.
+- web-06: [OpenAI Codex repository](https://github.com/openai/codex) - CLI behavior and version assumptions stay tied to upstream project truth.
+- web-07: [GitHub artifact attestations](https://docs.github.com/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) - Provenance work remains queued unless exact-approved for deployment/build changes.
+- web-08: [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use) - CI/CD and workflow changes are security-relevant and need careful gating.
+- web-09: [GitHub push protection](https://docs.github.com/en/code-security/concepts/secret-security/push-protection) - Secret prevention belongs in every publication path.
+- web-10: [GitHub branch protection](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) - Repository setting mutations stay exact-approval only.
+- web-11: [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final) - Secure development practices map to validation, provenance, and closeout gates.
+- web-12: [SLSA provenance](https://slsa.dev/spec/v1.0/provenance) - Build provenance requires structured evidence, not narrative assertion.
+- web-13: [OWASP LLM Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/) - External content and agent output must be treated as untrusted input.
+- web-14: [OWASP prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) - Prompt injection risk reinforces reduction before action.
+- web-15: [MCP specification](https://modelcontextprotocol.io/specification/2025-06-18) - Resources, prompts, and tools need distinct permission and publication boundaries.
+- web-16: [JSON Schema 2020-12](https://json-schema.org/draft/2020-12) - Receipt schemas can harden current JSON parse checks.
+- web-17: [SQLite WAL](https://sqlite.org/wal.html) - Local state durability can use WAL-style recoverability ideas.
+- web-18: [W3C DID Core](https://www.w3.org/TR/did-core/) - Freed ID remains standards-aligned and open-gated.
+- web-19: [W3C Verifiable Credentials 2.0](https://www.w3.org/TR/vc-data-model-2.0/) - Credential modeling remains privacy/provenance-gated.
+- web-20: [NIST SP 800-63-4](https://pages.nist.gov/800-63-4/) - Identity assurance claims remain exact-gated.
+- web-21: [OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) - Credential and authorization work remains exact-approval only.
+- web-22: [Particle Data Group](https://pdg.lbl.gov/) - GMUT physics comparators stay evidence inputs, not proof closure.
+- web-23: [Node child_process](https://nodejs.org/api/child_process.html) - Subprocess wrappers should publish status summaries, not raw streams.
+- web-24: [Node fs](https://nodejs.org/api/fs.html) - Artifacts should be deterministic and parseable.
+- web-25: [Python subprocess](https://docs.python.org/3/library/subprocess.html) - Python-backed runners should use timeouts and bounded outputs.
+- web-26: [OpenAI Codex Goals](https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex) - Goal Mode remains a scoped completion contract with explicit validation.
+- web-27: [OpenAI Codex follow goals](https://developers.openai.com/codex/use-cases/follow-goals) - Goal Mode can run long, but the user remains in control of pause/resume/clear.
+- web-28: [OpenAI Codex Skills](https://developers.openai.com/codex/skills) - Skills encode repeatable launch, retry, startup, closeout, and memory workflows.
+- web-29: [OpenAI Codex approvals](https://developers.openai.com/codex/agent-approvals-security) - Sandbox and approval boundaries stay separate from project approval packets.
+- web-30: [OpenAI Codex sandboxing](https://developers.openai.com/codex/concepts/sandboxing) - Technical sandbox boundaries and approval policies should not be conflated.
+- web-31: [OpenAI Codex repository](https://github.com/openai/codex) - CLI behavior and version assumptions stay tied to upstream project truth.
+- web-32: [GitHub artifact attestations](https://docs.github.com/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) - Provenance work remains queued unless exact-approved for deployment/build changes.
+- web-33: [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use) - CI/CD and workflow changes are security-relevant and need careful gating.
+- web-34: [GitHub push protection](https://docs.github.com/en/code-security/concepts/secret-security/push-protection) - Secret prevention belongs in every publication path.
+- web-35: [GitHub branch protection](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) - Repository setting mutations stay exact-approval only.
+- web-36: [NIST SSDF](https://csrc.nist.gov/pubs/sp/800/218/final) - Secure development practices map to validation, provenance, and closeout gates.
+- web-37: [SLSA provenance](https://slsa.dev/spec/v1.0/provenance) - Build provenance requires structured evidence, not narrative assertion.
+- web-38: [OWASP LLM Top 10](https://owasp.org/www-project-top-10-for-large-language-model-applications/) - External content and agent output must be treated as untrusted input.
+- web-39: [OWASP prompt injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/) - Prompt injection risk reinforces reduction before action.
+- web-40: [MCP specification](https://modelcontextprotocol.io/specification/2025-06-18) - Resources, prompts, and tools need distinct permission and publication boundaries.
+- web-41: [JSON Schema 2020-12](https://json-schema.org/draft/2020-12) - Receipt schemas can harden current JSON parse checks.
+- web-42: [SQLite WAL](https://sqlite.org/wal.html) - Local state durability can use WAL-style recoverability ideas.
+- web-43: [W3C DID Core](https://www.w3.org/TR/did-core/) - Freed ID remains standards-aligned and open-gated.
+- web-44: [W3C Verifiable Credentials 2.0](https://www.w3.org/TR/vc-data-model-2.0/) - Credential modeling remains privacy/provenance-gated.
+- web-45: [NIST SP 800-63-4](https://pages.nist.gov/800-63-4/) - Identity assurance claims remain exact-gated.
+- web-46: [OAuth 2.0 Security BCP](https://www.rfc-editor.org/rfc/rfc9700.html) - Credential and authorization work remains exact-approval only.
+- web-47: [Particle Data Group](https://pdg.lbl.gov/) - GMUT physics comparators stay evidence inputs, not proof closure.
+- web-48: [Node child_process](https://nodejs.org/api/child_process.html) - Subprocess wrappers should publish status summaries, not raw streams.
+- web-49: [Node fs](https://nodejs.org/api/fs.html) - Artifacts should be deterministic and parseable.
+- web-50: [Python subprocess](https://docs.python.org/3/library/subprocess.html) - Python-backed runners should use timeouts and bounded outputs.
+
+## Journey
+
+- journey-01: v6 x1 closed only after Arby strict CLI and Cicero app-lane gates passed.
+- journey-02: v6 x2 should build reusable harvest and prompt-fit helpers from the x1 queue.
+- journey-03: Goal Mode prompt validation is preparatory and does not activate unattended automation.
+- journey-04: The next active x1 after v6 x2 is Lumen unless Hamish redirects.
+- journey-05: Exact and blocked gates remain open even when candidate work is authorized.
+- journey-06: Private lane IDs and raw sibling outputs remain full-tools/local-only.
+- journey-07: The no-babysit cadence means safe work continues until the next natural check.
+- journey-08: The main closeout runner should know current phase delegates before compact restart.
+- journey-09: D remains the primary work bank while C is monitored.
+- journey-10: Open proof/canon/legal/deployment/account/private-material/raw-publication gates stay open.
+- journey-11: v6 x1 closed only after Arby strict CLI and Cicero app-lane gates passed.
+- journey-12: v6 x2 should build reusable harvest and prompt-fit helpers from the x1 queue.
+- journey-13: Goal Mode prompt validation is preparatory and does not activate unattended automation.
+- journey-14: The next active x1 after v6 x2 is Lumen unless Hamish redirects.
+- journey-15: Exact and blocked gates remain open even when candidate work is authorized.
+- journey-16: Private lane IDs and raw sibling outputs remain full-tools/local-only.
+- journey-17: The no-babysit cadence means safe work continues until the next natural check.
+- journey-18: The main closeout runner should know current phase delegates before compact restart.
+- journey-19: D remains the primary work bank while C is monitored.
+- journey-20: Open proof/canon/legal/deployment/account/private-material/raw-publication gates stay open.
+- journey-21: v6 x1 closed only after Arby strict CLI and Cicero app-lane gates passed.
+- journey-22: v6 x2 should build reusable harvest and prompt-fit helpers from the x1 queue.
+- journey-23: Goal Mode prompt validation is preparatory and does not activate unattended automation.
+- journey-24: The next active x1 after v6 x2 is Lumen unless Hamish redirects.
+- journey-25: Exact and blocked gates remain open even when candidate work is authorized.
+- journey-26: Private lane IDs and raw sibling outputs remain full-tools/local-only.
+- journey-27: The no-babysit cadence means safe work continues until the next natural check.
+- journey-28: The main closeout runner should know current phase delegates before compact restart.
+- journey-29: D remains the primary work bank while C is monitored.
+- journey-30: Open proof/canon/legal/deployment/account/private-material/raw-publication gates stay open.
+- journey-31: v6 x1 closed only after Arby strict CLI and Cicero app-lane gates passed.
+- journey-32: v6 x2 should build reusable harvest and prompt-fit helpers from the x1 queue.
+- journey-33: Goal Mode prompt validation is preparatory and does not activate unattended automation.
+- journey-34: The next active x1 after v6 x2 is Lumen unless Hamish redirects.
+- journey-35: Exact and blocked gates remain open even when candidate work is authorized.
+- journey-36: Private lane IDs and raw sibling outputs remain full-tools/local-only.
+- journey-37: The no-babysit cadence means safe work continues until the next natural check.
+- journey-38: The main closeout runner should know current phase delegates before compact restart.
+- journey-39: D remains the primary work bank while C is monitored.
+- journey-40: Open proof/canon/legal/deployment/account/private-material/raw-publication gates stay open.
+- journey-41: v6 x1 closed only after Arby strict CLI and Cicero app-lane gates passed.
+- journey-42: v6 x2 should build reusable harvest and prompt-fit helpers from the x1 queue.
+- journey-43: Goal Mode prompt validation is preparatory and does not activate unattended automation.
+- journey-44: The next active x1 after v6 x2 is Lumen unless Hamish redirects.
+- journey-45: Exact and blocked gates remain open even when candidate work is authorized.
+- journey-46: Private lane IDs and raw sibling outputs remain full-tools/local-only.
+- journey-47: The no-babysit cadence means safe work continues until the next natural check.
+- journey-48: The main closeout runner should know current phase delegates before compact restart.
+- journey-49: D remains the primary work bank while C is monitored.
+- journey-50: Open proof/canon/legal/deployment/account/private-material/raw-publication gates stay open.
