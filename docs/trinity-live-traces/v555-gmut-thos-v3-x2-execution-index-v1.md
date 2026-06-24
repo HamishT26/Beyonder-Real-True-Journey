@@ -1,0 +1,61 @@
+# v555-gmut-thos-v3-x2 Execution Index
+
+Status: `PASS_V555_V3_X2_EXECUTION_BUILT_PENDING_CLOSEOUT`
+
+```json
+{
+  "artifact_type": "ghc_v555_v3_x2_execution_index",
+  "generated_utc": "2026-06-24T21:10:38.234Z",
+  "generated_nz": "2026-06-25T09:10:38+12:00",
+  "phase_slug": "v555-gmut-thos-v3-x2",
+  "overall_status": "PASS_V555_V3_X2_EXECUTION_BUILT_PENDING_CLOSEOUT",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_lane_text_published": false
+  },
+  "claim_boundary": {
+    "full_goal_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "source_phase": "v555-gmut-thos-v3-x1",
+  "artifacts": {
+    "skill_runner_pack": "docs/trinity-live-traces/v555-gmut-thos-v3-x2-skill-runner-pack-install-v1.json",
+    "safe_execution": "docs/trinity-live-traces/v555-gmut-thos-v3-x2-safe-execution-reducer-v1.json",
+    "reflection_ledger": "docs/trinity-live-traces/v555-gmut-thos-v3-x2-web-journey-reflection-ledger-50-v1.json",
+    "triad_readiness": "docs/trinity-live-traces/v555-gmut-thos-v3-x2-v4-triad-readiness-v1.json",
+    "safe_runner_orchestrator": "docs/trinity-live-traces/v555-gmut-thos-v3-x2-safe-runner-orchestrator-v1.json"
+  },
+  "counts": {
+    "safe_now_packets": 50,
+    "candidate_packets": 30,
+    "exact_packets_queued": 20,
+    "blocked_packets_queued": 10,
+    "cleanup_inventory_only": 30,
+    "skills_created_or_refreshed": 20,
+    "runners_created_or_refreshed": 10,
+    "web_reflections": 50,
+    "journey_phase_reflections": 50
+  },
+  "safe_runner_status": "PASS_SAFE_RUNNER_ORCHESTRATION",
+  "next_active_phase_after_closeout": "v555-gmut-thos-v4-x1"
+}
+```

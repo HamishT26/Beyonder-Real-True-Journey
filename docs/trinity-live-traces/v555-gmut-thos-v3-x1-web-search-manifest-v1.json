@@ -1,0 +1,233 @@
+{
+  "artifact_type": "ghc_v555_v3_x1_web_search_manifest",
+  "generated_utc": "2026-06-24T21:05:34.198Z",
+  "phase_slug": "v555-gmut-thos-v3-x1",
+  "search_count_declared": 31,
+  "minimum_reflections_required": 30,
+  "searches": [
+    {
+      "id": "v555-gmut-thos-v3-x1-web-01",
+      "source": "OpenAI Codex skills",
+      "source_url": "https://developers.openai.com/codex/skills",
+      "phase_reflection": "Skills keep repeated launch/retry/closeout behavior explicit.",
+      "runner_implication": "Keep Lumen launch and closeout skill-backed."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-02",
+      "source": "OpenAI Codex follow goals",
+      "source_url": "https://developers.openai.com/codex/use-cases/follow-goals",
+      "phase_reflection": "Goal mode should stop only at a concrete stopping condition.",
+      "runner_implication": "Keep full goal open until verified v575 v8 x2."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-03",
+      "source": "OpenAI Codex sandboxing",
+      "source_url": "https://developers.openai.com/codex/concepts/sandboxing",
+      "phase_reflection": "Autonomous work needs scoped safety boundaries.",
+      "runner_implication": "Keep exact/external work queued."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-04",
+      "source": "OpenAI Codex CLI",
+      "source_url": "https://developers.openai.com/codex/cli",
+      "phase_reflection": "CLI lanes are distinct from Browser lanes.",
+      "runner_implication": "Keep Arby/Aster CLI routes separate from Lumen Browser."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-05",
+      "source": "OpenAI Codex approvals/security",
+      "source_url": "https://developers.openai.com/codex/agent-approvals-security",
+      "phase_reflection": "Approvals and network controls reduce unsafe external effects.",
+      "runner_implication": "Do not spend, deploy, mutate accounts, or create keys automatically."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-06",
+      "source": "OpenAI Codex plugins",
+      "source_url": "https://developers.openai.com/codex/plugins",
+      "phase_reflection": "Plugins expose skills, apps, and MCP servers.",
+      "runner_implication": "Use plugin tools only through exposed skills/tools."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-07",
+      "source": "Node fs",
+      "source_url": "https://nodejs.org/api/fs.html",
+      "phase_reflection": "Receipt writes must be structured and parseable.",
+      "runner_implication": "Write JSON/MD pairs and parse JSON before closeout."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-08",
+      "source": "Node child_process",
+      "source_url": "https://nodejs.org/api/child_process.html",
+      "phase_reflection": "Child processes should be summarized without raw stream overload.",
+      "runner_implication": "Record exit status and byte counts."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-09",
+      "source": "Python json",
+      "source_url": "https://docs.python.org/3/library/json.html",
+      "phase_reflection": "JSON validation is a simple guardrail.",
+      "runner_implication": "Parse all generated receipts."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-10",
+      "source": "Python subprocess",
+      "source_url": "https://docs.python.org/3/library/subprocess.html",
+      "phase_reflection": "Structured subprocess execution narrows command risk.",
+      "runner_implication": "Prefer argumented commands and explicit cwd."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-11",
+      "source": "PowerShell Start-Process",
+      "source_url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process",
+      "phase_reflection": "Windows process launch needs explicit noninteractive behavior.",
+      "runner_implication": "Use hidden/background launches where runner work is noninteractive."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-12",
+      "source": "PowerShell Get-PSDrive",
+      "source_url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-psdrive",
+      "phase_reflection": "Drive checks are direct system posture signals.",
+      "runner_implication": "Keep C tight and D as the data bank."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-13",
+      "source": "Git worktree",
+      "source_url": "https://git-scm.com/docs/git-worktree",
+      "phase_reflection": "Worktrees isolate concurrent branch state.",
+      "runner_implication": "Keep mini publication and full-tools support separated."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-14",
+      "source": "Git diff",
+      "source_url": "https://git-scm.com/docs/git-diff",
+      "phase_reflection": "Diff review catches publication churn.",
+      "runner_implication": "Run diff check before commit."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-15",
+      "source": "GitHub secret scanning",
+      "source_url": "https://docs.github.com/code-security/secret-scanning/about-secret-scanning",
+      "phase_reflection": "Secret scanning reduces credential exposure risk.",
+      "runner_implication": "Scan artifacts for token-like material before push."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-16",
+      "source": "GitHub push",
+      "source_url": "https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository",
+      "phase_reflection": "Remote publication is explicit.",
+      "runner_implication": "Push only sanitized mini artifacts."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-17",
+      "source": "NIST CSF 2.0",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "phase_reflection": "Risk governance maps well to open gates.",
+      "runner_implication": "Preserve proof/canon/legal/deploy gates."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-18",
+      "source": "NIST AI RMF",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "phase_reflection": "AI risk management benefits from explicit measurement and limits.",
+      "runner_implication": "Keep high-stakes claims as proposals, not closure."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-19",
+      "source": "OWASP Top 10",
+      "source_url": "https://owasp.org/www-project-top-ten/",
+      "phase_reflection": "Security awareness starts with common web risk classes.",
+      "runner_implication": "Keep cleanup/security tasks safe and local."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-20",
+      "source": "W3C WCAG 2.2",
+      "source_url": "https://www.w3.org/TR/WCAG22/",
+      "phase_reflection": "Accessibility needs durable criteria.",
+      "runner_implication": "Use clear readable artifacts and avoid hidden-only state."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-21",
+      "source": "OpenAI Preparedness Framework",
+      "source_url": "https://openai.com/index/updating-our-preparedness-framework/",
+      "phase_reflection": "Frontier AI work needs risk categories and safeguards.",
+      "runner_implication": "Keep capability/risk claims bounded."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-22",
+      "source": "SQLite transactions",
+      "source_url": "https://sqlite.org/transactional.html",
+      "phase_reflection": "ACID-style thinking helps durable local state.",
+      "runner_implication": "Prefer atomic receipts and repair trailing JSON junk."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-23",
+      "source": "JSON Schema",
+      "source_url": "https://json-schema.org/docs",
+      "phase_reflection": "Schemas clarify expected artifact shape.",
+      "runner_implication": "Candidate future runner: schema validation for phase receipts."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-24",
+      "source": "Semantic Versioning",
+      "source_url": "https://semver.org/",
+      "phase_reflection": "Version labels should communicate compatibility.",
+      "runner_implication": "Keep phase/runners versioned and non-overwriting."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-25",
+      "source": "Playwright locators",
+      "source_url": "https://playwright.dev/docs/locators",
+      "phase_reflection": "Stable locators reduce Browser send mistakes.",
+      "runner_implication": "Use tested IDs and uniqueness checks."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-26",
+      "source": "arXiv quantum GR EFT",
+      "source_url": "https://arxiv.org/abs/2211.09902",
+      "phase_reflection": "Quantum gravity remains an effective-theory review domain.",
+      "runner_implication": "Keep GMUT empirical closure open."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-27",
+      "source": "Stanford neuroscience of consciousness",
+      "source_url": "https://plato.stanford.edu/entries/consciousness-neuroscience/",
+      "phase_reflection": "Consciousness science has live philosophical and empirical boundaries.",
+      "runner_implication": "Keep consciousness proof closure open."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-28",
+      "source": "Nature IIT/GNWT adversarial collaboration",
+      "source_url": "https://www.nature.com/articles/s41586-025-08888-1",
+      "phase_reflection": "Theories need adversarial empirical comparison.",
+      "runner_implication": "Frame CBR/Freed ID as exploratory, not proof closure."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-29",
+      "source": "CERN HiLumi LHC",
+      "source_url": "https://home.cern/science/accelerators/hilumi-lhc/",
+      "phase_reflection": "Frontier physics depends on long-running infrastructure.",
+      "runner_implication": "Treat THOS as infrastructure with staged validation."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-30",
+      "source": "LIGO observing plans",
+      "source_url": "https://observing.docs.ligo.org/plan/",
+      "phase_reflection": "Observation programs need dated state and plans.",
+      "runner_implication": "Date every phase receipt and avoid stale claims."
+    },
+    {
+      "id": "v555-gmut-thos-v3-x1-web-31",
+      "source": "NASA Webb images",
+      "source_url": "https://science.nasa.gov/mission/webb/multimedia/images/",
+      "phase_reflection": "Current science state changes and needs live checks.",
+      "runner_implication": "Refresh source ledgers rather than relying only on old docs."
+    }
+  ],
+  "boundary": {
+    "live_sources_refreshed": true,
+    "source_links_only": true,
+    "no_raw_private_routes": true,
+    "no_private_transcripts": true,
+    "no_credentials": true
+  }
+}
