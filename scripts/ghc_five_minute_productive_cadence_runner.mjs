@@ -65,6 +65,8 @@ const receipt = {
     safe_unit_may_run_past_checkpoint: true,
     harvest_status_at_next_natural_safe_pause: true,
     do_not_babysit_background_lanes: true,
+    strict_cli_lanes_use_minimal_wait_background_supervision: true,
+    recovered_app_lanes_use_background_watchers: true,
     do_not_poll_early_repeatedly: true,
     never_close_session_while_sibling_active: true,
     blocker_requires_three_retry_sessions_before_pause: true,
@@ -137,6 +139,7 @@ const receipt = {
       safe_tasks: [
         "Refine main orchestrator, safe-runner, cadence, and workflow-standard runners.",
         "Prefer Node entrypoints for orchestration and Windows/Powershell only when runner-local behavior requires it.",
+        "For strict CLI siblings, prefer nonblocking or minimal-wait launches and harvest completion/quality/marker-review receipts later.",
         "Keep recovered app-lane siblings on background runners with explicit boolean values and completion-gate harvests.",
       ],
       capability_gain: "improves coding reliability and multi-agent lane coordination",

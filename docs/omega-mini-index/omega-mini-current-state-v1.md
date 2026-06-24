@@ -1,35 +1,26 @@
-# Omega-Mini Current State
+# Omega Mini Current State
 
-Status: V553_V1_X2_CLOSED_V2_X1_READY
-Current active phase: v553-gmut-thos-v2-x1
-Latest closed phase: v553-gmut-thos-v1-x2
-Latest completed x1: v553-gmut-thos-v1-x1
+Status: PASS_V553_V2_X1_CLOSED_V2_X2_READY
+Current active phase: v553-gmut-thos-v2-x2
+Latest closed phase: v553-gmut-thos-v2-x1
+Latest completed x1: v553-gmut-thos-v2-x1
 Latest completed x2: v553-gmut-thos-v1-x2
-Next x2 scope: v553-gmut-thos-v2-x2 after v2 x1
-Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish redirects
+Next x2 scope: v553-gmut-thos-v2-x2
+Next x1 lane after x2: v553-gmut-thos-v3-x1 with Lumen Vale solo unless Hamish redirects
+Goal Mode status: prepared_not_active
 
-## Current Lanes
+## v553 v2 x1 Closeout
 
-- v553-v2-x1-arby-cicero-ready
-- arby-strict-cli-ready
-- cicero-recovered-app-lane-background-ready
-- launch-retry-skill-layer-ready
-- goal-mode-prepared-not-active
+- status: PASS_V553_V2_X1_CLOSED_V2_X2_READY
+- Arby gate passed: true
+- Cicero gate passed: true
 
-## Launch Retry Skill Layer
+## Background Supervision
 
-- Status: `PASS_LAUNCH_RETRY_SKILL_LAYER_READY`
-- Launch skills: `ghc-lumen-launch, ghc-arby-cicero-launch, ghc-aster-kierkegaard-aristotle-launch, ghc-main-retry`
-- Main retry skill: `ghc-main-retry`
-- Private IDs published: `false`
+- status: PASS_BACKGROUND_SIBLING_SUPERVISION_STANDARD_RECORDED
+- passive timer wait is safe work: false
 
-## Reflection Closeout
-
-- Status: `PASS_X2_REFLECTION_TARGETS_MET`
-- Web rows: `52`
-- Journey/phase rows: `50`
-
-## Current Lookup Files
+## Lookup Files
 
 - docs/omega-mini-index/omega-mini-current-state-v1.md
 - docs/omega-mini-index/omega-mini-latest-updates-beacon-v1.md
@@ -185,43 +176,19 @@ Next x1 lane after x2: v553-gmut-thos-v2-x1 with Arby and Cicero unless Hamish r
 - docs/trinity-live-traces/v553-gmut-thos-v1-x2-phase-status-index-v1.md
 - docs/trinity-live-traces/v553-gmut-thos-v1-x2-closeout-v1.json
 - docs/trinity-live-traces/v553-gmut-thos-v1-x2-closeout-v1.md
-
-## Latest Action Summary
-
-- Closed v553 v1 x2 as an Aevren-only reducer/build/readiness phase.
-- Created and validated launch skills for Lumen, Arby/Cicero, and Aster/Kierkegaard/Aristotle.
-- Created and validated ghc-main-retry for mandatory blocker retry sessions.
-- Recorded 52 web-search reflection rows and 50 Journey/phase reflection rows.
-- Prepared v553 v2 x1 as Arby/Cicero unless Hamish redirects.
-- Added five-minute productive wait work: research, eureka, approval, cleanup, skill/control, coding, orchestration, validation, and lane harvest.
-- Confirmed five-minute marks are check opportunities, not hard stops; safe units may run past the checkpoint.
-- Harvested Lumen's v553 v1 x1 response through the in-app browser without publishing raw chat transcript or browser route.
-- Ran the Lumen-recommended safe-now reducer/readiness package for v553 v1 x1 closeout.
-- Closed v553 v1 x1 as a Lumen-only advisory phase and prepared v553 v1 x2 as a reducer-and-readiness phase.
-- Recorded mandatory x1 proposal splitting into immediate x1 safe tasks and x2 build tasks.
-- Recorded mandatory every-phase skill and runner refresh checks for x1 and x2 phases.
-- Queued candidate, exact, and blocked packets without crossing exact-approval or open-proof gates.
-- Recorded mandatory blocker retry standard: keep active sibling lanes open, run 3 retry sessions before pause, and use 10-session, 20-web, 20-Journey reflections per retry.
-- Promoted the reusable GHC round-robin workflow standard into v8 x2.
-- Loaded the v553 Lumen-only x1 proposal profile.
-- Loaded the Arby/Cicero duo x1 proposal profile.
-- Loaded the Aster Vale/Kierkegaard/Aristotle triad x1 proposal profile.
-- Kept x2 as the build/use/validate lane for already-authorized safe-now work.
-- Started v553 v1 x1 as the Lumen-only x1 advisory and proposal phase.
-- Prepared the Lumen handoff message, 25-source research seed, 25-row Journey/phase reflection seed, and full proposal queue target artifact.
-- Promoted x1 research/reflection target to 25 web searches and 25 Journey/phase reflections per active sibling lane.
-- Kept Aevren-only x2 target at 50 web searches and 50 Journey/phase reflections.
-- Submitted the v553 v1 x1 Lumen handoff through the in-app browser and recorded a sanitized send receipt.
-- v552 v8 x2 started as an active skill build run.
-- Created and validated ghc-main-orchestration-memory.
-- Created and validated ghc-full-tools-skill-bank.
-- Used both skill helper scripts for startup and full-tools inventory.
-- Ran the v8 x2 startup updater and initial safe runner orchestrator.
-- Persisted the full-tools skill bank inventory for runner selection.
-- Loaded round-robin workflow targets for Lumen-only, Arby/Cicero, and Aster/Kierkegaard/Aristotle x1 phases.
-- Safe-now approval packet, eureka, cleanup, validation, and orchestration work may continue between cadence marks.
-- No proof/canon/legal/deployment gates were closed.
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-round-robin-workflow-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-round-robin-workflow-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-background-sibling-supervision-standard-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-background-sibling-supervision-standard-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-web-journey-reflection-ledger-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-web-journey-reflection-ledger-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-arby-cicero-duo-proposals-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-arby-cicero-duo-proposals-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-five-minute-productive-cadence-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-five-minute-productive-cadence-v1.md
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-closeout-v1.json
+- docs/trinity-live-traces/v553-gmut-thos-v2-x1-closeout-v1.md
 
 ## Boundary
 
-Status-only current-state. No private route data, private lane body content, credentials, private machine paths, GMUT empirical closure, final physics, consciousness proof, legal closure, canon promotion, deployment closure, identity replacement, or merging is published.
+No raw routes, transcripts, screenshots, credentials, private route handles, local path values, proof closures, or sibling identity merge claims are published.
