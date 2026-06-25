@@ -96,6 +96,16 @@ const liveReceipt = {
     role: "primary orchestration receipt builder for recovered app-lane routing, updater cadence, full-tools support, and sanitized omega-mini current-state publication",
     promoted: true,
   },
+  mandatory_five_lane_sibling_route: {
+    primary_for_broad_sibling_runs: true,
+    strict_cli_lanes: ["Arby", "Aster Vale"],
+    recovered_app_lanes: ["Cicero", "Kierkegaard", "Aristotle"],
+    strict_cli_required_gates: ["completion", "elaboration_quality", "marker_review"],
+    app_lane_required_gates: ["notifier", "completion_gate"],
+    stale_manual_or_partial_routes_deprecated: true,
+    watcher_start_is_completion_proof: false,
+    closeout_requires_all_five_lane_gates: true,
+  },
   aster_vale: {
     route: "strict_cli_lane_cycle",
     cycle_status: source.aster_cycle.overall_status || "missing",
