@@ -122,6 +122,7 @@ const liveReceipt = {
     default_for_local_app_lane_siblings: true,
     excludes_main_thread_agents: true,
     boolean_flag_invocation_rule: "Pass explicit paired values for runner booleans, such as --allow-turn-start-after-resume-timeout true --background-watch true.",
+    private_source_override_rule: "If the default private map source is missing after a Codex app update or worktree rotation, use a process-local THOS_APP_LANE_POLICY_SOURCE, GHC_APP_LANE_POLICY_SOURCE, or THOS_APP_LANE_IDS_JSON route; publish only sanitized source basenames, source_override_used, handle counts, statuses, and child receipt names.",
     status: source.recovered_app_lane.overall_status || "missing",
     preflight_status: source.recovered_app_preflight.overall_status || "missing",
     runner_status: source.recovered_app_runner.overall_status || "missing",
@@ -161,6 +162,11 @@ const liveReceipt = {
     omega_mini_role: "sanitized-public-receipts-and-current-state",
     private_handles_published_to_omega_mini: false,
     use_full_tools_lanes_first_when_needed: true,
+    daily_branch_worktree_creation_cap: {
+      timezone: "Pacific/Auckland",
+      max_new_omega_mini_full_tools_pairs_per_day: 3,
+      fresh_exact_override_required_above_cap: true,
+    },
   },
   mandatory_rule: {
     background_notifier_orchestrator_first: true,
@@ -168,6 +174,8 @@ const liveReceipt = {
     updater_runners_required_for_startup_resume_and_compact_pause: true,
     five_minute_status_checks_required: true,
     full_tools_support_worktree_required_for_private_or_rich_lane_helpers: true,
+    local_only_app_lane_source_override_before_open_gap: true,
+    max_three_new_mini_full_tools_worktree_pairs_per_day: true,
     no_stale_direct_manual_downgrade: true,
     existing_inducted_lanes_only: true,
     no_new_agents_spawned: true,
@@ -214,6 +222,9 @@ const recoveredRouteReceipt = {
   lanes: ["Kierkegaard", "Aristotle"],
   default_for_local_app_lane_siblings: true,
   excludes_main_thread_agents: true,
+  private_source_override_supported: true,
+  private_source_override_rule:
+    "Use THOS_APP_LANE_POLICY_SOURCE, GHC_APP_LANE_POLICY_SOURCE, or process-local THOS_APP_LANE_IDS_JSON when the default private map source is missing; never copy private IDs into branch artifacts.",
   recovered_handle_count: source.recovered_app_lane.recovered_handle_count || 0,
   background_watch_requested: Boolean(source.recovered_app_lane.background_watch_requested),
   preflight_status: source.recovered_app_preflight.overall_status || "missing",

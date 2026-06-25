@@ -5,7 +5,8 @@ import { spawnSync } from "node:child_process";
 
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const TRACE_DIR = join(ROOT, "docs", "trinity-live-traces");
-const POLICY_SOURCE = join(ROOT, "scripts", "trinity_v461a_v463a_hybrid_canon_builder.py");
+const DEFAULT_POLICY_SOURCE = join(ROOT, "scripts", "trinity_v461a_v463a_hybrid_canon_builder.py");
+const POLICY_SOURCE = resolvePolicySource();
 const SUPPORTED_LANES = ["Cicero", "Kierkegaard", "Aristotle"];
 
 const args = new Map();
@@ -21,6 +22,14 @@ function booleanArg(name, fallback = false) {
   if (["true", "1", "yes", "y", "on"].includes(normalized)) return true;
   if (["false", "0", "no", "n", "off"].includes(normalized)) return false;
   throw new Error(`Invalid boolean for ${name}: ${value}`);
+}
+
+function resolvePolicySource() {
+  const override =
+    process.env.THOS_APP_LANE_POLICY_SOURCE ||
+    process.env.GHC_APP_LANE_POLICY_SOURCE ||
+    "";
+  return override.trim() || DEFAULT_POLICY_SOURCE;
 }
 
 const phaseSlug = args.get("--phase-slug");
@@ -320,6 +329,7 @@ const receipt = {
   missing_or_unsupported_lanes: missing,
   recovery_source: {
     source_artifact: basename(POLICY_SOURCE),
+    source_override_used: POLICY_SOURCE !== DEFAULT_POLICY_SOURCE,
     raw_source_copied: false,
     raw_handles_published: false,
   },
