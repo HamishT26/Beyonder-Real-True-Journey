@@ -10,13 +10,13 @@ Latest completed x2: v557-gmut-thos-v7-x2
 Next x2 scope: v557-gmut-thos-v8-x1
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## Full-Tools-4 App-Lane Repair
+## v557 Lumen Last-Three Proposal Sweep
 
-Status: `ACTIVE_OPEN_FULLTOOLS4_APP_LANE_REPAIRED_BUT_COMPLETION_GATE_OPEN`
-Env-map status: `PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT`
-Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
-Notify status: `PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED`
-Closeout allowed now: `false`
+Status: `PASS_LUMEN_LAST_THREE_PROPOSAL_SWEEP_READY`
+Selected sessions: `v557-gmut-thos-v4-x1, v557-gmut-thos-v5-x1, v557-gmut-thos-v7-x1`
+Immediate x1 safe count: `20`
+x2 build task count: `273`
+Raw private material published: `false`
 
 ## Lookup Files
 

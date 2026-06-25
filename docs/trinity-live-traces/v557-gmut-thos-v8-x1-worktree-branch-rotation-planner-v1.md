@@ -2,8 +2,8 @@
 
 Status: `WARN_ROTATION_RECOMMENDED_AT_SAFE_BOUNDARY`
 
-Recommended next mini lane: `omega-mini-5`
-Recommended next full-tools lane: `full-tools-4`
+Recommended next mini lane: `omega-mini-6`
+Recommended next full-tools lane: `full-tools-5`
 
 ## Rotation Warnings
 
