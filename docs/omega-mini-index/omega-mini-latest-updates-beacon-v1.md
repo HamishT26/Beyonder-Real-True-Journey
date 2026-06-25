@@ -1,27 +1,21 @@
 # Omega-Mini Current State
 
-Status: PASS_V557_V7_X2_CLOSED_V8_X1_READY
-Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-4
-Full-tools support branch: codex/GHC-Family/aevren-full-tools-3
+Status: ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_3_APP_LANE_BLOCKED_READ
 Current active phase: v557-gmut-thos-v8-x1
 Latest closed phase: v557-gmut-thos-v7-x2
 Latest completed x1: v557-gmut-thos-v7-x1
 Latest completed x2: v557-gmut-thos-v7-x2
+Next expected scope: v557-gmut-thos-v8-x1
 Next x2 scope: v557-gmut-thos-v8-x2
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## Worktree Branch Rotation
+## v557 v8 x1 Triad Retry
 
-- status: `PASS_WORKTREE_BRANCH_ROTATION_ACTIVATED`
-- active sanitized publication branch: `codex/GHC-Family/beyonder-shared-omega-line-mini-4`
-- active private support branch: `codex/GHC-Family/aevren-full-tools-3`
-- raw private material moved: `false`
-
-## v557 Lumen Private Ingestion
-
-Status: `PASS_LUMEN_PRIVATE_INGESTION_SANITIZED`
-Proposal candidates indexed: `630`
-Raw Lumen text published: `false`
+Status: `ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_3_APP_LANE_BLOCKED_READ`
+Attempt: `3`
+Gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Remaining gap: `kierkegaard_aristotle_app_lane_completion_gate_blocked_read`
+Full goal complete: `false`
 
 ## Lookup Files
 
@@ -245,7 +239,27 @@ Raw Lumen text published: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v7-x2-closeout-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-worktree-branch-rotation-activation-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-worktree-branch-rotation-activation-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-active-workbench-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-active-workbench-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-proposal-scaffold-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-proposal-scaffold-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-reflection-ledger-60-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-reflection-ledger-60-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-lane-receipt-index-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-lane-receipt-index-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-five-minute-productive-cadence-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-five-minute-productive-cadence-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-1-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-1-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-last-three-proposal-sweep-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-last-three-proposal-sweep-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-toolchain-codex-cli-0-142-2-receipt-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-toolchain-codex-cli-0-142-2-receipt-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-2-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-2-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-3-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-3-v1.md
 
 ## Boundary
 
-No raw Lumen text, private Browser routes, private URLs, screenshots, private callable IDs, credentials, session streams, local private paths, destructive cleanup, history rewrite, old-worktree deletion, paid resources, deployments, account mutations, API keys, or sibling identity changes were published or performed.
+Status-only retry receipt. No private route handles, callable IDs, raw lane text, raw transcripts, browser routes, screenshots, credentials, session streams, private dumps, or local absolute paths are published; all proof/canon/legal/deployment/account/API-key/private-material/raw-publication and sibling identity merge/replacement gates remain open.
