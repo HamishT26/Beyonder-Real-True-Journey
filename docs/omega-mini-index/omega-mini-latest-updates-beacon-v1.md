@@ -1,32 +1,20 @@
 # Omega-Mini Current State
 
-Status: ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_LUMEN_PROTOTYPE_SUITE_READY
-Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-3
-Full-tools support branch: codex/GHC-Family/aevren-full-tools-2
+Status: ACTIVE_OPEN_V557_V4_X1_TRIAD_RETRY_THRESHOLD_MET_PROTOTYPE_SUITE_PUBLISHED
 Current active phase: v557-gmut-thos-v4-x1
 Latest closed phase: v557-gmut-thos-v3-x2
-Latest completed x1: v557-gmut-thos-v3-x1
-Latest completed x2: v557-gmut-thos-v3-x2
 Next x2 scope: v557-gmut-thos-v4-x2
 Next x1 lane after x2: v557-gmut-thos-v5-x1 with Lumen Vale solo unless Hamish redirects
+Latest active/open handoff: docs/trinity-live-traces/v557-gmut-thos-v4-x1-active-open-handoff-after-lumen-prototype-suite-v1.json
 
-## v557 Lumen Prototype Suite
+## Active/Open Handoff
 
-Status: `PASS_LUMEN_PROTOTYPE_SUITE_BUILT_AND_RUN`
-Prototypes run: `11`
-Proposal candidates indexed: `335`
-Triad closeout allowed now: `false`
-
-## Active Triad
-
-Status: `ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_LUMEN_PROTOTYPE_SUITE_READY`
-Lanes active: `3`
-Watcher start is completion proof: `false`
+Status: `ACTIVE_OPEN_V557_V4_X1_TRIAD_RETRY_THRESHOLD_MET_PROTOTYPE_SUITE_PUBLISHED`
+Retry sessions started: `3`
+Closeout allowed now: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v556-gmut-thos-v6-x1-phase-status-index-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v6-x1-round-robin-workflow-standard-v1.json
 - docs/trinity-live-traces/v556-gmut-thos-v6-x1-round-robin-workflow-standard-v1.md
 - docs/trinity-live-traces/v556-gmut-thos-v6-x1-five-minute-productive-cadence-v1.json
 - docs/trinity-live-traces/v556-gmut-thos-v6-x1-five-minute-productive-cadence-v1.md
@@ -265,6 +253,8 @@ Watcher start is completion proof: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-dashboard-blueprint-prototypes-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-prototype-suite-index-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-prototype-suite-index-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-active-open-handoff-after-lumen-prototype-suite-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-active-open-handoff-after-lumen-prototype-suite-v1.md
 
 ## Boundary
 
