@@ -1,13 +1,13 @@
 # Omega-Mini Current State
 
-Status: ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_3_APP_LANE_BLOCKED_READ
+Status: V552_V8_X2_ACTIVE_PRODUCTIVE_CADENCE_READY
 Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-5
 Full-tools support branch: codex/GHC-Family/aevren-full-tools-4
 Current active phase: v557-gmut-thos-v8-x1
 Latest closed phase: v557-gmut-thos-v7-x2
 Latest completed x1: v557-gmut-thos-v7-x1
 Latest completed x2: v557-gmut-thos-v7-x2
-Next x2 scope: v557-gmut-thos-v8-x2
+Next x2 scope: v557-gmut-thos-v8-x1
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
 ## Full-Tools-4 App-Lane Repair
@@ -15,6 +15,7 @@ Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 Status: `ACTIVE_OPEN_FULLTOOLS4_APP_LANE_REPAIRED_BUT_COMPLETION_GATE_OPEN`
 Env-map status: `PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT`
 Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Notify status: `PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED`
 Closeout allowed now: `false`
 
 ## Lookup Files

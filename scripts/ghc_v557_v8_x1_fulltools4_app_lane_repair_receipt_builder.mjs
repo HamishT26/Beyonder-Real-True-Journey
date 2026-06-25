@@ -12,6 +12,7 @@ const args = parseArgs(process.argv.slice(2));
 const phaseSlug = args.get("--phase-slug") || "v557-gmut-thos-v8-x1";
 const fullToolsRoot = args.get("--full-tools-root");
 const probePrefix = args.get("--probe-prefix") || "v557-gmut-thos-v8-x1-kierkegaard-aristotle-fulltools4-env-probe-1";
+const notifyPrefix = args.get("--notify-prefix") || "v557-gmut-thos-v8-x1-kierkegaard-aristotle-fulltools4-env-notify-1";
 const noEnvPreflightPrefix = args.get("--no-env-preflight-prefix") || "v557-gmut-thos-v8-x1-kierkegaard-aristotle-fulltools4-private-map-preflight";
 const envPreflightPrefix = args.get("--env-preflight-prefix") || "v557-gmut-thos-v8-x1-kierkegaard-aristotle-fulltools4-private-map-preflight-env";
 const generated = new Date();
@@ -29,6 +30,9 @@ const envPreflight = readOptional(path.join(fullTraceDir, `${envPreflightPrefix}
 const probe = readOptional(path.join(fullTraceDir, `${probePrefix}-v1.json`));
 const probeGate = readOptional(path.join(fullTraceDir, `${probePrefix}-completion-gate-v1.json`));
 const probeRunner = readOptional(path.join(fullTraceDir, `${probePrefix}-runner-v1.json`));
+const notify = readOptional(path.join(fullTraceDir, `${notifyPrefix}-v1.json`));
+const notifyRunner = readOptional(path.join(fullTraceDir, `${notifyPrefix}-runner-v1.json`));
+const notifyPreflight = readOptional(path.join(fullTraceDir, `${notifyPrefix}-preflight-v1.json`));
 
 const receipt = {
   artifact_type: "ghc_v557_v8_x1_fulltools4_app_lane_repair_receipt",
@@ -59,6 +63,15 @@ const receipt = {
     lane_count: probe?.lanes ?? null,
     lane_rows_published: false,
     completion_gate_passed: probeGate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE",
+  },
+  app_lane_notify: {
+    notify_status: notify?.overall_status || notify?.status || "missing",
+    runner_status: notifyRunner?.overall_status || notifyRunner?.status || "missing",
+    preflight_status: notifyPreflight?.overall_status || notifyPreflight?.status || "missing",
+    recovered_handle_count: notify?.recovered_handle_count ?? notifyRunner?.recovered_handle_count ?? null,
+    background_watch_started: notify?.overall_status === "PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED"
+      || notifyRunner?.overall_status === "PASS_BACKGROUND_WATCH_STARTED",
+    raw_callable_ids_published: false,
   },
   current_phase_decision: {
     closeout_allowed_now: probeGate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE",
@@ -104,6 +117,7 @@ function refreshBeacons(refs, doc) {
       active_private_support_branch: doc.support_lane.active_private_support_branch,
       env_map_status: doc.map_preflight.env_status,
       completion_gate_status: doc.app_lane_probe.completion_gate_status,
+      notify_status: doc.app_lane_notify.notify_status,
       closeout_allowed_now: doc.current_phase_decision.closeout_allowed_now,
       raw_private_ids_published: false,
     };
@@ -132,6 +146,7 @@ function renderArtifactMd(doc) {
     `Private support branch: \`${doc.support_lane.active_private_support_branch}\``,
     `Env-map preflight: \`${doc.map_preflight.env_status}\``,
     `Completion gate: \`${doc.app_lane_probe.completion_gate_status}\``,
+    `Notify status: \`${doc.app_lane_notify.notify_status}\``,
     `Closeout allowed now: \`${doc.current_phase_decision.closeout_allowed_now ? "true" : "false"}\``,
     "",
     "## Decision",
@@ -164,6 +179,7 @@ function renderBeaconMd(doc, listKey) {
     `Status: \`${doc.v557_v8_x1_fulltools4_app_lane_repair?.status || "not_recorded"}\``,
     `Env-map status: \`${doc.v557_v8_x1_fulltools4_app_lane_repair?.env_map_status || "not_recorded"}\``,
     `Completion gate status: \`${doc.v557_v8_x1_fulltools4_app_lane_repair?.completion_gate_status || "not_recorded"}\``,
+    `Notify status: \`${doc.v557_v8_x1_fulltools4_app_lane_repair?.notify_status || "not_recorded"}\``,
     `Closeout allowed now: \`${doc.v557_v8_x1_fulltools4_app_lane_repair?.closeout_allowed_now === true ? "true" : "false"}\``,
     "",
     "## Lookup Files",

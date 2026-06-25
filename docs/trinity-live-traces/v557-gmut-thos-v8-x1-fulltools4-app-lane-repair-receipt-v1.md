@@ -5,6 +5,7 @@ Status: `ACTIVE_OPEN_FULLTOOLS4_APP_LANE_REPAIRED_BUT_COMPLETION_GATE_OPEN`
 Private support branch: `codex/GHC-Family/aevren-full-tools-4`
 Env-map preflight: `PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT`
 Completion gate: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Notify status: `PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED`
 Closeout allowed now: `false`
 
 ## Decision
