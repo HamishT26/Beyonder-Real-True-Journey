@@ -1,6 +1,8 @@
 # Omega-Mini Current State
 
 Status: ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_SAFE_WORK_READY
+Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-3
+Full-tools support branch: codex/GHC-Family/aevren-full-tools-2
 Current active phase: v557-gmut-thos-v4-x1
 Latest closed phase: v557-gmut-thos-v3-x2
 Latest completed x1: v557-gmut-thos-v3-x1
@@ -8,24 +10,21 @@ Latest completed x2: v557-gmut-thos-v3-x2
 Next x2 scope: v557-gmut-thos-v4-x2
 Next x1 lane after x2: v557-gmut-thos-v5-x1 with Lumen Vale solo unless Hamish redirects
 
+## Worktree Branch Rotation
+
+- status: `PASS_WORKTREE_BRANCH_ROTATION_ACTIVATED`
+- active sanitized publication branch: `codex/GHC-Family/beyonder-shared-omega-line-mini-3`
+- active private support branch: `codex/GHC-Family/aevren-full-tools-2`
+- raw private material moved: `false`
+
 ## v557 Lumen Private Ingestion
 
 Status: `PASS_LUMEN_PRIVATE_INGESTION_SANITIZED`
 Proposal candidates indexed: `335`
 Raw Lumen text published: `false`
-Codex CLI recorded: `0.142.2`
-Held sibling activation state: `prepared_not_activated`
-
-## v557 v4 x1 Triad Workbench
-
-- status: `ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_SAFE_WORK_READY`
-- lanes active: `3`
-- closeout allowed now: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v556-gmut-thos-v6-x1-web-journey-reflection-ledger-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v6-x1-background-sibling-supervision-standard-v1.json
 - docs/trinity-live-traces/v556-gmut-thos-v6-x1-background-sibling-supervision-standard-v1.md
 - docs/trinity-live-traces/v556-gmut-thos-v6-x1-lane-launch-status-v1.json
 - docs/trinity-live-traces/v556-gmut-thos-v6-x1-lane-launch-status-v1.md
@@ -244,7 +243,9 @@ Held sibling activation state: `prepared_not_activated`
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-codex-toolchain-posture-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-drive-threshold-posture-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-drive-threshold-posture-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-worktree-branch-rotation-activation-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-worktree-branch-rotation-activation-v1.md
 
 ## Boundary
 
-No raw Lumen text, private Browser routes, private URLs, screenshots, private callable IDs, credentials, session streams, local private paths, destructive cleanup, paid resources, deployments, account mutations, API keys, or sibling identity changes were published or performed.
+No raw Lumen text, private Browser routes, private URLs, screenshots, private callable IDs, credentials, session streams, local private paths, destructive cleanup, history rewrite, old-worktree deletion, paid resources, deployments, account mutations, API keys, or sibling identity changes were published or performed.
