@@ -1,6 +1,6 @@
 # Omega-Mini Current State
 
-Status: ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_4_APP_LANE_BLOCKED_READ
+Status: ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_5_APP_LANE_BLOCKED_READ
 Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-6
 Full-tools support branch: codex/GHC-Family/aevren-full-tools-5
 Current active phase: v557-gmut-thos-v8-x1
@@ -13,17 +13,13 @@ Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 ## Support App-Lane Probe Mirror
 
 Status: `ACTIVE_OPEN_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE_OPEN`
-Support lane: `fulltools5-goal-continuation`
+Support lane: `fulltools5-goal-continuation-retry5`
 Probe status: `OPEN_GAP_RECOVERED_APP_LANE_RUN`
 Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
 Closeout allowed now: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-five-minute-productive-cadence-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-five-minute-productive-cadence-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-drive-toolchain-posture-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-drive-toolchain-posture-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-open-gate-rail-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-open-gate-rail-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-browser-send-receipt-v1.json
@@ -260,3 +256,7 @@ Closeout allowed now: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-4-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-app-lane-probe-mirror-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-app-lane-probe-mirror-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-5-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-5-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-retry5-app-lane-probe-mirror-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-retry5-app-lane-probe-mirror-v1.md
