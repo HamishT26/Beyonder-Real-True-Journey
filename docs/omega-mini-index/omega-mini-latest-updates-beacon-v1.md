@@ -10,7 +10,7 @@ Next x1 lane after x2: v556-gmut-thos-v8-x1 with Aster Vale, Kierkegaard, and Ar
 
 ## Five-Minute Productive Cadence
 
-- Status: `ACTIVE_OPEN_V556_V7_X1_LUMEN_HARVEST_BLOCKED_AFTER_3_RETRIES`
+- Status: `ACTIVE_OPEN_LUMEN_HARVEST_STILL_BLOCKED_GOAL_CONTINUATION_RETRY_2`
 - Safe unit may run past checkpoint: `true`
 - Wait work queues: `9`
 
@@ -1228,3 +1228,8 @@ Status-only beacon. No private route data, private lane body content, credential
 ## Active Open Handoff
 
 - `v556-gmut-thos-v7-x1-active-open-lumen-harvest-blocker-handoff-v1.json`
+
+## Active Open Retry
+
+- `v556-gmut-thos-v7-x1-lumen-harvest-goal-continuation-retry-2-v1.json`
+- Lumen Browser send remains already submitted; sanitized harvest is still pending. Do not resend unless handoff absence is proven.
