@@ -10,21 +10,33 @@ Latest completed x2: v557-gmut-thos-v7-x2
 Next x2 scope: v557-gmut-thos-v8-x2
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## Worktree Branch Rotation
+## Full-Tools-4 App-Lane Repair
 
-- status: `PASS_WORKTREE_BRANCH_ROTATION_ACTIVATED`
-- active sanitized publication branch: `codex/GHC-Family/beyonder-shared-omega-line-mini-5`
-- active private support branch: `codex/GHC-Family/aevren-full-tools-4`
-- raw private material moved: `false`
-
-## v557 Lumen Private Ingestion
-
-Status: `PASS_LUMEN_PRIVATE_INGESTION_SANITIZED`
-Proposal candidates indexed: `630`
-Raw Lumen text published: `false`
+Status: `ACTIVE_OPEN_FULLTOOLS4_APP_LANE_REPAIRED_BUT_COMPLETION_GATE_OPEN`
+Env-map status: `PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT`
+Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Closeout allowed now: `false`
 
 ## Lookup Files
 
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-paired-boolean-completion-validator-prototype-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-paired-boolean-completion-validator-prototype-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-compact-closeout-builder-prototype-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-compact-closeout-builder-prototype-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-drift-sentinel-prototype-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-drift-sentinel-prototype-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-launch-seed-builder-prototype-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-launch-seed-builder-prototype-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-dashboard-blueprint-prototypes-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-dashboard-blueprint-prototypes-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-prototype-suite-index-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-prototype-suite-index-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-active-open-handoff-after-lumen-prototype-suite-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-active-open-handoff-after-lumen-prototype-suite-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-closeout-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x1-closeout-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v4-x2-aster-private-proposal-hash-queue-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v4-x2-aster-private-proposal-hash-queue-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x2-aster-x2-workbench-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v4-x2-aster-x2-workbench-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x2-approval-split-ledger-v1.json
@@ -245,7 +257,5 @@ Raw Lumen text published: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-2-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-3-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-3-v1.md
-
-## Boundary
-
-No raw Lumen text, private Browser routes, private URLs, screenshots, private callable IDs, credentials, session streams, local private paths, destructive cleanup, history rewrite, old-worktree deletion, paid resources, deployments, account mutations, API keys, or sibling identity changes were published or performed.
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools4-app-lane-repair-receipt-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools4-app-lane-repair-receipt-v1.md
