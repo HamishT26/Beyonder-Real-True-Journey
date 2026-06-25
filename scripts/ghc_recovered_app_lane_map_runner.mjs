@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -52,9 +52,38 @@ function selectedLanes() {
 }
 
 function extractMap(lanes) {
-  const text = readFileSync(POLICY_SOURCE, "utf8");
+  const privateEnv = process.env.THOS_APP_LANE_IDS_JSON || "";
   const map = {};
   const missing = [];
+  if (privateEnv.trim()) {
+    try {
+      const parsed = JSON.parse(privateEnv);
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return { map, missing: lanes.map((lane) => `${lane}:private-env-not-object`) };
+      }
+      for (const lane of lanes) {
+        if (!SUPPORTED_LANES.includes(lane)) {
+          missing.push(`${lane}:unsupported`);
+          continue;
+        }
+        const value = parsed[lane];
+        if (typeof value === "string" && value.trim()) {
+          map[lane] = value.trim();
+        } else {
+          missing.push(`${lane}:missing-private-env`);
+        }
+      }
+      return { map, missing };
+    } catch {
+      return { map, missing: lanes.map((lane) => `${lane}:private-env-parse-failed`) };
+    }
+  }
+
+  if (!existsSync(POLICY_SOURCE)) {
+    return { map, missing: lanes.map((lane) => `${lane}:missing-private-map-source`) };
+  }
+
+  const text = readFileSync(POLICY_SOURCE, "utf8");
   for (const lane of lanes) {
     if (!SUPPORTED_LANES.includes(lane)) {
       missing.push(`${lane}:unsupported`);
