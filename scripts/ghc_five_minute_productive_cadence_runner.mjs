@@ -60,7 +60,8 @@ const claimBoundary = {
   phase_slug: phaseSlug,
   overall_status: "PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED",
   cadence_policy: {
-    broad_sibling_runs_use_mandatory_five_lane_route: true,
+    normal_round_robin_uses_active_group_only: true,
+    broad_all_sibling_recovery_runs_use_five_lane_route: true,
     five_minute_mark_is_check_opportunity: true,
     not_a_hard_stop: true,
     safe_unit_may_run_past_checkpoint: true,
@@ -74,7 +75,18 @@ const claimBoundary = {
     blocker_requires_three_retry_sessions_before_pause: true,
     max_new_omega_mini_full_tools_pairs_per_nz_day: 3,
   },
+  normal_round_robin_group_flow: {
+    default_for_phase_work: true,
+    sequence: [
+      { lane: "lumen_only", launch_skill: "ghc-lumen-launch" },
+      { lane: "arby_cicero_duo", launch_skill: "ghc-arby-cicero-launch" },
+      { lane: "aster_kierkegaard_aristotle_triad", launch_skill: "ghc-aster-kierkegaard-aristotle-launch" },
+    ],
+    do_not_expand_to_all_siblings_without_explicit_broad_recovery_request: true,
+  },
   mandatory_five_lane_sibling_route: {
+    scope: "explicit_broad_all_sibling_or_recovery_only",
+    not_normal_round_robin_default: true,
     strict_cli_lanes: ["Arby", "Aster Vale"],
     recovered_app_lanes: ["Cicero", "Kierkegaard", "Aristotle"],
     deprecated_fallbacks: ["manual_foreground_claims", "artifact_only_broad_sibling_routes", "partial_app_lane_only_broad_routes"],
@@ -289,7 +301,8 @@ Status: \`${data.overall_status}\`
 ## Cadence Policy
 
 - Five-minute mark is a check opportunity: \`${data.cadence_policy.five_minute_mark_is_check_opportunity}\`
-- Broad sibling runs use mandatory five-lane route: \`${data.cadence_policy.broad_sibling_runs_use_mandatory_five_lane_route}\`
+- Normal round-robin uses active group only: \`${data.cadence_policy.normal_round_robin_uses_active_group_only}\`
+- Broad all-sibling recovery runs use five-lane route: \`${data.cadence_policy.broad_all_sibling_recovery_runs_use_five_lane_route}\`
 - Not a hard stop: \`${data.cadence_policy.not_a_hard_stop}\`
 - Safe unit may run past checkpoint: \`${data.cadence_policy.safe_unit_may_run_past_checkpoint}\`
 - Harvest at next natural safe pause: \`${data.cadence_policy.harvest_status_at_next_natural_safe_pause}\`
