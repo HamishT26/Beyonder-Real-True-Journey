@@ -4,12 +4,12 @@ for (let index = 2; index < process.argv.length; index += 2) args.set(process.ar
 const phaseSlug = args.get("--phase-slug") || "v556-gmut-thos-v7-x2";
 console.log(JSON.stringify({
   artifact_type: "ghc_v556_v7_x2_generated_runner_receipt",
-  runner_name: "ghc_v556_v7_x2_01_ghc_v556_v7_x1_lumen_response_reducer_mjs.mjs",
+  runner_name: "ghc_v556_v7_x2_02_ghc_v556_goal_progress_ledger_mjs.mjs",
   generated_utc: new Date().toISOString(),
   phase_slug: phaseSlug,
   overall_status: "PASS_V556_V7_X2_STATUS_RUNNER",
-  purpose: "ghc_v556_v7_x1_lumen_response_reducer.mjs",
-  source_id: "v556-gmut-thos-v7-x1-runner-01",
+  purpose: "ghc_v556_goal_progress_ledger.mjs",
+  source_id: "v556-gmut-thos-v7-x1-runner-02",
   publication_boundary: {
     raw_browser_routes_published: false,
     private_urls_published: false,
