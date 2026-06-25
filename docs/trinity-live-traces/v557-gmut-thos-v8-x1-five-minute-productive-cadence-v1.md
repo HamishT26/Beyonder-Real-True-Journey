@@ -5,6 +5,7 @@ Status: `PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED`
 ## Cadence Policy
 
 - Five-minute mark is a check opportunity: `true`
+- Broad sibling runs use mandatory five-lane route: `true`
 - Not a hard stop: `true`
 - Safe unit may run past checkpoint: `true`
 - Harvest at next natural safe pause: `true`

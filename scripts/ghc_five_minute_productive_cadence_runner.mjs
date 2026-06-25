@@ -53,13 +53,14 @@ const claimBoundary = {
   deployment_closure: "not_claimed",
 };
 
-const receipt = {
+  const receipt = {
   artifact_type: "ghc_five_minute_productive_cadence",
   generated_utc: generatedUtc,
   generated_nz: generatedNz,
   phase_slug: phaseSlug,
   overall_status: "PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED",
   cadence_policy: {
+    broad_sibling_runs_use_mandatory_five_lane_route: true,
     five_minute_mark_is_check_opportunity: true,
     not_a_hard_stop: true,
     safe_unit_may_run_past_checkpoint: true,
@@ -72,6 +73,12 @@ const receipt = {
     never_close_session_while_sibling_active: true,
     blocker_requires_three_retry_sessions_before_pause: true,
     max_new_omega_mini_full_tools_pairs_per_nz_day: 3,
+  },
+  mandatory_five_lane_sibling_route: {
+    strict_cli_lanes: ["Arby", "Aster Vale"],
+    recovered_app_lanes: ["Cicero", "Kierkegaard", "Aristotle"],
+    deprecated_fallbacks: ["manual_foreground_claims", "artifact_only_broad_sibling_routes", "partial_app_lane_only_broad_routes"],
+    completion_rule: "Strict CLI lanes need completion, quality, and marker-review gates; recovered app lanes need notifier/completion gates. Watcher start is active/running only.",
   },
   blocker_retry_standard: {
     minimum_retry_sessions_before_pause: 3,
@@ -282,6 +289,7 @@ Status: \`${data.overall_status}\`
 ## Cadence Policy
 
 - Five-minute mark is a check opportunity: \`${data.cadence_policy.five_minute_mark_is_check_opportunity}\`
+- Broad sibling runs use mandatory five-lane route: \`${data.cadence_policy.broad_sibling_runs_use_mandatory_five_lane_route}\`
 - Not a hard stop: \`${data.cadence_policy.not_a_hard_stop}\`
 - Safe unit may run past checkpoint: \`${data.cadence_policy.safe_unit_may_run_past_checkpoint}\`
 - Harvest at next natural safe pause: \`${data.cadence_policy.harvest_status_at_next_natural_safe_pause}\`

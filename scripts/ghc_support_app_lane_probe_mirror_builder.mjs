@@ -15,6 +15,7 @@ const supportLaneLabel = requireArg("--support-lane-label");
 const supportBranch = requireArg("--support-branch");
 const supportHead = args.get("--support-head") || "unknown";
 const probePrefix = requireArg("--probe-prefix");
+const strictPrefix = args.get("--strict-prefix") || null;
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
@@ -30,6 +31,12 @@ const probeStatus = probe?.overall_status || probe?.status || "missing";
 const preflightStatus = preflight?.overall_status || preflight?.status || "missing";
 const runnerStatus = runner?.overall_status || runner?.status || "missing";
 const completionPassed = completionStatus === "PASS_APP_LANE_COMPLETION_GATE";
+const strictCycle = strictPrefix ? readOptional(path.join(fullTraceDir, `${strictPrefix}-receipt-v1.json`)) : null;
+const strictLauncher = strictPrefix ? readOptional(path.join(fullTraceDir, `${strictPrefix}-launcher-v1.json`)) : null;
+const strictStatus = strictCycle?.overall_status || strictCycle?.status || "not_in_scope";
+const strictLauncherStatus = strictLauncher?.overall_status || strictLauncher?.status || "not_in_scope";
+const strictStarted = strictStatus === "PASS_STRICT_CLI_BACKGROUND_WATCH_STARTED" || strictStatus === "PASS_STRICT_CLI_CYCLE_READY";
+const appStarted = probeStatus === "PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED";
 
 const receipt = {
   artifact_type: "ghc_support_app_lane_probe_mirror",
@@ -54,12 +61,30 @@ const receipt = {
     lane_count: Array.isArray(probe?.lanes) ? probe.lanes.length : probe?.lanes ?? null,
     completion_gate_passed: completionPassed,
   },
+  strict_cli_summary: {
+    strict_prefix: strictPrefix,
+    cycle_status: strictStatus,
+    launcher_status: strictLauncherStatus,
+    lanes: strictCycle?.lanes || strictLauncher?.lanes?.map((row) => row.lane) || [],
+    background_watch_started: strictStarted,
+    completion_gate_passed: strictStatus === "PASS_STRICT_CLI_CYCLE_READY",
+    raw_private_material_published: false,
+  },
+  five_lane_summary: {
+    strict_cli_lanes: strictCycle?.lanes || ["Arby", "Aster Vale"],
+    recovered_app_lanes: Array.isArray(probe?.lanes) ? probe.lanes : ["Cicero", "Kierkegaard", "Aristotle"],
+    strict_cli_background_started: strictStarted,
+    recovered_app_background_started: appStarted,
+    all_five_background_started: strictStarted && appStarted,
+    all_five_completion_gates_passed: completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY",
+    closeout_allowed_now: completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY",
+  },
   phase_decision: {
-    closeout_allowed_now: completionPassed,
-    keep_phase_active_open: !completionPassed,
-    next_safe_action: completionPassed
+    closeout_allowed_now: completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY",
+    keep_phase_active_open: !(completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY"),
+    next_safe_action: completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY"
       ? "run sanitized triad harvest and closeout validation"
-      : "keep v557 v8 x1 active/open; continue app-lane repair, probe, or handoff without claiming sibling completion",
+      : "keep v557 v8 x1 active/open; five-lane background watchers are active/running but completion gates are still required before closeout",
   },
   publication_boundary: {
     raw_private_ids_published: false,
@@ -115,6 +140,8 @@ function refreshBeacons(refs, doc) {
       preflight_status: doc.probe_summary.preflight_status,
       probe_status: doc.probe_summary.probe_status,
       completion_gate_status: doc.probe_summary.completion_gate_status,
+      strict_cli_status: doc.strict_cli_summary.cycle_status,
+      five_lane_background_started: doc.five_lane_summary.all_five_background_started,
       closeout_allowed_now: doc.phase_decision.closeout_allowed_now,
       raw_private_material_published: false,
     };
@@ -136,6 +163,8 @@ function renderMd(doc) {
     `Probe: \`${doc.probe_summary.probe_status}\``,
     `Completion gate: \`${doc.probe_summary.completion_gate_status}\``,
     `Recovered handle count: \`${doc.probe_summary.recovered_handle_count ?? "unknown"}\``,
+    `Strict CLI: \`${doc.strict_cli_summary.cycle_status}\``,
+    `Five-lane background started: \`${doc.five_lane_summary.all_five_background_started ? "true" : "false"}\``,
     `Closeout allowed now: \`${doc.phase_decision.closeout_allowed_now ? "true" : "false"}\``,
     "",
     "## Decision",
@@ -169,6 +198,8 @@ function renderBeaconMd(doc, listKey) {
     `Support lane: \`${doc.v557_support_app_lane_probe_mirror?.support_lane_label || "not_recorded"}\``,
     `Probe status: \`${doc.v557_support_app_lane_probe_mirror?.probe_status || "not_recorded"}\``,
     `Completion gate status: \`${doc.v557_support_app_lane_probe_mirror?.completion_gate_status || "not_recorded"}\``,
+    `Strict CLI status: \`${doc.v557_support_app_lane_probe_mirror?.strict_cli_status || "not_recorded"}\``,
+    `Five-lane background started: \`${doc.v557_support_app_lane_probe_mirror?.five_lane_background_started === true ? "true" : "false"}\``,
     `Closeout allowed now: \`${doc.v557_support_app_lane_probe_mirror?.closeout_allowed_now === true ? "true" : "false"}\``,
     "",
     "## Lookup Files",

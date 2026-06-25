@@ -13,15 +13,15 @@ Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 ## Support App-Lane Probe Mirror
 
 Status: `ACTIVE_OPEN_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE_OPEN`
-Support lane: `fulltools5-app-update-recovery-notify8`
+Support lane: `fulltools5-five-lane-route`
 Probe status: `PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED`
 Completion gate status: `missing`
+Strict CLI status: `PASS_STRICT_CLI_BACKGROUND_WATCH_STARTED`
+Five-lane background started: `true`
 Closeout allowed now: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-x2-build-queue-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-x2-build-queue-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-dashboard-workbench-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-dashboard-workbench-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-source-reflection-workbench-v1.json
@@ -260,3 +260,5 @@ Closeout allowed now: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-retry6-app-lane-probe-mirror-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-app-update-recovery-notify8-app-lane-probe-mirror-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-app-update-recovery-notify8-app-lane-probe-mirror-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-five-lane-route-app-lane-probe-mirror-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-five-lane-route-app-lane-probe-mirror-v1.md
