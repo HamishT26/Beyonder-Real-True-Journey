@@ -1,26 +1,20 @@
 # Omega-Mini Current State
 
-Status: PASS_V557_V2_X1_CLOSED_V2_X2_READY
-Current active phase: v557-gmut-thos-v2-x2
-Latest closed phase: v557-gmut-thos-v2-x1
+Status: PASS_V557_V2_X2_CLOSED_V3_X1_READY
+Current active phase: v557-gmut-thos-v3-x1
+Latest closed phase: v557-gmut-thos-v2-x2
 Latest completed x1: v557-gmut-thos-v2-x1
-Latest completed x2: v557-gmut-thos-v1-x2
-Next x2 scope: v557-gmut-thos-v2-x2
+Latest completed x2: v557-gmut-thos-v2-x2
+Next x2 scope: v557-gmut-thos-v3-x2
 Next x1 lane after x2: v557-gmut-thos-v3-x1 with Lumen Vale solo unless Hamish redirects
 
-## v557 v2 x1 Closeout
+## v557 v2 x2 Closeout
 
-- status: `PASS_V557_V2_X1_CLOSED_V2_X2_READY`
+- status: `PASS_V557_V2_X2_CLOSED_V3_X1_READY`
 - full goal complete: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v556-gmut-thos-v5-x1-goal-mode-reconciliation-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v5-x1-goal-mode-reconciliation-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v5-x1-v5-x2-readiness-handoff-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v5-x1-v5-x2-readiness-handoff-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v5-x1-v6-x1-arby-cicero-prep-card-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v5-x1-v6-x1-arby-cicero-prep-card-v1.md
 - docs/trinity-live-traces/v556-gmut-thos-v5-x1-closeout-v1.json
 - docs/trinity-live-traces/v556-gmut-thos-v5-x1-closeout-v1.md
 - docs/trinity-live-traces/v556-gmut-thos-v5-x2-round-robin-workflow-standard-v1.json
@@ -195,3 +189,9 @@ Next x1 lane after x2: v557-gmut-thos-v3-x1 with Lumen Vale solo unless Hamish r
 - docs/trinity-live-traces/v557-gmut-thos-v2-x1-v2-x2-readiness-handoff-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v2-x1-closeout-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v2-x1-closeout-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v2-x2-execution-index-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v2-x2-execution-index-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v2-x2-v3-x1-lumen-startup-handoff-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v2-x2-v3-x1-lumen-startup-handoff-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v2-x2-closeout-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v2-x2-closeout-v1.md
