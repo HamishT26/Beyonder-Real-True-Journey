@@ -92,6 +92,9 @@ function builderForPhase(slug, explicit) {
   if (slug === "v556-gmut-thos-v2-x1") {
     return "ghc_v556_v2_x1_arby_cicero_startup_builder.mjs";
   }
+  if (slug === "v556-gmut-thos-v3-x1") {
+    return "ghc_v556_v3_x1_lumen_startup_builder.mjs";
+  }
   return null;
 }
 
