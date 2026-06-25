@@ -41,8 +41,12 @@ const checks = {
   cadence_status: cadence?.overall_status || cadence?.status || "missing",
 };
 
+const sendSubmitted =
+  sendReceipt?.send_status === "browser_send_submitted_response_active" ||
+  sendReceipt?.overall_status === "PASS_LUMEN_BROWSER_HANDOFF_SUBMITTED";
+
 const passed =
-  sendReceipt?.send_status === "browser_send_submitted_response_active" &&
+  sendSubmitted &&
   harvest?.overall_status === "PASS_LUMEN_BROWSER_HARVEST_SANITIZED" &&
   checks.web_reflections >= 30 &&
   checks.journey_phase_reflections >= 30 &&
