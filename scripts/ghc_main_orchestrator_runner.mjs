@@ -89,6 +89,15 @@ const liveReceipt = {
   generated_nz: generatedNz,
   phase_slug: phaseSlug,
   overall_status: effectivePhaseClosed ? "PASS_V8_X1_EFFECTIVE_TRIAD_GATE_CLOSED" : "OPEN_GAP_V8_X1_BACKGROUND_APP_GATE",
+  timestamp_workflow: {
+    phase_start_or_resume_time_utc: generatedUtc,
+    last_checkpoint_time_utc: generatedUtc,
+    next_checkpoint_due_utc: new Date(Date.parse(generatedUtc) + 5 * 60 * 1000).toISOString(),
+    checkpoint_interval_minutes: 5,
+    checkpoint_overrun_allowed: true,
+    background_watch_is_completion_proof: false,
+    continue_retry_refresh_repair_until_gate_or_formal_open_gap: true,
+  },
   main_orchestrator_runner: {
     promoted_entrypoint: "scripts/ghc_main_orchestrator_runner.mjs",
     compatibility_entrypoint: "scripts/ghc_v8_x1_background_runner_correction_builder.mjs",

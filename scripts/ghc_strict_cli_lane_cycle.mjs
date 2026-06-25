@@ -248,11 +248,21 @@ async function main() {
     }
   }
 
+  const generatedAt = new Date();
   const payload = {
     artifact_type: "strict_cli_lane_cycle",
-    generated_utc: new Date().toISOString(),
+    generated_utc: generatedAt.toISOString(),
     phase_slug: options.phaseSlug,
     overall_status: overallStatus,
+    timestamp_workflow: {
+      lane_launch_or_harvest_time_utc: generatedAt.toISOString(),
+      last_checkpoint_time_utc: generatedAt.toISOString(),
+      next_checkpoint_due_utc: new Date(generatedAt.getTime() + 5 * 60 * 1000).toISOString(),
+      checkpoint_interval_minutes: 5,
+      checkpoint_overrun_allowed: true,
+      background_watch_is_completion_proof: false,
+      continue_retry_refresh_repair_until_gate_or_formal_open_gap: true,
+    },
     execute: options.execute,
     background_watch_requested: options.backgroundWatch,
     lanes: options.lanes,
@@ -280,6 +290,7 @@ async function main() {
       background_watch_is_completion_proof: false,
       passive_wait_required: false,
       harvest_at_next_natural_safe_pause: true,
+      timestamp_workflow_required: true,
     },
     claim_boundary: {
       gmut_gate_state: "open",

@@ -296,6 +296,7 @@ if (mode !== "preflight" && missing.length === 0) {
 
 const preflight = readJsonIfExists(preflightJson);
 const gate = readJsonIfExists(join(TRACE_DIR, `${gatePrefix}-v1.json`));
+const nextCheckpointUtc = new Date(Date.parse(generatedUtc) + 5 * 60 * 1000).toISOString().replace(/\.\d{3}Z$/, "Z");
 const preflightPassed = preflight?.overall_status === "PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT";
 const gatePassed = mode === "preflight" ? true : gate?.overall_status === "PASS_APP_LANE_COMPLETION_GATE";
 const backgroundStarted =
@@ -315,6 +316,15 @@ const receipt = {
   generated_utc: generatedUtc,
   phase_slug: phaseSlug,
   mode,
+  timestamp_workflow: {
+    lane_launch_or_harvest_time_utc: generatedUtc,
+    last_checkpoint_time_utc: generatedUtc,
+    next_checkpoint_due_utc: nextCheckpointUtc,
+    checkpoint_interval_minutes: 5,
+    checkpoint_overrun_allowed: true,
+    background_watch_is_completion_proof: false,
+    continue_retry_refresh_repair_until_gate_or_formal_open_gap: true,
+  },
   background_watch_requested: backgroundWatch,
   turn_start_after_resume_timeout_fallback_requested: allowTurnStartAfterResumeTimeout,
   retry_policy: {
