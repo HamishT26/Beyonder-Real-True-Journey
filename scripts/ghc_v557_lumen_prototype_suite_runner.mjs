@@ -17,6 +17,9 @@ const appLaneRetryStarted = Number(args.get("--app-lane-retry-started") || "3");
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
+const nextX2Scope = phaseSlug.replace(/-x1$/, "-x2");
+const nextX1LaneAfterX2 = inferNextX1LaneAfterX2(phaseSlug);
+const activeOpenStatus = `ACTIVE_OPEN_${phaseSlug.toUpperCase().replace(/[^A-Z0-9]+/g, "_")}_LUMEN_PROTOTYPE_SUITE_READY`;
 
 const currentState = readJson(path.join(omegaDir, "omega-mini-current-state-v1.json"));
 const ghcBeacon = readJson(path.join(tracesDir, "ghc-current-state-beacon-v1.json"));
@@ -268,16 +271,16 @@ function refreshBeacons(refs, suite) {
   ];
   for (const [jsonFile, mdFile, listKey] of specs) {
     const data = readJson(jsonFile);
-    data.status = "ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_LUMEN_PROTOTYPE_SUITE_READY";
+    data.status = activeOpenStatus;
     data.branch = miniBranch;
     data.primary_branch = miniBranch;
     data.full_tools_support_branch = fullToolsBranch;
     data.updated_at = generatedNz;
     data.generated_utc = generatedUtc;
     data.current_active_phase = phaseSlug;
-    data.latest_closed_phase = data.latest_closed_phase || "v557-gmut-thos-v3-x2";
-    data.next_x2_scope = "v557-gmut-thos-v4-x2";
-    data.next_x1_lane_after_x2 = "v557-gmut-thos-v5-x1 with Lumen Vale solo unless Hamish redirects";
+    data.latest_closed_phase = data.latest_closed_phase || inferPreviousX2(phaseSlug);
+    data.next_x2_scope = nextX2Scope;
+    data.next_x1_lane_after_x2 = nextX1LaneAfterX2;
     data.v557_lumen_prototype_suite = {
       status: suite.overall_status,
       prototypes_run: suite.prototypes_run.length,
@@ -287,10 +290,10 @@ function refreshBeacons(refs, suite) {
       raw_private_material_published: false,
       support_runner_boolean_status: supportRunnerProbe.status,
     };
-    data.v557_v4_x1_triad_workbench = {
-      ...(data.v557_v4_x1_triad_workbench || {}),
-      status: "ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_LUMEN_PROTOTYPE_SUITE_READY",
-      lanes_active: 3,
+    data[`${phaseSlug.replace(/-/g, "_")}_prototype_suite`] = {
+      status: activeOpenStatus,
+      next_x2_scope: nextX2Scope,
+      next_x1_lane_after_x2: nextX1LaneAfterX2,
       watcher_start_is_completion_proof: false,
       closeout_allowed_now: false,
       app_lane_retry_started: appLaneRetryStarted,
@@ -300,6 +303,25 @@ function refreshBeacons(refs, suite) {
     writeJson(jsonFile, data);
     fs.writeFileSync(mdFile, renderBeaconMd(data, listKey), "utf8");
   }
+}
+
+function inferPreviousX2(slug) {
+  const match = slug.match(/^(v\d+)-gmut-thos-v(\d+)-x1$/);
+  if (!match) return "not_inferred";
+  const version = match[1];
+  const round = Number(match[2]);
+  return round > 1 ? `${version}-gmut-thos-v${round - 1}-x2` : "not_inferred";
+}
+
+function inferNextX1LaneAfterX2(slug) {
+  const match = slug.match(/^(v\d+)-gmut-thos-v(\d+)-x1$/);
+  if (!match) return "not_inferred";
+  const version = match[1];
+  const round = Number(match[2]);
+  const nextRound = round + 1;
+  if (nextRound === 2 || nextRound === 6) return `${version}-gmut-thos-v${nextRound}-x1 with Arby and Cicero unless Hamish redirects`;
+  if (nextRound === 4 || nextRound === 8) return `${version}-gmut-thos-v${nextRound}-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects`;
+  return `${version}-gmut-thos-v${nextRound}-x1 with Lumen Vale solo unless Hamish redirects`;
 }
 
 function renderArtifactMd(doc) {
