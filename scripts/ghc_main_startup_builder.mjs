@@ -101,6 +101,9 @@ function builderForPhase(slug, explicit) {
   if (slug === "v556-gmut-thos-v6-x1") {
     return "ghc_v556_v6_x1_duo_phase_builder.mjs";
   }
+  if (slug === "v556-gmut-thos-v7-x1") {
+    return "ghc_v556_v7_x1_lumen_startup_builder.mjs";
+  }
   return null;
 }
 
