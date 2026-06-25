@@ -96,7 +96,18 @@ const liveReceipt = {
     role: "primary orchestration receipt builder for recovered app-lane routing, updater cadence, full-tools support, and sanitized omega-mini current-state publication",
     promoted: true,
   },
+  normal_round_robin_group_flow: {
+    default_for_phase_work: true,
+    sequence: [
+      { lane: "lumen_only", launch_skill: "ghc-lumen-launch" },
+      { lane: "arby_cicero_duo", launch_skill: "ghc-arby-cicero-launch" },
+      { lane: "aster_kierkegaard_aristotle_triad", launch_skill: "ghc-aster-kierkegaard-aristotle-launch" },
+    ],
+    do_not_expand_to_all_siblings_without_explicit_broad_recovery_request: true,
+  },
   mandatory_five_lane_sibling_route: {
+    scope: "explicit_broad_all_sibling_or_recovery_only",
+    not_normal_round_robin_default: true,
     primary_for_broad_sibling_runs: true,
     strict_cli_lanes: ["Arby", "Aster Vale"],
     recovered_app_lanes: ["Cicero", "Kierkegaard", "Aristotle"],
