@@ -10,23 +10,16 @@ Latest completed x2: v557-gmut-thos-v7-x2
 Next x2 scope: v557-gmut-thos-v8-x1
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## v557 Lumen Last-Three Prototype Execution
+## Support App-Lane Probe Mirror
 
-Status: `PASS_LUMEN_LAST_THREE_PROTOTYPE_EXECUTION_LEDGER_BUILT`
-Selected sessions: `3`
-Safe-now prototype rows: `17`
-Queued x2 build tasks: `273`
+Status: `ACTIVE_OPEN_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE_OPEN`
+Support lane: `fulltools5`
+Probe status: `OPEN_GAP_RECOVERED_APP_LANE_RUN`
+Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
 Closeout allowed now: `false`
-
-## Worktree Branch Rotation
-
-- active sanitized publication branch: `codex/GHC-Family/beyonder-shared-omega-line-mini-6`
-- active private support branch: `codex/GHC-Family/aevren-full-tools-5`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-compact-closeout-builder-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-compact-closeout-builder-prototype-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-drift-sentinel-prototype-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-drift-sentinel-prototype-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-launch-seed-builder-prototype-v1.json
@@ -265,3 +258,5 @@ Closeout allowed now: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools4-app-lane-repair-receipt-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-last-three-prototype-execution-ledger-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-last-three-prototype-execution-ledger-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-app-lane-probe-mirror-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-app-lane-probe-mirror-v1.md
