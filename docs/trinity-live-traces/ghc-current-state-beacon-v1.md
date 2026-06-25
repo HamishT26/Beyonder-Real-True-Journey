@@ -1,6 +1,6 @@
 # Omega-Mini Current State
 
-Status: ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_6_APP_LANE_BLOCKED_READ
+Status: V557_V8_X1_ACTIVE_PRODUCTIVE_CADENCE_READY
 Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-6
 Full-tools support branch: codex/GHC-Family/aevren-full-tools-5
 Current active phase: v557-gmut-thos-v8-x1
@@ -13,15 +13,13 @@ Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish r
 ## Support App-Lane Probe Mirror
 
 Status: `ACTIVE_OPEN_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE_OPEN`
-Support lane: `fulltools5-goal-continuation-retry6`
-Probe status: `OPEN_GAP_RECOVERED_APP_LANE_RUN`
-Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Support lane: `fulltools5-app-update-recovery-notify8`
+Probe status: `PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED`
+Completion gate status: `missing`
 Closeout allowed now: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-immediate-safe-execution-ledger-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-immediate-safe-execution-ledger-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-x2-build-queue-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-x2-build-queue-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-dashboard-workbench-v1.json
@@ -260,3 +258,5 @@ Closeout allowed now: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-6-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-retry6-app-lane-probe-mirror-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-retry6-app-lane-probe-mirror-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-app-update-recovery-notify8-app-lane-probe-mirror-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-app-update-recovery-notify8-app-lane-probe-mirror-v1.md

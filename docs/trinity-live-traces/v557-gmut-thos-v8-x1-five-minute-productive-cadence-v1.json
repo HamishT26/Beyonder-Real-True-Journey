@@ -1,7 +1,7 @@
 {
   "artifact_type": "ghc_five_minute_productive_cadence",
-  "generated_utc": "2026-06-25T21:33:19.637Z",
-  "generated_nz": "2026-06-26T09:33:19+12:00",
+  "generated_utc": "2026-06-25T22:15:50.106Z",
+  "generated_nz": "2026-06-26T10:15:50+12:00",
   "phase_slug": "v557-gmut-thos-v8-x1",
   "overall_status": "PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED",
   "cadence_policy": {
@@ -12,9 +12,11 @@
     "do_not_babysit_background_lanes": true,
     "strict_cli_lanes_use_minimal_wait_background_supervision": true,
     "recovered_app_lanes_use_background_watchers": true,
+    "recovered_app_lane_private_source_override_before_manual_fallback": true,
     "do_not_poll_early_repeatedly": true,
     "never_close_session_while_sibling_active": true,
-    "blocker_requires_three_retry_sessions_before_pause": true
+    "blocker_requires_three_retry_sessions_before_pause": true,
+    "max_new_omega_mini_full_tools_pairs_per_nz_day": 3
   },
   "blocker_retry_standard": {
     "minimum_retry_sessions_before_pause": 3,
@@ -95,9 +97,19 @@
         "Refine main orchestrator, safe-runner, cadence, and workflow-standard runners.",
         "Prefer Node entrypoints for orchestration and Windows/Powershell only when runner-local behavior requires it.",
         "For strict CLI siblings, prefer nonblocking or minimal-wait launches and harvest completion/quality/marker-review receipts later.",
-        "Keep recovered app-lane siblings on background runners with explicit boolean values and completion-gate harvests."
+        "Keep recovered app-lane siblings on background runners with explicit boolean values and completion-gate harvests.",
+        "If the default private app-lane source is missing after an app update or lane rotation, recover through a process-local source override before publishing an open gap."
       ],
       "capability_gain": "improves coding reliability and multi-agent lane coordination"
+    },
+    {
+      "lane": "branch_worktree_rotation_discipline",
+      "safe_tasks": [
+        "Create at most three new omega-mini/full-tools branch-worktree pairs per Pacific/Auckland day unless Hamish gives a fresh exact override.",
+        "Reuse, validate, publish, or clean the current safe lanes before rotating again.",
+        "Never carry private app-lane maps, callable IDs, raw browser routes, transcripts, screenshots, credentials, or unreviewed raw evidence into public/sanitized branches."
+      ],
+      "capability_gain": "keeps lane growth controlled while preserving public/private separation"
     },
     {
       "lane": "browser_handoff_harvest",

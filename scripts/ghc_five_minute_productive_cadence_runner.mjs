@@ -67,9 +67,11 @@ const receipt = {
     do_not_babysit_background_lanes: true,
     strict_cli_lanes_use_minimal_wait_background_supervision: true,
     recovered_app_lanes_use_background_watchers: true,
+    recovered_app_lane_private_source_override_before_manual_fallback: true,
     do_not_poll_early_repeatedly: true,
     never_close_session_while_sibling_active: true,
     blocker_requires_three_retry_sessions_before_pause: true,
+    max_new_omega_mini_full_tools_pairs_per_nz_day: 3,
   },
   blocker_retry_standard: {
     minimum_retry_sessions_before_pause: 3,
@@ -141,8 +143,18 @@ const receipt = {
         "Prefer Node entrypoints for orchestration and Windows/Powershell only when runner-local behavior requires it.",
         "For strict CLI siblings, prefer nonblocking or minimal-wait launches and harvest completion/quality/marker-review receipts later.",
         "Keep recovered app-lane siblings on background runners with explicit boolean values and completion-gate harvests.",
+        "If the default private app-lane source is missing after an app update or lane rotation, recover through a process-local source override before publishing an open gap.",
       ],
       capability_gain: "improves coding reliability and multi-agent lane coordination",
+    },
+    {
+      lane: "branch_worktree_rotation_discipline",
+      safe_tasks: [
+        "Create at most three new omega-mini/full-tools branch-worktree pairs per Pacific/Auckland day unless Hamish gives a fresh exact override.",
+        "Reuse, validate, publish, or clean the current safe lanes before rotating again.",
+        "Never carry private app-lane maps, callable IDs, raw browser routes, transcripts, screenshots, credentials, or unreviewed raw evidence into public/sanitized branches.",
+      ],
+      capability_gain: "keeps lane growth controlled while preserving public/private separation",
     },
     {
       lane: "browser_handoff_harvest",
@@ -275,6 +287,8 @@ Status: \`${data.overall_status}\`
 - Harvest at next natural safe pause: \`${data.cadence_policy.harvest_status_at_next_natural_safe_pause}\`
 - Do not babysit background lanes: \`${data.cadence_policy.do_not_babysit_background_lanes}\`
 - Never close while sibling active: \`${data.cadence_policy.never_close_session_while_sibling_active}\`
+- Recover app-lane private source before manual fallback: \`${data.cadence_policy.recovered_app_lane_private_source_override_before_manual_fallback}\`
+- Max new omega-mini/full-tools pairs per NZ day: \`${data.cadence_policy.max_new_omega_mini_full_tools_pairs_per_nz_day}\`
 
 ## Blocker Retry Standard
 

@@ -10,6 +10,8 @@ Status: `PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED`
 - Harvest at next natural safe pause: `true`
 - Do not babysit background lanes: `true`
 - Never close while sibling active: `true`
+- Recover app-lane private source before manual fallback: `true`
+- Max new omega-mini/full-tools pairs per NZ day: `3`
 
 ## Blocker Retry Standard
 
@@ -67,8 +69,17 @@ Capability gain: improves Aevren startup control and context survival
 - Prefer Node entrypoints for orchestration and Windows/Powershell only when runner-local behavior requires it.
 - For strict CLI siblings, prefer nonblocking or minimal-wait launches and harvest completion/quality/marker-review receipts later.
 - Keep recovered app-lane siblings on background runners with explicit boolean values and completion-gate harvests.
+- If the default private app-lane source is missing after an app update or lane rotation, recover through a process-local source override before publishing an open gap.
 
 Capability gain: improves coding reliability and multi-agent lane coordination
+
+### branch_worktree_rotation_discipline
+
+- Create at most three new omega-mini/full-tools branch-worktree pairs per Pacific/Auckland day unless Hamish gives a fresh exact override.
+- Reuse, validate, publish, or clean the current safe lanes before rotating again.
+- Never carry private app-lane maps, callable IDs, raw browser routes, transcripts, screenshots, credentials, or unreviewed raw evidence into public/sanitized branches.
+
+Capability gain: keeps lane growth controlled while preserving public/private separation
 
 ### browser_handoff_harvest
 
