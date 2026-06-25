@@ -221,6 +221,9 @@ function builderForPhase(slug, explicitBuilder) {
   if (slug === "v556-gmut-thos-v4-x1") {
     return "ghc_v556_v4_x1_triad_closeout_builder.mjs";
   }
+  if (slug === "v556-gmut-thos-v4-x2") {
+    return "ghc_v556_v4_x2_closeout_builder.mjs";
+  }
   return null;
 }
 
