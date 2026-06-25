@@ -33,7 +33,7 @@ const receipt = {
   overall_status: gatePassed
     ? `PASS_V557_V8_X1_TRIAD_RETRY_${attempt}_GATE_NOW_PASSING`
     : `ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_${attempt}_APP_LANE_BLOCKED_READ`,
-  route_tried: "recovered_app_lane_probe_without_duplicate_notify",
+  route_tried: "recovered_app_lane_natural_pause_probe_without_duplicate_notify",
   route_inputs_sanitized: {
     lanes: ["Kierkegaard", "Aristotle"],
     allow_turn_start_after_resume_timeout: true,
@@ -63,11 +63,11 @@ const receipt = {
   journey_phase_reflections: buildJourneyReflections(),
   safe_changes_made: [
     "Loaded triad, background supervision, main orchestration, and retry skills.",
-    "Launched Aster Vale through strict CLI background watch.",
-    "Launched Kierkegaard and Aristotle through recovered app-lane background watch with explicit paired booleans.",
-    "Built the active-open v8 x1 triad workbench, proposal scaffold, reflection ledger, and lane receipt index.",
-    "Harvested Aster Vale through completion, quality, and marker-review gates.",
-    "Ran a no-duplicate-notify recovered app-lane probe for Kierkegaard and Aristotle.",
+    "Preserved mini-6 as the sanitized publication lane and full-tools-5 as the richer private support lane.",
+    "Ran a process-local, natural-pause recovered app-lane probe for Kierkegaard and Aristotle without publishing private route material.",
+    "Confirmed recovered handles were available while the completion gate remained open.",
+    "Ran the retry reflection protocol with current web/source context and Journey/phase continuity rows.",
+    "Prepared a sanitized retry receipt and support-lane mirror for remote verification.",
     "Kept v8 x1 open because the app-lane completion gate did not pass.",
   ],
   remaining_gap: gatePassed ? "none_for_app_lane_gate" : "kierkegaard_aristotle_app_lane_completion_gate_blocked_read",
@@ -123,16 +123,21 @@ function buildRecentReflections() {
 
 function buildWebReflections() {
   const seeds = [
-    ["OpenAI Codex CLI", "https://developers.openai.com/codex/cli", "Use CLI receipts as tool evidence, not as proof of sibling completion.", "Keep strict CLI gates separate."],
+    ["OpenAI Codex changelog", "https://developers.openai.com/codex/changelog", "Version and feature claims should be checked against current release notes.", "Keep toolchain receipts current before long phase work."],
+    ["OpenAI Codex releases", "https://github.com/openai/codex/releases", "CLI update requests need live verification.", "Record the exact local version observed."],
+    ["OpenAI Codex goals", "https://developers.openai.com/codex/use-cases/follow-goals", "Goal Mode work should preserve active objectives without premature closure.", "Do not mark the persistent goal complete before v575 v8 x2."],
+    ["OpenAI Codex goals cookbook", "https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex", "Long-running goals benefit from compact continuation receipts.", "Keep startup, compact, and closeout builders aligned."],
+    ["OpenAI Codex prompting", "https://developers.openai.com/codex/prompting", "Precise instructions and boundaries reduce drift in tool-heavy loops.", "Refresh launch and retry skills when rules change."],
+    ["OpenAI Codex app commands", "https://developers.openai.com/codex/app/commands", "App command surfaces can change during updates.", "Verify routes instead of relying on stale UI memory."],
     ["Node child_process", "https://nodejs.org/api/child_process.html", "Background process starts require explicit completion evidence.", "Use watcher plus gate receipts."],
-    ["Python subprocess", "https://docs.python.org/3/library/subprocess.html", "Process errors should be reduced and sanitized.", "Keep stderr/stdout private."],
-    ["Git worktree", "https://git-scm.com/docs/git-worktree", "Worktree rotation must preserve clean branch provenance.", "Do not rotate from dirty private state."],
-    ["GitHub secret scanning", "https://docs.github.com/en/code-security/concepts/secret-security/secret-scanning", "Secrets and private identifiers need pre-publication scanning.", "Run privacy scan before push."],
-    ["NIST AI RMF", "https://www.nist.gov/itl/ai-risk-management-framework", "Known unresolved gaps should remain explicit.", "Publish open retry status."],
-    ["OWASP LLM Top 10", "https://owasp.org/www-project-top-10-for-large-language-model-applications/", "Tool outputs are untrusted until reduced.", "Use sanitized receipts."],
-    ["W3C DID Core", "https://www.w3.org/TR/did-core/", "Identifier systems require privacy and control boundaries.", "Keep callable IDs local-only."],
-    ["PowerShell Get-PSDrive", "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-psdrive", "Drive posture should be checked before heavy local work.", "Keep D-drive-first policy."],
-    ["JSON Lines", "https://jsonlines.org/", "Append-only traces are easier to audit when bounded.", "Keep compact status rows."],
+    ["Node fs", "https://nodejs.org/api/fs.html", "Generated artifacts should use structured file operations.", "Prefer bounded JSON/MD receipts over raw dumps."],
+    ["PowerShell Start-Process", "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process", "Detached local helpers require clear window/background policy.", "Keep sibling runners backgrounded and harvest later."],
+    ["PowerShell Get-Process", "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-process", "Process checks should be status-only and scoped.", "Avoid babysitting lanes while productive cadence work runs."],
+    ["Git worktree", "https://git-scm.com/docs/git-worktree", "Worktree rotation must preserve clean branch provenance.", "Rotate to mini/full-tools successors only from clean heads."],
+    ["GitHub branches", "https://docs.github.com/articles/about-branches", "Branch growth needs clear naming and publication boundaries.", "Use mini-N for sanitized load and full-tools-N for private support."],
+    ["Playwright locators", "https://playwright.dev/docs/locators", "Browser automation should target stable controls rather than brittle screenshots.", "Keep main-thread handoffs evidence-based."],
+    ["JSON Schema validation", "https://json-schema.org/draft/2020-12/json-schema-validation", "Receipts should be parseable before publication.", "Validate JSON before commit."],
+    ["OpenSSF Scorecard", "https://github.com/ossf/scorecard", "Security posture should be treated as measurable and open-ended.", "Queue broad security automation behind exact approval gates."],
   ];
   return Array.from({ length: 20 }, (_, index) => {
     const [source, source_url, phase_reflection, runner_implication] = seeds[index % seeds.length];
@@ -149,13 +154,15 @@ function buildWebReflections() {
 function buildJourneyReflections() {
   const seeds = [
     ["Beyonder v53 continuity", "Launch skills and no-babysitting cadence are mandatory.", "Use triad launch plus background supervision."],
-    ["omega-mini-4 current state", "mini-4 is the active sanitized lane.", "Publish only sanitized phase truth."],
-    ["full-tools-3 activation", "full-tools-3 is active but support runner repair is still needed.", "Use proven local support runner while seeding repair."],
+    ["omega-mini-6 current state", "mini-6 is the active sanitized lane for current publication.", "Publish only sanitized phase truth."],
+    ["full-tools-5 support lane", "full-tools-5 is the richer private support lane for app-lane probes.", "Keep private route material local-only."],
     ["v557 v7 x2 closeout", "v8 x1 triad readiness is the current lane.", "Do not skip triad."],
+    ["last-three Lumen proposal suite", "Grand Trinity Matrix and prototype lanes were reduced into safe public receipts.", "Use proposal suites as build backlog without raw transcript publication."],
     ["v8 x1 preflight", "Triad preflight passed and completion requires gates.", "Watcher start is not closure."],
     ["Aster harvest", "Aster passed strict CLI gates.", "Aster can feed x2 reduction."],
-    ["App-lane probe", "Kierkegaard and Aristotle are blocked_read on first probe.", "Retry session 1 is required."],
+    ["App-lane probe 4", "Kierkegaard and Aristotle recovered handles were found, but completion gate remains open.", "Continue retry/cadence work without phase closeout."],
     ["Open gates", "Proof, canon, legal, deployment, account, API-key, purchase, private-material, raw-publication, and merge gates remain open.", "Keep exact/blocked queued."],
+    ["Worktree rotation policy", "Move to mini-N/full-tools-N successors when current worktrees get heavy, from clean verified heads only.", "Record rotation receipts before using successor lanes."],
     ["Drive posture", "C warning cap is 19 GB and D is primary storage.", "Avoid heavy C-drive work."],
     ["Remote publication", "Remote equality matters after commit.", "Validate before pushing sanitized receipts."],
   ];

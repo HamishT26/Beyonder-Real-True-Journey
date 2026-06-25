@@ -1,6 +1,6 @@
 # Omega-Mini Current State
 
-Status: ACTIVE_OPEN_V557_GMUT_THOS_V8_X1_LUMEN_PROTOTYPE_SUITE_READY
+Status: ACTIVE_OPEN_V557_V8_X1_TRIAD_RETRY_4_APP_LANE_BLOCKED_READ
 Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-6
 Full-tools support branch: codex/GHC-Family/aevren-full-tools-5
 Current active phase: v557-gmut-thos-v8-x1
@@ -10,25 +10,16 @@ Latest completed x2: v557-gmut-thos-v7-x2
 Next x2 scope: v557-gmut-thos-v8-x2
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## v557 Lumen Prototype Suite
+## Support App-Lane Probe Mirror
 
-Status: `PASS_LUMEN_PROTOTYPE_SUITE_BUILT_AND_RUN`
-Prototypes run: `11`
-Proposal candidates indexed: `1211`
-Triad closeout allowed now: `false`
-
-## Active Triad
-
-Status: `ACTIVE_OPEN_V557_V4_X1_TRIAD_BACKGROUND_RUNNING_LUMEN_PROTOTYPE_SUITE_READY`
-Lanes active: `3`
-Watcher start is completion proof: `false`
+Status: `ACTIVE_OPEN_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE_OPEN`
+Support lane: `fulltools5-goal-continuation`
+Probe status: `OPEN_GAP_RECOVERED_APP_LANE_RUN`
+Completion gate status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Closeout allowed now: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-grand-trinity-matrix-carryforward-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-grand-trinity-matrix-carryforward-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-handoff-message-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v5-x1-lumen-handoff-message-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-five-minute-productive-cadence-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-five-minute-productive-cadence-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-drive-toolchain-posture-v1.json
@@ -265,7 +256,7 @@ Watcher start is completion proof: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-prototype-suite-index-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continue-app-lane-probe-mirror-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continue-app-lane-probe-mirror-v1.md
-
-## Boundary
-
-No private message body content, private Browser routes, private URLs, screenshots, private callable IDs, credentials, runtime streams, local private paths, destructive cleanup, paid resources, deployments, account mutations, API keys, or sibling identity changes were published or performed.
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-4-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-4-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-app-lane-probe-mirror-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools5-goal-continuation-app-lane-probe-mirror-v1.md
