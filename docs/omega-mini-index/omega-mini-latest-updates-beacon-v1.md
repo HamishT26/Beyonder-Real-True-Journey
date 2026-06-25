@@ -1,44 +1,24 @@
 # Omega-Mini Current State
 
-Status: PASS_V557_V5_X1_CLOSED_V5_X2_READY
-Current active phase: v557-gmut-thos-v5-x2
-Latest closed phase: v557-gmut-thos-v5-x1
+Status: PASS_V557_V5_X2_CLOSED_V6_X1_READY
+Current active phase: v557-gmut-thos-v6-x1
+Latest closed phase: v557-gmut-thos-v5-x2
 Latest completed x1: v557-gmut-thos-v5-x1
-Latest completed x2: v557-gmut-thos-v4-x2
-Next expected scope: v557-gmut-thos-v5-x2
-Next x2 scope: v557-gmut-thos-v5-x2
-Next x1 lane after x2: v557-gmut-thos-v6-x1 with Arby and Cicero unless Hamish redirects
+Latest completed x2: v557-gmut-thos-v5-x2
+Next expected scope: v557-gmut-thos-v6-x1
+Next x2 scope: v557-gmut-thos-v6-x2
+Next x1 lane after x2: v557-gmut-thos-v7-x1 with Lumen Vale solo unless Hamish redirects
 
-## v557 v5 x1 Lumen Closeout
+## v557 v5 x2 Closeout
 
-Status: `PASS_V557_V5_X1_CLOSED_V5_X2_READY`
-Lumen response harvested: `true`
-Proposal candidates indexed: `246`
-Next active phase: `v557-gmut-thos-v5-x2`
+Status: `PASS_V557_V5_X2_CLOSED_V6_X1_READY`
+Combined proposal rows: `581`
+Safe/candidate rows represented: `475`
+Next active phase: `v557-gmut-thos-v6-x1`
 Full goal complete: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v556-gmut-thos-v8-x1-approval-eureka-reducer-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-execution-index-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-execution-index-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-safe-execution-reducer-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-safe-execution-reducer-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-skill-runner-pack-install-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-skill-runner-pack-install-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-web-journey-reflection-ledger-50-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-web-journey-reflection-ledger-50-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-v557-lumen-readiness-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-v557-lumen-readiness-v1.md
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-closeout-v1.json
-- docs/trinity-live-traces/v556-gmut-thos-v8-x2-closeout-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-round-robin-workflow-standard-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-round-robin-workflow-standard-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-lumen-handoff-message-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-lumen-handoff-message-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-lumen-browser-send-receipt-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v1-x1-lumen-browser-harvest-sanitized-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v1-x1-proposal-queue-targets-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v1-x1-web-reflection-ledger-30-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v1-x1-journey-phase-reflection-ledger-30-v1.json
@@ -259,6 +239,26 @@ Full goal complete: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-closeout-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-v5-x2-readiness-handoff-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v5-x1-v5-x2-readiness-handoff-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-execution-index-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-execution-index-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-safe-execution-reducer-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-safe-execution-reducer-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-lumen-proposal-bridge-ledger-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-lumen-proposal-bridge-ledger-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-dashboard-build-manifest-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-dashboard-build-manifest-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-skill-runner-pack-refresh-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-skill-runner-pack-refresh-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-web-journey-reflection-ledger-50-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-web-journey-reflection-ledger-50-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-branch-rotation-decision-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-branch-rotation-decision-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-privacy-open-gate-rail-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-privacy-open-gate-rail-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-v6-arby-cicero-readiness-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-v6-arby-cicero-readiness-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-closeout-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v5-x2-closeout-v1.md
 
 ## Boundary
 
