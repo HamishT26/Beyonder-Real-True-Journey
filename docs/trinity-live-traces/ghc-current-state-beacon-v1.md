@@ -1,6 +1,6 @@
 # Omega-Mini Current State
 
-Status: ACTIVE_OPEN_V557_V2_X1_ARBY_READY_CICERO_BLOCKED_AFTER_RETRY
+Status: ACTIVE_OPEN_V557_V2_X1_CICERO_RECOVERED_MAP_READ_OK_TURN_START_BLOCKED
 Current active phase: v557-gmut-thos-v2-x1
 Latest closed phase: v557-gmut-thos-v1-x2
 Latest completed x1: v557-gmut-thos-v1-x1
@@ -10,12 +10,26 @@ Next x1 lane after x2: v557-gmut-thos-v3-x1 with Lumen Vale solo unless Hamish r
 
 ## v557 v2 x1 Active-Open Handoff
 
-- status: `ACTIVE_OPEN_V557_V2_X1_ARBY_READY_CICERO_BLOCKED_AFTER_RETRY`
+- status: `ACTIVE_OPEN_V557_V2_X1_CICERO_RECOVERED_MAP_READ_OK_TURN_START_BLOCKED`
 - closeout allowed: `false`
 - full goal complete: `false`
 
+## v557 v2 x1 Cicero Continuation Checkpoint
+
+- status: `ACTIVE_OPEN_V557_V2_X1_CICERO_RECOVERED_PROBE_PASSED_BACKGROUND_NOTIFY_RUNNING`
+- Cicero private map preflight: `PASS_PRIVATE_APP_LANE_MAP_PREFLIGHT`
+- Cicero recovered probe: `PASS_PROBE_ONLY`
+- Cicero continuation background notify: `PASS_RECOVERED_APP_LANE_BACKGROUND_WATCH_STARTED`
+- Cicero completion gate: `pending_harvest`
+- closeout allowed: `false`
+- x2 execution allowed: `false`
+
 ## Lookup Files
 
+- docs/trinity-live-traces/v557-gmut-thos-v2-x1-cicero-continuation-checkpoint-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v2-x1-cicero-continuation-checkpoint-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v2-x1-active-open-handoff-v2.json
+- docs/trinity-live-traces/v557-gmut-thos-v2-x1-active-open-handoff-v2.md
 - docs/trinity-live-traces/v556-gmut-thos-v3-x2-execution-index-v1.json
 - docs/trinity-live-traces/v556-gmut-thos-v3-x2-execution-index-v1.md
 - docs/trinity-live-traces/v556-gmut-thos-v3-x2-safe-execution-reducer-v1.json
