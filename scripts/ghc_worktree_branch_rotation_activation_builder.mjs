@@ -13,6 +13,10 @@ const phaseSlug = args.get("--phase-slug") || "v557-gmut-thos-v4-x1";
 const miniBranch = args.get("--mini-branch") || "codex/GHC-Family/beyonder-shared-omega-line-mini-3";
 const fullToolsBranch = args.get("--full-tools-branch") || "codex/GHC-Family/aevren-full-tools-2";
 const baseHead = args.get("--base-head") || "unknown";
+const previousMiniBranch = args.get("--previous-mini-branch") || "codex/GHC-Family/beyonder-shared-omega-line-mini-2";
+const nextRotationPattern = args.get("--next-rotation-pattern") || "omega-mini-4/full-tools-3 and onward from verified safe bases";
+const miniLaneLabel = args.get("--mini-lane-label") || "omega-mini-3";
+const fullToolsLaneLabel = args.get("--full-tools-lane-label") || "full-tools-2";
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
@@ -27,15 +31,15 @@ const activation = {
   active_private_support_branch: fullToolsBranch,
   base_head: baseHead,
   rotation_reason: [
-    "Current omega-mini-2 and full-tools lanes were heavy enough to trigger the rotation planner.",
+    "The previous omega-mini and full-tools lanes were heavy enough to trigger the rotation planner.",
     "New lanes were created from a verified sanitized head.",
     "Private raw Lumen responses and private app-lane maps remain outside GitHub.",
   ],
   use_policy: [
-    "Use omega-mini-3 for future sanitized publication after this activation receipt.",
-    "Use full-tools-2 as the clean support/control lane when the older full-tools lane is too dirty or slow.",
-    "Keep omega-mini-2 recoverable as the previous verified lane.",
-    "Create omega-mini-4/full-tools-3 and onward from verified clean/safe bases when the active lanes become heavy again.",
+    `Use ${miniLaneLabel} for future sanitized publication after this activation receipt.`,
+    `Use ${fullToolsLaneLabel} as the clean support/control lane when the older full-tools lane is too dirty or slow.`,
+    `Keep ${previousMiniBranch} recoverable as the previous verified lane.`,
+    `Create ${nextRotationPattern} when the active lanes become heavy again.`,
   ],
   publication_boundary: publicationBoundary(),
   safety_boundary: safetyBoundary(),
@@ -74,8 +78,8 @@ function refreshBeacons(doc) {
       active_sanitized_publication_branch: miniBranch,
       active_private_support_branch: fullToolsBranch,
       base_head: baseHead,
-      previous_sanitized_branch: "codex/GHC-Family/beyonder-shared-omega-line-mini-2",
-      next_rotation_pattern: "omega-mini-4/full-tools-3 and onward from verified safe bases",
+      previous_sanitized_branch: previousMiniBranch,
+      next_rotation_pattern: nextRotationPattern,
       raw_private_material_moved: false,
     };
     data[listKey] = unique([...(data[listKey] || []), ...refs]);

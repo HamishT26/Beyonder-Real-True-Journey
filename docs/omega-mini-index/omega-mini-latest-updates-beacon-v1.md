@@ -1,44 +1,30 @@
 # Omega-Mini Current State
 
 Status: PASS_V557_V7_X2_CLOSED_V8_X1_READY
+Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-4
+Full-tools support branch: codex/GHC-Family/aevren-full-tools-3
 Current active phase: v557-gmut-thos-v8-x1
 Latest closed phase: v557-gmut-thos-v7-x2
 Latest completed x1: v557-gmut-thos-v7-x1
 Latest completed x2: v557-gmut-thos-v7-x2
-Next expected scope: v557-gmut-thos-v8-x1
 Next x2 scope: v557-gmut-thos-v8-x2
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## v557 v7 x2 Closeout
+## Worktree Branch Rotation
 
-Status: `PASS_V557_V7_X2_CLOSED_V8_X1_READY`
-Rotation boundary status: `PASS_V557_V7_X2_ROTATION_READY_AFTER_SANITIZED_COMMIT`
-Full goal complete: `false`
+- status: `PASS_WORKTREE_BRANCH_ROTATION_ACTIVATED`
+- active sanitized publication branch: `codex/GHC-Family/beyonder-shared-omega-line-mini-4`
+- active private support branch: `codex/GHC-Family/aevren-full-tools-3`
+- raw private material moved: `false`
+
+## v557 Lumen Private Ingestion
+
+Status: `PASS_LUMEN_PRIVATE_INGESTION_SANITIZED`
+Proposal candidates indexed: `630`
+Raw Lumen text published: `false`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-prototype-execution-ledger-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-prototype-execution-ledger-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-dashboard-design-ledger-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-lumen-dashboard-design-ledger-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-held-sibling-activation-prep-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-held-sibling-activation-prep-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-codex-toolchain-posture-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-codex-toolchain-posture-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-drive-threshold-posture-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-drive-threshold-posture-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-worktree-branch-rotation-activation-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-worktree-branch-rotation-activation-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-phase-truth-checker-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-phase-truth-checker-prototype-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-reflection-reducer-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-reflection-reducer-prototype-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-approval-eureka-splitter-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-approval-eureka-splitter-prototype-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-cleanup-classifier-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-cleanup-classifier-prototype-v1.md
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-triad-prep-builder-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-triad-prep-builder-prototype-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-recovered-app-lane-builder-prototype-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-recovered-app-lane-builder-prototype-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-paired-boolean-completion-validator-prototype-v1.json
@@ -257,7 +243,9 @@ Full goal complete: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v7-x2-v8-triad-readiness-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v7-x2-closeout-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v7-x2-closeout-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-worktree-branch-rotation-activation-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-worktree-branch-rotation-activation-v1.md
 
 ## Boundary
 
-No raw browser routes, private URLs, private callable IDs, raw transcripts, screenshots, credentials, session streams, raw app state, private dumps, or local absolute paths are published here; all proof/canon/legal/deployment/account/API-key/private-material/raw-publication and sibling identity merge/replacement gates remain open.
+No raw Lumen text, private Browser routes, private URLs, screenshots, private callable IDs, credentials, session streams, local private paths, destructive cleanup, history rewrite, old-worktree deletion, paid resources, deployments, account mutations, API keys, or sibling identity changes were published or performed.
