@@ -33,6 +33,7 @@ const phaseStatus =
 const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
+const nextCheckpoint = new Date(generated.getTime() + 5 * 60 * 1000);
 
 const publicationBoundary = {
   private_route_handles_published: false,
@@ -59,6 +60,15 @@ const claimBoundary = {
   generated_nz: generatedNz,
   phase_slug: phaseSlug,
   overall_status: "PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED",
+  timestamp_workflow: {
+    phase_start_or_resume_time_utc: generatedUtc,
+    last_checkpoint_time_utc: generatedUtc,
+    next_checkpoint_due_utc: nextCheckpoint.toISOString(),
+    checkpoint_interval_minutes: 5,
+    checkpoint_overrun_allowed: true,
+    continue_retry_refresh_repair_until_gate_or_formal_open_gap: true,
+    passive_wait_allowed: false,
+  },
   cadence_policy: {
     normal_round_robin_uses_active_group_only: true,
     broad_all_sibling_recovery_runs_use_five_lane_route: true,
@@ -303,6 +313,7 @@ Status: \`${data.overall_status}\`
 - Five-minute mark is a check opportunity: \`${data.cadence_policy.five_minute_mark_is_check_opportunity}\`
 - Normal round-robin uses active group only: \`${data.cadence_policy.normal_round_robin_uses_active_group_only}\`
 - Broad all-sibling recovery runs use five-lane route: \`${data.cadence_policy.broad_all_sibling_recovery_runs_use_five_lane_route}\`
+- Timestamp cadence: last checkpoint \`${data.timestamp_workflow.last_checkpoint_time_utc}\`, next checkpoint \`${data.timestamp_workflow.next_checkpoint_due_utc}\`
 - Not a hard stop: \`${data.cadence_policy.not_a_hard_stop}\`
 - Safe unit may run past checkpoint: \`${data.cadence_policy.safe_unit_may_run_past_checkpoint}\`
 - Harvest at next natural safe pause: \`${data.cadence_policy.harvest_status_at_next_natural_safe_pause}\`

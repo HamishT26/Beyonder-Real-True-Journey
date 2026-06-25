@@ -46,6 +46,14 @@ const receipt = {
   overall_status: completionPassed
     ? "PASS_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE"
     : "ACTIVE_OPEN_SUPPORT_APP_LANE_PROBE_COMPLETION_GATE_OPEN",
+  timestamp_workflow: {
+    mirror_time_utc: generatedUtc,
+    last_checkpoint_time_utc: generatedUtc,
+    next_checkpoint_due_utc: new Date(Date.parse(generatedUtc) + 5 * 60 * 1000).toISOString(),
+    checkpoint_interval_minutes: 5,
+    checkpoint_overrun_allowed: true,
+    continue_retry_refresh_repair_until_gate_or_formal_open_gap: true,
+  },
   support_lane: {
     label: supportLaneLabel,
     branch: supportBranch,
@@ -84,7 +92,7 @@ const receipt = {
     keep_phase_active_open: !(completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY"),
     next_safe_action: completionPassed && strictStatus === "PASS_STRICT_CLI_CYCLE_READY"
       ? "run sanitized triad harvest and closeout validation"
-      : "keep v557 v8 x1 active/open; five-lane background watchers are active/running but completion gates are still required before closeout",
+      : "keep v557 v8 x1 active/open; active round-robin group watchers are running or open, and completion gates are still required before closeout",
   },
   publication_boundary: {
     raw_private_ids_published: false,

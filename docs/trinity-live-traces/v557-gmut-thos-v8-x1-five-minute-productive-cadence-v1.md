@@ -7,6 +7,7 @@ Status: `PASS_PRODUCTIVE_CADENCE_WAIT_WORK_STANDARD_RECORDED`
 - Five-minute mark is a check opportunity: `true`
 - Normal round-robin uses active group only: `true`
 - Broad all-sibling recovery runs use five-lane route: `true`
+- Timestamp cadence: last checkpoint `2026-06-25T23:24:22.162Z`, next checkpoint `2026-06-25T23:29:22.162Z`
 - Not a hard stop: `true`
 - Safe unit may run past checkpoint: `true`
 - Harvest at next natural safe pause: `true`
