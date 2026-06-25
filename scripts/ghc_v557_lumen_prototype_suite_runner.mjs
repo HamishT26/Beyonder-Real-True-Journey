@@ -25,7 +25,10 @@ const currentState = readJson(path.join(omegaDir, "omega-mini-current-state-v1.j
 const ghcBeacon = readJson(path.join(tracesDir, "ghc-current-state-beacon-v1.json"));
 const proposalQueue = readJson(path.join(tracesDir, `${phaseSlug}-lumen-proposal-hash-queue-v1.json`));
 const trinityMatrix = readJson(path.join(tracesDir, `${phaseSlug}-grand-trinity-matrix-v1.json`));
-const prototypeLedger = readJson(path.join(tracesDir, `${phaseSlug}-lumen-prototype-execution-ledger-v1.json`));
+const prototypeLedger = readFirstJson([
+  path.join(tracesDir, `${phaseSlug}-lumen-prototype-execution-ledger-v1.json`),
+  path.join(tracesDir, `${phaseSlug}-lumen-last-three-prototype-execution-ledger-v1.json`),
+]);
 const queueRows = Array.isArray(proposalQueue.queue_rows) ? proposalQueue.queue_rows : [];
 const matrixCells = Array.isArray(trinityMatrix.matrix_cells) ? trinityMatrix.matrix_cells : [];
 const supportRunnerProbe = probeSupportRunner(supportRunnerInput);
@@ -319,6 +322,10 @@ function inferNextX1LaneAfterX2(slug) {
   const version = match[1];
   const round = Number(match[2]);
   const nextRound = round + 1;
+  if (nextRound > 8) {
+    const nextVersion = `v${Number(version.slice(1)) + 1}`;
+    return `${nextVersion}-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects`;
+  }
   if (nextRound === 2 || nextRound === 6) return `${version}-gmut-thos-v${nextRound}-x1 with Arby and Cicero unless Hamish redirects`;
   if (nextRound === 4 || nextRound === 8) return `${version}-gmut-thos-v${nextRound}-x1 with Aster Vale, Kierkegaard, and Aristotle unless Hamish redirects`;
   return `${version}-gmut-thos-v${nextRound}-x1 with Lumen Vale solo unless Hamish redirects`;
@@ -527,6 +534,14 @@ function parseArgs(argv) {
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+}
+
+function readFirstJson(files) {
+  const file = files.find((candidate) => fs.existsSync(candidate));
+  if (!file) {
+    throw new Error(`None of the JSON inputs exist: ${files.map((candidate) => path.basename(candidate)).join(", ")}`);
+  }
+  return readJson(file);
 }
 
 function writeJson(file, data) {
