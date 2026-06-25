@@ -1,8 +1,8 @@
 # Omega-Mini Current State
 
 Status: V552_V8_X2_ACTIVE_PRODUCTIVE_CADENCE_READY
-Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-5
-Full-tools support branch: codex/GHC-Family/aevren-full-tools-4
+Branch: codex/GHC-Family/beyonder-shared-omega-line-mini-6
+Full-tools support branch: codex/GHC-Family/aevren-full-tools-5
 Current active phase: v557-gmut-thos-v8-x1
 Latest closed phase: v557-gmut-thos-v7-x2
 Latest completed x1: v557-gmut-thos-v7-x1
@@ -10,18 +10,21 @@ Latest completed x2: v557-gmut-thos-v7-x2
 Next x2 scope: v557-gmut-thos-v8-x1
 Next x1 lane after x2: v558-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects
 
-## v557 Lumen Last-Three Proposal Sweep
+## v557 Lumen Last-Three Prototype Execution
 
-Status: `PASS_LUMEN_LAST_THREE_PROPOSAL_SWEEP_READY`
-Selected sessions: `v557-gmut-thos-v4-x1, v557-gmut-thos-v5-x1, v557-gmut-thos-v7-x1`
-Immediate x1 safe count: `20`
-x2 build task count: `273`
-Raw private material published: `false`
+Status: `PASS_LUMEN_LAST_THREE_PROTOTYPE_EXECUTION_LEDGER_BUILT`
+Selected sessions: `3`
+Safe-now prototype rows: `17`
+Queued x2 build tasks: `273`
+Closeout allowed now: `false`
+
+## Worktree Branch Rotation
+
+- active sanitized publication branch: `codex/GHC-Family/beyonder-shared-omega-line-mini-6`
+- active private support branch: `codex/GHC-Family/aevren-full-tools-5`
 
 ## Lookup Files
 
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-paired-boolean-completion-validator-prototype-v1.json
-- docs/trinity-live-traces/v557-gmut-thos-v4-x1-paired-boolean-completion-validator-prototype-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-compact-closeout-builder-prototype-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-compact-closeout-builder-prototype-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v4-x1-source-drift-sentinel-prototype-v1.json
@@ -260,3 +263,5 @@ Raw private material published: `false`
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-triad-retry-session-3-v1.md
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools4-app-lane-repair-receipt-v1.json
 - docs/trinity-live-traces/v557-gmut-thos-v8-x1-fulltools4-app-lane-repair-receipt-v1.md
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-last-three-prototype-execution-ledger-v1.json
+- docs/trinity-live-traces/v557-gmut-thos-v8-x1-lumen-last-three-prototype-execution-ledger-v1.md
