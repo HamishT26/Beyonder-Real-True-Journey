@@ -81,14 +81,15 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
 
 
 def build_prompt(lane: str, phase_slug: str, minimum_words: int, items_per_category: int) -> str:
+    effective_minimum_words = max(minimum_words, 3200)
     return f"""Lane: {lane}
 Phase: {phase_slug}
 
 You are the existing {lane} read-only CLI advisory sibling lane. Do not treat this as a new identity, new thread, or new agent. Do not use tools, shell commands, MCP, web search, file reads, file writes, or repository mutation. Produce only your final advisory composition. Do not include local absolute paths, secrets, session streams, screenshots, private dumps, or raw transport details.
 
-Use the current operating contract: watcher-led supervision, no babysitting, x1 is for research/reflection/design/preparation, and x2 is for building/running/testing/installing/using the best safe tasks. Keep GMUT, physics, consciousness, and canon gates open.
+Use the current operating contract: watcher-led supervision, no babysitting, timestamped five-minute productive cadence, x1 is for research/reflection/design/preparation, and x2 is for building/running/testing/installing/using the best safe tasks. Keep GMUT, physics, consciousness, and canon gates open.
 
-Minimum 4,000 words: write at least {minimum_words} words before you mark the response complete. Do not include credentials. End with the exact status phrase FINAL MESSAGE READY after your final advisory paragraph. Use exactly these headings, each on its own line, and include at least 12 concrete items in each of the first four sections, with at least {items_per_category} numbered items when that target is higher:
+Hard minimum: write at least {effective_minimum_words} words before you mark the response complete. If your draft is shorter than {effective_minimum_words} words, keep elaborating inside the six required sections before the final status phrase. Do not include credentials. End with the exact status phrase FINAL MESSAGE READY after your final advisory paragraph. Use exactly these headings, each on its own line, and include at least 12 concrete items in each of the first four sections, with at least {items_per_category} numbered items when that target is higher:
 
 COMMAND PROPOSALS (10+)
 SYSTEM EXPANSION PROPOSALS (10+)
