@@ -12,6 +12,10 @@ const args = parseArgs(process.argv.slice(2));
 const phaseSlug = args.get("--phase-slug") || "v557-gmut-thos-v2-x1";
 const attempt = Number(args.get("--attempt") || "1");
 const retryPrefix = args.get("--retry-prefix") || `${phaseSlug}-cicero-recovered-app-lane-retry-${attempt}`;
+const runnerPrefix = args.get("--runner-prefix") || retryPrefix;
+const notifierPrefix = args.get("--notifier-prefix") || `${retryPrefix}-notifier`;
+const launcherPrefix = args.get("--launcher-prefix") || `${retryPrefix}-watch-launcher`;
+const gatePrefix = args.get("--gate-prefix") || `${retryPrefix}-completion-gate`;
 const fullToolsRoot = args.get("--full-tools-root");
 const generated = new Date();
 const generatedUtc = generated.toISOString();
@@ -23,10 +27,10 @@ if (!fullToolsRoot) {
 }
 
 const fullTraceDir = path.join(fullToolsRoot, "docs", "trinity-live-traces");
-const runner = readOptional(fullTraceDir, `${retryPrefix}-v1.json`);
-const notifier = readOptional(fullTraceDir, `${retryPrefix}-notifier-v1.json`);
-const launcher = readOptional(fullTraceDir, `${retryPrefix}-watch-launcher-v1.json`);
-const gate = readOptional(fullTraceDir, `${retryPrefix}-completion-gate-v1.json`);
+const runner = readOptional(fullTraceDir, `${runnerPrefix}-v1.json`);
+const notifier = readOptional(fullTraceDir, `${notifierPrefix}-v1.json`);
+const launcher = readOptional(fullTraceDir, `${launcherPrefix}-v1.json`);
+const gate = readOptional(fullTraceDir, `${gatePrefix}-v1.json`);
 
 const receipt = {
   artifact_type: "ghc_v557_v2_x1_cicero_retry_session_receipt",
@@ -34,7 +38,13 @@ const receipt = {
   generated_nz: generatedNz,
   phase_slug: phaseSlug,
   attempt,
-  retry_prefix: `${phaseSlug}-cicero-recovered-app-lane-retry-${attempt}`,
+  retry_prefix: retryPrefix,
+  receipt_prefixes_sanitized: {
+    runner: runnerPrefix,
+    notifier: notifierPrefix,
+    launcher: launcherPrefix,
+    gate: gatePrefix,
+  },
   route_tried: "recovered_app_lane_background_runner_with_explicit_booleans",
   route_inputs_sanitized: {
     lane: "Cicero",

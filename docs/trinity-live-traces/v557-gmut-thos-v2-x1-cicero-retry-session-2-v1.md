@@ -1,6 +1,6 @@
 # v557-gmut-thos-v2-x1 Cicero Retry Session 2
 
-Status: `OPEN_GAP_APP_LANE_COMPLETION_REQUIRED`
+Status: `missing`
 Remaining gap: `cicero_app_lane_completion_gate_not_yet_passed`
 
 ## Reflection Counts
