@@ -1,8 +1,8 @@
-# v559-gmut-thos-v5-x1 v3-x2-safe-build-handoff
+# v559-gmut-thos-v5-x1 v5-x2-safe-build-handoff
 
 Status: PASS_V559_V5_X2_SAFE_BUILD_HANDOFF_READY
 
-Generated NZ: 2026-06-27T08:46:33+12:00
+Generated NZ: 2026-06-27T08:49:42+12:00
 
 Boundary: sanitized artifact only. Raw Browser routes, private URLs, raw transcripts, screenshots, credentials, local private paths, session streams, private app state, private dumps, and hidden reasoning are not published.
 
