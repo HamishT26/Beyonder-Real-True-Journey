@@ -1,18 +1,18 @@
 # omega-mini-current-state-v1
 
-Status: PASS_V558_V2_X1_CLOSED_V2_X2_READY
-Current active phase: v558-gmut-thos-v2-x2
-Latest closed phase: v558-gmut-thos-v2-x1
+Status: PASS_V558_V2_X2_CLOSED_V3_X1_READY
+Current active phase: v558-gmut-thos-v3-x1
+Latest closed phase: v558-gmut-thos-v2-x2
 Latest completed x1: v558-gmut-thos-v2-x1
-Latest completed x2: v558-gmut-thos-v1-x2
-Next x2 scope: v558-gmut-thos-v2-x2
-Next x1 after x2: v558-gmut-thos-v3-x1 Lumen Vale solo unless Hamish redirects
+Latest completed x2: v558-gmut-thos-v2-x2
+Next x2 scope: v558-gmut-thos-v3-x2
+Next x1 after x2: v558-gmut-thos-v4-x1 Mira Vale + Rowan Vale unless Hamish redirects
 Full goal complete: false
 
-## Latest v558 v2 x1 Closeout
+## Latest v558 v2 x2 Closeout
 
-- Status: PASS_V558_V2_X1_CLOSED_V2_X2_READY
-- Next active phase: v558-gmut-thos-v2-x2
+- Status: PASS_V558_V2_X2_CLOSED_V3_X1_READY
+- Next active phase: v558-gmut-thos-v3-x1
 
 ## Privacy Boundary
 
