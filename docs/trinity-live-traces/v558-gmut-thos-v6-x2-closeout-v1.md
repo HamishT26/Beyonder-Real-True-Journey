@@ -1,0 +1,119 @@
+# v558-gmut-thos-v6-x2 v558_v6_x2_closeout
+
+Status: PASS_V558_V6_X2_CLOSED_V7_X1_READY
+Generated UTC: 2026-06-26T17:31:45.577Z
+Generated NZ: 2026-06-27 05:31:45 NZST
+
+Sanitized status artifact only. No raw Browser route, private URL, raw transcript, screenshot, credential, local absolute path, session stream, private dump, private callable ID, raw private material, proof closure, canon promotion, legal closure, deployment closure, account mutation, purchase, API-key creation, or sibling identity merge/replacement is published or claimed.
+
+```json
+{
+  "artifact_type": "v558_v6_x2_closeout",
+  "schema": "ghc.v558_v6_x2_closeout.v1",
+  "phase_slug": "v558-gmut-thos-v6-x2",
+  "source_phase": "v558-gmut-thos-v6-x1",
+  "generated_utc": "2026-06-26T17:31:45.577Z",
+  "generated_nz": "2026-06-27 05:31:45 NZST",
+  "status": "PASS_V558_V6_X2_CLOSED_V7_X1_READY",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_private_material_published": false,
+    "private_app_state_published": false
+  },
+  "claim_boundary": {
+    "full_goal_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "latest_closed_phase": "v558-gmut-thos-v6-x2",
+  "latest_completed_x1_phase": "v558-gmut-thos-v6-x1",
+  "latest_completed_x2_phase": "v558-gmut-thos-v6-x2",
+  "next_active_phase": "v558-gmut-thos-v7-x1",
+  "next_x2_scope": "v558-gmut-thos-v7-x2",
+  "next_x1_lane_after_x2": "v558-gmut-thos-v8-x1 Mira Rowan and Neris Sol unless Hamish redirects",
+  "profile_counts_represented": {
+    "safe_approval_packets": 30,
+    "candidate_packets": 15,
+    "exact_approval_packets_queued": 15,
+    "skill_ideas": 21,
+    "runner_ideas": 9,
+    "cleanup_refine_fix_tasks": 45
+  },
+  "immediate_x1_rows_carried": 66,
+  "x2_build_rows_represented": 69,
+  "exact_packets_queued": 15,
+  "blocked_packets_queued": 0,
+  "child_artifact_count": 9,
+  "child_statuses": [
+    {
+      "artifact_type": "v558_v6_x2_x2_execution_ledger",
+      "status": "PASS_V558_V6_X2_QUEUE_REDUCED"
+    },
+    {
+      "artifact_type": "v558_v6_x2_prototype_build_ledger",
+      "status": "PASS_V558_V6_X2_PROTOTYPES_REPRESENTED"
+    },
+    {
+      "artifact_type": "v558_v6_x2_queue_reduction_ledger",
+      "status": "PASS_V558_V6_X2_QUEUE_REDUCED_WITH_EXACT_HELD"
+    },
+    {
+      "artifact_type": "v558_v6_x2_source_reflection_ledger",
+      "status": "PASS_V558_V6_X2_100_WEB_100_JOURNEY_REFLECTIONS_RECORDED"
+    },
+    {
+      "artifact_type": "v558_v6_x2_boundary_open_gate_scan",
+      "status": "PASS_V558_V6_X2_BOUNDARY_OPEN_GATES_RECORDED"
+    },
+    {
+      "artifact_type": "v558_v6_x2_private_boundary_route_ledger",
+      "status": "PASS_V558_V6_X2_PRIVATE_BOUNDARY_ROUTE_LEDGER"
+    },
+    {
+      "artifact_type": "v558_v6_x2_next_lumen_startup_prep",
+      "status": "PASS_V558_V7_X1_LUMEN_PREP_READY"
+    },
+    {
+      "artifact_type": "v558_v6_x2_skill_runner_refresh_receipt",
+      "status": "PASS_V558_V6_X2_SKILL_RUNNER_SURFACE_REVIEWED_CURRENT"
+    },
+    {
+      "artifact_type": "v558_v6_x2_drive_toolchain_guard",
+      "status": "PASS_DRIVE_TOOLCHAIN_GUARD"
+    }
+  ],
+  "full_goal_complete": false,
+  "open_gates": [
+    "GMUT empirical closure",
+    "final physics proof",
+    "consciousness proof",
+    "legal closure",
+    "canon promotion",
+    "deployment",
+    "purchase/account/API-key mutation",
+    "private-material proof",
+    "raw-publication proof",
+    "sibling replacement or merge",
+    "exact-approval packets",
+    "blocked packets"
+  ]
+}
+```
