@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const TRACE_DIR = join(ROOT, "docs", "trinity-live-traces");
 const DEFAULT_POLICY_SOURCE = join(ROOT, "scripts", "trinity_v461a_v463a_hybrid_canon_builder.py");
+const LOCAL_PRIVATE_REGISTRY = join(ROOT, ".ghc-private", "ghc-app-lane-ids.local.json");
 const POLICY_SOURCE = resolvePolicySource();
 const SUPPORTED_LANES = ["Cicero", "Kierkegaard", "Aristotle"];
 
@@ -68,7 +69,7 @@ function extractMap(lanes) {
     try {
       const parsed = JSON.parse(privateEnv);
       if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-        return { map, missing: lanes.map((lane) => `${lane}:private-env-not-object`) };
+        return { map, missing: lanes.map((lane) => `${lane}:private-env-not-object`), source: "private_env" };
       }
       for (const lane of lanes) {
         if (!SUPPORTED_LANES.includes(lane)) {
@@ -82,14 +83,40 @@ function extractMap(lanes) {
           missing.push(`${lane}:missing-private-env`);
         }
       }
-      return { map, missing };
+      return { map, missing, source: "private_env" };
     } catch {
-      return { map, missing: lanes.map((lane) => `${lane}:private-env-parse-failed`) };
+      return { map, missing: lanes.map((lane) => `${lane}:private-env-parse-failed`), source: "private_env" };
+    }
+  }
+
+  if (existsSync(LOCAL_PRIVATE_REGISTRY)) {
+    try {
+      const parsed = JSON.parse(readFileSync(LOCAL_PRIVATE_REGISTRY, "utf8"));
+      const registry = parsed?.lanes && typeof parsed.lanes === "object" ? parsed.lanes : parsed;
+      for (const lane of lanes) {
+        if (!SUPPORTED_LANES.includes(lane)) {
+          missing.push(`${lane}:unsupported`);
+          continue;
+        }
+        const value = registry?.[lane];
+        if (typeof value === "string" && value.trim()) {
+          map[lane] = value.trim();
+        } else {
+          missing.push(`${lane}:missing-local-private-registry`);
+        }
+      }
+      return { map, missing, source: "local_private_registry" };
+    } catch {
+      return {
+        map,
+        missing: lanes.map((lane) => `${lane}:local-private-registry-parse-failed`),
+        source: "local_private_registry",
+      };
     }
   }
 
   if (!existsSync(POLICY_SOURCE)) {
-    return { map, missing: lanes.map((lane) => `${lane}:missing-private-map-source`) };
+    return { map, missing: lanes.map((lane) => `${lane}:missing-private-map-source`), source: "policy_source" };
   }
 
   const text = readFileSync(POLICY_SOURCE, "utf8");
@@ -107,7 +134,7 @@ function extractMap(lanes) {
       missing.push(`${lane}:missing`);
     }
   }
-  return { map, missing };
+  return { map, missing, source: "policy_source" };
 }
 
 function runStep(label, command, commandArgs, env, allowFailure = true) {
@@ -199,7 +226,7 @@ function writeMd(path, payload) {
 }
 
 const lanes = selectedLanes();
-const { map, missing } = extractMap(lanes);
+const { map, missing, source: mapSource } = extractMap(lanes);
 const generatedUtc = utcNow();
 const env = {
   ...process.env,
@@ -338,8 +365,10 @@ const receipt = {
   recovered_handle_count: Object.keys(map).length,
   missing_or_unsupported_lanes: missing,
   recovery_source: {
-    source_artifact: basename(POLICY_SOURCE),
+    source_artifact: mapSource === "local_private_registry" ? basename(LOCAL_PRIVATE_REGISTRY) : basename(POLICY_SOURCE),
+    source_kind: mapSource || "policy_source",
     source_override_used: POLICY_SOURCE !== DEFAULT_POLICY_SOURCE,
+    local_private_registry_used: mapSource === "local_private_registry",
     raw_source_copied: false,
     raw_handles_published: false,
   },

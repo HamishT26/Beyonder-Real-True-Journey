@@ -81,7 +81,7 @@ def write_md(path: Path, payload: dict[str, Any]) -> None:
 
 
 def build_prompt(lane: str, phase_slug: str, minimum_words: int, items_per_category: int) -> str:
-    effective_minimum_words = max(minimum_words, 3200)
+    effective_minimum_words = max(minimum_words, 2000)
     return f"""Lane: {lane}
 Phase: {phase_slug}
 
@@ -266,7 +266,7 @@ def main() -> int:
     parser.add_argument("--phase-slug", required=True)
     parser.add_argument("--lane", action="append")
     parser.add_argument("--output-dir")
-    parser.add_argument("--minimum-words", type=int, default=2500)
+    parser.add_argument("--minimum-words", type=int, default=2000)
     parser.add_argument("--items-per-category", type=int, default=12)
     parser.add_argument("--next-check-minutes", type=int, default=15)
     parser.add_argument("--execute", action="store_true")

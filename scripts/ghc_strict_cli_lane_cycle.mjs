@@ -13,7 +13,7 @@ const options = {
   execute: false,
   backgroundWatch: false,
   waitSeconds: 0,
-  minimumWords: 2200,
+  minimumWords: 2000,
   itemsPerCategory: 10,
 };
 
@@ -58,7 +58,7 @@ if (options.lanes.length === 0) {
 }
 
 options.receiptPrefix = options.receiptPrefix || `${options.phaseSlug}-strict-cli-lane-cycle`;
-options.outputDir = options.outputDir || join(tmpdir(), `${options.phaseSlug}-strict-cli-lane-cycle`);
+options.outputDir = options.outputDir || join(tmpdir(), `${options.receiptPrefix}-strict-cli-lane-cycle`);
 
 function relTrace(name) {
   return join(TRACE_DIR, `${options.receiptPrefix}-${name}-v1`);
