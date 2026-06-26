@@ -272,6 +272,9 @@ function builderForPhase(slug, explicitBuilder) {
   if (slug === "v558-gmut-thos-v5-x1") {
     return "ghc_v558_v5_x1_lumen_closeout_builder.mjs";
   }
+  if (slug === "v558-gmut-thos-v5-x2") {
+    return "ghc_v558_v5_x2_lumen_queue_executor_closeout_builder.mjs";
+  }
   return null;
 }
 

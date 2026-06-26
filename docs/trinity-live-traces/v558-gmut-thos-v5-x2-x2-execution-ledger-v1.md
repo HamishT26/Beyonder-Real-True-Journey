@@ -1,0 +1,371 @@
+# v558-gmut-thos-v5-x2 v558_v5_x2_x2_execution_ledger
+
+Status: PASS_V558_V5_X2_X2_QUEUE_REDUCED
+Generated UTC: 2026-06-26T16:56:50.313Z
+Generated NZ: 2026-06-27 04:56:50 NZST
+
+Sanitized status artifact only. No raw Browser route, private URL, raw transcript, screenshot, credential, local absolute path, session stream, private dump, private callable ID, raw private material, proof closure, canon promotion, legal closure, deployment closure, account mutation, purchase, API-key creation, or sibling identity merge/replacement is published or claimed.
+
+```json
+{
+  "artifact_type": "v558_v5_x2_x2_execution_ledger",
+  "schema": "ghc.v558_v5_x2_x2_execution_ledger.v1",
+  "phase_slug": "v558-gmut-thos-v5-x2",
+  "source_phase": "v558-gmut-thos-v5-x1",
+  "generated_utc": "2026-06-26T16:56:50.313Z",
+  "generated_nz": "2026-06-27 04:56:50 NZST",
+  "status": "PASS_V558_V5_X2_X2_QUEUE_REDUCED",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_private_material_published": false,
+    "private_app_state_published": false
+  },
+  "claim_boundary": {
+    "full_goal_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "source_queue": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1.json",
+  "tagged_rows": 85,
+  "x2_build_rows_represented": 30,
+  "safe_x2_rows_reduced_now": 29,
+  "held_x2_rows": 1,
+  "exact_x2_rows_held": 1,
+  "blocked_x2_rows_held": 0,
+  "exact_rows_queued_global": 12,
+  "blocked_rows_queued_global": 0,
+  "orchestrator": {
+    "exit_status": 0,
+    "stdout_status": "PASS_SAFE_RUNNER_ORCHESTRATION",
+    "stdout_bytes": 140,
+    "stderr_bytes": 0,
+    "stderr_excerpt": ""
+  },
+  "execution_policy": "safe/candidate x2 rows are reduced into sanitized build receipts; exact and blocked rows stay queued/open.",
+  "reduced_x2_rows": [
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-021",
+      "source_line_sha16": "05348854522d6588",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "general"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-022",
+      "source_line_sha16": "2cfd0a58e7d2f6f8",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "source_reflection"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-023",
+      "source_line_sha16": "e08d909675eabef4",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "trinity_matrix"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-024",
+      "source_line_sha16": "4823a4f88e121ad3",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "private_boundary"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-025",
+      "source_line_sha16": "618826721e4baf8f",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "next_lane"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-036",
+      "source_line_sha16": "cd4f85c274b24e93",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "phase_truth",
+        "skill_runner"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-037",
+      "source_line_sha16": "0989cf58eeae381f",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "source_reflection",
+        "skill_runner"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-038",
+      "source_line_sha16": "dfdb9853ff22ab27",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "approval_splitter",
+        "skill_runner"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-039",
+      "source_line_sha16": "ae9c542be514500c",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "general"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-040",
+      "source_line_sha16": "cdf6f9bc1f26b825",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "next_lane"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-056",
+      "source_line_sha16": "fbb9c81f5522baca",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "phase_truth"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-057",
+      "source_line_sha16": "c708e9797c2f829b",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "browser_safety"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-058",
+      "source_line_sha16": "d5c1cc4a9a1befac",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "browser_safety"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-059",
+      "source_line_sha16": "5a1610150d4bdea7",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "trinity_matrix"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-060",
+      "source_line_sha16": "6227f66661899c15",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "source_reflection"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-061",
+      "source_line_sha16": "b4e7e78eeb4f3511",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "approval_splitter"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-062",
+      "source_line_sha16": "1d251a119bcb9e87",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "cleanup_classifier"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-063",
+      "source_line_sha16": "9a53699292dc4834",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "private_boundary"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-064",
+      "source_line_sha16": "8f92030e0de79476",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "general"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-065",
+      "source_line_sha16": "8b2a758690f5ca61",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "next_lane"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-066",
+      "source_line_sha16": "315166e153bb268d",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "phase_truth"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-067",
+      "source_line_sha16": "621c6189b55e930a",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "general"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-068",
+      "source_line_sha16": "cc48846ecefbf163",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "source_reflection"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-069",
+      "source_line_sha16": "dc84769e756c6125",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "private_boundary"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-070",
+      "source_line_sha16": "ac03f6bbd666cdc1",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "next_lane"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-081",
+      "source_line_sha16": "76aeaed218176af3",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "phase_truth"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-082",
+      "source_line_sha16": "c85d4cf388e4862a",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "general"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-083",
+      "source_line_sha16": "243ccd3c5a1afea1",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "general"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-084",
+      "source_line_sha16": "6aa96cb13197b178",
+      "approval_bucket": "safe_now",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "next_lane"
+      ],
+      "status": "reduced_now"
+    },
+    {
+      "id": "v558-gmut-thos-v5-x1-lumen-row-085",
+      "source_line_sha16": "a89134eaed65f8e5",
+      "approval_bucket": "exact_approval_needed",
+      "execution_lane": "x2_build_task",
+      "topic_tags": [
+        "source_reflection",
+        "private_boundary"
+      ],
+      "status": "held_open"
+    }
+  ],
+  "raw_private_material_published": false
+}
+```
