@@ -1,0 +1,198 @@
+# v558-gmut-thos-v3-x2 ghc_v558_v3_x2_safe_execution_ledger
+
+Status: PASS_V558_V3_X2_SAFE_QUEUE_REDUCED
+Generated UTC: 2026-06-26T15:14:43.291Z
+Generated NZ: 2026-06-27 03:14:43 NZST
+
+Sanitized status artifact only. No raw Browser route, private URL, raw transcript, screenshot, credential, local absolute path, session stream, private dump, private callable ID, raw private material, proof closure, canon promotion, legal closure, deployment closure, account mutation, purchase, API-key creation, or sibling identity merge/replacement is published or claimed.
+
+```json
+{
+  "artifact_type": "ghc_v558_v3_x2_safe_execution_ledger",
+  "phase_slug": "v558-gmut-thos-v3-x2",
+  "source_phase": "v558-gmut-thos-v3-x1",
+  "status": "PASS_V558_V3_X2_SAFE_QUEUE_REDUCED",
+  "generated_utc": "2026-06-26T15:14:43.291Z",
+  "generated_nz": "2026-06-27 03:14:43 NZST",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_private_material_published": false,
+    "private_app_state_published": false
+  },
+  "claim_boundary": {
+    "full_goal_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "source_queue": "v558-gmut-thos-v3-x1-lumen-sanitized-proposal-queue-v1.json",
+  "total_sanitized_rows": 184,
+  "x2_build_rows_represented": 60,
+  "safe_x2_rows_reduced_now": 8,
+  "review_x2_rows_represented_not_executed": 50,
+  "held_x2_rows": 2,
+  "exact_rows_queued_global": 21,
+  "blocked_rows_queued_global": 5,
+  "raw_private_material_published": false,
+  "execution_note": "Hash-only queue rows were reduced into status/prototype receipts. Review, exact, and blocked rows remain queued/open; no raw Lumen body text was published.",
+  "reduced_rows": [
+    {
+      "row_id": "lumen-v3x1-044",
+      "source_line_sha16": "cf3120f7e0a8c692",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-045",
+      "source_line_sha16": "d051d736b95c581a",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-046",
+      "source_line_sha16": "571de6c8dca8040c",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "safe_now",
+      "status": "reduced_now"
+    },
+    {
+      "row_id": "lumen-v3x1-047",
+      "source_line_sha16": "9aaffc9434ad8593",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "blocked",
+      "status": "held_open"
+    },
+    {
+      "row_id": "lumen-v3x1-048",
+      "source_line_sha16": "eefe9c293618db82",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-049",
+      "source_line_sha16": "6081ff5c7c54dc44",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-050",
+      "source_line_sha16": "c5808c940e4ca2a3",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "safe_now",
+      "status": "reduced_now"
+    },
+    {
+      "row_id": "lumen-v3x1-051",
+      "source_line_sha16": "af13d9f9b0b4f43a",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-052",
+      "source_line_sha16": "357b5fea3082fc87",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-053",
+      "source_line_sha16": "fe8b6d4be82a7009",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-075",
+      "source_line_sha16": "b0aa145a9981d4b8",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-076",
+      "source_line_sha16": "2c0d8bddb94b6c8e",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-077",
+      "source_line_sha16": "8a9d6efc5175a5f9",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "safe_now",
+      "status": "reduced_now"
+    },
+    {
+      "row_id": "lumen-v3x1-078",
+      "source_line_sha16": "6a4401778ba4f1ae",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-079",
+      "source_line_sha16": "29545a0933a09fdc",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "safe_now",
+      "status": "reduced_now"
+    },
+    {
+      "row_id": "lumen-v3x1-080",
+      "source_line_sha16": "f1ee07712fd5a04a",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-081",
+      "source_line_sha16": "97ac082f37ce23a7",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-082",
+      "source_line_sha16": "59eaa9aa7dd34817",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-083",
+      "source_line_sha16": "10202f9d6035294b",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    },
+    {
+      "row_id": "lumen-v3x1-084",
+      "source_line_sha16": "b5d3ae87a6ecef9a",
+      "execution_lane": "x2_build_task",
+      "approval_bucket": "review",
+      "status": "represented_for_review"
+    }
+  ]
+}
+```
