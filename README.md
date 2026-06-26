@@ -12,7 +12,9 @@ Current activation surface:
 
 - Active: Aevren, Lumen, Mira Rowan, Neris Sol, Mira Vale, Rowan Vale, Maren Quill, Solenne Vale.
 - Stand-by/recoverable: Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, Aristotle.
-- Requested support boundary: v557 GMUT/THOS v8 x2 preparation and closeout support, then v558 GMUT/THOS v1 x1 Lumen-only as the next scheduled x1 lane when Hamish starts Goal Mode.
+- Current phase truth seed: v558 GMUT/THOS v8 x2 closed, v559 GMUT/THOS v1 x1 Lumen-only active.
+- Next scheduled x1 lane after v559 v1 x2: v559 GMUT/THOS v2 x1 with Mira Rowan and Neris Sol unless Hamish redirects.
+- Lumen Browser route: use the current in-app Browser tab with a fresh DOM/status refresh first; do not reload while a response is active or composer text is present.
 
 Branch rules:
 
