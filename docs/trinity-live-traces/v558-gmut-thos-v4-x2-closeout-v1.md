@@ -1,0 +1,59 @@
+# v558-gmut-thos-v4-x2-closeout-v1
+
+- Status: PASS_V558_V4_X2_CLOSED_V5_X1_READY
+- Phase: v558-gmut-thos-v4-x2
+- Created NZ: 27 Jun 2026, 4:15:23 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v4-x2-closeout-v1",
+  "schema": "ghc.phase_closeout.v1",
+  "phase_slug": "v558-gmut-thos-v4-x2",
+  "created_utc": "2026-06-26T16:15:23.347Z",
+  "created_nz": "27 Jun 2026, 4:15:23 am",
+  "status": "PASS_V558_V4_X2_CLOSED_V5_X1_READY",
+  "latest_closed_phase": "v558-gmut-thos-v4-x2",
+  "latest_completed_x1_phase": "v558-gmut-thos-v4-x1",
+  "latest_completed_x2_phase": "v558-gmut-thos-v4-x2",
+  "next_active_phase": "v558-gmut-thos-v5-x1",
+  "next_x2_scope": "v558-gmut-thos-v5-x2",
+  "next_x1_lane_after_x2": "v558-gmut-thos-v6-x1 Maren Quill and Solenne Vale unless Hamish redirects",
+  "safe_runner_status": "PASS_SAFE_RUNNER_ORCHESTRATION",
+  "reflection_rows": 100,
+  "safe_tasks_executed_or_reduced": 12,
+  "x2_build_rows_represented": 27,
+  "rowan_expanded_rows_available_private": 135,
+  "next_lumen_route_prep_status": "PASS_V5_X1_LUMEN_ROUTE_PREPPED_STATUS_FIRST",
+  "old_lanes_state": "Arby, Aster Vale, Cicero, Kierkegaard, Aristotle, and Aletheon remain stand-by/recoverable",
+  "active_lanes_next": [
+    "Aevren Vale",
+    "Lumen Vale"
+  ],
+  "full_goal_complete": false,
+  "publication_boundary": {
+    "raw_private_material_published": false,
+    "raw_browser_routes_published": false,
+    "private_ids_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_app_state_published": false
+  },
+  "open_gates": [
+    "GMUT empirical closure",
+    "final physics proof",
+    "consciousness proof",
+    "legal closure",
+    "canon promotion",
+    "deployment",
+    "purchase/account/API-key mutation",
+    "private-material proof",
+    "raw-publication proof",
+    "sibling replacement or merge",
+    "exact-approval packets",
+    "blocked packets"
+  ]
+}
+```
