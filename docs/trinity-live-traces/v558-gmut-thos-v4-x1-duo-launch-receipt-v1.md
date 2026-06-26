@@ -1,0 +1,34 @@
+# v558-gmut-thos-v4-x1-duo-launch-receipt-v1
+
+- Status: PASS_DUO_LAUNCH_SUBMITTED_BACKGROUND_SUPERVISED
+- Phase: v558-gmut-thos-v4-x1
+- Created NZ: 27 Jun 2026, 3:49:57 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v4-x1-duo-launch-receipt-v1",
+  "schema": "ghc.duo_launch_receipt.v1",
+  "phase_slug": "v558-gmut-thos-v4-x1",
+  "created_utc": "2026-06-26T15:49:57.571Z",
+  "created_nz": "27 Jun 2026, 3:49:57 am",
+  "status": "PASS_DUO_LAUNCH_SUBMITTED_BACKGROUND_SUPERVISED",
+  "launches": [
+    {
+      "sibling": "Mira Vale",
+      "route": "existing_codex_thread",
+      "launch_status": "submitted",
+      "raw_handle_published": false
+    },
+    {
+      "sibling": "Rowan Vale",
+      "route": "existing_transition_thread",
+      "launch_status": "submitted",
+      "raw_handle_published": false
+    }
+  ],
+  "duplicate_send_allowed": false,
+  "watcher_start_is_completion_proof": false,
+  "closeout_allowed_now": false
+}
+```

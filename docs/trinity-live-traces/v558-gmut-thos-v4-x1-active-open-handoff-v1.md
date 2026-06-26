@@ -1,0 +1,33 @@
+# v558-gmut-thos-v4-x1-active-open-handoff-v1
+
+- Status: ACTIVE_OPEN_V558_V4_X1_DUO_BACKGROUND_RUNNING_SAFE_WORK_READY
+- Phase: v558-gmut-thos-v4-x1
+- Created NZ: 27 Jun 2026, 3:49:57 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v4-x1-active-open-handoff-v1",
+  "schema": "ghc.active_open_handoff.v1",
+  "phase_slug": "v558-gmut-thos-v4-x1",
+  "created_utc": "2026-06-26T15:49:57.571Z",
+  "created_nz": "27 Jun 2026, 3:49:57 am",
+  "status": "ACTIVE_OPEN_V558_V4_X1_DUO_BACKGROUND_RUNNING_SAFE_WORK_READY",
+  "active_lanes": [
+    "Mira Vale",
+    "Rowan Vale"
+  ],
+  "safe_work_completed_now": [
+    "startup context built",
+    "duo launch receipt built",
+    "background supervision cadence recorded",
+    "proposal targets recorded",
+    "Aevren immediate safe seed ledger built",
+    "source/reflection seeds recorded",
+    "open-gate privacy guard built"
+  ],
+  "next_checkpoint": "harvest duo thread status at next natural safe pause after productive work",
+  "closeout_allowed_now": false,
+  "full_goal_complete": false
+}
+```
