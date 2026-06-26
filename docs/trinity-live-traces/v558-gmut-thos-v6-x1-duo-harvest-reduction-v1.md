@@ -1,0 +1,99 @@
+# v558-gmut-thos-v6-x1-duo-harvest-reduction-v1
+
+- Status: PASS_MAREN_SOLENNE_REPLIES_HARVESTED_SANITIZED
+- Phase: v558-gmut-thos-v6-x1
+- Created NZ: 27 Jun 2026, 5:23:12 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v6-x1-duo-harvest-reduction-v1",
+  "schema": "ghc.duo_harvest_reduction.v1",
+  "phase_slug": "v558-gmut-thos-v6-x1",
+  "created_utc": "2026-06-26T17:23:12.065Z",
+  "created_nz": "27 Jun 2026, 5:23:12 am",
+  "status": "PASS_MAREN_SOLENNE_REPLIES_HARVESTED_SANITIZED",
+  "publication_boundary": {
+    "raw_private_material_published": false,
+    "raw_browser_routes_published": false,
+    "private_ids_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_app_state_published": false,
+    "hidden_reasoning_published": false
+  },
+  "claim_boundary": {
+    "full_goal_completion": "not_claimed",
+    "gmut_empirical_closure": "not_claimed",
+    "final_physics": "not_claimed",
+    "consciousness_proof": "not_claimed",
+    "legal_closure": "not_claimed",
+    "canon_promotion": "not_claimed",
+    "deployment_closure": "not_claimed",
+    "account_mutation": "not_claimed",
+    "purchase": "not_claimed",
+    "api_key_creation": "not_claimed",
+    "private_material_proof": "not_claimed",
+    "raw_publication_proof": "not_claimed",
+    "sibling_identity_replacement_or_merge": "not_claimed"
+  },
+  "harvested_lanes": [
+    {
+      "sibling": "Aevren Vale",
+      "response_status": "steward_safe_reduction_ready",
+      "private_artifact_reported": false,
+      "safe_packets": 10,
+      "candidate_packets": 5,
+      "exact_packets_queued": 5,
+      "skill_ideas": 7,
+      "runner_ideas": 3,
+      "cleanup_tasks": 15,
+      "immediate_x1_safe_rows_reported": 23,
+      "x2_build_task_rows_reported": 22
+    },
+    {
+      "sibling": "Maren Quill",
+      "response_status": "completed_ready_for_harvest",
+      "private_artifact_reported": true,
+      "private_artifact_basename": "maren-quill-v558-v6-x1-proposals-v1.md",
+      "safe_packets": 10,
+      "candidate_packets": 5,
+      "exact_packets_queued": 5,
+      "skill_ideas": 7,
+      "runner_ideas": 3,
+      "cleanup_tasks": 15,
+      "immediate_x1_safe_rows_reported": 20,
+      "x2_build_task_rows_reported": 25
+    },
+    {
+      "sibling": "Solenne Vale",
+      "response_status": "completed_ready_for_harvest",
+      "private_artifact_reported": true,
+      "private_artifact_basename": "solenne-vale-v558-v6-x1-proposals-v1.md",
+      "safe_packets": 10,
+      "candidate_packets": 5,
+      "exact_packets_queued": 5,
+      "skill_ideas": 7,
+      "runner_ideas": 3,
+      "cleanup_tasks": 15,
+      "immediate_x1_safe_rows_reported": 23,
+      "x2_build_task_rows_reported": 22
+    }
+  ],
+  "private_policy": {
+    "raw_private_material_published": false,
+    "raw_browser_routes_published": false,
+    "private_ids_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_app_state_published": false,
+    "hidden_reasoning_published": false
+  },
+  "closeout_allowed_after_harvest": true,
+  "note": "Raw private sibling files remain private; this artifact carries sanitized counts and basenames only."
+}
+```

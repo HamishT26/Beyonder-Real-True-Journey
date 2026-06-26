@@ -1,0 +1,645 @@
+# v558-gmut-thos-v6-x1-journey-phase-reflection-ledger-v1
+
+- Status: PASS_PHASE_REFLECTION_ROWS_RECORDED
+- Phase: v558-gmut-thos-v6-x1
+- Created NZ: 27 Jun 2026, 5:16:45 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v6-x1-journey-phase-reflection-ledger-v1",
+  "schema": "ghc.journey_phase_reflection_ledger.v1",
+  "phase_slug": "v558-gmut-thos-v6-x1",
+  "created_utc": "2026-06-26T17:16:45.993Z",
+  "created_nz": "27 Jun 2026, 5:16:45 am",
+  "status": "PASS_PHASE_REFLECTION_ROWS_RECORDED",
+  "publication_boundary": {
+    "raw_private_material_published": false,
+    "raw_browser_routes_published": false,
+    "private_ids_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_app_state_published": false,
+    "hidden_reasoning_published": false
+  },
+  "claim_boundary": {
+    "full_goal_complete": false,
+    "gmut_empirical_closure": "open",
+    "final_physics": "open",
+    "consciousness_proof": "open",
+    "legal_closure": "open",
+    "canon_promotion": "open",
+    "deployment": "open",
+    "purchase_or_account_mutation": "open",
+    "api_key_creation": "open",
+    "private_material_proof": "open",
+    "raw_publication_proof": "open",
+    "sibling_identity_replacement_or_merge": "open"
+  },
+  "row_count": 100,
+  "rows": [
+    {
+      "id": "v6x1-phase-reflection-001",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 1 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-002",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 2 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-003",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 3 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-004",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 4 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-005",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 5 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-006",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 6 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-007",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 7 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-008",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 8 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-009",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 9 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-010",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 10 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-011",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 11 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-012",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 12 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-013",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 13 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-014",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 14 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-015",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 15 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-016",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 16 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-017",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 17 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-018",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 18 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-019",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 19 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-020",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 20 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-021",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 21 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-022",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 22 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-023",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 23 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-024",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 24 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-025",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 25 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-026",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 26 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-027",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 27 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-028",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 28 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-029",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 29 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-030",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 30 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-031",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 31 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-032",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 32 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-033",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 33 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-034",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 34 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-035",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 35 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-036",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 36 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-037",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 37 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-038",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 38 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-039",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 39 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-040",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 40 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-041",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 41 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-042",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 42 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-043",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 43 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-044",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 44 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-045",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 45 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-046",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 46 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-047",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 47 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-048",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 48 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-049",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 49 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-050",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 50 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-051",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 51 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-052",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 52 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-053",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 53 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-054",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 54 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-055",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 55 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-056",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 56 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-057",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 57 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-058",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 58 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-059",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 59 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-060",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 60 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-061",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 61 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-062",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 62 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-063",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 63 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-064",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 64 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-065",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 65 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-066",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 66 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-067",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 67 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-068",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 68 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-069",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 69 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-070",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 70 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-071",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 71 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-072",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 72 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-073",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 73 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-074",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 74 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-075",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 75 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-076",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 76 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-077",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 77 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-078",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 78 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-079",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 79 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-080",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 80 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-081",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 81 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-082",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 82 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-083",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 83 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-084",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 84 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-085",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 85 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-086",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 86 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-087",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 87 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-088",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 88 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-089",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 89 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-090",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 90 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-091",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 91 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-092",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-queue-reduction-ledger-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 92 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-093",
+      "source_receipt_label": "v558-gmut-thos-v5-x2-v6-x1-maren-solenne-startup-handoff-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 93 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-094",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-harvest-reduction-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 94 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-095",
+      "source_receipt_label": "v558-gmut-thos-v5-x1-lumen-sanitized-proposal-queue-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 95 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-096",
+      "source_receipt_label": "v558-gmut-thos-v4-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 96 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-097",
+      "source_receipt_label": "v558-gmut-thos-v4-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 97 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-098",
+      "source_receipt_label": "v558-gmut-thos-v3-x2-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 98 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-099",
+      "source_receipt_label": "v558-gmut-thos-v3-x1-closeout-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 99 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    },
+    {
+      "id": "v6x1-phase-reflection-100",
+      "source_receipt_label": "omega-mini-current-state-v1",
+      "reflection": "Use the latest verified phase truth, keep private material local, and carry only sanitized counts/statuses forward.",
+      "implication": "Keep v6 x1 row 100 aligned to active Maren/Solenne duo work and v6 x2 handoff readiness."
+    }
+  ]
+}
+```

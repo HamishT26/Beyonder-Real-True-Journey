@@ -1,0 +1,745 @@
+# v558-gmut-thos-v6-x1-source-reflection-ledger-v1
+
+- Status: PASS_SOURCE_REFLECTION_ROWS_RECORDED
+- Phase: v558-gmut-thos-v6-x1
+- Created NZ: 27 Jun 2026, 5:16:45 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v6-x1-source-reflection-ledger-v1",
+  "schema": "ghc.source_reflection_ledger.v1",
+  "phase_slug": "v558-gmut-thos-v6-x1",
+  "created_utc": "2026-06-26T17:16:45.993Z",
+  "created_nz": "27 Jun 2026, 5:16:45 am",
+  "status": "PASS_SOURCE_REFLECTION_ROWS_RECORDED",
+  "publication_boundary": {
+    "raw_private_material_published": false,
+    "raw_browser_routes_published": false,
+    "private_ids_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_app_state_published": false,
+    "hidden_reasoning_published": false
+  },
+  "claim_boundary": {
+    "full_goal_complete": false,
+    "gmut_empirical_closure": "open",
+    "final_physics": "open",
+    "consciousness_proof": "open",
+    "legal_closure": "open",
+    "canon_promotion": "open",
+    "deployment": "open",
+    "purchase_or_account_mutation": "open",
+    "api_key_creation": "open",
+    "private_material_proof": "open",
+    "raw_publication_proof": "open",
+    "sibling_identity_replacement_or_merge": "open"
+  },
+  "row_count": 100,
+  "rows": [
+    {
+      "id": "v6x1-source-001",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 1."
+    },
+    {
+      "id": "v6x1-source-002",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 2."
+    },
+    {
+      "id": "v6x1-source-003",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 3."
+    },
+    {
+      "id": "v6x1-source-004",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 4."
+    },
+    {
+      "id": "v6x1-source-005",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 5."
+    },
+    {
+      "id": "v6x1-source-006",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 6."
+    },
+    {
+      "id": "v6x1-source-007",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 7."
+    },
+    {
+      "id": "v6x1-source-008",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 8."
+    },
+    {
+      "id": "v6x1-source-009",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 9."
+    },
+    {
+      "id": "v6x1-source-010",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 10."
+    },
+    {
+      "id": "v6x1-source-011",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 11."
+    },
+    {
+      "id": "v6x1-source-012",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 12."
+    },
+    {
+      "id": "v6x1-source-013",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 13."
+    },
+    {
+      "id": "v6x1-source-014",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 14."
+    },
+    {
+      "id": "v6x1-source-015",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 15."
+    },
+    {
+      "id": "v6x1-source-016",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 16."
+    },
+    {
+      "id": "v6x1-source-017",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 17."
+    },
+    {
+      "id": "v6x1-source-018",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 18."
+    },
+    {
+      "id": "v6x1-source-019",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 19."
+    },
+    {
+      "id": "v6x1-source-020",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 20."
+    },
+    {
+      "id": "v6x1-source-021",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 21."
+    },
+    {
+      "id": "v6x1-source-022",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 22."
+    },
+    {
+      "id": "v6x1-source-023",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 23."
+    },
+    {
+      "id": "v6x1-source-024",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 24."
+    },
+    {
+      "id": "v6x1-source-025",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 25."
+    },
+    {
+      "id": "v6x1-source-026",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 26."
+    },
+    {
+      "id": "v6x1-source-027",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 27."
+    },
+    {
+      "id": "v6x1-source-028",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 28."
+    },
+    {
+      "id": "v6x1-source-029",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 29."
+    },
+    {
+      "id": "v6x1-source-030",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 30."
+    },
+    {
+      "id": "v6x1-source-031",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 31."
+    },
+    {
+      "id": "v6x1-source-032",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 32."
+    },
+    {
+      "id": "v6x1-source-033",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 33."
+    },
+    {
+      "id": "v6x1-source-034",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 34."
+    },
+    {
+      "id": "v6x1-source-035",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 35."
+    },
+    {
+      "id": "v6x1-source-036",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 36."
+    },
+    {
+      "id": "v6x1-source-037",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 37."
+    },
+    {
+      "id": "v6x1-source-038",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 38."
+    },
+    {
+      "id": "v6x1-source-039",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 39."
+    },
+    {
+      "id": "v6x1-source-040",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 40."
+    },
+    {
+      "id": "v6x1-source-041",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 41."
+    },
+    {
+      "id": "v6x1-source-042",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 42."
+    },
+    {
+      "id": "v6x1-source-043",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 43."
+    },
+    {
+      "id": "v6x1-source-044",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 44."
+    },
+    {
+      "id": "v6x1-source-045",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 45."
+    },
+    {
+      "id": "v6x1-source-046",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 46."
+    },
+    {
+      "id": "v6x1-source-047",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 47."
+    },
+    {
+      "id": "v6x1-source-048",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 48."
+    },
+    {
+      "id": "v6x1-source-049",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 49."
+    },
+    {
+      "id": "v6x1-source-050",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 50."
+    },
+    {
+      "id": "v6x1-source-051",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 51."
+    },
+    {
+      "id": "v6x1-source-052",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 52."
+    },
+    {
+      "id": "v6x1-source-053",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 53."
+    },
+    {
+      "id": "v6x1-source-054",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 54."
+    },
+    {
+      "id": "v6x1-source-055",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 55."
+    },
+    {
+      "id": "v6x1-source-056",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 56."
+    },
+    {
+      "id": "v6x1-source-057",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 57."
+    },
+    {
+      "id": "v6x1-source-058",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 58."
+    },
+    {
+      "id": "v6x1-source-059",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 59."
+    },
+    {
+      "id": "v6x1-source-060",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 60."
+    },
+    {
+      "id": "v6x1-source-061",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 61."
+    },
+    {
+      "id": "v6x1-source-062",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 62."
+    },
+    {
+      "id": "v6x1-source-063",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 63."
+    },
+    {
+      "id": "v6x1-source-064",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 64."
+    },
+    {
+      "id": "v6x1-source-065",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 65."
+    },
+    {
+      "id": "v6x1-source-066",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 66."
+    },
+    {
+      "id": "v6x1-source-067",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 67."
+    },
+    {
+      "id": "v6x1-source-068",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 68."
+    },
+    {
+      "id": "v6x1-source-069",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 69."
+    },
+    {
+      "id": "v6x1-source-070",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 70."
+    },
+    {
+      "id": "v6x1-source-071",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 71."
+    },
+    {
+      "id": "v6x1-source-072",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 72."
+    },
+    {
+      "id": "v6x1-source-073",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 73."
+    },
+    {
+      "id": "v6x1-source-074",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 74."
+    },
+    {
+      "id": "v6x1-source-075",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 75."
+    },
+    {
+      "id": "v6x1-source-076",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 76."
+    },
+    {
+      "id": "v6x1-source-077",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 77."
+    },
+    {
+      "id": "v6x1-source-078",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 78."
+    },
+    {
+      "id": "v6x1-source-079",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 79."
+    },
+    {
+      "id": "v6x1-source-080",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 80."
+    },
+    {
+      "id": "v6x1-source-081",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 81."
+    },
+    {
+      "id": "v6x1-source-082",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 82."
+    },
+    {
+      "id": "v6x1-source-083",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 83."
+    },
+    {
+      "id": "v6x1-source-084",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 84."
+    },
+    {
+      "id": "v6x1-source-085",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 85."
+    },
+    {
+      "id": "v6x1-source-086",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 86."
+    },
+    {
+      "id": "v6x1-source-087",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 87."
+    },
+    {
+      "id": "v6x1-source-088",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 88."
+    },
+    {
+      "id": "v6x1-source-089",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 89."
+    },
+    {
+      "id": "v6x1-source-090",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 90."
+    },
+    {
+      "id": "v6x1-source-091",
+      "source_label": "OPENAI_CODEX_CLI",
+      "url": "https://developers.openai.com/codex/cli",
+      "reflection": "Codex CLI work should be treated as toolchain support rather than proof closure.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 91."
+    },
+    {
+      "id": "v6x1-source-092",
+      "source_label": "OPENAI_CODEX_REFERENCE",
+      "url": "https://developers.openai.com/codex/cli/reference",
+      "reflection": "Command behavior belongs in bounded runner receipts and current-state guards.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 92."
+    },
+    {
+      "id": "v6x1-source-093",
+      "source_label": "NODE_FS",
+      "url": "https://nodejs.org/api/fs.html",
+      "reflection": "Deterministic local file writes keep sanitized traces parseable.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 93."
+    },
+    {
+      "id": "v6x1-source-094",
+      "source_label": "NODE_CHILD_PROCESS",
+      "url": "https://nodejs.org/api/child_process.html",
+      "reflection": "Subprocess work needs explicit status checks rather than implied completion.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 94."
+    },
+    {
+      "id": "v6x1-source-095",
+      "source_label": "GIT_STATUS",
+      "url": "https://git-scm.com/docs/git-status",
+      "reflection": "Porcelain status separates staged work from unrelated dirty files.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 95."
+    },
+    {
+      "id": "v6x1-source-096",
+      "source_label": "GIT_DIFF",
+      "url": "https://git-scm.com/docs/git-diff",
+      "reflection": "Diff checks catch whitespace and patch hygiene before commit.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 96."
+    },
+    {
+      "id": "v6x1-source-097",
+      "source_label": "GITHUB_SECRET_SCANNING",
+      "url": "https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning",
+      "reflection": "Secret scanning complements local privacy scans.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 97."
+    },
+    {
+      "id": "v6x1-source-098",
+      "source_label": "GITHUB_PUSH_PROTECTION",
+      "url": "https://docs.github.com/en/code-security/concepts/secret-security/push-protection",
+      "reflection": "Push protection reinforces the no-secret-publication boundary.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 98."
+    },
+    {
+      "id": "v6x1-source-099",
+      "source_label": "GITHUB_BRANCH_PROTECTION",
+      "url": "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches",
+      "reflection": "Remote verification should be explicit and branch-scoped.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 99."
+    },
+    {
+      "id": "v6x1-source-100",
+      "source_label": "JSON_SCHEMA",
+      "url": "https://json-schema.org/learn/getting-started-step-by-step",
+      "reflection": "Structured JSON twins make compact-pause recovery easier.",
+      "phase_implication": "Apply to v6 x1 duo startup/cadence/validation unit 100."
+    }
+  ]
+}
+```
