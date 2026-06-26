@@ -60,7 +60,7 @@ const artifacts = [
     profile_cap_counts_represented: counts,
     full_goal_complete: false,
   }),
-  artifact("v3-x2-safe-build-handoff", "ghc.x2_handoff.v1", closeoutAllowed
+  artifact("v5-x2-safe-build-handoff", "ghc.x2_handoff.v1", closeoutAllowed
     ? "PASS_V559_V5_X2_SAFE_BUILD_HANDOFF_READY"
     : "OPEN_GAP_V559_V5_X2_HANDOFF_NOT_READY", {
     source_x1_phase: phaseSlug,

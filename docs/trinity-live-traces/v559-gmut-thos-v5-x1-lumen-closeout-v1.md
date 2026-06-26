@@ -2,7 +2,7 @@
 
 Status: PASS_V559_V5_X1_CLOSED_V5_X2_READY
 
-Generated NZ: 2026-06-27T08:46:33+12:00
+Generated NZ: 2026-06-27T08:49:42+12:00
 
 Boundary: sanitized artifact only. Raw Browser routes, private URLs, raw transcripts, screenshots, credentials, local private paths, session streams, private app state, private dumps, and hidden reasoning are not published.
 
