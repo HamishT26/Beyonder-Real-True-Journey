@@ -1,19 +1,18 @@
-# v558-gmut-thos-v7-x1
+# Current State Beacon
 
-Status: PASS_V558_V6_X2_CLOSED_V7_X1_READY
-
-- Current active phase: v558-gmut-thos-v7-x1
-- Latest closed phase: v558-gmut-thos-v6-x2
-- Latest completed x1: v558-gmut-thos-v6-x1
-- Latest completed x2: v558-gmut-thos-v6-x2
+- Status: PASS_V558_V7_X1_CLOSED_V7_X2_READY
+- Current active phase: v558-gmut-thos-v7-x2
+- Latest closed phase: v558-gmut-thos-v7-x1
+- Latest completed x1 phase: v558-gmut-thos-v7-x1
+- Latest completed x2 phase: v558-gmut-thos-v6-x2
 - Next x2 scope: v558-gmut-thos-v7-x2
 - Next x1 lane after x2: v558-gmut-thos-v8-x1 Mira Rowan and Neris Sol unless Hamish redirects
+- Raw private material published: false
+- Full goal complete: false
 
-## v558 v6 x2 Closeout
+## V558 V7 X1
 
-- x2 build rows represented: 69
-- Exact packets queued: 15
-- Blocked packets queued: 0
-- Lumen Browser rule: refresh/status-first; no reload over active response or unsent composer text.
-
-Sanitized beacon only. Private lane handles, raw browser routes, raw transcripts, screenshots, credentials, local absolute paths, session streams, and raw private material are not published here.
+- Lumen response harvested privately: true
+- Immediate x1 safe rows executed or recorded: 65
+- X2 build rows queued: 41
+- Browser route: refresh/status first; no reload over active response or composer; no duplicate sends.
