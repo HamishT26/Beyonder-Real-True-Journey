@@ -1,13 +1,24 @@
 # Omega-Mini Current State
 
-Status: V558_V3_X1_LUMEN_HARVESTED_SAFE_QUEUE_READY
-Current active phase: v558-gmut-thos-v3-x1
-Latest closed phase: v558-gmut-thos-v2-x2
-Latest completed x1: v558-gmut-thos-v2-x1
+Status: V558_V3_X2_ACTIVE_AFTER_LUMEN_X1_CLOSEOUT
+Current active phase: v558-gmut-thos-v3-x2
+Latest closed phase: v558-gmut-thos-v3-x1
+Latest completed x1: v558-gmut-thos-v3-x1
 Latest completed x2: v558-gmut-thos-v2-x2
 Current lanes: Aevren Vale; Lumen Vale; Mira Rowan; Mira Vale; Maren Quill; Neris Sol; Rowan Vale; Solenne Vale; five-minute-productive-cadence-ready; safe-wait-workbench-enabled; round-robin-workflow-standard-promoted; v553-lumen-only-x1-profile-loaded
 Next x2 scope: v558-gmut-thos-v3-x2
 Next x1 lane after x2: v558-gmut-thos-v4-x1 Mira Vale + Rowan Vale unless Hamish redirects
+
+## v558 v3 x1 Closeout
+
+- Status: `PASS_V558_V3_X1_CLOSED_V3_X2_READY`
+- Lumen response harvested private: `true`
+- Raw private material published: `false`
+- Sanitized queue rows: `184`
+- immediate_x1_safe signal rows: `110`
+- x2_build_task signal rows: `60`
+- Next active phase: `v558-gmut-thos-v3-x2`
+
 
 ## Lumen Browser Harvest State
 
@@ -34,6 +45,8 @@ Next x1 lane after x2: v558-gmut-thos-v4-x1 Mira Vale + Rowan Vale unless Hamish
 
 ## Current Lookup Files
 
+- docs/trinity-live-traces/v558-gmut-thos-v3-x1-closeout-v1.md
+- docs/trinity-live-traces/v558-gmut-thos-v3-x1-closeout-v1.json
 - docs/trinity-live-traces/v558-gmut-thos-v3-x1-lumen-browser-send-receipt-v1.md
 - docs/trinity-live-traces/v558-gmut-thos-v3-x1-lumen-browser-send-receipt-v1.json
 - docs/trinity-live-traces/v558-gmut-thos-v3-x1-lumen-harvest-reduction-v1.md
