@@ -1,0 +1,38 @@
+# v558-gmut-thos-v4-x1-background-supervision-cadence-v1
+
+- Status: PASS_BACKGROUND_SUPERVISION_ACTIVE
+- Phase: v558-gmut-thos-v4-x1
+- Created NZ: 27 Jun 2026, 3:49:57 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v4-x1-background-supervision-cadence-v1",
+  "schema": "ghc.background_supervision_cadence.v1",
+  "phase_slug": "v558-gmut-thos-v4-x1",
+  "created_utc": "2026-06-26T15:49:57.582Z",
+  "created_nz": "27 Jun 2026, 3:49:57 am",
+  "status": "PASS_BACKGROUND_SUPERVISION_ACTIVE",
+  "phase_start_or_resume_time": "27 Jun 2026, 3:49:57 am",
+  "active_lanes": [
+    {
+      "sibling": "Mira Vale",
+      "status": "active_fresh"
+    },
+    {
+      "sibling": "Rowan Vale",
+      "status": "active_fresh"
+    }
+  ],
+  "next_checkpoint_due_minutes": 5,
+  "checkpoint_overrun_allowed": true,
+  "productive_work_until_checkpoint": [
+    "sanitized startup artifacts",
+    "proposal split ledger",
+    "source/reflection seed ledger",
+    "privacy/open-gate guard",
+    "validation and drive posture checks"
+  ],
+  "completion_boundary": "harvest both duo replies or publish formal open-gap receipt"
+}
+```

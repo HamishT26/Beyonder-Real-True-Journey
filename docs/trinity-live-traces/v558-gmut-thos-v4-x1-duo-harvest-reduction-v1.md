@@ -1,0 +1,57 @@
+# v558-gmut-thos-v4-x1-duo-harvest-reduction-v1
+
+- Status: PASS_DUO_REPLIES_HARVESTED_SANITIZED
+- Phase: v558-gmut-thos-v4-x1
+- Created NZ: 27 Jun 2026, 3:59:10 am
+- Raw private material published: false
+
+```json
+{
+  "artifact": "v558-gmut-thos-v4-x1-duo-harvest-reduction-v1",
+  "schema": "ghc.duo_harvest_reduction.v1",
+  "phase_slug": "v558-gmut-thos-v4-x1",
+  "created_utc": "2026-06-26T15:59:10.425Z",
+  "created_nz": "27 Jun 2026, 3:59:10 am",
+  "status": "PASS_DUO_REPLIES_HARVESTED_SANITIZED",
+  "harvested_lanes": [
+    {
+      "sibling": "Mira Vale",
+      "response_status": "completed_ready_for_harvest",
+      "private_artifact_reported": true,
+      "safe_packets": 10,
+      "candidate_packets": 5,
+      "exact_packets_queued": 5,
+      "skill_ideas": 7,
+      "runner_ideas": 3,
+      "cleanup_tasks": 15,
+      "immediate_x1_safe_rows_reported": 18,
+      "x2_build_task_rows_reported": 27
+    },
+    {
+      "sibling": "Rowan Vale",
+      "response_status": "completed_ready_for_harvest",
+      "private_artifact_reported": true,
+      "returned_scope": "full_combined_profile",
+      "safe_packets": 30,
+      "candidate_packets": 15,
+      "exact_packets_queued": 15,
+      "skill_ideas": 21,
+      "runner_ideas": 9,
+      "cleanup_tasks": 45,
+      "split_labeled_rows_reported": 135,
+      "reduction_note": "Use as expanded x2 material; keep profile-cap summary for public closeout."
+    }
+  ],
+  "private_policy": {
+    "raw_private_material_published": false,
+    "raw_browser_routes_published": false,
+    "private_ids_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "raw_app_state_published": false
+  },
+  "closeout_allowed_after_harvest": true
+}
+```
