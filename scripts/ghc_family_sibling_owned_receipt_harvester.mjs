@@ -34,10 +34,18 @@ const hasPrivateBoundary = receipt.validation?.private_material_published === fa
   || receipt.publication_boundary?.raw_private_material_published === false
   || receipt.publication_boundary?.sanitized_only === true;
 const sharedBranchesClean = receipt.validation?.shared_branches_mutated !== true;
+const queuedGateEvidence = [
+  ...(receipt.queued_out_of_scope_gates || []),
+  ...(receipt.open_gates || [])
+].join(" ").toLowerCase();
+const claimBoundaryEvidence = Object.values(receipt.claim_boundary || {})
+  .some((value) => value === "not_claimed" || value === "open");
 const majorGatesOpen = receipt.validation?.proof_canon_legal_deployment_account_api_key_purchase_private_raw_destructive_sibling_merge_gates_open === true
   || receipt.validation?.open_gate_validation === "all required gates remain open"
   || receipt.claim_boundary?.full_goal_completion === "not_claimed"
-  || receipt.claim_boundary?.proof_canon_legal_deployment_account_api_key_private_gates === "open";
+  || receipt.claim_boundary?.proof_canon_legal_deployment_account_api_key_private_gates === "open"
+  || claimBoundaryEvidence
+  || /exact|blocked|proof|canon|legal|deployment|account|api-key|purchase|private-material|raw-publication|sibling merge/.test(queuedGateEvidence);
 const checks = [
   { label: "source_receipt_present", status: existsSync(receiptFile) ? "PASS" : "OPEN_GAP" },
   { label: "sibling_status_completed", status: hasCompactCompletion || hasCloseoutBuilderCompletion ? "PASS" : "OPEN_GAP", observed: receiptStatus },
