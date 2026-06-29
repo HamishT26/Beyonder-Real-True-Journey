@@ -1,0 +1,157 @@
+﻿{
+  "artifact_type": "ghc_source_reflection_manifest",
+  "phase_slug": "v565-gmut-thos-v1-x1",
+  "search_count_declared": 20,
+  "minimum_reflections_required": 20,
+  "status": "PASS_SOURCE_REFLECTION_MANIFEST_PREPARED",
+  "searches": [
+    {
+      "query": "OpenAI Codex changelog and update posture",
+      "source": "OpenAI Developers Codex changelog",
+      "source_url": "https://developers.openai.com/codex/changelog",
+      "phase_reflection": "Use the latest verified Codex app and CLI posture as a moving surface; avoid stale route assumptions after app updates.",
+      "runner_implication": "Keep Browser and CLI route receipts timestamped and refresh-before-unavailable."
+    },
+    {
+      "query": "OpenAI Codex follow goal use case",
+      "source": "OpenAI Developers Follow a goal",
+      "source_url": "https://developers.openai.com/codex/use-cases/follow-goals",
+      "phase_reflection": "Goal work needs a durable objective and a verifiable stopping condition rather than repeated manual restarts.",
+      "runner_implication": "Keep full v544-v575 goal open until verified v575-gmut-thos-v8-x2 closeout."
+    },
+    {
+      "query": "OpenAI Codex app goal controls",
+      "source": "OpenAI Developers Codex app commands",
+      "source_url": "https://developers.openai.com/codex/app/commands",
+      "phase_reflection": "Goal control can be paused or resumed while follow-up steering continues in the same thread.",
+      "runner_implication": "Treat Hamish follow-ups as steering constraints without resetting phase truth."
+    },
+    {
+      "query": "OpenAI Codex prompting goal mode",
+      "source": "OpenAI Developers Codex prompting",
+      "source_url": "https://developers.openai.com/codex/prompting",
+      "phase_reflection": "Long-running work should preserve a clear definition of done and pause safely before connectivity risk.",
+      "runner_implication": "Every compact/startup/closeout receipt must carry next phase and open-gate state."
+    },
+    {
+      "query": "OpenAI Codex in-app browser",
+      "source": "OpenAI Developers In-app browser",
+      "source_url": "https://developers.openai.com/codex/app/browser",
+      "phase_reflection": "The in-app Browser is a shared rendered page surface and must be refreshed with visible page state before action.",
+      "runner_implication": "Lumen route checks use fresh DOM/status refresh and no reload during active response."
+    },
+    {
+      "query": "OpenAI Codex app computer and browser use",
+      "source": "OpenAI Codex app overview",
+      "source_url": "https://openai.com/index/codex-for-almost-everything/",
+      "phase_reflection": "Multiple tool surfaces can coexist, but the phase route should prefer the current proven surface.",
+      "runner_implication": "Keep Browser for Lumen and avoid stale manual fallback unless retry receipts require it."
+    },
+    {
+      "query": "OpenAI Codex CLI features",
+      "source": "OpenAI Developers Codex CLI features",
+      "source_url": "https://developers.openai.com/codex/cli/features",
+      "phase_reflection": "CLI workflows are separate from app Browser work and should not be conflated with ChatGPT main-thread routing.",
+      "runner_implication": "Keep strict CLI and Browser receipt classes separate in phase artifacts."
+    },
+    {
+      "query": "OpenAI Codex CLI slash goal commands",
+      "source": "OpenAI Developers Codex CLI slash commands",
+      "source_url": "https://developers.openai.com/codex/cli/slash-commands",
+      "phase_reflection": "Goal mode has explicit pause, resume, and clear semantics.",
+      "runner_implication": "Do not claim goal completion before the final verified phase."
+    },
+    {
+      "query": "GitHub REST git references",
+      "source": "GitHub Docs REST Git refs",
+      "source_url": "https://docs.github.com/rest/git/refs",
+      "phase_reflection": "Branches are refs pointing at commits, so Lumen-owned write lanes can be represented as explicit branch refs.",
+      "runner_implication": "Use lumen-only branches for write scope and shared branches as read-only context."
+    },
+    {
+      "query": "GitHub repository permissions personal accounts",
+      "source": "GitHub Docs personal repository permission levels",
+      "source_url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository",
+      "phase_reflection": "Repository permission models may not exactly match desired per-branch sibling lanes on personal accounts.",
+      "runner_implication": "Record Lumen write posture as branch-scoped operational policy, not a claim of account-level permission mutation."
+    },
+    {
+      "query": "GitHub repository contents API",
+      "source": "GitHub Docs REST repository contents",
+      "source_url": "https://docs.github.com/rest/repos/contents",
+      "phase_reflection": "Content reads and writes should be explicit and auditable.",
+      "runner_implication": "Keep Lumen's GitHub write lane limited to sanitized branch content and never raw private local state."
+    },
+    {
+      "query": "GitHub branches API",
+      "source": "GitHub Docs REST branches",
+      "source_url": "https://docs.github.com/v3/repos/branches",
+      "phase_reflection": "Branch listing can be read-only and is useful for keeping current with latest sanitized state.",
+      "runner_implication": "Ask Lumen to check latest shared branch truth read-only before proposing x1 corrections."
+    },
+    {
+      "query": "GitHub repository roles for organizations",
+      "source": "GitHub Docs organization repository roles",
+      "source_url": "https://docs.github.com/organizations/managing-user-access-to-your-organizations-repositories/repository-roles-for-an-organization",
+      "phase_reflection": "Granular roles are organization-specific and should not be assumed for every repository shape.",
+      "runner_implication": "Avoid claiming external account or permission mutation unless exact admin action is requested and verified."
+    },
+    {
+      "query": "GitHub REST rulesets",
+      "source": "GitHub Docs REST repository rules",
+      "source_url": "https://docs.github.com/en/rest/repos/rules",
+      "phase_reflection": "Rulesets can govern branch interaction and are relevant to future branch safety design.",
+      "runner_implication": "Queue branch-protection/ruleset changes as exact-approval work, not automatic safe-now work."
+    },
+    {
+      "query": "Playwright locator API",
+      "source": "Playwright Locator documentation",
+      "source_url": "https://playwright.dev/docs/api/class-locator",
+      "phase_reflection": "Locators provide current element resolution and are better than stale DOM guesses.",
+      "runner_implication": "Use fresh snapshot/status and verify unique composer/send controls before Browser actions."
+    },
+    {
+      "query": "Playwright text input fill contenteditable",
+      "source": "Playwright Actions documentation",
+      "source_url": "https://playwright.dev/docs/input",
+      "phase_reflection": "Filling contenteditable elements is a supported route when textarea wrappers are hidden or zero-size.",
+      "runner_implication": "Preserve contenteditable fallback as the staple Lumen route after fresh refresh."
+    },
+    {
+      "query": "Chrome DevTools Protocol Runtime evaluate",
+      "source": "Chrome DevTools Protocol Runtime domain",
+      "source_url": "https://chromedevtools.github.io/devtools-protocol/tot/Runtime/",
+      "phase_reflection": "Runtime evaluation can time out during active app work and should not trigger duplicate sends.",
+      "runner_implication": "If post-send evaluation times out, probe non-destructively and record active/open state."
+    },
+    {
+      "query": "Chrome DevTools Protocol browser instrumentation",
+      "source": "Chrome DevTools Protocol overview",
+      "source_url": "https://chromedevtools.github.io/devtools-protocol/",
+      "phase_reflection": "Browser instrumentation is powerful but needs conservative state checks around side effects.",
+      "runner_implication": "Prefer smallest safe Browser probes and no reload during active response."
+    },
+    {
+      "query": "Chrome DevTools Protocol Network domain",
+      "source": "Chrome DevTools Protocol Network domain",
+      "source_url": "https://chromedevtools.github.io/devtools-protocol/tot/Network/",
+      "phase_reflection": "Network-level introspection can expose sensitive request data and should not be dumped into artifacts.",
+      "runner_implication": "Keep Browser receipts compact and avoid raw network/session state publication."
+    },
+    {
+      "query": "GitHub REST API overview",
+      "source": "GitHub Docs REST API overview",
+      "source_url": "https://docs.github.com/en/rest",
+      "phase_reflection": "GitHub automation should be explicit, scoped, and rate-aware.",
+      "runner_implication": "Use sanitized GitHub branch lanes and queue permission/account mutations for exact approval."
+    }
+  ],
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "raw_transcripts_published": false,
+    "private_ids_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false
+  }
+}

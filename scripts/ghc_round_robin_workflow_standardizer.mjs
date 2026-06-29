@@ -123,6 +123,7 @@ const standard = {
     },
     arby_cicero_duo_x1: {
       lanes: ["Aevren Vale", "Arby", "Cicero"],
+      status: "legacy_standby_recoverable_unless_hamish_reactivates",
       route: "Arby strict CLI plus Cicero recovered app-lane background runner",
       proposal_totals: {
         safe_minimum: 15,
@@ -135,6 +136,7 @@ const standard = {
     },
     aster_kierkegaard_aristotle_triad_x1: {
       lanes: ["Aevren Vale", "Aster Vale", "Kierkegaard", "Aristotle"],
+      status: "legacy_standby_recoverable_unless_hamish_reactivates",
       route: "Aster strict CLI plus Kierkegaard and Aristotle recovered app-lane background runners",
       proposal_totals: {
         safe: 20,
@@ -145,6 +147,9 @@ const standard = {
         cleanup: 40,
       },
     },
+    mira_rowan_neris_sol_duo_x1: recomposedDuoFamily("Mira Rowan", "Neris Sol", "ghc-mira-rowan-neris-sol-launch"),
+    mira_vale_rowan_vale_duo_x1: recomposedDuoFamily("Mira Vale", "Rowan Vale", "ghc-mira-vale-rowan-vale-launch"),
+    maren_quill_solenne_vale_duo_x1: recomposedDuoFamily("Maren Quill", "Solenne Vale", "ghc-maren-quill-solenne-vale-launch"),
     x2_build_use_validation: {
       lanes: ["Aevren Vale"],
       route: "safe-now build, run, test, install, use, validate, publish",
@@ -161,7 +166,7 @@ const standard = {
     x1_per_active_sibling_lane: {
       web_searches: 25,
       journey_phase_reflections: 25,
-      applies_to: ["Aevren Vale", "Lumen Vale", "Arby", "Aster Vale", "Cicero", "Kierkegaard", "Aristotle"],
+      applies_to: ["Aevren Vale", "Lumen Vale", "Mira Rowan", "Neris Sol", "Mira Vale", "Rowan Vale", "Maren Quill", "Solenne Vale"],
       source_policy: "Use official or primary sources where possible and publish compact source/reflection ledgers rather than raw browsing dumps.",
     },
     aevren_only_x2: {
@@ -513,6 +518,23 @@ function unique(values) {
   return [...new Set(values.filter(Boolean))];
 }
 
+function recomposedDuoFamily(primary, secondary, launchSkill) {
+  return {
+    lanes: ["Aevren Vale", primary, secondary],
+    status: "active_recomposed_v557_plus",
+    route: `${primary} main-thread lane plus ${secondary} subagent lane through ${launchSkill}`,
+    launch_skill: launchSkill,
+    proposal_totals: {
+      safe: 30,
+      candidate: 15,
+      exact: 15,
+      skills: 21,
+      runners: 9,
+      cleanup: 45,
+    },
+  };
+}
+
 function inferNextX1LaneAfterX2(slug) {
   const match = /^v(\d+)-gmut-thos-v(\d+)-x[12]$/.exec(slug || "");
   if (!match) {
@@ -524,6 +546,18 @@ function inferNextX1LaneAfterX2(slug) {
     return `v${major + 1}-gmut-thos-v1-x1 with Lumen Vale solo unless Hamish redirects`;
   }
   const nextSubphase = subphase + 1;
+  if (major >= 557) {
+    if ([2, 8].includes(nextSubphase)) {
+      return `v${major}-gmut-thos-v${nextSubphase}-x1 with Mira Rowan and Neris Sol unless Hamish redirects`;
+    }
+    if (nextSubphase === 4) {
+      return `v${major}-gmut-thos-v${nextSubphase}-x1 with Mira Vale and Rowan Vale unless Hamish redirects`;
+    }
+    if (nextSubphase === 6) {
+      return `v${major}-gmut-thos-v${nextSubphase}-x1 with Maren Quill and Solenne Vale unless Hamish redirects`;
+    }
+    return `v${major}-gmut-thos-v${nextSubphase}-x1 with Lumen Vale solo unless Hamish redirects`;
+  }
   if ([2, 6].includes(nextSubphase)) {
     return `v${major}-gmut-thos-v${nextSubphase}-x1 with Arby and Cicero unless Hamish redirects`;
   }

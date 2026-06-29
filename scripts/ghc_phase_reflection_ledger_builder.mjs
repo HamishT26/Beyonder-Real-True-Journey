@@ -26,7 +26,7 @@ function utcNow() {
 }
 
 function readJson(path) {
-  return JSON.parse(readFileSync(path, "utf8"));
+  return JSON.parse(readFileSync(path, "utf8").replace(/^\uFEFF/, ""));
 }
 
 const manifest = readJson(manifestPath);

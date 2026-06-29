@@ -20,8 +20,9 @@ const generated = new Date();
 const generatedUtc = generated.toISOString();
 const generatedNz = nzTimestamp(generated);
 
-const handoffJsonPath = path.join(tracesDir, `${phaseSlug}-lumen-handoff-message-v1.json`);
-const handoffMdPath = path.join(tracesDir, `${phaseSlug}-lumen-handoff-message-v1.md`);
+const handoffBase = args.get("--handoff-base") || firstExistingHandoffBase(phaseSlug);
+const handoffJsonPath = path.join(tracesDir, `${handoffBase}.json`);
+const handoffMdPath = path.join(tracesDir, `${handoffBase}.md`);
 const handoff = readJson(handoffJsonPath);
 handoff.live_send_status = sendStatus;
 handoff.browser_send_verification = {
@@ -40,7 +41,7 @@ const receipt = {
   generated_utc: generatedUtc,
   generated_nz: generatedNz,
   phase_slug: phaseSlug,
-  overall_status: responseControlVisible ? "PASS_LUMEN_BROWSER_HANDOFF_SUBMITTED" : "OPEN_GAP_LUMEN_BROWSER_HANDOFF_SUBMISSION_UNVERIFIED",
+  overall_status: browserSendOverallStatus(sendStatus, responseControlVisible),
   intended_recipient: "Lumen Vale",
   route: "in_app_browser_current_lumen_thread",
   send_status: sendStatus,
@@ -261,6 +262,27 @@ function publicationBoundary() {
     local_absolute_paths_published: false,
     screenshots_published: false,
   };
+}
+
+function browserSendOverallStatus(status, controlVisible) {
+  if (status === "browser_send_submitted_response_completed_ready_for_harvest") {
+    return "PASS_LUMEN_BROWSER_HANDOFF_COMPLETED_READY_FOR_HARVEST";
+  }
+  if (status === "browser_send_submitted_response_active" && controlVisible) {
+    return "PASS_LUMEN_BROWSER_HANDOFF_SUBMITTED_RESPONSE_ACTIVE";
+  }
+  return controlVisible ? "PASS_LUMEN_BROWSER_HANDOFF_SUBMITTED" : "OPEN_GAP_LUMEN_BROWSER_HANDOFF_SUBMISSION_UNVERIFIED";
+}
+
+function firstExistingHandoffBase(slug) {
+  const candidates = [
+    `${slug}-lumen-handoff-message-v1`,
+    `${slug}-lumen-browser-handoff-v1`,
+  ];
+  for (const candidate of candidates) {
+    if (fs.existsSync(path.join(tracesDir, `${candidate}.json`))) return candidate;
+  }
+  return candidates[0];
 }
 
 function boundarySentence() {

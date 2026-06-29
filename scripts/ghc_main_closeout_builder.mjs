@@ -33,7 +33,7 @@ if (!builder) {
   process.exit(2);
 }
 
-const childArgs = args.includes("--phase-slug") ? args : ["--phase-slug", phaseSlug, ...args];
+const childArgs = childArgsForBuilder(phaseSlug, builder, args);
 const child = spawnSync(process.execPath, [path.join(__dirname, builder), ...childArgs], {
   cwd: path.resolve(__dirname, ".."),
   encoding: "utf8",
@@ -51,6 +51,47 @@ const result = {
 
 process.stdout.write(JSON.stringify(result, null, 2) + "\n");
 process.exit(child.status ?? 1);
+
+function childArgsForBuilder(slug, builderName, originalArgs) {
+  const childArgs = originalArgs.includes("--phase-slug") ? [...originalArgs] : ["--phase-slug", slug, ...originalArgs];
+  if (builderName !== "ghc_lumen_x2_closeout_builder.mjs") {
+    return childArgs;
+  }
+  const defaults = lumenX2Defaults(slug);
+  if (!defaults) {
+    return childArgs;
+  }
+  for (const [flag, value] of Object.entries(defaults)) {
+    if (!childArgs.includes(flag)) {
+      childArgs.push(flag, value);
+    }
+  }
+  return childArgs;
+}
+
+function lumenX2Defaults(slug) {
+  const match = slug.match(/^v(\d+)-gmut-thos-v(1|3|5|7)-x2$/);
+  if (!match) {
+    return null;
+  }
+  const major = Number(match[1]);
+  const lumenLane = Number(match[2]);
+  const nextLane = lumenLane + 1;
+  const nextAfterLane = nextLane + 1;
+  const sourceX1 = `v${major}-gmut-thos-v${lumenLane}-x1`;
+  const nextActive = `v${major}-gmut-thos-v${nextLane}-x1`;
+  const nextX2Scope = `v${major}-gmut-thos-v${nextLane}-x2`;
+  const afterX2 = nextAfterLane <= 8
+    ? `v${major}-gmut-thos-v${nextAfterLane}-x1 Lumen${nextAfterLane === 3 ? "-only" : ""} unless Hamish redirects`
+    : `v${major + 1}-gmut-thos-v1-x1 Lumen-only unless Hamish redirects`;
+  return {
+    "--source-x1": sourceX1,
+    "--next-active-phase": nextActive,
+    "--next-x2-scope": nextX2Scope,
+    "--next-x1-after-x2": afterX2,
+    "--status": `PASS_V${major}_V${lumenLane}_X2_CLOSED_V${major}_V${nextLane}_X1_READY`,
+  };
+}
 
 function builderForPhase(slug, explicitBuilder) {
   if (explicitBuilder) {
@@ -280,6 +321,114 @@ function builderForPhase(slug, explicitBuilder) {
   }
   if (slug === "v558-gmut-thos-v6-x2") {
     return "ghc_v558_v6_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v559-gmut-thos-v7-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v559-gmut-thos-v7-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v559-gmut-thos-v8-x1") {
+    return "ghc_v559_v8_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v559-gmut-thos-v8-x2") {
+    return "ghc_v559_v8_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v1-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v1-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v2-x1") {
+    return "ghc_v560_v2_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v2-x2") {
+    return "ghc_v560_v2_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v3-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v3-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v4-x1") {
+    return "ghc_v560_v4_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v4-x2") {
+    return "ghc_v560_v4_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v5-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v5-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v6-x1") {
+    return "ghc_v560_v6_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v6-x2") {
+    return "ghc_v560_v6_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v7-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v7-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v8-x1") {
+    return "ghc_v560_v8_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v560-gmut-thos-v8-x2") {
+    return "ghc_v560_v8_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v1-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v1-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v2-x1") {
+    return "ghc_v561_v2_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v2-x2") {
+    return "ghc_v561_v2_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v3-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v3-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v4-x1") {
+    return "ghc_v561_v4_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v4-x2") {
+    return "ghc_v561_v4_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v5-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v5-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v6-x1") {
+    return "ghc_v561_v6_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v6-x2") {
+    return "ghc_v561_v6_x2_duo_queue_executor_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v7-x1") {
+    return "ghc_lumen_x1_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v7-x2") {
+    return "ghc_lumen_x2_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v8-x1") {
+    return "ghc_v561_v8_x1_duo_closeout_builder.mjs";
+  }
+  if (slug === "v561-gmut-thos-v8-x2") {
+    return "ghc_v561_v8_x2_duo_queue_executor_closeout_builder.mjs";
   }
   return null;
 }

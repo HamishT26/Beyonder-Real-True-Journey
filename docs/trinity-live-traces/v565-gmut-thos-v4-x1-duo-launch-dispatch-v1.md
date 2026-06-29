@@ -1,0 +1,22 @@
+# v565-gmut-thos-v4-x1 Duo Launch Dispatch
+
+Status: `PASS_DUO_PROMPTS_SUBMITTED_BACKGROUND_SUPERVISED`
+
+- Lane: `Mira Vale and Rowan Vale`
+- Launch skill: `ghc-mira-vale-rowan-vale-launch`
+- Next x2 scope: `v565-gmut-thos-v4-x2`
+- Next x1 after x2: `v565-gmut-thos-v5-x1 Lumen-only unless Hamish redirects`
+- Background supervised: `true`
+
+## Siblings
+
+- Mira Vale: `submitted_background_supervised`, raw handle published `false`.
+- Rowan Vale: `submitted_background_supervised`, raw handle published `false`.
+
+## Closeout Rule
+
+Run `scripts/ghc_complete_incomplete_checklist_runner.mjs` before x1 and x2 closeout. Exact-approval and blocked rows remain queued out of scope.
+
+## Boundary
+
+No raw private material, browser routes, private ids, raw transcripts, screenshots, credentials, local absolute paths, raw app state, hidden reasoning, proof closure, canon promotion, legal closure, deployment, account mutation, API-key creation, or sibling identity replacement is published or claimed.

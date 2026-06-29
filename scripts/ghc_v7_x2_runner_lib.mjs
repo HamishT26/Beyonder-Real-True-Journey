@@ -12,7 +12,7 @@ export async function runV7X2Runner({ runnerName }) {
   if (!runner) throw new Error(`Unknown v7 x2 runner: ${runnerName}`);
 
   const startedAt = new Date();
-  const context = loadContext();
+  const context = { ...loadContext(), phaseSlug };
   const result = runner.run(context);
   const status = result.issues.length === 0 ? runner.passStatus : "FAIL_" + runner.passStatus.replace(/^PASS_/, "");
   const receipt = {
@@ -145,8 +145,12 @@ const runnerDefinitions = {
       const checks = [];
       check(ctx.current.status === ctx.latestBeacon.status, "Current state matches latest-updates status", checks, issues);
       check(ctx.current.status === ctx.ghcBeacon.status, "Current state matches GHC beacon status", checks, issues);
-      check(ctx.current.latest_closed_phase === "v552-gmut-thos-v88-v7-x1", "Latest closed phase is v7 x1", checks, issues);
-      check(ctx.v7Closeout.overall_status === "PASS_V552_V7_X1_LUMEN_ADVISORY_CLOSEOUT", "v7 x1 closeout is present", checks, issues);
+      check(ctx.current.current_active_phase === ctx.phaseSlug, "Current state matches requested phase", checks, issues);
+      for (const field of ["current_active_phase", "latest_closed_phase", "latest_completed_x1_phase", "latest_completed_x2_phase", "next_x2_scope"]) {
+        check(ctx.current[field] === ctx.latestBeacon[field], `${field} matches latest-updates beacon`, checks, issues);
+        check(ctx.current[field] === ctx.ghcBeacon[field], `${field} matches GHC beacon`, checks, issues);
+      }
+      check(Boolean(ctx.current.latest_closed_phase), "Latest closed phase is recorded", checks, issues);
       return result(checks, issues, ["omega-mini-current-state-v1.json", "omega-mini-latest-updates-beacon-v1.json", "ghc-current-state-beacon-v1.json"], { status: ctx.current.status });
     },
   },

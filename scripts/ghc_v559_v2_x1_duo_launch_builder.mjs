@@ -7,6 +7,10 @@ const args = parseArgs();
 const root = args.get("--root") || repoRoot(import.meta.url);
 const phaseSlug = args.get("--phase-slug") || "v559-gmut-thos-v2-x1";
 const createPrivateDropbox = args.get("--create-private-dropbox") === "true";
+const latestClosedPhase = args.get("--latest-closed-phase") || "v559-gmut-thos-v1-x2";
+const nextX2Scope = args.get("--next-x2") || phaseSlug.replace(/-x1$/, "-x2");
+const nextX1AfterX2 = args.get("--next-x1-after-x2") || "not_recorded";
+const passStatus = args.get("--status") || `PASS_${phaseSlug.toUpperCase().replaceAll("-", "_")}_DUO_LAUNCHED_BACKGROUND_SUPERVISED`;
 
 const now = new Date();
 const generatedUtc = now.toISOString().replace(/\.\d{3}Z$/, "Z");
@@ -74,11 +78,12 @@ const claimBoundary = {
 const launchReceipt = {
   schema: "ghc.duo_launch_receipt.v2",
   phase_slug: phaseSlug,
-  status: "PASS_V559_V2_X1_DUO_LAUNCHED_BACKGROUND_SUPERVISED",
+  status: passStatus,
   generated_utc: generatedUtc,
   generated_nz: generatedNz,
-  latest_closed_phase: "v559-gmut-thos-v1-x2",
-  next_x2_scope: "v559-gmut-thos-v2-x2",
+  latest_closed_phase: latestClosedPhase,
+  next_x2_scope: nextX2Scope,
+  next_x1_after_x2: nextX1AfterX2,
   active_lane: {
     profile: "mira-rowan-neris-sol",
     members: ["Aevren", "Mira Rowan", "Neris Sol"],
@@ -122,7 +127,7 @@ const launchReceipt = {
   claim_boundary: claimBoundary,
   next_action: "Run productive five-minute cadence work, then harvest Mira Rowan and Neris Sol at the next natural safe pause.",
   summary: [
-    "Mira Rowan and Neris Sol were launched as the scheduled v559 v2 x1 duo.",
+    `Mira Rowan and Neris Sol were launched as the scheduled ${phaseSlug} duo.`,
     "The launch used existing private routes and did not spawn new agents.",
     "Background supervision and no-babysit productive cadence are active."
   ]
@@ -196,7 +201,7 @@ const written = [
 ];
 
 console.log(JSON.stringify({
-  status: "PASS_V559_V2_X1_DUO_LAUNCH_BUILDER",
+  status: `PASS_${phaseSlug.toUpperCase().replaceAll("-", "_")}_DUO_LAUNCH_BUILDER`,
   phase_slug: phaseSlug,
   written,
   private_dropbox_created: createPrivateDropbox

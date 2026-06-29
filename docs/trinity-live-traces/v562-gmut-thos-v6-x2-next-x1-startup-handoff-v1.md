@@ -1,0 +1,7 @@
+# v562-gmut-thos-v6-x2 next-x1-startup-handoff
+
+Status: PASS_NEXT_X1_STARTUP_HANDOFF_READY
+
+Generated NZ: 2026-06-27T15:52:13+12:00
+
+Boundary: sanitized artifact only. Raw Browser routes, private URLs, raw transcripts, screenshots, credentials, local private paths, session streams, private app state, private dumps, and hidden reasoning are not published.

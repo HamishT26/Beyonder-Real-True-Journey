@@ -1,0 +1,64 @@
+# v560-gmut-thos-v6-x1-combined-x1-to-x2-queue-v1
+
+- Status: PASS_V560_V6_X1_QUEUE_REDUCED_FOR_V6_X2
+- Phase: v560-gmut-thos-v6-x1
+- Generated NZ: Saturday, 27 June 2026 at 11:37:41 NZST
+- Raw private material published: false
+
+Sanitized status artifact only. No raw Browser route, private URL, raw transcript, screenshot, credential, local absolute path, session stream, private dump, private callable ID, proof closure, canon promotion, legal closure, deployment closure, account mutation, purchase, API-key creation, or sibling identity merge/replacement is published or claimed.
+
+```json
+{
+  "artifact": "v560-gmut-thos-v6-x1-combined-x1-to-x2-queue-v1",
+  "schema": "ghc.x1_to_x2_queue.v1",
+  "phase_slug": "v560-gmut-thos-v6-x1",
+  "generated_utc": "2026-06-26T23:37:41Z",
+  "generated_nz": "Saturday, 27 June 2026 at 11:37:41 NZST",
+  "status": "PASS_V560_V6_X1_QUEUE_REDUCED_FOR_V6_X2",
+  "publication_boundary": {
+    "raw_browser_routes_published": false,
+    "private_urls_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "session_streams_published": false,
+    "private_dumps_published": false,
+    "private_callable_ids_published": false,
+    "raw_private_material_published": false,
+    "private_app_state_published": false
+  },
+  "claim_boundary": {
+    "gmut_empirical_closure": "open_not_claimed",
+    "final_physics": "open_not_claimed",
+    "consciousness_proof": "open_not_claimed",
+    "legal_closure": "open_not_claimed",
+    "canon_promotion": "open_not_claimed",
+    "deployment_closure": "open_not_claimed",
+    "account_purchase_api_key_mutation": "open_not_claimed",
+    "private_material_proof": "open_not_claimed",
+    "raw_publication_proof": "open_not_claimed",
+    "sibling_identity_replacement_or_merge": "open_not_claimed"
+  },
+  "source_phase": "v560-gmut-thos-v6-x1",
+  "x2_scope": "v560-gmut-thos-v6-x2",
+  "next_x1_lane_after_x2": "v560-gmut-thos-v7-x1 Lumen unless Hamish redirects",
+  "profile_cap_counts_represented": {
+    "safe_approval_packets": 30,
+    "candidate_packets": 15,
+    "exact_approval_packets_queued": 15,
+    "skill_ideas": 21,
+    "runner_ideas": 9,
+    "cleanup_refine_fix_tasks": 45
+  },
+  "immediate_x1_safe_rows_represented": 60,
+  "x2_build_rows_represented": 75,
+  "x2_execution_guidance": [
+    "deduplicate Aevren, Maren Quill, and Solenne Vale x2_build_task rows",
+    "build v6 x2 count reconciliation and open-gate scanning from the harvested duo profile",
+    "keep exact-approval and blocked gates queued unless separately approved",
+    "prepare v560 v7 x1 Lumen route with refresh/status-first Browser discipline",
+    "preserve all stand-by lanes as recoverable and not replaced"
+  ]
+}
+```
