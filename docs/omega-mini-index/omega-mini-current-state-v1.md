@@ -1,20 +1,13 @@
-# Omega-Mini Current State
+# v576-gmut-thos-v2-x1
 
-Status: PASS_DUO_X2_CLOSED_NEXT_X1_READY
-Current active phase: post-v575-continuation-exact-gated
-Latest closed phase: v575-gmut-thos-v8-x2
-Latest completed x1: v575-gmut-thos-v8-x1
-Latest completed x2: v575-gmut-thos-v8-x2
-Next expected scope: post-v575-continuation-exact-gated
-Next x2 scope: post-v575-continuation-exact-gated
-Next x1 lane after x2: post-v575 continuation exact-gated unless Hamish redirects
+Status: PASS_V576_V1_X2_CLOSED_MIRA_ROWAN_NEXT_READY
 
-## Duo X2 Closeout
+- Current active phase: v576-gmut-thos-v2-x1
+- Latest closed phase: v576-gmut-thos-v1-x2
+- Latest completed x1: v576-gmut-thos-v1-x1
+- Latest completed x2: v576-gmut-thos-v1-x2
+- Next x2 scope: v576-gmut-thos-v2-x2
+- Next x1 lane after x2: v576-gmut-thos-v3-x1 with Mira Vale-only solo bundle unless Hamish redirects
+- Full v544-v575 goal complete: false.
 
-- Status: `PASS_DUO_X2_CLOSED_NEXT_X1_READY`
-- Source x1: `v575-gmut-thos-v8-x1`
-- Next launch skill: `post-v575-exact-gated`
-
-## Safety Boundary
-
-Sanitized state only. Raw Browser routes, private URLs, raw transcripts, screenshots, credentials, local private paths, session streams, private app state, private dumps, and hidden reasoning are not published.
+Sanitized beacon only. Raw handles, browser routes, private URLs, transcripts, screenshots, credentials, local private paths, session streams, and private app state are not published here.

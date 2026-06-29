@@ -1,0 +1,32 @@
+# v576-gmut-thos-v1-x1 lumen-sanitized-proposal-queue
+
+Status: PASS_LUMEN_QUEUE_REDUCED_FOR_NEXT_X2
+
+Generated NZ: 2026-06-29T13:58:40+12:00
+
+Boundary: sanitized reduction only. Raw Lumen text, browser routes, private URLs, private IDs, screenshots, credentials, local private paths, session streams, app state, and hidden reasoning are not published.
+
+## Queue Counts
+
+- total: 241
+- immediate_x1_safe: 129
+- x2_build_task: 112
+- safe_now: 180
+- exact_approval_needed: 33
+- blocked: 22
+- candidate: 6
+
+## Expected Profile
+
+- safe_approval_packets: 50
+- candidate_packets: 30
+- exact_approval_packets_queued: 20
+- blocked_packets_queued: 10
+- skill_ideas: 20
+- runner_ideas: 10
+- cleanup_refine_fix_tasks: 30
+
+Next x2 scope: v576-gmut-thos-v1-x2
+
+Next x1 lane after x2: v576-gmut-thos-v2-x1 with Mira Rowan-only solo bundle unless Hamish redirects
+
