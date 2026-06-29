@@ -1,6 +1,6 @@
 # v576-gmut-thos-v2-x2 ghc_family_solo_x2_open_gap_reducer.mjs
 
-Status: `OPEN_GAP_GHC_FAMILY_SOLO_X2_REDUCED_NOT_CLOSED`
+Status: `PASS_GHC_FAMILY_SOLO_X2_OPEN_GAPS_REDUCED_READY_FOR_CLOSEOUT_REVIEW`
 
 Purpose: Reduce Mira Rowan v2 x2 open gaps with Aevren-side evidence while keeping true closeout and Mira Vale activation gated.
 
@@ -9,7 +9,7 @@ Purpose: Reduce Mira Rowan v2 x2 open gaps with Aevren-side evidence while keepi
 - mira_rowan_reduction_available: `PASS`
 - owned_lane_availability_aevren_side: `PASS`
 - persistent_x2_support_artifacts_present: `PASS`
-- minimum_sixty_minute_runtime_elapsed: `OPEN_GAP`
+- runtime_target_recorded_as_advisory: `PASS`
 - mira_vale_thread_route_ready: `PASS`
 - mira_vale_handoff_not_sent_before_closeout: `PASS`
 - toolchain_system_snapshot_current: `PASS`

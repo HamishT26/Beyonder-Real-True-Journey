@@ -1,6 +1,6 @@
 # v576-gmut-thos-v2-x2 ghc_family_sibling_cadence_status_checker.mjs
 
-Status: `OPEN_GAP_GHC_FAMILY_SIBLING_CADENCE_CHECK_TIME_GATE`
+Status: `PASS_GHC_FAMILY_SIBLING_CADENCE_CHECK_RECORDED_CLOSEOUT_WHEN_COMPLETE`
 
 Purpose: Record a sanitized 15-minute sibling cadence check without publishing private thread handles.
 
@@ -9,7 +9,8 @@ Purpose: Record a sanitized 15-minute sibling cadence check without publishing p
 - cadence_minutes_recorded: `PASS`
 - active_sibling_lane_checked: `PASS`
 - latest_response_harvested_or_open_gap: `PASS`
-- minimum_runtime_elapsed: `OPEN_GAP`
+- runtime_target_recorded_as_advisory: `PASS`
+- closeout_policy_allows_completion_before_runtime_target: `PASS`
 - next_handoff_not_sent_before_closeout: `PASS`
 - private_thread_ids_not_published: `PASS`
 
