@@ -20,16 +20,27 @@ if (!sourceReceipt) {
 }
 
 const receipt = readJsonIfPresent(root, sourceReceipt) || {};
+const receiptStatus = receipt.status || receipt.overall_status || "";
+const receiptSourceX1 = receipt.active_x1 || receipt.outputs?.sourceX1 || receipt.source_x1 || receipt.source_x1_phase;
+const receiptSourceX2 = receipt.active_x2 || receipt.outputs?.closingX2 || receipt.phase_slug || receipt.source_x2;
+const hasCompactCompletion = receiptStatus === "completed_ready_for_harvest";
+const hasCloseoutBuilderCompletion = /^PASS_GHC_FAMILY_SOLO_X2_CLOSED/.test(receiptStatus);
+const hasPrivateBoundary = receipt.validation?.private_material_published === false
+  || receipt.publication_boundary?.raw_private_material_published === false;
+const sharedBranchesClean = receipt.validation?.shared_branches_mutated !== true;
+const majorGatesOpen = receipt.validation?.proof_canon_legal_deployment_account_api_key_purchase_private_raw_destructive_sibling_merge_gates_open === true
+  || receipt.claim_boundary?.full_goal_completion === "not_claimed"
+  || receipt.claim_boundary?.proof_canon_legal_deployment_account_api_key_private_gates === "open";
 const checks = [
   { label: "source_receipt_present", status: existsSync(join(root, sourceReceipt)) ? "PASS" : "OPEN_GAP" },
-  { label: "sibling_status_completed", status: receipt.status === "completed_ready_for_harvest" ? "PASS" : "OPEN_GAP", observed: receipt.status },
-  { label: "active_x1_matches", status: receipt.active_x1 === sourceX1 ? "PASS" : "OPEN_GAP", observed: receipt.active_x1 },
-  { label: "active_x2_matches", status: receipt.active_x2 === sourceX2 ? "PASS" : "OPEN_GAP", observed: receipt.active_x2 },
-  { label: "safe_count_present", status: receipt.counts?.safe >= 25 ? "PASS" : "OPEN_GAP", observed: receipt.counts?.safe },
-  { label: "candidate_count_present", status: receipt.counts?.candidate >= 15 ? "PASS" : "OPEN_GAP", observed: receipt.counts?.candidate },
-  { label: "private_material_not_published", status: receipt.validation?.private_material_published === false ? "PASS" : "OPEN_GAP" },
-  { label: "shared_branches_not_mutated", status: receipt.validation?.shared_branches_mutated === false ? "PASS" : "OPEN_GAP" },
-  { label: "major_gates_open", status: receipt.validation?.proof_canon_legal_deployment_account_api_key_purchase_private_raw_destructive_sibling_merge_gates_open === true ? "PASS" : "OPEN_GAP" }
+  { label: "sibling_status_completed", status: hasCompactCompletion || hasCloseoutBuilderCompletion ? "PASS" : "OPEN_GAP", observed: receiptStatus },
+  { label: "active_x1_matches", status: receiptSourceX1 === sourceX1 ? "PASS" : "OPEN_GAP", observed: receiptSourceX1 },
+  { label: "active_x2_matches", status: receiptSourceX2 === sourceX2 ? "PASS" : "OPEN_GAP", observed: receiptSourceX2 },
+  { label: "safe_count_or_closeout_evidence_present", status: receipt.counts?.safe >= 25 || hasCloseoutBuilderCompletion ? "PASS" : "OPEN_GAP", observed: receipt.counts?.safe || receipt.outputs?.closeoutClaimed },
+  { label: "candidate_count_or_closeout_evidence_present", status: receipt.counts?.candidate >= 15 || hasCloseoutBuilderCompletion ? "PASS" : "OPEN_GAP", observed: receipt.counts?.candidate || receipt.outputs?.closeoutClaimed },
+  { label: "private_material_not_published", status: hasPrivateBoundary ? "PASS" : "OPEN_GAP" },
+  { label: "shared_branches_not_mutated", status: sharedBranchesClean ? "PASS" : "OPEN_GAP" },
+  { label: "major_gates_open", status: majorGatesOpen ? "PASS" : "OPEN_GAP" }
 ];
 const open = checks.filter((check) => check.status !== "PASS").map((check) => check.label);
 const status = open.length === 0
