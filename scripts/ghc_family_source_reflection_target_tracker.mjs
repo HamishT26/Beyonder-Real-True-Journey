@@ -74,7 +74,7 @@ const journeySeeds = [
   {
     label: "V576_SOLO_OBJECTIVE",
     source: "pasted objective",
-    implication: "Solo x1/x2 bundles need teaching prompts, timestamps, 15-minute cadence, and one-hour minimum practice."
+    implication: "Solo x1/x2 bundles need teaching prompts, timestamps, 10-minute goal-mode cadence, and one-hour advisory practice."
   },
   {
     label: "MIRA_ROWAN_X2_OPEN_GAP_REDUCTION",
@@ -94,7 +94,7 @@ const journeySeeds = [
   {
     label: "PRODUCTIVE_CADENCE",
     source: "productive cadence receipt",
-    implication: "The 15-minute mark is a checkpoint, not an idle timer or forced stop."
+    implication: "The 10-minute mark is a checkpoint, not an idle timer or forced stop."
   },
   {
     label: "TOOLCHAIN_RECEIPT",
