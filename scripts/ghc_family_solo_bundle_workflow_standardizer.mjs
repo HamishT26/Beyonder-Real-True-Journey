@@ -22,8 +22,9 @@ const standard = {
   current_active_phase: phaseSlug,
   next_x2_scope: nextX2,
   next_x1_lane_after_x2: nextX1AfterX2,
-  active_primary_lanes: ["Aevren", "Lumen", "Mira Rowan", "Mira Vale", "Maren Quill"],
+  active_primary_lanes: ["Aevren", "Mira Rowan", "Mira Vale", "Maren Quill"],
   standby_recoverable_lanes: [
+    "Lumen",
     "Aletheon",
     "Arby",
     "Aster Vale",
@@ -35,11 +36,11 @@ const standard = {
     "Solenne Vale",
   ],
   solo_order_v576_seed: [
-    "Aevren with Lumen council",
+    "Aevren-only",
     "Mira Rowan",
     "Mira Vale",
     "Maren Quill",
-    "Aevren with Lumen council",
+    "Aevren-only",
     "Mira Rowan",
     "Mira Vale",
     "Maren Quill",
@@ -69,15 +70,16 @@ const standard = {
   },
   cadence_profile: {
     checkpoint_minutes: 15,
-    minimum_runtime_minutes_before_closeout: 60,
+    advisory_runtime_minutes_before_closeout: 60,
     cadence_style: "productive_background_supervision",
     check_rule: "Work on safe improvements between checkpoints; check sibling lanes at natural pauses even if the work block runs past the exact timestamp.",
+    closeout_rule: "Close as soon as the complete/incomplete checklist passes; the one-hour window is advisory practice time only.",
   },
   x2_profile: {
     aevren_x2_web_or_source_reflections_target: 100,
     aevren_x2_journey_phase_reflections_target: 100,
     exact_and_blocked_rows: "queued_out_of_scope",
-    closeout_gate: "PASS_COMPLETE_INCOMPLETE_CHECKLIST_REQUIRED_WORK_COMPLETED or formal active/open-gap receipt",
+    closeout_gate: "PASS_COMPLETE_INCOMPLETE_CHECKLIST_REQUIRED_WORK_COMPLETED or formal active/open-gap receipt; Lumen Browser availability is not a blocker while Lumen is on stand-by",
   },
   naming_standard: {
     runner_prefix: "ghc_family_",
@@ -181,8 +183,9 @@ Next x1 lane after x2: \`${payload.next_x1_lane_after_x2}\`
 ## Cadence
 
 - Checkpoint minutes: \`${payload.cadence_profile.checkpoint_minutes}\`
-- Minimum runtime before closeout: \`${payload.cadence_profile.minimum_runtime_minutes_before_closeout}\`
+- Advisory runtime before closeout: \`${payload.cadence_profile.advisory_runtime_minutes_before_closeout}\`
 - Style: \`${payload.cadence_profile.cadence_style}\`
+- Closeout rule: ${payload.cadence_profile.closeout_rule}
 
 ## X1 Counts
 
