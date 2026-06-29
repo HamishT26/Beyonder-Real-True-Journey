@@ -71,10 +71,10 @@ writeFamilyReceipt({
     earliestCloseoutUtc,
     oneHourElapsed,
     activeAndStandbySummary: [
-      "Mira Rowan: active v2 x2 lane, latest visible response completed as formal open-gap and reduced.",
-      "Mira Vale: route ready, activation not sent before v2 x2 closeout.",
-      "Maren Quill: standby until Mira Vale v3 bundle completes or Hamish redirects.",
-      "Lumen: support/council route available when Aevren solo phases need council."
+      `${activeSibling}: current checked lane status is ${laneStatus}.`,
+      `Latest response status: ${latestResponseStatus}.`,
+      "Next sibling handoff stays gated until the active x1/x2 checklist passes or a formal open-gap is accepted.",
+      "Lumen remains support/council for Aevren solo phases when the verified Browser route is available."
     ],
     closeoutBoundary: "Continue 15-minute checks. Close the phase as soon as the completion checklist passes; the one-hour window is an advisory practice target, not a hard blocker."
   },

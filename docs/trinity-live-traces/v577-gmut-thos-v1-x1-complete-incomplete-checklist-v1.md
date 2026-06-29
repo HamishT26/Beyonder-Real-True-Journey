@@ -8,6 +8,6 @@ Open checks: live Lumen council is prepared-not-sent, and x2 safe-build work wai
 
 Closeout is not allowed yet. The one-hour window remains advisory only; the real closeout gate is the checklist.
 
-Latest checkpoint: toolchain and drive-space snapshot passed. Codex CLI is current at 0.142.4, C: remains above the warning floor, D: remains the work/artifact target, x2 remains not started, and closeout remains blocked.
+Latest checkpoint: the 15-minute checker was refreshed to the current v577 v1 state, the cadence runner now records the one-hour window as advisory only, and the family completion inventory remains open with two expected gaps: live Lumen council is prepared-not-sent and the verified Lumen Browser handle is not exposed in this checkpoint. Closeout remains blocked.
 
 No private thread IDs, private routes, local absolute paths, raw transcripts, screenshots, credentials, or hidden reasoning are published here.

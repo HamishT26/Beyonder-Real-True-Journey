@@ -37,6 +37,6 @@ writeFamilyReceipt({
     cadenceMinutes,
     minimumRuntimeMinutes,
     practiceRule: "Do safe local validation, cleanup, runner, skill, and reflection work between lane checks; check at natural pauses if work runs over the exact minute.",
-    closeoutRule: "Do not close a solo practice bundle before the minimum runtime and checklist completion unless a formal open-gap/pause receipt is created."
+    closeoutRule: "Close a solo practice bundle as soon as the complete/incomplete checklist passes; the one-hour runtime is advisory practice context, not a hard blocker."
   }
 });
