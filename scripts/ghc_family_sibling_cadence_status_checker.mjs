@@ -8,7 +8,7 @@ const activeSibling = args.get("--active-sibling") || "Mira Rowan";
 const laneStatus = args.get("--lane-status") || "idle_completed_open_gap_harvested";
 const latestResponseStatus = args.get("--latest-response-status") || "formal_open_gap_reduced";
 const launchTime = args.get("--lane-launch-time") || "2026-06-29T18:34:26+12:00";
-const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
 const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 60);
 const closeoutPolicy = args.get("--closeout-policy") || "close_when_completion_checklist_passes";
 const now = new Date();
@@ -24,7 +24,7 @@ const oneHourElapsed = elapsedMinutes >= minimumRuntimeMinutes;
 const closeoutWhenComplete = closeoutPolicy === "close_when_completion_checklist_passes";
 
 const checks = [
-  { label: "cadence_minutes_recorded", status: cadenceMinutes === 15 ? "PASS" : "OPEN_GAP", observed: cadenceMinutes },
+  { label: "cadence_minutes_recorded", status: cadenceMinutes === 10 ? "PASS" : "OPEN_GAP", observed: cadenceMinutes },
   { label: "active_sibling_lane_checked", status: activeSibling ? "PASS" : "OPEN_GAP" },
   { label: "latest_response_harvested_or_open_gap", status: latestResponseStatus ? "PASS" : "OPEN_GAP", observed: latestResponseStatus },
   {
@@ -46,7 +46,7 @@ writeFamilyReceipt({
   root,
   phaseSlug,
   runnerName: "ghc_family_sibling_cadence_status_checker.mjs",
-  purpose: "Record a sanitized 15-minute sibling cadence check without publishing private thread handles.",
+  purpose: "Record a sanitized 10-minute sibling cadence check without publishing private thread handles.",
   status: open.length === 0
     ? "PASS_GHC_FAMILY_SIBLING_CADENCE_CHECK_RECORDED_CLOSEOUT_WHEN_COMPLETE"
     : "OPEN_GAP_GHC_FAMILY_SIBLING_CADENCE_CHECK_POLICY",
@@ -76,7 +76,7 @@ writeFamilyReceipt({
       "Next sibling handoff stays gated until the active x1/x2 checklist passes or a formal open-gap is accepted.",
       "Lumen remains stand-by/recoverable while the verified Browser route is unavailable; Aevren-only phases do not wait on Lumen Browser harvest."
     ],
-    closeoutBoundary: "Continue 15-minute checks. Close the phase as soon as the completion checklist passes; the one-hour window is an advisory practice target, not a hard blocker."
+    closeoutBoundary: "Continue 10-minute checks. Close the phase as soon as the completion checklist passes; the one-hour window is an advisory practice target, not a hard blocker."
   },
   note: "This receipt records the checkpoint state only; it is not a sibling completion proof by itself."
 });
