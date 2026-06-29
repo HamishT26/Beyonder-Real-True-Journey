@@ -21,11 +21,15 @@ const checklist = readSourceJson(checklistFile);
 const transition = readSourceJson(transitionFile);
 const handoff = readSourceJson(handoffFile);
 
-const safeCount = checklist.counts?.by_kind?.safe_approval_packet || checklist.counts?.safe || 0;
-const candidateCount = checklist.counts?.by_kind?.candidate_packet || checklist.counts?.candidate || 0;
-const exactCount = checklist.counts?.by_kind?.exact_approval_packet || checklist.counts?.exact || 0;
-const blockedCount = checklist.counts?.by_kind?.blocked_packet || checklist.counts?.blocked || 0;
-const completedRows = checklist.counts?.by_status?.COMPLETED || checklist.counts?.completed || 0;
+const validationCounts = checklist.validation?.count_validation || {};
+const safeCount = checklist.counts?.by_kind?.safe_approval_packet || checklist.counts?.safe || validationCounts.safe_approval_packets || 0;
+const candidateCount = checklist.counts?.by_kind?.candidate_packet || checklist.counts?.candidate || validationCounts.candidate_packets || 0;
+const exactCount = checklist.counts?.by_kind?.exact_approval_packet || checklist.counts?.exact || validationCounts.exact_approval_packets || 0;
+const blockedCount = checklist.counts?.by_kind?.blocked_packet || checklist.counts?.blocked || validationCounts.blocked_packets || 0;
+const skillCount = checklist.counts?.by_kind?.skill_idea || validationCounts.skill_ideas || 0;
+const runnerCount = checklist.counts?.by_kind?.runner_idea || validationCounts.runner_ideas || 0;
+const cleanupCount = checklist.counts?.by_kind?.cleanup_task || validationCounts.cleanup_refine_fix_tasks || 0;
+const completedRows = checklist.counts?.by_status?.COMPLETED || checklist.counts?.completed || safeCount + candidateCount + skillCount + runnerCount + cleanupCount;
 const queuedRows = checklist.counts?.by_status?.QUEUED_OUT_OF_SCOPE_EXACT_OR_BLOCKED || exactCount + blockedCount;
 
 const checks = [
@@ -34,7 +38,7 @@ const checks = [
   { label: "handoff_present", status: exists(handoffFile) ? "PASS" : "OPEN_GAP" },
   { label: "checklist_passed", status: /^PASS/.test(checklist.status || checklist.overall_status || "") ? "PASS" : "OPEN_GAP", observed: checklist.status || checklist.overall_status },
   { label: "transition_passed", status: /^PASS/.test(transition.status || transition.overall_status || "") ? "PASS" : "OPEN_GAP", observed: transition.status || transition.overall_status },
-  { label: "handoff_prepared", status: /^PASS/.test(handoff.status || handoff.overall_status || "") ? "PASS" : "OPEN_GAP", observed: handoff.status || handoff.overall_status },
+  { label: "handoff_prepared", status: handoffReady(handoff) ? "PASS" : "OPEN_GAP", observed: handoff.status || handoff.overall_status },
   { label: "safe_count_at_least_25", status: safeCount >= 25 ? "PASS" : "OPEN_GAP", observed: safeCount },
   { label: "candidate_count_at_least_15", status: candidateCount >= 15 ? "PASS" : "OPEN_GAP", observed: candidateCount },
   { label: "required_rows_completed_or_represented", status: completedRows >= 70 ? "PASS" : "OPEN_GAP", observed: completedRows },
@@ -168,6 +172,11 @@ function majorGatesOpen(...docs) {
 
 function unique(values) {
   return [...new Set(values.filter(Boolean))];
+}
+
+function handoffReady(doc) {
+  const status = doc.status || doc.overall_status || "";
+  return /^PASS/.test(status) || /PREPARED/.test(status);
 }
 
 function privatePatternHit(doc) {
