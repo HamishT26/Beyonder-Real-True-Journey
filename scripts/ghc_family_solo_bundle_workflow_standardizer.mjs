@@ -65,14 +65,14 @@ const standard = {
       runner_ideas_total: 10,
       cleanup_refine_fix_tasks_total: 30,
     },
-    web_or_source_reflections_target: 60,
-    journey_phase_reflections_target: 60,
+    web_or_source_reflections_target: 100,
+    journey_phase_reflections_target: 100,
   },
   cadence_profile: {
-    checkpoint_minutes: 15,
+    checkpoint_minutes: 10,
     advisory_runtime_minutes_before_closeout: 60,
     cadence_style: "productive_background_supervision",
-    check_rule: "Work on safe improvements between checkpoints; check sibling lanes at natural pauses even if the work block runs past the exact timestamp.",
+    check_rule: "Use goal-mode as the primary continuation driver. Work on safe improvements between 10-minute checkpoints; check sibling lanes at natural pauses even if the work block runs past the exact timestamp.",
     closeout_rule: "Close as soon as the complete/incomplete checklist passes; the one-hour window is advisory practice time only.",
   },
   x2_profile: {

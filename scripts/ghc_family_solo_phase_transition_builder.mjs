@@ -37,9 +37,9 @@ const receipt = {
     reason_x2_not_closed: "x2 execution/build/cleanup lane has just been activated and still requires completion evidence or a formal open-gap receipt"
   },
   cadence: {
-    checkpoint_minutes: 15,
+    checkpoint_minutes: 10,
     minimum_runtime_minutes_before_x2_closeout: 60,
-    style: "productive_background_supervision_no_babysitting"
+    style: "goal_mode_productive_supervision_no_babysitting"
   },
   publication_boundary: publicationBoundary(),
   claim_boundary: claimBoundary()
