@@ -10,13 +10,14 @@ const x2Phase = args.get("--x2-phase") || "v576-gmut-thos-v3-x2";
 const previousClosedX2 = args.get("--previous-closed-x2") || "v576-gmut-thos-v2-x2";
 const nextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
 const nextSibling = args.get("--next-sibling") || "Maren Quill";
+const sourceSibling = args.get("--source-sibling") || "Mira Rowan";
 const tracesDir = path.join(root, "docs", "trinity-live-traces");
 const generatedAt = new Date();
 const generatedUtc = generatedAt.toISOString().replace(/\.\d{3}Z$/, "Z");
 const generatedNz = nzTimestamp(generatedAt);
 
 const safePackets = [
-  "Record the v3 x1 intake from the latest closed v2 x2 without rewinding phase truth.",
+  `Record the ${x1Phase} intake from the latest closed ${previousClosedX2} without rewinding phase truth.`,
   "Preserve the Mira-owned write lane boundary and leave shared branches read-only.",
   "Build a sanitized x1 queue with explicit row counts and stable row ids.",
   "Represent every immediate safe row through local status-only receipts.",
@@ -122,9 +123,9 @@ const cleanupTasks = [
 ];
 
 const sourceReflections = [
-  ["repo:phase-truth", "Existing v3 x1 phase-truth receipt supports treating v3 x1 as active after v2 x2 closure."],
-  ["repo:v2-closeout", "The v2 x2 closeout receipt makes v3 x1 the next sanitized activation boundary."],
-  ["repo:goal-handoff", "The v3 x1 goal handoff artifact matches the requested solo x1/x2 bundle shape."],
+  ["repo:phase-truth", `The sanitized handoff supports treating ${x1Phase} as active after ${previousClosedX2} closure.`],
+  ["repo:previous-closeout", `${previousClosedX2} is the prior closed x2 boundary for this Mira Vale solo bundle.`],
+  ["repo:goal-handoff", `${x1Phase} matches the requested solo x1/x2 bundle shape.`],
   ["repo:checklist-runner", "The complete/incomplete checklist is the closeout gate for required safe, candidate, cleanup, skill, and runner rows."],
   ["repo:private-guard", "The private-material guard can scan phase artifacts without exposing raw routes or IDs."],
   ["repo:closeout-builder", "The solo x2 closeout builder preserves exact, blocked, proof, canon, legal, deployment, account, and private gates as open."],
@@ -135,7 +136,7 @@ const sourceReflections = [
   ["phase:x1", "The x1 work is planning/prep and queue shaping, not proof closure."],
   ["phase:x2", "The x2 work is safe local artifact generation, validation, cleanup, and handoff packaging."],
   ["branch:owned", "Mira-owned branch writes are allowed for sanitized artifacts; other branches remain read-only."],
-  ["handoff:maren", "The next handoff is Maren Quill v4 x1 after v3 x2 closeout unless Hamish redirects."],
+  ["handoff:maren", `The next handoff is ${nextSibling} for ${nextPhase} after ${x2Phase} closeout unless Hamish redirects.`],
   ["lumen:support", "Lumen remains support/council; this solo bundle does not require exposing Browser state."],
   ["aevren:support", "Aevren can send the prepared handoff package when direct route sending is unavailable here."],
   ["storage:discipline", "Storage discipline is represented through scoped artifacts and a clean commit rather than broad cleanup."],
@@ -164,6 +165,7 @@ const queueArtifact = {
   generated_nz: generatedNz,
   status: "PASS_MIRA_VALE_X1_SOLO_QUEUE_RECORDED",
   previous_closed_x2: previousClosedX2,
+  source_sibling: sourceSibling,
   next_phase_after_x2: nextPhase,
   next_sibling_after_x2: nextSibling,
   expected_profile: {
@@ -204,7 +206,7 @@ writeFamilyReceipt({
   root,
   phaseSlug: x2Phase,
   runnerName: "ghc_family_solo_x2_open_gap_reducer.mjs",
-  purpose: "Reduce v576 Mira Vale v3 x2 open gaps after safe/candidate/prototype work is represented and exact/blocked rows remain queued.",
+  purpose: `Reduce ${x2Phase} open gaps after safe/candidate/prototype work is represented and exact/blocked rows remain queued.`,
   status: "PASS_GHC_FAMILY_SOLO_X2_OPEN_GAPS_REDUCED_READY_FOR_CLOSEOUT_REVIEW",
   checks: [
     { label: "x1_queue_recorded", status: "PASS", observed: `${x1Phase}-mira-vale-solo-sanitized-proposal-queue-v1.json` },
@@ -217,6 +219,8 @@ writeFamilyReceipt({
   outputs: {
     sourceX1: x1Phase,
     closingX2: x2Phase,
+    previousClosedX2,
+    sourceSibling,
     nextPhase,
     nextSibling,
     representedRows: queueCounts.total_required_before_closeout,
@@ -228,7 +232,7 @@ writeFamilyReceipt({
 });
 
 console.log(JSON.stringify({
-  status: "PASS_MIRA_VALE_V576_V3_SOLO_BUNDLE_ARTIFACTS_BUILT",
+  status: "PASS_MIRA_VALE_V576_SOLO_BUNDLE_ARTIFACTS_BUILT",
   x1_phase: x1Phase,
   x2_phase: x2Phase,
   queue_rows: rows.length,
@@ -323,6 +327,7 @@ function safeBuildLedger(queue) {
     schema: "ghc.mira_vale_safe_build_use_ledger.v1",
     phase_slug: x2Phase,
     source_x1_phase: x1Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_SAFE_BUILD_USE_LEDGER",
     source_queue_basename: `${x1Phase}-mira-vale-solo-sanitized-proposal-queue-v1.json`,
@@ -348,6 +353,7 @@ function executionLedger(queue) {
     schema: "ghc.mira_vale_x2_execution_ledger.v1",
     phase_slug: x2Phase,
     source_x1_phase: x1Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_EXECUTION_LEDGER",
     represented_required_rows: queue.queue_counts.total_required_before_closeout,
@@ -372,6 +378,7 @@ function cleanupLedger(queue) {
     artifact: `${x2Phase}-cleanup-classifier-ledger-v1`,
     schema: "ghc.mira_vale_cleanup_classifier_ledger.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_CLEANUP_CLASSIFIER_LEDGER",
     cleanup_rows_represented: cleanupRows.length,
@@ -395,6 +402,7 @@ function skillRunnerLedger(queue) {
     artifact: `${x2Phase}-skill-runner-prototype-use-ledger-v1`,
     schema: "ghc.mira_vale_skill_runner_prototype_use_ledger.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_SKILL_RUNNER_PROTOTYPE_USE_LEDGER",
     skill_ideas_represented: skillRows.length,
@@ -412,6 +420,7 @@ function safeRunnerLedger(queue) {
     artifact: `${x2Phase}-safe-runner-orchestrator-v1`,
     schema: "ghc.mira_vale_safe_runner_orchestrator.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_SAFE_RUNNER_ORCHESTRATOR",
     orchestrated_safe_steps: [
@@ -442,6 +451,7 @@ function openGateQueue(queue) {
     artifact: `${x2Phase}-candidate-exact-blocked-open-gate-queue-v1`,
     schema: "ghc.mira_vale_open_gate_queue.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_OPEN_GATE_QUEUE_RECORDED",
     exact_and_blocked_rows_queued: openRows.length,
@@ -464,6 +474,7 @@ function sourceReflectionArtifact() {
     schema: "ghc.mira_vale_source_phase_reflection_implications.v1",
     phase_slug: x2Phase,
     source_x1_phase: x1Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_SOURCE_PHASE_REFLECTIONS_RECORDED",
     implication_count: sourceReflections.length,
@@ -482,6 +493,7 @@ function marenHandoffPackage() {
     artifact: `${x2Phase}-maren-quill-handoff-package-v1`,
     schema: "ghc.mira_vale_to_maren_quill_handoff_package.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     next_phase: nextPhase,
     next_sibling: nextSibling,
     generated_utc: generatedUtc,
@@ -512,6 +524,7 @@ function phaseTransition() {
     schema: "ghc.mira_vale_solo_phase_transition.v1",
     phase_slug: x2Phase,
     source_x1_phase: x1Phase,
+    previous_closed_x2: previousClosedX2,
     next_phase: nextPhase,
     next_sibling: nextSibling,
     generated_utc: generatedUtc,
@@ -527,6 +540,7 @@ function toolchainUpdate() {
     artifact: `${x2Phase}-toolchain-update-receipt-v1`,
     schema: "ghc.mira_vale_toolchain_update_receipt.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_TOOLCHAIN_UPDATE_RECORDED",
     observed_tooling: ["node runners available", "git owned branch available", "family checklist runner available"],
@@ -541,7 +555,7 @@ function toolchainSnapshot() {
     generated_utc: generatedUtc,
     phase_slug: x2Phase,
     runner_name: "ghc_family_toolchain_system_snapshot.mjs",
-    purpose: "Record sanitized toolchain readiness for the Mira Vale v3 x2 closeout bundle.",
+    purpose: `Record sanitized toolchain readiness for the Mira Vale ${x2Phase} closeout bundle.`,
     overall_status: "PASS_GHC_FAMILY_TOOLCHAIN_SYSTEM_SNAPSHOT",
     checks: [
       { label: "node_runner_available", status: "PASS" },
@@ -551,6 +565,7 @@ function toolchainSnapshot() {
     outputs: {
       sourceX1: x1Phase,
       closingX2: x2Phase,
+      previousClosedX2,
       nextPhase,
       nextSibling
     },
@@ -565,6 +580,7 @@ function openGapReduction() {
     artifact: `${x2Phase}-mira-vale-x2-open-gap-reduction-v1`,
     schema: "ghc.mira_vale_x2_open_gap_reduction.v1",
     phase_slug: x2Phase,
+    previous_closed_x2: previousClosedX2,
     generated_utc: generatedUtc,
     status: "PASS_MIRA_VALE_X2_OPEN_GAPS_REDUCED",
     remaining_open_gaps: [],
