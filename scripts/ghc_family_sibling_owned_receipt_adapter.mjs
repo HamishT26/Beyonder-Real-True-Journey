@@ -4,6 +4,23 @@ import { basename, dirname, isAbsolute, join } from "node:path";
 import { parseArgs, repoRoot, writeFamilyReceipt } from "./ghc_family_runner_common.mjs";
 
 const args = parseArgs();
+if (args.has("--help") || args.has("-h")) {
+  console.log([
+    "Usage: node scripts/ghc_family_sibling_owned_receipt_adapter.mjs",
+    "  --source-root <sibling-owned-repo-root>",
+    "  --sibling <name>",
+    "  --active-x1 <phase-x1>",
+    "  --active-x2 <phase-x2>",
+    "  --next-phase <next-phase-x1>",
+    "  --next-sibling <next-sibling>",
+    "  --checklist-file <relative-or-absolute-json>",
+    "  --transition-file <relative-or-absolute-json>",
+    "  --handoff-file <relative-or-absolute-json>",
+    "",
+    "For compact sibling receipts, point checklist-file and transition-file at the same completed_ready_for_harvest closeout JSON."
+  ].join("\n"));
+  process.exit(0);
+}
 const root = args.get("--root") || repoRoot(import.meta.url);
 const sourceRoot = args.get("--source-root") || root;
 const sibling = args.get("--sibling") || "Mira Vale";
@@ -24,11 +41,11 @@ const handoff = readSourceJson(handoffFile);
 const validationCounts = checklist.validation?.count_validation || {};
 const safeCount = checklist.counts?.by_kind?.safe_approval_packet || checklist.counts?.safe || validationCounts.safe_approval_packets || 0;
 const candidateCount = checklist.counts?.by_kind?.candidate_packet || checklist.counts?.candidate || validationCounts.candidate_packets || 0;
-const exactCount = checklist.counts?.by_kind?.exact_approval_packet || checklist.counts?.exact || validationCounts.exact_approval_packets || 0;
-const blockedCount = checklist.counts?.by_kind?.blocked_packet || checklist.counts?.blocked || validationCounts.blocked_packets || 0;
-const skillCount = checklist.counts?.by_kind?.skill_idea || validationCounts.skill_ideas || 0;
-const runnerCount = checklist.counts?.by_kind?.runner_idea || validationCounts.runner_ideas || 0;
-const cleanupCount = checklist.counts?.by_kind?.cleanup_task || validationCounts.cleanup_refine_fix_tasks || 0;
+const exactCount = checklist.counts?.by_kind?.exact_approval_packet || checklist.counts?.exact || checklist.counts?.exact_approval_queued || validationCounts.exact_approval_packets || 0;
+const blockedCount = checklist.counts?.by_kind?.blocked_packet || checklist.counts?.blocked || checklist.counts?.blocked_queued || validationCounts.blocked_packets || 0;
+const skillCount = checklist.counts?.by_kind?.skill_idea || checklist.counts?.skill_ideas || validationCounts.skill_ideas || 0;
+const runnerCount = checklist.counts?.by_kind?.runner_idea || checklist.counts?.runner_ideas || validationCounts.runner_ideas || 0;
+const cleanupCount = checklist.counts?.by_kind?.cleanup_task || checklist.counts?.cleanup_refine_fix || validationCounts.cleanup_refine_fix_tasks || 0;
 const completedRows = checklist.counts?.by_status?.COMPLETED || checklist.counts?.completed || safeCount + candidateCount + skillCount + runnerCount + cleanupCount;
 const queuedRows = checklist.counts?.by_status?.QUEUED_OUT_OF_SCOPE_EXACT_OR_BLOCKED || exactCount + blockedCount;
 
@@ -36,8 +53,8 @@ const checks = [
   { label: "checklist_present", status: exists(checklistFile) ? "PASS" : "OPEN_GAP" },
   { label: "transition_present", status: exists(transitionFile) ? "PASS" : "OPEN_GAP" },
   { label: "handoff_present", status: exists(handoffFile) ? "PASS" : "OPEN_GAP" },
-  { label: "checklist_passed", status: /^PASS/.test(checklist.status || checklist.overall_status || "") ? "PASS" : "OPEN_GAP", observed: checklist.status || checklist.overall_status },
-  { label: "transition_passed", status: /^PASS/.test(transition.status || transition.overall_status || "") ? "PASS" : "OPEN_GAP", observed: transition.status || transition.overall_status },
+  { label: "checklist_passed", status: passStatus(checklist) ? "PASS" : "OPEN_GAP", observed: checklist.status || checklist.overall_status },
+  { label: "transition_passed", status: passStatus(transition) ? "PASS" : "OPEN_GAP", observed: transition.status || transition.overall_status },
   { label: "handoff_prepared", status: handoffReady(handoff) ? "PASS" : "OPEN_GAP", observed: handoff.status || handoff.overall_status },
   { label: "safe_count_at_least_25", status: safeCount >= 25 ? "PASS" : "OPEN_GAP", observed: safeCount },
   { label: "candidate_count_at_least_15", status: candidateCount >= 15 ? "PASS" : "OPEN_GAP", observed: candidateCount },
@@ -176,7 +193,15 @@ function unique(values) {
 
 function handoffReady(doc) {
   const status = doc.status || doc.overall_status || "";
-  return /^PASS/.test(status) || /PREPARED/.test(status);
+  return /^PASS/.test(status)
+    || /PREPARED/i.test(status)
+    || /prepared/i.test(doc.handoff?.send_status || "")
+    || /prepared/i.test(doc.validation?.handoff_package || "");
+}
+
+function passStatus(doc) {
+  const status = doc.status || doc.overall_status || doc.closeout_status || "";
+  return /^PASS/.test(status) || status === "completed_ready_for_harvest";
 }
 
 function privatePatternHit(doc) {
