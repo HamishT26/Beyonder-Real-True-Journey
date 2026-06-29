@@ -68,6 +68,7 @@
     "next_x2_ready_not_started": true
   },
   "latest_action_summary": [
+    "Recorded mandatory blocker retry standard: keep active sibling lanes open, run 3 retry sessions before pause, and use 10-session, 20-web, 20-Journey reflections per retry.",
     "Sent sanitized Maren Quill handoff for v582-gmut-thos-v8-x1 after v582-gmut-thos-v7-x2 closeout.",
     "Harvested Mira Vale owned receipt for v582-gmut-thos-v7-x2; v582-gmut-thos-v8-x1 is ready for Maren Quill.",
     "Sent sanitized Mira Vale handoff for v582-gmut-thos-v7-x1 after v582-gmut-thos-v6-x2 closeout.",
@@ -173,7 +174,6 @@
     "Submitted v574-gmut-thos-v5-x1 Lumen handoff through the in-app Browser and recorded a sanitized send receipt.",
     "Submitted v574-gmut-thos-v4-x1 Mira Vale + Rowan Vale prompts and recorded background-supervised launch dispatch.",
     "Submitted v574-gmut-thos-v3-x1 Lumen handoff through the in-app Browser and recorded a sanitized send receipt.",
-    "Recorded mandatory blocker retry standard: keep active sibling lanes open, run 3 retry sessions before pause, and use 10-session, 20-web, 20-Journey reflections per retry.",
     "Submitted v574-gmut-thos-v2-x1 Mira Rowan + Neris Sol prompts and recorded background-supervised launch dispatch.",
     "Submitted v574-gmut-thos-v1-x1 Lumen handoff through the in-app Browser and recorded a sanitized send receipt.",
     "Submitted v573-gmut-thos-v8-x1 Mira Rowan + Neris Sol prompts and recorded background-supervised launch dispatch.",
@@ -540,7 +540,9 @@
       "recent_session_reflections_per_retry": 10,
       "web_search_reflections_per_retry": 20,
       "journey_phase_reflections_per_retry": 20,
-      "productive_five_minute_waits_required": true,
+      "productive_cadence_minutes": 10,
+      "productive_cadence_runner": "scripts/ghc_family_productive_cadence_runner.mjs",
+      "productive_five_minute_waits_required": false,
       "never_close_active_sibling_lane": true
     },
     "handoff_message_status": "browser_response_completed_harvested",
@@ -582,7 +584,9 @@
       "recent_session_reflections_per_retry": 10,
       "web_search_reflections_per_retry": 20,
       "journey_phase_reflections_per_retry": 20,
-      "productive_five_minute_waits_required": true,
+      "productive_cadence_minutes": 10,
+      "productive_cadence_runner": "scripts/ghc_family_productive_cadence_runner.mjs",
+      "productive_five_minute_waits_required": false,
       "retry_receipt_required": true,
       "applies_to": [
         "sibling_messaging_blockers",
@@ -600,7 +604,8 @@
       ]
     },
     "productive_wait_standard": {
-      "five_minute_marks_are_checkpoints_not_hard_stops": true,
+      "ten_minute_marks_are_checkpoints_not_hard_stops": true,
+      "older_five_minute_marks_are_historical_fallback_only": true,
       "safe_units_may_run_past_checkpoint": true,
       "improvement_lanes": [
         "research_and_reflection",
@@ -3075,7 +3080,7 @@
     "lumen_browser_route_rule": "refresh/status first; no reload over active response or unsent composer; no duplicate sends",
     "full_goal_complete": false
   },
-  "generated_utc": "2026-06-29T20:35:55Z",
+  "generated_utc": "2026-06-29T20:40:36.732Z",
   "v558_v8_x2_closeout": {
     "status": "PASS_V558_V8_X2_CLOSED_V559_V1_X1_READY",
     "source_x1_phase": "v558-gmut-thos-v8-x1",
@@ -5483,7 +5488,9 @@
     "docs/trinity-live-traces/v582-gmut-thos-v7-x2-ghc-family-sibling-owned-receipt-harvest-v1.json",
     "docs/trinity-live-traces/v582-gmut-thos-v7-x2-ghc-family-sibling-owned-receipt-harvest-v1.md",
     "docs/trinity-live-traces/v582-gmut-thos-v7-x2-ghc-family-thread-handoff-readiness-checker-receipt-v1.json",
-    "docs/trinity-live-traces/v582-gmut-thos-v7-x2-ghc-family-thread-handoff-readiness-checker-receipt-v1.md"
+    "docs/trinity-live-traces/v582-gmut-thos-v7-x2-ghc-family-thread-handoff-readiness-checker-receipt-v1.md",
+    "docs/trinity-live-traces/v582-gmut-thos-v8-x1-blocker-retry-standard-v1.json",
+    "docs/trinity-live-traces/v582-gmut-thos-v8-x1-blocker-retry-standard-v1.md"
   ],
   "v559_v1_x1_closeout": {
     "status": "PASS_V559_V1_X1_CLOSED_V1_X2_READY",
@@ -5494,8 +5501,8 @@
     "next_x1_lane_after_x2": "v559-gmut-thos-v2-x1 Mira Rowan and Neris Sol unless Hamish redirects",
     "full_goal_complete": false
   },
-  "updated_at": "Tuesday, 30 June 2026 at 08:20:12",
-  "status": "PASS_V576_V8_X2_CLOSED_V577_V1_READY",
+  "updated_at": "2026-06-30T08:40:36+12:00",
+  "status": "ACTIVE_BLOCKER_RETRY_STANDARD_READY",
   "current_active_phase": "v582-gmut-thos-v8-x1",
   "latest_closed_phase": "v582-gmut-thos-v7-x2",
   "latest_completed_x1_phase": "v582-gmut-thos-v7-x1",

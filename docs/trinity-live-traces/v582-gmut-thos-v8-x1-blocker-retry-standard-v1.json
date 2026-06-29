@@ -1,0 +1,70 @@
+{
+  "artifact_type": "ghc_blocker_retry_standard",
+  "generated_utc": "2026-06-29T20:40:36.732Z",
+  "generated_nz": "2026-06-30T08:40:36+12:00",
+  "phase_slug": "v582-gmut-thos-v8-x1",
+  "overall_status": "PASS_BLOCKER_RETRY_STANDARD_RECORDED",
+  "mandatory_sibling_completion": {
+    "never_close_session_while_sibling_active": true,
+    "completion_states": [
+      "completed_ready_for_harvest",
+      "completion_gate_passed"
+    ],
+    "noncompletion_states": [
+      "active_fresh",
+      "active_stale",
+      "retrying",
+      "formal_open_gap"
+    ],
+    "pause_policy": "If Hamish explicitly pauses/stops, a compact event happens, or an exact/safety gate blocks continuation, publish an active/open handoff rather than a closed session."
+  },
+  "blocker_retry_protocol": {
+    "minimum_retry_sessions_before_pause": 3,
+    "recent_session_reflections_per_retry": 10,
+    "web_search_reflections_per_retry": 20,
+    "journey_phase_reflections_per_retry": 20,
+    "productive_cadence_minutes": 10,
+    "productive_cadence_runner": "scripts/ghc_family_productive_cadence_runner.mjs",
+    "productive_five_minute_waits_required": false,
+    "retry_receipt_required": true,
+    "applies_to": [
+      "sibling_messaging_blockers",
+      "sibling_harvest_blockers",
+      "browser_handoff_blockers",
+      "app_lane_runner_blockers",
+      "strict_cli_lane_blockers",
+      "core_system_blockers"
+    ],
+    "pause_exceptions": [
+      "Hamish explicit pause/stop",
+      "safety boundary",
+      "fresh exact approval required",
+      "app compact or interruption"
+    ]
+  },
+  "productive_wait_standard": {
+    "ten_minute_marks_are_checkpoints_not_hard_stops": true,
+    "older_five_minute_marks_are_historical_fallback_only": true,
+    "safe_units_may_run_past_checkpoint": true,
+    "improvement_lanes": [
+      "research_and_reflection",
+      "safe_eureka_tasks",
+      "approval_packet_work",
+      "cleanup_and_refinement",
+      "skill_and_control_growth",
+      "coding_and_multi_agent_orchestration",
+      "browser_handoff_harvest",
+      "blocker_retry_research_and_improvement",
+      "validation_and_publication_hygiene"
+    ]
+  },
+  "publication_boundary": {
+    "private_route_handles_published": false,
+    "private_lane_body_content_published": false,
+    "verbatim_conversation_logs_published": false,
+    "browser_routes_published": false,
+    "credentials_published": false,
+    "local_absolute_paths_published": false,
+    "screenshots_published": false
+  }
+}
