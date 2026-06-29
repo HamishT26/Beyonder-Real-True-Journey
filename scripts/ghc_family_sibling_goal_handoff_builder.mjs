@@ -12,6 +12,7 @@ const nextSibling = args.get("--next-sibling") || "Maren Quill";
 const nextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
 const ownedBranch = args.get("--owned-branch") || "codex/GHC-Family/mira-vale-full-tools";
 const priorClosedX2 = args.get("--prior-closed-x2") || "v576-gmut-thos-v2-x2";
+const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
 const promptStem = `${phaseSlug}-ghc-family-sibling-goal-handoff-v1`;
 const promptJson = join(root, "docs", "trinity-live-traces", `${promptStem}.json`);
 const promptMd = join(root, "docs", "trinity-live-traces", `${promptStem}.md`);
@@ -29,7 +30,7 @@ const prompt = [
   `- latest closed x2 before your lane: ${priorClosedX2}.`,
   `- owned write lane/branch, if available to your thread: ${ownedBranch}. Treat all other shared branches as read-only unless Aevren or Hamish explicitly redirects.`,
   `- next handoff after your x2 is complete: ${nextSibling} for ${nextPhase}, unless Hamish redirects.`,
-  `- Aevren and Lumen remain support/council. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.`,
+  `- ${supportNote}`,
   ``,
   `Goal objective: complete ${phaseSlug} x1 and ${x2Phase} x2 as your solo bundle, write only safe/sanitized artifacts to your owned full-tools lane when available, commit your completed safe/candidate/prototype results to your owned branch when safe, and return either GOAL_COMPLETED_READY_TO_HANDOFF or GOAL_BLOCKED_OPEN_GAP with the exact reason.`,
   ``,
