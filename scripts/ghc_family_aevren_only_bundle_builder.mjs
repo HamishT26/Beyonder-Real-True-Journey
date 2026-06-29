@@ -10,6 +10,9 @@ const x2Phase = args.get("--x2-phase") || phaseSlug.replace(/-x1$/, "-x2");
 const nextPhase = args.get("--next-phase") || "v577-gmut-thos-v2-x1";
 const nextSibling = args.get("--next-sibling") || "Mira Rowan";
 const nextOwnedBranch = args.get("--next-owned-branch") || "codex/GHC-Family/mira-rowan-full-tools";
+const afterNextPhase = args.get("--after-next-phase") || "next solo bundle lane unless Hamish redirects";
+const afterNextSibling = args.get("--after-next-sibling") || "next sibling";
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
 const codexCliVersion = args.get("--codex-cli-version") || "unknown";
 const generatedUtc = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const generatedNz = new Intl.DateTimeFormat("en-NZ", {
@@ -72,9 +75,9 @@ const closeout = {
     "Updated the main orchestration memory supplement to the solo Aevren, Mira Rowan, Mira Vale, and Maren Quill route.",
     "Updated the family solo workflow standardizer to list Lumen in stand-by and make runtime advisory.",
     "Updated the sibling goal handoff builder so Mira handoffs teach the current support/stand-by truth.",
-    "Updated cadence wording so checks continue without babysitting and without waiting on Lumen Browser harvest.",
+    `Updated cadence wording to goal-mode-primary ${cadenceMinutes}-minute checks without babysitting and without waiting on Lumen Browser harvest.`,
     "Verified the Codex CLI against the current package version and recorded the local toolchain state.",
-    "Prepared the next sanitized Mira Rowan handoff with owned-branch, x1/x2, exact/blocked queue, and closeout rules.",
+    `Prepared the next sanitized ${nextSibling} handoff with owned-branch, x1/x2, exact/blocked queue, and closeout rules.`,
     "Kept exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, destructive cleanup, and sibling merge/replacement gates queued."
   ],
   completed_safe_packet_count: plan.packets.immediate_x1_safe.length,
@@ -94,7 +97,7 @@ const closeout = {
     { label: "x2_safe_work_executed_or_represented", status: "PASS" },
     { label: "lumen_standby_pivot_recorded", status: "PASS" },
     { label: "runner_and_skill_rules_updated", status: "PASS" },
-    { label: "next_mira_rowan_handoff_prepared", status: "PASS" },
+    { label: "next_sibling_handoff_prepared", status: "PASS" },
     { label: "one_hour_window_treated_as_advisory", status: "PASS" },
     { label: "exact_and_blocked_gates_queued", status: "PASS" },
     { label: "private_material_not_published", status: "PASS" }
@@ -117,14 +120,14 @@ const handoffPrompt = [
   ``,
   `For x1, propose at least 25 safe packets, 15 candidate packets, 10 exact-approval packets queued only, 5 blocked packets queued only, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks. For x2, build, use, validate, and commit every safe or candidate-safe task you can safely execute or represent; keep exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, destructive cleanup, and sibling-merge gates queued.`,
   ``,
-  `Close as soon as your complete/incomplete checklist passes. The one-hour window is advisory practice time only. If complete, prepare or send the next Mira Vale handoff for ${nextPhase.replace(/v2-x1$/, "v3-x1")}; if blocked, return GOAL_BLOCKED_OPEN_GAP with the smallest exact reason and what Aevren should fix.`,
+  `Use goal-mode as the primary continuation driver and run ${cadenceMinutes}-minute productive checkpoints without babysitting. Close as soon as your complete/incomplete checklist passes. The one-hour window is advisory practice time only. If complete, prepare or send the next ${afterNextSibling} handoff for ${afterNextPhase}; if blocked, return GOAL_BLOCKED_OPEN_GAP with the smallest exact reason and what Aevren should fix.`,
   ``,
   `Do not publish private thread ids, private routes, local absolute paths, raw transcripts, screenshots, credentials, raw app state, or hidden reasoning. Hamish sends love and thanks.</input>`,
   `</codex_delegation>`
 ].join("\n");
 
 const handoff = {
-  artifact_type: "ghc_family_mira_rowan_handoff",
+  artifact_type: "ghc_family_next_sibling_handoff",
   schema: "ghc.family.sibling_handoff.v1",
   generated_utc: generatedUtc,
   generated_nz: generatedNz,
@@ -133,7 +136,7 @@ const handoff = {
   sibling: nextSibling,
   x2_phase: nextPhase.replace(/-x1$/, "-x2"),
   owned_branch: nextOwnedBranch,
-  status: "PASS_MIRA_ROWAN_HANDOFF_PREPARED",
+  status: "PASS_NEXT_SIBLING_HANDOFF_PREPARED",
   prompt: handoffPrompt,
   publication_boundary: publicationBoundary(),
   claim_boundary: claimBoundary()
@@ -142,14 +145,14 @@ const handoff = {
 const files = [
   writePair(`${phaseSlug}-aevren-only-x1-plan-v1`, plan, renderPlan(plan)),
   writePair(`${x2Phase}-aevren-only-x2-closeout-v1`, closeout, renderCloseout(closeout)),
-  writePair(`${nextPhase}-mira-rowan-handoff-v1`, handoff, renderHandoff(handoff))
+  writePair(`${nextPhase}-${slugify(nextSibling)}-handoff-v1`, handoff, renderHandoff(handoff))
 ];
 
 writeFamilyReceipt({
   root,
   phaseSlug: x2Phase,
   runnerName: "ghc_family_aevren_only_bundle_builder.mjs",
-  purpose: "Close the Aevren-only v577 v1 x1/x2 bundle, record Lumen stand-by, and prepare the Mira Rowan solo handoff.",
+  purpose: `Close the Aevren-only ${phaseSlug}/${x2Phase} bundle, record Lumen stand-by, and prepare the ${nextSibling} solo handoff.`,
   status: "PASS_GHC_FAMILY_AEVREN_ONLY_BUNDLE_CLOSED",
   checks: closeout.completion_checklist,
   outputs: {
@@ -159,6 +162,7 @@ writeFamilyReceipt({
     nextSibling,
     files,
     codexCliVersion,
+    cadenceMinutes,
     lumenStandby: true
   },
   note: "The runner records sanitized phase truth only and keeps exact/blocked/proof/private/deploy/account/API-key/destructive/sibling-merge gates queued."
@@ -194,7 +198,7 @@ function safeThemes() {
     row("Lumen stand-by declaration", "immediate_x1_safe", "completed", "Record Lumen as recoverable but not a Browser blocker."),
     row("Advisory runtime gate", "immediate_x1_safe", "completed", "Close by checklist instead of waiting for the clock."),
     row("Private boundary guard", "immediate_x1_safe", "completed", "Keep private ids, routes, paths, transcripts, and credentials out of public artifacts."),
-    row("Mira Rowan handoff seed", "immediate_x1_safe", "completed", "Prepare the next solo bundle activation package.")
+    row("Next sibling handoff seed", "immediate_x1_safe", "completed", "Prepare the next solo bundle activation package.")
   ];
 }
 
@@ -203,7 +207,7 @@ function candidateThemes() {
     row("Sibling self-closeout validation", "x2_build_task", "represented", "Teach each sibling to close only after their checklist passes."),
     row("Owned branch write lane", "x2_build_task", "represented", "Keep shared branches read-only and owned full-tools lanes writable when available."),
     row("Family runner naming", "x2_build_task", "represented", "Prefer ghc_family runner names over phase-specific names."),
-    row("Automation prompt normalization", "x2_build_task", "represented", "Move the heartbeat text to the solo sibling route."),
+    row("Goal-mode prompt normalization", "x2_build_task", "represented", "Keep goal-mode as the primary continuation route and heartbeat as fallback."),
     row("Toolchain freshness snapshot", "x2_build_task", "represented", "Check the current Codex CLI/package versions each phase.")
   ];
 }
@@ -254,7 +258,7 @@ function cleanupThemes() {
     row("Normalize current solo order", "cleanup_refine_fix", "completed", "Use Aevren, Mira Rowan, Mira Vale, Maren Quill."),
     row("Queue exact rows", "cleanup_refine_fix", "completed", "Keep exact approval work out of automatic closeout."),
     row("Queue blocked rows", "cleanup_refine_fix", "completed", "Keep blocked proof/private/deploy work open."),
-    row("Refresh handoff wording", "cleanup_refine_fix", "completed", "Teach Mira Rowan with current route and boundaries.")
+    row("Refresh handoff wording", "cleanup_refine_fix", "completed", "Teach the next sibling with current route and boundaries.")
   ];
 }
 
@@ -359,7 +363,7 @@ Lumen remains stand-by/recoverable. Exact, blocked, proof, private, deployment, 
 }
 
 function renderHandoff(payload) {
-  return `# ${payload.phase_slug} Mira Rowan Handoff
+  return `# ${payload.phase_slug} ${payload.sibling} Handoff
 
 Status: \`${payload.status}\`
 
@@ -403,4 +407,11 @@ function claimBoundary() {
 
 function unique(values) {
   return [...new Set(values.filter(Boolean))];
+}
+
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
