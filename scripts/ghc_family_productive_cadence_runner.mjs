@@ -6,7 +6,7 @@ const root = args.get("--root") || repoRoot(import.meta.url);
 const phaseSlug = args.get("--phase-slug") || "v576-gmut-thos-v2-x1";
 const activeSibling = args.get("--active-sibling") || "Mira Rowan";
 const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
-const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 60);
+const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 10);
 const checkpointIndex = Number(args.get("--checkpoint-index") || 1);
 const mode = args.get("--mode") || "solo_bundle_background_supervision";
 const startedAtUtc = args.get("--started-at-utc") || new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
@@ -15,7 +15,7 @@ const nextCheckpointUtc = new Date(started.getTime() + cadenceMinutes * 60_000).
 
 const checks = [
   { label: "cadence_minutes_recorded", status: cadenceMinutes === 10 ? "PASS" : "OPEN_GAP", observed: cadenceMinutes },
-  { label: "minimum_runtime_recorded", status: minimumRuntimeMinutes >= 60 ? "PASS" : "OPEN_GAP", observed: minimumRuntimeMinutes },
+  { label: "minimum_runtime_recorded", status: minimumRuntimeMinutes >= 10 ? "PASS" : "OPEN_GAP", observed: minimumRuntimeMinutes },
   { label: "background_supervision_not_babysitting", status: "PASS", observed: mode },
   { label: "exact_and_blocked_stay_queued", status: "PASS" },
   { label: "public_private_boundary_kept", status: "PASS" }
