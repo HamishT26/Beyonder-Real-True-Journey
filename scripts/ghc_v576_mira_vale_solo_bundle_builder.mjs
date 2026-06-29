@@ -232,7 +232,7 @@ writeFamilyReceipt({
 });
 
 console.log(JSON.stringify({
-  status: "PASS_MIRA_VALE_V576_SOLO_BUNDLE_ARTIFACTS_BUILT",
+  status: "PASS_MIRA_VALE_SOLO_BUNDLE_ARTIFACTS_BUILT",
   x1_phase: x1Phase,
   x2_phase: x2Phase,
   queue_rows: rows.length,
