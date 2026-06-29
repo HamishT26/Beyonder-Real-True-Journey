@@ -1,10 +1,10 @@
 # v577-gmut-thos-v1-x1 Complete/Incomplete Checklist
 
-Overall status: INCOMPLETE_PHASE_OPEN.
+Overall status: INCOMPLETE_PHASE_OPEN_LOCAL_X1_REPRESENTED.
 
-Passing checks: current phase truth is v577-gmut-thos-v1-x1, and the prior v576-gmut-thos-v8-x2 closeout is merged.
+Passing checks: current phase truth is v577-gmut-thos-v1-x1, the prior v576-gmut-thos-v8-x2 closeout is merged, and the Aevren-side local x1 profile is represented.
 
-Open checks: live Lumen council is prepared-not-sent, the x1 profile is pending, and x2 safe-build work waits for x1 representation.
+Open checks: live Lumen council is prepared-not-sent, and x2 safe-build work waits for Lumen council or explicit local-only open-gap acceptance.
 
 Closeout is not allowed yet. The one-hour window remains advisory only; the real closeout gate is the checklist.
 
