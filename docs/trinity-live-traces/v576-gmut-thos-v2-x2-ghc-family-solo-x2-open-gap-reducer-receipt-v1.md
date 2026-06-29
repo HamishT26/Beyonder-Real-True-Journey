@@ -12,6 +12,7 @@ Purpose: Reduce Mira Rowan v2 x2 open gaps with Aevren-side evidence while keepi
 - minimum_sixty_minute_runtime_elapsed: `OPEN_GAP`
 - mira_vale_thread_route_ready: `PASS`
 - mira_vale_handoff_not_sent_before_closeout: `PASS`
+- toolchain_system_snapshot_current: `PASS`
 - exact_and_blocked_gates_remain_queued: `PASS`
 - source_reflection_target_tracked: `PASS`
 - hundred_source_reflection_target_completed: `PASS`
