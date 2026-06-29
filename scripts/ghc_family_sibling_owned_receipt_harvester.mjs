@@ -6,6 +6,8 @@ import { parseArgs, readJsonIfPresent, repoRoot, writeFamilyReceipt } from "./gh
 const args = parseArgs();
 const root = args.get("--root") || repoRoot(import.meta.url);
 const sourceReceipt = args.get("--source-receipt");
+const sourceReceiptPath = args.get("--source-receipt-path");
+const sourceReceiptLabel = args.get("--source-receipt-label") || sourceReceipt || "sibling-owned-receipt";
 const sibling = args.get("--sibling") || "Mira Rowan";
 const sourceX1 = args.get("--source-x1") || "v577-gmut-thos-v2-x1";
 const sourceX2 = args.get("--source-x2") || "v577-gmut-thos-v2-x2";
@@ -14,12 +16,15 @@ const nextSibling = args.get("--next-sibling") || "Mira Vale";
 const traceDir = join(root, "docs", "trinity-live-traces");
 const generatedUtc = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 
-if (!sourceReceipt) {
-  console.error("Usage: node scripts/ghc_family_sibling_owned_receipt_harvester.mjs --source-receipt <relative-json>");
+if (!sourceReceipt && !sourceReceiptPath) {
+  console.error("Usage: node scripts/ghc_family_sibling_owned_receipt_harvester.mjs --source-receipt <relative-json> OR --source-receipt-path <json> --source-receipt-label <sanitized-label>");
   process.exit(2);
 }
 
-const receipt = readJsonIfPresent(root, sourceReceipt) || {};
+const receiptFile = sourceReceiptPath || join(root, sourceReceipt);
+const receipt = sourceReceiptPath
+  ? JSON.parse(readFileSync(sourceReceiptPath, "utf8").replace(/^\uFEFF/, ""))
+  : readJsonIfPresent(root, sourceReceipt) || {};
 const receiptStatus = receipt.status || receipt.overall_status || "";
 const receiptSourceX1 = receipt.active_x1 || receipt.outputs?.sourceX1 || receipt.source_x1 || receipt.source_x1_phase || receipt.paired_x1_phase;
 const receiptSourceX2 = receipt.active_x2 || receipt.outputs?.closingX2 || receipt.phase_slug || receipt.phase || receipt.source_x2;
@@ -34,7 +39,7 @@ const majorGatesOpen = receipt.validation?.proof_canon_legal_deployment_account_
   || receipt.claim_boundary?.full_goal_completion === "not_claimed"
   || receipt.claim_boundary?.proof_canon_legal_deployment_account_api_key_private_gates === "open";
 const checks = [
-  { label: "source_receipt_present", status: existsSync(join(root, sourceReceipt)) ? "PASS" : "OPEN_GAP" },
+  { label: "source_receipt_present", status: existsSync(receiptFile) ? "PASS" : "OPEN_GAP" },
   { label: "sibling_status_completed", status: hasCompactCompletion || hasCloseoutBuilderCompletion ? "PASS" : "OPEN_GAP", observed: receiptStatus },
   { label: "active_x1_matches", status: receiptSourceX1 === sourceX1 ? "PASS" : "OPEN_GAP", observed: receiptSourceX1 },
   { label: "active_x2_matches", status: receiptSourceX2 === sourceX2 ? "PASS" : "OPEN_GAP", observed: receiptSourceX2 },
@@ -52,7 +57,7 @@ const status = open.length === 0
 const harvest = {
   artifact_type: "ghc_family_sibling_owned_receipt_harvest",
   generated_utc: generatedUtc,
-  source_receipt: sourceReceipt,
+  source_receipt: sourceReceiptLabel,
   sibling,
   source_x1: sourceX1,
   source_x2: sourceX2,
@@ -93,7 +98,7 @@ writeFamilyReceipt({
   status,
   checks,
   outputs: {
-    sourceReceipt,
+    sourceReceipt: sourceReceiptLabel,
     sibling,
     sourceX1,
     sourceX2,
