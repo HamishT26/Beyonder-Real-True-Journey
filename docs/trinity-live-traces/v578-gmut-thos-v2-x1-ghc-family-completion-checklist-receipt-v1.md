@@ -1,4 +1,4 @@
-# v578-gmut-thos-v1-x1 ghc_family_completion_checklist.mjs
+# v578-gmut-thos-v2-x1 ghc_family_completion_checklist.mjs
 
 Status: `PASS_GHC_FAMILY_COMPLETION_CHECKLIST`
 

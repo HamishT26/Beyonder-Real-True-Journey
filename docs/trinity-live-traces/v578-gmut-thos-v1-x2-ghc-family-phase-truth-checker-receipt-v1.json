@@ -1,30 +1,35 @@
 {
   "artifact_type": "ghc_family_runner_receipt",
-  "generated_utc": "2026-06-29T15:47:16Z",
-  "phase_slug": "v578-gmut-thos-v1-x1",
-  "runner_name": "ghc_family_completion_checklist.mjs",
-  "purpose": "Emit a family-named complete/incomplete inventory for current phase closeout discipline.",
-  "overall_status": "PASS_GHC_FAMILY_COMPLETION_CHECKLIST",
+  "generated_utc": "2026-06-29T15:47:14Z",
+  "phase_slug": "v578-gmut-thos-v1-x2",
+  "runner_name": "ghc_family_phase_truth_checker.mjs",
+  "purpose": "Verify current phase truth without using phase-stamped runner names.",
+  "overall_status": "PASS_GHC_FAMILY_PHASE_TRUTH",
   "checks": [
     {
-      "label": "phase_receipts_present",
+      "label": "current_active_phase",
       "status": "PASS",
-      "observed": 4
+      "observed": "v578-gmut-thos-v2-x1"
     },
     {
-      "label": "open_gap_receipts_inventory",
+      "label": "beacon_active_phase",
       "status": "PASS",
-      "observed": 0
+      "observed": "v578-gmut-thos-v2-x1"
     },
     {
-      "label": "exact_and_blocked_not_forced_closed",
-      "status": "PASS"
+      "label": "latest_closed_phase",
+      "status": "PASS",
+      "observed": "v578-gmut-thos-v1-x2"
+    },
+    {
+      "label": "full_goal_open",
+      "status": "PASS",
+      "observed": false
     }
   ],
   "outputs": {
-    "receiptCount": 4,
-    "openGapCount": 0,
-    "openGaps": []
+    "expectedActive": "v578-gmut-thos-v2-x1",
+    "expectedClosed": "v578-gmut-thos-v1-x2"
   },
   "note": "",
   "publication_boundary": {
