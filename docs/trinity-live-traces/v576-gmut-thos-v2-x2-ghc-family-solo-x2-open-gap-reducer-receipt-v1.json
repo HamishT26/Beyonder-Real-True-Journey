@@ -1,6 +1,6 @@
 {
   "artifact_type": "ghc_family_runner_receipt",
-  "generated_utc": "2026-06-29T06:54:41Z",
+  "generated_utc": "2026-06-29T07:05:19Z",
   "phase_slug": "v576-gmut-thos-v2-x2",
   "runner_name": "ghc_family_solo_x2_open_gap_reducer.mjs",
   "purpose": "Reduce Mira Rowan v2 x2 open gaps with Aevren-side evidence while keeping true closeout and Mira Vale activation gated.",
@@ -17,12 +17,16 @@
     {
       "label": "persistent_x2_support_artifacts_present",
       "status": "PASS",
-      "observed": 7
+      "observed": 8
     },
     {
       "label": "minimum_sixty_minute_runtime_elapsed",
       "status": "OPEN_GAP",
-      "observed": 20
+      "observed": 30
+    },
+    {
+      "label": "mira_vale_thread_route_ready",
+      "status": "PASS"
     },
     {
       "label": "mira_vale_handoff_not_sent_before_closeout",
@@ -38,17 +42,18 @@
     },
     {
       "label": "hundred_source_reflection_target_completed",
-      "status": "OPEN_GAP",
-      "observed": 12
+      "status": "PASS",
+      "observed": 100
     }
   ],
   "outputs": {
     "sourceReduction": "v576-gmut-thos-v2-x2-mira-rowan-x2-open-gap-reduction-v1.json",
     "laneAvailabilityReceipt": "v576-gmut-thos-v2-x2-ghc-family-owned-lane-availability-checker-receipt-v1.json",
     "sourceReflectionReceipt": "v576-gmut-thos-v2-x2-ghc-family-source-reflection-target-tracker-receipt-v1.json",
+    "handoffReadinessReceipt": "v576-gmut-thos-v2-x2-ghc-family-thread-handoff-readiness-checker-receipt-v1.json",
     "launchTime": "2026-06-29T18:34:26+12:00",
-    "generatedAtUtc": "2026-06-29T06:54:41Z",
-    "elapsedMinutes": 20,
+    "generatedAtUtc": "2026-06-29T07:05:19Z",
+    "elapsedMinutes": 30,
     "minimumRuntimeMinutes": 60,
     "earliestCloseoutUtc": "2026-06-29T07:34:26Z",
     "artifactRows": [
@@ -73,6 +78,10 @@
         "present": true
       },
       {
+        "name": "v576-gmut-thos-v2-x2-ghc-family-thread-handoff-readiness-checker-receipt-v1.json",
+        "present": true
+      },
+      {
         "name": "v576-gmut-thos-v2-x2-ghc-family-approval-eureka-splitter-receipt-v1.json",
         "present": true
       },
@@ -82,17 +91,19 @@
       }
     ],
     "missingArtifacts": [],
-    "sourceReflectionStatus": "OPEN_GAP_GHC_FAMILY_SOURCE_REFLECTION_TARGET",
-    "sourceReflectionRepresentedRows": 12,
-    "sourceReflectionRemainingRows": 88,
+    "sourceReflectionStatus": "PASS_GHC_FAMILY_SOURCE_REFLECTION_TARGET",
+    "sourceReflectionRepresentedRows": 100,
+    "sourceReflectionRemainingRows": 0,
+    "handoffReadinessStatus": "PASS_GHC_FAMILY_THREAD_HANDOFF_ROUTE_READY_NOT_SENT",
+    "handoffMessageSent": false,
     "closedOrReduced": [
       "Mira Rowan x2 response reduced into sanitized open-gap form",
       "Sibling-owned lane availability checked from Aevren-side support lane",
-      "Persistent support artifacts tracked as explicit closeout evidence"
+      "Persistent support artifacts tracked as explicit closeout evidence",
+      "Mira Vale thread handoff route checked privately and kept unsent before closeout"
     ],
     "remainingOpenGaps": [
-      "minimum_sixty_minute_runtime_elapsed",
-      "hundred_source_reflection_target_completed"
+      "minimum_sixty_minute_runtime_elapsed"
     ],
     "closeoutBoundary": "Do not close v576-gmut-thos-v2-x2 or activate Mira Vale until the minimum runtime/checklist gates pass or Hamish accepts a formal open-gap handoff."
   },

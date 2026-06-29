@@ -9,6 +9,7 @@ const phaseSlug = args.get("--phase-slug") || "v576-gmut-thos-v2-x2";
 const reductionFile = args.get("--reduction-file") || `docs/trinity-live-traces/${phaseSlug}-mira-rowan-x2-open-gap-reduction-v1.json`;
 const laneReceiptFile = args.get("--lane-receipt-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-owned-lane-availability-checker-receipt-v1.json`;
 const sourceReflectionFile = args.get("--source-reflection-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-source-reflection-target-tracker-receipt-v1.json`;
+const handoffReadinessFile = args.get("--handoff-readiness-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-thread-handoff-readiness-checker-receipt-v1.json`;
 const launchTime = args.get("--lane-launch-time") || "2026-06-29T18:34:26+12:00";
 const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 60);
 const now = new Date();
@@ -23,12 +24,14 @@ const earliestCloseout = Number.isFinite(launchedAt.getTime())
 const reduction = readJsonIfPresent(root, reductionFile) || {};
 const laneReceipt = readJsonIfPresent(root, laneReceiptFile) || {};
 const sourceReflection = readJsonIfPresent(root, sourceReflectionFile) || {};
+const handoffReadiness = readJsonIfPresent(root, handoffReadinessFile) || {};
 const requiredArtifacts = [
   `docs/trinity-live-traces/${phaseSlug}-solo-phase-transition-v1.json`,
   `docs/trinity-live-traces/${phaseSlug}-ghc-family-productive-cadence-runner-receipt-v1.json`,
   reductionFile,
   laneReceiptFile,
   sourceReflectionFile,
+  handoffReadinessFile,
   `docs/trinity-live-traces/${phaseSlug}-ghc-family-approval-eureka-splitter-receipt-v1.json`,
   `docs/trinity-live-traces/${phaseSlug}-toolchain-update-receipt-v1.json`
 ];
@@ -42,6 +45,8 @@ const reductionPass = /^PASS/.test(reduction.status || reduction.overall_status 
 const sourceReflectionStatus = sourceReflection.overall_status || sourceReflection.status || "";
 const sourceReflectionTracked = Boolean(sourceReflectionStatus);
 const sourceReflectionComplete = /^PASS/.test(sourceReflectionStatus);
+const handoffReadinessStatus = handoffReadiness.overall_status || handoffReadiness.status || "";
+const handoffRouteReady = /^PASS_GHC_FAMILY_THREAD_HANDOFF_ROUTE_READY_NOT_SENT/.test(handoffReadinessStatus);
 const timePass = elapsedMinutes >= minimumRuntimeMinutes;
 const artifactsPass = missingArtifacts.length === 0;
 
@@ -50,7 +55,8 @@ const checks = [
   { label: "owned_lane_availability_aevren_side", status: lanePass ? "PASS" : "OPEN_GAP" },
   { label: "persistent_x2_support_artifacts_present", status: artifactsPass ? "PASS" : "OPEN_GAP", observed: artifactRows.length - missingArtifacts.length },
   { label: "minimum_sixty_minute_runtime_elapsed", status: timePass ? "PASS" : "OPEN_GAP", observed: elapsedMinutes },
-  { label: "mira_vale_handoff_not_sent_before_closeout", status: "PASS" },
+  { label: "mira_vale_thread_route_ready", status: handoffRouteReady ? "PASS" : "OPEN_GAP" },
+  { label: "mira_vale_handoff_not_sent_before_closeout", status: handoffReadiness.outputs?.messageSent === false ? "PASS" : "OPEN_GAP" },
   { label: "exact_and_blocked_gates_remain_queued", status: "PASS" },
   { label: "source_reflection_target_tracked", status: sourceReflectionTracked ? "PASS" : "OPEN_GAP" },
   {
@@ -76,6 +82,7 @@ writeFamilyReceipt({
     sourceReduction: basename(reductionFile),
     laneAvailabilityReceipt: basename(laneReceiptFile),
     sourceReflectionReceipt: basename(sourceReflectionFile),
+    handoffReadinessReceipt: basename(handoffReadinessFile),
     launchTime,
     generatedAtUtc: now.toISOString().replace(/\.\d{3}Z$/, "Z"),
     elapsedMinutes,
@@ -86,10 +93,14 @@ writeFamilyReceipt({
     sourceReflectionStatus,
     sourceReflectionRepresentedRows: sourceReflection.outputs?.representedRows || 0,
     sourceReflectionRemainingRows: sourceReflection.outputs?.remainingRows || 0,
+    handoffReadinessStatus,
+    handoffMessageSent: handoffReadiness.outputs?.messageSent === true,
     closedOrReduced: [
       "Mira Rowan x2 response reduced into sanitized open-gap form",
       "Sibling-owned lane availability checked from Aevren-side support lane",
       "Persistent support artifacts tracked as explicit closeout evidence"
+      ,
+      "Mira Vale thread handoff route checked privately and kept unsent before closeout"
     ],
     remainingOpenGaps,
     closeoutBoundary: "Do not close v576-gmut-thos-v2-x2 or activate Mira Vale until the minimum runtime/checklist gates pass or Hamish accepts a formal open-gap handoff."
@@ -130,6 +141,7 @@ function refreshBeacons() {
       source_reflection_status: sourceReflectionStatus,
       source_reflection_represented_rows: sourceReflection.outputs?.representedRows || 0,
       source_reflection_remaining_rows: sourceReflection.outputs?.remainingRows || 0,
+      mira_vale_thread_route_ready: handoffRouteReady ? "PASS" : "OPEN_GAP",
       mira_vale_handoff_sent: false,
       x2_closed: false,
       full_goal_complete: false
