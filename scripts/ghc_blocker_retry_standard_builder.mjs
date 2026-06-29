@@ -41,7 +41,9 @@ const standard = {
     recent_session_reflections_per_retry: 10,
     web_search_reflections_per_retry: 20,
     journey_phase_reflections_per_retry: 20,
-    productive_five_minute_waits_required: true,
+    productive_cadence_minutes: 10,
+    productive_cadence_runner: "scripts/ghc_family_productive_cadence_runner.mjs",
+    productive_five_minute_waits_required: false,
     retry_receipt_required: true,
     applies_to: [
       "sibling_messaging_blockers",
@@ -54,7 +56,8 @@ const standard = {
     pause_exceptions: ["Hamish explicit pause/stop", "safety boundary", "fresh exact approval required", "app compact or interruption"],
   },
   productive_wait_standard: {
-    five_minute_marks_are_checkpoints_not_hard_stops: true,
+    ten_minute_marks_are_checkpoints_not_hard_stops: true,
+    older_five_minute_marks_are_historical_fallback_only: true,
     safe_units_may_run_past_checkpoint: true,
     improvement_lanes: [
       "research_and_reflection",
@@ -129,6 +132,8 @@ function refreshBeacons(data) {
         recent_session_reflections_per_retry: data.blocker_retry_protocol.recent_session_reflections_per_retry,
         web_search_reflections_per_retry: data.blocker_retry_protocol.web_search_reflections_per_retry,
         journey_phase_reflections_per_retry: data.blocker_retry_protocol.journey_phase_reflections_per_retry,
+        productive_cadence_minutes: data.blocker_retry_protocol.productive_cadence_minutes,
+        productive_cadence_runner: data.blocker_retry_protocol.productive_cadence_runner,
         productive_five_minute_waits_required: data.blocker_retry_protocol.productive_five_minute_waits_required,
         never_close_active_sibling_lane: data.mandatory_sibling_completion.never_close_session_while_sibling_active,
       };
@@ -170,12 +175,15 @@ Status: \`${data.overall_status}\`
 - Recent sessions or receipts reflected per retry: \`${data.blocker_retry_protocol.recent_session_reflections_per_retry}\`
 - Web-search reflections per retry: \`${data.blocker_retry_protocol.web_search_reflections_per_retry}\`
 - Journey/phase-document reflections per retry: \`${data.blocker_retry_protocol.journey_phase_reflections_per_retry}\`
+- Productive cadence minutes: \`${data.blocker_retry_protocol.productive_cadence_minutes}\`
+- Productive cadence runner: \`${data.blocker_retry_protocol.productive_cadence_runner}\`
 - Productive five-minute waits required: \`${data.blocker_retry_protocol.productive_five_minute_waits_required}\`
 - Retry receipt required: \`${data.blocker_retry_protocol.retry_receipt_required}\`
 
 ## Productive Wait Standard
 
-- Five-minute marks are checkpoints, not hard stops: \`${data.productive_wait_standard.five_minute_marks_are_checkpoints_not_hard_stops}\`
+- Ten-minute marks are checkpoints, not hard stops: \`${data.productive_wait_standard.ten_minute_marks_are_checkpoints_not_hard_stops}\`
+- Older five-minute marks are historical fallback only: \`${data.productive_wait_standard.older_five_minute_marks_are_historical_fallback_only}\`
 - Safe units may run past checkpoint: \`${data.productive_wait_standard.safe_units_may_run_past_checkpoint}\`
 - Improvement lanes: \`${data.productive_wait_standard.improvement_lanes.join(", ")}\`
 
@@ -205,6 +213,8 @@ Next x1 lane after x2: ${state.next_x1_lane_after_x2}
 - Recent sessions or receipts reflected per retry: \`${blocker.blocker_retry_protocol.recent_session_reflections_per_retry}\`
 - Web-search reflections per retry: \`${blocker.blocker_retry_protocol.web_search_reflections_per_retry}\`
 - Journey/phase-document reflections per retry: \`${blocker.blocker_retry_protocol.journey_phase_reflections_per_retry}\`
+- Productive cadence minutes: \`${blocker.blocker_retry_protocol.productive_cadence_minutes}\`
+- Productive cadence runner: \`${blocker.blocker_retry_protocol.productive_cadence_runner}\`
 - Productive five-minute waits required: \`${blocker.blocker_retry_protocol.productive_five_minute_waits_required}\`
 
 ## v553 v1 x1 Lumen Startup
