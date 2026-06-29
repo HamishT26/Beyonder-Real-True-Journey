@@ -45,15 +45,33 @@ const standard = {
     "Maren Quill",
   ],
   x1_profile: {
-    safe_approval_packets_total: 50,
-    candidate_packets_total: 30,
-    exact_approval_packets_queued_total: 20,
-    blocked_packets_queued_total: 10,
-    skill_ideas_total: 20,
-    runner_ideas_total: 10,
-    cleanup_refine_fix_tasks_total: 30,
+    count_interpretation: "Each currently active x1 participant contributes the per-participant targets below; phase totals are derived from the active lane roster instead of hard-coded older duo totals.",
+    per_active_participant: {
+      safe_approval_packets: 25,
+      candidate_packets: 15,
+      exact_approval_packets_queued: 10,
+      blocked_packets_queued: 5,
+      skill_ideas: 10,
+      runner_ideas: 5,
+      cleanup_refine_fix_tasks: 15,
+    },
+    older_total_profile_superseded: {
+      safe_approval_packets_total: 50,
+      candidate_packets_total: 30,
+      exact_approval_packets_queued_total: 20,
+      blocked_packets_queued_total: 10,
+      skill_ideas_total: 20,
+      runner_ideas_total: 10,
+      cleanup_refine_fix_tasks_total: 30,
+    },
     web_or_source_reflections_target: 60,
     journey_phase_reflections_target: 60,
+  },
+  cadence_profile: {
+    checkpoint_minutes: 15,
+    minimum_runtime_minutes_before_closeout: 60,
+    cadence_style: "productive_background_supervision",
+    check_rule: "Work on safe improvements between checkpoints; check sibling lanes at natural pauses even if the work block runs past the exact timestamp.",
   },
   x2_profile: {
     aevren_x2_web_or_source_reflections_target: 100,
@@ -132,6 +150,8 @@ function refreshBeacons(payload, lookupFiles) {
       active_primary_lanes: payload.active_primary_lanes,
       standby_recoverable_lanes: payload.standby_recoverable_lanes,
       naming_standard: payload.naming_standard,
+      cadence_profile: payload.cadence_profile,
+      x1_per_active_participant_profile: payload.x1_profile.per_active_participant,
     };
     const listKey = file.includes("latest-updates") ? "latest_lookup_files" : file.includes("ghc-current") ? "lookup_files" : "current_lookup_files";
     doc[listKey] = unique([...(doc[listKey] || []), ...lookupFiles]);
@@ -157,6 +177,16 @@ Next x1 lane after x2: \`${payload.next_x1_lane_after_x2}\`
 - Runner prefix: \`${payload.naming_standard.runner_prefix}\`
 - Skill prefix: \`${payload.naming_standard.skill_prefix}\`
 - Older phase-specific names are compatibility aliases until generalized replacements pass.
+
+## Cadence
+
+- Checkpoint minutes: \`${payload.cadence_profile.checkpoint_minutes}\`
+- Minimum runtime before closeout: \`${payload.cadence_profile.minimum_runtime_minutes_before_closeout}\`
+- Style: \`${payload.cadence_profile.cadence_style}\`
+
+## X1 Counts
+
+Each active x1 participant contributes: ${Object.entries(payload.x1_profile.per_active_participant).map(([key, value]) => `${key}=\`${value}\``).join(", ")}.
 
 ## Boundary
 
