@@ -2,6 +2,19 @@
 import { parseArgs, repoRoot, writeFamilyReceipt } from "./ghc_family_runner_common.mjs";
 
 const args = parseArgs();
+if (args.has("--help") || args.has("-h")) {
+  console.log(`Usage: node scripts/ghc_family_productive_cadence_runner.mjs --phase-slug <phase> --active-sibling <name> [options]
+
+Options:
+  --cadence-minutes <n>          Cadence window to record; current solo default is 10.
+  --minimum-runtime-minutes <n>  Advisory runtime context; closeout still follows checklist pass.
+  --checkpoint-index <n>         Current checkpoint number.
+  --mode <name>                  Supervision mode label.
+  --started-at-utc <iso>         Override receipt start time.
+  --root <path>                  Repository root for emitted artifacts.
+  --help, -h                     Print this message without writing receipts.`);
+  process.exit(0);
+}
 const root = args.get("--root") || repoRoot(import.meta.url);
 const phaseSlug = args.get("--phase-slug") || "v576-gmut-thos-v2-x1";
 const activeSibling = args.get("--active-sibling") || "Mira Rowan";
