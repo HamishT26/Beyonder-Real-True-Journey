@@ -12,21 +12,26 @@ const nextSibling = args.get("--next-sibling") || "Mira Vale";
 const reducerFile = args.get("--reducer-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-solo-x2-open-gap-reducer-receipt-v1.json`;
 const cadenceFile = args.get("--cadence-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-sibling-cadence-status-checker-receipt-v1.json`;
 const handoffReadinessFile = args.get("--handoff-readiness-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-thread-handoff-readiness-checker-receipt-v1.json`;
+const handoffPackageFile = args.get("--handoff-package-file") || `docs/trinity-live-traces/${phaseSlug}-maren-quill-handoff-package-v1.json`;
 const privateGuardFile = args.get("--private-guard-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-private-material-guard-receipt-v1.json`;
 
 const reducer = readJsonIfPresent(root, reducerFile) || {};
 const cadence = readJsonIfPresent(root, cadenceFile) || {};
 const handoffReadiness = readJsonIfPresent(root, handoffReadinessFile) || {};
+const handoffPackage = readJsonIfPresent(root, handoffPackageFile) || {};
 const privateGuard = readJsonIfPresent(root, privateGuardFile) || {};
 
 const reducerStatus = reducer.overall_status || reducer.status || "";
 const cadenceStatus = cadence.overall_status || cadence.status || "";
 const handoffReadinessStatus = handoffReadiness.overall_status || handoffReadiness.status || "";
+const handoffPackageStatus = handoffPackage.overall_status || handoffPackage.status || "";
 const privateGuardStatus = privateGuard.overall_status || privateGuard.status || "";
 const reducerPass = /^PASS_GHC_FAMILY_SOLO_X2_OPEN_GAPS_REDUCED_READY/.test(reducerStatus);
 const cadencePass = /^PASS_GHC_FAMILY_SIBLING_CADENCE_CHECK_(RUNTIME_READY|RECORDED_CLOSEOUT_WHEN_COMPLETE)/.test(cadenceStatus);
 const handoffReadyNotSent = /^PASS_GHC_FAMILY_THREAD_HANDOFF_ROUTE_READY_NOT_SENT/.test(handoffReadinessStatus)
   && handoffReadiness.outputs?.messageSent === false;
+const handoffPackagePreparedNotSent = /^PASS_.*HANDOFF_PACKAGE_PREPARED_NOT_SENT/.test(handoffPackageStatus);
+const handoffReadyOrPrepared = handoffReadyNotSent || handoffPackagePreparedNotSent;
 const privateGuardPass = /^PASS_GHC_FAMILY_PRIVATE_MATERIAL_GUARD/.test(privateGuardStatus);
 
 const checks = [
@@ -35,7 +40,7 @@ const checks = [
   { label: "reducer_ready_for_closeout", status: reducerPass ? "PASS" : "OPEN_GAP", observed: reducerStatus },
   { label: "cadence_recorded_closeout_when_complete", status: cadencePass ? "PASS" : "OPEN_GAP", observed: cadenceStatus },
   { label: "private_material_guard_passed", status: privateGuardPass ? "PASS" : "OPEN_GAP", observed: privateGuardStatus },
-  { label: "next_sibling_route_ready_not_sent", status: handoffReadyNotSent ? "PASS" : "OPEN_GAP", observed: handoffReadinessStatus },
+  { label: "next_sibling_handoff_ready_or_package_prepared", status: handoffReadyOrPrepared ? "PASS" : "OPEN_GAP", observed: handoffReadyNotSent ? handoffReadinessStatus : handoffPackageStatus },
   { label: "exact_and_blocked_gates_remain_queued", status: "PASS" },
   { label: "major_proof_canon_legal_deploy_account_gates_open", status: "PASS" }
 ];
@@ -60,11 +65,12 @@ writeFamilyReceipt({
     reducerFile: basename(reducerFile),
     cadenceFile: basename(cadenceFile),
     handoffReadinessFile: basename(handoffReadinessFile),
+    handoffPackageFile: basename(handoffPackageFile),
     privateGuardFile: basename(privateGuardFile),
     openChecks: open,
     closeoutClaimed: open.length === 0,
     nextStep: open.length === 0
-      ? `Send sanitized ${nextSibling} activation for ${nextActivePhase}; do not publish private thread handles.`
+      ? `Send or relay sanitized ${nextSibling} activation for ${nextActivePhase}; do not publish private thread handles.`
       : "Keep the x2 lane open and re-run reducer/cadence before activation."
   },
   note: "This builder records phase truth only. It does not send a thread message and does not close exact, blocked, proof, canon, legal, deployment, account, or private-material gates."
@@ -80,7 +86,8 @@ function refreshBeacons() {
     `docs/trinity-live-traces/${phaseSlug}-ghc-family-solo-x2-closeout-builder-receipt-v1.md`,
     reducerFile,
     cadenceFile,
-    handoffReadinessFile
+    handoffReadinessFile,
+    handoffPackageFile
   ];
   const beaconTargets = [
     ["docs/omega-mini-index/omega-mini-current-state-v1.json", "current_lookup_files"],
