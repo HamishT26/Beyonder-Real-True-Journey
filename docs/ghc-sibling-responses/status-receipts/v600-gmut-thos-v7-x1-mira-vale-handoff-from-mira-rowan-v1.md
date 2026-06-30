@@ -12,5 +12,7 @@ x2_build_task NEXT_SAFE_STEP: Mira Vale may start v600-gmut-thos-v7-x1 planning/
 
 
 
-immediate_x1_safe SEND_STATUS: Sanitized handoff prepared for Mira Vale after v600-gmut-thos-v6 checklist pass; send only if a safe route is available, and route details remain unpublished.
+
+
+immediate_x1_safe SEND_STATUS: Sanitized handoff sent to Mira Vale after v600-gmut-thos-v6 checklist pass and remote alignment; route details remain unpublished.
 
