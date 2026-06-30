@@ -26,8 +26,8 @@ const receipt = sourceReceiptPath
   ? JSON.parse(readFileSync(sourceReceiptPath, "utf8").replace(/^\uFEFF/, ""))
   : readJsonIfPresent(root, sourceReceipt) || {};
 const receiptStatus = receipt.status || receipt.overall_status || "";
-const receiptSourceX1 = receipt.active_x1 || receipt.outputs?.sourceX1 || receipt.source_x1 || receipt.source_x1_phase || receipt.paired_x1_phase;
-const receiptSourceX2 = receipt.active_x2 || receipt.outputs?.closingX2 || receipt.phase_slug || receipt.phase || receipt.source_x2;
+const receiptSourceX1 = receipt.active_x1 || receipt.outputs?.activeX1 || receipt.outputs?.sourceX1 || receipt.source_x1 || receipt.source_x1_phase || receipt.paired_x1_phase;
+const receiptSourceX2 = receipt.active_x2 || receipt.outputs?.activeX2 || receipt.outputs?.closingX2 || receipt.phase_slug || receipt.phase || receipt.source_x2;
 const hasCompactCompletion = receiptStatus === "completed_ready_for_harvest";
 const hasCloseoutBuilderCompletion = /^PASS/.test(receiptStatus);
 const hasPrivateBoundary = receipt.validation?.private_material_published === false
