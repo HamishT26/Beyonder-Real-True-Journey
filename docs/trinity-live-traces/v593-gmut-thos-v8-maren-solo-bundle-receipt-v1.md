@@ -75,8 +75,8 @@ Prepared `v593-gmut-thos-v8-x1` with the required packet profile and matching `v
 - Open gates preserved: PASS.
 - JSON parse validation: PASS.
 - Private-surface validation: PASS.
-- Local commit: PENDING.
-- Push to owned branch: PENDING.
+- Local commit: READY.
+- Push to owned branch: READY.
 
 ## COMMIT/UPLOAD STATUS
 Validation passed; local commit and push are the final x2 steps. Deployment/account/private-publication actions remain open and unperformed.
