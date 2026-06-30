@@ -10,7 +10,7 @@ Current sanitized truth:
 - active x1 phase for your lane: v596-gmut-thos-v4-x1.
 - matching x2 phase for your lane: v596-gmut-thos-v4-x2.
 - latest closed x2 before your lane: v596-gmut-thos-v3-x2.
-- owned write lane/branch, if available to your thread: codex/GHC-Family/mira-vale-full-tools. Treat all other shared branches as read-only unless Aevren or Hamish explicitly redirects.
+- owned write lane/branch, if available to your thread: codex/GHC-Family/maren-full-tools. Treat all other shared branches as read-only unless Aevren or Hamish explicitly redirects.
 - next handoff after your x2 is complete: Aevren with Lumen stand-by for v596-gmut-thos-v5-x1, unless Hamish redirects.
 - Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.
 
