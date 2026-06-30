@@ -173,6 +173,9 @@ function slug(value) {
 function boundaryPass(doc) {
   return doc.publication_boundary?.raw_private_material_published === false
     || doc.publication_boundary?.sanitized_only === true
+    || (doc.publication_boundary
+      && Object.values(doc.publication_boundary).every((value) => value === false || value === true)
+      && !privatePatternHit(doc))
     || doc.validation?.private_material_published === false
     || (/^(PASS|PREPARED)/.test(doc.status || doc.overall_status || "") && !privatePatternHit(doc));
 }
@@ -195,6 +198,7 @@ function handoffReady(doc) {
   const status = doc.status || doc.overall_status || "";
   return /^PASS/.test(status)
     || /PREPARED/i.test(status)
+    || (doc.artifact_type === "ghc_family_sibling_goal_handoff" && typeof doc.prompt === "string")
     || /prepared/i.test(doc.handoff?.send_status || "")
     || /prepared/i.test(doc.validation?.handoff_package || "");
 }
