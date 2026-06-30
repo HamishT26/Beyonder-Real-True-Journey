@@ -27,7 +27,7 @@ const payload = {
   next_handoff_after_x2: nextHandoff,
   cadence: {
     checkpoint_minutes: cadenceMinutes,
-    minimum_runtime_minutes_before_closeout: minimumRuntimeMinutes,
+    advisory_runtime_minutes_before_closeout: minimumRuntimeMinutes,
     style: "productive_background_supervision_no_babysitting",
   },
   per_active_participant_x1_counts: {
@@ -96,7 +96,7 @@ This records the fuller solo x1/x2 rerun teaching route for ${doc.sibling}.
 ## Cadence
 
 - Check every \`${doc.cadence.checkpoint_minutes}\` minutes at natural pauses.
-- Keep the solo practice bundle open for at least \`${doc.cadence.minimum_runtime_minutes_before_closeout}\` minutes unless a formal pause/open-gap receipt is required.
+- Treat \`${doc.cadence.advisory_runtime_minutes_before_closeout}\` minutes as practice guidance only; close as soon as the complete/incomplete checklist passes.
 - Use productive background supervision rather than babysitting.
 
 ## Per-Participant X1 Counts
