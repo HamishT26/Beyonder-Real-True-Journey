@@ -227,7 +227,7 @@ function candidateThemes() {
     row("Sibling self-closeout validation", "x2_build_task", "represented", "Teach each sibling to close only after their checklist passes."),
     row("Owned branch write lane", "x2_build_task", "represented", "Keep shared branches read-only and owned full-tools lanes writable when available."),
     row("Family runner naming", "x2_build_task", "represented", "Prefer ghc_family runner names over phase-specific names."),
-    row("Goal-mode prompt normalization", "x2_build_task", "represented", "Keep goal-mode as the primary continuation route and heartbeat as fallback."),
+    row("Goal Mode v3 prompt normalization", "x2_build_task", "represented", "Keep Goal Mode v3 as the primary continuation route and heartbeat automation dormant unless Hamish explicitly reactivates it."),
     row("Toolchain freshness snapshot", "x2_build_task", "represented", "Check the current Codex CLI/package versions each phase.")
   ];
 }
