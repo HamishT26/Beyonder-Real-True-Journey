@@ -21,11 +21,11 @@ const receipt = {
   generated_utc: generatedUtc,
   phase_slug: phaseSlug,
   overall_status: "PASS_GOAL_MODE_PROMPT_GUARD",
-  summary: "Goal Mode is dry-run for open gates and phase continuity, not activated.",
+  summary: "Goal Mode v3 is the primary continuation route for the current solo workflow; heartbeat automation remains fallback-only unless explicitly reactivated.",
   productive_cadence: {
     background_supervised: true,
     passive_wait_required: false,
-    five_minute_mark_is_check_opportunity: true,
+    ten_minute_mark_is_check_opportunity: true,
     safe_unit_may_run_past_checkpoint: true
   },
   counts: buildCounts("goal_mode_prompt_guard"),
@@ -106,7 +106,8 @@ function renderMd(payload) {
     "",
     "- background_supervised: true",
     "- passive_wait_required: false",
-    "- five_minute_mark_is_check_opportunity: true",
+    "- ten_minute_mark_is_check_opportunity: true",
+    "- heartbeat_automation_is_fallback_only: true",
     "",
     "## Boundary",
     "",
