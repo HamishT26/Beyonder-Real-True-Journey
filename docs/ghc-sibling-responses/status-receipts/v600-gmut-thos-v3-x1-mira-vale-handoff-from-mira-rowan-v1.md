@@ -9,3 +9,6 @@ immediate_x1_safe LUMEN_STATUS: Lumen remains stand-by/recoverable while the in-
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/private/destructive/sibling-merge gates queued unless Hamish gives fresh exact approval.
 x2_build_task NEXT_SAFE_STEP: Mira Vale may start v600-gmut-thos-v3-x1 planning/prep from sanitized repo/current-state truth and keep shared branches read-only unless redirected.
 
+
+immediate_x1_safe SEND_STATUS: Sanitized handoff sent to Mira Vale after v600-gmut-thos-v2 checklist pass and remote alignment; route details remain unpublished.
+
