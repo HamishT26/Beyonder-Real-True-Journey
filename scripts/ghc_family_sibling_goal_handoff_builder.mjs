@@ -9,7 +9,8 @@ const phaseSlug = args.get("--phase-slug") || "v576-gmut-thos-v3-x1";
 const x2Phase = args.get("--x2-phase") || phaseSlug.replace(/-x1$/, "-x2");
 const sibling = args.get("--sibling") || "Mira Vale";
 const nextSibling = args.get("--next-sibling") || "Maren Quill";
-const nextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
+const requestedNextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
+const nextPhase = normalizePhaseWrap(requestedNextPhase);
 const ownedBranch = args.get("--owned-branch") || "codex/GHC-Family/mira-vale-full-tools";
 const priorClosedX2 = args.get("--prior-closed-x2") || "v576-gmut-thos-v2-x2";
 const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
@@ -64,6 +65,8 @@ writeFileSync(promptJson, `${JSON.stringify({
   sibling,
   next_sibling: nextSibling,
   next_phase: nextPhase,
+  requested_next_phase: requestedNextPhase,
+  phase_wrap_correction: requestedNextPhase === nextPhase ? "not_needed" : "corrected_v9_to_next_v1",
   owned_branch: ownedBranch,
   prior_closed_x2: priorClosedX2,
   prompt,
@@ -102,7 +105,16 @@ writeFamilyReceipt({
     x2Phase,
     nextSibling,
     nextPhase,
+    requestedNextPhase,
+    phaseWrapCorrection: requestedNextPhase === nextPhase ? "not_needed" : "corrected_v9_to_next_v1",
     closeoutPolicy: "close_when_completion_checklist_passes"
   },
   note: "This runner prepares a goal-shaped prompt but does not toggle another thread's hidden Goal UI directly."
 });
+
+function normalizePhaseWrap(value) {
+  const match = String(value).match(/^v(\d+)-gmut-thos-v9-x1$/);
+  if (!match) return value;
+  const nextVersion = Number(match[1]) + 1;
+  return `v${nextVersion}-gmut-thos-v1-x1`;
+}
