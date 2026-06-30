@@ -174,7 +174,7 @@ function boundaryPass(doc) {
   return doc.publication_boundary?.raw_private_material_published === false
     || doc.publication_boundary?.sanitized_only === true
     || doc.validation?.private_material_published === false
-    || (/^PASS/.test(doc.status || doc.overall_status || "") && !privatePatternHit(doc));
+    || (/^(PASS|PREPARED)/.test(doc.status || doc.overall_status || "") && !privatePatternHit(doc));
 }
 
 function majorGatesOpen(...docs) {

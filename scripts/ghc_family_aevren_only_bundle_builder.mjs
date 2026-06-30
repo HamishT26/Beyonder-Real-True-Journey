@@ -4,6 +4,19 @@ import { dirname, join } from "node:path";
 import { parseArgs, repoRoot, writeFamilyReceipt } from "./ghc_family_runner_common.mjs";
 
 const args = parseArgs();
+if (args.has("--help") || args.has("-h")) {
+  console.log(`Usage: node scripts/ghc_family_aevren_only_bundle_builder.mjs --phase-slug <x1-phase> --x2-phase <x2-phase> --next-phase <next-x1-phase> --next-sibling <name> [options]
+
+Options:
+  --next-owned-branch <branch>   Owned branch for the next sibling lane.
+  --after-next-phase <phase>     Phase after the next sibling closes.
+  --after-next-sibling <name>    Sibling after the next sibling lane.
+  --cadence-minutes <n>          Productive cadence window; current default is 10.
+  --codex-cli-version <version>  Toolchain version label for the receipt.
+  --root <path>                  Repository root for emitted artifacts.
+  --help, -h                     Print this message without writing receipts.`);
+  process.exit(0);
+}
 const root = args.get("--root") || repoRoot(import.meta.url);
 const phaseSlug = args.get("--phase-slug") || "v577-gmut-thos-v1-x1";
 const x2Phase = args.get("--x2-phase") || phaseSlug.replace(/-x1$/, "-x2");
