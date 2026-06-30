@@ -312,6 +312,7 @@ function refreshBeacons(lookupFiles) {
     doc.latest_completed_x2_phase = x2Phase;
     doc.current_active_phase = nextPhase;
     doc.current_active_phase_status = `${nextSibling} solo x1/x2 handoff prepared after Aevren-only closeout`;
+    doc.next_x1_lane_after_x2 = `${nextPhase} ${nextSibling} solo bundle unless Hamish redirects`;
     doc.full_goal_complete = false;
     doc.lumen_status = {
       status: "standby_recoverable_browser_unavailable",
@@ -335,7 +336,8 @@ function refreshBeacons(lookupFiles) {
       x1_closed: true,
       x2_closed: true,
       next_x1_ready: true,
-      next_sibling: nextSibling
+      next_sibling: nextSibling,
+      next_x1_lane_after_x2: doc.next_x1_lane_after_x2
     };
     doc[lookupKey] = unique([...(doc[lookupKey] || []), ...lookupFiles]);
     doc.latest_action_summary = unique([
