@@ -41,6 +41,7 @@ const handoff = readSourceJson(handoffFile);
 const validationCounts = checklist.validation?.count_validation || {};
 const x1Counts = checklist.x1_counts || {};
 const safeCount = firstNumber(
+  checklist.queue_counts?.by_kind?.safe_approval_packet,
   checklist.counts?.by_kind?.safe_approval_packet,
   checklist.counts?.safe,
   validationCounts.safe_approval_packets,
@@ -48,6 +49,8 @@ const safeCount = firstNumber(
   checklist.safe_approval_packets?.length
 );
 const candidateCount = firstNumber(
+  checklist.queue_counts?.by_kind?.candidate_packet,
+  checklist.queue_counts?.by_tag?.candidate,
   checklist.counts?.by_kind?.candidate_packet,
   checklist.counts?.candidate,
   validationCounts.candidate_packets,
@@ -55,6 +58,8 @@ const candidateCount = firstNumber(
   checklist.candidate_packets?.length
 );
 const exactCount = firstNumber(
+  checklist.queue_counts?.by_kind?.exact_approval_packet,
+  checklist.queue_counts?.by_tag?.exact_approval_needed,
   checklist.counts?.by_kind?.exact_approval_packet,
   checklist.counts?.exact,
   checklist.counts?.exact_approval_queued,
@@ -63,6 +68,8 @@ const exactCount = firstNumber(
   checklist.exact_approval_packets?.length
 );
 const blockedCount = firstNumber(
+  checklist.queue_counts?.by_kind?.blocked_packet,
+  checklist.queue_counts?.by_tag?.blocked,
   checklist.counts?.by_kind?.blocked_packet,
   checklist.counts?.blocked,
   checklist.counts?.blocked_queued,
@@ -71,6 +78,7 @@ const blockedCount = firstNumber(
   checklist.blocked_packets?.length
 );
 const skillCount = firstNumber(
+  checklist.queue_counts?.by_kind?.skill_idea,
   checklist.counts?.by_kind?.skill_idea,
   checklist.counts?.skill_ideas,
   validationCounts.skill_ideas,
@@ -78,6 +86,7 @@ const skillCount = firstNumber(
   checklist.skill_ideas?.length
 );
 const runnerCount = firstNumber(
+  checklist.queue_counts?.by_kind?.runner_idea,
   checklist.counts?.by_kind?.runner_idea,
   checklist.counts?.runner_ideas,
   validationCounts.runner_ideas,
@@ -85,6 +94,7 @@ const runnerCount = firstNumber(
   checklist.runner_ideas?.length
 );
 const cleanupCount = firstNumber(
+  checklist.queue_counts?.by_kind?.cleanup_task,
   checklist.counts?.by_kind?.cleanup_task,
   checklist.counts?.cleanup_refine_fix,
   validationCounts.cleanup_refine_fix_tasks,
