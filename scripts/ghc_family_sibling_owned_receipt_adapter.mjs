@@ -39,13 +39,58 @@ const transition = readSourceJson(transitionFile);
 const handoff = readSourceJson(handoffFile);
 
 const validationCounts = checklist.validation?.count_validation || {};
-const safeCount = checklist.counts?.by_kind?.safe_approval_packet || checklist.counts?.safe || validationCounts.safe_approval_packets || 0;
-const candidateCount = checklist.counts?.by_kind?.candidate_packet || checklist.counts?.candidate || validationCounts.candidate_packets || 0;
-const exactCount = checklist.counts?.by_kind?.exact_approval_packet || checklist.counts?.exact || checklist.counts?.exact_approval_queued || validationCounts.exact_approval_packets || 0;
-const blockedCount = checklist.counts?.by_kind?.blocked_packet || checklist.counts?.blocked || checklist.counts?.blocked_queued || validationCounts.blocked_packets || 0;
-const skillCount = checklist.counts?.by_kind?.skill_idea || checklist.counts?.skill_ideas || validationCounts.skill_ideas || 0;
-const runnerCount = checklist.counts?.by_kind?.runner_idea || checklist.counts?.runner_ideas || validationCounts.runner_ideas || 0;
-const cleanupCount = checklist.counts?.by_kind?.cleanup_task || checklist.counts?.cleanup_refine_fix || validationCounts.cleanup_refine_fix_tasks || 0;
+const x1Counts = checklist.x1_counts || {};
+const safeCount = firstNumber(
+  checklist.counts?.by_kind?.safe_approval_packet,
+  checklist.counts?.safe,
+  validationCounts.safe_approval_packets,
+  x1Counts.safe_approval_packets,
+  checklist.safe_approval_packets?.length
+);
+const candidateCount = firstNumber(
+  checklist.counts?.by_kind?.candidate_packet,
+  checklist.counts?.candidate,
+  validationCounts.candidate_packets,
+  x1Counts.candidate_packets,
+  checklist.candidate_packets?.length
+);
+const exactCount = firstNumber(
+  checklist.counts?.by_kind?.exact_approval_packet,
+  checklist.counts?.exact,
+  checklist.counts?.exact_approval_queued,
+  validationCounts.exact_approval_packets,
+  x1Counts.exact_approval_packets,
+  checklist.exact_approval_packets?.length
+);
+const blockedCount = firstNumber(
+  checklist.counts?.by_kind?.blocked_packet,
+  checklist.counts?.blocked,
+  checklist.counts?.blocked_queued,
+  validationCounts.blocked_packets,
+  x1Counts.blocked_packets,
+  checklist.blocked_packets?.length
+);
+const skillCount = firstNumber(
+  checklist.counts?.by_kind?.skill_idea,
+  checklist.counts?.skill_ideas,
+  validationCounts.skill_ideas,
+  x1Counts.skill_ideas,
+  checklist.skill_ideas?.length
+);
+const runnerCount = firstNumber(
+  checklist.counts?.by_kind?.runner_idea,
+  checklist.counts?.runner_ideas,
+  validationCounts.runner_ideas,
+  x1Counts.runner_ideas,
+  checklist.runner_ideas?.length
+);
+const cleanupCount = firstNumber(
+  checklist.counts?.by_kind?.cleanup_task,
+  checklist.counts?.cleanup_refine_fix,
+  validationCounts.cleanup_refine_fix_tasks,
+  x1Counts.cleanup_refine_fix_tasks,
+  checklist.cleanup_refine_fix_tasks?.length
+);
 const completedRows = checklist.counts?.by_status?.COMPLETED || checklist.counts?.completed || safeCount + candidateCount + skillCount + runnerCount + cleanupCount;
 const queuedRows = checklist.counts?.by_status?.QUEUED_OUT_OF_SCOPE_EXACT_OR_BLOCKED || exactCount + blockedCount;
 
@@ -194,6 +239,13 @@ function unique(values) {
   return [...new Set(values.filter(Boolean))];
 }
 
+function firstNumber(...values) {
+  for (const value of values) {
+    if (Number.isFinite(value)) return value;
+  }
+  return 0;
+}
+
 function handoffReady(doc) {
   const status = doc.status || doc.overall_status || "";
   return /^PASS/.test(status)
@@ -204,7 +256,7 @@ function handoffReady(doc) {
 }
 
 function passStatus(doc) {
-  const status = doc.status || doc.overall_status || doc.closeout_status || "";
+  const status = doc.status || doc.overall_status || doc.closeout_status || doc.x1_status || "";
   return /^PASS/.test(status) || status === "completed_ready_for_harvest";
 }
 
