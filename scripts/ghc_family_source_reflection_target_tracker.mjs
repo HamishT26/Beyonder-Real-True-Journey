@@ -5,6 +5,8 @@ const args = parseArgs();
 const root = args.get("--root") || repoRoot(import.meta.url);
 const phaseSlug = args.get("--phase-slug") || "v576-gmut-thos-v2-x2";
 const targetCount = Number(args.get("--target-count") || 100);
+const sourceCount = Number(args.get("--source-count") || 50);
+const journeyCount = Number(args.get("--journey-count") || 50);
 const mode = args.get("--mode") || "source_reflection_open_target";
 
 const sourceSeeds = [
@@ -118,12 +120,14 @@ const journeyAngles = [
   "compact_recovery"
 ];
 
-const sourceRows = expandRows(sourceSeeds, sourceAngles, "web_source", 50);
-const journeyRows = expandRows(journeySeeds, journeyAngles, "journey_phase_reflection", 50);
+const sourceRows = expandRows(sourceSeeds, sourceAngles, "web_source", sourceCount);
+const journeyRows = expandRows(journeySeeds, journeyAngles, "journey_phase_reflection", journeyCount);
 const representedRows = sourceRows.length + journeyRows.length;
 const checks = [
   { label: "source_rows_recorded", status: sourceRows.length > 0 ? "PASS" : "OPEN_GAP", observed: sourceRows.length },
   { label: "journey_reflection_rows_recorded", status: journeyRows.length > 0 ? "PASS" : "OPEN_GAP", observed: journeyRows.length },
+  { label: "requested_source_rows_represented", status: sourceRows.length >= sourceCount ? "PASS" : "OPEN_GAP", observed: `${sourceRows.length}/${sourceCount}` },
+  { label: "requested_journey_rows_represented", status: journeyRows.length >= journeyCount ? "PASS" : "OPEN_GAP", observed: `${journeyRows.length}/${journeyCount}` },
   { label: "target_count_tracked", status: targetCount >= 100 ? "PASS" : "OPEN_GAP", observed: targetCount },
   { label: "hundred_row_target_completed", status: representedRows >= targetCount ? "PASS" : "OPEN_GAP", observed: representedRows },
   { label: "literal_hundred_distinct_browser_searches_not_claimed", status: "PASS" },
@@ -142,7 +146,9 @@ writeFamilyReceipt({
   outputs: {
     mode,
     targetCount,
-    rowShape: "50 reviewed web/source reflection rows plus 50 Journey/phase reflection rows",
+    sourceCount,
+    journeyCount,
+    rowShape: `${sourceRows.length} reviewed web/source reflection rows plus ${journeyRows.length} Journey/phase reflection rows`,
     representedRows,
     remainingRows: Math.max(0, targetCount - representedRows),
     sourceRows,
