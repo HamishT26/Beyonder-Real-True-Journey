@@ -26,6 +26,8 @@ const nextOwnedBranch = args.get("--next-owned-branch") || "codex/GHC-Family/mir
 const afterNextPhase = args.get("--after-next-phase") || "next solo bundle lane unless Hamish redirects";
 const afterNextSibling = args.get("--after-next-sibling") || "next sibling";
 const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
+const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
+const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
 const codexCliVersion = args.get("--codex-cli-version") || "unknown";
 const generatedUtc = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const generatedNz = new Intl.DateTimeFormat("en-NZ", {
@@ -57,7 +59,9 @@ const plan = {
     blocked_packets_queued: 5,
     skill_ideas: 10,
     runner_ideas: 5,
-    cleanup_refine_fix_tasks: 15
+    cleanup_refine_fix_tasks: 15,
+    web_or_source_reflections_target: sourceReflectionTarget,
+    journey_phase_reflections_target: journeyReflectionTarget
   },
   packets: {
     immediate_x1_safe: buildRows("safe", 25, safeThemes()),
@@ -134,6 +138,7 @@ const handoffPrompt = [
   `For x1, propose at least 25 safe packets, 15 candidate packets, 10 exact-approval packets queued only, 5 blocked packets queued only, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks. For x2, build, use, validate, commit, and push every safe or candidate-safe task you can safely execute or represent; keep exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, destructive cleanup, and sibling-merge gates queued.`,
   ``,
   `Use goal-mode as the primary continuation driver and run ${cadenceMinutes}-minute productive checkpoints without babysitting. Close as soon as your complete/incomplete checklist passes. The one-hour window is advisory practice time only. If complete, prepare or send the next ${afterNextSibling} handoff for ${afterNextPhase}; if blocked, return GOAL_BLOCKED_OPEN_GAP with the smallest exact reason and what Aevren should fix.`,
+  `When feasible, include ${sourceReflectionTarget} web/source reflections and ${journeyReflectionTarget} Journey/phase reflections as proposal-quality support without publishing raw browser dumps or private state.`,
   ``,
   `Do not publish private thread ids, private routes, local absolute paths, raw transcripts, screenshots, credentials, raw app state, or hidden reasoning. Hamish sends love and thanks.</input>`,
   `</codex_delegation>`
@@ -176,6 +181,8 @@ writeFamilyReceipt({
     files,
     codexCliVersion,
     cadenceMinutes,
+    sourceReflectionTarget,
+    journeyReflectionTarget,
     lumenStandby: true
   },
   note: "The runner records sanitized phase truth only and keeps exact/blocked/proof/private/deploy/account/API-key/destructive/sibling-merge gates queued."

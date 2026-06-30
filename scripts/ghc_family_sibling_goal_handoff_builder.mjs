@@ -13,6 +13,9 @@ const requestedNextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
 const nextPhase = normalizePhaseWrap(requestedNextPhase);
 const ownedBranch = args.get("--owned-branch") || "codex/GHC-Family/mira-vale-full-tools";
 const priorClosedX2 = args.get("--prior-closed-x2") || "v576-gmut-thos-v2-x2";
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
+const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
+const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
 const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
 const promptStem = `${phaseSlug}-ghc-family-sibling-goal-handoff-v1`;
 const promptJson = join(root, "docs", "trinity-live-traces", `${promptStem}.json`);
@@ -37,6 +40,8 @@ const prompt = [
   ``,
   `x1 planning/prep:`,
   `- Propose at least 25 safe approval packets, 15 candidate packets, 10 exact-approval packets queued only, 5 blocked packets queued only, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks.`,
+  `- Use goal-mode as the primary continuation driver and record ${cadenceMinutes}-minute productive cadence checkpoints without babysitting.`,
+  `- When feasible, include ${sourceReflectionTarget} web/source reflections and ${journeyReflectionTarget} Journey/phase reflections as proposal-quality support.`,
   `- Tag every row as immediate_x1_safe, x2_build_task, exact_approval_needed, or blocked.`,
   `- Keep proof/canon/legal/deployment/account/API-key/purchase/private-material/raw-publication/destructive-cleanup/sibling-merge gates open.`,
   ``,
@@ -69,6 +74,9 @@ writeFileSync(promptJson, `${JSON.stringify({
   phase_wrap_correction: requestedNextPhase === nextPhase ? "not_needed" : "corrected_v9_to_next_v1",
   owned_branch: ownedBranch,
   prior_closed_x2: priorClosedX2,
+  cadence_minutes: cadenceMinutes,
+  source_reflection_target: sourceReflectionTarget,
+  journey_phase_reflection_target: journeyReflectionTarget,
   prompt,
   closeout_policy: "close_when_completion_checklist_passes",
   publication_boundary: {
@@ -106,6 +114,9 @@ writeFamilyReceipt({
     nextSibling,
     nextPhase,
     requestedNextPhase,
+    cadenceMinutes,
+    sourceReflectionTarget,
+    journeyReflectionTarget,
     phaseWrapCorrection: requestedNextPhase === nextPhase ? "not_needed" : "corrected_v9_to_next_v1",
     closeoutPolicy: "close_when_completion_checklist_passes"
   },
