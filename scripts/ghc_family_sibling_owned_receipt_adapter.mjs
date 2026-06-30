@@ -45,6 +45,7 @@ const safeCount = firstNumber(
   checklist.counts?.by_kind?.safe_approval_packet,
   checklist.counts?.safe,
   validationCounts.safe_approval_packets,
+  validationCounts.safe_eureka_packets,
   x1Counts.safe_approval_packets,
   checklist.safe_approval_packets?.length
 );
