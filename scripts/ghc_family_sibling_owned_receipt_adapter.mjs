@@ -139,7 +139,9 @@ const receipt = {
   source_labels: [basename(checklistFile), basename(transitionFile), basename(handoffFile)],
   handoff: {
     status: handoff.status || handoff.overall_status || "not_recorded",
-    next_phase: handoff.next_phase || nextPhase,
+    next_phase: nextPhase,
+    observed_source_handoff_next_phase: handoff.next_phase || null,
+    next_phase_correction: handoff.next_phase && handoff.next_phase !== nextPhase ? "corrected_to_declared_next_phase" : "not_needed",
     next_sibling: handoff.next_sibling || nextSibling,
     message_sent: false,
     prepared_not_sent: true
