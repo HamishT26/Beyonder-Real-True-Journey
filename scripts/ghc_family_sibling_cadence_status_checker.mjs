@@ -9,7 +9,7 @@ const laneStatus = args.get("--lane-status") || "idle_completed_open_gap_harvest
 const latestResponseStatus = args.get("--latest-response-status") || "formal_open_gap_reduced";
 const launchTime = args.get("--lane-launch-time") || "2026-06-29T18:34:26+12:00";
 const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
-const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 60);
+const advisoryRuntimeMinutes = Number(args.get("--advisory-runtime-minutes") || args.get("--minimum-runtime-minutes") || 60);
 const closeoutPolicy = args.get("--closeout-policy") || "close_when_completion_checklist_passes";
 const now = new Date();
 const launched = new Date(launchTime);
@@ -17,10 +17,10 @@ const elapsedMinutes = Number.isFinite(launched.getTime())
   ? Math.max(0, Math.floor((now.getTime() - launched.getTime()) / 60_000))
   : 0;
 const nextCheckpointUtc = new Date(now.getTime() + cadenceMinutes * 60_000).toISOString().replace(/\.\d{3}Z$/, "Z");
-const earliestCloseoutUtc = Number.isFinite(launched.getTime())
-  ? new Date(launched.getTime() + minimumRuntimeMinutes * 60_000).toISOString().replace(/\.\d{3}Z$/, "Z")
+const advisoryWindowUtc = Number.isFinite(launched.getTime())
+  ? new Date(launched.getTime() + advisoryRuntimeMinutes * 60_000).toISOString().replace(/\.\d{3}Z$/, "Z")
   : "";
-const oneHourElapsed = elapsedMinutes >= minimumRuntimeMinutes;
+const advisoryWindowElapsed = elapsedMinutes >= advisoryRuntimeMinutes;
 const closeoutWhenComplete = closeoutPolicy === "close_when_completion_checklist_passes";
 
 const checks = [
@@ -30,7 +30,7 @@ const checks = [
   {
     label: "runtime_target_recorded_as_advisory",
     status: "PASS",
-    observed: { elapsedMinutes, minimumRuntimeMinutes, oneHourElapsed }
+    observed: { elapsedMinutes, advisoryRuntimeMinutes, advisoryWindowElapsed }
   },
   {
     label: "closeout_policy_allows_completion_before_runtime_target",
@@ -66,10 +66,10 @@ writeFamilyReceipt({
     cadenceMinutes,
     launchTime,
     elapsedMinutes,
-    minimumRuntimeMinutes,
+    advisoryRuntimeMinutes,
     closeoutPolicy,
-    earliestCloseoutUtc,
-    oneHourElapsed,
+    advisoryWindowUtc,
+    advisoryWindowElapsed,
     activeAndStandbySummary: [
       `${activeSibling}: current checked lane status is ${laneStatus}.`,
       `Latest response status: ${latestResponseStatus}.`,

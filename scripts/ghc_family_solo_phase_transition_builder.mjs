@@ -38,7 +38,8 @@ const receipt = {
   },
   cadence: {
     checkpoint_minutes: 10,
-    minimum_runtime_minutes_before_x2_closeout: 60,
+    advisory_runtime_minutes_before_x2_closeout: 60,
+    runtime_policy: "close_when_completion_checklist_passes",
     style: "goal_mode_productive_supervision_no_babysitting"
   },
   publication_boundary: publicationBoundary(),
@@ -121,6 +122,8 @@ Codex CLI verified: \`${payload.codex_cli_version_verified}\`
 ## Boundary
 
 The x2 phase is active and background-supervised. It is not closed. Mira Vale is not activated until x2 has completion evidence or a formal open-gap handoff. No raw private material, Browser routes, private ids, transcripts, screenshots, credentials, local paths, raw app state, hidden reasoning, proof closure, canon promotion, legal closure, deployment, account mutation, API-key creation, purchase, destructive cleanup, or sibling merge/replacement is published or claimed.
+
+The 60-minute window is advisory practice context only. Close as soon as the complete/incomplete checklist passes.
 `;
 }
 

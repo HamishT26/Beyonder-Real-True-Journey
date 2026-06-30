@@ -7,7 +7,7 @@ Purpose: Record the family 10-minute productive cadence for goal-mode sibling su
 ## Checks
 
 - cadence_minutes_recorded: `PASS`
-- minimum_runtime_recorded: `PASS`
+- advisory_runtime_recorded: `PASS`
 - background_supervision_not_babysitting: `PASS`
 - exact_and_blocked_stay_queued: `PASS`
 - public_private_boundary_kept: `PASS`

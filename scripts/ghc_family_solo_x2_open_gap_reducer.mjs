@@ -12,14 +12,14 @@ const sourceReflectionFile = args.get("--source-reflection-file") || `docs/trini
 const handoffReadinessFile = args.get("--handoff-readiness-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-thread-handoff-readiness-checker-receipt-v1.json`;
 const toolchainSnapshotFile = args.get("--toolchain-snapshot-file") || `docs/trinity-live-traces/${phaseSlug}-ghc-family-toolchain-system-snapshot-receipt-v1.json`;
 const launchTime = args.get("--lane-launch-time") || "2026-06-29T18:34:26+12:00";
-const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 60);
+const advisoryRuntimeMinutes = Number(args.get("--advisory-runtime-minutes") || args.get("--minimum-runtime-minutes") || 60);
 const now = new Date();
 const launchedAt = new Date(launchTime);
 const elapsedMinutes = Number.isFinite(launchedAt.getTime())
   ? Math.max(0, Math.floor((now.getTime() - launchedAt.getTime()) / 60_000))
   : 0;
-const earliestCloseout = Number.isFinite(launchedAt.getTime())
-  ? new Date(launchedAt.getTime() + minimumRuntimeMinutes * 60_000).toISOString().replace(/\.\d{3}Z$/, "Z")
+const advisoryWindowUtc = Number.isFinite(launchedAt.getTime())
+  ? new Date(launchedAt.getTime() + advisoryRuntimeMinutes * 60_000).toISOString().replace(/\.\d{3}Z$/, "Z")
   : "";
 
 const reduction = readJsonIfPresent(root, reductionFile) || {};
@@ -52,7 +52,7 @@ const handoffReadinessStatus = handoffReadiness.overall_status || handoffReadine
 const handoffRouteReady = /^PASS_GHC_FAMILY_THREAD_HANDOFF_ROUTE_READY_NOT_SENT/.test(handoffReadinessStatus);
 const toolchainSnapshotStatus = toolchainSnapshot.overall_status || toolchainSnapshot.status || "";
 const toolchainSnapshotPass = /^PASS_GHC_FAMILY_TOOLCHAIN_SYSTEM_SNAPSHOT/.test(toolchainSnapshotStatus);
-const timePass = elapsedMinutes >= minimumRuntimeMinutes;
+const advisoryWindowElapsed = elapsedMinutes >= advisoryRuntimeMinutes;
 const artifactsPass = missingArtifacts.length === 0;
 
 const checks = [
@@ -62,7 +62,7 @@ const checks = [
   {
     label: "runtime_target_recorded_as_advisory",
     status: "PASS",
-    observed: { elapsedMinutes, minimumRuntimeMinutes, oneHourElapsed: timePass }
+    observed: { elapsedMinutes, advisoryRuntimeMinutes, advisoryWindowElapsed }
   },
   { label: "mira_vale_thread_route_ready", status: handoffRouteReady ? "PASS" : "OPEN_GAP" },
   { label: "mira_vale_handoff_not_sent_before_closeout", status: handoffReadiness.outputs?.messageSent === false ? "PASS" : "OPEN_GAP" },
@@ -97,8 +97,8 @@ writeFamilyReceipt({
     launchTime,
     generatedAtUtc: now.toISOString().replace(/\.\d{3}Z$/, "Z"),
     elapsedMinutes,
-    minimumRuntimeMinutes,
-    earliestCloseoutUtc: earliestCloseout,
+    advisoryRuntimeMinutes,
+    advisoryWindowUtc,
     artifactRows,
     missingArtifacts: missingArtifacts.map((row) => row.name),
     sourceReflectionStatus,
@@ -148,8 +148,8 @@ function refreshBeacons() {
       status,
       remaining_open_gaps: remainingOpenGaps,
       elapsed_minutes: elapsedMinutes,
-      minimum_runtime_minutes: minimumRuntimeMinutes,
-      earliest_closeout_utc: earliestCloseout,
+      advisory_runtime_minutes: advisoryRuntimeMinutes,
+      advisory_window_utc: advisoryWindowUtc,
       runtime_target_policy: "advisory_close_when_complete",
       owned_lane_availability_aevren_side: lanePass ? "PASS" : "OPEN_GAP",
       persistent_x2_support_artifacts_present: artifactsPass ? "PASS" : "OPEN_GAP",
