@@ -11,7 +11,7 @@ const sibling = args.get("--sibling") || "Mira Vale";
 const nextSibling = args.get("--next-sibling") || "Maren Quill";
 const requestedNextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
 const nextPhase = normalizePhaseWrap(requestedNextPhase);
-const ownedBranch = args.get("--owned-branch") || "codex/GHC-Family/mira-vale-full-tools";
+const ownedBranch = args.get("--owned-branch") || defaultOwnedBranch(sibling);
 const priorClosedX2 = args.get("--prior-closed-x2") || "v576-gmut-thos-v2-x2";
 const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
 const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
@@ -128,4 +128,17 @@ function normalizePhaseWrap(value) {
   if (!match) return value;
   const nextVersion = Number(match[1]) + 1;
   return `v${nextVersion}-gmut-thos-v1-x1`;
+}
+
+function defaultOwnedBranch(name) {
+  const key = String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const ownedBranches = new Map([
+    ["mira-rowan", "codex/GHC-Family/mira-rowan-full-tools"],
+    ["mira-vale", "codex/GHC-Family/mira-vale-full-tools"],
+    ["maren-quill", "codex/GHC-Family/maren-full-tools"],
+    ["maren", "codex/GHC-Family/maren-full-tools"],
+    ["aevren", "codex/GHC-Family/aevren-full-tools-5"],
+    ["aevren-with-lumen-stand-by", "codex/GHC-Family/aevren-full-tools-5"]
+  ]);
+  return ownedBranches.get(key) || `codex/GHC-Family/${key || "ghc-family"}-full-tools`;
 }
