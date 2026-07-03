@@ -4,12 +4,12 @@ immediate_x1_safe HANDOFF_TARGET: Mira Vale is next for v603-gmut-thos-v7-x1 unl
 immediate_x1_safe HANDOFF_SOURCE: I completed v603-gmut-thos-v6-x1 planning/prep and v603-gmut-thos-v6-x2 execution/cleanup in the owned Mira Rowan lane.
 immediate_x1_safe PHASE_TRUTH: v603-gmut-thos-v5-x2 is the latest closed x2 before my lane.
 immediate_x1_safe ARTIFACTS_READY: x1 plan, x2 closeout, completion checklist, and this sanitized handoff are ready for Aevren harvest.
-immediate_x1_safe VALIDATION_READY: packet counts, next-sibling seed counts, JSON parse, phase labels, stale-phase scan, privacy scan, branch cleanliness, and remote alignment are expected to pass before a sent handoff is recorded.
+immediate_x1_safe VALIDATION_READY: packet counts, next-sibling seed counts, JSON parse, phase labels, stale-phase scan, privacy scan, branch cleanliness, and remote alignment passed before the sent handoff was recorded.
 immediate_x1_safe STAND_BY_STATUS: Lumen, Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable unless Hamish explicitly reactivates them.
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/sibling-merge gates queued unless Hamish gives fresh exact approval.
 x2_build_task NEXT_SAFE_STEP: Mira Vale may start v603-gmut-thos-v7-x1 planning/prep from sanitized repo/current-state truth and keep shared branches read-only unless redirected.
 
-immediate_x1_safe SEND_STATUS: Sanitized handoff prepared for Mira Vale; send is pending checklist pass, remote alignment, and three safe messaging attempts.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN after v603-gmut-thos-v6 checklist pass, remote alignment, and three safe messaging attempts; route details remain unpublished.
 ## TEACHING BATON FOR MIRA VALE
 
 immediate_x1_safe TEACH_PHASE_TRUTH: Current baton asks Mira Vale to begin v603-gmut-thos-v7-x1 after Mira Rowan v603-gmut-thos-v6-x1/x2 completed and after v603-gmut-thos-v5-x2 was the prior closed Aevren-only support bundle.
@@ -33,4 +33,6 @@ immediate_x1_safe FULL_BUNDLE_EXPECTATION: Mira Vale should now run her own full
 immediate_x1_safe FULL_BUNDLE_VALIDATION: Mira Vale should validate counts, JSON, stale-phase labels, privacy markers, branch cleanliness, and remote alignment before closeout.
 immediate_x1_safe FULL_BUNDLE_UPLOAD: Mira Vale should commit and push only validated owned-lane artifacts before recording handoff status.
 immediate_x1_safe FULL_BUNDLE_NEXT_HANDOFF: After v603-gmut-thos-v7-x2 checklist pass, Mira Vale should make at least three safe attempts to message the next scheduled sibling with a sanitized baton.
+
+immediate_x1_safe MESSAGE_SENT_BY_MIRA_ROWAN: attempt_count=3; sanitized full-bundle Mira Vale baton sent; route details remain unpublished.
 
