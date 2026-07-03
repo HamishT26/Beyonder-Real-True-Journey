@@ -131,6 +131,16 @@ const openChecks = checks.filter((check) => check.status !== "PASS").map((check)
 const status = openChecks.length === 0
   ? "completed_ready_for_harvest"
   : "OPEN_GAP_GHC_FAMILY_SIBLING_OWNED_RECEIPT_ADAPTER";
+const handoffSendStatus = handoff.send_status || handoff.handoff?.send_status || handoff.handoff_message?.send_status || handoff.status || handoff.overall_status || "not_recorded";
+const handoffMessageSent = handoff.message_sent === true
+  || handoff.handoff?.message_sent === true
+  || /sent/i.test(handoffSendStatus);
+const handoffPreparedNotSent = !handoffMessageSent && (
+  handoff.prepared_not_sent === true
+  || handoff.handoff?.prepared_not_sent === true
+  || /prepared/i.test(handoffSendStatus)
+  || /prepared/i.test(handoff.validation?.handoff_package || "")
+);
 
 const receipt = {
   artifact_type: "ghc_family_sibling_owned_receipt_adapter",
@@ -157,13 +167,13 @@ const receipt = {
   },
   source_labels: [basename(checklistFile), basename(transitionFile), basename(handoffFile)],
   handoff: {
-    status: handoff.status || handoff.overall_status || "not_recorded",
+    status: handoffSendStatus,
     next_phase: nextPhase,
     observed_source_handoff_next_phase: handoff.next_phase || null,
     next_phase_correction: handoff.next_phase && handoff.next_phase !== nextPhase ? "corrected_to_declared_next_phase" : "not_needed",
     next_sibling: handoff.next_sibling || nextSibling,
-    message_sent: false,
-    prepared_not_sent: true
+    message_sent: handoffMessageSent,
+    prepared_not_sent: handoffPreparedNotSent
   },
   open_gates: unique([
     ...(checklist.open_gates || []),
@@ -282,12 +292,16 @@ function firstMatchingCount(counts, pattern) {
 
 function handoffReady(doc) {
   const status = doc.status || doc.overall_status || "";
+  const sendStatus = doc.send_status || doc.handoff?.send_status || doc.handoff_message?.send_status || "";
   return /^PASS/.test(status)
+    || status === "completed_ready_for_harvest"
     || /PREPARED/i.test(status)
     || /SENT_VIA_SAFE_THREAD_TOOL/i.test(status)
     || doc.message_sent === true
+    || /sent/i.test(sendStatus)
     || (doc.artifact_type === "ghc_family_sibling_goal_handoff" && typeof doc.prompt === "string")
     || /prepared/i.test(doc.handoff?.send_status || "")
+    || /prepared/i.test(doc.handoff_message?.send_status || "")
     || /prepared/i.test(doc.validation?.handoff_package || "");
 }
 
