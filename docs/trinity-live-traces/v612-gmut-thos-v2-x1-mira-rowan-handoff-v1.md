@@ -1,6 +1,8 @@
 # v612-gmut-thos-v2-x1 Mira Rowan Handoff
 
-Status: `PASS_NEXT_SIBLING_HANDOFF_PREPARED`
+Status: `SENT_VIA_SAFE_THREAD_TOOL`
+
+Delivery: `MESSAGE_SENT_BY_AEVREN`; attempt count `1`; private route details not recorded.
 
 ```xml
 <codex_delegation>
