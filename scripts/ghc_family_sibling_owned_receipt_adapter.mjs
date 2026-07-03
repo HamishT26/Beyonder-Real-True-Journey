@@ -40,10 +40,12 @@ const handoff = readSourceJson(handoffFile);
 
 const validationCounts = checklist.validation?.count_validation || {};
 const x1Counts = checklist.x1_counts || {};
+const namedCounts = checklist.counts || {};
 const safeCount = firstNumber(
   checklist.queue_counts?.by_kind?.safe_approval_packet,
   checklist.counts?.by_kind?.safe_approval_packet,
   checklist.counts?.safe,
+  firstMatchingCount(namedCounts, /_safe$/),
   validationCounts.safe_approval_packets,
   validationCounts.safe_eureka_packets,
   x1Counts.safe_approval_packets,
@@ -54,6 +56,7 @@ const candidateCount = firstNumber(
   checklist.queue_counts?.by_tag?.candidate,
   checklist.counts?.by_kind?.candidate_packet,
   checklist.counts?.candidate,
+  firstMatchingCount(namedCounts, /_candidate$/),
   validationCounts.candidate_packets,
   x1Counts.candidate_packets,
   checklist.candidate_packets?.length
@@ -64,6 +67,7 @@ const exactCount = firstNumber(
   checklist.counts?.by_kind?.exact_approval_packet,
   checklist.counts?.exact,
   checklist.counts?.exact_approval_queued,
+  firstMatchingCount(namedCounts, /exact_approval_queued$/),
   validationCounts.exact_approval_packets,
   x1Counts.exact_approval_packets,
   checklist.exact_approval_packets?.length
@@ -74,6 +78,7 @@ const blockedCount = firstNumber(
   checklist.counts?.by_kind?.blocked_packet,
   checklist.counts?.blocked,
   checklist.counts?.blocked_queued,
+  firstMatchingCount(namedCounts, /blocked_queued$/),
   validationCounts.blocked_packets,
   x1Counts.blocked_packets,
   checklist.blocked_packets?.length
@@ -82,6 +87,7 @@ const skillCount = firstNumber(
   checklist.queue_counts?.by_kind?.skill_idea,
   checklist.counts?.by_kind?.skill_idea,
   checklist.counts?.skill_ideas,
+  firstMatchingCount(namedCounts, /_skill_ideas$/),
   validationCounts.skill_ideas,
   x1Counts.skill_ideas,
   checklist.skill_ideas?.length
@@ -90,6 +96,7 @@ const runnerCount = firstNumber(
   checklist.queue_counts?.by_kind?.runner_idea,
   checklist.counts?.by_kind?.runner_idea,
   checklist.counts?.runner_ideas,
+  firstMatchingCount(namedCounts, /_runner_ideas$/),
   validationCounts.runner_ideas,
   x1Counts.runner_ideas,
   checklist.runner_ideas?.length
@@ -98,6 +105,7 @@ const cleanupCount = firstNumber(
   checklist.queue_counts?.by_kind?.cleanup_task,
   checklist.counts?.by_kind?.cleanup_task,
   checklist.counts?.cleanup_refine_fix,
+  firstMatchingCount(namedCounts, /_cleanup_refine_fix$/),
   validationCounts.cleanup_refine_fix_tasks,
   x1Counts.cleanup_refine_fix_tasks,
   checklist.cleanup_refine_fix_tasks?.length
@@ -257,6 +265,14 @@ function firstNumber(...values) {
     if (Number.isFinite(value)) return value;
   }
   return 0;
+}
+
+function firstMatchingCount(counts, pattern) {
+  if (!counts || typeof counts !== "object") return undefined;
+  for (const [key, value] of Object.entries(counts)) {
+    if (pattern.test(key) && Number.isFinite(value)) return value;
+  }
+  return undefined;
 }
 
 function handoffReady(doc) {
