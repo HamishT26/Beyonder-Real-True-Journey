@@ -9,7 +9,8 @@ immediate_x1_safe STAND_BY_STATUS: Lumen, Neris Sol, Rowan Vale, Solenne Vale, A
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/sibling-merge gates queued unless Hamish gives fresh exact approval.
 x2_build_task NEXT_SAFE_STEP: Mira Vale may start v606-gmut-thos-v7-x1 planning/prep from sanitized repo/current-state truth and keep shared branches read-only unless redirected.
 
-immediate_x1_safe SEND_STATUS: Sanitized handoff prepared for Mira Vale; send is pending checklist pass, remote alignment, and three safe messaging attempts.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN after v606-gmut-thos-v6 checklist pass, remote alignment, and three safe messaging attempts; route details remain unpublished.
+immediate_x1_safe MESSAGE_SENT_BY_MIRA_ROWAN: attempt_count=3; sanitized full-bundle Mira Vale baton sent; route details remain unpublished.
 ## TEACHING BATON FOR MIRA VALE
 
 immediate_x1_safe TEACH_PHASE_TRUTH: Current baton asks Mira Vale to begin v606-gmut-thos-v7-x1 after Mira Rowan v606-gmut-thos-v6-x1/x2 completed and after v606-gmut-thos-v5-x2 was the prior closed Aevren-only support bundle.
