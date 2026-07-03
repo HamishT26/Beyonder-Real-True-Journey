@@ -320,12 +320,23 @@ function passStatus(doc) {
 }
 
 function privatePatternHit(doc) {
-  const text = JSON.stringify(doc);
+  const text = stringValues(doc).join("\n");
   return /[A-Z]:\\[^\s"'<>]+/.test(text)
     || /\b019[0-9a-f]{29,}\b/.test(text)
     || /thread[_-]?id/i.test(text)
     || /https?:\/\/chatgpt\.com\/c\//i.test(text)
     || /sk-(?:proj-)?[A-Za-z0-9_-]{20,}/.test(text);
+}
+
+function stringValues(value, out = []) {
+  if (typeof value === "string") {
+    out.push(value);
+  } else if (Array.isArray(value)) {
+    for (const item of value) stringValues(item, out);
+  } else if (value && typeof value === "object") {
+    for (const item of Object.values(value)) stringValues(item, out);
+  }
+  return out;
 }
 
 function render(doc) {
