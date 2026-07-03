@@ -5,11 +5,11 @@ import { parseArgs, repoRoot } from "./ghc_family_runner_common.mjs";
 
 const args = parseArgs();
 const root = args.get("--root") || repoRoot(import.meta.url);
-const phaseSlug = args.get("--phase-slug") || "v576-gmut-thos-v2-x1";
+const phaseSlug = args.get("--phase-slug") || "v601-gmut-thos-v2-x1";
 const sibling = args.get("--sibling") || "Mira Rowan";
 const nextX2 = args.get("--next-x2") || phaseSlug.replace(/-x1$/, "-x2");
-const nextHandoff = args.get("--next-handoff") || "v576-gmut-thos-v3-x1 with Mira Vale-only solo bundle unless Hamish redirects";
-const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
+const nextHandoff = args.get("--next-handoff") || "v601-gmut-thos-v3-x1 with Mira Vale-only solo bundle unless Hamish redirects";
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
 const minimumRuntimeMinutes = Number(args.get("--minimum-runtime-minutes") || 60);
 const generatedUtc = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const tracesDir = join(root, "docs", "trinity-live-traces");
@@ -33,16 +33,25 @@ const payload = {
   per_active_participant_x1_counts: {
     safe_approval_packets: 25,
     candidate_packets: 15,
-    exact_approval_packets_queued: 10,
-    blocked_packets_queued: 5,
+    exact_approval_packets_queued_by_aevren_only: 10,
+    blocked_packets_queued_by_aevren_only: 5,
     skill_ideas: 10,
     runner_ideas: 5,
     cleanup_refine_fix_tasks: 15,
+  },
+  next_sibling_seed_counts_at_x2_closeout: {
+    safe_approval_packets: 25,
+    candidate_packets: 15,
+    skill_ideas: 10,
+    runner_ideas: 5,
+    cleanup_refine_fix_tasks: 15,
+    exact_and_blocked_seed: "not_bumped",
   },
   teaching_points: [
     "x1 is planning, preparation, current-state acceptance, packet generation, source/reflection framing, and safe/candidate/exact/blocked separation.",
     "x2 is execution, building, validation, cleanup, safe prototype use, candidate-safe build work, and handoff packaging.",
     "Exact and blocked rows stay queued; proof/canon/legal/deployment/account/API-key/purchase/private/raw/destructive/sibling-merge gates stay open.",
+    "At x2 closeout, prepare next-sibling seed rows without exposing private thread IDs or local routes; if a safe thread messaging tool is not available, ask Aevren to send the baton.",
     "Shared branches are read-only; sibling-owned full-tools lanes are the only write lanes unless exact approval changes that.",
     "Public artifacts stay sanitized and compact; raw private responses or private lane material stay private."
   ],

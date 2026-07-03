@@ -6,6 +6,16 @@ const args = parseArgs(process.argv.slice(2));
 const phaseSlug = required("--phase-slug");
 const nextX2 = args.get("--next-x2") || `${phaseSlug.replace(/-x1$/, "-x2")}`;
 const nextX1AfterX2 = args.get("--next-x1-after-x2") || "next solo bundle lane unless Hamish redirects";
+const workflowRange = args.get("--workflow-range") || "v601-v620";
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
+const advisoryRuntimeMinutes = Number(args.get("--advisory-runtime-minutes") || 60);
+const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
+const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
+const safeNextSiblingExtra = Number(args.get("--safe-next-sibling-extra") || 25);
+const candidateNextSiblingExtra = Number(args.get("--candidate-next-sibling-extra") || 15);
+const skillNextSiblingExtra = Number(args.get("--skill-next-sibling-extra") || 10);
+const runnerNextSiblingExtra = Number(args.get("--runner-next-sibling-extra") || 5);
+const cleanupNextSiblingExtra = Number(args.get("--cleanup-next-sibling-extra") || 15);
 const root = process.cwd();
 const tracesDir = path.join(root, "docs", "trinity-live-traces");
 const omegaDir = path.join(root, "docs", "omega-mini-index");
@@ -13,8 +23,9 @@ const generatedUtc = new Date().toISOString();
 const generatedNz = nzTimestamp(new Date());
 
 const standard = {
-  schema: "ghc.family.solo_bundle_workflow_standard.v1",
+  schema: "ghc.family.solo_bundle_workflow_standard.v2",
   artifact_type: "solo_bundle_workflow_standard",
+  workflow_range: workflowRange,
   generated_utc: generatedUtc,
   generated_nz: generatedNz,
   phase_slug: phaseSlug,
@@ -35,7 +46,7 @@ const standard = {
     "Rowan Vale",
     "Solenne Vale",
   ],
-  solo_order_v576_seed: [
+  solo_order_current: [
     "Aevren-only",
     "Mira Rowan",
     "Mira Vale",
@@ -46,33 +57,33 @@ const standard = {
     "Maren Quill",
   ],
   x1_profile: {
-    count_interpretation: "Each currently active x1 participant contributes the per-participant targets below; phase totals are derived from the active lane roster instead of hard-coded older duo totals.",
+    count_interpretation: "Each active solo x1 participant contributes the self targets below, then adds the next-sibling seed targets at x2 closeout so the next lane inherits a prepared queue without replacing its own x1 work.",
     per_active_participant: {
       safe_approval_packets: 25,
       candidate_packets: 15,
-      exact_approval_packets_queued: 10,
-      blocked_packets_queued: 5,
+      exact_approval_packets_queued_by_aevren_only: 10,
+      blocked_packets_queued_by_aevren_only: 5,
       skill_ideas: 10,
       runner_ideas: 5,
       cleanup_refine_fix_tasks: 15,
     },
-    older_total_profile_superseded: {
-      safe_approval_packets_total: 50,
-      candidate_packets_total: 30,
-      exact_approval_packets_queued_total: 20,
-      blocked_packets_queued_total: 10,
-      skill_ideas_total: 20,
-      runner_ideas_total: 10,
-      cleanup_refine_fix_tasks_total: 30,
+    x2_next_sibling_seed: {
+      safe_approval_packets: safeNextSiblingExtra,
+      candidate_packets: candidateNextSiblingExtra,
+      skill_ideas: skillNextSiblingExtra,
+      runner_ideas: runnerNextSiblingExtra,
+      cleanup_refine_fix_tasks: cleanupNextSiblingExtra,
+      exact_and_blocked_seed: "not_bumped; Aevren queues exact/blocked rows when needed",
     },
-    web_or_source_reflections_target: 100,
-    journey_phase_reflections_target: 100,
+    completed_v576_v600_profile_superseded: true,
+    web_or_source_reflections_target: sourceReflectionTarget,
+    journey_phase_reflections_target: journeyReflectionTarget,
   },
   cadence_profile: {
-    checkpoint_minutes: 10,
-    advisory_runtime_minutes_before_closeout: 60,
+    checkpoint_minutes: cadenceMinutes,
+    advisory_runtime_minutes_before_closeout: advisoryRuntimeMinutes,
     cadence_style: "productive_background_supervision",
-    check_rule: "Use goal-mode as the primary continuation driver. Work on safe improvements between 10-minute checkpoints; check sibling lanes at natural pauses even if the work block runs past the exact timestamp.",
+    check_rule: `Use goal-mode as the primary continuation driver. Work on safe improvements between ${cadenceMinutes}-minute checkpoints; check sibling lanes at natural pauses even if the work block runs past the exact timestamp.`,
     closeout_rule: "Close as soon as the complete/incomplete checklist passes; the one-hour window is advisory practice time only.",
   },
   x2_profile: {
@@ -213,7 +224,8 @@ function publicationBoundary() {
 
 function claimBoundary() {
   return {
-    full_v576_v600_goal_complete: false,
+    completed_v576_v600_goal: "historical_closed",
+    full_v601_v620_goal_complete: false,
     gmut_empirical_closure: "open",
     final_physics: "open",
     consciousness_proof: "open",

@@ -12,8 +12,8 @@ const nextSibling = args.get("--next-sibling") || "Maren Quill";
 const requestedNextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
 const nextPhase = normalizePhaseWrap(requestedNextPhase);
 const ownedBranch = args.get("--owned-branch") || defaultOwnedBranch(sibling);
-const priorClosedX2 = args.get("--prior-closed-x2") || "v576-gmut-thos-v2-x2";
-const cadenceMinutes = Number(args.get("--cadence-minutes") || 10);
+const priorClosedX2 = args.get("--prior-closed-x2") || "v600-gmut-thos-v8-x2";
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
 const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
 const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
 const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
@@ -39,7 +39,8 @@ const prompt = [
   `Goal objective: complete ${phaseSlug} x1 and ${x2Phase} x2 as your solo bundle, write only safe/sanitized artifacts to your owned full-tools lane when available, commit and push your completed safe/candidate/prototype results to your owned branch when safe, and return either GOAL_COMPLETED_READY_TO_HANDOFF or GOAL_BLOCKED_OPEN_GAP with the exact reason.`,
   ``,
   `x1 planning/prep:`,
-  `- Propose at least 25 safe approval packets, 15 candidate packets, 10 exact-approval packets queued only, 5 blocked packets queued only, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks.`,
+  `- Propose at least 25 safe approval packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for your own lane. Aevren queues exact and blocked rows when needed.`,
+  `- At x2 closeout, add next-sibling seeds: 25 safe packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for ${nextSibling}; do not bump exact or blocked counts.`,
   `- Use goal-mode as the primary continuation driver and record ${cadenceMinutes}-minute productive cadence checkpoints without babysitting.`,
   `- When feasible, include ${sourceReflectionTarget} web/source reflections and ${journeyReflectionTarget} Journey/phase reflections as proposal-quality support.`,
   `- Tag every row as immediate_x1_safe, x2_build_task, exact_approval_needed, or blocked.`,
@@ -52,6 +53,7 @@ const prompt = [
   `- If work cannot complete, return a formal open-gap with what is missing and what Aevren should fix/resume.`,
   ``,
   `Handoff:`,
+  `- If your Codex thread exposes a safe thread messaging tool, use it only for a sanitized baton message to ${nextSibling}; do not reveal thread IDs, private routes, local absolute paths, raw transcripts, screenshots, credentials, raw app state, or hidden reasoning.`,
   `- If your thread has a safe way to message ${nextSibling}, send a sanitized ${nextPhase} activation after your x2 closeout and record that it was sent.`,
   `- If not, prepare a sanitized ${nextSibling} handoff package and ask Aevren to send it.`,
   ``,
