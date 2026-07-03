@@ -170,7 +170,7 @@ const cleanupCount = firstNumber(
 const completedRows = firstNumber(
   checklist.counts?.by_status?.COMPLETED,
   checklist.counts?.completed,
-  completedOrRepresentedRows,
+  completedOrRepresentedRows || undefined,
   safeCount + candidateCount + skillCount + runnerCount + cleanupCount
 );
 const queuedRows = checklist.counts?.by_status?.QUEUED_OUT_OF_SCOPE_EXACT_OR_BLOCKED || exactCount + blockedCount;
