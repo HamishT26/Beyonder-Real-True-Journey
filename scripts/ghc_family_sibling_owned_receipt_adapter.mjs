@@ -137,7 +137,7 @@ const openChecks = checks.filter((check) => check.status !== "PASS").map((check)
 const status = openChecks.length === 0
   ? "completed_ready_for_harvest"
   : "OPEN_GAP_GHC_FAMILY_SIBLING_OWNED_RECEIPT_ADAPTER";
-const handoffSendStatus = handoff.send_status || handoff.handoff?.send_status || handoff.handoff_message?.send_status || handoff.status || handoff.overall_status || "not_recorded";
+const handoffSendStatus = handoff.send_status || handoff.handoff_status || handoff.handoff?.send_status || handoff.handoff_message?.send_status || handoff.status || handoff.overall_status || "not_recorded";
 const handoffNotSent = /not[_ -]?sent/i.test(handoffSendStatus);
 const handoffMessageSent = !handoffNotSent && (handoff.message_sent === true
   || handoff.handoff?.message_sent === true
@@ -298,8 +298,8 @@ function firstMatchingCount(counts, pattern) {
 }
 
 function handoffReady(doc) {
-  const status = doc.status || doc.overall_status || "";
-  const sendStatus = doc.send_status || doc.handoff?.send_status || doc.handoff_message?.send_status || "";
+  const status = doc.status || doc.overall_status || doc.handoff_status || "";
+  const sendStatus = doc.send_status || doc.handoff_status || doc.handoff?.send_status || doc.handoff_message?.send_status || "";
   const notSent = /not[_ -]?sent/i.test(sendStatus) || /not[_ -]?sent/i.test(status);
   return /^PASS/.test(status)
     || status === "completed_ready_for_harvest"
@@ -308,6 +308,7 @@ function handoffReady(doc) {
     || doc.message_sent === true
     || (!notSent && /sent/i.test(sendStatus))
     || (doc.artifact_type === "ghc_family_sibling_goal_handoff" && typeof doc.prompt === "string")
+    || (doc.artifact_type === "ghc_family_sibling_teaching_handoff" && typeof doc.baton_text === "string")
     || /prepared/i.test(doc.handoff?.send_status || "")
     || /prepared/i.test(doc.handoff_message?.send_status || "")
     || /prepared/i.test(doc.validation?.handoff_package || "");
