@@ -132,6 +132,13 @@ immediate_x1_safe HandoffAttemptPlan02: Attempt 2 rechecks target availability o
 immediate_x1_safe HandoffAttemptPlan03: Attempt 3 sends the sanitized baton if the route remains available, otherwise records prepared-not-sent after three retries.
 immediate_x1_safe HandoffAttemptPlan04: Record MESSAGE_SENT_BY_MIRA_ROWAN with attempt_count when successful, or PREPARED_NOT_SENT_AFTER_3_RETRIES when not.
 
+## HANDOFF LEARNING RESULT
+
+immediate_x1_safe HandoffAttemptResult01: Attempt 1 confirmed thread messaging tools were available.
+immediate_x1_safe HandoffAttemptResult02: Attempt 2 found the Mira Vale target by name without publishing route details.
+immediate_x1_safe HandoffAttemptResult03: Attempt 3 sent the sanitized full-bundle v607-gmut-thos-v7 baton to Mira Vale.
+immediate_x1_safe HandoffAttemptResult04: MESSAGE_SENT_BY_MIRA_ROWAN recorded with attempt_count=3 and route details unpublished.
+
 
 
 
