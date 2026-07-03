@@ -31,12 +31,17 @@ const nextSibling = args.get("--next-sibling") || "Maren Quill";
 const checklistFile = args.get("--checklist-file") || `docs/trinity-live-traces/${activeX2}-complete-incomplete-checklist-v1.json`;
 const transitionFile = args.get("--transition-file") || `docs/trinity-live-traces/${activeX2}-solo-phase-transition-v1.json`;
 const handoffFile = args.get("--handoff-file") || `docs/trinity-live-traces/${activeX2}-${slug(nextSibling)}-handoff-package-v1.json`;
+const planFile = args.get("--plan-file") || "";
 const traceDir = join(root, "docs", "trinity-live-traces");
 const generatedUtc = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 
 const checklist = readSourceJson(checklistFile);
 const transition = readSourceJson(transitionFile);
 const handoff = readSourceJson(handoffFile);
+const plan = planFile ? readSourceJson(planFile) : {};
+const executedWork = Array.isArray(transition.executed_work) ? transition.executed_work : [];
+const executedByCategory = countBy(executedWork.map((row) => row?.category).filter(Boolean));
+const completedOrRepresentedRows = executedWork.filter((row) => /COMPLETED|REPRESENTED/i.test(row?.disposition || "")).length;
 
 const validationCounts =
   checklist.validation?.count_validation
@@ -47,76 +52,127 @@ const validationCounts =
   || {};
 const x1Counts = checklist.x1_counts || {};
 const namedCounts = checklist.counts || {};
+const planCounts = plan.counts || {};
 const safeCount = firstNumber(
   checklist.queue_counts?.by_kind?.safe_approval_packet,
   checklist.counts?.by_kind?.safe_approval_packet,
+  plan.queue_counts?.by_kind?.safe_approval_packet,
+  plan.counts?.by_kind?.safe_approval_packet,
   checklist.counts?.safe,
+  plan.counts?.safe,
   firstMatchingCount(namedCounts, /_safe$/),
+  firstMatchingCount(planCounts, /_safe$/),
   validationCounts.safe_approval_packets,
   validationCounts.safe_eureka_packets,
   x1Counts.safe_approval_packets,
-  checklist.safe_approval_packets?.length
+  checklist.safe_approval_packets?.length,
+  plan.safe_approval_packets?.length,
+  executedByCategory.safe_approval_packet
 );
 const candidateCount = firstNumber(
   checklist.queue_counts?.by_kind?.candidate_packet,
   checklist.queue_counts?.by_tag?.candidate,
   checklist.counts?.by_kind?.candidate_packet,
+  plan.queue_counts?.by_kind?.candidate_packet,
+  plan.queue_counts?.by_tag?.candidate,
+  plan.counts?.by_kind?.candidate_packet,
   checklist.counts?.candidate,
+  plan.counts?.candidate,
   firstMatchingCount(namedCounts, /_candidate$/),
+  firstMatchingCount(planCounts, /_candidate$/),
   validationCounts.candidate_packets,
   x1Counts.candidate_packets,
-  checklist.candidate_packets?.length
+  checklist.candidate_packets?.length,
+  plan.candidate_packets?.length,
+  executedByCategory.candidate_packet
 );
 const exactCount = firstNumber(
   checklist.queue_counts?.by_kind?.exact_approval_packet,
   checklist.queue_counts?.by_tag?.exact_approval_needed,
   checklist.counts?.by_kind?.exact_approval_packet,
+  plan.queue_counts?.by_kind?.exact_approval_packet,
+  plan.queue_counts?.by_tag?.exact_approval_needed,
+  plan.counts?.by_kind?.exact_approval_packet,
   checklist.counts?.exact,
+  plan.counts?.exact,
   checklist.counts?.exact_approval_queued,
+  plan.counts?.exact_approval_queued,
   firstMatchingCount(namedCounts, /exact_approval_queued$/),
+  firstMatchingCount(planCounts, /exact_approval_queued$/),
   validationCounts.exact_approval_packets,
   x1Counts.exact_approval_packets,
-  checklist.exact_approval_packets?.length
+  checklist.exact_approval_packets?.length,
+  plan.exact_approval_packets?.length
 );
 const blockedCount = firstNumber(
   checklist.queue_counts?.by_kind?.blocked_packet,
   checklist.queue_counts?.by_tag?.blocked,
   checklist.counts?.by_kind?.blocked_packet,
+  plan.queue_counts?.by_kind?.blocked_packet,
+  plan.queue_counts?.by_tag?.blocked,
+  plan.counts?.by_kind?.blocked_packet,
   checklist.counts?.blocked,
+  plan.counts?.blocked,
   checklist.counts?.blocked_queued,
+  plan.counts?.blocked_queued,
   firstMatchingCount(namedCounts, /blocked_queued$/),
+  firstMatchingCount(planCounts, /blocked_queued$/),
   validationCounts.blocked_packets,
   x1Counts.blocked_packets,
-  checklist.blocked_packets?.length
+  checklist.blocked_packets?.length,
+  plan.blocked_packets?.length
 );
 const skillCount = firstNumber(
   checklist.queue_counts?.by_kind?.skill_idea,
   checklist.counts?.by_kind?.skill_idea,
+  plan.queue_counts?.by_kind?.skill_idea,
+  plan.counts?.by_kind?.skill_idea,
   checklist.counts?.skill_ideas,
+  plan.counts?.skill_ideas,
   firstMatchingCount(namedCounts, /_skill_ideas$/),
+  firstMatchingCount(planCounts, /_skill_ideas$/),
   validationCounts.skill_ideas,
   x1Counts.skill_ideas,
-  checklist.skill_ideas?.length
+  checklist.skill_ideas?.length,
+  plan.skill_ideas?.length,
+  executedByCategory.skill_idea
 );
 const runnerCount = firstNumber(
   checklist.queue_counts?.by_kind?.runner_idea,
   checklist.counts?.by_kind?.runner_idea,
+  plan.queue_counts?.by_kind?.runner_idea,
+  plan.counts?.by_kind?.runner_idea,
   checklist.counts?.runner_ideas,
+  plan.counts?.runner_ideas,
   firstMatchingCount(namedCounts, /_runner_ideas$/),
+  firstMatchingCount(planCounts, /_runner_ideas$/),
   validationCounts.runner_ideas,
   x1Counts.runner_ideas,
-  checklist.runner_ideas?.length
+  checklist.runner_ideas?.length,
+  plan.runner_ideas?.length,
+  executedByCategory.runner_idea
 );
 const cleanupCount = firstNumber(
   checklist.queue_counts?.by_kind?.cleanup_task,
   checklist.counts?.by_kind?.cleanup_task,
+  plan.queue_counts?.by_kind?.cleanup_task,
+  plan.counts?.by_kind?.cleanup_task,
   checklist.counts?.cleanup_refine_fix,
+  plan.counts?.cleanup_refine_fix,
   firstMatchingCount(namedCounts, /_cleanup_refine_fix$/),
+  firstMatchingCount(planCounts, /_cleanup_refine_fix$/),
   validationCounts.cleanup_refine_fix_tasks,
   x1Counts.cleanup_refine_fix_tasks,
-  checklist.cleanup_refine_fix_tasks?.length
+  checklist.cleanup_refine_fix_tasks?.length,
+  plan.cleanup_refine_fix_tasks?.length,
+  executedByCategory.cleanup_task
 );
-const completedRows = checklist.counts?.by_status?.COMPLETED || checklist.counts?.completed || safeCount + candidateCount + skillCount + runnerCount + cleanupCount;
+const completedRows = firstNumber(
+  checklist.counts?.by_status?.COMPLETED,
+  checklist.counts?.completed,
+  completedOrRepresentedRows,
+  safeCount + candidateCount + skillCount + runnerCount + cleanupCount
+);
 const queuedRows = checklist.counts?.by_status?.QUEUED_OUT_OF_SCOPE_EXACT_OR_BLOCKED || exactCount + blockedCount;
 
 const checks = [
@@ -172,7 +228,7 @@ const receipt = {
     proof_canon_legal_deployment_account_api_key_purchase_private_raw_destructive_sibling_merge_gates_open: true,
     source_files_json_validated_before_adapter: true
   },
-  source_labels: [basename(checklistFile), basename(transitionFile), basename(handoffFile)],
+  source_labels: [checklistFile, transitionFile, handoffFile, planFile].filter(Boolean).map((file) => basename(file)),
   handoff: {
     status: handoffSendStatus,
     next_phase: nextPhase,
@@ -295,6 +351,12 @@ function firstMatchingCount(counts, pattern) {
     if (pattern.test(key) && Number.isFinite(value)) return value;
   }
   return undefined;
+}
+
+function countBy(values) {
+  const counts = {};
+  for (const value of values) counts[value] = (counts[value] || 0) + 1;
+  return counts;
 }
 
 function handoffReady(doc) {
