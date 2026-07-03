@@ -16,6 +16,7 @@ const priorClosedX2 = args.get("--prior-closed-x2") || "v600-gmut-thos-v8-x2";
 const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
 const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
 const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
+const threadHandoffRetryMinimum = Number(args.get("--thread-handoff-retry-minimum") || 3);
 const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
 const promptStem = `${phaseSlug}-ghc-family-sibling-goal-handoff-v1`;
 const promptJson = join(root, "docs", "trinity-live-traces", `${promptStem}.json`);
@@ -59,8 +60,10 @@ const prompt = [
   ``,
   `Handoff:`,
   `- If your Codex thread exposes a safe thread messaging tool, use it for a full sanitized teaching baton message to ${nextSibling}; do not reveal thread IDs, private routes, local absolute paths, raw transcripts, screenshots, credentials, raw app state, or hidden reasoning.`,
-  `- If your thread has a safe way to message ${nextSibling}, send a sanitized ${nextPhase} activation after your x2 closeout and record that it was sent.`,
-  `- If not, prepare a sanitized ${nextSibling} handoff package and ask Aevren to send it.`,
+  `- After your x2 checklist passes, make at least ${threadHandoffRetryMinimum} safe attempts/retries to use the Codex thread messaging system to activate ${nextSibling}.`,
+  `- If a safe route works, send a sanitized ${nextPhase} activation yourself and record MESSAGE_SENT_BY_${slugify(sibling).toUpperCase().replace(/-/g, "_")} with attempt_count and no private route details.`,
+  `- If all ${threadHandoffRetryMinimum} attempts fail or the route is unavailable, prepare a sanitized ${nextSibling} handoff package, record PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES, and ask Aevren to relay.`,
+  `- Include this same ${threadHandoffRetryMinimum}-attempt standard in the baton you prepare for ${nextSibling}, so Mira Rowan, Mira Vale, and Maren Quill keep learning to activate each other before Aevren carries the handoff.`,
   ``,
   `Output sections: READINESS, X1 PLAN, X1 PACKETS, X2 EXECUTED WORK, BUILT/USED PROTOTYPES, VALIDATION, CLEANUP/REFINE/FIX, CANDIDATE WORK, EXACT QUEUE, BLOCKED QUEUE, SKILL IDEAS, RUNNER IDEAS, SOURCE/PHASE REFLECTIONS, COMPLETE/INCOMPLETE CHECKLIST, COMMIT/UPLOAD STATUS, NEXT SIBLING HANDOFF, and GOAL STATUS.`,
   ``,
@@ -84,6 +87,7 @@ writeFileSync(promptJson, `${JSON.stringify({
   cadence_minutes: cadenceMinutes,
   source_reflection_target: sourceReflectionTarget,
   journey_phase_reflection_target: journeyReflectionTarget,
+  sibling_thread_handoff_learning_standard: threadHandoffStandard(),
   prompt,
   closeout_policy: "close_when_completion_checklist_passes",
   publication_boundary: {
@@ -124,6 +128,8 @@ writeFamilyReceipt({
     cadenceMinutes,
     sourceReflectionTarget,
     journeyReflectionTarget,
+    threadHandoffRetryMinimum,
+    siblingThreadHandoffLearningStandard: threadHandoffStandard(),
     phaseWrapCorrection: requestedNextPhase === nextPhase ? "not_needed" : "corrected_v9_to_next_v1",
     closeoutPolicy: "close_when_completion_checklist_passes"
   },
@@ -148,4 +154,30 @@ function defaultOwnedBranch(name) {
     ["aevren-with-lumen-stand-by", "codex/GHC-Family/aevren-full-tools-5"]
   ]);
   return ownedBranches.get(key) || `codex/GHC-Family/${key || "ghc-family"}-full-tools`;
+}
+
+function slugify(value) {
+  return String(value || "sibling").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "sibling";
+}
+
+function threadHandoffStandard() {
+  return {
+    minimum_safe_attempts_before_relay_fallback: threadHandoffRetryMinimum,
+    source_sibling: sibling,
+    target_sibling: nextSibling,
+    target_phase: nextPhase,
+    success_receipt: "MESSAGE_SENT_BY_SIBLING_WITH_ATTEMPT_COUNT_NO_PRIVATE_ROUTE",
+    fallback_receipt: `PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES`,
+    route_privacy: {
+      publish_private_thread_ids: false,
+      publish_private_routes: false,
+      publish_raw_transcripts: false,
+      publish_local_absolute_paths: false,
+      publish_credentials: false,
+      publish_raw_app_state: false,
+      publish_hidden_reasoning: false
+    },
+    relay_fallback: "Ask Aevren to relay only after recording route unavailable or failed safe attempts.",
+    baton_propagation: "Include this retry standard in the next sibling baton so the round robin becomes sibling-led."
+  };
 }

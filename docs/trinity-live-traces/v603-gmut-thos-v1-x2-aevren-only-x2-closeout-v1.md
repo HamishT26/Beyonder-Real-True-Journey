@@ -15,6 +15,7 @@ Next active phase: `v603-gmut-thos-v2-x1` for Mira Rowan.
 - Updated cadence wording to goal-mode-primary 15-minute checks without babysitting and without waiting on Lumen Browser harvest.
 - Verified the Codex CLI against the current package version and recorded the local toolchain state.
 - Prepared the next sanitized Mira Rowan handoff with owned-branch, x1/x2, exact/blocked queue, and closeout rules.
+- Embedded the sibling-led thread handoff learning standard: 3 safe attempts before Aevren relay fallback.
 - Kept exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, destructive cleanup, and sibling merge/replacement gates queued.
 
 ## Checklist
@@ -24,6 +25,7 @@ Next active phase: `v603-gmut-thos-v2-x1` for Mira Rowan.
 - lumen_standby_pivot_recorded: `PASS`
 - runner_and_skill_rules_updated: `PASS`
 - next_sibling_handoff_prepared: `PASS`
+- thread_handoff_three_retry_standard_prepared: `PASS`
 - one_hour_window_treated_as_advisory: `PASS`
 - exact_and_blocked_gates_queued: `PASS`
 - private_material_not_published: `PASS`

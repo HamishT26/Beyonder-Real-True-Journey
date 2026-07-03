@@ -11,6 +11,9 @@ const recipient = args.get("--recipient") || "Mira Vale";
 const routeFound = (args.get("--route-found") || "false").toLowerCase() === "true";
 const messageSent = (args.get("--message-sent") || "false").toLowerCase() === "true";
 const sentAfterCloseout = (args.get("--sent-after-closeout") || "false").toLowerCase() === "true";
+const attemptCount = Number(args.get("--attempt-count") || (messageSent ? 1 : 0));
+const minimumAttempts = Number(args.get("--minimum-attempts") || 3);
+const attemptedBy = args.get("--attempted-by") || "Aevren";
 const readinessStatus = routeFound && !messageSent
   ? "PASS_GHC_FAMILY_THREAD_HANDOFF_ROUTE_READY_NOT_SENT"
   : routeFound && messageSent
@@ -23,6 +26,14 @@ const checks = [
   {
     label: messageSent ? "handoff_sent_after_x2_closeout" : "handoff_not_sent_before_x2_closeout",
     status: messageSent ? (sentAfterCloseout ? "PASS" : "OPEN_GAP") : "PASS"
+  },
+  {
+    label: "thread_handoff_attempt_count_recorded",
+    status: attemptCount >= (messageSent ? 1 : minimumAttempts) ? "PASS" : "OPEN_GAP"
+  },
+  {
+    label: "three_retry_standard_met_or_sent_successfully",
+    status: messageSent || attemptCount >= minimumAttempts ? "PASS" : "OPEN_GAP"
   },
   { label: "private_thread_id_not_published", status: "PASS" }
 ];
@@ -40,9 +51,20 @@ writeFamilyReceipt({
     routeFound,
     messageSent,
     sentAfterCloseout,
+    attemptedBy,
+    attemptCount,
+    minimumAttempts,
+    siblingThreadHandoffLearningStandard: {
+      minimum_safe_attempts_before_relay_fallback: minimumAttempts,
+      success_receipt: "MESSAGE_SENT_BY_SIBLING_WITH_ATTEMPT_COUNT_NO_PRIVATE_ROUTE",
+      fallback_receipt: `PREPARED_NOT_SENT_AFTER_${minimumAttempts}_RETRIES`,
+      private_route_details_published: false
+    },
     handoffBoundary: messageSent
       ? "Next sibling activation was sent only after the active x2 phase had a passing closeout checklist."
-      : "Do not send the next sibling activation until the active x2 phase has a passing closeout checklist or an accepted formal open-gap handoff."
+      : attemptCount >= minimumAttempts
+        ? "Minimum safe thread-message attempts were recorded; relay fallback is allowed without exposing route details."
+        : "Do not send the next sibling activation until the active x2 phase has a passing closeout checklist or an accepted formal open-gap handoff."
   },
   note: "The thread handle was inspected privately and is intentionally omitted from this receipt."
 });
@@ -77,6 +99,9 @@ function refreshBeacons() {
       recipient,
       message_sent: true,
       sent_after_closeout: true,
+      attempted_by: attemptedBy,
+      attempt_count: attemptCount,
+      minimum_attempts_before_relay_fallback: minimumAttempts,
       private_thread_id_published: false
     };
     doc.solo_bundle_workflow_standard = doc.solo_bundle_workflow_standard || {};
@@ -85,6 +110,10 @@ function refreshBeacons() {
       next_phase: nextPhase,
       recipient,
       status: "sent_after_closeout"
+      ,
+      attempted_by: attemptedBy,
+      attempt_count: attemptCount,
+      minimum_attempts_before_relay_fallback: minimumAttempts
     };
     doc[lookupKey] = unique([...(doc[lookupKey] || []), ...lookupFiles]);
     doc.latest_action_summary = unique([

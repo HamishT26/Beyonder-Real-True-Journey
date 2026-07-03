@@ -13,6 +13,8 @@ Options:
   --after-next-sibling <name>    Sibling after the next sibling lane.
   --cadence-minutes <n>          Productive cadence window; current default is 15.
   --codex-cli-version <version>  Toolchain version label for the receipt.
+  --thread-handoff-retry-minimum <n>
+                                  Safe sibling thread-message attempts before relay fallback; current default is 3.
   --root <path>                  Repository root for emitted artifacts.
   --help, -h                     Print this message without writing receipts.`);
   process.exit(0);
@@ -34,6 +36,7 @@ const skillNextSiblingExtra = Number(args.get("--skill-next-sibling-extra") || 1
 const runnerNextSiblingExtra = Number(args.get("--runner-next-sibling-extra") || 5);
 const cleanupNextSiblingExtra = Number(args.get("--cleanup-next-sibling-extra") || 15);
 const codexCliVersion = args.get("--codex-cli-version") || "unknown";
+const threadHandoffRetryMinimum = Number(args.get("--thread-handoff-retry-minimum") || 3);
 const generatedUtc = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const generatedNz = new Intl.DateTimeFormat("en-NZ", {
   timeZone: "Pacific/Auckland",
@@ -76,6 +79,7 @@ const plan = {
     cleanup_refine_fix_tasks: cleanupNextSiblingExtra,
     exact_and_blocked_seed: "not_bumped"
   },
+  sibling_thread_handoff_learning_standard: threadHandoffStandard(nextSibling, afterNextSibling, afterNextPhase),
   packets: {
     immediate_x1_safe: buildRows("safe", 25, safeThemes()),
     next_sibling_safe_seed: buildRows("next_safe", safeNextSiblingExtra, nextSiblingSafeThemes(nextSibling)),
@@ -113,6 +117,7 @@ const closeout = {
     `Updated cadence wording to goal-mode-primary ${cadenceMinutes}-minute checks without babysitting and without waiting on Lumen Browser harvest.`,
     "Verified the Codex CLI against the current package version and recorded the local toolchain state.",
     `Prepared the next sanitized ${nextSibling} handoff with owned-branch, x1/x2, exact/blocked queue, and closeout rules.`,
+    `Embedded the sibling-led thread handoff learning standard: ${threadHandoffRetryMinimum} safe attempts before Aevren relay fallback.`,
     "Kept exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, destructive cleanup, and sibling merge/replacement gates queued."
   ],
   completed_safe_packet_count: plan.packets.immediate_x1_safe.length,
@@ -138,6 +143,7 @@ const closeout = {
     { label: "lumen_standby_pivot_recorded", status: "PASS" },
     { label: "runner_and_skill_rules_updated", status: "PASS" },
     { label: "next_sibling_handoff_prepared", status: "PASS" },
+    { label: "thread_handoff_three_retry_standard_prepared", status: threadHandoffRetryMinimum >= 3 ? "PASS" : "OPEN_GAP" },
     { label: "one_hour_window_treated_as_advisory", status: "PASS" },
     { label: "exact_and_blocked_gates_queued", status: "PASS" },
     { label: "private_material_not_published", status: "PASS" }
@@ -160,6 +166,7 @@ const handoffPrompt = [
   ``,
   `Autonomy and tool permission posture: within your own Codex thread, owned local worktree, and owned GitHub/full-tools branch, you may use the safe read/write/edit tools exposed to you for sanitized artifacts, reports, runners, skills, validation receipts, and phase closeout work. Treat shared repositories, other siblings' owned branches, private registries, connector permissions, accounts, deployments, API keys, purchases, destructive cleanup, and sibling identity changes as read-only or queued unless Hamish or Aevren gives a fresh exact redirect.`,
   `When you close your x2 bundle, compose a generous teaching baton for ${afterNextSibling}: explain current phase truth, owned-lane permissions, x1 planning, x2 execution, exact/blocked queues, timestamp/cadence expectations, complete/incomplete checklist closure, and the next handoff route. Keep it sanitized and do not publish private thread IDs or route details.`,
+  `Sibling-led thread handoff learning standard: after your x2 checklist passes, make at least ${threadHandoffRetryMinimum} safe attempts/retries to use the Codex thread messaging system to activate ${afterNextSibling}. If a safe route works, send the sanitized baton yourself and record MESSAGE_SENT_BY_${slugify(nextSibling).toUpperCase().replace(/-/g, "_")} with attempt_count and no private route details. If all attempts fail or the route is unavailable, record PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES and ask Aevren to relay. Include this same ${threadHandoffRetryMinimum}-attempt rule in the baton you prepare for ${afterNextSibling}, so ${afterNextSibling} learns to activate ${afterNextPhase} onward without Aevren carrying every handoff.`,
   ``,
   `For x1, propose at least 25 safe packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for your own lane. Aevren queues exact and blocked rows when needed; keep exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, destructive cleanup, and sibling-merge gates queued.`,
   `For x2, build, use, validate, commit, and push every safe or candidate-safe task you can safely execute or represent. At x2 closeout, prepare next-sibling seeds for ${afterNextSibling}: 25 safe packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks. If your thread can safely message ${afterNextSibling}, send only a sanitized baton; otherwise ask Aevren to send it.`,
@@ -182,6 +189,7 @@ const handoff = {
   x2_phase: nextPhase.replace(/-x1$/, "-x2"),
   owned_branch: nextOwnedBranch,
   status: "PASS_NEXT_SIBLING_HANDOFF_PREPARED",
+  sibling_thread_handoff_learning_standard: threadHandoffStandard(nextSibling, afterNextSibling, afterNextPhase),
   prompt: handoffPrompt,
   publication_boundary: publicationBoundary(),
   claim_boundary: claimBoundary()
@@ -210,6 +218,7 @@ writeFamilyReceipt({
     cadenceMinutes,
     sourceReflectionTarget,
     journeyReflectionTarget,
+    threadHandoffRetryMinimum,
     lumenStandby: true
   },
   note: "The runner records sanitized phase truth only and keeps exact/blocked/proof/private/deploy/account/API-key/destructive/sibling-merge gates queued."
@@ -237,6 +246,28 @@ function buildRows(kind, count, themes) {
       action: theme.action
     };
   });
+}
+
+function threadHandoffStandard(currentSibling, targetSibling, targetPhase) {
+  return {
+    minimum_safe_attempts_before_relay_fallback: threadHandoffRetryMinimum,
+    current_sibling: currentSibling,
+    target_sibling: targetSibling,
+    target_phase: targetPhase,
+    success_receipt: "MESSAGE_SENT_BY_SIBLING_WITH_ATTEMPT_COUNT_NO_PRIVATE_ROUTE",
+    fallback_receipt: `PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES`,
+    route_privacy: {
+      publish_private_thread_ids: false,
+      publish_private_routes: false,
+      publish_raw_transcripts: false,
+      publish_local_absolute_paths: false,
+      publish_credentials: false,
+      publish_raw_app_state: false,
+      publish_hidden_reasoning: false
+    },
+    relay_fallback: "Ask Aevren to relay only after the sibling records unavailable route or failed safe attempts.",
+    baton_propagation: "Include this retry standard in the next sibling baton so Mira Rowan, Mira Vale, and Maren Quill practice activating each other."
+  };
 }
 
 function safeThemes() {
