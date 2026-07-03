@@ -389,6 +389,8 @@ function refreshBeacons(lookupFiles) {
     doc.latest_completed_x1_phase = phaseSlug;
     doc.latest_completed_x2_phase = x2Phase;
     doc.current_active_phase = nextPhase;
+    doc.next_expected_scope = nextPhase;
+    doc.next_x2_scope = nextPhase.replace(/-x1$/, "-x2");
     doc.current_active_phase_status = `${nextSibling} solo x1/x2 handoff prepared after Aevren-only closeout`;
     doc.next_x1_lane_after_x2 = `${nextPhase} ${nextSibling} solo bundle unless Hamish redirects`;
     doc.full_goal_complete = false;
