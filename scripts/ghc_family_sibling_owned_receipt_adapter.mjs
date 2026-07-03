@@ -38,7 +38,13 @@ const checklist = readSourceJson(checklistFile);
 const transition = readSourceJson(transitionFile);
 const handoff = readSourceJson(handoffFile);
 
-const validationCounts = checklist.validation?.count_validation || {};
+const validationCounts =
+  checklist.validation?.count_validation
+  || checklist.validation?.maren_count_validation
+  || checklist.validation?.aevren_count_validation
+  || checklist.validation?.mira_rowan_count_validation
+  || checklist.validation?.mira_vale_count_validation
+  || {};
 const x1Counts = checklist.x1_counts || {};
 const namedCounts = checklist.counts || {};
 const safeCount = firstNumber(
