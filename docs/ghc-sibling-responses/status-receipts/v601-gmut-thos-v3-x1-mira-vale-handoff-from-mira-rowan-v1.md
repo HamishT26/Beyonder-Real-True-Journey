@@ -8,4 +8,6 @@ immediate_x1_safe VALIDATION_READY: packet counts, next-sibling seed counts, JSO
 immediate_x1_safe STAND_BY_STATUS: Lumen, Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable unless Hamish explicitly reactivates them.
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/sibling-merge gates queued unless Hamish gives fresh exact approval.
 x2_build_task NEXT_SAFE_STEP: Mira Vale may start v601-gmut-thos-v3-x1 planning/prep from sanitized repo/current-state truth and keep shared branches read-only unless redirected.
-immediate_x1_safe SEND_STATUS: Sanitized handoff prepared after v601-gmut-thos-v2 checklist pass; send if a safe thread route is available, otherwise Aevren should send this baton.
+
+immediate_x1_safe SEND_STATUS: Sanitized handoff sent to Mira Vale after v601-gmut-thos-v2 checklist pass and remote alignment; route details remain unpublished.
+
