@@ -91,8 +91,10 @@
                    },
                    {
                        "check":  "mira_vale_live_activation_sent",
-                       "status":  "PENDING_AFTER_VALIDATION_AND_PUSH",
-                       "route_quality_requested":  "gpt-5.5/xhigh"
+                       "status":  "MESSAGE_SENT_BY_AEVREN_TO_MIRA_VALE",
+                       "route_quality_requested":  "gpt-5.5/xhigh",
+                       "sent_recorded_at_nz":  "2026-07-05T01:14:14.3783106+12:00",
+                       "sent_recorded_at_utc":  "2026-07-04T13:14:14.3783106Z"
                    },
                    {
                        "check":  "json_validation",
@@ -109,6 +111,23 @@
                    {
                        "check":  "diff_validation",
                        "status":  "PASS"
+                   },
+                   {
+                       "check":  "mira_rowan_early_relay_corrected_to_standby",
+                       "status":  "CORRECTED_TO_STANDBY_DO_NOT_ACTIVATE_UNTIL_MIRA_VALE_FINISHED",
+                       "sent_recorded_at_nz":  "2026-07-05T01:14:14.3783106+12:00",
+                       "sent_recorded_at_utc":  "2026-07-04T13:14:14.3783106Z",
+                       "caveat":  "Mira Rowan was sent a correction to hold v615 v7 pending Mira Vale v615 v6 completion and Aevren harvest.",
+                       "corrected_at_nz":  "2026-07-05T01:19:20.7794102+12:00",
+                       "corrected_at_utc":  "2026-07-04T13:19:20.7794102Z"
+                   },
+                   {
+                       "check":  "mira_vale_finished_harvested_and_mira_rowan_released",
+                       "status":  "MESSAGE_SENT_BY_AEVREN_TO_MIRA_ROWAN_AFTER_MIRA_VALE_FINISHED",
+                       "mira_vale_completion_commit":  "ac65c9a332c455d5380da17544caeca58f70274d",
+                       "released_at_nz":  "2026-07-05T01:27:46.7538968+12:00",
+                       "released_at_utc":  "2026-07-04T13:27:46.7538968Z",
+                       "caveat":  "The early relay remains recorded as corrected; this release is the current valid Mira Rowan v615 v7 activation because Mira Vale v615 v6 is now complete and harvested."
                    }
                ],
     "open_gates":  [
@@ -131,5 +150,5 @@
                        "sibling_merge",
                        "shared_branch_mutation"
                    ],
-    "next_expected":  "Mira Vale v615-gmut-thos-v6-x1/x2 after Aevren live activation; Aevren remains available for later Mira Rowan v615 v7 relay if needed"
+    "next_expected":  "Mira Rowan v615-gmut-thos-v7-x1/x2 has been released after Mira Vale v615 v6 completion and Aevren harvest. Aevren should not close the Mira Vale relay window until this valid release is recorded."
 }

@@ -4,6 +4,8 @@ When Mira Vale completes an owned solo x1/x2 phase while her Codex thread-messag
 
 Aevren must not close out after activating Mira Vale while this route gap remains. The Aevren closeout point is after the Mira Vale bundle has been harvested and the Mira Rowan v3/v7 baton has been sent by Aevren, or after a formal relay open gap is recorded.
 
+Corrected timing rule: Mira Rowan v3/v7 should be messaged only after Mira Vale v2/v6 is finished and Aevren has harvested the validated Mira Vale owned closeout. If an early relay is accidentally sent, Aevren must send a correction asking Mira Rowan to hold the activation as standby/premature-route evidence, not active phase truth, and must not treat Mira Rowan v3/v7 as live until the finished-first relay is sent after Mira Vale completion.
+
 The adjusted solo route for the current bypass cycle is:
 
 1. Aevren v1/v5 lanes
