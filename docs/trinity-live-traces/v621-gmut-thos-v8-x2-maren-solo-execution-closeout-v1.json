@@ -3,7 +3,7 @@
     "phase":  "v621-gmut-thos-v8-x2",
     "paired_x1_phase":  "v621-gmut-thos-v8-x1",
     "generated_local_time":  "2026-07-05T06:43:00.2163900+12:00",
-    "status":  "PASS_V621_V8_X2_MAREN_SOLO_BUNDLE_READY_FOR_AEVREN_HARVEST_PENDING_SEND_ATTEMPTS",
+    "status":  "PASS_V621_V8_X2_MAREN_SOLO_BUNDLE_READY_FOR_AEVREN_HARVEST_MESSAGE_SENT",
     "phase_truth":  {
                         "latest_closed_x2_before_maren":  "v621-gmut-thos-v7-x2",
                         "current_scope":  "Maren-Quill-only v621-gmut-thos-v8-x1 planning/prep followed by v621-gmut-thos-v8-x2 execution/cleanup",
@@ -1793,28 +1793,31 @@
                        "privacy_scan":  "passed_pre_send",
                        "stale_label_scan":  "passed_pre_send",
                        "completion_checklist":  "passed_pre_send",
-                       "staged_diff_scope":  "ready_for_prepared_commit",
-                       "push_alignment":  "pending_prepared_push",
+                       "staged_diff_scope":  "final_receipt_ready_for_commit",
+                       "push_alignment":  "prepared_commit_pushed_remote_aligned_final_receipt_pending_push",
                        "pre_send_validation_recorded_local_time":  "2026-07-05T06:43:42.2904336+12:00"
                    },
     "complete_incomplete_checklist":  {
                                           "x1_plan":  "complete",
                                           "x2_execution":  "complete",
                                           "protected_gates":  "queued_open",
-                                          "next_baton":  "prepared_pending_send_attempts",
-                                          "final_status":  "ready_for_validation_commit_push_and_send_attempts"
+                                          "next_baton":  "sent_with_three_confirmed_attempts",
+                                          "final_status":  "complete_ready_for_final_receipt_commit_push"
                                       },
     "next_sibling_handoff":  {
                                  "target":  "Aevren",
                                  "phase":  "v622-gmut-thos-v1-x1",
                                  "artifact":  "docs/trinity-live-traces/v622-gmut-thos-v1-x1-aevren-teaching-baton-v1.json",
-                                 "status":  "PREPARED_PENDING_SAFE_ATTEMPTS",
-                                 "message_sent":  false,
-                                 "attempt_count":  0,
-                                 "successful_attempts":  0,
-                                 "route_quality_request":  "gpt-5.5 with xhigh reasoning where exposed"
+                                 "status":  "MESSAGE_SENT_BY_MAREN_QUILL",
+                                 "message_sent":  true,
+                                 "attempt_count":  3,
+                                 "successful_attempts":  3,
+                                 "route_quality_request":  "gpt-5.5 with xhigh reasoning where exposed",
+                                 "ambiguous_attempts":  0,
+                                 "send_receipt":  "MESSAGE_SENT_BY_MAREN_QUILL_AFTER_3_CONFIRMED_SENDS_WITH_GPT_5_5_XHIGH_REQUESTED",
+                                 "sent_recorded_local_time":  "2026-07-05T06:45:36.8761579+12:00"
                              },
-    "goal_status":  "READY_FOR_SEND_ATTEMPTS_AFTER_PREPARED_COMMIT",
+    "goal_status":  "GOAL_COMPLETED_READY_TO_HANDOFF",
     "open_gates":  [
                        "exact approval",
                        "blocked work",
@@ -1835,5 +1838,17 @@
                        "identity/model replacement",
                        "sibling merge/replacement",
                        "shared-branch mutation"
-                   ]
+                   ],
+    "prepared_commit":  "9684e3230ad72807d7f4b158db4a6c13f96d6844",
+    "handoff_result_summary":  {
+                                   "result":  "MESSAGE_SENT_BY_MAREN_QUILL",
+                                   "attempt_count":  3,
+                                   "successful_attempts":  3,
+                                   "ambiguous_attempts":  0,
+                                   "route_quality_requested_model":  "gpt-5.5",
+                                   "route_quality_requested_reasoning":  "xhigh",
+                                   "private_route_details":  "not_published",
+                                   "prepared_commit":  "9684e3230ad72807d7f4b158db4a6c13f96d6844",
+                                   "note":  "The full primary baton and two concise route-learning confirmations were accepted by the thread-message tool."
+                               }
 }
