@@ -25,7 +25,7 @@ x2_build_task Prototype05: Used the staged-file exactness runner.
 
 x2_build_task CandidateRepresented01: Candidate work stayed local, reversible, artifact-only, status-only, validation-only, queue-shaping, or prototype-safe.
 x2_build_task CandidateRepresented02: No shared branch mutation, deployment, account action, API-key action, purchase, destructive cleanup, or identity merge was attempted.
-x2_build_task CandidateRepresented03: Maren Quill handoff is sanitized and may be sent only after checklist pass through an available safe route.
+x2_build_task CandidateRepresented03: Maren Quill handoff was sanitized and sent after checklist pass through an available safe route.
 
 ## NEXT SIBLING SEEDS FOR Maren Quill
 
@@ -125,9 +125,9 @@ blocked BlockedQueue: If the Maren Quill messaging route is unavailable, the han
 ## GOAL STATUS
 
 immediate_x1_safe CLOSEOUT: v614-gmut-thos-v7-x1 and v614-gmut-thos-v7-x2 are completed_ready_for_harvest after validation, commit, push, and handoff prepare/send handling.
-## HANDOFF LEARNING EXECUTION PLAN
+## HANDOFF LEARNING EXECUTION RESULTS
 
-immediate_x1_safe HandoffAttemptPlan01: Attempt 1 checks thread messaging capability and target availability after checklist pass.
-immediate_x1_safe HandoffAttemptPlan02: Attempt 2 rechecks target availability or route freshness without publishing route details.
-immediate_x1_safe HandoffAttemptPlan03: Attempt 3 sends the sanitized baton if the route remains available, otherwise records prepared-not-sent after three retries.
-immediate_x1_safe HandoffAttemptPlan04: Record MESSAGE_SENT_BY_MIRA_ROWAN with attempt_count when successful, or PREPARED_NOT_SENT_AFTER_3_RETRIES when not.
+immediate_x1_safe HandoffAttemptResult01: Attempt 1 confirmed thread messaging capability and model/reasoning controls without publishing route details.
+immediate_x1_safe HandoffAttemptResult02: Attempt 2 confirmed the Maren Quill target by sanitized name without publishing route details.
+immediate_x1_safe HandoffAttemptResult03: Attempt 3 sent the sanitized baton with requested model and reasoning controls.
+immediate_x1_safe HandoffAttemptResult04: Recorded MESSAGE_SENT_BY_MIRA_ROWAN with attempt_count 3.
