@@ -2,7 +2,7 @@
 
 Status: `PASS_GHC_FAMILY_SIBLING_GOAL_HANDOFF_BUILT`
 
-Purpose: Build a sanitized Maren Quill teaching baton and record the nine-attempt sibling-led handoff retry result.
+Purpose: Build a sanitized Maren Quill teaching baton and record the ten-attempt sibling-led handoff retry result.
 
 ## Checks
 
