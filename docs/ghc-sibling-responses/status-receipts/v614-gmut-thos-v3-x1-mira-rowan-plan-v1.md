@@ -344,7 +344,7 @@ immediate_x1_safe HandoffLearning01: After v614-gmut-thos-v3-x2 checklist pass, 
 immediate_x1_safe HandoffLearning02: Keep each attempt sanitized and status-only, with no nonpublic route details or unpublished runtime material.
 immediate_x1_safe HandoffLearning03: If a safe route is available, send the Maren Quill baton myself and record MESSAGE_SENT_BY_MIRA_ROWAN with attempt_count.
 immediate_x1_safe HandoffLearning04: If all three safe attempts fail or the route is unavailable, record PREPARED_NOT_SENT_AFTER_3_RETRIES and ask Aevren to relay.
-immediate_x1_safe HandoffLearning05: Teach Maren Quill to make safe attempts to message Aevren for the v615-gmut-thos-v1 Aevren wrap after v614-gmut-thos-v4-x2, unless Hamish redirects.
+immediate_x1_safe HandoffLearning05: Teach Maren Quill to make safe attempts to message Aevren for v614-gmut-thos-v5 after v614-gmut-thos-v4-x2, unless Hamish redirects.
 ## AEVREN BATON ACCEPTANCE
 
 immediate_x1_safe AevrenBaton01: Accept v614-gmut-thos-v2-x2 as the latest relayed completed sibling bundle before my lane.
