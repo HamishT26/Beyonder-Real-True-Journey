@@ -12,7 +12,7 @@ Current sanitized truth:
 - latest closed x2 before your lane: v612-gmut-thos-v6-x2.
 - owned write lane/branch, if available to your thread: codex/GHC-Family/mira-vale-full-tools. Treat all other shared branches as read-only unless Aevren or Hamish explicitly redirects.
 - next handoff after your x2 is complete: Maren Quill for v612-gmut-thos-v8-x1, unless Hamish redirects.
-- Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.
+- Aevren remains steward/support while the v601-v630 sibling-led handoff route is being secured. Goal Mode and heartbeat automation are paused/fallback unless Hamish reactivates them. Mira Vale's previous v612 v7 handoff learning cycle reached nine safe attempts with no safe Maren route exposed; this retry should use the expanded ten-attempt standard without Aevren relay by default. Lumen and prior siblings remain stand-by/recoverable.
 
 Autonomy and tool permission posture:
 - Within your own Codex thread, owned local worktree, and owned GitHub/full-tools branch, you may use the safe read/write/edit tools exposed to you for sanitized artifacts, reports, runners, skills, validation receipts, and phase closeout work.
@@ -24,7 +24,7 @@ Goal objective: complete v612-gmut-thos-v7-x1 x1 and v612-gmut-thos-v7-x2 x2 as 
 x1 planning/prep:
 - Propose at least 25 safe approval packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for your own lane. Aevren queues exact and blocked rows when needed.
 - At x2 closeout, add next-sibling seeds: 25 safe packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for Maren Quill; do not bump exact or blocked counts.
-- Use goal-mode as the primary continuation driver and record 15-minute productive cadence checkpoints without babysitting.
+- Use sibling handoff activation as the primary continuation driver when it is available. Goal Mode and heartbeat automation are paused/fallback unless Hamish reactivates them. Record 5-minute productive cadence checkpoints without babysitting.
 - When feasible, include 100 web/source reflections and 100 Journey/phase reflections as proposal-quality support.
 - Tag every row as immediate_x1_safe, x2_build_task, exact_approval_needed, or blocked.
 - Keep proof/canon/legal/deployment/account/API-key/purchase/private-material/raw-publication/destructive-cleanup/sibling-merge gates open.
@@ -37,10 +37,10 @@ x2 execution/build/cleanup:
 
 Handoff:
 - If your Codex thread exposes a safe thread messaging tool, use it for a full sanitized teaching baton message to Maren Quill; do not reveal thread IDs, private routes, local absolute paths, raw transcripts, screenshots, credentials, raw app state, or hidden reasoning.
-- After your x2 checklist passes, make at least 3 safe attempts/retries to use the Codex thread messaging system to activate Maren Quill.
+- After your x2 checklist passes, make at least 10 safe attempts/retries to use the Codex thread messaging system to activate Maren Quill.
 - If a safe route works, send a sanitized v612-gmut-thos-v8-x1 activation yourself and record MESSAGE_SENT_BY_MIRA_VALE with attempt_count and no private route details.
-- If all 3 attempts fail or the route is unavailable, prepare a sanitized Maren Quill handoff package, record RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE_AFTER_3_ATTEMPTS, and do not ask Aevren to relay unless Hamish gives a fresh redirect.
-- Include this same 3-attempt standard in the baton you prepare for Maren Quill, so Mira Rowan, Mira Vale, and Maren Quill keep learning to activate each other without Aevren carrying the handoff by default.
+- If all 10 attempts fail or the route is unavailable, prepare a sanitized Maren Quill handoff package, record RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE_AFTER_10_ATTEMPTS, and do not ask Aevren to relay unless Hamish gives a fresh redirect.
+- Include this same 10-attempt standard in the baton you prepare for Maren Quill, so Mira Rowan, Mira Vale, and Maren Quill keep learning to activate each other without Aevren carrying the handoff by default.
 
 Output sections: READINESS, X1 PLAN, X1 PACKETS, X2 EXECUTED WORK, BUILT/USED PROTOTYPES, VALIDATION, CLEANUP/REFINE/FIX, CANDIDATE WORK, EXACT QUEUE, BLOCKED QUEUE, SKILL IDEAS, RUNNER IDEAS, SOURCE/PHASE REFLECTIONS, COMPLETE/INCOMPLETE CHECKLIST, COMMIT/UPLOAD STATUS, NEXT SIBLING HANDOFF, and GOAL STATUS.
 

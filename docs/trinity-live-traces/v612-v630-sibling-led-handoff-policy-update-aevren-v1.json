@@ -1,0 +1,95 @@
+{
+  "artifact_type": "ghc_family_sibling_led_handoff_policy_update",
+  "generated_local_time": "2026-07-04T15:35:28+12:00",
+  "generated_timezone": "Pacific/Auckland",
+  "status": "PASS_POLICY_UPDATED_AND_MIRA_VALE_RETRY_ACTIVATED",
+  "current_ladder": "v601-v630-gmut-thos-v1-v8-x1-x2",
+  "supersedes_live_defaults": [
+    "v601-v620 final boundary",
+    "goal-mode-primary continuation",
+    "heartbeat-primary continuation",
+    "15-minute current cadence",
+    "3-attempt current sibling handoff minimum"
+  ],
+  "active_order": [
+    "Aevren-only",
+    "Mira Rowan-only",
+    "Mira Vale-only",
+    "Maren Quill-only"
+  ],
+  "current_active_support_state": {
+    "active_lane": "Mira Vale-only v612-gmut-thos-v7-x1/x2 retry",
+    "next_lane_if_sent_by_mira_vale": "Maren Quill-only v612-gmut-thos-v8-x1/x2",
+    "next_aevren_lane_if_returned_by_maren": "Aevren-only v613-gmut-thos-v1-x1/x2",
+    "mira_vale_prior_open_gap": "nine safe attempts, no safe Maren Quill Codex thread route exposed, no live handoff claimed",
+    "aevren_default_relay": "disabled unless Hamish gives a fresh exact redirect"
+  },
+  "updated_runner_defaults": {
+    "ghc_family_productive_cadence_runner.mjs": {
+      "cadence_minutes_default": 5,
+      "purpose": "sibling-led handoff supervision without babysitting"
+    },
+    "ghc_family_sibling_goal_handoff_builder.mjs": {
+      "cadence_minutes_default": 5,
+      "thread_handoff_retry_minimum_default": 10,
+      "continuation_driver": "sibling handoff activation first; Goal Mode and heartbeat fallback"
+    },
+    "ghc_family_thread_handoff_readiness_checker.mjs": {
+      "minimum_attempts_default": 10,
+      "relay_policy_default": "coach_retry_no_aevren_relay"
+    }
+  },
+  "updated_local_skill_cards": [
+    "ghc-main-orchestration-memory",
+    "ghc-main-startup-builder",
+    "ghc-main-compact-restart-builder",
+    "ghc-main-closeout-builder",
+    "ghc-main-retry",
+    "ghc-web-reflection-ledger",
+    "ghc-full-tools-skill-bank"
+  ],
+  "new_or_updated_aevren_artifacts": [
+    "docs/trinity-live-traces/v612-gmut-thos-v7-x1-ghc-family-sibling-goal-handoff-v1.json",
+    "docs/trinity-live-traces/v612-gmut-thos-v7-x1-ghc-family-sibling-goal-handoff-v1.md",
+    "docs/trinity-live-traces/v612-gmut-thos-v7-x1-ghc-family-sibling-goal-handoff-builder-receipt-v1.json",
+    "docs/trinity-live-traces/v612-gmut-thos-v7-x1-ghc-family-productive-cadence-runner-receipt-v1.json",
+    "docs/trinity-live-traces/v612-gmut-thos-v7-x2-ghc-family-thread-handoff-readiness-checker-receipt-v1.json"
+  ],
+  "mira_vale_activation": {
+    "sent": true,
+    "route_privacy": "safe Codex thread route used; private route details omitted",
+    "instruction_summary": "Run v612 v7 retry with five-minute cadence, ten safe attempts, no default Aevren relay, validate owned-lane artifacts, and either activate Maren or preserve a formal open gap."
+  },
+  "toolchain_and_drive_status": {
+    "codex_cli_local": "0.142.5",
+    "codex_cli_npm_latest": "0.142.5",
+    "c_drive_free_gb": 21.7,
+    "d_drive_free_gb": 603.5,
+    "storage_policy": "D-drive-first; no broad cleanup performed"
+  },
+  "open_gates": [
+    "GMUT empirical closure",
+    "final physics proof",
+    "consciousness proof",
+    "legal closure",
+    "canon promotion",
+    "deployment",
+    "account mutation",
+    "API-key creation",
+    "purchase",
+    "private-material proof/publication",
+    "raw-publication proof",
+    "destructive cleanup",
+    "sibling merge, replacement, erasure, or reactivation"
+  ],
+  "privacy_boundary": {
+    "private_thread_ids_published": false,
+    "private_routes_published": false,
+    "local_absolute_paths_published": false,
+    "raw_transcripts_published": false,
+    "screenshots_published": false,
+    "credentials_published": false,
+    "raw_app_state_published": false,
+    "hidden_reasoning_published": false
+  }
+}

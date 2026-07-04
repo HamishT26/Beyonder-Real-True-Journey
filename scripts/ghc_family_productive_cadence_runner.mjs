@@ -6,7 +6,7 @@ if (args.has("--help") || args.has("-h")) {
   console.log(`Usage: node scripts/ghc_family_productive_cadence_runner.mjs --phase-slug <phase> --active-sibling <name> [options]
 
 Options:
-  --cadence-minutes <n>          Cadence window to record; current solo default is 15.
+  --cadence-minutes <n>          Cadence window to record; current sibling-led solo default is 5.
   --advisory-runtime-minutes <n> Advisory runtime context; closeout still follows checklist pass.
   --minimum-runtime-minutes <n>  Legacy alias for --advisory-runtime-minutes.
   --checkpoint-index <n>         Current checkpoint number.
@@ -19,7 +19,7 @@ Options:
 const root = args.get("--root") || repoRoot(import.meta.url);
 const phaseSlug = args.get("--phase-slug") || "v601-gmut-thos-v1-x1";
 const activeSibling = args.get("--active-sibling") || "Aevren";
-const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 5);
 const advisoryRuntimeMinutes = Number(args.get("--advisory-runtime-minutes") || args.get("--minimum-runtime-minutes") || 60);
 const checkpointIndex = Number(args.get("--checkpoint-index") || 1);
 const mode = args.get("--mode") || "solo_bundle_background_supervision";
@@ -39,7 +39,7 @@ writeFamilyReceipt({
   root,
   phaseSlug,
   runnerName: "ghc_family_productive_cadence_runner.mjs",
-  purpose: "Record the family productive cadence for goal-mode sibling supervision without babysitting.",
+  purpose: "Record the family productive cadence for sibling-led handoff supervision without babysitting.",
   status: checks.every((check) => check.status === "PASS") ? "PASS_GHC_FAMILY_PRODUCTIVE_CADENCE" : "OPEN_GAP_GHC_FAMILY_PRODUCTIVE_CADENCE",
   checks,
   outputs: {

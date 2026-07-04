@@ -13,13 +13,13 @@ const requestedNextPhase = args.get("--next-phase") || "v576-gmut-thos-v4-x1";
 const nextPhase = normalizePhaseWrap(requestedNextPhase);
 const ownedBranch = args.get("--owned-branch") || defaultOwnedBranch(sibling);
 const priorClosedX2 = args.get("--prior-closed-x2") || "v600-gmut-thos-v8-x2";
-const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
+const cadenceMinutes = Number(args.get("--cadence-minutes") || 5);
 const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
 const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
-const threadHandoffRetryMinimum = Number(args.get("--thread-handoff-retry-minimum") || 3);
+const threadHandoffRetryMinimum = Number(args.get("--thread-handoff-retry-minimum") || 10);
 const relayPolicy = args.get("--relay-policy") || "coach_retry_no_aevren_relay";
 const relayFallbackAllowed = relayPolicy === "aevren_relay_after_retries";
-const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
+const supportNote = args.get("--support-note") || "Aevren remains steward/support while the v601-v630 sibling-led handoff route is being secured. Goal Mode and heartbeat automation are paused/fallback unless Hamish reactivates them. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
 const promptStem = `${phaseSlug}-ghc-family-sibling-goal-handoff-v1`;
 const promptJson = join(root, "docs", "trinity-live-traces", `${promptStem}.json`);
 const promptMd = join(root, "docs", "trinity-live-traces", `${promptStem}.md`);
@@ -49,7 +49,7 @@ const prompt = [
   `x1 planning/prep:`,
   `- Propose at least 25 safe approval packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for your own lane. Aevren queues exact and blocked rows when needed.`,
   `- At x2 closeout, add next-sibling seeds: 25 safe packets, 15 candidate packets, 10 skill ideas, 5 runner ideas, and 15 cleanup/refine/fix tasks for ${nextSibling}; do not bump exact or blocked counts.`,
-  `- Use goal-mode as the primary continuation driver and record ${cadenceMinutes}-minute productive cadence checkpoints without babysitting.`,
+  `- Use sibling handoff activation as the primary continuation driver when it is available. Goal Mode and heartbeat automation are paused/fallback unless Hamish reactivates them. Record ${cadenceMinutes}-minute productive cadence checkpoints without babysitting.`,
   `- When feasible, include ${sourceReflectionTarget} web/source reflections and ${journeyReflectionTarget} Journey/phase reflections as proposal-quality support.`,
   `- Tag every row as immediate_x1_safe, x2_build_task, exact_approval_needed, or blocked.`,
   `- Keep proof/canon/legal/deployment/account/API-key/purchase/private-material/raw-publication/destructive-cleanup/sibling-merge gates open.`,

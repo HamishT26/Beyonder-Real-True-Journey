@@ -12,7 +12,7 @@ const routeFound = (args.get("--route-found") || "false").toLowerCase() === "tru
 const messageSent = (args.get("--message-sent") || "false").toLowerCase() === "true";
 const sentAfterCloseout = (args.get("--sent-after-closeout") || "false").toLowerCase() === "true";
 const attemptCount = Number(args.get("--attempt-count") || (messageSent ? 1 : 0));
-const minimumAttempts = Number(args.get("--minimum-attempts") || 3);
+const minimumAttempts = Number(args.get("--minimum-attempts") || 10);
 const attemptedBy = args.get("--attempted-by") || "Aevren";
 const relayPolicy = args.get("--relay-policy") || "coach_retry_no_aevren_relay";
 const relayFallbackAllowed = relayPolicy === "aevren_relay_after_retries";
@@ -34,7 +34,7 @@ const checks = [
     status: attemptCount >= (messageSent ? 1 : minimumAttempts) ? "PASS" : "OPEN_GAP"
   },
   {
-    label: "three_retry_standard_met_or_sent_successfully",
+    label: "ten_retry_standard_met_or_sent_successfully",
     status: messageSent || attemptCount >= minimumAttempts ? "PASS" : "OPEN_GAP"
   },
   { label: "private_thread_id_not_published", status: "PASS" }
