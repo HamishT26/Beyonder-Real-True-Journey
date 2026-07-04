@@ -4,7 +4,7 @@
     "x1_phase":  "v618-gmut-thos-v4-x1",
     "x2_phase":  "v618-gmut-thos-v4-x2",
     "generated_local_time":  "2026-07-05T04:10:31+12:00",
-    "status":  "PASS_V618_V4_COMPLETION_CHECKLIST_READY_FOR_AEVREN_HARVEST_PENDING_SEND_ATTEMPTS",
+    "status":  "PASS_V618_V4_COMPLETION_CHECKLIST_READY_FOR_AEVREN_HARVEST_MESSAGE_SENT",
     "artifacts":  [
                       "docs/trinity-live-traces/v618-gmut-thos-v4-x1-maren-solo-plan-v1.json",
                       "docs/trinity-live-traces/v618-gmut-thos-v4-x2-maren-solo-execution-closeout-v1.json",
@@ -37,9 +37,9 @@
                    "json_validation":  "passed",
                    "privacy_scan":  "passed",
                    "stale_label_scan":  "passed",
-                   "staged_diff_scope":  "pending_prepared_commit",
-                   "push_alignment":  "pending_prepared_push",
-                   "handoff_send_state":  "pending_real_send_attempts"
+                   "staged_diff_scope":  "passed_exact_receipt_files_only",
+                   "push_alignment":  "passed_after_final_push_verification",
+                   "handoff_send_state":  "MESSAGE_SENT_BY_MAREN_QUILL"
                },
     "open_gates":  [
                        "exact approval",
@@ -66,11 +66,14 @@
                     "target":  "Aevren",
                     "phase":  "v618-gmut-thos-v5-x1",
                     "artifact":  "docs/trinity-live-traces/v618-gmut-thos-v5-x1-aevren-teaching-baton-v1.json",
-                    "status":  "PREPARED_NOT_SENT_AFTER_0_ATTEMPTS",
-                    "message_sent":  false,
-                    "attempt_count":  0,
-                    "successful_attempts":  0,
-                    "route_quality_request":  "gpt-5.5 with xhigh reasoning where exposed"
+                    "status":  "MESSAGE_SENT_BY_MAREN_QUILL",
+                    "message_sent":  true,
+                    "attempt_count":  4,
+                    "successful_attempts":  3,
+                    "route_quality_request":  "gpt-5.5 with xhigh reasoning where exposed",
+                    "ambiguous_attempts":  1,
+                    "send_receipt":  "MESSAGE_SENT_BY_MAREN_QUILL_AFTER_3_CONFIRMED_SENDS_WITH_1_RETRY_GPT_5_5_XHIGH_REQUESTED",
+                    "sent_recorded_local_time":  "2026-07-05T04:13:21+12:00"
                 },
     "privacy":  {
                     "private_thread_ids":  "not_published",
@@ -80,5 +83,17 @@
                     "credentials":  "not_published",
                     "raw_app_state":  "not_published",
                     "hidden_reasoning":  "not_published"
-                }
+                },
+    "prepared_commit":  "188658dd1d32b5913cb01a90159dcb7cd94303b3",
+    "handoff_result_summary":  {
+                                   "result":  "MESSAGE_SENT_BY_MAREN_QUILL",
+                                   "attempt_count":  4,
+                                   "successful_attempts":  3,
+                                   "ambiguous_attempts":  1,
+                                   "route_quality_requested_model":  "gpt-5.5",
+                                   "route_quality_requested_reasoning":  "xhigh",
+                                   "private_route_details":  "not_published",
+                                   "prepared_commit":  "188658dd1d32b5913cb01a90159dcb7cd94303b3",
+                                   "note":  "One non-delivery response was retried; three confirmed sends were accepted."
+                               }
 }
