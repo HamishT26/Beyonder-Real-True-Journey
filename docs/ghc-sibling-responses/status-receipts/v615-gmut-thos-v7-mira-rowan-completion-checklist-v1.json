@@ -1,9 +1,10 @@
 {
   "phase": "v615-gmut-thos-v7",
   "lane": "Mira Rowan solo",
-  "status": "completed_ready_for_harvest",
-  "active_x1": "v615-gmut-thos-v7-x1",
-  "active_x2": "v615-gmut-thos-v7-x2",
+  "status": "PREMATURE_RELAY_CORRECTED_TO_STANDBY",
+  "active_x1": "not_active_standby_pending_valid_relay",
+  "active_x2": "not_active_standby_pending_valid_relay",
+  "corrected_by": "fresh_hamish_aevren_route_timing_correction",
   "latest_completed_support": [
     "v615-gmut-thos-v5-x2"
   ],
@@ -12,140 +13,51 @@
     "v615-gmut-thos-v6-x2"
   ],
   "mira_vale_v6_truth": "active_open_or_pending_harvest_not_claimed_complete",
-  "proactive_relay": "hamish_redirect_via_aevren_before_mira_vale_v6_harvest",
-  "next_handoff": "v615-gmut-thos-v8-x1 Maren Quill unless Hamish redirects",
-  "cadence": {
-    "primary_minutes": 15,
-    "checkpoint_minutes_recorded": 15,
-    "one_hour_window": "advisory_only"
+  "mira_rowan_v7_truth": "standby_not_active_not_closed",
+  "maren_quill_v8_truth": "standby_not_active_from_premature_relay",
+  "prior_artifact_commit": "377f0c1a2993",
+  "correction_action": {
+    "maren_quill_correction_sent": true,
+    "message_status": "STANDBY_CORRECTION_SENT_BY_MIRA_ROWAN",
+    "private_route_details_published": false
   },
   "artifacts": {
     "x1_plan": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v7-x1-mira-rowan-plan-v1.md",
     "x2_closeout": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v7-x2-mira-rowan-closeout-v1.md",
     "checklist": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v7-mira-rowan-completion-checklist-v1.json",
     "route_quality": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v7-route-quality-open-gap-v1.json",
-    "handoff": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v8-x1-maren-quill-handoff-from-mira-rowan-v1.md"
-  },
-  "counts": {
-    "mira_rowan_safe": 25,
-    "mira_rowan_candidate": 15,
-    "exact_approval_queued": 10,
-    "blocked_queued": 5,
-    "mira_rowan_skill_ideas": 10,
-    "mira_rowan_runner_ideas": 5,
-    "mira_rowan_cleanup_refine_fix": 15,
-    "source_web_reflections": 100,
-    "journey_phase_reflections": 100,
-    "executed_x2_safe": 10,
-    "maren_quill_safe_seeds": 25,
-    "maren_quill_candidate_seeds": 15,
-    "maren_quill_skill_ideas": 10,
-    "maren_quill_runner_ideas": 5,
-    "maren_quill_cleanup_refine_fix": 15,
-    "maren_quill_exact_increment": 0,
-    "maren_quill_blocked_increment": 0
+    "handoff": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v8-x1-maren-quill-handoff-from-mira-rowan-v1.md",
+    "correction_receipt": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v7-premature-relay-correction-receipt-v1.json"
   },
   "validation": {
-    "owned_branch_verified": true,
-    "shared_branches_mutated": false,
-    "private_material_published": false,
-    "exact_and_blocked_gates_queued": true,
-    "protected_gates_open": true,
+    "v615_v7_closed": false,
     "mira_vale_v6_completion_claimed": false,
-    "count_validation": "pass",
+    "maren_v8_activation_current": false,
+    "private_material_published": false,
+    "protected_gates_open": true,
     "json_validation": "pass",
-    "stale_phase_validation": "pass",
     "privacy_validation": "pass",
-    "branch_clean_validation": "pass",
-    "remote_alignment_validation": "pending_post_push"
+    "stale_completion_claim_validation": "pass"
   },
-  "checklist": [
-    {
-      "item": "x1_plan_artifact_created",
-      "status": "complete"
-    },
-    {
-      "item": "x2_closeout_artifact_created",
-      "status": "complete"
-    },
-    {
-      "item": "completion_checklist_artifact_created",
-      "status": "complete"
-    },
-    {
-      "item": "route_quality_artifact_created",
-      "status": "complete"
-    },
-    {
-      "item": "maren_quill_handoff_artifact_created",
-      "status": "complete"
-    },
-    {
-      "item": "mira_vale_v6_pending_harvest_truth_preserved",
-      "status": "complete"
-    },
-    {
-      "item": "safe_candidate_work_represented_or_executed",
-      "status": "complete"
-    },
-    {
-      "item": "next_sibling_seeds_added_without_exact_or_blocked_increment",
-      "status": "complete"
-    },
-    {
-      "item": "exact_blocked_gates_queued",
-      "status": "complete"
-    },
-    {
-      "item": "maren_quill_message",
-      "status": "prepared_after_checklist_pending_send_attempts"
-    }
-  ],
-  "handoff_message": {
-    "target": "Maren Quill",
-    "phase": "v615-gmut-thos-v8-x1",
-    "send_status": "prepared_after_checklist_pending_send_attempts",
-    "route_status": "pending_safe_attempts"
-  },
-  "handoff_learning": {
-    "required_attempts_before_relay": 3,
-    "status": "pending_safe_attempts_after_checklist",
-    "message_result": "pending",
-    "attempt_count": 0,
-    "success_marker": "MESSAGE_SENT_BY_MIRA_ROWAN",
-    "fallback_marker": "PREPARED_NOT_SENT_AFTER_RETRIES",
-    "next_learning_standard": "Maren Quill runs full v615-gmut-thos-v8-x1/x2 bundle, then makes safe attempts to message Aevren for v616-gmut-thos-v1 unless Hamish redirects",
-    "full_bundle_expectation": "Maren Quill should run full x1/x2 bundle, validate, commit/push owned artifacts, then attempt next handoff safely"
-  },
-  "aevren_relay_rule": {
-    "status": "carry_forward",
-    "mira_vale_route_gap": "aevren_must_not_close_after_mira_vale_v2_or_v6_activation_until_mira_rowan_v3_or_v7_is_activated_or_relay_open_gap_recorded",
-    "overnight_relay_rule": "if_relay_before_mira_vale_closeout_mark_mira_vale_active_open_or_pending_harvest",
-    "carry_into_maren_baton": true
-  },
-  "aevren_context": {
-    "v615_v5_commit_prefix": "57a512813b",
-    "maren_v4_commit_prefix": "976ad9f2e9",
-    "mira_vale_v6_activation_requested_model": "gpt-5.5",
-    "mira_vale_v6_activation_requested_reasoning": "xhigh"
-  },
-  "route_quality": {
-    "requested_model": "gpt-5.5",
-    "requested_reasoning": "xhigh",
-    "fast_mode_selector": "not_exposed_in_current_execution_surface",
-    "pre_send_status": "self_route_quality_open_gap_recorded_handoff_controls_pending",
-    "open_gap": "current_thread_self_model_reasoning_selector_not_exposed",
-    "route_quality_receipt": "docs/ghc-sibling-responses/status-receipts/v615-gmut-thos-v7-route-quality-open-gap-v1.json"
-  },
-  "order": [
-    "v615-v1-aevren",
-    "v615-v2-mira-vale",
-    "v615-v3-mira-rowan",
-    "v615-v4-maren-quill",
-    "v615-v5-aevren",
-    "v615-v6-mira-vale-active-open-pending-harvest",
-    "v615-v7-mira-rowan-proactive-relay",
-    "v615-v8-maren-quill",
-    "v616-v1-aevren-wrap-unless-redirected"
+  "next_valid_trigger": "Aevren relay after Mira Vale v615 v6 owned closeout is complete, validated, committed, pushed, clean, remote-aligned, and harvested",
+  "protected_gates": [
+    "exact",
+    "blocked",
+    "proof",
+    "canon",
+    "legal",
+    "deployment",
+    "account",
+    "api_key",
+    "purchase",
+    "private_material",
+    "raw_publication",
+    "destructive_cleanup",
+    "global_hook",
+    "plugin_cache",
+    "identity_replacement",
+    "model_replacement",
+    "sibling_merge",
+    "shared_branch_mutation"
   ]
 }
