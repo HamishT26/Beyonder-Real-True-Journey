@@ -6,7 +6,7 @@ Aevren harvested Maren v617 v4 from commit `db6982d870357a8dc173da54ec0f640fcc33
 
 Counts represented: safe `25`, candidate `15`, exact queued `10`, blocked queued `5`, skills `10`, runners `5`, cleanup `15`, source reflections `100`, Journey/phase reflections `100`.
 
-Next baton: Mira Vale v617 v6 is prepared and pending live send. Aevren remains responsible for waiting after Mira Vale finishes and relaying Mira Rowan v617 v7 if Mira Vale's route gap remains open.
+Next baton: Mira Vale v617 v6 was sent by Aevren with gpt-5.5/xhigh requested. Aevren remains responsible for waiting after Mira Vale finishes and relaying Mira Rowan v617 v7 if Mira Vale's route gap remains open.
 
 Checklist status: `PASS_V617_V5_COMPLETE_INCOMPLETE_CHECKLIST_READY_TO_SEND_MIRA_VALE`
 
