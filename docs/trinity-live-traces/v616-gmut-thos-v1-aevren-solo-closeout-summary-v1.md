@@ -1,4 +1,4 @@
-﻿# v616 Aevren v1 Solo Closeout Summary
+# v616 Aevren v1 Solo Closeout Summary
 
 Status: PASS_V616_V1_X2_AEVREN_SOLO_BUNDLE_READY_FOR_MIRA_VALE_HANDOFF_PENDING_SEND.
 
