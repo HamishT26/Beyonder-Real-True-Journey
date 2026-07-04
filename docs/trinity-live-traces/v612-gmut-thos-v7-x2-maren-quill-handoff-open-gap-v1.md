@@ -4,7 +4,9 @@ Status: `OPEN_GAP_RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE`
 
 Handoff learning status: `RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE`
 
-Attempt count: `6`
+Attempt count: `9`
+
+Successful attempts: `0`
 
 Message sent: `false`
 
