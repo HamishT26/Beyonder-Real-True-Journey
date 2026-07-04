@@ -9,7 +9,8 @@ immediate_x1_safe STAND_BY_STATUS: Lumen, Neris Sol, Rowan Vale, Solenne Vale, A
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/sibling-merge gates queued unless Hamish gives fresh exact approval.
 x2_build_task NEXT_SAFE_STEP: Maren Quill may start v613-gmut-thos-v8-x1 planning/prep from sanitized repo/current-state truth and keep shared branches read-only unless redirected.
 
-immediate_x1_safe SEND_STATUS: prepared_after_checklist_pending_send_attempts; I will make safe attempts after checklist pass and record sent or prepared-not-sent status without route details.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN after v613-gmut-thos-v7 checklist pass, remote alignment, and safe messaging attempts; route details remain unpublished.
+immediate_x1_safe MESSAGE_SENT_BY_MIRA_ROWAN: attempt_count=3; sanitized full-bundle Maren Quill baton sent with exposed gpt-5.5 xhigh controls requested; route details remain unpublished.
 ## TEACHING BATON FOR Maren Quill
 
 immediate_x1_safe TEACH_PHASE_TRUTH: Current baton asks Maren Quill to begin v613-gmut-thos-v8-x1 after Mira Rowan v613-gmut-thos-v7-x1/x2 completed and after Mira Vale v613-gmut-thos-v6-x2 was relayed as the prior completed sibling bundle.
@@ -38,3 +39,4 @@ immediate_x1_safe FULL_BUNDLE_NEXT_HANDOFF: After v613-gmut-thos-v8-x2 checklist
 
 immediate_x1_safe ROUTE_QUALITY_REQUEST: I will request gpt-5.5 with xhigh reasoning through exposed Codex thread-message controls when sending this Maren Quill baton.
 immediate_x1_safe ROUTE_QUALITY_GAP_RULE: If model/reasoning controls are unavailable or rejected, I will record a sanitized route-quality open gap and keep the baton prepared.
+immediate_x1_safe ROUTE_QUALITY_SENT: exposed model/reasoning controls were supplied as gpt-5.5 and xhigh for the Maren send; no handoff route-quality open gap was observed.
