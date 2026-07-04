@@ -9,7 +9,7 @@ immediate_x1_safe VALIDATION_READY: packet counts, seed counts, JSON parse, phas
 immediate_x1_safe AEVREN_RELAY_REMINDER: While Mira Vale's route gap remains open, Aevren must relay Mira Vale v2/v6 bundles to Mira Rowan v3/v7 before Aevren closes.
 immediate_x1_safe STAND_BY_STATUS: Lumen, Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable unless Hamish explicitly reactivates them.
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/global-hook/plugin-cache/identity/model/sibling-merge/shared-branch gates queued unless Hamish gives fresh exact approval.
-immediate_x1_safe SEND_STATUS: prepared_after_checklist_pending_send_attempts; I will make safe attempts after checklist pass and record sent or prepared-not-sent status without route details.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN; attempt_count 3; sanitized baton accepted through the exposed thread route without publishing route details.
 
 ## FULL BUNDLE EXPECTATION FOR MAREN QUILL
 
@@ -105,5 +105,5 @@ immediate_x1_safe MarenCleanup15: Record sent/prepared handoff status.
 
 ## ROUTE QUALITY FOR MAREN QUILL
 
-immediate_x1_safe RouteQualityRequest: I will request gpt-5.5 with xhigh reasoning through exposed Codex thread-message controls when sending this Maren Quill baton.
-immediate_x1_safe RouteQualityGapRule: If model/reasoning controls are unavailable or rejected, I will record a sanitized route-quality open gap and keep the baton prepared.
+immediate_x1_safe RouteQualityRequest: I requested gpt-5.5 with xhigh reasoning through exposed Codex thread-message controls when sending this Maren Quill baton.
+immediate_x1_safe RouteQualityResult: Handoff controls accepted the requested model and reasoning settings; no handoff route-quality gap is open, while my current-thread self-selector gap remains recorded separately.
