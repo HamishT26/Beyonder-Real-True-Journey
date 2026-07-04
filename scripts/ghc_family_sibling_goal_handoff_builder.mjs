@@ -17,6 +17,8 @@ const cadenceMinutes = Number(args.get("--cadence-minutes") || 15);
 const sourceReflectionTarget = Number(args.get("--source-reflection-target") || 100);
 const journeyReflectionTarget = Number(args.get("--journey-reflection-target") || 100);
 const threadHandoffRetryMinimum = Number(args.get("--thread-handoff-retry-minimum") || 3);
+const relayPolicy = args.get("--relay-policy") || "coach_retry_no_aevren_relay";
+const relayFallbackAllowed = relayPolicy === "aevren_relay_after_retries";
 const supportNote = args.get("--support-note") || "Aevren remains steward/support. Lumen is stand-by/recoverable while the verified Browser route is unavailable. Neris Sol, Rowan Vale, Solenne Vale, Aletheon, Arby, Aster Vale, legacy Cicero, Kierkegaard, and Aristotle remain stand-by/recoverable.";
 const promptStem = `${phaseSlug}-ghc-family-sibling-goal-handoff-v1`;
 const promptJson = join(root, "docs", "trinity-live-traces", `${promptStem}.json`);
@@ -62,8 +64,12 @@ const prompt = [
   `- If your Codex thread exposes a safe thread messaging tool, use it for a full sanitized teaching baton message to ${nextSibling}; do not reveal thread IDs, private routes, local absolute paths, raw transcripts, screenshots, credentials, raw app state, or hidden reasoning.`,
   `- After your x2 checklist passes, make at least ${threadHandoffRetryMinimum} safe attempts/retries to use the Codex thread messaging system to activate ${nextSibling}.`,
   `- If a safe route works, send a sanitized ${nextPhase} activation yourself and record MESSAGE_SENT_BY_${slugify(sibling).toUpperCase().replace(/-/g, "_")} with attempt_count and no private route details.`,
-  `- If all ${threadHandoffRetryMinimum} attempts fail or the route is unavailable, prepare a sanitized ${nextSibling} handoff package, record PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES, and ask Aevren to relay.`,
-  `- Include this same ${threadHandoffRetryMinimum}-attempt standard in the baton you prepare for ${nextSibling}, so Mira Rowan, Mira Vale, and Maren Quill keep learning to activate each other before Aevren carries the handoff.`,
+  relayFallbackAllowed
+    ? `- If all ${threadHandoffRetryMinimum} attempts fail or the route is unavailable, prepare a sanitized ${nextSibling} handoff package, record PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES, and ask Aevren to relay under the current explicit relay policy.`
+    : `- If all ${threadHandoffRetryMinimum} attempts fail or the route is unavailable, prepare a sanitized ${nextSibling} handoff package, record RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE_AFTER_${threadHandoffRetryMinimum}_ATTEMPTS, and do not ask Aevren to relay unless Hamish gives a fresh redirect.`,
+  relayFallbackAllowed
+    ? `- Include this same ${threadHandoffRetryMinimum}-attempt standard in the baton you prepare for ${nextSibling}, so Mira Rowan, Mira Vale, and Maren Quill keep learning to activate each other before Aevren carries the handoff.`
+    : `- Include this same ${threadHandoffRetryMinimum}-attempt standard in the baton you prepare for ${nextSibling}, so Mira Rowan, Mira Vale, and Maren Quill keep learning to activate each other without Aevren carrying the handoff by default.`,
   ``,
   `Output sections: READINESS, X1 PLAN, X1 PACKETS, X2 EXECUTED WORK, BUILT/USED PROTOTYPES, VALIDATION, CLEANUP/REFINE/FIX, CANDIDATE WORK, EXACT QUEUE, BLOCKED QUEUE, SKILL IDEAS, RUNNER IDEAS, SOURCE/PHASE REFLECTIONS, COMPLETE/INCOMPLETE CHECKLIST, COMMIT/UPLOAD STATUS, NEXT SIBLING HANDOFF, and GOAL STATUS.`,
   ``,
@@ -87,6 +93,7 @@ writeFileSync(promptJson, `${JSON.stringify({
   cadence_minutes: cadenceMinutes,
   source_reflection_target: sourceReflectionTarget,
   journey_phase_reflection_target: journeyReflectionTarget,
+  relay_policy: relayPolicy,
   sibling_thread_handoff_learning_standard: threadHandoffStandard(),
   prompt,
   closeout_policy: "close_when_completion_checklist_passes",
@@ -129,6 +136,7 @@ writeFamilyReceipt({
     sourceReflectionTarget,
     journeyReflectionTarget,
     threadHandoffRetryMinimum,
+    relayPolicy,
     siblingThreadHandoffLearningStandard: threadHandoffStandard(),
     phaseWrapCorrection: requestedNextPhase === nextPhase ? "not_needed" : "corrected_v9_to_next_v1",
     closeoutPolicy: "close_when_completion_checklist_passes"
@@ -167,7 +175,10 @@ function threadHandoffStandard() {
     target_sibling: nextSibling,
     target_phase: nextPhase,
     success_receipt: "MESSAGE_SENT_BY_SIBLING_WITH_ATTEMPT_COUNT_NO_PRIVATE_ROUTE",
-    fallback_receipt: `PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES`,
+    fallback_receipt: relayFallbackAllowed
+      ? `PREPARED_NOT_SENT_AFTER_${threadHandoffRetryMinimum}_RETRIES`
+      : `RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE_AFTER_${threadHandoffRetryMinimum}_ATTEMPTS`,
+    relay_policy: relayPolicy,
     route_privacy: {
       publish_private_thread_ids: false,
       publish_private_routes: false,
@@ -177,7 +188,9 @@ function threadHandoffStandard() {
       publish_raw_app_state: false,
       publish_hidden_reasoning: false
     },
-    relay_fallback: "Ask Aevren to relay only after recording route unavailable or failed safe attempts.",
+    relay_fallback: relayFallbackAllowed
+      ? "Ask Aevren to relay only after recording route unavailable or failed safe attempts."
+      : "Do not ask Aevren to relay by default; coach retry, preserve an open gap, or wait for a fresh Hamish redirect.",
     baton_propagation: "Include this retry standard in the next sibling baton so the round robin becomes sibling-led."
   };
 }

@@ -14,6 +14,8 @@ const sentAfterCloseout = (args.get("--sent-after-closeout") || "false").toLower
 const attemptCount = Number(args.get("--attempt-count") || (messageSent ? 1 : 0));
 const minimumAttempts = Number(args.get("--minimum-attempts") || 3);
 const attemptedBy = args.get("--attempted-by") || "Aevren";
+const relayPolicy = args.get("--relay-policy") || "coach_retry_no_aevren_relay";
+const relayFallbackAllowed = relayPolicy === "aevren_relay_after_retries";
 const readinessStatus = routeFound && !messageSent
   ? "PASS_GHC_FAMILY_THREAD_HANDOFF_ROUTE_READY_NOT_SENT"
   : routeFound && messageSent
@@ -57,13 +59,18 @@ writeFamilyReceipt({
     siblingThreadHandoffLearningStandard: {
       minimum_safe_attempts_before_relay_fallback: minimumAttempts,
       success_receipt: "MESSAGE_SENT_BY_SIBLING_WITH_ATTEMPT_COUNT_NO_PRIVATE_ROUTE",
-      fallback_receipt: `PREPARED_NOT_SENT_AFTER_${minimumAttempts}_RETRIES`,
+      fallback_receipt: relayFallbackAllowed
+        ? `PREPARED_NOT_SENT_AFTER_${minimumAttempts}_RETRIES`
+        : `RETRY_CYCLE_COMPLETE_STILL_NO_SAFE_ROUTE_AFTER_${minimumAttempts}_ATTEMPTS`,
+      relay_policy: relayPolicy,
       private_route_details_published: false
     },
     handoffBoundary: messageSent
       ? "Next sibling activation was sent only after the active x2 phase had a passing closeout checklist."
       : attemptCount >= minimumAttempts
-        ? "Minimum safe thread-message attempts were recorded; relay fallback is allowed without exposing route details."
+        ? relayFallbackAllowed
+          ? "Minimum safe thread-message attempts were recorded; Aevren relay fallback is allowed by the current relay policy without exposing route details."
+          : "Minimum safe thread-message attempts were recorded; Aevren relay is not allowed by the current relay policy, so the sibling must keep retrying later or preserve a formal open gap."
         : "Do not send the next sibling activation until the active x2 phase has a passing closeout checklist or an accepted formal open-gap handoff."
   },
   note: "The thread handle was inspected privately and is intentionally omitted from this receipt."
