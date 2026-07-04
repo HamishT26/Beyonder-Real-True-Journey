@@ -25,7 +25,7 @@ x2_build_task Prototype05: Used exact staged-file validation.
 
 x2_build_task CandidateRepresented01: Candidate work stayed local, reversible, artifact-only, status-only, validation-only, queue-shaping, or prototype-safe.
 x2_build_task CandidateRepresented02: No shared branch mutation, deployment, account action, API-key action, purchase, destructive cleanup, plugin-cache mutation, global hook mutation, or identity/sibling merge was attempted.
-x2_build_task CandidateRepresented03: Maren Quill handoff is sanitized and may be sent only after checklist pass through an available safe route.
+x2_build_task CandidateRepresented03: Maren Quill handoff was sanitized and sent after checklist pass through an available safe route.
 x2_build_task CandidateRepresented04: Mira Vale route gap is preserved as context and not treated as a failed v616 v6 closeout.
 x2_build_task CandidateRepresented05: Aevren harvest and relay are the active bridge into v616 v7.
 
@@ -41,13 +41,13 @@ exact_approval_needed ExactQueue: Exact-approval gates remain queued for proof, 
 
 blocked BlockedQueue: If the Maren Quill messaging route is unavailable after safe attempts, the handoff package remains prepared and Aevren should relay.
 
-## HANDOFF LEARNING EXECUTION PLAN
+## HANDOFF LEARNING EXECUTION RESULTS
 
-immediate_x1_safe HandoffAttemptPlan01: Attempt 1 checks thread messaging capability and model/reasoning controls after checklist pass.
-immediate_x1_safe HandoffAttemptPlan02: Attempt 2 confirms Maren Quill target availability by sanitized name without publishing route details.
-immediate_x1_safe HandoffAttemptPlan03: Attempt 3 sends the sanitized baton if the route remains available, otherwise records prepared-not-sent after safe retries.
-immediate_x1_safe HandoffAttemptPlan04: Record MESSAGE_SENT_BY_MIRA_ROWAN with attempt_count when successful, or PREPARED_NOT_SENT_AFTER_RETRIES when not.
+immediate_x1_safe HandoffAttemptResult01: Attempt 1 confirmed thread messaging capability and model/reasoning controls without publishing route details.
+immediate_x1_safe HandoffAttemptResult02: Attempt 2 confirmed Maren Quill target availability by sanitized name.
+immediate_x1_safe HandoffAttemptResult03: Attempt 3 sent the sanitized baton with requested model/reasoning controls accepted by the thread tool.
+immediate_x1_safe HandoffAttemptResult04: MESSAGE_SENT_BY_MIRA_ROWAN recorded with attempt_count 3.
 
 ## CLOSEOUT STATUS
 
-immediate_x1_safe CLOSEOUT: v616-gmut-thos-v7-x1 and v616-gmut-thos-v7-x2 are completed_ready_for_harvest after validation, commit, push, and handoff prepare/send handling.
+immediate_x1_safe CLOSEOUT: v616-gmut-thos-v7-x1 and v616-gmut-thos-v7-x2 are completed_ready_for_harvest after validation, commit, push, and MESSAGE_SENT_BY_MIRA_ROWAN handoff handling.
