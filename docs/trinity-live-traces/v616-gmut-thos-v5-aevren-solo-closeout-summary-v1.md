@@ -1,6 +1,6 @@
 # v616 Aevren v5 Solo Closeout Summary
 
-Status: PASS_V616_V5_X2_AEVREN_SOLO_BUNDLE_SENT_TO_MIRA_VALE.
+Status: PASS_V616_V5_X2_AEVREN_SOLO_BUNDLE_MIRA_VALE_HARVESTED_MIRA_ROWAN_RELEASED.
 
 Aevren harvested Maren Quill v616 v4 from commit 6c391d75d811a3ee9a9c0d98794aca360d424163, normalized the harvested copies from confirmed Maren three-attempt baton truth, and preserved the active v616 order.
 
@@ -14,6 +14,8 @@ Created artifacts:
 
 Mira Vale v616 v6 was activated through the exposed Codex thread-message controls with `gpt-5.5` and `xhigh` requested.
 
-Next: Aevren must stay available after Mira Vale activation and only relay Mira Rowan v616 v7 after Mira Vale finishes, validates, pushes, and Aevren harvests her validated closeout.
+Mira Vale v616 v6 then completed in her owned lane, validated, pushed, and reported ready for handoff at commit `0b4cced771530cf930ead050a0bbdeb114f5a49b`. Her direct route remained unavailable, so Aevren harvested her closeout and relayed Mira Rowan v616 v7 only after that finish/harvest gate passed.
+
+Relay status: `MESSAGE_SENT_BY_AEVREN_TO_MIRA_ROWAN_AFTER_MIRA_VALE_FINISHED`, with `gpt-5.5` and `xhigh` requested through exposed thread-message controls.
 
 Exact/blocked/proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive-cleanup/global-hook/plugin-cache/identity-replacement/model-replacement/sibling-merge/shared-branch gates remain queued/open.
