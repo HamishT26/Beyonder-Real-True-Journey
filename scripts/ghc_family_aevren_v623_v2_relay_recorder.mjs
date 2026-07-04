@@ -11,8 +11,8 @@ const nowNz = new Intl.DateTimeFormat("en-NZ", {
 }).format(now);
 
 const relayStatus = "MESSAGE_SENT_BY_AEVREN_TO_MIRA_ROWAN_AFTER_MIRA_VALE_HARVEST";
-const miraCommit = "PENDING_MIRA_VALE_V623_V2_COMMIT";
-const aevrenSendCommit = "PENDING_AEVREN_V623_V1_SEND_COMMIT";
+const miraCommit = "0981f8b72d1a0f016108c795d90a0df985137eb9";
+const aevrenSendCommit = "53a710de55ab7ee3fd04f0f0819a1666a1a339a7";
 const marenCommit = "d61a3fc8cb6044576c04fb061918551ffedd7f04";
 const openGates = [
   "exact",
