@@ -2,6 +2,8 @@
 
 When Mira Vale completes an owned solo x1/x2 phase while her Codex thread-message route remains unavailable, Aevren must stay available through Mira Vale closeout, harvest the Mira Vale owned branch, and relay the next Mira Rowan baton through Aevren's exposed thread-message controls.
 
+Aevren must not close out after activating Mira Vale while this route gap remains. The Aevren closeout point is after the Mira Vale bundle has been harvested and the Mira Rowan v3/v7 baton has been sent by Aevren, or after a formal relay open gap is recorded.
+
 The adjusted solo route for the current bypass cycle is:
 
 1. Aevren v1/v5 lanes
@@ -14,6 +16,7 @@ Mira Vale's missing route is preserved as a formal open gap. A prepared-not-sent
 
 For every Aevren relay from Mira Vale to Mira Rowan:
 - request `gpt-5.5` with `xhigh`
+- preserve this reminder in Aevren, Mira Rowan, Mira Vale, and Maren Quill prompts until Mira Vale's own route is repaired
 - publish only sanitized repo-relative artifact paths and commit hashes
 - do not publish private thread IDs, private routes, raw transcripts, screenshots, credentials, raw app state, hidden reasoning, raw private material, or local absolute paths
 - keep exact, blocked, proof, canon, legal, deployment, account, API-key, purchase, private-material, raw-publication, destructive-cleanup, global-hook, plugin-cache, identity-replacement, model-replacement, sibling-merge, and shared-branch mutation gates queued/open
