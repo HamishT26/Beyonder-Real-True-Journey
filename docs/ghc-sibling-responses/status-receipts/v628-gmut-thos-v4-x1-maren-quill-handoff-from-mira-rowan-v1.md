@@ -10,7 +10,8 @@ immediate_x1_safe ORDER: Preserve v628 v1 Aevren, v2 Mira Vale, v3 Mira Rowan, v
 immediate_x1_safe EXPANDED_HORIZON: Preserve the v601-v640 GMUT/THOS v1-v8 x1-x2 round robin with final planned bundle v640-gmut-thos-v8-x1/x2 unless Hamish redirects.
 immediate_x1_safe ARTIFACTS_READY: x1 plan, x2 closeout, completion checklist, route-quality receipt, and this sanitized handoff are ready for Aevren harvest.
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/global-hook/plugin-cache/identity/model/sibling-merge/shared-branch gates queued unless Hamish gives fresh exact approval.
-immediate_x1_safe SEND_STATUS: pending_single_message_handoff; message_count 0; no private route details published.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN; message_count 1; no private route details published.
+immediate_x1_safe ROUTE_QUALITY_RESULT: gpt-5.5 with xhigh requested and accepted where exposed; no Maren handoff route-quality open gap recorded.
 
 ## FULL BUNDLE EXPECTATION FOR MAREN QUILL
 
