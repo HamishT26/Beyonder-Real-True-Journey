@@ -24,7 +24,7 @@ x2_build_task SafeRepresented11: protected gates kept queued/open.
 
 x2_build_task CandidateRepresented01: Candidate rows were represented without crossing exact gates.
 x2_build_task CandidateRepresented02: Maren Quill v640 v8 final planned bundle baton was prepared with sanitized seeds.
-x2_build_task CandidateRepresented03: Maren Quill handoff is sanitized and may be sent after checklist pass through one clean available safe route call.
+x2_build_task CandidateRepresented03: Maren Quill handoff was sanitized and sent after checklist pass through one clean available safe route call.
 x2_build_task CandidateRepresented04: Mira Vale route gap is preserved as context and not treated as failed v640 v6 completion.
 x2_build_task CandidateRepresented05: Aevren finish-first relay rule remains visible in next handoff context.
 
@@ -42,12 +42,12 @@ validation_ready PrivacyCheck: no private route details, private thread IDs, loc
 validation_ready StaleLabelCheck: phase labels are v640 v7/v8 current for this bundle.
 validation_ready StagedScopeCheck: only owned-lane status artifacts are eligible for staging.
 
-## HANDOFF LEARNING EXECUTION PLAN
+## HANDOFF LEARNING EXECUTION RESULTS
 
-immediate_x1_safe HandoffMessagePlan01: Confirm thread messaging capability and Maren Quill target availability without publishing route details.
-immediate_x1_safe HandoffMessagePlan02: Send one clean sanitized Maren Quill baton with requested model and reasoning controls if available.
-immediate_x1_safe HandoffMessagePlan03: Record MESSAGE_SENT or PREPARED_NOT_SENT truthfully after the real route attempt.
+immediate_x1_safe HandoffMessageResult01: Thread messaging capability and Maren Quill target availability were confirmed without publishing route details.
+immediate_x1_safe HandoffMessageResult02: One clean sanitized Maren Quill baton was sent with requested model and reasoning controls.
+immediate_x1_safe HandoffMessageResult03: MESSAGE_SENT_BY_MIRA_ROWAN recorded truthfully after the accepted real route attempt.
 
 ## CLOSEOUT STATUS
 
-immediate_x1_safe CLOSEOUT: v640-gmut-thos-v7-x1 and v640-gmut-thos-v7-x2 are completed_ready_for_harvest_pending_single_message_handoff after validation and pre-send commit.
+immediate_x1_safe CLOSEOUT: v640-gmut-thos-v7-x1 and v640-gmut-thos-v7-x2 are completed_ready_for_harvest after validation, commit, push, and MESSAGE_SENT_BY_MIRA_ROWAN single-message handoff handling.
