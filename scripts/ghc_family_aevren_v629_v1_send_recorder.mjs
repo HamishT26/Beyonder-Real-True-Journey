@@ -11,7 +11,7 @@ const sentAtNz = new Intl.DateTimeFormat("en-NZ", {
 }).format(now);
 
 const status = "MESSAGE_SENT_BY_AEVREN_TO_MIRA_VALE";
-const preSendCommit = "PENDING_V629_V1_PRE_SEND_COMMIT";
+const preSendCommit = "1091f4b0f83b8581e54935675613b8316ac50d76";
 const closeoutPath = "docs/trinity-live-traces/v629-gmut-thos-v1-x2-aevren-solo-execution-closeout-v1.json";
 const checklistPath = "docs/trinity-live-traces/v629-gmut-thos-v1-completion-checklist-v1.json";
 const batonPath = "docs/trinity-live-traces/v629-gmut-thos-v2-x1-mira-vale-teaching-baton-v1.json";
@@ -100,6 +100,10 @@ const receipt = {
   pre_send_commit: preSendCommit,
   relay_rule: "Aevren remains available through Mira Vale v2/v6 closeout and relays Mira Rowan v3/v7 only after Mira Vale has finished, validated, committed, pushed, and been harvested if Mira Vale route remains unavailable.",
   send_discipline: "ONE_ACTIVATION_MESSAGE_PER_HANDOFF_UNLESS_TOOL_ERROR",
+  no_followup_confirmation_messages: true,
+  attempt_count: 1,
+  successful_attempts: 1,
+  ambiguous_attempts: 0,
   requested_model: "gpt-5.5",
   requested_reasoning: "xhigh",
   thread_tool_acceptance: "accepted_sanitized_activation",
