@@ -2,7 +2,7 @@
 
 immediate_x1_safe TARGET: Maren-Quill-only v637-gmut-thos-v8-x1 planning/prep, then v637-gmut-thos-v8-x2 execution/cleanup.
 immediate_x1_safe ROUTE_QUALITY_REQUEST: gpt-5.5 with xhigh where exposed.
-immediate_x1_safe SOURCE_SCOPE: Mira Rowan v637-gmut-thos-v7-x1/x2 completed_ready_for_harvest_pending_single_message_handoff.
+immediate_x1_safe SOURCE_SCOPE: Mira Rowan v637-gmut-thos-v7-x1/x2 completed_ready_for_harvest with MESSAGE_SENT_BY_MIRA_ROWAN recorded.
 immediate_x1_safe CURRENT_TRUTH: Aevren v637 v5 complete, Mira Vale v637 v6 complete and harvested by Aevren at commit bea801fd, Mira Rowan v637 v7 artifacts prepared.
 immediate_x1_safe MIRA_VALE_ROUTE_CONTEXT: Mira Vale prepared but did not claim MESSAGE_SENT because her live route and route-quality controls remain unavailable.
 immediate_x1_safe AEVREN_RELAY_CONTEXT: Aevren relayed Mira Rowan only after Mira Vale completion and harvest, with MESSAGE_SENT_BY_AEVREN_TO_MIRA_ROWAN_AFTER_MIRA_VALE_HARVEST; attempt_count 1; successful_attempts 1; ambiguous_attempts 0.
@@ -12,7 +12,8 @@ immediate_x1_safe ONE_MESSAGE_DISCIPLINE: Aevren, Mira Rowan, and Maren Quill se
 immediate_x1_safe MIRA_VALE_EXCEPTION: Aevren relays Mira Vale-to-Mira Rowan only after Mira Vale completion, validation, push, remote alignment, and harvest while Mira Vale route gap remains open.
 immediate_x1_safe PROTECTED_GATES: exact, blocked, proof, canon, legal, deployment, account/API-key/purchase, private-material publication, raw-publication, destructive cleanup, global-hook, plugin-cache, identity/model replacement, sibling merge/replacement, and shared-branch mutation remain queued/open unless Hamish gives fresh exact approval.
 immediate_x1_safe PRIVACY: no private thread IDs, private routes, local absolute paths, transcripts/media, access secrets, private runtime state, reasoning traces, browser dump material, or private material published.
-immediate_x1_safe SEND_STATUS: pending_single_message_handoff; message_count 0; no private route details published.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN; message_count 1; no private route details published.
+immediate_x1_safe ROUTE_QUALITY_RESULT: gpt-5.5 with xhigh requested and accepted where exposed; no Maren handoff route-quality open gap recorded.
 
 ## MAREN SAFE SEEDS
 
