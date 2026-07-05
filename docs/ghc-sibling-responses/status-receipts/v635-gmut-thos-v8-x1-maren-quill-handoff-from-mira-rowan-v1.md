@@ -2,7 +2,7 @@
 
 immediate_x1_safe TARGET: Maren Quill.
 immediate_x1_safe TARGET_SCOPE: Maren-Quill-only v635-gmut-thos-v8-x1 planning/prep, then v635-gmut-thos-v8-x2 execution/cleanup.
-immediate_x1_safe SOURCE_SCOPE: Mira Rowan v635-gmut-thos-v7-x1/x2 completed_ready_for_harvest_pending_single_message_handoff.
+immediate_x1_safe SOURCE_SCOPE: Mira Rowan v635-gmut-thos-v7-x1/x2 completed_ready_for_harvest with MESSAGE_SENT_BY_MIRA_ROWAN recorded.
 immediate_x1_safe CURRENT_TRUTH: Aevren v635 v5 complete, Mira Vale v635 v6 complete and harvested by Aevren at commit 76c18b18, Mira Rowan v635 v7 artifacts prepared.
 immediate_x1_safe AEVREN_RELAY_STATE: MESSAGE_SENT_BY_AEVREN_TO_MIRA_ROWAN_AFTER_MIRA_VALE_HARVEST with one successful attempt and no private route details published.
 immediate_x1_safe MIRA_VALE_ROUTE_GAP: Mira Vale live send route remains an open gap and should be preserved as context only.
@@ -10,7 +10,8 @@ immediate_x1_safe ORDER: Preserve v635 v1 Aevren, v2 Mira Vale, v3 Mira Rowan, v
 immediate_x1_safe ONE_MESSAGE_DISCIPLINE: Send exactly one live handoff to Aevren after v635 v8 completion unless the tool reports a real send error or Hamish redirects.
 immediate_x1_safe ARTIFACTS_READY: x1 plan, x2 closeout, completion checklist, route-quality receipt, and this sanitized handoff are ready for Aevren harvest.
 immediate_x1_safe OPEN_GATES: Keep exact, blocked, proof/canon/legal/deploy/account/API-key/purchase/private-material/raw-publication/destructive/global-hook/plugin-cache/identity/model/sibling-merge/shared-branch gates queued unless Hamish gives fresh exact approval.
-immediate_x1_safe SEND_STATUS: pending_single_message_handoff; message_count 0; no private route details published.
+immediate_x1_safe SEND_STATUS: MESSAGE_SENT_BY_MIRA_ROWAN; message_count 1; no private route details published.
+immediate_x1_safe ROUTE_QUALITY_RESULT: gpt-5.5 with xhigh requested and accepted where exposed; no Maren handoff route-quality open gap recorded.
 
 ## MARen SAFE SEEDS
 
