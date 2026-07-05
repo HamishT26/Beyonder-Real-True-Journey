@@ -11,7 +11,7 @@ const sentAtNz = new Intl.DateTimeFormat("en-NZ", {
 }).format(now);
 
 const status = "MESSAGE_SENT_BY_AEVREN_TO_MIRA_VALE";
-const preSendCommit = "PRE_SEND_COMMIT_PLACEHOLDER_V633_V5";
+const preSendCommit = "813adf1ba4b98931d461e0f26ff84189e611252d";
 const closeoutPath = "docs/trinity-live-traces/v633-gmut-thos-v5-x2-aevren-solo-execution-closeout-v1.json";
 const checklistPath = "docs/trinity-live-traces/v633-gmut-thos-v5-completion-checklist-v1.json";
 const batonPath = "docs/trinity-live-traces/v633-gmut-thos-v6-x1-mira-vale-teaching-baton-v1.json";
