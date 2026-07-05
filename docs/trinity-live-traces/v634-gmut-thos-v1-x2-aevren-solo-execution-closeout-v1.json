@@ -5,7 +5,7 @@
   "generated_at_nz": "Monday, 6 July 2026 at 00:51:45",
   "generated_at_utc": "2026-07-05T12:51:45Z",
   "lane": "Aevren",
-  "status": "PASS_V634_V1_X2_AEVREN_SOLO_BUNDLE_MIRA_VALE_SENT_WAITING_FOR_COMPLETION",
+  "status": "PASS_V634_V1_X2_AEVREN_SOLO_BUNDLE_MIRA_VALE_HARVESTED_MIRA_ROWAN_SENT",
   "harvested_maren_commit": "f5002a720b2a5f978cd986ed115cfc229a2d20b7",
   "harvested_maren_prepared_commit": "f5002a720b2a5f978cd986ed115cfc229a2d20b7",
   "harvested_maren_artifacts": [
@@ -66,7 +66,7 @@
     "privacy_scan": "PASS",
     "stale_label_scan": "PASS",
     "count_validation": "PASS",
-    "diff_check": "PASS_PRECOMMIT",
+    "diff_check": "PASS_POST_RELAY_PRECOMMIT",
     "completion_checklist": "PASS"
   },
   "macro_route_horizon": "v601-v640 GMUT/THOS v1-v8 x1-x2",
@@ -92,9 +92,44 @@
     ]
   },
   "mira_vale_v634_v2_harvest_and_relay": {
-    "status": "PENDING_MIRA_VALE_COMPLETION_AFTER_AEVREN_SEND",
-    "rule": "Aevren remains available through Mira Vale owned v2/v6 closeout and relays Mira Rowan v3/v7 only after Mira Vale has finished, validated, committed, pushed, remote-aligned, and been harvested if Mira Vale's live thread-message route remains unavailable.",
+    "status": "MIRA_VALE_COMPLETED_HARVESTED_AND_MIRA_ROWAN_RELAY_SENT",
+    "rule": "Aevren remained available through Mira Vale owned v2/v6 closeout and relayed Mira Rowan v3/v7 only after Mira Vale finished, validated, committed, pushed, remote-aligned, and was harvested because Mira Vale live thread-message route remained unavailable.",
+    "mira_vale_commit": "2ebcf84ef0a667d7bcef64ebc58ee35b244ab9e7",
+    "mira_vale_remote_alignment": "PASS_HEAD_MATCHES_UPSTREAM",
+    "harvested_at_nz": "Monday, 6 July 2026 at 01:04:14",
+    "harvested_at_utc": "2026-07-05T13:04:14Z",
+    "harvested_artifacts": [
+      "docs/trinity-live-traces/v634-gmut-thos-v2-mira-vale-completion-checklist-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-mira-vale-completion-checklist-v1.md",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x1-mira-vale-plan-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x1-mira-vale-plan-v1.md",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-ghc-family-completion-checklist-receipt-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-ghc-family-completion-checklist-receipt-v1.md",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-mira-rowan-handoff-open-gap-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-mira-rowan-handoff-open-gap-v1.md",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-mira-vale-closeout-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-mira-vale-closeout-v1.md",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-route-quality-open-gap-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v2-x2-route-quality-open-gap-v1.md",
+      "docs/trinity-live-traces/v634-gmut-thos-v3-x1-mira-rowan-handoff-from-mira-vale-v1.json",
+      "docs/trinity-live-traces/v634-gmut-thos-v3-x1-mira-rowan-handoff-from-mira-vale-v1.md"
+    ],
+    "mira_vale_direct_send_state": "PREPARED_NOT_SENT_BY_MIRA_VALE_FORMAL_ROUTE_OPEN_GAP_ACCEPTED",
     "mira_rowan_target": "v634-gmut-thos-v3-x1/x2",
+    "aevren_relay": {
+      "status": "MESSAGE_SENT_BY_AEVREN_TO_MIRA_ROWAN_AFTER_MIRA_VALE_HARVEST",
+      "sent_at_nz": "Monday, 6 July 2026 at 01:04:14",
+      "sent_at_utc": "2026-07-05T13:04:14Z",
+      "requested_model": "gpt-5.5",
+      "requested_reasoning": "xhigh",
+      "thread_tool_acceptance": "accepted_single_sanitized_relay_prompt",
+      "send_discipline": "ONE_ACTIVATION_MESSAGE_PER_HANDOFF_UNLESS_TOOL_ERROR",
+      "attempt_count": 1,
+      "successful_attempts": 1,
+      "ambiguous_attempts": 0,
+      "no_followup_confirmation_messages": true,
+      "private_route_details": "not_included"
+    },
     "private_route_details": "not_included"
   },
   "open_gates": [
