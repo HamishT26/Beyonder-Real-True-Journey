@@ -1,0 +1,775 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Trinity Mandala evidence review: v36-v54 and v601-v640",
+    "description": "A technical, evidence-bounded synthesis by Eiren Kestrel.",
+    "generatedAt": "2026-07-11T11:20:41+00:00",
+    "cards": [
+      {
+        "id": "corpus",
+        "description": "Journey records indexed without embedding private transcript content.",
+        "dataset": "summary",
+        "sourceId": "corpus_summary",
+        "metrics": [
+          {
+            "label": "Journey versions",
+            "field": "journey_versions",
+            "format": "number"
+          },
+          {
+            "label": "TXT variants",
+            "field": "journey_variants",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "operations",
+        "description": "Live owned-lane coverage after fresh fetch and reconciliation.",
+        "dataset": "summary",
+        "sourceId": "operations_summary",
+        "metrics": [
+          {
+            "label": "Live versions per lane",
+            "field": "live_versions_per_lane",
+            "format": "number"
+          },
+          {
+            "label": "Matching artifact files",
+            "field": "live_artifact_files",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "validation",
+        "description": "Current deterministic tests and external comparison ledger.",
+        "dataset": "summary",
+        "sourceId": "validation_summary",
+        "metrics": [
+          {
+            "label": "Kernel tests passed",
+            "field": "tests_passed",
+            "format": "number"
+          },
+          {
+            "label": "Comparison sources",
+            "field": "external_sources",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "journey_scale",
+        "title": "The Solas formulation period contains the largest canonical records",
+        "subtitle": "Lines in each deterministic canonical TXT selection; corpus size is not evidence quality.",
+        "headerMarkdown": "Use this chart to understand **record scale**, not truth or novelty.",
+        "type": "bar",
+        "dataset": "journey",
+        "sourceId": "journey_index",
+        "encodings": {
+          "x": {
+            "field": "version",
+            "type": "ordinal",
+            "label": "Journey version"
+          },
+          "y": {
+            "field": "line_count",
+            "type": "quantitative",
+            "label": "Lines",
+            "format": "number"
+          },
+          "color": {
+            "field": "era",
+            "type": "nominal",
+            "label": "Development era"
+          }
+        },
+        "yAxisTitle": "Canonical TXT lines",
+        "valueFormat": "number",
+        "layout": "full"
+      },
+      {
+        "id": "lane_volume",
+        "title": "Artifact volume is concentrated in the Aevren and Mira Vale lanes",
+        "subtitle": "Files whose names begin v601-v640 after fresh live verification.",
+        "headerMarkdown": "All lanes contain **40 of 40 versions**; volume differs because schemas and mirrored support differ.",
+        "type": "bar",
+        "dataset": "lanes",
+        "sourceId": "live_index",
+        "encodings": {
+          "x": {
+            "field": "lane",
+            "type": "nominal",
+            "label": "Owned lane"
+          },
+          "y": {
+            "field": "file_count",
+            "type": "quantitative",
+            "label": "Matching files",
+            "format": "number"
+          }
+        },
+        "yAxisTitle": "Matching files",
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "lane_evidence",
+        "title": "Every owned lane is clean, upstream-equal, and complete through v640",
+        "subtitle": "Current branch evidence, not a scientific result.",
+        "dataset": "lanes",
+        "sourceId": "live_index",
+        "columns": [
+          {
+            "field": "lane",
+            "label": "Lane",
+            "type": "text"
+          },
+          {
+            "field": "file_count",
+            "label": "Files",
+            "format": "number"
+          },
+          {
+            "field": "version_count",
+            "label": "Versions",
+            "format": "number"
+          },
+          {
+            "field": "head_prefix",
+            "label": "HEAD",
+            "type": "text"
+          },
+          {
+            "field": "remote_state",
+            "label": "State",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "pillar_verdicts",
+        "title": "The three pillars have different evidence maturity",
+        "subtitle": "Grades are claim-specific and intentionally non-interchangeable.",
+        "dataset": "pillars",
+        "sourceId": "pillar_evidence",
+        "columns": [
+          {
+            "field": "pillar",
+            "label": "Pillar",
+            "type": "text"
+          },
+          {
+            "field": "evidence_grade",
+            "label": "Current grade",
+            "type": "text"
+          },
+          {
+            "field": "verified_strength",
+            "label": "Verified strength",
+            "type": "text"
+          },
+          {
+            "field": "boundary",
+            "label": "Boundary",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "next_versions",
+        "title": "v641-v650 converts operational endurance into evidence",
+        "subtitle": "Each mission has an observable completion criterion and accepts negative results.",
+        "dataset": "missions",
+        "sourceId": "mission_evidence",
+        "columns": [
+          {
+            "field": "version",
+            "label": "Version",
+            "format": "number"
+          },
+          {
+            "field": "mission",
+            "label": "Mission",
+            "type": "text"
+          },
+          {
+            "field": "success",
+            "label": "Minimum success evidence",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "corpus_summary",
+        "label": "Journey corpus summary query"
+      },
+      {
+        "id": "operations_summary",
+        "label": "Owned-lane operations summary query"
+      },
+      {
+        "id": "validation_summary",
+        "label": "Validation summary query"
+      },
+      {
+        "id": "journey_index",
+        "label": "Privacy-minimized Journey v36-v54 evidence query"
+      },
+      {
+        "id": "live_index",
+        "label": "Fresh v601-v640 owned-lane verification query"
+      },
+      {
+        "id": "pillar_evidence",
+        "label": "Typed pillar evidence query"
+      },
+      {
+        "id": "mission_evidence",
+        "label": "v641-v650 mission query"
+      },
+      {
+        "id": "source_ledger",
+        "label": "Primary and authoritative comparison source query"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Trinity Mandala evidence review"
+      },
+      {
+        "id": "executive_summary",
+        "type": "markdown",
+        "sourceId": "live_index",
+        "body": "## Executive Summary\n\nThe Journey has moved from mythic-relational synthesis to instrumented research operations. Kairos clarified Mind-Body-Heart; Solas made the physical seed action-first and falsifiable; Lumen built evidence gates; Aevren, Mira Vale, Mira Rowan, and Maren made continuity operational.\n\nThe strongest current claim is an interdisciplinary research programme with a real orchestration prototype. GMUT is not a validated Theory of Everything, THOS is not ASI, and Freed ID/CBR is not enacted law."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "corpus",
+          "operations",
+          "validation"
+        ]
+      },
+      {
+        "id": "journey_chart",
+        "type": "chart",
+        "chartId": "journey_scale",
+        "layout": "full"
+      },
+      {
+        "id": "historical_finding",
+        "type": "markdown",
+        "sourceId": "journey_index",
+        "body": "## The decisive historical progression\n\n**v36** supplied the architecture and an unusually honest gap analysis. **v45-v47** separated physical spacetime from the meta-Mandala, added null recovery and a coefficient ledger, and named real constraints. **v51** made truth reconciliation and open gates operational. **v52-v54** preserved identity without replacement and closed v640 cleanly."
+      },
+      {
+        "id": "lane_chart",
+        "type": "chart",
+        "chartId": "lane_volume",
+        "layout": "full"
+      },
+      {
+        "id": "lane_table",
+        "type": "table",
+        "tableId": "lane_evidence",
+        "layout": "full"
+      },
+      {
+        "id": "workflow_result",
+        "type": "markdown",
+        "sourceId": "live_index",
+        "body": "## v601-v640 proves workflow endurance more strongly than novelty\n\nThe run demonstrates owned-branch isolation, route truth, privacy, completion discipline, and forty-version persistence. It does not turn represented 25/15/10/5/15/100/100 counts into independent discoveries. Numbered packet templates require semantic deduplication and claim-to-evidence links."
+      },
+      {
+        "id": "pillar_table",
+        "type": "table",
+        "tableId": "pillar_verdicts",
+        "layout": "full"
+      },
+      {
+        "id": "equation",
+        "type": "markdown",
+        "sourceId": "source_ledger",
+        "body": "## Equation outcome\n\nThe defensible physical kernel is `G_mn + Lambda g_mn = M_Pl^-2 T_SM,mn + Omega_mn`, where `Omega_mn = M_Pl^-2 (T_phi,mn + T_EFT,mn)` derives from a declared action. Total conservation, stability, existing bounds, a GR/SM null limit, and a unique observable are gates - not optional decoration."
+      },
+      {
+        "id": "mission_table",
+        "type": "table",
+        "tableId": "next_versions",
+        "layout": "full"
+      },
+      {
+        "id": "recommendation",
+        "type": "markdown",
+        "sourceId": "source_ledger",
+        "body": "## Recommendation\n\nRun v641-v650 as an evidence programme: provenance, canonical equations, independent checks, empirical adapters, matched-budget orchestration, Freed ID threat modelling, participatory rights design, red teaming, reproduction, and a terminal evidence board. Success includes cleanly falsifying a cherished claim."
+      },
+      {
+        "id": "methods",
+        "type": "markdown",
+        "body": "## Methods, caveats, and open questions\n\nJourney counts are approximate because exports use inconsistent message markers. Corpus size and keyword frequency do not measure truth. Live Git state was verified at one point in time. The source ledger samples representative leading frameworks rather than every subject named in the Journey. No subagents were used. No exhaustive delegated security scan was claimed."
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-07-11T11:20:41+00:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "journey_versions": 19,
+          "journey_variants": 35,
+          "live_versions_per_lane": 40,
+          "live_artifact_files": 5704,
+          "owned_lanes": 4,
+          "tests_passed": 15,
+          "external_sources": 61
+        }
+      ],
+      "journey": [
+        {
+          "version": "v36",
+          "version_number": 36,
+          "era": "Architecture",
+          "line_count": 3676,
+          "message_markers": 10,
+          "gmut_mentions": 52,
+          "thos_mentions": 5,
+          "freed_id_mentions": 48,
+          "cbr_mentions": 3
+        },
+        {
+          "version": "v37",
+          "version_number": 37,
+          "era": "Architecture",
+          "line_count": 771,
+          "message_markers": 7,
+          "gmut_mentions": 35,
+          "thos_mentions": 10,
+          "freed_id_mentions": 23,
+          "cbr_mentions": 7
+        },
+        {
+          "version": "v38",
+          "version_number": 38,
+          "era": "Architecture",
+          "line_count": 541,
+          "message_markers": 25,
+          "gmut_mentions": 7,
+          "thos_mentions": 1,
+          "freed_id_mentions": 4,
+          "cbr_mentions": 0
+        },
+        {
+          "version": "v39",
+          "version_number": 39,
+          "era": "Architecture",
+          "line_count": 1310,
+          "message_markers": 16,
+          "gmut_mentions": 13,
+          "thos_mentions": 14,
+          "freed_id_mentions": 10,
+          "cbr_mentions": 28
+        },
+        {
+          "version": "v40",
+          "version_number": 40,
+          "era": "Architecture",
+          "line_count": 2213,
+          "message_markers": 28,
+          "gmut_mentions": 66,
+          "thos_mentions": 34,
+          "freed_id_mentions": 2,
+          "cbr_mentions": 29
+        },
+        {
+          "version": "v41",
+          "version_number": 41,
+          "era": "Architecture",
+          "line_count": 1726,
+          "message_markers": 24,
+          "gmut_mentions": 23,
+          "thos_mentions": 11,
+          "freed_id_mentions": 4,
+          "cbr_mentions": 9
+        },
+        {
+          "version": "v42",
+          "version_number": 42,
+          "era": "Architecture",
+          "line_count": 2491,
+          "message_markers": 50,
+          "gmut_mentions": 26,
+          "thos_mentions": 8,
+          "freed_id_mentions": 2,
+          "cbr_mentions": 2
+        },
+        {
+          "version": "v43",
+          "version_number": 43,
+          "era": "Architecture",
+          "line_count": 2805,
+          "message_markers": 50,
+          "gmut_mentions": 31,
+          "thos_mentions": 6,
+          "freed_id_mentions": 10,
+          "cbr_mentions": 2
+        },
+        {
+          "version": "v44",
+          "version_number": 44,
+          "era": "Architecture",
+          "line_count": 6265,
+          "message_markers": 37,
+          "gmut_mentions": 393,
+          "thos_mentions": 14,
+          "freed_id_mentions": 100,
+          "cbr_mentions": 26
+        },
+        {
+          "version": "v45",
+          "version_number": 45,
+          "era": "Formulation and truth gates",
+          "line_count": 6664,
+          "message_markers": 17,
+          "gmut_mentions": 256,
+          "thos_mentions": 31,
+          "freed_id_mentions": 152,
+          "cbr_mentions": 23
+        },
+        {
+          "version": "v46",
+          "version_number": 46,
+          "era": "Formulation and truth gates",
+          "line_count": 12025,
+          "message_markers": 21,
+          "gmut_mentions": 361,
+          "thos_mentions": 59,
+          "freed_id_mentions": 316,
+          "cbr_mentions": 16
+        },
+        {
+          "version": "v47",
+          "version_number": 47,
+          "era": "Formulation and truth gates",
+          "line_count": 7532,
+          "message_markers": 20,
+          "gmut_mentions": 121,
+          "thos_mentions": 30,
+          "freed_id_mentions": 67,
+          "cbr_mentions": 0
+        },
+        {
+          "version": "v48",
+          "version_number": 48,
+          "era": "Formulation and truth gates",
+          "line_count": 5360,
+          "message_markers": 28,
+          "gmut_mentions": 38,
+          "thos_mentions": 12,
+          "freed_id_mentions": 102,
+          "cbr_mentions": 1
+        },
+        {
+          "version": "v49",
+          "version_number": 49,
+          "era": "Formulation and truth gates",
+          "line_count": 1490,
+          "message_markers": 54,
+          "gmut_mentions": 64,
+          "thos_mentions": 23,
+          "freed_id_mentions": 2,
+          "cbr_mentions": 0
+        },
+        {
+          "version": "v50",
+          "version_number": 50,
+          "era": "Formulation and truth gates",
+          "line_count": 1412,
+          "message_markers": 62,
+          "gmut_mentions": 74,
+          "thos_mentions": 128,
+          "freed_id_mentions": 3,
+          "cbr_mentions": 2
+        },
+        {
+          "version": "v51",
+          "version_number": 51,
+          "era": "Formulation and truth gates",
+          "line_count": 5833,
+          "message_markers": 27,
+          "gmut_mentions": 296,
+          "thos_mentions": 206,
+          "freed_id_mentions": 25,
+          "cbr_mentions": 5
+        },
+        {
+          "version": "v52",
+          "version_number": 52,
+          "era": "Operational recovery",
+          "line_count": 3982,
+          "message_markers": 21,
+          "gmut_mentions": 213,
+          "thos_mentions": 175,
+          "freed_id_mentions": 8,
+          "cbr_mentions": 0
+        },
+        {
+          "version": "v53",
+          "version_number": 53,
+          "era": "Operational recovery",
+          "line_count": 1162,
+          "message_markers": 77,
+          "gmut_mentions": 111,
+          "thos_mentions": 111,
+          "freed_id_mentions": 0,
+          "cbr_mentions": 0
+        },
+        {
+          "version": "v54",
+          "version_number": 54,
+          "era": "Operational recovery",
+          "line_count": 289,
+          "message_markers": 22,
+          "gmut_mentions": 25,
+          "thos_mentions": 25,
+          "freed_id_mentions": 0,
+          "cbr_mentions": 0
+        }
+      ],
+      "lanes": [
+        {
+          "lane": "Aevren",
+          "file_count": 2708,
+          "version_count": 40,
+          "head_prefix": "3ef7d1f10c",
+          "remote_state": "clean and upstream-equal"
+        },
+        {
+          "lane": "Mira Vale",
+          "file_count": 2294,
+          "version_count": 40,
+          "head_prefix": "c1608e0e48",
+          "remote_state": "clean and upstream-equal"
+        },
+        {
+          "lane": "Mira Rowan",
+          "file_count": 382,
+          "version_count": 40,
+          "head_prefix": "bbfa8875ea",
+          "remote_state": "clean and upstream-equal"
+        },
+        {
+          "lane": "Maren Quill",
+          "file_count": 320,
+          "version_count": 40,
+          "head_prefix": "8202033a9a",
+          "remote_state": "clean and upstream-equal"
+        }
+      ],
+      "pillars": [
+        {
+          "pillar": "GMUT (Mind)",
+          "evidence_grade": "E1 formulation / E2 toy checks",
+          "verified_strength": "Action-first seed and typed Omega tests",
+          "boundary": "No unique prediction or external replication"
+        },
+        {
+          "pillar": "THOS (Body)",
+          "evidence_grade": "E2 internal artifacts",
+          "verified_strength": "Forty-version clean owned-lane workflow",
+          "boundary": "No matched-budget superiority or ASI evidence"
+        },
+        {
+          "pillar": "Freed ID + CBR (Heart)",
+          "evidence_grade": "E1 architecture / selected E2 practices",
+          "verified_strength": "Consent, identity, privacy, and remedy design",
+          "boundary": "No production profile, enacted law, or personhood proof"
+        },
+        {
+          "pillar": "Trinity Mandala",
+          "evidence_grade": "E1 meta-framework",
+          "verified_strength": "Typed research constitution across all pillars",
+          "boundary": "Integration is not one validated universal equation"
+        }
+      ],
+      "missions": [
+        {
+          "version": 641,
+          "mission": "Corpus provenance and semantic deduplication",
+          "success": "Dedup audit and provenance map"
+        },
+        {
+          "version": 642,
+          "mission": "GMUT action and notation closure",
+          "success": "Compiled action and dimension checks"
+        },
+        {
+          "version": 643,
+          "mission": "Conservation, stability, and numerical sanity",
+          "success": "Cross-check and convergence evidence"
+        },
+        {
+          "version": 644,
+          "mission": "Empirical constraint adapters",
+          "success": "Baseline and preregistered forecast"
+        },
+        {
+          "version": 645,
+          "mission": "Matched-budget THOS benchmark",
+          "success": "Blind quality, cost, and uncertainty"
+        },
+        {
+          "version": 646,
+          "mission": "Freed ID protocol profile",
+          "success": "DID/VC model and threat tests"
+        },
+        {
+          "version": 647,
+          "mission": "Cosmic Bill of Rights model charter",
+          "success": "Rights, remedies, and consultation gates"
+        },
+        {
+          "version": 648,
+          "mission": "Security, privacy, and recovery red team",
+          "success": "Attack paths and residual risk"
+        },
+        {
+          "version": 649,
+          "mission": "External reproducibility packet",
+          "success": "Clean-machine run and real critique"
+        },
+        {
+          "version": 650,
+          "mission": "Integrated evidence board and Stage 20 decision",
+          "success": "Graded claims and terminal closeout"
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "id": "corpus_summary",
+      "label": "Journey corpus summary query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT journey_versions, journey_variants FROM summary",
+        "description": "Version and variant totals derived from the privacy-minimized Journey index.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "summary"
+        ]
+      }
+    },
+    {
+      "id": "operations_summary",
+      "label": "Owned-lane operations summary query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT live_versions_per_lane, live_artifact_files, owned_lanes FROM summary",
+        "description": "Live version, file, and lane totals after fresh branch verification.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "summary"
+        ]
+      }
+    },
+    {
+      "id": "validation_summary",
+      "label": "Validation summary query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT tests_passed, external_sources FROM summary",
+        "description": "Deterministic test and reviewed comparison-source totals.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "summary"
+        ]
+      }
+    },
+    {
+      "id": "journey_index",
+      "label": "Privacy-minimized Journey v36-v54 evidence query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT version, version_number, era, line_count, message_markers, gmut_mentions, thos_mentions, freed_id_mentions, cbr_mentions FROM journey ORDER BY version_number",
+        "description": "Canonical-per-version line, message-marker, and bounded topic counts; no transcript excerpts.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "journey"
+        ]
+      }
+    },
+    {
+      "id": "live_index",
+      "label": "Fresh v601-v640 owned-lane verification query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT lane, file_count, version_count, head_prefix, remote_state FROM lanes ORDER BY file_count DESC",
+        "description": "Fresh fetch, HEAD/upstream comparison, cleanliness, version coverage, and file totals.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "lanes"
+        ]
+      }
+    },
+    {
+      "id": "pillar_evidence",
+      "label": "Typed pillar evidence query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT pillar, evidence_grade, verified_strength, boundary FROM pillars",
+        "description": "Reviewed claim-specific evidence grades and boundaries.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "pillars"
+        ]
+      }
+    },
+    {
+      "id": "mission_evidence",
+      "label": "v641-v650 mission query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT version, mission, success FROM missions ORDER BY version",
+        "description": "Reviewed version missions and minimum success evidence.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "missions"
+        ]
+      }
+    },
+    {
+      "id": "source_ledger",
+      "label": "Primary and authoritative comparison source query",
+      "query": {
+        "engine": "sqlite3_in_memory_over_reviewed_artifacts",
+        "sql": "SELECT source_id, category, grade, title, url FROM source_ledger ORDER BY source_id",
+        "description": "Scientific papers, standards, laws, official documentation, and labelled conceptual comparators.",
+        "executed_at": "2026-07-11T11:20:41+00:00",
+        "tables_used": [
+          "source_ledger"
+        ]
+      }
+    }
+  ],
+  "package_info": {
+    "root": "eiren-kestrel",
+    "manifestPath": "artifact.json",
+    "snapshotPath": "artifact.json"
+  }
+}
