@@ -1,0 +1,44 @@
+{
+  "schema": "ghc.family.synthetic-recovery-drill.v1",
+  "scenario": "suspected route spoof plus possible secret exposure and branch drift",
+  "steps": [
+    {
+      "order": 1,
+      "action": "stop protected actions",
+      "simulated_pass": true
+    },
+    {
+      "order": 2,
+      "action": "preserve sanitized evidence",
+      "simulated_pass": true
+    },
+    {
+      "order": 3,
+      "action": "mark claimed send unverified",
+      "simulated_pass": true
+    },
+    {
+      "order": 4,
+      "action": "request external credential revocation if a real secret was exposed",
+      "simulated_pass": true
+    },
+    {
+      "order": 5,
+      "action": "restore from pinned owned clean baseline",
+      "simulated_pass": true
+    },
+    {
+      "order": 6,
+      "action": "verify branch, upstream, and remote before resume",
+      "simulated_pass": true
+    },
+    {
+      "order": 7,
+      "action": "notify Hamish with sanitized residual gaps",
+      "simulated_pass": true
+    }
+  ],
+  "all_simulated_steps_passed": true,
+  "disposition": "represented",
+  "boundary": "no real secret, route, branch, account, or incident was manipulated"
+}

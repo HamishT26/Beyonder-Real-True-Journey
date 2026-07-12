@@ -1,0 +1,34 @@
+{
+  "schema": "ghc.family.reproduction-manifest.v2",
+  "scope": "v641-gmut-thos-v2 local evidence package",
+  "runtime_requirements": [
+    "Python 3.12 or compatible standard library",
+    "Git",
+    "Node.js only for repository privacy scanners"
+  ],
+  "network_required_for_core_tests": false,
+  "commands": [
+    "python -m unittest tests.test_ghc_family_gmut_kernel tests.test_ghc_family_v641_pilot tests.test_ghc_family_v641_v2 -v",
+    "python scripts/ghc_family_phase_evidence_validator.py --phase-dir docs/sable-rook/v641-v2"
+  ],
+  "inputs": [
+    "x1-proposals.json",
+    "sources/source-ledger.json",
+    "latex/grand_mandala.tex",
+    "family-current Python modules under scripts/"
+  ],
+  "expected": [
+    "all unit tests pass",
+    "phase validator reports valid=true",
+    "all JSON files parse",
+    "no empirical, cryptographic, legal, or independent-reproduction claim is inferred"
+  ],
+  "tolerances": {
+    "conservation_residual": 1e-15,
+    "friedmann_residual": 1e-12,
+    "rk4_observed_order_minimum": 2.5
+  },
+  "reproduction_status": "pending_clean_snapshot",
+  "evidence_commit": null,
+  "boundary": "same-owner clean-snapshot execution can establish local repeatability only; independent reproduction requires a different team"
+}

@@ -1,6 +1,6 @@
 # v641-v2 primary and official source ledger
 
-The canonical machine-readable ledger contains 32 sources grouped by authority root. The v2 evidence cycle uses official standards bodies, collaboration publications, official archives, binding instruments, Indigenous and Maori authority sources, and official security or reproducibility guidance.
+The canonical machine-readable ledger contains 32 sources grouped by authority root. The v2 evidence cycle uses official standards bodies, collaboration publications, official archives, binding instruments, Indigenous and Māori authority sources, and official security or reproducibility guidance.
 
 ## Version-sensitive findings
 
@@ -14,6 +14,6 @@ The canonical machine-readable ledger contains 32 sources grouped by authority r
 
 ## Authority boundary
 
-Te Mana Raraunga is the Maori authority source used for Maori data-sovereignty concepts. GIDA is the source for CARE. Neither is absorbed into synthetic project ownership, and the local conflict rehearsal cannot ratify, translate, or override their authority.
+Te Mana Raraunga is the Māori authority source used for Māori data-sovereignty concepts. GIDA is the source for CARE. Neither is absorbed into synthetic project ownership, and the local conflict rehearsal cannot ratify, translate, or override their authority.
 
 Repeated pages from W3C, NIST, the United Nations, OWASP, Planck, PDG, or New Zealand authorities remain one authority root in the independence graph. Citations constrain or inform the work; none endorses GHC claims.

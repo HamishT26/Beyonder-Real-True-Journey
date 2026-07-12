@@ -25,6 +25,32 @@ REQUIRED_CAPABILITIES = {
     "appeal",
 }
 
+V2_REQUIRED_PROFILE_FIELDS = {
+    "pinned_vc_context",
+    "pinned_vc_recommendation",
+    "pinned_did_recommendation",
+    "proof_boundary",
+    "status_boundary",
+    "synthetic_data_only",
+}
+
+V2_REQUIRED_PROOF_FIELDS = {
+    "type",
+    "cryptosuite",
+    "created",
+    "verificationMethod",
+    "proofPurpose",
+    "proofValue",
+}
+
+V2_REQUIRED_STATUS_FIELDS = {
+    "id",
+    "type",
+    "statusPurpose",
+    "statusListIndex",
+    "statusListCredential",
+}
+
 
 def validate_profile(profile: dict[str, Any]) -> list[str]:
     issues: list[str] = []
@@ -39,10 +65,20 @@ def validate_profile(profile: dict[str, Any]) -> list[str]:
     boundary = profile.get("personhood_boundary", "")
     if boundary != "credentials_do_not_prove_consciousness_or_legal_personhood":
         issues.append("personhood_boundary_missing")
+    if profile.get("profile_version") == "2":
+        missing = sorted(field for field in V2_REQUIRED_PROFILE_FIELDS if not profile.get(field))
+        if missing:
+            issues.append("v2_profile_fields_missing:" + ",".join(missing))
+        if profile.get("pinned_vc_context") != VC_CONTEXT:
+            issues.append("v2_vc_context_not_pinned")
+        if profile.get("synthetic_data_only") is not True:
+            issues.append("v2_real_data_boundary_missing")
     return issues
 
 
-def validate_credential(credential: dict[str, Any]) -> list[str]:
+def validate_credential(
+    credential: dict[str, Any], *, profile: dict[str, Any] | None = None
+) -> list[str]:
     issues: list[str] = []
     context = credential.get("@context", [])
     types = credential.get("type", [])
@@ -59,6 +95,42 @@ def validate_credential(credential: dict[str, Any]) -> list[str]:
         issues.append("prohibited_consciousness_inference")
     if credential.get("claimsLegalPersonhood") is True:
         issues.append("prohibited_legal_personhood_inference")
+    if profile and profile.get("profile_version") == "2":
+        if not isinstance(credential.get("validFrom"), str):
+            issues.append("valid_from_missing")
+        if not isinstance(credential.get("validUntil"), str):
+            issues.append("valid_until_missing")
+
+        status = credential.get("credentialStatus")
+        if not isinstance(status, dict):
+            issues.append("credential_status_missing")
+        else:
+            missing_status = sorted(
+                field for field in V2_REQUIRED_STATUS_FIELDS if not status.get(field)
+            )
+            if missing_status:
+                issues.append("credential_status_fields_missing:" + ",".join(missing_status))
+            if status.get("type") != "BitstringStatusListEntry":
+                issues.append("credential_status_type_invalid")
+            if status.get("statusPurpose") not in {"revocation", "suspension"}:
+                issues.append("credential_status_purpose_invalid")
+
+        proof = credential.get("proof")
+        if not isinstance(proof, dict):
+            issues.append("proof_shape_missing")
+        else:
+            missing_proof = sorted(
+                field for field in V2_REQUIRED_PROOF_FIELDS if not proof.get(field)
+            )
+            if missing_proof:
+                issues.append("proof_fields_missing:" + ",".join(missing_proof))
+
+        holder = credential.get("holder")
+        controller = credential.get("controller")
+        if not isinstance(holder, str) or not isinstance(controller, str):
+            issues.append("holder_controller_roles_missing")
+        elif holder == controller:
+            issues.append("holder_controller_separation_violated")
     return issues
 
 
@@ -66,15 +138,22 @@ def run_vectors(profile: dict[str, Any], vectors: list[dict[str, Any]]) -> dict[
     profile_issues = validate_profile(profile)
     results = []
     for vector in vectors:
-        issues = validate_credential(vector["credential"])
+        issues = validate_credential(vector["credential"], profile=profile)
         accepted = not issues and not profile_issues
         expected = bool(vector["expect_accept"])
+        expected_issue_codes = vector.get("expected_issue_codes")
+        issue_codes_matched = (
+            True
+            if expected_issue_codes is None
+            else set(expected_issue_codes) == set(issues)
+        )
         results.append(
             {
                 "vector_id": vector["vector_id"],
                 "expected_accept": expected,
                 "actual_accept": accepted,
-                "matched": expected == accepted,
+                "matched": expected == accepted and issue_codes_matched,
+                "issue_codes_matched": issue_codes_matched,
                 "issues": issues,
             }
         )
@@ -86,7 +165,7 @@ def run_vectors(profile: dict[str, Any], vectors: list[dict[str, Any]]) -> dict[
         "matched_count": sum(row["matched"] for row in results),
         "all_matched": all(row["matched"] for row in results),
         "results": results,
-        "boundary": "structural_profile_only_no_crypto_no_did_resolution_no_personhood_or_legal_status",
+        "boundary": "structural_profile_only_no_signature_verification_no_did_resolution_no_trust_decision_no_deployment_no_personhood_or_legal_status",
     }
 
 

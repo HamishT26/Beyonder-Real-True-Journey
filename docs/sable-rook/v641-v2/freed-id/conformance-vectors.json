@@ -1,0 +1,277 @@
+{
+  "schema": "ghc.family.freed-id-conformance-vectors.v2",
+  "synthetic": true,
+  "vectors": [
+    {
+      "vector_id": "valid-structural-shape",
+      "expect_accept": true,
+      "expected_issue_codes": [],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "validUntil": "2026-10-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "credentialStatus": {
+          "id": "https://example.invalid/status/1#0",
+          "type": "BitstringStatusListEntry",
+          "statusPurpose": "revocation",
+          "statusListIndex": "0",
+          "statusListCredential": "https://example.invalid/status/1"
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-rdfc-2022",
+          "created": "2026-07-12T00:00:00Z",
+          "verificationMethod": "did:example:synthetic-issuer#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zSyntheticShapeOnlyNotACryptographicSignature"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-controller"
+      }
+    },
+    {
+      "vector_id": "missing-status",
+      "expect_accept": false,
+      "expected_issue_codes": [
+        "credential_status_missing"
+      ],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "validUntil": "2026-10-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-rdfc-2022",
+          "created": "2026-07-12T00:00:00Z",
+          "verificationMethod": "did:example:synthetic-issuer#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zSyntheticShapeOnlyNotACryptographicSignature"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-controller"
+      }
+    },
+    {
+      "vector_id": "missing-proof",
+      "expect_accept": false,
+      "expected_issue_codes": [
+        "proof_shape_missing"
+      ],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "validUntil": "2026-10-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "credentialStatus": {
+          "id": "https://example.invalid/status/1#0",
+          "type": "BitstringStatusListEntry",
+          "statusPurpose": "revocation",
+          "statusListIndex": "0",
+          "statusListCredential": "https://example.invalid/status/1"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-controller"
+      }
+    },
+    {
+      "vector_id": "holder-controller-collapse",
+      "expect_accept": false,
+      "expected_issue_codes": [
+        "holder_controller_separation_violated"
+      ],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "validUntil": "2026-10-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "credentialStatus": {
+          "id": "https://example.invalid/status/1#0",
+          "type": "BitstringStatusListEntry",
+          "statusPurpose": "revocation",
+          "statusListIndex": "0",
+          "statusListCredential": "https://example.invalid/status/1"
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-rdfc-2022",
+          "created": "2026-07-12T00:00:00Z",
+          "verificationMethod": "did:example:synthetic-issuer#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zSyntheticShapeOnlyNotACryptographicSignature"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-holder"
+      }
+    },
+    {
+      "vector_id": "consciousness-overclaim",
+      "expect_accept": false,
+      "expected_issue_codes": [
+        "prohibited_consciousness_inference"
+      ],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "validUntil": "2026-10-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "credentialStatus": {
+          "id": "https://example.invalid/status/1#0",
+          "type": "BitstringStatusListEntry",
+          "statusPurpose": "revocation",
+          "statusListIndex": "0",
+          "statusListCredential": "https://example.invalid/status/1"
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-rdfc-2022",
+          "created": "2026-07-12T00:00:00Z",
+          "verificationMethod": "did:example:synthetic-issuer#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zSyntheticShapeOnlyNotACryptographicSignature"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-controller",
+        "claimsConsciousness": true
+      }
+    },
+    {
+      "vector_id": "personhood-overclaim",
+      "expect_accept": false,
+      "expected_issue_codes": [
+        "prohibited_legal_personhood_inference"
+      ],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "validUntil": "2026-10-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "credentialStatus": {
+          "id": "https://example.invalid/status/1#0",
+          "type": "BitstringStatusListEntry",
+          "statusPurpose": "revocation",
+          "statusListIndex": "0",
+          "statusListCredential": "https://example.invalid/status/1"
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-rdfc-2022",
+          "created": "2026-07-12T00:00:00Z",
+          "verificationMethod": "did:example:synthetic-issuer#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zSyntheticShapeOnlyNotACryptographicSignature"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-controller",
+        "claimsLegalPersonhood": true
+      }
+    },
+    {
+      "vector_id": "missing-valid-until",
+      "expect_accept": false,
+      "expected_issue_codes": [
+        "valid_until_missing"
+      ],
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "id": "urn:example:freed-id:credential:structural-001",
+        "type": [
+          "VerifiableCredential",
+          "FreedIdStructuralCredential"
+        ],
+        "issuer": "did:example:synthetic-issuer",
+        "validFrom": "2026-07-12T00:00:00Z",
+        "credentialSubject": {
+          "id": "did:example:synthetic-subject",
+          "assurance": "synthetic-structural-only"
+        },
+        "credentialStatus": {
+          "id": "https://example.invalid/status/1#0",
+          "type": "BitstringStatusListEntry",
+          "statusPurpose": "revocation",
+          "statusListIndex": "0",
+          "statusListCredential": "https://example.invalid/status/1"
+        },
+        "proof": {
+          "type": "DataIntegrityProof",
+          "cryptosuite": "eddsa-rdfc-2022",
+          "created": "2026-07-12T00:00:00Z",
+          "verificationMethod": "did:example:synthetic-issuer#key-1",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "zSyntheticShapeOnlyNotACryptographicSignature"
+        },
+        "holder": "did:example:synthetic-holder",
+        "controller": "did:example:synthetic-controller"
+      }
+    }
+  ]
+}

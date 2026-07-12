@@ -1,0 +1,56 @@
+{
+  "schema": "ghc.family.thos-matched-budget-protocol.v2",
+  "status": "PROTOCOL_FROZEN_LIVE_BLIND_ARMS_NOT_RUN",
+  "question": "Does orchestration improve blinded task quality after matched tool scope, reasoning budget, time, cost, privacy, and handoff loss?",
+  "arms": [
+    {
+      "arm": "single_agent",
+      "status": "pending_blind_run"
+    },
+    {
+      "arm": "historical_four_sibling_replay",
+      "status": "pending_faithful_replay"
+    },
+    {
+      "arm": "sequential_new_sibling_chain",
+      "status": "pending_v2_to_v5_results"
+    }
+  ],
+  "matched_budget": {
+    "same_task_set": true,
+    "same_grader_rubric": true,
+    "same_safe_tool_scope": true,
+    "reasoning_budget": "fixed_and_recorded_per_task",
+    "message_budget": "fixed_and_recorded_per_task",
+    "wall_time_cap": "fixed_and_recorded_per_task",
+    "context_and_compaction": "recorded_as_harness_variables"
+  },
+  "task_families": [
+    "coding",
+    "primary_source_synthesis",
+    "contradiction_detection",
+    "privacy_boundary",
+    "checkpoint_recovery"
+  ],
+  "metrics": [
+    "task_success",
+    "brier_calibration",
+    "content_uniqueness",
+    "latency",
+    "token_or_compute_cost",
+    "privacy_incident",
+    "handoff_loss",
+    "recovery_rate"
+  ],
+  "blinding": "task IDs, hidden cases, and grader rubrics are frozen before arm outputs",
+  "contamination_rule": "replace any task discoverable by an evaluated arm before scoring",
+  "stopping_rule": "finish the fixed set and retain unfavorable outputs",
+  "decision_rule": "report uncertainty and Pareto tradeoffs; select the simplest non-dominated arm, with no presumption that more agents win",
+  "protected_data_rule": "no raw task transcript or private route enters repository artifacts",
+  "prohibited_inference": "protocol or synthetic scorer output is not AGI, ASI, consciousness, or multi-agent superiority evidence",
+  "source_ids": [
+    "SRC-15",
+    "SRC-16",
+    "SRC-17"
+  ]
+}

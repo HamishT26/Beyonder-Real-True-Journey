@@ -1,0 +1,131 @@
+{
+  "schema": "ghc.family.empirical-adapter-readiness.v1",
+  "download_policy": "read_only_manifest_no_automatic_download",
+  "fit_status": "NO_LIKELIHOOD_RUN_NO_EMPIRICAL_GMUT_CONFIRMATION",
+  "adapters": [
+    {
+      "dataset_id": "planck-legacy-cosmology",
+      "release": "Planck 2018 legacy likelihood baseline; PR4 maps tracked separately",
+      "authority": "European Space Agency and Planck Collaboration",
+      "source_id": "SRC-08",
+      "source_url": "https://pla.esac.esa.int/",
+      "citation": "Planck Collaboration, Astronomy and Astrophysics 641, A6 (2020)",
+      "license_or_terms": "ESA archive terms and Planck citation guidance must be checked before download",
+      "baseline": "six-parameter Lambda-CDM with official likelihood products",
+      "parameter_map": [
+        "extension background -> H(z)",
+        "extension perturbations -> CMB spectra and lensing"
+      ],
+      "expected_products": [
+        "official likelihood",
+        "chains",
+        "baseline best fit"
+      ],
+      "rejection_condition": "published baseline cannot be reproduced before extension fitting",
+      "status": "baseline_pending"
+    },
+    {
+      "dataset_id": "desi-dr2-bao",
+      "release": "DR2 cosmology results using first three survey years",
+      "authority": "DESI Collaboration",
+      "source_id": "SRC-10",
+      "source_url": "https://data.desi.lbl.gov/doc/releases/",
+      "citation": "DESI DR2 cosmology results and supporting products (2025)",
+      "license_or_terms": "DESI citation, acknowledgement, and product-specific terms",
+      "baseline": "published BAO cosmology constraints",
+      "parameter_map": [
+        "background -> D_M/r_d",
+        "background -> D_H/r_d"
+      ],
+      "expected_products": [
+        "cosmology chains",
+        "posterior maximization results"
+      ],
+      "rejection_condition": "adapter does not reproduce released BAO baseline",
+      "status": "baseline_pending"
+    },
+    {
+      "dataset_id": "gw170817-grb170817a",
+      "release": "2017 multimessenger event, LIGO-P1700308-v8",
+      "authority": "LIGO/Virgo, Fermi, and INTEGRAL collaborations",
+      "source_id": "SRC-11",
+      "source_url": "https://dcc.ligo.org/P1700308/public",
+      "citation": "Astrophysical Journal Letters 848 L13 (2017)",
+      "license_or_terms": "publication and released event-product terms",
+      "baseline": "luminal tensor propagation within the reported multimessenger bound",
+      "parameter_map": [
+        "tensor-sector EFT coefficients -> c_T/c"
+      ],
+      "expected_products": [
+        "event timing",
+        "propagation bound"
+      ],
+      "rejection_condition": "candidate coefficient region violates the reported propagation bound",
+      "status": "manifest_only"
+    },
+    {
+      "dataset_id": "microscope-final",
+      "release": "final result 2022",
+      "authority": "MICROSCOPE Collaboration",
+      "source_id": "SRC-12",
+      "source_url": "https://doi.org/10.1103/PhysRevLett.129.121102",
+      "citation": "Physical Review Letters 129, 121102 (2022)",
+      "license_or_terms": "publication and released-data terms must be checked",
+      "baseline": "weak equivalence principle",
+      "parameter_map": [
+        "composition-dependent scalar coupling -> Eotvos ratio"
+      ],
+      "expected_products": [
+        "reported final constraint",
+        "systematics metadata"
+      ],
+      "rejection_condition": "candidate coupling exceeds the reported final constraint",
+      "status": "manifest_only"
+    },
+    {
+      "dataset_id": "eot-wash-short-range-2020",
+      "release": "torsion-balance result down to 52 micrometres",
+      "authority": "Eot-Wash Group",
+      "source_id": "SRC-13",
+      "source_url": "https://doi.org/10.1103/PhysRevLett.124.101101",
+      "citation": "Physical Review Letters 124, 101101 (2020)",
+      "license_or_terms": "publication terms; digitization is not released raw data",
+      "baseline": "Newtonian inverse-square law with published Yukawa exclusions",
+      "parameter_map": [
+        "scalar mass and coupling -> Yukawa range and strength"
+      ],
+      "expected_products": [
+        "exclusion curve",
+        "geometry and systematics description"
+      ],
+      "rejection_condition": "candidate range and strength fall in an excluded region",
+      "status": "manifest_only"
+    },
+    {
+      "dataset_id": "pdg-2025-constraint-index",
+      "release": "Review of Particle Physics 2025 update",
+      "authority": "Particle Data Group",
+      "source_id": "SRC-14",
+      "source_url": "https://pdg.lbl.gov/2025/index.html",
+      "citation": "Physical Review D 110, 030001 (2024) and 2025 update",
+      "license_or_terms": "PDG citation and reuse terms",
+      "baseline": "authoritative reviewed constraint inventory",
+      "parameter_map": [
+        "extension parameter -> applicable primary experimental source"
+      ],
+      "expected_products": [
+        "constraint table",
+        "primary-source pointers"
+      ],
+      "rejection_condition": "proposal omits a directly applicable established bound",
+      "status": "manifest_only"
+    }
+  ],
+  "validation": {
+    "valid": true,
+    "issues": []
+  },
+  "completed_component": "portable authority release baseline mapping",
+  "open_gap": "official likelihood products were not downloaded; published baselines, a unique GMUT prediction, blind analysis, and external replication remain absent",
+  "disposition": "open_gap"
+}
