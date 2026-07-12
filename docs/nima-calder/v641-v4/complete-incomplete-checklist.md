@@ -15,13 +15,14 @@
 - [x] The third clean snapshot and owned path each pass 75 of 75 tests and the phase validator, with zero-hit privacy scans.
 - [x] All 28 declared LF-normalized deterministic artifact hashes match.
 - [x] Same-owner local repeatability is complete without promotion to independent reproduction.
+- [x] The closeout candidate is pushed, three-way equal, and passes 75 tests, phase validation, a 67-file zero-hit privacy scan, and clean Git state in a fourth snapshot.
 - [x] No sibling branch, shared branch, deployment, account, API key, private material, production key, or destructive operation was used.
 - [x] No collaboration subagent was spawned.
 
 ## Incomplete / open
 
-- [ ] Closeout-candidate commit, exact staged review, push, three-way equality, and fresh clean-snapshot validation.
-- [ ] Final seal commit, push, seal clean-snapshot validation, and local/upstream/live-remote equality.
+- [ ] Push the containing seal commit and prove local/upstream/live-remote equality.
+- [ ] Validate the containing seal commit from a fifth fresh additive snapshot.
 - [ ] Published empirical baseline reproduction, a unique preregistered GMUT prediction, likelihood, blind fit, or external scientific review.
 - [ ] Any blinded THOS arm or legitimate performance comparison.
 - [ ] Freed ID signature verification, DID resolution, status retrieval, issuer trust, interoperability, production keys, deployment, or legal identity status.
