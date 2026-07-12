@@ -1,6 +1,6 @@
 # Eiren Kestrel v641-v6 closeout candidate
 
-Status: **CLOSEOUT CANDIDATE READY — SEAL PENDING**.
+Status: **CLOSEOUT CANDIDATE VERIFIED — SEAL COMMIT PENDING**.
 
 - X1 commit: `09c2bd3960177535f9181b172374d38268261202`.
 - Snapshot-target evidence commit: `83866ac31b7c5605ca880792a419a213ffe56130`.
@@ -14,4 +14,4 @@ Status: **CLOSEOUT CANDIDATE READY — SEAL PENDING**.
 - Retained negatives: 9, including `REPRO-V5-N05` and two observed v6 implementation negatives.
 - Terminal verdict: **NOT READY FOR STAGE 20**.
 
-No successor task or outbound handoff is requested or sent. All named siblings remain on standby. A fresh detached closeout-candidate validation, seal commit, seal validation, and final-head validation are still required.
+The closeout-candidate commit `bf45385b590f17a5ba0f7b549b4eb59ea83e2ee6` passed 110/110 tests, validator pass, 60 public files / 0 privacy hits, and clean detached state. No successor task or outbound handoff is requested or sent. All named siblings remain on standby. Seal commit, seal validation, and final-head validation are still required.
