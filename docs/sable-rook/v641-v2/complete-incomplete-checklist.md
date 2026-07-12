@@ -10,6 +10,8 @@
 - [x] Three-page-equivalent overview, wellbeing check, proposal/source ledgers, tests, and accessible static report produced.
 - [x] 39 tests, phase validator, and clean detached-worktree repeatability passed.
 - [x] Privacy/raw-ID scan passed with zero pattern hits.
+- [x] Closeout candidate pushed; local, upstream, and remote heads agreed.
+- [x] Closeout candidate passed the full gates from a clean detached worktree.
 
 ## Open or exact-gated
 
@@ -19,7 +21,6 @@
 - [ ] Production Freed ID crypto, DID resolution, trust governance, real identity data, or deployment.
 - [ ] CBR enactment, legal advice, treaty/cultural ratification, Māori authority, or affected-party acceptance.
 - [ ] Real penetration test or exhaustive security certification.
-- [ ] Final closeout push and local/upstream/remote equality proof.
 - [ ] Exactly one authorized sibling #2 creation, followed by exactly one verified Eiren baton.
 
-Watcher activity, elapsed time, a prepared task, and a prepared message are not completion. Sibling #2 remains `NOT_CREATED_YET`, and the Eiren baton remains `NOT_SENT` at this receipt boundary.
+Watcher activity, elapsed time, a prepared task, and a prepared message are not completion. Sibling #2 is `NOT_CREATED_AT_CLOSEOUT_RECEIPT`, and the Eiren baton is `NOT_SENT` at this receipt boundary.
