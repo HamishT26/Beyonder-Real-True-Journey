@@ -16,4 +16,4 @@
 - authorized affected-party Māori legal and cultural ratification
 - independent scientific reproduction exhaustive security and complete accessibility review
 
-Internal reproduction verified: **False**. Terminal closeout remains pending.
+Internal reproduction verified: **True**. The closeout candidate is ready; seal and final-head validation remain pending.
