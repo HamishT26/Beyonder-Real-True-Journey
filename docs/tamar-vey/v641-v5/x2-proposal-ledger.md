@@ -10,7 +10,7 @@
 | V5-P06 — Freed ID cryptographic evidence bundle and trust-resolution completion gate | `open_gap` | absence and negative vectors failed closed; no real cryptographic assurance inputs existed |
 | V5-P07 — Affected-party participation proof and empty-chair refusal protocol | `exact_gate` | empty-chair and authority substitution fixtures failed closed |
 | V5-P08 — Canonical package manifest with collision and archive-boundary defense | `completed` | canonical package collision and archive-boundary fixtures passed |
-| V5-P09 — Multi-perturbation clean-snapshot repeatability and retained-negative replay | `open_gap` | clean additive snapshot matrix pending |
+| V5-P09 — Multi-perturbation clean-snapshot repeatability and retained-negative replay | `completed` | two clean additive snapshot comparisons passed |
 | V5-P10 — Claim-compression integrity and accessible evidence-to-render trace | `completed` | claim compression and accessible static render checks passed |
 
 Only `completed`, `represented`, `open_gap`, and `exact_gate` are used. Completed means local execution in the declared scope; it does not close the gaps listed in the JSON ledger.

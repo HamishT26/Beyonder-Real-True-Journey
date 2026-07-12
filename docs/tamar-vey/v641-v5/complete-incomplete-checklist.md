@@ -12,10 +12,11 @@
 - [x] static accessible report and integrated overview generated
 - [x] retained negatives REPRO-V4-N01 and REPRO-V4-N02 preserved
 - [x] no subagents sibling writes app update deployment or destructive cleanup
+- [x] same-owner multi-perturbation clean-snapshot repeatability verified
 
 ## Incomplete or exact-gated
 
-- [ ] multi-perturbation clean-snapshot repeatability
+- [ ] legacy v4 raw manuscript hash portability under alternate LF checkout remains retained as REPRO-V5-N05
 - [ ] empirical baseline reproduction and GMUT likelihood with real data
 - [ ] blind matched-budget THOS real arms and independent review
 - [ ] Freed ID real conformant keys proofs resolution status interoperability and trust governance

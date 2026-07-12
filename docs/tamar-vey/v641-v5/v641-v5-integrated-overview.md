@@ -8,7 +8,7 @@ The source ledger uses primary publications and official authority pages. Its cu
 
 ## Truth distribution
 
-The current ledger records 5 completed local outcomes, 1 represented outcome, 3 open gaps, and 1 exact gate. Those four labels are the complete truth vocabulary. A completed label never means externally true, certified, deployed, enacted, culturally authorized, cryptographically assured, or independently reproduced. Represented means a protocol or proxy exists without the external event it models. Open gap means required evidence is absent. Exact gate means the project lacks authority to synthesize the missing decision or participation.
+The current ledger records 6 completed local outcomes, 1 represented outcome, 2 open gaps, and 1 exact gate. Those four labels are the complete truth vocabulary. A completed label never means externally true, certified, deployed, enacted, culturally authorized, cryptographically assured, or independently reproduced. Represented means a protocol or proxy exists without the external event it models. Open gap means required evidence is absent. Exact gate means the project lacks authority to synthesize the missing decision or participation.
 
 ## Proposal-by-proposal record
 
@@ -190,7 +190,7 @@ The supporting official source identifiers are V5-S27, V5-S28, V5-S29, V5-S30, V
 
 **Falsifier.** A hidden owner path or environment variable is required, a perturbation changes semantic output, a retained negative stops failing as specified, or same-owner replay is called independent reproduction.
 
-**Executed result.** The truth label is `open_gap`. clean additive snapshot matrix pending The governing decision rule remains: completed only after the evidence commit passes the owned path and declared clean-snapshot matrix; independent reproduction remains open.
+**Executed result.** The truth label is `completed`. two clean additive snapshot comparisons passed The governing decision rule remains: completed only after the evidence commit passes the owned path and declared clean-snapshot matrix; independent reproduction remains open.
 
 The preregistered checks were:
 

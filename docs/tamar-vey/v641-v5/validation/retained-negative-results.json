@@ -1,7 +1,7 @@
 {
   "schema": "ghc.family.retained-negative-results.v5",
   "phase": "v641-gmut-thos-v5-x1-x2",
-  "negative_count": 6,
+  "negative_count": 7,
   "negatives": [
     {
       "negative_id": "REPRO-V4-N01",
@@ -50,10 +50,19 @@
       "retained": true,
       "resolution": "both additive wrappers now bootstrap the repository root using the established family-script pattern",
       "verification": "direct CLI validation passed"
+    },
+    {
+      "negative_id": "REPRO-V5-N05",
+      "origin": "v5_clean_snapshot_matrix",
+      "observed": "the alternate newline-policy snapshot passed 15 of 15 v5 tests assurance validation zero-hit privacy and 31 of 31 normalized v5 core hashes, but the full suite passed only 89 of 90 because a legacy v4 equation-lineage receipt uses a raw manuscript hash",
+      "retained": true,
+      "resolution": "do not count the newline-policy snapshot as a full-suite verifier; retain it as a portability negative and use two separate clean full-suite snapshots for same-owner repeatability",
+      "verification": "snapshots A and C each passed 90 of 90 with assurance validation zero privacy hits and clean Git state",
+      "independent_reproduction_established": false
     }
   ],
   "all_retained": true,
-  "all_resolved_for_declared_local_scope": true,
+  "all_resolved_for_declared_local_scope": false,
   "external_gaps_closed_by_resolutions": false,
   "boundary": "resolved local implementation negatives do not establish empirical truth cryptographic assurance authority deployment exhaustive security accessibility conformance or independent reproduction"
 }
