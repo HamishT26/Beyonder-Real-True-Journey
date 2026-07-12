@@ -14,13 +14,14 @@
 - [x] Evidence commit `7cf96ce8604f470b662308b0cabb81847a6629ab` pushed on the Elian-owned branch.
 - [x] Fresh detached D:-first evidence snapshot passed 56 tests, phase validation, and zero-hit privacy scan.
 - [x] Twenty-five of twenty-five declared deterministic hashes matched.
+- [x] Closeout candidate `aa5b5e727327a1e14f947cfe4b9c1db53e56d8cf` committed, pushed, and remote-equal.
+- [x] Second fresh detached D:-first snapshot passed 56 tests, phase validation, and zero-hit privacy scan.
 
 ## Incomplete before closeout
 
-- [ ] Commit and push the closeout receipt candidate.
-- [ ] Validate the receipt commit from a fresh additive detached D:-first snapshot.
 - [ ] Seal final checklist, receipt, phase truth, and validation evidence.
-- [ ] Prove clean local/upstream/live-remote equality.
+- [ ] Push and clean-snapshot validate the seal commit.
+- [ ] Prove final clean local/upstream/live-remote equality.
 - [ ] Only then create exactly one user-owned v4 successor.
 
 Empirical GMUT, proof/canon, legal, cultural, Māori authority, cryptographic assurance, deployment, account/API-key, private-publication, destructive, shared-branch, sibling-merge, exhaustive-security, and independent-reproduction gates remain open or exact-gated.
