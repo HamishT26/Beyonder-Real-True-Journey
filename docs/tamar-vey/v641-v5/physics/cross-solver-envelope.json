@@ -1,0 +1,79 @@
+{
+  "schema": "ghc.family.cross-solver-envelope.v1",
+  "equation": "dimensionless exponential decay proxy",
+  "steps": 128,
+  "frozen_tolerance": 5e-05,
+  "solvers": [
+    {
+      "solver": "rk4",
+      "endpoint": 0.3678794411829373,
+      "reference": 0.36787944117144233,
+      "absolute_error": 1.1494971641212715e-11,
+      "within_frozen_tolerance": true
+    },
+    {
+      "solver": "midpoint",
+      "endpoint": 0.3678832054497415,
+      "reference": 0.36787944117144233,
+      "absolute_error": 3.7642782991786916e-06,
+      "within_frozen_tolerance": true
+    },
+    {
+      "solver": "heun",
+      "endpoint": 0.3678832054497415,
+      "reference": 0.36787944117144233,
+      "absolute_error": 3.7642782991786916e-06,
+      "within_frozen_tolerance": true
+    }
+  ],
+  "pairwise_max_difference": 3.7642668042070504e-06,
+  "unhealthy_fixtures": [
+    {
+      "fixture_id": "singular_step",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    },
+    {
+      "fixture_id": "nonfinite_initial_value",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    },
+    {
+      "fixture_id": "ghost_kinetic_term",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    },
+    {
+      "fixture_id": "nonpositive_gradient_term",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    },
+    {
+      "fixture_id": "superluminal_proxy",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    },
+    {
+      "fixture_id": "at_cutoff",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    },
+    {
+      "fixture_id": "above_cutoff",
+      "expected": "reject",
+      "actual": "reject",
+      "matched": true
+    }
+  ],
+  "all_healthy_within_tolerance": true,
+  "all_unhealthy_rejected": true,
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "cross-solver agreement in a local proxy is not accuracy against nature"
+}

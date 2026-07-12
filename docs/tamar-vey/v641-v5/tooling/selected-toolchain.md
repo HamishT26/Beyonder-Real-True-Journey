@@ -13,3 +13,12 @@ The generated family index is the phase-local inventory. V5 selects only seven c
 | `scripts/build_ghc_family_evidence_report.py` | extension planned after x1 | Static accessible report |
 
 The v2-v4 builders remain unchanged as compatibility evidence. The x1 commit contains no v5 x2 implementation or outcome, and no historical tool is promoted merely because it exists.
+
+## X2 compatibility adaptation
+
+The first in-place reporter and validator extension was rejected by the v4 tool-integrity replay. V5 therefore keeps `scripts/build_ghc_family_evidence_report.py` and `scripts/ghc_family_phase_evidence_validator.py` byte-stable and uses two additive family-current wrappers instead:
+
+- `scripts/build_ghc_family_assurance_report.py`
+- `scripts/ghc_family_evidence_assurance_validator.py`
+
+This negative is retained as `COMPAT-V5-N03`. The final v1-v5 compatibility suite passes with the additive design.
