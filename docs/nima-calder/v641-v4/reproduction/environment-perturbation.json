@@ -19,6 +19,14 @@
       "effect": "tool-integrity rebuild test failed while the remaining tests, phase validator, and privacy scan passed",
       "recovery": "hash canonical Git index blobs and require the working tree to match the index",
       "retained": true
+    },
+    {
+      "negative_id": "REPRO-V4-N02",
+      "evidence_revision": "8581f3c51f2d24546b04eea90b71a1c682932f3c",
+      "observed": "raw-byte parity differed for two JSON artifacts because the clean checkout used CRLF while regenerated files used LF",
+      "effect": "26 of 28 raw hashes matched even though both mismatches were semantically and LF-normalized identical",
+      "recovery": "hash deterministic text artifacts after LF newline normalization while preserving all other bytes",
+      "retained": true
     }
   ],
   "boundary": "environment perturbation is bounded portability evidence, not platform exhaustiveness or independent reproduction"

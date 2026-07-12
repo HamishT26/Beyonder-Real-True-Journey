@@ -77,6 +77,12 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_lf_normalized_file(path: Path) -> str:
+    """Hash text artifacts without treating Git checkout newlines as content drift."""
+    payload = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def repair_and_remap(value: Any) -> Any:
     """Repair legacy mojibake and map v3 source IDs without changing evidence."""
     if isinstance(value, dict):
@@ -954,11 +960,13 @@ def build_hash_parity(
     rows = []
     for relative in DETERMINISTIC_HASH_PATHS:
         current = phase / relative
-        current_hash = sha256_file(current) if current.is_file() else None
+        current_hash = sha256_lf_normalized_file(current) if current.is_file() else None
         comparison_hash = None
         if comparison_phase is not None:
             other = comparison_phase / relative
-            comparison_hash = sha256_file(other) if other.is_file() else None
+            comparison_hash = (
+                sha256_lf_normalized_file(other) if other.is_file() else None
+            )
         rows.append(
             {
                 "path": relative,
@@ -975,10 +983,11 @@ def build_hash_parity(
         "schema": "ghc.family.hash-parity.v4",
         "status": "verified_local_hash_parity" if all_match else "pending_clean_snapshot",
         "artifact_count": len(rows),
+        "hash_algorithm": "sha256_over_lf_normalized_bytes",
         "artifacts": rows,
         "all_match": all_match,
         "comparison_path_published": False,
-        "boundary": "same-owner hash parity is local repeatability evidence only, not independent reproduction",
+        "boundary": "LF-normalized byte parity ignores checkout newline policy but preserves every other byte difference; same-owner parity is local repeatability evidence only, not independent reproduction",
     }
 
 
@@ -1049,7 +1058,15 @@ def build_reproduction(
                 "effect": "tool-integrity rebuild test failed while the remaining tests, phase validator, and privacy scan passed",
                 "recovery": "hash canonical Git index blobs and require the working tree to match the index",
                 "retained": True,
-            }
+            },
+            {
+                "negative_id": "REPRO-V4-N02",
+                "evidence_revision": "8581f3c51f2d24546b04eea90b71a1c682932f3c",
+                "observed": "raw-byte parity differed for two JSON artifacts because the clean checkout used CRLF while regenerated files used LF",
+                "effect": "26 of 28 raw hashes matched even though both mismatches were semantically and LF-normalized identical",
+                "recovery": "hash deterministic text artifacts after LF newline normalization while preserving all other bytes",
+                "retained": True,
+            },
         ],
         "boundary": "environment perturbation is bounded portability evidence, not platform exhaustiveness or independent reproduction",
     }

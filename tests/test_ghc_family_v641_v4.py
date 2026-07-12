@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from scripts.ghc_family_evidence_lineage import (
     build_stage20_v4,
     build_thos_v4,
     build_tool_integrity_manifest,
+    sha256_lf_normalized_file,
 )
 from scripts.ghc_family_phase_evidence_validator import validate_phase
 
@@ -181,6 +183,22 @@ class BodyHeartAndSecurityTests(unittest.TestCase):
 
 
 class Stage20ReproductionAndReportTests(unittest.TestCase):
+    def test_parity_hash_ignores_only_checkout_newlines(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            lf = root / "lf.json"
+            crlf = root / "crlf.json"
+            changed = root / "changed.json"
+            lf.write_bytes(b'{\n  "value": 1\n}\n')
+            crlf.write_bytes(b'{\r\n  "value": 1\r\n}\r\n')
+            changed.write_bytes(b'{\n  "value": 2\n}\n')
+            self.assertEqual(
+                sha256_lf_normalized_file(lf), sha256_lf_normalized_file(crlf)
+            )
+            self.assertNotEqual(
+                sha256_lf_normalized_file(lf), sha256_lf_normalized_file(changed)
+            )
+
     def test_stage20_lineage_and_promotion_rules_rebuild(self) -> None:
         status = load("reproduction/reproduction-report.json")["status"]
         board, lineage, drill, rehearsal = build_stage20_v4("2026-07-13", "Nima Calder", status)
