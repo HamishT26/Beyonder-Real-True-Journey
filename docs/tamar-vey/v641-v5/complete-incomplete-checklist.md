@@ -13,6 +13,7 @@
 - [x] retained negatives REPRO-V4-N01 and REPRO-V4-N02 preserved
 - [x] no subagents sibling writes app update deployment or destructive cleanup
 - [x] same-owner multi-perturbation clean-snapshot repeatability verified
+- [x] seal commit pushed equal and validated in a fresh clean detached snapshot
 
 ## Incomplete or exact-gated
 

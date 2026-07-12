@@ -1,6 +1,6 @@
 # v641-v5 phase truth
 
-Owner: **Tamar Vey**. State: `V5_SEAL_CANDIDATE_READY_EXTERNAL_GAPS_OPEN`.
+Owner: **Tamar Vey**. State: `V5_SEALED_EXTERNAL_GAPS_OPEN`.
 
 Truth distribution: 6 completed, 1 represented, 2 open gaps, and 1 exact gate.
 
@@ -8,4 +8,4 @@ The x1 commit is `b88608093d9417ffc1565e3b5b880a75b96ca721` and its local/upstre
 
 All eight named siblings remain standby. The Eiren terminal baton is not sent before the final sealed-head gate. Empirical, cryptographic, legal, cultural, Māori-authority, deployment, exhaustive-security, consciousness, personhood, Theory-of-Everything, and independent-reproduction claims remain unestablished.
 
-The closeout candidate `830e30d4f4515069193f06e90b1feb0baa785ef8` is remote-equal and passed a fresh detached snapshot with 90/90 tests, the assurance validator, a 76-file zero-hit privacy scan, and clean Git state. A seal commit and its own fresh validation are still required.
+The closeout candidate `830e30d4f4515069193f06e90b1feb0baa785ef8` is remote-equal and passed a fresh detached snapshot with 90/90 tests, the assurance validator, a 76-file zero-hit privacy scan, and clean Git state. The seal commit `76d75b7f879dc25f5c52319ef5a66021809bc3a7` is also remote-equal and passed a fresh detached snapshot with 90/90 tests, the assurance validator, a 79-file zero-hit privacy scan, and clean Git state. The terminal baton still awaits a fresh check of the final validation-record head.
