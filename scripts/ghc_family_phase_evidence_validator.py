@@ -63,6 +63,7 @@ def validate_phase(phase: Path) -> dict[str, Any]:
     ]
     x1_preview = parsed.get("x1-proposals.json", {})
     is_v3_refresh = x1_preview.get("phase") == "v641-gmut-thos-v3-x1-x2"
+    is_v4_lineage = x1_preview.get("phase") == "v641-gmut-thos-v4-x1-x2"
     if is_v3_refresh:
         required.extend(
             [
@@ -75,6 +76,36 @@ def validate_phase(phase: Path) -> dict[str, Any]:
                 "cbr/authority-veto-matrix.json",
                 "security/adversarial-fixtures.json",
                 "stage20/expiry-contradiction-drill.json",
+                "reproduction/hash-parity.json",
+                "environment/version-receipt.json",
+                "tooling/selected-toolchain.json",
+            ]
+        )
+    if is_v4_lineage:
+        required.extend(
+            [
+                "provenance/claim-source-matrix.json",
+                "provenance/freshness-lineage-audit.json",
+                "physics/equation-test-lineage.json",
+                "physics/category-barrier-mutations.json",
+                "physics/metamorphic-scale-audit.json",
+                "empirical/baseline-smoke-manifest.json",
+                "empirical/inference-leak-audit.json",
+                "thos/allocation-missingness-audit.json",
+                "thos/synthetic-paired-analysis.json",
+                "freed-id/cryptographic-assurance-boundary.json",
+                "freed-id/assurance-transition-model.json",
+                "freed-id/transition-vectors.json",
+                "freed-id/transition-report.json",
+                "cbr/authority-veto-matrix.json",
+                "cbr/consent-authority-graph.json",
+                "cbr/non-transfer-invariants.json",
+                "cbr/authority-report.json",
+                "security/tool-integrity-manifest.json",
+                "security/adversarial-fixtures.json",
+                "stage20/claim-lineage.json",
+                "stage20/promotion-monotonicity-drill.json",
+                "reproduction/environment-perturbation.json",
                 "reproduction/hash-parity.json",
                 "environment/version-receipt.json",
                 "tooling/selected-toolchain.json",
@@ -106,8 +137,10 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         "protected_gates",
         "x1_status",
     }
-    if is_v3_refresh:
+    if is_v3_refresh or is_v4_lineage:
         proposal_fields.add("decision_rule")
+    if is_v4_lineage:
+        proposal_fields.update({"lane", "prior_v3_input", "internal_inputs"})
     if len(proposals) != 10 or len({row.get("proposal_id") for row in proposals}) != 10:
         issue("x1-proposals.json", "proposal_count_invalid", "expected ten unique proposals")
     for index, proposal in enumerate(proposals):
@@ -140,6 +173,8 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             issue(f"sources/source-ledger.json#sources[{index}]", "snapshot_embedded", "must be false")
     if is_v3_refresh and len(source_rows) != 33:
         issue("sources/source-ledger.json", "v3_source_count_invalid", "expected 33 records")
+    if is_v4_lineage and len(source_rows) != 35:
+        issue("sources/source-ledger.json", "v4_source_count_invalid", "expected 35 records")
 
     graph = parsed["provenance/source-independence-graph.json"]
     roots = {row["authority_root"] for row in source_rows}
@@ -162,6 +197,25 @@ def validate_phase(phase: Path) -> dict[str, Any]:
                 "v3_version_correction_invalid",
                 "current-version corrections must not add independent votes",
             )
+    if is_v4_lineage:
+        matrix = parsed["provenance/claim-source-matrix.json"]
+        freshness = parsed["provenance/freshness-lineage-audit.json"]
+        if (
+            matrix.get("claim_count") != 10
+            or matrix.get("all_references_resolve") is not True
+            or matrix.get("passed") is not True
+        ):
+            issue("provenance/claim-source-matrix.json", "v4_claim_source_matrix_failed", "")
+        if (
+            freshness.get("passed") is not True
+            or freshness.get("all_matched") is not True
+            or len(freshness.get("current_version_corrections", [])) < 4
+            or any(
+                row.get("adds_independent_vote") is not False
+                for row in freshness.get("current_version_corrections", [])
+            )
+        ):
+            issue("provenance/freshness-lineage-audit.json", "v4_freshness_lineage_failed", "")
 
     canonical = parsed["physics/canonical-gmut-audit.json"]
     if not canonical.get("passed") or canonical.get("disposition") != "completed":
@@ -174,6 +228,17 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             row.get("matched") for row in trace.get("negative_fixtures", [])
         ):
             issue("physics/variational-trace-audit.json", "v3_variational_trace_failed", "")
+    if is_v4_lineage:
+        lineage = parsed["physics/equation-test-lineage.json"]
+        mutations = parsed["physics/category-barrier-mutations.json"]
+        if lineage.get("passed") is not True or lineage.get("claim_count", 0) < 9:
+            issue("physics/equation-test-lineage.json", "v4_equation_lineage_failed", "")
+        if (
+            mutations.get("passed") is not True
+            or mutations.get("fixture_count", 0) < 6
+            or mutations.get("raw_mutations_retained") is not False
+        ):
+            issue("physics/category-barrier-mutations.json", "v4_mutation_audit_failed", "")
 
     stability = parsed["physics/conservation-stability-sweep.json"]
     if not stability.get("passed") or not all(row.get("matched") for row in stability.get("stability_cases", [])):
@@ -186,6 +251,15 @@ def validate_phase(phase: Path) -> dict[str, Any]:
                 "v3_sensitivity_envelope_failed",
                 "",
             )
+    if is_v4_lineage:
+        metamorphic = parsed["physics/metamorphic-scale-audit.json"]
+        if (
+            metamorphic.get("passed") is not True
+            or metamorphic.get("all_matched") is not True
+            or metamorphic.get("case_count", 0) < 13
+            or metamorphic.get("convergence", {}).get("observed_order", 0) <= 2.5
+        ):
+            issue("physics/metamorphic-scale-audit.json", "v4_metamorphic_scale_failed", "")
 
     empirical = parsed["empirical/adapter-readiness.json"]
     if not empirical.get("validation", {}).get("valid"):
@@ -207,6 +281,23 @@ def validate_phase(phase: Path) -> dict[str, Any]:
                 "v3_empirical_boundary_failed",
                 "",
             )
+    if is_v4_lineage:
+        smoke = parsed["empirical/baseline-smoke-manifest.json"]
+        leak = parsed["empirical/inference-leak-audit.json"]
+        if (
+            smoke.get("row_count", 0) < 7
+            or smoke.get("all_no_download") is not True
+            or smoke.get("all_baselines_pending") is not True
+            or smoke.get("disposition") != "open_gap"
+            or "DR1_public_spectroscopy" not in smoke.get("desi_release_distinction", "")
+        ):
+            issue("empirical/baseline-smoke-manifest.json", "v4_empirical_smoke_boundary_failed", "")
+        if (
+            leak.get("all_matched") is not True
+            or leak.get("fit_complete_receipt_present") is not False
+            or leak.get("empirical_gmut_confirmation") is not False
+        ):
+            issue("empirical/inference-leak-audit.json", "v4_empirical_inference_leak", "")
 
     proxy = parsed["thos/synthetic-scorer-proxy.json"]
     if "not_agent_or_model_performance" not in proxy.get("interpretation_boundary", ""):
@@ -222,6 +313,23 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             or power.get("disposition") != "represented"
         ):
             issue("thos/power-contamination-audit.json", "v3_thos_boundary_failed", "")
+    if is_v4_lineage:
+        allocation = parsed["thos/allocation-missingness-audit.json"]
+        paired = parsed["thos/synthetic-paired-analysis.json"]
+        if (
+            allocation.get("all_budgets_matched") is not True
+            or allocation.get("all_fixtures_matched") is not True
+            or allocation.get("live_arm_output_count") != 0
+            or allocation.get("outcome_blind") is not True
+            or allocation.get("disposition") != "represented"
+        ):
+            issue("thos/allocation-missingness-audit.json", "v4_thos_allocation_failed", "")
+        if (
+            paired.get("live_results_present") is not False
+            or paired.get("winner_declared") is not False
+            or "not_agent_or_model_performance" not in paired.get("interpretation_boundary", "")
+        ):
+            issue("thos/synthetic-paired-analysis.json", "v4_thos_proxy_inflation", "")
 
     freed = parsed["freed-id/conformance-report.json"]
     if not freed.get("all_matched") or freed.get("vector_count") < 7:
@@ -246,20 +354,59 @@ def validate_phase(phase: Path) -> dict[str, Any]:
                 "v3_crypto_or_deploy_overclaim",
                 "",
             )
+    if is_v4_lineage:
+        transition_model = parsed["freed-id/assurance-transition-model.json"]
+        transition_report = parsed["freed-id/transition-report.json"]
+        if (
+            transition_model.get("highest_local_state") != "proof_shaped"
+            or transition_model.get("cryptographic_verification_performed") is not False
+            or transition_model.get("deployment_performed") is not False
+            or transition_model.get("legal_status_decided") is not False
+        ):
+            issue("freed-id/assurance-transition-model.json", "v4_assurance_transition_inflation", "")
+        if (
+            transition_report.get("all_matched") is not True
+            or transition_report.get("vector_count", 0) < 13
+            or transition_report.get("disposition") != "completed"
+            or "no_signature_verification" not in transition_report.get("boundary", "")
+        ):
+            issue("freed-id/transition-report.json", "v4_transition_report_failed", "")
 
     cbr = parsed["cbr/conflict-report.json"]
     if not cbr.get("all_matched") or cbr.get("case_count") < 6:
         issue("cbr/conflict-report.json", "cbr_rehearsal_failed", "")
-    if "Māori authority" not in cbr.get("maori_authority_boundary", ""):
+    if "M\u0101ori authority" not in cbr.get("maori_authority_boundary", ""):
         issue("cbr/conflict-report.json", "maori_authority_boundary_missing", "")
     if is_v3_refresh:
         authority = parsed["cbr/authority-veto-matrix.json"]
         if (
             authority.get("all_matched") is not True
             or authority.get("disposition") != "exact_gate"
-            or "Māori authority" not in authority.get("maori_authority_boundary", "")
+            or "M\u0101ori authority"
+            not in authority.get("maori_authority_boundary", "")
         ):
             issue("cbr/authority-veto-matrix.json", "v3_authority_veto_failed", "")
+    if is_v4_lineage:
+        consent_graph = parsed["cbr/consent-authority-graph.json"]
+        non_transfer = parsed["cbr/non-transfer-invariants.json"]
+        authority_report = parsed["cbr/authority-report.json"]
+        if (
+            consent_graph.get("all_matched") is not True
+            or consent_graph.get("case_count", 0) < 8
+            or consent_graph.get("disposition") != "exact_gate"
+        ):
+            issue("cbr/consent-authority-graph.json", "v4_consent_authority_graph_failed", "")
+        if (
+            non_transfer.get("passed") is not True
+            or "Māori authority" not in non_transfer.get("maori_authority_boundary", "")
+        ):
+            issue("cbr/non-transfer-invariants.json", "v4_maori_non_transfer_failed", "")
+        if (
+            authority_report.get("all_matched") is not True
+            or authority_report.get("disposition") != "exact_gate"
+            or "Māori authority" not in authority_report.get("maori_authority_boundary", "")
+        ):
+            issue("cbr/authority-report.json", "v4_authority_report_failed", "")
 
     security = parsed["security/red-team.json"]
     if not security.get("all_matched") or security.get("fixture_count") < 7:
@@ -274,6 +421,21 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             or adversarial.get("fixture_count", 0) < 8
         ):
             issue("security/adversarial-fixtures.json", "v3_adversarial_fixture_failed", "")
+    if is_v4_lineage:
+        adversarial = parsed["security/adversarial-fixtures.json"]
+        tool_manifest = parsed["security/tool-integrity-manifest.json"]
+        if (
+            adversarial.get("all_matched") is not True
+            or adversarial.get("raw_fixture_retained") is not False
+            or adversarial.get("fixture_count", 0) < 8
+        ):
+            issue("security/adversarial-fixtures.json", "v4_adversarial_fixture_failed", "")
+        if (
+            tool_manifest.get("all_passed") is not True
+            or tool_manifest.get("selected_tool_count", 0) < 7
+            or tool_manifest.get("absolute_paths_published") is not False
+        ):
+            issue("security/tool-integrity-manifest.json", "v4_tool_integrity_failed", "")
 
     board = parsed["stage20/evidence-board.json"]
     board_fields = {
@@ -287,8 +449,10 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         "dissent",
         "rejection_or_promotion_condition",
     }
-    if is_v3_refresh:
+    if is_v3_refresh or is_v4_lineage:
         board_fields.update({"expiry_status", "contradiction_state"})
+    if is_v4_lineage:
+        board_fields.update({"source_claim_ids", "negative_evidence", "protected_gates"})
     if len(board.get("claims", [])) < 12:
         issue("stage20/evidence-board.json", "too_few_claims", "")
     for index, row in enumerate(board.get("claims", [])):
@@ -310,6 +474,22 @@ def validate_phase(phase: Path) -> dict[str, Any]:
                 "v3_expiry_contradiction_failed",
                 "",
             )
+    if is_v4_lineage:
+        claim_lineage = parsed["stage20/claim-lineage.json"]
+        promotion = parsed["stage20/promotion-monotonicity-drill.json"]
+        if (
+            len(board.get("claims", [])) < 20
+            or claim_lineage.get("negative_evidence_retained") is not True
+            or claim_lineage.get("passed") is not True
+        ):
+            issue("stage20/claim-lineage.json", "v4_claim_lineage_failed", "")
+        if (
+            promotion.get("all_matched") is not True
+            or promotion.get("fixture_count", 0) < 8
+            or promotion.get("negative_evidence_retained") is not True
+            or promotion.get("exact_gates_retained") is not True
+        ):
+            issue("stage20/promotion-monotonicity-drill.json", "v4_promotion_monotonicity_failed", "")
 
     ledger = parsed["x2-proposal-ledger.json"]
     outcomes = ledger.get("outcomes", [])
@@ -357,6 +537,28 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             or toolchain.get("mass_deletion_performed") is not False
         ):
             issue("tooling/selected-toolchain.json", "v3_toolchain_boundary_failed", "")
+    if is_v4_lineage:
+        parity = parsed["reproduction/hash-parity.json"]
+        perturbation = parsed["reproduction/environment-perturbation.json"]
+        if reproduction.get("status") == "verified_local_repeatability":
+            if (
+                parity.get("all_match") is not True
+                or reproduction.get("hash_parity_passed") is not True
+                or perturbation.get("status") != "verified"
+                or perturbation.get("network_required") is not False
+                or perturbation.get("untracked_input_required") is not False
+            ):
+                issue("reproduction/hash-parity.json", "v4_repeatability_receipt_failed", "")
+        environment = parsed["environment/version-receipt.json"]
+        if environment.get("codex_desktop_updated_by_phase") is not False:
+            issue("environment/version-receipt.json", "codex_app_update_forbidden", "")
+        toolchain = parsed["tooling/selected-toolchain.json"]
+        if (
+            toolchain.get("historical_tools_executed") is not False
+            or toolchain.get("mass_deletion_performed") is not False
+            or toolchain.get("x2_outcome_generator_executed_before_x1_push") is not False
+        ):
+            issue("tooling/selected-toolchain.json", "v4_toolchain_boundary_failed", "")
 
     for path in sorted(phase.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in {".json", ".md", ".html", ".tex"}:

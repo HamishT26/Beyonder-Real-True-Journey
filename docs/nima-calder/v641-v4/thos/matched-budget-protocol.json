@@ -1,0 +1,66 @@
+{
+  "schema": "ghc.family.thos-matched-budget-protocol.v4",
+  "status": "FROZEN_NO_BLIND_ARMS_RUN",
+  "question": "Does orchestration improve blinded task quality after matching task, rubric, safe tools, reasoning, messages, retries, wall time, context, and cost?",
+  "arms": [
+    {
+      "arm": "single_agent",
+      "status": "pending_blind_run"
+    },
+    {
+      "arm": "historical_four_sibling_replay",
+      "status": "pending_faithful_replay"
+    },
+    {
+      "arm": "sequential_new_sibling_chain",
+      "status": "pending_sequential_results"
+    }
+  ],
+  "matched_budget": {
+    "same_hidden_task_set": true,
+    "same_grader_rubric": true,
+    "same_safe_tool_scope": true,
+    "reasoning_budget": "fixed_and_recorded_per_task",
+    "message_budget": "fixed_and_recorded_per_task",
+    "retry_budget": "fixed_and_recorded_per_task",
+    "wall_time_cap": "fixed_and_recorded_per_task",
+    "cost_accounting": "tokens_compute_and_paid_external_cost_recorded",
+    "context_and_compaction": "frozen_or_recorded_as_harness_variables"
+  },
+  "power_design": {
+    "minimum_planned_tasks_per_arm": 30,
+    "primary_binary_metric": "task_success",
+    "minimum_detectable_effect": "must be chosen before hidden task release",
+    "uncertainty": "intervals and arm-level variance required",
+    "underpowered_null_boundary": "failure_to_detect_is_not_equivalence"
+  },
+  "metrics": [
+    "task_success",
+    "brier_calibration",
+    "content_uniqueness",
+    "latency",
+    "token_compute_and_external_cost",
+    "privacy_incident",
+    "handoff_loss",
+    "recovery_rate"
+  ],
+  "validity_hazards": [
+    "contamination",
+    "broken_task",
+    "reward_hacking",
+    "refusal",
+    "sandbagging",
+    "harness_drift",
+    "handoff_loss",
+    "favorable_early_stopping"
+  ],
+  "stopping_rule": "finish the fixed hidden set and retain unfavorable outputs",
+  "decision_rule": "report uncertainty and Pareto tradeoffs; retain the simplest non-dominated arm with no presumption that more agents win",
+  "protected_data_rule": "no raw task transcript, private route, or hidden answer enters repository artifacts",
+  "prohibited_inference": "protocol and calibration are not agent performance, multi-agent superiority, AGI, ASI, or consciousness evidence",
+  "source_ids": [
+    "V4-S17",
+    "V4-S18",
+    "V4-S19"
+  ]
+}

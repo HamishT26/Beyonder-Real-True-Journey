@@ -67,6 +67,20 @@ def build_report(phase: Path) -> str:
     authority = load_optional(phase / "cbr" / "authority-veto-matrix.json")
     adversarial = load_optional(phase / "security" / "adversarial-fixtures.json")
     expiry = load_optional(phase / "stage20" / "expiry-contradiction-drill.json")
+    claim_matrix = load_optional(phase / "provenance" / "claim-source-matrix.json")
+    freshness = load_optional(phase / "provenance" / "freshness-lineage-audit.json")
+    equation_lineage = load_optional(phase / "physics" / "equation-test-lineage.json")
+    category_mutations = load_optional(phase / "physics" / "category-barrier-mutations.json")
+    metamorphic = load_optional(phase / "physics" / "metamorphic-scale-audit.json")
+    baseline_smoke = load_optional(phase / "empirical" / "baseline-smoke-manifest.json")
+    inference_leak = load_optional(phase / "empirical" / "inference-leak-audit.json")
+    allocation = load_optional(phase / "thos" / "allocation-missingness-audit.json")
+    paired_analysis = load_optional(phase / "thos" / "synthetic-paired-analysis.json")
+    transition_report = load_optional(phase / "freed-id" / "transition-report.json")
+    authority_report = load_optional(phase / "cbr" / "authority-report.json")
+    tool_integrity = load_optional(phase / "security" / "tool-integrity-manifest.json")
+    claim_lineage = load_optional(phase / "stage20" / "claim-lineage.json")
+    promotion_drill = load_optional(phase / "stage20" / "promotion-monotonicity-drill.json")
 
     refresh_section = ""
     if all(
@@ -91,6 +105,44 @@ def build_report(phase: Path) -> str:
     <h2 id="refresh-title">2A. Evidence refresh extensions</h2>
     <p>The dependency audit retains {len(dedup['version_corrections'])} current-version corrections without turning them into extra independent votes. The variational trace rejected {len(trace['negative_fixtures'])} wrong-rank, wrong-unit, missing-null, or category-collapse fixtures. The stability envelope exercised {sensitivity['case_count']} boundary cases.</p>
     <p>THOS kept all live arms pending while testing {power['fixture_count']} power, contamination, harness, and handoff-loss rules. Freed ID keeps {open_assurance_layers} assurance layers open or exact-gated. The CBR veto matrix exercised {authority['fixture_count']} authority cases, the ephemeral public-artifact scanner matched {adversarial['fixture_count']} categories without retaining raw fixtures, and Stage 20 matched {len(expiry['fixtures'])} expiry or contradiction transitions.</p>
+  </section>
+"""
+
+    lineage_section = ""
+    if all(
+        item is not None
+        for item in (
+            claim_matrix,
+            freshness,
+            equation_lineage,
+            category_mutations,
+            metamorphic,
+            baseline_smoke,
+            inference_leak,
+            allocation,
+            paired_analysis,
+            transition_report,
+            authority_report,
+            tool_integrity,
+            claim_lineage,
+            promotion_drill,
+        )
+    ):
+        lineage_section = f"""
+  <section aria-labelledby="lineage-title">
+    <h2 id="lineage-title">2B. Evidence lineage extensions</h2>
+    <p>The claim-source matrix resolves {claim_matrix['claim_count']} preregistered claims against {claim_matrix['source_count']} primary or official records. The freshness audit retains {len(freshness['current_version_corrections'])} version or release distinctions without turning them into independent votes.</p>
+    <div class="table-wrap"><table><caption>v4 bounded evidence-lineage checks</caption><thead><tr><th>Lane</th><th>Executed check</th><th>Bounded result</th></tr></thead><tbody>
+      <tr><th scope="row">Canonical GMUT</th><td>{category_mutations['fixture_count']} manuscript mutations and {equation_lineage['claim_count']} trace rows</td><td>Local formal accountability only</td></tr>
+      <tr><th scope="row">Conservation and stability</th><td>{metamorphic['case_count']} metamorphic and unhealthy cases</td><td>Toy-kernel rejection behavior only</td></tr>
+      <tr><th scope="row">Empirical readiness</th><td>{baseline_smoke['row_count']} zero-download smoke rows and {inference_leak['fixture_count']} inference-leak fixtures</td><td>Open: no baseline or likelihood run</td></tr>
+      <tr><th scope="row">THOS</th><td>{allocation['task_slot_count']} calibration slots and {allocation['fixture_count']} missingness fixtures</td><td>Represented: {allocation['live_arm_output_count']} live outputs</td></tr>
+      <tr><th scope="row">Freed ID</th><td>{transition_report['vector_count']} assurance-transition vectors</td><td>Highest local state: {esc(transition_report['highest_local_state'])}</td></tr>
+      <tr><th scope="row">CBR and Māori authority</th><td>{authority_report['case_count']} consent and authority cases</td><td>Exact gate retained</td></tr>
+      <tr><th scope="row">Security</th><td>{tool_integrity['selected_tool_count']} selected-tool path and hash receipts</td><td>Local integrity, not certification</td></tr>
+      <tr><th scope="row">Stage 20</th><td>{promotion_drill['fixture_count']} promotion mutations with negative evidence retained</td><td>Local governance rehearsal</td></tr>
+    </tbody></table></div>
+    <p class="note">The synthetic paired THOS analysis contains {paired_analysis['row_count']} fabricated calibration rows and declares no winner. Claim lineage retains negative evidence for {claim_lineage['claim_count']} Stage 20 claims.</p>
   </section>
 """
 
@@ -215,6 +267,7 @@ def build_report(phase: Path) -> str:
   </section>
 
 {refresh_section}
+{lineage_section}
 
   <section aria-labelledby="mind-title">
     <h2 id="mind-title">3. Mind: formal rejection tools, not empirical confirmation</h2>

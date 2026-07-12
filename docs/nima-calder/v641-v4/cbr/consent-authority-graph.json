@@ -1,0 +1,238 @@
+{
+  "schema": "ghc.family.cbr-consent-authority-graph.v1",
+  "nodes": [
+    {
+      "node": "model_clause",
+      "kind": "represented_design"
+    },
+    {
+      "node": "duty_bearer",
+      "kind": "must_be_legitimate"
+    },
+    {
+      "node": "affected_parties",
+      "kind": "authority_and_participation"
+    },
+    {
+      "node": "maori_authority",
+      "kind": "non_transferable_external_authority"
+    },
+    {
+      "node": "consent",
+      "kind": "purpose_limited_revocable_expiring"
+    },
+    {
+      "node": "law",
+      "kind": "jurisdiction_specific_external_authority"
+    },
+    {
+      "node": "remedy",
+      "kind": "required_process"
+    }
+  ],
+  "edges": [
+    {
+      "from": "model_clause",
+      "to": "duty_bearer",
+      "relation": "cannot_assign_legitimacy"
+    },
+    {
+      "from": "model_clause",
+      "to": "affected_parties",
+      "relation": "requires_participation"
+    },
+    {
+      "from": "model_clause",
+      "to": "maori_authority",
+      "relation": "must_route_not_substitute"
+    },
+    {
+      "from": "consent",
+      "to": "affected_parties",
+      "relation": "cannot_transfer_or_outlive_scope"
+    },
+    {
+      "from": "law",
+      "to": "model_clause",
+      "relation": "constrains_not_created_by_model"
+    },
+    {
+      "from": "remedy",
+      "to": "affected_parties",
+      "relation": "must_be_accessible"
+    }
+  ],
+  "case_count": 8,
+  "cases": [
+    {
+      "case_id": "CBR-AUTH-01",
+      "case": "complete_model_clause_no_legitimate_authority",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "authority_missing"
+      ],
+      "expected_decision": "hold_exact_gate",
+      "actual_decision": "hold_exact_gate",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-02",
+      "case": "consent_without_expiry_or_revocation",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "consent_not_time_bounded",
+        "revocation_missing"
+      ],
+      "expected_decision": "reject",
+      "actual_decision": "reject",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-03",
+      "case": "consent_transferred_by_citation",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "authority_non_transfer"
+      ],
+      "expected_decision": "reject",
+      "actual_decision": "reject",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-04",
+      "case": "emergency_without_independent_review",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "review_missing",
+        "remedy_missing"
+      ],
+      "expected_decision": "reject",
+      "actual_decision": "reject",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-05",
+      "case": "indirect_collection_without_notice",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "ipp3a_notice_missing"
+      ],
+      "expected_decision": "reject",
+      "actual_decision": "reject",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-06",
+      "case": "maori_data_without_maori_governance",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "maori_authority_missing"
+      ],
+      "expected_decision": "hold_exact_gate",
+      "actual_decision": "hold_exact_gate",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-07",
+      "case": "affected_community_not_participating",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [
+        "affected_authority_missing"
+      ],
+      "expected_decision": "hold_exact_gate",
+      "actual_decision": "hold_exact_gate",
+      "matched": true
+    },
+    {
+      "case_id": "CBR-AUTH-08",
+      "case": "rights_preserving_model_clause",
+      "duty_bearer": "declared_model_role",
+      "affected_parties": "explicit_or_missing_as_fixture",
+      "evidence": "synthetic_model_charter_fixture",
+      "notice": "fixture_specific",
+      "reasons": "fixture_specific",
+      "appeal": "required",
+      "remedy": "required",
+      "consent_scope": "purpose_specific_non_transferable",
+      "expiry": "required",
+      "revocation": "required",
+      "authority_boundary": "external_legitimate_authority_required",
+      "issues": [],
+      "expected_decision": "represented_not_enacted",
+      "actual_decision": "represented_not_enacted",
+      "matched": true
+    }
+  ],
+  "all_matched": true,
+  "disposition": "exact_gate"
+}

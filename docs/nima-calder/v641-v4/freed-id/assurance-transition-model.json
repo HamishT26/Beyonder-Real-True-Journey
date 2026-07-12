@@ -1,0 +1,116 @@
+{
+  "schema": "ghc.family.freed-id-assurance-transition-model.v1",
+  "stable_pins": [
+    "VC Data Model 2.0",
+    "DID Core 1.0",
+    "Data Integrity 1.0"
+  ],
+  "watch_items": [
+    "VC Data Model 2.1",
+    "DID 1.1",
+    "Data Integrity 1.1"
+  ],
+  "states": [
+    {
+      "state": "unparsed",
+      "evidence_state": "local_input"
+    },
+    {
+      "state": "structurally_valid",
+      "evidence_state": "completed_local"
+    },
+    {
+      "state": "proof_shaped",
+      "evidence_state": "completed_local_shape_only"
+    },
+    {
+      "state": "proof_verified",
+      "evidence_state": "open_gap_cryptographic_verification"
+    },
+    {
+      "state": "did_resolved",
+      "evidence_state": "open_gap_resolution"
+    },
+    {
+      "state": "status_current",
+      "evidence_state": "open_gap_live_status_retrieval"
+    },
+    {
+      "state": "issuer_trusted",
+      "evidence_state": "exact_gate_trust_policy"
+    },
+    {
+      "state": "interoperable",
+      "evidence_state": "open_gap_external_implementations"
+    },
+    {
+      "state": "deployed",
+      "evidence_state": "exact_gate_deployment"
+    },
+    {
+      "state": "legal_status_assessed",
+      "evidence_state": "exact_gate_legal_authority"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "unparsed",
+      "to": "structurally_valid",
+      "required_receipt": "schema_and_context_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "structurally_valid",
+      "to": "proof_shaped",
+      "required_receipt": "proof_shape_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "proof_shaped",
+      "to": "proof_verified",
+      "required_receipt": "cryptographic_verification_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "proof_verified",
+      "to": "did_resolved",
+      "required_receipt": "did_resolution_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "did_resolved",
+      "to": "status_current",
+      "required_receipt": "fresh_status_retrieval_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "status_current",
+      "to": "issuer_trusted",
+      "required_receipt": "legitimate_trust_policy_decision",
+      "skip_allowed": false
+    },
+    {
+      "from": "issuer_trusted",
+      "to": "interoperable",
+      "required_receipt": "external_interoperability_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "interoperable",
+      "to": "deployed",
+      "required_receipt": "deployment_authority_receipt",
+      "skip_allowed": false
+    },
+    {
+      "from": "deployed",
+      "to": "legal_status_assessed",
+      "required_receipt": "competent_legal_authority_receipt",
+      "skip_allowed": false
+    }
+  ],
+  "highest_local_state": "proof_shaped",
+  "cryptographic_verification_performed": false,
+  "deployment_performed": false,
+  "legal_status_decided": false,
+  "passed": true
+}

@@ -1,0 +1,141 @@
+{
+  "schema": "ghc.family.metamorphic-scale-audit.v1",
+  "case_count": 13,
+  "cases": [
+    {
+      "case_id": "META-Z-01",
+      "transformation": "positive_kinetic_unit_scale_1e-12",
+      "expected_valid": true,
+      "actual_valid": true,
+      "issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "META-Z-02",
+      "transformation": "positive_kinetic_unit_scale_1",
+      "expected_valid": true,
+      "actual_valid": true,
+      "issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "META-Z-03",
+      "transformation": "positive_kinetic_unit_scale_1e+12",
+      "expected_valid": true,
+      "actual_valid": true,
+      "issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "META-Q-04",
+      "transformation": "paired_exchange_scale_1e-09",
+      "expected_valid": true,
+      "actual_valid": true,
+      "residual": 0.0,
+      "issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "META-Q-05",
+      "transformation": "paired_exchange_scale_1",
+      "expected_valid": true,
+      "actual_valid": true,
+      "residual": 0.0,
+      "issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "META-Q-06",
+      "transformation": "paired_exchange_scale_1e+09",
+      "expected_valid": true,
+      "actual_valid": true,
+      "residual": 0.0,
+      "issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-07",
+      "transformation": "ghost_sign_flip",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "non_positive_kinetic_normalization"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-08",
+      "transformation": "zero_gradient",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "non_positive_sound_speed_squared"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-09",
+      "transformation": "superluminal_proxy",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "superluminal_effective_sound_speed_requires_model_specific_review"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-10",
+      "transformation": "at_cutoff",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-11",
+      "transformation": "above_cutoff",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-12",
+      "transformation": "negative_scale",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "META-BAD-13",
+      "transformation": "nonfinite",
+      "expected_valid": false,
+      "actual_valid": false,
+      "issues": [
+        "kinetic_normalization must be finite"
+      ],
+      "matched": true
+    }
+  ],
+  "convergence": {
+    "schema": "ghc.family.gmut-rk4-convergence.v1",
+    "horizon": 0.5,
+    "coarse_steps": 10,
+    "coarse_to_medium_error": 1.13957020571021e-07,
+    "medium_to_fine_error": 6.931388566704424e-09,
+    "observed_order": 4.039201600740262,
+    "convergent": true,
+    "boundary": "endpoint_self_convergence_not_accuracy_against_empirical_data"
+  },
+  "all_matched": true,
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "dimensionless metamorphic and toy-kernel checks are not a full perturbation analysis, causal proof, cosmological fit, or new law of nature"
+}

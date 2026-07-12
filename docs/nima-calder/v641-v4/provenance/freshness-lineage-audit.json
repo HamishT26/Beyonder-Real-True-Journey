@@ -1,0 +1,115 @@
+{
+  "schema": "ghc.family.freshness-lineage-audit.v1",
+  "source_count": 35,
+  "stable_or_approved_ids": [
+    "V4-S01",
+    "V4-S11",
+    "V4-S12",
+    "V4-S14",
+    "V4-S15",
+    "V4-S31",
+    "V4-S33"
+  ],
+  "watch_item_ids": [
+    "V4-S13",
+    "V4-S16",
+    "V4-S34"
+  ],
+  "access_limited_ids": [
+    "V4-S03",
+    "V4-S08",
+    "V4-S09",
+    "V4-S20",
+    "V4-S21",
+    "V4-S24"
+  ],
+  "current_version_corrections": [
+    {
+      "finding_id": "V4-FRESH-01",
+      "source_id": "V4-S33",
+      "prior_record": "WCAG 2.2 publication date recorded as 5 October 2023",
+      "current_record": "W3C Recommendation, 12 December 2024",
+      "relation": "same_standard_later_recommendation_publication",
+      "adds_independent_vote": false
+    },
+    {
+      "finding_id": "V4-FRESH-02",
+      "source_id": "V4-S05",
+      "prior_record": "DESI DR2 label could be read as a public spectroscopy release",
+      "current_record": "DR1 public spectroscopy released 19 March 2025; DR2 cosmology supporting products listed, checked 13 July 2026",
+      "relation": "release_type_disambiguation",
+      "adds_independent_vote": false
+    },
+    {
+      "finding_id": "V4-FRESH-03",
+      "source_id": "V4-S02",
+      "prior_record": "DataCite 4.7 first corrected in v3",
+      "current_record": "4.7, released 3 March 2026",
+      "relation": "current_version_reconfirmed",
+      "adds_independent_vote": false
+    },
+    {
+      "finding_id": "V4-FRESH-04",
+      "source_id": "V4-S10",
+      "prior_record": "PDG 2026 first corrected in v3",
+      "current_record": "F. Takahashi et al., Int. J. Mod. Phys. A 41, 2630011 (2026)",
+      "relation": "current_version_reconfirmed",
+      "adds_independent_vote": false
+    }
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "V4-FRESH-FX-01",
+      "case": "silent_draft_promotion",
+      "expected": "reject",
+      "actual": "reject",
+      "reason": "draft_cannot_replace_stable_pin",
+      "matched": true
+    },
+    {
+      "fixture_id": "V4-FRESH-FX-02",
+      "case": "duplicate_root_as_two_votes",
+      "expected": "reject",
+      "actual": "reject",
+      "reason": "authority_root_dependence",
+      "matched": true
+    },
+    {
+      "fixture_id": "V4-FRESH-FX-03",
+      "case": "expired_unchecked_record",
+      "expected": "hold",
+      "actual": "hold",
+      "reason": "fresh_review_required",
+      "matched": true
+    },
+    {
+      "fixture_id": "V4-FRESH-FX-04",
+      "case": "missing_source_reference",
+      "expected": "reject",
+      "actual": "reject",
+      "reason": "referential_integrity",
+      "matched": true
+    },
+    {
+      "fixture_id": "V4-FRESH-FX-05",
+      "case": "access_limited_record_as_fully_reviewed",
+      "expected": "reject",
+      "actual": "reject",
+      "reason": "access_receipt_boundary",
+      "matched": true
+    },
+    {
+      "fixture_id": "V4-FRESH-FX-06",
+      "case": "version_correction_as_new_vote",
+      "expected": "reject",
+      "actual": "reject",
+      "reason": "version_relation_not_independence",
+      "matched": true
+    }
+  ],
+  "fixture_count": 6,
+  "all_matched": true,
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "freshness, access, and succession metadata do not establish endorsement or source independence"
+}

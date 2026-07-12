@@ -1,0 +1,206 @@
+{
+  "schema": "ghc.family.thos-allocation-missingness-audit.v1",
+  "allocation_seed_sha256": "96a3d5aa74bbb54706f18d41db0ca4388de77736cea2886fda0b0f1da3ec58da",
+  "allocation_rule": "deterministic balanced rotation fixed before outcomes",
+  "task_slot_count": 12,
+  "arm_count": 3,
+  "slots": [
+    {
+      "task_slot": "THOS-CAL-01",
+      "arm_order": [
+        "single_agent",
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-02",
+      "arm_order": [
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain",
+        "single_agent"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-03",
+      "arm_order": [
+        "sequential_new_sibling_chain",
+        "single_agent",
+        "historical_four_sibling_replay"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-04",
+      "arm_order": [
+        "single_agent",
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-05",
+      "arm_order": [
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain",
+        "single_agent"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-06",
+      "arm_order": [
+        "sequential_new_sibling_chain",
+        "single_agent",
+        "historical_four_sibling_replay"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-07",
+      "arm_order": [
+        "single_agent",
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-08",
+      "arm_order": [
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain",
+        "single_agent"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-09",
+      "arm_order": [
+        "sequential_new_sibling_chain",
+        "single_agent",
+        "historical_four_sibling_replay"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-10",
+      "arm_order": [
+        "single_agent",
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-11",
+      "arm_order": [
+        "historical_four_sibling_replay",
+        "sequential_new_sibling_chain",
+        "single_agent"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    },
+    {
+      "task_slot": "THOS-CAL-12",
+      "arm_order": [
+        "sequential_new_sibling_chain",
+        "single_agent",
+        "historical_four_sibling_replay"
+      ],
+      "outcomes_present": false,
+      "hidden_task_present": false,
+      "calibration_only": true
+    }
+  ],
+  "fixture_count": 8,
+  "fixtures": [
+    {
+      "fixture_id": "THOS-MISS-01",
+      "case": "missing_result",
+      "expected_action": "retain_denominator_and_report_missingness",
+      "actual_action": "retain_denominator_and_report_missingness",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-02",
+      "case": "valid_refusal",
+      "expected_action": "score_separately_under_frozen_rubric",
+      "actual_action": "score_separately_under_frozen_rubric",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-03",
+      "case": "broken_problem",
+      "expected_action": "exclude_with_documented_blind_reason",
+      "actual_action": "exclude_with_documented_blind_reason",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-04",
+      "case": "contaminated_task",
+      "expected_action": "invalidate_and_refreeze_task",
+      "actual_action": "invalidate_and_refreeze_task",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-05",
+      "case": "reward_hacked_success",
+      "expected_action": "disqualify_success_and_retain_cost",
+      "actual_action": "disqualify_success_and_retain_cost",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-06",
+      "case": "handoff_loss",
+      "expected_action": "count_failure_handoff_loss_and_resource_cost",
+      "actual_action": "count_failure_handoff_loss_and_resource_cost",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-07",
+      "case": "harness_drift",
+      "expected_action": "invalidate_comparison_batch",
+      "actual_action": "invalidate_comparison_batch",
+      "matched": true
+    },
+    {
+      "fixture_id": "THOS-MISS-08",
+      "case": "favourable_early_stop",
+      "expected_action": "invalidate_stopping_rule",
+      "actual_action": "invalidate_stopping_rule",
+      "matched": true
+    }
+  ],
+  "all_budgets_matched": true,
+  "all_fixtures_matched": true,
+  "live_arm_output_count": 0,
+  "outcome_blind": true,
+  "disposition": "represented",
+  "boundary": "allocation and missingness calibration are not agent or model performance"
+}
