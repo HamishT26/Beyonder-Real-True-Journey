@@ -820,15 +820,21 @@ def build_tool_integrity_manifest(repo: Path) -> dict[str, Any]:
             within_repo = True
         except ValueError:
             within_repo = False
-        tracked = (
-            subprocess.run(
-                ["git", "-C", str(repo), "ls-files", "--error-unmatch", relative],
-                capture_output=True,
-                text=True,
-                check=False,
-            ).returncode
-            == 0
+        tracked = subprocess.run(
+            ["git", "-C", str(repo), "ls-files", "--error-unmatch", relative],
+            capture_output=True,
+            check=False,
+        ).returncode == 0
+        index_blob = subprocess.run(
+            ["git", "-C", str(repo), "show", f":{relative}"],
+            capture_output=True,
+            check=False,
         )
+        worktree_matches_index = subprocess.run(
+            ["git", "-C", str(repo), "diff", "--quiet", "--", relative],
+            capture_output=True,
+            check=False,
+        ).returncode == 0
         row = {
             "path": relative,
             "exists": path.is_file(),
@@ -836,7 +842,11 @@ def build_tool_integrity_manifest(repo: Path) -> dict[str, Any]:
             "symlink": path.is_symlink(),
             "within_owned_repository": within_repo,
             "git_tracked_or_staged": tracked,
-            "sha256": sha256_file(path) if path.is_file() else None,
+            "worktree_matches_index": worktree_matches_index,
+            "sha256": hashlib.sha256(index_blob.stdout).hexdigest()
+            if index_blob.returncode == 0
+            else None,
+            "hash_input": "canonical_git_index_blob",
         }
         row["passed"] = all(
             (
@@ -845,6 +855,7 @@ def build_tool_integrity_manifest(repo: Path) -> dict[str, Any]:
                 not row["symlink"],
                 row["within_owned_repository"],
                 row["git_tracked_or_staged"],
+                row["worktree_matches_index"],
                 bool(row["sha256"]),
             )
         )
@@ -854,10 +865,10 @@ def build_tool_integrity_manifest(repo: Path) -> dict[str, Any]:
         "selected_tool_count": len(rows),
         "tools": rows,
         "all_passed": all(row["passed"] for row in rows),
-        "hash_algorithm": "sha256",
+        "hash_algorithm": "sha256_over_canonical_git_index_blob",
         "absolute_paths_published": False,
         "disposition": "completed" if all(row["passed"] for row in rows) else "open_gap",
-        "boundary": "tracked path and content hashes are local integrity evidence, not signed provenance, SLSA certification, or exhaustive supply-chain assurance",
+        "boundary": "canonical Git index hashes avoid checkout line-ending drift; they remain local integrity evidence, not signed provenance, SLSA certification, or exhaustive supply-chain assurance",
     }
 
 
@@ -1030,6 +1041,16 @@ def build_reproduction(
         "privacy_scan_zero_hits": clean_snapshot_verified,
         "evidence_commit": evidence_commit,
         "status": "verified" if verified and clean_snapshot_verified else "pending",
+        "retained_negative_results": [
+            {
+                "negative_id": "REPRO-V4-N01",
+                "evidence_revision": "daef2f739e16af52586ac20469f6fd73fed0b2ba",
+                "observed": "working-tree byte hashes changed across a clean checkout because Git line-ending normalization differed",
+                "effect": "tool-integrity rebuild test failed while the remaining tests, phase validator, and privacy scan passed",
+                "recovery": "hash canonical Git index blobs and require the working tree to match the index",
+                "retained": True,
+            }
+        ],
         "boundary": "environment perturbation is bounded portability evidence, not platform exhaustiveness or independent reproduction",
     }
     report = {
