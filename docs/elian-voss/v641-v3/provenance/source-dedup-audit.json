@@ -1,0 +1,100 @@
+{
+  "schema": "ghc.family.source-dedup-audit.v1",
+  "source_count": 33,
+  "authority_root_count": 21,
+  "duplicate_canonical_url_groups": [],
+  "duplicate_normalized_title_groups": [],
+  "repeated_authority_roots": [
+    {
+      "authority_root": "desi",
+      "source_ids": [
+        "V3-S05",
+        "V3-S06"
+      ],
+      "count": 2
+    },
+    {
+      "authority_root": "nist",
+      "source_ids": [
+        "V3-S17",
+        "V3-S18",
+        "V3-S29"
+      ],
+      "count": 3
+    },
+    {
+      "authority_root": "owasp",
+      "source_ids": [
+        "V3-S30",
+        "V3-S31"
+      ],
+      "count": 2
+    },
+    {
+      "authority_root": "united_nations",
+      "source_ids": [
+        "V3-S20",
+        "V3-S21"
+      ],
+      "count": 2
+    },
+    {
+      "authority_root": "w3c",
+      "source_ids": [
+        "V3-S01",
+        "V3-S11",
+        "V3-S12",
+        "V3-S13",
+        "V3-S14",
+        "V3-S15",
+        "V3-S16",
+        "V3-S33"
+      ],
+      "count": 8
+    }
+  ],
+  "version_corrections": [
+    {
+      "correction_id": "DATACITE-4.7",
+      "current_source_id": "V3-S02",
+      "superseded_assertion": "DataCite 4.6 was current in v2",
+      "current_assertion": "DataCite 4.7 released 3 March 2026 is current",
+      "adds_independent_vote": false
+    },
+    {
+      "correction_id": "PDG-2026",
+      "current_source_id": "V3-S10",
+      "superseded_assertion": "PDG 2025 update was current in v2",
+      "current_assertion": "Review of Particle Physics 2026 is current",
+      "adds_independent_vote": false
+    }
+  ],
+  "false_merge_fixtures": [
+    {
+      "fixture_id": "DEDUP-F01",
+      "left": "V3-S11",
+      "right": "V3-S14",
+      "same_authority_root": true,
+      "same_canonical_url": false,
+      "same_normalized_title": false,
+      "expected_relation": "dependent_root_distinct_standard",
+      "actual_relation": "dependent_root_distinct_standard",
+      "matched": true
+    },
+    {
+      "fixture_id": "DEDUP-F02",
+      "left": "V3-S05",
+      "right": "V3-S06",
+      "same_authority_root": true,
+      "same_canonical_url": false,
+      "same_normalized_title": false,
+      "expected_relation": "dependent_root_distinct_official_page",
+      "actual_relation": "dependent_root_distinct_official_page",
+      "matched": true
+    }
+  ],
+  "deterministic_order": true,
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "canonicalization and grouping expose declared dependence; they do not prove that distinct roots are statistically or epistemically independent"
+}

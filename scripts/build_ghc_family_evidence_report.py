@@ -32,6 +32,10 @@ def load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_optional(path: Path) -> Any | None:
+    return load(path) if path.exists() else None
+
+
 def join_items(values: list[Any]) -> str:
     return "; ".join(esc(value) for value in values)
 
@@ -51,6 +55,44 @@ def build_report(phase: Path) -> str:
     security = load(phase / "security" / "red-team.json")
     board = load(phase / "stage20" / "evidence-board.json")
     reproduction = load(phase / "reproduction" / "reproduction-report.json")
+    dedup = load_optional(phase / "provenance" / "source-dedup-audit.json")
+    trace = load_optional(phase / "physics" / "variational-trace-audit.json")
+    sensitivity = load_optional(
+        phase / "physics" / "conservation-sensitivity-envelope.json"
+    )
+    power = load_optional(phase / "thos" / "power-contamination-audit.json")
+    assurance = load_optional(
+        phase / "freed-id" / "cryptographic-assurance-boundary.json"
+    )
+    authority = load_optional(phase / "cbr" / "authority-veto-matrix.json")
+    adversarial = load_optional(phase / "security" / "adversarial-fixtures.json")
+    expiry = load_optional(phase / "stage20" / "expiry-contradiction-drill.json")
+
+    refresh_section = ""
+    if all(
+        item is not None
+        for item in (
+            dedup,
+            trace,
+            sensitivity,
+            power,
+            assurance,
+            authority,
+            adversarial,
+            expiry,
+        )
+    ):
+        open_assurance_layers = sum(
+            row["state"].startswith(("open_gap", "exact_gate"))
+            for row in assurance["layers"]
+        )
+        refresh_section = f"""
+  <section aria-labelledby="refresh-title">
+    <h2 id="refresh-title">2A. Evidence refresh extensions</h2>
+    <p>The dependency audit retains {len(dedup['version_corrections'])} current-version corrections without turning them into extra independent votes. The variational trace rejected {len(trace['negative_fixtures'])} wrong-rank, wrong-unit, missing-null, or category-collapse fixtures. The stability envelope exercised {sensitivity['case_count']} boundary cases.</p>
+    <p>THOS kept all live arms pending while testing {power['fixture_count']} power, contamination, harness, and handoff-loss rules. Freed ID keeps {open_assurance_layers} assurance layers open or exact-gated. The CBR veto matrix exercised {authority['fixture_count']} authority cases, the ephemeral public-artifact scanner matched {adversarial['fixture_count']} categories without retaining raw fixtures, and Stage 20 matched {len(expiry['fixtures'])} expiry or contradiction transitions.</p>
+  </section>
+"""
 
     outcome_rows = "".join(
         "<tr>"
@@ -154,10 +196,10 @@ def build_report(phase: Path) -> str:
 <a class="skip" href="#main-content">Skip to main evidence</a>
 <main id="main-content">
   <header>
-    <div class="kicker">GHC Family · {esc(x1['owner'])} · v641-v2 · 12 July 2026</div>
+    <div class="kicker">GHC Family · {esc(x1['owner'])} · {esc(x1['phase'])} · {esc(x1.get('preregistered_on', 'undated'))}</div>
     <h1>Ten proposals tested; evidence classes kept separate</h1>
     <p class="lede">This report exposes the local result and the missing external evidence side by side. It is generated from portable JSON artifacts, requires no JavaScript, and does not rely on colour alone.</p>
-    <div class="boundary"><strong>Claim boundary.</strong> v2 does not establish empirical GMUT confirmation, a Theory of Everything, AGI or ASI, AI consciousness or personhood, a deployed Freed ID system, enacted or culturally ratified CBR, exhaustive security, or independent reproduction.</div>
+    <div class="boundary"><strong>Claim boundary.</strong> This phase does not establish empirical GMUT confirmation, a Theory of Everything, AGI or ASI, AI consciousness or personhood, a deployed Freed ID system, enacted or culturally ratified CBR, exhaustive security, or independent reproduction.</div>
   </header>
 
   <section aria-labelledby="outcomes-title">
@@ -171,6 +213,8 @@ def build_report(phase: Path) -> str:
     <p>The source ledger has <strong>{graph['source_count']}</strong> records but only <strong>{graph['authority_root_count']}</strong> declared authority roots. It includes {graph['repeated_authority_root_count']} repeated roots and {graph['duplicate_url_group_count']} duplicate-URL group. Repetition from W3C, NIST, the United Nations, Planck, PDG, OWASP, or another root is not counted as independent support.</p>
     <p class="note">Distinct roots are still not automatically independent. The graph detects declared dependence; it cannot prove statistical or epistemic independence.</p>
   </section>
+
+{refresh_section}
 
   <section aria-labelledby="mind-title">
     <h2 id="mind-title">3. Mind: formal rejection tools, not empirical confirmation</h2>
@@ -216,7 +260,7 @@ def build_report(phase: Path) -> str:
   <section aria-labelledby="sources-title">
     <h2 id="sources-title">9. Primary and official sources</h2>
     <ol class="sources">{source_items}</ol>
-    <p>These sources constrain or inform v2. None endorses GHC, GMUT, THOS, Freed ID, CBR, or the working identity Sable Rook.</p>
+    <p>These sources constrain or inform {esc(x1['phase'])}. None endorses GHC, GMUT, THOS, Freed ID, CBR, or the relational working identity {esc(x1['owner'])}.</p>
   </section>
 
   <footer>Generated by <code>scripts/build_ghc_family_evidence_report.py</code> from repository-relative JSON. Source count: {sources['source_count']}; proposal count: {ledger['proposal_count']}.</footer>

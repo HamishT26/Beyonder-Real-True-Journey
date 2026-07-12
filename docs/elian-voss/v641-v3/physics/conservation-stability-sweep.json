@@ -1,0 +1,110 @@
+{
+  "schema": "ghc.family.conservation-stability-sweep.v1",
+  "stability_cases": [
+    {
+      "valid": true,
+      "kinetic_normalization": 1.0,
+      "sound_speed_squared": 1.0,
+      "energy_to_cutoff_ratio": 0.2,
+      "issues": [],
+      "case_id": "healthy_canonical",
+      "expected_valid": true,
+      "expected_issues": [],
+      "matched": true
+    },
+    {
+      "valid": false,
+      "kinetic_normalization": -1.0,
+      "sound_speed_squared": 1.0,
+      "energy_to_cutoff_ratio": 0.2,
+      "issues": [
+        "non_positive_kinetic_normalization"
+      ],
+      "case_id": "ghost_proxy",
+      "expected_valid": false,
+      "expected_issues": [
+        "non_positive_kinetic_normalization"
+      ],
+      "matched": true
+    },
+    {
+      "valid": false,
+      "kinetic_normalization": 1.0,
+      "sound_speed_squared": -0.1,
+      "energy_to_cutoff_ratio": 0.2,
+      "issues": [
+        "non_positive_sound_speed_squared"
+      ],
+      "case_id": "gradient_instability_proxy",
+      "expected_valid": false,
+      "expected_issues": [
+        "non_positive_sound_speed_squared"
+      ],
+      "matched": true
+    },
+    {
+      "valid": false,
+      "kinetic_normalization": 1.0,
+      "sound_speed_squared": 1.2,
+      "energy_to_cutoff_ratio": 0.2,
+      "issues": [
+        "superluminal_effective_sound_speed_requires_model_specific_review"
+      ],
+      "case_id": "superluminal_proxy_requires_review",
+      "expected_valid": false,
+      "expected_issues": [
+        "superluminal_effective_sound_speed_requires_model_specific_review"
+      ],
+      "matched": true
+    },
+    {
+      "valid": false,
+      "kinetic_normalization": 1.0,
+      "sound_speed_squared": 0.8,
+      "energy_to_cutoff_ratio": 1.0,
+      "issues": [
+        "outside_declared_eft_regime"
+      ],
+      "case_id": "outside_cutoff",
+      "expected_valid": false,
+      "expected_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    }
+  ],
+  "conservation_checks": {
+    "exchange_residual": 0.0,
+    "continuity_residual": 0.0,
+    "tolerance": 1e-15
+  },
+  "simulation": {
+    "sample_count": 26,
+    "finite": true,
+    "max_abs_friedmann_residual": 2.220446049250313e-16,
+    "endpoint": {
+      "time": 0.5,
+      "phi": 0.2987979390231117,
+      "phi_dot": -0.004374360342960589,
+      "rho_matter": 0.3955923287397876,
+      "rho_phi": 0.10179517168149421,
+      "pressure_phi": -0.10177603665308416,
+      "w_phi": -0.9998120242041545,
+      "hubble": 0.4071803451466692,
+      "friedmann_residual": 1.1102230246251565e-16
+    }
+  },
+  "convergence": {
+    "schema": "ghc.family.gmut-rk4-convergence.v1",
+    "horizon": 0.5,
+    "coarse_steps": 10,
+    "coarse_to_medium_error": 1.13957020571021e-07,
+    "medium_to_fine_error": 6.931388566704424e-09,
+    "observed_order": 4.039201600740262,
+    "convergent": true,
+    "boundary": "endpoint_self_convergence_not_accuracy_against_empirical_data"
+  },
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "bounded homogeneous toy-kernel rejection sweep; not a full perturbation proof, cosmological fit, new-law detection, or empirical GMUT confirmation"
+}

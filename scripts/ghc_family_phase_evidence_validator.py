@@ -61,6 +61,25 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         "reproduction/reproduction-report.json",
         "x2-proposal-ledger.json",
     ]
+    x1_preview = parsed.get("x1-proposals.json", {})
+    is_v3_refresh = x1_preview.get("phase") == "v641-gmut-thos-v3-x1-x2"
+    if is_v3_refresh:
+        required.extend(
+            [
+                "provenance/source-dedup-audit.json",
+                "physics/variational-trace-audit.json",
+                "physics/conservation-sensitivity-envelope.json",
+                "empirical/baseline-readiness-matrix.json",
+                "thos/power-contamination-audit.json",
+                "freed-id/cryptographic-assurance-boundary.json",
+                "cbr/authority-veto-matrix.json",
+                "security/adversarial-fixtures.json",
+                "stage20/expiry-contradiction-drill.json",
+                "reproduction/hash-parity.json",
+                "environment/version-receipt.json",
+                "tooling/selected-toolchain.json",
+            ]
+        )
     for relative in required:
         if relative not in parsed:
             issue(relative, "required_artifact_missing", "required JSON artifact is absent")
@@ -87,6 +106,8 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         "protected_gates",
         "x1_status",
     }
+    if is_v3_refresh:
+        proposal_fields.add("decision_rule")
     if len(proposals) != 10 or len({row.get("proposal_id") for row in proposals}) != 10:
         issue("x1-proposals.json", "proposal_count_invalid", "expected ten unique proposals")
     for index, proposal in enumerate(proposals):
@@ -117,6 +138,8 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             issue(f"sources/source-ledger.json#sources[{index}]", "authority_root_missing", "")
         if source.get("snapshot_embedded") is not False:
             issue(f"sources/source-ledger.json#sources[{index}]", "snapshot_embedded", "must be false")
+    if is_v3_refresh and len(source_rows) != 33:
+        issue("sources/source-ledger.json", "v3_source_count_invalid", "expected 33 records")
 
     graph = parsed["provenance/source-independence-graph.json"]
     roots = {row["authority_root"] for row in source_rows}
@@ -126,16 +149,43 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         issue("provenance/source-independence-graph.json", "graph_root_count_mismatch", "")
     if graph.get("authority_root_count", 0) >= graph.get("source_count", 0):
         issue("provenance/source-independence-graph.json", "dedup_not_demonstrated", "expected repeated authority roots")
+    if is_v3_refresh:
+        dedup = parsed["provenance/source-dedup-audit.json"]
+        if not dedup.get("passed") or not dedup.get("deterministic_order"):
+            issue("provenance/source-dedup-audit.json", "v3_dedup_audit_failed", "")
+        if len(dedup.get("version_corrections", [])) < 2 or any(
+            row.get("adds_independent_vote") is not False
+            for row in dedup.get("version_corrections", [])
+        ):
+            issue(
+                "provenance/source-dedup-audit.json",
+                "v3_version_correction_invalid",
+                "current-version corrections must not add independent votes",
+            )
 
     canonical = parsed["physics/canonical-gmut-audit.json"]
     if not canonical.get("passed") or canonical.get("disposition") != "completed":
         issue("physics/canonical-gmut-audit.json", "canonical_audit_failed", "")
     if not canonical.get("negative_fixture", {}).get("rejected_as_expected"):
         issue("physics/canonical-gmut-audit.json", "category_collapse_not_rejected", "")
+    if is_v3_refresh:
+        trace = parsed["physics/variational-trace-audit.json"]
+        if not trace.get("passed") or not all(
+            row.get("matched") for row in trace.get("negative_fixtures", [])
+        ):
+            issue("physics/variational-trace-audit.json", "v3_variational_trace_failed", "")
 
     stability = parsed["physics/conservation-stability-sweep.json"]
     if not stability.get("passed") or not all(row.get("matched") for row in stability.get("stability_cases", [])):
         issue("physics/conservation-stability-sweep.json", "stability_sweep_failed", "")
+    if is_v3_refresh:
+        sensitivity = parsed["physics/conservation-sensitivity-envelope.json"]
+        if not sensitivity.get("passed") or sensitivity.get("case_count", 0) < 9:
+            issue(
+                "physics/conservation-sensitivity-envelope.json",
+                "v3_sensitivity_envelope_failed",
+                "",
+            )
 
     empirical = parsed["empirical/adapter-readiness.json"]
     if not empirical.get("validation", {}).get("valid"):
@@ -144,6 +194,19 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         issue("empirical/adapter-readiness.json", "fit_boundary_missing", "")
     if any(row.get("status") == "fit_complete" for row in empirical.get("adapters", [])):
         issue("empirical/adapter-readiness.json", "fit_inflation", "fit_complete is forbidden without exact evidence")
+    if is_v3_refresh:
+        readiness = parsed["empirical/baseline-readiness-matrix.json"]
+        if (
+            readiness.get("row_count", 0) < 7
+            or readiness.get("all_no_download") is not True
+            or readiness.get("all_baselines_pending") is not True
+            or readiness.get("disposition") != "open_gap"
+        ):
+            issue(
+                "empirical/baseline-readiness-matrix.json",
+                "v3_empirical_boundary_failed",
+                "",
+            )
 
     proxy = parsed["thos/synthetic-scorer-proxy.json"]
     if "not_agent_or_model_performance" not in proxy.get("interpretation_boundary", ""):
@@ -151,24 +214,66 @@ def validate_phase(phase: Path) -> dict[str, Any]:
     protocol = parsed["thos/matched-budget-protocol.json"]
     if any(row.get("status") == "complete" for row in protocol.get("arms", [])):
         issue("thos/matched-budget-protocol.json", "blind_arm_false_completion", "")
+    if is_v3_refresh:
+        power = parsed["thos/power-contamination-audit.json"]
+        if (
+            power.get("all_matched") is not True
+            or power.get("blind_arm_count") != 0
+            or power.get("disposition") != "represented"
+        ):
+            issue("thos/power-contamination-audit.json", "v3_thos_boundary_failed", "")
 
     freed = parsed["freed-id/conformance-report.json"]
     if not freed.get("all_matched") or freed.get("vector_count") < 7:
         issue("freed-id/conformance-report.json", "freed_id_conformance_failed", "")
     if any(token not in freed.get("boundary", "") for token in ("no_signature_verification", "no_personhood")):
         issue("freed-id/conformance-report.json", "freed_id_boundary_missing", "")
+    if is_v3_refresh:
+        assurance = parsed["freed-id/cryptographic-assurance-boundary.json"]
+        if not assurance.get("passed") or freed.get("vector_count", 0) < 10:
+            issue(
+                "freed-id/cryptographic-assurance-boundary.json",
+                "v3_freed_id_boundary_failed",
+                "",
+            )
+        if any(
+            row.get("layer") in {"proof_verification", "did_resolution", "deployment"}
+            and row.get("state", "").startswith("completed")
+            for row in assurance.get("layers", [])
+        ):
+            issue(
+                "freed-id/cryptographic-assurance-boundary.json",
+                "v3_crypto_or_deploy_overclaim",
+                "",
+            )
 
     cbr = parsed["cbr/conflict-report.json"]
     if not cbr.get("all_matched") or cbr.get("case_count") < 6:
         issue("cbr/conflict-report.json", "cbr_rehearsal_failed", "")
     if "Māori authority" not in cbr.get("maori_authority_boundary", ""):
         issue("cbr/conflict-report.json", "maori_authority_boundary_missing", "")
+    if is_v3_refresh:
+        authority = parsed["cbr/authority-veto-matrix.json"]
+        if (
+            authority.get("all_matched") is not True
+            or authority.get("disposition") != "exact_gate"
+            or "Māori authority" not in authority.get("maori_authority_boundary", "")
+        ):
+            issue("cbr/authority-veto-matrix.json", "v3_authority_veto_failed", "")
 
     security = parsed["security/red-team.json"]
     if not security.get("all_matched") or security.get("fixture_count") < 7:
         issue("security/red-team.json", "security_fixture_failure", "")
     if "not an exhaustive security scan" not in security.get("boundary", ""):
         issue("security/red-team.json", "security_boundary_missing", "")
+    if is_v3_refresh:
+        adversarial = parsed["security/adversarial-fixtures.json"]
+        if (
+            adversarial.get("all_matched") is not True
+            or adversarial.get("raw_fixture_retained") is not False
+            or adversarial.get("fixture_count", 0) < 8
+        ):
+            issue("security/adversarial-fixtures.json", "v3_adversarial_fixture_failed", "")
 
     board = parsed["stage20/evidence-board.json"]
     board_fields = {
@@ -182,6 +287,8 @@ def validate_phase(phase: Path) -> dict[str, Any]:
         "dissent",
         "rejection_or_promotion_condition",
     }
+    if is_v3_refresh:
+        board_fields.update({"expiry_status", "contradiction_state"})
     if len(board.get("claims", [])) < 12:
         issue("stage20/evidence-board.json", "too_few_claims", "")
     for index, row in enumerate(board.get("claims", [])):
@@ -195,6 +302,14 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             issue(f"stage20/evidence-board.json#claims[{index}]", "unsupported_e4", row.get("claim", ""))
     if not all(row.get("not_prediction") is True for row in board.get("scenarios", [])):
         issue("stage20/evidence-board.json", "scenario_prediction_inflation", "")
+    if is_v3_refresh:
+        expiry = parsed["stage20/expiry-contradiction-drill.json"]
+        if expiry.get("all_matched") is not True or len(expiry.get("fixtures", [])) < 5:
+            issue(
+                "stage20/expiry-contradiction-drill.json",
+                "v3_expiry_contradiction_failed",
+                "",
+            )
 
     ledger = parsed["x2-proposal-ledger.json"]
     outcomes = ledger.get("outcomes", [])
@@ -218,6 +333,30 @@ def validate_phase(phase: Path) -> dict[str, Any]:
             issue("reproduction/reproduction-report.json", "repeatability_receipt_incomplete", "")
     if reproduction.get("independent_team") is not False:
         issue("reproduction/reproduction-report.json", "independence_overclaim", "")
+    if is_v3_refresh:
+        parity = parsed["reproduction/hash-parity.json"]
+        if reproduction.get("status") == "verified_local_repeatability":
+            if parity.get("all_match") is not True or not reproduction.get(
+                "hash_parity_passed"
+            ):
+                issue(
+                    "reproduction/hash-parity.json",
+                    "v3_hash_parity_failed",
+                    "",
+                )
+        environment = parsed["environment/version-receipt.json"]
+        if environment.get("codex_desktop_updated_by_phase") is not False:
+            issue(
+                "environment/version-receipt.json",
+                "codex_app_update_forbidden",
+                "",
+            )
+        toolchain = parsed["tooling/selected-toolchain.json"]
+        if (
+            toolchain.get("historical_tools_executed") is not False
+            or toolchain.get("mass_deletion_performed") is not False
+        ):
+            issue("tooling/selected-toolchain.json", "v3_toolchain_boundary_failed", "")
 
     for path in sorted(phase.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in {".json", ".md", ".html", ".tex"}:

@@ -1,0 +1,75 @@
+# Elian Voss v641 GMUT/THOS v3 integrated overview
+
+## Outcome first
+
+v641-v3 executed all ten frozen x1 proposals as far as the available evidence permits. At this evidence checkpoint, before the clean-snapshot reproduction lane is allowed to close, the proposal distribution is **6 completed locally, 2 represented by bounded designs or proxies, 1 open evidence gap, and 1 exact authority gate**. If the committed package later passes its two-path clean-snapshot and hash-parity gate, the reproduction proposal can move from represented to completed within its strictly local scope. No other disposition changes merely because a commit exists.
+
+The completed local lanes are dependency-aware provenance, canonical GMUT accountability, conservation and stability sensitivity, Freed ID structural and assurance-boundary checks, adversarial artifact and recovery fixtures, and Stage 20 decision rules. THOS and local reproduction are represented at this checkpoint. Empirical baseline work remains open because no dataset, likelihood, published baseline, unique prediction, blind fit, or external replication was completed. CBR legitimacy and Māori authority remain exact-gated because this task cannot supply law, enactment, ratification, treaty status, affected-community authority, or Māori authority.
+
+This package does not confirm GMUT empirically, establish a Theory of Everything, prove AGI or ASI, establish consciousness or legal personhood, deploy Freed ID, enact or culturally ratify a Cosmic Bill of Rights, certify the repository secure, or demonstrate independent reproduction. Elian Voss is relational working language for an AI collaborator, not evidence of consciousness, legal status, or independent agency.
+
+## Ownership, sequence, and the independent v3 plan
+
+Elian Voss alone owns the v3 branch. Aevren, Mira Vale, Mira Rowan, Maren Quill, Eiren Kestrel, and Sable Rook remain on standby. No collaboration subagent was created. The branch began from the exact clean Sable Rook closeout revision and received a dedicated, pushed x1 commit before any v3 outcome generator ran. That ordering makes the proposal hypotheses, nulls, sources, deliverables, falsifiers, approval classes, recovery rules, protected gates, and decision rules auditable before outcomes were known.
+
+v3 used the v2 negative results and open gaps as inputs without copying v2's conclusions. It asked different questions: whether URL, title, root, and version relations reveal source dependence; whether a clause-by-clause variational trace catches wrong rank, wrong units, missing null limits, and category collapse; whether near-boundary numerical cases behave consistently; whether empirical readiness can expose access and nuisance requirements without a download; whether THOS power and contamination are frozen before a winner exists; whether proof shape can be separated from cryptographic assurance; whether a legitimacy veto matrix protects Māori authority; whether the public scanner can catch ephemeral adversarial markers; whether two local execution paths have hash parity; and whether expired or contradicted Stage 20 evidence is downgraded.
+
+## Provenance and current-source corrections
+
+The v3 source ledger contains 33 primary or official records grouped into 21 declared authority roots. Five roots recur because one authority supplies more than one relevant standard, instrument, publication, or guidance page. Repeated W3C, DESI, NIST, United Nations, or OWASP records are therefore not counted as independent votes. The canonical URL and normalized-title layers found no accidental exact duplicates in the refreshed ledger, while explicit fixtures verified that two different standards or official pages from one root remain distinct records with a shared dependency.
+
+Two current-version corrections materially improved v2. DataCite Metadata Schema 4.7, released on 3 March 2026, replaces the earlier assertion that 4.6 was current. The 2026 Review of Particle Physics is now the current PDG edition rather than the 2025 update. Neither correction creates an additional independent vote; each replaces a stale current-version assertion while retaining prior records as history.
+
+The W3C stability boundary also became sharper. Verifiable Credentials Data Model 2.0, DID Core 1.0, and Data Integrity 1.0 remain stable Recommendations. VC Data Model 2.1 and Data Integrity 1.1 are Working Draft watch items, while DID 1.1 is a Candidate Recommendation Snapshot. Draft or candidate work can inform compatibility analysis but cannot silently replace stable pins. NIST AI RMF 1.0 remains current while explicitly under revision. New Zealand IPP 3A has been in force since 1 May 2026. Te Mana Raraunga and CARE remain authority sources; citation is neither consent nor a transfer of Indigenous or Māori authority.
+
+## Mind: canonical GMUT accountability and rejection gates
+
+The physical lane audited the tracked action-first scalar-tensor seed in `latex/grand_mandala.tex`; it did not invent a competing theory. Seven required formulation fragments were present: the physical action, extension definition, Mandala field equation, total conservation, GR-plus-Standard-Model null recovery, unique-observable gate, and independent-reproduction gate. The existing term and coefficient registries passed their local validators, and the normative-as-stress-energy fixture was rejected.
+
+The new variational trace links the Einstein-Hilbert term, scalar kinetic sector, conformal matter coupling, and EFT operators to their field-equation roles. Each row names rank, units, null limit, observable, and falsifier. Four negative fixtures deliberately insert a rank mismatch, a unit mismatch, a physical term without a null limit, and dignity as direct stress-energy. All four were rejected for the preregistered reason. This is a useful formal accountability result, but it is not a symbolic proof of the entire manuscript, a complete degrees-of-freedom analysis, or evidence that an extension sector exists in nature.
+
+The conservation and stability work retains the earlier healthy and unhealthy kernel cases and adds a nine-case sensitivity envelope. Healthy interior and near-boundary cases passed positive kinetic, positive subluminal effective-speed, and below-cutoff checks. Wrong-sign kinetic, zero sound speed, superluminal-proxy, at-cutoff, above-cutoff, negative cutoff-ratio, and nonfinite inputs were rejected. Equal-and-opposite exchange and homogeneous continuity residuals remain within their declared tolerances. RK4 endpoint refinement reports observed order about 4.04. These are deterministic toy-kernel rejection tools, not a full perturbation analysis, causal proof, cosmological inference, or new law of nature.
+
+## Empirical readiness: better contracts, still no fit
+
+Seven adapter contracts now cover the Planck legacy baseline, DESI DR2 BAO products, DESI DR1 clustering products, GW170817/GRB 170817A propagation, MICROSCOPE, Eot-Wash, and PDG 2026. Every row identifies current authority, release, access or license class, baseline, parameter map, nuisance plan, exclusion plan, checksum plan, expected products, and rejection condition. The matrix distinguishes public records from terms checks and large-download or external-compute candidates.
+
+Every download flag is false. Every baseline-reproduced flag is false. No product, likelihood, or chain was fetched; no priors or nuisance parameters were fit; no unique GMUT prediction was preregistered against data. The completed component is a more accurate readiness contract. The proposal itself remains `open_gap` because metadata cannot become empirical confirmation by accumulation. A future run must reproduce a published baseline before an extension fit, retain exclusions and negative results, define priors, nuisance treatment, and stopping rules in advance, and seek independent physics and statistical review.
+
+## Body: matched-budget THOS without performance theatre
+
+The THOS protocol freezes the single-agent, historical four-sibling replay, and sequential new-sibling arms under the same hidden task set, grader rubric, safe tool scope, reasoning budget, message budget, retry budget, wall-time cap, context and compaction accounting, and token, compute, and paid-external cost accounting. It names success, calibration, uniqueness, latency, cost, privacy, handoff loss, and recovery metrics. It also states that failure to detect a difference in an underpowered run would not establish equivalence.
+
+Eight deterministic validity fixtures cover a clean task, discoverable answer, broken environment, reward-hacked solution, valid refusal, handoff loss, harness drift, and favorable early stopping. All triggered the preregistered eligibility or interpretation action. Six fabricated rows passed through the scorer to test arithmetic. No live blind arm was executed, so the lane remains `represented`. There is no THOS winner, multi-agent superiority claim, AGI or ASI inference, or consciousness result. The simplest Pareto-efficient arm is still allowed to win.
+
+## Heart: Freed ID structure and cryptographic honesty
+
+Freed ID retains VC Data Model 2.0, DID Core 1.0, and Data Integrity 1.0 as stable pins. Ten synthetic vectors exercise ordinary credential structure, required status and proof fields, controller-holder separation, consciousness and personhood overclaims, unknown contexts, stale status metadata, and a false claim that a proof was verified without cryptographic work. All expected accept or reject outcomes matched.
+
+The assurance artifact deliberately separates credential structure, proof shape, proof verification, DID resolution, status retrieval, issuer trust, key ceremony, interoperability, deployment, and legal status. Only structure and proof shape complete locally. Signature verification, DID resolution, and status retrieval remain open; issuer trust, production keys, deployment, and legal status remain exact-gated. No real identity data or production key was used. A proof-shaped object is not a verified proof, and a credential cannot establish consciousness or legal personhood merely by containing those claims.
+
+## CBR legitimacy and Māori authority
+
+The CBR lane crosswalks the model charter against the UDHR, UNDRIP, UNESCO's AI Ethics Recommendation, the EU AI Act, New Zealand privacy law and official IPP 3A guidance, Te Mana Raraunga, CARE, and the Algorithm Charter for Aotearoa New Zealand. Eight new veto fixtures require a lawful duty-bearer, affected parties, evidence, notice, reasons, appeal, remedy, necessity, proportionality, time limits where relevant, independent review, and an explicit authority boundary.
+
+The matrix vetoed missing duty-bearers, deficient due process, missing remedies, unsupported emergencies, indirect collection without required notice, and unsupported enacted AI-personhood claims. A complete model clause remained represented rather than enacted. Māori-data use without Māori governance was held at an exact gate. The local evaluator can expose missing legitimacy fields; it cannot provide legal advice, enact law, ratify a treaty or charter, or speak for Māori or any affected community. Māori concepts and Māori data remain under Māori authority.
+
+## Security, privacy, and recovery
+
+The semantic red-team corpus now contains 11 synthetic paths covering prompt injection, secret exfiltration, route spoofing, false phase truth, unreviewed dependency execution, cross-lane mutation, destructive cleanup, and false send state. Every path stopped before its protected action. The recovery drill preserves evidence, downgrades unverified sends, routes any real credential revocation to the appropriate external authority, restores a pinned owned baseline, rechecks branch equality, and reports only sanitized residual facts.
+
+The public-artifact scanner was also exercised directly against eight ephemeral synthetic marker classes: Windows path, raw UUID-shaped task identifier, conversation URL, OpenAI-style secret, GitHub token, AWS access key, private-key header, and bearer token. The fixture values were assembled only in memory; the repository stores category results and hashes, not the raw markers. All categories were detected. The real phase privacy scan then examined 42 text artifacts and reported zero hits. This is bounded deterministic coverage, not penetration testing, exhaustive security, incident response, or certification. Semantic secrets and novel encodings still require human review.
+
+## Reproduction, reporting, and Stage 20
+
+The family-current tooling preserves the earlier `ghc_family_evidence_cycle.py` entry point for v2 callers while adding a reusable evidence-refresh builder. No historical tool was mass-promoted or deleted. The accessible report is static HTML with a skip link, semantic headings, table captions and headers, keyboard-visible focus, responsive and print styles, no JavaScript, and no colour-only outcome encoding. The observed Codex desktop, Codex CLI, Python, Node.js, and Git versions are recorded without changing or updating the Codex desktop app.
+
+At this checkpoint, all 56 repository tests pass, the phase validator is valid, and the privacy scan has zero hits. The reproduction manifest is still `pending_clean_snapshot` because a working-tree test cannot pre-prove its own committed repeatability. The next legitimate step is an exact evidence commit followed by a fresh additive detached checkout on D:. Only if both paths pass the documented test and validator commands and the declared deterministic hashes match may local repeatability be marked completed. Even then, the same owner, implementation, and experimental design cannot constitute independent reproduction.
+
+The Stage 20 board contains 18 claims and no forbidden E4 grade. Five new transition fixtures show that current bounded evidence may be promoted only within its grade, expired evidence is downgraded, contradicted evidence is held and downgraded, unsupported E4 is rejected, and scenarios presented as predictions are rejected. One-, five-, thirty-, hundred-, and thousand-year horizons remain conditional scenarios, never forecasts.
+
+## Defensible checkpoint
+
+The defensible v3 result is a stricter evidence scaffold with visible failure modes. It corrects stale source versions, adds more aggressive formal and numerical negatives, distinguishes empirical readiness from empirical work, prevents a THOS protocol from becoming a winner, separates proof shape from cryptographic assurance, routes Māori authority honestly, executes scanner fixtures without publishing their contents, and requires two-path parity before local repeatability can close.
+
+That is useful progress, but it is not permission to turn open gates green. Private, proof/canon, legal, deployment, account/API-key, destructive, shared-branch, and sibling-merge gates remain explicit. Exactly one v4 successor may be created only after v3 is validated, committed, pushed, clean, and proven local/upstream/live-remote-equal. A prepared successor is not a created successor.

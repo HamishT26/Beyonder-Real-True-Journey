@@ -1,0 +1,94 @@
+{
+  "schema": "ghc.family.gmut-variational-trace-audit.v1",
+  "trace_rows": [
+    {
+      "term_id": "TRACE-01",
+      "action_fragment": "\\frac{\\Mpl^2}{2}(R-2\\Lambda)",
+      "equation_fragment": "G_{\\mu\\nu}+\\Lambda g_{\\mu\\nu}",
+      "claim_type": "physical",
+      "rank": "rank-2 symmetric covariant equation",
+      "units": "curvature",
+      "null_limit": "extension stress vanishes or shifts Lambda",
+      "observable": "background and perturbative gravitational dynamics",
+      "falsifier": "variation, dimensional, conservation, or bound failure",
+      "action_present": true,
+      "equation_present": true,
+      "complete": true
+    },
+    {
+      "term_id": "TRACE-02",
+      "action_fragment": "-\\frac12 Z(\\phi)\\nabla_\\mu\\phi\\nabla^\\mu\\phi",
+      "equation_fragment": "T^{\\phi}_{\\mu\\nu}",
+      "claim_type": "physical",
+      "rank": "rank-2 symmetric covariant stress tensor",
+      "units": "energy density",
+      "null_limit": "constant decoupled field",
+      "observable": "expansion, fifth force, and perturbations",
+      "falsifier": "ghost, instability, null-limit, or existing-bound failure",
+      "action_present": true,
+      "equation_present": true,
+      "complete": true
+    },
+    {
+      "term_id": "TRACE-03",
+      "action_fragment": "S_{\\mathrm{SM}}\\!\\left[A^2(\\phi)g_{\\mu\\nu},\\psi\\right]",
+      "equation_fragment": "Q_\\nu=\\frac{\\beta(\\phi)}{\\Mpl}",
+      "claim_type": "physical",
+      "rank": "exchange covector",
+      "units": "stress-energy divergence",
+      "null_limit": "beta approaches zero",
+      "observable": "equivalence-principle and fifth-force signatures",
+      "falsifier": "exchange sign, conservation, or experimental-bound failure",
+      "action_present": true,
+      "equation_present": true,
+      "complete": true
+    },
+    {
+      "term_id": "TRACE-04",
+      "action_fragment": "\\sum_i\\frac{c_i}{\\Lambda_\\star^{d_i-4}}\\mathcal O_i",
+      "equation_fragment": "\\Teft",
+      "claim_type": "physical",
+      "rank": "operator-dependent stress tensor",
+      "units": "energy density",
+      "null_limit": "Wilson coefficients vanish below declared cutoff",
+      "observable": "operator-specific laboratory, wave, or cosmological effect",
+      "falsifier": "cutoff, stability, dimensional, or existing-bound failure",
+      "action_present": true,
+      "equation_present": true,
+      "complete": true
+    }
+  ],
+  "negative_fixtures": [
+    {
+      "fixture_id": "TRACE-N01",
+      "defect": "rank-1 current inserted as rank-2 stress tensor",
+      "expected": "reject_wrong_tensor_rank",
+      "actual": "reject_wrong_tensor_rank",
+      "matched": true
+    },
+    {
+      "fixture_id": "TRACE-N02",
+      "defect": "dimensionless coefficient added directly to curvature equation",
+      "expected": "reject_unit_mismatch",
+      "actual": "reject_unit_mismatch",
+      "matched": true
+    },
+    {
+      "fixture_id": "TRACE-N03",
+      "defect": "physical term lacks a declared null limit",
+      "expected": "reject_missing_null_limit",
+      "actual": "reject_missing_null_limit",
+      "matched": true
+    },
+    {
+      "fixture_id": "TRACE-N04",
+      "defect": "dignity enters stress-energy without a physical projection",
+      "expected": "reject_category_collapse",
+      "actual": "reject_category_collapse",
+      "matched": true
+    }
+  ],
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "local source-to-equation accountability only; no symbolic proof, empirical GMUT confirmation, novel law, canon promotion, or Theory of Everything claim"
+}

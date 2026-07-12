@@ -1,0 +1,143 @@
+{
+  "schema": "ghc.family.conservation-stability-sensitivity-envelope.v1",
+  "case_count": 9,
+  "cases": [
+    {
+      "case_id": "SENS-01",
+      "inputs": {
+        "kinetic_normalization": 1.0,
+        "sound_speed_squared": 0.5,
+        "energy_to_cutoff_ratio": 0.1
+      },
+      "expected_valid": true,
+      "actual_valid": true,
+      "expected_issues": [],
+      "actual_issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-02",
+      "inputs": {
+        "kinetic_normalization": 1e-12,
+        "sound_speed_squared": 1e-12,
+        "energy_to_cutoff_ratio": 0.999999
+      },
+      "expected_valid": true,
+      "actual_valid": true,
+      "expected_issues": [],
+      "actual_issues": [],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-03",
+      "inputs": {
+        "kinetic_normalization": -1e-12,
+        "sound_speed_squared": 0.5,
+        "energy_to_cutoff_ratio": 0.1
+      },
+      "expected_valid": false,
+      "actual_valid": false,
+      "expected_issues": [
+        "non_positive_kinetic_normalization"
+      ],
+      "actual_issues": [
+        "non_positive_kinetic_normalization"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-04",
+      "inputs": {
+        "kinetic_normalization": 1.0,
+        "sound_speed_squared": 0.0,
+        "energy_to_cutoff_ratio": 0.1
+      },
+      "expected_valid": false,
+      "actual_valid": false,
+      "expected_issues": [
+        "non_positive_sound_speed_squared"
+      ],
+      "actual_issues": [
+        "non_positive_sound_speed_squared"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-05",
+      "inputs": {
+        "kinetic_normalization": 1.0,
+        "sound_speed_squared": 1.000001,
+        "energy_to_cutoff_ratio": 0.1
+      },
+      "expected_valid": false,
+      "actual_valid": false,
+      "expected_issues": [
+        "superluminal_effective_sound_speed_requires_model_specific_review"
+      ],
+      "actual_issues": [
+        "superluminal_effective_sound_speed_requires_model_specific_review"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-06",
+      "inputs": {
+        "kinetic_normalization": 1.0,
+        "sound_speed_squared": 0.5,
+        "energy_to_cutoff_ratio": 1.0
+      },
+      "expected_valid": false,
+      "actual_valid": false,
+      "expected_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "actual_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-07",
+      "inputs": {
+        "kinetic_normalization": 1.0,
+        "sound_speed_squared": 0.5,
+        "energy_to_cutoff_ratio": 1.01
+      },
+      "expected_valid": false,
+      "actual_valid": false,
+      "expected_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "actual_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    },
+    {
+      "case_id": "SENS-08",
+      "inputs": {
+        "kinetic_normalization": 1.0,
+        "sound_speed_squared": 0.5,
+        "energy_to_cutoff_ratio": -0.01
+      },
+      "expected_valid": false,
+      "actual_valid": false,
+      "expected_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "actual_issues": [
+        "outside_declared_eft_regime"
+      ],
+      "matched": true
+    }
+  ],
+  "nonfinite_fixture": {
+    "case_id": "SENS-09",
+    "expected": "reject_nonfinite_input",
+    "actual": "reject_nonfinite_input",
+    "matched": true
+  },
+  "passed": true,
+  "disposition": "completed",
+  "boundary": "bounded local EFT gate sensitivity only; not a full perturbation analysis, causality proof, likelihood, or empirical GMUT result"
+}

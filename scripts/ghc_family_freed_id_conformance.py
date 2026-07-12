@@ -51,6 +51,12 @@ V2_REQUIRED_STATUS_FIELDS = {
     "statusListCredential",
 }
 
+V3_REQUIRED_PROFILE_FIELDS = {
+    "allowed_contexts",
+    "status_freshness_policy",
+    "proof_verification_boundary",
+}
+
 
 def validate_profile(profile: dict[str, Any]) -> list[str]:
     issues: list[str] = []
@@ -73,6 +79,19 @@ def validate_profile(profile: dict[str, Any]) -> list[str]:
             issues.append("v2_vc_context_not_pinned")
         if profile.get("synthetic_data_only") is not True:
             issues.append("v2_real_data_boundary_missing")
+    if profile.get("profile_revision") == "3":
+        missing = sorted(field for field in V3_REQUIRED_PROFILE_FIELDS if not profile.get(field))
+        if missing:
+            issues.append("v3_profile_fields_missing:" + ",".join(missing))
+        if VC_CONTEXT not in profile.get("allowed_contexts", []):
+            issues.append("v3_vc_context_not_allowed")
+        policy = profile.get("status_freshness_policy", {})
+        if not isinstance(policy.get("maximum_age_seconds"), int) or policy.get(
+            "maximum_age_seconds", 0
+        ) <= 0:
+            issues.append("v3_status_freshness_policy_invalid")
+        if profile.get("proof_verification_boundary") != "shape_only_no_crypto_performed":
+            issues.append("v3_proof_verification_boundary_missing")
     return issues
 
 
@@ -131,6 +150,21 @@ def validate_credential(
             issues.append("holder_controller_roles_missing")
         elif holder == controller:
             issues.append("holder_controller_separation_violated")
+    if profile and profile.get("profile_revision") == "3":
+        allowed_contexts = set(profile.get("allowed_contexts", []))
+        if not isinstance(context, list) or any(item not in allowed_contexts for item in context):
+            issues.append("unapproved_context")
+        maximum_age = profile.get("status_freshness_policy", {}).get(
+            "maximum_age_seconds"
+        )
+        age = credential.get("statusAgeSeconds")
+        if not isinstance(age, (int, float)) or isinstance(age, bool) or age < 0:
+            issues.append("status_age_missing_or_invalid")
+        elif isinstance(maximum_age, int) and age > maximum_age:
+            issues.append("status_stale")
+        proof_status = credential.get("proofVerificationStatus")
+        if proof_status != "not_performed":
+            issues.append("unverified_proof_misrepresented")
     return issues
 
 
