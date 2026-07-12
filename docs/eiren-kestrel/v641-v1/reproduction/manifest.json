@@ -1,0 +1,27 @@
+{
+  "schema": "ghc.family.v641-reproduction-manifest.v1",
+  "status": "LOCAL_REPRODUCTION_COMMANDS_DEFINED_EXTERNAL_REVIEW_PENDING",
+  "environment": {
+    "python": "3.12.10",
+    "implementation": "CPython",
+    "platform_family": "Windows",
+    "codex_cli": "0.144.1",
+    "node": "24.18.0",
+    "npm": "12.0.1",
+    "git": "2.55.0.windows.2"
+  },
+  "commands": [
+    "python -m unittest discover -s tests -p test_ghc_family*.py",
+    "python scripts/ghc_family_gmut_kernel.py demo --output docs/eiren-kestrel/v641-v1/physics/gmut-kernel-v641-demo.json",
+    "python scripts/ghc_family_empirical_adapters.py docs/eiren-kestrel/v641-v1/empirical/adapter-manifest.json",
+    "python scripts/ghc_family_freed_id_conformance.py docs/eiren-kestrel/v641-v1/freed-id/minimum-profile.json docs/eiren-kestrel/v641-v1/freed-id/conformance-vectors.json",
+    "python scripts/ghc_family_phase_validator.py docs/eiren-kestrel/v641-v1"
+  ],
+  "seed_policy": "deterministic_fixtures_no_random_network_data",
+  "inputs": [
+    "repository source",
+    "synthetic non-personal fixtures",
+    "primary-source metadata"
+  ],
+  "external_reviewer": "NO_EXTERNAL_REVIEWER_YET_OPEN_GAP"
+}

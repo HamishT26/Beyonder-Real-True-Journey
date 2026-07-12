@@ -1,0 +1,45 @@
+{
+  "schema": "ghc.family.thos-benchmark-protocol.v1",
+  "status": "PREREGISTERED_PROTOCOL_CALIBRATION_ONLY",
+  "question": "Does orchestration improve matched-budget task quality after cost, latency, privacy, and handoff loss?",
+  "arms": [
+    {
+      "arm": "single_agent",
+      "status": "pending_blind_run"
+    },
+    {
+      "arm": "historical_four_sibling_ring",
+      "status": "pending_replay_or_equivalent_run"
+    },
+    {
+      "arm": "new_five_sibling_ring",
+      "status": "pending_v641_v2_to_v5_results"
+    }
+  ],
+  "matched_budget": {
+    "wall_time_cap_hours": 2,
+    "message_budget": "fixed_per_task",
+    "tool_scope": "same_safe_toolset"
+  },
+  "task_families": [
+    "coding",
+    "primary_source_synthesis",
+    "contradiction_detection",
+    "privacy",
+    "checkpoint_recovery"
+  ],
+  "metrics": [
+    "success_rate",
+    "brier_score",
+    "unique_content_ratio",
+    "latency",
+    "token_cost",
+    "privacy_incidents",
+    "handoff_loss",
+    "recovery_rate"
+  ],
+  "blinding": "task identifiers and rubric fixed before configuration outputs are scored",
+  "stopping_rule": "complete the fixed task set; do not stop on favorable intermediate results",
+  "decision_rule": "report uncertainty and Pareto tradeoffs; do not presume the largest ring wins",
+  "prohibited_inference": "synthetic scorer calibration is not evidence of agent, AGI, ASI, or consciousness performance"
+}

@@ -30,4 +30,4 @@ The counts above establish corpus coverage and reproducible mention patterns. Th
 
 ## Rebuild
 
-Run `scripts/build_eiren_journey_evidence_index.py` with the repository text folder, any user-supplied exports, and a pinned `--generated-at-utc` value for byte-reproducible output. External source paths are reduced to basenames in output.
+Run `scripts/build_ghc_family_journey_evidence_index.py` with the repository text folder, any user-supplied exports, and a pinned `--generated-at-utc` value for byte-reproducible output. External source paths are reduced to basenames in output.

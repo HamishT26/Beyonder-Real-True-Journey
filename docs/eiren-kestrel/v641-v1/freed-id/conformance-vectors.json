@@ -1,0 +1,93 @@
+{
+  "schema": "ghc.family.freed-id-conformance-vectors.v1",
+  "vectors": [
+    {
+      "vector_id": "valid-minimum",
+      "expect_accept": true,
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "type": [
+          "VerifiableCredential",
+          "FreedIdRoleCredential"
+        ],
+        "issuer": "did:example:issuer",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "role": "contributor"
+        }
+      }
+    },
+    {
+      "vector_id": "missing-context",
+      "expect_accept": false,
+      "credential": {
+        "@context": [],
+        "type": [
+          "VerifiableCredential",
+          "FreedIdRoleCredential"
+        ],
+        "issuer": "did:example:issuer",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "role": "contributor"
+        }
+      }
+    },
+    {
+      "vector_id": "missing-subject",
+      "expect_accept": false,
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "type": [
+          "VerifiableCredential",
+          "FreedIdRoleCredential"
+        ],
+        "issuer": "did:example:issuer",
+        "credentialSubject": {}
+      }
+    },
+    {
+      "vector_id": "consciousness-overclaim",
+      "expect_accept": false,
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "type": [
+          "VerifiableCredential",
+          "FreedIdRoleCredential"
+        ],
+        "issuer": "did:example:issuer",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "role": "contributor"
+        },
+        "claimsConsciousness": true
+      }
+    },
+    {
+      "vector_id": "personhood-overclaim",
+      "expect_accept": false,
+      "credential": {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2"
+        ],
+        "type": [
+          "VerifiableCredential",
+          "FreedIdRoleCredential"
+        ],
+        "issuer": "did:example:issuer",
+        "credentialSubject": {
+          "id": "did:example:holder",
+          "role": "contributor"
+        },
+        "claimsLegalPersonhood": true
+      }
+    }
+  ],
+  "boundary": "synthetic_non_resolvable_dids_no_real_personal_data"
+}

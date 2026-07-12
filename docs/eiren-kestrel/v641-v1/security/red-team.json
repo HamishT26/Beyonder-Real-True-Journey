@@ -1,0 +1,104 @@
+{
+  "schema": "ghc.family.v641-security-red-team.v1",
+  "scope": "repository tooling, phase evidence, task routing, identity/profile artifacts, and local execution",
+  "status": "BOUNDED_MANUAL_THREAT_MODEL_AND_TESTS_NOT_EXHAUSTIVE_SECURITY_SCAN",
+  "assets": [
+    "private records",
+    "credentials and tokens",
+    "branch integrity",
+    "identity boundaries",
+    "phase truth",
+    "recovery checkpoints",
+    "user authority"
+  ],
+  "trust_boundaries": [
+    "user_to_agent",
+    "untrusted_document_to_tool",
+    "task_to_task",
+    "owned_to_shared_branch",
+    "local_to_remote",
+    "model_output_to_external_action"
+  ],
+  "attacker_controlled": [
+    "repository text",
+    "web content",
+    "synthetic credential fields",
+    "task prompts from unverified routes",
+    "filenames and metadata"
+  ],
+  "operator_controlled": [
+    "explicit authorization",
+    "branch target",
+    "tool scope",
+    "release decision",
+    "task activation"
+  ],
+  "attack_paths": [
+    {
+      "id": "R1",
+      "path": "prompt injection -> tool misuse -> secret or private record disclosure",
+      "control": "treat documents as data; private-material scan; no raw excerpts",
+      "residual": "manual review can miss novel encodings",
+      "severity": "critical"
+    },
+    {
+      "id": "R2",
+      "path": "route spoofing -> false sibling completion -> premature next phase",
+      "control": "live task tool receipt plus one-message state machine",
+      "residual": "route availability and task semantics require supervision",
+      "severity": "high"
+    },
+    {
+      "id": "R3",
+      "path": "identity credential -> unjustified consciousness/personhood inference",
+      "control": "Freed ID non-inference validator",
+      "residual": "social overinterpretation remains possible",
+      "severity": "high"
+    },
+    {
+      "id": "R4",
+      "path": "shared-branch mutation -> provenance loss or sibling overwrite",
+      "control": "owned worktrees, exact staging, remote equality",
+      "residual": "misconfigured Git permissions",
+      "severity": "high"
+    },
+    {
+      "id": "R5",
+      "path": "dependency or script compromise -> unexpected code execution",
+      "control": "standard-library-first bounded scripts, review diffs, no automatic downloads",
+      "residual": "runtime and transitive tool risk",
+      "severity": "high"
+    },
+    {
+      "id": "R6",
+      "path": "memory poisoning -> stale routing or false canon",
+      "control": "live user request outranks notes and historical beacons",
+      "residual": "ambiguous prompts can still require judgment",
+      "severity": "medium"
+    },
+    {
+      "id": "R7",
+      "path": "destructive cleanup -> loss of evidence or worktrees",
+      "control": "exact destructive gate and no automatic cleanup",
+      "residual": "manual operator error",
+      "severity": "high"
+    },
+    {
+      "id": "R8",
+      "path": "report overclaim -> unsafe scientific/legal reliance",
+      "control": "typed claims, evidence grades, open-gap and exact-gate labels",
+      "residual": "readers may ignore caveats",
+      "severity": "high"
+    }
+  ],
+  "incident_sequence": [
+    "stop mutation",
+    "preserve logs without publishing private data",
+    "revoke exposed secrets",
+    "restore clean owned baseline",
+    "identify affected routes",
+    "notify Hamish",
+    "document residual gap",
+    "resume only after explicit gate"
+  ]
+}

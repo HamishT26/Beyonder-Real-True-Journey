@@ -19,8 +19,8 @@ This package is a privacy-minimizing, evidence-bounded response to the v36-v54 J
 - `gmut-coefficient-ledger.json`
 - `v641-v650-round-robin-proposal.json`
 - `../../latex/grand_mandala.tex`
-- `../../scripts/gmut_kernel.py`
-- `../../tests/test_gmut_kernel.py`
+- `../../scripts/ghc_family_gmut_kernel.py`
+- `../../tests/test_ghc_family_gmut_kernel.py`
 
 Generated PDF, DOCX, HTML, and deterministic JSON outputs are written under `deliverables/` after validation.
 

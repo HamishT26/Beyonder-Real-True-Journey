@@ -3,11 +3,13 @@ from __future__ import annotations
 import math
 import unittest
 
-from scripts.gmut_kernel import (
+from scripts.ghc_family_gmut_kernel import (
     BackgroundState,
     ConstantPotential,
     QuadraticPotential,
+    assess_effective_stability,
     continuity_residual,
+    convergence_report,
     equation_of_state,
     exchange_residual,
     friedmann_residual,
@@ -87,6 +89,31 @@ class ToySimulationTests(unittest.TestCase):
         self.assertTrue(all(sample.phi == 1.0 for sample in samples))
         self.assertTrue(all(sample.phi_dot == 0.0 for sample in samples))
         self.assertTrue(all(sample.w_phi == -1.0 for sample in samples))
+
+    def test_rk4_self_convergence_is_reported(self) -> None:
+        report = convergence_report(
+            BackgroundState(time=0.0, phi=0.3, phi_dot=0.0, rho_matter=0.8),
+            QuadraticPotential(mass=0.2, offset=0.1),
+            horizon=0.5,
+            coarse_steps=10,
+        )
+        self.assertTrue(report["convergent"])
+        self.assertGreater(report["observed_order"], 2.5)
+
+    def test_minimal_stability_gate_rejects_bad_regime(self) -> None:
+        valid = assess_effective_stability(
+            kinetic_normalization=1.0,
+            sound_speed_squared=1.0,
+            energy_to_cutoff_ratio=0.2,
+        )
+        invalid = assess_effective_stability(
+            kinetic_normalization=-1.0,
+            sound_speed_squared=-0.1,
+            energy_to_cutoff_ratio=1.2,
+        )
+        self.assertTrue(valid.valid)
+        self.assertFalse(invalid.valid)
+        self.assertIn("outside_declared_eft_regime", invalid.issues)
 
 
 class EpistemicGateTests(unittest.TestCase):
