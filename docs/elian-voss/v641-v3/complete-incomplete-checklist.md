@@ -11,14 +11,15 @@
 - [x] Fifty-six tests passed; phase validator passed; privacy/raw-ID scan returned zero hits.
 - [x] Codex desktop version observed without updating the app.
 - [x] No collaboration subagent or standby sibling activated.
+- [x] Evidence commit `7cf96ce8604f470b662308b0cabb81847a6629ab` pushed on the Elian-owned branch.
+- [x] Fresh detached D:-first evidence snapshot passed 56 tests, phase validation, and zero-hit privacy scan.
+- [x] Twenty-five of twenty-five declared deterministic hashes matched.
 
 ## Incomplete before closeout
 
-- [ ] Create and inspect the exact x2 evidence commit.
-- [ ] Push only the Elian-owned branch.
-- [ ] Run the evidence commit from a fresh additive detached D:-first snapshot.
-- [ ] Prove deterministic hash parity for the declared core artifacts.
-- [ ] Update reproduction, checklist, phase truth, and closeout receipt from actual results.
+- [ ] Commit and push the closeout receipt candidate.
+- [ ] Validate the receipt commit from a fresh additive detached D:-first snapshot.
+- [ ] Seal final checklist, receipt, phase truth, and validation evidence.
 - [ ] Prove clean local/upstream/live-remote equality.
 - [ ] Only then create exactly one user-owned v4 successor.
 

@@ -12,7 +12,7 @@ All **10** frozen x1 proposals were executed as far as evidence permitted.
 | V3-P06 | `completed` | ten synthetic structural and assurance-boundary vectors matched | no signature, resolution, status retrieval, issuer trust, interoperability, deployment, consciousness, or personhood decision |
 | V3-P07 | `exact_gate` | structural conflict and authority-veto fixtures matched with Māori routing retained | law, legal advice, enactment, ratification, treaty status, affected authority, and Māori authority require legitimate external processes |
 | V3-P08 | `completed` | semantic attack paths and eight ephemeral public-artifact scanner categories matched | no real incident, credential, penetration test, external route, or exhaustive security certification |
-| V3-P09 | `represented` | portable two-path manifest prepared; clean-snapshot execution pending | same-owner same-design repeatability is not independent reproduction |
+| V3-P09 | `completed` | two local paths and deterministic hashes matched | same-owner same-design repeatability is not independent reproduction |
 | V3-P10 | `completed` | eighteen claims and five expiry or contradiction fixtures received bounded decisions | Stage 20 horizons remain conditional and non-predictive |
 
 `completed` is bounded local execution, not external confirmation. `represented` is a protocol or proxy. `open_gap` lacks required evidence. `exact_gate` requires fresh legitimate authority.
