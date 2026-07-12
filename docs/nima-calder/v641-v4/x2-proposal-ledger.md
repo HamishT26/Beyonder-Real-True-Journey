@@ -12,7 +12,7 @@ All 10 frozen proposals were executed as far as available evidence permits.
 | V4-P06 — Freed ID assurance-transition state machine and fail-closed vectors | `completed` | synthetic assurance-transition vectors fail closed at proof verification, resolution, status, trust, deployment, legal, consciousness, and personhood boundaries |
 | V4-P07 — CBR consent-and-authority provenance graph with Māori non-transfer invariants | `exact_gate` | consent and authority non-transfer fixtures match locally with Māori routing retained |
 | V4-P08 — Evidence-tool supply-chain, path-authorization, and recovery red team | `completed` | selected-tool path and hash receipts plus bounded supply-chain, path, injection, false-state, and private-marker fixtures matched |
-| V4-P09 — Hermetic two-path repeatability with environment-perturbation receipts | `represented` | hermetic manifest and parity scope exist; fresh detached execution is pending |
+| V4-P09 — Hermetic two-path repeatability with environment-perturbation receipts | `completed` | two-path offline tests, validator, privacy scan, and declared hash parity match |
 | V4-P10 — Stage 20 claim-lineage monotonicity and negative-evidence retention audit | `completed` | twenty claims and eight promotion mutations retain freshness, negative evidence, dissent, independence, and exact gates |
 
 Completed means locally executed and validated only within the proposal's declared scope. Represented, open-gap, exact-gate, empirical, legal, cultural, cryptographic, deployment, security, and independent-reproduction boundaries remain open where stated.

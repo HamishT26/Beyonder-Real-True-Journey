@@ -11,15 +11,17 @@
 - [x] The first detached snapshot's 73-of-74 portability failure is retained as `REPRO-V4-N01` rather than overwritten.
 - [x] The committed canonical-Git-blob correction passes 74 of 74 tests, the phase validator, and a 66-file zero-hit privacy scan in the second clean snapshot.
 - [x] The second snapshot's 26-of-28 raw-parity result is retained as `REPRO-V4-N02`; both mismatches are semantically and LF-normalized identical.
-- [x] The LF-normalized parity correction passes 75 of 75 tests, the phase validator, and a 65-file zero-hit privacy scan in the owned checkout.
+- [x] The LF-normalized parity correction is pushed and proven three-way equal.
+- [x] The third clean snapshot and owned path each pass 75 of 75 tests and the phase validator, with zero-hit privacy scans.
+- [x] All 28 declared LF-normalized deterministic artifact hashes match.
+- [x] Same-owner local repeatability is complete without promotion to independent reproduction.
 - [x] No sibling branch, shared branch, deployment, account, API key, private material, production key, or destructive operation was used.
 - [x] No collaboration subagent was spawned.
 
 ## Incomplete / open
 
-- [ ] Dedicated second portability-correction commit, exact staged diff review, push, and three-way equality.
-- [ ] Third additive detached-snapshot execution of that commit and deterministic normalized hash parity.
-- [ ] Final closeout candidate, clean-snapshot validation, seal commit, push, and local/upstream/live-remote equality.
+- [ ] Closeout-candidate commit, exact staged review, push, three-way equality, and fresh clean-snapshot validation.
+- [ ] Final seal commit, push, seal clean-snapshot validation, and local/upstream/live-remote equality.
 - [ ] Published empirical baseline reproduction, a unique preregistered GMUT prediction, likelihood, blind fit, or external scientific review.
 - [ ] Any blinded THOS arm or legitimate performance comparison.
 - [ ] Freed ID signature verification, DID resolution, status retrieval, issuer trust, interoperability, production keys, deployment, or legal identity status.
