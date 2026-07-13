@@ -152,11 +152,21 @@ class TestGhcFamilyV641V8(unittest.TestCase):
         protocol = load("reproduction/external-executor-protocol.json")
         split = load("reproduction/common-mode-dependency-split.json")
         gap = load("reproduction/independent-team-gap.json")
+        snapshots = load("reproduction/clean-snapshot-validation.json")
+        receipt = load("validation/reproduction-validation.json")
         self.assertFalse(protocol["private_routes_required"])
         self.assertFalse(protocol["machine_specific_absolute_paths"])
         self.assertFalse(protocol["independent_result_returned"])
         self.assertFalse(split["independent_team_reproduction"])
         self.assertEqual(gap["gap"], "open")
+        self.assertFalse(receipt["independent_team_reproduction"])
+        self.assertEqual(receipt["independent_team_gap"], "open")
+        if snapshots["state"] == "verified":
+            evidence_commit = "a92c15d52a1324b1cf9ff73a3354cd0c40aab726"
+            self.assertEqual(snapshots["source_commit"], evidence_commit)
+            self.assertEqual(receipt["evidence_commit"], evidence_commit)
+            self.assertEqual({row["snapshot_label"] for row in snapshots["snapshots"]}, {"evidence_a", "evidence_b"})
+            self.assertTrue(all(row["clean"] and row["detached"] for row in snapshots["snapshots"]))
 
     def test_15_thermo_psyche_promotions_add_burdens_and_reject_shortcuts(self) -> None:
         state = load("thermo-psyche/promotion-state-machine.json")

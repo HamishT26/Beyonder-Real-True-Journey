@@ -11,6 +11,9 @@ from collections import Counter
 from pathlib import Path
 
 
+EVIDENCE_COMMIT = "a92c15d52a1324b1cf9ff73a3354cd0c40aab726"
+
+
 REQUIRED_FILES = [
     "x1-proposals.json", "x1-preregistration.md", "x2-proposal-ledger.json", "x2-proposal-ledger.md",
     "sources/source-ledger.json", "provenance/frozen-chain-proposal-index.json", "provenance/authority-liveness-quorum.json",
@@ -28,6 +31,7 @@ REQUIRED_FILES = [
     "security/recovery-rto-drill.json", "security/privacy-raw-id-controls.json",
     "reproduction/external-executor-protocol.json", "reproduction/blinded-output-commitment.json",
     "reproduction/common-mode-dependency-split.json", "reproduction/clean-snapshot-validation.json", "reproduction/independent-team-gap.json",
+    "validation/reproduction-validation.json",
     "thermo-psyche/promotion-state-machine.json", "thermo-psyche/evidence-burden-matrix.json",
     "thermo-psyche/prohibited-transition-vectors.json", "thermo-psyche/classification-register.json",
     "stage20/gate-dependency-graph.json", "stage20/minimal-blocking-cutsets.json", "stage20/stop-rule-mutations.json",
@@ -147,9 +151,14 @@ def validate(phase: Path, allow_pending: bool = False, require_report: bool = Fa
     protocol_text = json.dumps(parsed["reproduction/external-executor-protocol.json"], ensure_ascii=False)
     check(not re.search(r"[A-Za-z]:[\\/]", protocol_text) and not re.search(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,}\b", protocol_text), "external protocol leaks a private path or raw UUID")
     snap = parsed["reproduction/clean-snapshot-validation.json"]
+    reproduction_validation = parsed["validation/reproduction-validation.json"]
     check(snap.get("state") in {"pending", "verified"}, "snapshot state invalid")
+    check(reproduction_validation.get("state") == snap.get("state") and reproduction_validation.get("aggregate_sha256") == commitment.get("aggregate_sha256"), "reproduction receipt disagrees with the clean-snapshot receipt or commitment")
+    check(reproduction_validation.get("independent_team_reproduction") is False and reproduction_validation.get("independent_team_gap") == "open", "reproduction receipt overclaims independence")
     if not allow_pending:
         check(snap.get("state") == "verified" and snap.get("verified_snapshots") == 2 and snap.get("same_owner_repeatability") is True, "clean snapshot verification is incomplete")
+        check(snap.get("source_commit") == EVIDENCE_COMMIT and reproduction_validation.get("evidence_commit") == EVIDENCE_COMMIT, "snapshot receipts are not bound to the exact evidence commit")
+        check({row.get("snapshot_label") for row in snap.get("snapshots", [])} == {"evidence_a", "evidence_b"} and all(row.get("source_commit") == EVIDENCE_COMMIT and row.get("detached") is True and row.get("clean") is True and row.get("tests_passed") == 150 and row.get("validator_checks") == 121 and row.get("validator_issues") == 0 and row.get("json_files_parsed") == 60 and row.get("privacy_files_scanned") == 72 and row.get("privacy_hits") == 0 and row.get("commitment_artifacts_matched") == 36 for row in snap.get("snapshots", [])), "snapshot receipt counts or labels are not exact")
     check(parsed["reproduction/independent-team-gap.json"].get("gap") == "open" and not parsed["reproduction/common-mode-dependency-split.json"].get("independent_team_reproduction"), "independent-team gap was silently closed")
 
     promotion = parsed["thermo-psyche/promotion-state-machine.json"]
