@@ -13,7 +13,7 @@
 - **complete** — diff and stale-label review passes; x1 files remain byte-stable
 - **complete** — two clean detached evidence snapshots at `1929173535d461fb874359a0e4fc678b19661831`; each passed 170 tests, 87 full checks, 17 minimal checks, 62 JSON parses, a 72-file zero-hit privacy scan, and all 44 manifest hashes
 - **complete** — clean detached closeout validation at `9195682645728cf46c55e981490b2765d7253584`: 170 tests, 89 full checks, 17 minimal checks, 64 JSON parses, and a 74-file zero-hit privacy scan
-- **pending_seal** — final seal and four-way equality
+- **complete** — seal `a7400eb5920134577d19e1c83ae6c4005513c2e6` was four-way equal, then a clean detached snapshot passed 170 tests, 89 full checks, 17 minimal checks, 65 JSON parses, and a 75-file zero-hit privacy scan
 - **incomplete_open_gap** — independent-team reproduction
 - **incomplete_or_exact_gated** — empirical, legal, cultural, identity, deployment, proof, exhaustive-security gates
 
