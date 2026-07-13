@@ -1,8 +1,8 @@
 {
   "schema": "ghc.family.v642-v2.retained-negative-register.v1",
   "inherited_count": 46,
-  "new_count": 20,
-  "negative_count": 66,
+  "new_count": 22,
+  "negative_count": 68,
   "negatives": [
     {
       "negative_id": "REPRO-V4-N01",
@@ -462,6 +462,20 @@
       "statement": "Two inherited-ACL runner discovery attempts failed: one partial 106-test run and one non-importable-start error.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Insert the repository in sys.path, preserve bare discovery, and reject both failed attempts.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6422-N21",
+      "statement": "The first evidence push could not reach the live remote because the local Git proxy endpoint was unavailable.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retry without force and prove four-way equality after success.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6422-N22",
+      "statement": "The evidence snapshot materialization command exceeded its wrapper timeout after both detached heads completed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Recheck both heads and clean states separately, retain both worktrees, and validate each fully.",
       "retained": true
     }
   ],

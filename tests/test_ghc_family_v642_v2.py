@@ -191,13 +191,13 @@ class TestGhcFamilyV642V2(unittest.TestCase):
     def test_14_all_inherited_new_and_execution_negatives_are_retained(self) -> None:
         data = load("retained-negative-register.json")
         incident = load("validation/execution-negative-log.json")
-        self.assertEqual((data["inherited_count"], data["new_count"], data["negative_count"]), (46, 20, 66))
+        self.assertEqual((data["inherited_count"], data["new_count"], data["negative_count"]), (46, 22, 68))
         self.assertEqual(data["negative_count"], len(data["negatives"]))
         self.assertTrue(data["all_retained"])
         self.assertFalse(data["erasure_permitted"])
         self.assertTrue(all(row["retained"] for row in data["negatives"]))
-        self.assertEqual(incident["negative_count"], 6)
-        self.assertEqual([row["negative_id"] for row in incident["negatives"]], ["V6422-N15", "V6422-N16", "V6422-N17", "V6422-N18", "V6422-N19", "V6422-N20"])
+        self.assertEqual(incident["negative_count"], 8)
+        self.assertEqual([row["negative_id"] for row in incident["negatives"]], ["V6422-N15", "V6422-N16", "V6422-N17", "V6422-N18", "V6422-N19", "V6422-N20", "V6422-N21", "V6422-N22"])
         self.assertTrue(all(row["preserved"] for row in incident["negatives"]))
 
     def test_15_gate_register_preserves_five_plus_six(self) -> None:

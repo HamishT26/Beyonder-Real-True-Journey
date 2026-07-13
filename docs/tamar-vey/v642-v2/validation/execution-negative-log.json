@@ -1,6 +1,6 @@
 {
   "schema": "ghc.family.v642-v2.execution-negative-log.v1",
-  "negative_count": 6,
+  "negative_count": 8,
   "negatives": [
     {
       "negative_id": "V6422-N15",
@@ -69,6 +69,22 @@
         }
       ],
       "recovery": "insert the repository in sys.path while preserving bare unittest discovery from tests",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N21",
+      "stage": "first_evidence_push",
+      "failure": "the local Git proxy endpoint was unavailable before the push reached the live remote",
+      "effect": "the evidence commit remained local and the first push result was rejected",
+      "recovery": "retry the same non-force push; then prove local, upstream, tracking, and live-remote equality",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N22",
+      "stage": "evidence_snapshot_materialization",
+      "failure": "the command wrapper timed out after both additive detached snapshots finished materializing and reported the exact evidence head",
+      "effect": "the timeout result itself was rejected until both heads and clean states were rechecked",
+      "recovery": "retain both additive snapshots, verify their exact heads and clean states separately, then run the complete battery in each",
       "preserved": true
     }
   ]

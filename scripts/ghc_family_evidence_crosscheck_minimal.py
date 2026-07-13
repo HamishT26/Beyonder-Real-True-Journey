@@ -93,9 +93,9 @@ def verify(phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
     check("expected and observed fields retained", all({"expected_disposition", "observed_disposition"} <= set(row) for row in x2["proposals"]))
     check("source ledger has 38 pins", sources["source_count"] == len(sources["sources"]) == 38)
     check("source status counts preserved", Counter(row["status_class"] for row in sources["sources"]) == Counter({"current": 20, "stable": 14, "draft": 3, "watch": 1}))
-    check("66 negatives retained", negatives["negative_count"] == len(negatives["negatives"]) == 66 and all(row["retained"] for row in negatives["negatives"]))
-    check("negative inheritance exact", negatives["inherited_count"] == 46 and negatives["new_count"] == 20 and negatives["erasure_permitted"] is False)
-    check("execution failures retained", execution_negatives["negative_count"] == 6 and all(row["preserved"] for row in execution_negatives["negatives"]))
+    check("68 negatives retained", negatives["negative_count"] == len(negatives["negatives"]) == 68 and all(row["retained"] for row in negatives["negatives"]))
+    check("negative inheritance exact", negatives["inherited_count"] == 46 and negatives["new_count"] == 22 and negatives["erasure_permitted"] is False)
+    check("execution failures retained", execution_negatives["negative_count"] == 8 and all(row["preserved"] for row in execution_negatives["negatives"]))
     check("five open gaps and six exact gates", gates["open_gap_count"] == 5 and gates["exact_gate_count"] == 6)
     check("no gate silently closed", gates["silently_closed"] == 0 and all(row["state"] in {"open", "deferred"} for row in gates["gates"]))
     check("typed physics remains structural", ast["model_class"] == "typed scalar-tensor EFT research scaffold" and not any(eq["empirically_confirmed"] for eq in ast["equations"]))
@@ -135,7 +135,7 @@ def verify(phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
         "summary": {
             "proposal_count": 10,
             "disposition_counts": EXPECTED,
-            "retained_negative_count": 66,
+            "retained_negative_count": 68,
             "open_gap_count": 5,
             "exact_gate_count": 6,
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",

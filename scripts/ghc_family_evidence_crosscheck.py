@@ -144,7 +144,7 @@ def overview(owner: str, source_revision: str, x1_commit: str) -> str:
 
         ## 13. Retained negatives, accessibility, and closeout discipline
 
-        All 46 inherited negatives remain, and 20 v642-v2 negatives are added rather than erased. They preserve lexical-novelty limits, overlap-debt limits, structural physics limits, zero-row empirical evidence, zero real THOS arms, absent production cryptography, absent authority, bounded security, shared-infrastructure replay, absent thermo-psyche law evidence, bounded accessibility, the terminal not-ready result, the failed default-locale decoding attempt observed during the first x2 build, the first validator console-encoding failure, a failed test whose pre-snapshot state set was too narrow, a combined diagnostic invocation rejected by PowerShell quoting before either audit could run, repeated inherited-test failures caused by mode-0700 temporary directories becoming inaccessible in the managed Windows context, and the first adapted runner's incomplete discovery root. Recovery never deletes a negative merely because a later run passes.
+        All 46 inherited negatives remain, and 22 v642-v2 negatives are added rather than erased. They preserve lexical-novelty limits, overlap-debt limits, structural physics limits, zero-row empirical evidence, zero real THOS arms, absent production cryptography, absent authority, bounded security, shared-infrastructure replay, absent thermo-psyche law evidence, bounded accessibility, the terminal not-ready result, six earlier execution failures, a recovered evidence-push proxy failure, and a snapshot materialization command that exceeded its wrapper timeout after both detached heads completed. Recovery never deletes a negative merely because a later run passes.
 
         The static report provides language metadata, a skip link, landmarks, headings, navigation, table captions, scoped headers, readable labels, and bounded status language. These structural checks improve usefulness but are not a complete WCAG conformance assessment. Closeout additionally requires the full repository suite, the phase validator, the standard-library minimal verifier, JSON parsing, diff hygiene, stale-label review, exact staged-file review, zero-hit privacy scanning, clean detached snapshots, pushed commits, and local, upstream, tracking, and live-remote equality.
         """
@@ -557,7 +557,7 @@ Recovery stops consumption, retains the vector, quarantines only owned output, r
 
     write_json(phase_dir / "validation/execution-negative-log.json", {
         "schema": "ghc.family.v642-v2.execution-negative-log.v1",
-        "negative_count": 6,
+        "negative_count": 8,
         "negatives": [{
             "negative_id": "V6422-N15",
             "stage": "first_x2_build",
@@ -609,6 +609,20 @@ Recovery stops consumption, retains the vector, quarantines only owned output, r
             ],
             "recovery": "insert the repository in sys.path while preserving bare unittest discovery from tests",
             "preserved": True,
+        }, {
+            "negative_id": "V6422-N21",
+            "stage": "first_evidence_push",
+            "failure": "the local Git proxy endpoint was unavailable before the push reached the live remote",
+            "effect": "the evidence commit remained local and the first push result was rejected",
+            "recovery": "retry the same non-force push; then prove local, upstream, tracking, and live-remote equality",
+            "preserved": True,
+        }, {
+            "negative_id": "V6422-N22",
+            "stage": "evidence_snapshot_materialization",
+            "failure": "the command wrapper timed out after both additive detached snapshots finished materializing and reported the exact evidence head",
+            "effect": "the timeout result itself was rejected until both heads and clean states were rechecked",
+            "recovery": "retain both additive snapshots, verify their exact heads and clean states separately, then run the complete battery in each",
+            "preserved": True,
         }],
     })
     new_negative_specs = [
@@ -632,12 +646,14 @@ Recovery stops consumption, retains the vector, quarantines only owned output, r
         ("V6422-N18", "The first combined diagnostic invocation was rejected by PowerShell quoting before its audits ran.", "validation/execution-negative-log.json", "Split the read-only audits and preserve the rejected invocation."),
         ("V6422-N19", "Two repository reruns hit the same managed-Windows permission error for mode-0700 temporary directories across system and D-drive roots.", "validation/execution-negative-log.json", "Use the additive inherited-ACL temp adapter without editing the inherited test or changing parent or host security."),
         ("V6422-N20", "Two inherited-ACL runner discovery attempts failed: one partial 106-test run and one non-importable-start error.", "validation/execution-negative-log.json", "Insert the repository in sys.path, preserve bare discovery, and reject both failed attempts."),
+        ("V6422-N21", "The first evidence push could not reach the live remote because the local Git proxy endpoint was unavailable.", "validation/execution-negative-log.json", "Retry without force and prove four-way equality after success."),
+        ("V6422-N22", "The evidence snapshot materialization command exceeded its wrapper timeout after both detached heads completed.", "validation/execution-negative-log.json", "Recheck both heads and clean states separately, retain both worktrees, and validate each fully."),
     ]
     new_negatives = [{"negative_id": nid, "statement": statement, "evidence": evidence, "recovery": recovery, "retained": True}
                      for nid, statement, evidence, recovery in new_negative_specs]
     write_json(phase_dir / "retained-negative-register.json", {
-        "schema": "ghc.family.v642-v2.retained-negative-register.v1", "inherited_count": 46, "new_count": 20,
-        "negative_count": 66, "negatives": inherited_negatives["negatives"] + new_negatives,
+        "schema": "ghc.family.v642-v2.retained-negative-register.v1", "inherited_count": 46, "new_count": 22,
+        "negative_count": 68, "negatives": inherited_negatives["negatives"] + new_negatives,
         "all_retained": True, "erasure_permitted": False,
     })
     write_json(phase_dir / "exact-open-gate-register.json", {
@@ -655,7 +671,7 @@ Recovery stops consumption, retains the vector, quarantines only owned output, r
     write_json(phase_dir / "phase-truth.json", {
         "schema": "ghc.family.v642-v2.phase-truth.v1", "phase": phase, "owner": owner,
         "source_revision": source_revision, "x1_commit": x1_commit, "evidence_commit": "pending",
-        "proposal_count": 10, "disposition_counts": counts, "retained_negative_count": 66,
+        "proposal_count": 10, "disposition_counts": counts, "retained_negative_count": 68,
         "open_gap_count": 5, "exact_gate_count": 6, "protected_claims": protected,
         "maori_authority_boundary": "Māori concepts, wording, data, and governance remain under Māori authority.",
         "cross_owner_internal_repeatability": "pending_clean_snapshots", "independent_team_gap": "open",
@@ -664,7 +680,7 @@ Recovery stops consumption, retains the vector, quarantines only owned output, r
     checklist = [
         {"item": "exact ten frozen proposals executed as evidence permits", "state": "completed"},
         {"item": "four truth labels and observed distribution", "state": "completed"},
-        {"item": "all 66 negatives retained", "state": "completed"},
+        {"item": "all 68 negatives retained", "state": "completed"},
         {"item": "five open gaps and six exact gates visible", "state": "completed"},
         {"item": "full repository suite", "state": "pending_validation"},
         {"item": "phase validator and minimal verifier", "state": "pending_validation"},

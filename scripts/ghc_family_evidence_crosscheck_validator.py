@@ -227,15 +227,15 @@ def validate(phase: Path, allow_pending_snapshot: bool, require_report: bool) ->
     check("terminal verdict exact", verdict["verdict"] == truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("terminal deployment false", verdict["deployment_authorized"] is False and verdict["successor_authorized_by_artifact"] is False)
 
-    check("negative count 66", negatives["negative_count"] == len(negatives["negatives"]) == 66)
-    check("negative inheritance 46 plus 20", negatives["inherited_count"] == 46 and negatives["new_count"] == 20)
+    check("negative count 68", negatives["negative_count"] == len(negatives["negatives"]) == 68)
+    check("negative inheritance 46 plus 22", negatives["inherited_count"] == 46 and negatives["new_count"] == 22)
     check("all negatives retained", negatives["all_retained"] is True and all(n["retained"] for n in negatives["negatives"]))
     check("negative erasure forbidden", negatives["erasure_permitted"] is False)
-    check("execution failures retained", execution_negatives["negative_count"] == 6 and [row["negative_id"] for row in execution_negatives["negatives"]] == ["V6422-N15", "V6422-N16", "V6422-N17", "V6422-N18", "V6422-N19", "V6422-N20"] and all(row["preserved"] for row in execution_negatives["negatives"]))
+    check("execution failures retained", execution_negatives["negative_count"] == 8 and [row["negative_id"] for row in execution_negatives["negatives"]] == ["V6422-N15", "V6422-N16", "V6422-N17", "V6422-N18", "V6422-N19", "V6422-N20", "V6422-N21", "V6422-N22"] and all(row["preserved"] for row in execution_negatives["negatives"]))
     check("gate counts exact", gates["open_gap_count"] == 5 and gates["exact_gate_count"] == 6)
     check("no gates silently closed", gates["silently_closed"] == 0 and all(g["state"] in {"open", "deferred"} for g in gates["gates"]))
     check("phase truth counts exact", truth["disposition_counts"] == EXPECTED_COUNTS)
-    check("phase truth negative count", truth["retained_negative_count"] == 66)
+    check("phase truth negative count", truth["retained_negative_count"] == 68)
     check("all protected claims false", not any(truth["protected_claims"].values()))
     check("independent team gap open", truth["independent_team_gap"] == "open")
 
@@ -266,7 +266,7 @@ def validate(phase: Path, allow_pending_snapshot: bool, require_report: bool) ->
         "schema": "ghc.family.evidence-crosscheck-validation.v1", "valid": not issues,
         "check_count": len(checks), "pass_count": len(checks) - len(issues), "issue_count": len(issues),
         "issues": issues,
-        "summary": {"proposal_count": 10, "disposition_counts": EXPECTED_COUNTS, "negative_count": 66,
+        "summary": {"proposal_count": 10, "disposition_counts": EXPECTED_COUNTS, "negative_count": 68,
                     "open_gap_count": 5, "exact_gate_count": 6, "manifest_files": manifest["artifact_count"],
                     "terminal_verdict": "NOT_READY_FOR_STAGE_20"},
         "checks": checks,
