@@ -30,6 +30,8 @@ REQUIRED_FILES = [
     "complete-incomplete-checklist.md",
     "closeout-receipt.json",
     "closeout-receipt.md",
+    "seal-receipt.json",
+    "seal-receipt.md",
     "exact-open-gate-register.json",
     "v641-v7-integrated-overview.md",
     "wellbeing-check.md",
@@ -80,6 +82,7 @@ REQUIRED_FILES = [
     "environment/version-receipt.json",
     "validation/full-suite-receipt.json",
     "validation/reproduction-validation.json",
+    "validation/closeout-validation.json",
     "tooling/ghc-family-index.json",
     "tooling/selected-toolchain.json",
 ]
@@ -285,6 +288,16 @@ def validate(phase: Path, allow_pending: bool, require_report: bool, output: Pat
     if repro_validation.get("mismatch_count") != 0 or not repro_validation.get("same_owner_repeatability") or repro_validation.get("independent_team_reproduction"):
         issues.append("reproduction validation scope mismatch")
     checks.append("closeout_and_full_suite_receipts")
+
+    seal = parsed["seal-receipt.json"]
+    closeout_validation = parsed["validation/closeout-validation.json"]
+    if seal.get("closeout_commit") != "2fd89db1cd668c698e6e9609e2f3d3ede42e30f3" or seal.get("terminal_verdict") != "NOT_READY_FOR_STAGE_20":
+        issues.append("seal receipt closeout commit or terminal verdict mismatch")
+    if seal.get("outbound_baton_state") != "NOT_SENT_PRE_FINAL_SEAL" or seal.get("successor_task_created"):
+        issues.append("seal receipt claims an early baton or successor")
+    if not closeout_validation.get("valid") or closeout_validation.get("tests_passed") != 130 or closeout_validation.get("validator_issues") != 0 or closeout_validation.get("privacy_hits") != 0 or not closeout_validation.get("clean_git_state"):
+        issues.append("detached closeout validation receipt failed")
+    checks.append("seal_and_detached_closeout_validation")
 
     patterns = {
         "raw_uuid_task_or_thread_id": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
