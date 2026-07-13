@@ -1,0 +1,75 @@
+{
+  "schema": "ghc.family.v642-v2.execution-negative-log.v1",
+  "negative_count": 6,
+  "negatives": [
+    {
+      "negative_id": "V6422-N15",
+      "stage": "first_x2_build",
+      "failure": "default Windows locale could not decode a UTF-8 frozen Git object",
+      "effect": "build stopped before any x2 evidence artifact was generated",
+      "recovery": "request UTF-8 explicitly from the additive Git wrapper and rerun from the unchanged frozen x1 commit",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N16",
+      "stage": "first_full_validator_run",
+      "failure": "the Windows console encoding could not emit the Māori authority boundary in validator JSON",
+      "effect": "the validator wrote its result file but returned a console-encoding error",
+      "recovery": "configure verifier stdout as UTF-8 and rerun the unchanged evidence packet",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N17",
+      "stage": "first_v642_v2_unit_test_run",
+      "failure": "the replay test omitted the valid pending_clean_snapshots pre-commit state",
+      "effect": "one of 20 phase tests failed while the full and minimal validators remained valid",
+      "recovery": "admit the exact builder-emitted pending state without weakening the verified-state requirement",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N18",
+      "stage": "first_combined_diagnostic_invocation",
+      "failure": "PowerShell rejected a combined privacy-help and stale-label command because of malformed quoting",
+      "effect": "neither audit result from that invocation was accepted as evidence",
+      "recovery": "split the read-only audits into simpler commands and rerun each from the unchanged worktree",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N19",
+      "stage": "full_repository_test_reruns",
+      "failure": "an inherited v641-v4 test could not write or clean mode-0700 temporary directories in either the system or Tamar-owned D-drive temp root",
+      "effect": "two 190-test reruns ended with one environmental error each after an earlier complete pass",
+      "attempts": [
+        {
+          "temp_root": "system_default",
+          "result": "permission_denied"
+        },
+        {
+          "temp_root": "tamar_owned_d_drive",
+          "result": "permission_denied"
+        }
+      ],
+      "diagnosis": "ordinary inherited-ACL child directories were writable; the failure followed Python 3.12 tempfile mode 0700 under the managed Windows execution token",
+      "recovery": "use the additive family test runner to create only ephemeral temp children with inherited parent ACLs; do not edit the inherited test or change parent or host security",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6422-N20",
+      "stage": "first_inherited_acl_test_runner_run",
+      "failure": "the first adapted runner omitted the repository from sys.path; the second incorrectly treated the bare tests directory as an importable package",
+      "effect": "the first ran only 106 tests with six import errors; the second stopped before discovery; both partial results were rejected",
+      "attempts": [
+        {
+          "discovery": "bare_without_repository_sys_path",
+          "result": "106_tests_and_6_import_errors"
+        },
+        {
+          "discovery": "tests_as_importable_top_level",
+          "result": "start_directory_not_importable"
+        }
+      ],
+      "recovery": "insert the repository in sys.path while preserving bare unittest discovery from tests",
+      "preserved": true
+    }
+  ]
+}
