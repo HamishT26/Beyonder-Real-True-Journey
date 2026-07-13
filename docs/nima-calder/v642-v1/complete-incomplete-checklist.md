@@ -7,13 +7,13 @@
 - **complete** — all 32 inherited negatives retained
 - **complete** — 14 new negatives retained
 - **complete** — full repository suite: 170 of 170 tests pass
-- **complete** — full validator 87 of 87 and stdlib-only minimal verifier 17 of 17; summaries agree
-- **complete** — 62 of 62 phase JSON files parse
+- **complete** — closeout full validator 89 of 89 and stdlib-only minimal verifier 17 of 17; summaries agree
+- **complete** — closeout snapshot parsed 64 of 64 phase JSON files
 - **complete** — privacy and raw-ID scan has zero hits
 - **complete** — diff and stale-label review passes; x1 files remain byte-stable
 - **complete** — two clean detached evidence snapshots at `1929173535d461fb874359a0e4fc678b19661831`; each passed 170 tests, 87 full checks, 17 minimal checks, 62 JSON parses, a 72-file zero-hit privacy scan, and all 44 manifest hashes
-- **pending_closeout** — clean detached closeout validation
-- **pending_closeout** — final seal and four-way equality
+- **complete** — clean detached closeout validation at `9195682645728cf46c55e981490b2765d7253584`: 170 tests, 89 full checks, 17 minimal checks, 64 JSON parses, and a 74-file zero-hit privacy scan
+- **pending_seal** — final seal and four-way equality
 - **incomplete_open_gap** — independent-team reproduction
 - **incomplete_or_exact_gated** — empirical, legal, cultural, identity, deployment, proof, exhaustive-security gates
 
