@@ -7,8 +7,8 @@
 - **V7-P05 — open_gap**: Freed ID resolution-status interoperability fault injection
 - **V7-P06 — exact_gate**: CBR rights-floor precedence and authority-conflict casebook
 - **V7-P07 — completed**: Adversarial encoding and provenance-poisoning recovery battery
-- **V7-P08 — open_gap**: Common-mode independence budget for snapshot repeatability
+- **V7-P08 — completed**: Common-mode independence budget for snapshot repeatability
 - **V7-P09 — completed**: Thermo-psyche counterfactual relabel adjudication
 - **V7-P10 — completed**: Stage 20 falsifier-linked claim-expiry matrix
 
-Snapshot state: `pending`. The ledger separates completed, represented, open-gap, and exact-gate outcomes; none is silently promoted.
+Snapshot state: `verified`. The ledger separates completed, represented, open-gap, and exact-gate outcomes; none is silently promoted.

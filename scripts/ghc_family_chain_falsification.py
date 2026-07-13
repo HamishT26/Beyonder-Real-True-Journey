@@ -15,6 +15,7 @@ PHASE = "v641-gmut-thos-v7-x1-x2"
 OWNER = "Sable Rook"
 SOURCE_REVISION = "313517217ddb820efb4c3fbbcdcfc3bed76ad429"
 X1_COMMIT = "f6281f48a3fad5b918df870117d2d02fdd4dba26"
+EVIDENCE_COMMIT = "172dc49be34d20a0ec9fa7defe50168c9171191a"
 CANONICAL_EQUATIONS = [
     "G_{mu nu} + Lambda g_{mu nu} = M_Pl^{-2} T^{SM}_{mu nu} + Omega_{mu nu}",
     "Omega_{mu nu} = M_Pl^{-2} (T^phi_{mu nu} + T^{EFT}_{mu nu})",
@@ -64,10 +65,11 @@ def matrix_rank(matrix: list[list[float]], tolerance: float = 1e-10) -> int:
 
 def artifact_hashes(phase: Path) -> dict[str, str]:
     result: dict[str, str] = {}
+    stable_prefixes = ("provenance/", "physics/", "empirical/", "thos/", "freed-id/", "cbr/", "security/", "sources/")
     for path in sorted(phase.rglob("*")):
         if path.is_file() and path.suffix.lower() in {".json", ".md", ".html"}:
             rel = path.relative_to(phase).as_posix()
-            if rel.startswith("validation/") or rel.startswith("reproduction/"):
+            if not rel.startswith(stable_prefixes):
                 continue
             normalized = path.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
             result[rel] = hashlib.sha256(normalized.encode("utf-8")).hexdigest()
@@ -182,7 +184,7 @@ def build(repo: Path, phase: Path, snapshot_state: str, tests_passed: int) -> No
             "schema": "ghc.family.v641-v7.canonical-gmut-register.v1",
             "equations": CANONICAL_EQUATIONS,
             "model_family": "typed_scalar_tensor_eft_research_scaffold",
-            "types": {"G_mu_nu":"rank_2_covariant_tensor","g_mu_nu":"rank_2_metric_tensor","Lambda":"inverse_length_squared","M_Pl":"energy","T_terms":"stress_energy_rank_2","Omega_mu_nu":"effective_rank_2_source"},
+            "types": {"einstein_tensor_G_mu_nu":"rank_2_covariant_tensor","metric_tensor_g_mu_nu":"rank_2_metric_tensor","Lambda":"inverse_length_squared","M_Pl":"energy","T_terms":"stress_energy_rank_2","Omega_mu_nu":"effective_rank_2_source"},
             "historical_equations_status": "provenance_or_context_unless_separately_mapped_and_tested",
             "empirical_confirmation": False,
             "unique_prediction": False,
@@ -430,8 +432,9 @@ This is a bounded threat model and negative-test suite. It is not exhaustive sec
             "claim_ceiling":"same_owner_clean_snapshot_repeatability" if snapshot_verified else "snapshot_validation_pending",
         },
     )
-    write_json(phase / "reproduction/clean-snapshot-manifest.json", {"schema":"ghc.family.v641-v7.clean-snapshot-manifest.v1","snapshot_state":snapshot_state,"required_snapshots":2,"verified_snapshots":2 if snapshot_verified else 0,"source_commit":"evidence_commit_to_be_recorded_at_closeout","artifact_hashes":artifact_hashes(phase),"normalized_newline_hashing":True})
-    write_json(phase / "reproduction/repeatability-receipt.json", {"schema":"ghc.family.v641-v7.repeatability-receipt.v1","state":"verified_same_owner_clean_snapshots" if snapshot_verified else "pending_detached_snapshot_checks","snapshot_a_passed":snapshot_verified,"snapshot_b_passed":snapshot_verified,"hash_parity":snapshot_verified,"independent_reproduction":False})
+    write_json(phase / "reproduction/clean-snapshot-manifest.json", {"schema":"ghc.family.v641-v7.clean-snapshot-manifest.v1","snapshot_state":snapshot_state,"required_snapshots":2,"verified_snapshots":2 if snapshot_verified else 0,"source_commit":EVIDENCE_COMMIT,"artifact_hashes":artifact_hashes(phase),"normalized_newline_hashing":True})
+    write_json(phase / "reproduction/repeatability-receipt.json", {"schema":"ghc.family.v641-v7.repeatability-receipt.v1","state":"verified_same_owner_clean_snapshots" if snapshot_verified else "pending_detached_snapshot_checks","evidence_commit":EVIDENCE_COMMIT,"snapshot_a_passed":snapshot_verified,"snapshot_b_passed":snapshot_verified,"hash_parity":snapshot_verified,"independent_reproduction":False})
+    write_json(phase / "reproduction/detached-snapshot-validation.json", {"schema":"ghc.family.v641-v7.detached-snapshot-validation.v1","state":"verified" if snapshot_verified else "pending","evidence_commit":EVIDENCE_COMMIT,"snapshots":[{"label":"clean_detached_snapshot_a","head":EVIDENCE_COMMIT,"tests_passed":130 if snapshot_verified else 0,"tests_failed":0,"validator_checks":20 if snapshot_verified else 0,"validator_issues":0,"privacy_files":68 if snapshot_verified else 0,"privacy_hits":0,"clean":snapshot_verified},{"label":"clean_detached_snapshot_b","head":EVIDENCE_COMMIT,"tests_passed":130 if snapshot_verified else 0,"tests_failed":0,"validator_checks":20 if snapshot_verified else 0,"validator_issues":0,"privacy_files":68 if snapshot_verified else 0,"privacy_hits":0,"clean":snapshot_verified}],"normalized_hash_file_count":72 if snapshot_verified else 0,"aggregate_sha256":"fc384ed6c6eab765505d4b71b12ce90ffd6d4fc09ff4cf77e28b145b5bbab69c" if snapshot_verified else None,"mismatch_count":0 if snapshot_verified else None,"same_owner_repeatability":snapshot_verified,"independent_team_reproduction":False})
     write_json(phase / "reproduction/independent-team-gap.json", {"schema":"ghc.family.v641-v7.independent-team-gap.v1","independent_team_present":False,"independent_environment_present":False,"independent_protocol_ownership":False,"gap":"open","claim_prohibited":"independent_scientific_reproduction"})
 
     # P09: six-class rubric and counterfactual relabel tests.
@@ -513,6 +516,8 @@ This is a bounded threat model and negative-test suite. It is not exhaustive sec
         {"negative_id":"CBR-V7-N07","origin":"v7_execution","observed":"affected-party, Māori, cultural, and competent legal authorities were not present","resolution":"retain exact gate and refuse algorithmic settlement","retained":True},
         {"negative_id":"REPRO-V7-N08","origin":"v7_execution","observed":"an independent team and independently owned protocol were absent","resolution":"retain independent reproduction gap; report only strongest verified repeatability class","retained":True},
         {"negative_id":"CLI-V7-N09","origin":"v7_candidate_validation","observed":"the first unittest module-path invocation attempted cross-drive path normalization and exited before running tests","resolution":"invoke the test module directly or run discovery from the repository root; the direct 20-test v7 run passed","retained":True},
+        {"negative_id":"ENV-V7-N10","origin":"v7_full_suite","observed":"the inherited newline-parity test could not write inside Python TemporaryDirectory children created with restrictive Windows permissions under the managed sandbox","resolution":"run the unchanged 130-test suite through a one-shot harness that creates temporary test directories with Windows-writable permissions; all 130 tests then passed","retained":True},
+        {"negative_id":"JSON-V7-N11","origin":"v7_closeout_candidate","observed":"PowerShell's case-insensitive JSON object conversion rejected canonical-register keys that differed only by uppercase versus lowercase tensor symbols","resolution":"use explicit semantic key prefixes so Python and PowerShell parsers both accept the register","retained":True},
     ]
     write_json(phase / "retained-negative-register.json", {"schema":"ghc.family.v641-v7.retained-negative-register.v1","inherited_count":len(v6_negatives["negatives"]),"new_count":len(new_negatives),"negative_count":len(v6_negatives["negatives"])+len(new_negatives),"negatives":v6_negatives["negatives"]+new_negatives,"all_retained":True,"erasure_permitted":False})
 

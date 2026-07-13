@@ -1,8 +1,8 @@
 {
   "schema": "ghc.family.v641-v7.retained-negative-register.v1",
   "inherited_count": 9,
-  "new_count": 9,
-  "negative_count": 18,
+  "new_count": 11,
+  "negative_count": 20,
   "negatives": [
     {
       "negative_id": "REPRO-V4-N01",
@@ -138,6 +138,20 @@
       "origin": "v7_candidate_validation",
       "observed": "the first unittest module-path invocation attempted cross-drive path normalization and exited before running tests",
       "resolution": "invoke the test module directly or run discovery from the repository root; the direct 20-test v7 run passed",
+      "retained": true
+    },
+    {
+      "negative_id": "ENV-V7-N10",
+      "origin": "v7_full_suite",
+      "observed": "the inherited newline-parity test could not write inside Python TemporaryDirectory children created with restrictive Windows permissions under the managed sandbox",
+      "resolution": "run the unchanged 130-test suite through a one-shot harness that creates temporary test directories with Windows-writable permissions; all 130 tests then passed",
+      "retained": true
+    },
+    {
+      "negative_id": "JSON-V7-N11",
+      "origin": "v7_closeout_candidate",
+      "observed": "PowerShell's case-insensitive JSON object conversion rejected canonical-register keys that differed only by uppercase versus lowercase tensor symbols",
+      "resolution": "use explicit semantic key prefixes so Python and PowerShell parsers both accept the register",
       "retained": true
     }
   ],

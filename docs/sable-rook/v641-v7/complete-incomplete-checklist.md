@@ -12,10 +12,10 @@
 - bounded adversarial encoding and recovery suite generated
 - six-class thermo-psyche relabel tribunal generated
 - Stage 20 pass-fail-defer board retains NOT_READY verdict
+- two detached clean snapshots passed with common-mode budget recorded
 
 ## Incomplete or exactly gated
 
-- two detached clean-snapshot validations
 - real-data GMUT likelihood and independent statistical review
 - blind matched-budget THOS real arms
 - real Freed ID cryptography resolution status interoperability and trust governance

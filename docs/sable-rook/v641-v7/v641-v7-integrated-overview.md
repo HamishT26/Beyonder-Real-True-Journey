@@ -2,7 +2,7 @@
 
 ## Executive truth
 
-V641-v7 is a chain-wide falsification, provenance, and retained-negative audit. It begins from the clean v6 source revision `313517217ddb820efb4c3fbbcdcfc3bed76ad429` and the separately frozen v7 x1 commit `f6281f48a3fad5b918df870117d2d02fdd4dba26`. Ten proposals were executed only after x1 was clean and equal locally, upstream, and on the live remote. The current outcome ledger records {'completed': 5, 'represented': 2, 'open_gap': 2, 'exact_gate': 1}. The terminal decision remains **NOT_READY_FOR_STAGE_20**.
+V641-v7 is a chain-wide falsification, provenance, and retained-negative audit. It begins from the clean v6 source revision `313517217ddb820efb4c3fbbcdcfc3bed76ad429` and the separately frozen v7 x1 commit `f6281f48a3fad5b918df870117d2d02fdd4dba26`. Ten proposals were executed only after x1 was clean and equal locally, upstream, and on the live remote. The current outcome ledger records {'completed': 6, 'represented': 2, 'open_gap': 1, 'exact_gate': 1}. The terminal decision remains **NOT_READY_FOR_STAGE_20**.
 
 This packet improves how claims can be reproduced, challenged, downgraded, or retracted. It does not empirically confirm GMUT, detect a force, produce a unique prediction or likelihood, validate THOS superiority, establish AGI or ASI, create production Freed ID, enact or ratify CBR, transfer Māori authority, prove consciousness or personhood, deploy a system, establish exhaustive security or complete accessibility conformance, prove a Theory of Everything, or demonstrate independent-team scientific reproduction.
 
@@ -72,7 +72,7 @@ The relabel test rejects normative-to-physical conservation, heuristic-to-result
 
 ## Stage 20 evidence board
 
-Every board claim receives exactly one pass, fail, or defer decision, a surviving falsifier, an expiry or reopening condition, and an evidence owner. Bounded provenance, canonical structural fixtures, bounded security controls, and report structure can pass within their declared scope. Empirical GMUT confirmation, real THOS arms, production Freed ID, exhaustive security, independent reproduction, and consciousness/personhood/AGI/ASI/deployment/ToE claims fail. CBR legitimacy and complete accessibility conformance defer to the necessary authorities and assessments. Same-owner repeatability remains deferred until two detached snapshots pass.
+Every board claim receives exactly one pass, fail, or defer decision, a surviving falsifier, an expiry or reopening condition, and an evidence owner. Bounded provenance, canonical structural fixtures, bounded security controls, and report structure can pass within their declared scope. Empirical GMUT confirmation, real THOS arms, production Freed ID, exhaustive security, independent reproduction, and consciousness/personhood/AGI/ASI/deployment/ToE claims fail. CBR legitimacy and complete accessibility conformance defer to the necessary authorities and assessments. Same-owner repeatability passes after two detached snapshots.
 
 A defer is never counted as a pass. A structural pass cannot satisfy an empirical gate. A local test cannot satisfy an authority gate. The board remains monotonic with v6: inherited negatives are retained, not optimized away. Consequently the terminal verdict is **NOT_READY_FOR_STAGE_20**.
 

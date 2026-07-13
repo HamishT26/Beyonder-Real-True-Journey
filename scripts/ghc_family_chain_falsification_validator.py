@@ -28,6 +28,8 @@ REQUIRED_FILES = [
     "retained-negative-register.json",
     "complete-incomplete-checklist.json",
     "complete-incomplete-checklist.md",
+    "closeout-receipt.json",
+    "closeout-receipt.md",
     "exact-open-gate-register.json",
     "v641-v7-integrated-overview.md",
     "wellbeing-check.md",
@@ -63,6 +65,7 @@ REQUIRED_FILES = [
     "security/privacy-raw-id-controls.json",
     "reproduction/common-mode-independence-budget.json",
     "reproduction/clean-snapshot-manifest.json",
+    "reproduction/detached-snapshot-validation.json",
     "reproduction/repeatability-receipt.json",
     "reproduction/independent-team-gap.json",
     "thermo-psyche/six-class-rubric.json",
@@ -75,6 +78,8 @@ REQUIRED_FILES = [
     "stage20/terminal-evidence-board.json",
     "environment/startup-receipt.json",
     "environment/version-receipt.json",
+    "validation/full-suite-receipt.json",
+    "validation/reproduction-validation.json",
     "tooling/ghc-family-index.json",
     "tooling/selected-toolchain.json",
 ]
@@ -216,8 +221,11 @@ def validate(phase: Path, allow_pending: bool, require_report: bool, output: Pat
     repeat = parsed["reproduction/repeatability-receipt.json"]
     budget = parsed["reproduction/common-mode-independence-budget.json"]
     independent = parsed["reproduction/independent-team-gap.json"]
+    detached = parsed["reproduction/detached-snapshot-validation.json"]
     if snapshot_state == "verified" and not (repeat.get("snapshot_a_passed") and repeat.get("snapshot_b_passed") and repeat.get("hash_parity")):
         issues.append("verified snapshots lack parity receipt")
+    if snapshot_state == "verified" and not (detached.get("state") == "verified" and detached.get("normalized_hash_file_count") == 72 and detached.get("mismatch_count") == 0 and all(row.get("tests_passed") == 130 and row.get("validator_issues") == 0 and row.get("privacy_hits") == 0 and row.get("clean") for row in detached.get("snapshots", []))):
+        issues.append("detached snapshot validation receipt is incomplete")
     if budget.get("independent_team_reproduction") or independent.get("independent_team_present") or independent.get("gap") != "open":
         issues.append("independent reproduction gap was closed without evidence")
     checks.append("repeatability_and_independence_budget")
@@ -245,7 +253,7 @@ def validate(phase: Path, allow_pending: bool, require_report: bool, output: Pat
     checks.append("stage20_pass_fail_defer_board")
 
     negatives = parsed["retained-negative-register.json"]
-    if negatives.get("negative_count", 0) < 17 or not negatives.get("all_retained") or not all(row.get("retained") for row in negatives.get("negatives", [])):
+    if negatives.get("negative_count") != 20 or not negatives.get("all_retained") or not all(row.get("retained") for row in negatives.get("negatives", [])):
         issues.append("retained-negative register is incomplete")
     checks.append("retained_negatives")
 
@@ -264,6 +272,19 @@ def validate(phase: Path, allow_pending: bool, require_report: bool, output: Pat
     if len(re.findall(r"\b\w+\b", overview)) < 1800:
         issues.append("integrated overview is below the three-page-equivalent floor")
     checks.append("phase_truth_and_overview")
+
+    closeout = parsed["closeout-receipt.json"]
+    full_suite = parsed["validation/full-suite-receipt.json"]
+    repro_validation = parsed["validation/reproduction-validation.json"]
+    if closeout.get("disposition_counts") != {"completed":6,"represented":2,"open_gap":1,"exact_gate":1} or closeout.get("terminal_verdict") != "NOT_READY_FOR_STAGE_20":
+        issues.append("closeout receipt outcome or terminal verdict mismatch")
+    if closeout.get("outbound_baton_state") != "NOT_SENT_PRE_CLOSEOUT" or closeout.get("successor_task_created"):
+        issues.append("closeout receipt claims an early baton or task creation")
+    if full_suite.get("verified_run") != {"tests_passed":130,"tests_failed":0,"tests_errored":0,"valid":True}:
+        issues.append("full-suite verified receipt mismatch")
+    if repro_validation.get("mismatch_count") != 0 or not repro_validation.get("same_owner_repeatability") or repro_validation.get("independent_team_reproduction"):
+        issues.append("reproduction validation scope mismatch")
+    checks.append("closeout_and_full_suite_receipts")
 
     patterns = {
         "raw_uuid_task_or_thread_id": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),

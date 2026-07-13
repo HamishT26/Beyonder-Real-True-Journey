@@ -122,10 +122,14 @@ class TestGhcFamilyV641V7(unittest.TestCase):
     def test_14_repeatability_keeps_independent_team_gap(self) -> None:
         budget = load("reproduction/common-mode-independence-budget.json")
         receipt = load("reproduction/repeatability-receipt.json")
+        detached = load("reproduction/detached-snapshot-validation.json")
         gap = load("reproduction/independent-team-gap.json")
         self.assertGreaterEqual(len(budget["shared_dependencies"]), 5)
         self.assertFalse(budget["independent_team_reproduction"])
         self.assertFalse(receipt["independent_reproduction"])
+        if receipt["state"] == "verified_same_owner_clean_snapshots":
+            self.assertEqual(detached["normalized_hash_file_count"], 72)
+            self.assertEqual(detached["mismatch_count"], 0)
         self.assertEqual(gap["gap"], "open")
 
     def test_15_thermo_psyche_has_exact_six_class_rubric(self) -> None:
@@ -149,8 +153,8 @@ class TestGhcFamilyV641V7(unittest.TestCase):
     def test_17_all_inherited_and_v7_negatives_are_retained(self) -> None:
         data = load("retained-negative-register.json")
         self.assertEqual(data["inherited_count"], 9)
-        self.assertEqual(data["new_count"], 9)
-        self.assertEqual(data["negative_count"], 18)
+        self.assertEqual(data["new_count"], 11)
+        self.assertEqual(data["negative_count"], 20)
         self.assertTrue(data["all_retained"])
         self.assertTrue(all(row["retained"] for row in data["negatives"]))
 
