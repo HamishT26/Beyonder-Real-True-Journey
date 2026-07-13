@@ -1,0 +1,61 @@
+{
+  "schema": "ghc.family.v641-v7.conservation-obligation-register.v1",
+  "obligations": [
+    {
+      "name": "contracted_bianchi_identity",
+      "statement": "nabla^mu G_mu_nu = 0",
+      "class": "formal_invariant",
+      "status": "required"
+    },
+    {
+      "name": "metric_compatibility",
+      "statement": "nabla^mu g_mu_nu = 0",
+      "class": "formal_invariant",
+      "status": "required"
+    },
+    {
+      "name": "total_effective_source_conservation",
+      "statement": "nabla^mu (T_SM_mu_nu + T_phi_mu_nu + T_EFT_mu_nu) = 0 subject to field equations and exchange bookkeeping",
+      "class": "model_obligation",
+      "status": "required_not_empirically_tested_here"
+    }
+  ],
+  "unit_checks": [
+    {
+      "fixture": "canonical_terms",
+      "accepted": true
+    },
+    {
+      "fixture": "dimensionless_Lambda",
+      "accepted": false
+    },
+    {
+      "fixture": "scalar_Omega",
+      "accepted": false
+    }
+  ],
+  "stability_fixtures": [
+    {
+      "eigenvalues": [
+        -1.0,
+        -2.0
+      ],
+      "classification": "locally_stable_toy"
+    },
+    {
+      "eigenvalues": [
+        0.0,
+        -1.0
+      ],
+      "classification": "marginal_toy"
+    },
+    {
+      "eigenvalues": [
+        0.2,
+        -1.0
+      ],
+      "classification": "unstable_toy"
+    }
+  ],
+  "nature_claim": false
+}

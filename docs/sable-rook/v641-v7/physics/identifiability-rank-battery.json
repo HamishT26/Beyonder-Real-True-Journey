@@ -1,0 +1,91 @@
+{
+  "schema": "ghc.family.v641-v7.identifiability-rank-battery.v1",
+  "fixtures": [
+    {
+      "fixture": "full_rank_identity",
+      "jacobian": [
+        [
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "parameters": 2,
+      "expected_rank": 2,
+      "witness": null,
+      "observed_rank": 2,
+      "pass": true,
+      "structurally_identifiable": true
+    },
+    {
+      "fixture": "sum_degeneracy",
+      "jacobian": [
+        [
+          1.0,
+          1.0
+        ],
+        [
+          2.0,
+          2.0
+        ]
+      ],
+      "parameters": 2,
+      "expected_rank": 1,
+      "witness": [
+        1.0,
+        -1.0
+      ],
+      "observed_rank": 1,
+      "pass": true,
+      "structurally_identifiable": false
+    },
+    {
+      "fixture": "scaled_coordinates",
+      "jacobian": [
+        [
+          2.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0
+        ]
+      ],
+      "parameters": 2,
+      "expected_rank": 2,
+      "witness": null,
+      "observed_rank": 2,
+      "pass": true,
+      "structurally_identifiable": true
+    },
+    {
+      "fixture": "zero_response",
+      "jacobian": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "parameters": 2,
+      "expected_rank": 0,
+      "witness": [
+        1.0,
+        0.0
+      ],
+      "observed_rank": 0,
+      "pass": true,
+      "structurally_identifiable": false
+    }
+  ],
+  "all_expected_ranks_observed": true,
+  "degeneracy_witnesses_retained": true,
+  "scope": "toy_structural_parameter_maps_only",
+  "empirical_identifiability_established": false
+}
