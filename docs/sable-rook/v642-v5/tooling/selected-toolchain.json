@@ -1,0 +1,28 @@
+{
+  "schema": "ghc.family.v642-v5.selected-toolchain.v1",
+  "phase": "v642-gmut-thos-v5-x1-x2",
+  "owner": "Sable Rook",
+  "selection_rule": "Use the smallest standard-library family-current toolchain, keep inherited sealed tools byte-stable, and add only reusable family-named non-compensation tools after the x1 freeze.",
+  "existing_family_current": [
+    "ghc-family-index",
+    "scripts/ghc_family_phase_privacy_scan.py",
+    "scripts/ghc_family_repository_test_runner.py",
+    "scripts/ghc_family_claim_coherence_validator.py",
+    "scripts/ghc_family_claim_coherence_minimal.py"
+  ],
+  "planned_x2_family_current": [
+    "scripts/ghc_family_evidence_noncompensation.py",
+    "scripts/ghc_family_evidence_noncompensation_validator.py",
+    "scripts/ghc_family_evidence_noncompensation_minimal.py",
+    "scripts/build_ghc_family_evidence_noncompensation_report.py"
+  ],
+  "planned_tests": [
+    "tests/test_ghc_family_v642_v5.py",
+    "python scripts/ghc_family_repository_test_runner.py --start-directory tests --pattern test_*.py --windows-inherited-acl-temp"
+  ],
+  "planned_snapshot_policy": "Fresh additive detached D-drive snapshots with clean Git status, exact commit checks, normalized manifest parity, and no claim of independent reproduction.",
+  "compatibility_boundary": "The v642-v4 claim-coherence tools and all earlier sealed tools remain byte-stable and are selected only for inherited replay. They are not relabeled as v642-v5 implementation.",
+  "draft_source_boundary": "W3C DID Resolution v0.3 and JSON Schema 2020-12 remain draft context; the new implementation uses the Python standard library and stable RFC 8785 canonicalization boundary.",
+  "shared_skill_change": "not_justified",
+  "x1_state": "planned_not_implemented"
+}
