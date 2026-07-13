@@ -144,7 +144,7 @@ class TestGhcFamilyV642V4(unittest.TestCase):
     def test_12_claim_lattice_blocks_promotion_and_negative_erasure(self) -> None:
         protected = {name: False for name in builder.PROTECTED_CLAIMS}
         boundary = "No protected scientific authority production identity deployment accessibility security or reproduction claim is established."
-        base = {"truth_labels": builder.TRUTH_LABELS, "protected_claims": protected, "negative_count": 118, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary, "expected_boundary_phrase": boundary}
+        base = {"truth_labels": builder.TRUTH_LABELS, "protected_claims": protected, "negative_count": 120, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary, "expected_boundary_phrase": boundary}
         self.assertEqual(builder.claim_lattice_decision(base), (True, []))
         self.assertFalse(builder.claim_lattice_decision({**base, "negative_count": 95})[0])
         self.assertFalse(builder.claim_lattice_decision({**base, "protected_claims": {**protected, "empirical_gmut_confirmation": True}})[0])
@@ -153,11 +153,11 @@ class TestGhcFamilyV642V4(unittest.TestCase):
         register = read_json("retained-negative-register.json")
         ids = [row["negative_id"] for row in register["negatives"]]
         self.assertEqual(register["inherited_count"], 96)
-        self.assertGreaterEqual(register["new_count"], 22)
+        self.assertGreaterEqual(register["new_count"], 24)
         self.assertEqual(register["negative_count"], len(ids))
         self.assertEqual(len(ids), len(set(ids)))
         self.assertTrue(all(f"V6423-N{value}" in ids for value in range(21, 29)))
-        self.assertTrue(all(f"V6424-N{value:02d}" in ids for value in range(1, 21)))
+        self.assertTrue(all(f"V6424-N{value:02d}" in ids for value in range(1, 23)))
 
     def test_14_gate_register_preserves_five_plus_six(self) -> None:
         gates = read_json("exact-open-gate-register.json")

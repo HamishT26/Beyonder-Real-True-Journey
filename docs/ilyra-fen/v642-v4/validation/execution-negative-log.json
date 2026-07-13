@@ -1,6 +1,6 @@
 {
   "schema": "ghc.family.v642-v4.execution-negative-log.v1",
-  "negative_count": 3,
+  "negative_count": 4,
   "negatives": [
     {
       "negative_id": "V6424-X1-N01",
@@ -24,6 +24,14 @@
       "statement": "The first staged-token review placed --cached after the grep pattern, so Git treated it as a revision and the pending-token subcheck failed.",
       "evidence": "validation/diff-stale-staged-review.json",
       "recovery": "Use git grep --cached before the pattern; the corrected rerun found exactly three permitted pending evidence tokens and zero sent-route tokens.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6424-N22",
+      "origin": "v642-v4_execution",
+      "statement": "The first closeout staged-name hash helper used System.Convert.ToHexString, which is unavailable in the host PowerShell/.NET surface, so the helper stopped after staging.",
+      "evidence": "validation/diff-stale-staged-review.json",
+      "recovery": "Keep the intact staging set and encode each SHA-256 byte with ToString('x2') before joining the hexadecimal receipt.",
       "retained": true
     }
   ],

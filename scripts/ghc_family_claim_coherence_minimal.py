@@ -80,7 +80,7 @@ def verify(phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
     check(len({row["title"] for row in chain["records"]}) == 110, "chain-titles")
     check(negatives["inherited_count"] == 96, "inherited-negatives")
     check(negatives["negative_count"] == len(negatives["negatives"]), "negative-count")
-    check(negatives["negative_count"] >= 118, "negative-floor")
+    check(negatives["negative_count"] >= 120, "negative-floor")
     check(len({row["negative_id"] for row in negatives["negatives"]}) == negatives["negative_count"], "negative-ids")
     check(negatives["all_retained"] and not negatives["erasure_permitted"], "negative-retention")
     check(gates["open_gap_count"] == 5, "open-gaps")

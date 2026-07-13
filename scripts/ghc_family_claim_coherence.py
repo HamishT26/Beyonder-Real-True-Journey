@@ -845,10 +845,10 @@ def build_all(
     protected = {name: False for name in PROTECTED_CLAIMS}
     boundary_phrase = "No protected scientific authority production identity deployment accessibility security or reproduction claim is established."
     lattice_cases = [
-        {"case_id": "LATTICE-CONSISTENT", "truth_labels": TRUTH_LABELS, "protected_claims": protected, "negative_count": 119, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary_phrase, "expected_boundary_phrase": boundary_phrase, "expected": True},
-        {"case_id": "LATTICE-PROMOTED", "truth_labels": TRUTH_LABELS, "protected_claims": {**protected, "empirical_gmut_confirmation": True}, "negative_count": 119, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary_phrase, "expected_boundary_phrase": boundary_phrase, "expected": False},
+        {"case_id": "LATTICE-CONSISTENT", "truth_labels": TRUTH_LABELS, "protected_claims": protected, "negative_count": 120, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary_phrase, "expected_boundary_phrase": boundary_phrase, "expected": True},
+        {"case_id": "LATTICE-PROMOTED", "truth_labels": TRUTH_LABELS, "protected_claims": {**protected, "empirical_gmut_confirmation": True}, "negative_count": 120, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary_phrase, "expected_boundary_phrase": boundary_phrase, "expected": False},
         {"case_id": "LATTICE-NEGATIVE-ERASURE", "truth_labels": TRUTH_LABELS, "protected_claims": protected, "negative_count": 95, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": boundary_phrase, "expected_boundary_phrase": boundary_phrase, "expected": False},
-        {"case_id": "LATTICE-WHITESPACE-NORMALIZED", "truth_labels": TRUTH_LABELS, "protected_claims": protected, "negative_count": 119, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": "No protected scientific authority production identity deployment\n accessibility security or reproduction claim is established.", "expected_boundary_phrase": boundary_phrase, "expected": True},
+        {"case_id": "LATTICE-WHITESPACE-NORMALIZED", "truth_labels": TRUTH_LABELS, "protected_claims": protected, "negative_count": 120, "inherited_negative_count": 96, "open_gap_count": 5, "exact_gate_count": 6, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary_phrase": "No protected scientific authority production identity deployment\n accessibility security or reproduction claim is established.", "expected_boundary_phrase": boundary_phrase, "expected": True},
     ]
     lattice_vectors = []
     for case in lattice_cases:
@@ -985,6 +985,7 @@ def build_all(
         ("V6424-N19", "A protected-claim promotion or negative erasure is rejected across formats.", "validation/claim-contradiction-vectors.json", "Regenerate derived views from canonical phase truth and retain the contradiction."),
         ("V6424-N20", "Five open gaps and six exact gates independently keep Stage 20 not ready.", "stage20/terminal-verdict.json", "Preserve the terminal stop until exact evidence closes each gate."),
         ("V6424-N21", "The first staged-token review placed --cached after the grep pattern, so Git treated it as a revision and the pending-token subcheck failed.", "validation/diff-stale-staged-review.json", "Use git grep --cached before the pattern; the corrected rerun found exactly three permitted pending evidence tokens and zero sent-route tokens."),
+        ("V6424-N22", "The first closeout staged-name hash helper used System.Convert.ToHexString, which is unavailable in the host PowerShell/.NET surface, so the helper stopped after staging.", "validation/diff-stale-staged-review.json", "Keep the intact staging set and encode each SHA-256 byte with ToString('x2') before joining the hexadecimal receipt."),
     ]
     boundary_negatives = [
         {"negative_id": negative_id, "origin": "v642-v4_execution", "statement": statement, "evidence": evidence, "recovery": recovery, "retained": True}
@@ -992,7 +993,7 @@ def build_all(
     ]
     new_negatives = x1_negatives + boundary_negatives
     execution_negatives = x1_negatives + [
-        row for row in boundary_negatives if row["negative_id"] == "V6424-N21"
+        row for row in boundary_negatives if row["negative_id"] in {"V6424-N21", "V6424-N22"}
     ]
     write_json(
         phase / "retained-negative-register.json",

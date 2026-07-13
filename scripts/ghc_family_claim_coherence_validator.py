@@ -244,13 +244,13 @@ def validate(
 
     negative_ids = [row["negative_id"] for row in negatives["negatives"]]
     check(negatives["inherited_count"] == 96, "96 inherited negatives")
-    check(negatives["new_count"] >= 22, "at least 22 phase-local negatives")
+    check(negatives["new_count"] >= 24, "at least 24 phase-local negatives")
     check(negatives["negative_count"] == len(negative_ids), "negative count matches records")
     check(len(set(negative_ids)) == len(negative_ids), "negative identifiers unique")
     check(negatives["all_retained"] is True, "all negatives retained")
     check(negatives["erasure_permitted"] is False, "negative erasure forbidden")
     check(all(f"V6423-N{number}" in negative_ids for number in range(21, 29)), "all eight v642-v3 execution negatives preserved")
-    check(all(f"V6424-N{number:02d}" in negative_ids for number in range(1, 21)), "all twenty bounded v642-v4 negatives preserved")
+    check(all(f"V6424-N{number:02d}" in negative_ids for number in range(1, 23)), "all twenty-two bounded v642-v4 negatives preserved")
     check(all(value in negative_ids for value in ["V6424-X1-N01", "V6424-X1-N02"]), "both x1 negatives preserved")
 
     check(gates["open_gap_count"] == 5, "five open gaps")
