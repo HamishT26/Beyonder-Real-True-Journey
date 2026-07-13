@@ -8,5 +8,8 @@
 - [x] phase validator and minimal verifier — `completed`
 - [x] JSON, privacy, diff, stale-label, and staged-file review — `completed`
 - [x] two clean evidence snapshots and normalized parity — `completed`
-- [ ] closeout, seal, and final-head detached validation — `pending_closeout`
+- [x] closeout and seal detached validation — `completed`
+- [ ] containing final head detached validation — `postcommit_terminal_gate`
 - [ ] single Eiren baton — `not_sent_pre_terminal_gate`
+
+The containing final commit cannot truthfully validate itself before it exists. Its fresh detached validation is the terminal external gate; the baton remains forbidden until that gate passes.
