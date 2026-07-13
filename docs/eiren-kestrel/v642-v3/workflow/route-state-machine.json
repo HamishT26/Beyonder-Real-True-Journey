@@ -1,0 +1,40 @@
+{
+  "schema": "ghc.family.v642-v3.route-state-machine.v1",
+  "states": [
+    "ACTIVE",
+    "VERIFIED_CLOSEOUT",
+    "PREPARED_NOT_SENT",
+    "SENT",
+    "RETURNED",
+    "STANDBY",
+    "OPEN_ROUTE_GAP"
+  ],
+  "transitions": {
+    "ACTIVE": [
+      "VERIFIED_CLOSEOUT"
+    ],
+    "VERIFIED_CLOSEOUT": [
+      "PREPARED_NOT_SENT"
+    ],
+    "PREPARED_NOT_SENT": [
+      "SENT",
+      "OPEN_ROUTE_GAP"
+    ],
+    "SENT": [
+      "RETURNED",
+      "STANDBY"
+    ],
+    "RETURNED": [
+      "ACTIVE"
+    ],
+    "STANDBY": [
+      "ACTIVE"
+    ],
+    "OPEN_ROUTE_GAP": [
+      "PREPARED_NOT_SENT"
+    ]
+  },
+  "prepared_is_sent": false,
+  "repository_artifact_can_send_message": false,
+  "successor_state": "PLANNED_NOT_SENT"
+}

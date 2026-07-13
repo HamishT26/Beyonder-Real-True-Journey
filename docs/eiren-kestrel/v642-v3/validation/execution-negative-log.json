@@ -1,0 +1,31 @@
+{
+  "schema": "ghc.family.v642-v3.execution-negative-log.v1",
+  "negative_count": 4,
+  "negatives": [
+    {
+      "negative_id": "V6423-N21",
+      "observed": "The first concurrent candidate validation started before the report builder completed; it also measured the overview at 1716 regex words against the 1800-word floor.",
+      "resolution": "Run report construction and validation sequentially and extend the overview to 1911 regex words.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N22",
+      "observed": "The first sequential report validation found the exact accessibility boundary phrase split by a source newline.",
+      "resolution": "Keep the bounded phrase contiguous in the static HTML and rerun the 140-check validator.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N23",
+      "observed": "The first candidate-receipt apply-patch targeted compact checklist lines while the generated JSON used expanded objects; patch verification rejected the entire change.",
+      "resolution": "Read the actual generated checklist and apply a narrower structural patch; no partial change occurred.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N24",
+      "observed": "A combined register, log, truth, and overview patch used stale overview context and was rejected atomically before any file changed.",
+      "resolution": "Split generator changes from regenerated-artifact changes and rebuild from the corrected generator.",
+      "preserved": true
+    }
+  ],
+  "boundary": "All failed validation or patch attempts remain retained even though later execution passed."
+}
