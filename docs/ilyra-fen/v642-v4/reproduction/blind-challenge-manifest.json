@@ -1,0 +1,48 @@
+{
+  "schema": "ghc.family.blind-challenge-manifest.v1",
+  "expectations_visible": false,
+  "classification_commitments": [
+    {
+      "fixture_id": "blind-01",
+      "commitment_sha256": "d2901aeff839b01fc64ced46fefcf4268261921c5b4faf926e632ce59808f664"
+    },
+    {
+      "fixture_id": "blind-02",
+      "commitment_sha256": "927abe3ca21b3ddd3e3006fbb71a62600d55bec03fb6c2eef4e5b9eab39d05c3"
+    },
+    {
+      "fixture_id": "blind-03",
+      "commitment_sha256": "7f45e4b7f83dea7878dd5d6c3c5f46f0d155232236e0ea01ac4173cf46b62ed3"
+    }
+  ],
+  "owner_may_self_certify_independence": false,
+  "vectors": [
+    {
+      "case_id": "CHALLENGE-READY",
+      "expected": "packet_ready_only",
+      "actual": "packet_ready_only",
+      "reasons": [
+        "independent_execution_not_returned"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "CHALLENGE-LEAKED",
+      "expected": "reject_packet",
+      "actual": "reject_packet",
+      "reasons": [
+        "expected_classifications_visible"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "CHALLENGE-SELF-ATTESTED",
+      "expected": "reject_independence_claim",
+      "actual": "reject_independence_claim",
+      "reasons": [
+        "owner_self_certification"
+      ],
+      "matches_expected": true
+    }
+  ]
+}

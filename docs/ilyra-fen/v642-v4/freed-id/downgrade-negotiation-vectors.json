@@ -1,0 +1,40 @@
+{
+  "schema": "ghc.family.downgrade-negotiation-vectors.v1",
+  "vectors": [
+    {
+      "case_id": "FID-STRONG",
+      "expected": "accept_synthetic",
+      "actual": "accept_synthetic",
+      "reasons": [],
+      "matches_expected": true
+    },
+    {
+      "case_id": "FID-DOWNGRADE",
+      "expected": "reject",
+      "actual": "reject",
+      "reasons": [
+        "forced_downgrade"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "FID-UNKNOWN",
+      "expected": "reject",
+      "actual": "reject",
+      "reasons": [
+        "selected_suite_not_eligible",
+        "unknown_algorithm_identifier"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "FID-STALE-STATUS",
+      "expected": "reject",
+      "actual": "reject",
+      "reasons": [
+        "status_stale"
+      ],
+      "matches_expected": true
+    }
+  ]
+}

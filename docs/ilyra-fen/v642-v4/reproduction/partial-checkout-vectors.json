@@ -1,0 +1,42 @@
+{
+  "schema": "ghc.family.partial-checkout-vectors.v1",
+  "vectors": [
+    {
+      "case_id": "WT-CLEAN",
+      "expected": "accept",
+      "actual": "accept",
+      "reasons": [],
+      "matches_expected": true
+    },
+    {
+      "case_id": "WT-TIMEOUT",
+      "expected": "quarantine_owned",
+      "actual": "quarantine_owned",
+      "reasons": [
+        "state_timed_out",
+        "head_mismatch",
+        "dirty",
+        "locked"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "WT-FOREIGN",
+      "expected": "refuse_foreign",
+      "actual": "refuse_foreign",
+      "reasons": [
+        "owner_scope_mismatch"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "WT-DIRTY",
+      "expected": "quarantine_owned",
+      "actual": "quarantine_owned",
+      "reasons": [
+        "dirty"
+      ],
+      "matches_expected": true
+    }
+  ]
+}

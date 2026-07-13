@@ -1,0 +1,44 @@
+{
+  "schema": "ghc.family.validation-dependency-graph.v1",
+  "nodes": [
+    "x1",
+    "build",
+    "report",
+    "validate",
+    "manifest",
+    "snapshot",
+    "publish"
+  ],
+  "edges": [
+    [
+      "x1",
+      "build"
+    ],
+    [
+      "build",
+      "report"
+    ],
+    [
+      "build",
+      "validate"
+    ],
+    [
+      "report",
+      "validate"
+    ],
+    [
+      "validate",
+      "manifest"
+    ],
+    [
+      "manifest",
+      "snapshot"
+    ],
+    [
+      "snapshot",
+      "publish"
+    ]
+  ],
+  "publication_requires_complete_frontier": true,
+  "producer_exit_state_distinct_from_wrapper_state": true
+}
