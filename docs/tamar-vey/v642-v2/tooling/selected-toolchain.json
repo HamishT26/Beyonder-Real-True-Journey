@@ -1,0 +1,25 @@
+{
+  "schema": "ghc.family.v642-v2.selected-toolchain.v1",
+  "phase": "v642-gmut-thos-v2-x1-x2",
+  "owner": "Tamar Vey",
+  "selection_rule": "Use the smallest family-current standard-library toolchain, keep sealed source tools byte-stable, and add compatibility only when an existing caller requires it.",
+  "existing_family_current": [
+    "ghc-family-index",
+    "scripts/ghc_family_phase_privacy_scan.py",
+    "scripts/ghc_family_evidence_boundary.py",
+    "scripts/ghc_family_evidence_boundary_validator.py",
+    "scripts/ghc_family_evidence_boundary_minimal.py"
+  ],
+  "planned_x2_family_current": [
+    "scripts/ghc_family_evidence_crosscheck.py",
+    "scripts/ghc_family_evidence_crosscheck_validator.py",
+    "scripts/ghc_family_evidence_crosscheck_minimal.py",
+    "scripts/build_ghc_family_evidence_crosscheck_report.py"
+  ],
+  "planned_tests": [
+    "tests/test_ghc_family_v642_v2.py",
+    "python -m unittest discover -s tests -p test_ghc_family*.py"
+  ],
+  "compatibility_boundary": "The v642-v1 evidence-boundary tools are selected for exact source replay only. They are not to be edited or relabeled as v642-v2 implementation.",
+  "x1_state": "planned_not_implemented"
+}

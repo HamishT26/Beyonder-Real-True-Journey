@@ -1,0 +1,239 @@
+{
+  "schema": "ghc.family.v642-v2.x1-proposals.v1",
+  "phase": "v642-gmut-thos-v2-x1-x2",
+  "owner": "Tamar Vey",
+  "source_phase": "v642-gmut-thos-v1-x1-x2",
+  "source_revision": "78fa2460eb223789e102c0627279d07acc216470",
+  "preregistered_on": "2026-07-13",
+  "proposal_count": 10,
+  "prior_frozen_proposal_count": 80,
+  "outcome_classes": ["completed", "represented", "open_gap", "exact_gate"],
+  "expected_disposition_counts": {
+    "completed": 6,
+    "represented": 2,
+    "open_gap": 1,
+    "exact_gate": 1
+  },
+  "expected_counts_are_results": false,
+  "x1_freeze_rule": "This file, the source ledger, collision audit, and selected toolchain must be committed and remote-equal before any x2 implementation or observed outcome is created.",
+  "proposals": [
+    {
+      "proposal_id": "V6422-P01",
+      "title": "Evidence-root overlap and independence-debt reconciliation",
+      "mission_surface": "provenance, semantic deduplication, source independence, retained-negative reachability, and authority-root disclosure",
+      "hypothesis": "A multi-axis evidence graph that records authority root, dataset root, software root, funding or derivation root, and citation context can expose partial dependence that a binary independent-or-not label misses, while preserving a reachable path from every claim to every limiting negative.",
+      "null_or_failure": "An alias split, shared dataset, shared software lineage, or shared authority root is counted as independent; an overlap debt disappears after aggregation; a negative becomes unreachable; or canonicalization changes claim meaning.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": ["V8-S01", "V8-S02", "V8-S24", "V6422-S35"],
+      "deliverables": [
+        "provenance/frozen-chain-proposal-index.json",
+        "provenance/evidence-root-overlap-matrix.json",
+        "provenance/independence-debt-ledger.json",
+        "provenance/negative-reachability-receipt.json"
+      ],
+      "test_falsifier_or_gate": "Index all 90 frozen proposals, inject shared-root aliases and serialization reorderings, require zero false-independent pairs, zero erased debt edges, zero unreachable negatives, and semantic parity after canonical ordering.",
+      "rollback_or_recovery": "Quarantine the affected graph transform, restore full root and context edges, retain the failing vector, lower the independence label, and rerun from the frozen source packet.",
+      "protected_gates": ["private_material", "proof_or_canon", "shared_branch", "sibling_merge"],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier phases tested binary authority roots, support sets, retraction, context inheritance, and source partitions. This proposal adds multi-axis overlap debt and bidirectional negative reachability under canonical graph serialization."
+    },
+    {
+      "proposal_id": "V6422-P02",
+      "title": "Coordinate-invariant Jacobian witness and SI-typed equation AST",
+      "mission_surface": "canonical typed GMUT equations, dimensions and units, covariance, conservation, stability, parameter degeneracy, and identifiability",
+      "hypothesis": "A machine-readable equation AST with an explicit SI dimension basis, covariance transformation witnesses, conservation residuals, stability signs, and Jacobian rank certificates can reject invalid reparameterizations while separating structural observability from empirical identifiability.",
+      "null_or_failure": "A unit-inconsistent term, non-covariant transform, broken conservation residual, unstable sign, singular Jacobian, or nuisance degeneracy passes; rank changes under a valid unit-basis change; or structural rank is reported as an empirical result.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": ["V8-S03", "V8-S05", "V6421-S32", "V6422-S36"],
+      "deliverables": [
+        "physics/canonical-equation-ast.json",
+        "physics/unit-basis-and-covariance-vectors.json",
+        "physics/conservation-stability-jacobian-witness.json",
+        "physics/identifiability-claim-boundary.json"
+      ],
+      "test_falsifier_or_gate": "Mutate dimensions, index placement, coordinate transforms, conserved-current residuals, stability coefficients, and Jacobian rows; require deterministic rejection and keep empirical confirmation false.",
+      "rollback_or_recovery": "Restore the last typed AST, isolate the failing mutation, retain the counterexample, reduce the equation claim to represented research structure, and require real observations for promotion.",
+      "protected_gates": ["empirical_confirmation", "detected_force", "unique_prediction", "theory_of_everything", "proof_or_canon", "deployment"],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Prior physics work covered registers, null limits, variational boundaries, rank batteries, sensitivity, and proof obligations. This proposal adds a canonical equation AST plus unit-basis-invariant Jacobian and observability witnesses."
+    },
+    {
+      "proposal_id": "V6422-P03",
+      "title": "Lossless likelihood-schema round trip with zero-row stop",
+      "mission_surface": "public-data empirical adapter readiness, schema fidelity, units, masks, covariance, nuisance locks, and no-fit boundaries",
+      "hypothesis": "A rowless public-data adapter contract can round-trip schema, units, missingness masks, covariance ordering, selection metadata, and nuisance declarations without information loss, while refusing to create a likelihood or fitted parameter when no real rows are present.",
+      "null_or_failure": "A nullable field is silently imputed, units or covariance order change on round-trip, a release pin drifts without quarantine, a baseline is selected after outcomes, or zero rows yield a likelihood, fit, or GMUT confirmation claim.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": ["V8-S03", "V8-S04", "V8-S05", "V6422-S36"],
+      "deliverables": [
+        "empirical/public-data-adapter-contract.json",
+        "empirical/round-trip-schema-vectors.json",
+        "empirical/null-baseline-readiness.json",
+        "empirical/real-data-likelihood-gate.json"
+      ],
+      "test_falsifier_or_gate": "Round-trip valid and mutated metadata-only fixtures, require exact units, masks, covariance shape, nuisance lock, and release pin, and require zero parsed measurements, zero likelihoods, and zero fits.",
+      "rollback_or_recovery": "Quarantine the adapter mapping, restore the official schema pin, retain the lossy vector, and keep the surface represented until a separately authorized preregistered real-data study exists.",
+      "protected_gates": ["data_download", "private_data", "account_or_api_key", "likelihood_execution", "empirical_confirmation", "deployment"],
+      "expected_disposition": "represented",
+      "novelty_against_prior_chain": "Earlier adapters tested readiness, release integrity, leakage, selection functions, covariance shape, and zero-row boundaries. This proposal centers lossless likelihood-input round-trip semantics and explicit null handling."
+    },
+    {
+      "proposal_id": "V6422-P04",
+      "title": "Pre-outcome exposure escrow and dropout decision lock for THOS",
+      "mission_surface": "THOS preregistration, blindness, matched budgets, allocation integrity, attrition, stopping, and real-arm evidence",
+      "hypothesis": "A preregistered allocation escrow with fixed token, time, tool, evaluator, stopping, exclusion, and attrition rules can make post-freeze arm tampering detectable before outcomes are exposed; the superiority hypothesis remains unanswered until real blind matched-budget arms run.",
+      "null_or_failure": "Arm identity is inferable, allocation or budgets change after outcome access, exclusions depend on score, stopping differs by arm, attrition handling is unspecified, or synthetic fixtures are promoted to real-arm superiority.",
+      "approval_class": "safe_now_protocol_only",
+      "execution_lane": "x2_build_task_with_open_real_arm_gap",
+      "authoritative_source_needs": ["V8-S06", "V8-S07", "V8-S08", "V6422-S37"],
+      "deliverables": [
+        "thos/allocation-escrow-spec.json",
+        "thos/blindness-budget-mutation-vectors.json",
+        "thos/attrition-decision-table.json",
+        "thos/real-arm-execution-gate.json"
+      ],
+      "test_falsifier_or_gate": "Freeze a synthetic escrow, mutate allocation, exposure, stopping, exclusion, and attrition fields, require every post-freeze mutation to fail, and require real arm count to remain zero.",
+      "rollback_or_recovery": "Void the affected synthetic allocation, preserve the mutation as a negative, issue a new preregistration before any real execution, and keep THOS superiority, AGI, ASI, consciousness, and personhood claims false.",
+      "protected_gates": ["real_arm_execution", "independent_review", "agi_or_asi", "consciousness", "personhood", "deployment"],
+      "expected_disposition": "open_gap",
+      "novelty_against_prior_chain": "Prior THOS work covered budgets, blindness, contamination, exchangeability, estimands, attrition, crossover, carryover, and outcome sealing. This proposal adds a tamper-evident allocation escrow and precommitted attrition decision table, but no real arms."
+    },
+    {
+      "proposal_id": "V6422-P05",
+      "title": "Cross-layer issuer-controller-status coherence profile",
+      "mission_surface": "Freed ID structural conformance, proof metadata, controller scope, resolver state, status or revocation, privacy, interoperability, and trust governance",
+      "hypothesis": "Synthetic fixtures can enforce cross-layer consistency among credential issuer, verification method controller, proof purpose, resolver metadata, status-list purpose, freshness, and governance assumptions without pretending that real cryptographic verification or production trust exists.",
+      "null_or_failure": "A controller mismatch, stale resolver state, contradictory status purpose, missing privacy boundary, unsupported cryptosuite, or absent governance owner passes; or structural validation is called cryptographic assurance.",
+      "approval_class": "safe_now_structural_only",
+      "execution_lane": "x2_build_task_with_production_gap",
+      "authoritative_source_needs": ["V8-S09", "V8-S10", "V8-S11", "V8-S12", "V8-S13", "V8-S14", "V8-S15", "V6421-S33"],
+      "deliverables": [
+        "freed-id/cross-layer-conformance-profile.json",
+        "freed-id/status-resolver-consistency-vectors.json",
+        "freed-id/trust-governance-assumption-ledger.json",
+        "freed-id/production-assurance-gate.json"
+      ],
+      "test_falsifier_or_gate": "Exercise synthetic valid and invalid cross-layer fixtures and require deterministic rejection of mismatched controller, purpose, freshness, status, privacy, and governance declarations while real key and service counts remain zero.",
+      "rollback_or_recovery": "Fail closed, preserve the fixture, remove the affected structural conformance label, restore stable-source pins, and require real standards-conformant keys, proofs, resolution, status, interoperability, independent review, and governance for production claims.",
+      "protected_gates": ["real_keys_or_proofs", "cryptographic_assurance", "live_resolution_or_status", "privacy_review", "interoperability", "independent_security_review", "trust_governance", "deployment"],
+      "expected_disposition": "represented",
+      "novelty_against_prior_chain": "Earlier Freed ID phases tested lifecycle, resolver freshness, selective disclosure, assurance transitions, and fault injection. This proposal joins controller, proof-purpose, resolver, status, privacy, and governance invariants into one cross-layer consistency profile."
+    },
+    {
+      "proposal_id": "V6422-P06",
+      "title": "Consent-withdrawal chronology and remedy-floor gate",
+      "mission_surface": "CBR legitimacy, affected-party authority, Māori authority, consent withdrawal, jurisdiction, legal limits, remedies, recusal, and anti-retaliation",
+      "hypothesis": "A technical lifecycle model can flag expired or withdrawn authority, overlapping jurisdiction, unhandled recusal, retaliation risk, and remedy regression, but must defer every binding legal, cultural, Māori, or affected-party conclusion to authorized participants and competent authorities.",
+      "null_or_failure": "Expired authority remains active, consent withdrawal is ignored, a remedy weakens after challenge, retaliation or recusal is unhandled, jurisdiction is algorithmically settled, or Māori wording or governance is treated as system-owned.",
+      "approval_class": "exact_gate",
+      "execution_lane": "x2_document_and_defer",
+      "authoritative_source_needs": ["V8-S16", "V8-S17", "V8-S18", "V8-S19", "V8-S20", "V8-S21", "V8-S31"],
+      "deliverables": [
+        "cbr/authority-scope-lifecycle.json",
+        "cbr/consent-revocation-vectors.json",
+        "cbr/remedy-nonretrogression-matrix.json",
+        "cbr/legal-cultural-authority-gate.json"
+      ],
+      "test_falsifier_or_gate": "Run synthetic time-order, withdrawal, recusal, retaliation, remedy, and jurisdiction vectors; require technical refusal whenever authorized affected-party, Māori, cultural, or legal participation is absent.",
+      "rollback_or_recovery": "Stop the technical decision, preserve the contested record and remedy, protect dissent, route only through authorized affected parties and competent authorities, and never reinterpret or normalize Māori wording without Māori authority.",
+      "protected_gates": ["affected_party_authority", "maori_authority", "cultural_ratification", "legal_interpretation", "enacted_law", "private_material"],
+      "expected_disposition": "exact_gate",
+      "novelty_against_prior_chain": "Earlier CBR work covered standing, empty-chair veto, conflict, consent provenance, rights floors, contestability, remedy preservation, recusal, and anti-retaliation. This proposal adds time-scoped expiry, consent withdrawal ordering, and remedy non-retrogression."
+    },
+    {
+      "proposal_id": "V6422-P07",
+      "title": "Strict number, key, and Unicode input tribunal",
+      "mission_surface": "bounded threat modelling, canonical inputs, parser differentials, resource ceilings, privacy and raw-ID controls, negative retention, and recovery",
+      "hypothesis": "A strict standard-library input boundary can reject duplicate JSON keys, non-finite numbers, unsafe integer domains, Unicode-normalization key collisions, confusable control characters, and resource-ceiling violations before artifacts are consumed.",
+      "null_or_failure": "Two parsers disagree without quarantine, a duplicate key or non-finite value survives, normalized keys collide, an unsafe integer changes meaning, a privacy or raw-ID pattern passes, or recovery deletes the negative.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": ["V8-S22", "V8-S23", "V8-S24", "V6421-S34", "V6422-S38"],
+      "deliverables": [
+        "security/threat-model.md",
+        "security/canonical-input-policy.json",
+        "security/parser-differential-vectors.json",
+        "security/recovery-resource-receipt.json"
+      ],
+      "test_falsifier_or_gate": "Run bounded duplicate-key, number-domain, Unicode, depth, object-count, privacy, and raw-ID vectors through strict and ordinary parsers; require fail-closed disagreement and preserved recovery evidence.",
+      "rollback_or_recovery": "Stop consumption, retain the exact vector, quarantine only owned outputs, restore the clean owned snapshot, tighten the smallest relevant bound, and rerun without elevation, destructive cleanup, host-security weakening, or reboot.",
+      "protected_gates": ["exhaustive_security", "host_security", "elevation", "destructive_action", "private_material", "account_or_api_key"],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier security work covered encoding, provenance poisoning, manifests, links, TOCTOU, archives, decompression, and resource ceilings. This proposal centers parser disagreement across duplicate keys, numeric domains, and Unicode-equivalent keys."
+    },
+    {
+      "proposal_id": "V6422-P08",
+      "title": "Named-owner semantic replay and normalized-manifest parity",
+      "mission_surface": "clean detached snapshots, cross-owner handoff repeatability, normalized manifests, environment perturbation, dependency disclosure, and independent-team gap",
+      "hypothesis": "Tamar can replay Nima's exact final source evidence and the new v642-v2 packet in clean detached snapshots with semantic-normalization parity and explicit environment differences, establishing bounded cross-owner internal repeatability without claiming independent-team reproduction.",
+      "null_or_failure": "The Nima source suite or validator fails, normalized manifests diverge, a hidden absolute path or untracked dependency appears, an environment change alters meaning, or same-machine cross-owner replay is called independent reproduction.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_and_snapshot_task",
+      "authoritative_source_needs": ["V8-S24", "V8-S25", "V6422-S35", "V6422-S38"],
+      "deliverables": [
+        "reproduction/cross-owner-lineage-replay.json",
+        "reproduction/semantic-normalization-manifest.json",
+        "reproduction/environment-perturbation-receipt.json",
+        "reproduction/independent-team-gap.json"
+      ],
+      "test_falsifier_or_gate": "Validate exact source and v2 heads in separate clean detached D-drive snapshots, compare normalized manifests, disclose environment deltas, and require the independent-team flag to remain false.",
+      "rollback_or_recovery": "Retain the mismatch, identify common-mode or environment dependence, lower the repeatability class, rebuild only from committed inputs, and keep independent-team reproduction open.",
+      "protected_gates": ["independent_team_reproduction", "private_route", "untracked_input", "network_dependency", "shared_branch"],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier reproduction work used two paths, clean snapshots, external-executor packets, common-mode budgets, and dual local oracles. This proposal performs an explicit named-owner handoff replay with semantic-normalization parity across the source and successor phases."
+    },
+    {
+      "proposal_id": "V6422-P09",
+      "title": "Indicator invariance, temporal precedence, and category barrier",
+      "mission_surface": "thermodynamic, computational, psychological, metaphorical, emergent, and fundamental-law classification; measurement invariance; temporal order; and category errors",
+      "hypothesis": "A bounded classification tribunal can reject claims whose indicators change meaning across contexts or time, whose cause follows the alleged effect, or whose computational, thermodynamic, psychological, and metaphorical categories are silently conflated.",
+      "null_or_failure": "A non-invariant indicator is compared as if equivalent, temporal order is reversed, metaphor becomes mechanism, computational telemetry becomes subjective experience, or a local pattern is promoted to a fundamental thermo-psyche law or consciousness evidence.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": ["V8-S07", "V8-S08", "V8-S17"],
+      "deliverables": [
+        "thermo-psyche/measurement-invariance-vectors.json",
+        "thermo-psyche/temporal-order-register.json",
+        "thermo-psyche/category-boundary-matrix.json",
+        "thermo-psyche/classification-receipt.json"
+      ],
+      "test_falsifier_or_gate": "Mutate indicator meaning, context, time order, intervention status, and category labels; require rejection of non-invariance, reversed causality, category collapse, and protected law or consciousness claims.",
+      "rollback_or_recovery": "Restore the narrowest supported category, retain the counterexample, separate observation from mechanism, and require real preregistered evidence and authority before any promotion.",
+      "protected_gates": ["fundamental_law", "consciousness", "personhood", "empirical_confirmation", "cultural_authority"],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier thermo-psyche work covered class rubrics, relabeling, promotion burdens, constructs, causal direction, and alternative explanations. This proposal adds measurement invariance across context and explicit temporal-order rejection."
+    },
+    {
+      "proposal_id": "V6422-P10",
+      "title": "Freshness-withdrawal monotonic terminal board",
+      "mission_surface": "terminal pass-fail-defer logic, evidence freshness, gate dominance, negative monotonicity, authority non-substitution, and Stage 20 readiness",
+      "hypothesis": "A terminal board can keep fail and defer decisions monotone when supporting evidence expires, is withdrawn, or is downgraded, while identifying gate dominance without allowing optimization to score away authority or protected evidence requirements.",
+      "null_or_failure": "Stale or withdrawn evidence improves readiness, removal of support leaves a pass unchanged, a technical score overrides an exact authority gate, an unresolved dominant gate is hidden, or NOT_READY_FOR_STAGE_20 becomes ready without all mandatory evidence.",
+      "approval_class": "safe_now_board_only",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": ["V8-S01", "V8-S02", "V8-S07", "V8-S16", "V8-S17", "V8-S24"],
+      "deliverables": [
+        "stage20/gate-dominance-matrix.json",
+        "stage20/evidence-freshness-ledger.json",
+        "stage20/decision-monotonicity-vectors.json",
+        "stage20/pass-fail-defer-board.json",
+        "stage20/terminal-verdict.json"
+      ],
+      "test_falsifier_or_gate": "Expire, withdraw, and downgrade supporting evidence; require readiness to stay equal or worsen, exact gates to remain non-substitutable, every dominant open gate to remain visible, and the terminal verdict to remain NOT_READY_FOR_STAGE_20.",
+      "rollback_or_recovery": "Restore the last supported decision, retain the mutation, reopen every dependent claim, require refreshed evidence or exact authority, and prohibit deployment or successor claims from the board alone.",
+      "protected_gates": ["stage20", "affected_party_authority", "maori_authority", "legal_interpretation", "proof_or_canon", "deployment", "independent_team_reproduction"],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier Stage 20 work covered decision rehearsal, expiry, monotonic claim lineage, falsifier linkage, cut sets, stop rules, and evidence-order regret. This proposal joins evidence freshness with gate dominance and decision monotonicity under support withdrawal."
+    }
+  ],
+  "non_claims": [
+    "No empirical GMUT confirmation, detected force, unique prediction, likelihood result, or Theory of Everything is claimed.",
+    "No THOS superiority, AGI, ASI, consciousness, personhood, or independent review is claimed.",
+    "No Freed ID production cryptographic assurance, live interoperability, privacy completion, or trust governance is claimed.",
+    "No affected-party, Māori, cultural, legal, or enacted-law authority is claimed.",
+    "No deployment, exhaustive security, complete accessibility conformance, proof or canon, or independent-team scientific reproduction is claimed."
+  ]
+}
