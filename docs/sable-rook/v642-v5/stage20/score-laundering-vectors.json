@@ -1,0 +1,41 @@
+{
+  "schema": "ghc.family.score-laundering-vectors.v1",
+  "vectors": [
+    {
+      "case_id": "BOARD-ZERO-VETO-DEFER",
+      "expected": "defer",
+      "actual": "defer",
+      "reasons": [
+        "zero_empirical_dimension",
+        "zero_authority_dimension",
+        "zero_production_dimension",
+        "zero_independence_dimension"
+      ],
+      "matches_expected": true
+    },
+    {
+      "case_id": "BOARD-WEIGHTED-LAUNDER",
+      "expected": "fail",
+      "actual": "fail",
+      "reasons": [
+        "weighted_score_attempted_to_offset_veto"
+      ],
+      "matches_expected": true,
+      "negative_id": "V6425-N19"
+    },
+    {
+      "case_id": "BOARD-MISSING-NEUTRAL",
+      "expected": "fail",
+      "actual": "fail",
+      "reasons": [
+        "missing_empirical_dimension",
+        "missing_authority_dimension",
+        "missing_production_dimension",
+        "missing_independence_dimension",
+        "missing_evidence_laundered_as_neutral"
+      ],
+      "matches_expected": true,
+      "negative_id": "V6425-N20"
+    }
+  ]
+}
