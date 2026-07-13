@@ -1,0 +1,27 @@
+# V641-v8 complete / incomplete checklist
+
+## Completed
+
+- ten v8 proposals frozen in a dedicated clean remote-equal x1 commit
+- 70-proposal provenance index and authority expiry/retraction replay generated
+- canonical typed GMUT obligation coverage and sixteen mutation kills generated
+- public-dataset integrity/licence/schema manifest represented with zero fit
+- synthetic THOS estimand, budget, attrition, missingness, and stop-rule rehearsal represented
+- Freed ID lifecycle and resolver freshness vectors generated with production gap retained
+- CBR contestability, remedy, recusal, and authority non-substitution exact gates generated
+- bounded TOCTOU/link recovery and privacy controls generated
+- external-executor packet and thermo-psyche promotion burdens generated
+- Stage 20 cut-set board retains NOT_READY_FOR_STAGE_20
+
+## Still incomplete or exact-gated
+
+- real-data GMUT likelihood, parameter fit, unique prediction, and independent statistical review
+- blind matched-budget real THOS arms and independent review
+- production Freed ID keys, proofs, resolver/status services, interoperability, security review, and trust governance
+- affected-party authorization, Māori authority, cultural ratification, competent legal interpretation, and enacted-law status
+- independent-team scientific reproduction
+- exhaustive security assessment
+- complete WCAG conformance and independent accessibility review
+- proof/canon, deployment, private material, account/API-key, destructive, host-security, shared-branch, and sibling-merge gates
+
+Snapshot verification: **pending**. Terminal verdict: **NOT_READY_FOR_STAGE_20**.

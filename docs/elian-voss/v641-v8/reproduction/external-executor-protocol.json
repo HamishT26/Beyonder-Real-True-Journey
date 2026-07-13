@@ -1,0 +1,20 @@
+{
+  "schema": "ghc.family.v641-v8.external-executor-protocol.v1",
+  "source_commit": "4bbfbcc069894f60a9392799bb0fb15c03e6c954",
+  "phase_path": "docs/elian-voss/v641-v8",
+  "commands": [
+    "python -m unittest discover -s tests -p test_*.py -v",
+    "python scripts/ghc_family_gate_resilience_validator.py --phase-dir docs/elian-voss/v641-v8 --require-report",
+    "python scripts/ghc_family_phase_privacy_scan.py --repo . --phase-dir docs/elian-voss/v641-v8"
+  ],
+  "environment_tolerances": {
+    "python": "3.12.x",
+    "node": "24.x_or_unused",
+    "git": ">=2.55",
+    "line_endings": "normalized_LF_for_hash_comparison"
+  },
+  "private_routes_required": false,
+  "machine_specific_absolute_paths": false,
+  "independent_executor_required_for_independent_claim": true,
+  "independent_result_returned": false
+}

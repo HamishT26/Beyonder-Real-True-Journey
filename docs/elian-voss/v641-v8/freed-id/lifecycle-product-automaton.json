@@ -1,0 +1,85 @@
+{
+  "schema": "ghc.family.v641-v8.freed-id-lifecycle-product-automaton.v1",
+  "states": [
+    "unissued",
+    "active",
+    "refreshed",
+    "suspended",
+    "revoked",
+    "expired",
+    "rotated"
+  ],
+  "allowed_transitions": [
+    [
+      "unissued",
+      "active"
+    ],
+    [
+      "active",
+      "refreshed"
+    ],
+    [
+      "active",
+      "suspended"
+    ],
+    [
+      "suspended",
+      "active"
+    ],
+    [
+      "active",
+      "revoked"
+    ],
+    [
+      "suspended",
+      "revoked"
+    ],
+    [
+      "active",
+      "expired"
+    ],
+    [
+      "active",
+      "rotated"
+    ],
+    [
+      "rotated",
+      "active"
+    ]
+  ],
+  "invalid_transition_vectors": [
+    {
+      "from": "unissued",
+      "to": "revoked",
+      "rejected": true
+    },
+    {
+      "from": "revoked",
+      "to": "active",
+      "rejected": true
+    },
+    {
+      "from": "expired",
+      "to": "active",
+      "rejected": true
+    },
+    {
+      "from": "revoked",
+      "to": "refreshed",
+      "rejected": true
+    },
+    {
+      "from": "suspended",
+      "to": "rotated",
+      "rejected": true
+    },
+    {
+      "from": "rotated",
+      "to": "revoked_without_new_identifier",
+      "rejected": true
+    }
+  ],
+  "all_invalid_rejected": true,
+  "synthetic_only": true,
+  "real_credentials": 0
+}
