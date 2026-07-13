@@ -1,0 +1,12 @@
+{
+  "schema": "ghc.family.v642-v3.selected-toolchain.v1",
+  "phase": "v642-gmut-thos-v3-x1-x2",
+  "owner": "Eiren Kestrel",
+  "selection_rule": "Use the smallest family-current standard-library toolchain, keep inherited sealed tools byte-stable, and add family-named route-aware tools only after the x1 freeze.",
+  "existing_family_current": ["ghc-family-index", "scripts/ghc_family_phase_privacy_scan.py", "scripts/ghc_family_repository_test_runner.py", "scripts/ghc_family_evidence_crosscheck_validator.py", "scripts/ghc_family_evidence_crosscheck_minimal.py"],
+  "planned_x2_family_current": ["scripts/ghc_family_project_round_robin.py", "scripts/ghc_family_project_round_robin_validator.py", "scripts/ghc_family_project_round_robin_minimal.py", "scripts/build_ghc_family_project_round_robin_report.py"],
+  "planned_tests": ["tests/test_ghc_family_v642_v3.py", "python scripts/ghc_family_repository_test_runner.py --start-directory tests --pattern test_*.py --windows-inherited-acl-temp"],
+  "compatibility_boundary": "The v642-v2 evidence-crosscheck tools remain byte-stable and are selected for inherited-source replay only. They are not relabeled as v642-v3 implementation.",
+  "global_skill_update_boundary": "The current ghc-family-index instructions already express precedence, ownership, safe naming, task-ID privacy, four truth classes, and terminal handoff gating. This phase records the route-specific delta additively rather than rewriting a shared global skill during an active run.",
+  "x1_state": "planned_not_implemented"
+}
