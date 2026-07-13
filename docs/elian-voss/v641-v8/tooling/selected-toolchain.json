@@ -1,0 +1,19 @@
+{
+  "schema": "ghc.family.v641-v8.selected-toolchain.v1",
+  "phase": "v641-gmut-thos-v8-x1-x2",
+  "owner": "Elian Voss",
+  "selected_on": "2026-07-13",
+  "selection_rule": "Use the smallest family-current toolchain that validates the owned phase, and keep prior phase-specific implementations as compatibility evidence rather than silently promoting them.",
+  "selected": [
+    {"name": "ghc-family-index", "kind": "skill", "category": "family_current", "state": "executed_for_x1", "purpose": "resolve current family tooling and preserve historical/compatibility labels"},
+    {"name": "scripts/ghc_family_phase_privacy_scan.py", "kind": "script", "category": "family_current", "state": "present", "purpose": "phase-scoped privacy, raw-ID, secret-shape, and private-path scan"},
+    {"name": "scripts/ghc_family_gate_resilience.py", "kind": "script", "category": "family_current", "state": "planned_after_x1_remote_equality", "purpose": "build v8 provenance, physics, adapter, THOS, Freed ID, CBR, security, reproduction, thermo-psyche, and Stage 20 evidence"},
+    {"name": "scripts/ghc_family_gate_resilience_validator.py", "kind": "script", "category": "family_current", "state": "planned_after_x1_remote_equality", "purpose": "validate v8 cross-artifact invariants and protected gates"},
+    {"name": "scripts/build_ghc_family_gate_resilience_report.py", "kind": "script", "category": "family_current", "state": "planned_after_x1_remote_equality", "purpose": "build a useful static report with bounded structural accessibility checks"},
+    {"name": "tests/test_ghc_family_v641_v2.py through tests/test_ghc_family_v641_v7.py", "kind": "test_suite", "category": "compatibility", "state": "present", "purpose": "protect all inherited phase behavior while v8 is additive"}
+  ],
+  "x2_builder_present_at_x1": false,
+  "shared_skill_change": false,
+  "compatibility_policy": "Existing v2-v7 scripts and artifacts remain byte-stable unless a concrete failing compatibility test proves a narrowly scoped change is required.",
+  "boundary": "Selection is not evidence that a planned x2 tool exists or that any x2 outcome has been executed."
+}
