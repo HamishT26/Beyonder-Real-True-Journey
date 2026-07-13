@@ -11,7 +11,7 @@
 - **complete** — 62 of 62 phase JSON files parse
 - **complete** — privacy and raw-ID scan has zero hits
 - **complete** — diff and stale-label review passes; x1 files remain byte-stable
-- **pending_evidence_commit** — clean detached evidence snapshots
+- **complete** — two clean detached evidence snapshots at `1929173535d461fb874359a0e4fc678b19661831`; each passed 170 tests, 87 full checks, 17 minimal checks, 62 JSON parses, a 72-file zero-hit privacy scan, and all 44 manifest hashes
 - **pending_closeout** — clean detached closeout validation
 - **pending_closeout** — final seal and four-way equality
 - **incomplete_open_gap** — independent-team reproduction
