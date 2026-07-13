@@ -1,0 +1,63 @@
+{
+  "schema": "ghc.family.canonical-variational-register.v1",
+  "model_family": "typed scalar-tensor/EFT research scaffold",
+  "unit_convention": "four-dimensional natural units with action dimension zero",
+  "declared_dimensions": {
+    "x": -1,
+    "d4x": -4,
+    "sqrt_minus_g": 0,
+    "R": 2,
+    "M_star": 1,
+    "phi": 1,
+    "V": 4,
+    "L_m": 4
+  },
+  "equations": [
+    {
+      "id": "ACTION-BULK",
+      "expression": "S_bulk = integral sqrt(-g) [M_*^2 F(phi) R/2 - Z(phi)(nabla phi)^2/2 - V(phi) + L_m] d^4x",
+      "type": "dimensionless_action",
+      "free_indices": [],
+      "mass_dimension": 0
+    },
+    {
+      "id": "ACTION-BOUNDARY",
+      "expression": "S_boundary = declared functional of induced metric, normal, phi, and allowed derivatives",
+      "type": "boundary_functional",
+      "free_indices": [],
+      "mass_dimension": 0
+    },
+    {
+      "id": "METRIC-EOM",
+      "expression": "E_{mu nu} = T_{mu nu}",
+      "type": "symmetric_rank_2_covariant_tensor",
+      "free_indices": [
+        "mu",
+        "nu"
+      ],
+      "mass_dimension": 4
+    },
+    {
+      "id": "SCALAR-EOM",
+      "expression": "E_phi = 0",
+      "type": "scalar_equation",
+      "free_indices": [],
+      "mass_dimension": 3
+    },
+    {
+      "id": "DIVERGENCE",
+      "expression": "nabla^mu(E_{mu nu} - T_{mu nu}) = 0 under declared assumptions",
+      "type": "covector_identity",
+      "free_indices": [
+        "nu"
+      ],
+      "mass_dimension": 5
+    }
+  ],
+  "boundary_term_required_for_declared_variational_problem": true,
+  "canonical_repository_reference": "latex/grand_mandala.tex",
+  "empirical_confirmation": false,
+  "detected_force": false,
+  "unique_prediction": false,
+  "theory_of_everything": false
+}
