@@ -2,8 +2,8 @@
   "schema": "ghc.family.v642-v5.retained-negative-register.v1",
   "inherited_from": "docs/ilyra-fen/v642-v4/retained-negative-register.json",
   "inherited_count": 120,
-  "new_count": 26,
-  "negative_count": 146,
+  "new_count": 27,
+  "negative_count": 147,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -1075,6 +1075,14 @@
       "statement": "The first 372-check candidate validator run rejected five untouched inherited v642-v4 tools because it compared LF Git blobs with CRLF Windows worktree bytes without newline normalization.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Compare LF-normalized content, keep the inherited Git blobs untouched, rerun the complete validator, and retain this failed attempt after recovery.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6425-X2-N02",
+      "origin": "v642-v5_x2_execution",
+      "statement": "The combined command that created two fresh detached evidence worktrees exceeded its orchestration timeout after both worktrees had registered at the exact evidence head; a residual Git process ended normally before validation began.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Audit both registered worktrees and the residual process read-only, preserve both additive snapshots, require exact detached heads and clean status, then validate each snapshot separately and retain this timeout after recovery.",
       "retained": true
     }
   ]

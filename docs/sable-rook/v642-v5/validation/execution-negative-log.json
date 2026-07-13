@@ -8,7 +8,15 @@
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Compare LF-normalized content, keep the inherited Git blobs untouched, rerun the complete validator, and retain this failed attempt after recovery.",
       "retained": true
+    },
+    {
+      "negative_id": "V6425-X2-N02",
+      "origin": "v642-v5_x2_execution",
+      "statement": "The combined command that created two fresh detached evidence worktrees exceeded its orchestration timeout after both worktrees had registered at the exact evidence head; a residual Git process ended normally before validation began.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Audit both registered worktrees and the residual process read-only, preserve both additive snapshots, require exact detached heads and clean status, then validate each snapshot separately and retain this timeout after recovery.",
+      "retained": true
     }
   ],
-  "record_count": 1
+  "record_count": 2
 }
