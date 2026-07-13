@@ -217,8 +217,8 @@ verdict remains NOT_READY_FOR_STAGE_20.
 ## 13. Negative retention, reproducibility, and closeout
 
 All 68 inherited negatives remain reachable. Twenty domain limitations
-and four execution failures from v642-v3 are added rather than erased,
-bringing the retained total to 92. They preserve project-context limits,
+and eight execution failures from v642-v3 are added rather than erased,
+bringing the retained total to 96. They preserve project-context limits,
 future-seat nonexistence, no-v9 routing, least-authority rejection,
 structural-only physics, synthetic-only calibration, zero real THOS
 arms, absent production Freed ID evidence, absent authority, entropy

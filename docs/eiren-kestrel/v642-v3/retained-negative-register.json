@@ -1,8 +1,8 @@
 {
   "schema": "ghc.family.v642-v3.retained-negative-register.v1",
   "inherited_count": 68,
-  "new_count": 24,
-  "negative_count": 92,
+  "new_count": 28,
+  "negative_count": 96,
   "negatives": [
     {
       "negative_id": "REPRO-V4-N01",
@@ -644,6 +644,34 @@
       "statement": "A combined negative-register patch was rejected atomically because its overview context had already changed after regeneration.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Retain the limitation, keep the protected claim false, and require the named missing evidence or authority.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6423-N25",
+      "statement": "The first two-snapshot materialization command exceeded its wrapper timeout after snapshot A completed and snapshot B remained locked initializing.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Inspect actual state, remove only the owned incomplete checkout after path verification, rematerialize it alone, and validate both snapshots.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6423-N26",
+      "statement": "The first post-snapshot full suite found the environment receipt used a more specific state token than the validator contract allowed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Keep the bounded claim text, restore the exact verified contract token, and rerun the complete suite.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6423-N27",
+      "statement": "The second post-snapshot full suite exposed a stale new-negative-count literal in both validators after N26 was retained.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Update both count contracts together, retain this failure, and rerun the complete suite.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6423-N28",
+      "statement": "A final verification wrapper truncated validator output with Select-Object and returned a wrapper failure after the validator had emitted a valid result.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Consume validator output fully, preserve the wrapper failure, and rerun both validators.",
       "retained": true
     }
   ],

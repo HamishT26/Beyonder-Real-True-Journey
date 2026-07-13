@@ -187,16 +187,16 @@ class TestGhcFamilyV642V3(unittest.TestCase):
         self.assertEqual(terminal["verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(terminal["deployment_authorized"] or terminal["successor_authorized_by_artifact"])
 
-    def test_14_all_ninety_two_negatives_are_retained(self) -> None:
+    def test_14_all_ninety_three_negatives_are_retained(self) -> None:
         negatives = load("retained-negative-register.json")
-        self.assertEqual((negatives["inherited_count"], negatives["new_count"], negatives["negative_count"]), (68, 24, 92))
+        self.assertEqual((negatives["inherited_count"], negatives["new_count"], negatives["negative_count"]), (68, 28, 96))
         self.assertEqual(negatives["negative_count"], len(negatives["negatives"]))
         self.assertTrue(negatives["all_retained"])
         self.assertFalse(negatives["erasure_permitted"])
         self.assertTrue(all(row["retained"] for row in negatives["negatives"]))
         execution = load("validation/execution-negative-log.json")
-        self.assertEqual(execution["negative_count"], 4)
-        self.assertEqual([row["negative_id"] for row in execution["negatives"]], ["V6423-N21", "V6423-N22", "V6423-N23", "V6423-N24"])
+        self.assertEqual(execution["negative_count"], 8)
+        self.assertEqual([row["negative_id"] for row in execution["negatives"]], ["V6423-N21", "V6423-N22", "V6423-N23", "V6423-N24", "V6423-N25", "V6423-N26", "V6423-N27", "V6423-N28"])
         self.assertTrue(all(row["preserved"] for row in execution["negatives"]))
 
     def test_15_gate_register_preserves_five_plus_six(self) -> None:

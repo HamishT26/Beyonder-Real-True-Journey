@@ -1,6 +1,6 @@
 {
   "schema": "ghc.family.v642-v3.execution-negative-log.v1",
-  "negative_count": 4,
+  "negative_count": 8,
   "negatives": [
     {
       "negative_id": "V6423-N21",
@@ -24,6 +24,30 @@
       "negative_id": "V6423-N24",
       "observed": "A combined register, log, truth, and overview patch used stale overview context and was rejected atomically before any file changed.",
       "resolution": "Split generator changes from regenerated-artifact changes and rebuild from the corrected generator.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N25",
+      "observed": "The first two-snapshot materialization command exceeded its wrapper timeout after snapshot A completed and snapshot B remained locked initializing.",
+      "resolution": "Inspect both paths, retain completed snapshot A, remove only the verified incomplete snapshot B worktree, and recreate B alone with a longer bound; both final snapshots then matched the evidence head and were clean.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N26",
+      "observed": "The first post-snapshot repository suite failed one v642-v3 test because the environment receipt used verified_bounded_same_owner while the validator contract required the exact token verified.",
+      "resolution": "Retain the stronger boundary in separate claim text, restore the contract token to verified, and rerun the complete suite.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N27",
+      "observed": "The second post-snapshot repository suite failed one v642-v3 test because both validators still required new_count 25 after N26 increased it to 26.",
+      "resolution": "Update both count contracts together, retain this failure, and rerun the complete suite.",
+      "preserved": true
+    },
+    {
+      "negative_id": "V6423-N28",
+      "observed": "A final verification wrapper piped validator JSON through Select-Object -First, which closed the producer early and returned a wrapper failure after the full validator had emitted valid=true and 141/141.",
+      "resolution": "Consume validator output fully with Out-Null or write it to its receipt, preserve the wrapper failure, and rerun both validators.",
       "preserved": true
     }
   ],

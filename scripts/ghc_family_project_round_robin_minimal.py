@@ -86,8 +86,8 @@ def verify(phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
     check("ten x2 outcomes", x2["proposal_count"] == len(x2["proposals"]) == 10)
     check("outcome distribution exact", x2["disposition_counts"] == EXPECTED)
     check("all outcomes evidence-bounded", all(row["executed_as_far_as_evidence_permits"] for row in x2["proposals"]))
-    check("92 negatives retained", negatives["negative_count"] == len(negatives["negatives"]) == 92)
-    check("negative inheritance exact", negatives["inherited_count"] == 68 and negatives["new_count"] == 24)
+    check("96 negatives retained", negatives["negative_count"] == len(negatives["negatives"]) == 96)
+    check("negative inheritance exact", negatives["inherited_count"] == 68 and negatives["new_count"] == 28)
     check("negative erasure forbidden", negatives["erasure_permitted"] is False and negatives["all_retained"] is True)
     check("five open gaps and six exact gates", gates["open_gap_count"] == 5 and gates["exact_gate_count"] == 6)
     check("no gate silently closed", gates["silently_closed"] == 0)
@@ -140,7 +140,7 @@ def verify(phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
         "summary": {
             "proposals": 10,
             "disposition_counts": EXPECTED,
-            "retained_negatives": 92,
+            "retained_negatives": 96,
             "open_gaps": 5,
             "exact_gates": 6,
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",

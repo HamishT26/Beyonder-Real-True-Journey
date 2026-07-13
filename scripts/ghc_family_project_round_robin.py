@@ -365,8 +365,8 @@ def overview(owner: str, source_revision: str, x1_commit: str) -> str:
         ## 13. Negative retention, reproducibility, and closeout
 
         All 68 inherited negatives remain reachable. Twenty domain limitations
-        and four execution failures from v642-v3 are added rather than erased,
-        bringing the retained total to 92. They preserve project-context limits,
+        and eight execution failures from v642-v3 are added rather than erased,
+        bringing the retained total to 96. They preserve project-context limits,
         future-seat nonexistence, no-v9 routing, least-authority rejection,
         structural-only physics, synthetic-only calibration, zero real THOS
         arms, absent production Freed ID evidence, absent authority, entropy
@@ -1159,6 +1159,10 @@ def build_all(repo: Path, phase: Path, x1_commit: str) -> None:
         ("V6423-N22", "The first sequential report validation found the accessibility boundary split across a newline, so the exact bounded-claim phrase did not match.", "validation/execution-negative-log.json"),
         ("V6423-N23", "The first candidate-receipt patch targeted compact JSON lines that did not match the generated expanded checklist and was rejected without partial changes.", "validation/execution-negative-log.json"),
         ("V6423-N24", "A combined negative-register patch was rejected atomically because its overview context had already changed after regeneration.", "validation/execution-negative-log.json"),
+        ("V6423-N25", "The first two-snapshot materialization command exceeded its wrapper timeout after snapshot A completed and snapshot B remained locked initializing.", "validation/execution-negative-log.json"),
+        ("V6423-N26", "The first post-snapshot full suite found the environment receipt used a more specific state token than the validator contract allowed.", "validation/execution-negative-log.json"),
+        ("V6423-N27", "The second post-snapshot full suite exposed a stale new-negative-count literal in both validators after N26 was retained.", "validation/execution-negative-log.json"),
+        ("V6423-N28", "A final verification wrapper truncated validator output with Select-Object and returned a wrapper failure after the validator had emitted a valid result.", "validation/execution-negative-log.json"),
     ]
     appended = [
         {
@@ -1255,7 +1259,7 @@ def build_all(repo: Path, phase: Path, x1_commit: str) -> None:
             "evidence_commit": None,
             "proposal_count": 10,
             "disposition_counts": counts,
-            "retained_negative_count": 92,
+            "retained_negative_count": 96,
             "open_gap_count": inherited_gates["open_gap_count"],
             "exact_gate_count": inherited_gates["exact_gate_count"],
             "protected_claims": protected,
@@ -1349,7 +1353,7 @@ def build_all(repo: Path, phase: Path, x1_commit: str) -> None:
         phase / "validation/execution-negative-log.json",
         {
             "schema": "ghc.family.v642-v3.execution-negative-log.v1",
-            "negative_count": 4,
+            "negative_count": 8,
             "negatives": [
                 {
                     "negative_id": "V6423-N21",
@@ -1373,6 +1377,30 @@ def build_all(repo: Path, phase: Path, x1_commit: str) -> None:
                     "negative_id": "V6423-N24",
                     "observed": "A combined register, log, truth, and overview patch used stale overview context and was rejected atomically before any file changed.",
                     "resolution": "Split generator changes from regenerated-artifact changes and rebuild from the corrected generator.",
+                    "preserved": True,
+                },
+                {
+                    "negative_id": "V6423-N25",
+                    "observed": "The first combined two-worktree materialization exceeded its wrapper timeout; snapshot A was clean while snapshot B was present but locked initializing with an incomplete checkout.",
+                    "resolution": "Verify both actual states, path-check and remove only the owned incomplete B checkout, rematerialize B alone with a longer bound, then validate both snapshots.",
+                    "preserved": True,
+                },
+                {
+                    "negative_id": "V6423-N26",
+                    "observed": "The first post-snapshot repository suite failed one v642-v3 test because the environment receipt used verified_bounded_same_owner while the validator contract required the exact token verified.",
+                    "resolution": "Retain the stronger boundary in the separate claim text, restore the contract token to verified, and rerun the complete suite.",
+                    "preserved": True,
+                },
+                {
+                    "negative_id": "V6423-N27",
+                    "observed": "The second post-snapshot repository suite failed one v642-v3 test because both validators still required new_count 25 after N26 increased it to 26.",
+                    "resolution": "Update both count contracts together, retain this failure, and rerun the complete suite.",
+                    "preserved": True,
+                },
+                {
+                    "negative_id": "V6423-N28",
+                    "observed": "A final verification wrapper piped validator JSON through Select-Object -First, which closed the producer early and returned a wrapper failure after the full validator had emitted valid=true and 141/141.",
+                    "resolution": "Consume validator output fully with Out-Null or write it to its receipt, preserve the wrapper failure, and rerun both validators.",
                     "preserved": True,
                 },
             ],
@@ -1418,7 +1446,7 @@ def main() -> None:
                 "phase": "v642-gmut-thos-v3-x1-x2",
                 "proposal_count": 10,
                 "disposition_counts": dict(Counter(OBSERVED.values())),
-                "retained_negatives": 92,
+                "retained_negatives": 96,
                 "terminal_verdict": "NOT_READY_FOR_STAGE_20",
             }
         )

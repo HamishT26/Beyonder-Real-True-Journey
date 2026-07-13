@@ -276,16 +276,16 @@ def validate(phase: Path, allow_pending_snapshot: bool = False, require_report: 
     check("terminal not ready", terminal["verdict"] == "NOT_READY_FOR_STAGE_20")
     check("deployment not authorized", terminal["deployment_authorized"] is False and terminal["successor_authorized_by_artifact"] is False)
 
-    check("92 negatives retained", negatives["negative_count"] == len(negatives["negatives"]) == 92)
-    check("negative inheritance exact", negatives["inherited_count"] == 68 and negatives["new_count"] == 24)
+    check("96 negatives retained", negatives["negative_count"] == len(negatives["negatives"]) == 96)
+    check("negative inheritance exact", negatives["inherited_count"] == 68 and negatives["new_count"] == 28)
     check("all negatives retained", negatives["all_retained"] is True and all(row["retained"] for row in negatives["negatives"]))
     check("negative erasure forbidden", negatives["erasure_permitted"] is False)
-    check("four execution failures retained", execution_negatives["negative_count"] == 4 and [row["negative_id"] for row in execution_negatives["negatives"]] == ["V6423-N21", "V6423-N22", "V6423-N23", "V6423-N24"] and all(row["preserved"] for row in execution_negatives["negatives"]))
+    check("eight execution failures retained", execution_negatives["negative_count"] == 8 and [row["negative_id"] for row in execution_negatives["negatives"]] == ["V6423-N21", "V6423-N22", "V6423-N23", "V6423-N24", "V6423-N25", "V6423-N26", "V6423-N27", "V6423-N28"] and all(row["preserved"] for row in execution_negatives["negatives"]))
     check("five open gaps", gates["open_gap_count"] == 5)
     check("six exact gates", gates["exact_gate_count"] == 6)
     check("no gate silently closed", gates["silently_closed"] == 0 and all(row["state"] in {"open", "deferred"} for row in gates["gates"]))
     check("phase truth distribution exact", truth["disposition_counts"] == EXPECTED)
-    check("phase truth negatives exact", truth["retained_negative_count"] == 92)
+    check("phase truth negatives exact", truth["retained_negative_count"] == 96)
     check("phase truth protected claims false", not any(truth["protected_claims"].values()))
     check("phase truth terminal exact", truth["terminal_verdict"] == terminal["verdict"] == "NOT_READY_FOR_STAGE_20")
     check("projectless lanes preserved standby", truth["projectless_lanes_on_standby"] == ["Elian Voss", "Nima Calder"])
@@ -345,7 +345,7 @@ def validate(phase: Path, allow_pending_snapshot: bool = False, require_report: 
         "summary": {
             "proposals": 10,
             "disposition_counts": EXPECTED,
-            "retained_negatives": 92,
+            "retained_negatives": 96,
             "open_gaps": 5,
             "exact_gates": 6,
             "schedule_assignments": 150,
