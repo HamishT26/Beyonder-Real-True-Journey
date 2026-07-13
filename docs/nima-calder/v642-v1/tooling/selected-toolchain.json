@@ -1,0 +1,20 @@
+{
+  "schema": "ghc.family.v642-v1.selected-toolchain.v1",
+  "phase": "v642-gmut-thos-v1-x1-x2",
+  "owner": "Nima Calder",
+  "selected_on": "2026-07-13",
+  "selection_rule": "Use the smallest additive family-current toolchain that validates the owned phase. Preserve v641 implementations and callers byte-stably as compatibility or historical evidence unless an exact regression proves a narrow shared change necessary.",
+  "selected": [
+    {"name": "ghc-family-index", "kind": "skill", "category": "family_current", "state": "executed_for_x1", "purpose": "resolve family-current, compatibility, historical-versioned, and other tooling labels"},
+    {"name": "scripts/ghc_family_phase_privacy_scan.py", "kind": "script", "category": "family_current", "state": "present", "purpose": "phase-scoped privacy, raw-task-ID, secret-shape, and private-path scan"},
+    {"name": "scripts/ghc_family_evidence_boundary.py", "kind": "script", "category": "family_current", "state": "planned_after_x1_remote_equality", "purpose": "build reusable counterevidence, boundary-condition, adapter, THOS, Freed ID, CBR, security, reproduction, classification, and Stage 20 evidence"},
+    {"name": "scripts/ghc_family_evidence_boundary_validator.py", "kind": "script", "category": "family_current", "state": "planned_after_x1_remote_equality", "purpose": "validate v642-v1 cross-artifact invariants, disposition classes, retained negatives, and protected gates"},
+    {"name": "scripts/build_ghc_family_evidence_boundary_report.py", "kind": "script", "category": "family_current", "state": "planned_after_x1_remote_equality", "purpose": "build an accessible static evidence report with bounded structural checks"},
+    {"name": "tests/test_ghc_family_v641_v2.py through tests/test_ghc_family_v641_v8.py", "kind": "test_suite", "category": "compatibility", "state": "present", "purpose": "protect inherited phase behavior while v642-v1 remains additive"}
+  ],
+  "x2_builder_present_at_x1": false,
+  "shared_skill_change": false,
+  "historical_tool_change": false,
+  "compatibility_policy": "Existing v641 scripts, tests, artifacts, and ghc-family skills remain byte-stable; new v642-v1 tooling uses reusable family-current names.",
+  "boundary": "Selection is not evidence that a planned x2 tool exists or that any x2 outcome has been executed."
+}
