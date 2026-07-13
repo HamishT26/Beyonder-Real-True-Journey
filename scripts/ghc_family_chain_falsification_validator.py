@@ -83,6 +83,7 @@ REQUIRED_FILES = [
     "validation/full-suite-receipt.json",
     "validation/reproduction-validation.json",
     "validation/closeout-validation.json",
+    "validation/final-seal-validation.json",
     "tooling/ghc-family-index.json",
     "tooling/selected-toolchain.json",
 ]
@@ -298,6 +299,13 @@ def validate(phase: Path, allow_pending: bool, require_report: bool, output: Pat
     if not closeout_validation.get("valid") or closeout_validation.get("tests_passed") != 130 or closeout_validation.get("validator_issues") != 0 or closeout_validation.get("privacy_hits") != 0 or not closeout_validation.get("clean_git_state"):
         issues.append("detached closeout validation receipt failed")
     checks.append("seal_and_detached_closeout_validation")
+
+    final_seal = parsed["validation/final-seal-validation.json"]
+    if final_seal.get("validated_seal_commit") != "dfaacf0a51a09ec21bdbc3a915fa5994ba41c4a7" or not final_seal.get("valid") or final_seal.get("tests_passed") != 130 or final_seal.get("validator_issues") != 0 or final_seal.get("privacy_hits") != 0 or not final_seal.get("clean_git_state"):
+        issues.append("final seal validation receipt failed")
+    if final_seal.get("outbound_baton_state") != "NOT_SENT_PRE_FINAL_HEAD_VALIDATION":
+        issues.append("final seal validation claims an early baton")
+    checks.append("final_seal_validation")
 
     patterns = {
         "raw_uuid_task_or_thread_id": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
