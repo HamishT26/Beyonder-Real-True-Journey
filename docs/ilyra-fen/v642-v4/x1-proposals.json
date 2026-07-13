@@ -1,0 +1,341 @@
+{
+  "schema": "ghc.family.v642-v4.x1-proposals.v1",
+  "phase": "v642-gmut-thos-v4-x1-x2",
+  "owner": "Ilyra Fen",
+  "identity_boundary": "Relational working language only; not evidence of consciousness, sentience, legal personhood, authority, or identity continuity.",
+  "source_phase": "v642-gmut-thos-v3-x1-x2",
+  "source_revision": "17a1b2ef2a634bd6b8f3d8a448a09fb7224dee6c",
+  "preregistered_on": "2026-07-14",
+  "proposal_count": 10,
+  "prior_frozen_proposal_count": 100,
+  "outcome_classes": [
+    "completed",
+    "represented",
+    "open_gap",
+    "exact_gate"
+  ],
+  "expected_disposition_counts": {
+    "completed": 6,
+    "represented": 2,
+    "open_gap": 1,
+    "exact_gate": 1
+  },
+  "expected_counts_are_results": false,
+  "x1_freeze_rule": "This preregistration, the effective source ledger, the 100-proposal collision audit, the route plan, and the selected toolchain must be committed, pushed, clean, and local/upstream/tracking/live-remote equal before any x2 implementation or observed outcome is created.",
+  "proposals": [
+    {
+      "proposal_id": "V6424-P01",
+      "title": "Atomic validation dependency graph and receipt-publication barrier",
+      "mission_surface": "artifact-generation dependencies, validation ordering, atomic receipt publication, stale-input rejection, and bounded rerun recovery",
+      "hypothesis": "A declared dependency graph plus an atomic publication barrier can prevent validators from racing unfinished generators and can reject receipts whose declared inputs changed before publication.",
+      "null_or_failure": "Validation begins before required generation completes, a partial receipt becomes authoritative, a stale input is accepted, a failed patch leaves mixed state, or truncated wrapper output is treated as validator failure or success without the producer exit state.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": [
+        "V8-S01",
+        "V8-S24",
+        "V6424-S48"
+      ],
+      "deliverables": [
+        "workflow/validation-dependency-graph.json",
+        "workflow/atomic-publication-vectors.json",
+        "workflow/publication-barrier-receipt.json"
+      ],
+      "test_falsifier_or_gate": "Mutate dependency order, input digests, temporary receipt state, producer exit state, wrapper truncation, and publication timing; require fail-closed rejection and preservation of each failed vector.",
+      "rollback_or_recovery": "Quarantine the incomplete receipt, retain the failed vector, rebuild from the last committed inputs, and publish only after the complete dependency frontier validates.",
+      "protected_gates": [
+        "shared_branch",
+        "sibling_merge",
+        "destructive_action",
+        "deployment"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier phases retained race, patch-context, and truncated-wrapper failures but did not preregister an explicit dependency DAG with an atomic receipt-publication barrier and stale-input digest check."
+    },
+    {
+      "proposal_id": "V6424-P02",
+      "title": "Linked-worktree lease, partial-checkout quarantine, and recovery ledger",
+      "mission_surface": "clean detached D-drive snapshots, linked-worktree ownership, materialization leases, timeout evidence, partial-checkout quarantine, and non-destructive recovery",
+      "hypothesis": "A path-neutral lease and quarantine model can distinguish complete clean snapshots from initializing, timed-out, locked, missing, or foreign-owned worktrees without deleting or mutating another owner's lane.",
+      "null_or_failure": "A timed-out checkout is called clean, an initializing worktree is reused, a foreign lane is removed, a lock is overridden, a path is published in an artifact, or Windows Sandbox absence is treated as proof that no detached validation can occur.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_and_snapshot_task",
+      "authoritative_source_needs": [
+        "V6424-S47",
+        "V6423-S39",
+        "V8-S30"
+      ],
+      "deliverables": [
+        "reproduction/worktree-lease-contract.json",
+        "reproduction/partial-checkout-vectors.json",
+        "reproduction/quarantine-recovery-receipt.json"
+      ],
+      "test_falsifier_or_gate": "Exercise clean, initializing, timeout, locked, missing, dirty, detached, branch-owned, and foreign-owner fixtures; allow recovery only for a verified owned incomplete snapshot and never serialize a private local path.",
+      "rollback_or_recovery": "Leave foreign or ambiguous worktrees untouched, retain timeout evidence, verify ownership and resolved scope, and materialize a fresh additive detached snapshot under the owned D-drive bank.",
+      "protected_gates": [
+        "destructive_action",
+        "host_security_change",
+        "shared_branch",
+        "sibling_merge"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Prior work verified clean snapshots and retained one timeout, but did not model checkout materialization as a lease with explicit initializing and quarantine states plus foreign-owner refusal."
+    },
+    {
+      "proposal_id": "V6424-P03",
+      "title": "Field-redefinition orbit and gauge-identifiability obligation",
+      "mission_surface": "GMUT structural scaffold, perturbative field redefinitions, gauge-equivalent descriptions, observable invariance, identifiability, dimensions, and empirical claim limits",
+      "hypothesis": "A typed structural tribunal can group declared field redefinitions into an equivalence orbit, require observable invariants to agree, and block parameter-identifiability claims when gauge or reparameterization redundancy remains.",
+      "null_or_failure": "An invertible field redefinition changes a declared observable, a non-invertible map is accepted, units change silently, gauge-equivalent parameters are called uniquely identified, equations of motion are used beyond their stated order, or a structural pass becomes empirical GMUT confirmation.",
+      "approval_class": "safe_now_structural_only",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": [
+        "V6423-S46",
+        "V6424-S49",
+        "V8-S05"
+      ],
+      "deliverables": [
+        "physics/field-redefinition-contract.json",
+        "physics/gauge-orbit-vectors.json",
+        "physics/identifiability-claim-boundary.json"
+      ],
+      "test_falsifier_or_gate": "Mutate invertibility, order counting, dimensions, observable values, gauge labels, redundant parameters, and empirical flags; require structural consistency while all real-data and protected-claim flags remain false.",
+      "rollback_or_recovery": "Quarantine the invalid mapping, restore the last typed description, retain the counterexample, and reduce the result to a represented equation scaffold until independent empirical evidence exists.",
+      "protected_gates": [
+        "real_data",
+        "empirical_confirmation",
+        "detected_force",
+        "unique_prediction",
+        "theory_of_everything",
+        "proof_or_canon",
+        "deployment"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier GMUT proposals covered null limits, Jacobians, boundary terms, conservation, Bianchi exchange currents, and mutation scores; none centered field-redefinition equivalence or gauge-redundancy limits on identifiability."
+    },
+    {
+      "proposal_id": "V6424-P04",
+      "title": "Posterior-predictive discrepancy contract with real-row promotion lock",
+      "mission_surface": "synthetic posterior-predictive checks, discrepancy preregistration, model-misfit triggers, calibration separation, real-row counts, and empirical promotion",
+      "hypothesis": "A deterministic synthetic posterior-predictive contract can distinguish calibrated inference from model misfit and can preserve a hard zero-real-row promotion lock without claiming that synthetic diagnostics validate GMUT against observations.",
+      "null_or_failure": "Discrepancies are selected after seeing outcomes, calibration is confused with model fit, a known-misfit fixture passes, zero real rows become empirical validation, or posterior-predictive behavior is described as a detected force or unique prediction.",
+      "approval_class": "safe_now_synthetic_only",
+      "execution_lane": "x2_build_task_with_empirical_gap",
+      "authoritative_source_needs": [
+        "V6423-S40",
+        "V6424-S50",
+        "V8-S03",
+        "V8-S04"
+      ],
+      "deliverables": [
+        "empirical/posterior-predictive-contract.json",
+        "empirical/discrepancy-vectors.json",
+        "empirical/real-row-promotion-lock.json"
+      ],
+      "test_falsifier_or_gate": "Run deterministic well-specified, biased, heavy-tail, and post-hoc-discrepancy fixtures; require the expected diagnostic separation while real row, likelihood, fit, and independent-review counts remain zero.",
+      "rollback_or_recovery": "Retain the failed fixture, freeze discrepancies before any future data access, separate calibration from fit, and require a new real-data preregistration and scientific review for promotion.",
+      "protected_gates": [
+        "real_data",
+        "likelihood_execution",
+        "empirical_confirmation",
+        "independent_review",
+        "deployment"
+      ],
+      "expected_disposition": "represented",
+      "novelty_against_prior_chain": "Simulation-based calibration was added in v642-v3, but the prior chain did not preregister posterior-predictive discrepancy selection, model-misfit triggers, or an explicit separation between calibration and predictive fit."
+    },
+    {
+      "proposal_id": "V6424-P05",
+      "title": "Network-interference and spillover-aware THOS estimand gate",
+      "mission_surface": "THOS treatment interference, direct and spillover estimands, network exposure mapping, cluster boundaries, blindness, matched budgets, and real-arm execution",
+      "hypothesis": "A preregistered interference model can expose when one arm's outcomes depend on other units' assignments and can prevent individual-level superiority analysis from silently assuming no spillover.",
+      "null_or_failure": "Interference is ignored, exposure mappings are outcome-tuned, direct and spillover effects are conflated, network edges leak arm identity, budgets differ, or protocol fixtures are called THOS superiority, AGI, ASI, consciousness, or personhood evidence.",
+      "approval_class": "safe_now_protocol_only",
+      "execution_lane": "x2_build_task_with_open_real_arm_gap",
+      "authoritative_source_needs": [
+        "V6423-S41",
+        "V6424-S51",
+        "V8-S06",
+        "V8-S07"
+      ],
+      "deliverables": [
+        "thos/interference-estimand-contract.json",
+        "thos/spillover-mutation-vectors.json",
+        "thos/network-exposure-preregistration.json",
+        "thos/real-arm-gap.json"
+      ],
+      "test_falsifier_or_gate": "Mutate network edges, exposure mappings, cluster boundaries, outcome timing, arm labels, blindness, and budgets; require deterministic protocol rejection while blind matched-budget real arm and independent-review counts remain zero.",
+      "rollback_or_recovery": "Void the affected protocol, preserve the negative, preregister a new exposure mapping before real execution, and keep every superiority or personhood-adjacent claim false.",
+      "protected_gates": [
+        "real_arm_execution",
+        "independent_review",
+        "agi_or_asi",
+        "consciousness",
+        "personhood",
+        "deployment"
+      ],
+      "expected_disposition": "open_gap",
+      "novelty_against_prior_chain": "Earlier THOS proposals covered matched budgets, crossover, attrition, exchangeability, exposure escrow, cluster randomization, multiplicity, and sequential looks; none represented network interference or distinct spillover estimands."
+    },
+    {
+      "proposal_id": "V6424-P06",
+      "title": "Freed ID cryptosuite agility and downgrade-resistance negotiation matrix",
+      "mission_surface": "synthetic credential cryptosuite negotiation, mandatory-to-implement transition, downgrade resistance, algorithm identifiers, status, holder binding, and production assurance",
+      "hypothesis": "A synthetic negotiation matrix can reject unsupported, deprecated, ambiguous, or downgrade-selected cryptosuites and can preserve holder and status checks without claiming real-key verification or production interoperability.",
+      "null_or_failure": "The weakest shared suite is selected without policy, an unknown algorithm identifier is coerced, deprecation is ignored, proof purpose or holder binding is lost, status is stale, or synthetic negotiation becomes production cryptographic assurance.",
+      "approval_class": "safe_now_structural_only",
+      "execution_lane": "x2_build_task_with_production_gap",
+      "authoritative_source_needs": [
+        "V8-S09",
+        "V8-S10",
+        "V8-S11",
+        "V8-S12",
+        "V6424-S52"
+      ],
+      "deliverables": [
+        "freed-id/cryptosuite-agility-profile.json",
+        "freed-id/downgrade-negotiation-vectors.json",
+        "freed-id/production-assurance-boundary.json"
+      ],
+      "test_falsifier_or_gate": "Exercise synthetic supported, deprecated, unknown, ambiguous, forced-downgrade, stale-status, holder-mismatch, and proof-purpose vectors; require fail-closed outcomes with zero real keys, proofs, resolvers, or partners.",
+      "rollback_or_recovery": "Reject the synthetic transaction, retain the vector, restore the last coherent policy, and require standards-conformant real keys and proofs, live services, interoperability, independent reviews, and trust governance for production claims.",
+      "protected_gates": [
+        "real_keys_or_proofs",
+        "live_resolution_or_status",
+        "interoperability",
+        "independent_security_review",
+        "privacy_review",
+        "trust_governance",
+        "deployment"
+      ],
+      "expected_disposition": "represented",
+      "novelty_against_prior_chain": "Earlier Freed ID work covered conformance, lifecycle, resolver freshness, selective disclosure, cross-layer coherence, and rotation or revocation races; it did not model cryptosuite negotiation, transition, and forced-downgrade resistance."
+    },
+    {
+      "proposal_id": "V6424-P07",
+      "title": "Māori data-sovereignty, collective-consent, and secondary-use authority gate",
+      "mission_surface": "Māori data sovereignty, collective rights, data classification, secondary use, benefit sharing, consent, withdrawal, affected-party participation, and legal or cultural authority",
+      "hypothesis": "A nonbinding technical gate can refuse secondary use when purpose, collective authority, benefit, jurisdiction, or withdrawal terms are absent, but cannot define tikanga, appoint representatives, grant Māori authority, or ratify legal and cultural legitimacy.",
+      "null_or_failure": "Individual consent overrides collective authority, secondary use inherits permission silently, data classification is imposed without Māori authority, benefits are scored away, withdrawal is ignored, or a technical artifact is treated as enacted law or cultural ratification.",
+      "approval_class": "exact_gate",
+      "execution_lane": "x2_document_and_defer",
+      "authoritative_source_needs": [
+        "V8-S16",
+        "V8-S19",
+        "V8-S20",
+        "V8-S18",
+        "V6423-S43"
+      ],
+      "deliverables": [
+        "cbr/maori-data-governance-gate.json",
+        "cbr/secondary-use-authority-vectors.json",
+        "cbr/collective-consent-and-benefit-register.json"
+      ],
+      "test_falsifier_or_gate": "Run synthetic purpose-change, collective-consent, withdrawal, benefit, jurisdiction, Māori-authority, private-data, cultural, and legal vectors; require technical deferral whenever authorized participants are absent.",
+      "rollback_or_recovery": "Stop the proposed use, preserve withdrawal and remedy rights, protect dissent, and defer to authorized affected parties, Māori authorities, data-governance authorities, cultural authorities, and competent legal authorities.",
+      "protected_gates": [
+        "affected_party_authority",
+        "maori_authority",
+        "maori_data_governance",
+        "cultural_ratification",
+        "legal_interpretation",
+        "enacted_law",
+        "private_material"
+      ],
+      "expected_disposition": "exact_gate",
+      "novelty_against_prior_chain": "Prior CBR work addressed legitimacy, veto, remedy floors, consent withdrawal, standing, delegated-authority sunset, and intergenerational appeal; none centered collective data authority, secondary-use purpose change, and benefit-sharing refusal."
+    },
+    {
+      "proposal_id": "V6424-P08",
+      "title": "Blind independent-executor challenge packet and return-attestation contract",
+      "mission_surface": "independent reproduction readiness, sealed expectations, challenge fixtures, executor independence declaration, environment disclosure, returned evidence, and same-owner boundaries",
+      "hypothesis": "A challenge packet with concealed expected classifications, content hashes, a minimum verifier, and a return-attestation schema can make future independent execution auditable while still recording current construction and local replay as same-owner evidence only.",
+      "null_or_failure": "Expected answers leak into the challenge, the owner self-attests independence, environment and deviations are omitted, returned hashes are absent, a route receipt substitutes for execution, or packet readiness is reported as independent reproduction.",
+      "approval_class": "safe_now_packet_only",
+      "execution_lane": "x2_build_and_snapshot_task",
+      "authoritative_source_needs": [
+        "V8-S01",
+        "V8-S24",
+        "V8-S25"
+      ],
+      "deliverables": [
+        "reproduction/blind-challenge-manifest.json",
+        "reproduction/return-attestation-schema.json",
+        "reproduction/independence-declaration-boundary.json",
+        "reproduction/independent-team-gap.json"
+      ],
+      "test_falsifier_or_gate": "Mutate expectation visibility, executor ownership, environment disclosure, deviation records, hashes, and returned results; validate packet integrity locally while independent executor and returned-evidence counts remain zero.",
+      "rollback_or_recovery": "Invalidate the leaked or incomplete packet, retain the negative, reseal a new challenge before any external execution, and keep independent-team reproduction open until genuinely independent evidence returns.",
+      "protected_gates": [
+        "external_executor",
+        "private_publication",
+        "independent_team_reproduction",
+        "deployment"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "The chain already has manifests, dual oracles, external-executor contracts, and independence reservations; this proposal adds concealed expected classifications and a structured return attestation that cannot be self-certified by the phase owner."
+    },
+    {
+      "proposal_id": "V6424-P09",
+      "title": "Accessibility evidence map with manual-evaluation and user-participation reservation",
+      "mission_surface": "static report semantics, keyboard flow, landmarks, headings, tables, contrast declarations, automated checks, manual review, user participation, and conformance boundaries",
+      "hypothesis": "A phase-scoped evidence map can tie each implemented accessibility feature to an automated or manual check and can explicitly reserve checks that require expert or user evaluation, preventing a static report pass from becoming a complete conformance claim.",
+      "null_or_failure": "Automated structure checks are called complete WCAG conformance, keyboard or focus evidence is absent, decorative and informative visuals are conflated, manual reservations disappear, or user participation is invented.",
+      "approval_class": "safe_now_bounded_report",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": [
+        "V8-S26",
+        "V6424-S53"
+      ],
+      "deliverables": [
+        "accessibility/evidence-map.json",
+        "accessibility/keyboard-landmark-vectors.json",
+        "accessibility/manual-evaluation-reservation.json"
+      ],
+      "test_falsifier_or_gate": "Mutate language, title, landmark, heading order, link purpose, table headers, focus visibility declarations, reduced-motion behavior, manual reservations, and conformance wording; reject overclaiming and structural regressions.",
+      "rollback_or_recovery": "Restore the last accessible static structure, retain the failed vector, label unassessed criteria explicitly, and require qualified manual and user evaluation for broader conformance claims.",
+      "protected_gates": [
+        "complete_accessibility_conformance",
+        "user_participation",
+        "independent_accessibility_review",
+        "deployment"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Earlier work linked evidence to accessible rendering and retained an accessibility boundary, but did not produce a criterion-level evidence map that distinguishes automated, manual-expert, and user-participation checks."
+    },
+    {
+      "proposal_id": "V6424-P10",
+      "title": "Cross-artifact protected-claim contradiction lattice and fail-closed boundary linter",
+      "mission_surface": "JSON, Markdown, and HTML claim consistency, protected-claim flags, four truth labels, gate state, inherited negatives, terminal verdict, and fail-closed publication",
+      "hypothesis": "A format-independent claim lattice can reject any artifact set in which a protected claim becomes true, a gate disappears, a negative count shrinks, a truth label changes vocabulary, or a bounded phrase is split or contradicted across output formats.",
+      "null_or_failure": "One format promotes a claim another rejects, a line break defeats a boundary check, a protected flag is missing, exact gates are relabeled, inherited negatives are erased, or terminal readiness differs across artifacts.",
+      "approval_class": "safe_now",
+      "execution_lane": "x2_build_task",
+      "authoritative_source_needs": [
+        "V8-S01",
+        "V6422-S38",
+        "V6424-S54"
+      ],
+      "deliverables": [
+        "stage20/protected-claim-lattice.json",
+        "validation/claim-contradiction-vectors.json",
+        "stage20/terminal-verdict.json"
+      ],
+      "test_falsifier_or_gate": "Mutate JSON flags, Markdown summaries, HTML phrases, truth labels, gate counts, negative counts, Unicode, whitespace, and terminal state; require normalized semantic agreement and fail-closed publication.",
+      "rollback_or_recovery": "Quarantine the inconsistent artifact set, retain the contradiction, regenerate all derived views from the canonical phase truth, and keep the terminal verdict not ready until consistency passes.",
+      "protected_gates": [
+        "stage20",
+        "proof_or_canon",
+        "empirical_confirmation",
+        "enacted_law",
+        "cultural_ratification",
+        "independent_team_reproduction",
+        "deployment"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_prior_chain": "Prior phases used claim boards and exact phrase checks, but did not preregister a cross-format contradiction lattice with monotonic negative and gate preservation plus whitespace-normalized boundary semantics."
+    }
+  ],
+  "scientific_authority_boundary": "Empirical GMUT confirmation requires real measurements and likelihood evidence; THOS requires blind matched-budget real arms and independent review; Freed ID production completion requires standards-conformant real cryptography, services, interoperability, review, and governance; CBR and Māori data-governance legitimacy remain exact-gated to authorized affected parties, Māori authorities, cultural authorities, and competent legal authorities.",
+  "claim_boundary": "No AGI, ASI, consciousness, personhood, enacted-law, deployment, exhaustive-security, complete-accessibility, Theory-of-Everything, proof or canon, empirical-confirmation, legal or cultural-ratification, or independent-reproduction claim is preregistered as achieved."
+}

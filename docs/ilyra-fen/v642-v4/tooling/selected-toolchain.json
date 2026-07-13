@@ -1,0 +1,27 @@
+{
+  "schema": "ghc.family.v642-v4.selected-toolchain.v1",
+  "phase": "v642-gmut-thos-v4-x1-x2",
+  "owner": "Ilyra Fen",
+  "selection_rule": "Use the smallest family-current standard-library toolchain, keep inherited sealed tools byte-stable, and add only reusable family-named coherence tools after the x1 freeze.",
+  "existing_family_current": [
+    "ghc-family-index",
+    "scripts/ghc_family_phase_privacy_scan.py",
+    "scripts/ghc_family_repository_test_runner.py",
+    "scripts/ghc_family_project_round_robin_validator.py",
+    "scripts/ghc_family_project_round_robin_minimal.py"
+  ],
+  "planned_x2_family_current": [
+    "scripts/ghc_family_claim_coherence.py",
+    "scripts/ghc_family_claim_coherence_validator.py",
+    "scripts/ghc_family_claim_coherence_minimal.py",
+    "scripts/build_ghc_family_claim_coherence_report.py"
+  ],
+  "planned_tests": [
+    "tests/test_ghc_family_v642_v4.py",
+    "python scripts/ghc_family_repository_test_runner.py --start-directory tests --pattern test_*.py --windows-inherited-acl-temp"
+  ],
+  "planned_snapshot_policy": "Fresh additive detached D-drive snapshots with explicit lease state, clean Git status, normalized manifest parity, and no claim of independent reproduction.",
+  "compatibility_boundary": "The v642-v3 project-round-robin tools and all earlier sealed tools remain byte-stable and are selected only for inherited replay. They are not relabeled as v642-v4 implementation.",
+  "draft_source_boundary": "JSON Schema 2020-12 is contextual draft material only; the new tools use the Python standard library and stable RFC 8785 canonicalization boundary.",
+  "x1_state": "planned_not_implemented"
+}
