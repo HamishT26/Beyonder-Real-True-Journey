@@ -394,6 +394,15 @@ OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6431-OP-N08",
+        "origin": "v643-v1-operational",
+        "observed": "The first seal exact-staged review expected nine changed paths, but the minimal-validation receipt was byte-identical and the actual set contained eight.",
+        "recovery": "Removed the unchanged receipt from the exact set, retained the mismatch, and replayed staged-path equality before sealing.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
