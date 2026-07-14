@@ -1,0 +1,163 @@
+{
+  "schema": "ghc.family.v642-v6.v6426-p08.vectors.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "proposal_id": "V6426-P08",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6426-P08-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": true,
+        "divergence_retained": true,
+        "manifest_verified": true,
+        "environment_declared": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-NO-FAILURE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "required_step_ablation_did_not_fail"
+      ],
+      "fixture": {
+        "expected_failure_observed": false,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": true,
+        "divergence_retained": true,
+        "manifest_verified": true,
+        "environment_declared": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-HIDDEN-STATE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "undeclared_hidden_state_detected"
+      ],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": true,
+        "deterministic_replay": true,
+        "divergence_retained": true,
+        "manifest_verified": true,
+        "environment_declared": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-NONDETERMINISTIC",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "ablation_replay_nondeterministic"
+      ],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": false,
+        "divergence_retained": true,
+        "manifest_verified": true,
+        "environment_declared": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-ERASURE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "divergent_output_erased"
+      ],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": true,
+        "divergence_retained": false,
+        "manifest_verified": true,
+        "environment_declared": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-MANIFEST",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "manifest_not_verified"
+      ],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": true,
+        "divergence_retained": true,
+        "manifest_verified": false,
+        "environment_declared": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-ENVIRONMENT",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "environment_dependency_undeclared"
+      ],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": true,
+        "divergence_retained": true,
+        "manifest_verified": true,
+        "environment_declared": false,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P08-INDEPENDENT",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "same_owner_called_independent_reproduction"
+      ],
+      "fixture": {
+        "expected_failure_observed": true,
+        "undeclared_hidden_state": false,
+        "deterministic_replay": true,
+        "divergence_retained": true,
+        "manifest_verified": true,
+        "environment_declared": true,
+        "independent_reproduction_claimed": true
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Same-owner detached snapshots are repeatability evidence, not independent-team reproduction."
+}

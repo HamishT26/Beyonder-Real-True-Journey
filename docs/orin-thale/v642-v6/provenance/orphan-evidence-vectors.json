@@ -1,0 +1,163 @@
+{
+  "schema": "ghc.family.v642-v6.v6426-p01.vectors.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "proposal_id": "V6426-P01",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6426-P01-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": true,
+        "circular_edge": false,
+        "frozen_requirement": true,
+        "evidence_class_match": true,
+        "source_only": false,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-NO-FORWARD",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "missing_requirement_to_evidence_edge"
+      ],
+      "fixture": {
+        "forward_edge": false,
+        "reverse_edge": true,
+        "circular_edge": false,
+        "frozen_requirement": true,
+        "evidence_class_match": true,
+        "source_only": false,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-ORPHAN",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "orphan_evidence_without_requirement_edge"
+      ],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": false,
+        "circular_edge": false,
+        "frozen_requirement": true,
+        "evidence_class_match": true,
+        "source_only": false,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-CIRCULAR",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "circular_evidence"
+      ],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": true,
+        "circular_edge": true,
+        "frozen_requirement": true,
+        "evidence_class_match": true,
+        "source_only": false,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-POSTFREEZE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "post_freeze_requirement_mutation"
+      ],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": true,
+        "circular_edge": false,
+        "frozen_requirement": false,
+        "evidence_class_match": true,
+        "source_only": false,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-CLASS",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "evidence_class_mismatch"
+      ],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": true,
+        "circular_edge": false,
+        "frozen_requirement": true,
+        "evidence_class_match": false,
+        "source_only": false,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-SOURCE-ONLY",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "source_pointer_not_execution_evidence"
+      ],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": true,
+        "circular_edge": false,
+        "frozen_requirement": true,
+        "evidence_class_match": true,
+        "source_only": true,
+        "proposal_match": true
+      }
+    },
+    {
+      "case_id": "V6426-P01-OWNER",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "proposal_owner_mismatch"
+      ],
+      "fixture": {
+        "forward_edge": true,
+        "reverse_edge": true,
+        "circular_edge": false,
+        "frozen_requirement": true,
+        "evidence_class_match": true,
+        "source_only": false,
+        "proposal_match": false
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Trace coverage is local provenance control, not scientific proof or external validation."
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "ghc.family.v642-v6.execution-negative-log.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "negative_count": 2,
+  "negatives": [
+    {
+      "negative_id": "V6426-X2-N01",
+      "origin": "v642-v6_x2_execution",
+      "statement": "The first broad recursive stale-label and route-label search exceeded its 60-second command wrapper before returning a result.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Replace the broad search with bounded direct reads of the owner-scoped phase files, classify inherited source references separately from current owner or route fields, and retain this timeout after the bounded review passes.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6426-X2-N02",
+      "origin": "v642-v6_x2_execution",
+      "statement": "A combined footprint and exact-file receipt patch was rejected before changing either file because the update hunk ended without valid context.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Apply the bounded footprint update and new exact-file receipt in separate valid patch operations, then rerun manifest, JSON, privacy, and staged-path checks.",
+      "retained": true
+    }
+  ],
+  "boundary": "Append every recovered x2 operational failure; never erase it after a later pass."
+}

@@ -1,0 +1,187 @@
+{
+  "schema": "ghc.family.v642-v6.v6426-p02.vectors.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "proposal_id": "V6426-P02",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6426-P02-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "constrained",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-DIMENSION",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "dimension_mismatch"
+      ],
+      "fixture": {
+        "dimensions_valid": false,
+        "kinetic_signature": "constrained",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-WRONG-SIGN",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "wrong_sign_kinetic_mode"
+      ],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "negative",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-RANK-JUMP",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "undeclared_rank_change"
+      ],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "constrained",
+        "rank_change": true,
+        "rank_change_declared": false,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-DEGENERACY",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "undeclared_degeneracy"
+      ],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "constrained",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": false,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-CONSTRAINTS",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "constraint_count_mismatch"
+      ],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "constrained",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": false,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-STRONG-COUPLING",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "missing_strong_coupling_warning"
+      ],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "constrained",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": false,
+        "empirical_promotion": false
+      }
+    },
+    {
+      "case_id": "V6426-P02-EMPIRICAL",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "structural_pass_promoted_to_empirical_claim"
+      ],
+      "fixture": {
+        "dimensions_valid": true,
+        "kinetic_signature": "constrained",
+        "rank_change": false,
+        "rank_change_declared": true,
+        "degenerate": true,
+        "degeneracy_declared": true,
+        "constraints_match": true,
+        "zero_eigenvalue": true,
+        "strong_coupling_warning": true,
+        "empirical_promotion": true
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Kinetic-Hessian fixtures are structural obligations, not proof of a healthy theory or empirical GMUT evidence."
+}

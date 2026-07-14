@@ -1,0 +1,163 @@
+{
+  "schema": "ghc.family.v642-v6.v6426-p07.vectors.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "proposal_id": "V6426-P07",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6426-P07-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": true,
+        "cache_partitioned": true,
+        "requester_minimized": true,
+        "status_fresh": true,
+        "status_semantics_valid": true,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-SINGLETON",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "singleton_status_query"
+      ],
+      "fixture": {
+        "batch_size": 1,
+        "timing_bucketed": true,
+        "cache_partitioned": true,
+        "requester_minimized": true,
+        "status_fresh": true,
+        "status_semantics_valid": true,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-TIMING",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "fine_grained_timing_correlation"
+      ],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": false,
+        "cache_partitioned": true,
+        "requester_minimized": true,
+        "status_fresh": true,
+        "status_semantics_valid": true,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-CACHE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "cross_context_cache_join"
+      ],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": true,
+        "cache_partitioned": false,
+        "requester_minimized": true,
+        "status_fresh": true,
+        "status_semantics_valid": true,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-REQUESTER",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "requester_metadata_excess"
+      ],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": true,
+        "cache_partitioned": true,
+        "requester_minimized": false,
+        "status_fresh": true,
+        "status_semantics_valid": true,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-STALE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "stale_status_accepted"
+      ],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": true,
+        "cache_partitioned": true,
+        "requester_minimized": true,
+        "status_fresh": false,
+        "status_semantics_valid": true,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-SEMANTICS",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "status_semantics_changed"
+      ],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": true,
+        "cache_partitioned": true,
+        "requester_minimized": true,
+        "status_fresh": true,
+        "status_semantics_valid": false,
+        "anonymity_claimed": false
+      }
+    },
+    {
+      "case_id": "V6426-P07-ANONYMITY",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "padding_promoted_to_anonymity_proof"
+      ],
+      "fixture": {
+        "batch_size": 16,
+        "timing_bucketed": true,
+        "cache_partitioned": true,
+        "requester_minimized": true,
+        "status_fresh": true,
+        "status_semantics_valid": true,
+        "anonymity_claimed": true
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Synthetic correlation vectors do not establish live-service privacy assurance, interoperability, or exhaustive security."
+}
