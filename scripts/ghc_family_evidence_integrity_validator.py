@@ -39,6 +39,10 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
+def normalized_size(path: Path) -> int:
+    return len(path.read_bytes().replace(b"\r\n", b"\n"))
+
+
 def _manifest_paths(phase: Path) -> list[Path]:
     excluded_names = {"closeout-receipt.json", "final-validation-record.json", "seal-receipt.json"}
     paths: list[Path] = []
@@ -232,7 +236,8 @@ def validate(
         relative = path.relative_to(phase).as_posix()
         row = manifest_by_path.get(relative, {})
         check(f"manifest_hash_{relative}", row.get("normalized_sha256") == digest(path))
-        check(f"manifest_bytes_{relative}", row.get("bytes") == path.stat().st_size)
+        check(f"manifest_bytes_{relative}", row.get("bytes") == normalized_size(path))
+    check("manifest_byte_policy", manifest.get("byte_policy") == "length_after_crlf_to_lf_normalization")
     check("manifest_same_owner", manifest.get("same_owner_repeatability_only") is True)
     check("manifest_not_independent", manifest.get("independent_team_reproduction") is False)
 

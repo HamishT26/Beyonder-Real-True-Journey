@@ -5,9 +5,9 @@
   "inherited_count": 147,
   "x1_operational_count": 8,
   "new_synthetic_count": 70,
-  "x2_operational_count": 2,
-  "new_count": 80,
-  "negative_count": 227,
+  "x2_operational_count": 4,
+  "new_count": 82,
+  "negative_count": 229,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -1727,6 +1727,22 @@
       "statement": "A combined footprint and exact-file receipt patch was rejected before changing either file because the update hunk ended without valid context.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Apply the bounded footprint update and new exact-file receipt in separate valid patch operations, then rerun manifest, JSON, privacy, and staged-path checks.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6426-X2-N03",
+      "origin": "v642-v6_detached_evidence_validation",
+      "statement": "The first fresh detached evidence snapshot ran 276 repository tests with one failure because manifest byte counts used raw worktree sizes while Git materialized CRLF line endings; normalized content hashes still matched.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the failed snapshot result, define manifest byte counts as LF-normalized lengths alongside normalized hashes, add a regression test, create an additive repair commit, and repeat all clean-snapshot validation without rewriting the evidence commit.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6426-X2-N04",
+      "origin": "v642-v6_manifest_repair_validation",
+      "statement": "The first repair validation ran 277 repository tests with two failures because the accessible report was regenerated after the manifest, leaving the report hash stale when the retained-negative count changed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the failed run and enforce packet generation, report generation, then a final manifest-refresh generation before any validator or repository suite.",
       "retained": true
     }
   ]

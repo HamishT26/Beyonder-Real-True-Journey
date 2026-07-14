@@ -76,6 +76,10 @@ def normalized_sha256(path: Path) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def normalized_size(path: Path) -> int:
+    return len(path.read_bytes().replace(b"\r\n", b"\n"))
+
+
 def _decision(ok: bool, accepted: str, reasons: list[str]) -> tuple[str, list[str]]:
     return (accepted if ok else "reject", reasons)
 
@@ -487,7 +491,7 @@ def _manifest_entries(phase: Path) -> list[dict[str, Any]]:
             {
                 "path": relative,
                 "normalized_sha256": normalized_sha256(path),
-                "bytes": path.stat().st_size,
+                "bytes": normalized_size(path),
             }
         )
     return entries
@@ -863,6 +867,7 @@ def build(
             "phase": PHASE,
             "owner": OWNER,
             "hash_policy": "sha256_after_crlf_to_lf_normalization",
+            "byte_policy": "length_after_crlf_to_lf_normalization",
             "entry_count": len(entries),
             "entries": entries,
             "same_owner_repeatability_only": True,

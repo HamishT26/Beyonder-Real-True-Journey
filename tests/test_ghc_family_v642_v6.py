@@ -85,6 +85,13 @@ class TestGhcFamilyV642V6(unittest.TestCase):
         self.assertTrue(register["all_retained"])
         self.assertFalse(register["erasure_permitted"])
 
+    def test_manifest_byte_counts_are_newline_normalized(self):
+        manifest = read("reproduction/manifest.json")
+        self.assertEqual("length_after_crlf_to_lf_normalization", manifest["byte_policy"])
+        for row in manifest["entries"]:
+            path = PHASE / row["path"]
+            self.assertEqual(len(path.read_bytes().replace(b"\r\n", b"\n")), row["bytes"], row["path"])
+
     def test_full_validator_accepts_candidate(self):
         result = validator.validate(ROOT, PHASE, allow_pending_snapshot=True, require_report=True)
         self.assertTrue(result["valid"], result["issues"])
