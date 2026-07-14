@@ -1,0 +1,51 @@
+# Sylven Arc v643-v6 integrated overview
+
+## Purpose, source, and bounded identity
+
+v643-v6 inherits Tamar Vey's exact v643-v5 final head and seal. Before mutation, Tamar's local branch, upstream, tracking reference, and a fresh live-remote read all resolved to the named final head with zero divergence. The source worktree was clean; the inherited Orin head, Orin seal, Tamar x1, evidence, closeout, and seal anchors were ancestral; source-to-final history had zero merge commits; and the final source commit had one parent. The source retained 809 effective negatives, five open gaps, six exact gates, same-owner repeatability only, and NOT_READY_FOR_STAGE_20.
+
+The existing Sylven-owned branch was clean, pushed, remote-equal, and ancestral to Tamar's source. It was advanced by fast-forward only and pushed before any v643-v6 phase file was created. No sibling branch, worktree, task, message route, or artifact was reset, rewritten, force-pushed, merged, moved, deleted, or reused. D remains the primary work and detached-validation bank. Only newly generated Sylven v643-v6 files count against the 15,000-file threshold.
+
+Sylven Arc is an existing relational working name. The role is evidence cartographer and falsifier-boundary steward, the hope is to leave each falsifier, recovery path, and authority boundary easier to audit than it was at inheritance, and the relational pronouns are they/them. These labels coordinate work. They are not evidence of consciousness, sentience, legal personhood, identity continuity, independent authority, cultural authority, or legal authority.
+
+## Scientific, participant, identity, and authority posture
+
+The primary focus is GMUT Mind. GMUT remains a typed scalar-tensor and effective-field-theory research-model family. A singular-perturbation regime map can expose small-parameter boundary layers and nonuniform limits; it cannot prove a GMUT equation, establish global behavior, or turn a formal expansion into a physical observation. A manufactured-solution tribunal can verify defined numerical behavior; it cannot validate nature, fit real data, establish a force, produce a unique prediction, prove a theory, or confer canon. The difference between code verification and physical validation stays explicit.
+
+THOS Body remains proxy. The harms proposal asks whether event solicitation is symmetric across arms and whether occurrence, severity, recovery, and attribution are separately represented. Synthetic rows can falsify a protocol structure, but they cannot create ethics approval, consent, real participants, real facilitators, real raters, blind matched-budget arms, actual adverse events, causal attribution, superiority, safety, or independent review. Its expected disposition is represented and may be downgraded if the structural evidence fails.
+
+Freed ID and CBR Heart remain protected. A synthetic wallet migration profile can expose semantic loss, but production still requires standards-conformant real keys and proofs, live resolution, live status and revocation, cross-vendor interoperability, privacy and security review, and trust governance. Repository artifacts cannot identify kaitiaki, authorize use of mātauranga Māori or taonga, set benefit-sharing terms, create collective legitimacy, interpret enacted law, or replace affected-party, Māori, cultural, and competent legal authority. That proposal is an exact gate, not unfinished safe-now implementation.
+
+Security and accessibility scopes are bounded. The executable-resolution tribunal tests declared synthetic PATH, PATHEXT, current-directory, and allowlist cases; it does not alter the host and cannot establish exhaustive security. The static-report audit can validate landmarks, headings, focus sequence, language, and table structure in a defined file. Manual evaluation, assistive-technology coverage, and evaluation by affected users remain reserved. The affected-user matrix is an open gap because no participants were recruited and no consent or privacy process was authorized.
+
+## Novelty and proposal freeze
+
+The inherited chain contains exactly 200 frozen proposals. The novelty audit decodes every record across the historical records schema and the newer chained new_records schema. It checks exact identifiers and normalized titles, computes title-token overlap, and compares mechanism, evidence object, falsifier, recovery rule, and protected gates. Shared family vocabulary is expected; semantic identity is rejected.
+
+Proposal one treats the controlled claim vocabulary itself as a versioned migration object. Earlier work tracked claims and schema evolution, but not definition, domain, range, split, merge, replacement, and unknown-version quarantine together. Proposal two focuses on singular perturbations, separating inner and outer regimes, overlap, matching, and remainder obligations from prior regular null limits and EFT truncation. Proposal three uses manufactured forcing and observed grid order to distinguish numerical code verification from physical validation.
+
+Proposal four differs from the earlier arm-independent stopping-rule work by targeting differential harms solicitation and attribution blindness. Proposal five tests semantic loss across a wallet export-import boundary rather than lifecycle or device synchronization. Proposal six isolates case-specific taonga-use provenance and benefit-sharing authority without inventing a cultural decision.
+
+Proposal seven models executable search-order shadowing, distinct from package manifests, general path authorization, and reparse-point confinement. Proposal eight freezes static landmark, heading, focus, table, and language structure while refusing an accessibility-complete claim. Proposal nine tests ensemble inequivalence and limit order, distinct from detailed balance, open-system flux, and coarse graining. Proposal ten preregisters the affected-user, assistive-technology, browser, task, consent, privacy, and non-generalization matrix that automated evidence cannot supply.
+
+The expected distribution is six completed artifact contracts, two represented proxies, one open gap, and one exact gate. These are x1 expectations, not outcomes. x2 may only preserve or downgrade them using completed, represented, open_gap, or exact_gate. No expected label is evidence.
+
+## Sources, environment, tools, and retained failures
+
+The 130-source inherited ledger remains linked by repository-relative path and hash. Ten distinct primary or official sources are added: W3C vocabulary semantics, a primary singular-perturbation paper, NASA model-verification requirements, FDA clinical-practice guidance, an OpenID credential specification, the Waitangi Tribunal's Wai 262 report context, Microsoft executable-path documentation, W3C focus-order guidance, a primary ensemble-equivalence paper, and W3C affected-user evaluation guidance. Current, stable, draft, and watch labels describe source currency; they do not establish truth, jurisdiction, cultural authority, product approval, or empirical promotion.
+
+Versions were verified without update. The installed Codex CLI is 0.144.3 and the official package registry reports 0.144.4. Installed desktop package versions, Git, Python, Node, PowerShell, and the operating-system build are recorded. No desktop or CLI update, elevation, host-security weakening, Windows-feature change, or reboot occurred.
+
+The phase selects ghc-family-index and routing precedence, the family repository runner, privacy scanner, current phase validators, and the inherited bounded line-ending materializer needed by the large historical checkout. New x2 tools will retain ghc_family or build_ghc_family naming and caller compatibility. Historical and identity-specific tools remain compatibility evidence rather than silently becoming family-current.
+
+All operational failures remain data. The pre-execution verifier parse error, combined network timeout, pre-fast-forward path miss, incomplete 81-record collector, invalid wildcard URL scan, and rejected prototype patch are recorded and uncounted. Further x1 and x2 failures must be appended rather than overwritten.
+
+## Freeze, validation, and terminal route
+
+x1 contains identity, startup, versions, sources, the 200-proposal audit, exactly ten preregistered proposals, tooling selection, route rules, wellbeing, overview, operational negatives, privacy evidence, repository-suite evidence, and exact staged-file receipts. It contains no x2 outcome ledger or execution tool. The dedicated x1 commit must be pushed, clean, and equal across local, upstream, tracking, and a fresh live remote before x2 begins.
+
+x2 will execute each proposal only within its frozen approval class and preserve all 809 inherited negatives plus every new operational and synthetic failure. Evidence, closeout, seal, and exact-final heads will each be validated in fresh clean detached D-drive snapshots. Multiple successful same-owner snapshots remain same-owner repeatability, never independent-team scientific reproduction.
+
+The final packet will include pillar artifacts, the x2 ledger, source and proposal ledgers, retained-negative and exact/open-gate registers, threat model, phase truth, complete/incomplete checklist, accessible static report, manifest, environment receipts, and evidence, closeout, seal, and final records. The terminal verdict remains NOT_READY_FOR_STAGE_20 unless exact external evidence and authority change it; this phase does not have such evidence.
+
+Only after the exact final head is clean, pushed, remote-equal, and validated in a fresh detached snapshot may exactly one sanitized v643-v7 activation baton be sent to the existing task titled Eiren Kestrel. Tool acknowledgement alone changes PREPARED_NOT_SENT to SENT. No task may be created, no extra confirmation may be sent, and all other siblings remain recoverable and untouched.

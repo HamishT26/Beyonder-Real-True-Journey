@@ -1,0 +1,65 @@
+{
+  "schema": "ghc.family.v643-v6.x1-operational-negatives.v1",
+  "phase": "v643-gmut-thos-v6-x1-x2",
+  "count": 8,
+  "negatives": [
+    {
+      "negative_id": "V6436-X1-N01",
+      "operation": "combined source verifier wrapper",
+      "observed_failure": "The first PowerShell wrapper placed a command and exit-code capture inside an expression and failed to parse before any Git command ran.",
+      "recovery": "Separated command execution from exit-code capture and reran the checks read-only.",
+      "promotion_effect": "none; the parse failure is retained and uncounted"
+    },
+    {
+      "negative_id": "V6436-X1-N02",
+      "operation": "combined local and live-remote source verifier",
+      "observed_failure": "The corrected combined wrapper reached an external operation but timed out before returning buffered output.",
+      "recovery": "Split local truth from network truth and completed fresh live-remote reads separately.",
+      "promotion_effect": "none; the timed-out wrapper is not evidence"
+    },
+    {
+      "negative_id": "V6436-X1-N03",
+      "operation": "pre-fast-forward packet path probe",
+      "observed_failure": "The Sylven v642-v8 checkout correctly lacked Tamar's later v643-v5 directory, so the optional path probe reported a missing path.",
+      "recovery": "Verified ancestry and then used the authorized fast-forward-only update before inspecting the inherited packet.",
+      "promotion_effect": "none; no source fact was inferred from the missing path"
+    },
+    {
+      "negative_id": "V6436-X1-N04",
+      "operation": "recursive frozen-index audit",
+      "observed_failure": "The first PowerShell collector treated an absent new_records property as a one-element null array and reported only 81 records.",
+      "recovery": "Tested property presence explicitly and decoded all 200 frozen records across both index schemas.",
+      "promotion_effect": "none; the incomplete 81-record report is not novelty evidence"
+    },
+    {
+      "negative_id": "V6436-X1-N05",
+      "operation": "source URL duplicate scan",
+      "observed_failure": "The first ripgrep call used a Windows-invalid wildcard path for source-ledger files.",
+      "recovery": "Used ripgrep's native include filter and then traversed the inherited ledger chain directly.",
+      "promotion_effect": "none; only the corrected chain scan supports source uniqueness"
+    },
+    {
+      "negative_id": "V6436-X1-N06",
+      "operation": "x1 builder context patch",
+      "observed_failure": "The first patch expected underscore-version filenames to have changed during a hyphen-version mechanical copy and was rejected without modifying the file.",
+      "recovery": "Inspected the exact copied header and replaced the prototype with this explicit phase builder.",
+      "promotion_effect": "none; the rejected patch made no change"
+    },
+    {
+      "negative_id": "V6436-X1-N07",
+      "operation": "inherited checkout portability materialization",
+      "observed_failure": "The inherited v5 adapter verified semantic hashes and changed only line endings, but one older Orin artifact still appeared as a working-tree modification after the passing suite.",
+      "recovery": "Restored that exact file to its recorded pre-run raw SHA-256, confirmed the owned worktree had no inherited diff, and excluded it from staging.",
+      "promotion_effect": "none; the transient working-copy materialization is retained and is not repository evidence"
+    },
+    {
+      "negative_id": "V6436-X1-N08",
+      "operation": "staged-state repository suite without inherited portability precondition",
+      "observed_failure": "The complete suite ran 425 tests with one failure because the legacy constraint-hash alias warning fixture was checked under the unmaterialized CRLF working-copy form.",
+      "recovery": "Kept the 424-of-425 run uncounted, applied the exact hash-verified inherited materializer only for the suite, reran completely, and restored the original raw hash afterward.",
+      "promotion_effect": "the 424-of-425 run is failed evidence; only a complete adapted rerun may satisfy the x1 gate"
+    }
+  ],
+  "all_failures_retained": true,
+  "boundary": "Recovered failures remain negatives and are not counted as successful evidence runs."
+}
