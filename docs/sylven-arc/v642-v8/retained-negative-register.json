@@ -5,9 +5,9 @@
   "inherited_count": 312,
   "x1_operational_count": 11,
   "new_synthetic_count": 70,
-  "transition_and_x2_operational_count": 3,
-  "new_count": 84,
-  "negative_count": 396,
+  "transition_and_x2_operational_count": 4,
+  "new_count": 85,
+  "negative_count": 397,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -3077,6 +3077,14 @@
       "statement": "The first parsed phase-label comparison reported tooling/ghc-family-index.json as drift because the audit omitted the intentionally short v642-v8 index label from its allowlist.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Classify the index label as current v8 shorthand, add it explicitly to the bounded allowlist, and rerun owner and phase comparisons.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N04",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The closeout manifest-inspection command computed both normalized hashes but exited nonzero because its follow-up ripgrep expression did not match the manifest formatting.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the computed hashes, inspect manifest entries with parsed JSON or a literal search, rebuild the retained-negative register, and rerun validation.",
       "retained": true
     }
   ]
