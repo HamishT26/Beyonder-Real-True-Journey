@@ -42,7 +42,7 @@ def verify(phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
     add("eighty-cases", x2.get("case_count") == 80)
     add("seventy-rejections", x2.get("synthetic_rejection_count") == 70)
     add("distribution", x2.get("distribution") == {"completed": 6, "represented": 2, "open_gap": 1, "exact_gate": 1})
-    add("negative-count", negatives.get("negative_count") == 479)
+    add("negative-count", negatives.get("negative_count") == 480)
     add("negative-retention", negatives.get("all_retained") is True and negatives.get("erasure_permitted") is False)
     add("five-open-gaps", gates.get("open_gap_count") == 5)
     add("six-exact-gates", gates.get("exact_gate_count") == 6)

@@ -403,6 +403,15 @@ OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6431-OP-N09",
+        "origin": "v643-v1-operational",
+        "observed": "The first final-record commit command was rejected before Git execution because a compound PowerShell ancestry expression had mismatched parentheses.",
+        "recovery": "Retained the pre-mutation failure and split commit, ancestry, merge, and remote-equality checks into simpler commands.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
