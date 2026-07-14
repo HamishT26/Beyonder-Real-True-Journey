@@ -306,6 +306,15 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "retained": True,
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6432-X2-N02",
+        "origin": "v643-v2-x2-operational",
+        "observed": "The first parallel detached-evidence wrapper used ErrorActionPreference Stop and treated unittest's normal progress stream on stderr as a terminating PowerShell NativeCommandError before result aggregation.",
+        "recovery": "Rerun both exact detached snapshots through a non-mutating cmd capture that merges the test stream while preserving the Python process exit code, then require every validation field and clean status.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
     }
 ]
 
@@ -378,7 +387,9 @@ def build_overview(proposals: list[dict[str, Any]], evaluations: dict[str, list[
     return "\n".join(parts)
 
 
-def build(repo: Path, snapshot_state: str = "pending") -> dict[str, Any]:
+def build(repo: Path, snapshot_state: str = "pending", lifecycle: str = "evidence") -> dict[str, Any]:
+    if snapshot_state == "pending" and lifecycle != "evidence":
+        raise ValueError("closeout, seal, and final lifecycles require verified same-owner snapshots")
     phase = repo / "docs/ilyra-fen/v643-v2"
     proposals = json.loads((phase / "x1-proposals.json").read_text(encoding="utf-8"))["proposals"]
     evaluations = evaluate_catalog()
@@ -447,8 +458,20 @@ def build(repo: Path, snapshot_state: str = "pending") -> dict[str, Any]:
 
     verified = snapshot_state == "verified"
     write_json(phase / "reproduction/independent-team-gap.json", {"schema": "ghc.family.v643-v2.independent-team-gap.v1", "phase": PHASE, "owner": OWNER, "same_owner_evidence_snapshots_verified": verified, "shared_infrastructure": True, "independent_team_protocol_owned": False, "independent_team_return_received": False, "independent_team_reproduction_established": False, "boundary": BOUNDARY})
-    write_json(phase / "phase-truth.json", {"schema": "ghc.family.v643-v2.phase-truth.v1", "phase": PHASE, "owner": OWNER, "state": "EVIDENCE_VERIFIED" if verified else "EVIDENCE_CANDIDATE", "source_commit": SOURCE_COMMIT, "x1_commit": X1_COMMIT, "proposal_count": 10, "distribution": distribution, "case_count": 80, "synthetic_rejection_count": 70, "retained_negative_count": len(negatives), "open_gap_count": 5, "exact_gate_count": 6, "primary_focus": "GMUT Mind", "all_three_pillars_preserved": True, "same_owner_repeatability": verified, "independent_team_reproduction": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "route_state": "SUCCESSOR_MESSAGE_NOT_SENT", "outbound_message_count": 0, "successor_task_count": 0, "subagent_count": 0, "boundary": BOUNDARY})
-    write_json(phase / "complete-incomplete-checklist.json", {"schema": "ghc.family.v643-v2.complete-incomplete-checklist.v1", "phase": PHASE, "owner": OWNER, "complete": ["exact source and additive lane verified", "x1 frozen before x2", "ten distinct proposals executed as evidence permits", "eighty fixtures", "all inherited and new negatives retained", "GMUT, THOS, and Freed ID/CBR addressed", "current primary or official sources recorded", "privacy-aware artifacts"], "incomplete": ["real GMUT calculations, data, likelihood, prediction, force, or confirmation", "blind matched-budget real THOS arms and multi-site evidence", "production Freed ID", "CBR affected-party, Māori, cultural, and legal authority", "manual and affected-user accessibility evaluation", "independent security review", "independent-team reproduction", "Stage 20"], "closeout_ready": verified, "pending": ["closeout", "seal", "exact final validation", "one terminal baton"] if verified else ["evidence commit", "two detached evidence snapshots", "closeout", "seal", "exact final validation", "one terminal baton"], "boundary": BOUNDARY})
+    lifecycle_states = {
+        "evidence": "EVIDENCE_VERIFIED" if verified else "EVIDENCE_CANDIDATE",
+        "closeout": "CLOSEOUT_RECORDED",
+        "seal": "SEALED",
+        "final": "FINAL_HEAD_CANDIDATE",
+    }
+    pending_by_lifecycle = {
+        "evidence": ["closeout", "seal", "exact final validation", "one terminal baton"] if verified else ["evidence commit", "two detached evidence snapshots", "closeout", "seal", "exact final validation", "one terminal baton"],
+        "closeout": ["closeout detached validation", "seal", "exact final validation", "one terminal baton"],
+        "seal": ["seal detached validation", "exact final validation", "one terminal baton"],
+        "final": ["exact final detached validation", "one terminal baton"],
+    }
+    write_json(phase / "phase-truth.json", {"schema": "ghc.family.v643-v2.phase-truth.v1", "phase": PHASE, "owner": OWNER, "state": lifecycle_states[lifecycle], "source_commit": SOURCE_COMMIT, "x1_commit": X1_COMMIT, "proposal_count": 10, "distribution": distribution, "case_count": 80, "synthetic_rejection_count": 70, "retained_negative_count": len(negatives), "open_gap_count": 5, "exact_gate_count": 6, "primary_focus": "GMUT Mind", "all_three_pillars_preserved": True, "same_owner_repeatability": verified, "independent_team_reproduction": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "route_state": "SUCCESSOR_MESSAGE_NOT_SENT", "outbound_message_count": 0, "successor_task_count": 0, "subagent_count": 0, "boundary": BOUNDARY})
+    write_json(phase / "complete-incomplete-checklist.json", {"schema": "ghc.family.v643-v2.complete-incomplete-checklist.v1", "phase": PHASE, "owner": OWNER, "complete": ["exact source and additive lane verified", "x1 frozen before x2", "ten distinct proposals executed as evidence permits", "eighty fixtures", "all inherited and new negatives retained", "GMUT, THOS, and Freed ID/CBR addressed", "current primary or official sources recorded", "privacy-aware artifacts"], "incomplete": ["real GMUT calculations, data, likelihood, prediction, force, or confirmation", "blind matched-budget real THOS arms and multi-site evidence", "production Freed ID", "CBR affected-party, Māori, cultural, and legal authority", "manual and affected-user accessibility evaluation", "independent security review", "independent-team reproduction", "Stage 20"], "closeout_ready": verified, "lifecycle": lifecycle, "pending": pending_by_lifecycle[lifecycle], "boundary": BOUNDARY})
 
     x1_set = json.loads((phase / "validation/x1-exact-file-set.json").read_text(encoding="utf-8"))
     x1_entries = [{"path": relative, "sha256_lf_normalized": normalized_sha256(phase / relative), "bytes": (phase / relative).stat().st_size} for relative in x1_set["files"]]
@@ -466,15 +489,16 @@ def build(repo: Path, snapshot_state: str = "pending") -> dict[str, Any]:
             raise RuntimeError(f"manifest target missing: {relative}")
         manifest.append({"path": relative, "sha256_lf_normalized": normalized_sha256(target), "bytes": target.stat().st_size})
     write_json(phase / "reproduction/manifest.json", {"schema": "ghc.family.v643-v2.manifest.v1", "phase": PHASE, "owner": OWNER, "hash_algorithm": "sha256", "text_normalization": "CRLF and CR normalized to LF before hashing", "entry_count": len(manifest), "entries": manifest, "snapshot_state": snapshot_state, "independent_team_reproduction": False, "boundary": BOUNDARY})
-    return {"phase": PHASE, "proposal_count": 10, "case_count": 80, "rejections": 70, "distribution": distribution, "retained_negatives": len(negatives), "new_operational_negatives": operational_count, "manifest_entries": len(manifest), "snapshot_state": snapshot_state}
+    return {"phase": PHASE, "proposal_count": 10, "case_count": 80, "rejections": 70, "distribution": distribution, "retained_negatives": len(negatives), "new_operational_negatives": operational_count, "manifest_entries": len(manifest), "snapshot_state": snapshot_state, "lifecycle": lifecycle}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--snapshot-state", choices=("pending", "verified"), default="pending")
+    parser.add_argument("--lifecycle", choices=("evidence", "closeout", "seal", "final"), default="evidence")
     args = parser.parse_args()
-    print(json.dumps(build(args.repo.resolve(), args.snapshot_state), indent=2))
+    print(json.dumps(build(args.repo.resolve(), args.snapshot_state, args.lifecycle), indent=2))
     return 0
 
 

@@ -6,9 +6,9 @@
   "inherited_sha256": "ad7bbefb5273192e01b226325fe273ecb9f1bf1529dbf05825c2932413e6f4ce",
   "inherited_count": 480,
   "new_synthetic_count": 70,
-  "new_operational_count": 7,
-  "new_count": 77,
-  "negative_count": 557,
+  "new_operational_count": 8,
+  "new_count": 78,
+  "negative_count": 558,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -4941,6 +4941,15 @@
       "origin": "v643-v2-x2-operational",
       "observed": "The first read-only diff-hygiene loop treated the empty output of git diff --quiet as a false condition and incorrectly classified all eighteen frozen x1 files as modified.",
       "recovery": "Use the external command exit code for each path; the corrected audit reports zero frozen x1 modifications and zero inherited script or test modifications.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6432-X2-N02",
+      "origin": "v643-v2-x2-operational",
+      "observed": "The first parallel detached-evidence wrapper used ErrorActionPreference Stop and treated unittest's normal progress stream on stderr as a terminating PowerShell NativeCommandError before result aggregation.",
+      "recovery": "Rerun both exact detached snapshots through a non-mutating cmd capture that merges the test stream while preserving the Python process exit code, then require every validation field and clean status.",
       "retained": true,
       "resolved_for_current_local_scope": true,
       "external_gate_closed": false
