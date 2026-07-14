@@ -2,7 +2,7 @@
   "schema": "ghc.family.v642-v7.execution-negative-log.v1",
   "phase": "v642-gmut-thos-v7-x1-x2",
   "owner": "Tamar Vey",
-  "negative_count": 4,
+  "negative_count": 5,
   "negatives": [
     {
       "negative_id": "V6427-X1-N05",
@@ -34,6 +34,14 @@
       "statement": "A complete-suite invocation discovered tests by absolute path while the process remained outside the repository root, so six modules failed import-only loading of the scripts package and the run stopped after 206 tests.",
       "evidence": "validation/repository-test-receipt.json",
       "recovery": "Retained the runner-context failure and reran the identical discovery pattern from the repository root so package imports resolved without changing code or host configuration.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6427-X2-N04",
+      "origin": "v642-v7_evidence_snapshot_a_wrapper",
+      "statement": "The first evidence-snapshot A wrapper used PowerShell stop-on-error semantics, which promoted unittest's normal stderr summary before the native exit code could be inspected and ended the wrapper without a complete receipt.",
+      "evidence": "validation/evidence-snapshot-a.json",
+      "recovery": "Retained the wrapper failure, verified the detached worktree remained clean at the exact evidence commit, and reran with explicit native-process exit-code handling before accepting any result.",
       "retained": true
     }
   ],
