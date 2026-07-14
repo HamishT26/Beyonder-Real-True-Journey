@@ -35,14 +35,14 @@ def allowed(name: str) -> bool:
     return name.startswith("docs/orin-thale/v644-v2/") or name in ALLOWED_EXACT
 
 
-def run(repo: Path, base: str) -> dict[str, Any]:
+def run(repo: Path, base: str, self_path: str = SELF_PATH) -> dict[str, Any]:
     repo = repo.resolve()
     names = [
         item.decode("utf-8")
         for item in git_bytes(repo, "diff", "--cached", "--name-only", "-z").split(b"\0")
         if item
     ]
-    reviewed_names = [name for name in names if name != SELF_PATH]
+    reviewed_names = [name for name in names if name != self_path]
     status_rows: dict[str, str] = {}
     for line in git_bytes(repo, "diff", "--cached", "--name-status").decode("utf-8").splitlines():
         parts = line.split("\t")
@@ -90,7 +90,7 @@ def run(repo: Path, base: str) -> dict[str, Any]:
         "schema": "ghc.family.v644-v2.evidence-staged-review.v1",
         "phase": "v644-gmut-thos-v2-x1-x2",
         "base_commit": base,
-        "self_receipt_path": SELF_PATH,
+        "self_receipt_path": self_path,
         "self_receipt_excluded_from_blob_review": True,
         "reviewed_file_count": len(rows),
         "expected_final_staged_file_count": len(rows) + 1,
@@ -114,8 +114,12 @@ def main() -> int:
     parser.add_argument("--output", type=Path, default=Path(SELF_PATH))
     args = parser.parse_args()
     repo = args.repo.resolve()
-    result = run(repo, args.base)
     output = args.output if args.output.is_absolute() else repo / args.output
+    try:
+        self_path = output.resolve().relative_to(repo).as_posix()
+    except ValueError:
+        self_path = SELF_PATH
+    result = run(repo, args.base, self_path)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     keys = ("valid", "reviewed_file_count", "expected_final_staged_file_count", "deleted_file_count", "x1_frozen_file_count_staged", "issues")
