@@ -7,9 +7,9 @@
   "inherited_count": 1220,
   "x1_operational_count": 6,
   "new_synthetic_count": 70,
-  "x2_operational_count": 6,
-  "new_count": 82,
-  "negative_count": 1302,
+  "x2_operational_count": 10,
+  "new_count": 86,
+  "negative_count": 1306,
   "duplicate_negative_ids": [],
   "all_retained": true,
   "erasure_permitted": false,
@@ -13508,6 +13508,42 @@
       "observed": "The first static-report patch used a mojibake rendering of characters that were already valid UTF-8 and matched no lines.",
       "recovery": "Read the source explicitly as UTF-8 and patched only the stale GMUT summary text.",
       "promotion_effect": "The no-op patch is retained and is not report validation evidence.",
+      "retained": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6443-X2-OP-07",
+      "origin": "v644-v3-x2-operational",
+      "observed": "The combined evidence-snapshot materialization exceeded its first bounded timeout after fully creating evidence-A but before creating evidence-B.",
+      "recovery": "Verified evidence-A directly and created evidence-B separately with an extended bounded window.",
+      "promotion_effect": "The timed-out combined operation is retained and is not a two-snapshot validation pass.",
+      "retained": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6443-X2-OP-08",
+      "origin": "v644-v3-x2-operational",
+      "observed": "A broad post-timeout worktree inventory and state wrapper exceeded its bounded timeout without returning a receipt.",
+      "recovery": "Used path-scoped existence and exact detached-state checks instead of a broad worktree listing.",
+      "promotion_effect": "The timed-out inventory is retained and is not snapshot-state evidence.",
+      "retained": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6443-X2-OP-09",
+      "origin": "v644-v3-x2-operational",
+      "observed": "The first evidence-A state wrapper called Trim on the null branch name expected from a detached worktree.",
+      "recovery": "Switched to null-safe output handling and kept detached branch output empty by design.",
+      "promotion_effect": "The wrapper failure is retained and is not detached-state evidence.",
+      "retained": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6443-X2-OP-10",
+      "origin": "v644-v3-x2-operational",
+      "observed": "A second evidence-A state wrapper still attempted Trim on an empty pipeline value and failed before producing a receipt.",
+      "recovery": "Used Out-String before trimming and then proved exact head, detached state, and clean status.",
+      "promotion_effect": "The second wrapper failure is retained and is not snapshot-state evidence.",
       "retained": true,
       "external_gate_closed": false
     }
