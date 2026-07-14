@@ -2,7 +2,7 @@
   "schema": "ghc.family.v642-v8.execution-negative-log.v1",
   "phase": "v642-gmut-thos-v8-x1-x2",
   "owner": "Sylven Arc",
-  "negative_count": 4,
+  "negative_count": 6,
   "negatives": [
     {
       "negative_id": "V6428-X2-N01",
@@ -34,6 +34,22 @@
       "statement": "The closeout manifest-inspection command computed both normalized hashes but exited nonzero because its follow-up ripgrep expression did not match the manifest formatting.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Retain the computed hashes, inspect manifest entries with parsed JSON or a literal search, rebuild the retained-negative register, and rerun validation.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N05",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first closeout detached-validation wrapper failed at PowerShell parse time because a colon immediately followed three interpolated variable names; no validation command executed and the snapshot stayed clean.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Use explicitly delimited variable interpolation, verify the unchanged exact detached head and clean state, and rerun the complete closeout validation without erasing this wrapper failure.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N06",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first seal-candidate validation wrapper also stopped at PowerShell parse time because its summary string used undelimited variables immediately before colons; no test or validator command executed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the distinct failed wrapper, delimit every summary variable explicitly, rebuild derived evidence, and rerun the seal candidate from unchanged repository state.",
       "retained": true
     }
   ],
