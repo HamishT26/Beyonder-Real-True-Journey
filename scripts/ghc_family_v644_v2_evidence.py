@@ -19,6 +19,17 @@ SOURCE_HEAD = "7616eb17cbaff509eafe1423f1930d2d2e7f72d4"
 SOURCE_SEAL = "64ed8f3001553d2ffa364f3875043288c6ce91cc"
 X1_COMMIT = "fffbe71763bf981c928ebf4d1ef73c3a8293cf09"
 INHERITED_NEGATIVE_REGISTER = ROOT / "docs" / "sable-rook" / "v644-v1" / "retained-negative-register.json"
+X2_OPERATIONAL_NEGATIVES = [
+    {
+        "negative_id": "V6442-X2-OP-01",
+        "origin": "v644-v2-x2-operational",
+        "observed": "PowerShell brace interpolation altered a git rev-parse commit-tree expression and Git rejected the encoded suffix.",
+        "recovery": "Use git show -s --format=%T with the commit passed as a separate literal argument.",
+        "promotion_effect": "No evidence or gate changed; the failed command is retained and the safer literal form is required.",
+        "retained": True,
+        "external_gate_closed": False,
+    }
+]
 X2_EXTERNAL_FILES = [
     "scripts/build_ghc_family_v644_v2_report.py",
     "scripts/ghc_family_v644_v2_complete_suite.py",
@@ -237,7 +248,7 @@ def build_retained_negatives() -> None:
                     "external_gate_closed": False,
                 }
             )
-    x2_operational: list[dict[str, Any]] = []
+    x2_operational = list(X2_OPERATIONAL_NEGATIVES)
     negatives = inherited + x1_rows + synthetic + x2_operational
     ids = [item["negative_id"] for item in negatives]
     dump_json(
@@ -637,8 +648,8 @@ def build_evidence() -> None:
         {
             "schema": "ghc.family.v644-v2.execution-negative-log.v1",
             "phase": PHASE,
-            "x2_operational_negative_count": 0,
-            "negatives": [],
+            "x2_operational_negative_count": len(X2_OPERATIONAL_NEGATIVES),
+            "negatives": X2_OPERATIONAL_NEGATIVES,
             "synthetic_negatives_recorded_elsewhere": 70,
             "all_failures_retained": True,
         },
