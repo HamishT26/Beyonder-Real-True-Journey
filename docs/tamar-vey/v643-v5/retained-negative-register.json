@@ -7,9 +7,9 @@
   "inherited_count": 721,
   "x1_operational_count": 14,
   "new_synthetic_count": 70,
-  "x2_operational_count": 2,
-  "new_count": 86,
-  "negative_count": 807,
+  "x2_operational_count": 3,
+  "new_count": 87,
+  "negative_count": 808,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -7842,6 +7842,15 @@
       "origin": "v643-v5-x2-operational",
       "observed": "A read-only Python repr diagnostic exited nonzero when the host cp1252 console could not encode the valid Maori macron present in UTF-8 source text.",
       "recovery": "Kept the UTF-8 source unchanged and moved subsequent Unicode diagnostics to an explicit UTF-8 output path; the failed diagnostic remains uncounted as validation.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6435-X2-N03",
+      "origin": "v643-v5-post-evidence-remote-verification-operational",
+      "observed": "The first post-push divergence check passed an unquoted PowerShell upstream token to Git, which was transformed before Git parsed it and caused the combined verification command to exit nonzero after the evidence commit had already pushed successfully.",
+      "recovery": "Repeated the read-only check with an explicitly quoted upstream revision, fetched the owned branch, and proved local, upstream, tracking, and live-remote equality with zero divergence.",
       "retained": true,
       "resolved_for_current_local_scope": true,
       "external_gate_closed": false

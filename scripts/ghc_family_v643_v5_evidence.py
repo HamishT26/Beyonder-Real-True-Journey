@@ -297,6 +297,22 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6435-X2-N03",
+        "origin": "v643-v5-post-evidence-remote-verification-operational",
+        "observed": (
+            "The first post-push divergence check passed an unquoted PowerShell upstream token to "
+            "Git, which was transformed before Git parsed it and caused the combined verification "
+            "command to exit nonzero after the evidence commit had already pushed successfully."
+        ),
+        "recovery": (
+            "Repeated the read-only check with an explicitly quoted upstream revision, fetched the "
+            "owned branch, and proved local, upstream, tracking, and live-remote equality with zero divergence."
+        ),
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
