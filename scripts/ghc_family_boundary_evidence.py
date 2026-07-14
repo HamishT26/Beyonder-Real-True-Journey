@@ -453,6 +453,24 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6434-X2-N06",
+        "origin": "v643-v4-evidence-snapshot-line-ending-portability",
+        "observed": "Both clean LF-controlled final-retry snapshots failed three inherited repository checks: one historical GMUT source hash was CRLF-sensitive and the v643-v4 frozen inherited-index check accepted only its CRLF raw hash; detailed validation passed 1563 of 1564 checks.",
+        "recovery": "Preserve both snapshots uncounted, keep the inherited v641 tool immutable, retain one exact path/declared/observed alias in the v643-v4 validator, and validate a new Git-clean hybrid checkout that changes only the exact Orin legacy file's worktree newline materialization.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6434-X2-N07",
+        "origin": "v643-v4-line-ending-recovery-operational",
+        "observed": "A proposed edit to the inherited v641 evidence-lineage tool made its historical tool-integrity rebuild fail, so the main recovery suite passed only 396 of 397 tests.",
+        "recovery": "Retain the failed run, restore the inherited tool byte-for-byte, keep x1 immutable, and solve checkout portability through an exact Git-clean materialization rule rather than rewriting historical integrity evidence.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 

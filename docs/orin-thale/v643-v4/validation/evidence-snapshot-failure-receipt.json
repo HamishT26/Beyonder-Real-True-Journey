@@ -4,7 +4,15 @@
   "owner": "Orin Thale",
   "failed_evidence_commit": "bca35b23f1cd2a0e8239d68f88b427efa2a6f598",
   "materialization_retry_commit": "36edfddc83105fe10ee67aab84b45d5a87831a13",
-  "failed_snapshot_count": 4,
+  "line_ending_retry_commit": "c458723c52530626a3cd6fa9c436c0324077c37c",
+  "main_recovery_test_failure": {
+    "repository_tests_passed": 396,
+    "repository_tests_total": 397,
+    "failure": "An uncommitted inherited-tool edit invalidated its historical tool-integrity rebuild.",
+    "recovery": "Restore the inherited tool unchanged and use an exact Git-clean checkout materialization rule.",
+    "counted_as_evidence": false
+  },
+  "failed_snapshot_count": 6,
   "snapshots": [
     {
       "label": "evidence-a",
@@ -47,10 +55,40 @@
       "validation_suite_started": false,
       "administrative_state": "locked_initializing_after_timeout",
       "counted_as_evidence": false
+    },
+    {
+      "label": "evidence-a-finalretry",
+      "exact_head": true,
+      "clean_before_and_after": true,
+      "historical_index_worktree_sha256": "e5fa094302d36e4eea569a5ff2cebce212018afe4d17745d834e8e6818d8d6e5",
+      "repository_tests_passed": 394,
+      "repository_tests_total": 397,
+      "detailed_validation_passed": 1563,
+      "detailed_validation_total": 1564,
+      "minimal_validation_passed": 27,
+      "minimal_validation_total": 27,
+      "json_files_parsed": 82,
+      "privacy_hits": 0,
+      "counted_as_evidence": false
+    },
+    {
+      "label": "evidence-b-finalretry",
+      "exact_head": true,
+      "clean_before_and_after": true,
+      "historical_index_worktree_sha256": "e5fa094302d36e4eea569a5ff2cebce212018afe4d17745d834e8e6818d8d6e5",
+      "repository_tests_passed": 394,
+      "repository_tests_total": 397,
+      "detailed_validation_passed": 1563,
+      "detailed_validation_total": 1564,
+      "minimal_validation_passed": 27,
+      "minimal_validation_total": 27,
+      "json_files_parsed": 82,
+      "privacy_hits": 0,
+      "counted_as_evidence": false
     }
   ],
-  "failure": "The first pair failed the frozen x1 regression under CRLF. The paired LF retry command then timed out after materialization and left retry B administratively locked; no retry validation suite ran.",
-  "recovery": "Preserve all four snapshots uncounted, keep x1 immutable, and create a fresh LF-explicit pair one at a time with independent command budgets.",
+  "failure": "The first pair failed the frozen x1 regression under CRLF. The paired LF retry command then timed out after materialization. The next clean LF pair exposed three inherited line-ending-sensitive checks and passed only 394 of 397 repository tests.",
+  "recovery": "Preserve all six snapshots and the failed main run uncounted, keep x1 and inherited v641 tooling immutable, retain the exact v643 validator alias, and validate a new Git-clean hybrid detached pair.",
   "all_failures_retained": true,
   "boundary": "A clean failed snapshot remains a failure. It is not independent reproduction and is not upgraded to evidence by other passing checks."
 }
