@@ -2,7 +2,7 @@
   "schema": "ghc.family.v642-v8.execution-negative-log.v1",
   "phase": "v642-gmut-thos-v8-x1-x2",
   "owner": "Sylven Arc",
-  "negative_count": 7,
+  "negative_count": 8,
   "negatives": [
     {
       "negative_id": "V6428-X2-N01",
@@ -58,6 +58,14 @@
       "statement": "The first final-candidate validation wrapper stopped at PowerShell parse time because a compressed foreach token omitted the required space; no test or validator command executed.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Retain the wrapper failure, use conventional spaced PowerShell syntax and delimiter-safe output, update the final retained-negative count, and rerun from unchanged repository state.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N08",
+      "origin": "v642-v8_post_commit_validation_operational",
+      "statement": "The first exact-final detached wrapper completed every substantive test and kept the snapshot clean, but its ancestry accumulator used bare True instead of PowerShell $true, so the wrapper exited nonzero after reporting the passing checks.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the wrapper failure, bind the corrected final record in one new single-parent commit, use a valid Boolean literal, and repeat exact-final detached validation at the corrected head.",
       "retained": true
     }
   ],
