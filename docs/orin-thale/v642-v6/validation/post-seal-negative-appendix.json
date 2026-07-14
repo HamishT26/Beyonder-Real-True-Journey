@@ -1,0 +1,26 @@
+{
+  "schema": "ghc.family.v642-v6.post-seal-negative-appendix.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "sealed_packet_negative_count": 231,
+  "post_seal_operational_count": 2,
+  "effective_retained_negative_count": 233,
+  "negatives": [
+    {
+      "negative_id": "V6426-FINAL-N01",
+      "origin": "v642-v6_seal_push_verification",
+      "statement": "The first seal push and ancestry wrapper was rejected by PowerShell parsing before any command in the wrapper executed.",
+      "recovery": "Retain the parser failure, separate the ancestry exit-code capture from the expression, then prove the closeout commit ancestral and local, upstream, tracking, and live-remote equality at the seal head.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6426-FINAL-N02",
+      "origin": "v642-v6_final_commit_precheck",
+      "statement": "The first final commit wrapper repeated the inline PowerShell exit-code parsing error and was rejected before the ancestry check or commit executed.",
+      "recovery": "Retain the parser failure, run the seal-ancestry check as a separate command, capture its exit code in a separate statement, and only then create the exact staged final commit.",
+      "retained": true
+    }
+  ],
+  "erasure_permitted": false,
+  "boundary": "This appendix preserves an operational failure that occurred after the 231-record packet was sealed; it does not rewrite the sealed closeout."
+}
