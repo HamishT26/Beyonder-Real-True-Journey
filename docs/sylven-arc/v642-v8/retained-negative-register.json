@@ -5,9 +5,9 @@
   "inherited_count": 312,
   "x1_operational_count": 11,
   "new_synthetic_count": 70,
-  "transition_and_x2_operational_count": 6,
-  "new_count": 87,
-  "negative_count": 399,
+  "transition_and_x2_operational_count": 7,
+  "new_count": 88,
+  "negative_count": 400,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -3101,6 +3101,14 @@
       "statement": "The first seal-candidate validation wrapper also stopped at PowerShell parse time because its summary string used undelimited variables immediately before colons; no test or validator command executed.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Retain the distinct failed wrapper, delimit every summary variable explicitly, rebuild derived evidence, and rerun the seal candidate from unchanged repository state.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N07",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first final-candidate validation wrapper stopped at PowerShell parse time because a compressed foreach token omitted the required space; no test or validator command executed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the wrapper failure, use conventional spaced PowerShell syntax and delimiter-safe output, update the final retained-negative count, and rerun from unchanged repository state.",
       "retained": true
     }
   ]

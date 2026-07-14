@@ -2,7 +2,7 @@
   "schema": "ghc.family.v642-v8.execution-negative-log.v1",
   "phase": "v642-gmut-thos-v8-x1-x2",
   "owner": "Sylven Arc",
-  "negative_count": 6,
+  "negative_count": 7,
   "negatives": [
     {
       "negative_id": "V6428-X2-N01",
@@ -50,6 +50,14 @@
       "statement": "The first seal-candidate validation wrapper also stopped at PowerShell parse time because its summary string used undelimited variables immediately before colons; no test or validator command executed.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Retain the distinct failed wrapper, delimit every summary variable explicitly, rebuild derived evidence, and rerun the seal candidate from unchanged repository state.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N07",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first final-candidate validation wrapper stopped at PowerShell parse time because a compressed foreach token omitted the required space; no test or validator command executed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the wrapper failure, use conventional spaced PowerShell syntax and delimiter-safe output, update the final retained-negative count, and rerun from unchanged repository state.",
       "retained": true
     }
   ],
