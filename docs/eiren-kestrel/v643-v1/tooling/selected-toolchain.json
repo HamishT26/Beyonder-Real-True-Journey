@@ -1,0 +1,37 @@
+{
+  "schema": "ghc.family.v643-v1.selected-toolchain.v1",
+  "phase": "v643-gmut-thos-v1-x1-x2",
+  "owner": "Eiren Kestrel",
+  "selection_rule": "Use the smallest family-current set needed for the phase, preserve compatibility, and keep historical or sibling-specific tools as evidence rather than silently promoting them.",
+  "selected_existing": [
+    {
+      "name": "ghc-family-index",
+      "role": "startup, current-tool discovery, naming, route, and closeout discipline",
+      "status": "family_current"
+    },
+    {
+      "name": "ghc_family_phase_privacy_scan.py",
+      "role": "repository-relative privacy and raw-identifier screening",
+      "status": "family_current"
+    },
+    {
+      "name": "ghc_family_evidence_lineage.py",
+      "role": "inherited negative and evidence-lineage preservation reference",
+      "status": "family_current"
+    },
+    {
+      "name": "ghc_family_evidence_contract.py",
+      "role": "v642-v8 compatibility evidence and fixture-shape reference only",
+      "status": "compatibility_not_executed_as_v643"
+    }
+  ],
+  "planned_after_x1_freeze": [
+    "ghc_family_rights_resilience.py",
+    "ghc_family_rights_resilience_validator.py",
+    "ghc_family_rights_resilience_minimal.py",
+    "build_ghc_family_rights_resilience_report.py",
+    "test_ghc_family_v643_v1.py"
+  ],
+  "caller_compatibility": "All new canonical helpers use identity-neutral family names. Existing callers remain untouched; compatibility wrappers are added only if a real caller requires one.",
+  "mass_deletion_performed": false
+}
