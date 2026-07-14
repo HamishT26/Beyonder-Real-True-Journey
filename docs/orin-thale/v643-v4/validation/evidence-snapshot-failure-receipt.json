@@ -3,7 +3,8 @@
   "phase": "v643-gmut-thos-v4-x1-x2",
   "owner": "Orin Thale",
   "failed_evidence_commit": "bca35b23f1cd2a0e8239d68f88b427efa2a6f598",
-  "failed_snapshot_count": 2,
+  "materialization_retry_commit": "36edfddc83105fe10ee67aab84b45d5a87831a13",
+  "failed_snapshot_count": 4,
   "snapshots": [
     {
       "label": "evidence-a",
@@ -28,10 +29,28 @@
       "json_files_parsed": 79,
       "privacy_hits": 0,
       "counted_as_evidence": false
+    },
+    {
+      "label": "evidence-a-retry",
+      "exact_head": true,
+      "clean_after_materialization": true,
+      "historical_index_worktree_sha256": "e5fa094302d36e4eea569a5ff2cebce212018afe4d17745d834e8e6818d8d6e5",
+      "validation_suite_started": false,
+      "administrative_state": "materialized",
+      "counted_as_evidence": false
+    },
+    {
+      "label": "evidence-b-retry",
+      "exact_head": true,
+      "clean_after_materialization": true,
+      "historical_index_worktree_sha256": "e5fa094302d36e4eea569a5ff2cebce212018afe4d17745d834e8e6818d8d6e5",
+      "validation_suite_started": false,
+      "administrative_state": "locked_initializing_after_timeout",
+      "counted_as_evidence": false
     }
   ],
-  "failure": "The CRLF checkout directly matched the historical declared hash, so the frozen x1 regression test received zero alias warnings instead of one.",
-  "recovery": "Preserve both snapshots, do not count them, keep x1 immutable, and create fresh LF-explicit detached retry snapshots.",
+  "failure": "The first pair failed the frozen x1 regression under CRLF. The paired LF retry command then timed out after materialization and left retry B administratively locked; no retry validation suite ran.",
+  "recovery": "Preserve all four snapshots uncounted, keep x1 immutable, and create a fresh LF-explicit pair one at a time with independent command budgets.",
   "all_failures_retained": true,
   "boundary": "A clean failed snapshot remains a failure. It is not independent reproduction and is not upgraded to evidence by other passing checks."
 }

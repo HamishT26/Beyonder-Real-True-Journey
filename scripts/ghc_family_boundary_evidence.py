@@ -444,6 +444,15 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6434-X2-N05",
+        "origin": "v643-v4-evidence-snapshot-materialization-operational",
+        "observed": "The paired LF-explicit retry materialization exceeded its command budget after both worktree records and clean LF bytes appeared, leaving retry B administratively locked as initializing; no validation suite had run.",
+        "recovery": "Preserve both retry worktrees uncounted, retain the timeout and administrative lock as evidence, and materialize a new pair one at a time with independent bounded command budgets.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
