@@ -807,22 +807,42 @@ def build(
             "terminal_verdict": "NOT_READY_FOR_STAGE_20",
         },
     )
+    repository_receipt_path = phase / "validation/repository-test-receipt.json"
+    full_receipt_path = phase / "validation/candidate-validation-summary.json"
+    minimal_receipt_path = phase / "validation/minimal-validation-summary.json"
+    detached_receipt_path = phase / "reproduction/detached-evidence-validation.json"
+    repository_valid = False
+    validators_valid = False
+    detached_valid = False
+    if repository_receipt_path.exists():
+        repository_receipt = read_json(repository_receipt_path)
+        repository_valid = (
+            repository_receipt.get("valid") is True
+            and repository_receipt.get("tests_run") == repository_receipt.get("passed")
+            and repository_receipt.get("failures") == 0
+            and repository_receipt.get("errors") == 0
+        )
+    if full_receipt_path.exists() and minimal_receipt_path.exists():
+        validators_valid = read_json(full_receipt_path).get("valid") is True and read_json(minimal_receipt_path).get("valid") is True
+    if detached_receipt_path.exists():
+        detached_valid = read_json(detached_receipt_path).get("valid") is True and snapshot_state == "verified"
+
     write_json(
         phase / "complete-incomplete-checklist.json",
         {
             "schema": "ghc.family.v642-v6.complete-incomplete-checklist.v1",
             "phase": PHASE,
             "owner": OWNER,
-            "state": "evidence_candidate_incomplete_for_closeout",
+            "state": "evidence_validated_closeout_pending" if repository_valid and validators_valid and detached_valid else "evidence_candidate_incomplete_for_closeout",
             "required_rows": [
                 {"item": "x1 remote-equal freeze", "complete": True},
                 {"item": "ten x2 proposals executed to bounded outcome", "complete": True},
                 {"item": "all inherited and new negatives retained", "complete": True},
                 {"item": "open and exact gates visible", "complete": True},
                 {"item": "accessible static report built", "complete": (phase / "deliverables/v642-v6-evidence-integrity-report.html").exists()},
-                {"item": "complete repository suite passes", "complete": False},
-                {"item": "full and minimal validators pass", "complete": False},
-                {"item": "fresh detached evidence snapshots validate", "complete": snapshot_state == "verified"},
+                {"item": "complete repository suite passes", "complete": repository_valid},
+                {"item": "full and minimal validators pass", "complete": validators_valid},
+                {"item": "fresh detached evidence snapshots validate", "complete": detached_valid},
                 {"item": "closeout, seal, and final detached validation", "complete": False},
                 {"item": "final remote equality", "complete": False},
             ],

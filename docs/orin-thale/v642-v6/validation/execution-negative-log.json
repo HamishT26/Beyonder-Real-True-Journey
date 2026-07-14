@@ -2,7 +2,7 @@
   "schema": "ghc.family.v642-v6.execution-negative-log.v1",
   "phase": "v642-gmut-thos-v6-x1-x2",
   "owner": "Orin Thale",
-  "negative_count": 4,
+  "negative_count": 6,
   "negatives": [
     {
       "negative_id": "V6426-X2-N01",
@@ -34,6 +34,22 @@
       "statement": "The first repair validation ran 277 repository tests with two failures because the accessible report was regenerated after the manifest, leaving the report hash stale when the retained-negative count changed.",
       "evidence": "validation/execution-negative-log.json",
       "recovery": "Retain the failed run and enforce packet generation, report generation, then a final manifest-refresh generation before any validator or repository suite.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6426-X2-N05",
+      "origin": "v642-v6_remote_equality_verification",
+      "statement": "The first post-repair live-remote comparison wrapper applied PowerShell split syntax at the wrong precedence and returned the scalar value 1 instead of the remote hash.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the invalid comparison result, capture the ls-remote line first, split it in a separate statement, and require exact local, upstream, tracking, and live-remote equality with 0/0 divergence.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6426-X2-N06",
+      "origin": "v642-v6_parallel_detached_validation",
+      "statement": "The first parallel repair-snapshot wrapper treated the repository test runner's normal stderr progress stream as a terminating PowerShell native-command error before it could collect validation receipts.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the wrapper failure, verify no repository-test processes remain and both snapshots are clean at the exact head, then rerun with native stderr handled explicitly; both reruns passed.",
       "retained": true
     }
   ],
