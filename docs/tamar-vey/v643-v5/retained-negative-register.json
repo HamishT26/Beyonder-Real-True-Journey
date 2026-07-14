@@ -7,9 +7,9 @@
   "inherited_count": 721,
   "x1_operational_count": 14,
   "new_synthetic_count": 70,
-  "x2_operational_count": 3,
-  "new_count": 87,
-  "negative_count": 808,
+  "x2_operational_count": 4,
+  "new_count": 88,
+  "negative_count": 809,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -7851,6 +7851,15 @@
       "origin": "v643-v5-post-evidence-remote-verification-operational",
       "observed": "The first post-push divergence check passed an unquoted PowerShell upstream token to Git, which was transformed before Git parsed it and caused the combined verification command to exit nonzero after the evidence commit had already pushed successfully.",
       "recovery": "Repeated the read-only check with an explicitly quoted upstream revision, fetched the owned branch, and proved local, upstream, tracking, and live-remote equality with zero divergence.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6435-X2-N04",
+      "origin": "v643-v5-closeout-remote-display-operational",
+      "observed": "A post-closeout equality display expression applied PowerShell splitting at the wrong precedence and reported only the first character of the live hash, leaving that attempt inconclusive.",
+      "recovery": "Stored the ls-remote line first, split it explicitly on the tab delimiter, and then proved the full local, upstream, tracking, and live hashes equal with zero divergence.",
       "retained": true,
       "resolved_for_current_local_scope": true,
       "external_gate_closed": false

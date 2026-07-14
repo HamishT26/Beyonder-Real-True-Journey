@@ -313,6 +313,21 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6435-X2-N04",
+        "origin": "v643-v5-closeout-remote-display-operational",
+        "observed": (
+            "A post-closeout equality display expression applied PowerShell splitting at the wrong "
+            "precedence and reported only the first character of the live hash, leaving that attempt inconclusive."
+        ),
+        "recovery": (
+            "Stored the ls-remote line first, split it explicitly on the tab delimiter, and then proved "
+            "the full local, upstream, tracking, and live hashes equal with zero divergence."
+        ),
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 

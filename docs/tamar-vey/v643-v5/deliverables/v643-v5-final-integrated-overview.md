@@ -58,7 +58,7 @@ All ten frozen proposals were executed after the dedicated x1 commit was pushed 
 
 The selective-reporting graph, continuation-obligation ledger, Freed ID sync-fork tribunal, bounded-work tribunal, secret-trace screen, and detailed-balance classifier are completed as local structural artifacts. The nonregular-likelihood tribunal and THOS sham-control protocol are represented proxies because they use zero real rows and zero real arms. The Stage 20 minimax-regret board remains an open gap because no independent real-evidence portfolio or authorized external review exists. The CBR preservation, privilege, spoliation, and legal-hold surface remains an exact gate because repository output cannot substitute for affected-party participation, Māori authority, competent legal interpretation, or cultural ratification.
 
-The retained-negative count is 808: 721 inherited negatives, 14 x1 operational negatives, 70 new synthetic rejections, and 3 x2 operational negatives. No failure is erased when a later recovery passes. Evidence snapshots, when verified, establish same-owner repeatability under shared repository, protocol, tooling, and infrastructure only. Independent-team scientific reproduction remains open.
+The retained-negative count is 809: 721 inherited negatives, 14 x1 operational negatives, 70 new synthetic rejections, and 4 x2 operational negatives. No failure is erased when a later recovery passes. Evidence snapshots, when verified, establish same-owner repeatability under shared repository, protocol, tooling, and infrastructure only. Independent-team scientific reproduction remains open.
 
 ## Terminal posture
 
