@@ -7,9 +7,9 @@
   "inherited_count": 809,
   "x1_operational_count": 8,
   "new_synthetic_count": 70,
-  "x2_operational_count": 15,
-  "new_count": 93,
-  "negative_count": 902,
+  "x2_operational_count": 17,
+  "new_count": 95,
+  "negative_count": 904,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -8930,6 +8930,24 @@
       "origin": "v643-v6-x2-direct-module-import",
       "observed": "The first direct unittest import failed because its file-based loader did not place the scripts directory on sys.path, so the new sibling model module was unresolved.",
       "recovery": "Added a file-location fallback that resolves the sibling model without mutating global import state, then reran direct and discovery callers.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6436-X2-N16",
+      "origin": "v643-v6-closeout-inherited-receipt-lookup",
+      "observed": "A read-only lookup guessed the inherited evidence-snapshot receipt filename and returned path-not-found.",
+      "recovery": "Listed the bounded inherited closeout paths, selected the actual evidence-snapshot-receipt name, and changed no repository content during the failed lookup.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6436-X2-N17",
+      "origin": "v643-v6-closeout-report-manifest-order",
+      "observed": "The first closeout validator returned two manifest mismatches because the lifecycle-aware HTML and final overview were rebuilt after the manifest; the 3001-of-3003 run was not counted.",
+      "recovery": "Retained the failure and regenerated in stable core-artifact, report, then manifest order before repeating every closeout check.",
       "retained": true,
       "resolved_for_current_local_scope": true,
       "external_gate_closed": false

@@ -56,7 +56,7 @@ All ten frozen proposals were executed after the dedicated x1 commit was pushed 
 
 The claim-vocabulary migration tribunal, GMUT singular-perturbation map, manufactured-solution verification tribunal, executable-resolution shadowing tribunal, static-report structural audit, and finite-size ensemble classifier are completed as bounded local artifacts. The THOS harms protocol and Freed ID cross-wallet migration profile are represented proxies because they use zero real participants, zero real arms, zero real wallets, and zero real keys. The affected-user assistive-technology evaluation remains an open gap because no authorized participants, consent, privacy process, or qualified review exists. The taonga-use and benefit-sharing surface remains an exact gate because repository output cannot substitute for affected-party participation, Māori authority, competent legal interpretation, or cultural ratification.
 
-The retained-negative count is 902: 809 inherited negatives, 8 x1 operational negatives, 70 new synthetic rejections, and 15 x2 operational negatives. No failure is erased when a later recovery passes. Evidence snapshots, when verified, establish same-owner repeatability under shared repository, protocol, tooling, and infrastructure only. Independent-team scientific reproduction remains open.
+The retained-negative count is 904: 809 inherited negatives, 8 x1 operational negatives, 70 new synthetic rejections, and 17 x2 operational negatives. No failure is erased when a later recovery passes. Evidence snapshots, when verified, establish same-owner repeatability under shared repository, protocol, tooling, and infrastructure only. Independent-team scientific reproduction remains open.
 
 ## Terminal posture
 
