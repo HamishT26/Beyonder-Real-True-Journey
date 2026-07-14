@@ -1,0 +1,37 @@
+{
+  "schema": "ghc.family.v643-v8.execution-negative-log.v1",
+  "phase": "v643-gmut-thos-v8-x1-x2",
+  "owner": "Ilyra Fen",
+  "negative_count": 3,
+  "negatives": [
+    {
+      "negative_id": "V6438-X2-N01",
+      "origin": "v643-v8-x2-operational",
+      "observed": "An independent staged-name hash check attempted to use Convert.ToHexString, but the available Windows PowerShell/.NET surface did not provide that method, so the command returned a null hash.",
+      "recovery": "Retain the failed check, compute the SHA-256 with the portable BitConverter byte-to-hex path, and compare it with the frozen staged-name receipt.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6438-X2-N02",
+      "origin": "v643-v8-x2-operational",
+      "observed": "A combined evidence-script inspection returned exit code one because an optional ripgrep term had no match, even though the requested source excerpt was read successfully.",
+      "recovery": "Retain the wrapper failure, separate required reads from optional searches, and treat a bounded no-match search as an inspected absence rather than allowing it to mask successful output.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6438-X2-N03",
+      "origin": "v643-v8-x2-operational",
+      "observed": "A broad recursive search for privacy and raw-ID scanner names exceeded its bounded command timeout without returning a tool path.",
+      "recovery": "Retain the timeout, narrow discovery to known phase tooling and direct script-directory metadata, then run the located scanner with an explicit bounded scope.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    }
+  ],
+  "all_retained": true,
+  "boundary": "Operational failures are retained as execution evidence and do not close any external gate."
+}
