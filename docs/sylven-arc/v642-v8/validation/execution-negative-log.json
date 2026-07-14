@@ -1,0 +1,33 @@
+{
+  "schema": "ghc.family.v642-v8.execution-negative-log.v1",
+  "phase": "v642-gmut-thos-v8-x1-x2",
+  "owner": "Sylven Arc",
+  "negative_count": 3,
+  "negatives": [
+    {
+      "negative_id": "V6428-X2-N01",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first v8 unit-test run passed 19 of 20 tests but the full validator raised KeyError because it assumed prior_frozen_proposal_count and semantic_delta_checks were top-level collision-audit fields.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Read the frozen x1 schema, validate prior_phase_counts.total and checks plus semantic_delta_review_passed, then rerun without erasing this failure.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N02",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first stale-label audit command parsed all 60 JSON files and found no sent-route labels, but its two negative-lookahead ripgrep checks failed because PowerShell quoting moved the PCRE2 option into the pattern.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retain the partial results and replace the fragile regex checks with parsed top-level JSON owner and phase comparisons.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6428-X2-N03",
+      "origin": "v642-v8_x2_operational",
+      "statement": "The first parsed phase-label comparison reported tooling/ghc-family-index.json as drift because the audit omitted the intentionally short v642-v8 index label from its allowlist.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Classify the index label as current v8 shorthand, add it explicitly to the bounded allowlist, and rerun owner and phase comparisons.",
+      "retained": true
+    }
+  ],
+  "boundary": "Append every recovered transition or x2 operational failure; never erase it after a later pass."
+}

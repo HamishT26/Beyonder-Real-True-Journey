@@ -1,0 +1,228 @@
+{
+  "schema": "ghc.family.v642-v8.v6428-p10.mutation-vectors.v1",
+  "phase": "v642-gmut-thos-v8-x1-x2",
+  "owner": "Sylven Arc",
+  "proposal_id": "V6428-P10",
+  "case_count": 8,
+  "rejected_case_count": 7,
+  "all_expected_outcomes_matched": true,
+  "cases": [
+    {
+      "case_id": "V6428-P10-PASS",
+      "input": {
+        "action_class": "repository_reversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "owner_repo_only",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": true,
+      "expected_accept": true,
+      "matched_expectation": true,
+      "reasons": [],
+      "metrics": {
+        "action_class": "repository_reversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-CLASS",
+      "input": {
+        "action_class": "unknown",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "owner_repo_only",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "action_reversibility_class_invalid",
+        "external_or_irreversible_action_lacks_exact_authority"
+      ],
+      "metrics": {
+        "action_class": "unknown",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-AUTHORITY",
+      "input": {
+        "action_class": "irreversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "owner_repo_only",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "external_or_irreversible_action_lacks_exact_authority"
+      ],
+      "metrics": {
+        "action_class": "irreversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-ROLLBACK",
+      "input": {
+        "action_class": "repository_reversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": false,
+        "blast_radius": "owner_repo_only",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "rollback_claim_without_evidence"
+      ],
+      "metrics": {
+        "action_class": "repository_reversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-BLAST",
+      "input": {
+        "action_class": "repository_reversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "undeclared",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "blast_radius_undeclared"
+      ],
+      "metrics": {
+        "action_class": "repository_reversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-DEPLOY",
+      "input": {
+        "action_class": "repository_reversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "owner_repo_only",
+        "deployment": true,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "exact_gated_action_present"
+      ],
+      "metrics": {
+        "action_class": "repository_reversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-REVIEW",
+      "input": {
+        "action_class": "repository_reversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "owner_repo_only",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": true,
+        "execute_action": false,
+        "stage20_ready_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "missing_competent_review_promoted_to_pass"
+      ],
+      "metrics": {
+        "action_class": "repository_reversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    },
+    {
+      "case_id": "V6428-P10-EXECUTE",
+      "input": {
+        "action_class": "repository_reversible",
+        "exact_authority_present": false,
+        "rollback_claimed": true,
+        "rollback_evidence_present": true,
+        "blast_radius": "owner_repo_only",
+        "deployment": false,
+        "account_or_api_key": false,
+        "destructive_action": false,
+        "sibling_merge": false,
+        "missing_review_called_pass": false,
+        "execute_action": true,
+        "stage20_ready_claim": true
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "decision_fixture_attempted_external_action",
+        "structural_board_promoted_to_stage20_readiness"
+      ],
+      "metrics": {
+        "action_class": "repository_reversible",
+        "decision": "abstain_or_keep_unexecuted"
+      }
+    }
+  ],
+  "boundary": "Rejected synthetic fixtures are retained evidence, not external failures or permission to cross a protected gate."
+}

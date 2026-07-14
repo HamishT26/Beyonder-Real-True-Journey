@@ -1,0 +1,338 @@
+{
+  "schema": "ghc.family.v642-v8.v6428-p01.mutation-vectors.v1",
+  "phase": "v642-gmut-thos-v8-x1-x2",
+  "owner": "Sylven Arc",
+  "proposal_id": "V6428-P01",
+  "case_count": 8,
+  "rejected_case_count": 7,
+  "all_expected_outcomes_matched": true,
+  "cases": [
+    {
+      "case_id": "V6428-P01-PASS",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": true,
+        "membership_called_truth": false,
+        "local_log_called_public_service": false
+      },
+      "accepted": true,
+      "expected_accept": true,
+      "matched_expectation": true,
+      "reasons": [],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "aca87e51c3a5545c5a597705ed1866990905ed0089e6dba99a62fe7fb1050a85",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-PREFIX",
+      "input": {
+        "events": [
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          },
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": true,
+        "membership_called_truth": false,
+        "local_log_called_public_service": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "event_prefix_not_append_only"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "4d497939b320fb2cd96c7ad6fbaec2594048008f3d4a7e6e053ca218ff54b367",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-DUPLICATE",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": true,
+        "membership_called_truth": false,
+        "local_log_called_public_service": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "duplicate_event_identity"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "f8553ca5952f523230d1cff39cc0850fea8bf02b3bb8acb540d8f5a5fc756b6b",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-CANONICAL",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": false,
+        "aliases_deduplicated": true,
+        "membership_called_truth": false,
+        "local_log_called_public_service": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "canonical_event_bytes_floating"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "aca87e51c3a5545c5a597705ed1866990905ed0089e6dba99a62fe7fb1050a85",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-ROOT",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0000000000000000000000000000000000000000000000000000000000000000",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": true,
+        "membership_called_truth": false,
+        "local_log_called_public_service": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "previous_root_mismatch"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "aca87e51c3a5545c5a597705ed1866990905ed0089e6dba99a62fe7fb1050a85",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-ALIAS",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": false,
+        "membership_called_truth": false,
+        "local_log_called_public_service": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "alias_counted_as_independent_event"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "aca87e51c3a5545c5a597705ed1866990905ed0089e6dba99a62fe7fb1050a85",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-TRUTH",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": true,
+        "membership_called_truth": true,
+        "local_log_called_public_service": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "log_membership_promoted_to_truth"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "aca87e51c3a5545c5a597705ed1866990905ed0089e6dba99a62fe7fb1050a85",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    },
+    {
+      "case_id": "V6428-P01-PUBLIC",
+      "input": {
+        "events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          },
+          {
+            "id": "evt-2",
+            "kind": "synthetic-check",
+            "value": "beta"
+          }
+        ],
+        "previous_events": [
+          {
+            "id": "evt-1",
+            "kind": "synthetic-check",
+            "value": "alpha"
+          }
+        ],
+        "declared_previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f",
+        "canonical_bytes_pinned": true,
+        "aliases_deduplicated": true,
+        "membership_called_truth": false,
+        "local_log_called_public_service": true
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "local_log_promoted_to_public_transparency_service"
+      ],
+      "metrics": {
+        "tree_size": 2,
+        "previous_tree_size": 1,
+        "root": "aca87e51c3a5545c5a597705ed1866990905ed0089e6dba99a62fe7fb1050a85",
+        "previous_root": "0c4704be0412521048318f38cccff71b4a600f4aa7e8dad3029d1b78fd3ce27f"
+      }
+    }
+  ],
+  "boundary": "Rejected synthetic fixtures are retained evidence, not external failures or permission to cross a protected gate."
+}

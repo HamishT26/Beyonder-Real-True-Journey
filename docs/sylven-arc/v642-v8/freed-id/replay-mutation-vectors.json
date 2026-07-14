@@ -1,0 +1,282 @@
+{
+  "schema": "ghc.family.v642-v8.v6428-p05.mutation-vectors.v1",
+  "phase": "v642-gmut-thos-v8-x1-x2",
+  "owner": "Sylven Arc",
+  "proposal_id": "V6428-P05",
+  "case_count": 8,
+  "rejected_case_count": 7,
+  "all_expected_outcomes_matched": true,
+  "cases": [
+    {
+      "case_id": "V6428-P05-PASS",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": true,
+      "expected_accept": true,
+      "matched_expectation": true,
+      "reasons": [],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-REPLAY",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-new"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "challenge_replay"
+      ],
+      "metrics": {
+        "challenge_fresh": false,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-DOMAIN",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "other.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "proof_domain_mismatch"
+      ],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-AUDIENCE",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-b",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "verifier_audience_mismatch"
+      ],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-PURPOSE",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "assertionMethod",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "proof_purpose_mismatch"
+      ],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-TIME",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-13T23:59:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "proof_time_window_invalid"
+      ],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-WINDOW",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": false,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "challenge_window_unbounded"
+      ],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    },
+    {
+      "case_id": "V6428-P05-PRODUCTION",
+      "input": {
+        "challenge": "challenge-new",
+        "used_challenges": [
+          "challenge-old"
+        ],
+        "domain": "verifier.example",
+        "expected_domain": "verifier.example",
+        "audience": "verifier-a",
+        "expected_audience": "verifier-a",
+        "proof_purpose": "authentication",
+        "expected_proof_purpose": "authentication",
+        "created": "2026-07-14T00:00:00Z",
+        "expires": "2026-07-14T00:05:00Z",
+        "window_bounded": true,
+        "nonce_reuse_called_unlinkable": false,
+        "real_keys": 0,
+        "real_proofs": 0,
+        "live_resolution_calls": 0,
+        "live_status_calls": 0,
+        "production_promotion": true
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "structural_metadata_promoted_to_production_assurance"
+      ],
+      "metrics": {
+        "challenge_fresh": true,
+        "real_proofs": 0
+      }
+    }
+  ],
+  "boundary": "Rejected synthetic fixtures are retained evidence, not external failures or permission to cross a protected gate."
+}

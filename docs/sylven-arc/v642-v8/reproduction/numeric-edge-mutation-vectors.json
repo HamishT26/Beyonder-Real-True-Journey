@@ -1,0 +1,232 @@
+{
+  "schema": "ghc.family.v642-v8.v6428-p08.mutation-vectors.v1",
+  "phase": "v642-gmut-thos-v8-x1-x2",
+  "owner": "Sylven Arc",
+  "proposal_id": "V6428-P08",
+  "case_count": 8,
+  "rejected_case_count": 7,
+  "all_expected_outcomes_matched": true,
+  "cases": [
+    {
+      "case_id": "V6428-P08-PASS",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "reject",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": true,
+      "expected_accept": true,
+      "matched_expectation": true,
+      "reasons": [],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-COMPARISON",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "implicit",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "reject",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "comparison_policy_undeclared"
+      ],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-NONFINITE",
+      "input": {
+        "tokens": [
+          "nan"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "reject",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "non_finite_value_in_finite_contract"
+      ],
+      "metrics": {
+        "token_count": 1,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-ZERO",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "implicit",
+        "nan_policy": "reject",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "signed_zero_policy_implicit"
+      ],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-NAN",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "ordinary",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "nan_treated_as_ordinary_number"
+      ],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-INFINITY",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "reject",
+        "infinity_policy": "accept",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "infinity_policy_unsafe"
+      ],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-ORDER",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "reject",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": false,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": false
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "summation_order_floating"
+      ],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    },
+    {
+      "case_id": "V6428-P08-INDEPENDENT",
+      "input": {
+        "tokens": [
+          "0.1",
+          "1.0",
+          "-0.0"
+        ],
+        "comparison_mode": "relative_absolute",
+        "require_finite": true,
+        "signed_zero_policy": "distinguish",
+        "nan_policy": "reject",
+        "infinity_policy": "reject_when_finite_required",
+        "summation_order_pinned": true,
+        "runtime_family": "python-3.12",
+        "independent_reproduction_claim": true
+      },
+      "accepted": false,
+      "expected_accept": false,
+      "matched_expectation": true,
+      "reasons": [
+        "same_owner_numeric_parity_promoted_to_independent_reproduction"
+      ],
+      "metrics": {
+        "token_count": 3,
+        "ulp_at_one": 2.220446049250313e-16
+      }
+    }
+  ],
+  "boundary": "Rejected synthetic fixtures are retained evidence, not external failures or permission to cross a protected gate."
+}
