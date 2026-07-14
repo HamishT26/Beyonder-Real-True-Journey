@@ -358,6 +358,42 @@ OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6431-OP-N04",
+        "origin": "v643-v1-operational",
+        "observed": "The two-snapshot checkout orchestration command reached its bounded timeout while materializing the inherited corpus, although both detached worktrees completed.",
+        "recovery": "Performed a read-only worktree registry, exact-head, and clean-status audit before running either validation suite.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6431-OP-N05",
+        "origin": "v643-v1-operational",
+        "observed": "The first read-only snapshot-inspection PowerShell loop repeated the empty-pipeline parse error.",
+        "recovery": "Collected the loop rows before serialization and verified both detached worktrees at the exact evidence commit, clean and detached.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6431-OP-N06",
+        "origin": "v643-v1-operational",
+        "observed": "The first closeout-candidate validation passed 832 of 834 checks and rejected two stale manifest hashes after the explicit phase-state transition.",
+        "recovery": "Recomputed and rebound only the LF-normalized hashes and byte lengths for the two intentionally changed state files, then replayed the full gate.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6431-OP-N07",
+        "origin": "v643-v1-operational",
+        "observed": "The first read-only hash-calculation PowerShell expression repeated the empty-pipeline parse error.",
+        "recovery": "Collected hash rows before JSON serialization and obtained both LF-normalized hashes without mutating evidence.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 

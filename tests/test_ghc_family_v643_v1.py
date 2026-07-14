@@ -135,8 +135,8 @@ class TestGhcFamilyV643V1(unittest.TestCase):
         ledger = read("x2-proposal-ledger.json")
         negatives = read("retained-negative-register.json")
         self.assertEqual((ledger["case_count"], ledger["synthetic_rejection_count"]), (80, 70))
-        self.assertEqual(negatives["negative_count"], 474)
-        self.assertEqual(negatives["new_operational_count"], 3)
+        self.assertEqual(negatives["negative_count"], 478)
+        self.assertEqual(negatives["new_operational_count"], 7)
         self.assertTrue(negatives["all_retained"])
 
     def test_17_exact_gate_counts_and_terminal_verdict(self):
