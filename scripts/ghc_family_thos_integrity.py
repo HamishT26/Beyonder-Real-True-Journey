@@ -331,6 +331,24 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6433-X2-N04",
+        "origin": "v643-v3-x2-operational",
+        "observed": "The first combined creation of two detached evidence worktrees exceeded its 120-second command bound after snapshot A completed and left the originally named snapshot B registered but incompletely populated.",
+        "recovery": "Leave the incomplete worktree untouched and recoverable, retain this failure, and create one fresh additive B-retry worktree with a longer bounded checkout window; only clean A and B-retry snapshots count as evidence.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6433-X2-N05",
+        "origin": "v643-v3-x2-operational",
+        "observed": "The draft closeout receipt projected 907 detailed checks, but the newly retained incomplete-checkout negative correctly added a per-negative retention assertion and the stable validator reported 908.",
+        "recovery": "Retain this pre-commit bookkeeping mismatch, rebuild the register and manifest with the additional negative, and correct the closeout receipt to the resulting stable 909-check total before commit.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
