@@ -1,0 +1,41 @@
+{
+  "schema": "ghc.family.v642-v6.selected-toolchain.v1",
+  "phase": "v642-gmut-thos-v6-x1-x2",
+  "owner": "Orin Thale",
+  "selection_rule": "Use the smallest standard-library family-current toolchain, keep inherited sealed tools byte-stable, and add only reusable family-named integrity tools after the x1 freeze.",
+  "existing_family_current": [
+    "ghc-family-index",
+    "completion-gate-discipline",
+    "ghc-family-source-label-glossary-builder",
+    "ghc-family-truth-bridge",
+    "ghc-phase-closeout-validator",
+    "scripts/ghc_family_phase_privacy_scan.py",
+    "scripts/ghc_family_repository_test_runner.py",
+    "scripts/ghc_family_evidence_noncompensation_validator.py",
+    "scripts/ghc_family_evidence_noncompensation_minimal.py"
+  ],
+  "reviewed_not_invoked": [
+    {
+      "name": "ghc-main-orchestration-memory",
+      "reason": "Its older app-lane and v601-v630 route is superseded by the live v642-v6 solo authorization; its privacy, exact-gate, and validation principles are retained, but no app lane, updater, cadence, or automatic CLI update is in scope."
+    },
+    {
+      "name": "omega-mini current-state publication",
+      "reason": "This phase owns one additive full-tools branch only and has no authority to mutate shared current-state branches."
+    }
+  ],
+  "planned_x2_family_current": [
+    "scripts/ghc_family_evidence_integrity.py",
+    "scripts/ghc_family_evidence_integrity_validator.py",
+    "scripts/ghc_family_evidence_integrity_minimal.py",
+    "scripts/build_ghc_family_evidence_integrity_report.py"
+  ],
+  "planned_tests": [
+    "tests/test_ghc_family_v642_v6.py",
+    "python scripts/ghc_family_repository_test_runner.py --start-directory tests --pattern test_*.py --windows-inherited-acl-temp"
+  ],
+  "planned_snapshot_policy": "Fresh detached D-drive snapshots at evidence, closeout, seal, and final heads with clean Git status, exact ancestry, LF-normalized inherited-file parity where required, manifest parity, and no claim of independent-team reproduction.",
+  "compatibility_boundary": "All inherited v642-v5 and earlier tools remain byte-stable and available for replay. They are not relabeled as v642-v6 implementation and no compatibility entrypoint is deleted.",
+  "shared_skill_change": "reviewed_current_no_change_justified",
+  "x1_state": "planned_not_implemented"
+}
