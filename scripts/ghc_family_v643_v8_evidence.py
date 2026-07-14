@@ -183,6 +183,51 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6438-X2-N04",
+        "origin": "v643-v8-x2-operational",
+        "observed": (
+            "The wrapper that added both fresh evidence worktrees exceeded its 120-second command timeout while "
+            "the detached checkouts were materializing; both worktrees later proved complete, clean, and exact."
+        ),
+        "recovery": (
+            "Retain the timeout, inspect each new path directly, verify its exact detached head and clean state, "
+            "and validate the two snapshots separately without deleting or reusing either worktree."
+        ),
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6438-X2-N05",
+        "origin": "v643-v8-x2-operational",
+        "observed": (
+            "The first post-timeout worktree-registry query also exceeded its short timeout before returning "
+            "registry output."
+        ),
+        "recovery": (
+            "Retain the failed registry query, use direct bounded path-state checks first, then verify HEAD and "
+            "clean status from inside each detached snapshot with a longer timeout."
+        ),
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6438-X2-N06",
+        "origin": "v643-v8-x2-operational",
+        "observed": (
+            "The first closeout repository-suite run passed 497 of 500 tests; the three failures all identified "
+            "the closeout receipt hash as stale after its detailed-validation total was corrected."
+        ),
+        "recovery": (
+            "Retain the failed run, write the known closeout counts before rebuilding the normalized manifest, "
+            "then rerun the complete repository suite and validators."
+        ),
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
