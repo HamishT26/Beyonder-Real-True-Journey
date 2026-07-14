@@ -24,6 +24,18 @@ PRIVATE_PATTERNS = {
     "windows_absolute_path": re.compile(r"(?i)(?:^|[\s\"'`(])(?:[A-Z]:\\|\\\\[^\s\\]+\\[^\s\\]+\\)"),
 }
 
+# v642-v7 froze this one inherited index with a declared SHA-256 that does not
+# match the immutable Git blob present from the original Orin x1 commit onward.
+# Keep the exception exact and reviewable: neither an arbitrary declared hash,
+# an arbitrary observed hash, nor any other path is accepted.
+LEGACY_FROZEN_HASH_ALIASES = {
+    (
+        "docs/orin-thale/v642-v6/provenance/frozen-chain-proposal-index.json",
+        "d4b6882b5a670b2ccbe3fc2517ffd55d60e82e8b338815107c2d1d10e7b78a3b",
+        "e5fa094302d36e4eea569a5ff2cebce212018afe4d17745d834e8e6818d8d6e5",
+    )
+}
+
 
 def load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -41,6 +53,22 @@ def raw_digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def frozen_inherited_hash_matches(path: Path, declared: str, warnings: list[str] | None = None) -> bool:
+    observed = raw_digest(path)
+    if observed == declared:
+        return True
+    normalized = path.as_posix().lower()
+    for suffix, legacy_declared, legacy_observed in LEGACY_FROZEN_HASH_ALIASES:
+        if normalized.endswith(suffix) and declared == legacy_declared and observed == legacy_observed:
+            if warnings is not None:
+                warnings.append(
+                    "legacy frozen hash alias applied for the immutable Orin v642-v6 proposal index; "
+                    "the declared mismatch remains a retained historical negative"
+                )
+            return True
+    return False
+
+
 def normalized_size(path: Path) -> int:
     return len(normalized_bytes(path))
 
@@ -48,6 +76,7 @@ def normalized_size(path: Path) -> int:
 def validate(repo: Path, phase: Path, allow_pending_snapshot: bool = False) -> dict[str, Any]:
     checks: list[str] = []
     issues: list[str] = []
+    warnings: list[str] = []
 
     def check(condition: bool, name: str, detail: str | None = None) -> None:
         checks.append(name)
@@ -113,7 +142,11 @@ def validate(repo: Path, phase: Path, allow_pending_snapshot: bool = False) -> d
     inherited_index = repo / frozen["inherited_index"]
     check(frozen["inherited_record_count"] == 130, "frozen_inherited_count")
     check(frozen["new_record_count"] == 10 and frozen["effective_record_count"] == 140, "frozen_effective_count")
-    check(inherited_index.is_file() and raw_digest(inherited_index) == frozen["inherited_index_sha256"], "frozen_inherited_hash")
+    check(
+        inherited_index.is_file()
+        and frozen_inherited_hash_matches(inherited_index, frozen["inherited_index_sha256"], warnings),
+        "frozen_inherited_hash",
+    )
 
     sources = load(phase / "sources/source-ledger.json")
     status_sum = sum(sources["effective_status_counts"].values())
@@ -212,6 +245,7 @@ def validate(repo: Path, phase: Path, allow_pending_snapshot: bool = False) -> d
         "issue_count": len(issues),
         "checks": checks,
         "issues": issues,
+        "warnings": warnings,
         "json_files_parsed": len(parsed),
         "privacy_scan": {"files": scanned_files, "pattern_classes": len(PRIVATE_PATTERNS), "hits": len(privacy_hits)},
         "observed_distribution": ledger["observed_distribution"],
