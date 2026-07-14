@@ -1,0 +1,37 @@
+{
+  "schema": "ghc.family.v643-v4.evidence-snapshot-failure-receipt.v1",
+  "phase": "v643-gmut-thos-v4-x1-x2",
+  "owner": "Orin Thale",
+  "failed_evidence_commit": "bca35b23f1cd2a0e8239d68f88b427efa2a6f598",
+  "failed_snapshot_count": 2,
+  "snapshots": [
+    {
+      "label": "evidence-a",
+      "exact_head": true,
+      "clean_before_and_after": true,
+      "historical_index_worktree_sha256": "d4b6882b5a670b2ccbe3fc2517ffd55d60e82e8b338815107c2d1d10e7b78a3b",
+      "targeted_hash_alias_tests_passed": 1,
+      "targeted_hash_alias_tests_total": 2,
+      "counted_as_evidence": false
+    },
+    {
+      "label": "evidence-b",
+      "exact_head": true,
+      "clean_before_and_after": true,
+      "historical_index_worktree_sha256": "d4b6882b5a670b2ccbe3fc2517ffd55d60e82e8b338815107c2d1d10e7b78a3b",
+      "repository_tests_passed": 396,
+      "repository_tests_total": 397,
+      "detailed_validation_passed": 1559,
+      "detailed_validation_total": 1559,
+      "minimal_validation_passed": 27,
+      "minimal_validation_total": 27,
+      "json_files_parsed": 79,
+      "privacy_hits": 0,
+      "counted_as_evidence": false
+    }
+  ],
+  "failure": "The CRLF checkout directly matched the historical declared hash, so the frozen x1 regression test received zero alias warnings instead of one.",
+  "recovery": "Preserve both snapshots, do not count them, keep x1 immutable, and create fresh LF-explicit detached retry snapshots.",
+  "all_failures_retained": true,
+  "boundary": "A clean failed snapshot remains a failure. It is not independent reproduction and is not upgraded to evidence by other passing checks."
+}

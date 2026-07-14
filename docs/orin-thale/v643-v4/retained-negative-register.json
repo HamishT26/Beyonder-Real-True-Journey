@@ -7,9 +7,9 @@
   "inherited_count": 637,
   "x1_operational_count": 7,
   "new_synthetic_count": 70,
-  "x2_operational_count": 3,
-  "new_count": 80,
-  "negative_count": 717,
+  "x2_operational_count": 4,
+  "new_count": 81,
+  "negative_count": 718,
   "all_retained": true,
   "erasure_permitted": false,
   "negatives": [
@@ -6810,6 +6810,15 @@
       "origin": "v643-v4-x2-operational",
       "observed": "A PowerShell exact-stage verification reported a same-count list and hash mismatch because its culture-sensitive Sort-Object order differed from the receipt's Python Unicode code-point ordering.",
       "recovery": "Retain the false-negative check, recompute with the receipt generator's canonical Python ordering, prove exact list and hash equality, and record the sort-order contract in the staged receipt.",
+      "retained": true,
+      "resolved_for_current_local_scope": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6434-X2-N04",
+      "origin": "v643-v4-evidence-snapshot-operational",
+      "observed": "Both first detached evidence snapshots used CRLF working-tree bytes for the historical Orin v642-v6 index, directly matched its declared hash, emitted no compatibility-alias warning, and failed the frozen x1 regression test that expected exactly one warning; snapshot B's complete suite passed 396 of 397 tests.",
+      "recovery": "Keep both clean failed snapshots recoverable and uncounted, preserve frozen x1 unchanged, and create fresh detached retry snapshots with LF-explicit checkout configuration so the x1 compatibility contract is exercised consistently.",
       "retained": true,
       "resolved_for_current_local_scope": true,
       "external_gate_closed": false

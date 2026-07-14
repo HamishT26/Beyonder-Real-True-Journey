@@ -435,6 +435,15 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, Any]] = [
         "resolved_for_current_local_scope": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6434-X2-N04",
+        "origin": "v643-v4-evidence-snapshot-operational",
+        "observed": "Both first detached evidence snapshots used CRLF working-tree bytes for the historical Orin v642-v6 index, directly matched its declared hash, emitted no compatibility-alias warning, and failed the frozen x1 regression test that expected exactly one warning; snapshot B's complete suite passed 396 of 397 tests.",
+        "recovery": "Keep both clean failed snapshots recoverable and uncounted, preserve frozen x1 unchanged, and create fresh detached retry snapshots with LF-explicit checkout configuration so the x1 compatibility contract is exercised consistently.",
+        "retained": True,
+        "resolved_for_current_local_scope": True,
+        "external_gate_closed": False,
+    },
 ]
 
 
