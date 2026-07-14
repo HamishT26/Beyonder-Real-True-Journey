@@ -28,6 +28,15 @@ X2_OPERATIONAL_NEGATIVES = [
         "promotion_effect": "No evidence or gate changed; the failed command is retained and the safer literal form is required.",
         "retained": True,
         "external_gate_closed": False,
+    },
+    {
+        "negative_id": "V6442-X2-OP-02",
+        "origin": "v644-v2-terminal-operational",
+        "observed": "A supplemental PowerShell stale-label wrapper had an unmatched parenthesis and exited before any scan ran.",
+        "recovery": "Run the read-only stale-label, privacy, and diff-hygiene checks as separate literal commands.",
+        "promotion_effect": "No repository or external state changed; the failed wrapper is retained and cannot count as validation evidence.",
+        "retained": True,
+        "external_gate_closed": False,
     }
 ]
 X2_EXTERNAL_FILES = [
