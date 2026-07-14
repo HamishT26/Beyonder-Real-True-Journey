@@ -1,0 +1,172 @@
+{
+  "schema": "ghc.family.v642-v7.v6427-p07.vectors.v1",
+  "phase": "v642-gmut-thos-v7-x1-x2",
+  "owner": "Tamar Vey",
+  "proposal_id": "V6427-P07",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6427-P07-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": true,
+        "traversal_rejected": true,
+        "short_alias_rejected": true,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-CASE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "case_alias_bypass"
+      ],
+      "fixture": {
+        "case_alias_rejected": false,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": true,
+        "traversal_rejected": true,
+        "short_alias_rejected": true,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-DEVICE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "reserved_device_name_accepted"
+      ],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": false,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": true,
+        "traversal_rejected": true,
+        "short_alias_rejected": true,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-STREAM",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "alternate_data_stream_accepted"
+      ],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": false,
+        "drive_relative_rejected": true,
+        "traversal_rejected": true,
+        "short_alias_rejected": true,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-DRIVE",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "drive_relative_path_accepted"
+      ],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": false,
+        "traversal_rejected": true,
+        "short_alias_rejected": true,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-TRAVERSAL",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "parent_traversal_accepted"
+      ],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": true,
+        "traversal_rejected": false,
+        "short_alias_rejected": true,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-SHORT",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "short_name_alias_bypass"
+      ],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": true,
+        "traversal_rejected": true,
+        "short_alias_rejected": false,
+        "reparse_confined": true,
+        "resource_ceiling_enforced": true
+      }
+    },
+    {
+      "case_id": "V6427-P07-REPARSE-CEILING",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "reparse_target_outside_owned_root",
+        "path_resource_ceiling_missing"
+      ],
+      "fixture": {
+        "case_alias_rejected": true,
+        "device_name_rejected": true,
+        "alternate_stream_rejected": true,
+        "drive_relative_rejected": true,
+        "traversal_rejected": true,
+        "short_alias_rejected": true,
+        "reparse_confined": false,
+        "resource_ceiling_enforced": false
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Synthetic namespace vectors do not establish exhaustive host security, independent security review, or production assurance."
+}

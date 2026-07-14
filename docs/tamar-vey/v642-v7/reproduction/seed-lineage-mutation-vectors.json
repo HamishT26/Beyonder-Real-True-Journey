@@ -1,0 +1,172 @@
+{
+  "schema": "ghc.family.v642-v7.v6427-p08.vectors.v1",
+  "phase": "v642-gmut-thos-v7-x1-x2",
+  "owner": "Tamar Vey",
+  "proposal_id": "V6427-P08",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6427-P08-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": true,
+        "runtime_pinned": true,
+        "streams_partitioned": true,
+        "draw_count_matches": true,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-SEED",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "seed_missing_or_floating"
+      ],
+      "fixture": {
+        "seed_pinned": false,
+        "generator_pinned": true,
+        "runtime_pinned": true,
+        "streams_partitioned": true,
+        "draw_count_matches": true,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-GENERATOR",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "generator_implementation_floating"
+      ],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": false,
+        "runtime_pinned": true,
+        "streams_partitioned": true,
+        "draw_count_matches": true,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-RUNTIME",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "runtime_version_floating"
+      ],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": true,
+        "runtime_pinned": false,
+        "streams_partitioned": true,
+        "draw_count_matches": true,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-STREAM",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "pseudorandom_stream_overlap"
+      ],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": true,
+        "runtime_pinned": true,
+        "streams_partitioned": false,
+        "draw_count_matches": true,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-DRAWS",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "draw_count_diverged"
+      ],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": true,
+        "runtime_pinned": true,
+        "streams_partitioned": true,
+        "draw_count_matches": false,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-RETRY",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "hidden_retry_draws"
+      ],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": true,
+        "runtime_pinned": true,
+        "streams_partitioned": true,
+        "draw_count_matches": true,
+        "retry_draws_declared": false,
+        "stochastic_budget_respected": true,
+        "independent_reproduction_claimed": false
+      }
+    },
+    {
+      "case_id": "V6427-P08-BUDGET-INDEPENDENT",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "stochastic_budget_exceeded",
+        "same_owner_called_independent_reproduction"
+      ],
+      "fixture": {
+        "seed_pinned": true,
+        "generator_pinned": true,
+        "runtime_pinned": true,
+        "streams_partitioned": true,
+        "draw_count_matches": true,
+        "retry_draws_declared": true,
+        "stochastic_budget_respected": false,
+        "independent_reproduction_claimed": true
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Same-owner stochastic replay is repeatability evidence, not independent-team scientific reproduction."
+}

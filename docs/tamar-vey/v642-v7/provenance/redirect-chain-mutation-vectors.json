@@ -1,0 +1,172 @@
+{
+  "schema": "ghc.family.v642-v7.v6427-p01.vectors.v1",
+  "phase": "v642-gmut-thos-v7-x1-x2",
+  "owner": "Tamar Vey",
+  "proposal_id": "V6427-P01",
+  "case_count": 8,
+  "matched_count": 8,
+  "retained_negative_count": 7,
+  "cases": [
+    {
+      "case_id": "V6427-P01-CANONICAL",
+      "expected": "accept",
+      "observed": "accept",
+      "matched": true,
+      "retained_negative": false,
+      "reasons": [],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": true,
+        "authority_root_match": true,
+        "redirect_depth": 1,
+        "secure_scheme": true,
+        "alias_deduplicated": true,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-FLOATING",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "floating_source_version"
+      ],
+      "fixture": {
+        "version_pinned": false,
+        "fragment_stable": true,
+        "authority_root_match": true,
+        "redirect_depth": 1,
+        "secure_scheme": true,
+        "alias_deduplicated": true,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-FRAGMENT",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "citation_fragment_drift"
+      ],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": false,
+        "authority_root_match": true,
+        "redirect_depth": 1,
+        "secure_scheme": true,
+        "alias_deduplicated": true,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-AUTHORITY",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "redirect_crossed_authority_root"
+      ],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": true,
+        "authority_root_match": false,
+        "redirect_depth": 1,
+        "secure_scheme": true,
+        "alias_deduplicated": true,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-REDIRECT",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "redirect_depth_exceeded"
+      ],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": true,
+        "authority_root_match": true,
+        "redirect_depth": 5,
+        "secure_scheme": true,
+        "alias_deduplicated": true,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-SCHEME",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "insecure_source_scheme"
+      ],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": true,
+        "authority_root_match": true,
+        "redirect_depth": 1,
+        "secure_scheme": false,
+        "alias_deduplicated": true,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-ALIAS",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "canonical_alias_double_counted"
+      ],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": true,
+        "authority_root_match": true,
+        "redirect_depth": 1,
+        "secure_scheme": true,
+        "alias_deduplicated": false,
+        "source_role_preserved": true,
+        "resolution_called_truth": false
+      }
+    },
+    {
+      "case_id": "V6427-P01-ROLE-TRUTH",
+      "expected": "reject",
+      "observed": "reject",
+      "matched": true,
+      "retained_negative": true,
+      "reasons": [
+        "source_role_substitution",
+        "link_resolution_promoted_to_truth"
+      ],
+      "fixture": {
+        "version_pinned": true,
+        "fragment_stable": true,
+        "authority_root_match": true,
+        "redirect_depth": 1,
+        "secure_scheme": true,
+        "alias_deduplicated": true,
+        "source_role_preserved": false,
+        "resolution_called_truth": true
+      }
+    }
+  ],
+  "all_expected_results_matched": true,
+  "boundary": "Citation identity control is local provenance evidence, not proof that a source claim is true or independent."
+}

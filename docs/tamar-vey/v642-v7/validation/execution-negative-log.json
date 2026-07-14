@@ -1,0 +1,41 @@
+{
+  "schema": "ghc.family.v642-v7.execution-negative-log.v1",
+  "phase": "v642-gmut-thos-v7-x1-x2",
+  "owner": "Tamar Vey",
+  "negative_count": 4,
+  "negatives": [
+    {
+      "negative_id": "V6427-X1-N05",
+      "origin": "v642-v7_x1_remote_equality_proof",
+      "statement": "The first post-push live-remote equality wrapper indexed the first character of the live hash instead of splitting the remote line into fields, so it reported a false mismatch after local, upstream, and tracking equality and 0/0 divergence had already passed.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Kept the immutable x1 commit unchanged, parsed the live remote line into fields in a read-only rerun, and proved clean local, upstream, tracking, and live-remote equality at the exact x1 commit.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6427-X2-N01",
+      "origin": "v642-v7_first_full_candidate_validation",
+      "statement": "The first full candidate validator passed 370 checks but failed the inherited frozen-index hash check because it compared LF-normalized bytes with the raw-byte digest preregistered in the immutable x1 packet.",
+      "evidence": "validation/candidate-validation-summary.json",
+      "recovery": "Retained the mismatch, left the x1 packet unchanged, made the validator honor the frozen index's raw-byte digest while preserving LF-normalized manifest hashing, regenerated the negative register, and reran the complete validation.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6427-X2-N02",
+      "origin": "v642-v7_bounded_receipt_tool_lookup",
+      "statement": "A recursive lookup for prior receipt builders exceeded the command timeout while traversing the inherited script corpus and returned no usable result.",
+      "evidence": "validation/execution-negative-log.json",
+      "recovery": "Retained the timeout, stopped the broad lookup, and used the already verified phase-local validators plus bounded owner-scoped receipt generation.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6427-X2-N03",
+      "origin": "v642-v7_repository_suite_runner_context",
+      "statement": "A complete-suite invocation discovered tests by absolute path while the process remained outside the repository root, so six modules failed import-only loading of the scripts package and the run stopped after 206 tests.",
+      "evidence": "validation/repository-test-receipt.json",
+      "recovery": "Retained the runner-context failure and reran the identical discovery pattern from the repository root so package imports resolved without changing code or host configuration.",
+      "retained": true
+    }
+  ],
+  "boundary": "Append every recovered transition or x2 operational failure; never erase it after a later pass."
+}
