@@ -1,0 +1,25 @@
+{
+  "schema": "ghc.family.v643-v5.checkout-line-ending-materialization-plan.v1",
+  "phase": "v643-gmut-thos-v5-x1-x2",
+  "discovered_by": "first complete x1 repository suite",
+  "failed_suites": [
+    {
+      "passed": 395,
+      "total": 397,
+      "counted_as_pass": false
+    },
+    {
+      "passed": 396,
+      "total": 399,
+      "counted_as_pass": false
+    }
+  ],
+  "cause": "Two immutable JSON files were frozen under opposite raw line-ending materializations while their normalized semantics remained stable.",
+  "repair": "Before tests, verify exact normalized SHA-256 values and materialize only the declared LF or CRLF bytes in the owned checkout.",
+  "shared_validator_changed": false,
+  "historical_manifest_changed": false,
+  "semantic_mutation_accepted": false,
+  "prior_artifact_mutated": false,
+  "new_phase_scoped_regression_tests": 3,
+  "boundary": "This is an owned-checkout materialization step, not a repository-content rewrite, arbitrary hash alias, or scientific, security, or production assurance claim."
+}
