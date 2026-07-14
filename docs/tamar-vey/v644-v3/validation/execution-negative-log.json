@@ -1,7 +1,7 @@
 {
   "schema": "ghc.family.v644-v3.execution-negative-log.v1",
   "phase": "v644-gmut-thos-v3-x1-x2",
-  "x2_operational_negative_count": 10,
+  "x2_operational_negative_count": 11,
   "negatives": [
     {
       "negative_id": "V6443-X2-OP-01",
@@ -90,6 +90,15 @@
       "observed": "A second evidence-A state wrapper still attempted Trim on an empty pipeline value and failed before producing a receipt.",
       "recovery": "Used Out-String before trimming and then proved exact head, detached state, and clean status.",
       "promotion_effect": "The second wrapper failure is retained and is not snapshot-state evidence.",
+      "retained": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6443-X2-OP-11",
+      "origin": "v644-v3-seal-operational",
+      "observed": "The first closeout-snapshot command used an inferred full commit hash, and Git rejected the invalid reference before creating a worktree.",
+      "recovery": "Read the exact full commit from Git, confirmed the target path was still absent, and created a fresh detached closeout snapshot at that exact revision.",
+      "promotion_effect": "The invalid-reference attempt changed no repository state and is not snapshot evidence.",
       "retained": true,
       "external_gate_closed": false
     }

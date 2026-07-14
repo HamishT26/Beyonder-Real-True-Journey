@@ -110,6 +110,15 @@ X2_OPERATIONAL_NEGATIVES = [
         "retained": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6443-X2-OP-11",
+        "origin": "v644-v3-seal-operational",
+        "observed": "The first closeout-snapshot command used an inferred full commit hash, and Git rejected the invalid reference before creating a worktree.",
+        "recovery": "Read the exact full commit from Git, confirmed the target path was still absent, and created a fresh detached closeout snapshot at that exact revision.",
+        "promotion_effect": "The invalid-reference attempt changed no repository state and is not snapshot evidence.",
+        "retained": True,
+        "external_gate_closed": False,
+    },
 ]
 X2_EXTERNAL_FILES = [
     "scripts/build_ghc_family_v644_v3_report.py",

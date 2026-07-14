@@ -7,9 +7,9 @@
   "inherited_count": 1220,
   "x1_operational_count": 6,
   "new_synthetic_count": 70,
-  "x2_operational_count": 10,
-  "new_count": 86,
-  "negative_count": 1306,
+  "x2_operational_count": 11,
+  "new_count": 87,
+  "negative_count": 1307,
   "duplicate_negative_ids": [],
   "all_retained": true,
   "erasure_permitted": false,
@@ -13544,6 +13544,15 @@
       "observed": "A second evidence-A state wrapper still attempted Trim on an empty pipeline value and failed before producing a receipt.",
       "recovery": "Used Out-String before trimming and then proved exact head, detached state, and clean status.",
       "promotion_effect": "The second wrapper failure is retained and is not snapshot-state evidence.",
+      "retained": true,
+      "external_gate_closed": false
+    },
+    {
+      "negative_id": "V6443-X2-OP-11",
+      "origin": "v644-v3-seal-operational",
+      "observed": "The first closeout-snapshot command used an inferred full commit hash, and Git rejected the invalid reference before creating a worktree.",
+      "recovery": "Read the exact full commit from Git, confirmed the target path was still absent, and created a fresh detached closeout snapshot at that exact revision.",
+      "promotion_effect": "The invalid-reference attempt changed no repository state and is not snapshot evidence.",
       "retained": true,
       "external_gate_closed": false
     }
