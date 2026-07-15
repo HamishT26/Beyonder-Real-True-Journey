@@ -1,0 +1,230 @@
+{
+  "schema": "ghc.family.deferred-issuance-validation.v1",
+  "sequence_count": 7,
+  "passed_expectation_count": 7,
+  "valid": true,
+  "results": [
+    {
+      "sequence_id": "VCI-01",
+      "accepted": true,
+      "final_state": "accepted",
+      "terminal": true,
+      "reasons": [],
+      "trace": [
+        {
+          "event": "request",
+          "from": "none",
+          "to": "requested"
+        },
+        {
+          "event": "defer",
+          "from": "requested",
+          "to": "pending"
+        },
+        {
+          "event": "poll_pending",
+          "from": "pending",
+          "to": "pending"
+        },
+        {
+          "event": "issue",
+          "from": "pending",
+          "to": "issued"
+        },
+        {
+          "event": "notify_accepted",
+          "from": "issued",
+          "to": "accepted"
+        }
+      ]
+    },
+    {
+      "sequence_id": "VCI-02",
+      "accepted": true,
+      "final_state": "accepted",
+      "terminal": true,
+      "reasons": [],
+      "trace": [
+        {
+          "event": "request",
+          "from": "none",
+          "to": "requested"
+        },
+        {
+          "event": "defer",
+          "from": "requested",
+          "to": "pending"
+        },
+        {
+          "event": "issue",
+          "from": "pending",
+          "to": "issued"
+        },
+        {
+          "event": "notify_accepted",
+          "from": "issued",
+          "to": "accepted"
+        },
+        {
+          "event": "notify_accepted",
+          "from": "accepted",
+          "to": "accepted"
+        }
+      ]
+    },
+    {
+      "sequence_id": "VCI-03",
+      "accepted": false,
+      "final_state": "expired",
+      "terminal": true,
+      "reasons": [
+        "invalid_transition:expired:issue"
+      ],
+      "trace": [
+        {
+          "event": "request",
+          "from": "none",
+          "to": "requested"
+        },
+        {
+          "event": "defer",
+          "from": "requested",
+          "to": "pending"
+        },
+        {
+          "event": "expire",
+          "from": "pending",
+          "to": "expired"
+        },
+        {
+          "event": "issue",
+          "from": "expired",
+          "to": "expired"
+        }
+      ]
+    },
+    {
+      "sequence_id": "VCI-04",
+      "accepted": false,
+      "final_state": "none",
+      "terminal": false,
+      "reasons": [
+        "invalid_transition:none:issue"
+      ],
+      "trace": [
+        {
+          "event": "issue",
+          "from": "none",
+          "to": "none"
+        }
+      ]
+    },
+    {
+      "sequence_id": "VCI-05",
+      "accepted": false,
+      "final_state": "accepted",
+      "terminal": true,
+      "reasons": [
+        "notification_state_change_on_replay"
+      ],
+      "trace": [
+        {
+          "event": "request",
+          "from": "none",
+          "to": "requested"
+        },
+        {
+          "event": "defer",
+          "from": "requested",
+          "to": "pending"
+        },
+        {
+          "event": "issue",
+          "from": "pending",
+          "to": "issued"
+        },
+        {
+          "event": "notify_accepted",
+          "from": "issued",
+          "to": "accepted"
+        },
+        {
+          "event": "notify_deleted",
+          "from": "accepted",
+          "to": "accepted"
+        }
+      ]
+    },
+    {
+      "sequence_id": "VCI-06",
+      "accepted": true,
+      "final_state": "failed",
+      "terminal": true,
+      "reasons": [],
+      "trace": [
+        {
+          "event": "request",
+          "from": "none",
+          "to": "requested"
+        },
+        {
+          "event": "defer",
+          "from": "requested",
+          "to": "pending"
+        },
+        {
+          "event": "poll_pending",
+          "from": "pending",
+          "to": "pending"
+        },
+        {
+          "event": "poll_pending",
+          "from": "pending",
+          "to": "pending"
+        },
+        {
+          "event": "issue",
+          "from": "pending",
+          "to": "issued"
+        },
+        {
+          "event": "notify_failed",
+          "from": "issued",
+          "to": "failed"
+        }
+      ]
+    },
+    {
+      "sequence_id": "VCI-07",
+      "accepted": false,
+      "final_state": "issued",
+      "terminal": false,
+      "reasons": [
+        "unknown_notification_event"
+      ],
+      "trace": [
+        {
+          "event": "request",
+          "from": "none",
+          "to": "requested"
+        },
+        {
+          "event": "defer",
+          "from": "requested",
+          "to": "pending"
+        },
+        {
+          "event": "issue",
+          "from": "pending",
+          "to": "issued"
+        },
+        {
+          "event": "notify_unknown",
+          "from": "issued",
+          "to": "issued"
+        }
+      ]
+    }
+  ],
+  "boundary": "Synthetic state transitions use no real credentials or keys and do not establish production interoperability, privacy, security, or trust governance."
+}

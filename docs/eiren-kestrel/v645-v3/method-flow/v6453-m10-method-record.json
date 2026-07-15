@@ -1,0 +1,27 @@
+{
+  "method_id": "V6453-M10",
+  "title": "Separate shell yield cadence from process lifetime",
+  "failure_signature": "A one-second process timeout killed the first full-suite invocation before it could produce a test receipt.",
+  "trigger_preconditions": [
+    "a repository suite can exceed the commentary cadence",
+    "the shell tool supports asynchronous output yielding",
+    "the process itself must remain bounded but alive"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_timeout_recovery",
+  "candidate_workaround": "Give the test process a realistic bounded lifetime, let the orchestration layer yield after ten seconds, and poll the live cell while sending concise progress updates.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use tool yielding for responsiveness and reserve process timeouts for genuine upper bounds; never substitute one for the other.",
+  "rollback": "Terminate the live cell if it exceeds the declared upper bound, preserve the incomplete log, and do not call it a test result.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "test_receipt_integrity",
+    "negative_retention",
+    "bounded_execution"
+  ],
+  "retained_negative_ids": [
+    "V6453-X2-N04"
+  ],
+  "scope_boundary": "Timeout recovery establishes only bounded process completion; it cannot improve the scientific or authority status of the tested artifacts."
+}

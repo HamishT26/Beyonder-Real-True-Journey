@@ -1,0 +1,27 @@
+{
+  "method_id": "V6453-M09",
+  "title": "Inspect phase-local schemas before adapting inherited validators",
+  "failure_signature": "The first v645-v3 validator run raised a missing-field exception because it assumed inherited outcome and host-probe field names.",
+  "trigger_preconditions": [
+    "a validator is adapted from an earlier phase",
+    "the current builder uses a phase-local schema",
+    "final receipts depend on exact field names"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_schema_alignment",
+  "candidate_workaround": "Inspect representative current artifacts, bind checks to their exact keys, and rerun the bounded validator without deleting the failed witness.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Before first execution, compare every inherited validator lookup with one current phase artifact and retain mismatches as operational negatives.",
+  "rollback": "Keep the validator invalid and preserve the exception until the schema alignment is reviewed.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "validation_integrity",
+    "negative_retention",
+    "schema_drift"
+  ],
+  "retained_negative_ids": [
+    "V6453-X2-N03"
+  ],
+  "scope_boundary": "Schema alignment repairs a local validator only; it does not upgrade any scientific, operational, legal, cultural, identity, security, accessibility, or Stage 20 claim."
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "ghc.family.v645-v3.bounded-contract.v1",
+  "phase": "v645-gmut-thos-v3-x1-x2",
+  "proposal_id": "V6453-P01",
+  "title": "Method Flow causal-incident graph, counterfactual workaround, and retry-quarantine ledger",
+  "hypothesis": "An append-only incident graph can preserve each operational negative, distinguish observed causes from hypotheses, test a bounded counterfactual workaround, and quarantine repeated retries without treating recovery as independent evidence.",
+  "accepts": [
+    "append-only incident nodes",
+    "failed and passing witnesses",
+    "retry quarantine",
+    "rollback and recommendation"
+  ],
+  "refuses": [
+    "erased failures",
+    "unsupported causal claims",
+    "unbounded retry",
+    "independent-reproduction promotion"
+  ],
+  "evidence": {
+    "method_count": 9,
+    "failed_witness_count": 9,
+    "passing_witness_count": 9
+  },
+  "rollback": "Return the method to observed or candidate, retain every event and failed witness, quarantine the signature, and require a new precondition before retry.",
+  "protected_gates": [
+    "history_rewrite",
+    "private_material",
+    "sibling_authority",
+    "independent_team_reproduction"
+  ],
+  "boundary": "Software and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, legal or cultural authority, independent reproduction, AGI/ASI, complete accessibility, exhaustive security, or Stage 20 readiness."
+}

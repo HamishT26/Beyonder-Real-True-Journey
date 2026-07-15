@@ -1,0 +1,12 @@
+{
+  "schema": "ghc.family.deferred-issuance-fixtures.v1",
+  "sequences": [
+    {"sequence_id": "VCI-01", "events": ["request", "defer", "poll_pending", "issue", "notify_accepted"], "expected_accepted": true},
+    {"sequence_id": "VCI-02", "events": ["request", "defer", "issue", "notify_accepted", "notify_accepted"], "expected_accepted": true},
+    {"sequence_id": "VCI-03", "events": ["request", "defer", "expire", "issue"], "expected_accepted": false},
+    {"sequence_id": "VCI-04", "events": ["issue"], "expected_accepted": false},
+    {"sequence_id": "VCI-05", "events": ["request", "defer", "issue", "notify_accepted", "notify_deleted"], "expected_accepted": false},
+    {"sequence_id": "VCI-06", "events": ["request", "defer", "poll_pending", "poll_pending", "issue", "notify_failed"], "expected_accepted": true},
+    {"sequence_id": "VCI-07", "events": ["request", "defer", "issue", "notify_unknown"], "expected_accepted": false}
+  ]
+}

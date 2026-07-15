@@ -1,0 +1,32 @@
+{
+  "schema": "ghc.family.v645-v3.bounded-contract.v1",
+  "phase": "v645-gmut-thos-v3-x1-x2",
+  "proposal_id": "V6453-P05",
+  "title": "Freed ID deferred credential transaction, notification, replay, and expiry state-machine profile",
+  "hypothesis": "A synthetic state machine can reject malformed or replayed deferred-issuance and notification transitions while preserving the final OpenID4VCI protocol boundaries and reserving real cryptography and interoperability.",
+  "accepts": [
+    "synthetic deferred transaction states",
+    "notification idempotency",
+    "replay and expiry rejection"
+  ],
+  "refuses": [
+    "real credential",
+    "real key",
+    "live interoperability",
+    "production assurance"
+  ],
+  "evidence": {
+    "sequence_count": 7,
+    "passed_expectations": 7
+  },
+  "rollback": "Return to the last valid synthetic state, retain rejected transitions, expose no real credentials, and require standards-conformant keys, live interoperability, privacy and security review, and trust governance for production.",
+  "protected_gates": [
+    "real_keys",
+    "production_identity",
+    "interoperability",
+    "privacy_assurance",
+    "independent_security_review",
+    "trust_governance"
+  ],
+  "boundary": "Software and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, legal or cultural authority, independent reproduction, AGI/ASI, complete accessibility, exhaustive security, or Stage 20 readiness."
+}

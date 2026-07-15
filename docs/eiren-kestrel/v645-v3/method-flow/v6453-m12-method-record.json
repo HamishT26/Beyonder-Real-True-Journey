@@ -1,0 +1,21 @@
+{
+  "method_id": "V6453-M12",
+  "title": "Split large-index staging checks into witnessed bounded steps",
+  "failure_signature": "A combined stage, manifest, review, diff, and status wrapper exceeded its three-minute process bound after writing invalid review receipts.",
+  "trigger_preconditions": [
+    "the inherited index is large",
+    "multiple Git scans are composed in one wrapper",
+    "a failed early receipt requires repair"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_staging_cadence",
+  "candidate_workaround": "Run normalization, staging, manifest, exact review, and status summaries as separate bounded commands so each has a truthful exit status and retry boundary.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not combine repeated large-index scans after a known invalid receipt; bound and witness each lifecycle step separately.",
+  "rollback": "Leave the index staged but uncommitted, inspect the last valid receipt, and do not claim completion.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["commit_integrity", "exact_staged_review", "bounded_execution"],
+  "retained_negative_ids": ["V6453-X2-N06"],
+  "scope_boundary": "Staging cadence improves operational observability only; it is not independent reproduction or substantive validation."
+}
