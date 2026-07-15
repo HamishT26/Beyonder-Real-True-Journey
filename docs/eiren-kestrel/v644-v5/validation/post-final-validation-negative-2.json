@@ -1,0 +1,31 @@
+{
+  "schema": "ghc.family.v644-v5.post-final-validation-negative.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "owner": "Eiren Kestrel",
+  "negative_id": "V6445-VALID-N02",
+  "class": "fresh_clone_line_ending_conversion",
+  "failure_signature": "The first named validation clone passed all 637 repository tests but its detailed validator reported 46 manifest hash and 46 size mismatches after the global checkout policy converted LF files to CRLF.",
+  "observed_validation": {
+    "full_repository_tests": "637/637",
+    "detailed_checks_run": 385,
+    "manifest_hash_mismatches": 46,
+    "manifest_size_mismatches": 46,
+    "other_issues": 0,
+    "privacy_hits": 0,
+    "clone_clean_before_and_after": true
+  },
+  "trigger_preconditions": [
+    "fresh Windows clone inherits global automatic line-ending conversion",
+    "evidence manifest validates exact bytes rather than normalized text"
+  ],
+  "recovery": "Create one fresh named validation clone with repository-local checkout conversion disabled from clone time, then rerun the full suite and detailed byte-manifest validator.",
+  "recurrence_guard": "Declare line-ending policy before checkout whenever exact-byte manifests are part of the acceptance gate; never repair parity with a history rewrite or force push.",
+  "promotion_effect": "The test-only success is retained but the first clone is not promoted as a complete exact-head validation.",
+  "canonical_branch_mutated_by_failure": false,
+  "phase_retained_negative_count": 1488,
+  "post_final_validation_negative_count": 2,
+  "effective_retained_negative_count": 1490,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This is a byte-portability negative. It is not empirical, participant, security-certification, legal, cultural, identity, accessibility-complete, or independent-reproduction evidence."
+}
