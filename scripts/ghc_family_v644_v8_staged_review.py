@@ -23,6 +23,7 @@ APPEND_ONLY_X1 = {
 ALLOWED_EXACT = {
     "scripts/ghc_family_gitlink_visibility.py",
     "scripts/ghc_family_v644_v8_evidence.py",
+    "scripts/ghc_family_v644_v8_final_manifest.py",
     "scripts/ghc_family_v644_v8_model.py",
     "scripts/ghc_family_v644_v8_staged_review.py",
     "scripts/ghc_family_v644_v8_validator.py",

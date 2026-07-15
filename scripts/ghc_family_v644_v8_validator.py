@@ -28,6 +28,7 @@ OWNER_TOOLS = [
     "scripts/ghc_family_v644_v8_model.py",
     "scripts/ghc_family_v644_v8_staged_review.py",
     "scripts/ghc_family_v644_v8_evidence.py",
+    "scripts/ghc_family_v644_v8_final_manifest.py",
     "scripts/ghc_family_v644_v8_validator.py",
     "tests/test_ghc_family_v644_v8_x1.py",
     "tests/test_ghc_family_v644_v8.py",
@@ -140,6 +141,25 @@ def committed_manifest_result(repo: Path, path: Path) -> dict[str, Any]:
     }
 
 
+def staged_manifest_result(repo: Path, path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        return {"present": False, "entry_count": 0, "excluded_count": 0, "mismatches": []}
+    manifest = load(path)
+    specs = [f":{row['path']}" for row in manifest["entries"]]
+    blobs = batch_commit_blobs(repo, specs)
+    mismatches = []
+    for row, spec in zip(manifest["entries"], specs, strict=True):
+        data = blobs[spec]
+        if hashlib.sha256(data).hexdigest() != row["sha256"] or len(data) != row["bytes"]:
+            mismatches.append(row["path"])
+    return {
+        "present": True,
+        "entry_count": manifest["entry_count"],
+        "excluded_count": len(manifest["excluded_self_referential_receipts"]),
+        "mismatches": mismatches,
+    }
+
+
 def validate(
     repo: Path,
     *,
@@ -180,6 +200,7 @@ def validate(
 
     committed_evidence = committed_manifest_result(repo, phase / "reproduction/committed-evidence-manifest.json")
     committed_closeout = committed_manifest_result(repo, phase / "reproduction/committed-closeout-manifest.json")
+    final_staged = staged_manifest_result(repo, phase / "reproduction/final-staged-manifest.json")
     manifest_mismatches: list[str] = []
     if stage == "evidence" or not committed_evidence["present"]:
         for row in manifest["entries"]:
@@ -267,6 +288,8 @@ def validate(
         "committed_evidence_parity_when_required": stage == "evidence" or (not committed_evidence["mismatches"] and committed_evidence["ancestral"]),
         "committed_closeout_present_when_required": stage in {"evidence", "closeout"} or committed_closeout["present"],
         "committed_closeout_parity_when_required": stage in {"evidence", "closeout"} or (not committed_closeout["mismatches"] and committed_closeout["ancestral"]),
+        "final_staged_manifest_present_when_required": stage != "final" or final_staged["present"],
+        "final_staged_manifest_parity_when_required": stage != "final" or (not final_staged["mismatches"] and final_staged["entry_count"] > 0),
         "json_parse_zero_issues": not json_issues,
         "privacy_five_classes_zero_hits": privacy["valid"] and len(privacy["pattern_classes"]) == 5,
         "owner_files_under_15000": len(owner_files) < 15000,
@@ -335,6 +358,7 @@ def validate(
         "manifest_mismatches": manifest_mismatches,
         "committed_evidence": committed_evidence,
         "committed_closeout": committed_closeout,
+        "final_staged_manifest": final_staged,
         "method_states": dict(method_states),
         "same_owner_repeatability_only": True,
         "independent_reproduction": False,
