@@ -23,6 +23,7 @@ def manifest_entries() -> list[dict[str, str | int]]:
     excluded = {
         "docs/tamar-vey/v645-v7/validation/exact-owner-manifest.json",
         "docs/tamar-vey/v645-v7/validation/closeout-staged-manifest.json",
+        "docs/tamar-vey/v645-v7/validation/closeout-staged-review.json",
     }
     entries = []
     for path in owner_files():
@@ -124,7 +125,7 @@ def main() -> int:
         "schema": "ghc.family.v645-v7.exact-owner-manifest.v1",
         "domain": "LF-preserving owner working-tree bytes before exact staging",
         "entry_count": len(entries),
-        "excluded_self_describing_paths": ["docs/tamar-vey/v645-v7/validation/exact-owner-manifest.json", "docs/tamar-vey/v645-v7/validation/closeout-staged-manifest.json"],
+        "excluded_self_describing_paths": ["docs/tamar-vey/v645-v7/validation/exact-owner-manifest.json", "docs/tamar-vey/v645-v7/validation/closeout-staged-manifest.json", "docs/tamar-vey/v645-v7/validation/closeout-staged-review.json"],
         "entries": entries,
         "valid": True,
         "boundary": "Manifest parity is an integrity check, not security or privacy completeness.",
