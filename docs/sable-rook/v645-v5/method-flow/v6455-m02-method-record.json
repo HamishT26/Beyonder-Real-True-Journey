@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M02",
+  "title": "Assign ordered hash literals before enumeration in Windows PowerShell",
+  "failure_signature": "The first live-verification script failed at parse time because an ordered hash literal was enumerated inline without parentheses.",
+  "trigger_preconditions": [
+    "Windows PowerShell 5.1",
+    "ordered hash enumeration"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Assign ordered PowerShell hash literals to named variables before calling instance methods.",
+  "validation_witness_ids": [
+    "V6455-W02-F",
+    "V6455-W02-P"
+  ],
+  "recurrence_guard": "Avoid method calls directly on ordered-hashtable literals in Windows PowerShell 5.1.",
+  "rollback": "Retain the parser failure and make no repository mutation until the corrected proof passes.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X1-N02"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

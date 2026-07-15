@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M06",
+  "title": "Reject high-overlap semantic collisions after exact-title checks pass",
+  "failure_signature": "Manual overlap review found that the first P08 link-purpose candidate repeated v6442-P08 and the first P09 Onsager candidate repeated v6442-P09 despite zero exact normalized-title collisions.",
+  "trigger_preconditions": [
+    "exact-title audit passed",
+    "token or manual review shows a shared central mechanism"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Use exact-title checks only as the first novelty gate, then inspect high token overlaps and compare mission, evidence, falsifier, and recovery semantics manually.",
+  "validation_witness_ids": [
+    "V6455-W06-F",
+    "V6455-W06-P"
+  ],
+  "recurrence_guard": "Do not freeze a proposal whose closest predecessor covers the same central mechanism, even when wording differs.",
+  "rollback": "Keep the candidate rejected, preserve its comparison evidence, and redesign before the x1 commit.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X1-N06"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

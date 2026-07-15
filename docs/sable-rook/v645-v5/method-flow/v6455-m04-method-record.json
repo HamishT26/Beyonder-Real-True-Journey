@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M04",
+  "title": "Parse proposal JSON when line-oriented title filters return no evidence",
+  "failure_signature": "A title-only ripgrep filter returned no matches even though known proposal titles contained target terms.",
+  "trigger_preconditions": [
+    "formatted JSON records",
+    "semantic title or field query"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Use structured JSON parsing for semantic ledger queries and reserve rg for discovery or literal text checks.",
+  "validation_witness_ids": [
+    "V6455-W04-F",
+    "V6455-W04-P"
+  ],
+  "recurrence_guard": "An empty line-regex result is never evidence of semantic absence until the structured field query agrees.",
+  "rollback": "Withdraw the novelty conclusion and rerun from parsed records.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X1-N04"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}
