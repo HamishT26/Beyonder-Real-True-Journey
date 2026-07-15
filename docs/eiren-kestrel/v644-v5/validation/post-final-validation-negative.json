@@ -1,0 +1,28 @@
+{
+  "schema": "ghc.family.v644-v5.post-final-validation-negative.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "owner": "Eiren Kestrel",
+  "negative_id": "V6445-VALID-N01",
+  "class": "archive_git_metadata_dependency",
+  "failure_signature": "The archive-only full-suite replay failed the inherited v641-v4 tool-integrity rebuild because a Git archive intentionally contains no repository metadata.",
+  "failed_test": "test_ghc_family_v641_v4.BodyHeartAndSecurityTests.test_security_and_tool_integrity_rebuild",
+  "observed_suite_prefix": {
+    "tests_run_before_failfast": 61,
+    "failures": 1,
+    "errors": 0
+  },
+  "trigger_preconditions": [
+    "full repository suite executed inside a metadata-free Git archive",
+    "inherited integrity test compares worktree state with the Git index"
+  ],
+  "recovery": "Keep the archive for content-only JSON, manifest, and privacy checks; run the exact-head full suite in one fresh named local validation clone with complete Git metadata.",
+  "recurrence_guard": "Classify tests by metadata dependency before choosing archive-only replay; use a fresh named clone, never a detached worktree, when the suite contains Git-index integrity assertions.",
+  "promotion_effect": "The archive-only suite is rejected and is not counted as a successful full replay.",
+  "canonical_branch_mutated_by_failure": false,
+  "phase_retained_negative_count": 1488,
+  "post_final_validation_negative_count": 1,
+  "effective_retained_negative_count": 1489,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This is a workflow portability negative, not scientific, security, accessibility, legal, cultural, identity, or independent-reproduction evidence."
+}
