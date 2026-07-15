@@ -1,0 +1,32 @@
+{
+  "schema": "ghc.family.v644-v5.v6445-p05.contract.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "proposal_id": "V6445-P05",
+  "title": "Freed ID status-list cache-age, epoch-rollback, and revocation-window profile",
+  "observed_disposition": "represented",
+  "baseline": {
+    "list_purpose": "revocation",
+    "issuer_epoch": 4,
+    "observed_epoch": 4,
+    "cache_age_seconds": 60,
+    "maximum_cache_age_seconds": 300,
+    "retrieval_failure_policy": "indeterminate_not_valid",
+    "claim_class": "synthetic_proxy_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A synthetic profile can reject stale or rolled-back credential-status material and calculate a bounded unresolved exposure window without producing production identity assurance.",
+  "falsifier_or_gate": "Mutate list purpose, status bit, issuer epoch, observed epoch, issued time, retrieval time, maximum cache age, failure policy, privacy class, and claim class; stale, rolled-back, ambiguous, or promoted rows must fail.",
+  "protected_gates": [
+    "real_keys",
+    "real_proofs",
+    "live_issuance",
+    "live_resolution",
+    "live_status_revocation",
+    "interoperability",
+    "privacy_review",
+    "security_review",
+    "trust_governance",
+    "production"
+  ],
+  "boundary": "Structural or proxy acceptance is confined to the declared model. It does not promote empirical, participant, authority, production, security, accessibility, identity, or Stage 20 claims."
+}

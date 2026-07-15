@@ -1,0 +1,27 @@
+{
+  "schema": "ghc.family.v644-v5.v6445-p08.contract.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "proposal_id": "V6445-P08",
+  "title": "Skip-link, focus-visible, and bypass-block static-report audit",
+  "observed_disposition": "completed",
+  "baseline": {
+    "skip_link_first": true,
+    "unique_main_target": true,
+    "keyboard_reachable": true,
+    "focus_visible": true,
+    "target_not_hidden": true,
+    "manual_user_evaluation": false,
+    "claim_class": "static_structural_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A static audit can reject reports lacking a working first-use bypass mechanism, a unique main target, or visible keyboard focus while reserving manual and affected-user conformance.",
+  "falsifier_or_gate": "Mutate link order, target identifier, target count, keyboard reachability, focus visibility, landmark role, hidden state, and completeness claim; broken bypass or promotion must fail.",
+  "protected_gates": [
+    "manual_accessibility_evaluation",
+    "assistive_technology_coverage",
+    "cognitive_accessibility_review",
+    "affected_user_evaluation",
+    "accessibility_complete"
+  ],
+  "boundary": "Structural or proxy acceptance is confined to the declared model. It does not promote empirical, participant, authority, production, security, accessibility, identity, or Stage 20 claims."
+}

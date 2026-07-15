@@ -139,9 +139,11 @@ class TestV644V5X1Artifacts(unittest.TestCase):
         )
 
     def test_x1_has_no_x2_results(self) -> None:
-        self.assertFalse((PHASE / "x2-proposal-ledger.json").exists())
-        self.assertFalse((PHASE / "phase-truth.json").exists())
-        self.assertFalse((ROOT / "scripts" / "ghc_family_v644_v5_evidence.py").exists())
+        frozen = self.load("validation/x1-exact-file-set.json")
+        paths = set(frozen["expected_files"])
+        self.assertNotIn("docs/eiren-kestrel/v644-v5/x2-proposal-ledger.json", paths)
+        self.assertNotIn("docs/eiren-kestrel/v644-v5/phase-truth.json", paths)
+        self.assertNotIn("scripts/ghc_family_v644_v5_evidence.py", paths)
 
     def test_route_is_prepared_not_sent(self) -> None:
         route = self.load("workflow/route-preregistration.json")
