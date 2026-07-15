@@ -1,0 +1,23 @@
+{
+  "schema": "ghc.family.v644-v8.named-validation-lane-preregistration.v1",
+  "phase": "v644-gmut-thos-v8-x1-x2",
+  "owner_generated_file_threshold": 15000,
+  "canonical_rule": "The fast-forward-only Orin canonical sequential branch remains authoritative for all commits and pushes.",
+  "validation_rule": "Run recent v641-v660 round-robin and v644-v8 scoped checks in the canonical lane, then exactly one additional bounded replay in a fresh clean named Orin validation lane.",
+  "required_properties": [
+    "named branch and named worktree",
+    "exact final head",
+    "clean before and after",
+    "LF-preserving checkout",
+    "no push and no canonical authority",
+    "same-owner repeatability label only"
+  ],
+  "forbidden": [
+    "detached-worktree validation",
+    "full repository suite by this non-Eiren owner",
+    "host configuration or security changes",
+    "history rewrite, force push, merge, or sibling mutation",
+    "independent-reproduction claim"
+  ],
+  "boundary": "The named lane is one bounded same-owner replay, not a canonical cutover, exhaustive validation, or independent reproduction."
+}

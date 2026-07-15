@@ -1,0 +1,27 @@
+{
+  "method_id": "V6448-M04",
+  "title": "Explicit collection before Windows PowerShell report pipelines",
+  "failure_signature": "A direct pipeline from a foreach statement was rejected as an empty pipe element.",
+  "trigger_preconditions": [
+    "Windows PowerShell statement grammar",
+    "foreach output",
+    "JSON report serialization"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Collect the foreach results in an explicit array and pipe that expression to the serializer.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use expression collection boundaries around statement output before pipelines on this host.",
+  "rollback": "Retain the parser error, emit no similarity conclusion, and rerun only the corrected read-only report.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "semantic_novelty",
+    "private_material",
+    "history_rewrite"
+  ],
+  "retained_negative_ids": [
+    "V6448-X1-N05"
+  ],
+  "scope_boundary": "Report-shaping reliability only; token similarity remains a screen, not proof of semantic novelty."
+}

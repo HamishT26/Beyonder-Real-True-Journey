@@ -1,0 +1,15 @@
+{
+  "witness_id": "V6448-M08-W01",
+  "method_id": "V6448-M08",
+  "scope": "Exact v644-v8 x1 staged index and canonical working tree newline classification.",
+  "procedure": "Enumerate the exact staged paths with git ls-files --eol and run git diff --cached --check without changing repository or host configuration.",
+  "expected": "Every staged blob is LF-normalized, diff hygiene passes, working-tree CRLF variation is disclosed, and cross-checkout parity remains reserved for the named replay.",
+  "observed": "All 48 staged index entries were i/lf and cached diff hygiene passed; the canonical working tree showed 20 w/lf and 25 w/crlf text rows, so the conversion warning remains retained and the named replay is still required.",
+  "result": "pass",
+  "retained_negative_ids": [
+    "V6448-X1-N08"
+  ],
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This validates the x1 Git-blob newline domain only; it does not establish clean-checkout parity, independent reproduction, or final validation."
+}

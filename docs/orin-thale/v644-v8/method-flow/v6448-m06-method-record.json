@@ -1,0 +1,28 @@
+{
+  "method_id": "V6448-M06",
+  "title": "Small exact-context semantic patches after mechanical rewrites",
+  "failure_signature": "A multi-region patch was rejected because one context line had already changed during the mechanical scaffold rewrite.",
+  "trigger_preconditions": [
+    "mechanically rewritten compatibility scaffold",
+    "multi-region semantic patch",
+    "mixed stale and current context"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_edit",
+  "candidate_workaround": "Read the current UTF-8 source and apply independent semantic regions with exact present context, then compile and inspect stale markers.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never assume predecessor context survives a version rewrite; keep semantic patch regions small and verify the resulting file before promotion.",
+  "rollback": "An atomic rejection changes no file; retain the negative and retry only after exact source inspection.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "history_rewrite",
+    "destructive_action",
+    "private_material",
+    "sibling_lane"
+  ],
+  "retained_negative_ids": [
+    "V6448-X1-N06"
+  ],
+  "scope_boundary": "Patch transport and semantic targeting only; successful application still requires tests and content review."
+}

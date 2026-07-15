@@ -1,0 +1,30 @@
+{
+  "method_id": "V6448-M01",
+  "title": "Bounded single-surface audit after shared-envelope timeouts",
+  "failure_signature": "A shared short envelope and then a short login-shell listing timed out before returning complete audit evidence.",
+  "trigger_preconditions": [
+    "large inherited checkout",
+    "recursive discovery and runner startup",
+    "shared or undersized command window",
+    "D-drive metadata latency"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Run non-login, single-surface searches or allowlisted reads with independently measured windows and retain only complete child receipts.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never infer audit completion from a timed-out parent; separate recursive discovery from runner startup and preserve each completed witness independently.",
+  "rollback": "Retain the failed receipts, make no evidentiary promotion from them, and return to the clean canonical lane before bounded read-only retries.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "sibling_lane",
+    "history_rewrite",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6448-X1-N01",
+    "V6448-X1-N02"
+  ],
+  "scope_boundary": "Operational audit shaping only; it does not validate proposal novelty, repository content, scientific claims, or independent reproduction."
+}

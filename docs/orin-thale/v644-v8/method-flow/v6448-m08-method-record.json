@@ -1,0 +1,29 @@
+{
+  "method_id": "V6448-M08",
+  "title": "Git-blob newline domain with clean named-lane replay",
+  "failure_signature": "Exact staging emitted future LF-to-CRLF working-copy conversion warnings for new text files.",
+  "trigger_preconditions": [
+    "Windows checkout",
+    "line-ending conversion",
+    "exact Git-blob manifest",
+    "later clean named replay"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Use normalized staged Git blobs for hashes, inspect CRLF and LF counts and diff hygiene explicitly, then require one LF-preserving clean named-lane replay at the exact final head.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never claim cross-checkout byte parity from a warning-bearing working tree alone; bind manifests to Git blobs and retain the warning until the exact named replay passes.",
+  "rollback": "Stop before commit if staged blobs, content seals, or diff hygiene disagree; retain the warning and repair only phase-owned files without changing repository-wide configuration.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "host_configuration_change",
+    "history_rewrite",
+    "sibling_lane",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6448-X1-N08"
+  ],
+  "scope_boundary": "Newline and manifest portability only; the later same-owner named replay is not independent reproduction."
+}

@@ -1,0 +1,28 @@
+{
+  "method_id": "V6448-M03",
+  "title": "One-language traversal for chained JSON indices",
+  "failure_signature": "An inline Python f-string embedded through PowerShell was corrupted before Python parsing.",
+  "trigger_preconditions": [
+    "nested command-language parsers",
+    "inline Python source",
+    "f-string dictionary lookups",
+    "recursive JSON index traversal"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Traverse the inherited-index chain in one PowerShell process, collecting records after recursion so order and count remain explicit.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use one parser for structured chain walks; if reusable complexity grows, implement a family-named committed runner rather than another inline multilanguage expression.",
+  "rollback": "Retain the syntax fault, make no proposal-count claim from it, and rerun only with a single-language traversal.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "semantic_novelty",
+    "private_material",
+    "history_rewrite"
+  ],
+  "retained_negative_ids": [
+    "V6448-X1-N04"
+  ],
+  "scope_boundary": "Index traversal reliability only; complete extraction still requires semantic review for novelty."
+}

@@ -1,0 +1,28 @@
+{
+  "method_id": "V6448-M05",
+  "title": "Case-sensitive ordered-pair compatibility scaffold",
+  "failure_signature": "An inherited PowerShell hash-map rewrite failed because case-insensitive keys collapsed upper- and lower-case phase tokens.",
+  "trigger_preconditions": [
+    "versioned compatibility copy",
+    "replacement tokens differing only by case",
+    "new destination files only"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_edit",
+  "candidate_workaround": "Require destination absence, copy only the predecessor scaffold, apply an ordered array of case-sensitive String.Replace pairs, and inspect all stale phase markers before semantic edits.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never use a case-insensitive dictionary for phase tokens that differ only by case; never promote a mechanical copy without explicit stale-marker and diff review.",
+  "rollback": "If creation or inspection fails, retain the fault, remove no history, and leave the unpromoted new files out of the x1 commit until corrected.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "sibling_lane",
+    "history_rewrite",
+    "destructive_action",
+    "private_material"
+  ],
+  "retained_negative_ids": [
+    "V6447-X1-N06"
+  ],
+  "scope_boundary": "Mechanical version compatibility only; semantic correctness still requires explicit patch review and tests."
+}

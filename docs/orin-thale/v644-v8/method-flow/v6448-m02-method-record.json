@@ -1,0 +1,28 @@
+{
+  "method_id": "V6448-M02",
+  "title": "Literal-safe JSON field probes across PowerShell",
+  "failure_signature": "A multiply escaped JSON-field alternation reached ripgrep as an invalid unclosed group.",
+  "trigger_preconditions": [
+    "orchestrator string literal",
+    "PowerShell command parsing",
+    "ripgrep regular expression",
+    "quoted JSON field names"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Use an exact file and a single-quoted regex or fixed-string query, then inspect the complete result independently.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Avoid layered backslash escaping for JSON key probes; validate one literal-safe pattern before combining search operations.",
+  "rollback": "Retain the parser failure, make no repository inference from it, and rerun only after reducing the quoting layers.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "semantic_novelty",
+    "private_material",
+    "history_rewrite"
+  ],
+  "retained_negative_ids": [
+    "V6448-X1-N03"
+  ],
+  "scope_boundary": "Search transport only; a successful field probe is not by itself a semantic novelty determination."
+}
