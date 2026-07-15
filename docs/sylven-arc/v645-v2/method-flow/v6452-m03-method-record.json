@@ -1,0 +1,27 @@
+{
+  "method_id": "v6452-m03",
+  "title": "Treat passing witnesses as state transitions",
+  "failure_signature": "After a passing witness automatically promoted a method to validated, a redundant explicit validated transition was rejected as validated-to-validated.",
+  "trigger_preconditions": [
+    "Passing witness appended to a candidate method",
+    "Runner auto-promotion enabled",
+    "Explicit duplicate set-state invocation"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "After appending a witness, inspect the runner result or summary and call set-state only when a distinct allowed transition remains necessary.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Model witness append as a possible state mutation; never issue an unconditional duplicate promotion.",
+  "rollback": "The rejected duplicate transition did not change the ledger; retain it and continue from the auto-promoted validated state.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Append-only Method Flow history",
+    "No silent state rewrites",
+    "No erasure of recovered failures"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N03"
+  ],
+  "scope_boundary": "This method addresses Method Flow state handling only and proves no scientific, authority, production, deployment, privacy, security, accessibility, identity, personhood, or independent-reproduction claim."
+}

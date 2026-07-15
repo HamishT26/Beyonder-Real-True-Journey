@@ -1,0 +1,17 @@
+# Sylven Arc v645-v2 source ledger
+
+Inherited sources: 225. Added sources: 9. Effective sources: 234.
+
+| ID | Status | Authority | Title | Evidence role |
+|---|---|---|---|---|
+| V6452-S232 | stable | Steven G. Avery and Burkhard U. W. Schwab | [Noether's Second Theorem and Ward Identities for Gauge Symmetries](https://arxiv.org/abs/1510.07038) | primary local gauge symmetry and Noether-identity anchor; not validation of GMUT, a unique prediction, proof, canon, or empirical confirmation |
+| V6452-S233 | current | Gravitational Wave Open Science Center | [The O4a Data Release](https://gwosc.org/O4/O4a/) | official public strain, segment, calibration-context, injection, and release-lineage anchor; no data were downloaded and no polarization fit or likelihood was produced |
+| V6452-S234 | current | United Kingdom Health and Safety Executive | [Shift handover](https://www.hse.gov.uk/humanfactors/topics/shift-handover.htm) | official task-relevant communication and continuity vocabulary for a bounded synthetic handover lens; not operational authorization or evidence of a drinking-water outcome |
+| V6452-S235 | current | United Kingdom Health and Safety Executive | [Alarm management](https://www.hse.gov.uk/humanfactors/topics/alarm-management.htm) | official alarm relevance, defined-response, timing, and human-capability vocabulary; not a real THOS arm, plant safety decision, or operator-effectiveness result |
+| V6452-S236 | current | OpenID Foundation | [OpenID for Verifiable Presentations 1.0 Errata Revision - DCQL Section 6](https://openid.net/specs/openid-4-verifiable-presentations-1_0.html) | official DCQL credential-query, credential-set, option, required-set, and selective-disclosure vocabulary; not production Freed ID conformance, real proofs, interoperability, privacy assurance, or trust governance |
+| V6452-S237 | current | New Zealand Legislation | [Water Services Economic Efficiency and Consumer Protection Act 2023 - current consolidation](https://www.legislation.govt.nz/act/public/2023/54/en/latest/) | current statutory consumer-protection and hardship vocabulary only; this phase makes no legal interpretation, decision, enacted-law completeness claim, or authority substitution |
+| V6452-S238 | current | New Zealand Legislation | [Local Government (Water Services) Act 2025 - current consolidation](https://legislation.govt.nz/act/public/2025/42/en/latest/) | current affected-consumer and continuity-of-supply vocabulary only; not legal advice, a tariff or hardship decision, Maori authority, cultural legitimacy, or enacted-law interpretation |
+| V6452-S239 | current | Git project | [Git index-format documentation - stages and resolve undo](https://git-scm.com/docs/index-format.html) | primary index-stage, conflict multiplicity, and resolve-undo vocabulary; not authorization to mutate, resolve, merge, or rewrite repository state |
+| V6452-S240 | stable | National Bureau of Standards, now National Institute of Standards and Technology | [Selected Properties of Hydrogen - Joule-Thomson Coefficient](https://nvlpubs.nist.gov/nistpubs/Legacy/MONO/nbsmonograph168.pdf) | official thermodynamic derivative, constant-enthalpy, sign, unit, and inversion-curve context; not a psyche measurement, participant result, or cross-domain law |
+
+Official and primary sources constrain vocabulary and obligations. They do not supply missing observations, authority, participant outcomes, production assurance, or independent reproduction.

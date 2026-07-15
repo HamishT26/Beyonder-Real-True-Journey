@@ -1,0 +1,28 @@
+{
+  "method_id": "v6452-m10",
+  "title": "Emit LF explicitly from owner generators",
+  "failure_signature": "Restaging through repository-default filters still left twenty-four CRLF staged blobs and twenty-six LF text blobs, so staged parity remained false.",
+  "trigger_preconditions": [
+    "Owner generator used platform-default text writing",
+    "Generated working-tree artifacts contained CRLF",
+    "Repository filters did not normalize every generated path in the candidate index"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Make owner write_json and write_text use explicit newline='\\n', regenerate only owner-scoped x1 artifacts, restage through ordinary Git, and verify zero CRLF staged blobs before review.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "All new family generators must pin LF at write time and still review the staged index rather than relying on host filters.",
+  "rollback": "Regenerate only the uncommitted owner packet from frozen definitions; do not alter inherited files, Git configuration, history, or sibling state.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Owner-scoped writes only",
+    "No host Git configuration mutation",
+    "Exact staged-blob parity",
+    "No inherited-file rewrite"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N10"
+  ],
+  "scope_boundary": "This method addresses owner-generated newline determinism only and proves no scientific, privacy, security, accessibility, identity, authority, or independent-reproduction claim."
+}

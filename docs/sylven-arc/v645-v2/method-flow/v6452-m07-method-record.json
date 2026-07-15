@@ -1,0 +1,27 @@
+{
+  "method_id": "v6452-m07",
+  "title": "Use a complete collector for pre-definition audits",
+  "failure_signature": "The inherited-source collision probe imported the new preregistration builder before its x1 definitions module existed and stopped with ModuleNotFoundError.",
+  "trigger_preconditions": [
+    "Mechanically scaffolded builder present",
+    "Phase-specific definitions not yet created",
+    "Read-only audit imported the incomplete new module"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Run the compatible collector from the complete predecessor builder until the new definitions module exists, then validate the new import explicitly.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Preflight local module dependencies before importing a newly scaffolded phase tool.",
+  "rollback": "No source row or repository artifact was changed by the failed import; retain the failure and rerun only the read-only collector from a complete module.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No inferred audit result from failed imports",
+    "No sibling-lane mutation",
+    "No source-ledger collision suppression"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N07"
+  ],
+  "scope_boundary": "This method addresses local dependency order only and proves no scientific, legal, cultural, security, identity, authority, or independent-reproduction claim."
+}

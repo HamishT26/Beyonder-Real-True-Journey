@@ -1,0 +1,28 @@
+{
+  "method_id": "v6452-m09",
+  "title": "Preserve repository filters during exact staging",
+  "failure_signature": "The first exact staged review found seventeen content-seal mismatches and diff-check failures because a command-local core.autocrlf=false override staged CRLF bytes instead of the repository's normalized LF blobs.",
+  "trigger_preconditions": [
+    "Generated working-tree artifacts contained CRLF",
+    "Content seal used repository-filtered Git blob semantics",
+    "Restaging disabled the repository line-ending filter for one command"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Restage the exact file set with repository-default filters, retain recurring conversion warnings under N08, verify all staged blobs are LF, then rerun the exact review without changing host configuration.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not override repository clean filters when the manifest or content seal is defined over repository-filtered Git blobs.",
+  "rollback": "Replace only the candidate index entries by restaging the same owned files through repository-default filters; do not alter working-tree content, Git configuration, history, or sibling state.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Exact staged-blob parity",
+    "No host Git configuration mutation",
+    "No content-seal weakening",
+    "No sibling-lane mutation"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N09"
+  ],
+  "scope_boundary": "This method addresses staged newline and seal parity only and proves no scientific, privacy, security, accessibility, identity, authority, or independent-reproduction claim."
+}

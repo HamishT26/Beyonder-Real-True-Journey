@@ -1,0 +1,27 @@
+{
+  "method_id": "v6452-m01",
+  "title": "Bound environment probes by literal scope",
+  "failure_signature": "A read-only parent-walk plus drive-capacity probe exceeded a ten-second PowerShell budget and returned no evidence.",
+  "trigger_preconditions": [
+    "Cold PowerShell startup",
+    "Parent-directory traversal and drive query in one child command",
+    "Ten-second child-command timeout"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Split the probe into direct literal-path AGENTS.md checks and a separately bounded drive query with a thirty-second budget.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use literal paths and at least thirty seconds for cold read-only environment probes; never bundle directory traversal with unrelated capacity queries.",
+  "rollback": "No repository, branch, route, or host state changed; retain the timeout and resume from the last verified source gate.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Read applicable repository instructions before owner-file edits",
+    "No sibling-lane mutation",
+    "No private local path publication"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N01"
+  ],
+  "scope_boundary": "This method addresses local command latency only and proves no scientific, authority, production, deployment, privacy, security, accessibility, identity, personhood, or independent-reproduction claim."
+}

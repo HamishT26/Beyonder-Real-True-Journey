@@ -1,0 +1,27 @@
+{
+  "method_id": "v6452-m04",
+  "title": "Preflight Method Flow summarize output flags",
+  "failure_signature": "The summarize subcommand rejected an inferred --out argument after earlier record and witness operations had already succeeded.",
+  "trigger_preconditions": [
+    "Method Flow ledger contained valid methods and witnesses",
+    "Summarize output flag inferred from another tool",
+    "Argument parser rejected the unsupported flag before summary generation"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Read summarize --help, use its exact output flag, and leave already-appended ledger events untouched.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Preflight every Method Flow subcommand interface independently because their file flags are intentionally command-specific.",
+  "rollback": "No summary file was created and prior append-only ledger events remain valid; retain the rejected invocation and retry only summary generation.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Append-only Method Flow history",
+    "No rollback of successful record or witness events",
+    "No silent tooling-fault deletion"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N04"
+  ],
+  "scope_boundary": "This method addresses summary CLI invocation only and proves no scientific, authority, production, deployment, privacy, security, accessibility, identity, personhood, or independent-reproduction claim."
+}

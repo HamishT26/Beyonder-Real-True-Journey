@@ -1,0 +1,27 @@
+{
+  "method_id": "v6452-m06",
+  "title": "Serialize large source-slice inspection",
+  "failure_signature": "A four-command parallel inspection of large inherited scripts exceeded a thirty-second aggregate budget after only one slice returned.",
+  "trigger_preconditions": [
+    "Multiple cold PowerShell readers",
+    "Large generated Python sources",
+    "Parallel aggregate with a thirty-second per-command timeout"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Read required large script slices serially with a sixty-second bound and credit only commands that exit zero.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not parallelize large generated-source reads on this host; inspect targeted line ranges serially.",
+  "rollback": "No source or repository state changed; discard the incomplete aggregate as a review witness while retaining its timeout.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No partial-output promotion",
+    "No hidden script assumptions",
+    "No sibling-lane mutation"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N06"
+  ],
+  "scope_boundary": "This method addresses local source-inspection latency only and proves no scientific, production, security, accessibility, identity, authority, or independent-reproduction claim."
+}

@@ -1,0 +1,27 @@
+{
+  "method_id": "v6452-m02",
+  "title": "Preflight Method Flow runner subcommand flags",
+  "failure_signature": "The first Method Flow append used an unsupported --input flag; argparse stopped before mutating the initialized ledger.",
+  "trigger_preconditions": [
+    "Runner subcommand invoked from memory rather than its exact help contract",
+    "Record file existed and the ledger was initialized",
+    "Argument parsing occurred before ledger mutation"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Use the runner's documented --record-file flag and preflight exact subcommand help when an interface has not yet been exercised in the phase.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Copy exact runner flags from the current skill implementation or subcommand help; do not infer flag names from adjacent tools.",
+  "rollback": "No ledger entry or other repository state was changed by the rejected invocation; preserve the failed command as evidence and retry once with the exact flag.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Append-only Method Flow history",
+    "No erasure of tooling failures after recovery",
+    "No sibling-lane mutation"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N02"
+  ],
+  "scope_boundary": "This method addresses runner invocation accuracy only and proves no scientific, authority, production, deployment, privacy, security, accessibility, identity, personhood, or independent-reproduction claim."
+}

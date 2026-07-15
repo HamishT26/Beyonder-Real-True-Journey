@@ -1,0 +1,28 @@
+{
+  "method_id": "v6452-m08",
+  "title": "Separate staged-index bytes from future working-copy conversion",
+  "failure_signature": "The exact x1 staging pass succeeded but Git warned that twenty-one LF working-copy files may be replaced by CRLF the next time Git touches them.",
+  "trigger_preconditions": [
+    "Windows checkout line-ending conversion policy",
+    "New UTF-8 text artifacts with LF working-copy bytes",
+    "Exact Git add of the x1 packet"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Treat staged Git blobs as the commit and content-seal domain, verify their newline form directly, and reserve working-tree portability for the one clean named replay.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Keep index-byte and working-tree-byte claims separate; never infer cross-checkout parity from a successful stage operation.",
+  "rollback": "No rollback is needed because staging succeeded; retain the warnings, stop if staged blob parity fails, and make no host line-ending configuration change.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No host Git configuration mutation",
+    "Exact staged-blob review",
+    "Named-lane portability reservation",
+    "No independent-reproduction claim"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6452-X1-N08"
+  ],
+  "scope_boundary": "This method addresses newline portability only and proves no scientific, privacy, security, accessibility, authority, identity, or independent-reproduction claim."
+}
