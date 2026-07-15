@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M08",
+  "title": "Quote upstream revision expressions in PowerShell Git commands",
+  "trigger_preconditions": [
+    "PowerShell shell",
+    "Git revision expression contains braces"
+  ],
+  "failure_signature": "The first post-push equality wrapper let PowerShell reinterpret an unquoted upstream revision expression, so the divergence subcommand failed although all four hashes printed equal.",
+  "candidate_workaround": "Quote reflog-style and upstream revision expressions as literal Git arguments when invoked from PowerShell.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W08-F",
+    "V6454-W08-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N01"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Never leave braces in a Git revision expression open to PowerShell parsing.",
+  "rollback": "Treat divergence as unproved and do not enter x2 until the literal read-only proof passes.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

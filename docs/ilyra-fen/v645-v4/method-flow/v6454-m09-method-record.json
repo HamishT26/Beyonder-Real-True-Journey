@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M09",
+  "title": "Materialize PowerShell foreach output before pipeline conversion",
+  "trigger_preconditions": [
+    "PowerShell shell",
+    "foreach output must feed another cmdlet"
+  ],
+  "failure_signature": "The first x2 runner inventory probe piped directly after a foreach statement and stopped with an empty-pipe parser error.",
+  "candidate_workaround": "Materialize foreach results into an explicit array before applying downstream PowerShell pipeline operators.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W09-F",
+    "V6454-W09-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N02"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Use assignment or grouping whenever a foreach statement feeds a pipeline.",
+  "rollback": "Stop the inventory probe and use one literal Test-Path command per runner if array materialization fails.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

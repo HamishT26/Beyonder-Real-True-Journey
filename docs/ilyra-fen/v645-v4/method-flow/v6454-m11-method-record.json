@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M11",
+  "title": "Allow the immutable-x1 verification test in x2 staged scope",
+  "trigger_preconditions": [
+    "an x2 change strengthens x1 commit verification",
+    "the changed test remains phase-owned"
+  ],
+  "failure_signature": "The first evidence-stage review rejected the updated v645-v4 x1 test because the allowlist named only the new x2 test, even though privacy and lifecycle checks were clean.",
+  "candidate_workaround": "Bind lifecycle staged scope to the exact phase test set, including tests strengthened to inspect an immutable earlier commit.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W11-F",
+    "V6454-W11-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N04"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Review every allowlist addition by exact path and require unchanged privacy and lifecycle checks.",
+  "rollback": "Keep the evidence commit blocked if any test path is not phase-owned or if widening changes another gate.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

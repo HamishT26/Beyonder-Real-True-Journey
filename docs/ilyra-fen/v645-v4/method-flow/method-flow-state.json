@@ -207,6 +207,209 @@
       "rollback": "Keep the commit blocked and retain the finding if normalization would alter semantic content.",
       "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
       "supersedes": []
+    },
+    {
+      "method_id": "V6454-M08",
+      "title": "Quote upstream revision expressions in PowerShell Git commands",
+      "trigger_preconditions": [
+        "PowerShell shell",
+        "Git revision expression contains braces"
+      ],
+      "failure_signature": "The first post-push equality wrapper let PowerShell reinterpret an unquoted upstream revision expression, so the divergence subcommand failed although all four hashes printed equal.",
+      "candidate_workaround": "Quote reflog-style and upstream revision expressions as literal Git arguments when invoked from PowerShell.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W08-F",
+        "V6454-W08-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N01"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never leave braces in a Git revision expression open to PowerShell parsing.",
+      "rollback": "Treat divergence as unproved and do not enter x2 until the literal read-only proof passes.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
+    },
+    {
+      "method_id": "V6454-M09",
+      "title": "Materialize PowerShell foreach output before pipeline conversion",
+      "trigger_preconditions": [
+        "PowerShell shell",
+        "foreach output must feed another cmdlet"
+      ],
+      "failure_signature": "The first x2 runner inventory probe piped directly after a foreach statement and stopped with an empty-pipe parser error.",
+      "candidate_workaround": "Materialize foreach results into an explicit array before applying downstream PowerShell pipeline operators.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W09-F",
+        "V6454-W09-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N02"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Use assignment or grouping whenever a foreach statement feeds a pipeline.",
+      "rollback": "Stop the inventory probe and use one literal Test-Path command per runner if array materialization fails.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
+    },
+    {
+      "method_id": "V6454-M10",
+      "title": "Rebuild append-only Method Flow from the immutable x1 baseline",
+      "trigger_preconditions": [
+        "x1 commit is immutable and ancestral",
+        "x2 evidence builder may be rerun"
+      ],
+      "failure_signature": "The second evidence-builder invocation appended the two post-freeze incidents again, producing duplicate method identifiers and invalid 11-method counts.",
+      "candidate_workaround": "For repeatable lifecycle builders, take the immutable frozen-phase blob as the append base and materialize the full reviewed append set deterministically.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W10-F",
+        "V6454-W10-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N03"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Assert unique method and witness identifiers after every rebuild and before writing the worktree ledger.",
+      "rollback": "Keep validation failed, preserve the duplicate-append incident, and do not delete historical evidence without rebuilding it from the immutable baseline.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
+    },
+    {
+      "method_id": "V6454-M11",
+      "title": "Allow the immutable-x1 verification test in x2 staged scope",
+      "trigger_preconditions": [
+        "an x2 change strengthens x1 commit verification",
+        "the changed test remains phase-owned"
+      ],
+      "failure_signature": "The first evidence-stage review rejected the updated v645-v4 x1 test because the allowlist named only the new x2 test, even though privacy and lifecycle checks were clean.",
+      "candidate_workaround": "Bind lifecycle staged scope to the exact phase test set, including tests strengthened to inspect an immutable earlier commit.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W11-F",
+        "V6454-W11-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N04"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Review every allowlist addition by exact path and require unchanged privacy and lifecycle checks.",
+      "rollback": "Keep the evidence commit blocked if any test path is not phase-owned or if widening changes another gate.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
+    },
+    {
+      "method_id": "V6454-M12",
+      "title": "Normalize skill-generated index text at the Git clean boundary",
+      "trigger_preconditions": [
+        "generated text is semantically valid",
+        "repository text policy normalizes CRLF to LF"
+      ],
+      "failure_signature": "The first evidence diff-hygiene check found CRLF bytes in the skill-generated x2 index after those files were staged with newline conversion disabled, so every added line appeared to have trailing whitespace.",
+      "candidate_workaround": "For reviewed generated text that arrives with Windows line endings, apply repository text normalization at the staging boundary and verify the exact staged blob.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W12-F",
+        "V6454-W12-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N05"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "After every index refresh, run diff hygiene and inspect staged blob line endings before committing.",
+      "rollback": "Keep the commit blocked and retain the CRLF finding if clean filtering changes content beyond line endings.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
+    },
+    {
+      "method_id": "V6454-M13",
+      "title": "Force Git renormalization after an index entry already exists",
+      "trigger_preconditions": [
+        "the staged path already exists",
+        "only line-ending normalization is authorized"
+      ],
+      "failure_signature": "Re-adding the CRLF index files with autocrlf enabled did not replace their existing staged blobs, and the second diff-hygiene check repeated the same findings.",
+      "candidate_workaround": "When a text path already has an index entry, use Git's explicit renormalize mode rather than assuming a configuration change will refresh the blob.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W13-F",
+        "V6454-W13-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N06"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "After a line-ending repair, compare the staged object and rerun diff hygiene before trusting normal add.",
+      "rollback": "Keep the commit blocked and restore the prior staged blob if renormalization changes semantic content.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
+    },
+    {
+      "method_id": "V6454-M14",
+      "title": "Remove terminal blank lines after generated-source stabilization",
+      "trigger_preconditions": [
+        "new Python source is staged",
+        "diff hygiene identifies only terminal blank lines"
+      ],
+      "failure_signature": "After line-ending normalization, diff hygiene found one extra EOF blank line in the evidence-receipt builder and one in the shared runtime.",
+      "candidate_workaround": "After source generation is stable, run an exact EOF whitespace check and repair only owner-scoped terminal blank lines.",
+      "approval_class": "safe_now_local_tooling",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "private_material",
+        "unbounded_retry",
+        "sibling_lane"
+      ],
+      "validation_witness_ids": [
+        "V6454-W14-F",
+        "V6454-W14-P"
+      ],
+      "retained_negative_ids": [
+        "V6454-X2-N07"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Require zero-output diff hygiene after the final source patch and before each commit.",
+      "rollback": "Keep the commit blocked if an EOF repair would alter executable content.",
+      "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+      "supersedes": []
     }
   ],
   "witnesses": [
@@ -419,6 +622,216 @@
       "same_owner_only": true,
       "independent_reproduction": false,
       "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W08-F",
+      "method_id": "V6454-M08",
+      "result": "fail",
+      "procedure": "Pass HEAD...@{upstream} unquoted through PowerShell.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "Git received a mangled revision token and returned an ambiguous-argument error.",
+      "retained_negative_ids": [
+        "V6454-X2-N01"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W08-P",
+      "method_id": "V6454-M08",
+      "result": "pass",
+      "procedure": "Pass the complete revision expression as one literal argument and recompute four-way equality.",
+      "expected": "bounded recovery completes",
+      "observed": "Local, upstream, tracking, and live remote were equal at the x1 commit with 0/0 divergence and clean status.",
+      "retained_negative_ids": [
+        "V6454-X2-N01"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W09-F",
+      "method_id": "V6454-M09",
+      "result": "fail",
+      "procedure": "Append a pipeline directly to a PowerShell foreach statement without grouping or assignment.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "PowerShell reported an empty pipe element before any repository mutation.",
+      "retained_negative_ids": [
+        "V6454-X2-N02"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W09-P",
+      "method_id": "V6454-M09",
+      "result": "pass",
+      "procedure": "Assign foreach output to a bounded array, then convert that array to JSON.",
+      "expected": "bounded recovery completes",
+      "observed": "All ten runner names were inspected and confirmed absent before additive creation.",
+      "retained_negative_ids": [
+        "V6454-X2-N02"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W10-F",
+      "method_id": "V6454-M10",
+      "result": "fail",
+      "procedure": "Use the mutable worktree Method Flow ledger as the append base on every repeat evidence build.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "The ledger contained duplicate M08 and M09 rows, and both detailed and minimal validators failed their method invariants.",
+      "retained_negative_ids": [
+        "V6454-X2-N03"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W10-P",
+      "method_id": "V6454-M10",
+      "result": "pass",
+      "procedure": "Read the Method Flow ledger from the immutable x1 commit, append the complete reviewed x2 incident set exactly once, and derive counts from unique rows.",
+      "expected": "bounded recovery completes",
+      "observed": "The rebuilt ledger contains ten unique methods, ten retained failed witnesses, ten passing witnesses, and no duplicate method identifier.",
+      "retained_negative_ids": [
+        "V6454-X2-N03"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W11-F",
+      "method_id": "V6454-M11",
+      "result": "fail",
+      "procedure": "Treat every changed test except the x2 module as out of scope.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "The staged review reported scope_allowed false for the x1 test that now verifies the immutable x1 commit tree.",
+      "retained_negative_ids": [
+        "V6454-X2-N04"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W11-P",
+      "method_id": "V6454-M11",
+      "result": "pass",
+      "procedure": "Add the exact x1 test path to the phase allowlist and retain all other path, privacy, and lifecycle restrictions.",
+      "expected": "bounded recovery completes",
+      "observed": "The exact staged review accepts both v645-v4 test modules with zero lifecycle leaks and zero privacy hits.",
+      "retained_negative_ids": [
+        "V6454-X2-N04"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W12-F",
+      "method_id": "V6454-M12",
+      "result": "fail",
+      "procedure": "Stage Windows-generated index text with core.autocrlf disabled without first normalizing line endings.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "git diff --cached --check reported trailing whitespace throughout the JSON and Markdown index files.",
+      "retained_negative_ids": [
+        "V6454-X2-N05"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W12-P",
+      "method_id": "V6454-M12",
+      "result": "pass",
+      "procedure": "Re-add only the two generated text files through Git's text clean filter, then rerun exact staged diff hygiene and JSON parsing.",
+      "expected": "bounded recovery completes",
+      "observed": "The staged blobs are LF-normalized, the JSON remains semantically identical, and diff hygiene reports zero issues.",
+      "retained_negative_ids": [
+        "V6454-X2-N05"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W13-F",
+      "method_id": "V6454-M13",
+      "result": "fail",
+      "procedure": "Change the clean-filter configuration but use a normal add against an already staged path whose stat information appears unchanged.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "The staged blobs retained CRLF bytes and diff hygiene again reported every line as trailing whitespace.",
+      "retained_negative_ids": [
+        "V6454-X2-N06"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W13-P",
+      "method_id": "V6454-M13",
+      "result": "pass",
+      "procedure": "Use git add --renormalize with input normalization on the exact two index paths, then verify staged bytes, JSON semantics, and diff hygiene.",
+      "expected": "bounded recovery completes",
+      "observed": "Forced renormalization replaces only line endings, JSON parsing passes, and the exact staged diff is clean.",
+      "retained_negative_ids": [
+        "V6454-X2-N06"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W14-F",
+      "method_id": "V6454-M14",
+      "result": "fail",
+      "procedure": "Stage newly added Python tools without a final exact EOF whitespace check.",
+      "expected": "bounded read-only diagnostic completes",
+      "observed": "git diff --cached --check reported two new blank lines at EOF.",
+      "retained_negative_ids": [
+        "V6454-X2-N07"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
+    },
+    {
+      "witness_id": "V6454-W14-P",
+      "method_id": "V6454-M14",
+      "result": "pass",
+      "procedure": "Remove only the extra terminal blank lines through reviewed patches, restage, and rerun compilation plus diff hygiene.",
+      "expected": "bounded recovery completes",
+      "observed": "Both modules compile and the exact staged diff reports zero whitespace issues.",
+      "retained_negative_ids": [
+        "V6454-X2-N07"
+      ],
+      "scope": "single owner-local operational diagnostic",
+      "same_owner_only": true,
+      "independent_reproduction": false,
+      "boundary": "Software, public specifications, and synthetic fixtures can establish only bounded structural behavior. They do not establish empirical GMUT confirmation, THOS effectiveness, production identity assurance, museum or cultural authority, Maori authority, independent reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, legal effect, a Theory of Everything, or Stage 20 readiness."
     }
   ],
   "state_events": [
@@ -589,6 +1002,174 @@
       "after": "preferred",
       "witness_id": "V6454-W07-P",
       "reason": "preferred only for declared trigger and preconditions"
+    },
+    {
+      "event_index": 22,
+      "method_id": "V6454-M08",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 23,
+      "method_id": "V6454-M08",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W08-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 24,
+      "method_id": "V6454-M08",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W08-P",
+      "reason": "preferred only for the declared trigger"
+    },
+    {
+      "event_index": 25,
+      "method_id": "V6454-M09",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 26,
+      "method_id": "V6454-M09",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W09-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 27,
+      "method_id": "V6454-M09",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W09-P",
+      "reason": "preferred only for the declared trigger"
+    },
+    {
+      "event_index": 28,
+      "method_id": "V6454-M10",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 29,
+      "method_id": "V6454-M10",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W10-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 30,
+      "method_id": "V6454-M10",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W10-P",
+      "reason": "preferred only for the declared trigger"
+    },
+    {
+      "event_index": 31,
+      "method_id": "V6454-M11",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 32,
+      "method_id": "V6454-M11",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W11-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 33,
+      "method_id": "V6454-M11",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W11-P",
+      "reason": "preferred only for the declared trigger"
+    },
+    {
+      "event_index": 34,
+      "method_id": "V6454-M12",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 35,
+      "method_id": "V6454-M12",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W12-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 36,
+      "method_id": "V6454-M12",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W12-P",
+      "reason": "preferred only for the declared trigger"
+    },
+    {
+      "event_index": 37,
+      "method_id": "V6454-M13",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 38,
+      "method_id": "V6454-M13",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W13-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 39,
+      "method_id": "V6454-M13",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W13-P",
+      "reason": "preferred only for the declared trigger"
+    },
+    {
+      "event_index": 40,
+      "method_id": "V6454-M14",
+      "before": null,
+      "after": "candidate",
+      "witness_id": null,
+      "reason": "method recorded with retained negative linkage"
+    },
+    {
+      "event_index": 41,
+      "method_id": "V6454-M14",
+      "before": "candidate",
+      "after": "validated",
+      "witness_id": "V6454-W14-P",
+      "reason": "bounded passing witness recorded without erasing failure"
+    },
+    {
+      "event_index": 42,
+      "method_id": "V6454-M14",
+      "before": "validated",
+      "after": "preferred",
+      "witness_id": "V6454-W14-P",
+      "reason": "preferred only for the declared trigger"
     }
   ],
   "recommendations": [
@@ -675,24 +1256,108 @@
       "exceptions": "Do not generalize beyond the declared trigger or erase the failure.",
       "rollback": "Keep the commit blocked and retain the finding if normalization would alter semantic content.",
       "witness": "V6454-W07-P"
+    },
+    {
+      "recommendation_id": "V6454-R08",
+      "method_id": "V6454-M08",
+      "preferred_method": "Quote reflog-style and upstream revision expressions as literal Git arguments when invoked from PowerShell.",
+      "preconditions": [
+        "PowerShell shell",
+        "Git revision expression contains braces"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Treat divergence as unproved and do not enter x2 until the literal read-only proof passes.",
+      "witness": "V6454-W08-P"
+    },
+    {
+      "recommendation_id": "V6454-R09",
+      "method_id": "V6454-M09",
+      "preferred_method": "Materialize foreach results into an explicit array before applying downstream PowerShell pipeline operators.",
+      "preconditions": [
+        "PowerShell shell",
+        "foreach output must feed another cmdlet"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Stop the inventory probe and use one literal Test-Path command per runner if array materialization fails.",
+      "witness": "V6454-W09-P"
+    },
+    {
+      "recommendation_id": "V6454-R10",
+      "method_id": "V6454-M10",
+      "preferred_method": "For repeatable lifecycle builders, take the immutable frozen-phase blob as the append base and materialize the full reviewed append set deterministically.",
+      "preconditions": [
+        "x1 commit is immutable and ancestral",
+        "x2 evidence builder may be rerun"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Keep validation failed, preserve the duplicate-append incident, and do not delete historical evidence without rebuilding it from the immutable baseline.",
+      "witness": "V6454-W10-P"
+    },
+    {
+      "recommendation_id": "V6454-R11",
+      "method_id": "V6454-M11",
+      "preferred_method": "Bind lifecycle staged scope to the exact phase test set, including tests strengthened to inspect an immutable earlier commit.",
+      "preconditions": [
+        "an x2 change strengthens x1 commit verification",
+        "the changed test remains phase-owned"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Keep the evidence commit blocked if any test path is not phase-owned or if widening changes another gate.",
+      "witness": "V6454-W11-P"
+    },
+    {
+      "recommendation_id": "V6454-R12",
+      "method_id": "V6454-M12",
+      "preferred_method": "For reviewed generated text that arrives with Windows line endings, apply repository text normalization at the staging boundary and verify the exact staged blob.",
+      "preconditions": [
+        "generated text is semantically valid",
+        "repository text policy normalizes CRLF to LF"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Keep the commit blocked and retain the CRLF finding if clean filtering changes content beyond line endings.",
+      "witness": "V6454-W12-P"
+    },
+    {
+      "recommendation_id": "V6454-R13",
+      "method_id": "V6454-M13",
+      "preferred_method": "When a text path already has an index entry, use Git's explicit renormalize mode rather than assuming a configuration change will refresh the blob.",
+      "preconditions": [
+        "the staged path already exists",
+        "only line-ending normalization is authorized"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Keep the commit blocked and restore the prior staged blob if renormalization changes semantic content.",
+      "witness": "V6454-W13-P"
+    },
+    {
+      "recommendation_id": "V6454-R14",
+      "method_id": "V6454-M14",
+      "preferred_method": "After source generation is stable, run an exact EOF whitespace check and repair only owner-scoped terminal blank lines.",
+      "preconditions": [
+        "new Python source is staged",
+        "diff hygiene identifies only terminal blank lines"
+      ],
+      "exceptions": "Do not generalize beyond the declared trigger or erase the failed witness.",
+      "rollback": "Keep the commit blocked if an EOF repair would alter executable content.",
+      "witness": "V6454-W14-P"
     }
   ],
   "counts": {
-    "methods": 7,
-    "witnesses": 14,
-    "state_events": 21,
-    "recommendations": 7,
+    "methods": 14,
+    "witnesses": 28,
+    "state_events": 42,
+    "recommendations": 14,
     "states": {
       "observed": 0,
       "candidate": 0,
       "validated": 0,
-      "preferred": 7,
+      "preferred": 14,
       "superseded": 0,
       "deprecated": 0
     },
     "witness_results": {
-      "fail": 7,
-      "pass": 7
+      "fail": 14,
+      "pass": 14
     }
   }
 }

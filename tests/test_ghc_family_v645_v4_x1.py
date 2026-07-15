@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from collections import Counter
@@ -26,6 +27,13 @@ from ghc_family_v645_v4_definitions import (  # noqa: E402
 )
 
 PHASE_DIR = ROOT / "docs/ilyra-fen/v645-v4"
+X1_COMMIT = "a0c2cdfac1fee23c2f5318a148f80198d251efc6"
+
+
+def load_x1(relative: str) -> dict:
+    path = f"docs/ilyra-fen/v645-v4/{relative}"
+    text = subprocess.check_output(["git", "show", f"{X1_COMMIT}:{path}"], cwd=ROOT, text=True, encoding="utf-8")
+    return json.loads(text)
 
 
 class V645V4X1Tests(unittest.TestCase):
@@ -72,23 +80,24 @@ class V645V4X1Tests(unittest.TestCase):
             "environment/startup-receipt.json", "focus/primary-focus-receipt.json",
             "tooling/ghc-family-index.json", "tooling/ghc-family-index.md",
         ]
+        tree = set(subprocess.check_output(["git", "ls-tree", "-r", "--name-only", X1_COMMIT, "docs/ilyra-fen/v645-v4"], cwd=ROOT, text=True, encoding="utf-8").splitlines())
         for relative in required:
-            self.assertTrue((PHASE_DIR / relative).is_file(), relative)
-        self.assertFalse((PHASE_DIR / "x2-proposal-ledger.json").exists())
-        self.assertFalse((PHASE_DIR / "phase-truth.json").exists())
-        self.assertFalse((PHASE_DIR / "closeout-receipt.json").exists())
+            self.assertIn(f"docs/ilyra-fen/v645-v4/{relative}", tree, relative)
+        self.assertNotIn("docs/ilyra-fen/v645-v4/x2-proposal-ledger.json", tree)
+        self.assertNotIn("docs/ilyra-fen/v645-v4/phase-truth.json", tree)
+        self.assertNotIn("docs/ilyra-fen/v645-v4/closeout-receipt.json", tree)
 
     def test_collision_and_method_flow_integrity(self) -> None:
-        collision = json.loads((PHASE_DIR / "provenance/prior-proposal-collision-audit.json").read_text(encoding="utf-8"))
+        collision = load_x1("provenance/prior-proposal-collision-audit.json")
         self.assertEqual(collision["prior_frozen_proposal_count"], 340)
         self.assertEqual(collision["exact_title_collision_count"], 0)
         self.assertEqual(len(collision["comparisons"]), 10)
-        ledger = json.loads((PHASE_DIR / "method-flow/method-flow-state.json").read_text(encoding="utf-8"))
+        ledger = load_x1("method-flow/method-flow-state.json")
         self.assertEqual(ledger["counts"]["methods"], 7)
         self.assertEqual(ledger["counts"]["witnesses"], 14)
         self.assertEqual(ledger["counts"]["witness_results"], {"fail": 7, "pass": 7})
         self.assertTrue(all(row["recommendation_state"] == "preferred" for row in ledger["methods"]))
-        negatives = json.loads((PHASE_DIR / "validation/x1-operational-negatives.json").read_text(encoding="utf-8"))
+        negatives = load_x1("validation/x1-operational-negatives.json")
         self.assertEqual(negatives["inherited_effective_negative_count"], 2003)
         self.assertEqual(negatives["new_operational_negative_count"], 7)
         self.assertTrue(negatives["no_failure_erased"])

@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M10",
+  "title": "Rebuild append-only Method Flow from the immutable x1 baseline",
+  "trigger_preconditions": [
+    "x1 commit is immutable and ancestral",
+    "x2 evidence builder may be rerun"
+  ],
+  "failure_signature": "The second evidence-builder invocation appended the two post-freeze incidents again, producing duplicate method identifiers and invalid 11-method counts.",
+  "candidate_workaround": "For repeatable lifecycle builders, take the immutable frozen-phase blob as the append base and materialize the full reviewed append set deterministically.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W10-F",
+    "V6454-W10-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N03"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Assert unique method and witness identifiers after every rebuild and before writing the worktree ledger.",
+  "rollback": "Keep validation failed, preserve the duplicate-append incident, and do not delete historical evidence without rebuilding it from the immutable baseline.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

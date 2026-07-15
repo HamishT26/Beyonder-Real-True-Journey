@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M14",
+  "title": "Remove terminal blank lines after generated-source stabilization",
+  "trigger_preconditions": [
+    "new Python source is staged",
+    "diff hygiene identifies only terminal blank lines"
+  ],
+  "failure_signature": "After line-ending normalization, diff hygiene found one extra EOF blank line in the evidence-receipt builder and one in the shared runtime.",
+  "candidate_workaround": "After source generation is stable, run an exact EOF whitespace check and repair only owner-scoped terminal blank lines.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W14-F",
+    "V6454-W14-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N07"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Require zero-output diff hygiene after the final source patch and before each commit.",
+  "rollback": "Keep the commit blocked if an EOF repair would alter executable content.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

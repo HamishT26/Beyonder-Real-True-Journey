@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M13",
+  "title": "Force Git renormalization after an index entry already exists",
+  "trigger_preconditions": [
+    "the staged path already exists",
+    "only line-ending normalization is authorized"
+  ],
+  "failure_signature": "Re-adding the CRLF index files with autocrlf enabled did not replace their existing staged blobs, and the second diff-hygiene check repeated the same findings.",
+  "candidate_workaround": "When a text path already has an index entry, use Git's explicit renormalize mode rather than assuming a configuration change will refresh the blob.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W13-F",
+    "V6454-W13-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N06"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "After a line-ending repair, compare the staged object and rerun diff hygiene before trusting normal add.",
+  "rollback": "Keep the commit blocked and restore the prior staged blob if renormalization changes semantic content.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

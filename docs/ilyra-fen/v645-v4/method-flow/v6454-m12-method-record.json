@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M12",
+  "title": "Normalize skill-generated index text at the Git clean boundary",
+  "trigger_preconditions": [
+    "generated text is semantically valid",
+    "repository text policy normalizes CRLF to LF"
+  ],
+  "failure_signature": "The first evidence diff-hygiene check found CRLF bytes in the skill-generated x2 index after those files were staged with newline conversion disabled, so every added line appeared to have trailing whitespace.",
+  "candidate_workaround": "For reviewed generated text that arrives with Windows line endings, apply repository text normalization at the staging boundary and verify the exact staged blob.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W12-F",
+    "V6454-W12-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X2-N05"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "After every index refresh, run diff hygiene and inspect staged blob line endings before committing.",
+  "rollback": "Keep the commit blocked and retain the CRLF finding if clean filtering changes content beyond line endings.",
+  "scope_boundary": "Bounded owner-local operational recovery only; no scientific, professional, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": []
+}
