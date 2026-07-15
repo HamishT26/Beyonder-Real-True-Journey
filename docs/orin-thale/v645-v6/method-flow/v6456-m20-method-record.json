@@ -1,0 +1,37 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "After the staged file set changes, run review, stage receipts, rerun review, stage receipts, then run a third stable pass and verify every Git-blob hash.",
+  "failure_signature": "The first final manifest-parity assertion failed because the second review hashed the prior staged review and privacy receipts before those receipts were restaged.",
+  "method_id": "V6456-M20",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "manifest_scope_reduction",
+    "history_rewrite",
+    "sibling_lane"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat self-describing review and privacy receipts as a fixed-point problem and require explicit blob-parity verification after the stable pass.",
+  "retained_negative_ids": [
+    "V6456-X2-N13"
+  ],
+  "rollback": "Give the mismatched manifest zero commit credit, retain it as an operational negative, and rewrite only the owner final review receipts.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner change-control recovery only; no scientific, privacy-complete, security-complete, authority, production, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "three_owner_validation_receipts",
+    "no_committed_artifact_change",
+    "no_ref_change"
+  ],
+  "supersedes": [],
+  "title": "Stabilize self-excluding staged manifests with a third pass",
+  "trigger_preconditions": [
+    "self-describing staged review",
+    "review and privacy receipts included in manifest domain",
+    "manifest itself excluded"
+  ],
+  "validation_witness_ids": [
+    "V6456-W20-F",
+    "V6456-W20-P"
+  ]
+}
