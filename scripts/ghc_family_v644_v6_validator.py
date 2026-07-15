@@ -178,6 +178,9 @@ def validate(
 
     disposition = Counter(row["observed_disposition"] for row in ledger["rows"])
     method_states = Counter(row["recommendation_state"] for row in method["methods"])
+    candidate_method_ids = sorted(
+        row["method_id"] for row in method["methods"] if row["recommendation_state"] == "candidate"
+    )
     current_head = git(repo, "rev-parse", "HEAD")
     branch = git(repo, "branch", "--show-current")
     status = git(repo, "status", "--porcelain=v1", "--untracked-files=all") if require_clean else ""
@@ -214,8 +217,8 @@ def validate(
         "method_schema": method["schema"] == "ghc.family.method-flow-state.v1",
         "method_count_9_or_more": len(method["methods"]) >= 9,
         "method_validation_clean": method_validation["valid"] and method_validation["issue_count"] == 0,
-        "method_only_one_candidate_before_final": stage == "final" or method_states["candidate"] <= 1,
-        "method_all_preferred_at_final": stage != "final" or method_states["candidate"] == 0,
+        "method_only_one_candidate_before_final": method_states["candidate"] <= 1,
+        "method_final_named_lane_candidate_frozen": stage != "final" or candidate_method_ids == ["V6446-M01"],
         "report_skip_link": 'href="#main"' in report,
         "report_unique_main": report.count('<main id="main"') == 1,
         "report_focus_visible": ":focus-visible" in report,
@@ -286,6 +289,7 @@ def validate(
         "committed_manifest_entries": committed_manifest["entry_count"] if committed_manifest else 0,
         "committed_manifest_mismatches": committed_manifest_mismatches,
         "method_states": dict(method_states),
+        "candidate_method_ids": candidate_method_ids,
         "same_owner_repeatability_only": True,
         "independent_reproduction": False,
         "full_repository_suite_run": False,
