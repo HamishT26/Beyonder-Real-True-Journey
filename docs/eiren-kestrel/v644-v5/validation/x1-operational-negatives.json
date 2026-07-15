@@ -1,0 +1,89 @@
+{
+  "schema": "ghc.family.v644-v5.x1-operational-negatives.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "count": 9,
+  "negatives": [
+    {
+      "negative_id": "V6445-X1-N01",
+      "operation": "broad prior-artifact text search",
+      "failure_signature": "An unbounded recursive text scan across the large repository exceeded its sixty-second execution window.",
+      "trigger_precondition": "The query combined a broad root with many historical documents instead of a Git-indexed or phase-bounded surface.",
+      "recovery": "Switched to Git-indexed searches, exact filenames, and bounded phase directories.",
+      "recurrence_guard": "Prefer git grep, rg --files followed by a bounded file set, or direct schema reads before any historical recursive content scan.",
+      "promotion_effect": "none; the timed-out scan produced no completeness evidence"
+    },
+    {
+      "negative_id": "V6445-X1-N02",
+      "operation": "Codex CLI global package refresh",
+      "failure_signature": "The package manager could not remove one locked obsolete temporary executable directory after installing the requested CLI version.",
+      "trigger_precondition": "The running desktop process held the old executable while the global package update completed.",
+      "recovery": "Verified the new CLI version directly and left the locked temporary directory untouched for the operating system or a later nonrunning-process cleanup.",
+      "recurrence_guard": "Treat post-install cleanup warnings separately from version verification; never delete an in-use executable tree during an active desktop session.",
+      "promotion_effect": "CLI version verification passed; cleanup completeness remains unclaimed"
+    },
+    {
+      "negative_id": "V6445-X1-N03",
+      "operation": "batched predecessor artifact read",
+      "failure_signature": "The batch assumed a legacy proposal-ledger filename that the predecessor phase did not contain, causing the aggregate read to fail.",
+      "trigger_precondition": "A filename was inferred from an older phase instead of discovered from the current predecessor tree.",
+      "recovery": "Enumerated the exact predecessor phase files first and read the current x1-proposals filename.",
+      "recurrence_guard": "Use file discovery or manifest lookup before batched reads across evolving artifact schemas.",
+      "promotion_effect": "none; the failed batch produced no validation evidence"
+    },
+    {
+      "negative_id": "V6445-X1-N04",
+      "operation": "pointer-chain proposal summary",
+      "failure_signature": "The first summary queried generic count fields and treated a missing records array as a populated base.",
+      "trigger_precondition": "The query assumed a flattened index while the current artifact uses inherited_index plus new_records.",
+      "recovery": "Inspected the schema property names and recursively decoded the inherited pointer chain.",
+      "recurrence_guard": "Schema-introspect before field selection and validate effective_record_count against recursively collected unique IDs.",
+      "promotion_effect": "none; only the corrected 270-record reconstruction is evidence"
+    },
+    {
+      "negative_id": "V6445-X1-N05",
+      "operation": "source-ledger summary",
+      "failure_signature": "The first summary looked for a sources array, but the current ledger stores inherited_ledger plus added_sources.",
+      "trigger_precondition": "A generic field name was assumed without reading the current ledger schema.",
+      "recovery": "Read property names, then recursively combined added_sources through the inherited ledger chain.",
+      "recurrence_guard": "Use the declared schema and recursive pointer fields rather than guessed collection names.",
+      "promotion_effect": "none; only the corrected source reconstruction is counted"
+    },
+    {
+      "negative_id": "V6445-X1-N06",
+      "operation": "continuation output polling",
+      "failure_signature": "A completed command was queried through an unavailable continuation surface and then through an already-closed completion token.",
+      "trigger_precondition": "The caller did not first distinguish active asynchronous execution from a completed result.",
+      "recovery": "Reverified the desired Git state directly from the repository and live remote.",
+      "recurrence_guard": "Use continuation polling only for an explicitly active command; otherwise re-read the authoritative state directly.",
+      "promotion_effect": "none; exact four-way Git equality came from the direct verification"
+    },
+    {
+      "negative_id": "V6445-X1-N07",
+      "operation": "preliminary source-slate deduplication gate",
+      "failure_signature": "The first slate re-added four exact inherited authority URLs for secure development, credential status, accessibility, and cluster-randomized reporting.",
+      "trigger_precondition": "The candidate slate was compared against remembered titles before recursively decoding all 186 inherited source rows.",
+      "recovery": "Reused inherited source IDs V8-S22, V8-S12, V8-S26, and V6423-S41 and removed the duplicate additions before x1 freeze.",
+      "recurrence_guard": "Run exact normalized-title and canonical-URL deduplication against the full inherited pointer chain before writing a source ledger.",
+      "promotion_effect": "none; the rejected duplicate rows are not counted in the v644-v5 source addition"
+    },
+    {
+      "negative_id": "V6445-X1-N08",
+      "operation": "first complete x1 repository suite",
+      "failure_signature": "The suite passed 616 of 617 tests; the inherited exact legacy constraint-hash alias returned true from CRLF worktree bytes before emitting its required retained-negative warning.",
+      "trigger_precondition": "Automatic worktree line-ending conversion made the raw file hash equal the declared legacy hash, bypassing the exact alias-warning branch.",
+      "recovery": "Re-materialized that unchanged inherited JSON file byte-for-byte with LF endings matching its Git blob and reran the complete suite.",
+      "recurrence_guard": "Before the full suite, compare this named legacy fixture's raw hash with its immutable LF Git-blob hash and normalize only when the worktree conversion is the known cause.",
+      "promotion_effect": "none; the 616/617 run is retained failed evidence and only the later 617/617 run is promoted"
+    },
+    {
+      "negative_id": "V6445-X1-N09",
+      "operation": "first legacy-fixture line-ending recovery",
+      "failure_signature": "A two-step line edit and reversion produced mixed line endings, yielding a third hash that matched neither the declared nor exact legacy alias.",
+      "trigger_precondition": "A small patch rewrote only the touched line while preserving converted endings on untouched lines.",
+      "recovery": "Recreated the complete small JSON file through the patch tool from its exact HEAD content, producing the expected LF byte hash and passing both isolated alias tests.",
+      "recurrence_guard": "For an exact byte-level fixture, rematerialize the complete file from verified repository content rather than patching one line to induce normalization.",
+      "promotion_effect": "none; the mixed-ending file and failed isolated run are retained but not promoted"
+    }
+  ],
+  "retention_rule": "Recovery does not erase failure evidence; only successful corrected runs may be promoted."
+}
