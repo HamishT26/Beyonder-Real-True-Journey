@@ -1,0 +1,27 @@
+{
+  "method_id": "v6451-m01",
+  "title": "Serialize cold-start skill and memory reads",
+  "failure_signature": "A parallel cold-start batch of local skill, routing, discovery, and memory reads exceeded the ten-second shell startup budget before any content returned.",
+  "trigger_preconditions": [
+    "Cold PowerShell startup",
+    "Multiple concurrent local shell reads",
+    "Ten-second per-command timeout"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Run the mandatory skill and reference reads serially with a thirty-second bounded timeout, then perform memory discovery separately.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "At phase startup, serialize required skill reads and allow at least thirty seconds for each cold PowerShell process.",
+  "rollback": "Stop after the timed-out read; no repository or route state needs rollback because the failed batch was read-only.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No repository mutation before required guidance is read",
+    "No task creation or sibling contact",
+    "No private path publication"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6451-X1-N01"
+  ],
+  "scope_boundary": "This method addresses local shell startup latency only and proves no scientific, authority, production, security, accessibility, identity, or reproduction claim."
+}

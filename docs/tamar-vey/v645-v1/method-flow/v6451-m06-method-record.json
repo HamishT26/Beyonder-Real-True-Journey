@@ -1,0 +1,27 @@
+{
+  "method_id": "v6451-m06",
+  "title": "Use structured SimpleMatch for quote-bearing stale-label probes",
+  "failure_signature": "A native fixed-string search split a multiword quoted JSON pattern into path arguments and emitted file-not-found errors.",
+  "trigger_preconditions": [
+    "Windows PowerShell native argument marshaling",
+    "A pattern containing JSON quotes and spaces",
+    "A zero-hit stale-label review"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Enumerate owner-scoped text files and use PowerShell Select-String -SimpleMatch with the exact fragments.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Reject any stale-label result accompanied by native path errors and prefer structured matching for multiword quoted fragments.",
+  "rollback": "Discard the invalid zero-hit result and rerun only the read-only owner-scoped probe.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No stale-label pass from an errored command",
+    "No repository mutation from search",
+    "No private path publication"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6451-X1-N06"
+  ],
+  "scope_boundary": "This method validates stale-label string matching only and does not replace semantic review."
+}

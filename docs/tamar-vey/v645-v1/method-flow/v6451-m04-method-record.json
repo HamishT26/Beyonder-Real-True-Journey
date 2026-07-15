@@ -1,0 +1,27 @@
+{
+  "method_id": "v6451-m04",
+  "title": "Defer staged-review self-output until exact staging exists",
+  "failure_signature": "The first x1 build required its staged-review receipt before any exact staged file set existed and failed expected_files_present.",
+  "trigger_preconditions": [
+    "A builder enumerates its staged-review receipt as an expected x1 file",
+    "No exact staging pass has yet occurred",
+    "The builder validates expected-file presence"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Defer the staged-review receipt during the pre-stage build, stage the exact x1 files, generate the real staged review, then rebuild and restage before commit.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "A staged-review receipt may be deferred only until an actual Git index exists and must be regenerated after the final staged bytes are fixed.",
+  "rollback": "Leave x1 uncommitted, discard no generated evidence, and rerun the builder only after recording the failed expected-file gate.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No x1 commit without an actual exact staged review",
+    "No x2 implementation before x1 remote equality",
+    "No silent removal of the failed builder receipt"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6451-X1-N04"
+  ],
+  "scope_boundary": "This method resolves staged-receipt ordering only and does not validate x1 content by itself."
+}

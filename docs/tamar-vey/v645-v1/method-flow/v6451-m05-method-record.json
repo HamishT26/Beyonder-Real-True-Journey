@@ -1,0 +1,27 @@
+{
+  "method_id": "v6451-m05",
+  "title": "Anchor Windows staging parity to Git blobs and retain line-ending warnings",
+  "failure_signature": "The exact staging pass succeeded while Git warned that twelve LF working-copy files may later be rewritten as CRLF.",
+  "trigger_preconditions": [
+    "Windows checkout",
+    "Line-ending conversion behavior",
+    "New text files staged for an exact content-seal commit"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Use exact staged Git blobs as the commit and manifest domain, retain the warnings, and require the later named validation lane to preserve LF for its bounded replay.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never equate a warning-bearing working copy with cross-checkout byte parity; inspect staged blobs and perform the authorized named replay.",
+  "rollback": "Unstage without deleting files if staged-blob hashes fail; otherwise keep the normalized Git index and retain the warning as a negative.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No history rewrite",
+    "No newline portability claim before named replay",
+    "No independent-reproduction claim"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6451-X1-N05"
+  ],
+  "scope_boundary": "This method validates the staged Git-blob domain only and does not prove every checkout has identical working-tree bytes."
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "ghc.family.v645-v1.x1-operational-negatives.v1",
+  "phase": "v645-gmut-thos-v1-x1-x2",
+  "count": 6,
+  "negatives": [
+    {
+      "negative_id": "REPRO-V6451-X1-N01",
+      "operation": "parallel cold-start skill and memory read batch",
+      "failure_signature": "The batch exceeded the ten-second shell startup budget before any required document content returned.",
+      "trigger_precondition": "Four concurrent cold PowerShell reads each used a ten-second timeout.",
+      "recovery": "Retained the timeout, initialized Method Flow, and read each mandatory document serially with a thirty-second bounded timeout.",
+      "recurrence_guard": "Serialize required cold-start skill reads and allow at least thirty seconds per PowerShell process.",
+      "promotion_effect": "none; the timed-out batch produced no guidance evidence"
+    },
+    {
+      "negative_id": "REPRO-V6451-X1-N02",
+      "operation": "parallel repository discovery with a no-match query",
+      "failure_signature": "The aggregate call failed when ripgrep correctly returned exit code one for no AGENTS.md matches.",
+      "trigger_precondition": "Promise-style aggregation treated an acceptable no-match result as a fatal shell error.",
+      "recovery": "Retained the failure, ran discovery independently, and normalized ripgrep exit code one to an explicit zero-file result.",
+      "recurrence_guard": "Normalize no-match exit codes before aggregating discovery commands whose empty result is valid.",
+      "promotion_effect": "none; the failed aggregate returned no repository-instruction result"
+    },
+    {
+      "negative_id": "REPRO-V6451-X1-N03",
+      "operation": "ripgrep search with a Windows wildcard path argument",
+      "failure_signature": "Ripgrep received the wildcard path literally and returned an invalid filename or directory error after an earlier receipt had printed.",
+      "trigger_precondition": "A shell wildcard was placed in the path position instead of using a directory path plus ripgrep's glob filter.",
+      "recovery": "Retained the partial failure and changed to an explicit scripts directory with a -g filename filter.",
+      "recurrence_guard": "On Windows, pass a real directory to ripgrep and express filename wildcards through -g; do not credit output from an overall failed aggregate as a complete discovery witness.",
+      "promotion_effect": "none; the failed aggregate did not complete scoped-command discovery"
+    },
+    {
+      "negative_id": "REPRO-V6451-X1-N04",
+      "operation": "first x1 preregistration build",
+      "failure_signature": "The builder rejected expected_files_present because the x1 staged-review receipt cannot exist before the first exact staging pass.",
+      "trigger_precondition": "The staged-review output was required as an ordinary pre-build input rather than deferred until the staged file set existed.",
+      "recovery": "Retained the failed build and deferred only the staged-review self-output during the pre-stage build, with a required exact staged review and final rebuild before commit.",
+      "recurrence_guard": "Treat a receipt whose subject is the staged file set as a deferred self-output until staging exists; never mark it passed without an actual staged-blob review.",
+      "promotion_effect": "none; the rejected builder run did not establish a valid x1 packet"
+    },
+    {
+      "negative_id": "REPRO-V6451-X1-N05",
+      "operation": "first exact x1 staging pass",
+      "failure_signature": "Git staged the exact file set but warned that LF working-copy bytes may be replaced by CRLF on a later Git touch for twelve new text files.",
+      "trigger_precondition": "The Windows checkout applies line-ending conversion behavior while generated artifacts and content seals are defined over normalized Git blobs.",
+      "recovery": "Retained the warnings, verified the exact staged Git blobs and content seal, and reserved LF-preserving validation for the one later clean named replay.",
+      "recurrence_guard": "Treat the Git index as the committed manifest domain, record working-copy line-ending warnings, and do not claim cross-checkout byte parity without the clean named replay.",
+      "promotion_effect": "none; staging success alone does not establish working-tree newline portability"
+    },
+    {
+      "negative_id": "REPRO-V6451-X1-N06",
+      "operation": "first stale-label fixed-string probe",
+      "failure_signature": "Windows native argument marshaling split a quoted ripgrep fixed-string pattern with spaces into multiple path arguments.",
+      "trigger_precondition": "A quote-bearing multiword JSON fragment was passed from PowerShell to a native executable as the pattern argument.",
+      "recovery": "Retained the invalid probe and changed to PowerShell Select-String with SimpleMatch over the explicit owner-scoped files.",
+      "recurrence_guard": "Use structured PowerShell string matching for quote-bearing multiword JSON fragments; never credit a zero-hit result when the native tool reports path errors.",
+      "promotion_effect": "none; the invalid probe produced no stale-label evidence"
+    }
+  ],
+  "retention_rule": "Recovery does not erase failure evidence; only successful corrected runs may be promoted."
+}

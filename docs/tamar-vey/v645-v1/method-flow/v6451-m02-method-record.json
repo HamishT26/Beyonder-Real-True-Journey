@@ -1,0 +1,27 @@
+{
+  "method_id": "v6451-m02",
+  "title": "Normalize no-match discovery before aggregating shell results",
+  "failure_signature": "A parallel repository-discovery batch failed as a whole when one ripgrep query correctly returned exit code one for no matches.",
+  "trigger_preconditions": [
+    "Concurrent shell aggregation",
+    "A discovery query where no matches is an acceptable result",
+    "Promise-style failure propagation"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Run discovery commands independently and normalize ripgrep exit code one to an empty successful result before aggregation.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Classify ripgrep exit code one as no-match rather than a tooling fault whenever absence is an allowed discovery outcome.",
+  "rollback": "Discard the failed aggregate result and rerun only read-only discovery commands; no repository state was changed.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No inference that repository instructions are absent until normalized discovery completes",
+    "No repository mutation from discovery",
+    "No task creation or sibling contact"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6451-X1-N02"
+  ],
+  "scope_boundary": "This method validates discovery control flow only and does not establish repository correctness or any external claim."
+}

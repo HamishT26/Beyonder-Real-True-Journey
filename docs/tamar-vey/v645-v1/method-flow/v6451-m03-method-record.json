@@ -1,0 +1,27 @@
+{
+  "method_id": "v6451-m03",
+  "title": "Use ripgrep glob filters instead of Windows wildcard path arguments",
+  "failure_signature": "A ripgrep command received a wildcard in the path position and returned an invalid filename or directory error after partial output from an earlier command.",
+  "trigger_preconditions": [
+    "Windows shell",
+    "Wildcard embedded in a path argument",
+    "Multiple discovery operations in one command envelope"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Search the concrete scripts directory and restrict filenames with ripgrep -g, keeping the receipt read and code search as separate bounded operations.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use -g for filename wildcards on Windows and require the whole discovery command to exit successfully before treating it as complete evidence.",
+  "rollback": "Discard the incomplete aggregate discovery result; no repository state changed because the failed operation was read-only.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No inference from incomplete discovery",
+    "No repository mutation from search",
+    "No task creation or sibling contact"
+  ],
+  "retained_negative_ids": [
+    "REPRO-V6451-X1-N03"
+  ],
+  "scope_boundary": "This method addresses Windows search invocation only and proves no repository, scientific, authority, or reproduction claim."
+}
