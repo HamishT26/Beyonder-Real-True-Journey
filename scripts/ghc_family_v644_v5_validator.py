@@ -45,6 +45,12 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def index_blob(repo: Path, relative_path: str) -> bytes:
+    return subprocess.check_output(
+        ["git", "-C", str(repo), "show", f":{relative_path}"],
+    )
+
+
 def write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
@@ -54,7 +60,7 @@ def write_json(path: Path, payload: Any) -> None:
     )
 
 
-def build_manifest(phase: Path) -> dict[str, Any]:
+def build_manifest(repo: Path, phase: Path) -> dict[str, Any]:
     exclusions = {
         "reproduction/evidence-manifest.json",
         "reproduction/final-manifest.json",
@@ -64,10 +70,14 @@ def build_manifest(phase: Path) -> dict[str, Any]:
         rel = path.relative_to(phase).as_posix()
         if rel in exclusions or rel.startswith("validation/"):
             continue
-        entries.append({"path": rel, "sha256": sha256(path), "bytes": path.stat().st_size})
+        rel_repo = path.relative_to(repo).as_posix()
+        blob = index_blob(repo, rel_repo)
+        entries.append({"path": rel, "sha256": hashlib.sha256(blob).hexdigest(), "bytes": len(blob)})
     return {
-        "schema": "ghc.family.v644-v5.evidence-manifest.v1",
+        "schema": "ghc.family.v644-v5.evidence-manifest.v2",
         "phase": "v644-gmut-thos-v5-x1-x2",
+        "hash_domain": "git_index_blob_bytes",
+        "working_tree_line_endings_ignored": True,
         "entry_count": len(entries),
         "entries": entries,
         "same_owner_repeatability_only": True,
@@ -214,8 +224,13 @@ def validate(
         path = phase / row["path"]
         check(path.is_file(), f"manifest_exists:{row['path']}")
         if path.is_file():
-            check(sha256(path) == row["sha256"], f"manifest_hash:{row['path']}")
-            check(path.stat().st_size == row["bytes"], f"manifest_size:{row['path']}")
+            rel_repo = path.relative_to(repo).as_posix()
+            try:
+                blob = index_blob(repo, rel_repo)
+            except subprocess.CalledProcessError:
+                blob = b""
+            check(hashlib.sha256(blob).hexdigest() == row["sha256"], f"manifest_hash:{row['path']}")
+            check(len(blob) == row["bytes"], f"manifest_size:{row['path']}")
     check(manifest["same_owner_repeatability_only"] is True, "manifest_same_owner")
     check(manifest["independent_team_reproduction"] is False, "manifest_not_independent")
 
@@ -285,7 +300,7 @@ def main() -> None:
     repo = args.repo.resolve()
     phase = (repo / args.phase_dir).resolve() if not args.phase_dir.is_absolute() else args.phase_dir.resolve()
     if args.refresh_manifest:
-        write_json(phase / "reproduction/evidence-manifest.json", build_manifest(phase))
+        write_json(phase / "reproduction/evidence-manifest.json", build_manifest(repo, phase))
     result = validate(repo, phase, args.allow_pending_lean, args.expected_head)
     if args.output:
         output = (repo / args.output).resolve() if not args.output.is_absolute() else args.output.resolve()

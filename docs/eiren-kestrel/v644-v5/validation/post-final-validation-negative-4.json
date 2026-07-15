@@ -1,0 +1,32 @@
+{
+  "schema": "ghc.family.v644-v5.post-final-validation-negative.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "owner": "Eiren Kestrel",
+  "negative_id": "V6445-VALID-N04",
+  "class": "working_tree_manifest_hash_domain",
+  "failure_signature": "After long-path and LF checkout controls produced a complete clean clone, 20 frozen x1 artifacts still failed byte-manifest parity because the original manifest captured their precommit working-tree bytes rather than their committed Git blobs.",
+  "observed_validation": {
+    "clone_checkout_complete": true,
+    "clone_clean": true,
+    "x2_manifest_entries_matched": true,
+    "x1_manifest_hash_mismatches": 20,
+    "x1_manifest_size_mismatches": 20,
+    "other_issues": 0,
+    "privacy_hits": 0
+  },
+  "trigger_preconditions": [
+    "manifest is generated before commit from working-tree bytes",
+    "later clone validates committed blob bytes",
+    "working-tree and index line endings differ"
+  ],
+  "recovery": "Rebuild the evidence manifest from staged Git index blobs and validate future parity against the same committed-byte domain.",
+  "recurrence_guard": "For portable precommit manifests, hash the exact staged index blob for every path; pair that with a separate clean-status gate for working-tree integrity.",
+  "promotion_effect": "The working-tree-byte manifest is preserved in Git history but superseded by the index-blob manifest; the mismatching clone result is not promoted.",
+  "canonical_history_rewritten": false,
+  "phase_retained_negative_count": 1488,
+  "post_final_validation_negative_count": 4,
+  "effective_retained_negative_count": 1492,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This is a manifest-domain portability negative, not empirical confirmation, security certification, legal or cultural authority, identity evidence, or independent reproduction."
+}
