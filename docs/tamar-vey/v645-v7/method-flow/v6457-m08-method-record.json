@@ -1,0 +1,27 @@
+{
+  "method_id": "V6457-M08",
+  "title": "Return validation evidence from separate commands when one parallel child may fail",
+  "failure_signature": "A parallel wrapper launched reviewer and x1 tests, but the reviewer's nonzero result prevented the wrapper from returning the test output.",
+  "trigger_preconditions": [
+    "multiple evidence-producing child commands",
+    "wrapper may fail fast on one nonzero exit"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Separate evidence-producing validation commands when one expected failure could suppress another result.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Parallelize only when the orchestration layer preserves every child result on partial failure.",
+  "rollback": "Assign no credit to the suppressed run and rerun only the bounded validations independently.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6457-X1-N06"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

@@ -1,0 +1,27 @@
+{
+  "method_id": "V6457-M09",
+  "title": "Select the predecessor final test after its x2 artifacts exist",
+  "failure_signature": "The v645-v6 x1-stage test was run against Orin's completed x2 packet and correctly failed its no-x2-files assertion.",
+  "trigger_preconditions": [
+    "completed predecessor x2 packet",
+    "both x1-only and final scoped tests exist"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Match a validation entrypoint to the artifact stage it was designed to test.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Before invoking inherited tests, inspect whether the entrypoint asserts x1-only absence or final-packet presence.",
+  "rollback": "Assign no credit to the stage-mismatched run and preserve both the test and completed predecessor artifacts.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6457-X1-N07"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

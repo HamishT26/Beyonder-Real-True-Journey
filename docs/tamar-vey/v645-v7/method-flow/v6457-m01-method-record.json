@@ -1,0 +1,27 @@
+{
+  "method_id": "V6457-M01",
+  "title": "Increase only the schema-read envelope after retaining the first timeout",
+  "failure_signature": "The first complete Method Flow schema read timed out after ten seconds and returned no schema content.",
+  "trigger_preconditions": [
+    "required local schema",
+    "first bounded read returned no content"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Retain the timeout, widen only the read envelope, and require complete content before task action.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never infer schema content from silence or discard the first timed-out attempt.",
+  "rollback": "Keep task action paused until a complete read succeeds.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6457-START-N01"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

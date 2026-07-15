@@ -1,0 +1,27 @@
+{
+  "method_id": "V6457-M05",
+  "title": "Inspect runner subcommand help after a zero-match source-code search",
+  "failure_signature": "A narrow source search assumed argparse labels that were not present in the repository wrapper and exited with no matches.",
+  "trigger_preconditions": [
+    "delegating compatibility wrapper",
+    "narrow implementation search returned no matches"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Use executable help as the source of truth when a compatibility wrapper delegates implementation.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not treat zero text matches as proof that a delegated CLI lacks a capability.",
+  "rollback": "Withdraw the source-search inference and make no ledger call until help succeeds.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6457-X1-N03"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

@@ -1,0 +1,27 @@
+{
+  "method_id": "V6457-M06",
+  "title": "Let the passing-witness transition stand before preferred promotion",
+  "failure_signature": "The first x1 builder run recorded a passing witness that automatically promoted its method to validated, then attempted the invalid transition from validated to validated.",
+  "trigger_preconditions": [
+    "canonical runner auto-promotes on passing witness",
+    "builder requests an explicit state transition"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Treat a passing witness as the validated transition and request only the next legal state.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Re-read method state after every witness command before issuing an explicit transition.",
+  "rollback": "Stop the builder, preserve the partial ledger, and resume without deleting or duplicating evidence.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6457-X1-N04"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}
