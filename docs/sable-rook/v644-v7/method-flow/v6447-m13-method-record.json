@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M13",
+  "title": "Process-local UTF-8 for Unicode Method Flow output",
+  "failure_signature": "The Method Flow summary print could not encode valid Māori text through a legacy Windows console code page.",
+  "trigger_preconditions": ["Unicode Method Flow content", "Windows legacy stdout encoding", "JSON summary print"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_process_local",
+  "candidate_workaround": "Set UTF-8 output encoding for the single runner process, rerun summarize, and parse the emitted JSON receipt.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use process-local UTF-8 when Unicode may reach stdout; never replace or anglicize Māori wording to satisfy a console codec.",
+  "rollback": "Retain the failed print, leave host settings unchanged, and rerun only the bounded command with UTF-8 output.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["maori_authority", "cultural_wording", "host_configuration", "private_material"],
+  "retained_negative_ids": ["V6447-X2-N06"],
+  "scope_boundary": "Console transport only; it does not confer cultural authority or validate substantive wording."
+}

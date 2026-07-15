@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 8,
-    "recommendations": 7,
-    "state_events": 22,
+    "methods": 14,
+    "recommendations": 13,
+    "state_events": 40,
     "states": {
       "candidate": 1,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 7,
+      "preferred": 13,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
       "fail": 0,
-      "pass": 7
+      "pass": 13
     },
-    "witnesses": 7
+    "witnesses": 13
   },
   "owner": "Sable Rook",
   "phase": "v644-gmut-thos-v7-x1-x2",
@@ -133,6 +133,102 @@
       ],
       "validation_witness_ids": [
         "V6447-M08-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Split existence, status, and content inspection into bounded per-file calls and promote only complete outputs.",
+      "method_id": "V6447-M09",
+      "recurrence_guard": "Do not append an unbounded diff-stat walk to the first file-existence witness on a large packet.",
+      "rollback": "Retain the timeout, ignore incomplete aggregate output except its explicit file-existence rows, and rerun bounded checks.",
+      "scope_boundary": "Operational inspection only; it does not validate artifact semantics, privacy, or final integrity.",
+      "title": "Bounded per-file inspection after combined status timeout",
+      "trigger_preconditions": [
+        "slow D-first worktree",
+        "combined Git and filesystem inspection",
+        "large untracked packet"
+      ],
+      "validation_witness_ids": [
+        "V6447-M09-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Enumerate exact leaf filenames first and read only a returned path.",
+      "method_id": "V6447-M10",
+      "recurrence_guard": "Treat phase Method Flow storage layout as discoverable state, not an inherited directory convention.",
+      "rollback": "Retain the failed path assumption and rerun the read against an enumerated leaf path.",
+      "scope_boundary": "Filesystem path discovery only; it does not validate Method Flow content.",
+      "title": "Enumerate Method Flow leaf paths before exact reads",
+      "trigger_preconditions": [
+        "phase-specific Method Flow layout",
+        "guessed nested path",
+        "exact record read"
+      ],
+      "validation_witness_ids": [
+        "V6447-M10-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Inspect the known predecessor validator, phase lifecycle receipts, and exact current files directly before expanding search scope.",
+      "method_id": "V6447-M11",
+      "recurrence_guard": "Start from explicit phase-relative surfaces when the sought lifecycle schema is already localized.",
+      "rollback": "Retain the timeout and narrow the read-only search; expand only if the known surfaces are insufficient.",
+      "scope_boundary": "Search strategy only; it does not validate lifecycle receipt truth.",
+      "title": "Known-surface search instead of broad helper scan",
+      "trigger_preconditions": [
+        "slow D-first worktree",
+        "broad recursive content search",
+        "known phase predecessor available"
+      ],
+      "validation_witness_ids": [
+        "V6447-M11-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the exact source as UTF-8 and apply small semantic regions with independently verified context.",
+      "method_id": "V6447-M12",
+      "recurrence_guard": "Never derive culturally specific patch text from mojibake console output; verify UTF-8 source and keep patch regions bounded.",
+      "rollback": "A rejected patch changes no file; retain the negative and reapply only after exact source inspection.",
+      "scope_boundary": "Patch transport and encoding only; wording remains subject to Māori authority and substantive review.",
+      "title": "Small UTF-8-exact semantic patch regions",
+      "trigger_preconditions": [
+        "copied version scaffold",
+        "multi-region semantic patch",
+        "Unicode authority wording"
+      ],
+      "validation_witness_ids": [
+        "V6447-M12-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Set UTF-8 output encoding for the single runner process, rerun summarize, and parse the emitted JSON receipt.",
+      "method_id": "V6447-M13",
+      "recurrence_guard": "Use process-local UTF-8 when Unicode may reach stdout; never replace or anglicize Māori wording to satisfy a console codec.",
+      "rollback": "Retain the failed print, leave host settings unchanged, and rerun only the bounded command with UTF-8 output.",
+      "scope_boundary": "Console transport only; it does not confer cultural authority or validate substantive wording.",
+      "title": "Process-local UTF-8 for Unicode Method Flow output",
+      "trigger_preconditions": [
+        "Unicode Method Flow content",
+        "Windows legacy stdout encoding",
+        "JSON summary print"
+      ],
+      "validation_witness_ids": [
+        "V6447-M13-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Convert the returned exact leaf listing into an allowlist and read only paths present in it.",
+      "method_id": "V6447-M14",
+      "recurrence_guard": "Stop before a follow-up read when its leaf is absent from the enumerated allowlist.",
+      "rollback": "Retain the missing-file negative and rerun only the allowlisted exact reads.",
+      "scope_boundary": "Filesystem read selection only; it does not validate artifact content or currency.",
+      "title": "Enumerated leaf list as a follow-up read allowlist",
+      "trigger_preconditions": [
+        "exact directory listing",
+        "composite follow-up read",
+        "inferred naming symmetry"
+      ],
+      "validation_witness_ids": [
+        "V6447-M14-W01"
       ]
     }
   ],

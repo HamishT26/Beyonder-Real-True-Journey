@@ -2,8 +2,8 @@
 
 - Phase: v644-gmut-thos-v7-x1-x2
 - Owner: Sable Rook
-- Methods: 8
-- Passing witnesses: 7
+- Methods: 14
+- Passing witnesses: 13
 - Failed witnesses retained: 0
 
 ## Preferred methods
@@ -63,6 +63,54 @@
 - Recurrence guard: An exact file-set receipt must enumerate leaf paths, not a collapsed directory placeholder.
 - Rollback: Retain the inaccurate comparison, make no commit from it, and rerun against uncollapsed or staged leaf paths.
 - Witnesses: V6447-M08-W01
+
+### V6447-M09 — Bounded per-file inspection after combined status timeout
+
+- Trigger: slow D-first worktree; combined Git and filesystem inspection; large untracked packet
+- Method: Split existence, status, and content inspection into bounded per-file calls and promote only complete outputs.
+- Recurrence guard: Do not append an unbounded diff-stat walk to the first file-existence witness on a large packet.
+- Rollback: Retain the timeout, ignore incomplete aggregate output except its explicit file-existence rows, and rerun bounded checks.
+- Witnesses: V6447-M09-W01
+
+### V6447-M10 — Enumerate Method Flow leaf paths before exact reads
+
+- Trigger: phase-specific Method Flow layout; guessed nested path; exact record read
+- Method: Enumerate exact leaf filenames first and read only a returned path.
+- Recurrence guard: Treat phase Method Flow storage layout as discoverable state, not an inherited directory convention.
+- Rollback: Retain the failed path assumption and rerun the read against an enumerated leaf path.
+- Witnesses: V6447-M10-W01
+
+### V6447-M11 — Known-surface search instead of broad helper scan
+
+- Trigger: slow D-first worktree; broad recursive content search; known phase predecessor available
+- Method: Inspect the known predecessor validator, phase lifecycle receipts, and exact current files directly before expanding search scope.
+- Recurrence guard: Start from explicit phase-relative surfaces when the sought lifecycle schema is already localized.
+- Rollback: Retain the timeout and narrow the read-only search; expand only if the known surfaces are insufficient.
+- Witnesses: V6447-M11-W01
+
+### V6447-M12 — Small UTF-8-exact semantic patch regions
+
+- Trigger: copied version scaffold; multi-region semantic patch; Unicode authority wording
+- Method: Read the exact source as UTF-8 and apply small semantic regions with independently verified context.
+- Recurrence guard: Never derive culturally specific patch text from mojibake console output; verify UTF-8 source and keep patch regions bounded.
+- Rollback: A rejected patch changes no file; retain the negative and reapply only after exact source inspection.
+- Witnesses: V6447-M12-W01
+
+### V6447-M13 — Process-local UTF-8 for Unicode Method Flow output
+
+- Trigger: Unicode Method Flow content; Windows legacy stdout encoding; JSON summary print
+- Method: Set UTF-8 output encoding for the single runner process, rerun summarize, and parse the emitted JSON receipt.
+- Recurrence guard: Use process-local UTF-8 when Unicode may reach stdout; never replace or anglicize Māori wording to satisfy a console codec.
+- Rollback: Retain the failed print, leave host settings unchanged, and rerun only the bounded command with UTF-8 output.
+- Witnesses: V6447-M13-W01
+
+### V6447-M14 — Enumerated leaf list as a follow-up read allowlist
+
+- Trigger: exact directory listing; composite follow-up read; inferred naming symmetry
+- Method: Convert the returned exact leaf listing into an allowlist and read only paths present in it.
+- Recurrence guard: Stop before a follow-up read when its leaf is absent from the enumerated allowlist.
+- Rollback: Retain the missing-file negative and rerun only the allowlisted exact reads.
+- Witnesses: V6447-M14-W01
 
 ## Retained boundary
 

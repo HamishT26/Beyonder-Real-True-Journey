@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M09",
+  "title": "Bounded per-file inspection after combined status timeout",
+  "failure_signature": "A combined status, existence, and diff-stat probe exceeded its command window after returning only partial decisive output.",
+  "trigger_preconditions": ["slow D-first worktree", "combined Git and filesystem inspection", "large untracked packet"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Split existence, status, and content inspection into bounded per-file calls and promote only complete outputs.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not append an unbounded diff-stat walk to the first file-existence witness on a large packet.",
+  "rollback": "Retain the timeout, ignore incomplete aggregate output except its explicit file-existence rows, and rerun bounded checks.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["exact_staged_review", "private_material", "destructive_action", "history_rewrite"],
+  "retained_negative_ids": ["V6447-X2-N01"],
+  "scope_boundary": "Operational inspection only; it does not validate artifact semantics, privacy, or final integrity."
+}

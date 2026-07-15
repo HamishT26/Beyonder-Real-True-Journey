@@ -136,6 +136,128 @@ def assurance_defeater(row: Row) -> bool:
     )
 
 
+def evidence_min_cut(row: Row) -> bool:
+    return bool(
+        row.get("failure_domains_declared") is True
+        and row.get("aliases_collapsed") is True
+        and row.get("minimum_cut_enumerated") is True
+        and row.get("claim_survival_recomputed") is True
+        and row.get("negative_sources_retained") is True
+        and row.get("independent_team_reproduction") is False
+        and row.get("claim_class") == "structural_independence_only"
+    )
+
+
+def tidal_real_data(row: Row) -> bool:
+    return bool(
+        row.get("derived_gmut_observable") is True
+        and row.get("checksum_bound_strain_rows") is True
+        and row.get("calibration_and_waveform_frozen") is True
+        and row.get("priors_selection_covariance_complete") is True
+        and row.get("blind_holdout") is True
+        and row.get("independent_review") is True
+        and row.get("claim_class") == "empirical_analysis_ready"
+    )
+
+
+def eft_running(row: Row) -> bool:
+    return bool(
+        row.get("operator_basis_declared") is True
+        and row.get("coefficient_units_declared") is True
+        and row.get("anomalous_dimension_declared") is True
+        and row.get("scheme_and_matching_scale_declared") is True
+        and row.get("truncation_order_consistent") is True
+        and row.get("physical_prediction_claim") is False
+        and row.get("claim_class") == "formal_eft_only"
+    )
+
+
+def missing_tipping(row: Row) -> bool:
+    return bool(
+        row.get("estimand_declared") is True
+        and row.get("missingness_assumptions_frozen") is True
+        and row.get("delta_grid_preregistered") is True
+        and row.get("attrition_and_harms_retained") is True
+        and row.get("tipping_rule_frozen") is True
+        and row.get("real_arm_count") == 0
+        and row.get("claim_class") == "proxy_only"
+    )
+
+
+def mdoc_binding(row: Row) -> bool:
+    requested = set(row.get("requested_elements") or [])
+    disclosed = set(row.get("disclosed_elements") or [])
+    return bool(
+        row.get("session_transcript_bound") is True
+        and row.get("handover_bound") is True
+        and row.get("origin_nonce_bound") is True
+        and row.get("reader_auth_state_valid") is True
+        and row.get("device_auth_state_valid") is True
+        and disclosed <= requested
+        and row.get("claim_class") == "synthetic_mdoc_proxy_only"
+    )
+
+
+def residual_authority(row: Row) -> bool:
+    return bool(
+        row.get("affected_party_authority") is True
+        and row.get("fund_governance_authority") is True
+        and row.get("beneficiary_privacy_authority") is True
+        and row.get("maori_authority_where_applicable") is True
+        and row.get("fiduciary_authority") is True
+        and row.get("competent_legal_authority") is True
+        and row.get("claim_class") == "authorized_residual_fund_action"
+    )
+
+
+def windows_path_portability(row: Row) -> bool:
+    return bool(
+        row.get("reserved_names_rejected") is True
+        and row.get("casefold_collisions_rejected") is True
+        and row.get("trailing_components_rejected") is True
+        and row.get("path_policy_declared") is True
+        and row.get("manifest_identity_stable") is True
+        and row.get("host_configuration_mutated") is False
+        and row.get("claim_class") == "synthetic_portability_only"
+    )
+
+
+def diagnostic_minimization(row: Row) -> bool:
+    return bool(
+        row.get("raw_identifiers_present") is False
+        and row.get("private_paths_present") is False
+        and row.get("credentials_present") is False
+        and row.get("correlation_scope") == "single_purpose_window"
+        and row.get("token_reversible") is False
+        and row.get("retention_expiry_declared") is True
+        and row.get("claim_class") == "bounded_privacy_scan_only"
+    )
+
+
+def exergy_nonconversion(row: Row) -> bool:
+    return bool(
+        row.get("reference_environment_declared") is True
+        and row.get("dead_state_declared") is True
+        and row.get("interaction_class_declared") is True
+        and row.get("energy_exergy_distinguished") is True
+        and row.get("units_and_signs_consistent") is True
+        and row.get("psyche_conversion") is False
+        and row.get("claim_class") == "physical_synthetic_only"
+    )
+
+
+def sample_information_stop(row: Row) -> bool:
+    return bool(
+        row.get("uncertainty_and_decision_declared") is True
+        and row.get("evidence_domain_match") is True
+        and row.get("cost_and_risk_declared") is True
+        and row.get("irreversible_harm_blocked") is True
+        and row.get("domain_vetoes_preserved") is True
+        and row.get("negatives_retained") is True
+        and row.get("claim_class") == "structural_decision_only"
+    )
+
+
 TRIBUNALS: dict[str, Callable[[Row], bool]] = {
     "metrology": metrology,
     "self_adjoint": self_adjoint,
@@ -147,6 +269,16 @@ TRIBUNALS: dict[str, Callable[[Row], bool]] = {
     "figure_alternative": figure_alternative,
     "thermodynamic_length": thermodynamic_length,
     "assurance_defeater": assurance_defeater,
+    "evidence_min_cut": evidence_min_cut,
+    "tidal_real_data": tidal_real_data,
+    "eft_running": eft_running,
+    "missing_tipping": missing_tipping,
+    "mdoc_binding": mdoc_binding,
+    "residual_authority": residual_authority,
+    "windows_path_portability": windows_path_portability,
+    "diagnostic_minimization": diagnostic_minimization,
+    "exergy_nonconversion": exergy_nonconversion,
+    "sample_information_stop": sample_information_stop,
 }
 
 

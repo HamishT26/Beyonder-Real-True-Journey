@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M12",
+  "title": "Small UTF-8-exact semantic patch regions",
+  "failure_signature": "Large or console-rendered patch contexts were rejected atomically when copied UTF-8 text did not match exactly.",
+  "trigger_preconditions": ["copied version scaffold", "multi-region semantic patch", "Unicode authority wording"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_edit",
+  "candidate_workaround": "Read the exact source as UTF-8 and apply small semantic regions with independently verified context.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never derive culturally specific patch text from mojibake console output; verify UTF-8 source and keep patch regions bounded.",
+  "rollback": "A rejected patch changes no file; retain the negative and reapply only after exact source inspection.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["maori_authority", "cultural_wording", "private_material", "history_rewrite"],
+  "retained_negative_ids": ["V6447-X2-N04", "V6447-X2-N05"],
+  "scope_boundary": "Patch transport and encoding only; wording remains subject to Māori authority and substantive review."
+}

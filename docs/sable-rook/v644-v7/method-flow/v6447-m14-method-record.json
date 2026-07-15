@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M14",
+  "title": "Enumerated leaf list as a follow-up read allowlist",
+  "failure_signature": "A composite follow-up read guessed a filename that the immediately preceding exact leaf listing did not contain.",
+  "trigger_preconditions": ["exact directory listing", "composite follow-up read", "inferred naming symmetry"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Convert the returned exact leaf listing into an allowlist and read only paths present in it.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Stop before a follow-up read when its leaf is absent from the enumerated allowlist.",
+  "rollback": "Retain the missing-file negative and rerun only the allowlisted exact reads.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["private_material", "destructive_action", "history_rewrite"],
+  "retained_negative_ids": ["V6447-X2-N07"],
+  "scope_boundary": "Filesystem read selection only; it does not validate artifact content or currency."
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "ghc.family.v644-v7.v6447-p07.contract.v1",
+  "phase": "v644-gmut-thos-v7-x1-x2",
+  "proposal_id": "V6447-P07",
+  "title": "Windows reserved-name, case-fold, and trailing-component portability tribunal",
+  "observed_disposition": "completed",
+  "approval_class": "safe_now_synthetic_only",
+  "baseline": {
+    "reserved_names_rejected": true,
+    "casefold_collisions_rejected": true,
+    "trailing_components_rejected": true,
+    "path_policy_declared": true,
+    "manifest_identity_stable": true,
+    "host_configuration_mutated": false,
+    "claim_class": "synthetic_portability_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A synthetic path tribunal can reject an evidence package whose names collide under Windows case folding, map to reserved device names, lose trailing components, exceed declared path policy, or change manifest identity across supported path semantics.",
+  "falsifier_or_gate": "Mutate case, reserved base names, superscript device digits, trailing period or space, separator, path length, manifest key, and platform label; colliding, lossy, ambiguous, or promoted packages must fail.",
+  "protected_gates": [
+    "sibling_lane",
+    "history_rewrite",
+    "destructive_migration",
+    "host_configuration_change",
+    "independent_team_reproduction"
+  ],
+  "evidence_class": "bounded structural or proxy software evidence",
+  "boundary": "Acceptance is confined to the declared synthetic tribunal and does not promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

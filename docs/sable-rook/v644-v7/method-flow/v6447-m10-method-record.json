@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M10",
+  "title": "Enumerate Method Flow leaf paths before exact reads",
+  "failure_signature": "A read assumed nested record and witness directories even though the phase stored Method Flow leaf files directly under its method-flow directory.",
+  "trigger_preconditions": ["phase-specific Method Flow layout", "guessed nested path", "exact record read"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Enumerate exact leaf filenames first and read only a returned path.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Treat phase Method Flow storage layout as discoverable state, not an inherited directory convention.",
+  "rollback": "Retain the failed path assumption and rerun the read against an enumerated leaf path.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["private_material", "destructive_action", "history_rewrite"],
+  "retained_negative_ids": ["V6447-X2-N02"],
+  "scope_boundary": "Filesystem path discovery only; it does not validate Method Flow content."
+}
