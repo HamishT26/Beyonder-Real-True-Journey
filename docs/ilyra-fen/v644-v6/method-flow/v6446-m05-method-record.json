@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M05",
+  "title": "Dual-key inherited source-ledger deduplication",
+  "failure_signature": "A candidate source slate passed exact URL comparison but failed the builder because two normalized titles already existed under alternate official URLs.",
+  "trigger_preconditions": [
+    "recursive inherited source ledger",
+    "official specification with multiple stable URLs",
+    "candidate comparison limited to URL identity"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Recursively decode the full inherited ledger and compare both normalized titles and canonicalized URLs before assigning a new source ID; reuse the inherited ID when either identifies the same source.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Require zero duplicate normalized titles and zero duplicate canonical URLs for every added source slate.",
+  "rollback": "Remove only the uncommitted duplicate additions, preserve the failed builder receipt as a negative, and keep inherited ledger rows unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "source_provenance",
+    "private_material",
+    "sibling_lane",
+    "history_rewrite"
+  ],
+  "retained_negative_ids": ["V6446-X1-N06"],
+  "scope_boundary": "Source-ledger identity only; matching a source does not validate its claims, supply observations, or delegate authority."
+}

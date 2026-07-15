@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M07",
+  "title": "Exact boundary vocabulary in generated validation receipts",
+  "failure_signature": "A generated receipt expressed authoritative ownership but omitted the exact canonical-role term required by the frozen validation rule, causing one of 56 scoped tests to fail.",
+  "trigger_preconditions": [
+    "user boundary uses a term of art",
+    "generated receipt uses a near-synonym",
+    "validator asserts the explicit frozen role"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Carry exact boundary vocabulary into generated receipts and tests for canonical role, named lane, same-owner replay, and independent-reproduction limits.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Treat frozen role labels as schema values rather than prose synonyms and mutation-test their presence.",
+  "rollback": "Restore the prior receipt only if the exact term misstates evidence; otherwise retain the failed test and regenerate the bounded receipt.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "canonical_branch_authority",
+    "same_owner_only",
+    "independent_reproduction",
+    "x1_x2_separation"
+  ],
+  "retained_negative_ids": ["V6446-X1-N08"],
+  "scope_boundary": "Receipt vocabulary and validator alignment only; exact words do not manufacture missing evidence or authority."
+}

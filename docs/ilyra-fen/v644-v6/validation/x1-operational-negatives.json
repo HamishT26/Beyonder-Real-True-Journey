@@ -1,0 +1,89 @@
+{
+  "schema": "ghc.family.v644-v6.x1-operational-negatives.v1",
+  "phase": "v644-gmut-thos-v6-x1-x2",
+  "count": 9,
+  "negatives": [
+    {
+      "negative_id": "V6446-X1-N01",
+      "operation": "combined source-and-template inspection",
+      "failure_signature": "A four-command combined inspection exceeded its ten-second execution envelope before returning output.",
+      "trigger_precondition": "Several Git, Python, and large-file reads shared one short orchestration envelope.",
+      "recovery": "Recorded the timeout and split inspection into bounded single-purpose commands.",
+      "recurrence_guard": "Use separate commands and a measured envelope for large repository state or template reads; never infer success from a timed-out batch.",
+      "promotion_effect": "none; the timed-out batch produced no validation evidence"
+    },
+    {
+      "negative_id": "V6446-X1-N02",
+      "operation": "short-envelope Git and runner retry",
+      "failure_signature": "The first separated retry still exceeded the same ten-second envelope while the large worktree status scan was active.",
+      "trigger_precondition": "The retry separated logical checks but retained an envelope below the observed repository scan duration.",
+      "recovery": "Raised only the command timeout, kept the check unchanged, and obtained exact clean branch and upstream evidence.",
+      "recurrence_guard": "Use a sixty-second ceiling for large D-drive Git state checks while keeping output and query scope bounded.",
+      "promotion_effect": "none; only the later completed direct checks are evidence"
+    },
+    {
+      "negative_id": "V6446-X1-N03",
+      "operation": "PowerShell ripgrep structure query",
+      "failure_signature": "A double-quoted regular expression containing JSON quote syntax caused a PowerShell parse error before ripgrep ran.",
+      "trigger_precondition": "Nested shell and regular-expression quotation was composed in one command without a literal single-quoted pattern.",
+      "recovery": "Retried with a single-quoted ripgrep expression and a single target file.",
+      "recurrence_guard": "Use literal single-quoted ripgrep patterns in PowerShell and avoid nested JSON quoting in composite inspection commands.",
+      "promotion_effect": "none; the parse failure changed no file and supplied no evidence"
+    },
+    {
+      "negative_id": "V6446-X1-N04",
+      "operation": "Method Flow explicit validation transition for V6446-M02",
+      "failure_signature": "The runner rejected an explicit validated-to-validated transition because the passing witness had already advanced the method automatically.",
+      "trigger_precondition": "The caller treated witness recording and validated-state promotion as separate operations without first reading the returned method state.",
+      "recovery": "Retained the rejected transition and applied only the allowed validated-to-preferred transition.",
+      "recurrence_guard": "After recording a witness, inspect the returned method_state; do not request validated when a passing witness has already supplied it.",
+      "promotion_effect": "none for the rejected command; the separate preferred transition succeeded only after the witness had validated the method"
+    },
+    {
+      "negative_id": "V6446-X1-N05",
+      "operation": "Method Flow explicit validation transition for V6446-M03",
+      "failure_signature": "The runner rejected a second explicit validated-to-validated transition after the passing witness had already advanced the method.",
+      "trigger_precondition": "The same batched transition assumption was repeated for the second method before the first runner error was observed.",
+      "recovery": "Retained the second rejection, confirmed both methods were preferred only after successful witnesses, and preregistered a state-aware runner guard.",
+      "recurrence_guard": "Run and inspect one witness result before the next state operation; use set-state preferred only from the returned validated state.",
+      "promotion_effect": "none for the rejected command; no witness or negative was erased"
+    },
+    {
+      "negative_id": "V6446-X1-N06",
+      "operation": "first complete x1 source-collision gate",
+      "failure_signature": "The builder rejected two source additions whose URLs differed from inherited rows but whose normalized titles duplicated inherited W3C and OpenID specifications.",
+      "trigger_precondition": "The preliminary slate checked canonical URLs but did not also compare normalized titles across all 200 inherited source rows.",
+      "recovery": "Resolved and reused inherited source IDs V8-S09 and V6437-S147, removed both duplicate additions, and reran normalized-title and canonical-URL deduplication before the builder retry.",
+      "recurrence_guard": "Compare both normalized title and canonical URL against the recursively decoded inherited ledger before assigning any new source ID.",
+      "promotion_effect": "none; the rejected builder run produced no valid x1 freeze and the duplicate rows are not counted"
+    },
+    {
+      "negative_id": "V6446-X1-N07",
+      "operation": "second complete x1 expected-file gate",
+      "failure_signature": "The builder generated the packet but reported four expected files absent: two phase index receipts had no writer and the two validation outputs were checked before their own creation.",
+      "trigger_precondition": "The inherited expected-file list outpaced its direct writer map and treated terminal self-outputs as ordinary pre-existing inputs.",
+      "recovery": "Added explicit phase index writers and classified only the two terminal validation outputs as deferred self-outputs created after the presence check.",
+      "recurrence_guard": "Map every expected non-self file to a writer or immutable input and keep a named minimal set of terminal self-outputs outside prewrite presence checks.",
+      "promotion_effect": "none; the incomplete expected-file run is retained and only a later zero-missing build may be frozen"
+    },
+    {
+      "negative_id": "V6446-X1-N08",
+      "operation": "first combined scoped x1 test run",
+      "failure_signature": "The scoped run passed 55 of 56 tests; the named-validation receipt called the sequential branch authoritative but omitted the explicit canonical label required by the test and phase rule.",
+      "trigger_precondition": "The receipt used a near-synonym where the frozen user boundary and validator require an exact canonical-role statement.",
+      "recovery": "Changed the generated canonical_rule to name the canonical sequential branch explicitly and retained the failed 55/56 run.",
+      "recurrence_guard": "Use exact frozen boundary vocabulary for canonical role, same-owner replay, and independent-reproduction limits; test the generated receipt rather than implied synonyms.",
+      "promotion_effect": "none; only a later 56/56 scoped run may be promoted"
+    },
+    {
+      "negative_id": "V6446-X1-N09",
+      "operation": "first exact staged-blob x1 seal review",
+      "failure_signature": "All 44 staged files and 35 JSON blobs passed file-set, parse, and privacy checks, but 21 of 36 content-seal hashes differed because the seal used working-tree bytes while Git staged normalized blob bytes.",
+      "trigger_precondition": "Python-generated text used Windows working-tree newlines while Git attributes and clean filters normalized the staged representation.",
+      "recovery": "Changed the x1 content seal to declare and hash exact Git blob bytes produced through repository attributes and clean filters, then required staged-blob parity.",
+      "recurrence_guard": "Use Git-blob SHA-256 for committed-byte manifests and keep normalized logical-text hashes as a separately named domain; never compare an undeclared working-tree domain to staged blobs.",
+      "promotion_effect": "none; the 21-mismatch review is retained and only a later zero-mismatch staged review may be promoted"
+    }
+  ],
+  "retention_rule": "Recovery does not erase failure evidence; only successful corrected runs may be promoted."
+}

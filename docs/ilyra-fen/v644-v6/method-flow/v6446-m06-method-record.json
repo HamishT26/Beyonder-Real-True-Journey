@@ -1,0 +1,27 @@
+{
+  "method_id": "V6446-M06",
+  "title": "Direct writer map and deferred self-output gate",
+  "failure_signature": "An x1 build reached validation with four expected files absent because two receipts lacked writers and two terminal validation outputs were checked before they were written.",
+  "trigger_preconditions": [
+    "generated exact-file list",
+    "terminal validation writes after presence calculation",
+    "expected receipt names inherited without direct writers"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Give every expected non-self artifact a direct writer and exclude only the explicitly named terminal validation JSON and Markdown outputs from the prewrite presence gate.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Require a writer-or-input map for expected files and keep the deferred self-output set minimal, named, and verified after process completion.",
+  "rollback": "Retain the incomplete build receipt, revert only the unpromoted builder correction if it hides a real missing file, and never weaken privacy or exact-file review.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "exact_file_review",
+    "privacy_scan",
+    "x1_x2_separation",
+    "sibling_lane",
+    "history_rewrite"
+  ],
+  "retained_negative_ids": ["V6446-X1-N07"],
+  "scope_boundary": "Builder dependency ordering only; terminal self-output deferral cannot excuse a genuinely missing input or evidence file."
+}

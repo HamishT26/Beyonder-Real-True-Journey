@@ -1,0 +1,27 @@
+{
+  "method_id": "V6446-M04",
+  "title": "State-aware Method Flow witness promotion",
+  "failure_signature": "Two explicit validated-state requests were rejected because each passing witness had already advanced its candidate method to validated.",
+  "trigger_preconditions": [
+    "Method Flow candidate method",
+    "passing witness registration",
+    "caller assumes witness and validated transition are separate",
+    "state operations batched before returned state is inspected"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Record one witness, inspect its returned method_state, and request preferred only when the witness has already produced validated.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not batch witness and redundant validated transitions; branch the next operation on the runner's returned state.",
+  "rollback": "Retain the rejected transition, leave the witness and current valid state intact, and issue no compensating edit to the append-only ledger.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "append_only_method_history",
+    "private_material",
+    "destructive_action",
+    "sibling_lane"
+  ],
+  "retained_negative_ids": ["V6446-X1-N04", "V6446-X1-N05"],
+  "scope_boundary": "Method Flow runner sequencing only; not evidence for repository completeness or any scientific or authority claim."
+}

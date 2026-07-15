@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M03",
+  "title": "Literal PowerShell patterns for bounded ripgrep inspection",
+  "failure_signature": "A double-quoted regular expression containing nested JSON quote syntax caused a PowerShell parser failure before ripgrep ran.",
+  "trigger_preconditions": [
+    "PowerShell command composition",
+    "regular expression with quote-like JSON syntax",
+    "multiple patterns embedded in one shell string"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Use a literal single-quoted ripgrep pattern and one bounded target file per structural inspection.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Keep regular expressions literal in PowerShell and avoid nested JSON quotation in composite commands.",
+  "rollback": "Retain the parse failure, make no file change, and retry the read-only query with literal quoting.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "host_security_change",
+    "sibling_lane"
+  ],
+  "retained_negative_ids": ["V6446-X1-N03"],
+  "scope_boundary": "Shell-query construction only; not general proof of command safety or validation completeness."
+}

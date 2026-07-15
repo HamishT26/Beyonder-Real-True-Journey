@@ -1,0 +1,37 @@
+{
+  "method_id": "V6446-M01",
+  "title": "Named LF validation lane and scoped round-robin replay",
+  "failure_signature": "Inherited validation attempts exposed missing Git indexes, checkout newline conversion, long-path checkout failure, hash-domain confusion, and stale integrity receipts.",
+  "trigger_preconditions": [
+    "non-Eiren phase under the scoped validation rule",
+    "exact final-head replay",
+    "cross-checkout text and committed-byte evidence",
+    "one additional bounded same-owner replay"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Use a fresh clean named Ilyra validation branch and LF-preserving D-first worktree at the exact final head, run only the frozen scoped checks, keep Git-blob and logical-text hash domains distinct, and leave the canonical sequential branch authoritative.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Forbid detached validation, full-suite ownership by this seat, raw working-tree byte claims for logical text, any second additional replay, and any push from the validation lane.",
+  "rollback": "Stop using the named validation lane, retain its failed receipt, and return to the clean canonical Ilyra branch without deleting, resetting, or rewriting another lane.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "host_security_change",
+    "host_configuration_change",
+    "sibling_lane",
+    "history_rewrite",
+    "full_repository_suite_ownership",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6445-VALID-N01",
+    "V6445-VALID-N02",
+    "V6445-VALID-N03",
+    "V6445-VALID-N04",
+    "V6445-VALID-N05",
+    "V6445-VALID-N06",
+    "V6445-VALID-N07"
+  ],
+  "scope_boundary": "Candidate workflow only until the one authorized final named-lane replay passes; never independent reproduction, exhaustive validation, or scientific evidence."
+}

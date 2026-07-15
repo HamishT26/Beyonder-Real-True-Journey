@@ -1,0 +1,28 @@
+{
+  "method_id": "V6446-M08",
+  "title": "Exact Git-blob hash domain for committed content seals",
+  "failure_signature": "A working-tree-byte seal disagreed with 21 staged text blobs after Git newline normalization even though file-set, JSON, and privacy checks passed.",
+  "trigger_preconditions": [
+    "Windows working tree",
+    "text generated with platform newlines",
+    "Git attributes or clean filters",
+    "manifest intended to attest committed bytes"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Generate the committed-byte seal from exact Git blob bytes after repository attributes and clean filters, and name that domain explicitly.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Every hash receipt must declare Git-blob, normalized logical-text, or raw working-tree domain; staged parity may compare only the Git-blob domain.",
+  "rollback": "Retain the mismatching review, restore the previous seal only as an explicitly raw-working-tree receipt if needed, and never relabel one hash domain as another.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "committed_byte_integrity",
+    "logical_text_integrity",
+    "x1_x2_separation",
+    "history_rewrite",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X1-N09", "V6445-VALID-N04", "V6445-VALID-N05"],
+  "scope_boundary": "Committed-byte manifest portability only; no cryptographic signature, exhaustive integrity, security certification, or independent reproduction."
+}

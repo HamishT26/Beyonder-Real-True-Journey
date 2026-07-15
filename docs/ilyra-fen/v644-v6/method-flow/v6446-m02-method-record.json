@@ -1,0 +1,27 @@
+{
+  "method_id": "V6446-M02",
+  "title": "Bounded command envelopes for large repository inspection",
+  "failure_signature": "Two repository inspection commands exceeded a ten-second orchestration envelope before returning authoritative state.",
+  "trigger_preconditions": [
+    "large D-first working tree",
+    "Git status or Python startup",
+    "multiple inspections sharing one short envelope"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Split inspections by purpose, suppress unnecessary untracked enumeration where appropriate, and use a measured sixty-second ceiling without weakening the underlying check.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use single-purpose commands and an envelope above the observed scan duration; never promote a timed-out batch as evidence.",
+  "rollback": "Discard only the incomplete command result, retain its negative receipt, and reread authoritative Git or runner state directly.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "host_security_change",
+    "sibling_lane",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X1-N01", "V6446-X1-N02"],
+  "scope_boundary": "Repository inspection ergonomics only; not a validation waiver or scientific, security, or authority claim."
+}
