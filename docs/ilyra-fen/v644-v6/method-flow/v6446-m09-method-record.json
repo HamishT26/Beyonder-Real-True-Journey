@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M09",
+  "title": "PowerShell here-string transport for inline Python",
+  "failure_signature": "A POSIX heredoc redirection token was rejected by PowerShell before the inline Python metadata query started.",
+  "trigger_preconditions": [
+    "PowerShell host",
+    "multi-line inline Python",
+    "POSIX heredoc syntax"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Pipe a literal PowerShell here-string to python standard input for multi-line read-only queries.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Select shell-native multi-line transport before composing inline code and keep the query read-only.",
+  "rollback": "Retain the parser failure, make no file change, and rerun only through the host shell's supported literal transport.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "host_security_change",
+    "sibling_lane"
+  ],
+  "retained_negative_ids": ["V6446-X2-N01"],
+  "scope_boundary": "Inline read-only query transport only; not a general shell-safety or validation-completeness claim."
+}

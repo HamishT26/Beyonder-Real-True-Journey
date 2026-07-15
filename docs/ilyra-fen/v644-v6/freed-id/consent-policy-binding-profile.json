@@ -1,0 +1,40 @@
+{
+  "schema": "ghc.family.v644-v6.v6446-p05.contract.v1",
+  "phase": "v644-gmut-thos-v6-x1-x2",
+  "proposal_id": "V6446-P05",
+  "title": "Freed ID holder-consent, disclosure-purpose, and verifier-policy hash-binding profile",
+  "observed_disposition": "represented",
+  "approval_class": "safe_now_proxy_only",
+  "baseline": {
+    "holder_consent": true,
+    "requested_attributes": [
+      "age_over_threshold",
+      "membership"
+    ],
+    "disclosed_attributes": [
+      "age_over_threshold"
+    ],
+    "purpose_bound": true,
+    "verifier_policy_hash_bound": true,
+    "audience_nonce_bound": true,
+    "transaction_bound": true,
+    "claim_class": "synthetic_proxy_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A synthetic profile can reject a presentation when holder consent does not bind the requested disclosure set, declared purpose, verifier policy hash, audience, nonce, and transaction context.",
+  "falsifier_or_gate": "Mutate request set, disclosure set, purpose, policy digest, audience, nonce, holder decision, transaction identifier, and claim class; excessive, stale, unbound, replayable, or promoted rows must fail.",
+  "protected_gates": [
+    "real_keys",
+    "real_proofs",
+    "live_issuance",
+    "live_resolution",
+    "live_status_revocation",
+    "interoperability",
+    "privacy_review",
+    "security_review",
+    "trust_governance",
+    "production"
+  ],
+  "evidence_class": "bounded structural or proxy software evidence",
+  "boundary": "Acceptance is confined to the declared synthetic tribunal and does not promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}
