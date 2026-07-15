@@ -1,0 +1,36 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Remove the single trailing blank line, restage the exact blob, and require git diff --cached --check to pass.",
+  "failure_signature": "The first exact staged review found an extra blank line at the end of the new runtime module.",
+  "method_id": "V6456-M18",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run cached diff hygiene after the exact index is assembled and before every commit.",
+  "retained_negative_ids": [
+    "V6456-X2-N11"
+  ],
+  "rollback": "Give the failed staged index zero commit credit and modify only the owner runtime source.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "one_owner_source_line",
+    "no_history_change",
+    "no_ref_change"
+  ],
+  "supersedes": [],
+  "title": "Run cached diff hygiene before giving the evidence index credit",
+  "trigger_preconditions": [
+    "exact staged Git index",
+    "diff hygiene"
+  ],
+  "validation_witness_ids": [
+    "V6456-W18-F",
+    "V6456-W18-P"
+  ]
+}

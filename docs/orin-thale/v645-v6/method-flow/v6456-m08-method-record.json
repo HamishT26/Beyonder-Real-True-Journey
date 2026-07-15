@@ -1,0 +1,36 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Run status and bounded file reads separately with realistic per-command limits.",
+  "failure_signature": "The first parallel status, listing, and raw-content inspection exceeded its ten-second wrapper budget and returned no complete evidence.",
+  "method_id": "V6456-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Budget cold Git status separately from content inspection and retain timeouts as evidence-free.",
+  "retained_negative_ids": [
+    "V6456-X2-N01"
+  ],
+  "rollback": "Terminate only the diagnostic; make no repository mutation or inference from silence.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "read_only_repository",
+    "no_ref_change",
+    "no_artifact_change"
+  ],
+  "supersedes": [],
+  "title": "Split cold repository inspection when a ten-second aggregate probe times out",
+  "trigger_preconditions": [
+    "cold Windows worktree",
+    "aggregate Git and file inspection"
+  ],
+  "validation_witness_ids": [
+    "V6456-W08-F",
+    "V6456-W08-P"
+  ]
+}

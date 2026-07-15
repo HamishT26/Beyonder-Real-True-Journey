@@ -1,0 +1,37 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Enumerate matching files in PowerShell and invoke py_compile once per resolved path.",
+  "failure_signature": "Python received a literal wildcard path on Windows and rejected it as an invalid filename.",
+  "method_id": "V6456-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Perform wildcard expansion in the calling shell when the target program does not implement globbing.",
+  "retained_negative_ids": [
+    "V6456-X2-N06"
+  ],
+  "rollback": "Count the literal-wildcard invocation as zero compile evidence and rerun only resolved files.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "local_bytecode_cache_only",
+    "no_source_change",
+    "no_dependency_change"
+  ],
+  "supersedes": [],
+  "title": "Expand Python compile targets in PowerShell before invoking py_compile",
+  "trigger_preconditions": [
+    "Windows PowerShell",
+    "python py_compile",
+    "wildcard argument"
+  ],
+  "validation_witness_ids": [
+    "V6456-W13-F",
+    "V6456-W13-P"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Set PYTHONIOENCODING=utf-8 for every bounded child runner and rerun from the start.",
+  "failure_signature": "The first core-runner process wrote its artifacts but exited nonzero when the Windows cp1252 console could not encode Māori boundary text.",
+  "method_id": "V6456-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Declare UTF-8 process I/O for Windows evidence runners that may emit non-ASCII boundary language.",
+  "retained_negative_ids": [
+    "V6456-X2-N07"
+  ],
+  "rollback": "Give the failed invocation zero runner credit, retain its exception class, and overwrite only owner-generated candidate artifacts on rerun.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "owner_candidate_artifacts_only",
+    "no_committed_file_change",
+    "no_ref_change"
+  ],
+  "supersedes": [],
+  "title": "Set UTF-8 subprocess I/O before runner boundary text is printed",
+  "trigger_preconditions": [
+    "Windows legacy console encoding",
+    "Unicode boundary text",
+    "runner JSON stdout"
+  ],
+  "validation_witness_ids": [
+    "V6456-W14-F",
+    "V6456-W14-P"
+  ]
+}

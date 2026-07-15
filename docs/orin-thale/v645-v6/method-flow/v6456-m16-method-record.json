@@ -1,0 +1,37 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Insert the resolved repository root into sys.path before loading the eight frozen test module names.",
+  "failure_signature": "The first validation wrapper attempted eight scoped modules with only the scripts directory on sys.path; all eight imports errored and zero tests received credit.",
+  "method_id": "V6456-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Make repository-root importability explicit in file-launched validation runners.",
+  "retained_negative_ids": [
+    "V6456-X2-N09"
+  ],
+  "rollback": "Count the eight import errors as one failed validation attempt with zero passed tests, preserve the receipt, and rerun the unchanged scope.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "test_process_only",
+    "no_test_source_change",
+    "no_dependency_change"
+  ],
+  "supersedes": [],
+  "title": "Add the repository root before loading scoped unittest modules",
+  "trigger_preconditions": [
+    "script launched by file path",
+    "repository test modules",
+    "unittest module loader"
+  ],
+  "validation_witness_ids": [
+    "V6456-W16-F",
+    "V6456-W16-P"
+  ]
+}
