@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 9,
-    "recommendations": 8,
-    "state_events": 25,
+    "methods": 15,
+    "recommendations": 10,
+    "state_events": 39,
     "states": {
       "candidate": 1,
-      "deprecated": 0,
+      "deprecated": 4,
       "observed": 0,
-      "preferred": 8,
+      "preferred": 10,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 0,
-      "pass": 8
+      "fail": 4,
+      "pass": 10
     },
-    "witnesses": 8
+    "witnesses": 14
   },
   "owner": "Ilyra Fen",
   "phase": "v644-gmut-thos-v6-x1-x2",
@@ -150,9 +150,46 @@
       "validation_witness_ids": [
         "V6446-M09-W01"
       ]
+    },
+    {
+      "candidate_workaround": "Use subprocess communicate semantics to drain input and output concurrently, then parse the complete byte stream deterministically.",
+      "method_id": "V6446-M13",
+      "recurrence_guard": "Never implement high-volume bidirectional subprocess exchange as write-all then read-all on bounded pipes.",
+      "rollback": "Retain all timeout and failed-witness evidence, restore single-object reads if batch parsing changes any digest, and compare the same full manifest.",
+      "scope_boundary": "Subprocess transport only; all manifest entries and validation gates remain unchanged.",
+      "title": "Communicate-backed bidirectional Git batch transport",
+      "trigger_preconditions": [
+        "bidirectional subprocess protocol",
+        "large output per request batch",
+        "sequential parent write before read"
+      ],
+      "validation_witness_ids": [
+        "V6446-M13-W01"
+      ]
+    },
+    {
+      "candidate_workaround": "Retain the failed witness and rejection, move each failed candidate to deprecated as the transition graph permits, and name the preferred replacement in the transition note without rewriting history.",
+      "method_id": "V6446-M15",
+      "recurrence_guard": "Read the current-state transition graph before mutation and require every failed candidate to end in an allowed terminal state.",
+      "rollback": "If a deprecated method later needs reconsideration, create a new candidate with explicit lineage; never reopen or rewrite the terminal record.",
+      "scope_boundary": "Method-state hygiene only; deprecation preserves failure and does not broaden the preferred transport's evidence scope.",
+      "title": "Transition-graph-aligned failed-candidate deprecation",
+      "trigger_preconditions": [
+        "candidate method has a failed witness",
+        "a preferred replacement exists",
+        "candidate-to-superseded is not allowed"
+      ],
+      "validation_witness_ids": [
+        "V6446-M15-W01"
+      ]
     }
   ],
-  "retained_failed_witnesses": [],
+  "retained_failed_witnesses": [
+    "V6446-M10-W01",
+    "V6446-M11-W01",
+    "V6446-M12-W01",
+    "V6446-M14-W01"
+  ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
 }

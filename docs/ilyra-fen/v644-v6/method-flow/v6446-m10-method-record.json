@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M10",
+  "title": "Batched Git object reads for manifest validation",
+  "failure_signature": "A closeout validation bundle timed out after launching a separate Git process for each logical and committed manifest entry in two validators.",
+  "trigger_preconditions": [
+    "large multi-entry manifest",
+    "per-entry git show subprocess",
+    "detailed and minimal validators in one command envelope"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Read all requested commit blobs through one git cat-file batch and invoke detailed and minimal validators in separately observable commands.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Avoid per-entry process fanout for Git manifests; batch object reads and preserve each validator's independent result.",
+  "rollback": "Retain the timed-out bundle, restore the prior validator if batch parsing changes bytes, and compare the same manifest hashes before promotion.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "manifest_integrity",
+    "privacy_scan",
+    "validation_scope",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X2-N02"],
+  "scope_boundary": "Git object retrieval performance only; batching does not reduce the manifest, validation scope, or evidence gates."
+}

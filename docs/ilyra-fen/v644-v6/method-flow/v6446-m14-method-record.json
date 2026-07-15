@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M14",
+  "title": "Explicit failed-candidate supersession after successor validation",
+  "failure_signature": "A detailed validator passed 54 of 55 checks because three failed transport methods remained candidates after a working successor became available.",
+  "trigger_preconditions": [
+    "candidate method has failed witness",
+    "successor method has passing witness",
+    "failed candidate state remains active"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Promote the validated successor, then mark each failed candidate superseded with an explicit successor while retaining all state events, failed witnesses, and negatives.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "After successor validation, require no failed workaround to remain candidate and never delete its history.",
+  "rollback": "If the successor later fails compatibility, deprecate it explicitly and open a new candidate; do not rewrite prior failed or superseded events.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "append_only_method_history",
+    "failed_witness_retention",
+    "rollback_visibility",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X2-N06"],
+  "scope_boundary": "Workflow recommendation state only; supersession does not erase failure or broaden the successor's evidence scope."
+}

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import subprocess
@@ -16,6 +17,7 @@ from typing import Any
 PHASE = "v644-gmut-thos-v6-x1-x2"
 PHASE_REL = Path("docs/ilyra-fen/v644-v6")
 X1_COMMIT = "b8c667052b3fc9bb2f2aafe10b9b1410e9cd77ab"
+EVIDENCE_COMMIT = "198540dd2e581365457c5c9db13c0e3b399dae8b"
 EXPECTED_DISTRIBUTION = {"completed": 6, "represented": 2, "open_gap": 1, "exact_gate": 1}
 ALLOWED_OUTCOMES = set(EXPECTED_DISTRIBUTION)
 OWNER_TOOLS = [
@@ -48,6 +50,34 @@ def load(path: Path) -> Any:
 def logical_sha256(path: Path) -> str:
     data = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
     return hashlib.sha256(data).hexdigest()
+
+
+def commit_blob(repo: Path, commit: str, relative: str) -> bytes:
+    return subprocess.run(
+        ["git", "-C", str(repo), "show", f"{commit}:{relative}"],
+        check=True,
+        capture_output=True,
+    ).stdout
+
+
+def batch_commit_blobs(repo: Path, specs: list[str]) -> dict[str, bytes]:
+    specs = list(dict.fromkeys(specs))
+    completed = subprocess.run(
+        ["git", "-C", str(repo), "cat-file", "--batch"],
+        input="".join(f"{spec}\n" for spec in specs).encode("utf-8"),
+        check=True,
+        capture_output=True,
+    )
+    stream = io.BytesIO(completed.stdout)
+    result: dict[str, bytes] = {}
+    for spec in specs:
+        header = stream.readline().decode("utf-8").strip().split()
+        if len(header) != 3 or header[1] != "blob":
+            raise ValueError(f"missing Git blob for {spec}")
+        size = int(header[2])
+        result[spec] = stream.read(size)
+        stream.read(1)
+    return result
 
 
 def write_json(path: Path, payload: Any) -> None:
@@ -117,17 +147,40 @@ def validate(
             json_issues.append(f"{path.relative_to(repo).as_posix()}: {type(exc).__name__}")
     privacy = privacy_scan(repo, owner_files)
 
+    logical_specs = [
+        f"{EVIDENCE_COMMIT}:{PHASE_REL.as_posix()}/{row['path']}"
+        for row in manifest["entries"]
+    ] if stage != "evidence" else []
+    committed_manifest_path = phase / "reproduction/committed-evidence-manifest.json"
+    committed_manifest = load(committed_manifest_path) if committed_manifest_path.is_file() else None
+    committed_specs = [
+        f"{committed_manifest['target']}:{row['path']}" for row in committed_manifest["entries"]
+    ] if committed_manifest else []
+    batch = batch_commit_blobs(repo, logical_specs + committed_specs) if logical_specs or committed_specs else {}
+
     manifest_mismatches = []
     for row in manifest["entries"]:
         path = phase / row["path"]
-        if not path.is_file() or logical_sha256(path) != row["logical_lf_sha256"]:
+        if stage == "evidence":
+            observed = logical_sha256(path) if path.is_file() else "missing"
+        else:
+            data = batch[f"{EVIDENCE_COMMIT}:{PHASE_REL.as_posix()}/{row['path']}"]
+            observed = hashlib.sha256(data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")).hexdigest()
+        if observed != row["logical_lf_sha256"]:
             manifest_mismatches.append(row["path"])
+
+    committed_manifest_mismatches: list[str] = []
+    if committed_manifest:
+        for row in committed_manifest["entries"]:
+            data = batch[f"{committed_manifest['target']}:{row['path']}"]
+            if hashlib.sha256(data).hexdigest() != row["sha256"]:
+                committed_manifest_mismatches.append(row["path"])
 
     disposition = Counter(row["observed_disposition"] for row in ledger["rows"])
     method_states = Counter(row["recommendation_state"] for row in method["methods"])
     current_head = git(repo, "rev-parse", "HEAD")
     branch = git(repo, "branch", "--show-current")
-    status = git(repo, "status", "--porcelain=v1", "--untracked-files=all")
+    status = git(repo, "status", "--porcelain=v1", "--untracked-files=all") if require_clean else ""
     x1_ancestor = subprocess.run(
         ["git", "-C", str(repo), "merge-base", "--is-ancestor", X1_COMMIT, "HEAD"],
         capture_output=True,
@@ -177,6 +230,8 @@ def validate(
         "manifest_entries_present": manifest["entry_count"] == len(manifest["entries"]) > 0,
         "manifest_lf_parity": not manifest_mismatches,
         "manifest_same_owner_only": manifest["same_owner_repeatability_only"] and not manifest["independent_team_reproduction"],
+        "committed_manifest_present": committed_manifest is not None,
+        "committed_manifest_parity": committed_manifest is not None and not committed_manifest_mismatches,
         "json_parse_zero_issues": not json_issues,
         "privacy_zero_hits": privacy["valid"],
         "owner_files_under_15000": len(owner_files) < 15000,
@@ -189,14 +244,13 @@ def validate(
     }
 
     lifecycle_requirements = {
+        "evidence": [],
         "closeout": ["closeout-receipt.json"],
         "seal": ["closeout-receipt.json", "seal-receipt.json"],
         "final": ["closeout-receipt.json", "seal-receipt.json", "final-validation-record.json"],
     }
-    for lifecycle_stage, paths in lifecycle_requirements.items():
-        if stage in {lifecycle_stage, "seal", "final"} and lifecycle_stage != "seal" or stage == lifecycle_stage:
-            for rel in paths:
-                checks[f"lifecycle_{rel}"] = (phase / rel).is_file()
+    for rel in lifecycle_requirements[stage]:
+        checks[f"lifecycle_{rel}"] = (phase / rel).is_file()
 
     minimal_names = [
         "proposal_count_10", "allowed_outcomes_only", "distribution_6_2_1_1",
@@ -229,6 +283,8 @@ def validate(
         "privacy": privacy,
         "manifest_entries": manifest["entry_count"],
         "manifest_mismatches": manifest_mismatches,
+        "committed_manifest_entries": committed_manifest["entry_count"] if committed_manifest else 0,
+        "committed_manifest_mismatches": committed_manifest_mismatches,
         "method_states": dict(method_states),
         "same_owner_repeatability_only": True,
         "independent_reproduction": False,

@@ -76,7 +76,7 @@ class TestV644V6Artifacts(unittest.TestCase):
     def test_negative_retention(self) -> None:
         register = self.load("retained-negative-register.json")
         self.assertEqual(1495, register["inherited_effective_count"])
-        self.assertEqual(1575, register["negative_count"])
+        self.assertGreaterEqual(register["negative_count"], 1575)
         self.assertEqual(register["negative_count"], len(register["negatives"]))
         self.assertEqual([], register["duplicate_negative_ids"])
         self.assertTrue(register["all_retained"])

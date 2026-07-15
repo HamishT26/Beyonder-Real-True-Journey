@@ -1,0 +1,27 @@
+{
+  "method_id": "V6446-M13",
+  "title": "Communicate-backed bidirectional Git batch transport",
+  "failure_signature": "A manual cat-file batch deadlocked because the parent filled stdin before draining a large stdout stream.",
+  "trigger_preconditions": [
+    "bidirectional subprocess protocol",
+    "large output per request batch",
+    "sequential parent write before read"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Use subprocess communicate semantics to drain input and output concurrently, then parse the complete byte stream deterministically.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never implement high-volume bidirectional subprocess exchange as write-all then read-all on bounded pipes.",
+  "rollback": "Retain all timeout and failed-witness evidence, restore single-object reads if batch parsing changes any digest, and compare the same full manifest.",
+  "recommendation_state": "candidate",
+  "supersedes": ["V6446-M10", "V6446-M11", "V6446-M12"],
+  "protected_gates": [
+    "manifest_integrity",
+    "privacy_scan",
+    "json_integrity",
+    "validation_scope",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X2-N02", "V6446-X2-N03", "V6446-X2-N04", "V6446-X2-N05"],
+  "scope_boundary": "Subprocess transport only; all manifest entries and validation gates remain unchanged."
+}

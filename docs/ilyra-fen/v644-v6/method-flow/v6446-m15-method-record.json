@@ -1,0 +1,26 @@
+{
+  "method_id": "V6446-M15",
+  "title": "Transition-graph-aligned failed-candidate deprecation",
+  "failure_signature": "A failed-candidate cleanup method assumed candidate-to-superseded was legal, but the append-only runner correctly rejected that transition.",
+  "trigger_preconditions": [
+    "candidate method has a failed witness",
+    "a preferred replacement exists",
+    "candidate-to-superseded is not allowed"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Retain the failed witness and rejection, move each failed candidate to deprecated as the transition graph permits, and name the preferred replacement in the transition note without rewriting history.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Read the current-state transition graph before mutation and require every failed candidate to end in an allowed terminal state.",
+  "rollback": "If a deprecated method later needs reconsideration, create a new candidate with explicit lineage; never reopen or rewrite the terminal record.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "append_only_method_history",
+    "failed_witness_retention",
+    "transition_integrity",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X2-N06", "V6446-X2-N07", "V6446-X2-N08", "V6446-X2-N09"],
+  "scope_boundary": "Method-state hygiene only; deprecation preserves failure and does not broaden the preferred transport's evidence scope."
+}

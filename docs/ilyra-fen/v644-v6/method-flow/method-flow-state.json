@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 9,
-    "recommendations": 8,
-    "state_events": 25,
+    "methods": 15,
+    "recommendations": 10,
+    "state_events": 39,
     "states": {
       "candidate": 1,
-      "deprecated": 0,
+      "deprecated": 4,
       "observed": 0,
-      "preferred": 8,
+      "preferred": 10,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 0,
-      "pass": 8
+      "fail": 4,
+      "pass": 10
     },
-    "witnesses": 8
+    "witnesses": 14
   },
   "identity_boundary": "Relational working language only; not consciousness, personhood, continuity, employment, or authority evidence.",
   "methods": [
@@ -305,6 +305,208 @@
       "validation_witness_ids": [
         "V6446-M09-W01"
       ]
+    },
+    {
+      "approval_class": "safe_now_bounded",
+      "candidate_workaround": "Read all requested commit blobs through one git cat-file batch and invoke detailed and minimal validators in separately observable commands.",
+      "failure_signature": "A closeout validation bundle timed out after launching a separate Git process for each logical and committed manifest entry in two validators.",
+      "method_id": "V6446-M10",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "manifest_integrity",
+        "privacy_scan",
+        "validation_scope",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "deprecated",
+      "recurrence_guard": "Avoid per-entry process fanout for Git manifests; batch object reads and preserve each validator's independent result.",
+      "retained_negative_ids": [
+        "V6446-X2-N02"
+      ],
+      "rollback": "Retain the timed-out bundle, restore the prior validator if batch parsing changes bytes, and compare the same manifest hashes before promotion.",
+      "scope_boundary": "Git object retrieval performance only; batching does not reduce the manifest, validation scope, or evidence gates.",
+      "supersedes": [],
+      "title": "Batched Git object reads for manifest validation",
+      "trigger_preconditions": [
+        "large multi-entry manifest",
+        "per-entry git show subprocess",
+        "detailed and minimal validators in one command envelope"
+      ],
+      "validation_witness_ids": [
+        "V6446-M10-W01"
+      ]
+    },
+    {
+      "approval_class": "safe_now_bounded",
+      "candidate_workaround": "Deduplicate object specifications before one cat-file batch and run full worktree status only when require-clean is true.",
+      "failure_signature": "A batched manifest validator still timed out because it requested overlapping blobs twice and ran a full worktree status scan when clean state was not part of the candidate-stage contract.",
+      "method_id": "V6446-M11",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "manifest_integrity",
+        "privacy_scan",
+        "clean_state_when_required",
+        "validation_scope",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "deprecated",
+      "recurrence_guard": "Remove duplicate process and object work without removing any requested byte comparison; preserve the clean scan whenever the validation stage requires it.",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03"
+      ],
+      "rollback": "Retain both timeouts and the failed M10 witness, restore per-entry reads if batch parsing changes bytes, and rerun the same hashes under a larger observable envelope only if needed.",
+      "scope_boundary": "Validation efficiency only; deduplication cannot reduce manifest entries, privacy classes, or required clean-state evidence.",
+      "supersedes": [
+        "V6446-M10"
+      ],
+      "title": "Deduplicated object batch with demand-driven clean-state scan",
+      "trigger_preconditions": [
+        "overlapping logical and committed manifests",
+        "duplicate Git object specifications",
+        "candidate validation without require-clean"
+      ],
+      "validation_witness_ids": [
+        "V6446-M11-W01"
+      ]
+    },
+    {
+      "approval_class": "safe_now_bounded",
+      "candidate_workaround": "Keep the validation set unchanged, run detailed and minimal separately, and use a 180-second command envelope with progress yields no longer than thirty seconds.",
+      "failure_signature": "Three complete closeout validation attempts exceeded a sixty-second command ceiling despite process batching and object deduplication.",
+      "method_id": "V6446-M12",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "manifest_integrity",
+        "privacy_scan",
+        "json_integrity",
+        "lifecycle_checks",
+        "validation_scope",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "deprecated",
+      "recurrence_guard": "Measure full-packet runtime after structural optimizations and size only the execution envelope; never delete or narrow checks merely to avoid a timeout.",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03",
+        "V6446-X2-N04"
+      ],
+      "rollback": "Retain all three timeout negatives and both failed witnesses; if the larger envelope still fails, decompose receipts without changing their combined check set.",
+      "scope_boundary": "Execution-envelope sizing only; the full check set and all evidence gates remain unchanged.",
+      "supersedes": [
+        "V6446-M10",
+        "V6446-M11"
+      ],
+      "title": "Measured observable envelope for full detailed packet validation",
+      "trigger_preconditions": [
+        "large owner packet",
+        "full JSON, privacy, manifest, lifecycle, and Git checks",
+        "command ceiling below measured complete runtime"
+      ],
+      "validation_witness_ids": [
+        "V6446-M12-W01"
+      ]
+    },
+    {
+      "approval_class": "safe_now_bounded",
+      "candidate_workaround": "Use subprocess communicate semantics to drain input and output concurrently, then parse the complete byte stream deterministically.",
+      "failure_signature": "A manual cat-file batch deadlocked because the parent filled stdin before draining a large stdout stream.",
+      "method_id": "V6446-M13",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "manifest_integrity",
+        "privacy_scan",
+        "json_integrity",
+        "validation_scope",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never implement high-volume bidirectional subprocess exchange as write-all then read-all on bounded pipes.",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03",
+        "V6446-X2-N04",
+        "V6446-X2-N05"
+      ],
+      "rollback": "Retain all timeout and failed-witness evidence, restore single-object reads if batch parsing changes any digest, and compare the same full manifest.",
+      "scope_boundary": "Subprocess transport only; all manifest entries and validation gates remain unchanged.",
+      "supersedes": [
+        "V6446-M10",
+        "V6446-M11",
+        "V6446-M12"
+      ],
+      "title": "Communicate-backed bidirectional Git batch transport",
+      "trigger_preconditions": [
+        "bidirectional subprocess protocol",
+        "large output per request batch",
+        "sequential parent write before read"
+      ],
+      "validation_witness_ids": [
+        "V6446-M13-W01"
+      ]
+    },
+    {
+      "approval_class": "safe_now_bounded",
+      "candidate_workaround": "Promote the validated successor, then mark each failed candidate superseded with an explicit successor while retaining all state events, failed witnesses, and negatives.",
+      "failure_signature": "A detailed validator passed 54 of 55 checks because three failed transport methods remained candidates after a working successor became available.",
+      "method_id": "V6446-M14",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "append_only_method_history",
+        "failed_witness_retention",
+        "rollback_visibility",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "deprecated",
+      "recurrence_guard": "After successor validation, require no failed workaround to remain candidate and never delete its history.",
+      "retained_negative_ids": [
+        "V6446-X2-N06"
+      ],
+      "rollback": "If the successor later fails compatibility, deprecate it explicitly and open a new candidate; do not rewrite prior failed or superseded events.",
+      "scope_boundary": "Workflow recommendation state only; supersession does not erase failure or broaden the successor's evidence scope.",
+      "supersedes": [],
+      "title": "Explicit failed-candidate supersession after successor validation",
+      "trigger_preconditions": [
+        "candidate method has failed witness",
+        "successor method has passing witness",
+        "failed candidate state remains active"
+      ],
+      "validation_witness_ids": [
+        "V6446-M14-W01"
+      ]
+    },
+    {
+      "approval_class": "safe_now_bounded",
+      "candidate_workaround": "Retain the failed witness and rejection, move each failed candidate to deprecated as the transition graph permits, and name the preferred replacement in the transition note without rewriting history.",
+      "failure_signature": "A failed-candidate cleanup method assumed candidate-to-superseded was legal, but the append-only runner correctly rejected that transition.",
+      "method_id": "V6446-M15",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "append_only_method_history",
+        "failed_witness_retention",
+        "transition_integrity",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Read the current-state transition graph before mutation and require every failed candidate to end in an allowed terminal state.",
+      "retained_negative_ids": [
+        "V6446-X2-N06",
+        "V6446-X2-N07",
+        "V6446-X2-N08",
+        "V6446-X2-N09"
+      ],
+      "rollback": "If a deprecated method later needs reconsideration, create a new candidate with explicit lineage; never reopen or rewrite the terminal record.",
+      "scope_boundary": "Method-state hygiene only; deprecation preserves failure and does not broaden the preferred transport's evidence scope.",
+      "supersedes": [],
+      "title": "Transition-graph-aligned failed-candidate deprecation",
+      "trigger_preconditions": [
+        "candidate method has a failed witness",
+        "a preferred replacement exists",
+        "candidate-to-superseded is not allowed"
+      ],
+      "validation_witness_ids": [
+        "V6446-M15-W01"
+      ]
     }
   ],
   "owner": "Ilyra Fen",
@@ -438,6 +640,38 @@
       "scope_boundary": "Inline read-only query transport only; not a general shell-safety or validation-completeness claim.",
       "witness_ids": [
         "V6446-M09-W01"
+      ]
+    },
+    {
+      "method": "Use subprocess communicate semantics to drain input and output concurrently, then parse the complete byte stream deterministically.",
+      "method_id": "V6446-M13",
+      "preconditions": [
+        "bidirectional subprocess protocol",
+        "large output per request batch",
+        "sequential parent write before read"
+      ],
+      "recommendation_index": 9,
+      "recurrence_guard": "Never implement high-volume bidirectional subprocess exchange as write-all then read-all on bounded pipes.",
+      "rollback": "Retain all timeout and failed-witness evidence, restore single-object reads if batch parsing changes any digest, and compare the same full manifest.",
+      "scope_boundary": "Subprocess transport only; all manifest entries and validation gates remain unchanged.",
+      "witness_ids": [
+        "V6446-M13-W01"
+      ]
+    },
+    {
+      "method": "Retain the failed witness and rejection, move each failed candidate to deprecated as the transition graph permits, and name the preferred replacement in the transition note without rewriting history.",
+      "method_id": "V6446-M15",
+      "preconditions": [
+        "candidate method has a failed witness",
+        "a preferred replacement exists",
+        "candidate-to-superseded is not allowed"
+      ],
+      "recommendation_index": 10,
+      "recurrence_guard": "Read the current-state transition graph before mutation and require every failed candidate to end in an allowed terminal state.",
+      "rollback": "If a deprecated method later needs reconsideration, create a new candidate with explicit lineage; never reopen or rewrite the terminal record.",
+      "scope_boundary": "Method-state hygiene only; deprecation preserves failure and does not broaden the preferred transport's evidence scope.",
+      "witness_ids": [
+        "V6446-M15-W01"
       ]
     }
   ],
@@ -642,6 +876,118 @@
       "method_id": "V6446-M09",
       "reason": "Use PowerShell here-string transport for bounded inline Python and retain the rejected POSIX heredoc.",
       "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 26,
+      "method_id": "V6446-M10",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 27,
+      "method_id": "V6446-M11",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 28,
+      "method_id": "V6446-M12",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 29,
+      "method_id": "V6446-M13",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 30,
+      "method_id": "V6446-M14",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 31,
+      "method_id": "V6446-M13",
+      "reason": "bounded witness passed",
+      "witness_id": "V6446-M13-W01"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 32,
+      "method_id": "V6446-M13",
+      "reason": "Use communicate-backed Git batch transport; preserve all timeout and failed-witness evidence.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 33,
+      "method_id": "V6446-M15",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "deprecated",
+      "before": "candidate",
+      "event_index": 34,
+      "method_id": "V6446-M10",
+      "reason": "Failed witness retained; preferred replacement V6446-M13 uses communicate-backed transport.",
+      "witness_id": null
+    },
+    {
+      "after": "deprecated",
+      "before": "candidate",
+      "event_index": 35,
+      "method_id": "V6446-M11",
+      "reason": "Failed witness retained; preferred replacement V6446-M13 deduplicates and drains the batch safely.",
+      "witness_id": null
+    },
+    {
+      "after": "deprecated",
+      "before": "candidate",
+      "event_index": 36,
+      "method_id": "V6446-M12",
+      "reason": "Failed witness retained; preferred replacement V6446-M13 addresses the pipe deadlock rather than extending the envelope.",
+      "witness_id": null
+    },
+    {
+      "after": "deprecated",
+      "before": "candidate",
+      "event_index": 37,
+      "method_id": "V6446-M14",
+      "reason": "Failed transition witness retained; V6446-M15 follows the authoritative candidate-to-deprecated graph.",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 38,
+      "method_id": "V6446-M15",
+      "reason": "bounded witness passed",
+      "witness_id": "V6446-M15-W01"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 39,
+      "method_id": "V6446-M15",
+      "reason": "Passing transition-graph witness retained; recommend deprecation for failed candidates.",
+      "witness_id": null
     }
   ],
   "witnesses": [
@@ -768,6 +1114,111 @@
       "same_owner_only": true,
       "scope": "Same-owner read-only source metadata query only.",
       "witness_id": "V6446-M09-W01"
+    },
+    {
+      "boundary": "This validates one process-efficiency method only; it does not weaken scope or establish independent reproduction.",
+      "expected": "Both validators complete inside their envelopes with all manifest entries and other checks unchanged.",
+      "independent_reproduction": false,
+      "method_id": "V6446-M10",
+      "observed": "The first batched detailed validator still exceeded its sixty-second envelope because overlapping manifests requested duplicate blobs and an unneeded full status scan remained.",
+      "procedure": "Run detailed and minimal closeout validators separately using one batched Git object read per invocation.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03"
+      ],
+      "same_owner_only": true,
+      "scope": "v644-v6 logical and committed manifest validation only.",
+      "witness_id": "V6446-M10-W01"
+    },
+    {
+      "boundary": "This validates one performance method only; it does not weaken validation or establish independent reproduction.",
+      "expected": "Both validators complete inside their envelopes with all hashes, JSON, privacy, lifecycle, and gate checks unchanged.",
+      "independent_reproduction": false,
+      "method_id": "V6446-M11",
+      "observed": "The deduplicated detailed validator still exceeded the sixty-second ceiling while retaining its full check set.",
+      "procedure": "Run detailed and minimal closeout validators separately with deduplicated object specifications and a clean-state scan only when requested.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03",
+        "V6446-X2-N04"
+      ],
+      "same_owner_only": true,
+      "scope": "v644-v6 logical and committed manifest validation only.",
+      "witness_id": "V6446-M11-W01"
+    },
+    {
+      "boundary": "This validates one execution-envelope method only; it is not independent reproduction or a reduced validation.",
+      "expected": "Both validators complete with all JSON, privacy, manifest, lifecycle, Git, and gate checks intact.",
+      "independent_reproduction": false,
+      "method_id": "V6446-M12",
+      "observed": "The unchanged detailed validator still timed out at 180 seconds, revealing a bidirectional pipe deadlock rather than an underfit runtime envelope.",
+      "procedure": "Run the unchanged detailed and minimal closeout validators separately under a 180-second command envelope with bounded progress yields.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03",
+        "V6446-X2-N04",
+        "V6446-X2-N05"
+      ],
+      "same_owner_only": true,
+      "scope": "v644-v6 full owner-packet validator execution only.",
+      "witness_id": "V6446-M12-W01"
+    },
+    {
+      "boundary": "This validates one subprocess transport method only; it does not weaken scope or establish independent reproduction.",
+      "expected": "Both validators complete inside sixty seconds with all hashes and non-manifest checks unchanged.",
+      "independent_reproduction": false,
+      "method_id": "V6446-M13",
+      "observed": "The communicate-backed detailed closeout validator completed in eighteen seconds; all manifest byte comparisons passed and its only issue was the separately retained candidate-state gate.",
+      "procedure": "Run detailed and minimal closeout validators separately using communicate-backed cat-file batch transport and the unchanged complete check set.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6446-X2-N02",
+        "V6446-X2-N03",
+        "V6446-X2-N04",
+        "V6446-X2-N05"
+      ],
+      "same_owner_only": true,
+      "scope": "v644-v6 logical and committed manifest byte retrieval only.",
+      "witness_id": "V6446-M13-W01"
+    },
+    {
+      "boundary": "This validates recommendation-state hygiene only; it does not erase failure or establish independent reproduction.",
+      "expected": "The three failed candidates move to superseded while their failed witnesses remain present.",
+      "independent_reproduction": false,
+      "method_id": "V6446-M14",
+      "observed": "The runner rejected all three requests because candidate-to-superseded is not permitted; candidate methods may instead move to deprecated.",
+      "procedure": "Promote V6446-M13, request candidate-to-superseded transitions for V6446-M10 through M12 with M13 as successor, and observe the runner's transition enforcement.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6446-X2-N06",
+        "V6446-X2-N07",
+        "V6446-X2-N08",
+        "V6446-X2-N09"
+      ],
+      "same_owner_only": true,
+      "scope": "v644-v6 Method Flow recommendation states only.",
+      "witness_id": "V6446-M14-W01"
+    },
+    {
+      "boundary": "This validates the runner's recommendation-state procedure only; it does not erase failures or establish independent reproduction.",
+      "expected": "All four failed candidates become deprecated, their witnesses and negatives remain present, and only the preregistered final named-lane method remains candidate.",
+      "independent_reproduction": false,
+      "method_id": "V6446-M15",
+      "observed": "The runner accepted all four candidate-to-deprecated transitions; every failed witness remained in the ledger and V6446-M01 was the only earlier candidate left.",
+      "procedure": "Apply the authoritative candidate-to-deprecated transition to V6446-M10, V6446-M11, V6446-M12, and V6446-M14 after retaining their failed witnesses and naming the preferred replacement in each note.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6446-X2-N06",
+        "V6446-X2-N07",
+        "V6446-X2-N08",
+        "V6446-X2-N09"
+      ],
+      "same_owner_only": true,
+      "scope": "v644-v6 Method Flow recommendation-state hygiene only.",
+      "witness_id": "V6446-M15-W01"
     }
   ]
 }

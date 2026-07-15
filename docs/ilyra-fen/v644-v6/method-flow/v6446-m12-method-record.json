@@ -1,0 +1,28 @@
+{
+  "method_id": "V6446-M12",
+  "title": "Measured observable envelope for full detailed packet validation",
+  "failure_signature": "Three complete closeout validation attempts exceeded a sixty-second command ceiling despite process batching and object deduplication.",
+  "trigger_preconditions": [
+    "large owner packet",
+    "full JSON, privacy, manifest, lifecycle, and Git checks",
+    "command ceiling below measured complete runtime"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Keep the validation set unchanged, run detailed and minimal separately, and use a 180-second command envelope with progress yields no longer than thirty seconds.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Measure full-packet runtime after structural optimizations and size only the execution envelope; never delete or narrow checks merely to avoid a timeout.",
+  "rollback": "Retain all three timeout negatives and both failed witnesses; if the larger envelope still fails, decompose receipts without changing their combined check set.",
+  "recommendation_state": "candidate",
+  "supersedes": ["V6446-M10", "V6446-M11"],
+  "protected_gates": [
+    "manifest_integrity",
+    "privacy_scan",
+    "json_integrity",
+    "lifecycle_checks",
+    "validation_scope",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-X2-N02", "V6446-X2-N03", "V6446-X2-N04"],
+  "scope_boundary": "Execution-envelope sizing only; the full check set and all evidence gates remain unchanged."
+}
