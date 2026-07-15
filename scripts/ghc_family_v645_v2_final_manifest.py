@@ -64,17 +64,45 @@ def build(repo: Path) -> dict:
     }
 
 
+def build_commit(repo: Path, target: str, excluded_self: str) -> dict:
+    raw = git(repo, "ls-tree", "-r", "--name-only", "-z", target, "--", *ROOTS)
+    paths = sorted(
+        item.decode("utf-8")
+        for item in raw.split(b"\0")
+        if item and item.decode("utf-8") != excluded_self
+    )
+    entries = []
+    for relative in paths:
+        data = git(repo, "show", f"{target}:{relative}")
+        entries.append({"path": relative, "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)})
+    return {
+        "schema": "ghc.family.committed-manifest.v1",
+        "target": target,
+        "target_kind": "commit",
+        "hash_domain": "exact Git blob bytes",
+        "roots": ROOTS,
+        "excluded_self": excluded_self,
+        "entry_count": len(entries),
+        "entries": entries,
+        "same_owner_repeatability_only": True,
+        "independent_reproduction": False,
+        "boundary": "This exact committed-blob inventory supports change detection and ancestry validation; it is not a signature or independent reproduction.",
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--output", type=Path, default=Path(OUTPUT))
+    parser.add_argument("--commit")
     args = parser.parse_args()
     repo = args.repo.resolve()
-    payload = build(repo)
     output = args.output if args.output.is_absolute() else repo / args.output
+    relative_output = output.resolve().relative_to(repo).as_posix()
+    payload = build_commit(repo, args.commit, relative_output) if args.commit else build(repo)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
-    print(json.dumps({"entries": payload["entry_count"], "excluded": len(EXCLUDED), "output": str(args.output)}))
+    print(json.dumps({"entries": payload["entry_count"], "target": payload["target"], "output": str(args.output)}))
 
 
 if __name__ == "__main__":
