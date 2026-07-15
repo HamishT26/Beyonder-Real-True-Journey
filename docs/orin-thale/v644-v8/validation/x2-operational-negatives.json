@@ -1,7 +1,7 @@
 {
   "schema": "ghc.family.v644-v8.x2-operational-negatives.v1",
   "phase": "v644-gmut-thos-v8-x1-x2",
-  "count": 3,
+  "count": 4,
   "negatives": [
     {
       "negative_id": "V6448-X2-N01",
@@ -40,6 +40,18 @@
       "recurrence_guard": "Quote Git revision expressions containing @{...} in PowerShell or resolve them to hashes before composition.",
       "rollback": "Retain the failed probe, make no equality claim from it, and rerun only read-only resolution and divergence checks.",
       "sibling_recommendation": "Use a literal 'HEAD...@{upstream}' argument on PowerShell when checking divergence.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6448-X2-N04",
+      "class": "post_final_named_replay_start_parser_failure",
+      "surface": "named-lane replay ancestry summary",
+      "failure": "PowerShell rejected a parenthesized assignment that mixed a Git command and an if statement, before any replay child command executed.",
+      "impact": "No scoped test, validator, manifest, ancestry, or cleanliness result was produced or counted by the failed replay start.",
+      "workaround": "Run each Git ancestry command as its own statement, capture LASTEXITCODE immediately, and construct the summary object only after all commands complete.",
+      "recurrence_guard": "Do not embed statement lists inside a PowerShell assignment expression; separate command execution, exit-code capture, and object construction.",
+      "rollback": "Retain the parser failure, award no replay evidence, keep the named lane unchanged, and retry only after validating the corrected transport pattern read-only.",
+      "sibling_recommendation": "Capture PowerShell native-command exit codes in separate statements before composing a JSON receipt.",
       "retained": true
     }
   ],

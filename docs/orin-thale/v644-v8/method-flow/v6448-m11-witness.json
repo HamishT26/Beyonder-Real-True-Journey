@@ -1,0 +1,15 @@
+{
+  "witness_id": "V6448-M11-W01",
+  "method_id": "V6448-M11",
+  "scope": "Read-only ancestry and merge-count receipt on the canonical original final head.",
+  "procedure": "Execute source and seal ancestry commands separately, capture each LASTEXITCODE immediately, then resolve the parent and merge count before constructing one JSON object.",
+  "expected": "Both anchors are ancestral, the parent is the seal, zero merges are present, and the PowerShell receipt parses.",
+  "observed": "The corrected separate-statement pattern reported both anchors ancestral, the seal as parent, zero merges, and a valid JSON receipt.",
+  "result": "pass",
+  "retained_negative_ids": [
+    "V6448-X2-N04"
+  ],
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This validates command transport only; the failed replay start remains no evidence and the later named replay must still run."
+}

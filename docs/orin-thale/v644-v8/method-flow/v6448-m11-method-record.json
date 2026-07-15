@@ -1,0 +1,29 @@
+{
+  "method_id": "V6448-M11",
+  "title": "Separate native-command exit capture before PowerShell receipt composition",
+  "failure_signature": "PowerShell rejected an assignment expression that mixed a native Git command and an if statement before any replay child executed.",
+  "trigger_preconditions": [
+    "PowerShell parser",
+    "native command exit status",
+    "parenthesized assignment expression",
+    "inline conditional receipt construction"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Run each native command separately, capture LASTEXITCODE immediately, and construct the receipt object only after all command statements finish.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never embed statement lists inside a PowerShell assignment expression when native-command exit state is required.",
+  "rollback": "Retain the parser failure, award no evidence, keep the target lane unchanged, and retry only with separately validated statements.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "evidence_credit",
+    "history_rewrite",
+    "sibling_lane",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6448-X2-N04"
+  ],
+  "scope_boundary": "This method validates command transport and evidence accounting only; it does not validate the later replay results."
+}

@@ -2,8 +2,8 @@
 
 - Phase: v644-gmut-thos-v8-x1-x2
 - Owner: Orin Thale
-- Methods: 10
-- Passing witnesses: 11
+- Methods: 11
+- Passing witnesses: 12
 - Failed witnesses retained: 0
 
 ## Preferred methods
@@ -79,6 +79,14 @@
 - Recurrence guard: Quote Git revision expressions containing @{...} in PowerShell and never infer divergence state from a parser-failed probe.
 - Rollback: Retain the failed probe, make no equality claim from it, and rerun only read-only hash and divergence resolution.
 - Witnesses: V6448-M10-W01
+
+### V6448-M11 — Separate native-command exit capture before PowerShell receipt composition
+
+- Trigger: PowerShell parser; native command exit status; parenthesized assignment expression; inline conditional receipt construction
+- Method: Run each native command separately, capture LASTEXITCODE immediately, and construct the receipt object only after all command statements finish.
+- Recurrence guard: Never embed statement lists inside a PowerShell assignment expression when native-command exit state is required.
+- Rollback: Retain the parser failure, award no evidence, keep the target lane unchanged, and retry only with separately validated statements.
+- Witnesses: V6448-M11-W01
 
 ## Retained boundary
 
