@@ -6,10 +6,10 @@
   "inherited_sha256": "c42288d918189e0e1e6f86430ebbc5dbf882a6c24308a857a486257e25725a7a",
   "inherited_effective_count": 1668,
   "x1_operational_count": 8,
-  "x2_operational_count": 2,
+  "x2_operational_count": 3,
   "new_synthetic_count": 70,
-  "new_count": 80,
-  "negative_count": 1748,
+  "new_count": 81,
+  "negative_count": 1749,
   "duplicate_negative_ids": [],
   "all_retained": true,
   "erasure_permitted": false,
@@ -18198,6 +18198,18 @@
       "expected_accept": false,
       "observed_accept": false,
       "matched": true,
+      "retained": true
+    },
+    {
+      "negative_id": "V6448-X2-N03",
+      "class": "post_evidence_operational_ref_parse_failure",
+      "surface": "post-push divergence probe",
+      "failure": "An unquoted HEAD...@{upstream} token was transformed by PowerShell before Git received it, so the trailing rev-list probe failed after the evidence commit and push had already succeeded.",
+      "impact": "The commit and remote update remained successful, but that combined command did not establish divergence equality.",
+      "workaround": "Pass the upstream revision expression as a single-quoted literal and independently resolve local, upstream, tracking, and live-remote hashes.",
+      "recurrence_guard": "Quote Git revision expressions containing @{...} in PowerShell or resolve them to hashes before composition.",
+      "rollback": "Retain the failed probe, make no equality claim from it, and rerun only read-only resolution and divergence checks.",
+      "sibling_recommendation": "Use a literal 'HEAD...@{upstream}' argument on PowerShell when checking divergence.",
       "retained": true
     }
   ],

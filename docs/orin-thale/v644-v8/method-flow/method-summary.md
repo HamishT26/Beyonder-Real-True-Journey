@@ -2,8 +2,8 @@
 
 - Phase: v644-gmut-thos-v8-x1-x2
 - Owner: Orin Thale
-- Methods: 9
-- Passing witnesses: 10
+- Methods: 10
+- Passing witnesses: 11
 - Failed witnesses retained: 0
 
 ## Preferred methods
@@ -71,6 +71,14 @@
 - Recurrence guard: Never mix PowerShell backtick escapes inside a JavaScript template literal; verify that the outer orchestration source parses before assuming the nested command can run.
 - Rollback: Retain the parser failure, confirm no shell call or file mutation occurred, and retry only with a single-language edit.
 - Witnesses: V6448-M09-W01
+
+### V6448-M10 — Literal Git revision expressions in PowerShell
+
+- Trigger: PowerShell command parsing; Git revision expression; @{upstream} shorthand; unquoted argument
+- Method: Pass the revision expression as a single-quoted literal or resolve both revisions to exact hashes before comparison.
+- Recurrence guard: Quote Git revision expressions containing @{...} in PowerShell and never infer divergence state from a parser-failed probe.
+- Rollback: Retain the failed probe, make no equality claim from it, and rerun only read-only hash and divergence resolution.
+- Witnesses: V6448-M10-W01
 
 ## Retained boundary
 

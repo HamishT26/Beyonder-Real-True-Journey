@@ -137,8 +137,10 @@ def run(repo: Path, self_path: str = SELF_PATH) -> dict[str, Any]:
         issues.append("git diff --cached --check failed")
     if not method_check["valid"]:
         issues.append("Method Flow append-only check failed")
+    stage = next((name for name in ("closeout", "seal", "final") if f"/{name}-" in self_path), "evidence")
     return {
-        "schema": "ghc.family.v644-v8.evidence-staged-review.v1",
+        "schema": f"ghc.family.v644-v8.{stage}-staged-review.v1",
+        "stage": stage,
         "phase": PHASE,
         "base_commit": X1_COMMIT,
         "self_receipt_path": self_path,

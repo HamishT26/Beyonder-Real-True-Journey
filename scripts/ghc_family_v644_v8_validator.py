@@ -229,7 +229,7 @@ def validate(
         "synthetic_negatives_70": negatives["new_synthetic_count"] == 70,
         "negative_ids_unique": not negatives["duplicate_negative_ids"],
         "all_negatives_retained": negatives["all_retained"] and not negatives["erasure_permitted"],
-        "new_operational_negatives_present": {"V6448-X2-N01", "V6448-X2-N02"} <= negative_ids,
+        "new_operational_negatives_present": {"V6448-X2-N01", "V6448-X2-N02", "V6448-X2-N03"} <= negative_ids,
         "open_gaps_5": gates["open_gap_count"] == 5 == len(gates["open_gaps"]),
         "exact_gates_6": gates["exact_gate_count"] == 6 == len(gates["exact_gates"]),
         "gates_visible": gates["all_visible"] and gates["none_silently_closed"],

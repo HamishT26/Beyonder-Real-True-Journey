@@ -1,0 +1,29 @@
+{
+  "method_id": "V6448-M10",
+  "title": "Literal Git revision expressions in PowerShell",
+  "failure_signature": "An unquoted HEAD...@{upstream} divergence expression was transformed by PowerShell before Git received it.",
+  "trigger_preconditions": [
+    "PowerShell command parsing",
+    "Git revision expression",
+    "@{upstream} shorthand",
+    "unquoted argument"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Pass the revision expression as a single-quoted literal or resolve both revisions to exact hashes before comparison.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Quote Git revision expressions containing @{...} in PowerShell and never infer divergence state from a parser-failed probe.",
+  "rollback": "Retain the failed probe, make no equality claim from it, and rerun only read-only hash and divergence resolution.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "history_rewrite",
+    "sibling_lane",
+    "private_material",
+    "remote_equality"
+  ],
+  "retained_negative_ids": [
+    "V6448-X2-N03"
+  ],
+  "scope_boundary": "This method validates Git-ref transport only; it does not validate repository contents, scientific claims, or independent reproduction."
+}

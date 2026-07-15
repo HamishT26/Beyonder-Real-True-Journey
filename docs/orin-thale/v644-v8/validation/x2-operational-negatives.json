@@ -1,7 +1,7 @@
 {
   "schema": "ghc.family.v644-v8.x2-operational-negatives.v1",
   "phase": "v644-gmut-thos-v8-x1-x2",
-  "count": 2,
+  "count": 3,
   "negatives": [
     {
       "negative_id": "V6448-X2-N01",
@@ -28,6 +28,18 @@
       "recurrence_guard": "Do not combine shell startup, filesystem enumeration, Git status, and compilation under one short parent envelope on this checkout.",
       "rollback": "Retain the timeout, treat the combined receipt as no evidence, and make no mutation before the bounded retries complete.",
       "sibling_recommendation": "Use independently bounded non-login probes for this checkout when the combined startup surface has already timed out.",
+      "retained": true
+    },
+    {
+      "negative_id": "V6448-X2-N03",
+      "class": "post_evidence_operational_ref_parse_failure",
+      "surface": "post-push divergence probe",
+      "failure": "An unquoted HEAD...@{upstream} token was transformed by PowerShell before Git received it, so the trailing rev-list probe failed after the evidence commit and push had already succeeded.",
+      "impact": "The commit and remote update remained successful, but that combined command did not establish divergence equality.",
+      "workaround": "Pass the upstream revision expression as a single-quoted literal and independently resolve local, upstream, tracking, and live-remote hashes.",
+      "recurrence_guard": "Quote Git revision expressions containing @{...} in PowerShell or resolve them to hashes before composition.",
+      "rollback": "Retain the failed probe, make no equality claim from it, and rerun only read-only resolution and divergence checks.",
+      "sibling_recommendation": "Use a literal 'HEAD...@{upstream}' argument on PowerShell when checking divergence.",
       "retained": true
     }
   ],

@@ -9,6 +9,7 @@ Use a recommendation only when its declared trigger preconditions match. Preserv
 - Patch Unicode from exact UTF-8 source, never console mojibake.
 - Bind manifests to normalized Git blobs and require the one clean named replay for checkout parity.
 - Do not embed PowerShell backtick escapes inside JavaScript template literals.
+- Quote Git revision expressions containing `@{...}` in PowerShell or resolve exact hashes before comparison.
 - Demote a recommendation when its witness context drifts; never delete the prior pass or failure.
 
 These same-owner methods cannot close empirical, participant, legal, cultural, Maori-authority, identity, production, privacy, deployment, accessibility, exhaustive-security, independent-reproduction, or Stage 20 gates.
