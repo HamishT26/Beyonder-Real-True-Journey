@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M07",
+  "title": "Recover a predecessor builder inspection that exceeded the output budget",
+  "failure_signature": "A full read of the predecessor evidence builder exceeded the available tool and context output, so the tail was truncated.",
+  "trigger_preconditions": [
+    "large predecessor builder",
+    "full-file output request"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Index functions first, then read only the function or bounded line range needed for the current implementation.",
+  "validation_witness_ids": [
+    "V6455-W07-F",
+    "V6455-W07-P"
+  ],
+  "recurrence_guard": "Estimate output size before reading large generated builders and prefer function-level inspection.",
+  "rollback": "Discard the incomplete read as authoritative evidence and repeat only the bounded relevant inspection.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X2-N01"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

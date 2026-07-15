@@ -1,0 +1,107 @@
+{
+  "schema": "ghc.family.v645-v5.core-contract.v1",
+  "phase": "v645-gmut-thos-v5-x1-x2",
+  "proposal_id": "V6455-P01",
+  "title": "Stable claim-anchor remapping under line movement, content mutation, and split-merge provenance tribunal",
+  "hypothesis": "A content-aware remapping contract can distinguish a moved claim from a changed, split, merged, or deleted claim while preserving its source and negative-evidence lineage.",
+  "null_or_failure": "A changed claim inherits the old anchor silently, split claims lose parent lineage, deleted counterevidence disappears, or line numbers are treated as stable semantic identity.",
+  "approval_class": "safe_now_structural_only",
+  "details": {
+    "anchor_components": [
+      "normalized_claim_digest",
+      "source_scope",
+      "parent_anchor",
+      "negative_lineage"
+    ],
+    "mapping_states": [
+      "unchanged",
+      "moved",
+      "mutated",
+      "split",
+      "merged",
+      "deleted",
+      "ambiguous"
+    ],
+    "policy": "Only unchanged or content-identical moved claims inherit credit automatically; every other state retains both versions and requires review."
+  },
+  "mutation_vectors": [
+    {
+      "negative_id": "V6455-SYN-P01-01",
+      "proposal_id": "V6455-P01",
+      "mutation": "line-number-only identity",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P01-02",
+      "proposal_id": "V6455-P01",
+      "mutation": "mutated text inherits anchor",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P01-03",
+      "proposal_id": "V6455-P01",
+      "mutation": "split loses parent",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P01-04",
+      "proposal_id": "V6455-P01",
+      "mutation": "merge hides one source",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P01-05",
+      "proposal_id": "V6455-P01",
+      "mutation": "deleted negative removed",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P01-06",
+      "proposal_id": "V6455-P01",
+      "mutation": "ambiguous map autoaccepted",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P01-07",
+      "proposal_id": "V6455-P01",
+      "mutation": "common source called independent",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    }
+  ],
+  "protected_gates": [
+    "source_independence",
+    "counterevidence_retention",
+    "history_rewrite",
+    "stage20_promotion"
+  ],
+  "result_scope": "completed",
+  "boundary": "Software, official or primary sources, and synthetic fixtures establish only bounded structural behavior. They do not establish empirical GMUT confirmation, a likelihood result, THOS effectiveness, aviation competence, production identity assurance, CBR legitimacy, Maori authority, legal or cultural ratification, independent-team reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, a Theory of Everything, or Stage 20 readiness."
+}

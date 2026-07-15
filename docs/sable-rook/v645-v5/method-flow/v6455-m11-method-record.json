@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M11",
+  "title": "Keep the x2 Method Flow append separate from the immutable x1 state path",
+  "failure_signature": "The first scoped replay failed because x2 rewrote method-flow-state.json from six to ten methods, while the frozen x1 test correctly required the x1 artifact to remain at six.",
+  "trigger_preconditions": [
+    "x2 Method Flow append",
+    "x1 artifact path reused"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Restore the exact x1 state from the immutable x1 Git blob and write the combined append-only state to method-flow-state-x2.json.",
+  "validation_witness_ids": [
+    "V6455-W11-F",
+    "V6455-W11-P"
+  ],
+  "recurrence_guard": "Treat every x1 path as immutable after the remote-equal freeze; use phase-lifecycle suffixes for x2 state.",
+  "rollback": "Restore only the exact x1 blob, retain the failed replay, and rerun all scoped x1 and x2 modules.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X2-N05"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

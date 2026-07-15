@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M08",
+  "title": "Split a parallel inspection whose per-command timeout was too short",
+  "failure_signature": "A parallel status and script-index probe used ten-second per-command limits and timed out before returning its results.",
+  "trigger_preconditions": [
+    "several cold PowerShell and Git probes",
+    "ten-second command limit"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Repeat the read-only probes with bounded sixty-second command limits and preserve each result separately.",
+  "validation_witness_ids": [
+    "V6455-W08-F",
+    "V6455-W08-P"
+  ],
+  "recurrence_guard": "Use realistic per-command limits for cold Windows repository probes while keeping user updates below sixty seconds.",
+  "rollback": "Terminate only the timed-out diagnostic and make no repository mutation.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X2-N02"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

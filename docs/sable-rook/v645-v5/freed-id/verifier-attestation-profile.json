@@ -1,0 +1,107 @@
+{
+  "schema": "ghc.family.v645-v5.core-contract.v1",
+  "phase": "v645-gmut-thos-v5-x1-x2",
+  "proposal_id": "V6455-P05",
+  "title": "Freed ID verifier-attestation, client-metadata integrity, and policy-source confinement profile",
+  "hypothesis": "A synthetic presentation profile can reject unbound verifier metadata, unsupported trust assertions, policy fetched from an unpinned source, and requests that exceed the declared purpose.",
+  "null_or_failure": "A fixture treats self-asserted metadata as trust, accepts an unbound request, retrieves mutable policy silently, overrequests claims, uses real keys, or calls structural vectors production interoperability.",
+  "approval_class": "safe_now_synthetic_nonproduction",
+  "details": {
+    "requirements": [
+      "verifier attestation",
+      "client metadata binding",
+      "request binding",
+      "pinned policy source",
+      "purpose confinement",
+      "claim minimization",
+      "trust governance"
+    ],
+    "real_keys": 0,
+    "live_services": 0,
+    "live_interoperability_events": 0,
+    "status": "synthetic_nonproduction"
+  },
+  "mutation_vectors": [
+    {
+      "negative_id": "V6455-SYN-P05-01",
+      "proposal_id": "V6455-P05",
+      "mutation": "self-asserted metadata trusted",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P05-02",
+      "proposal_id": "V6455-P05",
+      "mutation": "request unbound",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P05-03",
+      "proposal_id": "V6455-P05",
+      "mutation": "mutable policy source",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P05-04",
+      "proposal_id": "V6455-P05",
+      "mutation": "purpose absent",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P05-05",
+      "proposal_id": "V6455-P05",
+      "mutation": "claims overrequested",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P05-06",
+      "proposal_id": "V6455-P05",
+      "mutation": "real key implied",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    },
+    {
+      "negative_id": "V6455-SYN-P05-07",
+      "proposal_id": "V6455-P05",
+      "mutation": "production interoperability claim",
+      "expected": "reject",
+      "observed": "reject",
+      "result": "pass",
+      "retained": true,
+      "empirical_evidence": false
+    }
+  ],
+  "protected_gates": [
+    "real_keys",
+    "production_identity",
+    "live_resolution",
+    "status_revocation",
+    "interoperability",
+    "privacy_review",
+    "trust_governance"
+  ],
+  "result_scope": "represented",
+  "boundary": "Software, official or primary sources, and synthetic fixtures establish only bounded structural behavior. They do not establish empirical GMUT confirmation, a likelihood result, THOS effectiveness, aviation competence, production identity assurance, CBR legitimacy, Maori authority, legal or cultural ratification, independent-team reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, a Theory of Everything, or Stage 20 readiness."
+}

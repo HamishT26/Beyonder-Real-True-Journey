@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M10",
+  "title": "Introspect frozen definition symbols before assuming predecessor names",
+  "failure_signature": "A compact definition probe guessed SAFE_NOW_TASKS, which does not exist; the frozen module exports SAFE_NOW.",
+  "trigger_preconditions": [
+    "new phase definition module",
+    "assumed predecessor symbol convention"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "List uppercase exported names, then query SAFE_NOW, CANDIDATES, SKILLS, RUNNERS, and CLEAN_TASKS directly.",
+  "validation_witness_ids": [
+    "V6455-W10-F",
+    "V6455-W10-P"
+  ],
+  "recurrence_guard": "Inspect frozen exported names before writing phase builders that import them.",
+  "rollback": "Retain the AttributeError as an operational negative and use the discovered immutable symbol names.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X2-N04"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

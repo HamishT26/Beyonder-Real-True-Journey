@@ -1,0 +1,30 @@
+{
+  "method_id": "V6455-M09",
+  "title": "Replace aggregate bounded reads that still exceeded the combined output limit",
+  "failure_signature": "Several individually bounded script ranges were combined into one response whose aggregate output was still truncated.",
+  "trigger_preconditions": [
+    "multiple bounded reads",
+    "aggregate output above response limit"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Inspect one function at a time or query compact symbols and shapes programmatically.",
+  "validation_witness_ids": [
+    "V6455-W09-F",
+    "V6455-W09-P"
+  ],
+  "recurrence_guard": "Budget aggregate output as well as each component output.",
+  "rollback": "Do not infer unseen content from the truncation; request only the missing narrow segment.",
+  "recommendation_state": "preferred",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6455-X2-N03"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}
