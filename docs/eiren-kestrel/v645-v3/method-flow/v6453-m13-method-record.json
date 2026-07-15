@@ -1,0 +1,21 @@
+{
+  "method_id": "V6453-M13",
+  "title": "Bind lifecycle manifests to their declared immutable target",
+  "failure_signature": "The first final-candidate validation compared an evidence-commit manifest to lifecycle-modified working files and reported five false parity failures.",
+  "trigger_preconditions": [
+    "an evidence manifest was frozen before lifecycle receipts",
+    "the final worktree legitimately adds or updates closeout metadata",
+    "the evidence commit remains ancestral and immutable"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_manifest_target_repair",
+  "candidate_workaround": "Read the manifest's declared evidence target, hash those committed blobs with logical newline normalization, and validate later lifecycle files through the separate final staged manifest.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Every manifest validator must select its hash domain and immutable target from the manifest lifecycle rather than silently defaulting to the mutable worktree.",
+  "rollback": "Keep parity invalid if the target is absent, nonancestral, or mismatched; never refresh evidence hashes merely to hide lifecycle drift.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["evidence_immutability", "manifest_target_integrity", "negative_retention"],
+  "retained_negative_ids": ["V6453-X2-N07"],
+  "scope_boundary": "Target-aware parity distinguishes evidence from lifecycle metadata; it does not sign the commit or establish independent reproduction."
+}

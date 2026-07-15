@@ -1,0 +1,21 @@
+{
+  "method_id": "V6453-M15",
+  "title": "Resolve the current phase ledger before Method Flow mutation",
+  "failure_signature": "The first M14 runner invocation assumed a stale ledger filename and stopped with a file-not-found error before writing any Method Flow event.",
+  "trigger_preconditions": [
+    "the phase contains a Method Flow ledger",
+    "the caller relies on a remembered filename instead of current phase evidence",
+    "the runner performs a mutating subcommand"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_ledger_path_resolution",
+  "candidate_workaround": "Enumerate the phase-scoped Method Flow artifacts read-only, select the existing state ledger, and verify its schema, phase, and owner before invoking a mutating runner command.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Every Method Flow mutation must resolve the ledger from the current phase artifact set rather than a remembered or generic filename.",
+  "rollback": "If no single matching ledger exists, preserve the failure and stop without initializing or overwriting a replacement.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["ledger_identity", "append_only_history", "negative_retention"],
+  "retained_negative_ids": ["V6453-X2-N09"],
+  "scope_boundary": "Path resolution prevents misdirected writes only; it does not validate the scientific or governance content of the ledger."
+}

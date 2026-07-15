@@ -2,9 +2,9 @@
 
 - Phase: v645-gmut-thos-v3-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 12
-- Passing witnesses: 12
-- Failed witnesses retained: 12
+- Methods: 17
+- Passing witnesses: 17
+- Failed witnesses retained: 17
 
 ## Preferred methods
 
@@ -103,6 +103,46 @@
 - Recurrence guard: Do not combine repeated large-index scans after a known invalid receipt; bound and witness each lifecycle step separately.
 - Rollback: Leave the index staged but uncommitted, inspect the last valid receipt, and do not claim completion.
 - Witnesses: V6453-W12-F, V6453-W12-P
+
+### V6453-M13 — Bind lifecycle manifests to their declared immutable target
+
+- Trigger: an evidence manifest was frozen before lifecycle receipts; the final worktree legitimately adds or updates closeout metadata; the evidence commit remains ancestral and immutable
+- Method: Read the manifest's declared evidence target, hash those committed blobs with logical newline normalization, and validate later lifecycle files through the separate final staged manifest.
+- Recurrence guard: Every manifest validator must select its hash domain and immutable target from the manifest lifecycle rather than silently defaulting to the mutable worktree.
+- Rollback: Keep parity invalid if the target is absent, nonancestral, or mismatched; never refresh evidence hashes merely to hide lifecycle drift.
+- Witnesses: V6453-W13-F, V6453-W13-P
+
+### V6453-M15 — Resolve the current phase ledger before Method Flow mutation
+
+- Trigger: the phase contains a Method Flow ledger; the caller relies on a remembered filename instead of current phase evidence; the runner performs a mutating subcommand
+- Method: Enumerate the phase-scoped Method Flow artifacts read-only, select the existing state ledger, and verify its schema, phase, and owner before invoking a mutating runner command.
+- Recurrence guard: Every Method Flow mutation must resolve the ledger from the current phase artifact set rather than a remembered or generic filename.
+- Rollback: If no single matching ledger exists, preserve the failure and stop without initializing or overwriting a replacement.
+- Witnesses: V6453-W15-F, V6453-W15-P
+
+### V6453-M14 — Separate combined metadata reads under large-index latency
+
+- Trigger: the repository carries a large inherited index; multiple lifecycle artifacts are read in one diagnostic wrapper; the wrapper has a short fixed timeout
+- Method: Read one literal lifecycle artifact per command, or raise the bounded read timeout only after confirming the target path and metadata size; do not over-combine diagnostics.
+- Recurrence guard: Lifecycle diagnostics must prefer one-file literal reads and reserve combined wrappers for operations already measured within their timeout budget.
+- Rollback: If a decomposed read still fails, preserve the failure and stop before interpreting or rewriting the artifact.
+- Witnesses: V6453-W14-F, V6453-W14-P
+
+### V6453-M16 — Synchronize structural assertions after Method Flow growth
+
+- Trigger: a new Method Flow method and witnesses were appended; phase validators and tests contain exact structural counts; only a subset of those assertions was updated
+- Method: After appending a Method Flow incident, audit every phase-local validator, test, receipt, and index assertion for the former method, witness, state, and negative counts before rerunning.
+- Recurrence guard: Use one bounded search for the prior exact counts across the phase-local test, validator, receipts, and index surfaces after every ledger growth event.
+- Rollback: If any count cannot be reconciled arithmetically with the append-only ledger, keep validation failed and do not edit evidence to fit the assertion.
+- Witnesses: V6453-W16-F, V6453-W16-P
+
+### V6453-M17 — Derive mutable lifecycle component invariants from append-only rows
+
+- Trigger: append-only negative and Method Flow rows can grow during validation; the validator carries fixed historical component counts; the total receipt has already been updated
+- Method: Keep the frozen inherited, x1, and synthetic baselines explicit, but derive the growing x2 row count and Method Flow state histogram from the append-only collections themselves.
+- Recurrence guard: Use fixed counts only for frozen inputs; for lifecycle-grown collections validate row-count equality, balanced witnesses, unique identifiers, and all-preferred state dynamically.
+- Rollback: If a derived invariant disagrees with the underlying rows, preserve the validator failure and do not coerce either side.
+- Witnesses: V6453-W17-F, V6453-W17-P
 
 ## Retained boundary
 

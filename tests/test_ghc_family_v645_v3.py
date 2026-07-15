@@ -95,15 +95,17 @@ class V645V3EvidenceTests(unittest.TestCase):
 
     def test_method_flow_structural_counts(self) -> None:
         ledger = load("method-flow/method-flow-state.json")
-        self.assertEqual(ledger["counts"]["methods"], 12)
-        self.assertEqual(ledger["counts"]["witness_results"], {"pass": 12, "fail": 12})
-        self.assertEqual(ledger["counts"]["states"]["preferred"], 12)
-        self.assertEqual(len({item["method_id"] for item in ledger["methods"]}), 12)
+        method_count = len(ledger["methods"])
+        self.assertGreaterEqual(method_count, 17)
+        self.assertEqual(ledger["counts"]["methods"], method_count)
+        self.assertEqual(ledger["counts"]["witness_results"], {"pass": method_count, "fail": method_count})
+        self.assertEqual(ledger["counts"]["states"]["preferred"], method_count)
+        self.assertEqual(len({item["method_id"] for item in ledger["methods"]}), method_count)
 
     def test_negatives_and_gates(self) -> None:
         negatives = load("retained-negative-register.json")
         gates = load("exact-open-gate-register.json")
-        self.assertEqual(negatives["negative_count"], 1998)
+        self.assertEqual(negatives["negative_count"], 2003)
         new_ids = [item["negative_id"] for item in negatives["x1_operational"] + negatives["x2_operational"] + negatives["synthetic_negatives"]]
         self.assertEqual(len(new_ids), len(set(new_ids)))
         self.assertEqual((gates["open_gap_count"], gates["exact_gate_count"]), (5, 6))

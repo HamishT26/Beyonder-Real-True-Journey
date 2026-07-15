@@ -63,7 +63,14 @@ def ancestor(repo: Path, older: str, newer: str = "HEAD") -> bool:
 
 
 def logical_text_hash(path: Path) -> str:
-    return hashlib.sha256(path.read_text(encoding="utf-8").encode("utf-8")).hexdigest()
+    data = path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(data).hexdigest()
+
+
+def committed_logical_text_hash(repo: Path, target: str, relative: str) -> str:
+    data = subprocess.check_output(["git", "-C", str(repo), "show", f"{target}:{relative}"])
+    data = data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def privacy_scan(repo: Path, files: list[Path]) -> dict[str, Any]:
@@ -128,10 +135,20 @@ def validate(repo: Path, *, mode: str, expected_head: str | None, require_clean:
             json_issues.append(f"{path.relative_to(repo).as_posix()}:{type(exc).__name__}")
     privacy = privacy_scan(repo, owner_files)
 
+    committed_manifest_path = phase / "reproduction/evidence-commit-manifest.json"
+    manifest_target = load(committed_manifest_path)["target"] if committed_manifest_path.is_file() else None
     manifest_issues: list[str] = []
     for row in manifest["entries"]:
         path = repo / row["path"]
-        if not path.is_file() or logical_text_hash(path) != row["logical_text_sha256"]:
+        try:
+            observed = (
+                committed_logical_text_hash(repo, manifest_target, row["path"])
+                if manifest_target and ancestor(repo, manifest_target)
+                else logical_text_hash(path)
+            )
+        except (OSError, subprocess.CalledProcessError):
+            observed = "missing"
+        if observed != row["logical_text_sha256"]:
             manifest_issues.append(row["path"])
 
     disposition = Counter(row["disposition"] for row in ledger["outcomes"])
@@ -164,14 +181,14 @@ def validate(repo: Path, *, mode: str, expected_head: str | None, require_clean:
         "successor_clean_seeds_15": len(clean["successor_seeds"]) == 15,
         "sandbox_blueprints_6_valid": sandbox["template_count"] == sandbox["valid_count"] == 6 and sandbox["valid"],
         "sandbox_runtime_truthful": host["windows_sandbox_executable_available"] is False and host["windows_sandbox_cli_available"] is False and truth["sandbox_runtime_available"] is False and truth["sandbox_launched"] is False,
-        "negatives_exact_1998": negatives["negative_count"] == 1998 == negatives["inherited_effective_count"] + negatives["x1_operational_count"] + negatives["x2_operational_count"] + negatives["new_synthetic_count"],
-        "negative_components": negatives["inherited_effective_count"] == 1916 and negatives["x1_operational_count"] == 6 and negatives["x2_operational_count"] == 6 and negatives["new_synthetic_count"] == 70,
+        "negatives_exact_2003": negatives["negative_count"] == 2003 == negatives["inherited_effective_count"] + negatives["x1_operational_count"] + negatives["x2_operational_count"] + negatives["new_synthetic_count"],
+        "negative_components": negatives["inherited_effective_count"] == 1916 and negatives["x1_operational_count"] == len(negatives["x1_operational"]) == 6 and negatives["x2_operational_count"] == len(negatives["x2_operational"]) and negatives["new_synthetic_count"] == len(negatives["synthetic_negatives"]) == 70,
         "negative_retention": negatives["all_retained"] and not negatives["erasure_permitted"],
         "open_gaps_5": gates["open_gap_count"] == 5 == len(gates["open_gaps"]),
         "exact_gates_6": gates["exact_gate_count"] == 6 == len(gates["exact_gates"]),
         "gates_visible": gates["all_visible"] and gates["none_silently_closed"],
-        "method_flow_12_balanced": len(method["methods"]) == 12 and len(method["witnesses"]) == 24 and witness_states == {"fail": 12, "pass": 12},
-        "method_flow_preferred": method_states == {"preferred": 12},
+        "method_flow_structurally_balanced": len(method["methods"]) >= 17 and len(method["witnesses"]) == 2 * len(method["methods"]) and witness_states == {"fail": len(method["methods"]), "pass": len(method["methods"])},
+        "method_flow_preferred": method_states == {"preferred": len(method["methods"])},
         "method_flow_runner_valid": method_receipt["valid"] and method_receipt["issue_count"] == 0,
         "source_vocabulary": set(source_states) <= {"current", "stable", "draft", "watch"} and sum(source_states.values()) == sources["source_count"] == 19,
         "real_counts_zero": truth["real_gmut_rows"] == truth["real_thos_participants"] == truth["real_freed_id_credentials"] == 0,
@@ -196,7 +213,7 @@ def validate(repo: Path, *, mode: str, expected_head: str | None, require_clean:
     minimal_names = [
         "proposals_exactly_10", "distribution_6_2_1_1", "safe_now_15_completed",
         "candidate_10_completed", "skills_10_built_used", "runners_5_built_used",
-        "negatives_exact_1998", "negative_retention", "open_gaps_5", "exact_gates_6",
+        "negatives_exact_2003", "negative_retention", "open_gaps_5", "exact_gates_6",
         "method_flow_runner_valid", "terminal_not_ready", "manifest_logical_parity",
         "json_parse_zero_issues", "privacy_five_class_zero_hits", "source_ancestral",
         "source_seal_ancestral", "x1_ancestral", "zero_merges", "expected_head",
@@ -221,6 +238,7 @@ def validate(repo: Path, *, mode: str, expected_head: str | None, require_clean:
         "json_issues": json_issues,
         "privacy": privacy,
         "manifest_entries": manifest["entry_count"],
+        "manifest_target": manifest_target or "WORKTREE",
         "manifest_issues": manifest_issues,
         "overview_word_count": len(overview.split()),
         "same_owner_repeatability_only": True,

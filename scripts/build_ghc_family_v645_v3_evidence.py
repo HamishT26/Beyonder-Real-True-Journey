@@ -337,6 +337,11 @@ def main() -> None:
         {"negative_id": "V6453-X2-N04", "summary": "The first full-suite shell wrapper used a one-second process timeout and terminated the run before a test receipt could be produced.", "disposition": "retained_recovered", "method_id": "V6453-M10"},
         {"negative_id": "V6453-X2-N05", "summary": "The first exact staged review rejected the skill-validation receipt because a PowerShell-emitted UTF-8 BOM made strict staged JSON decoding fail.", "disposition": "retained_recovered", "method_id": "V6453-M11"},
         {"negative_id": "V6453-X2-N06", "summary": "The first combined staging, manifest, review, and status wrapper exceeded its three-minute process bound after producing invalid review receipts.", "disposition": "retained_recovered", "method_id": "V6453-M12"},
+        {"negative_id": "V6453-X2-N07", "summary": "The first final-candidate validator compared the frozen evidence logical manifest to lifecycle-modified working files instead of its committed evidence target.", "disposition": "retained_recovered", "method_id": "V6453-M13"},
+        {"negative_id": "V6453-X2-N08", "summary": "A combined PowerShell metadata read of two lifecycle artifacts exceeded a thirty-second wrapper bound before returning either result.", "disposition": "retained_recovered", "method_id": "V6453-M14"},
+        {"negative_id": "V6453-X2-N09", "summary": "The first Method Flow M14 runner invocation used a stale assumed ledger filename and stopped before writing any event.", "disposition": "retained_recovered", "method_id": "V6453-M15"},
+        {"negative_id": "V6453-X2-N10", "summary": "The first post-M15 phase test run passed fifteen of sixteen tests but retained a stale fourteen-method structural assertion.", "disposition": "retained_recovered", "method_id": "V6453-M16"},
+        {"negative_id": "V6453-X2-N11", "summary": "The first post-M16 detailed validator passed forty-four of forty-six checks but retained stale fixed x2-negative and preferred-method component assertions.", "disposition": "retained_recovered", "method_id": "V6453-M17"},
     ]
     total_negatives = INHERITED_NEGATIVES + len(x1_negatives) + len(x2_negatives) + len(synthetic_negatives)
     write_json(phase_dir / "retained-negative-register.json", {

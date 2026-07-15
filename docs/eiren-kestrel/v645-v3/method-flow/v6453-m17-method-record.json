@@ -1,0 +1,21 @@
+{
+  "method_id": "V6453-M17",
+  "title": "Derive mutable lifecycle component invariants from append-only rows",
+  "failure_signature": "The first post-M16 detailed validator passed forty-four of forty-six checks but two checks still hard-coded older x2-negative and preferred-method counts.",
+  "trigger_preconditions": [
+    "append-only negative and Method Flow rows can grow during validation",
+    "the validator carries fixed historical component counts",
+    "the total receipt has already been updated"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_derived_invariant_repair",
+  "candidate_workaround": "Keep the frozen inherited, x1, and synthetic baselines explicit, but derive the growing x2 row count and Method Flow state histogram from the append-only collections themselves.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use fixed counts only for frozen inputs; for lifecycle-grown collections validate row-count equality, balanced witnesses, unique identifiers, and all-preferred state dynamically.",
+  "rollback": "If a derived invariant disagrees with the underlying rows, preserve the validator failure and do not coerce either side.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["append_only_history", "validator_truth", "negative_retention"],
+  "retained_negative_ids": ["V6453-X2-N11"],
+  "scope_boundary": "Derived invariants prevent stale-count failures only; they do not relax the fixed source, gate, or substantive evidence requirements."
+}

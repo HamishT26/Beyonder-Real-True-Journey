@@ -1,0 +1,21 @@
+{
+  "method_id": "V6453-M14",
+  "title": "Separate combined metadata reads under large-index latency",
+  "failure_signature": "A combined PowerShell read of two lifecycle metadata artifacts exceeded the 30-second wrapper limit even though each artifact remained readable.",
+  "trigger_preconditions": [
+    "the repository carries a large inherited index",
+    "multiple lifecycle artifacts are read in one diagnostic wrapper",
+    "the wrapper has a short fixed timeout"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_diagnostic_decomposition",
+  "candidate_workaround": "Read one literal lifecycle artifact per command, or raise the bounded read timeout only after confirming the target path and metadata size; do not over-combine diagnostics.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Lifecycle diagnostics must prefer one-file literal reads and reserve combined wrappers for operations already measured within their timeout budget.",
+  "rollback": "If a decomposed read still fails, preserve the failure and stop before interpreting or rewriting the artifact.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["artifact_integrity", "timeout_truth", "negative_retention"],
+  "retained_negative_ids": ["V6453-X2-N08"],
+  "scope_boundary": "Diagnostic decomposition improves observability only; it does not validate the artifact contents or remove the original timeout."
+}

@@ -1,0 +1,21 @@
+{
+  "method_id": "V6453-M16",
+  "title": "Synchronize structural assertions after Method Flow growth",
+  "failure_signature": "The first post-M15 phase test run passed fifteen of sixteen tests but one structural test still expected fourteen methods and fourteen fail/pass witnesses.",
+  "trigger_preconditions": [
+    "a new Method Flow method and witnesses were appended",
+    "phase validators and tests contain exact structural counts",
+    "only a subset of those assertions was updated"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_structural_assertion_sync",
+  "candidate_workaround": "After appending a Method Flow incident, audit every phase-local validator, test, receipt, and index assertion for the former method, witness, state, and negative counts before rerunning.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use one bounded search for the prior exact counts across the phase-local test, validator, receipts, and index surfaces after every ledger growth event.",
+  "rollback": "If any count cannot be reconciled arithmetically with the append-only ledger, keep validation failed and do not edit evidence to fit the assertion.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["append_only_history", "test_truth", "negative_retention"],
+  "retained_negative_ids": ["V6453-X2-N10"],
+  "scope_boundary": "Structural synchronization repairs local assertions only; it does not improve substantive evidence or independent reproduction."
+}
