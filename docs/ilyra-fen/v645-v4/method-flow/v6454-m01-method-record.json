@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M01",
+  "title": "Restart invalidated asynchronous lookup from the latest confirmed request",
+  "trigger_preconditions": [
+    "an asynchronous read was invalidated",
+    "new user text confirms or updates the request"
+  ],
+  "failure_signature": "The first memory-index lookup cell was invalidated when repeated activation text arrived before output could be collected.",
+  "candidate_workaround": "After user steering invalidates a live diagnostic, discard only the dead process handle, preserve the failure, and restart from the newest confirmed request rather than replaying stale context.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W01-F",
+    "V6454-W01-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X1-N01"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Check the latest user request before resuming any asynchronous cell and never infer success from a missing cell.",
+  "rollback": "Stop the lookup and continue only from live verified source evidence if the replacement also fails.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

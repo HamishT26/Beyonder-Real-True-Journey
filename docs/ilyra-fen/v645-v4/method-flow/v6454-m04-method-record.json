@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M04",
+  "title": "Use literal script paths instead of Windows rg wildcards",
+  "trigger_preconditions": [
+    "PowerShell on Windows",
+    "rg path selection across a scripts directory"
+  ],
+  "failure_signature": "A recursive-grep command passed a Windows wildcard path literally and returned an invalid filename error.",
+  "candidate_workaround": "Enumerate files first and pass literal Windows paths to rg for bounded skill-script inspection.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W04-F",
+    "V6454-W04-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X1-N04"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Do not rely on shell wildcard expansion for rg path operands on Windows.",
+  "rollback": "Use Get-ChildItem for enumeration and stop if the target cannot be uniquely resolved.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

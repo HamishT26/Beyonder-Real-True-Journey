@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M03",
+  "title": "Force UTF-8 for Unicode-bearing proposal audits",
+  "trigger_preconditions": [
+    "Windows console output",
+    "Unicode-bearing repository text"
+  ],
+  "failure_signature": "A proposal-keyword audit hit a Windows cp1252 UnicodeEncodeError while printing a prior Maori-bearing title.",
+  "candidate_workaround": "Use explicit UTF-8 process output for Unicode-bearing repository audits while keeping files encoded as UTF-8 with LF.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W03-F",
+    "V6454-W03-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X1-N03"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Set UTF-8 before printing proposal, authority, or cultural-language text on Windows.",
+  "rollback": "Write a sanitized UTF-8 receipt file or stop; never transliterate authority-bearing terms merely to satisfy a console.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

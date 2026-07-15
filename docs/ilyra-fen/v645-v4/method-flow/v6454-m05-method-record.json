@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M05",
+  "title": "Preflight every imported source-seed collection used by the builder",
+  "trigger_preconditions": [
+    "a builder imports frozen definition collections",
+    "portfolio counts reference each collection by name"
+  ],
+  "failure_signature": "The first x1 build stopped before artifact writes because the candidate source-count referenced an unimported definition constant.",
+  "candidate_workaround": "Before artifact writes, resolve every source-seed collection named by portfolio count and review logic through explicit imports.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W05-F",
+    "V6454-W05-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X1-N05"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Compile the builder and enumerate all imported portfolio collections before the first write boundary.",
+  "rollback": "Leave the phase directory absent or remove only owner-generated partial output, then repair the explicit import without changing source data.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

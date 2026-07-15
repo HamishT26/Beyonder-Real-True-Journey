@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M02",
+  "title": "Split large-index status and definition inspection into bounded commands",
+  "trigger_preconditions": [
+    "a repository has a large inherited index",
+    "two independent diagnostics were combined"
+  ],
+  "failure_signature": "A combined Git status plus definition import exceeded the twenty-second command bound and returned exit 124.",
+  "candidate_workaround": "Decompose large-index repository checks from verbose data inspection and give each one a measured bounded lifetime.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W02-F",
+    "V6454-W02-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X1-N02"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Do not combine Git status with Python imports or verbose portfolio output in the same short-lived wrapper.",
+  "rollback": "Retain the timeout and stop rather than raising the bound repeatedly without decomposition.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": []
+}

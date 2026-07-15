@@ -1,0 +1,29 @@
+{
+  "method_id": "V6454-M07",
+  "title": "Run staged diff hygiene before the x1 freeze",
+  "trigger_preconditions": [
+    "the exact x1 file set is staged",
+    "Git can inspect whitespace errors without mutating files"
+  ],
+  "failure_signature": "The first staged diff hygiene check reported an extra blank line at the end of the v645-v4 definitions module.",
+  "candidate_workaround": "Run exact staged diff hygiene after generated and hand-authored x1 files are stable, then repair only the reported owner-scoped whitespace defect.",
+  "approval_class": "safe_now_local_tooling",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "unbounded_retry",
+    "sibling_lane"
+  ],
+  "validation_witness_ids": [
+    "V6454-W07-F",
+    "V6454-W07-P"
+  ],
+  "retained_negative_ids": [
+    "V6454-X1-N07"
+  ],
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Require git diff --cached --check to return zero before every phase commit.",
+  "rollback": "Keep the commit blocked and retain the finding if normalization would alter semantic content.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": []
+}
