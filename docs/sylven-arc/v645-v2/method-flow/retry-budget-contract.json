@@ -1,0 +1,29 @@
+{
+  "schema": "ghc.family.v645-v2.v6452-p01.contract.v1",
+  "phase": "v645-gmut-thos-v2-x1-x2",
+  "proposal_id": "V6452-P01",
+  "title": "Method Flow recurrence-cluster, retry-budget, and stop-escalation ledger",
+  "observed_disposition": "completed",
+  "protected_gates": [
+    "history_rewrite",
+    "private_material",
+    "sibling_authority",
+    "independent_team_reproduction"
+  ],
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "approval_class": "safe_now_structural_only",
+  "baseline": {
+    "attempt_ids_unique": true,
+    "signatures_clustered_exactly": true,
+    "events_append_only": true,
+    "retry_budget": 2,
+    "attempt_count": 2,
+    "stop_after_budget": true,
+    "claim_class": "same_owner_method_evidence_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "An append-only Method Flow extension can preserve every failed attempt while clustering equivalent signatures, enforcing a bounded retry budget, and escalating to an explicit stop state without treating repetition as independent validation evidence.",
+  "falsifier_or_gate": "Mutate signature equivalence, attempt identity, retained-event count, retry budget, stop threshold, recovery witness, rollback, and recommendation state; every event must remain visible and budget exhaustion must fail closed.",
+  "evidence_class": "bounded structural, proxy, open-gap, or exact-gate software evidence",
+  "boundary": "Acceptance is confined to the frozen software evidence class and cannot promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

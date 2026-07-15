@@ -1,0 +1,28 @@
+{
+  "schema": "ghc.family.v645-v2.x2-operational-negatives.v1",
+  "phase": "v645-gmut-thos-v2-x1-x2",
+  "negative_count": 2,
+  "negatives": [
+    {
+      "negative_id": "REPRO-V6452-X2-N01",
+      "operation": "first post-freeze remote-tracking fetch proof",
+      "failure_signature": "PowerShell interpreted a colon immediately after an interpolated branch variable as scoped-variable syntax, producing an invalid refspec after the x1 commit and push had already succeeded.",
+      "trigger_precondition": "A source:destination refspec was placed in a double-quoted string as $branch:refs without braced interpolation.",
+      "recovery": "Retained the failed fetch, reran only the proof command with ${branch} on both sides, and established clean local, upstream, remote-tracking, and fresh live-remote equality with 0/0 divergence.",
+      "recurrence_guard": "Brace PowerShell variables that touch a colon in Git refspecs and separate commit or push success from later proof-command status.",
+      "promotion_effect": "none; the failed fetch supplied no equality evidence and x2 did not begin until the corrected proof passed",
+      "retained": true
+    },
+    {
+      "negative_id": "REPRO-V6452-X2-N02",
+      "operation": "first post-freeze Method Flow interface query",
+      "failure_signature": "The runner rejected inherited append-method and append-witness command names; its current subcommands are record and witness.",
+      "trigger_precondition": "Command names were recalled rather than copied from the runner interface already selected for the phase.",
+      "recovery": "Retained both parser rejections, queried record and witness help, and used the exact current flags for subsequent ledger appends.",
+      "recurrence_guard": "Use the complete skill and runner help as the command source of truth at each lifecycle boundary.",
+      "promotion_effect": "none; argument parsing stopped before any Method Flow ledger mutation",
+      "retained": true
+    }
+  ],
+  "boundary": "Operational recovery never deletes a failure or converts same-owner process evidence into independent reproduction."
+}

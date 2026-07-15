@@ -1,0 +1,26 @@
+{
+  "method_id": "v6452-m11",
+  "title": "Brace PowerShell variables adjacent to Git refspec colons",
+  "failure_signature": "An unbraced branch variable next to a colon produced an invalid fetch refspec after x1 commit and push.",
+  "trigger_preconditions": [
+    "PowerShell double-quoted interpolation",
+    "A variable is immediately followed by a colon",
+    "The resulting string is a Git source-to-destination refspec"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Use ${branch} around each branch interpolation, rerun only the failed fetch and equality proof, and credit equality only after live-remote comparison succeeds.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Brace variables at punctuation boundaries and report earlier child-command success separately from a later orchestration failure.",
+  "rollback": "Do not alter the successful commit or push; stop before x2 and rerun only the read-only or remote-tracking proof operation.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "No history rewrite",
+    "No force push",
+    "Exact live-remote equality before x2",
+    "Retain the failed proof command"
+  ],
+  "retained_negative_ids": ["REPRO-V6452-X2-N01"],
+  "scope_boundary": "This method validates refspec construction and equality proof only; it provides no scientific, authority, privacy, identity, deployment, or independent-reproduction evidence."
+}

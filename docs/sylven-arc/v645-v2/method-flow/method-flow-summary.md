@@ -2,8 +2,8 @@
 
 - Phase: v645-gmut-thos-v2-x1-x2
 - Owner: Sylven Arc
-- Methods: 10
-- Passing witnesses: 10
+- Methods: 12
+- Passing witnesses: 12
 - Failed witnesses retained: 0
 
 ## Preferred methods

@@ -1,0 +1,25 @@
+{
+  "method_id": "v6452-m12",
+  "title": "Bind Method Flow commands to the current runner interface",
+  "failure_signature": "The runner rejected inherited append-method and append-witness names before ledger mutation.",
+  "trigger_preconditions": [
+    "A current Method Flow runner is selected",
+    "Subcommand names are supplied from recollection rather than current help",
+    "Argument parsing occurs before ledger access"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Read command-specific help and use record --record-file and witness --witness-file against the existing ledger.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Copy subcommands and flags from the selected runner help at lifecycle transitions.",
+  "rollback": "No ledger rollback is needed when parsing stops before access; retain the parser failure and retry with the exact interface.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Append-only Method Flow",
+    "No failure erasure",
+    "No unsupported command inference"
+  ],
+  "retained_negative_ids": ["REPRO-V6452-X2-N02"],
+  "scope_boundary": "This method concerns runner invocation only and cannot validate proposal outcomes or external gates."
+}
