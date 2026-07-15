@@ -1,0 +1,30 @@
+{
+  "schema": "ghc.family.v644-v5.post-final-validation-negative.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "owner": "Eiren Kestrel",
+  "negative_id": "V6445-VALID-N03",
+  "class": "windows_checkout_path_length",
+  "failure_signature": "The first LF-preserving validation clone fetched the exact commit but its checkout rejected two inherited historical document filenames under the default Windows Git path-length policy.",
+  "observed_validation": {
+    "exact_commit_fetched": true,
+    "checkout_complete": false,
+    "rejected_inherited_paths": 2,
+    "full_suite_started": false,
+    "clone_promoted": false
+  },
+  "trigger_preconditions": [
+    "fresh Windows checkout includes inherited filenames beyond the default Git path limit",
+    "clone-time LF preservation exposes a complete new checkout path"
+  ],
+  "recovery": "Create one fresh named validation clone with Git long-path support and LF preservation enabled only for that clone operation, then require a clean exact-head checkout before validation.",
+  "recurrence_guard": "Audit inherited maximum path length before Windows materialization and set clone-local Git checkout policy before the first checkout; do not enable an operating-system feature or rewrite filenames without explicit migration authority.",
+  "promotion_effect": "The incomplete clone is rejected and no validator or test result from it is promoted.",
+  "canonical_branch_mutated_by_failure": false,
+  "host_security_or_windows_feature_changed": false,
+  "phase_retained_negative_count": 1488,
+  "post_final_validation_negative_count": 3,
+  "effective_retained_negative_count": 1491,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This is a Windows materialization negative. It is not scientific, security-certification, legal, cultural, identity, accessibility-complete, or independent-reproduction evidence."
+}
