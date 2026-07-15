@@ -1,0 +1,29 @@
+{
+  "schema": "ghc.family.v644-v8.v6448-p01.contract.v1",
+  "phase": "v644-gmut-thos-v8-x1-x2",
+  "proposal_id": "V6448-P01",
+  "title": "Method Flow witness invalidation, environment-drift, and recommendation-demotion ledger",
+  "observed_disposition": "completed",
+  "protected_gates": [
+    "history_rewrite",
+    "independent_team_reproduction",
+    "private_material",
+    "sibling_authority"
+  ],
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "approval_class": "safe_now_structural_only",
+  "baseline": {
+    "witness_context_bound": true,
+    "drift_detection_enabled": true,
+    "demotion_append_only": true,
+    "historical_witness_retained": true,
+    "negative_link_retained": true,
+    "silent_preferred_persistence": false,
+    "claim_class": "bounded_method_state_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A typed Method Flow extension can detect when a previously passing witness no longer matches its declared environment or preconditions and can demote the associated recommendation without deleting either the successful historical witness or the triggering negative.",
+  "falsifier_or_gate": "Mutate environment fingerprints, trigger preconditions, witness result, retained-negative linkage, and recommendation state; stale witnesses must invalidate or demote without erasing append-only history.",
+  "evidence_class": "bounded structural, proxy, open-gap, or exact-gate software evidence",
+  "boundary": "Acceptance is confined to the frozen software evidence class and cannot promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

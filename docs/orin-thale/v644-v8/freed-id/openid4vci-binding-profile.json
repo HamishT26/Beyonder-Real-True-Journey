@@ -1,0 +1,32 @@
+{
+  "schema": "ghc.family.v644-v8.v6448-p05.contract.v1",
+  "phase": "v644-gmut-thos-v8-x1-x2",
+  "proposal_id": "V6448-P05",
+  "title": "Freed ID OpenID4VCI credential-offer, nonce, and proof-of-possession binding profile",
+  "observed_disposition": "represented",
+  "protected_gates": [
+    "real_keys",
+    "live_issuance",
+    "production_identity",
+    "interoperability",
+    "privacy_assurance",
+    "independent_security_review",
+    "trust_governance"
+  ],
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "approval_class": "safe_now_synthetic_identity_profile",
+  "baseline": {
+    "offer_issuer_bound": true,
+    "configuration_identifier_bound": true,
+    "nonce_fresh": true,
+    "proof_audience_bound": true,
+    "holder_key_bound": true,
+    "replay_rejected": true,
+    "claim_class": "synthetic_issuance_proxy_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A synthetic structural profile can reject issuance transcripts that cross-bind credential offers, issuer metadata, nonces, proof audiences, or holder keys, while reserving real cryptographic and interoperability assurance.",
+  "falsifier_or_gate": "Mutate issuer identity, offer transport, configuration identifier, nonce freshness, proof audience, holder key, credential response, and replay state; mismatches must reject deterministically.",
+  "evidence_class": "bounded structural, proxy, open-gap, or exact-gate software evidence",
+  "boundary": "Acceptance is confined to the frozen software evidence class and cannot promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

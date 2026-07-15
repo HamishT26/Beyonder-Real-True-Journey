@@ -1,0 +1,29 @@
+{
+  "method_id": "V6448-M09",
+  "title": "Single-language block edits across orchestration boundaries",
+  "failure_signature": "PowerShell backtick-newline escapes broke the outer JavaScript orchestration template before a shell call was made.",
+  "trigger_preconditions": [
+    "nested JavaScript and PowerShell parsers",
+    "template literals",
+    "backtick escape syntax",
+    "bulk block replacement"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_edit",
+  "candidate_workaround": "Use apply-patch for the exact semantic block or keep the transformation in one parser language with no layered newline escapes.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never mix PowerShell backtick escapes inside a JavaScript template literal; verify that the outer orchestration source parses before assuming the nested command can run.",
+  "rollback": "Retain the parser failure, confirm no shell call or file mutation occurred, and retry only with a single-language edit.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "history_rewrite",
+    "destructive_action",
+    "private_material",
+    "sibling_lane"
+  ],
+  "retained_negative_ids": [
+    "V6448-X2-N01"
+  ],
+  "scope_boundary": "Orchestration and patch transport only; it does not validate the evidence builder semantics."
+}

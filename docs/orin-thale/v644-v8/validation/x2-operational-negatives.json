@@ -1,0 +1,35 @@
+{
+  "schema": "ghc.family.v644-v8.x2-operational-negatives.v1",
+  "phase": "v644-gmut-thos-v8-x1-x2",
+  "count": 2,
+  "negatives": [
+    {
+      "negative_id": "V6448-X2-N01",
+      "class": "orchestration_template_parse_failure",
+      "failure_signature": "The JavaScript orchestration parser rejected a PowerShell rewrite command because PowerShell backtick-newline tokens terminated the outer template literal.",
+      "trigger_preconditions": [
+        "JavaScript template literal",
+        "embedded PowerShell replacement string",
+        "PowerShell backtick escapes"
+      ],
+      "recovery": "Retained the parser failure and changed to an apply-patch block deletion without layered command-language newline escapes.",
+      "recurrence_guard": "Do not embed PowerShell backtick escapes in a JavaScript template literal; use apply-patch or a single-language file transformation.",
+      "method_id": "V6448-M09",
+      "retained": true,
+      "promotion_effect": "none; the failed orchestration script made no shell call and changed no file"
+    },
+    {
+      "negative_id": "V6448-X2-N02",
+      "class": "operational_timeout_recurrence",
+      "surface": "combined login-shell inspection and compilation probe",
+      "failure": "The combined probe reached its 20-second bound before returning any complete child output.",
+      "impact": "No file or repository conclusion was drawn from the timed-out parent command.",
+      "workaround": "Repeat only the required surfaces as non-login commands with independent bounds; the file-presence and compilation probes then completed.",
+      "recurrence_guard": "Do not combine shell startup, filesystem enumeration, Git status, and compilation under one short parent envelope on this checkout.",
+      "rollback": "Retain the timeout, treat the combined receipt as no evidence, and make no mutation before the bounded retries complete.",
+      "sibling_recommendation": "Use independently bounded non-login probes for this checkout when the combined startup surface has already timed out.",
+      "retained": true
+    }
+  ],
+  "retention_rule": "Recovery never erases a failure; later evidence may reference only the corrected complete operation."
+}
