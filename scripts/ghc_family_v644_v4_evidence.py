@@ -146,6 +146,15 @@ X2_OPERATIONAL_NEGATIVES = [
         "retained": True,
         "external_gate_closed": False,
     },
+    {
+        "negative_id": "V6444-X2-OP-15",
+        "origin": "v644-v4-seal-operational",
+        "observed": "The post-closeout four-way equality wrapper received a valid tab-delimited 0/0 divergence result but compared it with a space-delimited literal and exited after already proving all four heads equal.",
+        "recovery": "Retained the wrapper exit and normalized divergence output as two numeric fields in subsequent equality checks.",
+        "promotion_effect": "The failed string comparison is not the terminal 0/0 divergence receipt.",
+        "retained": True,
+        "external_gate_closed": False,
+    },
 ]
 X2_EXTERNAL_FILES = [
     "scripts/build_ghc_family_v644_v4_report.py",
