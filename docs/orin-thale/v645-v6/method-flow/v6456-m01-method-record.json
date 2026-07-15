@@ -1,0 +1,33 @@
+{
+  "method_id": "V6456-M01",
+  "title": "Split broad Git startup probes after an evidence-free timeout",
+  "failure_signature": "The first combined worktree, status, head, and branch probe exceeded its bounded shell time and returned no evidence.",
+  "trigger_preconditions": [
+    "large linked-worktree repository",
+    "combined read-only Git probe returned no evidence"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Decompose startup Git proof into small read-only probes and capture each native result separately.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not retry a broad timed-out wrapper or infer any result from its silence.",
+  "rollback": "Make no repository mutation until the decomposed proof passes.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6456-X1-N01"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "read_only_git_metadata",
+    "no_ref_change",
+    "no_worktree_change"
+  ],
+  "rollback_witness_required": true
+}

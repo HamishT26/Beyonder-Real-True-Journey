@@ -1,0 +1,19 @@
+{
+  "method_id": "V6456-M05",
+  "title": "Use a dependency-free scoped test entrypoint when pytest is absent",
+  "failure_signature": "The selected Python runtime had no pytest module, so the first scoped test invocation ran zero tests and received no evidence credit.",
+  "trigger_preconditions": ["phase-local pure-Python assertions", "pytest module absent from selected runtime"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Keep the assertions and add a deterministic dependency-free direct entrypoint that discovers and invokes only the phase-local test functions.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Check the intended test runtime and preserve zero-test dependency failures before switching runners.",
+  "rollback": "Do not count the failed invocation; retain the test source and run only the bounded phase entrypoint.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["system_install", "unrelated_dependency_update", "full_repository_suite", "independent_reproduction"],
+  "retained_negative_ids": ["V6456-X1-N05"],
+  "scope_boundary": "Same-owner v645-v6 scoped tests only; no full-suite, scientific, authority, production, or independent-reproduction credit.",
+  "side_effect_budget": ["phase_test_file_only", "no_package_install", "no_environment_update"],
+  "rollback_witness_required": true
+}

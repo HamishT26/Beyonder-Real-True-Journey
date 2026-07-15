@@ -1,0 +1,34 @@
+{
+  "method_id": "V6456-M03",
+  "title": "Fail closed when Windows Sandbox state is elevation-gated",
+  "failure_signature": "The ordinary optional-feature query required elevation and the Windows Sandbox executable was absent.",
+  "trigger_preconditions": [
+    "Sandbox status requires elevation",
+    "no exact host-change authorization"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Treat elevation-gated Sandbox status as an open environment gap and stop at read-only evidence.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never elevate, enable a feature, weaken security, or reboot to satisfy a validation template.",
+  "rollback": "Leave the host unchanged and retain the unavailable receipt.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6456-X1-N03"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "read_only_host_query",
+    "no_elevation",
+    "no_feature_change",
+    "no_reboot"
+  ],
+  "rollback_witness_required": true
+}

@@ -1,0 +1,19 @@
+{
+  "method_id": "V6456-M06",
+  "title": "Normalize family-index checkout text after preserving encoding drift",
+  "failure_signature": "The family-index builder emitted its phase-local JSON and Markdown with CRLF checkout bytes, and the Markdown dash was mojibake in the observed shell rendering.",
+  "trigger_preconditions": ["Windows family-index generation", "owner-scoped phase output", "UTF-8 LF cleanup obligation"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_cleanup",
+  "candidate_workaround": "Apply an owner-scoped reviewed-current patch that corrects the visible encoding marker and normalizes the two generated files, then rescan UTF-8 and line endings.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Inspect generated text bytes and visible headings before staging family-index output on Windows.",
+  "rollback": "Restore the phase-local generated files from the family index and retain the encoding negative if normalization changes semantics.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["shared_skill_mutation", "semantic_tool_promotion", "history_rewrite", "sibling_lane"],
+  "retained_negative_ids": ["V6456-X1-N06"],
+  "scope_boundary": "Only the Orin phase-local index rendering is normalized; the installed family skill and historical outputs remain untouched.",
+  "side_effect_budget": ["two_owner_phase_files", "no_shared_skill_change", "no_tool_selection_change"],
+  "rollback_witness_required": true
+}

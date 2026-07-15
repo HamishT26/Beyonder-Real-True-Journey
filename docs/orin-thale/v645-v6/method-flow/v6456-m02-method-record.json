@@ -1,0 +1,32 @@
+{
+  "method_id": "V6456-M02",
+  "title": "Remove unsupported ConvertFrom-Json parameters before structured audit",
+  "failure_signature": "A Windows PowerShell structured JSON inspection used an unsupported Depth parameter and produced no parsed evidence.",
+  "trigger_preconditions": [
+    "Windows PowerShell 5.1",
+    "structured JSON inspection"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Keep Windows PowerShell 5.1 JSON input parsing parameter-free and apply depth only when rendering output.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Check cmdlet version-specific parameters before using them in evidence probes.",
+  "rollback": "Withdraw the parse conclusion and rerun the exact read-only inspection.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6456-X1-N02"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "read_only_json",
+    "no_artifact_change"
+  ],
+  "rollback_witness_required": true
+}
