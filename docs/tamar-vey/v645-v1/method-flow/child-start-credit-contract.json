@@ -1,0 +1,29 @@
+{
+  "schema": "ghc.family.v645-v1.v6451-p01.contract.v1",
+  "phase": "v645-gmut-thos-v1-x1-x2",
+  "proposal_id": "V6451-P01",
+  "title": "Method Flow child-process start attestation, evidence-credit, and preflight-failure ledger",
+  "observed_disposition": "completed",
+  "protected_gates": [
+    "history_rewrite",
+    "private_material",
+    "sibling_authority",
+    "independent_team_reproduction"
+  ],
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "approval_class": "safe_now_structural_only",
+  "baseline": {
+    "parser_preflight_classified": true,
+    "launcher_preflight_classified": true,
+    "child_start_attested": true,
+    "completion_receipt_bound": true,
+    "zero_credit_for_unstarted": true,
+    "negative_retained": true,
+    "claim_class": "bounded_process_evidence_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A typed Method Flow extension can distinguish a parser or launcher failure that executes no evidence-producing child command from a started child process and can withhold replay credit unless a bounded start and completion receipt exist, while retaining every failed attempt.",
+  "falsifier_or_gate": "Mutate parser outcome, launcher outcome, child start token, command fingerprint, completion receipt, timeout state, retained-negative link, and replay count; only one actually started and successfully completed bounded child may receive replay credit.",
+  "evidence_class": "bounded structural, proxy, open-gap, or exact-gate software evidence",
+  "boundary": "Acceptance is confined to the frozen software evidence class and cannot promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

@@ -1,0 +1,17 @@
+{
+  "method_id": "v6451-m10",
+  "title": "Separate additive template writes from explicit destination inventory",
+  "failure_signature": "A post-copy display coerced five destination values into one invalid path and caused the combined command to exit nonzero.",
+  "trigger_preconditions": ["PowerShell hashtable Values collection", "Path cmdlet collection coercion", "Writes and display in one command envelope"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Validate additive destinations in a separate command using explicit wildcard and exact path arguments.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Keep mutation and validation receipts separate and enumerate path collections explicitly.",
+  "rollback": "Do not delete the additive files; inspect them independently and patch only after their exact presence is confirmed.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["No validation credit from failed wrapper", "No mutation of predecessor files", "No destructive cleanup"],
+  "retained_negative_ids": ["REPRO-V6451-X2-N04"],
+  "scope_boundary": "This method validates additive file-inventory control flow only and does not establish content correctness."
+}

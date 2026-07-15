@@ -1,0 +1,30 @@
+{
+  "schema": "ghc.family.v645-v1.v6451-p07.contract.v1",
+  "phase": "v645-gmut-thos-v1-x1-x2",
+  "proposal_id": "V6451-P07",
+  "title": "Git LFS pointer, materialized-object, and missing-content boundary tribunal",
+  "observed_disposition": "completed",
+  "protected_gates": [
+    "network_fetch",
+    "destructive_action",
+    "sibling_lane",
+    "history_rewrite",
+    "private_material"
+  ],
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "approval_class": "safe_now_read_only_tooling",
+  "baseline": {
+    "pointer_grammar_valid": true,
+    "sha256_oid_typed": true,
+    "declared_size_valid": true,
+    "materialization_state_explicit": true,
+    "missing_content_rejected": true,
+    "network_fetch_performed": false,
+    "root_containment_valid": true
+  },
+  "baseline_accept": true,
+  "hypothesis": "A read-only family-compatible classifier can distinguish ordinary Git blobs, valid and malformed LFS pointers, materialized LFS content, and pointer-only missing-content states so a manifest or privacy claim cannot silently treat a small pointer as the referenced large object.",
+  "falsifier_or_gate": "Exercise ordinary blobs, canonical pointers, wrong versions, non-SHA-256 identifiers, size mismatches, extension lines, oversized pointers, missing objects, materialized content, malicious paths, and network-required states; ambiguity must fail closed without fetching.",
+  "evidence_class": "bounded structural, proxy, open-gap, or exact-gate software evidence",
+  "boundary": "Acceptance is confined to the frozen software evidence class and cannot promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

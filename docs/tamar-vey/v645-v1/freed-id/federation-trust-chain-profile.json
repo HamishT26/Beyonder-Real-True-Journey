@@ -1,0 +1,32 @@
+{
+  "schema": "ghc.family.v645-v1.v6451-p05.contract.v1",
+  "phase": "v645-gmut-thos-v1-x1-x2",
+  "proposal_id": "V6451-P05",
+  "title": "Freed ID OpenID Federation trust-chain, entity-statement expiry, and policy-operator profile",
+  "observed_disposition": "represented",
+  "protected_gates": [
+    "real_keys",
+    "live_resolution",
+    "production_identity",
+    "interoperability",
+    "privacy_assurance",
+    "independent_security_review",
+    "trust_governance"
+  ],
+  "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "approval_class": "safe_now_synthetic_identity_profile",
+  "baseline": {
+    "issuer_subject_edges_bound": true,
+    "authority_hints_bound": true,
+    "trust_anchor_declared": true,
+    "expiry_order_valid": true,
+    "policy_operators_supported": true,
+    "rollover_linkage_bound": true,
+    "claim_class": "synthetic_federation_proxy_only"
+  },
+  "baseline_accept": true,
+  "hypothesis": "A synthetic structural profile can reject federation chains whose issuer-subject linkage, signature-key reference, expiry ordering, authority-hint path, trust anchor, or metadata-policy operator application is inconsistent while reserving real cryptographic and interoperability assurance.",
+  "falsifier_or_gate": "Mutate issuer, subject, authority hints, trust anchor, statement expiry, signing key, key rollover, chain ordering, policy operator, metadata result, and replay state; malformed or unsupported chains must reject deterministically.",
+  "evidence_class": "bounded structural, proxy, open-gap, or exact-gate software evidence",
+  "boundary": "Acceptance is confined to the frozen software evidence class and cannot promote empirical, participant, identity, authority, privacy, security, accessibility, deployment, or Stage 20 claims."
+}

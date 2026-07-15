@@ -1,0 +1,17 @@
+{
+  "method_id": "v6451-m13",
+  "title": "Gate evidence staging on cached diff hygiene",
+  "failure_signature": "The first exact staging pass carried conversion warnings and two extra EOF blank lines, causing cached diff hygiene to fail.",
+  "trigger_preconditions": ["Windows line-ending conversion", "New generated Python files", "Exact evidence-stage index"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Retain the warnings, remove only reported whitespace defects, restage, and require zero cached-diff and staged-review issues.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "A successful git add is not evidence-stage acceptance; cached diff hygiene and exact staged-blob review must both pass.",
+  "rollback": "Leave the commit unmade, retain the failed index receipt, and restage only after bounded whitespace repair.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["No commit from failed diff hygiene", "No warning erasure", "No x1 frozen-content rewrite"],
+  "retained_negative_ids": ["REPRO-V6451-X2-N07"],
+  "scope_boundary": "This method validates evidence-index hygiene only and does not prove newline portability, scientific correctness, or independent reproduction."
+}

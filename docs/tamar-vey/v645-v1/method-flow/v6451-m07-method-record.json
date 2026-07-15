@@ -1,0 +1,17 @@
+{
+  "method_id": "v6451-m07",
+  "title": "Split large predecessor reads into bounded source slices",
+  "failure_signature": "A combined status and multi-slice predecessor source read exceeded its command budget after returning incomplete output.",
+  "trigger_preconditions": ["Cold D-drive process startup", "Large predecessor builder", "Multiple slices in one command"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Read one bounded source slice per command with a sufficient timeout and accept it only on a zero exit status.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Keep large source inspections independently bounded and never credit a timed-out aggregate as complete.",
+  "rollback": "Discard the incomplete inspection result; the failed operation was read-only.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["No evidence credit for partial reads", "No repository mutation from inspection", "No sibling contact"],
+  "retained_negative_ids": ["REPRO-V6451-X2-N01"],
+  "scope_boundary": "This method addresses local source-reading reliability only and proves no scientific, authority, production, security, accessibility, or reproduction claim."
+}

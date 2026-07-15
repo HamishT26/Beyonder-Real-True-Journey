@@ -1,0 +1,17 @@
+{
+  "method_id": "v6451-m09",
+  "title": "Check generated-receipt presence before reading",
+  "failure_signature": "A future x2 runner-validation receipt was read before the x2 ledger transition and receipt generation occurred.",
+  "trigger_preconditions": ["Multi-stage phase", "Generated validation receipt", "Premature read assumption"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Test for output presence, append the intended Method Flow transitions, then generate and read the validation receipt in that order.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not infer or read a stage receipt before its generating transition has completed.",
+  "rollback": "Retain the absent-file attempt and make no validation claim.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["No validation claim from absent receipt", "Append-only ledger", "No sibling contact"],
+  "retained_negative_ids": ["REPRO-V6451-X2-N03"],
+  "scope_boundary": "This method validates receipt-ordering control flow only and proves no external claim."
+}

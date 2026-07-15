@@ -1,0 +1,17 @@
+{
+  "method_id": "v6451-m08",
+  "title": "Discover exact versioned test filenames before reading",
+  "failure_signature": "A predecessor x2 test filename was inferred incorrectly and the aggregate read exited nonzero.",
+  "trigger_preconditions": ["Versioned test suite", "Inconsistent historical suffix convention", "Assumed path"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "List tracked tests with a version-specific ripgrep filter before reading the exact returned path.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Discover exact paths from the tracked inventory and reject partial aggregate output when any requested path is absent.",
+  "rollback": "Discard the failed aggregate; the operation was read-only.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["No inferred filename as evidence", "No repository mutation from discovery", "No sibling contact"],
+  "retained_negative_ids": ["REPRO-V6451-X2-N02"],
+  "scope_boundary": "This method validates versioned test-path discovery only and does not establish test correctness."
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "ghc.family.v645-v1.x2-operational-negatives.v1",
+  "phase": "v645-gmut-thos-v1-x1-x2",
+  "owner": "Tamar Vey",
+  "negatives": [
+    {
+      "negative_id": "REPRO-V6451-X2-N01",
+      "operation": "first bounded predecessor evidence inspection",
+      "failure_signature": "A combined status and two-slice source read exceeded the twenty-second command budget after returning only the initial source slice.",
+      "trigger_precondition": "Cold D-drive process startup and multiple source slices were combined inside one bounded command.",
+      "recovery": "Retained the timeout, credited no complete inspection, and split later reads into one bounded slice per command with a sixty-second allowance.",
+      "recurrence_guard": "Read large predecessor builders in independently bounded slices and require the whole requested slice to exit successfully before using it as evidence.",
+      "promotion_effect": "none; the incomplete read earned zero x2 evidence credit"
+    },
+    {
+      "negative_id": "REPRO-V6451-X2-N02",
+      "operation": "first predecessor x2 test-file read",
+      "failure_signature": "The requested predecessor test path used an assumed x2 suffix that did not exist, so the aggregate command exited nonzero after the model file printed.",
+      "trigger_precondition": "A filename was inferred from the current x1 naming pattern instead of being discovered from the tracked test inventory.",
+      "recovery": "Retained the failed aggregate, credited only the separately complete model read, and discovered the exact predecessor test filename with a bounded file listing.",
+      "recurrence_guard": "Discover exact tracked filenames before reading versioned test artifacts and never treat partial aggregate output as a complete multi-file witness.",
+      "promotion_effect": "none; the missing-path attempt earned zero test-inspection credit"
+    },
+    {
+      "negative_id": "REPRO-V6451-X2-N03",
+      "operation": "premature Method Flow validation-receipt read",
+      "failure_signature": "The command assumed runner-validation.json already existed before x2 had generated and validated that receipt.",
+      "trigger_precondition": "A future x2 output was read alongside the existing append-only ledger without first checking file presence.",
+      "recovery": "Retained the failed expectation, used the existing ledger only, and reserved runner-validation generation for the x2 evidence build after new methods are appended.",
+      "recurrence_guard": "Check phase-local output existence before reading and generate validation receipts only after the ledger transition they are intended to validate.",
+      "promotion_effect": "none; no Method Flow validation was inferred from the absent receipt"
+    },
+    {
+      "negative_id": "REPRO-V6451-X2-N04",
+      "operation": "additive predecessor-template copy and inventory display",
+      "failure_signature": "All five additive copies and mechanical replacements completed, but the final Get-Item call coerced the destination collection into one combined path and exited nonzero.",
+      "trigger_precondition": "A hashtable Values collection was passed directly to a path cmdlet in a command that also performed earlier additive writes.",
+      "recovery": "Retained the nonzero wrapper result, credited no inventory from it, and ran a separate explicit wildcard and exact-path inventory that confirmed each additive destination.",
+      "recurrence_guard": "Separate write steps from their validation receipt or enumerate collection entries explicitly before passing them to path cmdlets.",
+      "promotion_effect": "none; the failed display command earned zero validation credit"
+    },
+    {
+      "negative_id": "REPRO-V6451-X2-N05",
+      "operation": "first x2 evidence-builder preflight",
+      "failure_signature": "The builder rejected the actual Tamar canonical branch because a mechanical rename retained the predecessor's historical v642-v6 branch suffix in the owner-branch constant.",
+      "trigger_precondition": "A broad owner-name replacement occurred before the exact predecessor branch-string replacement, leaving a syntactically valid but nonexistent Tamar branch name.",
+      "recovery": "Retained the preflight failure, awarded zero evidence credit, corrected only the frozen owner-branch constant, and required a fresh build from the exact x1 head.",
+      "recurrence_guard": "After mechanical phase scaffolding, compare branch constants to the live canonical branch before any evidence-producing loop begins.",
+      "promotion_effect": "none; the builder exited before proposal artifacts or mutation evidence were produced"
+    },
+    {
+      "negative_id": "REPRO-V6451-X2-N06",
+      "operation": "first x2 stale-semantic-label probe",
+      "failure_signature": "A broad fixed-string set treated legitimate secondary-pillar language, prior-proposal comparisons, Method Flow identifiers, and one frozen x1 check-key naming defect as one undifferentiated failure set.",
+      "trigger_precondition": "The probe searched the entire owner phase without classifying frozen x1, historical comparison, secondary-pillar, and live x2 contexts.",
+      "recovery": "Retained the failed broad probe, reviewed every hit by context, recorded the one frozen x1 key-label defect without rewriting x1, and required current x2 fields and values to use the correct 225-source and Heart-primary labels.",
+      "recurrence_guard": "Partition stale-label review by immutable x1, historical comparison, secondary-pillar, and current x2 truth before assigning a failure.",
+      "promotion_effect": "none; the broad hit list alone earned no stale-label pass"
+    },
+    {
+      "negative_id": "REPRO-V6451-X2-N07",
+      "operation": "first exact evidence staging and diff-hygiene pass",
+      "failure_signature": "The exact files staged with Windows LF-to-CRLF warnings, and git diff --cached --check rejected one extra blank line at EOF in each of two new Python files.",
+      "trigger_precondition": "Additive generated text was staged under Windows line-ending conversion behavior before the final cached diff-hygiene pass.",
+      "recovery": "Retained the failed staging receipt and warnings, removed only the two extra EOF blank lines, rebuilt evidence metadata, restaged exact Git blobs, and required a zero-issue staged review.",
+      "recurrence_guard": "Run cached diff hygiene before staged-review credit, preserve conversion warnings, and anchor commit parity to exact Git blobs plus the later LF-preserving named replay.",
+      "promotion_effect": "none; the failed index received no evidence-commit credit"
+    }
+  ]
+}

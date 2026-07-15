@@ -1,0 +1,17 @@
+{
+  "method_id": "v6451-m11",
+  "title": "Reverify canonical branch constants after mechanical scaffolding",
+  "failure_signature": "The x2 builder's branch preflight retained a predecessor historical suffix and rejected the actual Tamar canonical branch before evidence generation.",
+  "trigger_preconditions": ["Mechanical owner rename", "Historical branch suffix", "Exact branch preflight"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now",
+  "candidate_workaround": "Compare the builder constant to the live canonical branch, patch only that constant, and rerun from the exact frozen x1 head.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Inspect branch, source, x1, owner, and phase constants after every mechanical scaffold before an evidence-producing loop begins.",
+  "rollback": "Retain the stopped preflight, award zero evidence credit, and leave every already frozen x1 file unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["No evidence credit before branch preflight", "No x1 mutation", "No sibling branch mutation"],
+  "retained_negative_ids": ["REPRO-V6451-X2-N05"],
+  "scope_boundary": "This method validates owner-branch preflight recovery only and proves no scientific, authority, production, security, accessibility, or reproduction claim."
+}

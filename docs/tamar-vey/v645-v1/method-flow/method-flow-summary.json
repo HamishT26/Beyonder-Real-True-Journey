@@ -1,0 +1,236 @@
+{
+  "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
+  "counts": {
+    "methods": 13,
+    "recommendations": 13,
+    "state_events": 39,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 13,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 0,
+      "pass": 13
+    },
+    "witnesses": 13
+  },
+  "owner": "tamar-vey",
+  "phase": "v645-v1",
+  "preferred_methods": [
+    {
+      "candidate_workaround": "Run the mandatory skill and reference reads serially with a thirty-second bounded timeout, then perform memory discovery separately.",
+      "method_id": "v6451-m01",
+      "recurrence_guard": "At phase startup, serialize required skill reads and allow at least thirty seconds for each cold PowerShell process.",
+      "rollback": "Stop after the timed-out read; no repository or route state needs rollback because the failed batch was read-only.",
+      "scope_boundary": "This method addresses local shell startup latency only and proves no scientific, authority, production, security, accessibility, identity, or reproduction claim.",
+      "title": "Serialize cold-start skill and memory reads",
+      "trigger_preconditions": [
+        "Cold PowerShell startup",
+        "Multiple concurrent local shell reads",
+        "Ten-second per-command timeout"
+      ],
+      "validation_witness_ids": [
+        "v6451-w01"
+      ]
+    },
+    {
+      "candidate_workaround": "Run discovery commands independently and normalize ripgrep exit code one to an empty successful result before aggregation.",
+      "method_id": "v6451-m02",
+      "recurrence_guard": "Classify ripgrep exit code one as no-match rather than a tooling fault whenever absence is an allowed discovery outcome.",
+      "rollback": "Discard the failed aggregate result and rerun only read-only discovery commands; no repository state was changed.",
+      "scope_boundary": "This method validates discovery control flow only and does not establish repository correctness or any external claim.",
+      "title": "Normalize no-match discovery before aggregating shell results",
+      "trigger_preconditions": [
+        "Concurrent shell aggregation",
+        "A discovery query where no matches is an acceptable result",
+        "Promise-style failure propagation"
+      ],
+      "validation_witness_ids": [
+        "v6451-w02"
+      ]
+    },
+    {
+      "candidate_workaround": "Search the concrete scripts directory and restrict filenames with ripgrep -g, keeping the receipt read and code search as separate bounded operations.",
+      "method_id": "v6451-m03",
+      "recurrence_guard": "Use -g for filename wildcards on Windows and require the whole discovery command to exit successfully before treating it as complete evidence.",
+      "rollback": "Discard the incomplete aggregate discovery result; no repository state changed because the failed operation was read-only.",
+      "scope_boundary": "This method addresses Windows search invocation only and proves no repository, scientific, authority, or reproduction claim.",
+      "title": "Use ripgrep glob filters instead of Windows wildcard path arguments",
+      "trigger_preconditions": [
+        "Windows shell",
+        "Wildcard embedded in a path argument",
+        "Multiple discovery operations in one command envelope"
+      ],
+      "validation_witness_ids": [
+        "v6451-w03"
+      ]
+    },
+    {
+      "candidate_workaround": "Defer the staged-review receipt during the pre-stage build, stage the exact x1 files, generate the real staged review, then rebuild and restage before commit.",
+      "method_id": "v6451-m04",
+      "recurrence_guard": "A staged-review receipt may be deferred only until an actual Git index exists and must be regenerated after the final staged bytes are fixed.",
+      "rollback": "Leave x1 uncommitted, discard no generated evidence, and rerun the builder only after recording the failed expected-file gate.",
+      "scope_boundary": "This method resolves staged-receipt ordering only and does not validate x1 content by itself.",
+      "title": "Defer staged-review self-output until exact staging exists",
+      "trigger_preconditions": [
+        "A builder enumerates its staged-review receipt as an expected x1 file",
+        "No exact staging pass has yet occurred",
+        "The builder validates expected-file presence"
+      ],
+      "validation_witness_ids": [
+        "v6451-w04"
+      ]
+    },
+    {
+      "candidate_workaround": "Use exact staged Git blobs as the commit and manifest domain, retain the warnings, and require the later named validation lane to preserve LF for its bounded replay.",
+      "method_id": "v6451-m05",
+      "recurrence_guard": "Never equate a warning-bearing working copy with cross-checkout byte parity; inspect staged blobs and perform the authorized named replay.",
+      "rollback": "Unstage without deleting files if staged-blob hashes fail; otherwise keep the normalized Git index and retain the warning as a negative.",
+      "scope_boundary": "This method validates the staged Git-blob domain only and does not prove every checkout has identical working-tree bytes.",
+      "title": "Anchor Windows staging parity to Git blobs and retain line-ending warnings",
+      "trigger_preconditions": [
+        "Windows checkout",
+        "Line-ending conversion behavior",
+        "New text files staged for an exact content-seal commit"
+      ],
+      "validation_witness_ids": [
+        "v6451-w05"
+      ]
+    },
+    {
+      "candidate_workaround": "Enumerate owner-scoped text files and use PowerShell Select-String -SimpleMatch with the exact fragments.",
+      "method_id": "v6451-m06",
+      "recurrence_guard": "Reject any stale-label result accompanied by native path errors and prefer structured matching for multiword quoted fragments.",
+      "rollback": "Discard the invalid zero-hit result and rerun only the read-only owner-scoped probe.",
+      "scope_boundary": "This method validates stale-label string matching only and does not replace semantic review.",
+      "title": "Use structured SimpleMatch for quote-bearing stale-label probes",
+      "trigger_preconditions": [
+        "Windows PowerShell native argument marshaling",
+        "A pattern containing JSON quotes and spaces",
+        "A zero-hit stale-label review"
+      ],
+      "validation_witness_ids": [
+        "v6451-w06"
+      ]
+    },
+    {
+      "candidate_workaround": "Read one bounded source slice per command with a sufficient timeout and accept it only on a zero exit status.",
+      "method_id": "v6451-m07",
+      "recurrence_guard": "Keep large source inspections independently bounded and never credit a timed-out aggregate as complete.",
+      "rollback": "Discard the incomplete inspection result; the failed operation was read-only.",
+      "scope_boundary": "This method addresses local source-reading reliability only and proves no scientific, authority, production, security, accessibility, or reproduction claim.",
+      "title": "Split large predecessor reads into bounded source slices",
+      "trigger_preconditions": [
+        "Cold D-drive process startup",
+        "Large predecessor builder",
+        "Multiple slices in one command"
+      ],
+      "validation_witness_ids": [
+        "v6451-w07"
+      ]
+    },
+    {
+      "candidate_workaround": "List tracked tests with a version-specific ripgrep filter before reading the exact returned path.",
+      "method_id": "v6451-m08",
+      "recurrence_guard": "Discover exact paths from the tracked inventory and reject partial aggregate output when any requested path is absent.",
+      "rollback": "Discard the failed aggregate; the operation was read-only.",
+      "scope_boundary": "This method validates versioned test-path discovery only and does not establish test correctness.",
+      "title": "Discover exact versioned test filenames before reading",
+      "trigger_preconditions": [
+        "Versioned test suite",
+        "Inconsistent historical suffix convention",
+        "Assumed path"
+      ],
+      "validation_witness_ids": [
+        "v6451-w08"
+      ]
+    },
+    {
+      "candidate_workaround": "Test for output presence, append the intended Method Flow transitions, then generate and read the validation receipt in that order.",
+      "method_id": "v6451-m09",
+      "recurrence_guard": "Do not infer or read a stage receipt before its generating transition has completed.",
+      "rollback": "Retain the absent-file attempt and make no validation claim.",
+      "scope_boundary": "This method validates receipt-ordering control flow only and proves no external claim.",
+      "title": "Check generated-receipt presence before reading",
+      "trigger_preconditions": [
+        "Multi-stage phase",
+        "Generated validation receipt",
+        "Premature read assumption"
+      ],
+      "validation_witness_ids": [
+        "v6451-w09"
+      ]
+    },
+    {
+      "candidate_workaround": "Validate additive destinations in a separate command using explicit wildcard and exact path arguments.",
+      "method_id": "v6451-m10",
+      "recurrence_guard": "Keep mutation and validation receipts separate and enumerate path collections explicitly.",
+      "rollback": "Do not delete the additive files; inspect them independently and patch only after their exact presence is confirmed.",
+      "scope_boundary": "This method validates additive file-inventory control flow only and does not establish content correctness.",
+      "title": "Separate additive template writes from explicit destination inventory",
+      "trigger_preconditions": [
+        "PowerShell hashtable Values collection",
+        "Path cmdlet collection coercion",
+        "Writes and display in one command envelope"
+      ],
+      "validation_witness_ids": [
+        "v6451-w10"
+      ]
+    },
+    {
+      "candidate_workaround": "Compare the builder constant to the live canonical branch, patch only that constant, and rerun from the exact frozen x1 head.",
+      "method_id": "v6451-m11",
+      "recurrence_guard": "Inspect branch, source, x1, owner, and phase constants after every mechanical scaffold before an evidence-producing loop begins.",
+      "rollback": "Retain the stopped preflight, award zero evidence credit, and leave every already frozen x1 file unchanged.",
+      "scope_boundary": "This method validates owner-branch preflight recovery only and proves no scientific, authority, production, security, accessibility, or reproduction claim.",
+      "title": "Reverify canonical branch constants after mechanical scaffolding",
+      "trigger_preconditions": [
+        "Mechanical owner rename",
+        "Historical branch suffix",
+        "Exact branch preflight"
+      ],
+      "validation_witness_ids": [
+        "v6451-w11"
+      ]
+    },
+    {
+      "candidate_workaround": "Classify each hit as frozen x1, historical comparison, secondary pillar, or current x2 truth before issuing a stale-label verdict.",
+      "method_id": "v6451-m12",
+      "recurrence_guard": "Do not equate a string hit with semantic staleness until its artifact stage and role are identified.",
+      "rollback": "Retain the overbroad probe, rewrite no frozen x1 bytes, and publish a contextual receipt.",
+      "scope_boundary": "This method validates contextual stale-label review only and does not establish broader semantic completeness.",
+      "title": "Partition stale-label review by semantic context",
+      "trigger_preconditions": [
+        "Whole-phase text search",
+        "Immutable x1 artifacts",
+        "Historical and current vocabulary in one scope"
+      ],
+      "validation_witness_ids": [
+        "v6451-w12"
+      ]
+    },
+    {
+      "candidate_workaround": "Retain the warnings, remove only reported whitespace defects, restage, and require zero cached-diff and staged-review issues.",
+      "method_id": "v6451-m13",
+      "recurrence_guard": "A successful git add is not evidence-stage acceptance; cached diff hygiene and exact staged-blob review must both pass.",
+      "rollback": "Leave the commit unmade, retain the failed index receipt, and restage only after bounded whitespace repair.",
+      "scope_boundary": "This method validates evidence-index hygiene only and does not prove newline portability, scientific correctness, or independent reproduction.",
+      "title": "Gate evidence staging on cached diff hygiene",
+      "trigger_preconditions": [
+        "Windows line-ending conversion",
+        "New generated Python files",
+        "Exact evidence-stage index"
+      ],
+      "validation_witness_ids": [
+        "v6451-w13"
+      ]
+    }
+  ],
+  "retained_failed_witnesses": [],
+  "schema": "ghc.family.method-flow-state.summary.v1",
+  "valid": true
+}
