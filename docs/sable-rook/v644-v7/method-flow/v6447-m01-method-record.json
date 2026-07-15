@@ -1,0 +1,29 @@
+{
+  "method_id": "V6447-M01",
+  "title": "Canonical scoped validation with one clean named-lane replay",
+  "failure_signature": "Inherited final validation exposed a PowerShell parser fault while the current phase forbids detached validation and reserves the full repository suite to Eiren.",
+  "trigger_preconditions": [
+    "non-Eiren phase under the current scoped validation rule",
+    "exact final-head replay",
+    "one additional bounded same-owner named-lane replay",
+    "cross-checkout manifest and privacy evidence"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Keep the fast-forward-only Sable canonical branch authoritative, run scoped recent-round and v644-v7 checks there, then use exactly one fresh clean named Sable validation branch and D-first worktree at the exact final head without pushing it.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Forbid detached validation, full-suite ownership by this seat, a second additional replay, any validation-lane push, and any promotion of a failed parser command.",
+  "rollback": "Stop the named replay, retain its failed receipt, and return to the clean canonical Sable branch without deleting, resetting, rewriting, or mutating another lane.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "host_security_change",
+    "host_configuration_change",
+    "sibling_lane",
+    "history_rewrite",
+    "full_repository_suite_ownership",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": ["V6446-VALID-N01"],
+  "scope_boundary": "Candidate workflow until the one authorized exact-final named-lane replay passes; never exhaustive validation, independent reproduction, or scientific evidence."
+}

@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M06",
+  "title": "Non-elevating Windows Sandbox availability audit",
+  "failure_signature": "The optional-feature status query required elevation on the host.",
+  "trigger_preconditions": ["DISM-backed optional feature query", "non-elevated process", "read-only sandbox audit"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Stop at the privilege refusal, query only executable and command presence without elevation, and record Sandbox unavailable rather than enabling a feature or rebooting.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never elevate or change Windows features for an availability audit; a privilege refusal is a bounded negative, not a retry invitation.",
+  "rollback": "Make no host change, retain the refusal, and use the canonical and named repository lanes for bounded tests.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["elevation", "host_security_change", "windows_feature_change", "reboot", "independent_reproduction"],
+  "retained_negative_ids": ["V6447-X1-N05"],
+  "scope_boundary": "Host capability observation only; not sandbox execution or security assurance."
+}

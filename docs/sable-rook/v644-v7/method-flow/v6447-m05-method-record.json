@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M05",
+  "title": "Explicit no-match normalization for semantic novelty probes",
+  "failure_signature": "A valid ripgrep exit 1 stopped a batched novelty probe before later patterns ran.",
+  "trigger_preconditions": ["absence is an expected semantic result", "ripgrep exit code 1", "orchestrated multi-query sequence"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Map exit 1 to an explicit NO_MATCH witness, keep other nonzero codes as faults, and audit the exact 29 proposal files covering all 290 frozen proposals.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "State no-match semantics explicitly and never let one expected absence suppress later collision categories.",
+  "rollback": "Retain the interrupted batch and rerun the full bounded category set before freezing any proposal.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["semantic_novelty", "source_deduplication", "private_material", "independent_reproduction"],
+  "retained_negative_ids": ["V6447-X1-N04"],
+  "scope_boundary": "Search control-flow reliability only; human semantic review remains required."
+}

@@ -1,0 +1,13 @@
+{
+  "witness_id": "V6447-M08-W01",
+  "method_id": "V6447-M08",
+  "procedure": "Enumerate untracked leaf files with git status --porcelain -uall and compare them to the frozen expected list, then repeat from the staged index before commit.",
+  "scope": "Sable v644-v7 x1-only file set.",
+  "expected": "All 46 expected leaf paths exist and no unlisted x2 file is included.",
+  "observed": "The corrected leaf enumeration exposed the real phase files instead of one collapsed directory; staged parity is required before promotion.",
+  "result": "pass",
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "retained_negative_ids": ["V6447-X1-N07"],
+  "boundary": "This validates leaf enumeration, not file content or final commit integrity."
+}

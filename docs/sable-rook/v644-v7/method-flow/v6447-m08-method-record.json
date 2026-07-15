@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M08",
+  "title": "Uncollapsed untracked and staged exact-file comparison",
+  "failure_signature": "Default porcelain output collapsed a new phase directory and produced a false missing-file report.",
+  "trigger_preconditions": ["new untracked directory tree", "exact file-set audit", "default git status untracked mode"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Use git status --porcelain -uall before staging, direct expected-path existence checks, and git diff --cached --name-only after staging.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "An exact file-set receipt must enumerate leaf paths, not a collapsed directory placeholder.",
+  "rollback": "Retain the inaccurate comparison, make no commit from it, and rerun against uncollapsed or staged leaf paths.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["exact_staged_review", "private_material", "destructive_action", "history_rewrite"],
+  "retained_negative_ids": ["V6447-X1-N07"],
+  "scope_boundary": "Git file-set enumeration only; content, privacy, and semantic validation remain separate."
+}

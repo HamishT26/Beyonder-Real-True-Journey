@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M03",
+  "title": "Newest-task-group and same-day-note memory fallback",
+  "failure_signature": "An exact phase-keyword memory search returned no match although current context existed under broader indexing and an ad-hoc note.",
+  "trigger_preconditions": ["exact keyword query", "registry summaries", "newest same-day extension note"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Treat exit 1 as a no-match result, inspect the current exact-head task group in the registry, and read only the newest directly relevant same-day note.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "A no-match query cannot establish absence; use the newest indexed task group and bounded ad-hoc note before stopping.",
+  "rollback": "Retain the no-match receipt and avoid broad rollout scans unless the bounded fallback remains insufficient.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["private_material", "memory_mutation", "route_disclosure", "independent_reproduction"],
+  "retained_negative_ids": ["V6447-X1-N02"],
+  "scope_boundary": "Memory retrieval ergonomics only; memory claims remain subordinate to live repository verification."
+}

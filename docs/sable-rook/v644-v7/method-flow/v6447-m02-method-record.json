@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M02",
+  "title": "Standalone complete reads for mandatory skills and references",
+  "failure_signature": "A combined mandatory-skill and discovery read timed out before returning a complete receipt.",
+  "trigger_preconditions": ["multiple full instruction files", "repository discovery", "one shared orchestration envelope"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Read every mandatory skill and directly required reference completely in its own bounded command before task actions, then run discovery separately.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never infer a complete instruction read from a timed-out batch; preserve the timeout and obtain one end-to-end witness per mandatory file.",
+  "rollback": "Discard only the incomplete batch result, retain its negative, and reread each authoritative instruction source directly.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["private_material", "sibling_lane", "authority_boundary", "independent_reproduction"],
+  "retained_negative_ids": ["V6447-X1-N01"],
+  "scope_boundary": "Instruction-read reliability only; not authority, identity continuity, or validation evidence."
+}

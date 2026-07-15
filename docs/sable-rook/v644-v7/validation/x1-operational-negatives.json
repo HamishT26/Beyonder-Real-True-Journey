@@ -1,0 +1,71 @@
+{
+  "schema": "ghc.family.v644-v7.x1-operational-negatives.v1",
+  "phase": "v644-gmut-thos-v7-x1-x2",
+  "count": 7,
+  "negatives": [
+    {
+      "negative_id": "V6447-X1-N01",
+      "operation": "combined mandatory skill and discovery read",
+      "failure_signature": "The combined command exceeded its bounded execution window before returning a complete receipt.",
+      "trigger_precondition": "Multiple mandatory full-file reads and repository discovery shared one orchestration envelope.",
+      "recovery": "Retained the timeout and split each mandatory skill and reference read into a complete standalone command.",
+      "recurrence_guard": "Read each mandatory instruction file completely in its own bounded operation before repository work; never infer completion from a timed-out batch.",
+      "promotion_effect": "none; only the later complete standalone reads are witnesses"
+    },
+    {
+      "negative_id": "V6447-X1-N02",
+      "operation": "exact-keyword newest-memory search",
+      "failure_signature": "The exact v644-v6 and Method Flow keyword query returned no matches and exit code 1 despite newer context existing in the task-group index and ad-hoc note.",
+      "trigger_precondition": "The query assumed the newest context repeated exact phase terms in the top-level registry.",
+      "recovery": "Inspected the current exact-head task group and newest same-day ad-hoc note, while preserving the no-match result.",
+      "recurrence_guard": "Treat an exact-keyword no-match as a search result, not absence of memory; inspect the newest indexed task group and same-day note before stopping.",
+      "promotion_effect": "none; memory context was accepted only from the later direct reads"
+    },
+    {
+      "negative_id": "V6447-X1-N03",
+      "operation": "parallel source and owner equality audit",
+      "failure_signature": "The first three-lane parallel verification exceeded the runner window before yielding usable combined output.",
+      "trigger_precondition": "Two network fetches, large-worktree status scans, ancestry checks, and a named-lane scan shared one parent envelope.",
+      "recovery": "Retained the timeout and ran fetch, local ancestry, live-remote equality, and named-lane cleanliness as separate witnesses.",
+      "recurrence_guard": "Separate network and large-status operations; allow the observed D-drive scan time and preserve each exact witness independently.",
+      "promotion_effect": "none; only later exact local, upstream, tracking, live, ancestry, and cleanliness receipts are evidence"
+    },
+    {
+      "negative_id": "V6447-X1-N04",
+      "operation": "batched semantic novelty ripgrep probe",
+      "failure_signature": "A valid ripgrep no-match exit code stopped the orchestrated sequence before later novelty patterns ran.",
+      "trigger_precondition": "The batch treated exit code 1 as an operational fault rather than the documented no-match state.",
+      "recovery": "Retained the interrupted probe and reran one explicit no-match-tolerant title audit over the 29 proposal files.",
+      "recurrence_guard": "Normalize ripgrep exit 1 to an explicit NO_MATCH witness when absence is the intended semantic result; reserve other nonzero codes for faults.",
+      "promotion_effect": "none; semantic novelty relies on the later complete 290-proposal audit"
+    },
+    {
+      "negative_id": "V6447-X1-N05",
+      "operation": "Windows Sandbox optional-feature status query",
+      "failure_signature": "The read-only optional-feature command reported that elevation was required.",
+      "trigger_precondition": "DISM-backed feature status inspection requires an elevated token on this host even when no change is requested.",
+      "recovery": "Stopped without elevation, feature change, security weakening, or reboot; used non-elevating executable and command-presence checks, which found Sandbox unavailable.",
+      "recurrence_guard": "Audit executable and command presence first; if feature status requires elevation, record unavailable and do not retry with privilege.",
+      "promotion_effect": "none; Sandbox remains unavailable and no sandbox execution is claimed"
+    },
+    {
+      "negative_id": "V6447-X1-N06",
+      "operation": "first mechanical compatibility-copy command",
+      "failure_signature": "PowerShell rejected the replacement dictionary at parse time because case-insensitive keys treated V6446 and v6446 as duplicates.",
+      "trigger_precondition": "A case-insensitive hash literal was used for case-sensitive source-token replacements.",
+      "recovery": "Retained the parse failure, confirmed no destination file was created, and changed the rewrite map to an ordered array of explicit case-sensitive pairs.",
+      "recurrence_guard": "Use ordered pair arrays with String.Replace when replacement keys differ only by case; verify destination absence or exact diff after any parse failure.",
+      "promotion_effect": "none; the rejected command made no repository change"
+    },
+    {
+      "negative_id": "V6447-X1-N07",
+      "operation": "first exact x1 untracked-file comparison",
+      "failure_signature": "Git's default porcelain view collapsed the untracked phase directory, making 42 existing expected files appear missing in the comparison.",
+      "trigger_precondition": "The exact-file audit parsed default git status output without requesting all untracked files.",
+      "recovery": "Retained the false-negative receipt and reran with git status --porcelain -uall plus direct expected-path existence checks.",
+      "recurrence_guard": "Use -uall or compare the Git index after staging when an exact file set contains a new directory tree; never treat a collapsed directory entry as its children.",
+      "promotion_effect": "none; the collapsed view is not exact staged-file evidence"
+    }
+  ],
+  "retention_rule": "Recovery does not erase failure evidence; only successful corrected runs may be promoted."
+}

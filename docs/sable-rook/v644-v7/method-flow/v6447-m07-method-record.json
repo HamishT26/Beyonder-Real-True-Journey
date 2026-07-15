@@ -1,0 +1,17 @@
+{
+  "method_id": "V6447-M07",
+  "title": "Case-sensitive ordered-pair compatibility rewrite",
+  "failure_signature": "PowerShell rejected a case-insensitive replacement dictionary containing V6446 and v6446 as duplicate keys.",
+  "trigger_preconditions": ["mechanical compatibility copy", "tokens differing only by case", "PowerShell hash literal"],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Use an ordered array of explicit replacement pairs with case-sensitive String.Replace, require destination absence before creation, then inspect exact diffs for semantic leftovers.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never use a case-insensitive map when replacement keys differ only by case; separate mechanical copies from semantic apply-patch review.",
+  "rollback": "If parsing or inspection fails, retain the negative, remove no history, and do not promote the generated file until exact diff review passes.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["history_rewrite", "destructive_action", "sibling_lane", "private_material"],
+  "retained_negative_ids": ["V6447-X1-N06"],
+  "scope_boundary": "Versioned compatibility scaffolding only; semantic correctness still requires explicit review and tests."
+}
