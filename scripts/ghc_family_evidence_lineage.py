@@ -299,9 +299,10 @@ def build_equation_test_lineage(repo: Path) -> dict[str, Any]:
         )
     issues = _manuscript_invariants(text)
     return {
-        "schema": "ghc.family.equation-test-lineage.v1",
+        "schema": "ghc.family.equation-test-lineage.v2",
         "source_artifact": "latex/grand_mandala.tex",
-        "source_sha256": sha256_file(source),
+        "source_hash_domain": "lf_normalized_text_bytes",
+        "source_sha256": sha256_lf_normalized_file(source),
         "claim_count": len(rendered),
         "claims": rendered,
         "invariant_issues": issues,

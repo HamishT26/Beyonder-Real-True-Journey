@@ -166,13 +166,17 @@ def validate(
     method = load(phase / "method-flow/method-flow-state.json")
     method_validation = load(phase / "method-flow/workaround-validation-ledger.json")
     check(method["schema"] == "ghc.family.method-flow-state.v1", "method_schema")
-    check(method["counts"]["methods"] == 8, "method_count_8")
+    method_count = method["counts"]["methods"]
+    check(method_count >= 8, "method_count_minimum_8")
     preferred = method["counts"]["states"]["preferred"]
     candidate = method["counts"]["states"]["candidate"]
     if allow_pending_lean:
-        check(preferred == 7 and candidate == 1, "method_pending_lean")
+        check(
+            preferred + candidate == method_count and candidate == 1,
+            "method_pending_lean",
+        )
     else:
-        check(preferred == 8 and candidate == 0, "method_all_preferred")
+        check(preferred == method_count and candidate == 0, "method_all_preferred")
     check(method["counts"]["witness_results"]["fail"] >= 1, "failed_witness_retained")
     check(method_validation["validation"]["valid"] is True, "method_validation")
     if not allow_pending_lean:

@@ -1,0 +1,29 @@
+{
+  "method_id": "V6445-M10",
+  "title": "Atomic shared-tool and integrity-receipt promotion",
+  "failure_signature": "A reviewed shared-tool correction was staged while its inherited canonical-index-blob integrity receipt still named the prior tool version.",
+  "trigger_preconditions": [
+    "selected shared tool changes",
+    "tool-integrity receipt is rebuildable from the Git index",
+    "full suite includes an integrity equality test"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Rebuild the selected-tool receipt from staged Git index blobs, inspect the exact changed row, and promote the tool and receipt in one additive commit.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Treat a selected-tool diff and its integrity receipt as one review unit; run the targeted rebuild before the full repository suite.",
+  "rollback": "Leave the unpromoted tool and receipt staged, retain the failed suite, and do not send a baton until their targeted rebuild agrees.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "host_security_change",
+    "sibling_lane",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6445-VALID-N07"
+  ],
+  "scope_boundary": "Validated only for local selected-tool integrity bookkeeping; not exhaustive supply-chain assurance, security certification, or independent reproduction."
+}

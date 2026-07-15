@@ -1,0 +1,32 @@
+{
+  "method_id": "V6445-M09",
+  "title": "Named logical-text hash domains across Git newline conversion",
+  "failure_signature": "A clean LF checkout rebuilt one inherited lineage hash differently from the CRLF-origin artifact because the builder hashed raw working-tree bytes.",
+  "trigger_preconditions": [
+    "portable validation across Git checkout configurations",
+    "logical text evidence",
+    "raw working-tree SHA-256 in a lineage receipt"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_bounded",
+  "candidate_workaround": "Normalize CRLF and CR to LF before hashing logical text, name that hash domain in the artifact, and keep exact Git-blob manifests as a separate attestation domain.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Require every text-content hash to declare whether it attests normalized logical text or exact committed blob bytes; test both CRLF and LF checkouts.",
+  "rollback": "Revert only the unpromoted portability correction and retain the failed clone result if either checkout cannot rebuild the same artifact.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "host_security_change",
+    "sibling_lane",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6445-VALID-N02",
+    "V6445-VALID-N04",
+    "V6445-VALID-N05",
+    "V6445-VALID-N06"
+  ],
+  "scope_boundary": "Validated only for cross-checkout text-hash portability; no scientific, legal, cultural, identity, security-certification, or independent-reproduction claim."
+}

@@ -2,8 +2,8 @@
 
 - Phase: v644-gmut-thos-v5-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 8
-- Passing witnesses: 8
+- Methods: 10
+- Passing witnesses: 10
 - Failed witnesses retained: 1
 
 ## Preferred methods
@@ -71,6 +71,22 @@
 - Recurrence guard: Check source revision, closure manifest, file limit, targeted tests, clean local commit, no public remote, and rollback before use.
 - Rollback: Ignore or discard only the additive companion and continue from the unchanged canonical branch.
 - Witnesses: V6445-M08-W01
+
+### V6445-M09 — Named logical-text hash domains across Git newline conversion
+
+- Trigger: portable validation across Git checkout configurations; logical text evidence; raw working-tree SHA-256 in a lineage receipt
+- Method: Normalize CRLF and CR to LF before hashing logical text, name that hash domain in the artifact, and keep exact Git-blob manifests as a separate attestation domain.
+- Recurrence guard: Require every text-content hash to declare whether it attests normalized logical text or exact committed blob bytes; test both CRLF and LF checkouts.
+- Rollback: Revert only the unpromoted portability correction and retain the failed clone result if either checkout cannot rebuild the same artifact.
+- Witnesses: V6445-M09-W01
+
+### V6445-M10 — Atomic shared-tool and integrity-receipt promotion
+
+- Trigger: selected shared tool changes; tool-integrity receipt is rebuildable from the Git index; full suite includes an integrity equality test
+- Method: Rebuild the selected-tool receipt from staged Git index blobs, inspect the exact changed row, and promote the tool and receipt in one additive commit.
+- Recurrence guard: Treat a selected-tool diff and its integrity receipt as one review unit; run the targeted rebuild before the full repository suite.
+- Rollback: Leave the unpromoted tool and receipt staged, retain the failed suite, and do not send a baton until their targeted rebuild agrees.
+- Witnesses: V6445-M10-W01
 
 ## Retained boundary
 

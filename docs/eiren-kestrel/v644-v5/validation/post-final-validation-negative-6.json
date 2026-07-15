@@ -1,0 +1,36 @@
+{
+  "schema": "ghc.family.v644-v5.post-final-validation-negative.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "owner": "Eiren Kestrel",
+  "negative_id": "V6445-VALID-N06",
+  "class": "extensible_method_ledger_fixed_count_assertion",
+  "failure_signature": "After the ninth recurrence-prevention method was truthfully appended, the current-phase suite passed 36 of 37 tests and the first refreshed detailed validation raised two issues because both final-state gates hard-coded an eight-method count.",
+  "observed_validation": {
+    "current_phase_tests_passed": 36,
+    "current_phase_tests_failed": 1,
+    "failing_test": "v644-v5 method-flow final state",
+    "detailed_validator_issue_count": 2,
+    "detailed_validator_issues": [
+      "method_count_8",
+      "method_all_preferred"
+    ],
+    "method_ledger_schema_valid": true,
+    "new_method_state_at_failure": "candidate",
+    "privacy_hits": 0
+  },
+  "trigger_preconditions": [
+    "append-only method ledger gains a valid new method",
+    "test asserts an old exact method cardinality",
+    "all other current-phase tests pass"
+  ],
+  "recovery": "Make the test and detailed validator assert the extensible final-state invariants instead: at least the historical baseline count, every method preferred at closeout, zero candidate methods, and retained failed witnesses.",
+  "recurrence_guard": "Do not hard-code append-only ledger cardinality in lifecycle tests; bind counts to structural invariants while preserving an explicit minimum baseline.",
+  "promotion_effect": "The 36/37 run remains negative evidence and is not promoted; only a later complete suite after the method witness and state transition may pass.",
+  "canonical_history_rewritten": false,
+  "phase_retained_negative_count": 1488,
+  "post_final_validation_negative_count": 6,
+  "effective_retained_negative_count": 1494,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This is an extensibility-test negative, not empirical confirmation, security certification, legal or cultural authority, identity evidence, or independent reproduction."
+}

@@ -101,8 +101,11 @@ class TestV644V5Artifacts(unittest.TestCase):
 
     def test_method_flow_final_state(self) -> None:
         method = self.load("method-flow/method-flow-state.json")
-        self.assertEqual(8, method["counts"]["methods"])
-        self.assertEqual(8, method["counts"]["states"]["preferred"])
+        self.assertGreaterEqual(method["counts"]["methods"], 8)
+        self.assertEqual(
+            method["counts"]["methods"],
+            method["counts"]["states"]["preferred"],
+        )
         self.assertEqual(0, method["counts"]["states"]["candidate"])
         self.assertGreaterEqual(method["counts"]["witness_results"]["fail"], 1)
 

@@ -1,0 +1,30 @@
+{
+  "schema": "ghc.family.v644-v5.post-final-validation-negative.v1",
+  "phase": "v644-gmut-thos-v5-x1-x2",
+  "owner": "Eiren Kestrel",
+  "negative_id": "V6445-VALID-N07",
+  "class": "shared_tool_integrity_receipt_stale_after_reviewed_change",
+  "failure_signature": "The canonical full repository suite passed 636 of 637 tests after the lineage portability repair; the inherited v641-v4 tool-integrity test correctly rejected the old SHA-256 for the intentionally changed shared lineage builder.",
+  "observed_validation": {
+    "repository_tests_passed": 636,
+    "repository_tests_failed": 1,
+    "failing_test": "v641-v4 security and tool-integrity rebuild",
+    "changed_selected_tool_count": 1,
+    "privacy_hits": 0
+  },
+  "trigger_preconditions": [
+    "reviewed shared tool is intentionally changed and staged",
+    "tool-integrity receipt still names the prior Git index blob",
+    "full repository suite rebuilds the integrity manifest"
+  ],
+  "recovery": "Regenerate the selected-tool integrity receipt from the exact staged Git index blob and review the one-row hash change together with the tool diff.",
+  "recurrence_guard": "Promote every reviewed shared-tool change atomically with its index-blob integrity receipt, targeted integrity rebuild, and exact staged-file review.",
+  "promotion_effect": "The 636/637 run remains negative evidence and is not promoted; only a later complete full-suite pass with matching integrity receipt may close the stale-receipt defect.",
+  "canonical_history_rewritten": false,
+  "phase_retained_negative_count": 1488,
+  "post_final_validation_negative_count": 7,
+  "effective_retained_negative_count": 1495,
+  "same_owner_only": true,
+  "independent_reproduction": false,
+  "boundary": "This is a local tool-integrity bookkeeping negative, not exhaustive supply-chain assurance, security certification, empirical confirmation, authority evidence, or independent reproduction."
+}
