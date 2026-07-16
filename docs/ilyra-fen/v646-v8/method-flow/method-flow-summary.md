@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v8-x1-x2
 - Owner: Ilyra Fen
-- Methods: 12
-- Passing witnesses: 11
-- Failed witnesses retained: 12
+- Methods: 13
+- Passing witnesses: 12
+- Failed witnesses retained: 13
 
 ## Preferred methods
 
@@ -95,6 +95,14 @@
 - Recurrence guard: When a scanner incident must quote the matched token, disposition only the exact retained incident files and class; never introduce a broad path or content exemption.
 - Rollback: Give the failed broader validation zero pass credit, preserve both incident candidates, and do not delete diagnostic text or weaken the callable-pattern scanner.
 - Witnesses: V6468-M12-F, V6468-M12-P
+
+### V6468-M13 — Preserve Git porcelain columns before path slicing
+
+- Trigger: Git porcelain leading columns carry machine meaning; a shared command helper trims output
+- Method: Read Git porcelain output without global trimming, preserve both status columns, and slice the path only after each raw line has been retained.
+- Recurrence guard: Never pass machine-column output through a helper that globally strips leading whitespace; parse raw lines first.
+- Rollback: Give the stopped closeout builder zero lifecycle credit, retain the already-passed safe portfolio result, and write no closeout artifact until raw parsing passes.
+- Witnesses: V6468-M13-F, V6468-M13-P
 
 ## Retained boundary
 

@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_git_porcelain_parser",
+  "candidate_workaround": "Read Git porcelain output without global trimming, preserve both status columns, and slice the path only after each raw line has been retained.",
+  "failure_signature": "A shared Git helper applied strip to porcelain output, removed the leading status character from the first line, and truncated the parsed path by one character.",
+  "method_id": "V6468-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_status_columns",
+    "owner_scope",
+    "no_out_of_scope_write",
+    "route_held"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pass machine-column output through a helper that globally strips leading whitespace; parse raw lines first.",
+  "retained_negative_ids": [
+    "V6468-X2-N07"
+  ],
+  "rollback": "Give the stopped closeout builder zero lifecycle credit, retain the already-passed safe portfolio result, and write no closeout artifact until raw parsing passes.",
+  "scope_boundary": "Same-owner v646-v8 Git status preflight only; not general parser, repository, security, or independent-reproduction assurance.",
+  "supersedes": [],
+  "title": "Preserve Git porcelain columns before path slicing",
+  "trigger_preconditions": [
+    "Git porcelain leading columns carry machine meaning",
+    "a shared command helper trims output"
+  ],
+  "validation_witness_ids": []
+}

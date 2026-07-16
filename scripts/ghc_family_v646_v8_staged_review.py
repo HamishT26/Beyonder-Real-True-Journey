@@ -61,7 +61,7 @@ def allowed(relative: str) -> bool:
         return True
     if relative.startswith("scripts/ghc_family_v646_v8") or relative.startswith("scripts/build_ghc_family_v646_v8"):
         return relative.endswith(".py")
-    return relative == "tests/test_ghc_family_v646_v8.py"
+    return relative in {"tests/test_ghc_family_v646_v8.py", "tests/test_ghc_family_v646_v8_closeout.py"}
 
 
 def privacy_scan(paths: list[str]) -> dict[str, Any]:

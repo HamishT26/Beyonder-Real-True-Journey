@@ -93,7 +93,7 @@ def json_parse() -> dict[str, Any]:
 
 def run_scoped_tests() -> dict[str, Any]:
     result = subprocess.run(
-        [sys.executable, str(ROOT / "tests/test_ghc_family_v646_v8.py"), "-v"],
+        [sys.executable, "-m", "unittest", "discover", "-s", str(ROOT / "tests"), "-p", "test_ghc_family_v646_v8*.py", "-v"],
         cwd=ROOT,
         text=True,
         encoding="utf-8",

@@ -66,3 +66,7 @@ Canonical and named-lane checks are same-owner repeatability under shared infras
 ## Closeout position
 
 This packet is a falsifiable research-and-governance workbench. It is useful because it exposes what passed, what failed, what stayed represented, what remains an empirical gap, and what software cannot authorize. It does not prove the project's largest aspirations. The terminal verdict remains **NOT_READY_FOR_STAGE_20**.
+
+## Lifecycle closeout
+
+The immutable evidence commit passed the scoped canonical validation and was clean, pushed, and four-way remote-equal before this final lifecycle packet was built. The named validation lane was created additively, is not detached, has no upstream, has no live remote ref, and has run no replay yet. The final commit must remain a single-parent successor, pass the same bounded canonical gates, preserve exact manifest parity, become four-way remote-equal, and then receive exactly one clean named-lane replay. Only an acknowledged single baton after those checks changes the route state.

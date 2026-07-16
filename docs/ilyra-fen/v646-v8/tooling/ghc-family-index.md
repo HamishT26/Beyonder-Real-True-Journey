@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v646-gmut-thos-v8-x1-x2
 
 Owner: **Ilyra Fen**
-Generated UTC: `2026-07-16T16:13:53.146049+00:00`
+Generated UTC: `2026-07-16T16:43:04.539702+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 209 | 17 | 897 | 17 |
+| Repository scripts | 209 | 17 | 901 | 17 |
 | Local skills | 113 | 18 | 937 | 186 |
 
 ## Preferred current script candidates
