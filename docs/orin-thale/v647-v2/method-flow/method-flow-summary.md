@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v2-x1-x2
 - Owner: Orin Thale
-- Methods: 9
-- Passing witnesses: 9
-- Failed witnesses retained: 9
+- Methods: 17
+- Passing witnesses: 17
+- Failed witnesses retained: 17
 
 ## Preferred methods
 
@@ -79,6 +79,70 @@
 - Recurrence guard: Require diff hygiene to pass before manifest fixed-point or x1 commit credit.
 - Rollback: Keep all substantive staged content, withdraw the failed review's pass credit, and apply only the bounded whitespace correction.
 - Witnesses: V6472-M09-WFAIL, V6472-M09-WPASS, V6472-M09-WFAIL, V6472-M09-WPASS
+
+### V6472-M10 — Keep bounded ripgrep patterns in one argument
+
+- Trigger: A PowerShell command searches several exact evidence-builder markers.
+- Method: Use one quoted pattern argument or separate literal searches, then inspect exact line markers before patching.
+- Recurrence guard: Keep every ripgrep pattern in one explicitly quoted argument and never append alternation fragments as paths.
+- Rollback: Discard the failed read-only lookup; no edit or nested mutation occurred.
+- Witnesses: V6472-M10-WFAIL, V6472-M10-WPASS, V6472-M10-WFAIL, V6472-M10-WPASS
+
+### V6472-M11 — Use encoding-stable patch anchors
+
+- Trigger: A generated Python source contains UTF-8 authority terms displayed through a legacy console encoding.
+- Method: Use encoding-stable ASCII anchors or replace an exact in-memory block extracted from the UTF-8 file, then apply one owner-scoped patch.
+- Recurrence guard: Do not use console-rendered mojibake as patch context; anchor on stable schema or key lines.
+- Rollback: No rollback is needed because apply_patch rejected the edit atomically.
+- Witnesses: V6472-M11-WFAIL, V6472-M11-WPASS, V6472-M11-WFAIL, V6472-M11-WPASS
+
+### V6472-M12 — Transform unstable UTF-8 source from exact bytes
+
+- Trigger: An uncommitted owner-generated source file cannot be patched reliably through console-rendered Unicode context.
+- Method: Read the uncommitted owner script as base64, decode exact UTF-8 bytes in memory, transform stable keys and whole blocks, then replace the file through apply_patch delete and add operations.
+- Recurrence guard: For an uncommitted owner file with unstable console rendering, transform exact base64-decoded UTF-8 bytes rather than console text.
+- Rollback: No rollback is needed because the failed apply_patch was atomic; retain the current file until the exact-byte replacement is ready.
+- Witnesses: V6472-M12-WFAIL, V6472-M12-WPASS, V6472-M12-WFAIL, V6472-M12-WPASS
+
+### V6472-M13 — Use an isolate-local base64 decoder
+
+- Trigger: Exact UTF-8 bytes arrive as base64 in an orchestration isolate without browser decoding globals.
+- Method: Decode base64 with a small local alphabet-and-bit accumulator, then run the already bounded UTF-8 decoder and apply_patch replacement.
+- Recurrence guard: Do not assume browser base64 globals exist in the orchestration isolate.
+- Rollback: Discard the failed in-memory operation; no decoder completed and no file edit ran.
+- Witnesses: V6472-M13-WFAIL, V6472-M13-WPASS, V6472-M13-WFAIL, V6472-M13-WPASS
+
+### V6472-M14 — Configure the shell text channel explicitly as UTF-8
+
+- Trigger: An owner source file with Unicode must cross the shell-to-orchestration text boundary.
+- Method: Set PowerShell and console output encoding explicitly to UTF-8, read the source with -Encoding UTF8, and use the returned exact text for bounded apply_patch generation.
+- Recurrence guard: Prefer an explicitly UTF-8 configured shell text channel over ad hoc base64 decoding in the isolate.
+- Rollback: Discard the failed in-memory decode; no file edit ran.
+- Witnesses: V6472-M14-WFAIL, V6472-M14-WPASS, V6472-M14-WFAIL, V6472-M14-WPASS
+
+### V6472-M15 — Verify block markers before whole-block transforms
+
+- Trigger: A long generated overview must be replaced in an uncommitted owner builder.
+- Method: Inspect exact overview start and following write markers with separate literal searches, then replace between verified indices and retain the completeness guard.
+- Recurrence guard: Derive block boundaries from exact verified marker indices instead of a speculative multiline regex.
+- Rollback: No rollback is needed because the completeness guard stopped before apply_patch.
+- Witnesses: V6472-M15-WFAIL, V6472-M15-WPASS, V6472-M15-WFAIL, V6472-M15-WPASS
+
+### V6472-M16 — Reject truncated whole-file source transport
+
+- Trigger: A tool result may abbreviate a long whole-file source payload.
+- Method: Use bounded line windows and stable surrounding keys to reconstruct only the two truncated regions, then compile and scan before execution.
+- Recurrence guard: Never use a potentially truncated whole-file tool result as source bytes; prefer bounded windows or existing repository files.
+- Rollback: Do not execute the corrupt builder; reconstruct only the damaged owner lines and recompile.
+- Witnesses: V6472-M16-WFAIL, V6472-M16-WPASS, V6472-M16-WFAIL, V6472-M16-WPASS
+
+### V6472-M17 — Bind tests to declared contract and mutation roles
+
+- Trigger: A proposal uses a zero-row receipt as its mutation artifact.
+- Method: Read positive_fixture from the declared contract path and mutation rows from the declared mutation path in SURFACES.
+- Recurrence guard: Resolve contract and mutation roles through the runtime surface map before asserting fields.
+- Rollback: Keep the failed test output, change only the source artifact selected by the assertion, and rerun the current-phase tests.
+- Witnesses: V6472-M17-WFAIL, V6472-M17-WPASS, V6472-M17-WFAIL, V6472-M17-WPASS
 
 ## Retained boundary
 

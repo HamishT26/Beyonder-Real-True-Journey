@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Inspect exact overview start and following write markers with separate literal searches, then replace between verified indices and retain the completeness guard.",
+  "failure_signature": "The overview regular expression did not match the actual builder write sequence.",
+  "method_id": "V6472-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["bounded_transform", "completeness_guard", "no_partial_edit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Derive block boundaries from exact verified marker indices instead of a speculative multiline regex.",
+  "retained_negative_ids": ["V6472-X2-N06"],
+  "rollback": "No rollback is needed because the completeness guard stopped before apply_patch.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Verify block markers before whole-block transforms",
+  "trigger_preconditions": ["A long generated overview must be replaced in an uncommitted owner builder."],
+  "validation_witness_ids": ["V6472-M15-WFAIL", "V6472-M15-WPASS"]
+}

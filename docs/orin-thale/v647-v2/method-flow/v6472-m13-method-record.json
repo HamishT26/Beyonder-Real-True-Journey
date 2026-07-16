@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Decode base64 with a small local alphabet-and-bit accumulator, then run the already bounded UTF-8 decoder and apply_patch replacement.",
+  "failure_signature": "The orchestration isolate raised ReferenceError because atob was unavailable.",
+  "method_id": "V6472-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["exact_bytes", "apply_patch_only", "owned_uncommitted_file"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not assume browser base64 globals exist in the orchestration isolate.",
+  "retained_negative_ids": ["V6472-X2-N04"],
+  "rollback": "Discard the failed in-memory operation; no decoder completed and no file edit ran.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use an isolate-local base64 decoder",
+  "trigger_preconditions": ["Exact UTF-8 bytes arrive as base64 in an orchestration isolate without browser decoding globals."],
+  "validation_witness_ids": ["V6472-M13-WFAIL", "V6472-M13-WPASS"]
+}

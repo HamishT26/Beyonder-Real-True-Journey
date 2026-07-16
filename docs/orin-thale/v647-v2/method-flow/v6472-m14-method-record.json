@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Set PowerShell and console output encoding explicitly to UTF-8, read the source with -Encoding UTF8, and use the returned exact text for bounded apply_patch generation.",
+  "failure_signature": "The local base64 decoder produced a bad UTF-8 continuation before editing.",
+  "method_id": "V6472-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["utf8_integrity", "apply_patch_only", "no_partial_edit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Prefer an explicitly UTF-8 configured shell text channel over ad hoc base64 decoding in the isolate.",
+  "retained_negative_ids": ["V6472-X2-N05"],
+  "rollback": "Discard the failed in-memory decode; no file edit ran.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Configure the shell text channel explicitly as UTF-8",
+  "trigger_preconditions": ["An owner source file with Unicode must cross the shell-to-orchestration text boundary."],
+  "validation_witness_ids": ["V6472-M14-WFAIL", "V6472-M14-WPASS"]
+}

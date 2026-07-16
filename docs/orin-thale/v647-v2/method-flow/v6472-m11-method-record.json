@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Use encoding-stable ASCII anchors or replace an exact in-memory block extracted from the UTF-8 file, then apply one owner-scoped patch.",
+  "failure_signature": "apply_patch could not match a context line containing console-mojibake Māori text.",
+  "method_id": "V6472-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["utf8_integrity", "atomic_edit", "owned_lane_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not use console-rendered mojibake as patch context; anchor on stable schema or key lines.",
+  "retained_negative_ids": ["V6472-X2-N02"],
+  "rollback": "No rollback is needed because apply_patch rejected the edit atomically.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use encoding-stable patch anchors",
+  "trigger_preconditions": ["A generated Python source contains UTF-8 authority terms displayed through a legacy console encoding."],
+  "validation_witness_ids": ["V6472-M11-WFAIL", "V6472-M11-WPASS"]
+}

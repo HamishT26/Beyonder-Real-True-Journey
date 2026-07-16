@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Use one quoted pattern argument or separate literal searches, then inspect exact line markers before patching.",
+  "failure_signature": "PowerShell split a quoted ripgrep alternation into an invalid path argument.",
+  "method_id": "V6472-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["bounded_search", "owned_lane_only", "no_partial_patch"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep every ripgrep pattern in one explicitly quoted argument and never append alternation fragments as paths.",
+  "retained_negative_ids": ["V6472-X2-N01"],
+  "rollback": "Discard the failed read-only lookup; no edit or nested mutation occurred.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Keep bounded ripgrep patterns in one argument",
+  "trigger_preconditions": ["A PowerShell command searches several exact evidence-builder markers."],
+  "validation_witness_ids": ["V6472-M10-WFAIL", "V6472-M10-WPASS"]
+}

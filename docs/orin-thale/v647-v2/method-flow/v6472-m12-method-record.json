@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Read the uncommitted owner script as base64, decode exact UTF-8 bytes in memory, transform stable keys and whole blocks, then replace the file through apply_patch delete and add operations.",
+  "failure_signature": "Console text transport changed UTF-8 patch context even when the context was selected dynamically.",
+  "method_id": "V6472-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["utf8_integrity", "apply_patch_only", "owned_uncommitted_file", "no_partial_edit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For an uncommitted owner file with unstable console rendering, transform exact base64-decoded UTF-8 bytes rather than console text.",
+  "retained_negative_ids": ["V6472-X2-N03"],
+  "rollback": "No rollback is needed because the failed apply_patch was atomic; retain the current file until the exact-byte replacement is ready.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Transform unstable UTF-8 source from exact bytes",
+  "trigger_preconditions": ["An uncommitted owner-generated source file cannot be patched reliably through console-rendered Unicode context."],
+  "validation_witness_ids": ["V6472-M12-WFAIL", "V6472-M12-WPASS"]
+}
