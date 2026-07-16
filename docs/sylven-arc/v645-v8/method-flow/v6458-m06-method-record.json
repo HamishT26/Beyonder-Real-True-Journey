@@ -1,0 +1,36 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Retain the parser failure, pass the unchanged alternation as a double-quoted data argument, and split the explicitly named files into bounded groups.",
+  "failure_signature": "A read-only multi-file stale-term scan embedded an apostrophe inside a single-quoted PowerShell pattern, so the shell parsed later alternatives as pipeline expressions and returned no review evidence.",
+  "method_id": "V6458-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep shell metacharacters and apostrophes inside a verified quoted data argument; a parser error receives zero scan credit.",
+  "retained_negative_ids": [
+    "V6458-X2-N02"
+  ],
+  "rollback": "Treat the failed scan as no evidence and make no stale-label claim until the quoted grouped searches finish.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "owner_candidate_receipts_only",
+    "no_ref_change",
+    "no_remote_change"
+  ],
+  "supersedes": [],
+  "title": "Pass multi-alternative stale-term search patterns as quoted data",
+  "trigger_preconditions": [
+    "v645-v8 x2 evidence validation",
+    "same-owner local tooling"
+  ],
+  "validation_witness_ids": [
+    "V6458-W06-F",
+    "V6458-W06-P"
+  ]
+}

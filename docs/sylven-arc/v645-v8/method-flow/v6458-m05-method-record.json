@@ -1,0 +1,36 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Retain the rejected patch, verify that no file changed, and apply the core-runner replacement alone before reviewing runtime separately.",
+  "failure_signature": "The first substantive x2 patch included an unrelated runtime context that did not exist, so apply_patch rejected the entire edit and changed no file.",
+  "method_id": "V6458-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not combine independent context-sensitive edits unless every expected hunk was re-read from the current file.",
+  "retained_negative_ids": [
+    "V6458-X2-N01"
+  ],
+  "rollback": "Give the rejected patch zero implementation credit and preserve the source tree until the bounded replacement succeeds.",
+  "rollback_witness_required": true,
+  "scope_boundary": "Same-owner operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+  "side_effect_budget": [
+    "owner_candidate_receipts_only",
+    "no_ref_change",
+    "no_remote_change"
+  ],
+  "supersedes": [],
+  "title": "Split an overbroad substantive patch after context verification failure",
+  "trigger_preconditions": [
+    "v645-v8 x2 evidence validation",
+    "same-owner local tooling"
+  ],
+  "validation_witness_ids": [
+    "V6458-W05-F",
+    "V6458-W05-P"
+  ]
+}

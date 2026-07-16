@@ -1,0 +1,104 @@
+{
+  "boundary": "A disposable replay is not production, supply-chain, or exhaustive-security assurance.",
+  "canonical_head_paths": [
+    "keep/visible.txt",
+    "omit/hidden.txt"
+  ],
+  "canonical_repository_mutated": false,
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "init",
+        "--quiet"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "user.name",
+        "Sylven Fixture"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "config",
+        "user.email",
+        "fixture@example.invalid"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "add",
+        "--",
+        "keep/visible.txt",
+        "omit/hidden.txt"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "--quiet",
+        "-m",
+        "bounded sparse fixture"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "sparse-checkout",
+        "init",
+        "--cone",
+        "--sparse-index"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "sparse-checkout",
+        "set",
+        "keep"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "ls-tree",
+        "-r",
+        "--name-only",
+        "HEAD"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files",
+        "-t"
+      ],
+      "returncode": 0
+    }
+  ],
+  "disposable_repository": true,
+  "expected_results_passed": true,
+  "no_network": true,
+  "remote_mutated": false,
+  "skip_worktree_evidence": true,
+  "temporary_root_removed": true,
+  "tracked_omitted_path_absent": true,
+  "working_tree_only_manifest_rejected": true,
+  "working_tree_paths": [
+    "keep/visible.txt"
+  ]
+}
