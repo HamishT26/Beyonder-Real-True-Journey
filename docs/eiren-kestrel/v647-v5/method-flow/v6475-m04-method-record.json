@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Resolve the selected skill directory first and invoke its bundled runner from the exact discovered scripts path instead of assuming repository materialization.",
+  "failure_signature": "A repository scripts lookup returned no Method Flow runner because the runner belongs to the selected skill package.",
+  "method_id": "V6475-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["private_material", "sibling_lane", "canonical_history", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When a skill documents a bundled runner, resolve the skill root and scripts directory before constructing a repository-relative command.",
+  "retained_negative_ids": ["V6475-X1-N04"],
+  "rollback": "Give the empty repository lookup zero runner-discovery credit and inspect only the selected skill package.",
+  "scope_boundary": "Owner-local skill-runner discovery only; no broad filesystem, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Resolve bundled runner paths from the selected skill root",
+  "trigger_preconditions": ["selected local skill", "documented bundled runner", "repository-local path assumption"],
+  "validation_witness_ids": []
+}

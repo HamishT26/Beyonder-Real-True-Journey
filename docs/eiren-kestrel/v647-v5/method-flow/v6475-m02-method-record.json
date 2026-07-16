@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Pass directories to ripgrep and express filename matching with repeated --glob filters instead of shell-style wildcard path operands on Windows.",
+  "failure_signature": "Ripgrep received wildcard path operands that Windows treated as invalid literal filenames.",
+  "method_id": "V6475-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["private_material", "sibling_lane", "canonical_history", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "On Windows, give rg real directories and use --glob for selection; do not assume the shell expands wildcard path operands.",
+  "retained_negative_ids": ["V6475-X1-N02"],
+  "rollback": "Give the invalid inspection zero discovery credit and rerun a bounded directory-plus-glob query.",
+  "scope_boundary": "Owner-local repository inspection only; no evidence claim beyond the returned files and lines.",
+  "supersedes": [],
+  "title": "Use ripgrep directory roots with explicit Windows glob filters",
+  "trigger_preconditions": ["Windows PowerShell", "ripgrep", "multiple directories", "filename filter"],
+  "validation_witness_ids": []
+}

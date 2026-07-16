@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_design",
+  "candidate_workaround": "Separate repository-wide status from constant-time branch and head probes and give the status process a measured bounded budget that includes shell startup overhead.",
+  "failure_signature": "A combined status branch and head shell wrapper returned exit 124 after ten seconds without usable output.",
+  "method_id": "V6475-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["canonical_history", "completion_credit", "evidence_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not bundle repository-wide status with independent identity probes under a ten-second wrapper; measure status separately and retain timeout evidence.",
+  "retained_negative_ids": ["V6475-X1-N07"],
+  "rollback": "Treat the combined wrapper as failed, perform no mutation, and rerun branch, head, and status as separate read-only probes.",
+  "scope_boundary": "Owner-local Git inspection latency only; not remote equality, repository correctness, production performance, or independent reproduction.",
+  "supersedes": [],
+  "title": "Separate repository-wide status from constant-time identity probes",
+  "trigger_preconditions": ["large inherited worktree", "Git status inspection", "bounded shell wrapper"],
+  "validation_witness_ids": []
+}

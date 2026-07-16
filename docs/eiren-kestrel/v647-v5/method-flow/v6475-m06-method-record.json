@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_design",
+  "candidate_workaround": "Parse the two-character porcelain status prefix with anchored regular expressions, including an escaped literal question-mark pair for untracked rows.",
+  "failure_signature": "A PowerShell -like pattern containing question marks treated them as single-character wildcards and classified all staged rows as untracked.",
+  "method_id": "V6475-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["canonical_history", "completion_credit", "evidence_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use anchored regular expressions against the porcelain prefix and retain staged, unstaged, and untracked counts as separate fields.",
+  "retained_negative_ids": ["V6475-X1-N06"],
+  "rollback": "Reject the wildcard-derived count, preserve the failed observation, and rerun the same immutable status rows through anchored prefix expressions.",
+  "scope_boundary": "Owner-local Git status classification only; not repository correctness, remote equality, or independent reproduction.",
+  "supersedes": [],
+  "title": "Parse porcelain status prefixes with anchored regular expressions",
+  "trigger_preconditions": ["Git porcelain status rows", "PowerShell status classification", "exact staged review"],
+  "validation_witness_ids": []
+}

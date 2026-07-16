@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_editing",
+  "candidate_workaround": "Inspect UTF-8 source text before patching and use smaller exact hunks or an explicit apply-patch replacement when inherited display encoding may differ.",
+  "failure_signature": "An apply-patch hunk expected a mojibake line that did not exist in the UTF-8 file and failed verification without applying content.",
+  "method_id": "V6475-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["private_material", "sibling_lane", "canonical_history", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read the exact UTF-8 lines before matching inherited non-ASCII text; treat display-layer corruption as untrusted patch context.",
+  "retained_negative_ids": ["V6475-X1-N03"],
+  "rollback": "Retain the failed hunk, confirm that no partial change landed, and retry only with verified UTF-8 context through apply_patch.",
+  "scope_boundary": "Owner-local additive editing only; no authority, identity, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Verify UTF-8 patch context before matching non-ASCII lines",
+  "trigger_preconditions": ["non-ASCII repository text", "inherited console display", "apply_patch exact context"],
+  "validation_witness_ids": []
+}
