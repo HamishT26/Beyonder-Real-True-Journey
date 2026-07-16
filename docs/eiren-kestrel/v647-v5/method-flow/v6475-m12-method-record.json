@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_design",
+  "candidate_workaround": "Accumulate loop results in an explicit array and pipe the completed array to JSON serialization only after the loop closes.",
+  "failure_signature": "PowerShell raised ParserError for an empty pipe element after a foreach statement block.",
+  "method_id": "V6475-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["evidence_integrity", "document_word_limit", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not pipe a statement-form foreach block directly in Windows PowerShell 5.1; collect its output first or use a pipeline-native ForEach-Object expression.",
+  "retained_negative_ids": ["V6475-X2-N07"],
+  "rollback": "Give the parse-failed command zero word-count credit, preserve the error, and rerun with explicit array accumulation.",
+  "scope_boundary": "Owner-local PowerShell syntax and document counting only; not content quality or independent reproduction.",
+  "supersedes": [],
+  "title": "Collect PowerShell statement-loop output before piping",
+  "trigger_preconditions": ["Windows PowerShell 5.1", "statement foreach", "JSON pipeline"],
+  "validation_witness_ids": []
+}

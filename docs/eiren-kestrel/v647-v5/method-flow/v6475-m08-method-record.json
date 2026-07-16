@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_design",
+  "candidate_workaround": "Set Python UTF-8 mode for Windows console probes and use ASCII-escaped JSON when human-readable Unicode is not required.",
+  "failure_signature": "Python raised UnicodeEncodeError in the cp1252 stdout codec while printing a Māori macron.",
+  "method_id": "V6475-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["evidence_integrity", "cultural_wording", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Set PYTHONUTF8 before console serialization of repository text containing non-ASCII characters; never delete or anglicize text merely to satisfy a display codec.",
+  "retained_negative_ids": ["V6475-X2-N02"],
+  "rollback": "Give the failed console dump zero inspection credit, preserve the exception, and rerun read-only with explicit UTF-8 output.",
+  "scope_boundary": "Console serialization only; not cultural validation, translation authority, or content correctness.",
+  "supersedes": [],
+  "title": "Force UTF-8 for Windows console serialization",
+  "trigger_preconditions": ["Windows console", "Python stdout", "non-ASCII repository text"],
+  "validation_witness_ids": []
+}

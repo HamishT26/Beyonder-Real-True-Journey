@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_design",
+  "candidate_workaround": "Split a large patch into function-sized exact hunks after confirming that the failed aggregate patch made no partial change.",
+  "failure_signature": "The aggregate runtime patch failed verification at one quoted line and returned no applied hunks.",
+  "method_id": "V6475-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["canonical_history", "x1_freeze", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For copied code with quote-sensitive context, patch one function at a time and verify aggregate failures are atomic before retrying.",
+  "retained_negative_ids": ["V6475-X2-N03"],
+  "rollback": "Retain the failed aggregate patch, confirm zero partial application, and apply only exact function-bounded hunks.",
+  "scope_boundary": "Owner-local additive source editing only; not runtime correctness until tests pass.",
+  "supersedes": [],
+  "title": "Split quote-sensitive aggregate patches into function hunks",
+  "trigger_preconditions": ["copied phase template", "large patch", "quote-sensitive exact context"],
+  "validation_witness_ids": []
+}

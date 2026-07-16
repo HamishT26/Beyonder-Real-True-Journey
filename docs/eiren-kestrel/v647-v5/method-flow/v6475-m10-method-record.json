@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_design",
+  "candidate_workaround": "Inspect actual exported symbols or search the selected definitions file before constructing an attribute lookup.",
+  "failure_signature": "Python raised AttributeError because the copied assumption RUNNER_SPECS was absent while RUNNER_TITLES was the actual exported constant.",
+  "method_id": "V6475-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["evidence_integrity", "completion_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Discover the concrete module symbol before access; do not infer an API name from a neighboring phase.",
+  "retained_negative_ids": ["V6475-X2-N04"],
+  "rollback": "Give the failed lookup zero discovery credit, inspect the module text or dir listing, and use only the verified symbol.",
+  "scope_boundary": "Owner-local Python module inspection only; not API stability or caller compatibility proof.",
+  "supersedes": [],
+  "title": "Discover concrete module symbols before attribute access",
+  "trigger_preconditions": ["copied phase tooling", "Python module", "assumed exported constant"],
+  "validation_witness_ids": []
+}
