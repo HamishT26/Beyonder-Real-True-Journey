@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Resolve diagnostic input paths from the runner implementation and verify existence before reading.",
+  "failure_signature": "A diagnostic read named a nonexistent audit subdirectory despite the runner already declaring its provenance inputs.",
+  "method_id": "V6462-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "read_only_source",
+    "path_resolution",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Diagnostics select repository-relative inputs from the current runner source and require path existence before content reads.",
+  "retained_negative_ids": [
+    "V6462-X2-N08"
+  ],
+  "rollback": "Give the missing-path read zero evidence credit and make no repository mutation based on the failed lookup.",
+  "scope_boundary": "Same-owner read-only path-resolution recovery only; no source ownership, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resolve runner diagnostic paths from current source",
+  "trigger_preconditions": [
+    "a diagnostic follows a runner failure",
+    "the runner source declares its actual inputs"
+  ],
+  "validation_witness_ids": []
+}

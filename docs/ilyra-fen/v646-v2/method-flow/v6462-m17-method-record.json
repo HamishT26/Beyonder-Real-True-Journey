@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Discover phase reviewer names repository-relatively before selecting a source file for reuse.",
+  "failure_signature": "A read-only lookup assumed an absent x1_staged_review filename while the phase used x1_review.",
+  "method_id": "V6462-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "read_only_source",
+    "path_resolution",
+    "review_integrity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Reviewer-source reuse begins with a positive-cardinality repository-relative filename search.",
+  "retained_negative_ids": [
+    "V6462-X2-N10"
+  ],
+  "rollback": "Give the missing-file lookup zero evidence credit and make no design inference from an absent path.",
+  "scope_boundary": "Same-owner read-only path-resolution recovery only; no validation, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Discover exact reviewer filenames before reuse",
+  "trigger_preconditions": [
+    "a prior-phase reviewer is being inspected",
+    "filename conventions may differ"
+  ],
+  "validation_witness_ids": []
+}

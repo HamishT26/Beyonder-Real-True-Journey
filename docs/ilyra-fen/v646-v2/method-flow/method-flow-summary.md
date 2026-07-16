@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v2-x1-x2
 - Owner: Ilyra Fen
-- Methods: 7
-- Passing witnesses: 7
-- Failed witnesses retained: 15
+- Methods: 21
+- Passing witnesses: 21
+- Failed witnesses retained: 29
 
 ## Preferred methods
 
@@ -55,6 +55,118 @@
 - Recurrence guard: Every search witness declares expected-present or expected-empty semantics and checks native exit status and cardinality accordingly.
 - Rollback: Deprecate the method supported by the flawed witness and give the zero-line result no validation credit.
 - Witnesses: V6462-M07-F, V6462-M07-F2, V6462-M07-P
+
+### V6462-M08 — Resolve configured skill location from receipts before reading
+
+- Trigger: an inherited skill build may target the configured skill root; repository-local package location is not guaranteed
+- Method: Resolve the skill build receipt and indexed configured skill root before assuming a repository-local package directory.
+- Recurrence guard: Locate the committed receipt first and use only its sanitized package names; never publish the configured local root.
+- Rollback: Give the failed path assumption zero evidence credit and make no skill or source mutation.
+- Witnesses: V6462-M08-F, V6462-M08-P
+
+### V6462-M09 — Bind skill smoke assertions to the frozen artifact schema
+
+- Trigger: a skill smoke test consumes a frozen phase artifact; field names may differ from the test assumption
+- Method: Read the frozen rotation-guard schema and bind smoke assertions to its actual threshold and inherited-baseline fields.
+- Recurrence guard: Smoke tests read the frozen artifact schema before asserting field names, and retry accounting preserves first-invocation origins.
+- Rollback: Give the 19-of-20 smoke result zero portfolio completion credit and preserve all initialized packages unchanged.
+- Witnesses: V6462-M09-F, V6462-M09-P
+
+### V6462-M10 — Allow retained active candidates without premature promotion
+
+- Trigger: a retry runs while its recovery method is still candidate; a failed witness is already retained
+- Method: Permit a current candidate only when its retained failed witness is present; require a passing witness before terminal promotion.
+- Recurrence guard: Candidate state is accepted only for an active recorded failure; it never receives preferred credit before a pass.
+- Rollback: Give the 19-of-20 retry zero portfolio credit and leave the active candidate unpromoted.
+- Witnesses: V6462-M10-F, V6462-M10-P
+
+### V6462-M11 — Bind identity validation to the declared receipt field
+
+- Trigger: identity receipt has a specialized schema key; validator uses an assumed generic alias
+- Method: Read the frozen identity-receipt schema and assert the relational language through its identity_boundary field.
+- Recurrence guard: Validator field access is bound to the committed schema key rather than an assumed generic alias.
+- Rollback: Give the failed minimal run zero validation credit and leave the evidence candidate uncommitted.
+- Witnesses: V6462-M11-F, V6462-M11-P
+
+### V6462-M12 — Bind the source-status runner to the frozen ledger schema
+
+- Trigger: a runner consumes a frozen source ledger; field placement differs from an assumed schema
+- Method: Bind source-status assertions to the frozen top-level checked_on field, per-row use field, authority descriptor, and nullable local-skill URL.
+- Recurrence guard: Runner guards inspect the frozen ledger schema before asserting row and ledger field placement.
+- Rollback: Stop the aggregate at the first failed runner, preserve its output, and give all ten zero aggregate-use credit.
+- Witnesses: V6462-M12-F, V6462-M12-P
+
+### V6462-M13 — Split compound read-only preflight probes
+
+- Trigger: a wrapper combines multiple worktree probes; one probe may exceed the shared timeout
+- Method: Split compound status, head, and file probes into independently bounded commands with explicit output expectations.
+- Recurrence guard: Read-only preflight wrappers keep Git identity, Git status, and potentially large file reads in separate bounded invocations.
+- Rollback: Give the timed-out wrapper zero evidence credit and make no repository mutation based on partial output.
+- Witnesses: V6462-M13-F, V6462-M13-P
+
+### V6462-M14 — Bind proposal counts to the frozen index schema
+
+- Trigger: a guard consumes the frozen proposal index; cardinality fields have schema-specific names
+- Method: Bind the proposal-neighbor guard to frozen_chain_count_after_x1 in the immutable proposal index.
+- Recurrence guard: Proposal-count guards inspect the immutable index schema and bind to its declared prior and after-x1 cardinality keys.
+- Rollback: Stop the aggregate, preserve both runner outputs, and give all ten zero aggregate completion credit.
+- Witnesses: V6462-M14-F, V6462-M14-P
+
+### V6462-M15 — Resolve runner diagnostic paths from current source
+
+- Trigger: a diagnostic follows a runner failure; the runner source declares its actual inputs
+- Method: Resolve diagnostic input paths from the runner implementation and verify existence before reading.
+- Recurrence guard: Diagnostics select repository-relative inputs from the current runner source and require path existence before content reads.
+- Rollback: Give the missing-path read zero evidence credit and make no repository mutation based on the failed lookup.
+- Witnesses: V6462-M15-F, V6462-M15-P
+
+### V6462-M16 — Bind prior count to the collision-audit schema
+
+- Trigger: the proposal guard consumes both collision audit and proposal index; each artifact declares its own count key
+- Method: Bind the collision-audit prior count to prior_frozen_proposal_count and require an isolated pass before aggregate reuse.
+- Recurrence guard: Proposal guards bind both prior_frozen_proposal_count and frozen_chain_count_after_x1 from their respective immutable artifacts.
+- Rollback: Give the failed isolated replay zero validation credit and leave aggregate use incomplete.
+- Witnesses: V6462-M16-F, V6462-M16-P
+
+### V6462-M17 — Discover exact reviewer filenames before reuse
+
+- Trigger: a prior-phase reviewer is being inspected; filename conventions may differ
+- Method: Discover phase reviewer names repository-relatively before selecting a source file for reuse.
+- Recurrence guard: Reviewer-source reuse begins with a positive-cardinality repository-relative filename search.
+- Rollback: Give the missing-file lookup zero evidence credit and make no design inference from an absent path.
+- Witnesses: V6462-M17-F, V6462-M17-P
+
+### V6462-M18 — Bind current-phase tests to generated evidence schemas
+
+- Trigger: a new test module consumes generated phase artifacts; artifact names or fields are schema-specific
+- Method: Discover exact generated artifact paths and fields, synchronize the test module, and replay all tests from a fresh invocation.
+- Recurrence guard: Tests bind generated artifact names and fields only after positive-cardinality discovery and targeted schema inspection.
+- Rollback: Give the six-pass three-error run zero suite credit and leave the evidence candidate uncommitted.
+- Witnesses: V6462-M18-F, V6462-M18-P
+
+### V6462-M19 — Use generic D-first scratch roots in public runner sources
+
+- Trigger: a staged runner source embeds an owner-bank path; the path is not required in a public artifact
+- Method: Replace owner-bank scratch paths with a generic D-first scratch root while keeping all five scanner classes and constructed-fixture detection intact.
+- Recurrence guard: Repository scripts use generic D-first scratch roots and never embed an owner archive or profile path.
+- Rollback: Give the three-hit review zero evidence credit and do not commit the staged surface while any confirmed hit remains.
+- Witnesses: V6462-M19-F, V6462-M19-P
+
+### V6462-M20 — Require an empty index before evidence rebuild
+
+- Trigger: a builder enforces an empty Git index; all staged paths are verified owner-scoped
+- Method: Unstage only the verified owner-scoped surface, rebuild with an empty index, and restage the same bounded paths.
+- Recurrence guard: Evidence builders run only after explicit expected-path review confirms an empty Git index; staging occurs afterward.
+- Rollback: Leave worktree bytes unchanged, give the refusal zero credit, and never clear unrelated staged paths.
+- Witnesses: V6462-M20-F, V6462-M20-P
+
+### V6462-M21 — Defer terminal Method Flow aggregate use until recovery closes
+
+- Trigger: a current recovery method remains candidate; the aggregate requires terminal Method Flow states
+- Method: Defer terminal Method Flow aggregate use until the active recovery method has a bounded passing witness and terminal state.
+- Recurrence guard: The ten-runner terminal aggregate is invoked only when the ledger contains no candidate or observed method.
+- Rollback: Stop the aggregate, preserve all four outputs, and give all ten zero aggregate completion credit.
+- Witnesses: V6462-M21-F, V6462-M21-P
 
 ## Retained boundary
 

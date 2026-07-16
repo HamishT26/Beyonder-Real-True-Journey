@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Split compound status, head, and file probes into independently bounded commands with explicit output expectations.",
+  "failure_signature": "A combined read-only worktree preflight exceeded its bounded timeout before returning evidence.",
+  "method_id": "V6462-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "timeout_integrity",
+    "worktree_state",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read-only preflight wrappers keep Git identity, Git status, and potentially large file reads in separate bounded invocations.",
+  "retained_negative_ids": [
+    "V6462-X2-N06"
+  ],
+  "rollback": "Give the timed-out wrapper zero evidence credit and make no repository mutation based on partial output.",
+  "scope_boundary": "Same-owner read-only timeout recovery only; no repository-wide, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Split compound read-only preflight probes",
+  "trigger_preconditions": [
+    "a wrapper combines multiple worktree probes",
+    "one probe may exceed the shared timeout"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Unstage only the verified owner-scoped surface, rebuild with an empty index, and restage the same bounded paths.",
+  "failure_signature": "The evidence builder refused a nonempty Git index during staged-review recovery.",
+  "method_id": "V6462-M20",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "git_index_integrity",
+    "owner_scope",
+    "evidence_rebuild"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Evidence builders run only after explicit expected-path review confirms an empty Git index; staging occurs afterward.",
+  "retained_negative_ids": [
+    "V6462-X2-N13"
+  ],
+  "rollback": "Leave worktree bytes unchanged, give the refusal zero credit, and never clear unrelated staged paths.",
+  "scope_boundary": "Same-owner bounded Git-index sequencing only; no repository-wide, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Require an empty index before evidence rebuild",
+  "trigger_preconditions": [
+    "a builder enforces an empty Git index",
+    "all staged paths are verified owner-scoped"
+  ],
+  "validation_witness_ids": []
+}

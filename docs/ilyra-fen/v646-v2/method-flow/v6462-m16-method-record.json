@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Bind the collision-audit prior count to prior_frozen_proposal_count and require an isolated pass before aggregate reuse.",
+  "failure_signature": "The first isolated replay still failed because the collision audit used a second schema-specific cardinality key.",
+  "method_id": "V6462-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "proposal_novelty",
+    "x1_immutability",
+    "validation_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Proposal guards bind both prior_frozen_proposal_count and frozen_chain_count_after_x1 from their respective immutable artifacts.",
+  "retained_negative_ids": [
+    "V6462-X2-N09"
+  ],
+  "rollback": "Give the failed isolated replay zero validation credit and leave aggregate use incomplete.",
+  "scope_boundary": "Same-owner bounded proposal-audit recovery only; no semantic-exhaustiveness, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind prior count to the collision-audit schema",
+  "trigger_preconditions": [
+    "the proposal guard consumes both collision audit and proposal index",
+    "each artifact declares its own count key"
+  ],
+  "validation_witness_ids": []
+}

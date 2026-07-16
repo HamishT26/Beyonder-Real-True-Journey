@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Permit a current candidate only when its retained failed witness is present; require a passing witness before terminal promotion.",
+  "failure_signature": "The skill preflight required every method to be terminal while the current recovery method was correctly still a candidate with a failed witness.",
+  "method_id": "V6462-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["method_flow_append_only", "failed_witness_retention", "promotion_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Candidate state is accepted only for an active recorded failure; it never receives preferred credit before a pass.",
+  "retained_negative_ids": ["V6462-X2-N03"],
+  "rollback": "Give the 19-of-20 retry zero portfolio credit and leave the active candidate unpromoted.",
+  "scope_boundary": "Same-owner bounded Method Flow preflight recovery only; no broader workflow or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Allow retained active candidates without premature promotion",
+  "trigger_preconditions": ["a retry runs while its recovery method is still candidate", "a failed witness is already retained"],
+  "validation_witness_ids": []
+}

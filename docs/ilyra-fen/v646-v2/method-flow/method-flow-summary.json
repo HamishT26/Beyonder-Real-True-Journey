@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 7,
-    "recommendations": 7,
-    "state_events": 22,
+    "methods": 21,
+    "recommendations": 21,
+    "state_events": 64,
     "states": {
       "candidate": 0,
       "deprecated": 1,
       "observed": 0,
-      "preferred": 6,
+      "preferred": 20,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 15,
-      "pass": 7
+      "fail": 29,
+      "pass": 21
     },
-    "witnesses": 22
+    "witnesses": 50
   },
   "owner": "Ilyra Fen",
   "phase": "v646-gmut-thos-v2-x1-x2",
@@ -125,6 +125,230 @@
         "V6462-M07-F2",
         "V6462-M07-P"
       ]
+    },
+    {
+      "candidate_workaround": "Resolve the skill build receipt and indexed configured skill root before assuming a repository-local package directory.",
+      "method_id": "V6462-M08",
+      "recurrence_guard": "Locate the committed receipt first and use only its sanitized package names; never publish the configured local root.",
+      "rollback": "Give the failed path assumption zero evidence credit and make no skill or source mutation.",
+      "scope_boundary": "Same-owner read-only path-resolution evidence only; no ownership, authority, production, or independent-reproduction credit.",
+      "title": "Resolve configured skill location from receipts before reading",
+      "trigger_preconditions": [
+        "an inherited skill build may target the configured skill root",
+        "repository-local package location is not guaranteed"
+      ],
+      "validation_witness_ids": [
+        "V6462-M08-F",
+        "V6462-M08-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the frozen rotation-guard schema and bind smoke assertions to its actual threshold and inherited-baseline fields.",
+      "method_id": "V6462-M09",
+      "recurrence_guard": "Smoke tests read the frozen artifact schema before asserting field names, and retry accounting preserves first-invocation origins.",
+      "rollback": "Give the 19-of-20 smoke result zero portfolio completion credit and preserve all initialized packages unchanged.",
+      "scope_boundary": "Same-owner bounded skill-smoke recovery only; no domain truth, production, authority, or independent-reproduction credit.",
+      "title": "Bind skill smoke assertions to the frozen artifact schema",
+      "trigger_preconditions": [
+        "a skill smoke test consumes a frozen phase artifact",
+        "field names may differ from the test assumption"
+      ],
+      "validation_witness_ids": [
+        "V6462-M09-F",
+        "V6462-M09-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Permit a current candidate only when its retained failed witness is present; require a passing witness before terminal promotion.",
+      "method_id": "V6462-M10",
+      "recurrence_guard": "Candidate state is accepted only for an active recorded failure; it never receives preferred credit before a pass.",
+      "rollback": "Give the 19-of-20 retry zero portfolio credit and leave the active candidate unpromoted.",
+      "scope_boundary": "Same-owner bounded Method Flow preflight recovery only; no broader workflow or independent-reproduction credit.",
+      "title": "Allow retained active candidates without premature promotion",
+      "trigger_preconditions": [
+        "a retry runs while its recovery method is still candidate",
+        "a failed witness is already retained"
+      ],
+      "validation_witness_ids": [
+        "V6462-M10-F",
+        "V6462-M10-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the frozen identity-receipt schema and assert the relational language through its identity_boundary field.",
+      "method_id": "V6462-M11",
+      "recurrence_guard": "Validator field access is bound to the committed schema key rather than an assumed generic alias.",
+      "rollback": "Give the failed minimal run zero validation credit and leave the evidence candidate uncommitted.",
+      "scope_boundary": "Same-owner bounded validator-schema recovery only; no identity, authority, production, or independent-reproduction credit.",
+      "title": "Bind identity validation to the declared receipt field",
+      "trigger_preconditions": [
+        "identity receipt has a specialized schema key",
+        "validator uses an assumed generic alias"
+      ],
+      "validation_witness_ids": [
+        "V6462-M11-F",
+        "V6462-M11-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind source-status assertions to the frozen top-level checked_on field, per-row use field, authority descriptor, and nullable local-skill URL.",
+      "method_id": "V6462-M12",
+      "recurrence_guard": "Runner guards inspect the frozen ledger schema before asserting row and ledger field placement.",
+      "rollback": "Stop the aggregate at the first failed runner, preserve its output, and give all ten zero aggregate-use credit.",
+      "scope_boundary": "Same-owner bounded runner-schema recovery only; no source truth, authority, production, or independent-reproduction credit.",
+      "title": "Bind the source-status runner to the frozen ledger schema",
+      "trigger_preconditions": [
+        "a runner consumes a frozen source ledger",
+        "field placement differs from an assumed schema"
+      ],
+      "validation_witness_ids": [
+        "V6462-M12-F",
+        "V6462-M12-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Split compound status, head, and file probes into independently bounded commands with explicit output expectations.",
+      "method_id": "V6462-M13",
+      "recurrence_guard": "Read-only preflight wrappers keep Git identity, Git status, and potentially large file reads in separate bounded invocations.",
+      "rollback": "Give the timed-out wrapper zero evidence credit and make no repository mutation based on partial output.",
+      "scope_boundary": "Same-owner read-only timeout recovery only; no repository-wide, production, authority, or independent-reproduction credit.",
+      "title": "Split compound read-only preflight probes",
+      "trigger_preconditions": [
+        "a wrapper combines multiple worktree probes",
+        "one probe may exceed the shared timeout"
+      ],
+      "validation_witness_ids": [
+        "V6462-M13-F",
+        "V6462-M13-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind the proposal-neighbor guard to frozen_chain_count_after_x1 in the immutable proposal index.",
+      "method_id": "V6462-M14",
+      "recurrence_guard": "Proposal-count guards inspect the immutable index schema and bind to its declared prior and after-x1 cardinality keys.",
+      "rollback": "Stop the aggregate, preserve both runner outputs, and give all ten zero aggregate completion credit.",
+      "scope_boundary": "Same-owner bounded proposal-index recovery only; no semantic-exhaustiveness, authority, production, or independent-reproduction credit.",
+      "title": "Bind proposal counts to the frozen index schema",
+      "trigger_preconditions": [
+        "a guard consumes the frozen proposal index",
+        "cardinality fields have schema-specific names"
+      ],
+      "validation_witness_ids": [
+        "V6462-M14-F",
+        "V6462-M14-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Resolve diagnostic input paths from the runner implementation and verify existence before reading.",
+      "method_id": "V6462-M15",
+      "recurrence_guard": "Diagnostics select repository-relative inputs from the current runner source and require path existence before content reads.",
+      "rollback": "Give the missing-path read zero evidence credit and make no repository mutation based on the failed lookup.",
+      "scope_boundary": "Same-owner read-only path-resolution recovery only; no source ownership, authority, production, or independent-reproduction credit.",
+      "title": "Resolve runner diagnostic paths from current source",
+      "trigger_preconditions": [
+        "a diagnostic follows a runner failure",
+        "the runner source declares its actual inputs"
+      ],
+      "validation_witness_ids": [
+        "V6462-M15-F",
+        "V6462-M15-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind the collision-audit prior count to prior_frozen_proposal_count and require an isolated pass before aggregate reuse.",
+      "method_id": "V6462-M16",
+      "recurrence_guard": "Proposal guards bind both prior_frozen_proposal_count and frozen_chain_count_after_x1 from their respective immutable artifacts.",
+      "rollback": "Give the failed isolated replay zero validation credit and leave aggregate use incomplete.",
+      "scope_boundary": "Same-owner bounded proposal-audit recovery only; no semantic-exhaustiveness, authority, production, or independent-reproduction credit.",
+      "title": "Bind prior count to the collision-audit schema",
+      "trigger_preconditions": [
+        "the proposal guard consumes both collision audit and proposal index",
+        "each artifact declares its own count key"
+      ],
+      "validation_witness_ids": [
+        "V6462-M16-F",
+        "V6462-M16-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Discover phase reviewer names repository-relatively before selecting a source file for reuse.",
+      "method_id": "V6462-M17",
+      "recurrence_guard": "Reviewer-source reuse begins with a positive-cardinality repository-relative filename search.",
+      "rollback": "Give the missing-file lookup zero evidence credit and make no design inference from an absent path.",
+      "scope_boundary": "Same-owner read-only path-resolution recovery only; no validation, production, authority, or independent-reproduction credit.",
+      "title": "Discover exact reviewer filenames before reuse",
+      "trigger_preconditions": [
+        "a prior-phase reviewer is being inspected",
+        "filename conventions may differ"
+      ],
+      "validation_witness_ids": [
+        "V6462-M17-F",
+        "V6462-M17-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Discover exact generated artifact paths and fields, synchronize the test module, and replay all tests from a fresh invocation.",
+      "method_id": "V6462-M18",
+      "recurrence_guard": "Tests bind generated artifact names and fields only after positive-cardinality discovery and targeted schema inspection.",
+      "rollback": "Give the six-pass three-error run zero suite credit and leave the evidence candidate uncommitted.",
+      "scope_boundary": "Same-owner bounded test-schema recovery only; no scientific, authority, production, or independent-reproduction credit.",
+      "title": "Bind current-phase tests to generated evidence schemas",
+      "trigger_preconditions": [
+        "a new test module consumes generated phase artifacts",
+        "artifact names or fields are schema-specific"
+      ],
+      "validation_witness_ids": [
+        "V6462-M18-F",
+        "V6462-M18-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Replace owner-bank scratch paths with a generic D-first scratch root while keeping all five scanner classes and constructed-fixture detection intact.",
+      "method_id": "V6462-M19",
+      "recurrence_guard": "Repository scripts use generic D-first scratch roots and never embed an owner archive or profile path.",
+      "rollback": "Give the three-hit review zero evidence credit and do not commit the staged surface while any confirmed hit remains.",
+      "scope_boundary": "Same-owner bounded staged-path recovery only; zero hits are not complete privacy, exhaustive security, production, authority, or independent-reproduction evidence.",
+      "title": "Use generic D-first scratch roots in public runner sources",
+      "trigger_preconditions": [
+        "a staged runner source embeds an owner-bank path",
+        "the path is not required in a public artifact"
+      ],
+      "validation_witness_ids": [
+        "V6462-M19-F",
+        "V6462-M19-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Unstage only the verified owner-scoped surface, rebuild with an empty index, and restage the same bounded paths.",
+      "method_id": "V6462-M20",
+      "recurrence_guard": "Evidence builders run only after explicit expected-path review confirms an empty Git index; staging occurs afterward.",
+      "rollback": "Leave worktree bytes unchanged, give the refusal zero credit, and never clear unrelated staged paths.",
+      "scope_boundary": "Same-owner bounded Git-index sequencing only; no repository-wide, production, authority, or independent-reproduction credit.",
+      "title": "Require an empty index before evidence rebuild",
+      "trigger_preconditions": [
+        "a builder enforces an empty Git index",
+        "all staged paths are verified owner-scoped"
+      ],
+      "validation_witness_ids": [
+        "V6462-M20-F",
+        "V6462-M20-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Defer terminal Method Flow aggregate use until the active recovery method has a bounded passing witness and terminal state.",
+      "method_id": "V6462-M21",
+      "recurrence_guard": "The ten-runner terminal aggregate is invoked only when the ledger contains no candidate or observed method.",
+      "rollback": "Stop the aggregate, preserve all four outputs, and give all ten zero aggregate completion credit.",
+      "scope_boundary": "Same-owner bounded Method Flow sequencing only; no broader workflow, production, authority, or independent-reproduction credit.",
+      "title": "Defer terminal Method Flow aggregate use until recovery closes",
+      "trigger_preconditions": [
+        "a current recovery method remains candidate",
+        "the aggregate requires terminal Method Flow states"
+      ],
+      "validation_witness_ids": [
+        "V6462-M21-F",
+        "V6462-M21-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -142,7 +366,21 @@
     "V6462-M05-F3",
     "V6462-M06-F",
     "V6462-M07-F",
-    "V6462-M07-F2"
+    "V6462-M07-F2",
+    "V6462-M08-F",
+    "V6462-M09-F",
+    "V6462-M10-F",
+    "V6462-M11-F",
+    "V6462-M12-F",
+    "V6462-M13-F",
+    "V6462-M14-F",
+    "V6462-M15-F",
+    "V6462-M16-F",
+    "V6462-M17-F",
+    "V6462-M18-F",
+    "V6462-M19-F",
+    "V6462-M20-F",
+    "V6462-M21-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

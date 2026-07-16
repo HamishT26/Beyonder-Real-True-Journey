@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Bind the proposal-neighbor guard to frozen_chain_count_after_x1 in the immutable proposal index.",
+  "failure_signature": "The second aggregate stopped because the proposal guard queried an absent proposal_count key.",
+  "method_id": "V6462-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "proposal_novelty",
+    "x1_immutability",
+    "runner_use_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Proposal-count guards inspect the immutable index schema and bind to its declared prior and after-x1 cardinality keys.",
+  "retained_negative_ids": [
+    "V6462-X2-N07"
+  ],
+  "rollback": "Stop the aggregate, preserve both runner outputs, and give all ten zero aggregate completion credit.",
+  "scope_boundary": "Same-owner bounded proposal-index recovery only; no semantic-exhaustiveness, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind proposal counts to the frozen index schema",
+  "trigger_preconditions": [
+    "a guard consumes the frozen proposal index",
+    "cardinality fields have schema-specific names"
+  ],
+  "validation_witness_ids": []
+}

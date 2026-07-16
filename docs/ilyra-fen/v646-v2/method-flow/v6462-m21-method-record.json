@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Defer terminal Method Flow aggregate use until the active recovery method has a bounded passing witness and terminal state.",
+  "failure_signature": "The third aggregate stopped at Method Flow preflight while the staged-review recovery method remained a candidate.",
+  "method_id": "V6462-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "method_flow_append_only",
+    "promotion_integrity",
+    "runner_use_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "The ten-runner terminal aggregate is invoked only when the ledger contains no candidate or observed method.",
+  "retained_negative_ids": [
+    "V6462-X2-N14"
+  ],
+  "rollback": "Stop the aggregate, preserve all four outputs, and give all ten zero aggregate completion credit.",
+  "scope_boundary": "Same-owner bounded Method Flow sequencing only; no broader workflow, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Defer terminal Method Flow aggregate use until recovery closes",
+  "trigger_preconditions": [
+    "a current recovery method remains candidate",
+    "the aggregate requires terminal Method Flow states"
+  ],
+  "validation_witness_ids": []
+}
