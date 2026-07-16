@@ -1,0 +1,27 @@
+{
+  "method_id": "V6458-M03",
+  "title": "Decompose a timed-out multi-file text probe into bounded per-file reads",
+  "failure_signature": "A combined pattern scan across three explicitly named x1 working files exceeded its ten-second envelope and returned no usable result set.",
+  "trigger_preconditions": [
+    "explicitly named x1 working files",
+    "combined read-only scan returned no usable output before its deadline"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Split multi-file working-tree probes by file when shared-drive latency consumes the original envelope, retaining the timed-out command as a negative.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Treat timeout-without-output as no evidence; never infer either matches or cleanliness from it.",
+  "rollback": "Give the combined scan zero review credit and make no x1 claim until the per-file reads complete.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6458-X1-N03"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

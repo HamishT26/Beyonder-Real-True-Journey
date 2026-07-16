@@ -1,0 +1,27 @@
+{
+  "method_id": "V6458-M02",
+  "title": "Decompose a timed-out parallel startup probe into evidenced child commands",
+  "failure_signature": "A parallel worktree, source, owner, and drive probe exceeded its thirty-second envelope and returned no reliable child result set.",
+  "trigger_preconditions": [
+    "multiple evidence-producing startup children",
+    "parallel wrapper returned no reliable child result set"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Decompose composite startup probes so each child has an independent deadline, result, and evidence-credit decision.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Parallelize evidence-producing probes only when the orchestrator returns every child result even if one times out.",
+  "rollback": "Make no branch change until all required split probes pass.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6458-START-N02"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

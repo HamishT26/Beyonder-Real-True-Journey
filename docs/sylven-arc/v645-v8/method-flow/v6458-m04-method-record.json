@@ -1,0 +1,27 @@
+{
+  "method_id": "V6458-M04",
+  "title": "Normalize generated family-index line endings before x1 sealing",
+  "failure_signature": "The first x1 structural review found CRLF line endings in both generated family-index outputs and withheld a valid result.",
+  "trigger_preconditions": [
+    "family-index generator emitted CRLF text",
+    "x1 structural review rejected both generated artifacts"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Apply a narrowly scoped LF normalization step to the two family-index generator outputs before staging and sealing.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Require the structural reviewer to reject every owner artifact containing CRLF rather than relying on Git checkout normalization.",
+  "rollback": "Retain the failed review, remove all x1 validation credit from it, and do not stage receipts until the unchanged reviewer passes.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "retained_negative_ids": [
+    "V6458-X1-N04"
+  ],
+  "scope_boundary": "Same-owner bounded operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit."
+}

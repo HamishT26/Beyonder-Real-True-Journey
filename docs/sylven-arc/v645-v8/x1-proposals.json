@@ -1,0 +1,321 @@
+{
+  "schema": "ghc.family.v645-v8.proposals.v1",
+  "phase": "v645-gmut-thos-v8-x1-x2",
+  "owner": "Sylven Arc",
+  "freeze_stage": "x1_only",
+  "prior_frozen_proposal_count": 380,
+  "new_frozen_proposal_count": 10,
+  "frozen_chain_count_after_x1": 390,
+  "allowed_outcome_classes": [
+    "completed",
+    "represented",
+    "open_gap",
+    "exact_gate"
+  ],
+  "expected_distribution": {
+    "completed": 6,
+    "represented": 2,
+    "open_gap": 1,
+    "exact_gate": 1
+  },
+  "x2_execution_present": false,
+  "proposals": [
+    {
+      "proposal_id": "V6458-P01",
+      "title": "Method Flow process-tree cancellation, orphan-child quiescence, and teardown-evidence ledger",
+      "mission_surface": "parent and child command aliases, declared cancellation scope, timeout, cooperative stop, forced stop reservation, quiescence witness, exit evidence, partial output, and append-only recovery",
+      "hypothesis": "A method ledger can distinguish parent completion from process-tree quiescence, refuse orphan-child or partial-output credit, and require a bounded teardown witness before a timed-out command is considered recovered.",
+      "null_or_failure": "A parent timeout is treated as full teardown, an unobserved child is assumed gone, captured output is credited before quiescence, a retry creates overlapping children, or termination crosses the owner-scoped process boundary.",
+      "approval_class": "safe_now_owner_scoped_workflow",
+      "execution_lane": "x2_build_task",
+      "current_primary_or_official_source_needs": [
+        "V6458-S01",
+        "V6458-S21",
+        "V6458-S22"
+      ],
+      "concrete_artifacts": [
+        "method-flow/process-tree-quiescence-contract.json",
+        "method-flow/teardown-trace-mutation-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Synthetic traces must account for every declared child alias, retain timeout and teardown events, require observed quiescence or a fail-closed unknown, reject overlapping retries, and preserve all partial output as noncompletion evidence.",
+      "rollback_or_recovery": "Withdraw unsupported completion credit, retain the timeout and child-state uncertainty, stop owner-local retries, and resume only through a narrower bounded witness that cannot affect sibling or host processes.",
+      "protected_gates": [
+        "unbounded_retry",
+        "orphan_process",
+        "destructive_process_action",
+        "sibling_process",
+        "host_change",
+        "independent_reproduction"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_380_frozen_proposals": "Earlier Method Flow proposals cover child starts, deadline envelopes, recurrence clusters, causal graphs, and rollback budgets; none centers cancellation scope plus orphan-child quiescence and teardown evidence before recovery credit."
+    },
+    {
+      "proposal_id": "V6458-P02",
+      "title": "GMUT BRST nilpotency, Slavnov-Taylor hierarchy, and gauge-parameter-independence obligation tribunal",
+      "mission_surface": "typed fields and antifields, ghost number, BRST differential, nilpotency domain, gauge-fixing fermion, Slavnov-Taylor functional, loop order, anomaly obstruction, on-shell qualification, and claim boundary",
+      "hypothesis": "A symbolic obligation checker can distinguish a declared nilpotent BRST differential from a loop-order Slavnov-Taylor statement and can require anomaly, regularization, and on-shell qualifications before any gauge-parameter-independence claim.",
+      "null_or_failure": "Ghost numbers are inconsistent, nilpotency is asserted outside its assumptions, the Slavnov-Taylor hierarchy skips an order, a regulator or anomaly obstruction is omitted, on-shell independence becomes an off-shell theorem, or a symbolic fixture becomes physical evidence.",
+      "approval_class": "safe_now_symbolic_research_only",
+      "execution_lane": "x2_build_task",
+      "current_primary_or_official_source_needs": [
+        "V6458-S03",
+        "V6458-S04"
+      ],
+      "concrete_artifacts": [
+        "gmut/brst-slavnov-contract.json",
+        "gmut/brst-slavnov-mutation-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Positive and negative fixtures must type fields, ghost numbers, differential action, nilpotency scope, gauge fixing, functional identity, perturbative order, regulator, anomaly status, on-shell condition, and nonpromotion boundary.",
+      "rollback_or_recovery": "Quarantine the unsupported identity, restore explicit field and order declarations, retain the counterexample, and make no quantum-completeness, force, stability, likelihood, empirical, proof, canon, or Theory-of-Everything claim.",
+      "protected_gates": [
+        "quantum_completeness",
+        "physical_stability",
+        "empirical_confirmation",
+        "force_claim",
+        "proof_or_canon",
+        "theory_of_everything"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_380_frozen_proposals": "The frozen chain covers Noether identities, gauge generators, gauge fixing, Ward anomalies, constraint algebra, and operator bases; none makes BRST nilpotency, the Slavnov-Taylor hierarchy, and qualified gauge-parameter independence the central scalar-tensor obligation surface."
+    },
+    {
+      "proposal_id": "V6458-P03",
+      "title": "GMUT Euclid Q1 shear-product absence, photometric-selection, and covariance-ready zero-row protocol",
+      "mission_surface": "Euclid Q1 provenance, delivered-product inventory, absent SHE processing, photometric-redshift selection, visibility masks, future shear calibration, covariance, blinding, likelihood reservation, and zero-row stop",
+      "hypothesis": "A zero-row contract can verify that Q1 does not supply the required shear analysis products, enumerate future selection and covariance obligations, and prevent an imaging catalogue from being promoted into a GMUT weak-lensing result.",
+      "null_or_failure": "The phase ingests a real row, fabricates or infers shear from Q1 imaging, ignores the documented absent processing, tunes selection after an outcome, evaluates a likelihood, reports a constraint or force, or treats public availability as independent reproduction.",
+      "approval_class": "real_data_and_independent_review_required",
+      "execution_lane": "x2_open_gap",
+      "current_primary_or_official_source_needs": [
+        "V6458-S05",
+        "V6458-S06",
+        "V6458-S07"
+      ],
+      "concrete_artifacts": [
+        "empirical/euclid-q1-study-contract.json",
+        "empirical/euclid-q1-zero-row-receipt.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "The phase must retain zero downloaded rows, zero inferred shear values, zero likelihoods, and zero constraints; real execution requires an appropriate released shear product, frozen selection and nuisance models, calibration and covariance review, and separately authorized independent scrutiny.",
+      "rollback_or_recovery": "Stop before archive query or fit, retain the documented product-absence receipt, and route any future real study through a new preregistration, data handling plan, statistical review, and independent scientific review.",
+      "protected_gates": [
+        "real_data",
+        "shear_inference",
+        "likelihood",
+        "constraints",
+        "empirical_confirmation",
+        "independent_review",
+        "detected_force"
+      ],
+      "expected_disposition": "open_gap",
+      "novelty_against_380_frozen_proposals": "Earlier empirical proposals cover lensing, EHT, waves, pulsars, ranging, ephemerides, BAO, SLR, sirens, ISW, and Gaia binaries; none centers Euclid Q1's documented shear-product absence together with photometric selection and covariance-ready refusal."
+    },
+    {
+      "proposal_id": "V6458-P04",
+      "title": "THOS railway speed-restriction communication, control-room handover, and matched-budget proxy protocol",
+      "mission_surface": "temporary and emergency speed restrictions, source confirmation, readback, route and time scope, control-room handover, matched budget, workload, fatigue, blinding, escalation, and safety reservation",
+      "hypothesis": "A synthetic schedule can represent matched-budget railway control handovers and speed-restriction communication checks while exposing ambiguity, workload, fatigue, and authority-gradient risks.",
+      "null_or_failure": "A fixture uses real workers, trains, routes, or incidents; issues an operational instruction; rewards bypassing a safety control; omits scope or readback; breaks matched budgets or blinding; hides workload or fatigue; or claims THOS effectiveness.",
+      "approval_class": "safe_now_proxy_protocol_no_people",
+      "execution_lane": "x2_proxy_protocol",
+      "current_primary_or_official_source_needs": [
+        "V6458-S08",
+        "V6458-S09"
+      ],
+      "concrete_artifacts": [
+        "thos/rail-restriction-handover-protocol.json",
+        "thos/rail-handover-proxy-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Synthetic vectors may pass, but THOS remains represented until preregistered blind matched-budget real arms, authorized organizations and participants, rail-safety and workplace review, workload and harm monitoring, appropriate statistics, and independent review exist.",
+      "rollback_or_recovery": "Retain the proxy schedule and failures, void promoted comparisons, and require qualified rail operations, safety, human-factors, workplace, ethics, statistics, and affected-party processes outside the repository.",
+      "protected_gates": [
+        "participants",
+        "rail_safety",
+        "workplace_safety",
+        "operational_instruction",
+        "professional_competence",
+        "effectiveness",
+        "deployment",
+        "independent_review"
+      ],
+      "expected_disposition": "represented",
+      "novelty_against_380_frozen_proposals": "Prior THOS proposals cover clinical, aviation, maritime, maintenance, alarm, fatigue, allocation, and preservation handovers; none centers railway speed-restriction communication and control-room handover under matched budgets."
+    },
+    {
+      "proposal_id": "V6458-P05",
+      "title": "Freed ID Bitstring Status List index-allocation, purpose-separation, and herd-privacy profile",
+      "mission_surface": "status-list index allocation, minimum bitstring length, status purpose, multiple entries, issuer separation, validity interval, caching, stapling, correlation risk, decoys, fetch minimization, and nonproduction",
+      "hypothesis": "A synthetic Bitstring Status List profile can reject undersized, correlating, purpose-confused, duplicate-index, stale, or overfetching status designs without asserting real issuance, revocation, privacy, or interoperability.",
+      "null_or_failure": "A vector accepts a below-minimum list, unique list per credential, reused index, purpose mismatch, unbounded freshness claim, hidden issuer separation, verifier tracking, real keys or holder data, or production assurance wording.",
+      "approval_class": "safe_now_synthetic_nonproduction",
+      "execution_lane": "x2_proxy_protocol",
+      "current_primary_or_official_source_needs": [
+        "V6458-S10",
+        "V6458-S11"
+      ],
+      "concrete_artifacts": [
+        "freed-id/bitstring-status-privacy-profile.json",
+        "freed-id/bitstring-status-mutation-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Synthetic vectors must enforce minimum herd size, noncorrelating allocation, index and purpose consistency, validity and cache policy, issuer disclosure, fetch minimization, stapling boundaries, and fail-closed processing errors.",
+      "rollback_or_recovery": "Reject the synthetic status transaction, retain the vector, disclose no real key or holder data, separate status purposes, and restore the strictest noncorrelating owner-local fixture policy.",
+      "protected_gates": [
+        "real_keys",
+        "live_issuance",
+        "resolution_and_status",
+        "revocation",
+        "interoperability",
+        "privacy_review",
+        "security_review",
+        "trust_governance"
+      ],
+      "expected_disposition": "represented",
+      "novelty_against_380_frozen_proposals": "Earlier Freed ID proposals cover generic status cache age, epoch rollback, revocation windows, batch issuance, offers, presentations, federation, and migration; none centers index allocation, purpose separation, and herd-privacy correlation resistance in the final Bitstring Status List Recommendation."
+    },
+    {
+      "proposal_id": "V6458-P06",
+      "title": "CBR managed-retreat valuation, tenancy, confidentiality, and Maori-land authority reservation matrix",
+      "mission_surface": "community-led relocation, hazard and option evidence, valuation, owner and tenant interests, affordability, compensation, confidentiality, collective and cultural sites, remedy, legal status, affected parties, and Maori land authority",
+      "hypothesis": "A refusal-first matrix can expose unresolved valuation, tenancy, confidentiality, compensation, collective-interest, cultural-site, and Maori-land questions without deciding a real relocation, legal status, remedy, or authority issue.",
+      "null_or_failure": "The matrix names a real household, sets a valuation, recommends compulsory relocation, ranks cultural loss, discloses protected information, decides tenancy or compensation law, prescribes remedy, asserts Maori authority, or treats policy material as enacted law.",
+      "approval_class": "authorized_affected_parties_and_competent_authority_required",
+      "execution_lane": "x2_exact_gate",
+      "current_primary_or_official_source_needs": [
+        "V6458-S12",
+        "V6458-S13"
+      ],
+      "concrete_artifacts": [
+        "cbr/managed-retreat-authority-reservation.json",
+        "cbr/retreat-valuation-tenancy-matrix.md"
+      ],
+      "test_falsifier_or_acceptance_gate": "Only authorized affected people and communities, owners and tenants, relevant institutions, local and central authorities, privacy and legal authorities, tangata whenua, iwi, hapu, and Maori authorities can close their respective gates; software must stop at unknown or reserved.",
+      "rollback_or_recovery": "Stop before relocation, valuation, compensation, disclosure, or remedy conclusions, preserve refusals and unknowns, minimize data, and route only through authorized affected-party, legal, institutional, cultural, and Maori processes outside the repository.",
+      "protected_gates": [
+        "affected_party_authority",
+        "housing_and_tenancy",
+        "valuation",
+        "privacy",
+        "legal_interpretation",
+        "cultural_ratification",
+        "maori_authority",
+        "remedy_decision"
+      ],
+      "expected_disposition": "exact_gate",
+      "novelty_against_380_frozen_proposals": "Earlier CBR proposals cover remedy funds, water hardship, fisheries, archives, museums, cadastral records, litigation holds, aviation evidence, and data stewardship; none centers managed-retreat valuation, tenancy, confidentiality, and Maori-land authority together."
+    },
+    {
+      "proposal_id": "V6458-P07",
+      "title": "Git sparse-index, skip-worktree, cone-pattern, and omitted-path manifest tribunal",
+      "mission_surface": "disposable repository, sparse checkout, cone mode, sparse directory entry, skip-worktree state, tracked but absent paths, HEAD tree manifest, working-tree omission, vivification, cleanup, and nonsecurity boundary",
+      "hypothesis": "A disposable Git tribunal can distinguish a tracked path omitted by sparse checkout from a deletion and can require manifests to enumerate canonical HEAD content rather than only populated working-tree paths.",
+      "null_or_failure": "An omitted path is classified as deleted, a working-tree-only manifest is called complete, cone changes go unrecorded, sparse-index state is assumed from absence alone, the fixture touches the canonical repository, or bounded replay is called exhaustive security.",
+      "approval_class": "safe_now_disposable_synthetic_only",
+      "execution_lane": "x2_build_task",
+      "current_primary_or_official_source_needs": [
+        "V6458-S14",
+        "V6458-S15"
+      ],
+      "concrete_artifacts": [
+        "security/git-sparse-index-contract.json",
+        "security/git-sparse-index-mutation-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "A disposable no-network fixture must cover cone setup, sparse-index state, tracked omitted paths, canonical-tree manifest parity, skip-worktree evidence, a rejected working-tree-only manifest, and automatic cleanup outside the canonical repository.",
+      "rollback_or_recovery": "Discard only the disposable fixture, retain the failure receipt, rebuild the manifest from the declared Git object domain, and keep production, supply-chain, and exhaustive-security claims false.",
+      "protected_gates": [
+        "canonical_repository",
+        "destructive_filesystem",
+        "sibling_lane",
+        "remote_change",
+        "production",
+        "exhaustive_security"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_380_frozen_proposals": "Prior Git proposals cover replacement refs, alternate stores, index stages, LFS pointers, object formats, manifests, and borrowed objects; none centers sparse-index directory entries, skip-worktree omissions, cone patterns, and manifest-domain refusal."
+    },
+    {
+      "proposal_id": "V6458-P08",
+      "title": "ARIA live-region politeness, atomicity, and duplicate-announcement structural audit",
+      "mission_surface": "live-region role, aria-live politeness, aria-atomic, aria-relevant, aria-busy, status versus alert semantics, update ownership, duplicate channels, printable fallback, and manual evaluation reservation",
+      "hypothesis": "A structural auditor can flag contradictory live-region semantics, missing update ownership, duplicate announcement channels, and unsafe alert promotion while reserving runtime browser and assistive-technology behavior.",
+      "null_or_failure": "The audit accepts duplicate live surfaces for one update, a routine status promoted to alert, invalid politeness, contradictory atomicity, a permanently busy region, missing fallback text, infers actual announcement order, or claims complete accessibility.",
+      "approval_class": "safe_now_structural_only",
+      "execution_lane": "x2_build_task",
+      "current_primary_or_official_source_needs": [
+        "V6458-S16",
+        "V6458-S17"
+      ],
+      "concrete_artifacts": [
+        "accessibility/live-region-contract.json",
+        "accessibility/live-region-structural-audit.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Positive and negative fixtures must cover role and politeness alignment, atomicity, relevance, busy lifecycle, one update owner, duplicate-channel refusal, printable fallback, and explicit manual and affected-user reservations.",
+      "rollback_or_recovery": "Restore the least disruptive semantic role, one declared update owner, stable fallback text, and retain every failure; require qualified browser, keyboard, assistive-technology, language, and affected-user evaluation for broader conclusions.",
+      "protected_gates": [
+        "complete_accessibility",
+        "runtime_announcement_behavior",
+        "manual_keyboard_evaluation",
+        "assistive_technology",
+        "affected_user_acceptance"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_380_frozen_proposals": "Earlier accessibility work covers form status messages, alerts, inertness, focus, dialogs, maps, language, reflow, and print; no frozen proposal centers live-region politeness, atomicity, busy lifecycle, and duplicate-announcement ownership."
+    },
+    {
+      "proposal_id": "V6458-P09",
+      "title": "Gibbs-Duhem intensive-variable dependency, extensivity-domain, and psyche-autonomy nonconversion classifier",
+      "mission_surface": "homogeneous thermodynamic potential, extensive variables, intensive variables, composition, phase domain, Gibbs-Duhem constraint, unit typing, degrees of freedom, and psyche category barrier",
+      "hypothesis": "A typed synthetic classifier can check the Gibbs-Duhem dependency within a declared equilibrium phase and extensivity domain while rejecting conversion of thermodynamic variable dependence into psychological or civic autonomy claims.",
+      "null_or_failure": "The classifier treats all intensive variables as independent, mixes molar and extensive units, crosses phase domains, assumes extensivity where it is undeclared, drops composition, maps dependence to human autonomy, or calls synthetic rows participant evidence.",
+      "approval_class": "safe_now_synthetic_only",
+      "execution_lane": "x2_build_task",
+      "current_primary_or_official_source_needs": [
+        "V6458-S18"
+      ],
+      "concrete_artifacts": [
+        "thermo-psyche/gibbs-duhem-contract.json",
+        "thermo-psyche/gibbs-duhem-mutation-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Fixtures must enforce potential and phase declarations, extensive and intensive typing, composition and unit consistency, the dependency count only inside an equilibrium extensivity domain, phase-boundary refusal, and the psyche-autonomy category barrier.",
+      "rollback_or_recovery": "Quarantine the analogy, restore the declared phase, variables, units, composition, and extensivity assumptions, retain failures, and require independently validated human constructs and participant evidence for any human inference.",
+      "protected_gates": [
+        "participant_inference",
+        "empirical_psychology",
+        "human_autonomy_claim",
+        "fundamental_law",
+        "consciousness"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_380_frozen_proposals": "The chain covers chemical potentials, zeroth-law equilibration, Maxwell relations, Onsager reciprocity, free energies, phase transitions, and ensemble limits; no prior title centers Gibbs-Duhem intensive-variable dependency and extensivity-domain refusal."
+    },
+    {
+      "proposal_id": "V6458-P10",
+      "title": "Stage 20 entity-duplication, near-neighbor leakage, and preprocessing-fit quarantine board",
+      "mission_surface": "entity identity, group-aware split, exact duplicate, near-neighbor threshold, augmentation ancestry, preprocessing fit scope, feature selection, train and evaluation lineage, evidence credit, and terminal abstention",
+      "hypothesis": "A fail-closed board can quarantine Stage 20 evidence credit when entities or near-neighbors cross evaluation boundaries or preprocessing and feature selection are fit using evaluation information.",
+      "null_or_failure": "A duplicate remains credited, related entities cross splits, augmentation lineage is hidden, a near-neighbor threshold is tuned on evaluation results, preprocessing sees evaluation data, feature selection leaks labels, failures are erased, or Stage 20 advances.",
+      "approval_class": "safe_now_structural_only",
+      "execution_lane": "x2_build_task",
+      "current_primary_or_official_source_needs": [
+        "V6458-S19",
+        "V6458-S20"
+      ],
+      "concrete_artifacts": [
+        "stage20/split-leakage-contract.json",
+        "stage20/entity-leakage-mutation-vectors.json"
+      ],
+      "test_falsifier_or_acceptance_gate": "Mutations must reject exact and near-duplicate cross-split entities, hidden augmentation ancestry, evaluation-fitted preprocessing or feature selection, threshold tuning on outcomes, erased leakage events, unsupported independence, and Stage 20 promotion.",
+      "rollback_or_recovery": "Withdraw only affected evidence credit, preserve the leakage event and lineage, freeze further evaluation use, require a newly governed group-aware split where appropriate, and abstain.",
+      "protected_gates": [
+        "stage20",
+        "independent_reproduction",
+        "benchmark_authority",
+        "deployment",
+        "proof_or_canon",
+        "exhaustive_validation"
+      ],
+      "expected_disposition": "completed",
+      "novelty_against_380_frozen_proposals": "Earlier proposals cover cross-release leakage, generic deduplication, holdout disclosure, adaptive reuse, multiplicity, and carry-forward invalidation; none centers entity-group identity, near-neighbor lineage, and preprocessing-fit isolation as one Stage 20 refusal board."
+    }
+  ],
+  "boundary": "Software, official or primary sources, and synthetic fixtures establish bounded structural behavior only. They do not establish empirical GMUT confirmation, a detected force, a unique prediction, a likelihood or constraint, THOS effectiveness, professional competence, production identity assurance, CBR legitimacy, legal or cultural ratification, Maori authority, independent-team reproduction, AGI or ASI, consciousness or personhood, complete accessibility, exhaustive security, a Theory of Everything, deployment approval, proof or canon, or Stage 20 readiness."
+}
