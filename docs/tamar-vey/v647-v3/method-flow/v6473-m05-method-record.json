@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Place the complete bounded ripgrep alternation in one PowerShell single-quoted literal and keep file paths as separate arguments.",
+  "failure_signature": "An embedded quote split a ripgrep pattern into invalid path arguments.",
+  "method_id": "V6473-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "stale_label_review",
+    "privacy",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not mix embedded double quotes with a double-quoted native-command pattern.",
+  "retained_negative_ids": [
+    "V6473-X1-N05"
+  ],
+  "rollback": "Discard the failed read-only scan; it changed no file or ref.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use single-quoted literal patterns for PowerShell stale-label scans",
+  "trigger_preconditions": [
+    "A PowerShell wrapper passes one alternation pattern containing quote-sensitive text."
+  ],
+  "validation_witness_ids": []
+}

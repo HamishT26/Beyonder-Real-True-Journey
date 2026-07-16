@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Run worktree and drive inventory first, then exact branch, status, ancestry, and live-remote checks separately with a longer bound.",
+  "failure_signature": "A combined worktree drive and status probe timed out with no usable output.",
+  "method_id": "V6473-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "clean_state",
+    "exact_head",
+    "remote_equality",
+    "no_sibling_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not bundle multiple large-checkout status scans behind the shortest timeout.",
+  "retained_negative_ids": [
+    "V6473-X1-N02"
+  ],
+  "rollback": "Discard the timeout result; it made no mutation.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Split large-checkout startup probes into lightweight bounded witnesses",
+  "trigger_preconditions": [
+    "A large inherited checkout makes status and worktree inventory slow."
+  ],
+  "validation_witness_ids": []
+}

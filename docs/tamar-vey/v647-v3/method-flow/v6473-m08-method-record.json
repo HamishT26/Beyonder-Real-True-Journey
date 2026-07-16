@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Resolve each owner-scoped receipt to an absolute path before invoking the reviewer while keeping the staged surface unchanged.",
+  "failure_signature": "Path.relative_to rejected a repository-relative receipt argument.",
+  "method_id": "V6473-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_surface",
+    "x1_only",
+    "no_history_rewrite"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect reviewer path semantics before the first lifecycle invocation and use absolute receipt paths consistently.",
+  "retained_negative_ids": [
+    "V6473-X1-N08"
+  ],
+  "rollback": "Retain the same uncommitted staged set; the failed invocation emitted no receipt and changed no ref.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Pass absolute receipt paths to staged reviewers that relativize against the repository root",
+  "trigger_preconditions": [
+    "The staged reviewer computes public receipt paths relative to its absolute repository root."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Pass stable directories as paths and use ripgrep -g filters for version-patterned filenames.",
+  "failure_signature": "Wildcard file arguments reached ripgrep as invalid literal Windows paths.",
+  "method_id": "V6473-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "stale_label_review",
+    "exact_surface",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not rely on PowerShell to expand native-command wildcard path arguments.",
+  "retained_negative_ids": [
+    "V6473-X1-N07"
+  ],
+  "rollback": "Discard the failed read-only scan; no file was staged or changed.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use ripgrep-owned glob filters instead of PowerShell wildcard path expansion",
+  "trigger_preconditions": [
+    "A native ripgrep command needs to scan version-patterned files on Windows."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Initialize validation_witness_ids as an empty list and let each witness command append its stable identifier exactly once.",
+  "failure_signature": "Predeclared witness identifiers were appended a second time during witness recording.",
+  "method_id": "V6473-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "append_only_evidence",
+    "failed_witness_retention",
+    "x1_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect the first summary for duplicate witness IDs before x1 staging.",
+  "retained_negative_ids": [
+    "V6473-X1-N06"
+  ],
+  "rollback": "Discard only the uncommitted owner-generated derived ledger and rebuild it from corrected records; retain the first summary as a negative description.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Let the Method Flow runner append witness identifiers from an empty initial list",
+  "trigger_preconditions": [
+    "A generated method record is about to be ingested by the family Method Flow runner."
+  ],
+  "validation_witness_ids": []
+}
