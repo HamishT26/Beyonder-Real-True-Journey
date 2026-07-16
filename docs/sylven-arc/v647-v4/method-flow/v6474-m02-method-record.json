@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Decompose repository status and file discovery into separate bounded commands with explicit timeouts.",
+  "failure_signature": "A compound Git status and file-listing probe exceeded its 10-second execution envelope before returning output.",
+  "method_id": "V6474-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "clean_state",
+    "exact_head",
+    "bounded_execution",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not combine Git worktree inspection and recursive file discovery in one short-deadline shell invocation.",
+  "retained_negative_ids": [
+    "V6474-X2-N01"
+  ],
+  "rollback": "Terminate the timed-out read-only probe and discard its incomplete output; it changed no file, ref, index, or worktree.",
+  "scope_boundary": "Owner-local x2 status inspection only; no scientific, professional, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Decompose compound repository inspection probes",
+  "trigger_preconditions": [
+    "A repository inspection combines Git status and filesystem discovery under one short execution envelope."
+  ],
+  "validation_witness_ids": [
+    "V6474-M02-W-F"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Remove the single extra EOF blank line, restage the exact file, and rerun Git diff hygiene before any commit.",
+  "failure_signature": "The first exact evidence-stage git diff --cached --check reported a new blank line at EOF in the shared v647-v4 runtime.",
+  "method_id": "V6474-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_review",
+    "diff_hygiene",
+    "evidence_commit",
+    "manifest_parity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run exact staged diff hygiene before manifest generation and commit; do not treat advisory line-ending notices as the same class as a reported whitespace error.",
+  "retained_negative_ids": [
+    "V6474-X2-N04"
+  ],
+  "rollback": "Do not commit the staged candidate; retain the failure and correct only the reported EOF whitespace.",
+  "scope_boundary": "Owner-local staged-diff recovery only; no scientific, professional, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Gate evidence commits on exact staged diff hygiene",
+  "trigger_preconditions": [
+    "An exact owner-scoped evidence candidate has been staged but not committed."
+  ],
+  "validation_witness_ids": []
+}

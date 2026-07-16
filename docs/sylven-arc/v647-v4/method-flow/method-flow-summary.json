@@ -1,25 +1,25 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 1,
-    "recommendations": 1,
-    "state_events": 3,
+    "methods": 5,
+    "recommendations": 5,
+    "state_events": 15,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 1,
+      "preferred": 5,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 1,
-      "pass": 1
+      "fail": 5,
+      "pass": 5
     },
-    "witnesses": 2
+    "witnesses": 10
   },
   "owner": "Sylven Arc",
-  "phase": "v647-gmut-thos-v4-x1-x2-x1",
+  "phase": "v647-gmut-thos-v4-x1-x2",
   "preferred_methods": [
     {
       "candidate_workaround": "Assign loop output to a variable before piping, or use one bounded structured reader.",
@@ -35,10 +35,74 @@
         "V6474-M01-W-F",
         "V6474-M01-W-P"
       ]
+    },
+    {
+      "candidate_workaround": "Decompose repository status and file discovery into separate bounded commands with explicit timeouts.",
+      "method_id": "V6474-M02",
+      "recurrence_guard": "Do not combine Git worktree inspection and recursive file discovery in one short-deadline shell invocation.",
+      "rollback": "Terminate the timed-out read-only probe and discard its incomplete output; it changed no file, ref, index, or worktree.",
+      "scope_boundary": "Owner-local x2 status inspection only; no scientific, professional, production, authority, or independent-reproduction credit.",
+      "title": "Decompose compound repository inspection probes",
+      "trigger_preconditions": [
+        "A repository inspection combines Git status and filesystem discovery under one short execution envelope."
+      ],
+      "validation_witness_ids": [
+        "V6474-M02-W-F",
+        "V6474-M02-W-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Rebuild the structured state from named records and validate array member shapes as well as JSON syntax.",
+      "method_id": "V6474-M03",
+      "recurrence_guard": "Never use context-free closing-brace hunks against repeated JSON arrays; target named blocks or rebuild the complete structured document and validate member schemas.",
+      "rollback": "Discard the malformed state assembly, retain its failure witness, and reconstruct the state from the standalone method and witness records.",
+      "scope_boundary": "Owner-local Method Flow recovery only; no scientific, professional, production, authority, or independent-reproduction credit.",
+      "title": "Validate structured JSON member shapes after patching",
+      "trigger_preconditions": [
+        "A structured JSON ledger contains multiple arrays whose members share repeated closing-brace context."
+      ],
+      "validation_witness_ids": [
+        "V6474-M03-W-F",
+        "V6474-M03-W-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Pin historical x1 assertions to the immutable x1 commit while testing mutable x2 ledgers separately, and normalize the evidence label to the asserted lowercase form.",
+      "method_id": "V6474-M04",
+      "recurrence_guard": "Historical lifecycle tests must read immutable commit blobs; current lifecycle tests may read the working tree, and normative labels must be asserted with an explicitly declared case policy.",
+      "rollback": "Keep the frozen x1 commit authoritative, retain the failed 25-test receipt, and modify only lifecycle targeting and label casing before replay.",
+      "scope_boundary": "Owner-local test lifecycle recovery only; no scientific, professional, production, authority, or independent-reproduction credit.",
+      "title": "Pin historical lifecycle assertions to immutable commit blobs",
+      "trigger_preconditions": [
+        "A phase reuses x1 tests after x2 has intentionally advanced mutable owner ledgers."
+      ],
+      "validation_witness_ids": [
+        "V6474-M04-W-F",
+        "V6474-M04-W-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Remove the single extra EOF blank line, restage the exact file, and rerun Git diff hygiene before any commit.",
+      "method_id": "V6474-M05",
+      "recurrence_guard": "Run exact staged diff hygiene before manifest generation and commit; do not treat advisory line-ending notices as the same class as a reported whitespace error.",
+      "rollback": "Do not commit the staged candidate; retain the failure and correct only the reported EOF whitespace.",
+      "scope_boundary": "Owner-local staged-diff recovery only; no scientific, professional, production, authority, or independent-reproduction credit.",
+      "title": "Gate evidence commits on exact staged diff hygiene",
+      "trigger_preconditions": [
+        "An exact owner-scoped evidence candidate has been staged but not committed."
+      ],
+      "validation_witness_ids": [
+        "V6474-M05-W-F",
+        "V6474-M05-W-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
-    "V6474-M01-W-F"
+    "V6474-M01-W-F",
+    "V6474-M02-W-F",
+    "V6474-M03-W-F",
+    "V6474-M04-W-F",
+    "V6474-M05-W-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

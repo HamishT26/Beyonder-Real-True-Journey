@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -8,12 +9,22 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/sylven-arc/v647-v4"
+X1_FINAL = "5e5bc09f5173c00c7674b7868e3c7e5e8af80053"
 sys.path.insert(0, str(ROOT / "scripts"))
 import ghc_family_v647_v4_definitions as d  # noqa: E402
 
 
 def load(relative: str):
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def load_x1(relative: str):
+    payload = subprocess.check_output(
+        ["git", "-C", str(ROOT), "show", f"{X1_FINAL}:docs/sylven-arc/v647-v4/{relative}"],
+        text=True,
+        encoding="utf-8",
+    )
+    return json.loads(payload)
 
 
 class V647V4X1Tests(unittest.TestCase):
@@ -62,8 +73,8 @@ class V647V4X1Tests(unittest.TestCase):
         self.assertTrue(all(row["execution_state"] == "preregistered_not_executed" and row["accepted"] is None for row in data["mutations"]))
 
     def test_negative_and_gate_inheritance(self):
-        negatives = load("retained-negative-register.json")
-        gates = load("exact-open-gate-register.json")
+        negatives = load_x1("retained-negative-register.json")
+        gates = load_x1("exact-open-gate-register.json")
         self.assertEqual((negatives["inherited_effective"], negatives["x1_operational"], negatives["effective_total"]), (3417, 1, 3418))
         self.assertTrue(negatives["no_negative_erased"])
         self.assertEqual((gates["current_effective_open_gaps"], gates["current_effective_exact_gates"]), (20, 21))
@@ -71,7 +82,7 @@ class V647V4X1Tests(unittest.TestCase):
         self.assertEqual(gates["silently_closed"], 0)
 
     def test_method_flow_retains_failure_and_pass(self):
-        ledger = load("method-flow/method-flow-state.json")
+        ledger = load_x1("method-flow/method-flow-state.json")
         self.assertEqual(ledger["counts"]["witness_results"], {"fail": 1, "pass": 1})
         self.assertEqual(ledger["counts"]["states"]["preferred"], 1)
         self.assertEqual(len(ledger["methods"]), 1)
@@ -84,7 +95,7 @@ class V647V4X1Tests(unittest.TestCase):
 
     def test_identity_focus_and_environment_boundaries(self):
         identity = load("identity-receipt.json")
-        truth = load("phase-truth.json")
+        truth = load_x1("phase-truth.json")
         versions = load("environment/version-receipt.json")
         self.assertEqual(identity["owner"], "Sylven Arc")
         self.assertTrue(identity["corrigible_by_hamish"])

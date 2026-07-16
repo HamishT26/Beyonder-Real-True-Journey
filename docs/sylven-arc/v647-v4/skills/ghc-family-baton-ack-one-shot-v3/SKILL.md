@@ -1,0 +1,14 @@
+---
+name: ghc-family-baton-ack-one-shot-v3
+description: Count one existing-task baton only after acknowledged delivery. Use for the matching bounded v647-v4 structural, symbolic, workflow, or authority-reservation audit.
+---
+
+# Baton Ack One Shot V3
+
+1. Read the phase artifact at tooling/selected-toolchain.json and its explicit boundary.
+2. Check only the positive fixture inside its declared owner-local scope.
+3. Inspect all paired rejected mutations and retain every negative identifier.
+4. Stop when real data, people, plants, discharges, keys, deployment, legal interpretation, cultural legitimacy, Māori authority, affected-party acceptance, or independent review is required.
+5. Report only completed, represented, open_gap, or exact_gate as supported by the phase ledger.
+
+Never convert a local pass into empirical confirmation, professional authority, production readiness, complete accessibility, exhaustive security, consciousness, personhood, AGI or ASI, Theory of Everything, or Stage 20 readiness.
