@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v4-x1-x2
 - Owner: Orin Thale
-- Methods: 16
-- Passing witnesses: 16
-- Failed witnesses retained: 16
+- Methods: 22
+- Passing witnesses: 22
+- Failed witnesses retained: 22
 
 ## Preferred methods
 
@@ -135,6 +135,54 @@
 - Recurrence guard: Keep review execution and pair reporting in separate invocations and never widen an aggregate loop.
 - Rollback: Treat written-but-unreported receipts as pending and award no fixed-point credit until re-read.
 - Witnesses: V6464-M16-F, V6464-M16-P
+
+### V6464-M17 — Frozen route-invariant vocabulary check
+
+- Trigger: a phase-local route skill is smoke-tested; the frozen route plan is authoritative; no route action is authorized yet
+- Method: Inspect the frozen route preconditions and require the invariant tokens exactly one and named-lane replay rather than an unregistered local-only phrase.
+- Recurrence guard: Bind smoke checks to frozen invariant tokens and inspect the source plan before adding narrower vocabulary.
+- Rollback: Keep the skill portfolio invalid and send no route message if the corrected invariant check fails.
+- Witnesses: V6464-M17-F, V6464-M17-P
+
+### V6464-M18 — Frozen-x1-aware compatibility normalization
+
+- Trigger: a successor reuses a prior phase serialization scaffold; the exact x1 commit is known; the evidence candidate is not committed
+- Method: Restore the accidental tracked x1 byte changes from the exact x1 commit, then restrict compatibility normalization to new x2 artifacts and exact schema or proposal identifiers.
+- Recurrence guard: Before normalizing a generated tree, query exact x1 object membership and skip every path present at the frozen x1 revision; transform only exact schema and proposal-ID tokens.
+- Rollback: Keep the evidence candidate uncommitted and route unsent if any undeclared x1 path remains byte-different from the frozen commit.
+- Witnesses: V6464-M18-F, V6464-M18-P
+
+### V6464-M19 — Explicit UTF-8 phase text probe
+
+- Trigger: repository text may contain non-ASCII Unicode; a Python validation or count probe reads phase files
+- Method: Pass encoding='utf-8' to every Python text read used for phase counts or validation and keep the failed locale-default probe as a negative witness.
+- Recurrence guard: Use explicit UTF-8 for every repository text read and set PYTHONUTF8 for bounded validation subprocesses.
+- Rollback: Do not report file, JSON, or word counts from a probe that fails decoding.
+- Witnesses: V6464-M19-F, V6464-M19-P
+
+### V6464-M20 — Shape-aware aggregate runner witness projection
+
+- Trigger: a runner witness may be a single result or a named result map; each mapped result declares a passed boolean
+- Method: Classify a runner witness as passing when it either has a top-level passed or valid boolean, or is a nonempty mapping whose every result object has passed true.
+- Recurrence guard: Inspect witness shape before projecting pass state and require every child result to pass for mapped all-runner witnesses.
+- Rollback: Keep the aggregate runner receipt invalid and assign zero aggregate credit if any child result is missing or fails.
+- Witnesses: V6464-M20-F, V6464-M20-P
+
+### V6464-M21 — File-based nonpackage test selection
+
+- Trigger: the repository tests directory has no package initializer; the exact current files and two inherited exclusions are known
+- Method: Load the two current test files with file-based discovery instead of package-qualified names, then run the scoped selector separately to expose and correct its one exact error without broadening exclusions.
+- Recurrence guard: Inspect whether the test directory is packaged before selecting import names, use exact file patterns when it is not, and never hide a scoped error by expanding the exclusion set.
+- Rollback: Keep the validation runner invalid and award zero current or scoped pass credit until every eligible test runs without failures or errors.
+- Witnesses: V6464-M21-F, V6464-M21-P
+
+### V6464-M22 — Explicit PowerShell path-array stale-label scan
+
+- Trigger: multiple known repository paths require one bounded search; PowerShell is the active shell
+- Method: Pass an explicit PowerShell path array to ripgrep and keep the pattern as a separate literal argument; do not use Bash brace expansion in a PowerShell command.
+- Recurrence guard: Use explicit PowerShell arrays for multiple literal paths and never copy shell brace-list syntax into PowerShell wrappers.
+- Rollback: Assign zero stale-label credit to the parser-failed wrapper and leave the staged candidate unchanged.
+- Witnesses: V6464-M22-F, V6464-M22-P
 
 ## Retained boundary
 

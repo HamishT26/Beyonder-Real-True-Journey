@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_validation",
+  "candidate_workaround": "Pass encoding='utf-8' to every Python text read used for phase counts or validation and keep the failed locale-default probe as a negative witness.",
+  "failure_signature": "A read-only Python count probe omitted an explicit encoding and the Windows locale decoder rejected a UTF-8 phase document.",
+  "method_id": "V6464-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_count",
+    "text_integrity",
+    "validation_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use explicit UTF-8 for every repository text read and set PYTHONUTF8 for bounded validation subprocesses.",
+  "retained_negative_ids": [
+    "V6464-X2-N03"
+  ],
+  "rollback": "Do not report file, JSON, or word counts from a probe that fails decoding.",
+  "scope_boundary": "Read-only phase counting and validation only; no scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Explicit UTF-8 phase text probe",
+  "trigger_preconditions": [
+    "repository text may contain non-ASCII Unicode",
+    "a Python validation or count probe reads phase files"
+  ],
+  "validation_witness_ids": []
+}

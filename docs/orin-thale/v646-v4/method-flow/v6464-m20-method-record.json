@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_validation",
+  "candidate_workaround": "Classify a runner witness as passing when it either has a top-level passed or valid boolean, or is a nonempty mapping whose every result object has passed true.",
+  "failure_signature": "The first aggregate runner ledger treated the runtime and core all-runner result maps as failures because it required a top-level passed or valid field.",
+  "method_id": "V6464-M20",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "runner_credit",
+    "aggregate_validation",
+    "failure_retention"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect witness shape before projecting pass state and require every child result to pass for mapped all-runner witnesses.",
+  "retained_negative_ids": [
+    "V6464-X2-N04"
+  ],
+  "rollback": "Keep the aggregate runner receipt invalid and assign zero aggregate credit if any child result is missing or fails.",
+  "scope_boundary": "Owner-local runner witness aggregation only; no scientific, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Shape-aware aggregate runner witness projection",
+  "trigger_preconditions": [
+    "a runner witness may be a single result or a named result map",
+    "each mapped result declares a passed boolean"
+  ],
+  "validation_witness_ids": []
+}

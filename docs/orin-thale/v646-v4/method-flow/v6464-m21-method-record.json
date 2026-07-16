@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_validation",
+  "candidate_workaround": "Load the two current test files with file-based discovery instead of package-qualified names, then run the scoped selector separately to expose and correct its one exact error without broadening exclusions.",
+  "failure_signature": "The first validation runner used package-qualified current test names although the repository tests directory has no package initializer; current validation produced two import errors and the scoped selection retained one additional error.",
+  "method_id": "V6464-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "current_phase_tests",
+    "scoped_test_selection",
+    "exclusion_set",
+    "validation_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect whether the test directory is packaged before selecting import names, use exact file patterns when it is not, and never hide a scoped error by expanding the exclusion set.",
+  "retained_negative_ids": [
+    "V6464-X2-N05"
+  ],
+  "rollback": "Keep the validation runner invalid and award zero current or scoped pass credit until every eligible test runs without failures or errors.",
+  "scope_boundary": "Non-Eiren current-phase and explicit successor-scoped test loading only; the full repository suite remains Eiren-owned.",
+  "supersedes": [],
+  "title": "File-based nonpackage test selection",
+  "trigger_preconditions": [
+    "the repository tests directory has no package initializer",
+    "the exact current files and two inherited exclusions are known"
+  ],
+  "validation_witness_ids": []
+}

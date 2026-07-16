@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_validation",
+  "candidate_workaround": "Pass an explicit PowerShell path array to ripgrep and keep the pattern as a separate literal argument; do not use Bash brace expansion in a PowerShell command.",
+  "failure_signature": "A combined read-only status and stale-label wrapper used Bash-style brace expansion in a PowerShell path argument and failed parsing before any command ran.",
+  "method_id": "V6464-M22",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "stale_label_review",
+    "validation_credit",
+    "shell_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use explicit PowerShell arrays for multiple literal paths and never copy shell brace-list syntax into PowerShell wrappers.",
+  "retained_negative_ids": [
+    "V6464-X2-N06"
+  ],
+  "rollback": "Assign zero stale-label credit to the parser-failed wrapper and leave the staged candidate unchanged.",
+  "scope_boundary": "Read-only status, count, and stale-label inspection only; no repository, route, or external-state action.",
+  "supersedes": [],
+  "title": "Explicit PowerShell path-array stale-label scan",
+  "trigger_preconditions": [
+    "multiple known repository paths require one bounded search",
+    "PowerShell is the active shell"
+  ],
+  "validation_witness_ids": []
+}
