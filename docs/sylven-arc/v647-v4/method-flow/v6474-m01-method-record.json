@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assign loop output to a variable before piping, or use one bounded structured reader.",
+  "failure_signature": "PowerShell rejected a direct pipe from the foreach statement with an empty-pipe parser error.",
+  "method_id": "V6474-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "source_verification",
+    "no_repository_mutation",
+    "manifest_parity",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not pipe directly from a PowerShell foreach statement in compound diagnostics; check each native exit explicitly.",
+  "retained_negative_ids": [
+    "V6474-X1-N01"
+  ],
+  "rollback": "Discard the failed read-only command; it changed no file, ref, index, or worktree.",
+  "scope_boundary": "Owner-local x1 startup recovery only; no scientific, professional, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Assign PowerShell loop output before serialization",
+  "trigger_preconditions": [
+    "A read-only PowerShell loop builds structured manifest summaries for later serialization."
+  ],
+  "validation_witness_ids": []
+}
