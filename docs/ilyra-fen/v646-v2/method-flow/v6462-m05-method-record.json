@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Inspect the current ledger state after a passing witness and request only the next permitted transition.",
+  "failure_signature": "A redundant validated transition was requested after witness recording had already auto-promoted the method.",
+  "method_id": "V6462-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["method_flow_append_only", "state_transition_integrity", "negative_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never assume the pre-witness state persists; read the post-witness state before set-state.",
+  "retained_negative_ids": ["V6462-X1-N10", "V6462-X1-N11", "V6462-X1-N12"],
+  "rollback": "Give each invalid transition zero state-change credit while preserving the successful state already recorded by the witness.",
+  "scope_boundary": "Same-owner bounded ledger sequencing evidence only; no broader workflow or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Inspect Method Flow auto-promotion before explicit transitions",
+  "trigger_preconditions": ["a passing witness was just recorded", "the runner may auto-promote candidate to validated"],
+  "validation_witness_ids": []
+}

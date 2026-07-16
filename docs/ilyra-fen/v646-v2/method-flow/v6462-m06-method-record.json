@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Search the complete assertion block after count updates and remove superseded duplicates before replay.",
+  "failure_signature": "A unit test contained both the current Method Flow witness count and an obsolete duplicate zero-count assertion.",
+  "method_id": "V6462-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["test_integrity", "negative_retention", "method_flow_append_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Count edits include a local duplicate-assertion search before the complete test module runs.",
+  "retained_negative_ids": ["V6462-X1-N13"],
+  "rollback": "Give the failed test run zero freeze credit and leave the staged packet uncommitted.",
+  "scope_boundary": "Same-owner bounded test synchronization only; no scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Remove superseded duplicate count assertions before replay",
+  "trigger_preconditions": ["append-only ledger counts changed", "the test block may retain an older exact-count assertion"],
+  "validation_witness_ids": []
+}

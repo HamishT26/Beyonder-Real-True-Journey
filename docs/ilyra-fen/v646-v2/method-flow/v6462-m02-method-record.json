@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Finalize the staged path set, generate receipts, add them, regenerate once, add again, then require an unchanged review.",
+  "failure_signature": "A generated manifest differed from its Git-index copy after an invalid receipt sequence.",
+  "method_id": "V6462-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["immutable_manifest", "x1_separation", "commit_hygiene"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "A staged manifest receives freeze credit only when a post-add regeneration is byte-unchanged.",
+  "retained_negative_ids": ["V6462-X1-N04"],
+  "rollback": "Do not commit while generated receipts differ from their Git-index copies.",
+  "scope_boundary": "Same-owner bounded manifest sequencing evidence only; no broader repository or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Stabilize a receipt-inclusive self-excluding staged manifest",
+  "trigger_preconditions": ["review receipts are generated from the staged path set", "the manifest excludes its own hash"],
+  "validation_witness_ids": []
+}

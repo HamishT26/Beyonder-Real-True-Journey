@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Require positive cardinality for expected-present searches and independently verify the obsolete pattern is expected-empty.",
+  "failure_signature": "A zero-line search was treated as a passing source witness because match cardinality was not asserted.",
+  "method_id": "V6462-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["test_integrity", "witness_integrity", "negative_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Every search witness declares expected-present or expected-empty semantics and checks native exit status and cardinality accordingly.",
+  "retained_negative_ids": ["V6462-X1-N14", "V6462-X1-N15"],
+  "rollback": "Deprecate the method supported by the flawed witness and give the zero-line result no validation credit.",
+  "scope_boundary": "Same-owner bounded search-witness recovery only; no broader assurance or independent-reproduction credit.",
+  "supersedes": ["V6462-M06"],
+  "title": "Assert positive and expected-empty cardinality in source-search witnesses",
+  "trigger_preconditions": ["a search result is used as validation evidence", "the expected presence or absence is known"],
+  "validation_witness_ids": []
+}
