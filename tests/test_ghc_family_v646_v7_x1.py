@@ -86,7 +86,9 @@ class V646V7X1Tests(unittest.TestCase):
         seal = load("reproduction/x1-content-seal.json")
         self.assertEqual(seal["path_count"], 7)
         for entry in seal["frozen_paths"]:
-            self.assertEqual(hashlib.sha256((PHASE / entry["path"]).read_bytes()).hexdigest(), entry["sha256"])
+            repository_relative = f"docs/eiren-kestrel/v646-v7/{entry['path']}"
+            raw = subprocess.check_output(["git", "show", f"4604a34c48ba73f7d01f77e5a0bbf91a84145303:{repository_relative}"], cwd=ROOT)
+            self.assertEqual(hashlib.sha256(raw).hexdigest(), entry["sha256"])
 
 
 if __name__ == "__main__":

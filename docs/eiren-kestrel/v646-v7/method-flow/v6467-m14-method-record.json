@@ -1,0 +1,29 @@
+{
+  "method_id": "V6467-M14",
+  "title": "Verify frozen x1 content against exact x1 Git blobs",
+  "failure_signature": "The first clean named replay failed its x1 content-seal test because a Windows checkout transformed LF Git blobs into CRLF working bytes.",
+  "trigger_preconditions": [
+    "clean named Windows worktree",
+    "x1 content seal",
+    "checkout line-ending filter",
+    "working-byte test"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Read each of the seven frozen paths from the exact x1 commit and compare its Git-blob SHA-256 to the sealed value, independent of checkout filters.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Historical content seals are always checked in their declared Git-object domain; clean checkout bytes never substitute for canonical blobs.",
+  "rollback": "Retain the failed 33-test and 1,168-test named replay, award no replay credit, and correct only the seal test's hash domain.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "x1_immutability",
+    "line_ending_domain",
+    "named_replay",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N09"
+  ],
+  "scope_boundary": "Same-owner Git-blob repeatability only; not independent-team reproduction, production certification, or scientific validation."
+}

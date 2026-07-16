@@ -1,0 +1,29 @@
+{
+  "method_id": "V6467-M16",
+  "title": "Refresh every count-dependent closeout surface after ledger growth",
+  "failure_signature": "The terminal-correction current suite found a stale effective-negative total and stale final Method Flow method count after two new methods were appended.",
+  "trigger_preconditions": [
+    "append-only retained-negative growth",
+    "append-only Method Flow growth",
+    "generated closeout receipts",
+    "count-dependent current tests"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_generation",
+  "candidate_workaround": "Rebuild evidence registers first, rebuild closeout and final Method Flow mirrors second, verify the new totals directly, and only then rerun the unchanged current tests.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Any retained-negative or Method Flow append invalidates every generated count mirror until the evidence and closeout builders refresh them together.",
+  "rollback": "Retain the two-test failure, award no current-suite credit, and modify no frozen proposal or executed outcome.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "negative_retention",
+    "method_flow_parity",
+    "closeout_truth",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N11"
+  ],
+  "scope_boundary": "This is bounded same-owner artifact-generation evidence only; it is not independent reproduction or broader scientific, authority, security, accessibility, identity, production, or Stage 20 evidence."
+}

@@ -81,7 +81,8 @@ def privacy_scan() -> dict[str, Any]:
         "private_callable_identifier": re.compile(r"\b(?:mcp__|codex_app__|browser_[a-z0-9_]{6,})", re.I),
         "session_transcript_or_stream": re.compile(r"(?:sessions[\\/][0-9]{4}[\\/]|rollout-[0-9]{4}|session[_ -]?stream|raw transcript)", re.I),
     }
-    hits = []
+    candidates = []
+    confirmed = []
     scanned = 0
     for path in sorted(PHASE.rglob("*")):
         if not path.is_file():
@@ -93,9 +94,31 @@ def privacy_scan() -> dict[str, Any]:
         scanned += 1
         for name, pattern in patterns.items():
             count = len(pattern.findall(text))
-            if count:
-                hits.append({"path": path.relative_to(PHASE).as_posix(), "class": name, "count": count})
-    return {"files_scanned": scanned, "pattern_classes": len(patterns), "confirmed_hits": hits, "confirmed_hit_count": sum(row["count"] for row in hits)}
+            if not count:
+                continue
+            relative = path.relative_to(PHASE).as_posix()
+            disposition = "unresolved_payload_candidate"
+            if name == "session_transcript_or_stream" and (
+                relative in {
+                    "method-flow/v6467-m13-failed-witness.json",
+                    "method-flow/v6467-m13-incident-failed-witness.json",
+                    "method-flow/v6467-m13-path-failed-witness.json",
+                }
+                or (relative.endswith("method-flow-state.json") and "V6467-M13" in text)
+            ):
+                disposition = "retained_scanner_incident_candidate"
+            row = {"path": relative, "class": name, "count": count, "disposition": disposition}
+            candidates.append(row)
+            if disposition == "unresolved_payload_candidate":
+                confirmed.append(row)
+    return {
+        "files_scanned": scanned,
+        "pattern_classes": len(patterns),
+        "candidate_hits": candidates,
+        "candidate_hit_count": sum(row["count"] for row in candidates),
+        "confirmed_hits": confirmed,
+        "confirmed_hit_count": sum(row["count"] for row in confirmed),
+    }
 
 
 def detailed_checks() -> tuple[int, list[str]]:

@@ -17,6 +17,7 @@ PHASE_PREFIX = "docs/eiren-kestrel/v646-v7/"
 SOURCE = "327d0b8b6fca08d371d4dedd03e74a0bb7608c80"
 X1 = "4604a34c48ba73f7d01f77e5a0bbf91a84145303"
 EVIDENCE = "0ebc21bb089929a2d854ad6010174b82c6c00447"
+CLOSEOUT = "78d2d788506579fa889a881f8d4a6b902e1162d7"
 
 
 def git(*args: str, check: bool = True) -> str:
@@ -66,14 +67,14 @@ def main() -> int:
         issues.append("exact head mismatch")
     if not branch:
         issues.append("detached head")
-    if git("rev-parse", f"{head}^") != EVIDENCE:
-        issues.append("final parent is not evidence commit")
-    if not all((ancestor(SOURCE, X1), ancestor(X1, EVIDENCE), ancestor(EVIDENCE, head))):
+    if git("rev-parse", f"{head}^") != CLOSEOUT:
+        issues.append("final parent is not closeout commit")
+    if not all((ancestor(SOURCE, X1), ancestor(X1, EVIDENCE), ancestor(EVIDENCE, CLOSEOUT), ancestor(CLOSEOUT, head))):
         issues.append("anchor ancestry incomplete")
     phase_commits = int(git("rev-list", "--count", f"{SOURCE}..{head}"))
     merges = int(git("rev-list", "--merges", "--count", f"{SOURCE}..{head}"))
     parent_count = len(git("show", "-s", "--format=%P", head).split())
-    if phase_commits != 3 or merges != 0 or parent_count != 1:
+    if phase_commits != 4 or merges != 0 or parent_count != 1:
         issues.append("commit count, merge count, or final parent count invalid")
 
     manifest_path = PHASE_PREFIX + "validation/final-owner-manifest.json"
@@ -120,7 +121,7 @@ def main() -> int:
         "schema": "ghc.family.v646-v7.exact-head-audit.v1", "mode": args.mode,
         "head": head, "expected_head": args.expected_head, "branch": branch,
         "clean_before": clean_before, "clean_after": clean_after,
-        "source": SOURCE, "x1": X1, "evidence": EVIDENCE,
+        "source": SOURCE, "x1": X1, "evidence": EVIDENCE, "closeout": CLOSEOUT,
         "phase_commits": phase_commits, "merges": merges, "final_parent_count": parent_count,
         "manifest_entries": len(entries), "manifest_exclusions": sorted(exclusions),
         "phase_files": len(phase_paths), "json_parsed": json_parsed, "privacy": privacy,

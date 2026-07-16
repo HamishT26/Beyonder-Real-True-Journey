@@ -1,0 +1,29 @@
+{
+  "method_id": "V6467-M17",
+  "title": "Gate full-suite truth by exact exclusions instead of a frozen raw count",
+  "failure_signature": "A closeout assertion rejected a larger truthful test surface because it hardcoded the earlier discovery cardinality even though the exact exclusion set and unexpected-failure set were unchanged.",
+  "trigger_preconditions": [
+    "complete repository discovery",
+    "additive closeout tests",
+    "exact inherited exclusions",
+    "hardcoded historical suite cardinality"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Require the raw suite to be at least the preregistered baseline, compute eligible tests as raw minus the exact named exclusions, and fail on any unexpected event.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Additive tests may increase raw cardinality; only the exact exclusion identities, eligible arithmetic, and zero-unexpected-failure contract remain frozen.",
+  "rollback": "Retain the one-test failure, award no current-suite credit, and change only the brittle raw-count assertion.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "complete_suite",
+    "exact_exclusions",
+    "unexpected_failures",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N12"
+  ],
+  "scope_boundary": "This is bounded same-owner repository-test classification only; it is not independent reproduction, exhaustive security, production certification, or scientific validation."
+}

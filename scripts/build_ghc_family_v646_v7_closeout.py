@@ -19,6 +19,7 @@ PHASE = ROOT / PHASE_REL
 SOURCE = "327d0b8b6fca08d371d4dedd03e74a0bb7608c80"
 X1 = "4604a34c48ba73f7d01f77e5a0bbf91a84145303"
 EVIDENCE = "0ebc21bb089929a2d854ad6010174b82c6c00447"
+CLOSEOUT = "78d2d788506579fa889a881f8d4a6b902e1162d7"
 
 
 def read(relative: str) -> Any:
@@ -108,8 +109,12 @@ def main() -> int:
         "test_ghc_family_v646_v1.V646V1EvidenceTests.test_minimal_validator_precommit",
     }:
         raise RuntimeError("exact inherited exclusion set differs")
-    if not (ancestry(SOURCE, X1) and ancestry(X1, EVIDENCE)) or git("rev-parse", "HEAD") != EVIDENCE:
-        raise RuntimeError("source/x1/evidence ancestry or exact evidence head invalid")
+    head = git("rev-parse", "HEAD")
+    correction_mode = head == CLOSEOUT
+    if not (ancestry(SOURCE, X1) and ancestry(X1, EVIDENCE)) or head not in {EVIDENCE, CLOSEOUT}:
+        raise RuntimeError("source/x1/evidence ancestry or supported closeout head invalid")
+    if correction_mode and not ancestry(EVIDENCE, CLOSEOUT):
+        raise RuntimeError("closeout is not ancestral from evidence")
 
     write("method-flow/final-method-flow-state.json", method)
     write("method-flow/final-method-flow-summary.json", read("method-flow/x2-method-flow-summary.json"))
@@ -125,7 +130,12 @@ def main() -> int:
         **read("complete-incomplete-checklist.json"),
         "schema": "ghc.family.v646-v7.final-checklist.v1",
         "canonical_current_validation": "pass",
-        "complete_repository_discovery": {"tests_run": 1161, "eligible_tests": 1159, "exact_inherited_exclusions": 2, "unexpected_failures": 0},
+        "complete_repository_discovery": {
+            "tests_run": full["tests"]["tests_run"],
+            "eligible_tests": full["tests"]["eligible_tests"],
+            "exact_inherited_exclusions": len(exclusions),
+            "unexpected_failures": len(full["tests"]["unexpected_failure_events"]),
+        },
         "exact_final_head_validation": "required_after_commit",
         "named_local_replay": "required_after_commit",
         "baton": "not_sent",
@@ -133,6 +143,7 @@ def main() -> int:
     write("closeout-receipt.json", {
         "schema": "ghc.family.v646-v7.closeout-receipt.v1", "phase": d.PHASE, "owner": d.OWNER,
         "source_revision": SOURCE, "x1_revision": X1, "evidence_revision": EVIDENCE,
+        "closeout_revision": CLOSEOUT if correction_mode else "resolved_by_commit_containing_closeout",
         "strict_x1_before_x2": True, "phase_commit_cap": 4, "commits_used_before_final": 2,
         "core_distribution": truth["core_distribution"], "effective_negatives": negative["effective_total"],
         "effective_open_gaps": truth["effective_open_gaps"], "effective_exact_gates": truth["effective_exact_gates"],
@@ -147,11 +158,13 @@ def main() -> int:
     write("seal-receipt.json", {
         "schema": "ghc.family.v646-v7.seal-receipt.v1", "source_revision": SOURCE,
         "x1_revision": X1, "evidence_revision": EVIDENCE,
+        "closeout_revision": CLOSEOUT if correction_mode else "resolved_by_commit_containing_closeout",
         "source_to_evidence_zero_merges": int(git("rev-list", "--merges", "--count", f"{SOURCE}..{EVIDENCE}")) == 0,
         "x1_parent_is_source": git("rev-parse", f"{X1}^") == SOURCE,
         "evidence_parent_is_x1": git("rev-parse", f"{EVIDENCE}^") == X1,
-        "final_commit_contract": "single parent direct child of evidence; exact identity resolved after commit",
-        "maximum_phase_commits": 4, "expected_phase_commits_after_final": 3,
+        "closeout_parent_is_evidence": git("rev-parse", f"{CLOSEOUT}^") == EVIDENCE if correction_mode else "resolved_after_closeout_commit",
+        "final_commit_contract": "single-parent terminal validation correction directly after closeout" if correction_mode else "single parent direct child of evidence; exact identity resolved after commit",
+        "maximum_phase_commits": 4, "expected_phase_commits_after_final": 4 if correction_mode else 3,
         "history_rewrite": False, "force_push": False, "merge_commit": False,
         "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": d.TRUTH_BOUNDARY,
     })

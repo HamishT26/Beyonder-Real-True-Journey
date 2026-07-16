@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v7-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 13
-- Passing witnesses: 16
-- Failed witnesses retained: 16
+- Methods: 17
+- Passing witnesses: 23
+- Failed witnesses retained: 23
 
 ## Preferred methods
 
@@ -62,7 +62,7 @@
 - Method: Set PYTHONIOENCODING=utf-8 for the bounded diagnostic, preserve UTF-8 source and artifacts, and rerun only the incomplete display.
 - Recurrence guard: Any diagnostic expected to emit te reo Māori or other non-ASCII text must pin UTF-8 before Python starts; partial output earns no complete-review credit.
 - Rollback: Retain the encoding exception, award no complete-list credit, and do not transliterate or remove the source text.
-- Witnesses: V6467-M07-W-F, V6467-M07-W-P, V6467-M07-W-F2, V6467-M07-W-P2
+- Witnesses: V6467-M07-W-F, V6467-M07-W-P, V6467-M07-W-F2, V6467-M07-W-P2, V6467-M07-W-F3, V6467-M07-W-P3
 
 ### V6467-M08 — Bind x1 lifecycle assertions to the immutable x1 Git object
 
@@ -102,7 +102,7 @@
 - Method: Stage the complete intended surface, regenerate only the final owner manifest from exact index blobs, stage that manifest, and rerun the unchanged review.
 - Recurrence guard: Cross-worktree final identity uses Git blobs, never checkout bytes; line-ending normalization remains visible but cannot create false content drift.
 - Rollback: Retain the two mismatches, award no staged closeout credit, and do not rewrite the index files merely to match a checkout hash domain.
-- Witnesses: V6467-M12-W-F, V6467-M12-W-P
+- Witnesses: V6467-M12-W-F, V6467-M12-W-P, V6467-M12-W-F2, V6467-M12-W-P2
 
 ### V6467-M13 — Disposition exact-head audit regex literals as scanner definitions
 
@@ -110,7 +110,39 @@
 - Method: Add the exact-head audit to the narrow scanner-definition filename set while leaving every other path and pattern unresolved by default.
 - Recurrence guard: Only exact scanner implementation files may receive definition disposition; no general source-code or documentation exemption is allowed.
 - Rollback: Retain all three candidates and the failed receipt, award no privacy-pass credit, and change only the exact scanner-file disposition.
-- Witnesses: V6467-M13-W-F, V6467-M13-W-F2, V6467-M13-W-F3, V6467-M13-W-P, V6467-M13-W-P2, V6467-M13-W-P3
+- Witnesses: V6467-M13-W-F, V6467-M13-W-F2, V6467-M13-W-F3, V6467-M13-W-P, V6467-M13-W-P2, V6467-M13-W-P3, V6467-M13-W-F4, V6467-M13-W-P4
+
+### V6467-M14 — Verify frozen x1 content against exact x1 Git blobs
+
+- Trigger: clean named Windows worktree; x1 content seal; checkout line-ending filter; working-byte test
+- Method: Read each of the seven frozen paths from the exact x1 commit and compare its Git-blob SHA-256 to the sealed value, independent of checkout filters.
+- Recurrence guard: Historical content seals are always checked in their declared Git-object domain; clean checkout bytes never substitute for canonical blobs.
+- Rollback: Retain the failed 33-test and 1,168-test named replay, award no replay credit, and correct only the seal test's hash domain.
+- Witnesses: V6467-M14-W-F, V6467-M14-W-P
+
+### V6467-M15 — Split large-tree correction inspection into exact bounded probes
+
+- Trigger: large inherited Windows repository; recursive document-tree search; Git-status inspection in the same command; bounded command wrapper
+- Method: Search only the exact correction files first, list relevant filenames separately, and run Git status as its own bounded probe.
+- Recurrence guard: Do not combine recursive phase-tree searches with whole-worktree status checks when a narrow exact-file probe can answer the question.
+- Rollback: Retain the timed-out attempt, award no evidence from it, and return to read-only exact-file probes.
+- Witnesses: V6467-M15-W-F, V6467-M15-W-P
+
+### V6467-M16 — Refresh every count-dependent closeout surface after ledger growth
+
+- Trigger: append-only retained-negative growth; append-only Method Flow growth; generated closeout receipts; count-dependent current tests
+- Method: Rebuild evidence registers first, rebuild closeout and final Method Flow mirrors second, verify the new totals directly, and only then rerun the unchanged current tests.
+- Recurrence guard: Any retained-negative or Method Flow append invalidates every generated count mirror until the evidence and closeout builders refresh them together.
+- Rollback: Retain the two-test failure, award no current-suite credit, and modify no frozen proposal or executed outcome.
+- Witnesses: V6467-M16-W-F, V6467-M16-W-P
+
+### V6467-M17 — Gate full-suite truth by exact exclusions instead of a frozen raw count
+
+- Trigger: complete repository discovery; additive closeout tests; exact inherited exclusions; hardcoded historical suite cardinality
+- Method: Require the raw suite to be at least the preregistered baseline, compute eligible tests as raw minus the exact named exclusions, and fail on any unexpected event.
+- Recurrence guard: Additive tests may increase raw cardinality; only the exact exclusion identities, eligible arithmetic, and zero-unexpected-failure contract remain frozen.
+- Rollback: Retain the one-test failure, award no current-suite credit, and change only the brittle raw-count assertion.
+- Witnesses: V6467-M17-W-F, V6467-M17-W-P
 
 ## Retained boundary
 
