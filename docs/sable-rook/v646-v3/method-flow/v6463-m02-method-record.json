@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_workflow",
+  "candidate_workaround": "Materialize foreach output as an array and pipe only the completed array.",
+  "failure_signature": "PowerShell parser rejects a direct pipeline following a foreach statement.",
+  "method_id": "V6463-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["privacy", "source_integrity", "sibling_lane"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Wrap foreach output in an array before formatting or filtering it.",
+  "retained_negative_ids": ["V6463-X1-N03"],
+  "rollback": "Stop before any command executes and rerun only the read-only query with array materialization.",
+  "scope_boundary": "Read-only proposal-title queries; no repository mutation.",
+  "supersedes": [],
+  "title": "Array-before-pipeline PowerShell sequencing",
+  "trigger_preconditions": ["PowerShell foreach output must feed a later pipeline", "the operation is read-only"],
+  "validation_witness_ids": []
+}

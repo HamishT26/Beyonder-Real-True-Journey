@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_workflow",
+  "candidate_workaround": "Use direct known-path probes with login-profile startup disabled and a measured sixty-second upper bound.",
+  "failure_signature": "Read-only PowerShell probes exceeded a ten-second startup envelope before returning rows.",
+  "method_id": "V6463-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["host_security", "elevation", "sibling_lane", "privacy"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Avoid broad archive-root enumeration; use known paths, disable login startup, and keep the command bound at or below sixty seconds.",
+  "retained_negative_ids": ["V6463-X1-N01", "V6463-X1-N02"],
+  "rollback": "Stop the probe without mutation and retain unavailable state if the widened bounded envelope also fails.",
+  "scope_boundary": "Read-only owner-lane discovery only; no host feature change, elevation, deletion, or sibling mutation.",
+  "supersedes": [],
+  "title": "Bounded direct-path shell-startup probe",
+  "trigger_preconditions": ["known owner paths are available", "a broad D-drive listing would add no evidence", "ordinary user privileges only"],
+  "validation_witness_ids": []
+}

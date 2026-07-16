@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_workflow",
+  "candidate_workaround": "Pass concrete directories to ripgrep and constrain filenames with -g filters.",
+  "failure_signature": "Windows rejects a literal wildcard embedded in a path argument.",
+  "method_id": "V6463-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["privacy", "source_integrity", "sibling_lane"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use rg -g for wildcard selection on Windows rather than wildcard path arguments.",
+  "retained_negative_ids": ["V6463-X1-N04"],
+  "rollback": "Treat the failed search as no result and rerun against real directories with filters.",
+  "scope_boundary": "Read-only source audit only.",
+  "supersedes": [],
+  "title": "Windows ripgrep glob-filter guard",
+  "trigger_preconditions": ["versioned files must be searched on Windows", "literal wildcard paths are unsupported"],
+  "validation_witness_ids": []
+}
