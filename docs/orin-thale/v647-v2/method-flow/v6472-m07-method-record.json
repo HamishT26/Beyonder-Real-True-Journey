@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Ask the shell tool for UTF-8 text, isolate its Output section, normalize line endings, and pass the transformed content to apply_patch.",
+  "failure_signature": "TextDecoder was not defined in the isolate.",
+  "method_id": "V6472-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "utf8_integrity",
+    "apply_patch_only",
+    "no_partial_generation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not assume browser encoding globals exist in the orchestration isolate.",
+  "retained_negative_ids": [
+    "V6472-X1-N07"
+  ],
+  "rollback": "Discard the failed in-memory transform; no apply_patch call occurred.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use available UTF-8 text transport in the orchestration isolate",
+  "trigger_preconditions": [
+    "A local source file must be transformed and installed through apply_patch."
+  ],
+  "validation_witness_ids": [
+    "V6472-M07-WFAIL",
+    "V6472-M07-WPASS"
+  ]
+}

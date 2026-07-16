@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Remove only the surplus terminal blank lines, retain the failed staged receipt, restage the exact same owned surface, and rerun the reviewer.",
+  "failure_signature": "git diff --cached --check found extra blank lines at EOF in two adapted validators.",
+  "method_id": "V6472-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diff_hygiene",
+    "exact_staged_surface",
+    "x1_only",
+    "no_history_rewrite"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Require diff hygiene to pass before manifest fixed-point or x1 commit credit.",
+  "retained_negative_ids": [
+    "V6472-X1-N09",
+    "V6472-X1-N10"
+  ],
+  "rollback": "Keep all substantive staged content, withdraw the failed review's pass credit, and apply only the bounded whitespace correction.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Run staged diff hygiene before fixed-point manifest credit",
+  "trigger_preconditions": [
+    "New validators are created through compatibility-preserving text adaptation."
+  ],
+  "validation_witness_ids": [
+    "V6472-M09-WFAIL",
+    "V6472-M09-WPASS"
+  ]
+}

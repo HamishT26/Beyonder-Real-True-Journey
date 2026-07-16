@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Enumerate the bounded D-drive worktree bank first and run Git only with an explicit verified repository path.",
+  "failure_signature": "git worktree list was invoked from a nonrepository settings directory.",
+  "method_id": "V6472-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "owned_lane_only",
+    "no_sibling_mutation",
+    "no_destructive_git"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer repository status from the process cwd; pass -C with the exact owner or source worktree.",
+  "retained_negative_ids": [
+    "V6472-X1-N01"
+  ],
+  "rollback": "Discard the failed read-only probe; no repository mutation occurred.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Resolve a real repository root before worktree inventory",
+  "trigger_preconditions": [
+    "A task starts in a project settings directory rather than a checked-out repository."
+  ],
+  "validation_witness_ids": [
+    "V6472-M01-WFAIL",
+    "V6472-M01-WPASS"
+  ]
+}

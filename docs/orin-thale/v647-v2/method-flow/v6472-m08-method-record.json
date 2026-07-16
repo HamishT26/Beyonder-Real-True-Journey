@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Scan owner, phase, route, and boundary labels before staging; fix the authoritative builder and regenerate only owner-scoped precommit artifacts.",
+  "failure_signature": "Generated method scope boundaries named the source owner instead of the active owner.",
+  "method_id": "V6472-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "owner_scope",
+    "identity_boundary",
+    "no_history_rewrite",
+    "x1_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Require every Method Flow scope boundary to begin with Orin v647-v2 before ledger validation and x1 staging.",
+  "retained_negative_ids": [
+    "V6472-X1-N08"
+  ],
+  "rollback": "Discard the uncommitted owner-generated ledger, keep this failed witness, regenerate from the corrected builder, and rerun the family Method Flow runner.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Validate owner labels before sealing Method Flow",
+  "trigger_preconditions": [
+    "A phase builder is adapted from a prior owner's compatible implementation."
+  ],
+  "validation_witness_ids": [
+    "V6472-M08-WFAIL",
+    "V6472-M08-WPASS"
+  ]
+}

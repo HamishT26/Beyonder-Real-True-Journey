@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Use double-quoted JavaScript literals or template strings for replacement text containing apostrophes.",
+  "failure_signature": "A single-quoted JavaScript replacement contained an unescaped apostrophe.",
+  "method_id": "V6472-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "atomic_edit",
+    "no_partial_generation",
+    "x1_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Parse the orchestration source before allowing any nested edit call and avoid mixed quote ownership.",
+  "retained_negative_ids": [
+    "V6472-X1-N06"
+  ],
+  "rollback": "Discard the parser-rejected cell; no nested command or file edit ran.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Keep JavaScript replacement strings quote-safe",
+  "trigger_preconditions": [
+    "An orchestration cell transforms prose containing possessives or quoted names."
+  ],
+  "validation_witness_ids": [
+    "V6472-M06-WFAIL",
+    "V6472-M06-WPASS"
+  ]
+}

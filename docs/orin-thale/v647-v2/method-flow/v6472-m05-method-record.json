@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Record capability as unavailable to the current process and do not elevate, enable features, weaken security, or reboot.",
+  "failure_signature": "The read-only Windows optional-feature query required elevation.",
+  "method_id": "V6472-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_elevation",
+    "no_feature_change",
+    "no_security_weakening",
+    "no_reboot"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never retry the feature query with elevation inside a family phase.",
+  "retained_negative_ids": [
+    "V6472-X1-N05"
+  ],
+  "rollback": "No system mutation occurred; retain the error and continue with bounded owner-local fixtures.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Treat elevation-required Sandbox probes as unavailable",
+  "trigger_preconditions": [
+    "Sandbox feature state cannot be read by the ordinary process."
+  ],
+  "validation_witness_ids": [
+    "V6472-M05-WFAIL",
+    "V6472-M05-WPASS"
+  ]
+}
