@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v646-gmut-thos-v1-x1-x2
 
 Owner: **Eiren Kestrel**
-Generated UTC: `2026-07-16T01:47:25.774851+00:00`
+Generated UTC: `2026-07-16T02:08:35.427006+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,8 +9,8 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 171 | 17 | 786 | 17 |
-| Local skills | 74 | 18 | 937 | 186 |
+| Repository scripts | 180 | 17 | 791 | 17 |
+| Local skills | 94 | 18 | 937 | 186 |
 
 ## Preferred current script candidates
 
@@ -64,6 +64,7 @@ This is an inventory and selection aid, not permission to execute every discover
 - `ghc-drive-bank-guardian`
 - `ghc-drive-posture-receipt`
 - `ghc-family-source-label-glossary-builder`
+- `ghc-family-source-status-drift-watch`
 - `ghc-family-truth-bridge`
 - `ghc-goal-mode-startup-dry-run`
 - `ghc-main-closeout-builder`
@@ -95,8 +96,7 @@ This is an inventory and selection aid, not permission to execute every discover
 - `ghc-compact-pause-updater`
 - `ghc-context-freshness-guard`
 - `ghc-current-state-refresh-publisher`
-- `ghc-family-index`
-- `ghc-family-method-flow-state`
+- `ghc-family-accessible-table-audit`
 
 ## Use rule
 

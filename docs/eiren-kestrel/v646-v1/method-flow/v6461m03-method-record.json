@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Preserve the skill content and rerun the unchanged skill-creator validator with Python UTF-8 mode explicitly enabled.",
+  "failure_signature": "The first quick-validation pass used the Windows CP1252 default and could not decode the Māori macron in every skill's protected-authority boundary.",
+  "method_id": "V6461-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat locale-dependent decoding failures as validation failures; never remove culturally correct text merely to obtain a pass.",
+  "retained_negative_ids": [
+    "V6461-X2-N03"
+  ],
+  "rollback": "Retain all twenty failed validator witnesses and give no skill validation credit until the explicit UTF-8 rerun passes.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no broader assurance or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Run skill quick validation under explicit UTF-8 on Windows",
+  "trigger_preconditions": [
+    "UTF-8 skill content",
+    "validator used locale-dependent default decoding",
+    "Windows CP1252 process environment"
+  ],
+  "validation_witness_ids": []
+}

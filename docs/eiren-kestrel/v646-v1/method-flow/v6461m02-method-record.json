@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Verify the resolved fixture remains inside the declared scratch root, clear only disposable file read-only bits through the deletion callback, and retry the same scoped teardown once.",
+  "failure_signature": "The first disposable promisor-fixture cleanup was denied because a Git loose object retained the Windows read-only attribute.",
+  "method_id": "V6461-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never apply the writable-bit recovery to a canonical, sibling, unverified, or out-of-root path.",
+  "retained_negative_ids": [
+    "V6461-X2-N02"
+  ],
+  "rollback": "Retain the failed teardown, stop before any broader cleanup, and require an exact root-containment check.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no broader assurance or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Clear read-only Git fixture objects before bounded teardown",
+  "trigger_preconditions": [
+    "owner-local disposable fixture",
+    "resolved fixture inside declared scratch root",
+    "Git object carried a read-only attribute"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 1,
-    "recommendations": 1,
-    "state_events": 3,
+    "methods": 4,
+    "recommendations": 4,
+    "state_events": 12,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 1,
+      "preferred": 4,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 1,
-      "pass": 1
+      "fail": 4,
+      "pass": 4
     },
-    "witnesses": 2
+    "witnesses": 8
   },
   "owner": "Eiren Kestrel",
   "phase": "v646-gmut-thos-v1-x1-x2",
@@ -37,10 +37,64 @@
         "V6461-W01-F",
         "V6461-W01-P"
       ]
+    },
+    {
+      "candidate_workaround": "Verify the resolved fixture remains inside the declared scratch root, clear only disposable file read-only bits through the deletion callback, and retry the same scoped teardown once.",
+      "method_id": "V6461-M02",
+      "recurrence_guard": "Never apply the writable-bit recovery to a canonical, sibling, unverified, or out-of-root path.",
+      "rollback": "Retain the failed teardown, stop before any broader cleanup, and require an exact root-containment check.",
+      "scope_boundary": "Same-owner bounded operational recovery only; no broader assurance or independent-reproduction credit.",
+      "title": "Clear read-only Git fixture objects before bounded teardown",
+      "trigger_preconditions": [
+        "owner-local disposable fixture",
+        "resolved fixture inside declared scratch root",
+        "Git object carried a read-only attribute"
+      ],
+      "validation_witness_ids": [
+        "V6461-W02-F",
+        "V6461-W02-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Preserve the skill content and rerun the unchanged skill-creator validator with Python UTF-8 mode explicitly enabled.",
+      "method_id": "V6461-M03",
+      "recurrence_guard": "Treat locale-dependent decoding failures as validation failures; never remove culturally correct text merely to obtain a pass.",
+      "rollback": "Retain all twenty failed validator witnesses and give no skill validation credit until the explicit UTF-8 rerun passes.",
+      "scope_boundary": "Same-owner bounded operational recovery only; no broader assurance or independent-reproduction credit.",
+      "title": "Run skill quick validation under explicit UTF-8 on Windows",
+      "trigger_preconditions": [
+        "UTF-8 skill content",
+        "validator used locale-dependent default decoding",
+        "Windows CP1252 process environment"
+      ],
+      "validation_witness_ids": [
+        "V6461-W03-F",
+        "V6461-W03-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Keep the x1 proposal and portfolio checks live, but evaluate no-x2 artifact assertions against the exact immutable x1 commit tree.",
+      "method_id": "V6461-M04",
+      "recurrence_guard": "Lifecycle-specific absence tests must name the immutable commit or stage they are proving instead of assuming the current worktree is still at that stage.",
+      "rollback": "Give the failed combined run zero suite credit, retain both assertion failures, and rerun only after the snapshot-bound test passes.",
+      "scope_boundary": "Same-owner bounded operational recovery only; no broader assurance or independent-reproduction credit.",
+      "title": "Bind x1 absence assertions to the immutable x1 commit",
+      "trigger_preconditions": [
+        "x1 tests reused after x2 build",
+        "live worktree contains legitimate x2 artifacts",
+        "exact x1 commit remains available"
+      ],
+      "validation_witness_ids": [
+        "V6461-W04-F",
+        "V6461-W04-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
-    "V6461-W01-F"
+    "V6461-W01-F",
+    "V6461-W02-F",
+    "V6461-W03-F",
+    "V6461-W04-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

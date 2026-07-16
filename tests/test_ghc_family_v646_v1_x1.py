@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -59,9 +60,11 @@ class V646V1X1Tests(unittest.TestCase):
         self.assertTrue(module.structural()["valid"])
         self.assertTrue(module.privacy_from_worktree()["valid"])
 
-    def test_x2_absent(self) -> None:
+    def test_x2_absent_from_immutable_x1_commit(self) -> None:
+        x1_head = "7b7824b7643bfb3a80cf778a10ca65055554b5db"
+        paths = set(subprocess.check_output(["git","ls-tree","-r","--name-only",x1_head],cwd=ROOT,text=True).splitlines())
         for name in ("phase-truth.json","x2-proposal-ledger.json","closeout-receipt.json","seal-receipt.json","final-validation-record.json"):
-            self.assertFalse((PHASE / name).exists())
+            self.assertNotIn(f"docs/eiren-kestrel/v646-v1/{name}", paths)
 
 
 if __name__ == "__main__": unittest.main()

@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Keep the x1 proposal and portfolio checks live, but evaluate no-x2 artifact assertions against the exact immutable x1 commit tree.",
+  "failure_signature": "The first combined x1 and x2 test run applied two live-worktree no-x2 assertions after the lifecycle had legitimately advanced, producing two false failures.",
+  "method_id": "V6461-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Lifecycle-specific absence tests must name the immutable commit or stage they are proving instead of assuming the current worktree is still at that stage.",
+  "retained_negative_ids": [
+    "V6461-X2-N04"
+  ],
+  "rollback": "Give the failed combined run zero suite credit, retain both assertion failures, and rerun only after the snapshot-bound test passes.",
+  "scope_boundary": "Same-owner bounded operational recovery only; no broader assurance or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind x1 absence assertions to the immutable x1 commit",
+  "trigger_preconditions": [
+    "x1 tests reused after x2 build",
+    "live worktree contains legitimate x2 artifacts",
+    "exact x1 commit remains available"
+  ],
+  "validation_witness_ids": []
+}

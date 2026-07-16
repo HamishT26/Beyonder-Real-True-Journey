@@ -52,6 +52,7 @@ def scan_payload(name: str, payload: str) -> list[dict[str, Any]]:
 
 def structural() -> dict[str, Any]:
     issues: list[str] = []
+    lifecycle_has_advanced = (PHASE / "phase-truth.json").exists()
     proposals = load(PHASE / "x1-proposals.json")
     rows = proposals.get("proposals", [])
     if proposals.get("prior_frozen_proposal_count") != 390: issues.append("prior proposal count is not 390")
@@ -92,14 +93,16 @@ def structural() -> dict[str, Any]:
 
     method = load(PHASE / "method-flow/runner-validation.json")
     negatives = load(PHASE / "validation/x1-operational-negatives.json")
-    if not method.get("valid") or method.get("method_count") != 1 or method.get("witness_count") != 2: issues.append("Method Flow validation failed")
+    if not method.get("valid"): issues.append("Method Flow validation failed")
+    elif not lifecycle_has_advanced and (method.get("method_count") != 1 or method.get("witness_count") != 2): issues.append("x1 Method Flow count mismatch")
+    elif lifecycle_has_advanced and (method.get("method_count",0) < 1 or method.get("witness_count",0) < 2): issues.append("advanced Method Flow lost the x1 baseline")
     if negatives.get("inherited_effective") != 2432 or negatives.get("preregistered_synthetic") != 70 or negatives.get("effective_after_x1") != 2503: issues.append("negative accounting mismatch")
 
     forbidden = ["phase-truth.json","x2-proposal-ledger.json","closeout-receipt.json","seal-receipt.json","final-validation-record.json"]
-    if any((PHASE / name).exists() for name in forbidden): issues.append("x2 or closeout artifact exists in x1")
+    if not lifecycle_has_advanced and any((PHASE / name).exists() for name in forbidden): issues.append("x2 or closeout artifact exists before the x1 freeze")
     required_index = [PHASE / "tooling/ghc-family-index.json", PHASE / "tooling/ghc-family-index.md"]
     if any(not p.is_file() for p in required_index): issues.append("phase-scoped GHC Family Index is missing")
-    return {"schema":"ghc.family.v646-v1.x1-structural-review.v1","proposal_count":len(rows),"file_count":len(phase_files()),"issues":issues,"valid":not issues}
+    return {"schema":"ghc.family.v646-v1.x1-structural-review.v1","proposal_count":len(rows),"file_count":len(phase_files()),"lifecycle_has_advanced":lifecycle_has_advanced,"issues":issues,"valid":not issues}
 
 
 def privacy_from_worktree() -> dict[str, Any]:

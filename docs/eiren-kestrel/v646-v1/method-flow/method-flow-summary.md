@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v1-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 1
-- Passing witnesses: 1
-- Failed witnesses retained: 1
+- Methods: 4
+- Passing witnesses: 4
+- Failed witnesses retained: 4
 
 ## Preferred methods
 
@@ -15,6 +15,30 @@
 - Recurrence guard: A timed-out orchestration wrapper supplies no evidence for children whose complete result was not returned.
 - Rollback: Give the partial wrapper zero startup credit and make no phase mutation until every required split probe passes.
 - Witnesses: V6461-W01-F, V6461-W01-P
+
+### V6461-M02 — Clear read-only Git fixture objects before bounded teardown
+
+- Trigger: owner-local disposable fixture; resolved fixture inside declared scratch root; Git object carried a read-only attribute
+- Method: Verify the resolved fixture remains inside the declared scratch root, clear only disposable file read-only bits through the deletion callback, and retry the same scoped teardown once.
+- Recurrence guard: Never apply the writable-bit recovery to a canonical, sibling, unverified, or out-of-root path.
+- Rollback: Retain the failed teardown, stop before any broader cleanup, and require an exact root-containment check.
+- Witnesses: V6461-W02-F, V6461-W02-P
+
+### V6461-M03 — Run skill quick validation under explicit UTF-8 on Windows
+
+- Trigger: UTF-8 skill content; validator used locale-dependent default decoding; Windows CP1252 process environment
+- Method: Preserve the skill content and rerun the unchanged skill-creator validator with Python UTF-8 mode explicitly enabled.
+- Recurrence guard: Treat locale-dependent decoding failures as validation failures; never remove culturally correct text merely to obtain a pass.
+- Rollback: Retain all twenty failed validator witnesses and give no skill validation credit until the explicit UTF-8 rerun passes.
+- Witnesses: V6461-W03-F, V6461-W03-P
+
+### V6461-M04 — Bind x1 absence assertions to the immutable x1 commit
+
+- Trigger: x1 tests reused after x2 build; live worktree contains legitimate x2 artifacts; exact x1 commit remains available
+- Method: Keep the x1 proposal and portfolio checks live, but evaluate no-x2 artifact assertions against the exact immutable x1 commit tree.
+- Recurrence guard: Lifecycle-specific absence tests must name the immutable commit or stage they are proving instead of assuming the current worktree is still at that stage.
+- Rollback: Give the failed combined run zero suite credit, retain both assertion failures, and rerun only after the snapshot-bound test passes.
+- Witnesses: V6461-W04-F, V6461-W04-P
 
 ## Retained boundary
 

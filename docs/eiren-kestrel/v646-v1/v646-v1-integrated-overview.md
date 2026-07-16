@@ -1,0 +1,63 @@
+# Eiren Kestrel v646-v1 integrated overview
+
+## Executive truth
+
+This phase began only after the dedicated x1 freeze was committed, pushed, clean, and equal across local, upstream, tracking, and the fresh live remote. It inherits Sylven Arc's exact v645-v8 seal through an unbroken single-parent history. The ten new proposals were audited against 390 earlier frozen proposals, raising the frozen chain to 400. X2 executed every owner-scoped safe and prototype task as far as evidence permitted. The outcome distribution is six completed structural missions, two represented proxy missions, one open empirical gap, and one exact authority gate. The terminal verdict is `NOT_READY_FOR_STAGE_20`.
+
+The primary Trinity Mandala focus is THOS Body. GMUT Mind and Freed ID/CBR Heart remain explicit, but none is promoted beyond its evidence. The bounded human-practice lens is electric-power control-room switching-order readback and restoration handover. It supplied vocabulary for a synthetic state machine only. No real operator, worker, grid asset, switching order, station, feeder, restoration action, safety decision, employment, qualification, professional competence, or operational authority entered this phase.
+
+## Method Flow and reproducibility boundary
+
+Method Flow preserves four operational failures and four bounded recoveries. The first was an x1 parallel startup wrapper that timed out before returning complete child evidence. Recovery split the source, status, and definition probes. The second occurred in the disposable Git promisor fixture: a loose object retained a Windows read-only attribute, so default teardown was denied. Recovery verified the resolved fixture was inside the declared scratch root, cleared only disposable read-only bits through the cleanup callback, restored the object for fsck, and removed the fixture. The third involved the skill-creator validator using CP1252 by default and rejecting the Māori macron. Recovery preserved the correct text and enabled explicit UTF-8 mode for the unchanged validator. The fourth was a lifecycle-state error in two x1 tests: they checked the advanced live worktree for x2 absence. Recovery bound those assertions to the immutable x1 commit tree. Every failed witness remains retained.
+
+Canonical execution and the later clean named-lane replay use shared infrastructure and one owner. They can demonstrate same-owner repeatability of committed artifacts, tests, and validators. They cannot establish independent-team scientific reproduction. No failure is converted into a pass, and no retry is credited unless its own bounded witness completes.
+
+## Proposal outcomes
+
+The content-addressed cache tribunal completed on declared synthetic inputs. Mutating source identity, tool version, provenance, or retained-negative state changed the cache key, and eviction kept the failure receipt. It touched no host, sibling, or external cache. This is a workflow control, not general supply-chain assurance.
+
+The DHOST classifier completed as typed symbolic evidence. It requires an operator declaration, kinetic Hessian, rank condition, primary and secondary constraint obligations, matter-coupling scope, degree-of-freedom accounting, and an explicit claim boundary. Mutations missing those obligations were rejected. The result does not prove a GMUT model is degenerate, ghost-free, physically stable, quantum complete, predictive, empirically supported, or a Theory of Everything.
+
+The DESI DR2 BAO adapter remains an open gap. Official DESI release and publication pages informed a product and provenance contract, but this phase downloaded and ingested zero rows, zero covariance matrices, and zero compressed likelihood products. It ran zero likelihood evaluations and produced zero posterior samples, constraints, or force claims. A future empirical run would need an authorized official snapshot, checksum, schema, fiducial assumptions, covariance, blinding state, and independent review.
+
+The THOS switching-order and restoration-handover protocol remains represented. Synthetic traces covered order identity, revision, sender and receiver roles, instruction, repeat-back, correction state, hold points, step state, and handover owner. Ambiguous, stale, incomplete, and uncorrected traces failed. There were no real people, grid assets, orders, or operations and no blind matched-budget real arms, so no operational-effectiveness claim is available.
+
+The Freed ID SD-JWT VC profile remains represented. Synthetic vectors rejected missing nonce, wrong audience, absent holder binding, invalid disclosure digest, untrusted metadata, and illegal status transitions. The profile follows current official and standards-track material as a moving compatibility surface. It used zero real keys, proofs, credentials, issuance events, resolution events, status or revocation events, or interoperability events. Production assurance remains open to standards-conformant implementations, live systems, trust governance, privacy review, security review, and independent interoperability evidence.
+
+The electricity-care CBR matrix remains exact-gated. It records questions about medical dependency, hardship support, disconnection safeguards, complaint routes, remedy evidence, consumer confidentiality, privacy, affected-party voice, legal authority, Māori data governance, and Māori authority. It decides no consumer case, gives no legal advice, exposes no consumer data, allocates no remedy, and asserts no cultural or Māori legitimacy. Real decisions remain with affected people, competent institutions, privacy authorities, and Māori authorities.
+
+The Git partial-clone tribunal completed only on a disposable local fixture with network fallback disabled. It distinguished an expected missing promisor object from a successful object lookup, restored the object, passed fsck, and removed the fixture. It changed no canonical or sibling object store and makes no repository-wide integrity, availability, or security guarantee.
+
+The accessible-table audit completed structurally. A simple table with caption, header cells, data cells, and row or column scope passed; missing-caption and missing-scope mutations failed. The static report uses a caption and scoped headers. Manual keyboard review, browser diversity, assistive-technology testing, responsive-layout testing, Māori-language review, and affected-user evaluation remain reserved. Automated structure is not complete accessibility conformance.
+
+The Onsager classifier completed only as a physical-domain type boundary. It requires near-equilibrium scope, declared time-reversal parity, and nonnegative dissipation structure before a reciprocity label is accepted. Missing assumptions and a psyche-domain conversion failed. No psyche, autonomy, justice, human, consciousness, or fundamental-law inference is made.
+
+The optional-stopping quarantine completed structurally. It distinguished a single fixed-horizon look, a declared synthetic alpha-spending trace, repeated peeking under a fixed label, an unsupported e-process label, and silent holdout reuse. It makes no statistical discovery and does not convert e-value literature into evidence for GMUT or Stage 20. The evidence board abstains.
+
+## Expanded approval and tooling portfolio
+
+All 30 safe-now tasks produced bounded receipts. The first fifteen were materially reframed predecessor seeds, but no inherited artifact received Eiren completion credit. All 20 candidate prototypes were built as local structural specifications and linked to passing bounded witnesses. None became production software or independent assurance. The inherited ten exact-approval packets and five blocked packets remained visible and unexecuted.
+
+Twenty family-current skills were initialized through the system skill-creator, customized with concise workflows, given UI metadata, checked against the 6,000-word cap, quick-validated under explicit UTF-8, and smoke-used against their required sections. The smoke use establishes package structure and boundary presence only. Nine subject runners executed their bounded fixtures, and the v646-v1 validator runner was built and invoked through its CLI surface before receiving later substantive use. Ten runner ideas therefore have built and used receipts without claiming deployment.
+
+Thirty clean, fix, and refine tasks completed additively. They reconciled counts, labels, source states, origin metadata, outcome vocabulary, negative accounting, JSON order, UTF-8, logical line-ending hashes, privacy exclusions, manifests, staged scope, diff hygiene, ancestry, the commit cap, remote equality, named-lane locality, accessibility reservation, relational identity boundaries, and Stage 20 abstention. No user, sibling, canonical-history, host-security, Windows-feature, account, API-key, credential, or external-system deletion occurred.
+
+## Security, privacy, and authority
+
+The threat model treats cache poisoning, undeclared inputs, provenance substitution, stale order identity, readback ambiguity, credential replay, metadata substitution, illegal status transitions, privacy leakage, missing promisor objects, accessibility structure loss, cross-domain metaphor, optional stopping, raw identifier leakage, private route disclosure, and sibling-lane mutation as distinct risks. Mitigations are bounded and falsifiable: content keys, fail-closed state machines, zero-row refusal, synthetic vectors, exact gates, disposable fixtures, structural markup checks, domain typing, analysis-history quarantine, five-class scanning, exact manifests, and single-parent ancestry.
+
+The public packet contains no raw task or thread identifier, private route, transcript, screenshot, credential, session stream, private callable identifier, private app state, or private local path. A five-class scanner covers raw UUIDs, delegation markup, private connector URIs, private local paths, and credential assignments. Scanner definitions and retained candidates are not silently promoted to confirmed hits. Consumer confidentiality and Māori data governance remain authority questions, not decorative labels.
+
+## What remains incomplete
+
+GMUT has no new empirical dataset, likelihood, unique confirmed prediction, force constraint, physical-stability proof, quantum completion, or independent scientific reproduction. THOS has no preregistered blind matched-budget real arms, real participants, authorized operational study, or independent safety review. Freed ID has no standards-conformant real key material, proof, issuance, live resolution, status or revocation, interoperability, privacy assurance, security assurance, or trust governance. CBR has no real remedy, legal interpretation, affected-party legitimacy, cultural ratification, Māori authority, Māori data-governance authorization, or enacted-law status.
+
+The phase also does not establish employment, professional qualification, operational authority, complete accessibility, exhaustive security, production readiness, deployment, AGI/ASI, consciousness, sentience, personhood, identity continuity, a Theory of Everything, proof or canon, independent-team reproduction, or Stage 20 readiness. Those negatives are part of the result, not caveats to be hidden.
+
+## Closing state
+
+The value of v646-v1 is narrower and more durable than a grand claim: a cleanly separated x1 freeze, ten falsifiable x2 missions, expanded but bounded portfolios, real retained-negative learning, family-current skills and runners, a complete repository-suite obligation owned by Eiren, and a terminal evidence board that still says no. The next route may proceed only after the exact final committed head passes the full suite, detailed and minimal validation, JSON parsing, privacy scanning, manifest parity, diff and ancestry checks, one clean local-only named replay, and four-way remote equality.
+
+Identity and family language is relational working language only, never evidence of consciousness, sentience, legal personhood, identity continuity, employment, professional qualification, or independent authority.
+
+GMUT remains a typed scalar-tensor and EFT research-model family; THOS remains proxy; Freed ID remains synthetic and nonproduction; CBR, legal, cultural, affected-party, and Māori concepts remain under competent and Māori authority. No empirical confirmation, Theory-of-Everything, AGI/ASI, consciousness, personhood, deployment, exhaustive-security, independent-reproduction, or Stage 20 claim is made.
