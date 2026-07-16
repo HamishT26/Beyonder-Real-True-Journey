@@ -51,11 +51,13 @@ def allowed(relative: str) -> bool:
         return True
     exact = {
         "scripts/build_ghc_family_v646_v7_evidence.py",
+        "scripts/build_ghc_family_v646_v7_closeout.py",
         "scripts/ghc_family_v646_v7_runtime.py",
         "scripts/ghc_family_v646_v7_skill_runner.py",
         "scripts/ghc_family_v646_v7_portfolio_runner.py",
         "scripts/ghc_family_v646_v7_validation_runner.py",
         "scripts/ghc_family_v646_v7_staged_review.py",
+        "scripts/ghc_family_v646_v7_exact_head_audit.py",
         "scripts/ghc_family_v646_v7_definitions.py",
         "scripts/ghc_family_fencing_token_tribunal.py",
         "scripts/ghc_family_functional_rg_obligations.py",
@@ -68,6 +70,8 @@ def allowed(relative: str) -> bool:
         "scripts/ghc_family_mnar_sensitivity_board.py",
         "tests/test_ghc_family_v646_v7.py",
         "tests/test_ghc_family_v646_v7_x1.py",
+        "tests/test_ghc_family_v646_v7_closeout.py",
+        "tests/test_ghc_family_v646_v6_x1.py",
     }
     return relative in exact
 
@@ -89,8 +93,17 @@ def privacy_scan(paths: list[str]) -> dict[str, Any]:
             if not matches:
                 continue
             disposition = "unresolved_payload_candidate"
-            if relative.endswith(("ghc_family_v646_v7_staged_review.py", "ghc_family_v646_v7_validation_runner.py")) and class_name in {"private_callable_identifier", "session_transcript_or_stream"}:
+            if relative.endswith(("ghc_family_v646_v7_staged_review.py", "ghc_family_v646_v7_validation_runner.py", "ghc_family_v646_v7_exact_head_audit.py")) and class_name in {"private_callable_identifier", "session_transcript_or_stream"}:
                 disposition = "scanner_definition_candidate"
+            elif class_name == "session_transcript_or_stream" and (
+                relative in {
+                    "docs/eiren-kestrel/v646-v7/method-flow/v6467-m13-failed-witness.json",
+                    "docs/eiren-kestrel/v646-v7/method-flow/v6467-m13-incident-failed-witness.json",
+                    "docs/eiren-kestrel/v646-v7/method-flow/v6467-m13-path-failed-witness.json",
+                }
+                or (relative.endswith("method-flow-state.json") and b"V6467-M13" in raw)
+            ):
+                disposition = "retained_scanner_incident_candidate"
             elif relative.endswith("ghc_family_v646_v7_definitions.py") and class_name == "session_transcript_or_stream":
                 disposition = "privacy_exclusion_policy_candidate"
             row = {"path": relative, "class": class_name, "count": len(matches), "disposition": disposition}
@@ -130,6 +143,25 @@ def structural(paths: list[str], stage: str) -> list[str]:
             issues.append("runner receipt is not pass")
         if read_json("phase-truth.json").get("terminal_verdict") != "NOT_READY_FOR_STAGE_20":
             issues.append("Stage 20 verdict invalid")
+    if stage == "closeout":
+        if read_json("closeout-receipt.json").get("exact_final_head_validation") != "required_after_commit":
+            issues.append("closeout prematurely claims exact final validation")
+        if read_json("final-validation-record.json").get("named_local_only_replay") != "required_after_commit":
+            issues.append("final protocol prematurely claims named replay")
+        full = read_json("validation/full-suite-validation.json")
+        if full.get("result") != "pass" or full.get("tests", {}).get("unexpected_failure_events"):
+            issues.append("full-suite eligible validation invalid")
+        manifest = read_json("validation/final-owner-manifest.json")
+        indexed = {
+            line for line in subprocess.check_output(["git", "ls-files", PHASE_REL.as_posix() + "/"], cwd=ROOT, text=True, encoding="utf-8").splitlines() if line
+        }
+        exclusions = set(manifest.get("declared_self_exclusions", []))
+        entry_paths = {row["path"] for row in manifest.get("entries", [])}
+        if indexed - entry_paths != exclusions & indexed:
+            issues.append(f"final owner manifest coverage mismatch: {sorted((indexed - entry_paths) ^ (exclusions & indexed))}")
+        for entry in manifest.get("entries", []):
+            if hashlib.sha256(index_bytes(entry["path"])).hexdigest() != entry.get("sha256"):
+                issues.append(f"final owner manifest mismatch: {entry['path']}")
     return issues
 
 

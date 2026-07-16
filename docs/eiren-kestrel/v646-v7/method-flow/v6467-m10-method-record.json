@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M10",
+  "title": "Bind historical route-state assertions to their lifecycle commit",
+  "failure_signature": "A 33-test closeout run failed because an x1 PREPARED_NOT_SENT assertion read the truthful live closeout HOLD state.",
+  "trigger_preconditions": [
+    "x1 route-state assertion",
+    "live closeout tree",
+    "terminal route lifecycle",
+    "immutable x1 commit"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Read the terminal route plan from the exact x1 Git object when testing x1 state, while testing the live HOLD state separately in closeout tests.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Every state assertion must name its lifecycle commit or current-head domain; later truthful transitions never invalidate an earlier sealed state.",
+  "rollback": "Retain the failed 33-test run, award no closeout validation credit, and change only the route-state time domain.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "x1_immutability",
+    "terminal_route",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N05"
+  ],
+  "scope_boundary": "Owner-local lifecycle testing only; no route send, task creation, authority, or independent-reproduction credit."
+}

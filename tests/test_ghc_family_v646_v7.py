@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -131,8 +132,11 @@ class V646V7EvidenceTests(unittest.TestCase):
         self.assertGreaterEqual(len((PHASE / "v646-v7-integrated-overview.md").read_text(encoding="utf-8").split()), 900)
 
     def test_no_closeout_before_evidence_commit(self):
+        evidence_commit = "0ebc21bb089929a2d854ad6010174b82c6c00447"
         for relative in ("closeout-receipt.json", "seal-receipt.json", "final-validation-record.json"):
-            self.assertFalse((PHASE / relative).exists(), relative)
+            repository_relative = f"docs/eiren-kestrel/v646-v7/{relative}"
+            result = subprocess.run(["git", "cat-file", "-e", f"{evidence_commit}:{repository_relative}"], cwd=ROOT, capture_output=True)
+            self.assertNotEqual(result.returncode, 0, relative)
 
 
 if __name__ == "__main__":

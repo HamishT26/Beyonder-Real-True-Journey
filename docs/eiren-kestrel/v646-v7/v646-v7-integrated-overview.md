@@ -38,7 +38,7 @@ The MNAR sensitivity board used a synthetic delta grid and a declared estimand t
 
 The expanded portfolio completed 30 safe-now owner-scoped tasks, 20 bounded candidate prototypes, 20 phase-local skill builds and invocations, 10 family-current runner builds and uses, and 30 additive clean/fix/refine tasks. Ten exact-approval packets and five blocked packets remained unexecuted. No quota manufactured unsafe work. No file deletion, history rewrite, sibling mutation, production deployment, credential operation, security weakening, elevation, Windows-feature change, or reboot occurred.
 
-The evidence register preserves 3055 effective negatives: 2,977 inherited, five x1 operational failures, 70 executed synthetic mutation negatives, and the current x2 operational negatives. Method Flow keeps each failed witness beside its bounded passing recovery; recurrence does not erase the earlier failure. Same-owner checks share infrastructure and are not independent-team scientific reproduction.
+The evidence register preserves 3060 effective negatives: 2,977 inherited, five x1 operational failures, 70 executed synthetic mutation negatives, and the current x2 operational negatives. Method Flow keeps each failed witness beside its bounded passing recovery; recurrence does not erase the earlier failure. Same-owner checks share infrastructure and are not independent-team scientific reproduction.
 
 ## Decision
 

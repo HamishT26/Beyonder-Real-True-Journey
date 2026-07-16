@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M13",
+  "title": "Disposition exact-head audit regex literals as scanner definitions",
+  "failure_signature": "The first persisted closeout privacy receipt classified three regex literals in the exact-head audit as unresolved payload candidates.",
+  "trigger_preconditions": [
+    "five-class privacy scan",
+    "new scanner implementation",
+    "regex definition literals",
+    "filename-scoped disposition"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Add the exact-head audit to the narrow scanner-definition filename set while leaving every other path and pattern unresolved by default.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Only exact scanner implementation files may receive definition disposition; no general source-code or documentation exemption is allowed.",
+  "rollback": "Retain all three candidates and the failed receipt, award no privacy-pass credit, and change only the exact scanner-file disposition.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "privacy",
+    "raw_identifier_scan",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N08"
+  ],
+  "scope_boundary": "Scanner-definition classification only; it is not complete privacy assurance, security certification, or independent review."
+}

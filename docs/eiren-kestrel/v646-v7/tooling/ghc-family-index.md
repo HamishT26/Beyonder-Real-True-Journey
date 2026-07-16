@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v646-gmut-thos-v7-x1-x2
 
 Owner: **Eiren Kestrel**
-Generated UTC: `2026-07-16T13:55:00.117575+00:00`
+Generated UTC: `2026-07-16T14:14:27.723989+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 200 | 17 | 886 | 17 |
+| Repository scripts | 200 | 17 | 889 | 17 |
 | Local skills | 113 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

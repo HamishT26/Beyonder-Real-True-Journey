@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M11",
+  "title": "Validate Method Flow witness parity without assuming one pair per method",
+  "failure_signature": "A closeout test expected exactly ten failed and ten passing witnesses for ten methods and rejected an additional truthful recurrence pair.",
+  "trigger_preconditions": [
+    "append-only Method Flow",
+    "repeated failure under one method",
+    "witness count assertion",
+    "closeout validation"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Require exact method-ID coverage, failed/passing parity, and at least one pair per method while allowing additional retained recurrence witnesses.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Witness counts may exceed method counts; tests must preserve repetitions instead of compressing them to one synthetic pair.",
+  "rollback": "Retain the failed closeout run, award no validation credit, and replace only the invalid cardinality assumption.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "append_only_method_flow",
+    "failure_retention",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N06"
+  ],
+  "scope_boundary": "Owner-local Method Flow validation only; no independent reproduction, production, scientific, or authority credit."
+}

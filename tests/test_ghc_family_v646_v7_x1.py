@@ -70,7 +70,8 @@ class V646V7X1Tests(unittest.TestCase):
         self.assertTrue(all(row["status"] in {"current", "stable", "draft", "watch"} for row in source["sources"]))
 
     def test_route_prepared_not_sent(self):
-        route = load("orchestration/terminal-route-plan.json")
+        raw = subprocess.check_output(["git", "show", "4604a34c48ba73f7d01f77e5a0bbf91a84145303:docs/eiren-kestrel/v646-v7/orchestration/terminal-route-plan.json"], cwd=ROOT)
+        route = json.loads(raw.decode("utf-8"))
         self.assertEqual((route["current_state"], route["target_title"], route["send_count"]), ("PREPARED_NOT_SENT", "Ilyra Fen", 0))
 
     def test_x2_absent(self):

@@ -426,4 +426,9 @@ X2_OPERATIONAL_NEGATIVES = [
     {"negative_id": "V6467-X2-N01", "method_id": "V6467-M06", "summary": "A prior-phase inspection assumed a nonexistent x2 skill-runner ledger filename before discovering the actual split build/use receipts.", "retained": True, "recovered": True},
     {"negative_id": "V6467-X2-N02", "method_id": "V6467-M07", "summary": "A Python portfolio diagnostic failed when the legacy console encoding encountered a Māori macron.", "retained": True, "recovered": True},
     {"negative_id": "V6467-X2-N03", "method_id": "V6467-M08", "summary": "The first current-phase validation exposed two x1 tests that incorrectly treated live x2 growth as x1 contamination.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N04", "method_id": "V6467-M09", "summary": "The first complete repository discovery found three raw failures: two exact inherited v646-v1 exclusions and one unbound v646-v6 x1 lifecycle assertion.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N05", "method_id": "V6467-M10", "summary": "The first 33-test closeout run found an x1 route-state assertion bound to the live closeout tree instead of the x1 commit.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N06", "method_id": "V6467-M11", "summary": "A closeout test hardcoded one witness pair per method and rejected the truthful second M07 recurrence pair.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N07", "method_id": "V6467-M12", "summary": "The first closeout staged review found two final-manifest mismatches caused by GHC index CRLF-to-LF Git normalization.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N08", "method_id": "V6467-M13", "summary": "The first persisted closeout privacy receipt misclassified three regex literals in the exact-head audit as payload hits.", "retained": True, "recovered": True},
 ]

@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M12",
+  "title": "Build final owner manifests from exact staged Git blobs",
+  "failure_signature": "The first closeout staged review found two owner-manifest mismatches because regenerated index files used CRLF working bytes and LF Git-index blobs.",
+  "trigger_preconditions": [
+    "Windows autocrlf",
+    "generated index files",
+    "working-byte manifest",
+    "staged Git-blob verification"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Stage the complete intended surface, regenerate only the final owner manifest from exact index blobs, stage that manifest, and rerun the unchanged review.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Cross-worktree final identity uses Git blobs, never checkout bytes; line-ending normalization remains visible but cannot create false content drift.",
+  "rollback": "Retain the two mismatches, award no staged closeout credit, and do not rewrite the index files merely to match a checkout hash domain.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "manifest_integrity",
+    "line_ending_domain",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N07"
+  ],
+  "scope_boundary": "Owner-local Git-blob identity only; no independent reproduction, production certification, or scientific credit."
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -95,8 +96,11 @@ class V646V6X1Tests(unittest.TestCase):
         self.assertEqual(route["target_title"], "Eiren Kestrel")
 
     def test_x2_absent(self):
+        x1_commit = "147aab7fd2f2805f119968dd30ab9c7996306d3a"
         for relative in ("x2-proposal-ledger.json", "phase-truth.json", "closeout-receipt.json", "seal-receipt.json", "final-validation-record.json"):
-            self.assertFalse((PHASE / relative).exists(), relative)
+            repository_relative = f"docs/sylven-arc/v646-v6/{relative}"
+            result = subprocess.run(["git", "cat-file", "-e", f"{x1_commit}:{repository_relative}"], cwd=ROOT, capture_output=True)
+            self.assertNotEqual(result.returncode, 0, relative)
 
 
 if __name__ == "__main__":
