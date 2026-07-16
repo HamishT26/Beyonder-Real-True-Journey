@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped",
+  "candidate_workaround": "Preflight HEAD and use the evidence builder only while it equals the frozen x1 anchor; after evidence commit, update closeout receipts additively without rerunning generation.",
+  "failure_signature": "The evidence builder refused because HEAD was the evidence commit rather than the exact pushed x1 commit.",
+  "method_id": "V6473-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "x1_x2_separation",
+    "evidence_immutability",
+    "lifecycle_order"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Compare HEAD with the frozen x1 anchor before every evidence-builder invocation.",
+  "retained_negative_ids": [
+    "V6473-X2-N08"
+  ],
+  "rollback": "Retain the refused invocation; the guard wrote no derived evidence and no history changed.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Preflight lifecycle HEAD before phase-bound evidence generation",
+  "trigger_preconditions": [
+    "A phase builder is intentionally bound to one frozen lifecycle anchor."
+  ],
+  "validation_witness_ids": []
+}

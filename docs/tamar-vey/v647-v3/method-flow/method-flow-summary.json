@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 15,
-    "recommendations": 15,
-    "state_events": 45,
+    "methods": 16,
+    "recommendations": 16,
+    "state_events": 48,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 15,
+      "preferred": 16,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 15,
-      "pass": 15
+      "fail": 17,
+      "pass": 17
     },
-    "witnesses": 30
+    "witnesses": 34
   },
   "owner": "Tamar Vey",
   "phase": "v647-gmut-thos-v3-x1-x2",
@@ -123,7 +123,9 @@
       ],
       "validation_witness_ids": [
         "V6473-M07-WFAIL",
-        "V6473-M07-WPASS"
+        "V6473-M07-WPASS",
+        "V6473-M07-WFAIL-X2",
+        "V6473-M07-WPASS-X2"
       ]
     },
     {
@@ -245,6 +247,21 @@
         "V6473-M15-WFAIL",
         "V6473-M15-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Preflight HEAD and use the evidence builder only while it equals the frozen x1 anchor; after evidence commit, update closeout receipts additively without rerunning generation.",
+      "method_id": "V6473-M16",
+      "recurrence_guard": "Compare HEAD with the frozen x1 anchor before every evidence-builder invocation.",
+      "rollback": "Retain the refused invocation; the guard wrote no derived evidence and no history changed.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Preflight lifecycle HEAD before phase-bound evidence generation",
+      "trigger_preconditions": [
+        "A phase builder is intentionally bound to one frozen lifecycle anchor."
+      ],
+      "validation_witness_ids": [
+        "V6473-M16-WFAIL",
+        "V6473-M16-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -262,7 +279,9 @@
     "V6473-M12-WFAIL",
     "V6473-M13-WFAIL",
     "V6473-M14-WFAIL",
-    "V6473-M15-WFAIL"
+    "V6473-M15-WFAIL",
+    "V6473-M07-WFAIL-X2",
+    "V6473-M16-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

@@ -81,6 +81,20 @@ X2_OPERATIONAL_NEGATIVES = [
         "retained": True,
         "recovered": True,
     },
+    {
+        "negative_id": "V6473-X2-N07",
+        "method_id": "V6473-M07",
+        "summary": "A closeout stale-label scan repeated the known PowerShell wildcard-path mistake and ripgrep refused before scanning; explicit paths and ripgrep-owned globs recovered without mutation.",
+        "retained": True,
+        "recovered": True,
+    },
+    {
+        "negative_id": "V6473-X2-N08",
+        "method_id": "V6473-M16",
+        "summary": "A post-evidence refresh invoked the x1-head-bound evidence builder at the evidence commit; its lifecycle guard refused before derived files were rewritten, and closeout proceeded through additive receipts only.",
+        "retained": True,
+        "recovered": True,
+    },
 ]
 
 

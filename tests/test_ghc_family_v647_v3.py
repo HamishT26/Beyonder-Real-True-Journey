@@ -127,7 +127,7 @@ class V647V3EvidenceTests(unittest.TestCase):
             negatives["effective_total"],
             negatives["inherited_effective"] + negatives["x1_operational"] + negatives["preregistered_synthetic"] + negatives["x2_operational"],
         )
-        self.assertEqual(negatives["effective_total"], 3415)
+        self.assertEqual(negatives["effective_total"], 3417)
         self.assertEqual((gates["effective_open_gaps"], gates["effective_exact_gates"]), (20, 21))
 
     def test_overview_and_report_boundaries(self) -> None:
@@ -142,8 +142,8 @@ class V647V3EvidenceTests(unittest.TestCase):
     def test_method_flow_retains_fail_and_pass_witnesses(self) -> None:
         ledger = load("method-flow/method-flow-state.json")
         results = Counter(row["result"] for row in ledger["witnesses"])
-        self.assertEqual(results, Counter({"fail": 15, "pass": 15}))
-        self.assertEqual(ledger["counts"]["methods"], 15)
+        self.assertEqual(results, Counter({"fail": 17, "pass": 17}))
+        self.assertEqual(ledger["counts"]["methods"], 16)
         self.assertTrue(all(row["recommendation_state"] == "preferred" for row in ledger["methods"]))
 
 

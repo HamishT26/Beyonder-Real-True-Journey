@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v3-x1-x2
 - Owner: Tamar Vey
-- Methods: 15
-- Passing witnesses: 15
-- Failed witnesses retained: 15
+- Methods: 16
+- Passing witnesses: 17
+- Failed witnesses retained: 17
 
 ## Preferred methods
 
@@ -62,7 +62,7 @@
 - Method: Pass stable directories as paths and use ripgrep -g filters for version-patterned filenames.
 - Recurrence guard: Do not rely on PowerShell to expand native-command wildcard path arguments.
 - Rollback: Discard the failed read-only scan; no file was staged or changed.
-- Witnesses: V6473-M07-WFAIL, V6473-M07-WPASS
+- Witnesses: V6473-M07-WFAIL, V6473-M07-WPASS, V6473-M07-WFAIL-X2, V6473-M07-WPASS-X2
 
 ### V6473-M08 — Pass absolute receipt paths to staged reviewers that relativize against the repository root
 
@@ -127,6 +127,14 @@
 - Recurrence guard: Use exact repository discovery for phase-local reviewer names instead of inferring a suffix.
 - Rollback: Retain the failed read-only probe; it changed no file, index entry, ref, or worktree.
 - Witnesses: V6473-M15-WFAIL, V6473-M15-WPASS
+
+### V6473-M16 — Preflight lifecycle HEAD before phase-bound evidence generation
+
+- Trigger: A phase builder is intentionally bound to one frozen lifecycle anchor.
+- Method: Preflight HEAD and use the evidence builder only while it equals the frozen x1 anchor; after evidence commit, update closeout receipts additively without rerunning generation.
+- Recurrence guard: Compare HEAD with the frozen x1 anchor before every evidence-builder invocation.
+- Rollback: Retain the refused invocation; the guard wrote no derived evidence and no history changed.
+- Witnesses: V6473-M16-WFAIL, V6473-M16-WPASS
 
 ## Retained boundary
 
