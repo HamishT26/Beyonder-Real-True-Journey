@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from collections import Counter
@@ -26,6 +27,7 @@ from ghc_family_v647_v1_definitions import (  # noqa: E402
 
 
 PHASE = ROOT / "docs" / "sable-rook" / "v647-v1"
+X1_FINAL = "d120045b586665b507d3460b254158ec28e0baa6"
 
 
 class V647V1X1Tests(unittest.TestCase):
@@ -67,8 +69,13 @@ class V647V1X1Tests(unittest.TestCase):
         self.assertFalse(payload["x2_execution_present"])
         self.assertEqual(payload["prior_frozen_proposal_count"], 470)
         self.assertEqual(payload["frozen_chain_count_after_x1"], 480)
-        self.assertFalse((PHASE / "x2-proposal-ledger.json").exists())
-        self.assertFalse((PHASE / "closeout-receipt.json").exists())
+        for relative in ("docs/sable-rook/v647-v1/x2-proposal-ledger.json", "docs/sable-rook/v647-v1/closeout-receipt.json"):
+            probe = subprocess.run(
+                ["git", "-C", str(ROOT), "cat-file", "-e", f"{X1_FINAL}:{relative}"],
+                check=False,
+                capture_output=True,
+            )
+            self.assertNotEqual(probe.returncode, 0, relative)
 
 
 if __name__ == "__main__":

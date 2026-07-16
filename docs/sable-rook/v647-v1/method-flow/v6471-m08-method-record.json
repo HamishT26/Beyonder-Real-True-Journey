@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 for skill-creator initialization, metadata generation, and validation subprocesses.",
+  "failure_signature": "generate_openai_yaml.py decoded a UTF-8 SKILL.md through the host CP1252 default and raised UnicodeDecodeError on Māori text.",
+  "method_id": "V6471-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "maori_text_integrity",
+    "no_global_skill_mutation",
+    "no_delegation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 for every skill-creator subprocess before it reads or emits Unicode content.",
+  "retained_negative_ids": [
+    "V6471-X2-N01"
+  ],
+  "rollback": "Keep the partial package phase-local, overwrite only its generated metadata after UTF-8 validation, and do not touch the global skill bank.",
+  "scope_boundary": "Phase-local skill packaging evidence only; no global installation, authority, or independent review claim.",
+  "supersedes": [],
+  "title": "Pin UTF-8 for skill-creator subprocesses",
+  "trigger_preconditions": [
+    "A phase-local skill contains Māori or other non-CP1252 text and system skill tools use Python text defaults."
+  ],
+  "validation_witness_ids": []
+}

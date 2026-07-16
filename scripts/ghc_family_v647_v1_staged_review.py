@@ -26,6 +26,18 @@ PATTERNS = {
 SCANNER_DEFINITION_PATHS = {
     "scripts/ghc_family_v647_v1_staged_review.py",
     "scripts/ghc_family_v647_v1_x1_review.py",
+    "scripts/ghc_family_v647_v1_validation_runner.py",
+}
+FAMILY_CURRENT_RUNNERS = {
+    "scripts/ghc_family_tuf_trust_tribunal.py",
+    "scripts/ghc_family_nielsen_identity_obligations.py",
+    "scripts/ghc_family_chime_frb_zero_row.py",
+    "scripts/ghc_family_food_cold_chain_handover.py",
+    "scripts/ghc_family_controlled_identifier_profile.py",
+    "scripts/ghc_family_sqlite_session_tribunal.py",
+    "scripts/ghc_family_long_form_accessibility_audit.py",
+    "scripts/ghc_family_clausius_clapeyron_domain.py",
+    "scripts/ghc_family_control_outcome_nonpromotion.py",
 }
 
 
@@ -62,6 +74,7 @@ def allowed(path: str) -> bool:
     return (
         path.startswith(PHASE_PREFIX)
         or (path.startswith("scripts/") and SCRIPT_MARKER in path)
+        or path in FAMILY_CURRENT_RUNNERS
         or path == "tests/test_ghc_family_v647_v1_x1.py"
         or path == "tests/test_ghc_family_v647_v1.py"
     )

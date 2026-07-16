@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 for Method Flow validate and summarize commands, then verify both summary files parse or read.",
+  "failure_signature": "The Method Flow summary command wrote through CP1252 stdout and raised UnicodeEncodeError on Māori text after ledger validation.",
+  "method_id": "V6471-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "maori_text_integrity",
+    "append_only_failures",
+    "summary_parity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before every family runner that may print phase text, not only skill-creator tools.",
+  "retained_negative_ids": [
+    "V6471-X2-N02"
+  ],
+  "rollback": "Retain the valid ledger and failed command, then regenerate only derived summaries under UTF-8.",
+  "scope_boundary": "Derived Method Flow summary evidence only; no scientific or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Pin UTF-8 for family-runner stdout and summaries",
+  "trigger_preconditions": [
+    "A family runner prints phase content containing Māori or other non-CP1252 text."
+  ],
+  "validation_witness_ids": []
+}

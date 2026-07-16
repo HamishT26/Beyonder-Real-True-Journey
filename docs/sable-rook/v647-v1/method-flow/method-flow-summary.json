@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 7,
-    "recommendations": 7,
-    "state_events": 21,
+    "methods": 10,
+    "recommendations": 10,
+    "state_events": 30,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 7,
+      "preferred": 10,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 7,
-      "pass": 7
+      "fail": 10,
+      "pass": 10
     },
-    "witnesses": 14
+    "witnesses": 20
   },
   "owner": "Sable Rook",
   "phase": "v647-gmut-thos-v1-x1-x2",
@@ -139,6 +139,51 @@
         "V6471-M07-WFAIL",
         "V6471-M07-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 for skill-creator initialization, metadata generation, and validation subprocesses.",
+      "method_id": "V6471-M08",
+      "recurrence_guard": "Pin UTF-8 for every skill-creator subprocess before it reads or emits Unicode content.",
+      "rollback": "Keep the partial package phase-local, overwrite only its generated metadata after UTF-8 validation, and do not touch the global skill bank.",
+      "scope_boundary": "Phase-local skill packaging evidence only; no global installation, authority, or independent review claim.",
+      "title": "Pin UTF-8 for skill-creator subprocesses",
+      "trigger_preconditions": [
+        "A phase-local skill contains Māori or other non-CP1252 text and system skill tools use Python text defaults."
+      ],
+      "validation_witness_ids": [
+        "V6471-M08-WFAIL",
+        "V6471-M08-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 for Method Flow validate and summarize commands, then verify both summary files parse or read.",
+      "method_id": "V6471-M09",
+      "recurrence_guard": "Pin UTF-8 before every family runner that may print phase text, not only skill-creator tools.",
+      "rollback": "Retain the valid ledger and failed command, then regenerate only derived summaries under UTF-8.",
+      "scope_boundary": "Derived Method Flow summary evidence only; no scientific or independent-reproduction credit.",
+      "title": "Pin UTF-8 for family-runner stdout and summaries",
+      "trigger_preconditions": [
+        "A family runner prints phase content containing Māori or other non-CP1252 text."
+      ],
+      "validation_witness_ids": [
+        "V6471-M09-WFAIL",
+        "V6471-M09-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind x1-only absence assertions to the immutable pushed x1 final commit instead of the successor working tree.",
+      "method_id": "V6471-M10",
+      "recurrence_guard": "Historical lifecycle absence tests must read the lifecycle commit, not infer absence from a later working tree.",
+      "rollback": "Retain the failing 99-test run, patch only the lifecycle reference, and rerun the identical selection.",
+      "scope_boundary": "Successor test selection and x1 separation evidence only.",
+      "title": "Bind historical x1 absence assertions to the immutable x1 commit",
+      "trigger_preconditions": [
+        "An x1-only test is rerun after x2 artifacts legitimately exist in the successor worktree."
+      ],
+      "validation_witness_ids": [
+        "V6471-M10-WFAIL",
+        "V6471-M10-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -148,7 +193,10 @@
     "V6471-M04-WFAIL",
     "V6471-M05-WFAIL",
     "V6471-M06-WFAIL",
-    "V6471-M07-WFAIL"
+    "V6471-M07-WFAIL",
+    "V6471-M08-WFAIL",
+    "V6471-M09-WFAIL",
+    "V6471-M10-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

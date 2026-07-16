@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v647-gmut-thos-v1-x1-x2
 
 Owner: **Sable Rook**
-Generated UTC: `2026-07-16T17:15:32.385756+00:00`
+Generated UTC: `2026-07-16T17:36:23.804543+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 209 | 17 | 905 | 17 |
+| Repository scripts | 218 | 17 | 909 | 17 |
 | Local skills | 113 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v1-x1-x2
 - Owner: Sable Rook
-- Methods: 7
-- Passing witnesses: 7
-- Failed witnesses retained: 7
+- Methods: 10
+- Passing witnesses: 10
+- Failed witnesses retained: 10
 
 ## Preferred methods
 
@@ -63,6 +63,30 @@
 - Recurrence guard: Prefer the repository's byte-preserving manifest runner over host-specific PowerShell process APIs.
 - Rollback: Keep the already-created x1 commit, add one bounded x1 repair commit, and do not rewrite history.
 - Witnesses: V6471-M07-WFAIL, V6471-M07-WPASS, V6471-M07-WFAIL, V6471-M07-WPASS
+
+### V6471-M08 — Pin UTF-8 for skill-creator subprocesses
+
+- Trigger: A phase-local skill contains Māori or other non-CP1252 text and system skill tools use Python text defaults.
+- Method: Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 for skill-creator initialization, metadata generation, and validation subprocesses.
+- Recurrence guard: Pin UTF-8 for every skill-creator subprocess before it reads or emits Unicode content.
+- Rollback: Keep the partial package phase-local, overwrite only its generated metadata after UTF-8 validation, and do not touch the global skill bank.
+- Witnesses: V6471-M08-WFAIL, V6471-M08-WPASS
+
+### V6471-M09 — Pin UTF-8 for family-runner stdout and summaries
+
+- Trigger: A family runner prints phase content containing Māori or other non-CP1252 text.
+- Method: Set PYTHONUTF8=1 and PYTHONIOENCODING=utf-8 for Method Flow validate and summarize commands, then verify both summary files parse or read.
+- Recurrence guard: Pin UTF-8 before every family runner that may print phase text, not only skill-creator tools.
+- Rollback: Retain the valid ledger and failed command, then regenerate only derived summaries under UTF-8.
+- Witnesses: V6471-M09-WFAIL, V6471-M09-WPASS
+
+### V6471-M10 — Bind historical x1 absence assertions to the immutable x1 commit
+
+- Trigger: An x1-only test is rerun after x2 artifacts legitimately exist in the successor worktree.
+- Method: Bind x1-only absence assertions to the immutable pushed x1 final commit instead of the successor working tree.
+- Recurrence guard: Historical lifecycle absence tests must read the lifecycle commit, not infer absence from a later working tree.
+- Rollback: Retain the failing 99-test run, patch only the lifecycle reference, and rerun the identical selection.
+- Witnesses: V6471-M10-WFAIL, V6471-M10-WPASS
 
 ## Retained boundary
 
