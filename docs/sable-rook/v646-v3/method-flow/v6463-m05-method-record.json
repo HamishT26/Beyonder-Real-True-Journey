@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_workflow",
+  "candidate_workaround": "Disable login startup, split status and pattern inspection into bounded commands, and keep each query on known owner paths.",
+  "failure_signature": "Combined repository inventory and content inspection, followed by a login-profile skill read, exceeded short command envelopes before returning complete output.",
+  "method_id": "V6463-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["host_security", "elevation", "sibling_lane", "privacy"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use non-login shell startup and separate status, file inventory, and targeted content searches so each bounded command has one purpose.",
+  "retained_negative_ids": ["V6463-X2-N01", "V6463-X2-N02"],
+  "rollback": "Stop the read-only probe without mutation and retain unavailable state if the split command still exceeds the widened envelope.",
+  "scope_boundary": "Read-only owner-lane and local skill inspection only; no host feature change, elevation, deletion, or sibling mutation.",
+  "supersedes": [],
+  "title": "Split non-login inspection envelope",
+  "trigger_preconditions": ["the requested inspection spans multiple output classes", "known owner paths are available", "ordinary user privileges only"],
+  "validation_witness_ids": []
+}
