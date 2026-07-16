@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v4-x1-x2
 - Owner: Orin Thale
-- Methods: 22
-- Passing witnesses: 22
-- Failed witnesses retained: 22
+- Methods: 23
+- Passing witnesses: 23
+- Failed witnesses retained: 23
 
 ## Preferred methods
 
@@ -183,6 +183,14 @@
 - Recurrence guard: Use explicit PowerShell arrays for multiple literal paths and never copy shell brace-list syntax into PowerShell wrappers.
 - Rollback: Assign zero stale-label credit to the parser-failed wrapper and leave the staged candidate unchanged.
 - Witnesses: V6464-M22-F, V6464-M22-P
+
+### V6464-M23 — Separate native Git exit-status ancestry check
+
+- Trigger: PowerShell orchestrates native Git commands; the exact evidence head is already pushed and clean
+- Method: Run each native Git ancestry command as a separate PowerShell statement, capture its exit code immediately, and only then assign the boolean used by the summary object.
+- Recurrence guard: Never combine native commands and exit-status expressions inside a PowerShell assignment; preserve the inherited Sable recurrence example as an explicit negative test.
+- Rollback: Give the parser-failed wrapper zero exact-evidence credit and leave the clean evidence commit and remote refs untouched.
+- Witnesses: V6464-M23-F, V6464-M23-P
 
 ## Retained boundary
 

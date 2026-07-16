@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_validation",
+  "candidate_workaround": "Run each native Git ancestry command as a separate PowerShell statement, capture its exit code immediately, and only then assign the boolean used by the summary object.",
+  "failure_signature": "The first exact-evidence wrapper embedded native git merge-base commands and LASTEXITCODE checks inside PowerShell parenthesized expressions, causing a parser failure before Git ran.",
+  "method_id": "V6464-M23",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_evidence_validation",
+    "ancestry",
+    "remote_equality",
+    "validation_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never combine native commands and exit-status expressions inside a PowerShell assignment; preserve the inherited Sable recurrence example as an explicit negative test.",
+  "retained_negative_ids": [
+    "V6464-X2-N07"
+  ],
+  "rollback": "Give the parser-failed wrapper zero exact-evidence credit and leave the clean evidence commit and remote refs untouched.",
+  "scope_boundary": "Read-only exact-evidence ancestry, remote equality, and validation orchestration only.",
+  "supersedes": [],
+  "title": "Separate native Git exit-status ancestry check",
+  "trigger_preconditions": [
+    "PowerShell orchestrates native Git commands",
+    "the exact evidence head is already pushed and clean"
+  ],
+  "validation_witness_ids": []
+}
