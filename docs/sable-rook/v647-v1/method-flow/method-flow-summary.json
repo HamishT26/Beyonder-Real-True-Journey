@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 6,
-    "recommendations": 6,
-    "state_events": 18,
+    "methods": 7,
+    "recommendations": 7,
+    "state_events": 21,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 6,
+      "preferred": 7,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 6,
-      "pass": 6
+      "fail": 7,
+      "pass": 7
     },
-    "witnesses": 12
+    "witnesses": 14
   },
   "owner": "Sable Rook",
   "phase": "v647-gmut-thos-v1-x1-x2",
@@ -122,6 +122,23 @@
         "V6471-M06-WFAIL",
         "V6471-M06-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Use Python subprocess.check_output with an argument list for git cat-file blob and hash the returned bytes directly.",
+      "method_id": "V6471-M07",
+      "recurrence_guard": "Prefer the repository's byte-preserving manifest runner over host-specific PowerShell process APIs.",
+      "rollback": "Keep the already-created x1 commit, add one bounded x1 repair commit, and do not rewrite history.",
+      "scope_boundary": "Sable v647-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Verify exact Git blob bytes through a Python subprocess runner",
+      "trigger_preconditions": [
+        "Exact manifest parity requires byte-preserving Git blob reads on a host with inconsistent ProcessStartInfo APIs."
+      ],
+      "validation_witness_ids": [
+        "V6471-M07-WFAIL",
+        "V6471-M07-WPASS",
+        "V6471-M07-WFAIL",
+        "V6471-M07-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -130,7 +147,8 @@
     "V6471-M03-WFAIL",
     "V6471-M04-WFAIL",
     "V6471-M05-WFAIL",
-    "V6471-M06-WFAIL"
+    "V6471-M06-WFAIL",
+    "V6471-M07-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Use Python subprocess.check_output with an argument list for git cat-file blob and hash the returned bytes directly.",
+  "failure_signature": "PowerShell ProcessStartInfo.ArgumentList was null before the exact-byte loop could launch Git.",
+  "method_id": "V6471-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_blob_parity",
+    "x1_commit_cap",
+    "no_history_rewrite",
+    "no_x2_before_push"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Prefer the repository's byte-preserving manifest runner over host-specific PowerShell process APIs.",
+  "retained_negative_ids": [
+    "V6471-X1-N07"
+  ],
+  "rollback": "Keep the already-created x1 commit, add one bounded x1 repair commit, and do not rewrite history.",
+  "scope_boundary": "Sable v647-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Verify exact Git blob bytes through a Python subprocess runner",
+  "trigger_preconditions": [
+    "Exact manifest parity requires byte-preserving Git blob reads on a host with inconsistent ProcessStartInfo APIs."
+  ],
+  "validation_witness_ids": [
+    "V6471-M07-WFAIL",
+    "V6471-M07-WPASS"
+  ]
+}

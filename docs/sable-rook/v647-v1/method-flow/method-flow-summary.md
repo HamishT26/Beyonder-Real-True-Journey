@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v1-x1-x2
 - Owner: Sable Rook
-- Methods: 6
-- Passing witnesses: 6
-- Failed witnesses retained: 6
+- Methods: 7
+- Passing witnesses: 7
+- Failed witnesses retained: 7
 
 ## Preferred methods
 
@@ -55,6 +55,14 @@
 - Recurrence guard: Do not embed PowerShell backtick escapes inside JavaScript template strings.
 - Rollback: Discard the rejected orchestration cell; no commit or Git command ran.
 - Witnesses: V6471-M06-WFAIL, V6471-M06-WPASS, V6471-M06-WFAIL, V6471-M06-WPASS
+
+### V6471-M07 — Verify exact Git blob bytes through a Python subprocess runner
+
+- Trigger: Exact manifest parity requires byte-preserving Git blob reads on a host with inconsistent ProcessStartInfo APIs.
+- Method: Use Python subprocess.check_output with an argument list for git cat-file blob and hash the returned bytes directly.
+- Recurrence guard: Prefer the repository's byte-preserving manifest runner over host-specific PowerShell process APIs.
+- Rollback: Keep the already-created x1 commit, add one bounded x1 repair commit, and do not rewrite history.
+- Witnesses: V6471-M07-WFAIL, V6471-M07-WPASS, V6471-M07-WFAIL, V6471-M07-WPASS
 
 ## Retained boundary
 

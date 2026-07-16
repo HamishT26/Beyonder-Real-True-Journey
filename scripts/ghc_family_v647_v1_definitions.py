@@ -396,6 +396,7 @@ X1_OPERATIONAL_NEGATIVES = [
     {"negative_id":"V6471-X1-N04","method_id":"V6471-M04","summary":"The first staged privacy review treated the x1 reviewer's embedded private-path detection pattern as a confirmed payload hit instead of a scanner definition.","retained":True,"recovered":True},
     {"negative_id":"V6471-X1-N05","method_id":"V6471-M05","summary":"A rerun of the preregistration builder restored the rotation receipt template value, so a patch expecting the earlier measured owner-file count found no matching line.","retained":True,"recovered":True},
     {"negative_id":"V6471-X1-N06","method_id":"V6471-M06","summary":"A PowerShell backtick used inside a JavaScript template string terminated the orchestration source before the commit or any nested Git command could run.","retained":True,"recovered":True},
+    {"negative_id":"V6471-X1-N07","method_id":"V6471-M07","summary":"The first post-commit exact-byte verifier assumed ProcessStartInfo.ArgumentList was available, but that property was null on this Windows PowerShell host before any manifest entry was read.","retained":True,"recovered":True},
 ]
 
 METHOD_SPECS = [
@@ -462,7 +463,7 @@ METHOD_SPECS = [
         "protected_gates":["deterministic_generation","owner_file_threshold","no_history_rewrite"],
         "retained_negative_ids":["V6471-X1-N05"],
         "failed_observed":"The patch expected 51 but the regenerated receipt truthfully contained the template value 0.",
-        "pass_observed":"The corrected builder emitted the measured 35,643 inherited tracked baseline and 62 owner-generated x1 files, below threshold.",
+        "pass_observed":"The corrected builder emitted the measured inherited tracked baseline and owner-generated x1 count from its authoritative source, below threshold.",
     },
     {
         "method_id":"V6471-M06",
@@ -476,5 +477,18 @@ METHOD_SPECS = [
         "retained_negative_ids":["V6471-X1-N06"],
         "failed_observed":"JavaScript returned an unexpected-colon syntax error before calling the shell tool.",
         "pass_observed":"A read-only concatenated revision-path specification retrieved the exact staged manifest without parser ambiguity.",
+    },
+    {
+        "method_id":"V6471-M07",
+        "title":"Verify exact Git blob bytes through a Python subprocess runner",
+        "failure_signature":"PowerShell ProcessStartInfo.ArgumentList was null before the exact-byte loop could launch Git.",
+        "trigger_preconditions":["Exact manifest parity requires byte-preserving Git blob reads on a host with inconsistent ProcessStartInfo APIs."],
+        "candidate_workaround":"Use Python subprocess.check_output with an argument list for git cat-file blob and hash the returned bytes directly.",
+        "recurrence_guard":"Prefer the repository's byte-preserving manifest runner over host-specific PowerShell process APIs.",
+        "rollback":"Keep the already-created x1 commit, add one bounded x1 repair commit, and do not rewrite history.",
+        "protected_gates":["exact_blob_parity","x1_commit_cap","no_history_rewrite","no_x2_before_push"],
+        "retained_negative_ids":["V6471-X1-N07"],
+        "failed_observed":"The verifier stopped on a null ArgumentList before checking the first manifest entry; no push occurred.",
+        "pass_observed":"The Python runner hashed every exact x1 commit blob and reported zero manifest mismatches.",
     },
 ]

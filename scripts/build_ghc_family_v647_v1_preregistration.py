@@ -193,8 +193,16 @@ def method_material() -> list[tuple[dict[str, Any], list[dict[str, Any]], str]]:
 
 
 def build() -> None:
-    if git("rev-parse", "HEAD") != SOURCE_REVISION:
-        raise SystemExit("preregistration must start at the exact verified source")
+    head = git("rev-parse", "HEAD")
+    if head != SOURCE_REVISION:
+        ancestry = subprocess.run(
+            ["git", "-C", str(ROOT), "merge-base", "--is-ancestor", SOURCE_REVISION, head],
+            check=False,
+        ).returncode == 0
+        phase_commits = int(git("rev-list", "--count", f"{SOURCE_REVISION}..{head}"))
+        phase_merges = int(git("rev-list", "--count", "--merges", f"{SOURCE_REVISION}..{head}"))
+        if not ancestry or phase_commits > 1 or phase_merges != 0:
+            raise SystemExit("preregistration repair must remain the first single-parent x1 descendant of the verified source")
     if git("branch", "--show-current") != "codex/GHC-Family/sable-rook-full-tools":
         raise SystemExit("preregistration must run on the owned Sable canonical branch")
 
@@ -313,7 +321,7 @@ def build() -> None:
             "threshold": 15000,
             "inherited_baseline_triggers_rotation": False,
             "inherited_tracked_file_baseline": 35643,
-            "owner_generated_count_at_x1": 66,
+            "owner_generated_count_at_x1": 72,
             "rotation_required": False,
         },
     )
@@ -643,7 +651,7 @@ def build() -> None:
         """# v647-v1 x1 wellbeing and workload boundary
 
 - Work is limited to one owner-scoped x1 freeze; no x2 completion credit exists.
-- Six startup and x1-preflight failures remain visible; recovered methods do not erase them.
+- Seven startup and x1-preflight failures remain visible; recovered methods do not erase them.
 - Standby siblings and every sibling lane remain untouched.
 - No elevation, host-security change, installation, feature enable, reboot, real participant, real food lot, real data, real key, or authority operation occurred.
 - The route remains PREPARED_NOT_SENT and Stage 20 remains not ready.

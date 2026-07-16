@@ -59,7 +59,7 @@ class V647V1X1Tests(unittest.TestCase):
 
     def test_sources_and_negatives(self) -> None:
         self.assertEqual(len(SOURCES), 19)
-        self.assertEqual(len(X1_OPERATIONAL_NEGATIVES), 6)
+        self.assertEqual(len(X1_OPERATIONAL_NEGATIVES), 7)
         self.assertTrue(all(row["retained"] for row in X1_OPERATIONAL_NEGATIVES))
 
     def test_generated_packet_is_x1_only(self) -> None:
