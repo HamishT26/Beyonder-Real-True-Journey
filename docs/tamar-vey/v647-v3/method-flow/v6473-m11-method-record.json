@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped",
+  "candidate_workaround": "Construct dollar-prefixed skill prompts with Python string concatenation so JavaScript sees no dollar-brace interpolation syntax.",
+  "failure_signature": "JavaScript attempted to resolve a Python variable name in dollar-brace syntax.",
+  "method_id": "V6473-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "atomic_edit",
+    "skill_prompt_integrity",
+    "no_partial_generation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Avoid dollar-brace sequences inside JavaScript template literals unless JavaScript interpolation is intended.",
+  "retained_negative_ids": [
+    "V6473-X2-N02"
+  ],
+  "rollback": "Discard the ReferenceError result; it ran no patch and changed no file.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Separate Python skill prompt construction from JavaScript interpolation syntax",
+  "trigger_preconditions": [
+    "Generated Python source must contain a dollar-prefixed skill name inside a JavaScript template."
+  ],
+  "validation_witness_ids": []
+}

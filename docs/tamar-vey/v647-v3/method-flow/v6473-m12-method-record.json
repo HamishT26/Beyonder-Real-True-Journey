@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped",
+  "candidate_workaround": "Create the exact owner-scoped destination directory before copying a generated deliverable.",
+  "failure_signature": "Copy-Item reported that the destination directory did not exist.",
+  "method_id": "V6473-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "owner_scope",
+    "additive_filesystem",
+    "no_sibling_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Preflight the destination parent and create only the declared owner-scoped directory.",
+  "retained_negative_ids": [
+    "V6473-X2-N03"
+  ],
+  "rollback": "No partial destination existed; retain the source and retry only after the bounded parent exists.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Preflight owner-scoped deliverable directories before bounded copies",
+  "trigger_preconditions": [
+    "A generated artifact must be copied into a new phase deliverables directory."
+  ],
+  "validation_witness_ids": []
+}

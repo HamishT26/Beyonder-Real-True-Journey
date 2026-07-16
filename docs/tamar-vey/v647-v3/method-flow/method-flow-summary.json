@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 9,
-    "recommendations": 9,
-    "state_events": 27,
+    "methods": 15,
+    "recommendations": 15,
+    "state_events": 45,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 9,
+      "preferred": 15,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 9,
-      "pass": 9
+      "fail": 15,
+      "pass": 15
     },
-    "witnesses": 18
+    "witnesses": 30
   },
   "owner": "Tamar Vey",
   "phase": "v647-gmut-thos-v3-x1-x2",
@@ -155,6 +155,96 @@
         "V6473-M09-WFAIL",
         "V6473-M09-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Split large generated artifacts into quote-safe apply_patch surfaces and keep JavaScript template literals free of unescaped Markdown backticks.",
+      "method_id": "V6473-M10",
+      "recurrence_guard": "Scan cross-language template bodies for the outer delimiter before executing any nested edit call.",
+      "rollback": "Discard the parser-rejected orchestration cell; it ran no nested tool and changed no file.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Keep orchestration template delimiters out of generated artifact bodies",
+      "trigger_preconditions": [
+        "A JavaScript orchestration template contains generated Markdown or Python source."
+      ],
+      "validation_witness_ids": [
+        "V6473-M10-WFAIL",
+        "V6473-M10-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Construct dollar-prefixed skill prompts with Python string concatenation so JavaScript sees no dollar-brace interpolation syntax.",
+      "method_id": "V6473-M11",
+      "recurrence_guard": "Avoid dollar-brace sequences inside JavaScript template literals unless JavaScript interpolation is intended.",
+      "rollback": "Discard the ReferenceError result; it ran no patch and changed no file.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Separate Python skill prompt construction from JavaScript interpolation syntax",
+      "trigger_preconditions": [
+        "Generated Python source must contain a dollar-prefixed skill name inside a JavaScript template."
+      ],
+      "validation_witness_ids": [
+        "V6473-M11-WFAIL",
+        "V6473-M11-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Create the exact owner-scoped destination directory before copying a generated deliverable.",
+      "method_id": "V6473-M12",
+      "recurrence_guard": "Preflight the destination parent and create only the declared owner-scoped directory.",
+      "rollback": "No partial destination existed; retain the source and retry only after the bounded parent exists.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Preflight owner-scoped deliverable directories before bounded copies",
+      "trigger_preconditions": [
+        "A generated artifact must be copied into a new phase deliverables directory."
+      ],
+      "validation_witness_ids": [
+        "V6473-M12-WFAIL",
+        "V6473-M12-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Normalize the bounded evidence label to the canonical lowercase same-owner spelling and rerun the exact current-phase tests.",
+      "method_id": "V6473-M13",
+      "recurrence_guard": "Use the canonical same-owner label consistently across overview, receipts, report, and validators.",
+      "rollback": "Retain the failed test output and change only the label casing; do not weaken the assertion.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Normalize same-owner labels without weakening reproduction boundaries",
+      "trigger_preconditions": [
+        "A validator compares exact reproduction-boundary vocabulary."
+      ],
+      "validation_witness_ids": [
+        "V6473-M13-WFAIL",
+        "V6473-M13-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Replay each verification as a short single-command witness and accept only its explicit exit status.",
+      "method_id": "V6473-M14",
+      "recurrence_guard": "Use short serial verification commands when wrapper output or startup latency can consume the orchestration deadline.",
+      "rollback": "Retain the timeout and award no credit to its unobserved children.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Replace timed-out parallel verification with explicit serial witnesses",
+      "trigger_preconditions": [
+        "A verification wrapper times out without returning child results."
+      ],
+      "validation_witness_ids": [
+        "V6473-M14-WFAIL",
+        "V6473-M14-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Discover the exact frozen reviewer path with a bounded filename query before invoking help.",
+      "method_id": "V6473-M15",
+      "recurrence_guard": "Use exact repository discovery for phase-local reviewer names instead of inferring a suffix.",
+      "rollback": "Retain the failed read-only probe; it changed no file, index entry, ref, or worktree.",
+      "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+      "title": "Discover exact staged-reviewer paths before invocation",
+      "trigger_preconditions": [
+        "A phase contains more than one staged-review or x1-review helper."
+      ],
+      "validation_witness_ids": [
+        "V6473-M15-WFAIL",
+        "V6473-M15-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -166,7 +256,13 @@
     "V6473-M06-WFAIL",
     "V6473-M07-WFAIL",
     "V6473-M08-WFAIL",
-    "V6473-M09-WFAIL"
+    "V6473-M09-WFAIL",
+    "V6473-M10-WFAIL",
+    "V6473-M11-WFAIL",
+    "V6473-M12-WFAIL",
+    "V6473-M13-WFAIL",
+    "V6473-M14-WFAIL",
+    "V6473-M15-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

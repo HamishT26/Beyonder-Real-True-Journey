@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v3-x1-x2
 - Owner: Tamar Vey
-- Methods: 9
-- Passing witnesses: 9
-- Failed witnesses retained: 9
+- Methods: 15
+- Passing witnesses: 15
+- Failed witnesses retained: 15
 
 ## Preferred methods
 
@@ -79,6 +79,54 @@
 - Recurrence guard: Require git diff --cached --check before fixed-point manifest or commit credit.
 - Rollback: Keep all substantive staged bytes, withdraw the failed review's pass credit, and apply only bounded EOF whitespace correction.
 - Witnesses: V6473-M09-WFAIL, V6473-M09-WPASS
+
+### V6473-M10 — Keep orchestration template delimiters out of generated artifact bodies
+
+- Trigger: A JavaScript orchestration template contains generated Markdown or Python source.
+- Method: Split large generated artifacts into quote-safe apply_patch surfaces and keep JavaScript template literals free of unescaped Markdown backticks.
+- Recurrence guard: Scan cross-language template bodies for the outer delimiter before executing any nested edit call.
+- Rollback: Discard the parser-rejected orchestration cell; it ran no nested tool and changed no file.
+- Witnesses: V6473-M10-WFAIL, V6473-M10-WPASS
+
+### V6473-M11 — Separate Python skill prompt construction from JavaScript interpolation syntax
+
+- Trigger: Generated Python source must contain a dollar-prefixed skill name inside a JavaScript template.
+- Method: Construct dollar-prefixed skill prompts with Python string concatenation so JavaScript sees no dollar-brace interpolation syntax.
+- Recurrence guard: Avoid dollar-brace sequences inside JavaScript template literals unless JavaScript interpolation is intended.
+- Rollback: Discard the ReferenceError result; it ran no patch and changed no file.
+- Witnesses: V6473-M11-WFAIL, V6473-M11-WPASS
+
+### V6473-M12 — Preflight owner-scoped deliverable directories before bounded copies
+
+- Trigger: A generated artifact must be copied into a new phase deliverables directory.
+- Method: Create the exact owner-scoped destination directory before copying a generated deliverable.
+- Recurrence guard: Preflight the destination parent and create only the declared owner-scoped directory.
+- Rollback: No partial destination existed; retain the source and retry only after the bounded parent exists.
+- Witnesses: V6473-M12-WFAIL, V6473-M12-WPASS
+
+### V6473-M13 — Normalize same-owner labels without weakening reproduction boundaries
+
+- Trigger: A validator compares exact reproduction-boundary vocabulary.
+- Method: Normalize the bounded evidence label to the canonical lowercase same-owner spelling and rerun the exact current-phase tests.
+- Recurrence guard: Use the canonical same-owner label consistently across overview, receipts, report, and validators.
+- Rollback: Retain the failed test output and change only the label casing; do not weaken the assertion.
+- Witnesses: V6473-M13-WFAIL, V6473-M13-WPASS
+
+### V6473-M14 — Replace timed-out parallel verification with explicit serial witnesses
+
+- Trigger: A verification wrapper times out without returning child results.
+- Method: Replay each verification as a short single-command witness and accept only its explicit exit status.
+- Recurrence guard: Use short serial verification commands when wrapper output or startup latency can consume the orchestration deadline.
+- Rollback: Retain the timeout and award no credit to its unobserved children.
+- Witnesses: V6473-M14-WFAIL, V6473-M14-WPASS
+
+### V6473-M15 — Discover exact staged-reviewer paths before invocation
+
+- Trigger: A phase contains more than one staged-review or x1-review helper.
+- Method: Discover the exact frozen reviewer path with a bounded filename query before invoking help.
+- Recurrence guard: Use exact repository discovery for phase-local reviewer names instead of inferring a suffix.
+- Rollback: Retain the failed read-only probe; it changed no file, index entry, ref, or worktree.
+- Witnesses: V6473-M15-WFAIL, V6473-M15-WPASS
 
 ## Retained boundary
 

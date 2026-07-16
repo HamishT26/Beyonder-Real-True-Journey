@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped",
+  "candidate_workaround": "Split large generated artifacts into quote-safe apply_patch surfaces and keep JavaScript template literals free of unescaped Markdown backticks.",
+  "failure_signature": "The orchestration parser encountered an unexpected backtick before apply_patch.",
+  "method_id": "V6473-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "atomic_edit",
+    "no_partial_generation",
+    "x2_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Scan cross-language template bodies for the outer delimiter before executing any nested edit call.",
+  "retained_negative_ids": [
+    "V6473-X2-N01"
+  ],
+  "rollback": "Discard the parser-rejected orchestration cell; it ran no nested tool and changed no file.",
+  "scope_boundary": "Tamar v647-v3 workflow evidence only; no scientific, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Keep orchestration template delimiters out of generated artifact bodies",
+  "trigger_preconditions": [
+    "A JavaScript orchestration template contains generated Markdown or Python source."
+  ],
+  "validation_witness_ids": []
+}
