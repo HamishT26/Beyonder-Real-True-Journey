@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -54,9 +55,13 @@ class V646V7X1Tests(unittest.TestCase):
         method = load("method-flow/method-flow-state.json")
         count = len(d.X1_OPERATIONAL_NEGATIVES)
         self.assertEqual((negatives["count"], negatives["observed_effective_after_x1"]), (count, 2977 + count))
-        self.assertEqual(method["counts"]["methods"], count)
-        self.assertEqual(method["counts"]["witness_results"], {"fail": count, "pass": count})
-        self.assertTrue(all(row["recommendation_state"] == "preferred" for row in method["methods"]))
+        self.assertGreaterEqual(method["counts"]["methods"], count)
+        self.assertGreaterEqual(method["counts"]["witness_results"]["fail"], count)
+        self.assertGreaterEqual(method["counts"]["witness_results"]["pass"], count)
+        x1_ids = {f"V6467-M{i:02d}" for i in range(1, count + 1)}
+        x1_methods = [row for row in method["methods"] if row["method_id"] in x1_ids]
+        self.assertEqual({row["method_id"] for row in x1_methods}, x1_ids)
+        self.assertTrue(all(row["recommendation_state"] == "preferred" for row in x1_methods))
 
     def test_source_and_authority_boundaries(self):
         source = load("sources/source-ledger.json")
@@ -69,8 +74,11 @@ class V646V7X1Tests(unittest.TestCase):
         self.assertEqual((route["current_state"], route["target_title"], route["send_count"]), ("PREPARED_NOT_SENT", "Ilyra Fen", 0))
 
     def test_x2_absent(self):
+        x1_commit = "4604a34c48ba73f7d01f77e5a0bbf91a84145303"
         for relative in ("x2-proposal-ledger.json", "phase-truth.json", "closeout-receipt.json", "seal-receipt.json", "final-validation-record.json"):
-            self.assertFalse((PHASE / relative).exists(), relative)
+            repository_relative = f"docs/eiren-kestrel/v646-v7/{relative}"
+            result = subprocess.run(["git", "cat-file", "-e", f"{x1_commit}:{repository_relative}"], cwd=ROOT, capture_output=True)
+            self.assertNotEqual(result.returncode, 0, relative)
 
     def test_x1_content_seal(self):
         import hashlib

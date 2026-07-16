@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M06",
+  "title": "Discover prior artifact names before reading a presumed ledger",
+  "failure_signature": "A prior-phase inspection attempted to read a nonexistent x2 skill-runner ledger while later commands in the same shell still returned partial evidence.",
+  "trigger_preconditions": [
+    "inherited phase packet",
+    "unknown artifact filename",
+    "compound shell inspection",
+    "later successful output after an earlier path error"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Enumerate bounded prior-phase filenames first, select the actual skill-build-use and runner-build-use receipts, and treat an earlier missing-path error as failure even when later commands succeed.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never infer an artifact filename from a conceptual label; discover the bounded file surface and stop compound-command success from masking an earlier error.",
+  "rollback": "Give the presumed-path read zero reuse credit, retain the missing-path witness, and use only the discovered exact filenames.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "completion_credit",
+    "sibling_lane",
+    "canonical_history"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N01"
+  ],
+  "scope_boundary": "Read-only inherited artifact discovery only; no production, scientific, authority, security-complete, or independent-reproduction credit."
+}

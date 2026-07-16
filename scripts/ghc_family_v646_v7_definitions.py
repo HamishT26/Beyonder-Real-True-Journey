@@ -421,3 +421,9 @@ X1_OPERATIONAL_NEGATIVES = [
     {"negative_id": "V6467-X1-N04", "method_id": "V6467-M04", "summary": "A Method Flow refresh supplied an unsupported validate --output option after the ledger mutation had succeeded.", "retained": True, "recovered": True},
     {"negative_id": "V6467-X1-N05", "method_id": "V6467-M05", "summary": "The first expanded-portfolio audit found two exact inherited skill-name collisions and stopped before materialization.", "retained": True, "recovered": True},
 ]
+
+X2_OPERATIONAL_NEGATIVES = [
+    {"negative_id": "V6467-X2-N01", "method_id": "V6467-M06", "summary": "A prior-phase inspection assumed a nonexistent x2 skill-runner ledger filename before discovering the actual split build/use receipts.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N02", "method_id": "V6467-M07", "summary": "A Python portfolio diagnostic failed when the legacy console encoding encountered a Māori macron.", "retained": True, "recovered": True},
+    {"negative_id": "V6467-X2-N03", "method_id": "V6467-M08", "summary": "The first current-phase validation exposed two x1 tests that incorrectly treated live x2 growth as x1 contamination.", "retained": True, "recovered": True},
+]

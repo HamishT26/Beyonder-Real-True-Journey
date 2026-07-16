@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M08",
+  "title": "Bind x1 lifecycle assertions to the immutable x1 Git object",
+  "failure_signature": "Two current-phase tests failed because x1-only absence and Method Flow cardinality were asserted against a live x2 working tree.",
+  "trigger_preconditions": [
+    "strict x1-before-x2 lifecycle",
+    "x1 tests rerun during x2",
+    "append-only Method Flow growth",
+    "live working-tree assertions"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_testing",
+  "candidate_workaround": "Check x2 absence against the exact x1 Git object and check x1 Method Flow records as a preserved identified subset while allowing later append-only methods and witnesses.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Lifecycle tests must state whether their domain is an immutable commit or the current head; never infer historical contamination from legitimate additive later-phase files.",
+  "rollback": "Retain the two-test failure, award no current-suite credit, and change only the time-domain assertions before rerunning the same 26 tests.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "x1_immutability",
+    "append_only_method_flow",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N03"
+  ],
+  "scope_boundary": "Owner-local lifecycle test semantics only; no scientific, authority, production, security-complete, or independent-reproduction credit."
+}

@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M07",
+  "title": "Pin UTF-8 for console diagnostics containing Māori text",
+  "failure_signature": "A Python diagnostic raised UnicodeEncodeError when the legacy Windows console codec encountered a Māori macron after returning only a partial task list.",
+  "trigger_preconditions": [
+    "Windows console",
+    "Python stdout",
+    "Unicode source text",
+    "legacy code page"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Set PYTHONIOENCODING=utf-8 for the bounded diagnostic, preserve UTF-8 source and artifacts, and rerun only the incomplete display.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Any diagnostic expected to emit te reo Māori or other non-ASCII text must pin UTF-8 before Python starts; partial output earns no complete-review credit.",
+  "rollback": "Retain the encoding exception, award no complete-list credit, and do not transliterate or remove the source text.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "cultural_integrity",
+    "artifact_encoding",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X2-N02"
+  ],
+  "scope_boundary": "Owner-local console encoding only; it establishes no Māori authority, cultural ratification, or broader accessibility conformance."
+}
