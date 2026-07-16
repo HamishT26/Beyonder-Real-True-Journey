@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v2-x1-x2
 - Owner: Orin Thale
-- Methods: 17
-- Passing witnesses: 17
-- Failed witnesses retained: 17
+- Methods: 21
+- Passing witnesses: 21
+- Failed witnesses retained: 21
 
 ## Preferred methods
 
@@ -143,6 +143,38 @@
 - Recurrence guard: Resolve contract and mutation roles through the runtime surface map before asserting fields.
 - Rollback: Keep the failed test output, change only the source artifact selected by the assertion, and rerun the current-phase tests.
 - Witnesses: V6472-M17-WFAIL, V6472-M17-WPASS, V6472-M17-WFAIL, V6472-M17-WPASS
+
+### V6472-M18 — Quarantine compact-token stale filenames additively
+
+- Trigger: A compatibility adapter generates compact phase tokens inside filenames.
+- Method: Retain the immutable evidence paths, add correctly labelled v6472 witness copies with identical bounded content, and publish a stale-label quarantine receipt.
+- Recurrence guard: Scan both hyphenated, underscored, and compact phase tokens before staging generated witness paths.
+- Rollback: Do not rewrite or delete the evidence commit; add corrected paths and quarantine the stale compatibility paths.
+- Witnesses: V6472-M18-WFAIL, V6472-M18-WPASS, V6472-M18-WFAIL, V6472-M18-WPASS
+
+### V6472-M19 — Budget inherited-checkout Git status probes explicitly
+
+- Trigger: A bounded read-only status probe targets the inherited full checkout.
+- Method: Keep the Git and file probe unchanged but give the known large inherited checkout a measured sixty-second wrapper budget.
+- Recurrence guard: Use a sixty-second wrapper budget for bounded Git status probes over the inherited full checkout and retain any timeout before retry.
+- Rollback: No repository rollback is required because the failed probe was read-only; stop rather than broadening scope if the bounded retry also times out.
+- Witnesses: V6472-M19-WFAIL, V6472-M19-WPASS, V6472-M19-WFAIL, V6472-M19-WPASS
+
+### V6472-M20 — Compile validation scripts before closeout use
+
+- Trigger: A newly generated or patched validation script is about to be used for lifecycle credit.
+- Method: Patch only the mismatched subprocess argument-list delimiter, then require both scripts to compile before any closeout build.
+- Recurrence guard: Compile every newly landed validation script before it can generate or validate a closeout artifact.
+- Rollback: Revert only the uncommitted audit-script edit if the narrow correction fails compilation; do not alter evidence history.
+- Witnesses: V6472-M20-WFAIL, V6472-M20-WPASS, V6472-M20-WFAIL, V6472-M20-WPASS
+
+### V6472-M21 — Resolve staged-review receipt paths before containment checks
+
+- Trigger: The staged reviewer writes receipt, manifest, and privacy outputs beneath the repository root.
+- Method: Resolve every staged-review output to an absolute path beneath the verified repository root before invoking the containment guard.
+- Recurrence guard: Pass resolved absolute in-repository output paths to the v647-v2 staged reviewer; never weaken or remove its containment check.
+- Rollback: No content review or repository mutation was credited by the failed invocation; retain the staged index and stop if resolved paths fail containment.
+- Witnesses: V6472-M21-WFAIL, V6472-M21-WPASS, V6472-M21-WFAIL, V6472-M21-WPASS
 
 ## Retained boundary
 

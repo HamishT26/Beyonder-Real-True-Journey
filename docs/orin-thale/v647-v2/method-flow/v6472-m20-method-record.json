@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_additive_owned_lane",
+  "candidate_workaround": "Patch only the mismatched subprocess argument-list delimiter, then require both scripts to compile before any closeout build.",
+  "failure_signature": "Python rejected the first exact-head audit at line 45 because a subprocess argument list closed with a parenthesis instead of a bracket.",
+  "method_id": "V6472-M20",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_head_validation",
+    "narrow_patch",
+    "compile_before_use"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Compile every newly landed validation script before it can generate or validate a closeout artifact.",
+  "retained_negative_ids": [
+    "V6472-X2-N11"
+  ],
+  "rollback": "Revert only the uncommitted audit-script edit if the narrow correction fails compilation; do not alter evidence history.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Compile validation scripts before closeout use",
+  "trigger_preconditions": [
+    "A newly generated or patched validation script is about to be used for lifecycle credit."
+  ],
+  "validation_witness_ids": [
+    "V6472-M20-WFAIL",
+    "V6472-M20-WPASS"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_owned_lane",
+  "candidate_workaround": "Keep the Git and file probe unchanged but give the known large inherited checkout a measured sixty-second wrapper budget.",
+  "failure_signature": "A combined read-only file-presence and Git status probe exceeded a ten-second shell wrapper budget before returning output.",
+  "method_id": "V6472-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "read_only_probe",
+    "no_retry_mutation",
+    "timeout_visibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use a sixty-second wrapper budget for bounded Git status probes over the inherited full checkout and retain any timeout before retry.",
+  "retained_negative_ids": [
+    "V6472-X2-N10"
+  ],
+  "rollback": "No repository rollback is required because the failed probe was read-only; stop rather than broadening scope if the bounded retry also times out.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Budget inherited-checkout Git status probes explicitly",
+  "trigger_preconditions": [
+    "A bounded read-only status probe targets the inherited full checkout."
+  ],
+  "validation_witness_ids": [
+    "V6472-M19-WFAIL",
+    "V6472-M19-WPASS"
+  ]
+}

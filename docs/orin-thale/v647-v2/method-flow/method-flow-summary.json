@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 17,
-    "recommendations": 17,
-    "state_events": 51,
+    "methods": 21,
+    "recommendations": 21,
+    "state_events": 63,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 17,
+      "preferred": 21,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 17,
-      "pass": 17
+      "fail": 21,
+      "pass": 21
     },
-    "witnesses": 34
+    "witnesses": 42
   },
   "owner": "Orin Thale",
   "phase": "v647-gmut-thos-v2-x1-x2",
@@ -309,6 +309,74 @@
         "V6472-M17-WFAIL",
         "V6472-M17-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Retain the immutable evidence paths, add correctly labelled v6472 witness copies with identical bounded content, and publish a stale-label quarantine receipt.",
+      "method_id": "V6472-M18",
+      "recurrence_guard": "Scan both hyphenated, underscored, and compact phase tokens before staging generated witness paths.",
+      "rollback": "Do not rewrite or delete the evidence commit; add corrected paths and quarantine the stale compatibility paths.",
+      "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Quarantine compact-token stale filenames additively",
+      "trigger_preconditions": [
+        "A compatibility adapter generates compact phase tokens inside filenames."
+      ],
+      "validation_witness_ids": [
+        "V6472-M18-WFAIL",
+        "V6472-M18-WPASS",
+        "V6472-M18-WFAIL",
+        "V6472-M18-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Keep the Git and file probe unchanged but give the known large inherited checkout a measured sixty-second wrapper budget.",
+      "method_id": "V6472-M19",
+      "recurrence_guard": "Use a sixty-second wrapper budget for bounded Git status probes over the inherited full checkout and retain any timeout before retry.",
+      "rollback": "No repository rollback is required because the failed probe was read-only; stop rather than broadening scope if the bounded retry also times out.",
+      "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Budget inherited-checkout Git status probes explicitly",
+      "trigger_preconditions": [
+        "A bounded read-only status probe targets the inherited full checkout."
+      ],
+      "validation_witness_ids": [
+        "V6472-M19-WFAIL",
+        "V6472-M19-WPASS",
+        "V6472-M19-WFAIL",
+        "V6472-M19-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Patch only the mismatched subprocess argument-list delimiter, then require both scripts to compile before any closeout build.",
+      "method_id": "V6472-M20",
+      "recurrence_guard": "Compile every newly landed validation script before it can generate or validate a closeout artifact.",
+      "rollback": "Revert only the uncommitted audit-script edit if the narrow correction fails compilation; do not alter evidence history.",
+      "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Compile validation scripts before closeout use",
+      "trigger_preconditions": [
+        "A newly generated or patched validation script is about to be used for lifecycle credit."
+      ],
+      "validation_witness_ids": [
+        "V6472-M20-WFAIL",
+        "V6472-M20-WPASS",
+        "V6472-M20-WFAIL",
+        "V6472-M20-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Resolve every staged-review output to an absolute path beneath the verified repository root before invoking the containment guard.",
+      "method_id": "V6472-M21",
+      "recurrence_guard": "Pass resolved absolute in-repository output paths to the v647-v2 staged reviewer; never weaken or remove its containment check.",
+      "rollback": "No content review or repository mutation was credited by the failed invocation; retain the staged index and stop if resolved paths fail containment.",
+      "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Resolve staged-review receipt paths before containment checks",
+      "trigger_preconditions": [
+        "The staged reviewer writes receipt, manifest, and privacy outputs beneath the repository root."
+      ],
+      "validation_witness_ids": [
+        "V6472-M21-WFAIL",
+        "V6472-M21-WPASS",
+        "V6472-M21-WFAIL",
+        "V6472-M21-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -328,7 +396,11 @@
     "V6472-M14-WFAIL",
     "V6472-M15-WFAIL",
     "V6472-M16-WFAIL",
-    "V6472-M17-WFAIL"
+    "V6472-M17-WFAIL",
+    "V6472-M18-WFAIL",
+    "V6472-M19-WFAIL",
+    "V6472-M20-WFAIL",
+    "V6472-M21-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

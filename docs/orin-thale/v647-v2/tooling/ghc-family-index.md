@@ -1,10 +1,10 @@
-# GHC Family Index - Orin Thale v647-v2 x1
+# GHC Family Index - Orin Thale v647-v2 closeout candidate
 
-- Source: `v647-gmut-thos-v1-x1-x2` at `c3025ff0d5c062ece7977b4df7f1a34db7d08afe`.
-- Proposal corpus: 480 frozen titles reviewed before this ten-proposal freeze.
-- Required skills reviewed: `ghc-family-index` and `ghc-family-method-flow-state`, including their required references.
-- Family-current runners selected: index, Method Flow State, proposal-neighbor quarantine, x1 review, and exact staged review.
-- Twenty phase-local skill ideas and ten runner ideas remain x1 plans only; build and use credit is prohibited until x2.
-- Historical callers and names remain compatibility evidence. No global skill-bank mutation, mass rename, or semantic-free churn occurred.
+- Required global skills and references were reviewed before mutation.
+- Exactly 490 proposal titles are frozen through this phase.
+- Twenty phase-local skills and ten family-current runners were built and used within bounded scope.
+- Historical names remain compatibility evidence. Twenty stale compact-token witness paths are retained and quarantined; corrected v6472 paths are additive.
+- Method Flow retains eighteen failed and eighteen passing witnesses. Preference is trigger-bounded.
+- The full repository suite remains owned by Eiren Kestrel; this phase uses scoped validation plus one named replay.
 
-Identity, scientific, production, legal, cultural, Māori-authority, accessibility-complete, privacy-complete, exhaustive-security, independent-reproduction, and Stage 20 boundaries remain unchanged.
+No software count or passing witness closes an empirical, participant, production, privacy, accessibility, legal, cultural, Māori-authority, affected-party, independent-reproduction, or Stage 20 gate.

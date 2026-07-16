@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_owned_lane",
+  "candidate_workaround": "Resolve every staged-review output to an absolute path beneath the verified repository root before invoking the containment guard.",
+  "failure_signature": "The first final staged-review call rejected repository-relative receipt paths as not being subpaths of the absolute repository root.",
+  "method_id": "V6472-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_review",
+    "repository_containment",
+    "no_bypass"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pass resolved absolute in-repository output paths to the v647-v2 staged reviewer; never weaken or remove its containment check.",
+  "retained_negative_ids": [
+    "V6472-X2-N12"
+  ],
+  "rollback": "No content review or repository mutation was credited by the failed invocation; retain the staged index and stop if resolved paths fail containment.",
+  "scope_boundary": "Orin v647-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Resolve staged-review receipt paths before containment checks",
+  "trigger_preconditions": [
+    "The staged reviewer writes receipt, manifest, and privacy outputs beneath the repository root."
+  ],
+  "validation_witness_ids": [
+    "V6472-M21-WFAIL",
+    "V6472-M21-WPASS"
+  ]
+}
