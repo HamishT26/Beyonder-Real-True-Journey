@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_exact_staged_scope",
+  "candidate_workaround": "Bind staged-script scope to the exact ten frozen runner filenames plus the version-prefixed phase scripts, rather than assuming every family-current runner carries the phase version.",
+  "failure_signature": "The first evidence staged review classified nine frozen ghc_family runner scripts as out of scope solely because their filenames were family-current rather than version-prefixed.",
+  "method_id": "V6468-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_runner_allowlist",
+    "x1_frozen_path_protection",
+    "no_out_of_scope_stage",
+    "diff_hygiene"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Generate the exact staged runner allowlist from the frozen x1 runner ledger; do not infer scope from a filename prefix alone.",
+  "retained_negative_ids": [
+    "V6468-X2-N04"
+  ],
+  "rollback": "Give the failed staged review zero commit credit, retain its result, and leave every staged path intact until the corrected exact predicate passes.",
+  "scope_boundary": "Same-owner v646-v8 Git-index scope classification only; not general repository, supply-chain, security, or independent-reproduction assurance.",
+  "supersedes": [],
+  "title": "Derive staged runner scope from the frozen exact allowlist",
+  "trigger_preconditions": [
+    "x1 freezes family-current runner filenames",
+    "a staged scope predicate relies on a phase-version prefix"
+  ],
+  "validation_witness_ids": []
+}

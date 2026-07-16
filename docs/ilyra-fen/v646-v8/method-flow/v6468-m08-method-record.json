@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_disposable_fixture_recovery",
+  "candidate_workaround": "Close every SQLite connection explicitly before deleting the verified disposable fixture root, then rerun the unchanged confinement tribunal.",
+  "failure_signature": "The first integrated runtime reached disposable SQLite teardown while a backup database handle remained open and Windows rejected file removal.",
+  "method_id": "V6468-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "disposable_root_confinement",
+    "no_canonical_mutation",
+    "no_sibling_mutation",
+    "no_user_data_deletion"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not treat sqlite3 connection context managers as handle-closure guards; explicitly close every source and destination connection before Windows fixture teardown.",
+  "retained_negative_ids": [
+    "V6468-X2-N02"
+  ],
+  "rollback": "Give the failed all-proposal run zero integrated-run credit, wait for process exit, verify the leftover root is a child of the declared disposable bank, and remove only that root.",
+  "scope_boundary": "Same-owner disposable SQLite fixture recovery only; not general database, filesystem, production, or independent-reproduction assurance.",
+  "supersedes": [],
+  "title": "Explicitly close SQLite handles before Windows fixture teardown",
+  "trigger_preconditions": [
+    "a disposable SQLite fixture uses multiple source or destination connections",
+    "the host enforces open-file deletion locks"
+  ],
+  "validation_witness_ids": []
+}

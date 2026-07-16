@@ -1,0 +1,15 @@
+{
+  "boundary": "Same-owner disposable SQLite fixture recovery only; not general database, filesystem, production, or independent-reproduction assurance.",
+  "expected": "The unchanged integrated runtime passes all ten proposal lanes and removes the verified disposable SQLite root after explicit handle closure.",
+  "independent_reproduction": false,
+  "method_id": "V6468-M08",
+  "observed": "All ten bounded proposal lanes passed; the SQLite backup and VACUUM INTO fixture preserved twelve rows, refused a nonempty destination, passed integrity checks, and left no disposable child behind.",
+  "procedure": "Explicitly close each SQLite source and destination connection, then remove only the verified disposable root and rerun the unchanged all-proposal command.",
+  "result": "pass",
+  "retained_negative_ids": [
+    "V6468-X2-N02"
+  ],
+  "same_owner_only": true,
+  "scope": "one D-first owner-local disposable SQLite fixture and the integrated ten-proposal runtime",
+  "witness_id": "V6468-M08-P"
+}

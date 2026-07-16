@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Set PYTHONUTF8 and PYTHONIOENCODING before process start, then initialize only missing phase-local packages.",
+  "failure_signature": "The sixth phase-local skill initialization could not encode Māori text through the inherited console codec after creating the package skeleton.",
+  "method_id": "V6468-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["unicode_integrity", "skill_metadata", "no_global_install"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before invoking skill-creator tools that may emit or persist non-ASCII text; never delete culturally correct wording to satisfy a legacy codec.",
+  "retained_negative_ids": ["V6468-X2-N01"],
+  "rollback": "Give the partial initialization zero portfolio completion credit, keep it phase-local, and complete only missing files after the encoding guard is active.",
+  "scope_boundary": "Same-owner phase-local skill initialization only; not global installation, universal applicability, or independent reproduction.",
+  "supersedes": [],
+  "title": "Pin UTF-8 before phase-local skill initialization",
+  "trigger_preconditions": ["skill metadata may contain non-ASCII text", "the inherited console codec is not guaranteed UTF-8"],
+  "validation_witness_ids": []
+}

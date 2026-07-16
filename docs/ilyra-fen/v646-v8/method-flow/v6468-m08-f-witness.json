@@ -1,0 +1,15 @@
+{
+  "boundary": "Same-owner disposable SQLite fixture recovery only; not general database, filesystem, production, or independent-reproduction assurance.",
+  "expected": "All database handles close before the verified disposable root is removed.",
+  "independent_reproduction": false,
+  "method_id": "V6468-M08",
+  "observed": "The runtime produced core artifacts through proposal six, then Windows rejected removal of the disposable backup database because a connection handle was still open.",
+  "procedure": "Use sqlite3 connection context managers as if leaving the context also closes each connection, then remove the fixture immediately.",
+  "result": "fail",
+  "retained_negative_ids": [
+    "V6468-X2-N02"
+  ],
+  "same_owner_only": true,
+  "scope": "one D-first owner-local disposable SQLite fixture",
+  "witness_id": "V6468-M08-F"
+}
