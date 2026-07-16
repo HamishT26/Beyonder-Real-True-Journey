@@ -17,6 +17,8 @@ ALLOWED_EXACT={
     "scripts/build_ghc_family_v646_v1_evidence.py","scripts/build_ghc_family_v646_v1_skills.py",
     "scripts/ghc_family_v646_v1_runtime.py","scripts/ghc_family_v646_v1_validator.py",
     "scripts/ghc_family_v646_v1_minimal_validator.py",
+    "scripts/build_ghc_family_v646_v1_closeout.py",
+    "scripts/ghc_family_v646_v1_manifest_refresh.py",
     "scripts/ghc_family_v646_v1_staged_review.py","scripts/ghc_family_v646_v1_x1_review.py",
     "scripts/ghc_family_cache_provenance_tribunal.py","scripts/ghc_family_dhost_obligation_classifier.py",
     "scripts/ghc_family_zero_row_cosmology_adapter.py","scripts/ghc_family_switching_handover_proxy.py",

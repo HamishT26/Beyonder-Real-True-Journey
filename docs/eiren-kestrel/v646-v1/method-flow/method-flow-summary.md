@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v1-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 4
-- Passing witnesses: 4
-- Failed witnesses retained: 4
+- Methods: 5
+- Passing witnesses: 5
+- Failed witnesses retained: 5
 
 ## Preferred methods
 
@@ -39,6 +39,14 @@
 - Recurrence guard: Lifecycle-specific absence tests must name the immutable commit or stage they are proving instead of assuming the current worktree is still at that stage.
 - Rollback: Give the failed combined run zero suite credit, retain both assertion failures, and rerun only after the snapshot-bound test passes.
 - Witnesses: V6461-W04-F, V6461-W04-P
+
+### V6461-M05 — Refresh logical manifest after lifecycle receipt mutation
+
+- Trigger: phase lifecycle documents changed after evidence freeze; logical manifest covers one or more changed documents; exact evidence commit remains ancestral
+- Method: After any lifecycle document changes, refresh the logical manifest before rerunning phase-local tests and validators, then verify the exact changed-file hashes rather than weakening manifest parity.
+- Recurrence guard: Treat lifecycle receipt generation as a manifest-affecting mutation and refresh the manifest before any closeout validator is credited.
+- Rollback: Give the failed lifecycle run zero validation credit, retain all three stale-hash findings, and stop before the closeout commit until exact manifest parity is restored.
+- Witnesses: V6461-W05-F, V6461-W05-P
 
 ## Retained boundary
 

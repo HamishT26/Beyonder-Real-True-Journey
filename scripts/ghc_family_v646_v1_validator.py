@@ -57,7 +57,7 @@ def privacy(files: list[Path]) -> dict[str, Any]:
 def validate(mode: str, expected_head: str | None, require_clean: bool) -> dict[str, Any]:
     issues=[]; checks=0
     files=sorted(p for p in PHASE.rglob("*") if p.is_file())
-    required=["x1-proposals.json","x2-proposal-ledger.json","phase-truth.json","v646-v1-integrated-overview.md","deliverables/v646-v1-evidence-report.html","approval-packets/x2-execution-ledger.json","prototypes/skill-build-receipt.json","prototypes/runner-build-receipt.json","maintenance/x2-clean-refine-receipt.json","validation/runtime-smoke-results.json","validation/evidence-manifest.json","threat-model.json","complete-incomplete-checklist.json","retained-negative-register.json","open-exact-gate-register.json"]
+    required=["x1-proposals.json","x2-proposal-ledger.json","phase-truth.json","v646-v1-integrated-overview.md","deliverables/v646-v1-evidence-report.html","approval-packets/x2-execution-ledger.json","prototypes/skill-build-receipt.json","prototypes/runner-build-receipt.json","maintenance/x2-clean-refine-receipt.json","validation/runtime-smoke-results.json","validation/evidence-manifest.json","validation/canonical-evidence-full-suite.json","validation/canonical-evidence-detailed-validation.json","validation/canonical-evidence-minimal-validation.json","validation/canonical-evidence-remote-equality.json","closeout-receipt.json","seal-receipt.json","final-validation-record.json","threat-model.json","complete-incomplete-checklist.json","retained-negative-register.json","open-exact-gate-register.json"]
     for name in required:
         checks+=1
         if not (PHASE/name).is_file(): issues.append(f"missing {name}")
@@ -90,9 +90,22 @@ def validate(mode: str, expected_head: str | None, require_clean: bool) -> dict[
         runtime=load(PHASE/"validation/runtime-smoke-results.json")
         if len(runtime)!=10 or any(not x.get("passed") for x in runtime.values()): issues.append("runtime smoke suite failed")
         negatives=load(PHASE/"retained-negative-register.json")
-        if negatives.get("inherited_effective")!=2432 or negatives.get("preregistered_synthetic")!=70 or negatives.get("new_operational_count")!=4 or negatives.get("effective_total")!=2506: issues.append("retained-negative accounting mismatch")
+        if negatives.get("inherited_effective")!=2432 or negatives.get("preregistered_synthetic")!=70 or negatives.get("new_operational_count")!=5 or negatives.get("effective_total")!=2507: issues.append("retained-negative accounting mismatch")
         gates=load(PHASE/"open-exact-gate-register.json")
         if gates.get("inherited_open_gap_count")!=10 or gates.get("inherited_exact_gate_count")!=11 or gates.get("silently_closed_count")!=0: issues.append("gate preservation mismatch")
+        suite=load(PHASE/"validation/canonical-evidence-full-suite.json")
+        detailed_receipt=load(PHASE/"validation/canonical-evidence-detailed-validation.json")
+        minimal_receipt=load(PHASE/"validation/canonical-evidence-minimal-validation.json")
+        remote_receipt=load(PHASE/"validation/canonical-evidence-remote-equality.json")
+        closeout=load(PHASE/"closeout-receipt.json"); seal=load(PHASE/"seal-receipt.json"); final_record=load(PHASE/"final-validation-record.json")
+        checks+=11
+        if not suite.get("valid") or suite.get("test_count")!=1011 or suite.get("passed")!=1011 or suite.get("failed")!=0: issues.append("canonical full-suite receipt mismatch")
+        if not detailed_receipt.get("valid") or detailed_receipt.get("check_count")!=977 or detailed_receipt.get("privacy",{}).get("confirmed_hit_count")!=0: issues.append("canonical detailed receipt mismatch")
+        if not minimal_receipt.get("valid") or minimal_receipt.get("check_count")!=20: issues.append("canonical minimal receipt mismatch")
+        if not remote_receipt.get("equal") or not remote_receipt.get("clean"): issues.append("canonical evidence remote-equality receipt mismatch")
+        if closeout.get("evidence_commit")!=suite.get("head") or closeout.get("route_state")!="PREPARED_NOT_SENT": issues.append("closeout lifecycle mismatch")
+        if seal.get("named_lane_replay_required_after_push")!=1 or not seal.get("detached_validation_forbidden"): issues.append("seal replay policy mismatch")
+        if final_record.get("route_state")!="PREPARED_NOT_SENT" or final_record.get("terminal_verdict")!="NOT_READY_FOR_STAGE_20": issues.append("final record lifecycle mismatch")
 
         overview=(PHASE/"v646-v1-integrated-overview.md").read_text(encoding="utf-8")
         words=len(overview.split())

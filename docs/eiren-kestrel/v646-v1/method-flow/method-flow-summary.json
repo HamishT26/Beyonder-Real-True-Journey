@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 4,
-    "recommendations": 4,
-    "state_events": 12,
+    "methods": 5,
+    "recommendations": 5,
+    "state_events": 15,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 4,
+      "preferred": 5,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 4,
-      "pass": 4
+      "fail": 5,
+      "pass": 5
     },
-    "witnesses": 8
+    "witnesses": 10
   },
   "owner": "Eiren Kestrel",
   "phase": "v646-gmut-thos-v1-x1-x2",
@@ -88,13 +88,31 @@
         "V6461-W04-F",
         "V6461-W04-P"
       ]
+    },
+    {
+      "candidate_workaround": "After any lifecycle document changes, refresh the logical manifest before rerunning phase-local tests and validators, then verify the exact changed-file hashes rather than weakening manifest parity.",
+      "method_id": "V6461-M05",
+      "recurrence_guard": "Treat lifecycle receipt generation as a manifest-affecting mutation and refresh the manifest before any closeout validator is credited.",
+      "rollback": "Give the failed lifecycle run zero validation credit, retain all three stale-hash findings, and stop before the closeout commit until exact manifest parity is restored.",
+      "scope_boundary": "Same-owner bounded closeout recovery only; no broader assurance or independent-reproduction credit.",
+      "title": "Refresh logical manifest after lifecycle receipt mutation",
+      "trigger_preconditions": [
+        "phase lifecycle documents changed after evidence freeze",
+        "logical manifest covers one or more changed documents",
+        "exact evidence commit remains ancestral"
+      ],
+      "validation_witness_ids": [
+        "V6461-W05-F",
+        "V6461-W05-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
     "V6461-W01-F",
     "V6461-W02-F",
     "V6461-W03-F",
-    "V6461-W04-F"
+    "V6461-W04-F",
+    "V6461-W05-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

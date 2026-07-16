@@ -57,7 +57,7 @@ def validate(expected_head: str | None, require_clean: bool) -> dict[str, Any]:
     check("outcome_distribution", ledger.get("outcome_distribution") == {"completed": 6, "represented": 2, "open_gap": 1, "exact_gate": 1}, "required 6/2/1/1 distribution")
     check("stage20", truth.get("terminal_verdict") == "NOT_READY_FOR_STAGE_20", "terminal abstention required")
     check("zero_real_evidence", all(truth.get(key) == 0 for key in ("real_data_rows_ingested", "likelihood_evaluations", "real_participants", "real_keys_or_proofs", "real_operational_actions")), "real-evidence counters must remain zero")
-    check("negative_total", negatives.get("effective_total") == 2506 and negatives.get("erased_count") == 0, "2,506 negatives and zero erasures required")
+    check("negative_total", negatives.get("effective_total") == 2507 and negatives.get("erased_count") == 0, "2,507 negatives and zero erasures required")
     check("gate_preservation", gates.get("inherited_open_gap_count") == 10 and gates.get("inherited_exact_gate_count") == 11 and gates.get("silently_closed_count") == 0, "inherited gates must remain open")
     check("approval_counts", approval.get("safe_now_executed") == 30 and approval.get("candidates_executed") == 20, "expanded safe/candidate counts required")
     check("approval_boundaries", approval.get("exact_or_external_packets_executed") == 0 and approval.get("blocked_packets_executed") == 0, "exact and blocked packets must remain unexecuted")

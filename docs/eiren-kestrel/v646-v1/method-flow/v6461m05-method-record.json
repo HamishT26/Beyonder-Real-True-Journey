@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "After any lifecycle document changes, refresh the logical manifest before rerunning phase-local tests and validators, then verify the exact changed-file hashes rather than weakening manifest parity.",
+  "failure_signature": "The first lifecycle test run failed because phase-truth, checklist, and wellbeing content changed after the evidence manifest had been frozen, leaving three stale logical hashes.",
+  "method_id": "V6461-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "destructive_action",
+    "sibling_lane",
+    "host_change"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat lifecycle receipt generation as a manifest-affecting mutation and refresh the manifest before any closeout validator is credited.",
+  "retained_negative_ids": [
+    "V6461-CLOSE-N05"
+  ],
+  "rollback": "Give the failed lifecycle run zero validation credit, retain all three stale-hash findings, and stop before the closeout commit until exact manifest parity is restored.",
+  "scope_boundary": "Same-owner bounded closeout recovery only; no broader assurance or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Refresh logical manifest after lifecycle receipt mutation",
+  "trigger_preconditions": [
+    "phase lifecycle documents changed after evidence freeze",
+    "logical manifest covers one or more changed documents",
+    "exact evidence commit remains ancestral"
+  ],
+  "validation_witness_ids": []
+}

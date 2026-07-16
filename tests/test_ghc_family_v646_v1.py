@@ -57,10 +57,10 @@ class V646V1EvidenceTests(unittest.TestCase):
 
     def test_method_flow_preserves_failures(self) -> None:
         summary=load("method-flow/method-flow-summary.json"); negatives=load("retained-negative-register.json")
-        self.assertEqual(summary["counts"]["methods"],4)
-        self.assertEqual(summary["counts"]["witness_results"],{"fail":4,"pass":4})
-        self.assertEqual(len(summary["retained_failed_witnesses"]),4)
-        self.assertEqual(negatives["effective_total"],2506)
+        self.assertEqual(summary["counts"]["methods"],5)
+        self.assertEqual(summary["counts"]["witness_results"],{"fail":5,"pass":5})
+        self.assertEqual(len(summary["retained_failed_witnesses"]),5)
+        self.assertEqual(negatives["effective_total"],2507)
         self.assertEqual(negatives["erased_count"],0)
 
     def test_open_and_exact_gates_preserved(self) -> None:
@@ -91,6 +91,14 @@ class V646V1EvidenceTests(unittest.TestCase):
         result=validate_minimal(None,False)
         self.assertTrue(result["valid"],result["issues"])
         self.assertEqual(result["check_count"],20)
+
+    def test_lifecycle_receipts_are_bounded_and_prepared(self) -> None:
+        suite=load("validation/canonical-evidence-full-suite.json")
+        closeout=load("closeout-receipt.json"); seal=load("seal-receipt.json"); final_record=load("final-validation-record.json")
+        self.assertEqual((suite["passed"],suite["failed"]),(1011,0))
+        self.assertEqual(closeout["route_state"],"PREPARED_NOT_SENT")
+        self.assertEqual(seal["named_lane_replay_required_after_push"],1)
+        self.assertEqual(final_record["terminal_verdict"],"NOT_READY_FOR_STAGE_20")
 
     def test_runtime_functions_are_deterministic_except_disposable_git(self) -> None:
         for name in ("cache-provenance","dhost-obligations","zero-row-cosmology","switching-handover","sd-jwt-vc","electricity-care","accessible-table","onsager-domain","optional-stopping"):
