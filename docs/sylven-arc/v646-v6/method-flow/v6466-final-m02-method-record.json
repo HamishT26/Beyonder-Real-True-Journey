@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read the test's declared seal path before inspection and use the repository-relative reproduction location exactly.",
+  "failure_signature": "terminal diagnostic lookup assumed the x1 content seal was under validation instead of reproduction",
+  "method_id": "V6466-FINAL-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "external_state",
+    "sibling_lane",
+    "independent_reproduction",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Diagnostic artifact lookups are derived from the consuming test or manifest before invocation; guessed directory placement is not treated as evidence.",
+  "retained_negative_ids": [
+    "V6466-FINAL-N02"
+  ],
+  "rollback": "Retain the failed lookup and exclude it from evidence; use only the successful exact-path audit.",
+  "scope_boundary": "Owner-local diagnostic recovery only; no production, privacy-complete, security-complete, or authority credit.",
+  "supersedes": [],
+  "title": "Resolve diagnostic artifact paths from their consumer",
+  "trigger_preconditions": [
+    "terminal replay diagnosis",
+    "repository-relative artifact",
+    "multiple evidence directories",
+    "read-only lookup"
+  ],
+  "validation_witness_ids": []
+}

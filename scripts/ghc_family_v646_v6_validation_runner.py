@@ -92,7 +92,7 @@ def minimal() -> dict[str, Any]:
         "distribution": ledger["distribution"] == {"completed": 6, "exact_gate": 1, "open_gap": 1, "represented": 2},
         "all_acceptance_gates": all(row["acceptance_gate_passed"] for row in ledger["proposals"]),
         "mutation_total": sum(row["mutations_executed"] for row in ledger["proposals"]) == 70,
-        "negative_total": negatives["effective_total"] == 2973,
+        "negative_total": negatives["effective_total"] == 2977,
         "failure_retained": negatives["no_negative_erased"],
         "open_gaps": gates["effective_open_gaps"] == 15,
         "exact_gates": gates["effective_exact_gates"] == 16,

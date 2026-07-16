@@ -28,7 +28,9 @@ class V646V6EvidenceTests(unittest.TestCase):
         self.assertEqual(subprocess.run(["git", "merge-base", "--is-ancestor", X1, "HEAD"], cwd=ROOT).returncode, 0)
         seal = load("reproduction/x1-content-seal.json")
         for row in seal["frozen_paths"]:
-            self.assertEqual(hashlib.sha256((PHASE / row["path"]).read_bytes()).hexdigest(), row["sha256"])
+            relative = f"docs/sylven-arc/v646-v6/{row['path']}"
+            content = subprocess.check_output(["git", "show", f"{X1}:{relative}"], cwd=ROOT)
+            self.assertEqual(hashlib.sha256(content).hexdigest(), row["sha256"])
 
     def test_exact_outcome_distribution(self):
         ledger = load("x2-proposal-ledger.json")
@@ -51,7 +53,8 @@ class V646V6EvidenceTests(unittest.TestCase):
     def test_effective_negative_accounting(self):
         data = load("retained-negative-register.json")
         self.assertEqual((data["inherited_effective"], data["x1_operational"], data["preregistered_synthetic_executed_and_rejected"], data["x2_operational"]), (2884, 10, 70, 9))
-        self.assertEqual(data["effective_total"], 2973)
+        self.assertEqual(data["terminal_validation_operational"], 4)
+        self.assertEqual(data["effective_total"], 2977)
         self.assertTrue(data["no_negative_erased"])
 
     def test_gate_accounting(self):
@@ -93,9 +96,11 @@ class V646V6EvidenceTests(unittest.TestCase):
     def test_method_flow_retains_fail_and_pass(self):
         x1 = load("method-flow/method-flow-state.json")
         x2 = load("method-flow/x2-method-flow-state.json")
+        final = load("method-flow/final-method-flow-state.json")
         self.assertEqual(x1["counts"]["witness_results"], {"fail": 10, "pass": 10})
         self.assertEqual(x2["counts"]["witness_results"], {"fail": 9, "pass": 9})
-        self.assertTrue(all(row["recommendation_state"] == "preferred" for row in x1["methods"] + x2["methods"]))
+        self.assertEqual(final["counts"]["witness_results"], {"fail": 4, "pass": 4})
+        self.assertTrue(all(row["recommendation_state"] == "preferred" for row in x1["methods"] + x2["methods"] + final["methods"]))
 
     def test_overview_three_page_equivalent(self):
         text = (PHASE / "v646-v6-integrated-overview.md").read_text(encoding="utf-8")

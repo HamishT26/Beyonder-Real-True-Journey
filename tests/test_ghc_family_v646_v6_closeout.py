@@ -16,10 +16,10 @@ def load(relative: str):
 class V646V6CloseoutTests(unittest.TestCase):
     def test_phase_truth(self):
         truth = load("phase-truth.json")
-        self.assertEqual(truth["planned_phase_commit_count"], 3)
+        self.assertEqual(truth["planned_phase_commit_count"], 4)
         self.assertEqual(truth["merge_commits_allowed"], 0)
         self.assertEqual(truth["proposal_distribution"], {"completed": 6, "exact_gate": 1, "open_gap": 1, "represented": 2})
-        self.assertEqual(truth["effective_negatives"], 2973)
+        self.assertEqual(truth["effective_negatives"], 2977)
         self.assertEqual((truth["effective_open_gaps"], truth["effective_exact_gates"]), (15, 16))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
@@ -27,7 +27,7 @@ class V646V6CloseoutTests(unittest.TestCase):
         closeout = load("closeout-receipt.json")
         seal = load("seal-receipt.json")
         self.assertEqual(closeout["evidence_revision"], seal["evidence_revision"])
-        self.assertEqual(seal["expected_phase_commits"], 3)
+        self.assertEqual(seal["expected_phase_commits"], 4)
         self.assertEqual(seal["expected_merge_commits"], 0)
         self.assertEqual(seal["negative_erasure_count"], 0)
         self.assertEqual(seal["silent_gate_closure_count"], 0)
@@ -62,6 +62,13 @@ class V646V6CloseoutTests(unittest.TestCase):
         checklist = load("final-complete-incomplete-checklist.json")
         self.assertGreaterEqual(len(checklist["externally_incomplete"]), 7)
         self.assertIn("one acknowledged Eiren v646-v7 baton", checklist["pending_until_post_commit"])
+
+    def test_terminal_final_receipt(self):
+        receipt = load("final-receipt.json")
+        self.assertEqual(receipt["seal_revision"], "90258927049cfc89126f7fabeb04830a97eb744a")
+        self.assertEqual(receipt["expected_phase_commits"], 4)
+        self.assertEqual(receipt["effective_negatives"], 2977)
+        self.assertEqual(receipt["route"], "PREPARED_NOT_SENT")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Verify the x1 seal against bytes read from the exact x1 Git blobs rather than checkout-dependent working-tree bytes.",
+  "failure_signature": "clean named Windows replay failed the x1 content seal because working-tree line endings differed from frozen Git-blob bytes",
+  "method_id": "V6466-FINAL-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "external_state",
+    "sibling_lane",
+    "independent_reproduction",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Content seals declare and test one Git-object hash domain; working-tree byte hashes are not used for cross-worktree replay on platforms with line-ending conversion.",
+  "retained_negative_ids": [
+    "V6466-FINAL-N01"
+  ],
+  "rollback": "Retain the 23-of-24 named replay and award no replay credit until the exact final commit passes on the same local-only named lane.",
+  "scope_boundary": "Owner-local Git-object validation only; no independent reproduction, production, security-complete, or authority credit.",
+  "supersedes": [],
+  "title": "Bind x1 content seals to exact Git-blob bytes",
+  "trigger_preconditions": [
+    "clean named Windows worktree",
+    "x1 content seal",
+    "line-ending conversion",
+    "exact historical revision"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use PowerShell Select-String with an explicit pattern array for mixed quote and space searches, and evaluate each diagnostic command independently.",
+  "failure_signature": "mixed-quote ripgrep inspection split part of the pattern into a filename and a later command masked the nonzero exit",
+  "method_id": "V6466-FINAL-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "external_state",
+    "sibling_lane",
+    "independent_reproduction",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Mixed-quote diagnostics use structured pattern arrays; multi-command diagnostics check every native exit code so later success cannot mask an earlier failure.",
+  "retained_negative_ids": [
+    "V6466-FINAL-N03"
+  ],
+  "rollback": "Retain the failed search and exclude it from inspection evidence; rely only on the explicit successful inspection.",
+  "scope_boundary": "Owner-local diagnostic recovery only; no production, security-complete, privacy-complete, or authority credit.",
+  "supersedes": [],
+  "title": "Keep mixed-quote diagnostics structured and fail-visible",
+  "trigger_preconditions": [
+    "PowerShell shell",
+    "mixed quote search pattern",
+    "multiple diagnostic commands",
+    "native exit code"
+  ],
+  "validation_witness_ids": []
+}
