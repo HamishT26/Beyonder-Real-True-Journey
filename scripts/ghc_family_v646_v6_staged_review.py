@@ -83,7 +83,7 @@ def scope_valid(relative: str) -> bool:
     return (
         relative.startswith(PHASE_REL.as_posix() + "/")
         or re.fullmatch(r"scripts/(?:build_ghc_family_v646_v6_[a-z0-9_]+|ghc_family_v646_v6_[a-z0-9_]+)\.py", relative) is not None
-        or re.fullmatch(r"tests/test_ghc_family_v646_v6(?:_x1)?\.py", relative) is not None
+        or re.fullmatch(r"tests/test_ghc_family_v646_v6(?:_x1|_closeout)?\.py", relative) is not None
     )
 
 

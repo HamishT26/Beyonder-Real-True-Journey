@@ -50,8 +50,8 @@ class V646V6EvidenceTests(unittest.TestCase):
 
     def test_effective_negative_accounting(self):
         data = load("retained-negative-register.json")
-        self.assertEqual((data["inherited_effective"], data["x1_operational"], data["preregistered_synthetic_executed_and_rejected"], data["x2_operational"]), (2884, 10, 70, 5))
-        self.assertEqual(data["effective_total"], 2969)
+        self.assertEqual((data["inherited_effective"], data["x1_operational"], data["preregistered_synthetic_executed_and_rejected"], data["x2_operational"]), (2884, 10, 70, 9))
+        self.assertEqual(data["effective_total"], 2973)
         self.assertTrue(data["no_negative_erased"])
 
     def test_gate_accounting(self):
@@ -94,7 +94,7 @@ class V646V6EvidenceTests(unittest.TestCase):
         x1 = load("method-flow/method-flow-state.json")
         x2 = load("method-flow/x2-method-flow-state.json")
         self.assertEqual(x1["counts"]["witness_results"], {"fail": 10, "pass": 10})
-        self.assertEqual(x2["counts"]["witness_results"], {"fail": 5, "pass": 5})
+        self.assertEqual(x2["counts"]["witness_results"], {"fail": 9, "pass": 9})
         self.assertTrue(all(row["recommendation_state"] == "preferred" for row in x1["methods"] + x2["methods"]))
 
     def test_overview_three_page_equivalent(self):

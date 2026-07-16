@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v6-x1-x2-x2
 - Owner: Sylven Arc
-- Methods: 5
-- Passing witnesses: 5
-- Failed witnesses retained: 5
+- Methods: 9
+- Passing witnesses: 9
+- Failed witnesses retained: 9
 
 ## Preferred methods
 
@@ -47,6 +47,38 @@
 - Recurrence guard: The exception is path- and class-specific; any nondefinition match remains confirmed.
 - Rollback: Retain the original failure and award no affected credit until the bounded recovery passes.
 - Witnesses: V6466-X2-M05-W-F, V6466-X2-M05-W-P
+
+### V6466-X2-M06 — Keep closeout replay labels stable across records and tests
+
+- Trigger: generated closeout record; machine substring assertion; named local-only replay; precommit validation
+- Method: Use one stable contiguous named-replay phrase in the closeout record while preserving the local-only lane qualifier.
+- Recurrence guard: Machine checks and generated receipts share one stable label; scope qualifiers remain explicit elsewhere in the same phrase.
+- Rollback: Retain the 23-of-24 failed run and award no closeout-test credit until the bounded rerun passes.
+- Witnesses: V6466-X2-M06-W-F, V6466-X2-M06-W-P
+
+### V6466-X2-M07 — Quote PowerShell ripgrep alternations as literal arguments
+
+- Trigger: PowerShell shell; ripgrep alternation; embedded quote character; bounded cross-reference search
+- Method: Pass the ripgrep alternation as one PowerShell single-quoted literal so embedded double quotes remain data rather than shell syntax.
+- Recurrence guard: PowerShell search expressions containing alternation or quote characters use literal-safe single-quoted arguments and are retried without broadening scope.
+- Rollback: Retain the parser failure and do not treat it as search evidence; use only the successful literal-safe rerun.
+- Witnesses: V6466-X2-M07-W-F, V6466-X2-M07-W-P
+
+### V6466-X2-M08 — Refresh coupled lifecycle-count assertions after retained failures
+
+- Trigger: append-only Method Flow growth; authoritative retained-negative register; evidence-stage historical receipts; current validation assertions
+- Method: Update all final count-dependent assertions together after appending closeout Method Flow failures, while retaining evidence-stage receipts as historical snapshots.
+- Recurrence guard: After any retained lifecycle failure, update the authoritative negative register, current tests, minimal validator, closeout checks, and Method Flow count assertions in one review set; historical evidence receipts keep their stage label.
+- Rollback: Retain the 22-of-24 failed current bundle and do not claim final count parity until the complete bounded bundle passes.
+- Witnesses: V6466-X2-M08-W-F, V6466-X2-M08-W-P
+
+### V6466-X2-M09 — Allow only the explicit phase closeout test in staged-surface review
+
+- Trigger: exact staged-file review; phase-local closeout test; owner-scoped allowlist; precommit inspection
+- Method: Extend only the v646-v6 phase-local test allowlist to the explicit closeout suffix; keep all other out-of-scope paths rejected.
+- Recurrence guard: When a phase adds an explicitly named closeout test, review the exact staged allowlist before invocation and add only that phase-local suffix.
+- Rollback: Retain the inspection finding; if the exact staged review does not pass, restore the narrow allowlist and award no staged-review credit.
+- Witnesses: V6466-X2-M09-W-F, V6466-X2-M09-W-P
 
 ## Retained boundary
 

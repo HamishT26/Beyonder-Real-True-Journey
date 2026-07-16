@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Extend only the v646-v6 phase-local test allowlist to the explicit closeout suffix; keep all other out-of-scope paths rejected.",
+  "failure_signature": "staged-surface inspection found that the phase closeout test name was absent from the exact owner allowlist",
+  "method_id": "V6466-X2-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "external_state",
+    "sibling_lane",
+    "independent_reproduction",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When a phase adds an explicitly named closeout test, review the exact staged allowlist before invocation and add only that phase-local suffix.",
+  "retained_negative_ids": [
+    "V6466-X2-N09"
+  ],
+  "rollback": "Retain the inspection finding; if the exact staged review does not pass, restore the narrow allowlist and award no staged-review credit.",
+  "scope_boundary": "Owner-local staged-surface recovery only; no sibling, production, security-complete, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Allow only the explicit phase closeout test in staged-surface review",
+  "trigger_preconditions": [
+    "exact staged-file review",
+    "phase-local closeout test",
+    "owner-scoped allowlist",
+    "precommit inspection"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pass the ripgrep alternation as one PowerShell single-quoted literal so embedded double quotes remain data rather than shell syntax.",
+  "failure_signature": "PowerShell parsed an embedded double quote inside a ripgrep alternation and rejected the command before search",
+  "method_id": "V6466-X2-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "external_state",
+    "sibling_lane",
+    "independent_reproduction",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "PowerShell search expressions containing alternation or quote characters use literal-safe single-quoted arguments and are retried without broadening scope.",
+  "retained_negative_ids": [
+    "V6466-X2-N07"
+  ],
+  "rollback": "Retain the parser failure and do not treat it as search evidence; use only the successful literal-safe rerun.",
+  "scope_boundary": "Owner-local tooling recovery only; no production, security, privacy-complete, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Quote PowerShell ripgrep alternations as literal arguments",
+  "trigger_preconditions": [
+    "PowerShell shell",
+    "ripgrep alternation",
+    "embedded quote character",
+    "bounded cross-reference search"
+  ],
+  "validation_witness_ids": []
+}
