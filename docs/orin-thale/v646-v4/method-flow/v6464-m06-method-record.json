@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Create target.parent before every phase JSON write and regenerate the deterministic x1 packet.",
+  "failure_signature": "The x1 postprocessor attempted to write a Method Flow record before its new parent directory existed.",
+  "method_id": "V6464-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "All phase writers must create parents immediately before writing a new relative path.",
+  "retained_negative_ids": [
+    "V6464-X1-N06"
+  ],
+  "rollback": "Assign no credit to the partial build and overwrite only owner-scoped generated x1 artifacts from frozen definitions.",
+  "scope_boundary": "Owner-scoped deterministic x1 artifact generation only.",
+  "supersedes": [],
+  "title": "Parent-creating phase JSON writer",
+  "trigger_preconditions": [
+    "a builder introduces a new nested phase directory",
+    "the write helper receives a relative path",
+    "deterministic regeneration is safe"
+  ],
+  "validation_witness_ids": []
+}

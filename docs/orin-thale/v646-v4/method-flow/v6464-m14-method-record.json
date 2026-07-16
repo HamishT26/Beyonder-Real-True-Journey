@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Run unittest without ErrorActionPreference Stop and inspect LASTEXITCODE only after the process ends.",
+  "failure_signature": "PowerShell stop-on-error semantics converted normal verbose unittest stderr into a wrapper failure before exit-code inspection.",
+  "method_id": "V6464-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not classify native stderr as failure when the tool's contract uses stderr for normal progress.",
+  "retained_negative_ids": [
+    "V6464-X1-N14"
+  ],
+  "rollback": "Give the interrupted wrapper no validation credit and rerun only the test process.",
+  "scope_boundary": "Phase-local unittest invocation only.",
+  "supersedes": [],
+  "title": "Unittest exit-code separation from stderr",
+  "trigger_preconditions": [
+    "Python unittest writes progress to stderr",
+    "PowerShell captures native output",
+    "the process exit code is authoritative"
+  ],
+  "validation_witness_ids": []
+}

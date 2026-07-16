@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Give one reviewer invocation sixty seconds, then inspect staged blob IDs in a separate bounded command.",
+  "failure_signature": "A single exact staged review plus receipt staging and pair reporting exceeded a thirty-second envelope.",
+  "method_id": "V6464-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep review execution and pair reporting in separate invocations and never widen an aggregate loop.",
+  "retained_negative_ids": [
+    "V6464-X1-N16"
+  ],
+  "rollback": "Treat written-but-unreported receipts as pending and award no fixed-point credit until re-read.",
+  "scope_boundary": "Exact x1 staged review and blob-pair reporting only.",
+  "supersedes": [],
+  "title": "Sixty-second single staged-review envelope",
+  "trigger_preconditions": [
+    "the staged set is large",
+    "one reviewer invocation is required",
+    "aggregate loops remain prohibited"
+  ],
+  "validation_witness_ids": []
+}

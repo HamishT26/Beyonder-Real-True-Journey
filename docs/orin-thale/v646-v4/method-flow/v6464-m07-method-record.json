@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Inspect top-level and count keys first, then select authoritative fields without rerunning existing methods.",
+  "failure_signature": "A convenience projection assumed nested Method Flow count keys that were absent and printed null totals despite a valid authoritative receipt.",
+  "method_id": "V6464-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer Method Flow summary field names from a prior phase or wrapper.",
+  "retained_negative_ids": [
+    "V6464-X1-N07"
+  ],
+  "rollback": "Discard only the null convenience projection and preserve the valid runner receipt and ledger.",
+  "scope_boundary": "Read-only Method Flow count reporting only.",
+  "supersedes": [],
+  "title": "Schema-first Method Flow summary projection",
+  "trigger_preconditions": [
+    "a derived summary is read",
+    "field names may differ from validation receipts",
+    "the authoritative ledger remains intact"
+  ],
+  "validation_witness_ids": []
+}

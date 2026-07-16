@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Apply broad owner and phase substitutions first, then pin inherited Sable paths and Tamar routing targets exactly.",
+  "failure_signature": "Pre-run review found that exact inherited-source replacements would have been rewritten by later broad substitutions.",
+  "method_id": "V6464-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect transformed source paths and targets before executing any compatibility adapter.",
+  "retained_negative_ids": [
+    "V6464-X1-N03"
+  ],
+  "rollback": "Do not execute the adapter; restore the last reviewed replacement order.",
+  "scope_boundary": "X1 document-generation compatibility only; no x2 implementation or predecessor mutation.",
+  "supersedes": [],
+  "title": "Broad-first then exact-pin adapter transformation",
+  "trigger_preconditions": [
+    "a compatibility source adapter is used",
+    "owner and phase strings overlap source paths",
+    "pre-run review is available"
+  ],
+  "validation_witness_ids": []
+}

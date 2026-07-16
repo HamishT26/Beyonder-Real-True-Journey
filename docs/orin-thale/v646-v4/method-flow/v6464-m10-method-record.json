@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Read numbered source anchors and apply the correction against exact verified context.",
+  "failure_signature": "An edit patch was rejected because its assumed Python assignment context existed only as a JSON mapping entry.",
+  "method_id": "V6464-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer patch context from generated output shape; inspect the source lines first.",
+  "retained_negative_ids": [
+    "V6464-X1-N10"
+  ],
+  "rollback": "Retain the rejected patch as zero-change evidence and do not use a bulk rewrite fallback.",
+  "scope_boundary": "Owner-scoped source edit recovery only.",
+  "supersedes": [],
+  "title": "Verified-context apply_patch recovery",
+  "trigger_preconditions": [
+    "apply_patch rejected an owner-scoped edit",
+    "no file changed",
+    "the target source is bounded"
+  ],
+  "validation_witness_ids": []
+}

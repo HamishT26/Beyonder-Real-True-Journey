@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Read bounded installed-package metadata and record the version with verify-only status.",
+  "failure_signature": "The running executable exposed empty ProductVersion and FileVersion fields during a read-only version check.",
+  "method_id": "V6464-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat executable and package metadata as alternative read-only surfaces; never infer an update from an empty process field.",
+  "retained_negative_ids": [
+    "V6464-X1-N08"
+  ],
+  "rollback": "Record the desktop version as unavailable if both read-only surfaces fail; do not install or update.",
+  "scope_boundary": "Read-only local version observation only.",
+  "supersedes": [],
+  "title": "Package-metadata desktop version fallback",
+  "trigger_preconditions": [
+    "desktop version verification is required",
+    "running-process version fields are empty",
+    "updates are prohibited"
+  ],
+  "validation_witness_ids": []
+}

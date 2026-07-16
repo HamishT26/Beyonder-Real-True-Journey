@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Use a bounded no-login shell version query and carry only the observed version and verify-only action into the receipt.",
+  "failure_signature": "The generated Python subprocess observer could not resolve the Windows codex command form and recorded unavailable.",
+  "method_id": "V6464-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "On Windows, verify the command surface independently before treating Python subprocess absence as CLI absence.",
+  "retained_negative_ids": [
+    "V6464-X1-N09"
+  ],
+  "rollback": "Record unavailable if the direct shell also fails; never install or update.",
+  "scope_boundary": "Read-only local CLI version observation only.",
+  "supersedes": [],
+  "title": "Direct-shell Codex CLI version fallback",
+  "trigger_preconditions": [
+    "Codex CLI verification is required",
+    "Python subprocess command resolution fails",
+    "updates are prohibited"
+  ],
+  "validation_witness_ids": []
+}

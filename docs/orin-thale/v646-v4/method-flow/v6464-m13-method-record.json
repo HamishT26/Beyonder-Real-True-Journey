@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Set the measured final footprint in the builder postprocessor and regenerate once, rather than patching an outdated generated value.",
+  "failure_signature": "A post-build patch expected a provisional count that deterministic regeneration had correctly replaced with the prereview null placeholder.",
+  "method_id": "V6464-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Finalize generated receipt values in the builder source before the last regeneration.",
+  "retained_negative_ids": [
+    "V6464-X1-N13"
+  ],
+  "rollback": "Keep the rejected patch as zero change and leave rotation gated if the exact footprint cannot be measured.",
+  "scope_boundary": "Owner-generated file-count receipt only.",
+  "supersedes": [],
+  "title": "Builder-owned final footprint receipt",
+  "trigger_preconditions": [
+    "deterministic regeneration resets generated receipts",
+    "the final owner file set is known",
+    "the builder remains owner-scoped"
+  ],
+  "validation_witness_ids": []
+}

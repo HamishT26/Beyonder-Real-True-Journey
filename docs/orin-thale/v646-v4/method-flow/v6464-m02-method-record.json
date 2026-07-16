@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Inspect top-level keys, select prior_proposals explicitly, and null-check the first object before indexing.",
+  "failure_signature": "A read-only proposal-index probe selected a nonexistent key and array-wrapped null before indexing.",
+  "method_id": "V6464-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never treat @($null).Count as proof that a source collection exists.",
+  "retained_negative_ids": [
+    "V6464-X1-N02"
+  ],
+  "rollback": "Treat the failed probe as zero evidence and rerun only the schema-first read.",
+  "scope_boundary": "Read-only proposal-index parsing only.",
+  "supersedes": [],
+  "title": "Schema-first frozen-index selection",
+  "trigger_preconditions": [
+    "JSON schema may have evolved",
+    "PowerShell object access is used",
+    "read-only corpus audit"
+  ],
+  "validation_witness_ids": []
+}

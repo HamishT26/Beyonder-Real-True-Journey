@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Run one review per invocation, stage both receipts, and compare staged blob IDs with the prior invocation.",
+  "failure_signature": "A multi-iteration staged-review shell exceeded its envelope because each Python startup consumed part of the same bound.",
+  "method_id": "V6464-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not place repeated interpreter startups inside one closeout timeout envelope.",
+  "retained_negative_ids": [
+    "V6464-X1-N15"
+  ],
+  "rollback": "Retain the interrupted aggregate as zero credit and keep the latest staged pair pending verification.",
+  "scope_boundary": "Exact x1 staged-review fixed-point evidence only.",
+  "supersedes": [],
+  "title": "Single-iteration staged fixed-point witness",
+  "trigger_preconditions": [
+    "staged review rewrites self-excluding receipts",
+    "Python startup is nontrivial",
+    "blob-pair convergence is required"
+  ],
+  "validation_witness_ids": []
+}

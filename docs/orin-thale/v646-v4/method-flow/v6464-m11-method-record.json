@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owner_scoped_workflow",
+  "candidate_workaround": "Read bounded numbered line ranges directly instead of composing a regex and path.",
+  "failure_signature": "A composed ripgrep pattern and Windows path produced an invalid escape before a read-only source lookup completed.",
+  "method_id": "V6464-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "host_security",
+    "elevation",
+    "privacy",
+    "sibling_lane",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use literal paths separately from search expressions and prefer direct line ranges for patch anchors.",
+  "retained_negative_ids": [
+    "V6464-X1-N11"
+  ],
+  "rollback": "Treat the regex failure as no lookup evidence and leave the file unchanged.",
+  "scope_boundary": "Read-only owner-source inspection only.",
+  "supersedes": [],
+  "title": "Numbered direct-read source context lookup",
+  "trigger_preconditions": [
+    "exact patch context is required",
+    "the source file is known",
+    "regex matching adds no evidence"
+  ],
+  "validation_witness_ids": []
+}
