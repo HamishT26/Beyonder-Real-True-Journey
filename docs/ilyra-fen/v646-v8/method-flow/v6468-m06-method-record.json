@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Retain the failed staged state, normalize only the reported EOF, restage, and rerun the unchanged staged and diff gates.",
+  "failure_signature": "The staged packet stabilized but git diff --cached --check rejected an extra EOF blank line.",
+  "method_id": "V6468-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "validation_credit",
+    "repository_state",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "A stable manifest is necessary but never substitutes for diff hygiene.",
+  "retained_negative_ids": [
+    "V6468-X1-N06"
+  ],
+  "rollback": "Do not commit the stable but hygiene-invalid staged tree.",
+  "scope_boundary": "Same-owner bounded workflow recovery only; not independent reproduction or broader assurance.",
+  "supersedes": [],
+  "title": "Require diff-hygiene success after staged-review fixed point",
+  "trigger_preconditions": [
+    "staged review and manifest are byte-stable",
+    "diff hygiene has not yet passed"
+  ],
+  "validation_witness_ids": []
+}

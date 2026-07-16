@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Enumerate tracked Git paths once and compare candidate names against the returned path set.",
+  "failure_signature": "A single batched broad worktree content scan also exceeded its ceiling.",
+  "method_id": "V6468-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "validation_credit",
+    "repository_state",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use path evidence for package-name collisions; reserve content search for a bounded explicit file set.",
+  "retained_negative_ids": [
+    "V6468-X1-N04"
+  ],
+  "rollback": "Give the timed-out content scan zero absence credit and leave the candidate list unfrozen until the path witness passes.",
+  "scope_boundary": "Same-owner bounded workflow recovery only; not independent reproduction or broader assurance.",
+  "supersedes": [],
+  "title": "Use Git-index path evidence for exact skill-name collision preflight",
+  "trigger_preconditions": [
+    "candidate names map to package paths",
+    "the worktree content surface is large"
+  ],
+  "validation_witness_ids": []
+}

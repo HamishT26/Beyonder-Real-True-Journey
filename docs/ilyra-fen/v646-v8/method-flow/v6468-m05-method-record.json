@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Invoke the shim through a no-profile PowerShell command and capture only its sanitized version line.",
+  "failure_signature": "Direct Python process creation could not execute the Codex PowerShell command shim.",
+  "method_id": "V6468-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "validation_credit",
+    "repository_state",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve the command type before selecting a subprocess invocation method.",
+  "retained_negative_ids": [
+    "V6468-X1-N05"
+  ],
+  "rollback": "Give the failed builder zero packet credit and make no permission or installation change.",
+  "scope_boundary": "Same-owner bounded workflow recovery only; not independent reproduction or broader assurance.",
+  "supersedes": [],
+  "title": "Invoke PowerShell command shims through PowerShell",
+  "trigger_preconditions": [
+    "a command resolves to a PowerShell script shim",
+    "a Python subprocess probe needs only version text"
+  ],
+  "validation_witness_ids": []
+}
