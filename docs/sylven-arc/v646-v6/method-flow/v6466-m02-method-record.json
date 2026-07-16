@@ -1,0 +1,31 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run each native command separately, capture LASTEXITCODE on the following statement, then construct the summary object.",
+  "failure_signature": "PowerShell parse error around a native command and LASTEXITCODE inside parentheses",
+  "method_id": "V6466-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "external_state",
+    "destructive_action",
+    "sibling_lane",
+    "privacy",
+    "independent_reproduction",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not place native commands and LASTEXITCODE capture in one parenthesized expression.",
+  "retained_negative_ids": [
+    "V6466-X1-N02"
+  ],
+  "rollback": "Retain the negative and award no affected credit until the bounded recovery witness passes.",
+  "scope_boundary": "Preferred only for the recorded owner-local trigger; no scientific, professional, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Split PowerShell probes before exit-code capture",
+  "trigger_preconditions": [
+    "PowerShell",
+    "native Git command",
+    "exit-code capture",
+    "compound expression"
+  ],
+  "validation_witness_ids": []
+}
