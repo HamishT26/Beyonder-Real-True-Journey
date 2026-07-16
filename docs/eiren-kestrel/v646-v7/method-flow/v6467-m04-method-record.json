@@ -1,0 +1,28 @@
+{
+  "method_id": "V6467-M04",
+  "title": "Interrogate Method Flow subcommand help before receipt emission",
+  "failure_signature": "Method Flow validate rejected an invented --output option after earlier record, witness, and state mutations had succeeded.",
+  "trigger_preconditions": [
+    "Method Flow CLI",
+    "receipt refresh",
+    "locally guessed option name",
+    "partially completed command sequence"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Read the exact validate and summarize subcommand help, use validate --receipt and summarize --json-output plus --markdown-output, and avoid replaying already successful append-only mutations.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Treat each Method Flow subcommand as a separate contract; check help before first use and resume only from the first failed step.",
+  "rollback": "Retain the parser failure, award no validation-receipt credit to it, and do not duplicate the preceding successful ledger events.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "append_only_ledger",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X1-N04"
+  ],
+  "scope_boundary": "Owner-local Method Flow CLI contract only; no scientific, authority, production, security-complete, accessibility-complete, or independent-reproduction credit."
+}

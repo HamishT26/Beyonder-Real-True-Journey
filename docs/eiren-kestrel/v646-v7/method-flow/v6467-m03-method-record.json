@@ -1,0 +1,29 @@
+{
+  "method_id": "V6467-M03",
+  "title": "Split login-shell startup from bounded filesystem and compiler probes",
+  "failure_signature": "Two simple inspection commands exceeded a ten-second wrapper deadline while launched with login-shell semantics and returned no filesystem evidence.",
+  "trigger_preconditions": [
+    "Windows PowerShell login shell",
+    "large Git worktree",
+    "short wrapper deadline",
+    "filesystem or compiler inspection"
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Disable login-shell initialization for bounded probes, use an already responsive neutral working directory, address the target by absolute path, and separate existence, content, and compilation checks.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not retry an identical timed-out login-shell inspection; change one causal dimension, split the probe, and preserve the original timeout as a failed witness.",
+  "rollback": "Award no inspection or compilation credit to either timeout and retain both wrapper expirations before using the bounded recovery.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_material",
+    "sibling_lane",
+    "canonical_history",
+    "completion_credit"
+  ],
+  "retained_negative_ids": [
+    "V6467-X1-N03"
+  ],
+  "scope_boundary": "Owner-local shell and filesystem inspection only; no scientific, authority, production, security-complete, accessibility-complete, or independent-reproduction credit."
+}

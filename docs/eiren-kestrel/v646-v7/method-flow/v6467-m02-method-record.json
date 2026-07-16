@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Accumulate PowerShell loop results in an explicit array and pipe that completed array to ConvertTo-Json after the loop.",
+  "failure_signature": "A novelty-search command piped directly from a foreach statement and PowerShell rejected the construction as an empty pipe element before any title comparison ran.",
+  "method_id": "V6467-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_material",
+    "sibling_lane",
+    "canonical_history",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "PowerShell loops that feed serialization must assign to an explicit results array; parser failures receive no downstream evidence credit.",
+  "retained_negative_ids": [
+    "V6467-X1-N02"
+  ],
+  "rollback": "Retain the parser failure, award zero novelty-search credit, and rerun only the corrected read-only loop.",
+  "scope_boundary": "Owner-local proposal-title inspection only; no scientific, authority, production, privacy-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Serialize PowerShell loop results after explicit accumulation",
+  "trigger_preconditions": [
+    "PowerShell foreach loop",
+    "structured result objects",
+    "JSON serialization",
+    "read-only novelty audit"
+  ],
+  "validation_witness_ids": []
+}
