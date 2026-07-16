@@ -100,7 +100,7 @@ class V645V8EvidenceTests(unittest.TestCase):
         self.assertEqual(row["counts"]["inherited_effective"], 2353)
         self.assertEqual(row["counts"]["preregistered_synthetic"], 70)
         self.assertEqual(row["counts"]["x1_operational"], 4)
-        self.assertEqual(row["counts"]["x2_operational"], 4)
+        self.assertEqual(row["counts"]["x2_operational"], 5)
         self.assertEqual(row["erased"], 0)
         self.assertEqual(row["counts"]["effective_total"], sum(value for key, value in row["counts"].items() if key != "effective_total"))
 

@@ -60,6 +60,17 @@ INCIDENTS = [
         "guard": "A summary is invalid if any child writes a Git fatal error; never coerce absent numeric output into evidence.",
         "rollback": "Give the failed summary no merge-count credit and do not commit evidence until the isolated ancestry command passes.",
     },
+    {
+        "number": 9,
+        "negative_id": "V6458-X2-N05",
+        "title": "Normalize manifest bytes across Git and Windows working-tree domains",
+        "failure": "The first closeout owner-manifest review found three mismatches for committed x1 Python files whose Windows working-tree bytes used CRLF while canonical Git blobs used LF.",
+        "failed": "Hash raw working-tree bytes while comparing them later with canonical staged or committed Git blobs.",
+        "recovery": "Retain the failed review, declare an LF-normalized owner-byte domain, refresh the complete manifest, and rerun parity against canonical Git blobs.",
+        "observed": "The refreshed full owner manifest then matched every committed or staged canonical blob, including the three x1 files.",
+        "guard": "Every manifest must name its byte domain; Windows checkout line endings may not be compared to Git blobs without declared normalization.",
+        "rollback": "Give the failed manifest zero seal credit and keep the route prepared-not-sent until normalized parity passes.",
+    },
 ]
 
 

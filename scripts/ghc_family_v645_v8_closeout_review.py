@@ -16,7 +16,19 @@ SELF = {
     f"{PREFIX}validation/closeout-staged-manifest.json",
     f"{PREFIX}validation/closeout-staged-review.json",
 }
-ALLOWED_MODIFIED = {"scripts/build_ghc_family_v645_v8_closeout.py"}
+ALLOWED_MODIFIED = {
+    "docs/sylven-arc/v645-v8/method-flow/method-flow-state-x2.json",
+    "docs/sylven-arc/v645-v8/method-flow/method-flow-summary-x2.json",
+    "docs/sylven-arc/v645-v8/method-flow/method-flow-summary-x2.md",
+    "docs/sylven-arc/v645-v8/method-flow/method-flow-x2-validation.json",
+    "docs/sylven-arc/v645-v8/phase-truth.json",
+    "docs/sylven-arc/v645-v8/prototypes/runner-witnesses/ghc_family_v645_v8_method_flow_runner.json",
+    "docs/sylven-arc/v645-v8/retained-negative-register.json",
+    "scripts/build_ghc_family_v645_v8_closeout.py",
+    "scripts/ghc_family_v645_v8_closeout_review.py",
+    "scripts/ghc_family_v645_v8_method_flow_runner.py",
+    "tests/test_ghc_family_v645_v8.py",
+}
 PATTERNS = {
     "raw_uuid_identifier": re.compile(r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
     "private_route_or_callable": re.compile("(?:source_" + "thread_id|client" + "ThreadId|app" + "://|codex" + "://|private_" + "callable_id)", re.I),

@@ -2,9 +2,9 @@
 
 - Phase: v645-gmut-thos-v8-x1-x2
 - Owner: Sylven Arc
-- Methods: 8
-- Passing witnesses: 8
-- Failed witnesses retained: 8
+- Methods: 9
+- Passing witnesses: 9
+- Failed witnesses retained: 9
 
 ## Preferred methods
 
@@ -71,6 +71,14 @@
 - Recurrence guard: A summary is invalid if any child writes a Git fatal error; never coerce absent numeric output into evidence.
 - Rollback: Give the failed summary no merge-count credit and do not commit evidence until the isolated ancestry command passes.
 - Witnesses: V6458-W08-F, V6458-W08-P, V6458-W08-F, V6458-W08-P
+
+### V6458-M09 — Normalize manifest bytes across Git and Windows working-tree domains
+
+- Trigger: v645-v8 x2 evidence validation; same-owner local tooling
+- Method: Retain the failed review, declare an LF-normalized owner-byte domain, refresh the complete manifest, and rerun parity against canonical Git blobs.
+- Recurrence guard: Every manifest must name its byte domain; Windows checkout line endings may not be compared to Git blobs without declared normalization.
+- Rollback: Give the failed manifest zero seal credit and keep the route prepared-not-sent until normalized parity passes.
+- Witnesses: V6458-W09-F, V6458-W09-P, V6458-W09-F, V6458-W09-P
 
 ## Retained boundary
 

@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 8,
-    "recommendations": 8,
-    "state_events": 24,
+    "methods": 9,
+    "recommendations": 9,
+    "state_events": 27,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 8,
+      "preferred": 9,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 8,
-      "pass": 8
+      "fail": 9,
+      "pass": 9
     },
-    "witnesses": 16
+    "witnesses": 18
   },
   "owner": "Sylven Arc",
   "phase": "v645-gmut-thos-v8-x1-x2",
@@ -156,6 +156,24 @@
         "V6458-W08-F",
         "V6458-W08-P"
       ]
+    },
+    {
+      "candidate_workaround": "Retain the failed review, declare an LF-normalized owner-byte domain, refresh the complete manifest, and rerun parity against canonical Git blobs.",
+      "method_id": "V6458-M09",
+      "recurrence_guard": "Every manifest must name its byte domain; Windows checkout line endings may not be compared to Git blobs without declared normalization.",
+      "rollback": "Give the failed manifest zero seal credit and keep the route prepared-not-sent until normalized parity passes.",
+      "scope_boundary": "Same-owner operational recovery only; no scientific, authority, production, accessibility-complete, security-complete, or independent-reproduction credit.",
+      "title": "Normalize manifest bytes across Git and Windows working-tree domains",
+      "trigger_preconditions": [
+        "v645-v8 x2 evidence validation",
+        "same-owner local tooling"
+      ],
+      "validation_witness_ids": [
+        "V6458-W09-F",
+        "V6458-W09-P",
+        "V6458-W09-F",
+        "V6458-W09-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -166,7 +184,8 @@
     "V6458-W05-F",
     "V6458-W06-F",
     "V6458-W07-F",
-    "V6458-W08-F"
+    "V6458-W08-F",
+    "V6458-W09-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

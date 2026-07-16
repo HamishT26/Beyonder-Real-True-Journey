@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 
 from ghc_family_v645_v8_definitions import IDENTITY_BOUNDARY, SOURCE_REVISION
-from ghc_family_v645_v8_runtime import PHASE, ROOT, TRUTH_BOUNDARY, owner_files, parse_json_documents, privacy_scan, sha256_file, write_json
+from ghc_family_v645_v8_runtime import PHASE, ROOT, TRUTH_BOUNDARY, owner_files, parse_json_documents, privacy_scan, sha256_bytes, write_json
 
 
 X1_COMMIT = "3274af55081cf023f78e2a854448f2c5f936dbbd"
@@ -30,8 +30,8 @@ def manifest_entries() -> list[dict[str, str | int]]:
         relative = path.relative_to(ROOT).as_posix()
         if relative in excluded:
             continue
-        data = path.read_bytes()
-        entries.append({"path": relative, "bytes": len(data), "sha256": sha256_file(path)})
+        data = path.read_bytes().replace(b"\r\n", b"\n")
+        entries.append({"path": relative, "bytes": len(data), "sha256": sha256_bytes(data)})
     return entries
 
 
@@ -68,7 +68,7 @@ def main() -> int:
         "maximum_phase_commits": 4,
         "merge_commits": merges_before_closeout,
         "distribution": {"completed": 6, "represented": 2, "open_gap": 1, "exact_gate": 1},
-        "effective_retained_negatives": 2431,
+        "effective_retained_negatives": 2432,
         "effective_open_gaps": 10,
         "effective_exact_gates": 11,
         "full_repository_suite_run": False,
@@ -123,12 +123,12 @@ def main() -> int:
     entries = manifest_entries()
     manifest = {
         "schema": "ghc.family.v645-v8.exact-owner-manifest.v1",
-        "domain": "LF-preserving owner working-tree bytes before exact staging",
+        "domain": "LF-normalized owner bytes before exact staging",
         "entry_count": len(entries),
         "excluded_self_describing_paths": ["docs/sylven-arc/v645-v8/validation/exact-owner-manifest.json", "docs/sylven-arc/v645-v8/validation/closeout-staged-manifest.json", "docs/sylven-arc/v645-v8/validation/closeout-staged-review.json"],
         "entries": entries,
         "valid": True,
-        "boundary": "Manifest parity is an integrity check, not security or privacy completeness.",
+        "boundary": "Line-ending normalization is declared explicitly. Manifest parity is an integrity check, not security or privacy completeness.",
     }
     write_json("validation/exact-owner-manifest.json", manifest)
     write_json("validation/closeout-staged-manifest.json", {**manifest, "schema": "ghc.family.v645-v8.closeout-staged-manifest.v1", "state": "candidate_recheck_after_exact_staging"})
