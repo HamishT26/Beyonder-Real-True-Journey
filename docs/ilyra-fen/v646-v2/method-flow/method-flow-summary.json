@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 21,
-    "recommendations": 21,
-    "state_events": 64,
+    "methods": 28,
+    "recommendations": 28,
+    "state_events": 85,
     "states": {
       "candidate": 0,
       "deprecated": 1,
       "observed": 0,
-      "preferred": 20,
+      "preferred": 27,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 29,
-      "pass": 21
+      "fail": 38,
+      "pass": 28
     },
-    "witnesses": 50
+    "witnesses": 66
   },
   "owner": "Ilyra Fen",
   "phase": "v646-gmut-thos-v2-x1-x2",
@@ -349,6 +349,120 @@
         "V6462-M21-F",
         "V6462-M21-P"
       ]
+    },
+    {
+      "candidate_workaround": "Retain the two original-phase failures and run an explicit successor selection excluding only their phase-local commit-cap assertions.",
+      "method_id": "V6462-M22",
+      "recurrence_guard": "Successor scoped suites enumerate every exclusion by exact test ID and reason; excluded failures remain visible with zero pass credit.",
+      "rollback": "Give the 65-pass two-failure broad run zero full-selection credit and do not alter inherited test code.",
+      "scope_boundary": "Same-owner successor-scoped test selection only; not the complete repository suite or independent reproduction.",
+      "title": "Quarantine original-phase commit-cap assertions in successor scope",
+      "trigger_preconditions": [
+        "successor commits extend an inherited phase history",
+        "inherited validators assert the original phase commit cap"
+      ],
+      "validation_witness_ids": [
+        "V6462-M22-F",
+        "V6462-M22-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Keep precommit candidate results unbound to later commits and require exact-head plus clean-state checks for canonical scoped credit.",
+      "method_id": "V6462-M23",
+      "recurrence_guard": "A scoped-test receipt receives canonical credit only when its runner records the exact HEAD and required clean state during the invocation.",
+      "rollback": "Withdraw exact-evidence credit additively and preserve the earlier candidate receipt as noncanonical evidence.",
+      "scope_boundary": "Same-owner revision-binding recovery only; not semantic truth, production certification, or independent reproduction.",
+      "title": "Bind scoped-test credit to the invoked revision",
+      "trigger_preconditions": [
+        "a receipt predates the commit it is later associated with",
+        "no exact-head invocation was recorded"
+      ],
+      "validation_witness_ids": [
+        "V6462-M23-F",
+        "V6462-M23-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Insert the resolved repository root into the import search path before direct-script unittest loading.",
+      "method_id": "V6462-M24",
+      "recurrence_guard": "Direct family test runners establish the repository root as an explicit import origin before module discovery.",
+      "rollback": "Give the six loader errors zero test credit and do not weaken the selected module list.",
+      "scope_boundary": "Same-owner bounded test-runner import recovery only; not the complete repository suite or independent reproduction.",
+      "title": "Bind direct test-runner imports to the repository root",
+      "trigger_preconditions": [
+        "a family runner executes as a script",
+        "test modules are repository-root packages"
+      ],
+      "validation_witness_ids": [
+        "V6462-M24-F",
+        "V6462-M24-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Split read-only probes, disable login-shell startup, and use a bounded window matched to the observed PowerShell startup envelope.",
+      "method_id": "V6462-M25",
+      "recurrence_guard": "Use decomposed login-disabled PowerShell probes with an explicit sixty-second ceiling when the measured startup envelope exceeds ten seconds.",
+      "rollback": "Give both timed-out probes zero evidence credit and make no repository or host-state claim from them.",
+      "scope_boundary": "Same-owner read-only shell-probe recovery only; not a performance guarantee, host certification, or independent reproduction.",
+      "title": "Bound PowerShell startup probes to the measured envelope",
+      "trigger_preconditions": [
+        "a read-only PowerShell probe has a ten-second bound",
+        "local startup overhead is not yet characterized"
+      ],
+      "validation_witness_ids": [
+        "V6462-M25-F1",
+        "V6462-M25-F2",
+        "V6462-M25-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Search the containing directory with ripgrep's explicit glob filter or pass explicit file paths.",
+      "method_id": "V6462-M26",
+      "recurrence_guard": "On Windows, pass a real directory to ripgrep and use -g for filename selection rather than embedding a wildcard in the path argument.",
+      "rollback": "Give the failed diagnostic zero evidence credit and do not infer absence from an invalid-path search.",
+      "scope_boundary": "Same-owner diagnostic portability recovery only; not a filesystem, privacy, or search-completeness guarantee.",
+      "title": "Keep ripgrep globs out of Windows path arguments",
+      "trigger_preconditions": [
+        "ripgrep runs on Windows",
+        "the intended search targets a filename family"
+      ],
+      "validation_witness_ids": [
+        "V6462-M26-F",
+        "V6462-M26-F2",
+        "V6462-M26-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Enumerate the installed skill package and invoke the entrypoint that actually exists.",
+      "method_id": "V6462-M27",
+      "recurrence_guard": "Resolve installed skill entrypoints from the selected skill package before invocation; never infer a runner filename from the skill name.",
+      "rollback": "Give the missing-entrypoint invocation zero index credit and leave the existing index unchanged.",
+      "scope_boundary": "Same-owner installed-skill path recovery only; not package provenance, production certification, or independent reproduction.",
+      "title": "Resolve installed skill entrypoints before invocation",
+      "trigger_preconditions": [
+        "an installed skill runner is required",
+        "the exact runner filename has not been resolved"
+      ],
+      "validation_witness_ids": [
+        "V6462-M27-F",
+        "V6462-M27-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Run native commands before object construction, capture their exit codes in scalar variables, and build the summary only from those values.",
+      "method_id": "V6462-M28",
+      "recurrence_guard": "Never embed compound native-command statements inside PowerShell hashtable value expressions; evaluate and store them first.",
+      "rollback": "Give the parser-failed wrapper zero staged-review credit and make no inference from it.",
+      "scope_boundary": "Same-owner PowerShell wrapper recovery only; not shell correctness, repository certification, or independent reproduction.",
+      "title": "Separate native commands from PowerShell summary objects",
+      "trigger_preconditions": [
+        "a PowerShell summary includes a native-command result",
+        "the result needs an exit code"
+      ],
+      "validation_witness_ids": [
+        "V6462-M28-F",
+        "V6462-M28-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -380,7 +494,16 @@
     "V6462-M18-F",
     "V6462-M19-F",
     "V6462-M20-F",
-    "V6462-M21-F"
+    "V6462-M21-F",
+    "V6462-M22-F",
+    "V6462-M23-F",
+    "V6462-M24-F",
+    "V6462-M25-F1",
+    "V6462-M25-F2",
+    "V6462-M26-F",
+    "V6462-M26-F2",
+    "V6462-M27-F",
+    "V6462-M28-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

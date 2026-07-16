@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Split read-only probes, disable login-shell startup, and use a bounded window matched to the observed PowerShell startup envelope.",
+  "failure_signature": "Two read-only ten-second probes expired before output while the local PowerShell startup envelope exceeded the requested bound.",
+  "method_id": "V6462-M25",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["timeout_integrity", "validation_credit", "host_state"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use decomposed login-disabled PowerShell probes with an explicit sixty-second ceiling when the measured startup envelope exceeds ten seconds.",
+  "retained_negative_ids": ["V6462-X2-N18", "V6462-X2-N19"],
+  "rollback": "Give both timed-out probes zero evidence credit and make no repository or host-state claim from them.",
+  "scope_boundary": "Same-owner read-only shell-probe recovery only; not a performance guarantee, host certification, or independent reproduction.",
+  "supersedes": [],
+  "title": "Bound PowerShell startup probes to the measured envelope",
+  "trigger_preconditions": ["a read-only PowerShell probe has a ten-second bound", "local startup overhead is not yet characterized"],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Run native commands before object construction, capture their exit codes in scalar variables, and build the summary only from those values.",
+  "failure_signature": "PowerShell rejected a hashtable value expression that contained a native command and statement separator.",
+  "method_id": "V6462-M28",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["parser_integrity", "git_state", "validation_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never embed compound native-command statements inside PowerShell hashtable value expressions; evaluate and store them first.",
+  "retained_negative_ids": ["V6462-X2-N23"],
+  "rollback": "Give the parser-failed wrapper zero staged-review credit and make no inference from it.",
+  "scope_boundary": "Same-owner PowerShell wrapper recovery only; not shell correctness, repository certification, or independent reproduction.",
+  "supersedes": [],
+  "title": "Separate native commands from PowerShell summary objects",
+  "trigger_preconditions": ["a PowerShell summary includes a native-command result", "the result needs an exit code"],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Insert the resolved repository root into the import search path before direct-script unittest loading.",
+  "failure_signature": "The first explicit successor test runner produced six loader failures because direct script mode omitted the repository root.",
+  "method_id": "V6462-M24",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["test_integrity", "import_origin", "validation_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Direct family test runners establish the repository root as an explicit import origin before module discovery.",
+  "retained_negative_ids": ["V6462-X2-N17"],
+  "rollback": "Give the six loader errors zero test credit and do not weaken the selected module list.",
+  "scope_boundary": "Same-owner bounded test-runner import recovery only; not the complete repository suite or independent reproduction.",
+  "supersedes": [],
+  "title": "Bind direct test-runner imports to the repository root",
+  "trigger_preconditions": ["a family runner executes as a script", "test modules are repository-root packages"],
+  "validation_witness_ids": []
+}

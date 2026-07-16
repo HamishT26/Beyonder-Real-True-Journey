@@ -2,9 +2,9 @@
 
 - Phase: v646-gmut-thos-v2-x1-x2
 - Owner: Ilyra Fen
-- Methods: 21
-- Passing witnesses: 21
-- Failed witnesses retained: 29
+- Methods: 28
+- Passing witnesses: 28
+- Failed witnesses retained: 38
 
 ## Preferred methods
 
@@ -167,6 +167,62 @@
 - Recurrence guard: The ten-runner terminal aggregate is invoked only when the ledger contains no candidate or observed method.
 - Rollback: Stop the aggregate, preserve all four outputs, and give all ten zero aggregate completion credit.
 - Witnesses: V6462-M21-F, V6462-M21-P
+
+### V6462-M22 — Quarantine original-phase commit-cap assertions in successor scope
+
+- Trigger: successor commits extend an inherited phase history; inherited validators assert the original phase commit cap
+- Method: Retain the two original-phase failures and run an explicit successor selection excluding only their phase-local commit-cap assertions.
+- Recurrence guard: Successor scoped suites enumerate every exclusion by exact test ID and reason; excluded failures remain visible with zero pass credit.
+- Rollback: Give the 65-pass two-failure broad run zero full-selection credit and do not alter inherited test code.
+- Witnesses: V6462-M22-F, V6462-M22-P
+
+### V6462-M23 — Bind scoped-test credit to the invoked revision
+
+- Trigger: a receipt predates the commit it is later associated with; no exact-head invocation was recorded
+- Method: Keep precommit candidate results unbound to later commits and require exact-head plus clean-state checks for canonical scoped credit.
+- Recurrence guard: A scoped-test receipt receives canonical credit only when its runner records the exact HEAD and required clean state during the invocation.
+- Rollback: Withdraw exact-evidence credit additively and preserve the earlier candidate receipt as noncanonical evidence.
+- Witnesses: V6462-M23-F, V6462-M23-P
+
+### V6462-M24 — Bind direct test-runner imports to the repository root
+
+- Trigger: a family runner executes as a script; test modules are repository-root packages
+- Method: Insert the resolved repository root into the import search path before direct-script unittest loading.
+- Recurrence guard: Direct family test runners establish the repository root as an explicit import origin before module discovery.
+- Rollback: Give the six loader errors zero test credit and do not weaken the selected module list.
+- Witnesses: V6462-M24-F, V6462-M24-P
+
+### V6462-M25 — Bound PowerShell startup probes to the measured envelope
+
+- Trigger: a read-only PowerShell probe has a ten-second bound; local startup overhead is not yet characterized
+- Method: Split read-only probes, disable login-shell startup, and use a bounded window matched to the observed PowerShell startup envelope.
+- Recurrence guard: Use decomposed login-disabled PowerShell probes with an explicit sixty-second ceiling when the measured startup envelope exceeds ten seconds.
+- Rollback: Give both timed-out probes zero evidence credit and make no repository or host-state claim from them.
+- Witnesses: V6462-M25-F1, V6462-M25-F2, V6462-M25-P
+
+### V6462-M26 — Keep ripgrep globs out of Windows path arguments
+
+- Trigger: ripgrep runs on Windows; the intended search targets a filename family
+- Method: Search the containing directory with ripgrep's explicit glob filter or pass explicit file paths.
+- Recurrence guard: On Windows, pass a real directory to ripgrep and use -g for filename selection rather than embedding a wildcard in the path argument.
+- Rollback: Give the failed diagnostic zero evidence credit and do not infer absence from an invalid-path search.
+- Witnesses: V6462-M26-F, V6462-M26-F2, V6462-M26-P
+
+### V6462-M27 — Resolve installed skill entrypoints before invocation
+
+- Trigger: an installed skill runner is required; the exact runner filename has not been resolved
+- Method: Enumerate the installed skill package and invoke the entrypoint that actually exists.
+- Recurrence guard: Resolve installed skill entrypoints from the selected skill package before invocation; never infer a runner filename from the skill name.
+- Rollback: Give the missing-entrypoint invocation zero index credit and leave the existing index unchanged.
+- Witnesses: V6462-M27-F, V6462-M27-P
+
+### V6462-M28 — Separate native commands from PowerShell summary objects
+
+- Trigger: a PowerShell summary includes a native-command result; the result needs an exit code
+- Method: Run native commands before object construction, capture their exit codes in scalar variables, and build the summary only from those values.
+- Recurrence guard: Never embed compound native-command statements inside PowerShell hashtable value expressions; evaluate and store them first.
+- Rollback: Give the parser-failed wrapper zero staged-review credit and make no inference from it.
+- Witnesses: V6462-M28-F, V6462-M28-P
 
 ## Retained boundary
 

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Enumerate the installed skill package and invoke the entrypoint that actually exists.",
+  "failure_signature": "A direct skill-runner invocation assumed a filename that was not present in the installed package.",
+  "method_id": "V6462-M27",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["skill_integrity", "entrypoint_origin", "validation_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve installed skill entrypoints from the selected skill package before invocation; never infer a runner filename from the skill name.",
+  "retained_negative_ids": ["V6462-X2-N22"],
+  "rollback": "Give the missing-entrypoint invocation zero index credit and leave the existing index unchanged.",
+  "scope_boundary": "Same-owner installed-skill path recovery only; not package provenance, production certification, or independent reproduction.",
+  "supersedes": [],
+  "title": "Resolve installed skill entrypoints before invocation",
+  "trigger_preconditions": ["an installed skill runner is required", "the exact runner filename has not been resolved"],
+  "validation_witness_ids": []
+}

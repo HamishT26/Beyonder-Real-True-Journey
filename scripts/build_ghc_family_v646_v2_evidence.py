@@ -154,6 +154,30 @@ X2_OPERATIONAL_NEGATIVES = [
         "recovery": "Do not request terminal Method Flow aggregate credit while a recovery candidate is active; validate the candidate first, then replay the aggregate.",
         "method_id": "V6462-M21",
     },
+    {
+        "negative_id": "V6462-X2-N15",
+        "surface": "first post-evidence broad scoped-test replay",
+        "observed": "Sixty-five tests passed and two inherited v646-v1 precommit-validator tests failed because their original-phase commit cap does not apply after successor commits.",
+        "credit": "none",
+        "recovery": "Retain both failures and run an explicit successor selection that excludes only the two original-phase commit-cap assertions.",
+        "method_id": "V6462-M22",
+    },
+    {
+        "negative_id": "V6462-X2-N16",
+        "surface": "canonical evidence scoped-test binding",
+        "observed": "The first lifecycle builder rebound a precommit candidate receipt to the evidence head without an exact-head test invocation.",
+        "credit": "none",
+        "recovery": "Withdraw exact-evidence credit, label the receipt as precommit candidate evidence, and require the explicit successor selection at the exact final head.",
+        "method_id": "V6462-M23",
+    },
+    {
+        "negative_id": "V6462-X2-N17",
+        "surface": "first explicit successor scoped-test runner",
+        "observed": "Direct script execution discovered six loader failures because the repository root was absent from the import search path.",
+        "credit": "none",
+        "recovery": "Add the resolved repository root to the import path before loading the unchanged six-module selection.",
+        "method_id": "V6462-M24",
+    },
 ]
 
 

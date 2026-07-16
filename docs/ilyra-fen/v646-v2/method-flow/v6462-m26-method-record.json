@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_local_tooling",
+  "candidate_workaround": "Search the containing directory with ripgrep's explicit glob filter or pass explicit file paths.",
+  "failure_signature": "A wildcard embedded in a Windows path was treated as a literal invalid path by ripgrep.",
+  "method_id": "V6462-M26",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["diagnostic_integrity", "path_scope", "validation_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "On Windows, pass a real directory to ripgrep and use -g for filename selection rather than embedding a wildcard in the path argument.",
+  "retained_negative_ids": ["V6462-X2-N20", "V6462-X2-N21"],
+  "rollback": "Give the failed diagnostic zero evidence credit and do not infer absence from an invalid-path search.",
+  "scope_boundary": "Same-owner diagnostic portability recovery only; not a filesystem, privacy, or search-completeness guarantee.",
+  "supersedes": [],
+  "title": "Keep ripgrep globs out of Windows path arguments",
+  "trigger_preconditions": ["ripgrep runs on Windows", "the intended search targets a filename family"],
+  "validation_witness_ids": []
+}
