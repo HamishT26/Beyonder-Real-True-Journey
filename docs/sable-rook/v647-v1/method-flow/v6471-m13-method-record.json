@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Search repository roots and express filename selection with repeated -g filters.",
+  "failure_signature": "A Windows ripgrep invocation treated scripts/ghc_family_v647_v1* as an invalid literal path.",
+  "method_id": "V6471-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "append_only_failures",
+    "owned_lane_only",
+    "no_evidence_erasure"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pass a wildcard-bearing Windows pathname as a literal ripgrep search root.",
+  "retained_negative_ids": [
+    "V6471-X2-N06"
+  ],
+  "rollback": "Retain the failed read-only probe, then repeat the same pattern search with repository roots and glob filters.",
+  "scope_boundary": "Sable v647-v1 closeout workflow evidence only; no scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Apply ripgrep globs through filters rather than Windows literal paths",
+  "trigger_preconditions": [
+    "A bounded source search needs filename filtering on Windows."
+  ],
+  "validation_witness_ids": []
+}

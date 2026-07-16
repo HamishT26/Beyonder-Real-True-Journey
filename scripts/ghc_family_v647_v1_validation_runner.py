@@ -158,20 +158,22 @@ def main() -> int:
     parser.add_argument("--mode", choices=["detailed", "minimal"], required=True)
     parser.add_argument("--lifecycle", choices=["evidence", "closeout", "final", "named_replay"], required=True)
     parser.add_argument("--receipt", type=Path, required=True)
+    parser.add_argument("--no-write-witness", action="store_true")
     args = parser.parse_args()
     witness_path = PHASE / "validation" / "runner-witnesses" / "validation-runner.json"
-    write(
-        witness_path,
-        {
-            "schema": "ghc.family.v647-v1.runner-witness.v1",
-            "runner": "ghc_family_v647_v1_validation_runner.py",
-            "mode": args.mode,
-            "lifecycle": args.lifecycle,
-            "used": True,
-            "same_owner_only": True,
-            "independent_reproduction": False,
-        },
-    )
+    if not args.no_write_witness:
+        write(
+            witness_path,
+            {
+                "schema": "ghc.family.v647-v1.runner-witness.v1",
+                "runner": "ghc_family_v647_v1_validation_runner.py",
+                "mode": args.mode,
+                "lifecycle": args.lifecycle,
+                "used": True,
+                "same_owner_only": True,
+                "independent_reproduction": False,
+            },
+        )
     result = validate(args.mode, args.lifecycle)
     write(args.receipt, result)
     print(json.dumps({"valid": result["valid"], "checks": result["checks_total"], "json": result.get("json_files_parsed", 0), "tests": result["test_result"].get("tests", 0)}, sort_keys=True))

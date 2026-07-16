@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v1-x1-x2
 - Owner: Sable Rook
-- Methods: 10
-- Passing witnesses: 10
-- Failed witnesses retained: 10
+- Methods: 14
+- Passing witnesses: 14
+- Failed witnesses retained: 14
 
 ## Preferred methods
 
@@ -87,6 +87,38 @@
 - Recurrence guard: Historical lifecycle absence tests must read the lifecycle commit, not infer absence from a later working tree.
 - Rollback: Retain the failing 99-test run, patch only the lifecycle reference, and rerun the identical selection.
 - Witnesses: V6471-M10-WFAIL, V6471-M10-WPASS
+
+### V6471-M11 — Decompose shell-startup inspection into isolated bounded probes
+
+- Trigger: Several read-only native and PowerShell inspections were grouped behind one shell startup.
+- Method: Run independent login-disabled probes with a declared sixty-second upper bound and preserve each result separately.
+- Recurrence guard: Use isolated probes for closeout evidence and never infer which grouped component completed after a wrapper timeout.
+- Rollback: Retain the timeout; no repository mutation occurred, then retry only the isolated read-only probes.
+- Witnesses: V6471-M11-WFAIL, V6471-M11-WPASS
+
+### V6471-M12 — Enumerate phase-specific Method Flow artifact names before reading
+
+- Trigger: A closeout tool needs the current phase Method Flow ledger and inherited naming may differ.
+- Method: Enumerate the bounded phase root and select the exact method-flow-state.json artifact before reading it.
+- Recurrence guard: Do not construct Method Flow filenames from a generic convention when an exact bounded enumeration is available.
+- Rollback: Retain the failed lookup; it was read-only, then use the enumerated phase-specific path.
+- Witnesses: V6471-M12-WFAIL, V6471-M12-WPASS
+
+### V6471-M13 — Apply ripgrep globs through filters rather than Windows literal paths
+
+- Trigger: A bounded source search needs filename filtering on Windows.
+- Method: Search repository roots and express filename selection with repeated -g filters.
+- Recurrence guard: Never pass a wildcard-bearing Windows pathname as a literal ripgrep search root.
+- Rollback: Retain the failed read-only probe, then repeat the same pattern search with repository roots and glob filters.
+- Witnesses: V6471-M13-WFAIL, V6471-M13-WPASS
+
+### V6471-M14 — Resolve staged-review output paths before containment checks
+
+- Trigger: A staged-review runner validates that every receipt path is contained beneath an absolute repository root.
+- Method: Resolve each final staged-review receipt to an absolute path beneath the repository root before invoking the reviewer.
+- Recurrence guard: Pass fully resolved owner-lane receipt paths to staged-review tools that enforce repository containment.
+- Rollback: Retain the failed invocation; it wrote no receipt and changed no staged blob, then retry only with resolved in-repository paths.
+- Witnesses: V6471-M14-WFAIL, V6471-M14-WPASS
 
 ## Retained boundary
 

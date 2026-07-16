@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Resolve each final staged-review receipt to an absolute path beneath the repository root before invoking the reviewer.",
+  "failure_signature": "The staged reviewer rejected relative receipt paths because pathlib.relative_to compared them directly with the absolute repository root.",
+  "method_id": "V6471-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_review",
+    "owned_lane_only",
+    "append_only_failures"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pass fully resolved owner-lane receipt paths to staged-review tools that enforce repository containment.",
+  "retained_negative_ids": [
+    "V6471-X2-N07"
+  ],
+  "rollback": "Retain the failed invocation; it wrote no receipt and changed no staged blob, then retry only with resolved in-repository paths.",
+  "scope_boundary": "Sable v647-v1 final staged-review workflow evidence only; no scientific or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resolve staged-review output paths before containment checks",
+  "trigger_preconditions": [
+    "A staged-review runner validates that every receipt path is contained beneath an absolute repository root."
+  ],
+  "validation_witness_ids": []
+}
