@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Construct the revision and path with PowerShell string concatenation and pass the resulting variable to Git.",
+  "failure_signature": "A PowerShell escape backtick inside a JavaScript template string ended the outer string before nested execution.",
+  "method_id": "V6471-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_unreviewed_commit",
+    "exact_revision_credit",
+    "no_history_rewrite"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not embed PowerShell backtick escapes inside JavaScript template strings.",
+  "retained_negative_ids": [
+    "V6471-X1-N06"
+  ],
+  "rollback": "Discard the rejected orchestration cell; no commit or Git command ran.",
+  "scope_boundary": "Sable v647-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Build Git revision-path specifications without cross-language escape characters",
+  "trigger_preconditions": [
+    "A JavaScript template carries PowerShell that needs a Git revision:path argument."
+  ],
+  "validation_witness_ids": [
+    "V6471-M06-WFAIL",
+    "V6471-M06-WPASS"
+  ]
+}

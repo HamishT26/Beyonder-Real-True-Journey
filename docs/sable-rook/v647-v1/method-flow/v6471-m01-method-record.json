@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Represent PowerShell as a JavaScript template string and keep native commands inside that string.",
+  "failure_signature": "JavaScript parser rejected a PowerShell here-string token before nested commands ran.",
+  "method_id": "V6471-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "owned_lane_only",
+    "no_destructive_git",
+    "no_sibling_mutation",
+    "privacy_exclusions"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Before execution, check that shell-only here-string tokens never appear at JavaScript top level.",
+  "retained_negative_ids": [
+    "V6471-X1-N01"
+  ],
+  "rollback": "Discard the rejected orchestration cell; no repository rollback is required because no nested command ran.",
+  "scope_boundary": "Sable v647-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Separate orchestration and shell language syntax before execution",
+  "trigger_preconditions": [
+    "A JavaScript tool-orchestration cell must carry a multiline PowerShell program."
+  ],
+  "validation_witness_ids": [
+    "V6471-M01-WFAIL",
+    "V6471-M01-WPASS"
+  ]
+}

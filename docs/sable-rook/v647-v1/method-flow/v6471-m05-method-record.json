@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Move the verified inherited and owner-generated counts into the builder source, regenerate, and review the deterministic output.",
+  "failure_signature": "A regenerated receipt replaced an ad hoc measured count with its original template value before a later patch.",
+  "method_id": "V6471-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "deterministic_generation",
+    "owner_file_threshold",
+    "no_history_rewrite"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never patch a generated count without updating its authoritative builder in the same lifecycle.",
+  "retained_negative_ids": [
+    "V6471-X1-N05"
+  ],
+  "rollback": "Discard the failed patch attempt; it changed no file, then regenerate from the corrected builder.",
+  "scope_boundary": "Sable v647-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Bind measured rotation counts in the deterministic preregistration builder",
+  "trigger_preconditions": [
+    "A generated receipt is rerun after an out-of-band patch to one of its derived fields."
+  ],
+  "validation_witness_ids": [
+    "V6471-M05-WFAIL",
+    "V6471-M05-WPASS"
+  ]
+}

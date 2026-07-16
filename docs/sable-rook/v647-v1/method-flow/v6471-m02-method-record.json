@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Run a bounded rg --files enumeration under the exact phase root, then read only discovered paths.",
+  "failure_signature": "A batch read failed because an inherited phase used x1-proposals.json rather than the assumed older proposal-ledger filename.",
+  "method_id": "V6471-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "historical_compatibility",
+    "owned_lane_only",
+    "privacy_exclusions"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer a current artifact filename solely from an older sibling phase.",
+  "retained_negative_ids": [
+    "V6471-X1-N02"
+  ],
+  "rollback": "Discard the failed read assumption; no file mutation occurred.",
+  "scope_boundary": "Sable v647-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Enumerate exact phase paths before reading inherited artifacts",
+  "trigger_preconditions": [
+    "Inherited phases may preserve different compatibility filenames."
+  ],
+  "validation_witness_ids": [
+    "V6471-M02-WFAIL",
+    "V6471-M02-WPASS"
+  ]
+}
