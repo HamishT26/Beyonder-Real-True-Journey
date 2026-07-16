@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow_recovery",
+  "candidate_workaround": "Verify the existing ledger phase and owner, initialize only when absent, and add only missing method, witness, and state records.",
+  "failure_signature": "The repaired preregistration rerun called Method Flow init unconditionally, and the runner refused the already-existing phase ledger before the updated packet could complete.",
+  "method_id": "V6465-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_erasure",
+    "method_flow_identity",
+    "x1_freeze",
+    "completion_credit",
+    "history_rewrite"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Every rerunnable phase builder must distinguish absent, matching, and mismatched ledgers; it may reuse only a matching ledger and must never erase prior witnesses.",
+  "retained_negative_ids": [
+    "V6465-X1-N04"
+  ],
+  "rollback": "Retain the failed rerun with zero freeze credit; stop on identity mismatch and leave the existing ledger unchanged.",
+  "scope_boundary": "Phase-local builder resumption only; no x2, production, authority, privacy-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resume a preregistration build against its verified existing Method Flow ledger",
+  "trigger_preconditions": [
+    "same phase and owner",
+    "retained existing Method Flow ledger",
+    "preregistration rebuild after an operational negative"
+  ],
+  "validation_witness_ids": []
+}
