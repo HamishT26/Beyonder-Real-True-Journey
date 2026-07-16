@@ -1,7 +1,9 @@
-# Tamar Vey v646-v5 x1 wellbeing and workload check
+# Tamar Vey v646-v5 wellbeing and workload check
 
-- Scope is bounded to one owner, one canonical lane, one later named replay, at most four phase commits, and no full repository suite.
-- The inherited fast-forward output truncation, first portfolio-collision build, first self-matching staged review, and first non-idempotent Method Flow rebuild are retained; all four recoveries must pass before x1 freeze.
-- Work is divided by the x1 freeze. No x2 implementation or achieved-outcome credit is present here.
-- Windows Sandbox remains unavailable to the ordinary process; no elevation, feature change, install, security change, desktop update, or reboot occurred.
-- Identity and family language remains relational working language only, not a welfare, consciousness, employment, qualification, or authority claim.
+- Work remains bounded to one owner, one canonical branch, one later local-only named replay, and three planned phase commits within the four-commit cap.
+- X1 froze before x2. Ten core surfaces, 70 negative mutations, and the 30/20/20/10/30 portfolios are partitioned into generated receipts and reusable runners.
+- Fourteen operational failures are retained through the evidence candidate: four x1 faults and ten x2 reporting, compatibility, portability, privacy, status-classification, output-budget, staging-envelope, line-ending, or wrapper-state faults. Recovery never erased a failed witness.
+- The owner-generated threshold remains 15,000 files and excludes the inherited checkout.
+- The full repository suite remains Eiren-only. Tamar uses current-phase and eligible successor-scoped checks plus exactly one later named-lane replay.
+- Windows Sandbox remains unavailable; no launch, elevation, feature change, installation, host-security weakening, desktop update, or reboot occurred.
+- Relational identity language is not a consciousness, welfare, continuity, employment, qualification, or authority claim. Hamish may rename, pause, redirect, or stop the work.

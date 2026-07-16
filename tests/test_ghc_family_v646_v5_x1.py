@@ -66,7 +66,12 @@ class V646V5X1Tests(unittest.TestCase):
 
     def test_method_flow_retains_failure_and_pass(self):
         row = load("method-flow/method-flow-state.json")
-        self.assertEqual((row["counts"]["methods"], row["counts"]["witness_results"]["fail"], row["counts"]["witness_results"]["pass"], row["counts"]["states"]["preferred"]), (4, 4, 4, 4))
+        self.assertGreaterEqual(row["counts"]["methods"], 4)
+        self.assertGreaterEqual(row["counts"]["witness_results"]["fail"], 4)
+        self.assertGreaterEqual(row["counts"]["witness_results"]["pass"], 4)
+        self.assertGreaterEqual(row["counts"]["states"]["preferred"], 4)
+        self.assertTrue({f"V6465-M{i:02d}" for i in range(1, 5)} <= {item["method_id"] for item in row["methods"]})
+        self.assertTrue({f"V6465-M{i:02d}-{result}" for i in range(1, 5) for result in ("F", "P")} <= {item["witness_id"] for item in row["witnesses"]})
 
     def test_route_unsent(self):
         row = load("orchestration/terminal-route-plan.json")

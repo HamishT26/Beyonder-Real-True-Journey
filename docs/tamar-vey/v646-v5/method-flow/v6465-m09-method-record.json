@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_validation_recovery",
+  "candidate_workaround": "Use the literal StartsWith check for the two-character untracked prefix and keep staged, unstaged, and untracked counts separate.",
+  "failure_signature": "A read-only evidence status wrapper used the wildcard pattern ??* and therefore mislabeled every staged status line as untracked.",
+  "method_id": "V6465-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_review",
+    "clean_state",
+    "failure_erasure",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never use wildcard operators for literal Git porcelain prefixes containing question marks.",
+  "retained_negative_ids": [
+    "V6465-X2-N05"
+  ],
+  "rollback": "Retain the false wrapper result with zero validation credit and rerun only the read-only status classification.",
+  "scope_boundary": "Read-only Git status classification only; no repository, scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Count literal untracked Git statuses without PowerShell wildcard expansion",
+  "trigger_preconditions": [
+    "PowerShell wildcard comparison",
+    "Git porcelain status",
+    "literal two-question-mark prefix"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_git_recovery",
+  "candidate_workaround": "After a timeout, inspect the index lock and exact staged, unstaged, and untracked counts before deciding whether to retry; terminate only the identified owner-started orphan processes.",
+  "failure_signature": "A combined large git-add and staged-count wrapper exceeded its 120-second envelope after the index update completed and left two owner-started Git processes running without an index lock.",
+  "method_id": "V6465-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "git_index",
+    "process_scope",
+    "failure_erasure",
+    "duplicate_retry",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run large index updates and bounded post-stage enumeration as separate commands with independent envelopes.",
+  "retained_negative_ids": [
+    "V6465-X2-N07"
+  ],
+  "rollback": "Award no wrapper credit, avoid a duplicate staging retry until state is inspected, and never remove an unknown lock or terminate an unrelated process.",
+  "scope_boundary": "Owner-scoped Git index recovery only; no repository-history rewrite, scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Separate large index updates from bounded post-stage state proof",
+  "trigger_preconditions": [
+    "large owner-scoped index update",
+    "combined staging and enumeration wrapper",
+    "command timeout"
+  ],
+  "validation_witness_ids": []
+}

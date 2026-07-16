@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_portability_repair",
+  "candidate_workaround": "Escape non-ASCII code points in machine stdout while preserving Unicode in UTF-8 repository artifacts.",
+  "failure_signature": "The first all-runner invocation completed the runtime checks internally but failed while printing a Māori boundary string through a locale-default console encoding.",
+  "method_id": "V6465-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "runner_credit",
+    "unicode_integrity",
+    "failure_erasure",
+    "locale_portability",
+    "artifact_content"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Machine runner stdout must be ASCII-safe or explicitly UTF-8 configured; human artifacts retain correct Unicode.",
+  "retained_negative_ids": [
+    "V6465-X2-N03"
+  ],
+  "rollback": "Retain the failed invocation with zero runner credit and change only the stdout serialization boundary.",
+  "scope_boundary": "Machine-output portability only; no professional, production, scientific, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Emit machine-readable runner JSON independently of the host console code page",
+  "trigger_preconditions": [
+    "Windows locale-default console",
+    "machine-readable JSON output",
+    "non-ASCII boundary text"
+  ],
+  "validation_witness_ids": []
+}

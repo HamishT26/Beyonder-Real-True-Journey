@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_diff_hygiene_recovery",
+  "candidate_workaround": "Re-add only the affected generated text files with the repository's normal Git attributes and line-ending configuration, then rerun diff hygiene.",
+  "failure_signature": "The refreshed Family Index was staged with CRLF bytes after a per-command autocrlf override, so diff hygiene reported trailing whitespace throughout the two generated files.",
+  "method_id": "V6465-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diff_hygiene",
+    "exact_blob",
+    "skill_output",
+    "failure_erasure",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not disable repository normalization when staging generated text; use output suppression separately from byte normalization.",
+  "retained_negative_ids": [
+    "V6465-X2-N09"
+  ],
+  "rollback": "Retain the failed diff check and stage no commit until the normalized index blobs pass.",
+  "scope_boundary": "Generated-text line endings only; no semantic, scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Normalize skill-generated text through repository line-ending rules before exact staging",
+  "trigger_preconditions": [
+    "Windows-generated text",
+    "repository line-ending normalization",
+    "per-command autocrlf override"
+  ],
+  "validation_witness_ids": []
+}

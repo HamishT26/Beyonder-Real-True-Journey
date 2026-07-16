@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_validation_recovery",
+  "candidate_workaround": "Store the exit code immediately after each native validation command and fail on the stored value before later probes can overwrite it.",
+  "failure_signature": "The first final-state wrapper read LASTEXITCODE after subsequent Git probes, so it reported zero even though the earlier cached diff check had failed.",
+  "method_id": "V6465-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diff_hygiene",
+    "fail_closed",
+    "completion_credit",
+    "failure_erasure"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never defer reading LASTEXITCODE across another native command in an evidence gate.",
+  "retained_negative_ids": [
+    "V6465-X2-N10"
+  ],
+  "rollback": "Retain the false wrapper result with zero credit and rerun the underlying check independently.",
+  "scope_boundary": "Read-only wrapper correctness only; no repository, scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Capture each native validation exit code before running later probes",
+  "trigger_preconditions": [
+    "multiple native commands",
+    "PowerShell LASTEXITCODE",
+    "fail-closed validation wrapper"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_privacy_repair",
+  "candidate_workaround": "Store only return code, byte counts, stream digests, and a bounded error category; never store raw subprocess streams in public artifacts.",
+  "failure_signature": "The first runner wrapper wrote a raw captured error tail containing private local paths into an uncommitted witness file.",
+  "method_id": "V6465-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "private_local_path",
+    "raw_session_output",
+    "staged_review",
+    "failure_erasure"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Repository runner receipts must classify and digest captured streams before writing; raw tails remain outside artifacts.",
+  "retained_negative_ids": [
+    "V6465-X2-N04"
+  ],
+  "rollback": "Overwrite the unsafe uncommitted generated witness before staging, retain this privacy failure, and rerun the five-class scan.",
+  "scope_boundary": "Sanitized runner receipts only; zero privacy-complete, security-complete, production, or independent-review credit.",
+  "supersedes": [],
+  "title": "Record runner streams by category, size, and digest without raw private paths",
+  "trigger_preconditions": [
+    "subprocess failure",
+    "captured stdout or stderr",
+    "repository-scoped runner receipt"
+  ],
+  "validation_witness_ids": []
+}
