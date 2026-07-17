@@ -1,0 +1,27 @@
+{
+  "method_id": "V6478-M09",
+  "title": "Inspect generated list boundary before validator execution",
+  "failure_signature": "A generated Python list closes on the same physical line as a following branch.",
+  "trigger_preconditions": [
+    "A generated validator fails compilation at a list-to-branch boundary."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Insert one exact newline at the list boundary, recompile, and then run the unchanged bounded selection.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Compile generated Python before execution and inspect list-to-control-flow boundaries after slice replacement.",
+  "rollback": "Stop before execution, retain the syntax failure, and leave external and sibling state unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "private_paths",
+    "sibling_lane",
+    "destructive_action",
+    "external_state",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6478-X2-N01"
+  ],
+  "scope_boundary": "Workflow recovery only; no scientific, professional, production, authority, or independent-reproduction credit."
+}

@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v647-gmut-thos-v8-x1-x2
 
 Owner: **Orin Thale**
-Generated UTC: `2026-07-17T04:17:21.812077+00:00`
+Generated UTC: `2026-07-17T04:33:39.178423+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 273 | 17 | 971 | 17 |
+| Repository scripts | 282 | 17 | 975 | 17 |
 | Local skills | 113 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

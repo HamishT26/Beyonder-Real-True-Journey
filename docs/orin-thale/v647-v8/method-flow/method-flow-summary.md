@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v8-x1-x2
 - Owner: Orin Thale
-- Methods: 8
-- Passing witnesses: 8
-- Failed witnesses retained: 8
+- Methods: 11
+- Passing witnesses: 11
+- Failed witnesses retained: 11
 
 ## Preferred methods
 
@@ -71,6 +71,30 @@
 - Recurrence guard: Retain every invalid receipt, remove only the two extra EOF blank lines, restage the exact files, and repeat until the two self-exclusions and diff hygiene are stable and valid.
 - Rollback: Stop, retain the failure, and leave repository and external state unchanged.
 - Witnesses: V6478-M08-WFAIL, V6478-M08-WPASS
+
+### V6478-M09 — Inspect generated list boundary before validator execution
+
+- Trigger: A generated validator fails compilation at a list-to-branch boundary.
+- Method: Insert one exact newline at the list boundary, recompile, and then run the unchanged bounded selection.
+- Recurrence guard: Compile generated Python before execution and inspect list-to-control-flow boundaries after slice replacement.
+- Rollback: Stop before execution, retain the syntax failure, and leave external and sibling state unchanged.
+- Witnesses: V6478-M09-WFAIL, V6478-M09-WPASS
+
+### V6478-M10 — Bind historical x1 assertions to immutable Git blobs
+
+- Trigger: The x1 commit is known and ancestral.; The asserted x1 artifact is immutable in that commit.; The live artifact is intentionally append-only.
+- Method: Read only the historical assertion target from the exact x1 Git blob while keeping current lifecycle assertions live.
+- Recurrence guard: Declare whether each lifecycle assertion is historical or live before selecting its data source.
+- Rollback: Restore the live read, retain the failing selection, and stop if the x1 commit or blob path is not exact.
+- Witnesses: V6478-M10-WFAIL, V6478-M10-WPASS
+
+### V6478-M11 — Normalize generated Python EOF before staged review
+
+- Trigger: Only additive owner-generated Python files are named by the exact diff-hygiene output.
+- Method: Remove only the reported extra EOF blank lines, restage the same paths, and rerun the unchanged exact review.
+- Recurrence guard: Generate exactly one terminal newline and run diff hygiene before the first staged-manifest pass.
+- Rollback: Restore the owner-generated files from the staged index and retain the failed gate if any non-EOF content changes.
+- Witnesses: V6478-M11-WFAIL, V6478-M11-WPASS
 
 ## Retained boundary
 

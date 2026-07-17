@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -8,9 +9,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/orin-thale/v647-v8"
+X1_COMMIT = "d65f1b887497669bc8f295ebf3a04a32071a5b8a"
 
 def load(relative: str):
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def load_x1_blob(relative: str):
+    repository_path = f"docs/orin-thale/v647-v8/{relative}"
+    raw = subprocess.run(
+        ["git", "show", f"{X1_COMMIT}:{repository_path}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    ).stdout
+    return json.loads(raw)
 
 
 
@@ -41,7 +56,7 @@ class V647V8X1Tests(unittest.TestCase):
 
     def test_negatives_and_method_flow_are_retained(self):
         negatives = load("retained-negative-register.json")
-        methods = load("method-flow/method-flow-state.json")
+        methods = load_x1_blob("method-flow/method-flow-state.json")
         self.assertEqual(3753, negatives["inherited_effective_negatives"])
         self.assertEqual(8, negatives["x1_operational_negative_count"])
         self.assertEqual({"fail": 8, "pass": 8}, methods["counts"]["witness_results"])

@@ -1,0 +1,28 @@
+{
+  "method_id": "V6478-M10",
+  "title": "Bind historical x1 assertions to immutable Git blobs",
+  "failure_signature": "A historical x1 assertion reads an append-only live lifecycle ledger after x2 evidence is added.",
+  "trigger_preconditions": [
+    "The x1 commit is known and ancestral.",
+    "The asserted x1 artifact is immutable in that commit.",
+    "The live artifact is intentionally append-only."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read only the historical assertion target from the exact x1 Git blob while keeping current lifecycle assertions live.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Declare whether each lifecycle assertion is historical or live before selecting its data source.",
+  "rollback": "Restore the live read, retain the failing selection, and stop if the x1 commit or blob path is not exact.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "history_rewrite",
+    "x1_x2_separation",
+    "sibling_lane",
+    "independent_reproduction"
+  ],
+  "retained_negative_ids": [
+    "V6478-X2-N02"
+  ],
+  "scope_boundary": "Historical test binding only; no evidence, authority, or independent-reproduction promotion."
+}
