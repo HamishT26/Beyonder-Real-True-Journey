@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Use an exact bounded skill-directory query and treat discovery completeness separately from partial pipeline output.",
+  "failure_signature": "A broad cross-tree discovery pipeline emitted matches but returned a nonzero wrapper status and therefore supplied no complete-discovery credit.",
+  "method_id": "V6482-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["bounded_discovery", "complete_exit_status", "partial_output_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Query the known skill directory directly and require a zero exit before treating runner discovery as complete.",
+  "retained_negative_ids": ["V6482-X2-N06"],
+  "rollback": "Discard completeness credit from partial pipeline output, retain the failure, and rerun an exact bounded query.",
+  "scope_boundary": "Sylven v648-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Bound runner discovery and require a complete zero-exit witness",
+  "trigger_preconditions": ["A known skill directory contains the required runner and broad repository enumeration is unnecessary."],
+  "validation_witness_ids": []
+}

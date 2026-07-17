@@ -2,9 +2,9 @@
 
 - Phase: v648-gmut-thos-v2-x1-x2
 - Owner: Sylven Arc
-- Methods: 7
-- Passing witnesses: 7
-- Failed witnesses retained: 7
+- Methods: 15
+- Passing witnesses: 15
+- Failed witnesses retained: 15
 
 ## Preferred methods
 
@@ -63,6 +63,70 @@
 - Recurrence guard: Treat generated record files as runner input, not as a validated ledger; require the runner receipt before x1 freeze.
 - Rollback: Discard the null summary field; it changed no repository data beyond the already staged owner packet.
 - Witnesses: V6482-M07-WFAIL, V6482-M07-WPASS
+
+### V6482-M08 — Verify and invoke the actual family-template entry point
+
+- Trigger: A successor adapter compiles a versioned family builder whose terminal guard calls build directly rather than exposing main.
+- Method: Invoke the family-current template's build entry point directly, preserve the exact x1 head gate, and grant no partial x2 credit to the failed adapter call.
+- Recurrence guard: Inspect a family template's exported entry point before wrapping it and call only the verified build function under the exact x1 head guard.
+- Rollback: No runner or evidence write began, so discard the failed invocation and retain only its sanitized witness.
+- Witnesses: V6482-M08-WFAIL, V6482-M08-WPASS
+
+### V6482-M09 — Require enclosing success and exact register-schema use for partial-output evidence
+
+- Trigger: A builder produces bounded artifacts before a post-processing step reads a derived register.
+- Method: Read the exact retained-negative register schema, use effective_total, rerun the deterministic owner-scoped builder, and withhold evidence completion credit until the enclosing command exits zero.
+- Recurrence guard: Inspect generated register keys before post-processing and require the enclosing lifecycle command to exit zero before granting evidence credit.
+- Rollback: Retain candidate files as uncommitted partial output, overwrite only deterministic owner outputs on recovery, and grant no evidence lifecycle credit to the failed invocation.
+- Witnesses: V6482-M09-WFAIL, V6482-M09-WPASS
+
+### V6482-M10 — Route owner-growth queries to the exact lifecycle rotation receipt
+
+- Trigger: Both x1 rotation-guard and x2 rotation-receipt documents exist with distinct schemas.
+- Method: Read x2-rotation-receipt.json and its owner_generated_count field, retain the x1 rotation guard separately, and require the enclosing evidence command to exit zero.
+- Recurrence guard: Route each lifecycle query to its explicitly named receipt and inspect exact schema keys before deriving overview counts.
+- Rollback: Retain candidate outputs uncommitted, overwrite only deterministic owner reports after schema correction, and grant no lifecycle credit to the failed enclosure.
+- Witnesses: V6482-M10-WFAIL, V6482-M10-WPASS
+
+### V6482-M11 — Declare UTF-8 for Unicode-bearing evidence inspection
+
+- Trigger: A read-only child process may print repository text outside the active Windows code page.
+- Method: Set the child process output encoding to UTF-8 before printing JSON that may contain macrons or other non-CP1252 characters.
+- Recurrence guard: Declare UTF-8 child output for repository JSON inspection and require a zero exit before using printed results.
+- Rollback: Keep repository files unchanged, discard partial console output, and rerun the same read-only query with explicit UTF-8 output.
+- Witnesses: V6482-M11-WFAIL, V6482-M11-WPASS
+
+### V6482-M12 — Route Method Flow operations to the skill-owned runner
+
+- Trigger: The Method Flow skill is required and no repository-local runner has been verified.
+- Method: Invoke the Method Flow runner from the fully read ghc-family-method-flow-state skill package rather than guessing a repository-local copy.
+- Recurrence guard: Resolve the runner from the required skill instructions and verify its help surface before recording state.
+- Rollback: Make no ledger mutation through an unresolved path; retain the failed lookup and use the verified skill-owned runner.
+- Witnesses: V6482-M12-WFAIL, V6482-M12-WPASS
+
+### V6482-M13 — Bound runner discovery and require a complete zero-exit witness
+
+- Trigger: A known skill directory contains the required runner and broad repository enumeration is unnecessary.
+- Method: Use an exact bounded skill-directory query and treat discovery completeness separately from partial pipeline output.
+- Recurrence guard: Query the known skill directory directly and require a zero exit before treating runner discovery as complete.
+- Rollback: Discard completeness credit from partial pipeline output, retain the failure, and rerun an exact bounded query.
+- Witnesses: V6482-M13-WFAIL, V6482-M13-WPASS
+
+### V6482-M14 — Review generated path labels as part of lifecycle adaptation
+
+- Trigger: A family-template adapter transforms phase content while generated path literals may use a different spelling.
+- Method: Transform candidate-witness path literals as well as content literals, regenerate the owner packet, and reject any staged path carrying an inherited phase label.
+- Recurrence guard: Scan staged pathnames as well as file contents for inherited phase labels before lifecycle commit.
+- Rollback: Withhold the evidence commit, replace only uncommitted owner-generated stale candidate files, regenerate deterministically, and rerun exact staged review.
+- Witnesses: V6482-M14-WFAIL, V6482-M14-WPASS
+
+### V6482-M15 — Bind negative-count tests to the exact operational register
+
+- Trigger: Operational failures may be added before the evidence commit and the register is the authoritative evidence surface.
+- Method: Compare retained-negative arithmetic to the exact operational-negative register and use a minimum only for the known evidence floor.
+- Recurrence guard: Derive lifecycle-negative parity from the exact register rather than copying a mutable count into test code.
+- Rollback: Withhold validation credit, retain the failed assertion, update only the uncommitted owner test, rebuild the register, and rerun the same suite.
+- Witnesses: V6482-M15-WFAIL, V6482-M15-WPASS
 
 ## Retained boundary
 

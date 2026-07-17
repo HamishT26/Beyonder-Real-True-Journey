@@ -1,0 +1,55 @@
+{
+  "boundary": "Disposable advisory-lock evidence grants no external lock-breaking, production concurrency, sibling mutation, or exactly-once assurance.",
+  "checks": [
+    {
+      "name": "scope",
+      "pass": true
+    },
+    {
+      "name": "owner_token",
+      "pass": true
+    },
+    {
+      "name": "pid_reuse",
+      "pass": true
+    },
+    {
+      "name": "bounded_wait",
+      "pass": true
+    },
+    {
+      "name": "stale_record",
+      "pass": true
+    },
+    {
+      "name": "no_break",
+      "pass": true
+    },
+    {
+      "name": "release",
+      "pass": true
+    },
+    {
+      "name": "credit",
+      "pass": true
+    }
+  ],
+  "outcome": "completed",
+  "phase": "v648-gmut-thos-v2-x1-x2",
+  "positive_fixture": {
+    "advisory_scope_declared": true,
+    "bounded_wait": true,
+    "completion_credit": true,
+    "fixture": "owner-local disposable lock root",
+    "owner_token_bound": true,
+    "pid_only_ownership": false,
+    "pid_reuse_checked": true,
+    "release_witnessed": true,
+    "stale_record_not_lock": true,
+    "unowned_break_allowed": false
+  },
+  "positive_pass": true,
+  "proposal_id": "V6482-P01",
+  "schema": "ghc.family.v648-v2.advisory-lock.contract.v1",
+  "title": "Method Flow advisory file-lock acquisition, owner-token, PID-reuse, stale-record, bounded-wait, release, and evidence-credit tribunal"
+}

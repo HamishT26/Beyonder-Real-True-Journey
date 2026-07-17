@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Set the child process output encoding to UTF-8 before printing JSON that may contain macrons or other non-CP1252 characters.",
+  "failure_signature": "A read-only Python JSON inspection raised UnicodeEncodeError in the default cp1252 output codec after parsing valid evidence.",
+  "method_id": "V6482-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["unicode_integrity", "read_only_inspection", "partial_output_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Declare UTF-8 child output for repository JSON inspection and require a zero exit before using printed results.",
+  "retained_negative_ids": ["V6482-X2-N04"],
+  "rollback": "Keep repository files unchanged, discard partial console output, and rerun the same read-only query with explicit UTF-8 output.",
+  "scope_boundary": "Sylven v648-v2 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Declare UTF-8 for Unicode-bearing evidence inspection",
+  "trigger_preconditions": ["A read-only child process may print repository text outside the active Windows code page."],
+  "validation_witness_ids": []
+}
