@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Parse the validation receipt and grant runner credit only when its explicit valid field is true.",
+  "failure_signature": "Runner-use accounting treats the existence of a failed validation receipt as a successful invocation witness.",
+  "method_id": "V6476-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "runner_completion_credit",
+    "validation_truth",
+    "noncompensation",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer a passing runner from file existence; parse the declared success field and fail closed on malformed or absent receipts.",
+  "retained_negative_ids": [
+    "V6476-X2-N10"
+  ],
+  "rollback": "Keep runner invocation credit false until an explicit valid receipt exists.",
+  "scope_boundary": "Runner accounting only; a valid receipt remains bounded same-owner evidence.",
+  "supersedes": [],
+  "title": "Explicit-valid gate for validation-runner credit",
+  "trigger_preconditions": [
+    "A generated portfolio grants invocation credit from a validation receipt."
+  ],
+  "validation_witness_ids": []
+}

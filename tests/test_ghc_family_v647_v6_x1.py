@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import unittest
 from collections import Counter
 from pathlib import Path
@@ -9,10 +10,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/ilyra-fen/v647-v6"
+X1_COMMIT = "650e9f0e6d17118cf8b2389adf2a984cfc63cf08"
 
 
 def load(relative: str) -> dict:
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def load_x1_blob(relative: str) -> dict:
+    result = subprocess.run(
+        ["git", "show", f"{X1_COMMIT}:docs/ilyra-fen/v647-v6/{relative}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return json.loads(result.stdout)
 
 
 class V647V6X1Tests(unittest.TestCase):
@@ -79,7 +93,7 @@ class V647V6X1Tests(unittest.TestCase):
         self.assertFalse(ledger["authority_delegated"])
 
     def test_method_flow_retains_failures_and_passes(self) -> None:
-        flow = load("method-flow/method-flow-state.json")
+        flow = load_x1_blob("method-flow/method-flow-state.json")
         self.assertEqual(flow["counts"]["methods"], 5)
         self.assertEqual(flow["counts"]["witness_results"], {"fail": 5, "pass": 5})
         self.assertEqual(flow["counts"]["states"]["preferred"], 5)

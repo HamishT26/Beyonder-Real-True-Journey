@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Discover generated artifact paths first, set PowerShell errors to terminating, and reject null required fields.",
+  "failure_signature": "A verification probe guesses generated artifact paths and PowerShell returns exit zero with missing-path errors and null count fields.",
+  "method_id": "V6476-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "retained_negative_counts",
+    "runner_invocation_counts",
+    "evidence_credit",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve the exact artifact path, use ErrorActionPreference Stop, and fail if any required field is null.",
+  "retained_negative_ids": [
+    "V6476-X2-N07"
+  ],
+  "rollback": "Give the null-bearing probe zero evidence credit and rerun only against discovered exact paths with fail-closed field checks.",
+  "scope_boundary": "Generated receipt verification only; no scientific or authority claim.",
+  "supersedes": [],
+  "title": "Fail-closed generated-receipt path verification",
+  "trigger_preconditions": [
+    "A generated count or receipt must be verified from a repository artifact."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 5,
-    "recommendations": 5,
-    "state_events": 15,
+    "methods": 18,
+    "recommendations": 18,
+    "state_events": 54,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 5,
+      "preferred": 18,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 5,
-      "pass": 5
+      "fail": 18,
+      "pass": 18
     },
-    "witnesses": 10
+    "witnesses": 36
   },
   "owner": "Ilyra Fen",
   "phase": "v647-gmut-thos-v6-x1-x2",
@@ -95,6 +95,201 @@
         "V6476-M05-WFAIL",
         "V6476-M05-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Normalize both the structural report text and the expected reservation phrase with Unicode casefold before asserting presence.",
+      "method_id": "V6476-M06",
+      "recurrence_guard": "Use exact case only for case-significant syntax; use Unicode casefold for natural-language reservation phrases.",
+      "rollback": "Restore the original assertion, retain the failure, and keep accessibility-complete claims false.",
+      "scope_boundary": "Natural-language structural assertion only; it does not replace manual keyboard, browser, assistive-technology, Māori-language, or affected-user evaluation.",
+      "title": "Case-normalized natural-language accessibility assertion",
+      "trigger_preconditions": [
+        "A test checks a natural-language reservation phrase whose capitalization may differ only because of sentence position."
+      ],
+      "validation_witness_ids": [
+        "V6476-M06-WFAIL",
+        "V6476-M06-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Complete the focused recovery witness, refresh all authoritative and derived negative and Method Flow counts, then run the aggregate test selection.",
+      "method_id": "V6476-M07",
+      "recurrence_guard": "Before aggregate reruns, compare authoritative failure count, derived total, and Method Flow fail and pass witness counts.",
+      "rollback": "Stop the aggregate rerun, retain its failed assertions, and return to the last consistent generated ledger set.",
+      "scope_boundary": "Count and witness synchronization only; no broader evidence or authority claim.",
+      "title": "Refresh derived failure mirrors before aggregate rerun",
+      "trigger_preconditions": [
+        "A new operational negative or witness has been added since the last generated evidence build."
+      ],
+      "validation_witness_ids": [
+        "V6476-M07-WFAIL",
+        "V6476-M07-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run slow repository and file probes as separate commands with independent timeouts and receipts.",
+      "method_id": "V6476-M08",
+      "recurrence_guard": "Give each potentially slow Windows repository probe its own process, timeout, and receipt; never infer success from a timed aggregate wrapper.",
+      "rollback": "Discard all evidence credit from the timed wrapper and rerun only the required probes independently.",
+      "scope_boundary": "Local diagnostic orchestration only; no repository or remote mutation and no independent-reproduction credit.",
+      "title": "Independent receipts for slow Windows probes",
+      "trigger_preconditions": [
+        "A combined or parallel wrapper includes Git status, metadata, or file reads that can exceed a short process budget."
+      ],
+      "validation_witness_ids": [
+        "V6476-M08-WFAIL",
+        "V6476-M08-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use ripgrep file discovery or an exact LiteralPath instead of passing a PowerShell wildcard as a literal ripgrep path.",
+      "method_id": "V6476-M09",
+      "recurrence_guard": "Discover files with rg --files and filter them, or inspect an exact file with LiteralPath.",
+      "rollback": "Give the failed wildcard command zero evidence credit and rerun an exact bounded file probe.",
+      "scope_boundary": "Local file discovery only; no content or authority claim.",
+      "title": "Windows-safe exact-path inspection",
+      "trigger_preconditions": [
+        "A local inspection command would pass a wildcard path directly to a cross-platform executable."
+      ],
+      "validation_witness_ids": [
+        "V6476-M09-WFAIL",
+        "V6476-M09-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Supply a concise bounded --note value whenever promoting a Method Flow method state.",
+      "method_id": "V6476-M10",
+      "recurrence_guard": "Preflight required CLI options and always include an evidence-bounded promotion note.",
+      "rollback": "Retain the parser failure, leave the method unpromoted, and retry only after recording the missing-option guard.",
+      "scope_boundary": "Method Flow metadata transition only; it does not strengthen the underlying evidence.",
+      "title": "Explicit-note Method Flow state promotion",
+      "trigger_preconditions": [
+        "A validated Method Flow method is ready for a state transition."
+      ],
+      "validation_witness_ids": [
+        "V6476-M10-WFAIL",
+        "V6476-M10-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Discover generated artifact paths first, set PowerShell errors to terminating, and reject null required fields.",
+      "method_id": "V6476-M11",
+      "recurrence_guard": "Resolve the exact artifact path, use ErrorActionPreference Stop, and fail if any required field is null.",
+      "rollback": "Give the null-bearing probe zero evidence credit and rerun only against discovered exact paths with fail-closed field checks.",
+      "scope_boundary": "Generated receipt verification only; no scientific or authority claim.",
+      "title": "Fail-closed generated-receipt path verification",
+      "trigger_preconditions": [
+        "A generated count or receipt must be verified from a repository artifact."
+      ],
+      "validation_witness_ids": [
+        "V6476-M11-WFAIL",
+        "V6476-M11-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Set PYTHONUTF8=1 before launching any console diagnostic that may emit non-ASCII text.",
+      "method_id": "V6476-M12",
+      "recurrence_guard": "Pin UTF-8 in the child-process environment before launch; never delete or transliterate culturally correct text to satisfy a locale-dependent console.",
+      "rollback": "Retain the encoding failure, give the command zero pass credit, and rerun the unchanged inputs under explicit UTF-8.",
+      "scope_boundary": "Console encoding and unchanged text only; no cultural authority or content validation is conferred.",
+      "title": "Pre-launch UTF-8 pin for Unicode diagnostics",
+      "trigger_preconditions": [
+        "A Python process may print te reo Māori or other non-ASCII text on Windows."
+      ],
+      "validation_witness_ids": [
+        "V6476-M12-WFAIL",
+        "V6476-M12-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Insert the repository root at the front of sys.path before loading named repository test modules in-process.",
+      "method_id": "V6476-M13",
+      "recurrence_guard": "Bind named test loading to the exact repository root before constructing the unittest suite.",
+      "rollback": "Retain the three import errors, give the failed selection zero test credit, and retry only after repository-root binding.",
+      "scope_boundary": "Authorized bounded test modules only; the complete repository suite remains excluded for non-Eiren phases.",
+      "title": "Repository-root binding for in-process unittest loading",
+      "trigger_preconditions": [
+        "A validation runner loads repository test modules in-process from a script below the repository root."
+      ],
+      "validation_witness_ids": [
+        "V6476-M13-WFAIL",
+        "V6476-M13-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Parse the validation receipt and grant runner credit only when its explicit valid field is true.",
+      "method_id": "V6476-M14",
+      "recurrence_guard": "Never infer a passing runner from file existence; parse the declared success field and fail closed on malformed or absent receipts.",
+      "rollback": "Keep runner invocation credit false until an explicit valid receipt exists.",
+      "scope_boundary": "Runner accounting only; a valid receipt remains bounded same-owner evidence.",
+      "title": "Explicit-valid gate for validation-runner credit",
+      "trigger_preconditions": [
+        "A generated portfolio grants invocation credit from a validation receipt."
+      ],
+      "validation_witness_ids": [
+        "V6476-M14-WFAIL",
+        "V6476-M14-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Persist sanitized failing test identifiers in the bounded validation receipt before returning nonzero.",
+      "method_id": "V6476-M15",
+      "recurrence_guard": "Include sanitized test identifiers, not private traces or paths, in every failed bounded-test receipt.",
+      "rollback": "Retain the opaque failure receipt and run one bounded diagnostic selection; do not infer the failing assertions.",
+      "scope_boundary": "Failure identifiers only; private traces and local paths remain excluded.",
+      "title": "Sanitized failing-test identifiers in validation receipts",
+      "trigger_preconditions": [
+        "A bounded unittest selection can fail inside a validation runner."
+      ],
+      "validation_witness_ids": [
+        "V6476-M15-WFAIL",
+        "V6476-M15-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Load immutable x1 cardinality evidence from the exact frozen x1 Git blob rather than the advanced working-tree ledger.",
+      "method_id": "V6476-M16",
+      "recurrence_guard": "Evaluate historical x1 cardinalities from the frozen x1 commit object; use the current tree only for append-only lifecycle checks.",
+      "rollback": "Retain the failed advanced-tree assertion and restore the test if exact x1 Git-blob loading cannot be demonstrated.",
+      "scope_boundary": "Historical x1 contract only; no x2 result is backdated into x1.",
+      "title": "Immutable x1 Git-blob binding for historical cardinalities",
+      "trigger_preconditions": [
+        "An x1-only test examines an artifact designed to grow append-only during x2."
+      ],
+      "validation_witness_ids": [
+        "V6476-M16-WFAIL",
+        "V6476-M16-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Enumerate the nine intended family-current domain wrappers explicitly in the staged-review allowlist.",
+      "method_id": "V6476-M17",
+      "recurrence_guard": "Use an exact wrapper filename set rather than a broad scripts prefix, preserving rejection of unrelated sibling or historical files.",
+      "rollback": "Retain the failed nine-path review and remove any wrapper not present in the frozen runner plan.",
+      "scope_boundary": "Exact v647-v6 wrapper paths only; no broad scripts-directory authorization.",
+      "title": "Exact domain-wrapper staged allowlist",
+      "trigger_preconditions": [
+        "A phase stages family-current domain wrappers whose names are frozen in its runner plan."
+      ],
+      "validation_witness_ids": [
+        "V6476-M17-WFAIL",
+        "V6476-M17-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Remove only the extra terminal blank line and rerun exact staged diff hygiene.",
+      "method_id": "V6476-M18",
+      "recurrence_guard": "Require exactly one terminating newline and no extra blank line in generated or patched source files.",
+      "rollback": "Retain the diff-hygiene failure and keep the evidence commit blocked until the exact staged check passes.",
+      "scope_boundary": "One terminal whitespace correction only; no semantic code change.",
+      "title": "Single-newline source-file termination",
+      "trigger_preconditions": [
+        "Exact staged diff hygiene reports a blank line at end of a newly added source file."
+      ],
+      "validation_witness_ids": [
+        "V6476-M18-WFAIL",
+        "V6476-M18-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -102,7 +297,20 @@
     "V6476-M02-WFAIL",
     "V6476-M03-WFAIL",
     "V6476-M04-WFAIL",
-    "V6476-M05-WFAIL"
+    "V6476-M05-WFAIL",
+    "V6476-M06-WFAIL",
+    "V6476-M07-WFAIL",
+    "V6476-M08-WFAIL",
+    "V6476-M09-WFAIL",
+    "V6476-M10-WFAIL",
+    "V6476-M11-WFAIL",
+    "V6476-M12-WFAIL",
+    "V6476-M13-WFAIL",
+    "V6476-M14-WFAIL",
+    "V6476-M15-WFAIL",
+    "V6476-M16-WFAIL",
+    "V6476-M17-WFAIL",
+    "V6476-M18-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

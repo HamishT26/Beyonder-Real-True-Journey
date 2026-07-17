@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Normalize both the structural report text and the expected reservation phrase with Unicode casefold before asserting presence.",
+  "failure_signature": "A case-sensitive structural accessibility assertion rejects semantically identical sentence-initial capitalization.",
+  "method_id": "V6476-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "accessibility_complete",
+    "manual_evaluation",
+    "affected_user_acceptance",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use exact case only for case-significant syntax; use Unicode casefold for natural-language reservation phrases.",
+  "retained_negative_ids": [
+    "V6476-X2-N01"
+  ],
+  "rollback": "Restore the original assertion, retain the failure, and keep accessibility-complete claims false.",
+  "scope_boundary": "Natural-language structural assertion only; it does not replace manual keyboard, browser, assistive-technology, Māori-language, or affected-user evaluation.",
+  "supersedes": [],
+  "title": "Case-normalized natural-language accessibility assertion",
+  "trigger_preconditions": [
+    "A test checks a natural-language reservation phrase whose capitalization may differ only because of sentence position."
+  ],
+  "validation_witness_ids": []
+}

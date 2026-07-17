@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Remove only the extra terminal blank line and rerun exact staged diff hygiene.",
+  "failure_signature": "git diff --cached --check rejects a newly added runtime module for a blank line at end of file.",
+  "method_id": "V6476-M18",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diff_hygiene",
+    "exact_staged_surface",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Require exactly one terminating newline and no extra blank line in generated or patched source files.",
+  "retained_negative_ids": [
+    "V6476-X2-N14"
+  ],
+  "rollback": "Retain the diff-hygiene failure and keep the evidence commit blocked until the exact staged check passes.",
+  "scope_boundary": "One terminal whitespace correction only; no semantic code change.",
+  "supersedes": [],
+  "title": "Single-newline source-file termination",
+  "trigger_preconditions": [
+    "Exact staged diff hygiene reports a blank line at end of a newly added source file."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Supply a concise bounded --note value whenever promoting a Method Flow method state.",
+  "failure_signature": "The Method Flow set-state command is invoked without its required --note option and exits before ledger mutation.",
+  "method_id": "V6476-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "method_flow_integrity",
+    "preferred_method_state",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Preflight required CLI options and always include an evidence-bounded promotion note.",
+  "retained_negative_ids": [
+    "V6476-X2-N06"
+  ],
+  "rollback": "Retain the parser failure, leave the method unpromoted, and retry only after recording the missing-option guard.",
+  "scope_boundary": "Method Flow metadata transition only; it does not strengthen the underlying evidence.",
+  "supersedes": [],
+  "title": "Explicit-note Method Flow state promotion",
+  "trigger_preconditions": [
+    "A validated Method Flow method is ready for a state transition."
+  ],
+  "validation_witness_ids": []
+}

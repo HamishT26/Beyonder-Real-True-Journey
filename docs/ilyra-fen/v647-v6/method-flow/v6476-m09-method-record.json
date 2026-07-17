@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use ripgrep file discovery or an exact LiteralPath instead of passing a PowerShell wildcard as a literal ripgrep path.",
+  "failure_signature": "A Windows wildcard path is passed directly to ripgrep and is rejected as an invalid filename.",
+  "method_id": "V6476-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "tooling_evidence",
+    "method_flow_integrity",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Discover files with rg --files and filter them, or inspect an exact file with LiteralPath.",
+  "retained_negative_ids": [
+    "V6476-X2-N05"
+  ],
+  "rollback": "Give the failed wildcard command zero evidence credit and rerun an exact bounded file probe.",
+  "scope_boundary": "Local file discovery only; no content or authority claim.",
+  "supersedes": [],
+  "title": "Windows-safe exact-path inspection",
+  "trigger_preconditions": [
+    "A local inspection command would pass a wildcard path directly to a cross-platform executable."
+  ],
+  "validation_witness_ids": []
+}

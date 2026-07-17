@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set PYTHONUTF8=1 before launching any console diagnostic that may emit non-ASCII text.",
+  "failure_signature": "A Python diagnostic writes its files but fails while printing te reo Māori text through the Windows cp1252 console encoder.",
+  "method_id": "V6476-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "unicode_integrity",
+    "maori_authority_text",
+    "tooling_evidence",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 in the child-process environment before launch; never delete or transliterate culturally correct text to satisfy a locale-dependent console.",
+  "retained_negative_ids": [
+    "V6476-X2-N08"
+  ],
+  "rollback": "Retain the encoding failure, give the command zero pass credit, and rerun the unchanged inputs under explicit UTF-8.",
+  "scope_boundary": "Console encoding and unchanged text only; no cultural authority or content validation is conferred.",
+  "supersedes": [],
+  "title": "Pre-launch UTF-8 pin for Unicode diagnostics",
+  "trigger_preconditions": [
+    "A Python process may print te reo Māori or other non-ASCII text on Windows."
+  ],
+  "validation_witness_ids": []
+}

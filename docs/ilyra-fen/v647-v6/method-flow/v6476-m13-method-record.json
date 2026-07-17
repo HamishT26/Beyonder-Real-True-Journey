@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Insert the repository root at the front of sys.path before loading named repository test modules in-process.",
+  "failure_signature": "An in-process unittest loader launched from the scripts directory resolves the wrong tests namespace and returns one import error per named module.",
+  "method_id": "V6476-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "scoped_test_selection",
+    "inherited_source_validation",
+    "completion_credit",
+    "full_suite_exclusion"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind named test loading to the exact repository root before constructing the unittest suite.",
+  "retained_negative_ids": [
+    "V6476-X2-N09"
+  ],
+  "rollback": "Retain the three import errors, give the failed selection zero test credit, and retry only after repository-root binding.",
+  "scope_boundary": "Authorized bounded test modules only; the complete repository suite remains excluded for non-Eiren phases.",
+  "supersedes": [],
+  "title": "Repository-root binding for in-process unittest loading",
+  "trigger_preconditions": [
+    "A validation runner loads repository test modules in-process from a script below the repository root."
+  ],
+  "validation_witness_ids": []
+}

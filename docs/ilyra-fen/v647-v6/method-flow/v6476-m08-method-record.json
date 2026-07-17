@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run slow repository and file probes as separate commands with independent timeouts and receipts.",
+  "failure_signature": "A combined or parallel probe wrapper times out and returns no usable child evidence, even when some child probes may have completed.",
+  "method_id": "V6476-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "clean_state",
+    "exact_head",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Give each potentially slow Windows repository probe its own process, timeout, and receipt; never infer success from a timed aggregate wrapper.",
+  "retained_negative_ids": [
+    "V6476-X2-N03",
+    "V6476-X2-N04"
+  ],
+  "rollback": "Discard all evidence credit from the timed wrapper and rerun only the required probes independently.",
+  "scope_boundary": "Local diagnostic orchestration only; no repository or remote mutation and no independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Independent receipts for slow Windows probes",
+  "trigger_preconditions": [
+    "A combined or parallel wrapper includes Git status, metadata, or file reads that can exceed a short process budget."
+  ],
+  "validation_witness_ids": []
+}

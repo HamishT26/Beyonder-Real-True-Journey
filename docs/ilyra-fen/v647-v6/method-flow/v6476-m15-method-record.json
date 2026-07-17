@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Persist sanitized failing test identifiers in the bounded validation receipt before returning nonzero.",
+  "failure_signature": "A bounded unittest selection reports only aggregate failure counts, forcing a second diagnostic run to identify the failed assertions.",
+  "method_id": "V6476-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_traceability",
+    "retained_negatives",
+    "privacy",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Include sanitized test identifiers, not private traces or paths, in every failed bounded-test receipt.",
+  "retained_negative_ids": [
+    "V6476-X2-N11"
+  ],
+  "rollback": "Retain the opaque failure receipt and run one bounded diagnostic selection; do not infer the failing assertions.",
+  "scope_boundary": "Failure identifiers only; private traces and local paths remain excluded.",
+  "supersedes": [],
+  "title": "Sanitized failing-test identifiers in validation receipts",
+  "trigger_preconditions": [
+    "A bounded unittest selection can fail inside a validation runner."
+  ],
+  "validation_witness_ids": []
+}
