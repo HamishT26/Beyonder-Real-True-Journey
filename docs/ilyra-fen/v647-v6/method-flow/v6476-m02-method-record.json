@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Resolve or name the full remote-tracking ref explicitly and pass that ref to Git revision-range commands.",
+  "failure_signature": "PowerShell transforms an upstream expression embedded in a Git revision range.",
+  "method_id": "V6476-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_paths",
+    "sibling_lane",
+    "destructive_action",
+    "external_state",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never embed an unquoted upstream hashtable-like expression in a PowerShell revision range.",
+  "retained_negative_ids": [
+    "V6476-X1-N03"
+  ],
+  "rollback": "Stop the bounded probe, retain the failure, and return to the last clean repository state without external mutation.",
+  "scope_boundary": "Preferred only for the declared local workflow trigger; it grants no scientific, professional, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Explicit remote-ref revision-range equality",
+  "trigger_preconditions": [
+    "A Git equality range uses an upstream expression inside PowerShell command text."
+  ],
+  "validation_witness_ids": []
+}
