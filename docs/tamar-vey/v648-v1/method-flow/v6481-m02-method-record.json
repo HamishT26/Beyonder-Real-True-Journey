@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Assign loop results to an explicit array and pipe the completed array to ConvertTo-Json.",
+  "failure_signature": "A foreach statement followed directly by a pipeline produced an empty-pipe-element parse error.",
+  "method_id": "V6481-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "manifest_parity",
+    "exact_source",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not attach a native or cmdlet pipeline directly to a statement block without grouping or assignment.",
+  "retained_negative_ids": [
+    "V6481-X1-N02"
+  ],
+  "rollback": "Discard the pre-execution parser failure; no child command or mutation ran.",
+  "scope_boundary": "Tamar v648-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Materialize PowerShell loop results before piping them",
+  "trigger_preconditions": [
+    "A PowerShell wrapper aggregates multiple manifest checks into JSON."
+  ],
+  "validation_witness_ids": []
+}

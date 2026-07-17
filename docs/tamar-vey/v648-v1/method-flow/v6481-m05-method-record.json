@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Set PYTHONIOENCODING to UTF-8 for the same summarize command, retain the failed attempt, and credit only the successful replay.",
+  "failure_signature": "The Method Flow summarizer wrote bounded artifacts and then failed while printing Unicode through a locale-default console encoding.",
+  "method_id": "V6481-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "unicode_integrity",
+    "failed_witness_retention",
+    "method_flow",
+    "x1_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Apply explicit UTF-8 to every family runner that may print Unicode-bearing phase evidence.",
+  "retained_negative_ids": [
+    "V6481-X1-N05"
+  ],
+  "rollback": "Do not credit the partial invocation; overwrite only the same owner-scoped derived summary outputs on successful replay.",
+  "scope_boundary": "Tamar v648-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Set UTF-8 on Method Flow summary command output",
+  "trigger_preconditions": [
+    "A Method Flow ledger contains Māori text and the runner prints its JSON payload to a Windows console."
+  ],
+  "validation_witness_ids": []
+}

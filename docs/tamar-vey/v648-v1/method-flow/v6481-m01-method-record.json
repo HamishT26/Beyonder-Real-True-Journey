@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Retry the same exact read once with a longer bounded timeout and no broader scan.",
+  "failure_signature": "An exact read timed out before returning content.",
+  "method_id": "V6481-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "newest_memory",
+    "privacy",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep memory discovery narrow and do not convert a timeout into absence.",
+  "retained_negative_ids": [
+    "V6481-X1-N01"
+  ],
+  "rollback": "Discard the timeout result; it changed no repository or external state.",
+  "scope_boundary": "Tamar v648-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Increase only the bound on an exact read after a content-free timeout",
+  "trigger_preconditions": [
+    "A required read-only memory or instruction file is exact and known but the initial bound expires."
+  ],
+  "validation_witness_ids": []
+}

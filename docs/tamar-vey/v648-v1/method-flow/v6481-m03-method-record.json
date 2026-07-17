@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Set Python output encoding to UTF-8 or emit ASCII-safe structured counts while preserving source text.",
+  "failure_signature": "The console default encoding could not encode Māori title text.",
+  "method_id": "V6481-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "unicode_integrity",
+    "maori_text",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use explicit UTF-8 for every phase script and console witness that may carry Māori text.",
+  "retained_negative_ids": [
+    "V6481-X1-N03"
+  ],
+  "rollback": "Discard the failed display; it made no file or ref change.",
+  "scope_boundary": "Tamar v648-v1 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Force UTF-8 for Unicode-bearing Python audit output",
+  "trigger_preconditions": [
+    "A read-only audit prints proposal titles or authority terms containing non-ASCII characters."
+  ],
+  "validation_witness_ids": []
+}
