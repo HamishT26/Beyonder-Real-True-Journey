@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use rg --files to enumerate matching files and pass exact paths to the content search.",
+  "failure_signature": "Ripgrep receives a PowerShell-style wildcard path on Windows and rejects it as an invalid filename.",
+  "method_id": "V6477-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_paths",
+    "sibling_lane",
+    "destructive_action",
+    "external_state",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pass an unexpanded Windows wildcard as an rg path argument; enumerate then search exact paths.",
+  "retained_negative_ids": [
+    "V6477-X1-N03"
+  ],
+  "rollback": "Retain partial read-only output and rerun only the failed search surface; mutate no repository state.",
+  "scope_boundary": "Workflow evidence only; no scientific, security, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Exact-path ripgrep recovery for Windows wildcard faults",
+  "trigger_preconditions": [
+    "A Windows stale-label or content search spans generated filenames selected by a wildcard."
+  ],
+  "validation_witness_ids": []
+}
