@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v7-x1-x2
 - Owner: Sable Rook
-- Methods: 3
-- Passing witnesses: 3
-- Failed witnesses retained: 3
+- Methods: 6
+- Passing witnesses: 6
+- Failed witnesses retained: 6
 
 ## Preferred methods
 
@@ -31,6 +31,30 @@
 - Recurrence guard: Never pass an unexpanded Windows wildcard as an rg path argument; enumerate then search exact paths.
 - Rollback: Retain partial read-only output and rerun only the failed search surface; mutate no repository state.
 - Witnesses: V6477-M03-WFAIL, V6477-M03-WPASS
+
+### V6477-M05 — Atomic patch context recovery with smaller verified edits
+
+- Trigger: A multi-file patch includes long generated prose or several unrelated context anchors.
+- Method: Inspect exact current context, split the failed multi-file patch into smaller patches, and apply each only against verified lines.
+- Recurrence guard: Read exact context immediately before a multi-file patch and split unrelated edits when any long prose anchor is involved.
+- Rollback: Rely on apply_patch atomic rejection, verify no partial diff, and leave the last clean logical state unchanged.
+- Witnesses: V6477-M05-WFAIL, V6477-M05-WPASS
+
+### V6477-M04 — Exact inherited phase-local commit-cap test quarantine
+
+- Trigger: A successor phase validates inherited closeout behavior at a head beyond the inherited phase's own commit cap.
+- Method: Exclude only the exact inherited test method whose commit-cap assertion is scoped to its original phase, while running every other inherited closeout test.
+- Recurrence guard: List every inherited exclusion by fully qualified test identifier and preserve all other inherited assertions.
+- Rollback: Restore the broad failed selection receipt if the exact filtered selection does not pass; do not weaken current-phase tests.
+- Witnesses: V6477-M04-WFAIL, V6477-M04-WPASS
+
+### V6477-M06 — Immutable x1 assertion and derived-ledger refresh sequencing
+
+- Trigger: A successor x2 phase appends Method Flow evidence after an x1-only historical assertion was frozen.
+- Method: Bind x1 historical assertions to the immutable x1 Git blob and regenerate authoritative x2 negative mirrors before rerunning the aggregate selection.
+- Recurrence guard: Read historical counts from exact Git blobs and refresh authoritative and derived mirrors before any aggregate rerun.
+- Rollback: Retain the failed selection receipt, restore no history, and rerun only after current ledgers and historical assertions agree in their declared domains.
+- Witnesses: V6477-M06-WFAIL, V6477-M06-WPASS
 
 ## Retained boundary
 

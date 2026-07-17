@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 3,
-    "recommendations": 3,
-    "state_events": 9,
+    "methods": 6,
+    "recommendations": 6,
+    "state_events": 18,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 3,
+      "preferred": 6,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 3,
-      "pass": 3
+      "fail": 6,
+      "pass": 6
     },
-    "witnesses": 6
+    "witnesses": 12
   },
   "owner": "Sable Rook",
   "phase": "v647-gmut-thos-v7-x1-x2",
@@ -65,12 +65,60 @@
         "V6477-M03-WFAIL",
         "V6477-M03-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Inspect exact current context, split the failed multi-file patch into smaller patches, and apply each only against verified lines.",
+      "method_id": "V6477-M05",
+      "recurrence_guard": "Read exact context immediately before a multi-file patch and split unrelated edits when any long prose anchor is involved.",
+      "rollback": "Rely on apply_patch atomic rejection, verify no partial diff, and leave the last clean logical state unchanged.",
+      "scope_boundary": "Local patch-recovery evidence only; no scientific, production, or independent-reproduction credit.",
+      "title": "Atomic patch context recovery with smaller verified edits",
+      "trigger_preconditions": [
+        "A multi-file patch includes long generated prose or several unrelated context anchors."
+      ],
+      "validation_witness_ids": [
+        "V6477-M05-WFAIL",
+        "V6477-M05-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Exclude only the exact inherited test method whose commit-cap assertion is scoped to its original phase, while running every other inherited closeout test.",
+      "method_id": "V6477-M04",
+      "recurrence_guard": "List every inherited exclusion by fully qualified test identifier and preserve all other inherited assertions.",
+      "rollback": "Restore the broad failed selection receipt if the exact filtered selection does not pass; do not weaken current-phase tests.",
+      "scope_boundary": "Test-selection recovery only; it does not alter source history or grant full-suite, scientific, or independent-reproduction credit.",
+      "title": "Exact inherited phase-local commit-cap test quarantine",
+      "trigger_preconditions": [
+        "A successor phase validates inherited closeout behavior at a head beyond the inherited phase's own commit cap."
+      ],
+      "validation_witness_ids": [
+        "V6477-M04-WFAIL",
+        "V6477-M04-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind x1 historical assertions to the immutable x1 Git blob and regenerate authoritative x2 negative mirrors before rerunning the aggregate selection.",
+      "method_id": "V6477-M06",
+      "recurrence_guard": "Read historical counts from exact Git blobs and refresh authoritative and derived mirrors before any aggregate rerun.",
+      "rollback": "Retain the failed selection receipt, restore no history, and rerun only after current ledgers and historical assertions agree in their declared domains.",
+      "scope_boundary": "Validation-order recovery only; no scientific, production, or independent-reproduction credit.",
+      "title": "Immutable x1 assertion and derived-ledger refresh sequencing",
+      "trigger_preconditions": [
+        "A successor x2 phase appends Method Flow evidence after an x1-only historical assertion was frozen."
+      ],
+      "validation_witness_ids": [
+        "V6477-M06-WFAIL",
+        "V6477-M06-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
     "V6477-M01-WFAIL",
     "V6477-M02-WFAIL",
-    "V6477-M03-WFAIL"
+    "V6477-M03-WFAIL",
+    "V6477-M05-WFAIL",
+    "V6477-M04-WFAIL",
+    "V6477-M06-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

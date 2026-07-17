@@ -1,3 +1,3 @@
-# GHC Family Index — v647-v7 x1
+# GHC Family Index — v647-v7 evidence
 
-Owner: Sable Rook. Source: exact verified v647-v6 final head. Ten proposals are frozen; no x2 credit exists. Route: PREPARED_NOT_SENT. Terminal verdict: NOT_READY_FOR_STAGE_20.
+Owner: Sable Rook. Ten proposals: 6 completed, 2 represented, 1 open_gap, 1 exact_gate. Effective negatives: 3745. Route: PREPARED_NOT_SENT. Terminal verdict: NOT_READY_FOR_STAGE_20.

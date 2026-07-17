@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Exclude only the exact inherited test method whose commit-cap assertion is scoped to its original phase, while running every other inherited closeout test.",
+  "failure_signature": "An inherited closeout test compares its original source-to-HEAD commit count against an advanced successor head.",
+  "method_id": "V6477-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "test_scope",
+    "source_ancestry",
+    "commit_cap",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "List every inherited exclusion by fully qualified test identifier and preserve all other inherited assertions.",
+  "retained_negative_ids": [
+    "V6477-X2-N01"
+  ],
+  "rollback": "Restore the broad failed selection receipt if the exact filtered selection does not pass; do not weaken current-phase tests.",
+  "scope_boundary": "Test-selection recovery only; it does not alter source history or grant full-suite, scientific, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Exact inherited phase-local commit-cap test quarantine",
+  "trigger_preconditions": [
+    "A successor phase validates inherited closeout behavior at a head beyond the inherited phase's own commit cap."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Inspect exact current context, split the failed multi-file patch into smaller patches, and apply each only against verified lines.",
+  "failure_signature": "A multi-file apply_patch request is rejected atomically because one expected context line no longer matches the current file.",
+  "method_id": "V6477-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_diff",
+    "x1_immutability",
+    "history_rewrite",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read exact context immediately before a multi-file patch and split unrelated edits when any long prose anchor is involved.",
+  "retained_negative_ids": [
+    "V6477-X2-N02"
+  ],
+  "rollback": "Rely on apply_patch atomic rejection, verify no partial diff, and leave the last clean logical state unchanged.",
+  "scope_boundary": "Local patch-recovery evidence only; no scientific, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Atomic patch context recovery with smaller verified edits",
+  "trigger_preconditions": [
+    "A multi-file patch includes long generated prose or several unrelated context anchors."
+  ],
+  "validation_witness_ids": []
+}
