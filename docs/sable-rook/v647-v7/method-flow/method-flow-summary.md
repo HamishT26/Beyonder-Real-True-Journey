@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v7-x1-x2
 - Owner: Sable Rook
-- Methods: 6
-- Passing witnesses: 6
-- Failed witnesses retained: 6
+- Methods: 9
+- Passing witnesses: 10
+- Failed witnesses retained: 10
 
 ## Preferred methods
 
@@ -55,6 +55,30 @@
 - Recurrence guard: Read historical counts from exact Git blobs and refresh authoritative and derived mirrors before any aggregate rerun.
 - Rollback: Retain the failed selection receipt, restore no history, and rerun only after current ledgers and historical assertions agree in their declared domains.
 - Witnesses: V6477-M06-WFAIL, V6477-M06-WPASS
+
+### V6477-M07 — Isolated no-profile closeout probes after parallel-wrapper timeout
+
+- Trigger: A bounded Windows closeout preflight combines startup-sensitive read-only probes under a ten-second member timeout.
+- Method: Retain the timeout, isolate each probe, disable login-profile semantics, and give the observed Windows startup envelope a bounded sixty-second limit.
+- Recurrence guard: Do not group startup-sensitive Windows probes behind the shortest member timeout; isolate them and preserve each exit code.
+- Rollback: Stop after the timeout, retain the failed wrapper receipt, and verify repository state before any retry.
+- Witnesses: V6477-M07-WFAIL, V6477-M07-WPASS
+
+### V6477-M08 — Literal ASCII inspection wrapper after Unicode quote-parser fault
+
+- Trigger: A read-only PowerShell search wrapper mixes quoted regex alternation with Unicode display text.
+- Method: Retain the parser fault and split the inspection into literal single-quoted ASCII search patterns and separate exact-path reads.
+- Recurrence guard: Keep PowerShell search wrappers ASCII and single-quoted when Unicode byte integrity is being checked separately.
+- Rollback: Retain the pre-execution parser error and make no repository change before the corrected read-only probe.
+- Witnesses: V6477-M08-WFAIL, V6477-M08-WPASS, V6477-M08-WFAIL2, V6477-M08-WPASS2
+
+### V6477-M09 — Lifecycle-scoped Method Flow parity and negative-total validation
+
+- Trigger: A closeout validator reuses evidence-boundary assertions after append-only lifecycle failures are retained.
+- Method: Retain the failed 67-test closeout receipt, bind Method Flow parity and negative totals to the declared evidence or closeout lifecycle boundary, regenerate the final mirrors, and rerun the unchanged closeout selection.
+- Recurrence guard: Declare evidence-boundary and closeout-boundary counts separately and select the exact domain from the validator lifecycle flag.
+- Rollback: Preserve the failed closeout validation receipt, do not weaken the test selection, and retry only after count domains and ledgers agree.
+- Witnesses: V6477-M09-WFAIL, V6477-M09-WPASS
 
 ## Retained boundary
 

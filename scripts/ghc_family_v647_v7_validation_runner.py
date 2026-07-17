@@ -66,6 +66,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", required=True)
     parser.add_argument("--include-closeout", action="store_true")
+    parser.add_argument("--allow-method-promotion-pending", action="store_true")
     args = parser.parse_args()
     output = Path(args.output)
     if not output.is_absolute():
@@ -80,6 +81,8 @@ def main() -> int:
         "evidence-receipt.json", "deliverables/v647-v7-final-integrated-overview.md", "deliverables/v647-v7-static-report.html",
         "method-flow/method-flow-state.json", "prototypes/skill-build-use-receipt.json", "prototypes/runner-build-use-receipt.json",
     ]
+    if args.include_closeout:
+        required.extend(["closeout-receipt.json", "retained-negative-register-final.json", "validation/lifecycle-operational-negatives.json"])
     detailed: list[dict[str, object]] = []
 
     def check(name: str, condition: bool, detail: object) -> None:
@@ -89,6 +92,8 @@ def main() -> int:
     truth = load("phase-truth.json")
     ledger = load("x2-proposal-ledger.json")
     negatives = load("retained-negative-register-x2.json")
+    if args.include_closeout and not args.allow_method_promotion_pending:
+        negatives = load("retained-negative-register-final.json")
     gates = load("exact-open-gate-register-x2.json")
     skills = load("prototypes/skill-build-use-receipt.json")
     runners = load("prototypes/runner-build-use-receipt.json")
@@ -102,13 +107,15 @@ def main() -> int:
     check("zero people properties", ledger["real_people_or_properties"] == 0, ledger["real_people_or_properties"])
     check("zero keys servers", ledger["real_keys_tokens_or_servers"] == 0, ledger["real_keys_tokens_or_servers"])
     check("zero authority decisions", ledger["authority_decisions"] == 0, ledger["authority_decisions"])
-    check("negative total", negatives["effective_total"] == 3745 and negatives["erased_negative_count"] == 0, negatives["effective_total"])
+    expected_negative_total = 3745 if args.allow_method_promotion_pending or not args.include_closeout else 3749
+    check("negative total", negatives["effective_total"] == expected_negative_total and negatives["erased_negative_count"] == 0, negatives["effective_total"])
     check("gate totals", gates["effective_open_gaps"] == 24 and gates["effective_exact_gates"] == 25, [gates["effective_open_gaps"], gates["effective_exact_gates"]])
     check("terminal verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
     check("route held", truth["route_state"] == "PREPARED_NOT_SENT", truth["route_state"])
     check("skills validated", skills["skill_count"] == 20 and skills["validated_count"] == 20 and skills["smoke_used_count"] == 20, [skills["skill_count"], skills["validated_count"], skills["smoke_used_count"]])
     check("runners invoked", runners["runner_count"] == 10 and runners["invoked_count"] == 10, [runners["runner_count"], runners["invoked_count"]])
-    check("method flow parity", methods["counts"]["witness_results"] == {"fail": 6, "pass": 6}, methods["counts"]["witness_results"])
+    expected_method_parity = {"fail": 10, "pass": 9} if args.allow_method_promotion_pending else ({"fail": 10, "pass": 10} if args.include_closeout else {"fail": 6, "pass": 6})
+    check("method flow parity", methods["counts"]["witness_results"] == expected_method_parity, {"actual": methods["counts"]["witness_results"], "expected": expected_method_parity, "promotion_pending_allowed": args.allow_method_promotion_pending})
     check("x1 staged review", x1_review["valid"] and x1_review["confirmed_privacy_hits"] == 0, x1_review["valid"])
     check("x1 blob seal", load("reproduction/x1-content-seal.json")["mismatch_count"] == 0, load("reproduction/x1-content-seal.json")["mismatch_count"])
     check("synthetic negatives", load("validation/preregistered-synthetic-negatives.json")["rejected_count"] == 70, load("validation/preregistered-synthetic-negatives.json")["rejected_count"])

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Retain the parser fault and split the inspection into literal single-quoted ASCII search patterns and separate exact-path reads.",
+  "failure_signature": "A read-only PowerShell inspection string containing a mixed Unicode alternation is rejected as an unterminated quoted string before file access.",
+  "method_id": "V6477-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_evidence",
+    "unicode_integrity",
+    "negative_retention",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep PowerShell search wrappers ASCII and single-quoted when Unicode byte integrity is being checked separately.",
+  "retained_negative_ids": [
+    "V6477-LC-N02"
+  ],
+  "rollback": "Retain the pre-execution parser error and make no repository change before the corrected read-only probe.",
+  "scope_boundary": "Inspection-wrapper recovery only; no scientific, production, security, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Literal ASCII inspection wrapper after Unicode quote-parser fault",
+  "trigger_preconditions": [
+    "A read-only PowerShell search wrapper mixes quoted regex alternation with Unicode display text."
+  ],
+  "validation_witness_ids": []
+}
