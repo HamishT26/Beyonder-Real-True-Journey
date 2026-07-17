@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 11,
-    "recommendations": 11,
-    "state_events": 33,
+    "methods": 12,
+    "recommendations": 12,
+    "state_events": 36,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 11,
+      "preferred": 12,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 11,
-      "pass": 11
+      "fail": 12,
+      "pass": 12
     },
-    "witnesses": 22
+    "witnesses": 24
   },
   "owner": "Orin Thale",
   "phase": "v647-gmut-thos-v8-x1-x2",
@@ -187,6 +187,21 @@
         "V6478-M11-WFAIL",
         "V6478-M11-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Remove only the reported EOF blank lines, restage the same paths, and rerun the unchanged closeout gate.",
+      "method_id": "V6478-M12",
+      "recurrence_guard": "Generate exactly one terminal newline and run diff hygiene before closeout-manifest materialization.",
+      "rollback": "Restore the files from the staged index and retain the failure if any non-EOF content changes.",
+      "scope_boundary": "Mechanical owner-file hygiene only; no evidence or authority promotion.",
+      "title": "Normalize closeout Python EOF before seal review",
+      "trigger_preconditions": [
+        "Only additive owner-generated closeout Python files are named by the exact diff output."
+      ],
+      "validation_witness_ids": [
+        "V6478-M12-WFAIL",
+        "V6478-M12-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -200,7 +215,8 @@
     "V6478-M08-WFAIL",
     "V6478-M09-WFAIL",
     "V6478-M10-WFAIL",
-    "V6478-M11-WFAIL"
+    "V6478-M11-WFAIL",
+    "V6478-M12-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

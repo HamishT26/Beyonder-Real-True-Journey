@@ -1,0 +1,26 @@
+{
+  "method_id": "V6478-M12",
+  "title": "Normalize closeout Python EOF before seal review",
+  "failure_signature": "Closeout staged diff hygiene reports a new blank line at EOF in generated Python files.",
+  "trigger_preconditions": [
+    "Only additive owner-generated closeout Python files are named by the exact diff output."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_cleanup",
+  "candidate_workaround": "Remove only the reported EOF blank lines, restage the same paths, and rerun the unchanged closeout gate.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Generate exactly one terminal newline and run diff hygiene before closeout-manifest materialization.",
+  "rollback": "Restore the files from the staged index and retain the failure if any non-EOF content changes.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "x1_x2_separation",
+    "unexpected_path",
+    "destructive_action",
+    "sibling_lane"
+  ],
+  "retained_negative_ids": [
+    "V6478-LC-N01"
+  ],
+  "scope_boundary": "Mechanical owner-file hygiene only; no evidence or authority promotion."
+}

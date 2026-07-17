@@ -2,9 +2,9 @@
 
 - Phase: v647-gmut-thos-v8-x1-x2
 - Owner: Orin Thale
-- Methods: 11
-- Passing witnesses: 11
-- Failed witnesses retained: 11
+- Methods: 12
+- Passing witnesses: 12
+- Failed witnesses retained: 12
 
 ## Preferred methods
 
@@ -95,6 +95,14 @@
 - Recurrence guard: Generate exactly one terminal newline and run diff hygiene before the first staged-manifest pass.
 - Rollback: Restore the owner-generated files from the staged index and retain the failed gate if any non-EOF content changes.
 - Witnesses: V6478-M11-WFAIL, V6478-M11-WPASS
+
+### V6478-M12 — Normalize closeout Python EOF before seal review
+
+- Trigger: Only additive owner-generated closeout Python files are named by the exact diff output.
+- Method: Remove only the reported EOF blank lines, restage the same paths, and rerun the unchanged closeout gate.
+- Recurrence guard: Generate exactly one terminal newline and run diff hygiene before closeout-manifest materialization.
+- Rollback: Restore the files from the staged index and retain the failure if any non-EOF content changes.
+- Witnesses: V6478-M12-WFAIL, V6478-M12-WPASS
 
 ## Retained boundary
 

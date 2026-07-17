@@ -107,14 +107,14 @@ def main() -> int:
     check("zero people operations", ledger["real_people_or_operations"] == 0, ledger["real_people_or_operations"])
     check("zero keys servers", ledger["real_keys_tokens_or_servers"] == 0, ledger["real_keys_tokens_or_servers"])
     check("zero authority decisions", ledger["authority_decisions"] == 0, ledger["authority_decisions"])
-    expected_negative_total = 3834
+    expected_negative_total = 3835 if args.include_closeout else 3834
     check("negative total", negatives["effective_total"] == expected_negative_total and negatives["erased_negative_count"] == 0, negatives["effective_total"])
     check("gate totals", gates["effective_open_gaps"] == 25 and gates["effective_exact_gates"] == 26, [gates["effective_open_gaps"], gates["effective_exact_gates"]])
     check("terminal verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
     check("route held", truth["route_state"] == "PREPARED_NOT_SENT", truth["route_state"])
     check("skills validated", skills["skill_count"] == 20 and skills["validated_count"] == 20 and skills["smoke_used_count"] == 20, [skills["skill_count"], skills["validated_count"], skills["smoke_used_count"]])
     check("runners invoked", runners["runner_count"] == 10 and runners["invoked_count"] == 10, [runners["runner_count"], runners["invoked_count"]])
-    expected_method_parity = {"fail": 11, "pass": 11}
+    expected_method_parity = {"fail": 12, "pass": 12} if args.include_closeout else {"fail": 11, "pass": 11}
     check("method flow parity", methods["counts"]["witness_results"] == expected_method_parity, {"actual": methods["counts"]["witness_results"], "expected": expected_method_parity, "promotion_pending_allowed": args.allow_method_promotion_pending})
     check("x1 staged review", x1_review["valid"] and x1_review["confirmed_privacy_hits"] == 0, x1_review["valid"])
     check("x1 blob seal", load("reproduction/x1-content-seal.json")["mismatch_count"] == 0, load("reproduction/x1-content-seal.json")["mismatch_count"])
