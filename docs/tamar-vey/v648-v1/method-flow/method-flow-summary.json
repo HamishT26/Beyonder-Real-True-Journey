@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 7,
-    "recommendations": 7,
-    "state_events": 21,
+    "methods": 11,
+    "recommendations": 11,
+    "state_events": 33,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 7,
+      "preferred": 11,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 7,
-      "pass": 7
+      "fail": 15,
+      "pass": 15
     },
-    "witnesses": 14
+    "witnesses": 30
   },
   "owner": "Tamar Vey",
   "phase": "v648-gmut-thos-v1-x1-x2",
@@ -48,7 +48,9 @@
       ],
       "validation_witness_ids": [
         "V6481-M02-WFAIL",
-        "V6481-M02-WPASS"
+        "V6481-M02-WPASS",
+        "V6481-M02-WFAIL-LC10",
+        "V6481-M02-WPASS-LC10"
       ]
     },
     {
@@ -63,7 +65,9 @@
       ],
       "validation_witness_ids": [
         "V6481-M03-WFAIL",
-        "V6481-M03-WPASS"
+        "V6481-M03-WPASS",
+        "V6481-M03-WFAIL-LC05",
+        "V6481-M03-WPASS-LC05"
       ]
     },
     {
@@ -125,6 +129,70 @@
         "V6481-M07-WFAIL",
         "V6481-M07-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Use a non-login shell and split repository probes into exact bounded Git primitives before retrying ordinary status.",
+      "method_id": "V6481-M08",
+      "recurrence_guard": "Treat a timeout as missing evidence, retain each failed witness, and change only invocation mode or probe granularity before retry.",
+      "rollback": "Discard every timed-out result; none supplies clean-state, exact-head, or process-state credit and none changed repository or external state.",
+      "scope_boundary": "Tamar v648-v1 lifecycle diagnostics only; no scientific, operational, production, security-complete, or independent-reproduction claim.",
+      "title": "Recover bounded repository reads by changing invocation mode and probe granularity",
+      "trigger_preconditions": [
+        "A required read-only repository or process probe times out before returning usable evidence."
+      ],
+      "validation_witness_ids": [
+        "V6481-M08-WFAIL",
+        "V6481-M08-WPASS",
+        "V6481-M08-WFAIL-LC06",
+        "V6481-M08-WPASS-LC06"
+      ]
+    },
+    {
+      "candidate_workaround": "Require failed and passing witness parity while allowing multiple retained recurrence pairs per method.",
+      "method_id": "V6481-M09",
+      "recurrence_guard": "Test fail/pass parity and at least one failed witness per method; do not assume exactly one pair when recurrences are retained.",
+      "rollback": "Retain the failed 75-test receipt and change only the invalid witness-cardinality assertion.",
+      "scope_boundary": "Tamar v648-v1 Method Flow test semantics only; no broader test-suite, scientific, production, or independent-reproduction claim.",
+      "title": "Validate Method Flow parity without erasing recurrence witnesses",
+      "trigger_preconditions": [
+        "A Method Flow ledger has balanced recurrence witnesses and a test assumes exactly one fail/pass pair per method."
+      ],
+      "validation_witness_ids": [
+        "V6481-M09-WFAIL",
+        "V6481-M09-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the stage-zero index once and use one communicate-based cat-file batch for all unique blobs.",
+      "method_id": "V6481-M10",
+      "recurrence_guard": "Batch immutable blob reads through communicate; never use a write-all-then-read pipe wrapper and never substitute working-tree bytes.",
+      "rollback": "Discard the timed-out run and any incomplete outputs; leave the staged index unchanged.",
+      "scope_boundary": "Tamar v648-v1 exact staged and owner-manifest review only; no exhaustive-security or independent-reproduction claim.",
+      "title": "Batch exact staged Git-blob reads without changing the hash domain",
+      "trigger_preconditions": [
+        "An exact staged reviewer hashes many stage-zero paths and per-path Git process startup exceeds the bounded runtime."
+      ],
+      "validation_witness_ids": [
+        "V6481-M10-WFAIL",
+        "V6481-M10-WPASS",
+        "V6481-M10-WFAIL-LC11",
+        "V6481-M10-WPASS-LC11"
+      ]
+    },
+    {
+      "candidate_workaround": "Preserve the failed test and assertion while replacing only the private absolute traceback prefix with a repository-neutral owner-worktree marker.",
+      "method_id": "V6481-M11",
+      "recurrence_guard": "Sanitize traceback location prefixes before repository retention without deleting the test name, assertion, counts, or failure state.",
+      "rollback": "Keep the staged review invalid until the same exact privacy scan passes; do not delete the failed receipt.",
+      "scope_boundary": "Tamar v648-v1 repository-artifact privacy only; not complete privacy assurance or independent review.",
+      "title": "Retain failed validator evidence without publishing private traceback paths",
+      "trigger_preconditions": [
+        "A repository-bound failed validation receipt contains an otherwise useful traceback with a private absolute local path."
+      ],
+      "validation_witness_ids": [
+        "V6481-M11-WFAIL",
+        "V6481-M11-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -134,7 +202,15 @@
     "V6481-M04-WFAIL",
     "V6481-M05-WFAIL",
     "V6481-M06-WFAIL",
-    "V6481-M07-WFAIL"
+    "V6481-M07-WFAIL",
+    "V6481-M08-WFAIL",
+    "V6481-M03-WFAIL-LC05",
+    "V6481-M08-WFAIL-LC06",
+    "V6481-M09-WFAIL",
+    "V6481-M10-WFAIL",
+    "V6481-M11-WFAIL",
+    "V6481-M02-WFAIL-LC10",
+    "V6481-M10-WFAIL-LC11"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v648-gmut-thos-v1-x1-x2
 
 Owner: **Tamar Vey**
-Generated UTC: `2026-07-17T05:43:38.576864+00:00`
+Generated UTC: `2026-07-17T06:53:22.221427+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 282 | 17 | 981 | 17 |
+| Repository scripts | 292 | 17 | 986 | 17 |
 | Local skills | 113 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

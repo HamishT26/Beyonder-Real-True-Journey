@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Use a non-login shell and split repository probes into exact bounded Git primitives before retrying ordinary status.",
+  "failure_signature": "Login-shell repository probes exceeded their bounded timeouts without returning evidence.",
+  "method_id": "V6481-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "clean_state",
+    "exact_head",
+    "no_false_validation_credit",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat a timeout as missing evidence, retain each failed witness, and change only invocation mode or probe granularity before retry.",
+  "retained_negative_ids": [
+    "V6481-LC-N01",
+    "V6481-LC-N02",
+    "V6481-LC-N03",
+    "V6481-LC-N04"
+  ],
+  "rollback": "Discard every timed-out result; none supplies clean-state, exact-head, or process-state credit and none changed repository or external state.",
+  "scope_boundary": "Tamar v648-v1 lifecycle diagnostics only; no scientific, operational, production, security-complete, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Recover bounded repository reads by changing invocation mode and probe granularity",
+  "trigger_preconditions": [
+    "A required read-only repository or process probe times out before returning usable evidence."
+  ],
+  "validation_witness_ids": []
+}

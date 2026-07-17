@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owned_lane_tool_refinement",
+  "candidate_workaround": "Read the stage-zero index once and use one communicate-based cat-file batch for all unique blobs.",
+  "failure_signature": "Per-path Git subprocess startup caused the exact staged reviewer to exceed its bounded runtime before emitting a manifest.",
+  "method_id": "V6481-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_blob_domain",
+    "owner_manifest_parity",
+    "privacy_scan",
+    "no_partial_review_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Batch immutable blob reads through communicate; never use a write-all-then-read pipe wrapper and never substitute working-tree bytes.",
+  "retained_negative_ids": [
+    "V6481-LC-N08"
+  ],
+  "rollback": "Discard the timed-out run and any incomplete outputs; leave the staged index unchanged.",
+  "scope_boundary": "Tamar v648-v1 exact staged and owner-manifest review only; no exhaustive-security or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Batch exact staged Git-blob reads without changing the hash domain",
+  "trigger_preconditions": [
+    "An exact staged reviewer hashes many stage-zero paths and per-path Git process startup exceeds the bounded runtime."
+  ],
+  "validation_witness_ids": []
+}

@@ -52,6 +52,20 @@ def validate(mode: str, lifecycle: str) -> dict[str, Any]:
         "skills/skill-build-receipt.json",
         "tooling/runner-execution.json",
     ]
+    if lifecycle != "evidence":
+        required.extend(
+            [
+                "closeout-receipt.json",
+                "seal-receipt.json",
+                "final-receipt.json",
+                "final-validation-record.json",
+                "retained-negative-register-final.json",
+                "validation/lifecycle-operational-negatives.json",
+                "validation/final-validation-protocol.json",
+                "orchestration/successor-baton-preparation.json",
+                "orchestration/terminal-route-state.json",
+            ]
+        )
     missing = [path for path in required if not (PHASE / path).exists()]
     add(checks, "required_files", not missing, missing)
     if missing:
@@ -74,6 +88,15 @@ def validate(mode: str, lifecycle: str) -> dict[str, Any]:
     add(checks, "gate_counts", (gates["effective_open_gaps"], gates["effective_exact_gates"]) == (26, 27), [gates["effective_open_gaps"], gates["effective_exact_gates"]])
     add(checks, "skills_20", (skills["count"], skills["quick_validated"], skills["smoke_used"]) == (20, 20, 20), [skills["count"], skills["quick_validated"], skills["smoke_used"]])
     add(checks, "runners_built_and_used", (runners["built_count"], runners["used_count"]) == (10, 10), [runners["built_count"], runners["used_count"]])
+    if lifecycle != "evidence":
+        final_negatives = load("retained-negative-register-final.json")
+        closeout = load("closeout-receipt.json")
+        method_state = load("method-flow/method-flow-state.json")
+        route = load("orchestration/successor-baton-preparation.json")
+        add(checks, "final_negatives_3937", final_negatives["effective_total"] == 3937 and final_negatives["erased_negative_count"] == 0, final_negatives["effective_total"])
+        add(checks, "closeout_counts", (closeout["effective_open_gaps"], closeout["effective_exact_gates"]) == (26, 27), [closeout["effective_open_gaps"], closeout["effective_exact_gates"]])
+        add(checks, "method_flow_11_15_15", (method_state["counts"]["methods"], method_state["counts"]["witness_results"]["fail"], method_state["counts"]["witness_results"]["pass"]) == (11, 15, 15), [method_state["counts"]["methods"], method_state["counts"]["witness_results"]])
+        add(checks, "route_prepared_for_sylven", route["target_existing_task_title"] == "Sylven Arc" and route["state"] == "PREPARED_NOT_SENT", [route["target_existing_task_title"], route["state"]])
 
     json_errors = []
     json_files = sorted(PHASE.rglob("*.json"))
@@ -130,6 +153,8 @@ def validate(mode: str, lifecycle: str) -> dict[str, Any]:
             "tests.test_ghc_family_v648_v1_x1",
             "tests.test_ghc_family_v648_v1",
         ]
+        if lifecycle != "evidence":
+            selection.append("tests.test_ghc_family_v648_v1_closeout")
         suite = unittest.defaultTestLoader.loadTestsFromNames(selection)
         stream = io.StringIO()
         result = unittest.TextTestRunner(stream=stream, verbosity=1).run(suite)

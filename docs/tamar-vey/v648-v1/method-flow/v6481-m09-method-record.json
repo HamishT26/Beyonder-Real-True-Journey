@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owned_lane_test_refinement",
+  "candidate_workaround": "Require failed and passing witness parity while allowing multiple retained recurrence pairs per method.",
+  "failure_signature": "A scoped evidence test incorrectly equated method count with failed-witness count after valid recurrence witnesses were appended.",
+  "method_id": "V6481-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "retained_failures",
+    "witness_parity",
+    "scoped_test_integrity",
+    "no_test_exclusion_broadening"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Test fail/pass parity and at least one failed witness per method; do not assume exactly one pair when recurrences are retained.",
+  "retained_negative_ids": [
+    "V6481-LC-N07"
+  ],
+  "rollback": "Retain the failed 75-test receipt and change only the invalid witness-cardinality assertion.",
+  "scope_boundary": "Tamar v648-v1 Method Flow test semantics only; no broader test-suite, scientific, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Validate Method Flow parity without erasing recurrence witnesses",
+  "trigger_preconditions": [
+    "A Method Flow ledger has balanced recurrence witnesses and a test assumes exactly one fail/pass pair per method."
+  ],
+  "validation_witness_ids": []
+}
