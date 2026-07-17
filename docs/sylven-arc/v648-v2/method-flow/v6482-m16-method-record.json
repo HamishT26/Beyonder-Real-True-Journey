@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Parse Git divergence as two integer fields rather than comparing tab-formatted console text to an escape literal.",
+  "failure_signature": "The evidence push and four hashes were correct, but a PowerShell wrapper compared an actual tab to a literal escape sequence and exited nonzero.",
+  "method_id": "V6482-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["four_way_remote_equality", "zero_divergence", "clean_state", "wrapper_truth"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Split rev-list left-right counts on whitespace, cast both to integers, and compare hashes independently.",
+  "retained_negative_ids": ["V6482-LC-N01"],
+  "rollback": "Grant no equality-wrapper credit, retain the successful push as Git state only, and replay the same read-only equality observations with parsed fields.",
+  "scope_boundary": "Sylven v648-v2 lifecycle evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Parse remote-divergence fields instead of formatted text",
+  "trigger_preconditions": ["Git reports left-right counts as whitespace-separated fields under PowerShell."],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Pass Windows tree roots as literal paths and express filename selection with ripgrep's -g filter.",
+  "failure_signature": "Ripgrep rejected a wildcard embedded in a Windows path argument before the read-only source search began.",
+  "method_id": "V6482-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["source_discovery", "windows_path_semantics", "read_only_search"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use literal search roots plus -g for globs; require zero exit and exact matches before relying on discovery.",
+  "retained_negative_ids": ["V6482-LC-N02"],
+  "rollback": "Discard the rejected invocation, preserve repository state, and rerun the exact pattern against literal roots with a tool-native glob.",
+  "scope_boundary": "Sylven v648-v2 lifecycle evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use tool-native globs for Windows source searches",
+  "trigger_preconditions": ["A bounded source search needs a filename filter under Windows."],
+  "validation_witness_ids": []
+}

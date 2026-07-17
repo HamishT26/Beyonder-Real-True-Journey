@@ -2,9 +2,9 @@
 
 - Phase: v648-gmut-thos-v2-x1-x2
 - Owner: Sylven Arc
-- Methods: 15
-- Passing witnesses: 15
-- Failed witnesses retained: 15
+- Methods: 20
+- Passing witnesses: 20
+- Failed witnesses retained: 20
 
 ## Preferred methods
 
@@ -127,6 +127,46 @@
 - Recurrence guard: Derive lifecycle-negative parity from the exact register rather than copying a mutable count into test code.
 - Rollback: Withhold validation credit, retain the failed assertion, update only the uncommitted owner test, rebuild the register, and rerun the same suite.
 - Witnesses: V6482-M15-WFAIL, V6482-M15-WPASS
+
+### V6482-M16 — Parse remote-divergence fields instead of formatted text
+
+- Trigger: Git reports left-right counts as whitespace-separated fields under PowerShell.
+- Method: Parse Git divergence as two integer fields rather than comparing tab-formatted console text to an escape literal.
+- Recurrence guard: Split rev-list left-right counts on whitespace, cast both to integers, and compare hashes independently.
+- Rollback: Grant no equality-wrapper credit, retain the successful push as Git state only, and replay the same read-only equality observations with parsed fields.
+- Witnesses: V6482-M16-WFAIL, V6482-M16-WPASS
+
+### V6482-M17 — Use tool-native globs for Windows source searches
+
+- Trigger: A bounded source search needs a filename filter under Windows.
+- Method: Pass Windows tree roots as literal paths and express filename selection with ripgrep's -g filter.
+- Recurrence guard: Use literal search roots plus -g for globs; require zero exit and exact matches before relying on discovery.
+- Rollback: Discard the rejected invocation, preserve repository state, and rerun the exact pattern against literal roots with a tool-native glob.
+- Witnesses: V6482-M17-WFAIL, V6482-M17-WPASS
+
+### V6482-M18 — Inspect rendered boundaries for split inherited practice literals
+
+- Trigger: A family template contains practice wording split across adjacent string literals.
+- Method: Review the assembled boundary after transformation and replace split inherited practice literals before staging.
+- Recurrence guard: Inspect rendered boundary values, not only source replacement tables, before closeout staging.
+- Rollback: Withhold closeout staging, retain the adaptation miss, update only the uncommitted adapter, and regenerate deterministic owner outputs.
+- Witnesses: V6482-M18-WFAIL, V6482-M18-WPASS
+
+### V6482-M19 — Decompose a timed-out closeout stale-topic scan
+
+- Trigger: The closeout review surface is a known bounded file list and a combined search exceeds its deadline.
+- Method: Use exact per-file PowerShell matching over the known closeout surface when the combined ripgrep wrapper exceeds its bound.
+- Recurrence guard: Keep the target file list exact and record the complete per-file match count under a bounded envelope.
+- Rollback: Grant no scan credit to the timeout, retain it, and replay only read-only exact target matching.
+- Witnesses: V6482-M19-WFAIL, V6482-M19-WPASS
+
+### V6482-M20 — Distinguish retained historical failures from current truth labels
+
+- Trigger: A retained-negative register necessarily contains the stale wording that a prior guard detected.
+- Method: Separate current-truth label scans from retained-negative historical witness text and explicitly adjudicate the latter by field context.
+- Recurrence guard: Scan current truth surfaces for zero hits and validate retained-negative text as historical witness data rather than current claims.
+- Rollback: Grant no stale-label credit to the overbroad gate, retain its result, keep the negative witness unchanged, and replay context-aware checks.
+- Witnesses: V6482-M20-WFAIL, V6482-M20-WPASS
 
 ## Retained boundary
 
