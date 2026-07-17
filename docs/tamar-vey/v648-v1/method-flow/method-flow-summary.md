@@ -2,9 +2,9 @@
 
 - Phase: v648-gmut-thos-v1-x1-x2
 - Owner: Tamar Vey
-- Methods: 5
-- Passing witnesses: 5
-- Failed witnesses retained: 5
+- Methods: 7
+- Passing witnesses: 7
+- Failed witnesses retained: 7
 
 ## Preferred methods
 
@@ -47,6 +47,22 @@
 - Recurrence guard: Apply explicit UTF-8 to every family runner that may print Unicode-bearing phase evidence.
 - Rollback: Do not credit the partial invocation; overwrite only the same owner-scoped derived summary outputs on successful replay.
 - Witnesses: V6481-M05-WFAIL, V6481-M05-WPASS
+
+### V6481-M06 — Expose the exact repository root before dotted unittest loading
+
+- Trigger: A validator is executed from the scripts directory and loads repository tests by dotted module name.
+- Method: Insert the exact repository root into sys.path before loading the frozen unittest names, without changing the selection or exclusions.
+- Recurrence guard: When a validator loads dotted unittest names while invoked from scripts, expose only the exact repository root before constructing the suite.
+- Rollback: Retain the failed receipt, award zero substantive-test credit, and make no change to the frozen test selection or exclusion set.
+- Witnesses: V6481-M06-WFAIL, V6481-M06-WPASS
+
+### V6481-M07 — Use literal prefix checks for Git porcelain status codes
+
+- Trigger: A PowerShell diagnostic classifies Git porcelain lines by their two-character status prefix.
+- Method: Use the string StartsWith method for the literal two-character untracked prefix in Git porcelain output.
+- Recurrence guard: Use StartsWith for literal Git porcelain prefixes; do not use wildcard operators for punctuation-bearing status codes.
+- Rollback: Discard the false read-only count and leave the staged surface unchanged.
+- Witnesses: V6481-M07-WFAIL, V6481-M07-WPASS
 
 ## Retained boundary
 

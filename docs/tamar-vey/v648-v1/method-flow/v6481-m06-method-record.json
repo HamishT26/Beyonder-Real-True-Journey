@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Insert the exact repository root into sys.path before loading the frozen unittest names, without changing the selection or exclusions.",
+  "failure_signature": "Every frozen unittest name became a loader failure because the tests package was not importable from the script directory.",
+  "method_id": "V6481-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "scoped_test_selection",
+    "inherited_exclusions",
+    "no_false_test_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When a validator loads dotted unittest names while invoked from scripts, expose only the exact repository root before constructing the suite.",
+  "retained_negative_ids": [
+    "V6481-X2-N01"
+  ],
+  "rollback": "Retain the failed receipt, award zero substantive-test credit, and make no change to the frozen test selection or exclusion set.",
+  "scope_boundary": "Tamar v648-v1 scoped validation only; no full-suite, scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Expose the exact repository root before dotted unittest loading",
+  "trigger_preconditions": [
+    "A validator is executed from the scripts directory and loads repository tests by dotted module name."
+  ],
+  "validation_witness_ids": []
+}

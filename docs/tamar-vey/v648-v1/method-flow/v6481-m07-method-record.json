@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Use the string StartsWith method for the literal two-character untracked prefix in Git porcelain output.",
+  "failure_signature": "PowerShell wildcard matching treated two question marks as arbitrary characters and inflated the untracked count.",
+  "method_id": "V6481-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "clean_state",
+    "exact_staged_surface",
+    "no_false_status_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use StartsWith for literal Git porcelain prefixes; do not use wildcard operators for punctuation-bearing status codes.",
+  "retained_negative_ids": [
+    "V6481-X2-N02"
+  ],
+  "rollback": "Discard the false read-only count and leave the staged surface unchanged.",
+  "scope_boundary": "Tamar v648-v1 Git status diagnostics only; no broader repository, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use literal prefix checks for Git porcelain status codes",
+  "trigger_preconditions": [
+    "A PowerShell diagnostic classifies Git porcelain lines by their two-character status prefix."
+  ],
+  "validation_witness_ids": []
+}
