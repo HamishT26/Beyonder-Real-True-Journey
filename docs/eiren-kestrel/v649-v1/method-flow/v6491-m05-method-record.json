@@ -1,0 +1,27 @@
+{
+  "method_id": "v6491-m05",
+  "title": "Additive negative-total assertion synchronized with Method Flow",
+  "failure_signature": "A focused x2 test expected the pre-recovery total after two later operational negatives had been retained.",
+  "trigger_preconditions": [
+    "A phase test asserts the effective retained-negative total.",
+    "New Method Flow failures were added after the first evidence build."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local_test_recovery",
+  "candidate_workaround": "Recompute the total from inherited, x1, synthetic, and x2 categories; update the builder and assertion together; rerun only the focused preflight.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Before each focused test run, regenerate the retained-negative register after all newly recorded Method Flow failures and assert the category sum as well as the total.",
+  "rollback": "Retain the failed focused run with zero canonical credit, restore category-consistent accounting, and rerun the bounded preflight only.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "negative retention",
+    "single canonical validation pass",
+    "no replay credit",
+    "exact phase accounting"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6491-X2-003"
+  ],
+  "scope_boundary": "Focused owner-local test recovery only; no canonical suite, replay, independent-reproduction, or assurance credit."
+}

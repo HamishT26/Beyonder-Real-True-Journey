@@ -1,0 +1,27 @@
+{
+  "method_id": "v6491-m04",
+  "title": "Index reference search with concrete roots and include filters",
+  "failure_signature": "An index-refresh reference search passed a Windows wildcard as a literal rg path and returned invalid-path error 123.",
+  "trigger_preconditions": [
+    "A read-only search spans a skill entrypoint and its reference directory on Windows.",
+    "The intended selection includes all files under a known references directory."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Read the concrete skill file directly, enumerate the concrete references directory, and use -g filters when recursive filename selection is needed.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Reject every rg command containing a wildcard in a path argument; use concrete roots, directory enumeration, or explicit -g include filters.",
+  "rollback": "Discard the failed search result, retain error 123 as an operational negative, and rerun once against concrete paths.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "read-only skill inspection",
+    "failure retention",
+    "single canonical validation pass",
+    "private-path exclusion from artifacts"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6491-X2-002"
+  ],
+  "scope_boundary": "Read-only local skill-reference discovery only; no repository-suite, source-authority, or independent-reproduction credit."
+}
