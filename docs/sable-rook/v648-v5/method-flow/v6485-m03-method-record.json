@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set console output and Python I/O encoding to UTF-8 before reading or emitting the exact text.",
+  "failure_signature": "A PowerShell summary uses the legacy console encoding and renders intact Māori text as mojibake.",
+  "method_id": "V6485-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "maori_text_integrity",
+    "source_immutability",
+    "diagnostic_truth",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before every Unicode-emitting phase command, builder, validator, and source diagnostic.",
+  "retained_negative_ids": [
+    "V6485-X1-N03"
+  ],
+  "rollback": "Retain the mojibake witness, leave the Git blob unchanged, and rerun only the diagnostic with UTF-8 pinned.",
+  "scope_boundary": "Encoding recovery only; it confers no Māori-language or Māori-authority review.",
+  "supersedes": [],
+  "title": "Pin UTF-8 before Unicode-bearing diagnostics",
+  "trigger_preconditions": [
+    "A diagnostic may emit Māori or other non-ASCII text on Windows PowerShell."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Query Git's indexed path list once, then apply one exact-name alternation and adjudicate only returned paths.",
+  "failure_signature": "Twenty independent repository-wide content searches exceed their bounded window without returning collision evidence.",
+  "method_id": "V6485-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "semantic_novelty",
+    "caller_compatibility",
+    "historical_surfaces",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not launch one full historical content scan per proposed package name.",
+  "retained_negative_ids": [
+    "V6485-X1-N04"
+  ],
+  "rollback": "Retain the timeout, create no package from the failed scan, and use only indexed-path results.",
+  "scope_boundary": "Indexed filename evidence only; content semantics still require manual proposal review.",
+  "supersedes": [],
+  "title": "Use one indexed-path collision audit instead of repeated full scans",
+  "trigger_preconditions": [
+    "Many proposed family-current package names require an exact pre-build collision check."
+  ],
+  "validation_witness_ids": []
+}

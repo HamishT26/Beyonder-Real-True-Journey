@@ -1,0 +1,21 @@
+# v648-v5 source ledger
+
+- **SRC-LIVE-REQUEST** — Hamish current v648-v5 activation and committed Ilyra baton (`current`, `live_authority`). Controls solo ownership, no replay, x1-before-x2, four-commit cap, platform exclusions, privacy, and terminal route.
+- **SRC-W3C-PROV-DM** — W3C PROV Data Model (`stable`, `official_standard`). Defines entities, activities, agents, derivation, invalidation, specialization, alternates, and bundles; it does not prove source independence.
+- **SRC-W3C-PROV-CONSTRAINTS** — W3C Constraints of the PROV Data Model (`stable`, `official_standard`). Supplies validity and ordering constraints for bounded provenance fixtures, not real-world completeness.
+- **SRC-LSZ-PRIMARY** — Lehmann, Symanzik, and Zimmermann, On the formulation of quantized field theories (`stable`, `primary_research`). LSZ reduction has explicit asymptotic, pole, normalization, and field-theory assumptions and is not an empirical GMUT result.
+- **SRC-CHANDRA-CSC21** — Chandra Source Catalog Release 2.1 (`current`, `official_data`). Release 2.1 and its processing states expose a candidate official data surface but supply no GMUT likelihood.
+- **SRC-CHANDRA-RELEASE-VIEWS** — Chandra Source Catalog release and current database views (`current`, `official_data`). Static release views and mutable current views have different statistical and provenance properties that must not be flattened.
+- **SRC-NZ-MEDIA-COUNCIL** — New Zealand Media Council Principles (`current`, `primary_authority_source`). Accuracy, fairness, privacy, confidentiality, conflicts, and corrections are professional and affected-party obligations, not software authority.
+- **SRC-RFC9207** — RFC 9207 OAuth 2.0 Authorization Server Issuer Identification (`stable`, `official_standard`). The iss response parameter counters mix-up attacks but does not authenticate people or establish universal trust.
+- **SRC-OAUTH21-DRAFT** — IETF OAuth 2.1 Authorization Framework draft (`draft`, `official_draft`). The active draft remains work in progress and is monitored without being treated as settled normative authority.
+- **SRC-RFC2045** — RFC 2045 MIME Part One (`stable`, `official_standard`). MIME headers and transfer encodings require bounded, fail-closed parsing.
+- **SRC-RFC2046** — RFC 2046 MIME Part Two (`stable`, `official_standard`). Multipart boundaries and nesting rules support a synthetic parser tribunal, not exhaustive security.
+- **SRC-WCAG22** — Web Content Accessibility Guidelines 2.2 (`stable`, `official_standard`). Structural checks cover only declared markup obligations and cannot close manual or affected-user evaluation.
+- **SRC-WHATWG-TIME** — WHATWG HTML time element (`current`, `official_standard`). Machine-readable date and time semantics support a structural timeline contract only.
+- **SRC-CARATHEODORY** — Carathéodory, Untersuchungen über die Grundlagen der Thermodynamik (`stable`, `primary_research`). Adiabatic inaccessibility and Pfaffian integrability are thermodynamic-domain statements, not measures of choice or agency.
+- **SRC-MISCLASSIFICATION-PSA** — Fox, Lash, and Greenland, probabilistic sensitivity analysis of misclassified binary variables (`stable`, `primary_method`). Misclassification sensitivity analysis requires declared error parameters and uncertainty; a software board is not corrected evidence.
+- **SRC-NZ-PRIVACY** — New Zealand Privacy Commissioner privacy guidance (`current`, `official_authority`). Real privacy, harm, correction, and remedy decisions require competent human authority and affected-person consideration.
+- **SRC-TE-MANA-RARAUNGA** — Te Mana Raraunga principles of Māori data sovereignty (`stable`, `primary_authority_source`). Māori data and concepts remain under Māori governance; software confers no Māori authority.
+- **SRC-OPENAI-CODEX** — OpenAI Codex official repository and package channel (`watch`, `official_package`). CLI version status may be observed, but this phase performs no application update.
+- **SRC-OPENAI-CODEX-APP** — OpenAI Codex app announcement (`current`, `official_product`). Confirms the Windows app surface; the installed desktop build is verified locally and not updated.
