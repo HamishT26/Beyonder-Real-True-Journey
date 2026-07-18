@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m03",
+  "title": "Generated-JSON narrow patch recovery",
+  "failure_signature": "A multi-file patch assumed generated JSON key order and failed exact-context verification before changing any file.",
+  "trigger_preconditions": [
+    "A generated JSON artifact uses deterministic sorted keys.",
+    "The proposed patch context was inferred rather than read from the current file."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owned_files",
+  "candidate_workaround": "Read the exact bounded current snippet, patch source-of-truth code first, then patch or regenerate the artifact with minimal exact context.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Inspect generated key order before patching and avoid broad multi-file contexts that depend on inferred serialization order.",
+  "rollback": "No rollback is needed when apply_patch reports zero changes; retain the failed patch witness.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "owned-file scope",
+    "x1/x2 separation",
+    "generated artifact integrity"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-X1-003"
+  ],
+  "scope_boundary": "Owned x1 source and generated JSON only; no destructive rewrite."
+}

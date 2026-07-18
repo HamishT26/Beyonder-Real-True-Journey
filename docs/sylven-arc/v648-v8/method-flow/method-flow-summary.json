@@ -1,0 +1,80 @@
+{
+  "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
+  "counts": {
+    "methods": 3,
+    "recommendations": 3,
+    "state_events": 9,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 3,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 3,
+      "pass": 3
+    },
+    "witnesses": 6
+  },
+  "owner": "Sylven Arc",
+  "phase": "v648-v8",
+  "preferred_methods": [
+    {
+      "candidate_workaround": "Validate changed-path parity and Git object identity at the named commit, then use the retained staged-review receipt for checkout-domain byte parity instead of equating checkout bytes with raw blob size.",
+      "method_id": "v6488-m01",
+      "recurrence_guard": "Read hash_domain and checkout_bytes_domain before comparing sizes; never infer that the two byte domains are identical.",
+      "rollback": "Discard the false mismatch conclusion and retain the failed probe as an operational negative.",
+      "scope_boundary": "Source commit manifests and their retained staged-review receipts only; no source mutation and no independent-reproduction credit.",
+      "title": "Commit-manifest byte-domain discriminator",
+      "trigger_preconditions": [
+        "A commit-local manifest declares checkout_bytes_domain separately from git_blob identity.",
+        "Later commits may have changed files that were present in an earlier staged manifest."
+      ],
+      "validation_witness_ids": [
+        "v6488-m01-wfail-01",
+        "v6488-m01-wpass-01"
+      ]
+    },
+    {
+      "candidate_workaround": "Retain every raw candidate, inspect the matching source line, and classify only pattern-definition lines in the scanner itself as scanner-definition candidates rather than confirmed artifact leaks.",
+      "method_id": "v6488-m02",
+      "recurrence_guard": "Report candidate and confirmed-hit counts separately; never discard scanner self-matches without exact line-context classification.",
+      "rollback": "Restore fail-closed classification if a candidate is outside an exact scanner-definition line.",
+      "scope_boundary": "Exact staged scanner-definition lines only; zero confirmed hits is not complete privacy assurance.",
+      "title": "Scanner-definition candidate discriminator",
+      "trigger_preconditions": [
+        "A scanner source file is included in the exact staged-file domain.",
+        "The source contains the literal patterns it is designed to detect."
+      ],
+      "validation_witness_ids": [
+        "v6488-m02-wfail-01",
+        "v6488-m02-wpass-01"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the exact bounded current snippet, patch source-of-truth code first, then patch or regenerate the artifact with minimal exact context.",
+      "method_id": "v6488-m03",
+      "recurrence_guard": "Inspect generated key order before patching and avoid broad multi-file contexts that depend on inferred serialization order.",
+      "rollback": "No rollback is needed when apply_patch reports zero changes; retain the failed patch witness.",
+      "scope_boundary": "Owned x1 source and generated JSON only; no destructive rewrite.",
+      "title": "Generated-JSON narrow patch recovery",
+      "trigger_preconditions": [
+        "A generated JSON artifact uses deterministic sorted keys.",
+        "The proposed patch context was inferred rather than read from the current file."
+      ],
+      "validation_witness_ids": [
+        "v6488-m03-wfail-01",
+        "v6488-m03-wpass-01"
+      ]
+    }
+  ],
+  "retained_failed_witnesses": [
+    "v6488-m01-wfail-01",
+    "v6488-m02-wfail-01",
+    "v6488-m03-wfail-01"
+  ],
+  "schema": "ghc.family.method-flow-state.summary.v1",
+  "valid": true
+}

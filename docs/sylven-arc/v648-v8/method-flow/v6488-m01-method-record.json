@@ -1,0 +1,27 @@
+{
+  "method_id": "v6488-m01",
+  "title": "Commit-manifest byte-domain discriminator",
+  "failure_signature": "A source-manifest probe compared checkout byte counts to raw Git blob sizes and reported false mismatches despite exact path parity.",
+  "trigger_preconditions": [
+    "A commit-local manifest declares checkout_bytes_domain separately from git_blob identity.",
+    "Later commits may have changed files that were present in an earlier staged manifest."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Validate changed-path parity and Git object identity at the named commit, then use the retained staged-review receipt for checkout-domain byte parity instead of equating checkout bytes with raw blob size.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Read hash_domain and checkout_bytes_domain before comparing sizes; never infer that the two byte domains are identical.",
+  "rollback": "Discard the false mismatch conclusion and retain the failed probe as an operational negative.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "source immutability",
+    "sibling-lane isolation",
+    "same-owner evidence boundary",
+    "independent reproduction"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-X1-001"
+  ],
+  "scope_boundary": "Source commit manifests and their retained staged-review receipts only; no source mutation and no independent-reproduction credit."
+}
