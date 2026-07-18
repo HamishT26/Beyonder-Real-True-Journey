@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owned_lane",
+  "candidate_workaround": "Complete the append-only fail/pass witness transition and preferred-state update before invoking assertions that require a balanced ledger.",
+  "failure_signature": "A validation assertion sees one more failed witness than passing witness because recovery evidence was not finalized first.",
+  "method_id": "V6483-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "negative_retention",
+    "method_flow_balance",
+    "validation_order",
+    "no_false_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never run a balanced-witness terminal assertion while a known recovery still lacks its passing witness and state transition.",
+  "retained_negative_ids": [
+    "V6483-X2-N02"
+  ],
+  "rollback": "No external or sibling state changed; restore only the uncommitted owner-local ledger from its preceding valid JSON if a transition fails.",
+  "scope_boundary": "Eiren v648-v3 validation-order evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Finalize Method Flow recovery before balanced-witness validation",
+  "trigger_preconditions": [
+    "A known recovery has a retained failing witness but its passing witness or preferred-state transition is still pending."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,69 @@
+{
+  "boundary": "This design-only threat model neither provisions Hyper-V nor grants administrator authority, exhaustive security, production isolation, backup correctness, or permission to weaken host controls.",
+  "checks": [
+    {
+      "name": "guest",
+      "pass": true
+    },
+    {
+      "name": "nat",
+      "pass": true
+    },
+    {
+      "name": "address",
+      "pass": true
+    },
+    {
+      "name": "sandbox",
+      "pass": true
+    },
+    {
+      "name": "broker",
+      "pass": true
+    },
+    {
+      "name": "east_west",
+      "pass": true
+    },
+    {
+      "name": "artifact",
+      "pass": true
+    },
+    {
+      "name": "shares",
+      "pass": true
+    },
+    {
+      "name": "backup",
+      "pass": true
+    },
+    {
+      "name": "rollback",
+      "pass": true
+    },
+    {
+      "name": "no_host_change",
+      "pass": true
+    }
+  ],
+  "outcome": "completed",
+  "phase": "v648-gmut-thos-v3-x1-x2",
+  "positive_fixture": {
+    "artifact_broker_content_addressed": true,
+    "east_west_default_deny": true,
+    "fixture": "design-only six-node nexus",
+    "guest_admin_broker_human_controlled": true,
+    "host_changes_executed": 0,
+    "host_shares_writable": false,
+    "hyperv_guest_boundary_declared": true,
+    "native_codex_elevated_sandbox_distinguished": true,
+    "rollback_and_backup_declared": true,
+    "single_winnat_prefix_declared": true,
+    "static_guest_addresses_declared": true,
+    "windows_sandbox_distinguished": true
+  },
+  "positive_pass": true,
+  "proposal_id": "V6483-P07",
+  "schema": "ghc.family.v648-v3.six-node-nexus-threat-model.contract.v1",
+  "title": "GHC six-node Hyper-V, WinNAT, Windows Sandbox, native elevated-sandbox, guest-admin broker, east-west isolation, artifact-broker, and rollback threat-model board"
+}

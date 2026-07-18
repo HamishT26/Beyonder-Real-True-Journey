@@ -2,9 +2,9 @@
 
 - Phase: v648-gmut-thos-v3-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 10
-- Passing witnesses: 11
-- Failed witnesses retained: 11
+- Methods: 13
+- Passing witnesses: 14
+- Failed witnesses retained: 14
 
 ## Preferred methods
 
@@ -87,6 +87,30 @@
 - Recurrence guard: Never change a count assertion until the definitions, generated count, list cardinality, and user requirement agree exactly.
 - Rollback: Overwrite only the uncommitted owner-scoped review receipt after the adapter is corrected.
 - Witnesses: V6483-M10-WFAIL, V6483-M10-WPASS, V6483-M10-WFAIL-TEST, V6483-M10-WPASS-TEST
+
+### V6483-M11 — Recover a document-floor failure without lowering the frozen gate
+
+- Trigger: A bounded owner overview fails only its preregistered minimum word floor and remains below the 6,000-word cap.
+- Method: Retain the failing test, preserve the 1,200-word floor, add a bounded source-status and decision-limits section, and rerun the unchanged test.
+- Recurrence guard: Do not lower a frozen document floor merely to convert a failing receipt into a pass; add only decision-relevant content within the 6,000-word cap.
+- Rollback: Remove only the uncommitted owner-local added section if it introduces a factual or boundary defect.
+- Witnesses: V6483-M11-WFAIL, V6483-M11-WPASS
+
+### V6483-M12 — Finalize Method Flow recovery before balanced-witness validation
+
+- Trigger: A known recovery has a retained failing witness but its passing witness or preferred-state transition is still pending.
+- Method: Complete the append-only fail/pass witness transition and preferred-state update before invoking assertions that require a balanced ledger.
+- Recurrence guard: Never run a balanced-witness terminal assertion while a known recovery still lacks its passing witness and state transition.
+- Rollback: No external or sibling state changed; restore only the uncommitted owner-local ledger from its preceding valid JSON if a transition fails.
+- Witnesses: V6483-M12-WFAIL, V6483-M12-WPASS
+
+### V6483-M13 — Verify every assembled owner-path component in a versioned validator adapter
+
+- Trigger: A predecessor validator builds its phase path from separate owner-slug and phase components.
+- Method: Retain the missing-file receipt, inspect the transformed PHASE constant, add the explicit predecessor-to-owner slug substitution, and rerun unchanged validation logic.
+- Recurrence guard: When adapting a path assembled from components, verify owner slug and phase component independently before granting validator credit.
+- Rollback: Revert only the uncommitted adapter substitution if it points outside the Eiren owner phase.
+- Witnesses: V6483-M13-WFAIL, V6483-M13-WPASS
 
 ## Retained boundary
 

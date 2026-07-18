@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 10,
-    "recommendations": 10,
-    "state_events": 30,
+    "methods": 13,
+    "recommendations": 13,
+    "state_events": 39,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 10,
+      "preferred": 13,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 11,
-      "pass": 11
+      "fail": 14,
+      "pass": 14
     },
-    "witnesses": 22
+    "witnesses": 28
   },
   "owner": "Eiren Kestrel",
   "phase": "v648-gmut-thos-v3-x1-x2",
@@ -172,6 +172,51 @@
         "V6483-M10-WFAIL-TEST",
         "V6483-M10-WPASS-TEST"
       ]
+    },
+    {
+      "candidate_workaround": "Retain the failing test, preserve the 1,200-word floor, add a bounded source-status and decision-limits section, and rerun the unchanged test.",
+      "method_id": "V6483-M11",
+      "recurrence_guard": "Do not lower a frozen document floor merely to convert a failing receipt into a pass; add only decision-relevant content within the 6,000-word cap.",
+      "rollback": "Remove only the uncommitted owner-local added section if it introduces a factual or boundary defect.",
+      "scope_boundary": "Eiren v648-v3 document evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Recover a document-floor failure without lowering the frozen gate",
+      "trigger_preconditions": [
+        "A bounded owner overview fails only its preregistered minimum word floor and remains below the 6,000-word cap."
+      ],
+      "validation_witness_ids": [
+        "V6483-M11-WFAIL",
+        "V6483-M11-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Complete the append-only fail/pass witness transition and preferred-state update before invoking assertions that require a balanced ledger.",
+      "method_id": "V6483-M12",
+      "recurrence_guard": "Never run a balanced-witness terminal assertion while a known recovery still lacks its passing witness and state transition.",
+      "rollback": "No external or sibling state changed; restore only the uncommitted owner-local ledger from its preceding valid JSON if a transition fails.",
+      "scope_boundary": "Eiren v648-v3 validation-order evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Finalize Method Flow recovery before balanced-witness validation",
+      "trigger_preconditions": [
+        "A known recovery has a retained failing witness but its passing witness or preferred-state transition is still pending."
+      ],
+      "validation_witness_ids": [
+        "V6483-M12-WFAIL",
+        "V6483-M12-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Retain the missing-file receipt, inspect the transformed PHASE constant, add the explicit predecessor-to-owner slug substitution, and rerun unchanged validation logic.",
+      "method_id": "V6483-M13",
+      "recurrence_guard": "When adapting a path assembled from components, verify owner slug and phase component independently before granting validator credit.",
+      "rollback": "Revert only the uncommitted adapter substitution if it points outside the Eiren owner phase.",
+      "scope_boundary": "Eiren v648-v3 validator routing evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+      "title": "Verify every assembled owner-path component in a versioned validator adapter",
+      "trigger_preconditions": [
+        "A predecessor validator builds its phase path from separate owner-slug and phase components."
+      ],
+      "validation_witness_ids": [
+        "V6483-M13-WFAIL",
+        "V6483-M13-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -185,7 +230,10 @@
     "V6483-M08-WFAIL",
     "V6483-M09-WFAIL",
     "V6483-M10-WFAIL",
-    "V6483-M10-WFAIL-TEST"
+    "V6483-M10-WFAIL-TEST",
+    "V6483-M11-WFAIL",
+    "V6483-M12-WFAIL",
+    "V6483-M13-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
