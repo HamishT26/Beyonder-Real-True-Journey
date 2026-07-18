@@ -1,0 +1,23 @@
+{
+  "boundary": "Every observed X2 failure is retained before retry and receives zero evidence credit.",
+  "count": 2,
+  "negatives": [
+    {
+      "evidence_credit": "none",
+      "failure": "The post-copy verification searched relative paths from the wrong current directory and returned path-not-found after all three intended files had been copied.",
+      "mutation": "none",
+      "negative_id": "V6485-X2-N01",
+      "recovery": "Verify the three exact absolute worktree paths and bind subsequent probes to the repository root.",
+      "recurrence_guard": "Set the repository working directory explicitly before any relative post-copy verification."
+    },
+    {
+      "evidence_credit": "none",
+      "failure": "The first stale-label search used a double-quoted PowerShell pattern containing literal quote characters and failed parsing before the search ran.",
+      "mutation": "none",
+      "negative_id": "V6485-X2-N02",
+      "recovery": "Rerun the exact read-only search with a single-quoted literal pattern.",
+      "recurrence_guard": "Use single-quoted PowerShell literals for ripgrep alternations containing JSON quote characters."
+    }
+  ],
+  "schema": "ghc.family.v648-v5.x2-operational-negatives.v1"
+}

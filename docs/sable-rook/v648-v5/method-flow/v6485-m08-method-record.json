@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pass the full alternation as one single-quoted PowerShell literal.",
+  "failure_signature": "A double-quoted PowerShell search pattern containing literal quote characters terminates early and fails parsing.",
+  "method_id": "V6485-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "tooling_truth",
+    "parser_compatibility",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use single-quoted literals for read-only search patterns that contain JSON quote characters.",
+  "retained_negative_ids": [
+    "V6485-X2-N02"
+  ],
+  "rollback": "Retain the parser failure with zero credit; no repository rollback is required.",
+  "scope_boundary": "Owner-local read-only stale-label search only.",
+  "supersedes": [],
+  "title": "Quote JSON-like ripgrep alternations as PowerShell literals",
+  "trigger_preconditions": [
+    "A read-only ripgrep alternation contains JSON-like quotes under Windows PowerShell 5.1."
+  ],
+  "validation_witness_ids": []
+}

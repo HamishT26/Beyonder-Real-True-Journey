@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set the repository working directory explicitly or verify exact absolute owner-worktree paths before using relative probes.",
+  "failure_signature": "Relative verification paths resolve from a caller directory other than the intended worktree after files were copied successfully.",
+  "method_id": "V6485-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "tooling_truth",
+    "path_confinement",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Every post-copy relative probe declares its repository working directory.",
+  "retained_negative_ids": [
+    "V6485-X2-N01"
+  ],
+  "rollback": "Give the failed verification zero credit, then inspect only the exact intended files read-only.",
+  "scope_boundary": "Owner-local path verification only; no sibling or user path mutation.",
+  "supersedes": [],
+  "title": "Bind post-copy verification to the exact repository root",
+  "trigger_preconditions": [
+    "A bounded copy or generation step is followed by relative-path verification."
+  ],
+  "validation_witness_ids": []
+}
