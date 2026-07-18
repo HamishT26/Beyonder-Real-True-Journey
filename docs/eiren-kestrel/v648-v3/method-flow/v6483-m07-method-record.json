@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Write explicit UTF-8 without BOM and LF, parse files with UTF-8-aware validators, and inspect code points or decoded strings when glyph output is suspect.",
+  "failure_signature": "PowerShell console output renders valid UTF-8 Māori text as mojibake.",
+  "method_id": "V6483-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "cultural_text_integrity",
+    "utf8",
+    "source_hashes",
+    "privacy"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not edit valid source text merely to match a broken console rendering.",
+  "retained_negative_ids": [
+    "V6483-X1-N07"
+  ],
+  "rollback": "No source text was downgraded or transliterated.",
+  "scope_boundary": "Eiren v648-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Validate UTF-8 content from files rather than console glyph rendering",
+  "trigger_preconditions": [
+    "Repository files are UTF-8 but console code-page rendering is inconsistent."
+  ],
+  "validation_witness_ids": []
+}

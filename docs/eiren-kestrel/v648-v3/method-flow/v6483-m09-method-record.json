@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Pipe a PowerShell single-quoted literal here-string to python stdin so neither shell nor Python literals require nested escaping.",
+  "failure_signature": "Nested PowerShell and Python quote layers remove or unterminate string literals in a one-line diagnostic.",
+  "method_id": "V6483-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diagnostic_truth",
+    "no_repository_mutation",
+    "bounded_inspection"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Prefer a literal here-string for multi-line diagnostic code and keep it read-only.",
+  "retained_negative_ids": [
+    "V6483-X1-N09"
+  ],
+  "rollback": "Both failed diagnostics were read-only and produced no file or ref change.",
+  "scope_boundary": "Eiren v648-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use a PowerShell literal here-string for multi-language inline diagnostics",
+  "trigger_preconditions": [
+    "A read-only Python diagnostic contains many quoted search keys inside a PowerShell command string."
+  ],
+  "validation_witness_ids": []
+}

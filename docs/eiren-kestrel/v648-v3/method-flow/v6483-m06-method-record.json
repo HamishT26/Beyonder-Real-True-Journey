@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_lane",
+  "candidate_workaround": "Pass directory roots to rg and select files with one or more -g include expressions.",
+  "failure_signature": "Ripgrep receives a literal wildcard path on Windows and returns an invalid filename error.",
+  "method_id": "V6483-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diagnostic_truth",
+    "bounded_search",
+    "no_repository_mutation"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Reserve shell wildcard expansion assumptions for shells that document them; use rg-native globs on Windows.",
+  "retained_negative_ids": [
+    "V6483-X1-N06"
+  ],
+  "rollback": "The failed command was read-only and changed nothing.",
+  "scope_boundary": "Eiren v648-v3 workflow evidence only; no scientific, identity, authority, production, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use rg include globs instead of Windows wildcard path arguments",
+  "trigger_preconditions": [
+    "Multiple versioned files need a bounded content search in PowerShell."
+  ],
+  "validation_witness_ids": []
+}
