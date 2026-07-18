@@ -15,6 +15,7 @@ from ghc_family_v648_v6_runtime import CONTRACTS  # noqa: E402
 
 PHASE = ROOT / "docs" / "orin-thale" / "v648-v6"
 X1 = "3f6a64d239bdde1c38fea166db5eff0f2f3e1d89"
+EVIDENCE = "c13afb2e2753e820d4fc55735d51fa172f332483"
 
 
 def load(relative: str):
@@ -139,7 +140,11 @@ class TestGhcFamilyV648V6Evidence(unittest.TestCase):
     def test_negatives_and_gates_are_preserved(self) -> None:
         negatives = load("x2/retained-negative-register.json")
         gates = load("x2/gate-register.json")
-        self.assertEqual(negatives["effective_at_evidence"], 4471)
+        self.assertEqual(negatives["effective_at_evidence"], 4473)
+        self.assertEqual(negatives["effective_current"], 4482)
+        self.assertEqual(negatives["x2_operational"], 22)
+        self.assertEqual(negatives["evidence_commit_declared_effective"], 4471)
+        self.assertTrue(negatives["evidence_discrepancy_retained"])
         self.assertFalse(negatives["negative_erased"])
         self.assertEqual((gates["effective_open_gaps"], gates["effective_exact_gates"]), (32,33))
         self.assertEqual(gates["silently_closed"], 0)
@@ -152,7 +157,7 @@ class TestGhcFamilyV648V6Evidence(unittest.TestCase):
         self.assertFalse(evidence["canonical_successful_pass_used"])
         manifest = load("validation/evidence-staged-manifest.json")
         for entry in manifest["entries"]:
-            self.assertEqual(git("hash-object", f"--path={entry['path']}", entry["path"]), entry["git_blob"])
+            self.assertEqual(git("rev-parse", f"{EVIDENCE}:{entry['path']}"), entry["git_blob"])
 
 
 if __name__ == "__main__":

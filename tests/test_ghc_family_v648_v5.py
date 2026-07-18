@@ -17,6 +17,8 @@ import ghc_family_v648_v5_definitions as d  # noqa: E402
 
 PHASE = ROOT / "docs" / "sable-rook" / d.PHASE_SLUG
 X1_COMMIT = "8ca83ea35ecbc72b1a993e04bde6a1dde096f4b9"
+EVIDENCE_COMMIT = "7675f49a219b845da440cf80256720ec3ba33e87"
+PHASE_PREFIX = PHASE.relative_to(ROOT).as_posix()
 
 
 def load(relative: str):
@@ -145,12 +147,14 @@ class TestGhcFamilyV648V5Evidence(unittest.TestCase):
         self.assertEqual(receipt["checked_path_count"], len(paths))
         self.assertEqual(receipt["issues"], [])
         self.assertTrue(receipt["passed"])
-        for relative in paths:
+        for entry in manifest["entries"]:
             self.assertEqual(
-                git("rev-parse", f"{X1_COMMIT}:{relative}"),
-                git("hash-object", f"--path={relative}", relative),
-                relative,
+                git("rev-parse", f"{X1_COMMIT}:{entry['path']}"),
+                entry["git_blob"],
+                entry["path"],
             )
+        for relative in manifest["self_exclusions"]:
+            self.assertEqual(git("cat-file", "-e", f"{X1_COMMIT}:{relative}"), "")
 
     def test_negatives_method_flow_and_gates_preserve_every_failure(self) -> None:
         negatives = load("retained-negative-register-x2.json")
@@ -191,15 +195,15 @@ class TestGhcFamilyV648V5Evidence(unittest.TestCase):
         self.assertFalse(callers["external_caller_completeness_claim"])
 
     def test_evidence_manifest_privacy_and_exact_review(self) -> None:
-        manifest = load("validation/evidence-staged-manifest.json")
-        privacy = load("validation/evidence-staged-privacy.json")
-        review = load("validation/evidence-staged-review.json")
+        manifest = json.loads(git("show", f"{EVIDENCE_COMMIT}:{PHASE_PREFIX}/validation/evidence-staged-manifest.json"))
+        privacy = json.loads(git("show", f"{EVIDENCE_COMMIT}:{PHASE_PREFIX}/validation/evidence-staged-privacy.json"))
+        review = json.loads(git("show", f"{EVIDENCE_COMMIT}:{PHASE_PREFIX}/validation/evidence-staged-review.json"))
         self.assertEqual(manifest["hash_domain"], "git_hash_object_path_filtered_blob")
         self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
         self.assertEqual(len(manifest["self_exclusions"]), 3)
         for entry in manifest["entries"]:
             self.assertEqual(
-                git("hash-object", f"--path={entry['path']}", entry["path"]),
+                git("rev-parse", f"{EVIDENCE_COMMIT}:{entry['path']}"),
                 entry["git_blob"],
                 entry["path"],
             )

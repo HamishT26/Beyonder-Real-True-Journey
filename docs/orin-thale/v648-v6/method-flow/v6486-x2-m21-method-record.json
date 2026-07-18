@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Quarantine exact privacy-scanner definition files as candidates while rejecting matches in all payload files.",
+  "failure_signature": "An incremental privacy scanner treats its own regex rule definitions as confirmed payload leaks.",
+  "method_id": "V6486-X2-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["privacy", "postpass_no_replay", "validation_truth", "negative_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Separate exact scanner-definition surfaces from payload surfaces and report both counts.",
+  "retained_negative_ids": ["V6486-X2-N22"],
+  "rollback": "Retain the failed sealer, make no privacy pass claim, and do not rerun tests or the canonical scan.",
+  "scope_boundary": "Incremental post-pass privacy classification only; zero confirmed hits is not complete assurance.",
+  "supersedes": [],
+  "title": "Quarantine privacy scanner definitions from payload hits",
+  "trigger_preconditions": ["Changed validation scripts contain the privacy patterns they implement."],
+  "validation_witness_ids": []
+}

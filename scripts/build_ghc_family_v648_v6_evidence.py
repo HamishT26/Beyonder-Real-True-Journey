@@ -213,13 +213,15 @@ def build() -> None:
         "full_repository_suite_run":False,
         "canonical_successful_pass_used":False,
     })
+    operational = json.loads((PHASE / "validation/x2-operational-negatives.json").read_text(encoding="utf-8"))
+    x2_operational = int(operational["count"])
     write_json(PHASE / "x2/retained-negative-register.json", {
         "schema":"ghc.family.v648-v6.retained-negatives.evidence.v1",
         "inherited_sealed":4377,
         "x1_operational":13,
         "synthetic_rejected":70,
-        "x2_operational":11,
-        "effective_at_evidence":4471,
+        "x2_operational":x2_operational,
+        "effective_at_evidence":4377 + 13 + 70 + x2_operational,
         "negative_erased":False,
     })
     write_json(PHASE / "x2/gate-register.json", {

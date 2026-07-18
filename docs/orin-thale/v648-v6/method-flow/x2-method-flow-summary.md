@@ -2,9 +2,9 @@
 
 - Phase: v648-gmut-thos-v6-x1-x2
 - Owner: Orin Thale
-- Methods: 12
-- Passing witnesses: 11
-- Failed witnesses retained: 12
+- Methods: 21
+- Passing witnesses: 20
+- Failed witnesses retained: 21
 
 ## Preferred methods
 
@@ -95,6 +95,78 @@
 - Recurrence guard: Use literal search roots and -g filename filters for all Windows ripgrep calls.
 - Rollback: Retain both failed invocations and discard their partial output as a passing witness.
 - Witnesses: V6486-X2-M12-WFAIL, V6486-X2-M12-WPASS
+
+### V6486-X2-M13 — Parse Git divergence into numeric fields
+
+- Trigger: PowerShell consumes tab-separated Git divergence output.
+- Method: Parse the two divergence counts and compare them as numeric fields.
+- Recurrence guard: Parse native structured fields instead of comparing single-quoted control-character escapes.
+- Rollback: Retain the false-negative wrapper result while awarding no failed equality claim.
+- Witnesses: V6486-X2-M13-WFAIL, V6486-X2-M13-WPASS
+
+### V6486-X2-M14 — Reconcile aggregates from append-only negative ledgers
+
+- Trigger: An aggregate receipt and its source operational ledger disagree.
+- Method: Derive aggregate negative totals from the validated append-only operational ledger and retain any immutable earlier discrepancy explicitly.
+- Recurrence guard: Compute aggregate counts from validated source ledgers and require arithmetic parity before seal.
+- Rollback: Do not rewrite the immutable evidence commit; quarantine its stale aggregate and withhold final count credit until reconciled.
+- Witnesses: V6486-X2-M14-WFAIL, V6486-X2-M14-WPASS
+
+### V6486-X2-M15 — Measure decision-relevant successor batons before seal
+
+- Trigger: A generated activation baton has a declared 4,000-to-6,000-word contract.
+- Method: Add decision-relevant successor instructions and measure the generated baton before closeout writes.
+- Recurrence guard: Measure baton length before writes and require every added section to carry a decision, gate, or falsifier.
+- Rollback: Retain the failed build, leave routing unsent, and do not weaken the declared word contract.
+- Witnesses: V6486-X2-M15-WFAIL, V6486-X2-M15-WPASS
+
+### V6486-X2-M16 — Bind historical manifests to immutable Git objects
+
+- Trigger: Later lifecycle work legitimately edits paths that were present in an earlier manifest.
+- Method: Resolve manifest entries from their immutable commit object rather than hashing later working-tree files.
+- Recurrence guard: Bind every historical manifest assertion to its declared immutable Git commit.
+- Rollback: Retain the failed development run and award no manifest credit until commit-local comparison passes.
+- Witnesses: V6486-X2-M16-WFAIL, V6486-X2-M16-WPASS
+
+### V6486-X2-M17 — Bind in-process tests to the repository root
+
+- Trigger: A phase-local validator imports repository test modules from a script subdirectory.
+- Method: Insert the exact repository root at the front of sys.path before in-process unittest discovery.
+- Recurrence guard: Bind in-process discovery to the repository root and reject placeholder suites before execution.
+- Rollback: Retain the zero-test failed attempt, leave the successful-pass counter at zero, and do not claim a canonical pass.
+- Witnesses: V6486-X2-M17-WFAIL, V6486-X2-M17-WPASS
+
+### V6486-X2-M18 — Bind historical X1 suites to immutable commits
+
+- Trigger: A successor canonical selection includes X1 assertions from an earlier lifecycle boundary.
+- Method: Read X1 JSON, blobs, and changed paths from each phase's exact immutable X1 commit.
+- Recurrence guard: Declare an exact commit for every historical assertion and resolve its paths and blobs there.
+- Rollback: Retain the three failures and do not exclude, rewrite, or award canonical credit to the failed run.
+- Witnesses: V6486-X2-M18-WFAIL, V6486-X2-M18-WPASS
+
+### V6486-X2-M19 — Keep inherited immutability checks commit-local
+
+- Trigger: A successor legitimately updates a test file that was itself part of an inherited X1 manifest.
+- Method: Verify inherited X1 manifest entries and self-exclusions entirely at the exact historical X1 commit.
+- Recurrence guard: Verify historical manifests in their commit domain and review successor edits in the successor manifest.
+- Rollback: Retain the 66-of-67 failed run and do not revert the evidence-justified successor compatibility fix.
+- Witnesses: V6486-X2-M19-WFAIL, V6486-X2-M19-WPASS
+
+### V6486-X2-M20 — Keep inherited evidence manifests commit-local
+
+- Trigger: A successor edits a file that was included in an inherited evidence manifest.
+- Method: Resolve inherited evidence receipts and manifest entries from the exact historical evidence commit.
+- Recurrence guard: Resolve every historical evidence receipt and blob at the declared evidence commit.
+- Rollback: Retain the 10-of-11 failure and do not revert evidence-justified successor test changes.
+- Witnesses: V6486-X2-M20-WFAIL, V6486-X2-M20-WPASS
+
+### V6486-X2-M21 — Quarantine privacy scanner definitions from payload hits
+
+- Trigger: Changed validation scripts contain the privacy patterns they implement.
+- Method: Quarantine exact privacy-scanner definition files as candidates while rejecting matches in all payload files.
+- Recurrence guard: Separate exact scanner-definition surfaces from payload surfaces and report both counts.
+- Rollback: Retain the failed sealer, make no privacy pass claim, and do not rerun tests or the canonical scan.
+- Witnesses: V6486-X2-M21-WFAIL, V6486-X2-M21-WPASS
 
 ## Retained boundary
 

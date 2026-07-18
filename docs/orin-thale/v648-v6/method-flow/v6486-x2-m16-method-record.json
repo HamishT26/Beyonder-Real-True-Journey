@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Resolve manifest entries from their immutable commit object rather than hashing later working-tree files.",
+  "failure_signature": "A historical manifest test compares commit-local blobs to mutable successor working-tree bytes.",
+  "method_id": "V6486-X2-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["manifest_immutability", "lifecycle_separation", "validation_truth", "negative_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind every historical manifest assertion to its declared immutable Git commit.",
+  "retained_negative_ids": ["V6486-X2-N17"],
+  "rollback": "Retain the failed development run and award no manifest credit until commit-local comparison passes.",
+  "scope_boundary": "Commit-local Git object verification only.",
+  "supersedes": [],
+  "title": "Bind historical manifests to immutable Git objects",
+  "trigger_preconditions": ["Later lifecycle work legitimately edits paths that were present in an earlier manifest."],
+  "validation_witness_ids": []
+}

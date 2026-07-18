@@ -51,7 +51,11 @@ class TestGhcFamilyV648V6Closeout(unittest.TestCase):
     def test_final_negative_and_gate_candidates_preserve_counts(self) -> None:
         negatives = load("retained-negative-register-final.json")
         gates = load("exact-open-gate-register-final.json")
-        self.assertEqual(negatives["effective_at_evidence"], 4471)
+        self.assertEqual(negatives["effective_at_evidence"], 4473)
+        self.assertEqual(negatives["effective_current"], 4482)
+        self.assertEqual(negatives["x2_operational"], 22)
+        self.assertEqual(negatives["evidence_commit_declared_effective"], 4471)
+        self.assertTrue(negatives["evidence_discrepancy_retained"])
         self.assertFalse(negatives["negative_erased"])
         self.assertEqual((gates["effective_open_gaps"], gates["effective_exact_gates"]), (32,33))
         self.assertEqual(gates["silently_closed"], 0)

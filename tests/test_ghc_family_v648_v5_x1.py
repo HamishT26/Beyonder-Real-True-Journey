@@ -16,6 +16,8 @@ import ghc_family_v648_v5_definitions as d  # noqa: E402
 
 
 PHASE = ROOT / "docs" / "sable-rook" / d.PHASE_SLUG
+X1_COMMIT = "8ca83ea35ecbc72b1a993e04bde6a1dde096f4b9"
+PHASE_PREFIX = PHASE.relative_to(ROOT).as_posix()
 
 
 def load(relative: str):
@@ -180,8 +182,13 @@ class TestGhcFamilyV648V5X1(unittest.TestCase):
         self.assertEqual(staged["x2_outcome_paths"], [])
         self.assertTrue(staged["x1_only"])
         forbidden_keys = {"observed_disposition", "actual_outcome", "completed_at"}
-        for path in PHASE.rglob("*.json"):
-            payload = json.loads(path.read_text(encoding="utf-8"))
+        json_paths = [
+            path
+            for path in git("ls-tree", "-r", "--name-only", X1_COMMIT, "--", PHASE_PREFIX).splitlines()
+            if path.endswith(".json")
+        ]
+        for path in json_paths:
+            payload = json.loads(git("show", f"{X1_COMMIT}:{path}"))
             stack = [payload]
             while stack:
                 value = stack.pop()
@@ -192,21 +199,15 @@ class TestGhcFamilyV648V5X1(unittest.TestCase):
                     stack.extend(value)
 
     def test_x1_manifest_matches_filtered_git_blob_domain(self) -> None:
-        manifest = load("validation/x1-staged-manifest.json")
-        review = load("validation/x1-staged-review.json")
+        manifest = json.loads(git("show", f"{X1_COMMIT}:{PHASE_PREFIX}/validation/x1-staged-manifest.json"))
+        review = json.loads(git("show", f"{X1_COMMIT}:{PHASE_PREFIX}/validation/x1-staged-review.json"))
         entries = manifest["entries"]
         self.assertEqual(manifest["entry_count"], len(entries))
         self.assertEqual(len(manifest["self_exclusions"]), 3)
         for entry in entries:
-            observed = git(
-                "hash-object", f"--path={entry['path']}", entry["path"]
-            )
+            observed = git("rev-parse", f"{X1_COMMIT}:{entry['path']}")
             self.assertEqual(observed, entry["git_blob"], entry["path"])
-        current = set(filter(None, git("diff", "--name-only").splitlines()))
-        current.update(filter(None, git("diff", "--cached", "--name-only").splitlines()))
-        current.update(
-            filter(None, git("ls-files", "--others", "--exclude-standard").splitlines())
-        )
+        current = set(filter(None, git("diff-tree", "--no-commit-id", "--name-only", "-r", X1_COMMIT).splitlines()))
         covered = {row["path"] for row in entries} | set(manifest["self_exclusions"])
         self.assertEqual({path.replace("\\", "/") for path in current}, covered)
         self.assertEqual(review["intended_path_count"], len(covered))

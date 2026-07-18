@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Insert the exact repository root at the front of sys.path before in-process unittest discovery.",
+  "failure_signature": "An in-process unittest loader outside the repository import context returns one import-failure placeholder per requested module.",
+  "method_id": "V6486-X2-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["single_successful_pass", "test_selection", "validation_truth", "negative_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind in-process discovery to the repository root and reject placeholder suites before execution.",
+  "retained_negative_ids": ["V6486-X2-N18"],
+  "rollback": "Retain the zero-test failed attempt, leave the successful-pass counter at zero, and do not claim a canonical pass.",
+  "scope_boundary": "Authorized scoped unittest loading only; no full repository suite.",
+  "supersedes": [],
+  "title": "Bind in-process tests to the repository root",
+  "trigger_preconditions": ["A phase-local validator imports repository test modules from a script subdirectory."],
+  "validation_witness_ids": []
+}

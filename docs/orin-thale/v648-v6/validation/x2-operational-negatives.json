@@ -1,6 +1,6 @@
 {
   "all_retained": true,
-  "count": 13,
+  "count": 22,
   "negatives": [
     {
       "negative_id": "V6486-X2-N01",
@@ -105,6 +105,78 @@
       "recovery": "Apply the same literal-root and -g rule to both repository and skill-bank searches before another retry.",
       "passing": "The corrected searches used exact directory roots and glob filters and completed without path-parser faults.",
       "recurrence_guard": "Treat the first native wildcard-path fault as an immediate global guard for all remaining Windows searches in the phase."
+    },
+    {
+      "negative_id": "V6486-X2-N14",
+      "category": "powershell_literal_escape_comparison",
+      "failed": "The first post-evidence four-way equality wrapper printed identical local, upstream, tracking, and live hashes with zero divergence, but then exited nonzero because a single-quoted tab escape was compared as literal text.",
+      "recovery": "Split the divergence output on whitespace and compare the two parsed numeric fields independently.",
+      "passing": "The first diagnostic had already printed clean state; the corrected read-only proof then confirmed zero-ahead and zero-behind plus exact four-way hash equality while the required negative-retention files were pending.",
+      "recurrence_guard": "Do not compare control-character output to a single-quoted PowerShell escape literal; parse structured fields."
+    },
+    {
+      "negative_id": "V6486-X2-N15",
+      "category": "evidence_negative_aggregate_fixed_count_drift",
+      "failed": "The immutable evidence commit retained a 13-item X2 operational ledger but its generated aggregate retained-negative receipt still hardcoded 11 and therefore declared 4,471 instead of the evidence-boundary effective 4,473.",
+      "recovery": "Keep the evidence commit and exact manifest immutable, disclose the discrepancy, make the builder read the append-only ledger count, and reconcile the final receipt from the then-current 15-item lifecycle ledger while permitting later failures to append.",
+      "passing": "The final candidate distinguishes the stale evidence declaration, the actual evidence-boundary count, and the current lifecycle count, while the corrected builder no longer hardcodes X2 failures.",
+      "recurrence_guard": "Derive aggregate negative totals from the validated append-only operational ledger and test component parity before sealing."
+    },
+    {
+      "negative_id": "V6486-X2-N16",
+      "category": "successor_baton_word_floor",
+      "failed": "The first closeout builder stopped before writing the successor baton because the substantive activation text contained 2,932 words, below the preregistered 4,000-word floor.",
+      "recovery": "Add concrete source, novelty, validation, privacy, Method Flow, authority, workload, rollback, and terminal-routing instructions without padding, duplication, or exceeding 6,000 words.",
+      "passing": "The corrected closeout build produced a sanitized repository-relative activation baton within the 4,000-to-6,000-word contract.",
+      "recurrence_guard": "Measure generated baton text before closeout writes and keep each section tied to a successor decision or falsifier."
+    },
+    {
+      "negative_id": "V6486-X2-N17",
+      "category": "historical_manifest_worktree_binding",
+      "failed": "A development evidence test compared immutable evidence-manifest blob IDs to later closeout working-tree bytes, so one of 18 checks failed after legitimate lifecycle edits.",
+      "recovery": "Resolve every evidence-manifest path at the exact immutable evidence commit and compare that Git object ID to the recorded manifest blob.",
+      "passing": "The corrected test validates all evidence entries against the evidence commit while final staged review separately governs later bytes.",
+      "recurrence_guard": "Bind historical manifest assertions to their immutable commit, never the mutable successor worktree."
+    },
+    {
+      "negative_id": "V6486-X2-N18",
+      "category": "canonical_loader_repository_root_missing",
+      "failed": "The first canonical attempt ran zero tests because its in-process unittest loader lacked the repository root on sys.path and counted six import-failure placeholders instead of 67 cases.",
+      "recovery": "Insert the exact repository root at the front of sys.path before loading the six authorized modules, then require a 67-case count before execution.",
+      "passing": "The corrected canonical validator selected and ran all 67 authorized cases with no replay; the successful-pass counter remained zero until that complete pass.",
+      "recurrence_guard": "Bind in-process test discovery to the repository root and reject placeholder import suites before execution."
+    },
+    {
+      "negative_id": "V6486-X2-N19",
+      "category": "canonical_historical_x1_worktree_binding",
+      "failed": "The next 67-case canonical attempt ran completely but failed three X1 assertions because inherited v648-v5 and current v648-v6 historical tests compared X1 manifests or forbidden-key scope to the live successor worktree.",
+      "recovery": "Keep all 67 authorized tests, bind both X1 suites to their exact immutable X1 commits for JSON scope, blob identity, and changed-path parity, and retain later lifecycle bytes for final review.",
+      "passing": "The corrected historical X1 assertions passed against commit-local Git objects without broadening exclusions or rewriting either X1 commit.",
+      "recurrence_guard": "Every historical phase assertion must declare and read its immutable commit domain rather than infer it from the active worktree."
+    },
+    {
+      "negative_id": "V6486-X2-N20",
+      "category": "inherited_evidence_x1_worktree_hash_binding",
+      "failed": "A later 67-case attempt passed 66 checks but the inherited v648-v5 evidence suite still compared Sable X1 blobs to the successor-edited compatibility copy of its X1 test file.",
+      "recovery": "Compare each Sable X1 manifest entry to its recorded blob at the exact Sable X1 commit and verify self-excluded paths exist there, leaving later compatibility edits to final staged review.",
+      "passing": "The corrected inherited evidence assertion validates Sable X1 entirely in its commit-local domain and no longer treats a legitimate successor test fix as X1 drift.",
+      "recurrence_guard": "Inherited evidence immutability tests must verify the historical commit, not require the active successor checkout to remain byte-identical forever."
+    },
+    {
+      "negative_id": "V6486-X2-N21",
+      "category": "inherited_evidence_manifest_worktree_binding",
+      "failed": "A targeted v648-v5 evidence run passed 10 of 11 checks but its evidence-manifest assertion still hashed the successor-edited copy of the inherited test file instead of Sable's immutable evidence blob.",
+      "recovery": "Load Sable's evidence manifest, privacy receipt, and review from the exact evidence commit and compare each entry to its revision:path Git object.",
+      "passing": "All 11 inherited evidence checks passed in Sable's commit-local evidence domain while successor edits remained governed by Orin's final manifest.",
+      "recurrence_guard": "Historical evidence manifests, like X1 manifests, must resolve every assertion at their declared immutable commit."
+    },
+    {
+      "negative_id": "V6486-X2-N22",
+      "category": "postpass_privacy_definition_misclassification",
+      "failed": "The first post-pass sealer stopped because its incremental privacy scan classified regex definitions in two changed validator scripts as credential, private-route, and transcript payload hits.",
+      "recovery": "Quarantine exact scanner-definition files as candidates, keep them counted and reviewable, and continue to reject the same patterns in every nondefinition payload file.",
+      "passing": "The corrected incremental sealer reported definition candidates separately and zero confirmed payload hits without rerunning tests or the canonical scan.",
+      "recurrence_guard": "Privacy scanners must distinguish exact rule-definition surfaces from payload surfaces while preserving both counts."
     }
   ],
   "schema": "ghc.family.v648-v6.x2-operational-negatives.v1"

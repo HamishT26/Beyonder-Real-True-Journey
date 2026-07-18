@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -42,7 +43,14 @@ def incremental_privacy(paths: list[str]) -> dict:
         "private_route_or_callable": re.compile(r"(?i)(private_route|callable_identifier|browser_send_submitted_response_active)"),
         "transcript_or_session_stream": re.compile(r"(?i)(session_stream|raw_transcript|conversation_export)"),
     }
+    definition_paths = {
+        "scripts/build_ghc_family_v648_v6_evidence.py",
+        "scripts/build_ghc_family_v648_v6_postpass.py",
+        "scripts/ghc_family_v648_v6_staged_review.py",
+        "scripts/ghc_family_v648_v6_validate.py",
+    }
     confirmed = []
+    definition_candidates = []
     parsed = 0
     for relative in paths:
         path = ROOT / relative
@@ -56,9 +64,18 @@ def incremental_privacy(paths: list[str]) -> dict:
             json.loads(text)
             parsed += 1
         for pattern_class, pattern in patterns.items():
-            if pattern.search(text) and relative != "docs/orin-thale/v648-v6/validation/final-staged-privacy.json":
+            if not pattern.search(text):
+                continue
+            if relative in definition_paths:
+                definition_candidates.append({"path":relative,"pattern_class":pattern_class})
+            elif relative != "docs/orin-thale/v648-v6/validation/final-staged-privacy.json":
                 confirmed.append({"path":relative,"pattern_class":pattern_class})
-    return {"pattern_classes":sorted(patterns),"confirmed_hits":confirmed,"json_parses":parsed}
+    return {
+        "pattern_classes":sorted(patterns),
+        "confirmed_hits":confirmed,
+        "definition_candidates":definition_candidates,
+        "json_parses":parsed,
+    }
 
 
 def build() -> None:
@@ -144,6 +161,8 @@ def build() -> None:
         "schema":"ghc.family.v648-v6.final-incremental-privacy.v1",
         "scanned_path_count":len(paths)+len(exclusions),
         "pattern_classes":scan["pattern_classes"],
+        "definition_candidate_count":len(scan["definition_candidates"]),
+        "definition_candidates":scan["definition_candidates"],
         "confirmed_hit_count":0,
         "confirmed_hits":[],
         "canonical_scan_rerun":False,
@@ -170,5 +189,27 @@ def build() -> None:
     })
 
 
+def privacy_preflight() -> None:
+    exclusions = [
+        "docs/orin-thale/v648-v6/validation/final-staged-manifest.json",
+        "docs/orin-thale/v648-v6/validation/final-staged-privacy.json",
+        "docs/orin-thale/v648-v6/validation/final-staged-review.json",
+    ]
+    paths = [path for path in status_paths() if path not in exclusions]
+    scan = incremental_privacy(paths + exclusions)
+    if scan["confirmed_hits"]:
+        raise RuntimeError(f"incremental privacy hits: {scan['confirmed_hits']}")
+    print(json.dumps({
+        "scanned_paths":len(paths) + len(exclusions),
+        "pattern_classes":len(scan["pattern_classes"]),
+        "definition_candidates":len(scan["definition_candidates"]),
+        "confirmed_hits":0,
+        "canonical_scan_rerun":False,
+    }, sort_keys=True))
+
+
 if __name__ == "__main__":
-    build()
+    if "--privacy-only" in sys.argv[1:]:
+        privacy_preflight()
+    else:
+        build()

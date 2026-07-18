@@ -13,6 +13,8 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 PHASE = ROOT / "docs" / "orin-thale" / "v648-v6"
 MODULES = [
     "tests.test_ghc_family_v648_v5_x1",
@@ -67,11 +69,15 @@ def privacy(files: list[Path]) -> tuple[int, list[dict[str, str]]]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=PHASE / "validation/canonical-pass-result.json")
+    parser.add_argument("--selection-only", action="store_true")
     args = parser.parse_args()
     suite = unittest.defaultTestLoader.loadTestsFromNames(MODULES)
     selected = suite.countTestCases()
     if selected != 67:
         raise RuntimeError(f"expected 67 selected tests, found {selected}")
+    if args.selection_only:
+        print(json.dumps({"selected_tests": selected, "modules": MODULES, "tests_executed": 0}, sort_keys=True))
+        return
     stream = io.StringIO()
     result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
     if not result.wasSuccessful():
@@ -101,7 +107,7 @@ def main() -> None:
         outcomes["proposal_count"] == 10,
         outcomes["distribution"] == {"completed":6,"represented":2,"open_gap":1,"exact_gate":1},
         outcomes["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
-        negatives["effective_at_evidence"] == 4471,
+        negatives["effective_at_evidence"] == 4473 and negatives["effective_current"] == 4482 and negatives["x2_operational"] == 22 and negatives["evidence_commit_declared_effective"] == 4471 and negatives["evidence_discrepancy_retained"] is True,
         negatives["negative_erased"] is False,
         gates["effective_open_gaps"] == 32,
         gates["effective_exact_gates"] == 33,

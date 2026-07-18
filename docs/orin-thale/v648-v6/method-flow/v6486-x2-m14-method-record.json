@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Derive aggregate negative totals from the validated append-only operational ledger and retain any immutable earlier discrepancy explicitly.",
+  "failure_signature": "An aggregate evidence receipt hardcodes an operational-negative count that drifts below its append-only source ledger.",
+  "method_id": "V6486-X2-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["negative_retention", "manifest_immutability", "validation_truth", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Compute aggregate counts from validated source ledgers and require arithmetic parity before seal.",
+  "retained_negative_ids": ["V6486-X2-N15"],
+  "rollback": "Do not rewrite the immutable evidence commit; quarantine its stale aggregate and withhold final count credit until reconciled.",
+  "scope_boundary": "Append-only negative-count reconciliation only.",
+  "supersedes": [],
+  "title": "Reconcile aggregates from append-only negative ledgers",
+  "trigger_preconditions": ["An aggregate receipt and its source operational ledger disagree."],
+  "validation_witness_ids": []
+}
