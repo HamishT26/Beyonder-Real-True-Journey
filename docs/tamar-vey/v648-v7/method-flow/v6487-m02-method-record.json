@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Materialize PowerShell loop output into an array before piping it to JSON conversion.",
+  "failure_signature": "A PowerShell foreach statement was piped directly and failed at parse time before any receipt read.",
+  "method_id": "V6487-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["evidence_credit", "failure_retention", "receipt_integrity", "x1_x2_separation"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use an explicit array assignment around foreach results before a pipeline.",
+  "retained_negative_ids": ["V6487-X1-N02"],
+  "rollback": "Credit no output from the parser-failed attempt and preserve it as a negative.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Materialize PowerShell loop results before piping",
+  "trigger_preconditions": ["A bounded PowerShell receipt wrapper needs loop output in a pipeline."],
+  "validation_witness_ids": []
+}

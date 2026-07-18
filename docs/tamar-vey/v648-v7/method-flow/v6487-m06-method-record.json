@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use a compact post-fast-forward probe for branch, head, clean status, ancestry, tracking, divergence, and live remote equality.",
+  "failure_signature": "The successful fast-forward emitted an overlarge inherited change summary that the tool display truncated.",
+  "method_id": "V6487-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["remote_equality", "clean_state", "failure_retention", "bounded_output"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat verbose fast-forward output as lifecycle noise and prove state with a separate compact exact probe.",
+  "retained_negative_ids": ["V6487-X1-N06"],
+  "rollback": "Give the truncated summary no proof credit; do not repeat the fast-forward.",
+  "scope_boundary": "Bounded owner-scoped lifecycle recovery only; no independent reproduction credit.",
+  "supersedes": [],
+  "title": "Prove fast-forward state with a compact postflight",
+  "trigger_preconditions": ["A successful additive fast-forward emits an unbounded inherited diffstat."],
+  "validation_witness_ids": []
+}

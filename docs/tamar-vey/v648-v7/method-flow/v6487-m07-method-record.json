@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Configure the child process stdout stream explicitly as UTF-8 before emitting proposal titles.",
+  "failure_signature": "A read-only proposal-term scan stopped on a non-ASCII title because the default console encoder was not UTF-8.",
+  "method_id": "V6487-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["novelty_integrity", "failure_retention", "bounded_output", "language_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Set explicit UTF-8 for machine-readable child-process output containing repository text.",
+  "retained_negative_ids": ["V6487-X1-N07"],
+  "rollback": "Credit no complete novelty scan from the interrupted output and retain the encoding fault.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no semantic novelty credit until a passing scan completes.",
+  "supersedes": [],
+  "title": "Use explicit UTF-8 for proposal audit output",
+  "trigger_preconditions": ["Repository proposal titles may contain non-ASCII text."],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Move the receipt write into the manifest function and inspect enclosing function boundaries plus AST before execution.",
+  "failure_signature": "A context-based patch placed the staged-review receipt write inside the post-scan promotion function with out-of-scope manifest locals.",
+  "method_id": "V6487-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["manifest_integrity", "failure_retention", "scope_integrity", "x1_freeze"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "After context-based patches, inspect enclosing function boundaries rather than relying on syntax alone.",
+  "retained_negative_ids": ["V6487-X1-N12"],
+  "rollback": "Do not execute the misplaced source; retain the defect and correct it additively before retry.",
+  "scope_boundary": "Bounded owner-scoped source repair only; no x1 or validation credit until a passing witness exists.",
+  "supersedes": [],
+  "title": "Verify function scope after context-based patching",
+  "trigger_preconditions": ["A multi-function source file receives a context-based patch near repeated call shapes."],
+  "validation_witness_ids": []
+}

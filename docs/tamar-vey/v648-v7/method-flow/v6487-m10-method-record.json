@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Promote privacy recovery only after a complete generated-surface preview and require a final scan covering the new promotion evidence.",
+  "failure_signature": "A privacy recovery was promoted before all generated x1 definition surfaces existed; the later scan found five propagated definition candidates.",
+  "method_id": "V6487-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["privacy_integrity", "failure_retention", "promotion_order", "scanner_strength"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never promote before the full generated surface exists and a post-promotion final scan can cover the evidence files.",
+  "retained_negative_ids": ["V6487-X1-N11"],
+  "rollback": "Demote the method, keep x1 uncommitted, and retain both the premature pass and later failed scan.",
+  "scope_boundary": "Bounded owner-scoped ordering recovery only; no complete privacy assurance.",
+  "supersedes": [],
+  "title": "Order privacy promotion behind complete-surface generation",
+  "trigger_preconditions": ["A privacy pass would add new Method Flow evidence files to the surface it claims to cover."],
+  "validation_witness_ids": []
+}

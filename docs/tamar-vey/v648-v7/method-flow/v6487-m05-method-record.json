@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use the exact checked-out final worktree for checkout-byte verification and immutable commit objects for historical blob verification.",
+  "failure_signature": "A cat-file filters probe was assumed to reproduce checkout EOL conversion and instead mismatched every declared checkout-byte count.",
+  "method_id": "V6487-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["manifest_integrity", "failure_retention", "no_replay", "source_read_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not treat cat-file filters output as a historical checkout-byte reconstruction contract.",
+  "retained_negative_ids": ["V6487-X1-N05"],
+  "rollback": "Give the failed reconstruction no proof credit and do not create a temporary replay lane.",
+  "scope_boundary": "Bounded owner-scoped verification only; no replay or independent reproduction credit.",
+  "supersedes": [],
+  "title": "Verify checkout bytes only in an exact checked-out domain",
+  "trigger_preconditions": ["Checkout-byte parity is needed without creating a replay lane."],
+  "validation_witness_ids": []
+}

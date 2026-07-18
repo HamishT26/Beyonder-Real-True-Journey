@@ -1,0 +1,23 @@
+# v648-v7 source ledger
+
+- **SRC-LIVE-REQUEST** — Hamish current v648-v7 activation and committed Orin baton (current, live_authority). Controls solo ownership, x1-before-x2, one successful canonical pass, no replay, privacy, authority, and terminal route.
+- **SRC-RFC9110** — RFC 9110 HTTP Semantics (stable, official_standard). Defines Retry-After syntax and semantics; it does not authorize retrying unsafe or non-idempotent actions.
+- **SRC-RFC9773** — RFC 9773 ACME Renewal Information (stable, official_standard). Provides a bounded capped-backoff example; it is not a universal retry policy.
+- **SRC-REEH-SCHLIEDER-PRIMARY** — Strohmaier, Verch, and Wollenberg on analytic microlocal spectrum and Reeh-Schlieder (stable, primary_research). Supports formal theorem obligations only, not an empirical GMUT result or operational state-preparation claim.
+- **SRC-MAST-TESS** — MAST TESS Data Products (current, official_data_archive). Describes official TESS products and quality context; this phase downloads and analyzes no real observation.
+- **SRC-NZPOST-LOSS** — NZ Post cover for loss or damage (current, primary_operator_source). Provides operator context for loss and damage processes without delegating any real delivery or remedy authority.
+- **SRC-NZPOST-PRIVACY** — NZ Post Privacy Centre (current, primary_operator_source). Confirms address and delivery data are personal information; software fixtures make no real disclosure decision.
+- **SRC-RFC7643** — RFC 7643 SCIM Core Schema (stable, official_standard). Defines SCIM resource and attribute characteristics; synthetic conformance is not live identity assurance.
+- **SRC-RFC7644** — RFC 7644 SCIM Protocol (stable, official_standard). Defines SCIM HTTP operations, PATCH, versioning and bulk behavior without proving interoperability or safe production deprovisioning.
+- **SRC-RFC8794** — RFC 8794 Extensible Binary Meta Language (stable, official_standard). Defines EBML structure for bounded fixtures; it is not exhaustive decoder security assurance.
+- **SRC-WAI-ARIA12** — WAI-ARIA 1.2 (stable, official_standard). Defines combobox roles and state relationships while implementation and user evaluation remain separate.
+- **SRC-WAI-ARIA13-DRAFT** — WAI-ARIA 1.3 Working Draft (draft, official_draft). Watched as draft only and not flattened into the stable 1.2 contract.
+- **SRC-WAI-COMBOBOX** — WAI-ARIA Authoring Practices Combobox Pattern (current, official_guidance). Supports structural and keyboard design checks; APG examples are not complete accessibility conformance.
+- **SRC-WCAG22** — Web Content Accessibility Guidelines 2.2 (stable, official_standard). Supports declared structural obligations while manual and affected-user evaluation remain reserved.
+- **SRC-FICK-PRIMARY** — Adolf Fick, On Liquid Diffusion (stable, primary_research). Supports the physical diffusion relationship only, never a psyche, agency, cultural, or value conversion.
+- **SRC-IUPAC-DIFFUSION** — IUPAC Gold Book diffusion definition (stable, official_terminology). Supplies domain terminology without establishing any new physical or psychological law.
+- **SRC-COCHRANE-ITS** — Cochrane interrupted time-series analysis training (current, official_method_guidance). Identifies dependence and seasonality obligations; it is not participant evidence or Stage 20 authority.
+- **SRC-NZ-PRIVACY** — New Zealand Privacy Commissioner Privacy Act principles (current, official_authority). Real address, household, correction, disclosure, and remedy decisions require competent human authority and affected-person consideration.
+- **SRC-TE-MANA-RARAUNGA** — Te Mana Raraunga principles of Māori data sovereignty (stable, primary_authority_source). Māori data and concepts remain under Māori governance; software confers no Māori authority.
+- **SRC-OPENAI-CODEX** — OpenAI Codex CLI getting started (watch, official_product_channel). Supports version-channel observation only; this phase performs no CLI or desktop update.
+- **SRC-OPENAI-DESKTOP** — OpenAI Codex app announcement (current, official_product). Confirms the Windows app surface; the installed build is observed locally and not updated.

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Verify commit-local Git blob identity separately from the declared working-tree checkout-byte domain.",
+  "failure_signature": "The first manifest verifier compared working-tree checkout-byte counts with raw Git blob sizes and falsely classified four entries as mismatches.",
+  "method_id": "V6487-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["manifest_integrity", "failure_retention", "hash_domain", "checkout_domain"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read manifest domain metadata before comparing hashes or byte counts.",
+  "retained_negative_ids": ["V6487-X1-N04"],
+  "rollback": "Withdraw the false mismatch classification and retain the domain error.",
+  "scope_boundary": "Bounded owner-scoped verification only; no independent reproduction credit.",
+  "supersedes": [],
+  "title": "Separate Git blob identity from checkout-byte counts",
+  "trigger_preconditions": ["A manifest declares different hash and checkout-byte domains."],
+  "validation_witness_ids": []
+}

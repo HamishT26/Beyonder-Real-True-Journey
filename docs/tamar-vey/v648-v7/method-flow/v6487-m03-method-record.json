@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Inspect receipt types and keys before indexing optional manifest entries, then emit compact type-specific summaries.",
+  "failure_signature": "A broad receipt wrapper indexed entries on non-manifest JSON, emitted nonterminating errors, and produced truncated output.",
+  "method_id": "V6487-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["evidence_credit", "failure_retention", "receipt_integrity", "bounded_output"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Branch on schema or keys before indexing optional arrays and bound output by receipt type.",
+  "retained_negative_ids": ["V6487-X1-N03"],
+  "rollback": "Discard unsupported fields from the broad summary and retain the wrapper fault.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Use type-aware bounded receipt summaries",
+  "trigger_preconditions": ["Heterogeneous JSON receipts require a read-only summary."],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Classify the preview as scanner output, run a complete pre-promotion scan, add recovery evidence, and run a second post-promotion scan before freeze.",
+  "failure_signature": "The final scan treated two privacy class labels in its own preview receipt as payload, while an earlier witness had already described the final scan as passed.",
+  "method_id": "V6487-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["privacy_integrity", "failure_retention", "scanner_output", "promotion_order"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Quarantine scanner-output receipts explicitly and never describe a later scan as passed before it executes.",
+  "retained_negative_ids": ["V6487-X1-N14"],
+  "rollback": "Keep x1 uncommitted, retain the recursive candidates and premature witness, and require a post-promotion scan.",
+  "scope_boundary": "Bounded owner-scoped scanner-output recovery only; zero confirmed hits is not complete privacy assurance.",
+  "supersedes": [],
+  "title": "Break scanner-output recursion with post-promotion coverage",
+  "trigger_preconditions": ["A scanner receipt is itself included in the surface and Method Flow evidence is generated from its result."],
+  "validation_witness_ids": []
+}
