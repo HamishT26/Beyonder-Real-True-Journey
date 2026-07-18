@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assign foreach output to an array, then pipe the array to the consumer.",
+  "failure_signature": "Windows PowerShell raises EmptyPipeElement when a foreach statement is piped directly after a statement block.",
+  "method_id": "V6483R2-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "inspection_truth",
+    "negative_retention",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use $rows=@(foreach(...){...}); $rows | ConvertTo-Json and never direct foreach-to-pipeline composition.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N02",
+    "V6483R2-X1-N03",
+    "V6483R2-X1-N04"
+  ],
+  "rollback": "Retain the parser failure and replace only the orchestration form, not the underlying inspection.",
+  "scope_boundary": "PowerShell enumeration orchestration only.",
+  "supersedes": [],
+  "title": "Materialize PowerShell foreach output before pipelines",
+  "trigger_preconditions": [
+    "A PowerShell command needs to serialize objects produced by foreach."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Compute the total from its authoritative component counts and validate the same equation.",
+  "failure_signature": "A projected retained-negative total remains hard-coded after the operational-negative list grows.",
+  "method_id": "V6483R2-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "retained_negatives",
+    "negative_non_erasure",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never hand-update a derived negative total; retain components and calculate the projection at generation time.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N10"
+  ],
+  "rollback": "Retain the stale receipt and block the freeze until the recomputed total and component counts agree.",
+  "scope_boundary": "Bookkeeping correction only; it does not transform a failed result into a pass.",
+  "supersedes": [],
+  "title": "Dynamic retained-negative arithmetic",
+  "trigger_preconditions": [
+    "A phase derives an effective total from inherited, operational, and synthetic negative counts."
+  ],
+  "validation_witness_ids": []
+}

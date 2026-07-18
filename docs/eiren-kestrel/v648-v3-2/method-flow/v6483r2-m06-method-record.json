@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use datetime.astimezone with the configured Windows timezone and verify its UTC offset is plus twelve or plus thirteen hours.",
+  "failure_signature": "Python cannot resolve the Pacific/Auckland IANA key because the optional tzdata package is absent on Windows.",
+  "method_id": "V6483R2-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "timestamp_truth",
+    "host_change_boundary",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not install tzdata merely for a phase timestamp; fail closed if the configured local offset is not a valid New Zealand offset.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N08"
+  ],
+  "rollback": "Retain the missing-zone failure and omit local-time credit if the configured offset check fails.",
+  "scope_boundary": "Timestamp rendering only; it does not change the host timezone or install a package.",
+  "supersedes": [],
+  "title": "Windows-local New Zealand timestamp fallback",
+  "trigger_preconditions": [
+    "A phase timestamp needs New Zealand local time on a host already configured to that timezone."
+  ],
+  "validation_witness_ids": []
+}

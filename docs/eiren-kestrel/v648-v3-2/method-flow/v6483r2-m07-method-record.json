@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read and validate the exact frozen enum rather than substituting a reviewer-local synonym.",
+  "failure_signature": "A validator rejects a valid frozen route because it expects an unfrozen synonym for the same message mode.",
+  "method_id": "V6483R2-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "route_truth",
+    "x1_freeze_integrity",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat serialized lifecycle enums as contracts and centralize or import them when practical.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N09"
+  ],
+  "rollback": "Retain the failed review and keep the freeze blocked until validator and frozen contract agree exactly.",
+  "scope_boundary": "Route-mode vocabulary only; no message has been sent.",
+  "supersedes": [],
+  "title": "Exact frozen route-enum validation",
+  "trigger_preconditions": [
+    "A phase contract serializes a route or lifecycle enum that later validators must inspect."
+  ],
+  "validation_witness_ids": []
+}

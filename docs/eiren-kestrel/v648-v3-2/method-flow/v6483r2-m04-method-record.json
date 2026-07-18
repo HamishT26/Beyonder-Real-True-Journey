@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Select the maximum with an explicit numeric-score key and report the payload separately.",
+  "failure_signature": "A diagnostic max operation compares payload dictionaries after equal numeric scores tie.",
+  "method_id": "V6483R2-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diagnostic_truth",
+    "semantic_novelty",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never rely on tuple fallback ordering when later tuple fields are mappings or heterogeneous objects.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N06"
+  ],
+  "rollback": "Give the failed diagnostic zero evidence credit and rerun the same data with numeric-key ordering.",
+  "scope_boundary": "Local diagnostic ordering only; it does not change the novelty threshold.",
+  "supersedes": [],
+  "title": "Explicit numeric-key selection for tied diagnostics",
+  "trigger_preconditions": [
+    "A diagnostic ranks tuples containing a score and a structured payload."
+  ],
+  "validation_witness_ids": []
+}

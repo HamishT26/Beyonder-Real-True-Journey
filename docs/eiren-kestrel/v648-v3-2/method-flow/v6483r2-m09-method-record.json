@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Classify only exact reviewed scanner-definition paths separately while retaining payload-hit treatment everywhere else.",
+  "failure_signature": "A staged privacy scan treats a scanner's literal pattern definition as a confirmed payload hit.",
+  "method_id": "V6483R2-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "raw_identifier_exclusion",
+    "exact_staged_surface"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep a narrow exact scanner-definition set; never exempt a directory, wildcard, generated artifact, or unrelated script.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N11"
+  ],
+  "rollback": "Retain the failed scan and keep the commit blocked if any candidate occurs outside an exact scanner-definition path.",
+  "scope_boundary": "Literal scanner definitions only; zero structural hits are not complete privacy assurance.",
+  "supersedes": [],
+  "title": "Exact scanner-definition privacy disposition",
+  "trigger_preconditions": [
+    "A staged source file contains the exact privacy regular expressions it executes."
+  ],
+  "validation_witness_ids": []
+}

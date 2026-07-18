@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set PYTHONUTF8=1 before process launch and rerun unchanged content.",
+  "failure_signature": "A Python diagnostic fails while printing macron-bearing text through the Windows cp1252 console encoder.",
+  "method_id": "V6483R2-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "unicode_integrity",
+    "maori_authority_text",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before launching Unicode-emitting diagnostics; never transliterate valid source text to satisfy a console locale.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N07"
+  ],
+  "rollback": "Retain the encoding failure and rerun the unchanged diagnostic only under explicit UTF-8.",
+  "scope_boundary": "Console encoding recovery only; it confers no cultural authority or content approval.",
+  "supersedes": [],
+  "title": "Pre-launch UTF-8 for Unicode diagnostics",
+  "trigger_preconditions": [
+    "A Windows child process may print te reo Maori or other non-ASCII source text."
+  ],
+  "validation_witness_ids": []
+}

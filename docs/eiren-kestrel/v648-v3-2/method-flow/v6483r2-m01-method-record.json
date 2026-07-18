@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run each probe independently and normalize only the documented expected no-match exit.",
+  "failure_signature": "An aggregate preflight aborts because one read-only discovery command returns an expected no-match exit.",
+  "method_id": "V6483R2-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "startup_truth",
+    "drive_state",
+    "exact_head",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not aggregate unrelated read-only probes under fail-fast Promise.all when one command uses exit 1 for no matches.",
+  "retained_negative_ids": [
+    "V6483R2-X1-N01"
+  ],
+  "rollback": "Give the aggregate wrapper zero evidence credit and rerun only the required probes independently.",
+  "scope_boundary": "Local read-only preflight orchestration only.",
+  "supersedes": [],
+  "title": "Independent receipts for expected no-match probes",
+  "trigger_preconditions": [
+    "A preflight combines instruction discovery with unrelated drive or Git probes."
+  ],
+  "validation_witness_ids": []
+}
