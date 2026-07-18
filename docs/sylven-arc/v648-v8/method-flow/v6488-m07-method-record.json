@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m07",
+  "title": "Bounded Git status decomposition",
+  "failure_signature": "A combined status, head, branch, and recursive directory probe exceeded its short wrapper timeout before producing output.",
+  "trigger_preconditions": [
+    "A large Windows worktree is queried with several Git and recursive filesystem operations in one wrapper.",
+    "The wrapper timeout is shorter than the combined cold-path latency."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Split the probe into narrow Git commands and count staged and unstaged paths without recursive directory enumeration.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use one bounded purpose per status probe and never treat a timeout as clean-state evidence.",
+  "rollback": "Retain the timeout as an operational negative and make no state claim from it.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "clean state",
+    "exact head",
+    "terminal validation"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-002"
+  ],
+  "scope_boundary": "Read-only owner-lane state inspection only; no repository mutation."
+}

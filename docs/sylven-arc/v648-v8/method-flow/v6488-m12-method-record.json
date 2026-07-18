@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m12",
+  "title": "Unittest discovery root-path guard",
+  "failure_signature": "The closeout preflight counted one failed-import placeholder per module because the repository root was absent from the builder's module search path.",
+  "trigger_preconditions": [
+    "A script under scripts loads repository test modules by dotted name.",
+    "Only the script directory is present on the interpreter module path."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local",
+  "candidate_workaround": "Add the repository root to the builder module path before loading test names and reject implausibly small selected counts.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Inspect loaded identifiers and require the authorized selection to exceed the known inherited floor before staging.",
+  "rollback": "Discard the nine-placeholder count, retain the candidate artifacts as superseded preflight output, and regenerate before canonical use.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "authorized scoped test selection",
+    "single canonical pass",
+    "source-local exclusions"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-007"
+  ],
+  "scope_boundary": "Test-name discovery only; no canonical test pass occurred."
+}

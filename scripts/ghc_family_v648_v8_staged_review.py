@@ -13,6 +13,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/sylven-arc/v648-v8/"
+PRIVACY_PATTERNS = {
+    "raw_uuid": re.compile(rb"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
+    "private_local_path": re.compile(rb"(?:[A-Z]:\\Users\\|/Users/|/home/)[^\s\"']+", re.I),
+    "private_uri": re.compile(rb"(?:codex|chatgpt|vscode|file)://", re.I),
+    "credential_assignment": re.compile(rb"(?:api[_-]?key|password|secret|token)\s*[:=]\s*[\"'][^\"']+[\"']", re.I),
+    "delegation_markup": re.compile(rb"<\/?codex_delegation\b", re.I),
+}
+
+
+def scanner_definition(path: str, source_line: bytes) -> bool:
+    return path.startswith("scripts/") and "v648_v8" in path and b"re.compile(" in source_line
 
 
 def git(*args: str, text: bool = True) -> str | bytes:
@@ -69,13 +80,6 @@ def main() -> int:
     x2_path_markers = ("/x2/", "evidence-receipt", "closeout-receipt", "seal-receipt", "core-outcome-ledger")
     x2_paths = [path for path in candidate_paths if any(marker in path for marker in x2_path_markers)] if args.stage == "x1" else []
 
-    patterns = {
-        "raw_uuid": re.compile(rb"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
-        "private_local_path": re.compile(rb"(?:[A-Z]:\\Users\\|/Users/|/home/)[^\s\"']+", re.I),
-        "private_uri": re.compile(rb"(?:codex|chatgpt|vscode|file)://", re.I),
-        "credential_assignment": re.compile(rb"(?:api[_-]?key|password|secret|token)\s*[:=]\s*[\"'][^\"']+[\"']", re.I),
-        "delegation_markup": re.compile(rb"<\/?codex_delegation\b", re.I),
-    }
     candidates: list[dict[str, str]] = []
     scanner_definition_candidates: list[dict[str, str]] = []
     confirmed_hits: list[dict[str, str]] = []
@@ -92,7 +96,7 @@ def main() -> int:
         if path.endswith(".json"):
             json.loads(data.decode("utf-8"))
             json_parses += 1
-        for name, pattern in patterns.items():
+        for name, pattern in PRIVACY_PATTERNS.items():
             for match in pattern.finditer(data):
                 line_start = data.rfind(b"\n", 0, match.start()) + 1
                 line_end = data.find(b"\n", match.end())
@@ -101,7 +105,7 @@ def main() -> int:
                 source_line = data[line_start:line_end]
                 candidate = {"path": path, "pattern_class": name}
                 candidates.append(candidate)
-                if path == "scripts/ghc_family_v648_v8_staged_review.py" and b"re.compile(" in source_line:
+                if scanner_definition(path, source_line):
                     scanner_definition_candidates.append(candidate)
                 else:
                     confirmed_hits.append(candidate)
@@ -112,7 +116,7 @@ def main() -> int:
         "entry_count": len(entries), "entries": entries, "self_exclusions": self_exclusions,
     })
     write_json(privacy_path, {
-        "schema": schema + ".privacy.v1", "stage": args.stage, "pattern_class_count": len(patterns),
+        "schema": schema + ".privacy.v1", "stage": args.stage, "pattern_class_count": len(PRIVACY_PATTERNS),
         "scanned_file_count": len(candidate_paths), "candidate_count": len(candidates),
         "scanner_definition_candidate_count": len(scanner_definition_candidates),
         "scanner_definition_candidates": scanner_definition_candidates,
@@ -124,7 +128,7 @@ def main() -> int:
         "expected_staged_path_count": len(entries) + len(self_exclusions), "manifest_entry_count": len(entries),
         "self_exclusion_count": len(self_exclusions), "staged_json_parse_count": json_parses,
         "out_of_scope_paths": out_of_scope, "x2_implementation_or_outcome_paths": x2_paths,
-        "privacy_pattern_class_count": len(patterns), "privacy_confirmed_hit_count": len(confirmed_hits),
+        "privacy_pattern_class_count": len(PRIVACY_PATTERNS), "privacy_confirmed_hit_count": len(confirmed_hits),
         "path_scope_passed": not out_of_scope, "x1_only_passed": not x2_paths,
         "blob_capture_passed": True, "diff_hygiene_passed": True,
         "passed": not out_of_scope and not x2_paths and not confirmed_hits,

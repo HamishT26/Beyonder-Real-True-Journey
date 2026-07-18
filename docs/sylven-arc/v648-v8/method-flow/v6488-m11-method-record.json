@@ -1,0 +1,25 @@
+{
+  "method_id": "v6488-m11",
+  "title": "Search no-match exit discriminator",
+  "failure_signature": "A diagnostic ripgrep query returned exit code one because its inferred compact patterns did not occur, and the wrapper surfaced that as a script failure.",
+  "trigger_preconditions": [
+    "A read-only search is used to locate implementation details.",
+    "No-match is possible and the wrapper treats every nonzero exit as a tooling fault."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Read the exact known file when its path is already available, or explicitly distinguish no-match from execution error.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use a no-match-aware wrapper for discovery searches and never infer file absence from an overcompressed pattern.",
+  "rollback": "Retain the failed search and make no content claim from it.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "privacy scanner review",
+    "single-pass validation preparation"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-006"
+  ],
+  "scope_boundary": "Read-only source inspection only."
+}

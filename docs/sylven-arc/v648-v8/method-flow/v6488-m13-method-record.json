@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m13",
+  "title": "Index-tree revision materializer",
+  "failure_signature": "The owner-manifest checker passed a colon as though it were a tree revision, but git ls-tree requires a materialized tree-ish.",
+  "trigger_preconditions": [
+    "A checker accepts a revision and the intended domain is the current Git index.",
+    "Index stage syntax is confused with a tree object accepted by ls-tree."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Materialize the exact index with git write-tree and pass the resulting tree object to the revision checker.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Use stage syntax only for individual index paths; use an exact write-tree object for index-wide tree operations.",
+  "rollback": "Retain the failed check, make no manifest-parity claim from it, and leave the staged index unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "owner-manifest parity",
+    "exact staged tree",
+    "single canonical pass"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-008"
+  ],
+  "scope_boundary": "Read-only validation of the owned staged tree only."
+}

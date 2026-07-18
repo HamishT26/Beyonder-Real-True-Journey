@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m09",
+  "title": "Method Flow validate-option guard",
+  "failure_signature": "The validation subcommand was called with the summarizer output option instead of its receipt option after ledger updates had already succeeded.",
+  "trigger_preconditions": [
+    "Several Method Flow subcommands are composed in one wrapper.",
+    "Different subcommands expose similar but nonidentical output option names."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_local",
+  "candidate_workaround": "Read subcommand help and call validate with --receipt while reserving --json-output for summarize.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Resolve each Method Flow subcommand schema independently before composing lifecycle wrappers.",
+  "rollback": "Do not duplicate the already-recorded methods or witnesses; resume from ledger state and regenerate validation and summary receipts.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "Method Flow schema validity",
+    "failed-witness retention",
+    "closeout completeness"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-004"
+  ],
+  "scope_boundary": "Phase-local Method Flow CLI use only; no scientific or production claim."
+}

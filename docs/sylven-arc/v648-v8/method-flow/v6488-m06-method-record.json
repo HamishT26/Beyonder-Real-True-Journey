@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m06",
+  "title": "PowerShell live-remote line parser",
+  "failure_signature": "An inline PowerShell split expression treated command output as a collection expression and reduced the live remote hash to one character.",
+  "trigger_preconditions": [
+    "git ls-remote output is embedded directly in a parenthesized split expression.",
+    "PowerShell collection and operator precedence is not made explicit."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Capture exactly one ls-remote output line first, then split that scalar line on whitespace and require a forty-hex-character hash.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Validate live hash length and hexadecimal form before comparing it with local, upstream, and tracking heads.",
+  "rollback": "Discard the malformed one-character value and make no remote-equality claim from it.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "fresh live remote equality",
+    "push verification",
+    "terminal route"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-X2-003"
+  ],
+  "scope_boundary": "Read-only Git remote parsing only; no repository or remote mutation."
+}

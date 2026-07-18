@@ -1,0 +1,25 @@
+{
+  "method_id": "v6488-m08",
+  "title": "Method Flow flat-layout locator",
+  "failure_signature": "A read-only probe assumed records and witnesses lived in nested directories although the phase stores them directly under method-flow.",
+  "trigger_preconditions": [
+    "A prior phase layout is inferred without reading the current phase file list.",
+    "Several guessed paths are read in one wrapper."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "List the exact current method-flow directory first and read the discovered flat filenames literally.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Discover current ledger-adjacent paths before reading method and witness records.",
+  "rollback": "Retain the path errors and make no content claim from missing files.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "failed-witness retention",
+    "Method Flow completeness"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-003"
+  ],
+  "scope_boundary": "Read-only phase-local file discovery only; no repository mutation."
+}

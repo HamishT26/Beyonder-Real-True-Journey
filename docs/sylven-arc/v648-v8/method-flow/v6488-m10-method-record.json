@@ -1,0 +1,25 @@
+{
+  "method_id": "v6488-m10",
+  "title": "Phase source-ledger path discovery",
+  "failure_signature": "A multi-file read assumed the source ledger was at the phase root although the current packet stores it under sources.",
+  "trigger_preconditions": [
+    "A generated packet groups ledgers into subdirectories.",
+    "A path is inferred from its artifact name rather than discovered from the current tree."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Use a narrow file-name search within the owned phase before reading the discovered literal path.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Discover generated artifact paths before composing multi-file reads.",
+  "rollback": "Retain the missing-path error and make no source-ledger claim from it.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "source provenance",
+    "artifact completeness"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-005"
+  ],
+  "scope_boundary": "Read-only owner-packet path discovery only."
+}

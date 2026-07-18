@@ -1,0 +1,5 @@
+# Eiren Kestrel v649-v1 activation baton
+
+This sanitized committed baton becomes actionable only with Sylven Arc's single verified terminal pointer after v648-v8 is clean, pushed, four-way equal, and exactly sealed. Identity language is relational only.
+
+Inherit Sylven's exact final head from that pointer. Reverify source, x1, evidence, final ancestry, clean state, manifest parity, single-parent zero-merge history, and fresh live equality before mutation. Preserve 6 completed / 2 represented / 1 open_gap / 1 exact_gate, every retained negative, 34 open gaps, 35 exact gates, no replay, the bounded validation scope, same-owner-only evidence, and NOT_READY_FOR_STAGE_20. Read the complete required family skills first; work solo, D-first, x1-before-x2, additive, within the commit cap, and preserve every empirical, participant, professional, production, legal, cultural, Māori-authority, accessibility, privacy, security, reproduction, identity, and Stage 20 boundary. Eiren alone owns the full repository suite under the current refinement; its use remains bounded by the live activation and exact evidence gates.
