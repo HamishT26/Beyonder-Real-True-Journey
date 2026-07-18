@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Build the current intended surface from cached, unstaged, and untracked path sets before comparing coverage.",
+  "failure_signature": "A post-stage coverage check reads only unstaged and untracked paths and reports the entire cached surface as absent.",
+  "method_id": "V6484-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_surface",
+    "manifest_coverage",
+    "x1_tree",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer the staged surface from git diff without --cached after index mutation.",
+  "retained_negative_ids": [
+    "V6484-X1-N04"
+  ],
+  "rollback": "Retain the failed suite, leave staged blobs unchanged, and rerun only after the coverage-domain fix is staged.",
+  "scope_boundary": "Git path-set accounting only; it does not change artifact contents or outcome claims.",
+  "supersedes": [],
+  "title": "Union cached unstaged and untracked paths for staged coverage",
+  "trigger_preconditions": [
+    "An exact staged manifest is validated after git add while the worktree itself has no remaining unstaged paths."
+  ],
+  "validation_witness_ids": []
+}

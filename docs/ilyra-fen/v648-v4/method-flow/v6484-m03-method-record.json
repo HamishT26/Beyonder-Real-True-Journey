@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read the runner-produced state after witness ingestion and request only the remaining validated-to-preferred transition.",
+  "failure_signature": "A builder requests candidate-to-validated after the runner has already promoted the method on a passing witness.",
+  "method_id": "V6484-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "method_state_truth",
+    "failed_witness_retention",
+    "append_only_meaning",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat runner state transitions as authoritative; never replay an already-applied transition.",
+  "retained_negative_ids": [
+    "V6484-X1-N03"
+  ],
+  "rollback": "Retain the failed builder run, delete no witness, and rebuild the uncommitted ledger from its declared inputs.",
+  "scope_boundary": "Method Flow orchestration only; no scientific or authority gate is affected.",
+  "supersedes": [],
+  "title": "Respect Method Flow automatic witness promotion",
+  "trigger_preconditions": [
+    "A method is recorded as candidate and the family runner ingests a bounded passing witness."
+  ],
+  "validation_witness_ids": []
+}

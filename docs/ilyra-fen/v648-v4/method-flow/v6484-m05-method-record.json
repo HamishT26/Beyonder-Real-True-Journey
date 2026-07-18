@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Classify only the exact scanner implementation and exact privacy receipt as scanner-definition surfaces.",
+  "failure_signature": "A regenerated privacy scan reads its previous receipt and treats scanner-class names in that exact receipt as payload hits.",
+  "method_id": "V6484-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "raw_identifier_exclusion",
+    "exact_staged_surface",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never exempt a directory, wildcard, unrelated receipt, or arbitrary generated output from privacy adjudication.",
+  "retained_negative_ids": [
+    "V6484-X1-N05"
+  ],
+  "rollback": "Retain the failed scan and keep the x1 commit blocked until zero non-definition candidates remain.",
+  "scope_boundary": "Exact scanner metadata only; zero confirmed hits is not complete privacy assurance.",
+  "supersedes": [],
+  "title": "Exact self-referential privacy receipt disposition",
+  "trigger_preconditions": [
+    "A privacy receipt is a declared self-exclusion and already exists from a prior uncommitted builder run."
+  ],
+  "validation_witness_ids": []
+}

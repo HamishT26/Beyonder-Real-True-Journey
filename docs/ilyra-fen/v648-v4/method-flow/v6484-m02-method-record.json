@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Inspect the exact serialized keys, bind the declared field, and preserve the source receipt unchanged.",
+  "failure_signature": "A version probe binds an assumed property and returns null because the committed receipt uses a different exact field name.",
+  "method_id": "V6484-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "version_truth",
+    "schema_integrity",
+    "source_immutability",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never infer receipt property names from prose when the committed schema is available.",
+  "retained_negative_ids": [
+    "V6484-X1-N02"
+  ],
+  "rollback": "Retain the null result and give it no version evidence credit.",
+  "scope_boundary": "Schema-binding recovery only; it performs no application update.",
+  "supersedes": [],
+  "title": "Inspect serialized receipt schema before property binding",
+  "trigger_preconditions": [
+    "A current phase reads a structured receipt produced by an earlier phase or builder."
+  ],
+  "validation_witness_ids": []
+}

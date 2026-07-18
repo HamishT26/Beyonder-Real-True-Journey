@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run each Git command as a separate statement, capture LASTEXITCODE, and assemble the receipt only after every probe returns.",
+  "failure_signature": "A compound PowerShell proof embeds command and exit-code capture inside one parenthesized expression and fails at parse time.",
+  "method_id": "V6484-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "source_truth",
+    "ancestry",
+    "remote_equality",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not place command invocation and LASTEXITCODE capture inside the same parenthesized assignment.",
+  "retained_negative_ids": [
+    "V6484-X1-N01"
+  ],
+  "rollback": "Give the failed wrapper zero credit and rerun only the read-only probes as independent statements.",
+  "scope_boundary": "Read-only PowerShell orchestration only; no repository or remote state is changed.",
+  "supersedes": [],
+  "title": "Split PowerShell Git proof from exit-code assembly",
+  "trigger_preconditions": [
+    "Several Git ancestry probes must be combined into one sanitized receipt on Windows PowerShell."
+  ],
+  "validation_witness_ids": []
+}
