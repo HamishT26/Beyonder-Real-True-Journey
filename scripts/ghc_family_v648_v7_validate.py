@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 """Single successful canonical scoped validator for the assembled v648-v7 candidate."""
 
-import argparse, json, re, subprocess, sys
+import argparse, json, re, subprocess, sys, unittest
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1]; PHASE=ROOT/'docs/tamar-vey/v648-v7'; sys.path.insert(0,str(ROOT/'scripts'))
+ROOT=Path(__file__).resolve().parents[1]; PHASE=ROOT/'docs/tamar-vey/v648-v7'; sys.path.insert(0,str(ROOT)); sys.path.insert(0,str(ROOT/'scripts'))
 from build_ghc_family_v648_v7_evidence import git
 import ghc_family_v648_v7_x2_state as x2
 def load(p): return json.loads((PHASE/p).read_text(encoding='utf-8'))
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--output',type=Path,required=True); args=ap.parse_args()
-    plan=load('validation/final-validation-plan.json'); cmd=[sys.executable,'-B','-m','unittest',*plan['test_modules']]
+    plan=load('validation/final-validation-plan.json')
+    def ids(suite):
+        rows=[]
+        for item in suite:
+            rows.extend(ids(item) if isinstance(item,unittest.TestSuite) else [item.id()])
+        return rows
+    selected=[name for name in ids(unittest.defaultTestLoader.loadTestsFromNames(plan['test_modules'])) if name not in set(plan['excluded_source_local_tests'])]
+    if len(selected)!=plan['selected_test_count']: raise RuntimeError(f"expected {plan['selected_test_count']} selected tests, found {len(selected)}")
+    cmd=[sys.executable,'-B','-m','unittest',*selected]
     tests=subprocess.run(cmd,cwd=ROOT,capture_output=True,text=True,encoding='utf-8'); combined=tests.stdout+tests.stderr
     if tests.returncode: raise RuntimeError(combined[-4000:])
     m=re.search(r'Ran (\d+) tests',combined); test_count=int(m.group(1)) if m else -1
