@@ -39,6 +39,7 @@ SCANNER_DEFINITIONS = {
     "scripts/build_ghc_family_v648_v3_2_preregistration.py",
     "scripts/ghc_family_v648_v3_2_staged_review.py",
     "scripts/ghc_family_v648_v3_2_x1_review.py",
+    "scripts/ghc_family_v648_v3_2_validation_runner.py",
 }
 
 
