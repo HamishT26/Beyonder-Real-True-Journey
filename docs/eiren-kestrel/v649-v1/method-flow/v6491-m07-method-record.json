@@ -1,0 +1,27 @@
+{
+  "method_id": "v6491-m07",
+  "title": "Repository-root import preflight for script-hosted suite runner",
+  "failure_signature": "The plan-only full-suite selector launched from the scripts directory and could not import the repository tests package.",
+  "trigger_preconditions": [
+    "A Python runner stored under scripts imports repository test modules.",
+    "The runner is launched by file path rather than module mode."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_plan_only_recovery",
+  "candidate_workaround": "Insert the resolved repository root into sys.path before importing test modules, then rerun only the plan-only selector.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Every script-hosted test selector must assert that its repository root is present in sys.path before discovery and must provide a nonexecuting plan-only mode.",
+  "rollback": "Retain the import failure with zero suite credit, amend only the launcher path, and rerun plan-only discovery without executing tests.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "one canonical full-suite pass",
+    "no replay",
+    "exact exclusions",
+    "failure retention"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6491-CLOSE-002"
+  ],
+  "scope_boundary": "Plan-only import and selection recovery; no repository test executed and no canonical, replay, or independent-reproduction credit."
+}

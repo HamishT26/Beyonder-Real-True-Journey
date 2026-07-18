@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v649-v1
 
 Owner: **Eiren Kestrel**
-Generated UTC: `2026-07-18T23:09:09.504856+00:00`
+Generated UTC: `2026-07-18T23:49:50.348142+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 342 | 17 | 1091 | 17 |
+| Repository scripts | 342 | 17 | 1108 | 17 |
 | Local skills | 114 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

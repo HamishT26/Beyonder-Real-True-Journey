@@ -2,9 +2,9 @@
 
 - Phase: v649-gmut-thos-v1-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 5
-- Passing witnesses: 5
-- Failed witnesses retained: 5
+- Methods: 7
+- Passing witnesses: 7
+- Failed witnesses retained: 7
 
 ## Preferred methods
 
@@ -47,6 +47,22 @@
 - Recurrence guard: Before each focused test run, regenerate the retained-negative register after all newly recorded Method Flow failures and assert the category sum as well as the total.
 - Rollback: Retain the failed focused run with zero canonical credit, restore category-consistent accounting, and rerun the bounded preflight only.
 - Witnesses: v6491-m05-wfail-01, v6491-m05-wpass-01
+
+### v6491-m06 — Exact validation-plan read without wildcard roots
+
+- Trigger: A closeout preflight needs exact inherited validation exclusions.; Search scope spans a known phase plan and optionally version-filtered scripts.
+- Method: Read the exact inherited final-validation-plan directly and use a concrete scripts root with -g only if supporting implementation lookup is still necessary.
+- Recurrence guard: Run a pre-execution argument check that rejects wildcard characters in every rg root argument; exact known files must be read directly.
+- Rollback: Discard the partial lookup, retain error 123, and perform one exact-file read for the authoritative exclusion list.
+- Witnesses: v6491-m06-wfail-01, v6491-m06-wpass-01
+
+### v6491-m07 — Repository-root import preflight for script-hosted suite runner
+
+- Trigger: A Python runner stored under scripts imports repository test modules.; The runner is launched by file path rather than module mode.
+- Method: Insert the resolved repository root into sys.path before importing test modules, then rerun only the plan-only selector.
+- Recurrence guard: Every script-hosted test selector must assert that its repository root is present in sys.path before discovery and must provide a nonexecuting plan-only mode.
+- Rollback: Retain the import failure with zero suite credit, amend only the launcher path, and rerun plan-only discovery without executing tests.
+- Witnesses: v6491-m07-wfail-01, v6491-m07-wpass-01
 
 ## Retained boundary
 
