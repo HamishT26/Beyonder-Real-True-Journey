@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-M11",
+  "title": "Refresh lifecycle receipts before rerunning an aggregate",
+  "failure_signature": "A broad x1 rerun followed a targeted assertion correction before the new Method Flow pass witness and manifest refresh, so the aggregate reported expected ledger and blob-parity failures.",
+  "trigger_preconditions": [
+    "A correction mutates tests or Method Flow after an earlier manifest was generated."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Withhold aggregate credit, complete the pending fail/pass Method Flow lifecycle, validate and summarize it, then regenerate the manifest before retry.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "After any Method Flow or covered-file mutation, refresh lifecycle receipts and the exact manifest before a broad validation attempt.",
+  "rollback": "Retain the premature aggregate as a failure and do not treat its passing subtests as an aggregate pass.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "manifest_parity",
+    "method_flow_parity"
+  ],
+  "retained_negative_ids": [
+    "V6486-X1-N11"
+  ],
+  "scope_boundary": "Bounded validation sequencing recovery only; no scientific, authority, or independent-reproduction credit."
+}

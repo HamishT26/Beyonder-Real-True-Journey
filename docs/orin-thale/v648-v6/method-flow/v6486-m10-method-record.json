@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-M10",
+  "title": "Recover mechanical owner-origin drift without erasing its failed witness",
+  "failure_signature": "The first x1 suite expected Sable's successor-origin label even though the generated v648-v6 packet correctly used Orin's owner label.",
+  "trigger_preconditions": [
+    "A mechanically adapted successor test retains a predecessor owner token."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Correct only the owner-origin assertion to orin_v648_v6_new and rerun the bounded x1 suite.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Audit owner, slug, branch, and origin tokens independently after mechanical phase-number replacement.",
+  "rollback": "Give the failing suite no pass credit, retain the mismatch, and keep the generated packet unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "owner_attribution"
+  ],
+  "retained_negative_ids": [
+    "V6486-X1-N10"
+  ],
+  "scope_boundary": "Bounded owner-label correction only; no inherited evidence, authority, or completion credit."
+}

@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-M12",
+  "title": "Move quote-bearing staged review out of inline PowerShell",
+  "failure_signature": "An inline PowerShell staged-review command failed to parse an embedded quote-bearing privacy regex before Git staging ran.",
+  "trigger_preconditions": [
+    "Exact staged review combines Python regex syntax with Windows PowerShell string parsing."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use a dedicated UTF-8 Python runner with explicit staged-blob, manifest, JSON, diff-hygiene, and scanner-definition domains.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not embed quote-bearing privacy regexes inside a PowerShell inline Python string.",
+  "rollback": "Retain the parser fault, confirm the index is unchanged, and stage only after the dedicated runner and manifest are current.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "exact_staged_files",
+    "privacy_scan",
+    "json_parsing",
+    "diff_hygiene"
+  ],
+  "retained_negative_ids": [
+    "V6486-X1-N12"
+  ],
+  "scope_boundary": "Bounded owner-scoped staged review only; zero hits is not complete privacy assurance."
+}

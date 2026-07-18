@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run compact exact head, branch, clean, divergence, tracking, and live-remote probes after the successful fast-forward and push.",
+  "failure_signature": "Fast-forward output emitted a very large inherited change summary that was truncated and therefore earned no proof credit.",
+  "method_id": "V6486-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Suppress or separate inherited change summaries; validate state with compact exact probes.",
+  "retained_negative_ids": [
+    "V6486-X1-N03"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover unbounded_status_output without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v648-v6 workflow exposes unbounded_status_output."
+  ],
+  "validation_witness_ids": []
+}

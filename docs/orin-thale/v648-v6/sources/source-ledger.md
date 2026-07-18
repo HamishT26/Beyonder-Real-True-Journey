@@ -1,0 +1,21 @@
+# v648-v6 source ledger
+
+- **SRC-LIVE-REQUEST** — Hamish current v648-v6 activation and committed Sable baton (current, live_authority). Controls solo ownership, no replay, x1-before-x2, four-commit cap, platform exclusions, privacy, and terminal route.
+- **SRC-RFC7464** — RFC 7464 JSON Text Sequences (stable, official_standard). Defines record-separator framed UTF-8 JSON text sequences; it does not establish safe parsing for all inputs.
+- **SRC-JLD-PRIMARY** — Bros and Epstein on Jost-Lehmann-Dyson representation and causality (stable, primary_research). Supports formal causal and analytic obligations only, not empirical GMUT evidence.
+- **SRC-XRISM-HEASARC** — NASA HEASARC XRISM Archive (current, official_data). Exposes an official archive surface and prerequisites, not a GMUT likelihood or observation used here.
+- **SRC-WORKSAFE-EVENTS** — WorkSafe New Zealand managing risks at events (current, official_authority). Supplies general event-risk obligations; software fixtures confer no safety or workplace authority.
+- **SRC-RFC9396** — RFC 9396 OAuth 2.0 Rich Authorization Requests (stable, official_standard). Defines authorization_details syntax and processing; synthetic vectors are not production authorization evidence.
+- **SRC-RFC9207** — RFC 9207 OAuth 2.0 Authorization Server Issuer Identification (stable, official_standard). Provides an adjacent issuer-binding obligation without proving identity, authentication, or trust.
+- **SRC-OAUTH21-DRAFT** — IETF OAuth 2.1 Authorization Framework draft (draft, official_draft). A live draft is monitored as work in progress and not flattened into settled authority.
+- **SRC-TIFF6** — TIFF Revision 6.0 specification (stable, official_specification_copy). Defines TIFF headers, IFDs, fields, strips and tiles for bounded structural fixtures.
+- **SRC-LOC-TIFF** — Library of Congress TIFF format description (stable, official_format_description). Supplies preservation and format context without providing exhaustive decoder security.
+- **SRC-W3C-TABLES** — W3C WAI Tables Tutorial (current, official_guidance). Supports structural table association patterns while manual and affected-user evaluation remain reserved.
+- **SRC-WCAG22** — Web Content Accessibility Guidelines 2.2 (stable, official_standard). Structural checks cover only declared obligations and cannot close manual or affected-user evaluation.
+- **SRC-NIST-PLANCK** — NIST Technical Note 910-8 radiance temperature and Planck law (stable, primary_official_reference). Supports physical radiance definitions and units only, never a psyche or value conversion.
+- **SRC-ICH-E9R1** — ICH E9(R1) estimands and sensitivity analysis training material (stable, official_guideline). Identifies intercurrent-event and estimand obligations; it is not participant evidence or Stage 20 authority.
+- **SRC-NZ-PRIVACY** — New Zealand Privacy Commissioner obligations guidance (current, official_authority). Real privacy, correction, harm, disclosure, and remedy decisions require competent human authority and affected-person consideration.
+- **SRC-TE-MANA-RARAUNGA** — Te Mana Raraunga principles of Māori data sovereignty (stable, primary_authority_source). Māori data and concepts remain under Māori governance; software confers no Māori authority.
+- **SRC-TE-PAPA-REPATRIATION** — Te Papa domestic repatriation programme (current, primary_authority_context). Demonstrates authority and relationship dependencies around cultural material without delegating them to this phase.
+- **SRC-OPENAI-CODEX** — OpenAI Codex official repository and package channel (watch, official_package). CLI version status may be observed, but this phase performs no application update.
+- **SRC-OPENAI-CODEX-APP** — OpenAI Codex app announcement (current, official_product). Confirms the app surface; the installed desktop build is verified locally and not updated.

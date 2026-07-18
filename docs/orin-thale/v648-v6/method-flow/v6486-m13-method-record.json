@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-M13",
+  "title": "Require diff hygiene before staged-review credit",
+  "failure_signature": "The dedicated staged review reached git diff --cached --check, which rejected an extra blank line at EOF in the new runner.",
+  "trigger_preconditions": [
+    "A newly added x1 runner is staged for exact review."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Trim only the extra trailing blank line, preserve one final newline, regenerate covered hashes, and restage the exact surface.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Run diff hygiene on every new runner before awarding staged-review credit.",
+  "rollback": "Retain the failed review and do not award path, JSON, privacy, or staged aggregate credit from the attempt.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "diff_hygiene",
+    "exact_staged_files",
+    "manifest_parity",
+    "evidence_credit"
+  ],
+  "retained_negative_ids": [
+    "V6486-X1-N13"
+  ],
+  "scope_boundary": "Owner-created runner whitespace only; no inherited or user content is changed."
+}
