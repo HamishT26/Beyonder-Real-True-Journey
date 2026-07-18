@@ -2,9 +2,9 @@
 
 - Phase: v648-v8
 - Owner: Sylven Arc
-- Methods: 13
-- Passing witnesses: 13
-- Failed witnesses retained: 13
+- Methods: 14
+- Passing witnesses: 14
+- Failed witnesses retained: 14
 
 ## Preferred methods
 
@@ -111,6 +111,14 @@
 - Recurrence guard: Use stage syntax only for individual index paths; use an exact write-tree object for index-wide tree operations.
 - Rollback: Retain the failed check, make no manifest-parity claim from it, and leave the staged index unchanged.
 - Witnesses: v6488-m13-wfail-01, v6488-m13-wpass-01
+
+### v6488-m14 — Quote-stable exact-head verifier
+
+- Trigger: Python source with nested quote-sensitive expressions is transported through a shell command string.; The exact-head audit depends on the transported source parsing unchanged.
+- Method: Store the bounded verifier as a reviewed repository script and invoke it by filename with explicit commit arguments.
+- Recurrence guard: Do not embed nested f-string expressions in cross-shell inline source for terminal evidence gates.
+- Rollback: Retain the syntax error, make no commit-manifest claim from it, and preserve the separately passing owner-manifest result.
+- Witnesses: v6488-m14-wfail-01, v6488-m14-wpass-01
 
 ## Retained boundary
 

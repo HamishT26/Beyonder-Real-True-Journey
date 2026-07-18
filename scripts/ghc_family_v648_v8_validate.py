@@ -140,8 +140,8 @@ def main() -> int:
         load("validation/final-staged-review.json")["path_scope_passed"] is True,
         load("validation/final-staged-review.json")["diff_hygiene_passed"] is True,
         load("retained-negative-register-final.json")["negative_erased"] is False,
-        load("retained-negative-register-final.json")["effective_total"] >= 4664,
-        load("method-flow/method-flow-summary.json")["counts"]["witness_results"]["fail"] >= 13,
+        load("retained-negative-register-final.json")["effective_total"] >= 4665,
+        load("method-flow/method-flow-summary.json")["counts"]["witness_results"]["fail"] >= 14,
     ]
     if len(detailed) != plan["detailed_check_count"] or len(minimal) != plan["minimal_check_count"]:
         raise RuntimeError(f"validator count contract mismatch: {len(detailed)} detailed, {len(minimal)} minimal")

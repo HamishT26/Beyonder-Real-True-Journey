@@ -32,7 +32,7 @@ class TestGhcFamilyV648V8Closeout(unittest.TestCase):
     def test_negative_and_gate_truth(self):
         negatives = load("retained-negative-register-final.json")
         gates = load("exact-open-gate-register-final.json")
-        self.assertGreaterEqual(negatives["effective_total"], 4664)
+        self.assertGreaterEqual(negatives["effective_total"], 4665)
         self.assertFalse(negatives["negative_erased"])
         self.assertEqual((gates["effective_open_gaps"], gates["effective_exact_gates"]), (34, 35))
         self.assertEqual(gates["silently_closed"], 0)
@@ -44,7 +44,7 @@ class TestGhcFamilyV648V8Closeout(unittest.TestCase):
 
     def test_method_flow_retains_failures(self):
         summary = load("method-flow/method-flow-summary.json")
-        self.assertGreaterEqual(summary["counts"]["methods"], 13)
+        self.assertGreaterEqual(summary["counts"]["methods"], 14)
         self.assertEqual(summary["counts"]["witness_results"]["fail"], summary["counts"]["witness_results"]["pass"])
         self.assertTrue(load("method-flow/method-flow-validation.json")["valid"])
 

@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m14",
+  "title": "Quote-stable exact-head verifier",
+  "failure_signature": "An inline PowerShell here-string lost quote characters around a Python f-string expression and produced a syntax error after owner-manifest verification had passed.",
+  "trigger_preconditions": [
+    "Python source with nested quote-sensitive expressions is transported through a shell command string.",
+    "The exact-head audit depends on the transported source parsing unchanged."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Store the bounded verifier as a reviewed repository script and invoke it by filename with explicit commit arguments.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not embed nested f-string expressions in cross-shell inline source for terminal evidence gates.",
+  "rollback": "Retain the syntax error, make no commit-manifest claim from it, and preserve the separately passing owner-manifest result.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "commit-local manifest parity",
+    "exact final head",
+    "terminal route"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-LIFE-009"
+  ],
+  "scope_boundary": "Read-only exact-head verification only; no tests, privacy scan, or repository mutation."
+}
