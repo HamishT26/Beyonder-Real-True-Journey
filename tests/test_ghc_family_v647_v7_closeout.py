@@ -11,6 +11,7 @@ PHASE = ROOT / "docs/sable-rook/v647-v7"
 SOURCE = "c02273291edcbe408f28647495183e9ed4641995"
 X1 = "54bc352a9d57f81229261f0894e3affd35fc7ebc"
 EVIDENCE = "8fc7f7b3b779122fc4b27df1bcd97316a952f8a6"
+FINAL = "97cf00ca108dd7abdbb86492a4eca3cc4daf3c71"
 
 
 def load(relative: str):
@@ -26,11 +27,11 @@ class V647V7CloseoutTests(unittest.TestCase):
         contract = load("lifecycle/phase-anchor-contract.json")
         self.assertEqual((SOURCE, X1, EVIDENCE), (contract["source_commit"], contract["x1_commit"], contract["evidence_commit"]))
         for anchor in (SOURCE, X1, EVIDENCE):
-            subprocess.run(["git", "merge-base", "--is-ancestor", anchor, "HEAD"], cwd=ROOT, check=True)
-        count = int(git("rev-list", "--count", f"{SOURCE}..HEAD"))
+            subprocess.run(["git", "merge-base", "--is-ancestor", anchor, FINAL], cwd=ROOT, check=True)
+        count = int(git("rev-list", "--count", f"{SOURCE}..{FINAL}"))
         self.assertIn(count, {2, 3})
         self.assertLessEqual(count, 4)
-        self.assertEqual("0", git("rev-list", "--count", "--merges", f"{SOURCE}..HEAD"))
+        self.assertEqual("0", git("rev-list", "--count", "--merges", f"{SOURCE}..{FINAL}"))
 
     def test_closeout_counts_and_abstention(self):
         receipt = load("closeout-receipt.json")

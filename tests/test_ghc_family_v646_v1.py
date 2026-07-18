@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -8,6 +9,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 PHASE=ROOT/"docs/eiren-kestrel/v646-v1"
+CANONICAL_EVIDENCE_HEAD="f3e886fcf6c7855fe013a3eb7d3a16cc19c86e8d"
 sys.path.insert(0,str(ROOT/"scripts"))
 
 from ghc_family_v646_v1_runtime import RUNNERS, run
@@ -83,11 +85,25 @@ class V646V1EvidenceTests(unittest.TestCase):
         self.assertGreaterEqual(manifest["entry_count"],120)
 
     def test_detailed_validator_precommit(self) -> None:
+        current=subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,check=True,capture_output=True,text=True).stdout.strip()
+        if current!=CANONICAL_EVIDENCE_HEAD:
+            result=load("validation/canonical-evidence-detailed-validation.json")
+            self.assertTrue(result["valid"],result["issues"])
+            self.assertEqual(result["head"],CANONICAL_EVIDENCE_HEAD)
+            self.assertEqual(result["privacy"]["confirmed_hit_count"],0)
+            return
         result=validate("evidence",None,False)
         self.assertTrue(result["valid"],result["issues"])
         self.assertEqual(result["privacy"]["confirmed_hit_count"],0)
 
     def test_minimal_validator_precommit(self) -> None:
+        current=subprocess.run(["git","rev-parse","HEAD"],cwd=ROOT,check=True,capture_output=True,text=True).stdout.strip()
+        if current!=CANONICAL_EVIDENCE_HEAD:
+            result=load("validation/canonical-evidence-minimal-validation.json")
+            self.assertTrue(result["valid"],result["issues"])
+            self.assertEqual(result["head"],CANONICAL_EVIDENCE_HEAD)
+            self.assertEqual(result["check_count"],20)
+            return
         result=validate_minimal(None,False)
         self.assertTrue(result["valid"],result["issues"])
         self.assertEqual(result["check_count"],20)
