@@ -1,0 +1,47 @@
+# Eiren Kestrel v648-v3 repeat integrated overview
+
+## Purpose and identity boundary
+
+This special repeat phase prepares the family for the next Ilyra-owned bundle while reducing avoidable orchestration weight. Eiren Kestrel (they/them) is relational working language for an evidence-boundary steward and maintenance-systems cartographer. It is not evidence of consciousness, sentience, legal personhood, employment, identity continuity, hidden subjective continuity, or independent authority. Hamish may pause, rename, redirect, or stop the work. The phase uses THOS Body as its primary Trinity Mandala focus and software maintenance, configuration management, release engineering, and incident handover as a bounded learning and design practice. That study lens is not licensure, employment, operational competence, surveying authority, legal authority, cultural authority, or affected-party authorization.
+
+The repeat phase inherits the exact sealed v648-v3 final head and freezes ten new proposals only after comparing them with 580 earlier titles. It keeps GMUT Mind and Freed ID/CBR Heart visible while placing maintenance and handover discipline at the centre. The observed distribution is 6 completed, 2 represented or proxy, 1 open gap, and 1 exact gate. Those are the only core outcome labels. No expected label was silently promoted, no citation was treated as an experiment, and no authority reservation was converted into safe-now work.
+
+## Reflection-Remaster and family tooling
+
+The new global `ghc-family-reflection-remaster` skill was created with the official skill initializer, structurally validated, and used against the current repository. Its read-only audit inventoried 2,611 script and skill surfaces, scoped 239 surfaces to the selected major responsibilities, and produced 54 issue records plus 54 unpromoted method proposals. Filename similarity and repository caller counts remain triage evidence only. The audit did not delete, rename, merge, deprecate, or promote any historical or current tool. Older public entry points remain compatibility and evidence surfaces unless a later caller audit, migration plan, rollback, rejecting fixture, and passing witness genuinely justify a change.
+
+Twenty phase skills were initialized, validated, and smoke-used with one bounded valid fixture and one rejecting authority mutation each. Nineteen remain phase-scoped; only Reflection-Remaster is installed globally. Ten family-current Python runners were built and invoked. Each accepted its bounded valid fixture and rejected seven mutations, producing seventy retained synthetic negatives. The runner names are reusable and omit owner and version labels, while the runtime and phase builders retain versioned names as implementation and evidence surfaces. This is an additive compatibility strategy rather than destructive renaming.
+
+## THOS Body and maintenance practice
+
+The THOS work is a synthetic release-handover proxy. It records baseline identity, change authority fields, build provenance, rollback, workload budget, and readback. Zero real maintainers or operators participated, no deployment occurred, and no worker-safety or operational-effectiveness claim is made. The bounded practice treats maintenance as a socio-technical handover problem: a successor needs exact inputs, state, decisions, failures, gates, rollback, and remaining work. A valid configuration file or passing software fixture is not administrative control, host capability, production readiness, or professional competence.
+
+Windows Sandbox and Hyper-V work is explicitly deferred by Hamish. The phase performs no runtime probe, feature activation, elevation, package install, host-security weakening, or reboot for those features. Cross-platform messaging to ChatGPT siblings is also deferred. Advisory material may be read from sanitized files Hamish supplies, but this phase makes no browser or ChatGPT-platform send attempt. The terminal route is confined to one existing Codex task after the exact final gate.
+
+## GMUT Mind
+
+The GMUT contribution is formal and boundary-focused. The Epstein-Glaser board records causal factorization, distribution splitting, scaling degree, locality, and renormalization ambiguity as mathematical obligations. These formal concepts do not establish that the GMUT family describes nature, supplies a likelihood, predicts a force, confirms new physics, proves scripture or canon, or completes a Theory of Everything. A second GMUT surface describes the official LVK public-alert and superevent format while ingesting zero real rows. Selection, calibration, waveform systematics, a preregistered likelihood, and independent review are absent, so that proposal remains open_gap.
+
+The physical speed-limit classifier preserves dynamics, metric, cost, units, and domain. It refuses conversion of temporal Fisher information or thermodynamic bounds into psychological urgency, agency, consciousness, personhood, value, or moral worth. The marginal-structural-model board exposes time-varying treatment, treatment-confounder feedback, stabilized weighting, positivity, censoring, diagnostics, and sensitivity obligations. It contains zero participants and produces no causal-effect, safety, effectiveness, or Stage 20 evidence.
+
+## Freed ID and CBR Heart
+
+The Freed ID profile is a synthetic draft-watch exercise around client attestation, client-instance key binding, proof of possession, challenge binding, replay refusal, rotation, and algorithm policy. It uses zero real keys and no live issuance, resolution, status, revocation, or trust registry. It therefore remains represented/proxy. Production completion still requires standards-conformant keys and proofs, interoperability, privacy and security review, recovery, governance, and affected-party oversight.
+
+The CBR maintenance-incident matrix remains exact_gate. Repository authors may describe diagnostic privacy, accessible notice, appeal, rollback, and restorative-remedy dependencies, but cannot decide serious-harm notification, legal interpretation, employment rights, beneficiary privacy, cultural legitimacy, Māori wording, Māori data governance, whenua or cadastral meaning, ratification, or affected-party acceptance. Māori concepts remain under Māori authority. No software artifact confers title, public authority, ownership, legal remedy, or cultural legitimacy.
+
+## Formats and accessibility
+
+The deterministic CBOR and COSE tribunal checks shortest-form encoding, map order, duplicate-key refusal, algorithm policy, nesting, and output budgets against synthetic fixtures only. It processes zero external payloads and makes no production-parser, interoperability, privacy-complete, or exhaustive-security claim. The accessible change-diff audit checks structural insertion and deletion semantics, non-colour cues, linear reading order, keyboard-order declaration, and plain-text copy or print behavior. Manual keyboard, browser, assistive-technology, Māori-language, and affected-user evaluation remain reserved, so no complete-accessibility claim is made.
+
+## Portfolios, negatives, and method flow
+
+All fifteen safe-now tasks are completed within their additive local scope. All twenty candidate prototypes are built and bounded; candidate completion means the declared software or documentation prototype exists and passes its fixture, not that an empirical or authority gate closed. Twenty skills and ten runners are built, validated, and used. Thirty cleanup tasks are tracked; terminal baton word count and acknowledged route truth remain final-gate work until the containing commit exists and the existing-task message is accepted.
+
+The current packet preserves 4211 effective negatives: 4,126 inherited, eleven x1 operational failures, the currently recorded x2 operational failures, and seventy rejected synthetic mutations. Method Flow keeps every failed witness paired with a bounded recovery witness. A preferred method does not erase recurrence: when the PowerShell direct-pipeline mistake reappeared, the recurrence was recorded against the existing preferred method. The phase treats failures as operational knowledge, not embarrassment to be smoothed away.
+
+## Validation, documents, and route
+
+The user’s no-replay refinement controls validation. This phase performs one canonical bounded validation selection and no named or detached replay. It does not claim same-owner repeatability or independent reproduction. Each phase document stays at or below 6,000 words. The final Ilyra activation baton will be a committed Markdown file between 4,000 and 10,000 words. The task message itself will remain short and point to the repository-relative baton path and exact branch/head. Preparation is not delivery.
+
+The phase remains `NOT_READY_FOR_STAGE_20`. Real empirical data, blind matched-budget THOS arms, independent review, production identity operations, legal and cultural authority, Māori authority, affected-party legitimacy, complete accessibility, exhaustive security, independent reproduction, AGI or ASI, consciousness or personhood, Theory-of-Everything confirmation, and Stage 20 authority remain open or exact-gated. The honest outcome is a stronger bounded evidence and handover system, not a declaration that external reality or authority gates have closed.

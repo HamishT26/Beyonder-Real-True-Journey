@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run Git status and untracked-file discovery as independent processes with separate timeouts and receipts.",
+  "failure_signature": "A combined repository-state wrapper times out and discards both status and untracked-count evidence.",
+  "method_id": "V6483R2-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "clean_state",
+    "exact_staged_surface",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not combine potentially slow Git worktree scans under one short process budget.",
+  "retained_negative_ids": [
+    "V6483R2-X2-N03"
+  ],
+  "rollback": "Give the timed wrapper zero evidence credit and rerun only the required probes independently.",
+  "scope_boundary": "Read-only local repository-state inspection only.",
+  "supersedes": [],
+  "title": "Independent receipts for slow Git worktree probes",
+  "trigger_preconditions": [
+    "A large Windows worktree requires status and untracked-file inventory before staging."
+  ],
+  "validation_witness_ids": []
+}

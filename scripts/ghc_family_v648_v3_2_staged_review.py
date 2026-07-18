@@ -16,6 +16,18 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/eiren-kestrel/v648-v3-2/"
 SCRIPT_MARKERS = ("ghc_family_v648_v3_2", "build_ghc_family_v648_v3_2")
 TEST_PREFIX = "tests/test_ghc_family_v648_v3_2"
+FROZEN_DOMAIN_RUNNERS = {
+    "scripts/ghc_family_reflection_remaster.py",
+    "scripts/ghc_family_epstein_glaser_obligations.py",
+    "scripts/ghc_family_lvk_o4_zero_row.py",
+    "scripts/ghc_family_release_handover.py",
+    "scripts/ghc_family_client_attestation_profile.py",
+    "scripts/ghc_family_maintenance_authority.py",
+    "scripts/ghc_family_deterministic_cbor.py",
+    "scripts/ghc_family_accessible_change_diff.py",
+    "scripts/ghc_family_fisher_speed_domain.py",
+    "scripts/ghc_family_marginal_structural_board.py",
+}
 PATTERNS = {
     "raw_task_or_thread_id": re.compile(rb"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
     "private_absolute_path": re.compile(rb"(?:[A-Za-z]:[\\/](?:Users|GHC-Archives|Program Files)\b|/(?:Users|home)/)", re.I),
@@ -44,7 +56,7 @@ def write(path: Path, payload: Any) -> None:
 
 
 def allowed(path: str) -> bool:
-    return path.startswith(PHASE_PREFIX) or (path.startswith("scripts/") and any(marker in path for marker in SCRIPT_MARKERS)) or path.startswith(TEST_PREFIX)
+    return path.startswith(PHASE_PREFIX) or (path.startswith("scripts/") and any(marker in path for marker in SCRIPT_MARKERS)) or path in FROZEN_DOMAIN_RUNNERS or path.startswith(TEST_PREFIX)
 
 
 def repository_relative(path: Path) -> str:
