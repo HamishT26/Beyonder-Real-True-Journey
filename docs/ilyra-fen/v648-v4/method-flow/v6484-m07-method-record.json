@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assign the foreach result to an array and pipe that array in a separate statement.",
+  "failure_signature": "Windows PowerShell 5.1 reports an empty pipe element when a foreach statement is piped directly.",
+  "method_id": "V6484-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "tooling_truth",
+    "parser_compatibility",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pipe directly from a PowerShell 5.1 foreach statement.",
+  "retained_negative_ids": [
+    "V6484-X2-N02"
+  ],
+  "rollback": "Retain the parser failure with zero credit; no repository state requires rollback.",
+  "scope_boundary": "Owner-local read-only PowerShell orchestration only.",
+  "supersedes": [],
+  "title": "Assign PowerShell foreach output before piping",
+  "trigger_preconditions": [
+    "A Windows PowerShell 5.1 probe must format or filter rows produced by foreach."
+  ],
+  "validation_witness_ids": []
+}

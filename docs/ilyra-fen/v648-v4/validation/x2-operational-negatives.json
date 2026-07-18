@@ -1,0 +1,39 @@
+{
+  "boundary": "Every observed X2 failure is retained before retry and receives zero evidence credit.",
+  "count": 4,
+  "negatives": [
+    {
+      "evidence_credit": "none",
+      "failure": "A bounded inspection timed out while counting lines across the new X2 implementation files.",
+      "mutation": "none",
+      "negative_id": "V6484-X2-N01",
+      "recovery": "Split metadata, status, and syntax inspection into independently bounded probes.",
+      "recurrence_guard": "Do not combine line-count reads with status and syntax checks in one short Windows wrapper."
+    },
+    {
+      "evidence_credit": "none",
+      "failure": "Windows PowerShell 5.1 rejected a direct pipeline from a foreach statement before execution.",
+      "mutation": "none",
+      "negative_id": "V6484-X2-N02",
+      "recovery": "Assign foreach output to an array and pipe the completed array separately.",
+      "recurrence_guard": "Never pipe directly from a PowerShell 5.1 foreach statement."
+    },
+    {
+      "evidence_credit": "none",
+      "failure": "A single-file text search exceeded its ten-second bound without producing evidence.",
+      "mutation": "none",
+      "negative_id": "V6484-X2-N03",
+      "recovery": "Use a longer but still bounded native exact-pattern probe for the known file.",
+      "recurrence_guard": "Do not infer Windows inspection latency solely from the apparent size of a file."
+    },
+    {
+      "evidence_credit": "none",
+      "failure": "The first exact-surface preflight omitted all ten frozen family-current runner filenames from its allowlist.",
+      "mutation": "none",
+      "negative_id": "V6484-X2-N04",
+      "recovery": "Build the script allowlist from the exact runner names frozen in the X1 definitions.",
+      "recurrence_guard": "Derive generated-runner validation scope from the frozen runner ledger rather than a guessed filename prefix."
+    }
+  ],
+  "schema": "ghc.family.v648-v4.x2-operational-negatives.v1"
+}

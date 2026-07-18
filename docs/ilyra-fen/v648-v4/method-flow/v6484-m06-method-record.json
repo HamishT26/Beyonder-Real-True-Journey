@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Probe file existence and byte length first, then run syntax and status checks independently.",
+  "failure_signature": "A short compound inspection times out while reading line counts before status or syntax evidence is attributable.",
+  "method_id": "V6484-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "tooling_truth",
+    "bounded_execution",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not place content-wide line counting, status, and syntax checks in one short wrapper.",
+  "retained_negative_ids": [
+    "V6484-X2-N01"
+  ],
+  "rollback": "Give the timed-out wrapper zero credit and retain the unmodified worktree.",
+  "scope_boundary": "Owner-local read-only inspection only.",
+  "supersedes": [],
+  "title": "Split large-file inspection into bounded metadata and syntax probes",
+  "trigger_preconditions": [
+    "New or generated implementation files must be inspected on a latency-variable Windows worktree."
+  ],
+  "validation_witness_ids": []
+}
