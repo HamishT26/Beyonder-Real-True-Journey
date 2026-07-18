@@ -3,8 +3,8 @@
 - Phase: v648-gmut-thos-v7-x1-x2
 - Owner: Tamar Vey
 - Methods: 13
-- Passing witnesses: 19
-- Failed witnesses retained: 17
+- Passing witnesses: 25
+- Failed witnesses retained: 23
 
 ## Preferred methods
 
@@ -22,7 +22,7 @@
 - Method: Materialize PowerShell loop output into an array before piping it to JSON conversion.
 - Recurrence guard: Use an explicit array assignment around foreach results before a pipeline.
 - Rollback: Credit no output from the parser-failed attempt and preserve it as a negative.
-- Witnesses: V6487-M02-WFAIL, V6487-M02-WFAIL-X1-02, V6487-M02-WPASS, V6487-M02-WPASS-X1-02
+- Witnesses: V6487-M02-WFAIL, V6487-M02-WFAIL-X1-02, V6487-M02-WPASS, V6487-M02-WPASS-X1-02, V6487-M02-WFAIL-X2-01, V6487-M02-WPASS-X2-01
 
 ### V6487-M03 — Use type-aware bounded receipt summaries
 
@@ -30,7 +30,7 @@
 - Method: Inspect receipt types and keys before indexing optional manifest entries, then emit compact type-specific summaries.
 - Recurrence guard: Branch on schema or keys before indexing optional arrays and bound output by receipt type.
 - Rollback: Discard unsupported fields from the broad summary and retain the wrapper fault.
-- Witnesses: V6487-M03-WFAIL, V6487-M03-WPASS, V6487-M03-WFAIL-X1-02, V6487-M03-WFAIL-X1-03, V6487-M03-WPASS-X1-02, V6487-M03-WPASS-X1-03
+- Witnesses: V6487-M03-WFAIL, V6487-M03-WPASS, V6487-M03-WFAIL-X1-02, V6487-M03-WFAIL-X1-03, V6487-M03-WPASS-X1-02, V6487-M03-WPASS-X1-03, V6487-M03-WFAIL-X2-01, V6487-M03-WPASS-X2-01, V6487-M03-WFAIL-X2-02, V6487-M03-WPASS-X2-02
 
 ### V6487-M04 — Separate Git blob identity from checkout-byte counts
 
@@ -38,7 +38,7 @@
 - Method: Verify commit-local Git blob identity separately from the declared working-tree checkout-byte domain.
 - Recurrence guard: Read manifest domain metadata before comparing hashes or byte counts.
 - Rollback: Withdraw the false mismatch classification and retain the domain error.
-- Witnesses: V6487-M04-WFAIL, V6487-M04-WPASS
+- Witnesses: V6487-M04-WFAIL, V6487-M04-WPASS, V6487-M04-WFAIL-X2-01, V6487-M04-WPASS-X2-01
 
 ### V6487-M05 — Verify checkout bytes only in an exact checked-out domain
 
@@ -62,7 +62,7 @@
 - Method: Configure the child process stdout stream explicitly as UTF-8 before emitting proposal titles.
 - Recurrence guard: Set explicit UTF-8 for machine-readable child-process output containing repository text.
 - Rollback: Credit no complete novelty scan from the interrupted output and retain the encoding fault.
-- Witnesses: V6487-M07-WFAIL, V6487-M07-WPASS
+- Witnesses: V6487-M07-WFAIL, V6487-M07-WPASS, V6487-M07-WFAIL-X2-01, V6487-M07-WPASS-X2-01
 
 ### V6487-M08 — Replace collided proposal seeds after full-chain neighbour review
 
@@ -102,7 +102,7 @@
 - Method: Preserve immutable preferred history and add a stricter method whose promotion gate covers the newly exposed scope.
 - Recurrence guard: Treat promotion as monotonic and use additive corrective methods rather than attempted demotion.
 - Rollback: Credit no state change from the refused command and keep terminal evidence gated.
-- Witnesses: V6487-M12-WFAIL, V6487-M12-WPASS
+- Witnesses: V6487-M12-WFAIL, V6487-M12-WPASS, V6487-M12-WFAIL-X2-01, V6487-M12-WPASS-X2-01
 
 ### V6487-M13 — Break scanner-output recursion with post-promotion coverage
 

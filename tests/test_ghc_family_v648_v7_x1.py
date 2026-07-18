@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -11,6 +12,16 @@ PHASE = ROOT / "docs" / "tamar-vey" / "v648-v7"
 
 def load(relative: str):
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def load_frozen_x1(relative: str):
+    raw = subprocess.check_output(
+        ["git", "show", f"5ab7e85107f92dd8f6f21af66244c6dc9791b39d:docs/tamar-vey/v648-v7/{relative}"],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+    )
+    return json.loads(raw)
 
 
 class V648V7X1Tests(unittest.TestCase):
@@ -89,7 +100,7 @@ class V648V7X1Tests(unittest.TestCase):
 
     def test_negatives_and_method_flow_are_retained(self):
         negatives = load("retained-negative-register.json")
-        ledger = load("method-flow/method-flow-ledger.json")
+        ledger = load_frozen_x1("method-flow/method-flow-ledger.json")
         self.assertEqual(negatives["inherited_effective"], 4482)
         self.assertEqual(negatives["x1_operational"], 17)
         self.assertEqual(negatives["effective_at_x1"], 4499)

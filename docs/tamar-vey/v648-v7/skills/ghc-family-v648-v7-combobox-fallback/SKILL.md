@@ -1,0 +1,14 @@
+---
+name: ghc-family-v648-v7-combobox-fallback
+description: Apply bounded v648-v7 combobox name, value, popup, keyboard, focus, status, and fallback structure checks. Use when Codex must inspect or execute this owner-scoped synthetic, symbolic, structural, proxy, or refusal workflow while preserving evidence and authority gates.
+---
+
+# Combobox Fallback
+
+1. Read the v648-v7 proposal, source ledger, protected gates, and retained-negative register before acting.
+2. Use `ghc_family_v648_v7_accessibility_audit.py` only on owner-scoped synthetic, symbolic, structural, proxy, or zero-row inputs.
+3. Check combobox name, value, popup, keyboard, focus, status, and fallback structure obligations and reject missing or corrupted required fields.
+4. Preserve every rejected mutation, tooling failure, rollback, and recurrence guard; recovery never becomes an initially clean pass.
+5. Record a bounded use receipt and keep empirical, participant, production, professional, legal, cultural, Māori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, consciousness, personhood, Theory-of-Everything, and Stage 20 gates open.
+
+Do not mutate sibling lanes, install globally, elevate, alter host security, use private material, or claim authority. A passing result is same-owner bounded workflow evidence only.
