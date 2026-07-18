@@ -1,0 +1,20 @@
+# v649-v1 source ledger
+
+- **MS-SRWLOCKS** [current]: [Slim Reader/Writer (SRW) Locks](https://learn.microsoft.com/en-us/windows/win32/sync/slim-reader-writer--srw--locks) — Shared/exclusive, nonrecursive, nonupgradeable, and explicitly nonfair semantics only; the owner-local tribunal adds no Windows or production claim.
+- **BOGOLIUBOV-CAUSALITY** [stable]: [Bogoliubov causality in S-matrix theory](https://doi.org/10.1016/0550-3213(70)90183-5) — Formal causality obligations only; no GMUT physical or empirical confirmation.
+- **DUETSCH-FREDENHAGEN-2004** [stable]: [Causal perturbation theory in terms of retarded products and the Action Ward Identity](https://arxiv.org/abs/hep-th/0403213) — Formal local S-matrix and renormalization obligations only.
+- **SDSS-DR16-EBOSS** [stable]: [SDSS DR16 quasar catalogue and eBOSS product context](https://www.sdss.org/dr16/algorithms/qso_catalog/) — Product identity and provenance context only; no query or download.
+- **EBOSS-DR16-QSO-PS** [stable]: [Completed eBOSS BAO and RSD measurements from the DR16 quasar anisotropic power spectrum](https://doi.org/10.1093/mnras/staa2780) — Multipole, selection, window, covariance, and provenance obligations only; zero-row adapter.
+- **ARCHIVES-NZ-DIGITISATION** [current]: [Digital storage and preservation guidance](https://www.archives.govt.nz/manage-information/how-to-manage-your-information/digital/best-practice-guidance-on-digital-storage-and-preservation) — Synthetic preservation design context only; no archival, legal, destruction, access, or professional interpretation.
+- **NDSA-LEVELS-PRESERVATION** [current]: [Levels of Digital Preservation](https://ndsa.org/publications/levels-of-digital-preservation/) — Preservation control vocabulary only; no real collection assessment or certification.
+- **OIDC-BACKCHANNEL-LOGOUT-1.0** [stable]: [OpenID Connect Back-Channel Logout 1.0](https://openid.net/specs/openid-connect-backchannel-1_0.html) — Synthetic logout-token conformance requirements only.
+- **NZ-PRIVACY-PRINCIPLES** [current]: [New Zealand information privacy principles](https://www.privacy.org.nz/privacy-act-2020/privacy-principles/) — Privacy issue spotting only; no legal interpretation.
+- **TE-MANA-RARAUNGA** [current]: [Te Mana Raraunga Maori Data Sovereignty Network](https://www.temanararaunga.maori.nz/) — Authority reservation only; Maori concepts remain under tangata whenua, iwi, hapu, and Maori authority.
+- **ARCHIVES-NZ-ACCESS** [current]: [Archives New Zealand digital and access guidance index](https://www.archives.govt.nz/manage-information/how-to-manage-your-information/digital) — Access and sensitive-content issue spotting only; no takedown, disposal, legal, or authority decision.
+- **RFC-7932** [stable_with_errata_watch]: [RFC 7932 Brotli Compressed Data Format](https://datatracker.ietf.org/doc/rfc7932/) — Bounded synthetic format requirements only; RFC 9841 errata update is watched.
+- **HTML-METER** [current]: [HTML meter element](https://html.spec.whatwg.org/multipage/form-elements.html#the-meter-element) — Native meter semantics only; manual evaluation remains reserved.
+- **WAI-ARIA-METER** [current]: [Meter Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/meter/) — Structural role, name, value, and range requirements only.
+- **COLEMAN-NOLL-1963** [stable]: [The thermodynamics of elastic materials with heat conduction and viscosity](https://doi.org/10.1007/BF01262690) — Constitutive restriction and entropy-inequality context only; no psyche conversion.
+- **IUPAC-ENTROPY-PRODUCTION** [current]: [IUPAC Gold Book entropy terminology](https://goldbook.iupac.org/terms/view/E02149) — Thermodynamic terminology and units only.
+- **IMBENS-LEMIEUX-2008** [stable]: [Regression Discontinuity Designs: A Guide to Practice](https://doi.org/10.1016/j.jeconom.2007.05.001) — Structural design assumptions only; zero participant estimation.
+- **CATTANEO-IDROBO-TITIUNIK-RD** [stable]: [A Practical Introduction to Regression Discontinuity Designs](https://doi.org/10.1017/9781108684606) — Validation, falsification, and sensitivity obligations only; no effect estimation.

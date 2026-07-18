@@ -1,0 +1,27 @@
+{
+  "method_id": "v6491-m01",
+  "title": "Windows directory-root search with explicit include filters",
+  "failure_signature": "A Windows recursive search received wildcard path arguments directly and returned invalid-path error 123 before producing an inventory.",
+  "trigger_preconditions": [
+    "A recursive text or file search is running under Windows PowerShell.",
+    "The intended selection is a filename pattern within one or more known directory roots."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Pass real directory roots to the search tool and express filename selection through explicit include filters such as -g patterns.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "On Windows, never pass shell-style wildcard path components as directory arguments to rg; use concrete roots plus -g filters.",
+  "rollback": "Discard the failed inventory, retain the error as an operational negative, and rerun once with concrete roots and explicit filters.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "read-only startup",
+    "source immutability",
+    "single canonical validation pass",
+    "independent reproduction"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6491-X1-001"
+  ],
+  "scope_boundary": "Read-only local source inventory only; no source mutation, suite credit, or independent-reproduction credit."
+}

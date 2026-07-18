@@ -1,0 +1,27 @@
+{
+  "method_id": "v6491-m02",
+  "title": "Compound staged stale-label audit with concrete roots",
+  "failure_signature": "A staged stale-label wrapper repeated invalid-path error 123 because wildcard path components were again passed as search roots.",
+  "trigger_preconditions": [
+    "A staged audit searches owner documents plus phase-local scripts and tests.",
+    "Different file classes require include and exclusion filters without broad workspace enumeration."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_read_only",
+  "candidate_workaround": "Search only concrete owner, scripts, and tests roots; express file selection with -g include filters and exclude inherited frozen-index paths whose historical labels are intentional.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Build compound rg audits from a concrete-root array and explicit -g filters; treat exit one as a zero-hit success only after checking the zero-line result.",
+  "rollback": "Discard the failed stale-label conclusion, retain the wrapper failure, and rerun the bounded audit once with concrete roots and explicit filters.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "exact staged scope",
+    "historical provenance preservation",
+    "single canonical validation pass",
+    "failure retention"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6491-X1-002"
+  ],
+  "scope_boundary": "Read-only staged stale-label review only; inherited provenance labels remain intentional and no suite or independent-reproduction credit is earned."
+}
