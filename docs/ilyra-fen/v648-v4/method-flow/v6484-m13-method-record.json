@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Apply one exact-context receipt update per patch and refresh the measured manifest only after all patches succeed.",
+  "failure_signature": "A multi-file apply-patch request contains a malformed context-free hunk and is rejected before mutation.",
+  "method_id": "V6484-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "receipt_integrity",
+    "manifest_parity",
+    "canonical_pass_nonreplay",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never join unrelated receipt edits through a hunk without exact current context.",
+  "retained_negative_ids": [
+    "V6484-LIFE-N04"
+  ],
+  "rollback": "Retain the rejected patch with zero credit; no file changed and no content rollback is required.",
+  "scope_boundary": "Post-pass additive receipt edits only; no tests or canonical scans are rerun.",
+  "supersedes": [],
+  "title": "Split post-pass receipt patches by exact current context",
+  "trigger_preconditions": [
+    "Several self-excluded lifecycle receipts require additive post-pass count reconciliation."
+  ],
+  "validation_witness_ids": []
+}

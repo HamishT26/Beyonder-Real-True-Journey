@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Insert the exact repository root, use a fresh TestLoader, and require loader.errors to be empty before accepting countTestCases.",
+  "failure_signature": "Module loading returns one FailedTest placeholder per unresolved module, and a naive positive count misstates them as selected tests.",
+  "method_id": "V6484-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "module_selection",
+    "test_truth",
+    "canonical_pass",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never accept a test-count preflight without inspecting the loader error collection.",
+  "retained_negative_ids": [
+    "V6484-LIFE-N02"
+  ],
+  "rollback": "Give the false count zero credit and do not run the canonical aggregate.",
+  "scope_boundary": "Module import and counting only; no tests execute in this method witness.",
+  "supersedes": [],
+  "title": "Reject unittest loader placeholders and require an empty loader-error list",
+  "trigger_preconditions": [
+    "A canonical selection is loaded without execution from a script whose import root differs from the repository root."
+  ],
+  "validation_witness_ids": []
+}

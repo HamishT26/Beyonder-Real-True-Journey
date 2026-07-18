@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read or regenerate the exact manifest structure from measured current Git-blob hashes rather than guessed context.",
+  "failure_signature": "An apply-patch request guesses stale generated-manifest bytes and hash context and is rejected without mutation.",
+  "method_id": "V6484-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_surface",
+    "manifest_parity",
+    "post_pass_receipt_integrity",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never patch generated manifest entries against inferred bytes or hash context.",
+  "retained_negative_ids": [
+    "V6484-LIFE-N03"
+  ],
+  "rollback": "Retain the rejected patch with zero credit; it changed no file and requires no content rollback.",
+  "scope_boundary": "Post-pass owner-scoped receipt and Git-blob accounting only; tests and privacy scans are not rerun.",
+  "supersedes": [],
+  "title": "Regenerate final manifest entries from measured Git blobs",
+  "trigger_preconditions": [
+    "A post-pass result receipt must be added and the generated final manifest requires an exact refresh."
+  ],
+  "validation_witness_ids": []
+}

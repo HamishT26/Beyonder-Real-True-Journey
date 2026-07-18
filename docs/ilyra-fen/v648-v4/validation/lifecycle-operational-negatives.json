@@ -1,0 +1,40 @@
+{
+  "boundary": "All failures are retained with zero evidence credit; the canonical pass was not rerun.",
+  "canonical_passes_consumed": 0,
+  "count": 4,
+  "negatives": [
+    {
+      "canonical_pass_consumed": false,
+      "evidence_credit": "none",
+      "failure": "The first no-test closeout preflight confirmed two privacy-pattern hits in literal negative examples embedded in the closeout test.",
+      "negative_id": "V6484-LIFE-N01",
+      "recovery": "Construct the same negative examples from split string fragments so the test checks the policy without publishing scanner-shaped payload.",
+      "recurrence_guard": "Privacy-negative unit tests must not embed the prohibited payload spelling they are intended to reject."
+    },
+    {
+      "canonical_pass_consumed": false,
+      "evidence_credit": "none",
+      "failure": "The first no-test closeout preflight counted five unittest FailedTest placeholders because repository-root imports were unresolved and loader errors were not fail-closed.",
+      "negative_id": "V6484-LIFE-N02",
+      "recovery": "Insert the exact repository root before module loading and reject any nonempty unittest loader error list.",
+      "recurrence_guard": "A loaded test count is valid only when the explicit module loader error list is empty."
+    },
+    {
+      "canonical_pass_consumed": false,
+      "evidence_credit": "none",
+      "failure": "A post-pass manifest patch guessed stale surrounding bytes and hash context and was rejected before changing the manifest.",
+      "negative_id": "V6484-LIFE-N03",
+      "recovery": "Read the exact manifest structure and regenerate every static entry from measured Git-blob hashes in one bounded owner-scoped refresh.",
+      "recurrence_guard": "Never patch a generated manifest against inferred byte counts or hash context."
+    },
+    {
+      "canonical_pass_consumed": false,
+      "evidence_credit": "none",
+      "failure": "A multi-file post-pass receipt update used malformed patch-hunk grammar and was rejected without mutation.",
+      "negative_id": "V6484-LIFE-N04",
+      "recovery": "Apply one small exact-context receipt patch at a time before refreshing measured Git blobs.",
+      "recurrence_guard": "Do not combine unrelated receipt updates in a patch whose hunk has no exact context."
+    }
+  ],
+  "schema": "ghc.family.v648-v4.lifecycle-operational-negatives.v1"
+}
