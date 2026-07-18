@@ -61,10 +61,11 @@ class SylvenV648V8X1Tests(unittest.TestCase):
 
     def test_strict_x1_before_x2(self) -> None:
         truth = json.loads((PHASE / "phase-truth.json").read_text(encoding="utf-8"))
+        review = json.loads((PHASE / "validation" / "x1-staged-review.json").read_text(encoding="utf-8"))
         self.assertFalse(truth["x2_started"])
         self.assertFalse(truth["outcomes_executed"])
-        forbidden = [PHASE / "x2", PHASE / "evidence-receipt.json", PHASE / "closeout-receipt.json", PHASE / "seal-receipt.json"]
-        self.assertFalse(any(path.exists() for path in forbidden))
+        self.assertTrue(review["x1_only_passed"])
+        self.assertEqual(review["x2_implementation_or_outcome_paths"], [])
 
     def test_identity_and_authority_boundaries(self) -> None:
         text = (PHASE / "x1-preregistration.md").read_text(encoding="utf-8")

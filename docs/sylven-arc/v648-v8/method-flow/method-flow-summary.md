@@ -2,9 +2,9 @@
 
 - Phase: v648-v8
 - Owner: Sylven Arc
-- Methods: 3
-- Passing witnesses: 3
-- Failed witnesses retained: 3
+- Methods: 5
+- Passing witnesses: 5
+- Failed witnesses retained: 5
 
 ## Preferred methods
 
@@ -31,6 +31,22 @@
 - Recurrence guard: Inspect generated key order before patching and avoid broad multi-file contexts that depend on inferred serialization order.
 - Rollback: No rollback is needed when apply_patch reports zero changes; retain the failed patch witness.
 - Witnesses: v6488-m03-wfail-01, v6488-m03-wpass-01
+
+### v6488-m04 — Lifecycle-stable x1 assertion
+
+- Trigger: The same test module remains in the repository after x2 begins.; The test checks current path absence rather than immutable x1 truth and commit-local review evidence.
+- Method: Assert the frozen x1 phase-truth flags and x1 staged-review x2 path count, which remain valid after later additive lifecycle files exist.
+- Recurrence guard: Historical lifecycle tests must read frozen receipts, never infer prior state from the current later worktree.
+- Rollback: Restore the exact x1 test from its commit if the receipt-based assertion no longer matches the frozen evidence.
+- Witnesses: v6488-m04-wfail-01, v6488-m04-wpass-01
+
+### v6488-m05 — Multi-file patch hunk grammar guard
+
+- Trigger: One patch updates several files.; A hunk boundary is followed immediately by another file header without valid context.
+- Method: Use one syntactically complete update hunk per file and validate each file header boundary before submitting the patch.
+- Recurrence guard: Do not leave a bare hunk marker before the next file header; prefer smaller multi-file patches when contexts differ.
+- Rollback: No rollback is required because patch parsing failed before mutation.
+- Witnesses: v6488-m05-wfail-01, v6488-m05-wpass-01
 
 ## Retained boundary
 

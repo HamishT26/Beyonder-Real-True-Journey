@@ -1,0 +1,26 @@
+{
+  "method_id": "v6488-m05",
+  "title": "Multi-file patch hunk grammar guard",
+  "failure_signature": "A multi-file apply_patch payload inserted a new file header before closing the preceding update hunk and was rejected before mutation.",
+  "trigger_preconditions": [
+    "One patch updates several files.",
+    "A hunk boundary is followed immediately by another file header without valid context."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owned_files",
+  "candidate_workaround": "Use one syntactically complete update hunk per file and validate each file header boundary before submitting the patch.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not leave a bare hunk marker before the next file header; prefer smaller multi-file patches when contexts differ.",
+  "rollback": "No rollback is required because patch parsing failed before mutation.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "owned-file scope",
+    "negative count integrity",
+    "x2 evidence integrity"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6488-X2-002"
+  ],
+  "scope_boundary": "Patch grammar only; no repository content changed in the failed witness."
+}

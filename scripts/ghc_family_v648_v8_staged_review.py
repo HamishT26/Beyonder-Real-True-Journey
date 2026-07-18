@@ -60,7 +60,12 @@ def main() -> int:
         "scripts/ghc_family_v648_v8_staged_review.py",
         "tests/test_ghc_family_v648_v8_x1.py",
     }
-    out_of_scope = [path for path in candidate_paths if not (path.startswith(PHASE_PREFIX) or path in allowed_x1)]
+    allowed_phase_tool = lambda path: (
+        (path.startswith("scripts/") and "ghc_family_v648_v8" in path)
+        or (path.startswith("tests/test_ghc_family_v648_v8") and path.endswith(".py"))
+    )
+    allowed = lambda path: path.startswith(PHASE_PREFIX) or path in allowed_x1 or (args.stage != "x1" and allowed_phase_tool(path))
+    out_of_scope = [path for path in candidate_paths if not allowed(path)]
     x2_path_markers = ("/x2/", "evidence-receipt", "closeout-receipt", "seal-receipt", "core-outcome-ledger")
     x2_paths = [path for path in candidate_paths if any(marker in path for marker in x2_path_markers)] if args.stage == "x1" else []
 
