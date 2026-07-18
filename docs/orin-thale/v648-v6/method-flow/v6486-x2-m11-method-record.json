@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assert internal count and list parity instead of a fixed operational total.",
+  "failure_signature": "A checked JSON runner's fixed expected count drifted after new retained failures.",
+  "method_id": "V6486-X2-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["negative_retention", "json_integrity", "validation_truth", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use invariant parity checks for append-only ledgers.",
+  "retained_negative_ids": ["V6486-X2-N11"],
+  "rollback": "Retain the failed runner invocation and do not lower the negative count.",
+  "scope_boundary": "Bounded append-only ledger validation only.",
+  "supersedes": [],
+  "title": "Validate append-only ledgers by internal parity",
+  "trigger_preconditions": ["A ledger may gain retained entries during the phase."],
+  "validation_witness_ids": []
+}

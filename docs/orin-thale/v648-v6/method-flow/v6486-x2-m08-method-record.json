@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use a template literal with a single-quoted Python payload and immediate LASTEXITCODE propagation.",
+  "failure_signature": "An incorrectly escaped JavaScript command string failed before shell execution.",
+  "method_id": "V6486-X2-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["tooling_truth", "json_integrity", "failure_retention", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use one quoting layer per language and preflight command construction.",
+  "retained_negative_ids": ["V6486-X2-N08"],
+  "rollback": "Retain the pre-execution fault and rerun with a parse-safe command.",
+  "scope_boundary": "Pre-execution orchestration recovery only.",
+  "supersedes": [],
+  "title": "Separate JavaScript, PowerShell, and Python quoting layers",
+  "trigger_preconditions": ["A shell command embeds Python inside orchestration source."],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pass a literal directory root to ripgrep and put wildcard matching in a -g filter.",
+  "failure_signature": "Native ripgrep rejects wildcard-bearing Windows path arguments with operating-system error 123.",
+  "method_id": "V6486-X2-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["negative_retention", "tooling_truth", "path_confinement", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use literal search roots and -g filename filters for all Windows ripgrep calls.",
+  "retained_negative_ids": ["V6486-X2-N12", "V6486-X2-N13"],
+  "rollback": "Retain both failed invocations and discard their partial output as a passing witness.",
+  "scope_boundary": "Read-only native search construction on Windows only.",
+  "supersedes": [],
+  "title": "Separate Windows search roots from glob filters",
+  "trigger_preconditions": ["A native search requires wildcard filename selection on Windows."],
+  "validation_witness_ids": []
+}

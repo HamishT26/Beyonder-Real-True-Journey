@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-X2-M02",
+  "title": "Scope stale-label review around historical evidence",
+  "failure_signature": "The first evidence stale-label scan treated inherited V6485 proposal IDs and the retained failed Sable-origin witness as active v648-v6 drift.",
+  "trigger_preconditions": [
+    "A successor packet embeds frozen proposal history and retained failed witnesses."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Exclude frozen-chain proposal history and retained failed-witness domains, then scan active v648-v6 schemas, paths, and current origin fields for predecessor drift.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Classify historical and failure-evidence domains before interpreting predecessor tokens as stale.",
+  "rollback": "Retain the false-positive result, award no hygiene credit, and leave inherited history unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "historical_evidence",
+    "failure_retention",
+    "stale_label_hygiene",
+    "evidence_credit"
+  ],
+  "retained_negative_ids": [
+    "V6486-X2-N02"
+  ],
+  "scope_boundary": "Read-only label classification; no historical or failure evidence is rewritten."
+}

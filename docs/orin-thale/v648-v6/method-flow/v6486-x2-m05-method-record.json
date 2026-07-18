@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Check LASTEXITCODE immediately after every native parser or validator.",
+  "failure_signature": "A later successful command masked an earlier JSON parser failure.",
+  "method_id": "V6486-X2-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["json_integrity", "failure_retention", "validation_truth", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never rely on the last command's exit code for a multi-command native validation wrapper.",
+  "retained_negative_ids": ["V6486-X2-N05"],
+  "rollback": "Retain the misleading wrapper result and rerun with immediate exit propagation.",
+  "scope_boundary": "Bounded owner-scoped validation orchestration only.",
+  "supersedes": [],
+  "title": "Propagate every native validation exit immediately",
+  "trigger_preconditions": ["Multiple native validation commands share one PowerShell wrapper."]
+  ,"validation_witness_ids": []
+}

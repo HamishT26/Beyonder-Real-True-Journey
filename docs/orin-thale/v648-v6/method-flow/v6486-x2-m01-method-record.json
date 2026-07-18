@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-X2-M01",
+  "title": "Bind assertions to the artifact schema that declares the field",
+  "failure_signature": "The first isolated evidence module loaded the CBR mutation receipt when asserting contract-level absent-or-reserved authority fields, causing one KeyError after 17 passing checks.",
+  "trigger_preconditions": [
+    "A proposal emits separate contract and mutation evidence artifacts."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Load cbr/live-performance-remedy-matrix.json for contract-level authority reservations and keep the mutation receipt for mutation counts only.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Bind each test assertion to the artifact schema that declares the asserted field.",
+  "rollback": "Retain the failed module run, award it no aggregate credit, and leave the correct CBR artifacts unchanged.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "evidence_credit",
+    "schema_binding",
+    "exact_gate",
+    "failure_retention"
+  ],
+  "retained_negative_ids": [
+    "V6486-X2-N01"
+  ],
+  "scope_boundary": "Bounded test-surface correction only; no authority, completion, or independent-reproduction credit."
+}

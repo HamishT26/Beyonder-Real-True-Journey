@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Add validation_witness_ids, record each method successfully, then append its witness.",
+  "failure_signature": "Method Flow records omitted a required schema field and their dependent witness calls failed.",
+  "method_id": "V6486-X2-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["method_schema", "failure_retention", "validation_truth", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Validate required Method Flow fields and gate witness calls on record success.",
+  "retained_negative_ids": ["V6486-X2-N07"],
+  "rollback": "Retain all rejected calls and retry only with schema-complete records.",
+  "scope_boundary": "Bounded Method Flow schema recovery only.",
+  "supersedes": [],
+  "title": "Validate Method Flow records before dependent witnesses",
+  "trigger_preconditions": ["A new record and witness are about to be appended."],
+  "validation_witness_ids": []
+}

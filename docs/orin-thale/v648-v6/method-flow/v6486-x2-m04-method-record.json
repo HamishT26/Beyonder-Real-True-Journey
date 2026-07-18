@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Remove only literal patch-marker characters, preserve every negative object, and parse the exact file.",
+  "failure_signature": "Patch-addition markers were preserved as literal plus signs in the x2 negative JSON.",
+  "method_id": "V6486-X2-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["json_integrity", "failure_retention", "validation_truth", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect generated patch prefixes separately from intended JSON content.",
+  "retained_negative_ids": ["V6486-X2-N04"],
+  "rollback": "Retain the invalid parse, award no JSON credit, and remove only the literal markers.",
+  "scope_boundary": "Bounded owner-scoped JSON repair only.",
+  "supersedes": [],
+  "title": "Separate patch syntax from JSON content",
+  "trigger_preconditions": ["A generated patch adds JSON objects."]
+  ,"validation_witness_ids": []
+}

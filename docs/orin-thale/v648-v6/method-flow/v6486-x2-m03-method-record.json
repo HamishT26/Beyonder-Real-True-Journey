@@ -1,0 +1,26 @@
+{
+  "method_id": "V6486-X2-M03",
+  "title": "Avoid raw multiline code inside orchestration strings",
+  "failure_signature": "The first scope-aware stale-label recovery wrapper embedded an unescaped multiline Python string in orchestration source and failed before the shell command ran.",
+  "trigger_preconditions": [
+    "A read-only recovery check requires multiline embedded source."
+  ],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use native PowerShell file selection with explicit historical-domain exclusions and exact Select-String patterns.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not place raw multiline source inside a quoted orchestration string; use a checked script or native pipeline.",
+  "rollback": "Retain the orchestration failure, award no scan credit, and rerun only with a parse-safe method.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": [
+    "tooling_truth",
+    "stale_label_hygiene",
+    "failure_retention",
+    "evidence_credit"
+  ],
+  "retained_negative_ids": [
+    "V6486-X2-N03"
+  ],
+  "scope_boundary": "Read-only workflow recovery; no file or Git state changed in the failed attempt."
+}

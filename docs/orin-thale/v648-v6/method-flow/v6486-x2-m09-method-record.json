@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Move the JSON sweep into a checked phase-local Python runner and invoke it by filename.",
+  "failure_signature": "PowerShell stripped inner quotes from an inline Python payload.",
+  "method_id": "V6486-X2-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["tooling_truth", "json_integrity", "failure_retention", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use a script file for nontrivial Python under Windows PowerShell.",
+  "retained_negative_ids": ["V6486-X2-N09"],
+  "rollback": "Retain the native-binding failure and avoid further inline retries.",
+  "scope_boundary": "Bounded owner-scoped JSON validation only.",
+  "supersedes": ["V6486-X2-M08"],
+  "title": "Use a checked script for JSON sweeps",
+  "trigger_preconditions": ["Nontrivial Python must run under Windows PowerShell native argument binding."],
+  "validation_witness_ids": []
+}
