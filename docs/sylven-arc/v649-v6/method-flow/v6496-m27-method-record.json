@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Treat only the exact correction scanner receipt as a scanner-definition path while preserving all files, all five pattern classes, and all confirmed-hit checks.",
+  "failure_signature": "The second canonical aggregate passed all 158 tests and parsed all phase JSON, then misclassified two privacy-class names inside the correction scanner receipt as payload hits and received zero credit.",
+  "method_id": "V6496-M27",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "failure_retention",
+    "single_successful_pass",
+    "no_replay",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Every additive scanner receipt must be listed explicitly in the canonical scanner-definition set before the pass is consumed.",
+  "retained_negative_ids": [
+    "V6496-X2-N11"
+  ],
+  "rollback": "Give the failed aggregate zero credit, retain both self-matches, and refuse any broad path or pattern exclusion.",
+  "scope_boundary": "Exact scanner self-definition handling only; zero confirmed hits is not complete privacy assurance or external audit.",
+  "supersedes": [],
+  "title": "Quarantine exact scanner-definition receipts without removing privacy classes",
+  "trigger_preconditions": [
+    "A privacy receipt is itself included in a later canonical five-class scan."
+  ],
+  "validation_witness_ids": []
+}

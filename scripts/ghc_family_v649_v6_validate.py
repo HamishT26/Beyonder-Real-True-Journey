@@ -73,7 +73,12 @@ def privacy(files: list[Path]):
         "private_route_or_callable": re.compile(r"(?i)(private_route|callable_identifier|browser_send_submitted_response_active)"),
         "transcript_or_session_stream": re.compile(r"(?i)(session_stream|raw_transcript|conversation_export)"),
     }
-    definitions = {"validation/x1-staged-privacy.json", "validation/evidence-staged-privacy.json", "validation/final-staged-privacy.json"}
+    definitions = {
+        "validation/x1-staged-privacy.json",
+        "validation/evidence-staged-privacy.json",
+        "validation/correction-staged-privacy.json",
+        "validation/final-staged-privacy.json",
+    }
     hits = []
     for path in files:
         try:
@@ -226,7 +231,7 @@ def main() -> None:
         "privacy_confirmed_hits": 0,
         "full_repository_suite": False,
         "successful_canonical_pass_number": 1,
-        "failed_canonical_attempts_before_success": 1,
+        "failed_canonical_attempts_before_success": 2,
         "post_success_replay": False,
         "same_owner_only": True,
         "independent_reproduction": False,
