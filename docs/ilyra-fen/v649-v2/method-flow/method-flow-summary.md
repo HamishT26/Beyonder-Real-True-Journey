@@ -2,9 +2,9 @@
 
 - Phase: v649-gmut-thos-v2-x1-x2
 - Owner: Ilyra Fen
-- Methods: 11
-- Passing witnesses: 14
-- Failed witnesses retained: 15
+- Methods: 13
+- Passing witnesses: 17
+- Failed witnesses retained: 20
 
 ## Preferred methods
 
@@ -94,7 +94,23 @@
 - Method: Capture Git add diagnostics and exit code before projecting only warning count, then read staged-review receipt fields rather than streaming every advisory.
 - Recurrence guard: For large Windows staging sets, capture Git diagnostics and exit status before displaying only counts; never infer staged-review success from truncated console presentation.
 - Rollback: Hold the commit, retain the truncated presentation, inspect the exact review receipts read-only, and restage only after bounded diagnostic capture.
-- Witnesses: v6492-m11-wfail, v6492-m11-wpass
+- Witnesses: v6492-m11-wfail, v6492-m11-wpass, v6492-m11-wfail-commit-output, v6492-m11-wpass-commit-projection, v6492-m11-wfail-clean-claim
+
+### v6492-m12 — Inspect durable append state after post-output timeout
+
+- Trigger: runner emitted success output; wrapper later returned timeout
+- Method: After a post-output wrapper timeout, inspect the append-only ledger for the exact identifier and count before deciding whether any retry is permitted.
+- Recurrence guard: Never retry an append after a timeout when success output was observed; first prove whether the exact identifier exists once in durable state.
+- Rollback: Make no retry, retain the timeout, inspect exact durable state read-only, and proceed only if the identifier exists exactly once.
+- Witnesses: v6492-m12-wfail, v6492-m12-wpass
+
+### v6492-m13 — Extend final invariants for additive lifecycle fields
+
+- Trigger: final schema adds post-evidence negative components; identity boundary wording is semantically case-insensitive
+- Method: Make final validation arithmetic schema-aware by including post-evidence negatives, and compare identity-boundary wording case-insensitively.
+- Recurrence guard: When lifecycle schemas extend additive counts, derive the invariant from every declared component and normalize non-semantic text case before boundary matching.
+- Rollback: Retain the failed two-issue receipt, grant no final validation credit, update only the exact arithmetic and case-normalization checks, and rerun the unchanged validation surface once.
+- Witnesses: v6492-m13-wfail, v6492-m13-wfail-candidate-cycle, v6492-m13-wpass
 
 ## Retained boundary
 

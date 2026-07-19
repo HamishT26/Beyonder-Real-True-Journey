@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 11,
-    "recommendations": 11,
-    "state_events": 33,
+    "methods": 13,
+    "recommendations": 13,
+    "state_events": 39,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 11,
+      "preferred": 13,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 15,
-      "pass": 14
+      "fail": 20,
+      "pass": 17
     },
-    "witnesses": 29
+    "witnesses": 37
   },
   "identity_boundary": "Relational working language only; not consciousness, personhood, continuity, employment, or authority evidence.",
   "methods": [
@@ -356,7 +356,71 @@
       ],
       "validation_witness_ids": [
         "v6492-m11-wfail",
-        "v6492-m11-wpass"
+        "v6492-m11-wpass",
+        "v6492-m11-wfail-commit-output",
+        "v6492-m11-wpass-commit-projection",
+        "v6492-m11-wfail-clean-claim"
+      ]
+    },
+    {
+      "approval_class": "safe_now_owner_local_read_only_or_additive",
+      "candidate_workaround": "After a post-output wrapper timeout, inspect the append-only ledger for the exact identifier and count before deciding whether any retry is permitted.",
+      "failure_signature": "The Method Flow runner printed a successful witness append, then the wrapper timed out with exit 124, leaving completion state ambiguous.",
+      "method_id": "v6492-m12",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "duplicate_append",
+        "failed_witness_retention",
+        "append_only_ledger",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Never retry an append after a timeout when success output was observed; first prove whether the exact identifier exists once in durable state.",
+      "retained_negative_ids": [
+        "V6492-X2-N15"
+      ],
+      "rollback": "Make no retry, retain the timeout, inspect exact durable state read-only, and proceed only if the identifier exists exactly once.",
+      "scope_boundary": "Bounded owner-local append recovery only; no scientific, authority, production, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Inspect durable append state after post-output timeout",
+      "trigger_preconditions": [
+        "runner emitted success output",
+        "wrapper later returned timeout"
+      ],
+      "validation_witness_ids": [
+        "v6492-m12-wfail",
+        "v6492-m12-wpass"
+      ]
+    },
+    {
+      "approval_class": "safe_now_owner_local_additive",
+      "candidate_workaround": "Make final validation arithmetic schema-aware by including post-evidence negatives, and compare identity-boundary wording case-insensitively.",
+      "failure_signature": "The first final detailed validator omitted the final register's post-evidence count and used a case-sensitive identity-boundary substring.",
+      "method_id": "v6492-m13",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "negative_retention",
+        "identity_boundary",
+        "failed_validator_retention",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "When lifecycle schemas extend additive counts, derive the invariant from every declared component and normalize non-semantic text case before boundary matching.",
+      "retained_negative_ids": [
+        "V6492-X2-N16"
+      ],
+      "rollback": "Retain the failed two-issue receipt, grant no final validation credit, update only the exact arithmetic and case-normalization checks, and rerun the unchanged validation surface once.",
+      "scope_boundary": "Bounded same-owner validator correction only; no scientific, authority, production, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Extend final invariants for additive lifecycle fields",
+      "trigger_preconditions": [
+        "final schema adds post-evidence negative components",
+        "identity boundary wording is semantically case-insensitive"
+      ],
+      "validation_witness_ids": [
+        "v6492-m13-wfail",
+        "v6492-m13-wfail-candidate-cycle",
+        "v6492-m13-wpass"
       ]
     }
   ],
@@ -538,6 +602,39 @@
       "witness_ids": [
         "v6492-m11-wfail",
         "v6492-m11-wpass"
+      ]
+    },
+    {
+      "method": "After a post-output wrapper timeout, inspect the append-only ledger for the exact identifier and count before deciding whether any retry is permitted.",
+      "method_id": "v6492-m12",
+      "preconditions": [
+        "runner emitted success output",
+        "wrapper later returned timeout"
+      ],
+      "recommendation_index": 12,
+      "recurrence_guard": "Never retry an append after a timeout when success output was observed; first prove whether the exact identifier exists once in durable state.",
+      "rollback": "Make no retry, retain the timeout, inspect exact durable state read-only, and proceed only if the identifier exists exactly once.",
+      "scope_boundary": "Bounded owner-local append recovery only; no scientific, authority, production, or independent-reproduction credit.",
+      "witness_ids": [
+        "v6492-m12-wfail",
+        "v6492-m12-wpass"
+      ]
+    },
+    {
+      "method": "Make final validation arithmetic schema-aware by including post-evidence negatives, and compare identity-boundary wording case-insensitively.",
+      "method_id": "v6492-m13",
+      "preconditions": [
+        "final schema adds post-evidence negative components",
+        "identity boundary wording is semantically case-insensitive"
+      ],
+      "recommendation_index": 13,
+      "recurrence_guard": "When lifecycle schemas extend additive counts, derive the invariant from every declared component and normalize non-semantic text case before boundary matching.",
+      "rollback": "Retain the failed two-issue receipt, grant no final validation credit, update only the exact arithmetic and case-normalization checks, and rerun the unchanged validation surface once.",
+      "scope_boundary": "Bounded same-owner validator correction only; no scientific, authority, production, or independent-reproduction credit.",
+      "witness_ids": [
+        "v6492-m13-wfail",
+        "v6492-m13-wfail-candidate-cycle",
+        "v6492-m13-wpass"
       ]
     }
   ],
@@ -805,6 +902,54 @@
       "event_index": 33,
       "method_id": "v6492-m11",
       "reason": "Compact exact-receipt projection passed; truncated staging presentation remains retained.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 34,
+      "method_id": "v6492-m12",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 35,
+      "method_id": "v6492-m12",
+      "reason": "bounded witness passed",
+      "witness_id": "v6492-m12-wpass"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 36,
+      "method_id": "v6492-m12",
+      "reason": "Durable ledger inspection proved exactly-once append; timed-out wrapper remains retained.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 37,
+      "method_id": "v6492-m13",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 38,
+      "method_id": "v6492-m13",
+      "reason": "bounded witness passed",
+      "witness_id": "v6492-m13-wpass"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 39,
+      "method_id": "v6492-m13",
+      "reason": "Corrected final detailed and minimal validators passed; both prior validator failures remain retained.",
       "witness_id": null
     }
   ],
@@ -1246,6 +1391,126 @@
       "same_owner_only": true,
       "scope": "v649-v2 evidence staging",
       "witness_id": "v6492-m11-wpass"
+    },
+    {
+      "boundary": "The oversized commit summary has no standalone validation credit; the separately visible remote-equality fields remain valid evidence.",
+      "expected": "Commit and push output remains fully visible within the bounded display channel.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m11",
+      "observed": "The 220-file commit summary exceeded the display boundary, while the later exact local, upstream, tracking, live, divergence, and clean fields remained visible.",
+      "procedure": "Stream the complete large commit file summary before the compact push and equality receipt.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6492-X2-N13"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 evidence commit and push presentation",
+      "witness_id": "v6492-m11-wfail-commit-output"
+    },
+    {
+      "boundary": "The recovery proves only compact exact commit and equality projection; the oversized presentation remains retained.",
+      "expected": "A compact read-only projection reports the exact evidence commit, parent, subject, four equal refs, zero divergence, and clean state.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m11",
+      "observed": "Compact Git metadata and equality fields resolved without listing all changed paths.",
+      "procedure": "Read exact commit metadata with a one-line format and project only equality, divergence, and clean fields.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6492-X2-N13"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 evidence commit and push presentation",
+      "witness_id": "v6492-m11-wpass-commit-projection"
+    },
+    {
+      "boundary": "The four-way evidence equality remains true, but the earlier witness earns no clean-state credit; no failed observation is erased.",
+      "expected": "Every predicate in a passing commit projection is true at the observed checkpoint.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m11",
+      "observed": "Evidence local, upstream, tracking, and live refs were equal with zero divergence, but clean was false because additive closeout Method Flow files already existed.",
+      "procedure": "Record a passing projection whose expected fields included clean state even though the compact output explicitly reported clean false.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6492-X2-N14"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 evidence equality and closeout transition",
+      "witness_id": "v6492-m11-wfail-clean-claim"
+    },
+    {
+      "boundary": "The timeout receives no completion credit by itself; the original append is not retried.",
+      "expected": "The append command terminates cleanly after reporting its result.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m12",
+      "observed": "The runner reported the witness append, but the enclosing wrapper timed out with exit 124.",
+      "procedure": "Append one Method Flow witness inside a bounded shell wrapper.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6492-X2-N15"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 Method Flow closeout transition",
+      "witness_id": "v6492-m12-wfail"
+    },
+    {
+      "boundary": "The recovery proves only exactly-once local ledger presence; the timeout remains retained.",
+      "expected": "The intended witness identifier exists exactly once before any further lifecycle append.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m12",
+      "observed": "Read-only ledger inspection found exactly one v6492-m11-wfail-clean-claim witness, so no retry occurred.",
+      "procedure": "Parse the durable Method Flow ledger and count exact witness-id equality before recording the recovery method.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6492-X2-N15"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 Method Flow closeout transition",
+      "witness_id": "v6492-m12-wpass"
+    },
+    {
+      "boundary": "The failed 41-of-43 validator receives no clean-pass credit and remains committed as retained evidence.",
+      "expected": "All final detailed invariants pass against the final schema.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m13",
+      "observed": "Forty-one checks passed; negative arithmetic omitted post-evidence failures and identity wording comparison was case-sensitive.",
+      "procedure": "Run the first final detailed validator against the extended closeout schema.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6492-X2-N16"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 final detailed validation",
+      "witness_id": "v6492-m13-wfail"
+    },
+    {
+      "boundary": "The 42-of-43 validator receives no clean-pass credit; M13 remains candidate until a corrected passing witness exists.",
+      "expected": "Final validation can assess the active recovery method without requiring its own future promotion as a precondition.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m13",
+      "observed": "Forty-two checks passed; the last check required every method preferred even though M13 must remain candidate until this validator passes.",
+      "procedure": "Rerun final detailed validation with negative and identity fixes but an all-preferred Method Flow precondition.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6492-X2-N17"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 final detailed validation",
+      "witness_id": "v6492-m13-wfail-candidate-cycle"
+    },
+    {
+      "boundary": "The recovery proves only the corrected final invariants; the failed validator remains retained.",
+      "expected": "All final detailed and minimal checks pass with complete additive negative arithmetic and case-insensitive identity-boundary matching.",
+      "independent_reproduction": false,
+      "method_id": "v6492-m13",
+      "observed": "The corrected final validators passed their declared checks with zero issues and zero confirmed privacy hits.",
+      "procedure": "Include post-evidence operational negatives in the arithmetic and casefold identity-boundary text before rerunning final detailed and minimal validation.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6492-X2-N16"
+      ],
+      "same_owner_only": true,
+      "scope": "v649-v2 final detailed and minimal validation",
+      "witness_id": "v6492-m13-wpass"
     }
   ]
 }

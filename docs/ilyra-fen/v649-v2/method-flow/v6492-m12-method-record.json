@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_read_only_or_additive",
+  "candidate_workaround": "After a post-output wrapper timeout, inspect the append-only ledger for the exact identifier and count before deciding whether any retry is permitted.",
+  "failure_signature": "The Method Flow runner printed a successful witness append, then the wrapper timed out with exit 124, leaving completion state ambiguous.",
+  "method_id": "v6492-m12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "duplicate_append",
+    "failed_witness_retention",
+    "append_only_ledger",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never retry an append after a timeout when success output was observed; first prove whether the exact identifier exists once in durable state.",
+  "retained_negative_ids": [
+    "V6492-X2-N15"
+  ],
+  "rollback": "Make no retry, retain the timeout, inspect exact durable state read-only, and proceed only if the identifier exists exactly once.",
+  "scope_boundary": "Bounded owner-local append recovery only; no scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Inspect durable append state after post-output timeout",
+  "trigger_preconditions": [
+    "runner emitted success output",
+    "wrapper later returned timeout"
+  ],
+  "validation_witness_ids": []
+}

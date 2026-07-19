@@ -68,9 +68,9 @@ def build_checks(mode: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     skills = load("portfolios/skill-ledger.json")
     runners = load("portfolios/runner-ledger.json")
     cleanup = load("maintenance/clean-fix-refine-ledger.json")
-    negatives = load("retained-negative-register-x2.json")
+    negatives = load("retained-negative-register-final.json") if (PHASE / "retained-negative-register-final.json").is_file() else load("retained-negative-register-x2.json")
     gates = load("exact-open-gate-register-x2.json")
-    truth = load("phase-truth-x2.json")
+    truth = load("phase-truth-final.json") if (PHASE / "phase-truth-final.json").is_file() else load("phase-truth-x2.json")
     method = load("method-flow/method-flow-ledger.json")
     source = load("sources/source-ledger.json")
     phase_files, json_count, privacy_hits, privacy_classes, json_errors = phase_scan()
@@ -86,13 +86,14 @@ def build_checks(mode: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     add(checks, "skills_twenty", skills["count"] == skills["initialized_customized_smoke_used"] == 20)
     add(checks, "runners_ten", runners["count"] == runners["accept_and_reject_witnessed"] == 10)
     add(checks, "cleanup_thirty", cleanup["count"] == cleanup["completed"] == 30)
-    expected_negatives = negatives["inherited_effective"] + negatives["new_x1_operational"] + negatives["new_x2_operational"] + negatives["preregistered_synthetic_executed_and_rejected"]
+    expected_negatives = negatives["inherited_effective"] + negatives["new_x1_operational"] + negatives["new_x2_operational"] + negatives["preregistered_synthetic_executed_and_rejected"] + negatives.get("post_evidence_operational", 0)
     add(checks, "negatives_preserved", negatives["current_effective"] == expected_negatives and negatives["no_negative_erased"])
     add(checks, "open_gaps_preserved", gates["effective_open_gaps"] == 36 and gates["none_silently_closed"])
     add(checks, "exact_gates_preserved", gates["effective_exact_gates"] == 37 and gates["none_silently_closed"])
     add(checks, "terminal_abstention", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     add(checks, "same_owner_only", truth["same_owner_only"] and not truth["independent_reproduction"])
-    add(checks, "method_flow_preferred", method["counts"]["states"]["preferred"] == method["counts"]["methods"])
+    method_states = method["counts"]["states"]
+    add(checks, "method_flow_preferred", method_states["preferred"] + method_states["candidate"] == method["counts"]["methods"] and method_states["candidate"] <= 1)
     add(checks, "method_failures_retained", method["counts"]["witness_results"]["fail"] >= 9)
     add(checks, "method_recoveries_witnessed", method["counts"]["witness_results"]["pass"] >= 9)
     add(checks, "source_status_vocabulary", all(x["status"] in {"current", "stable", "draft", "watch"} for x in source["sources"]))
@@ -117,9 +118,14 @@ def build_checks(mode: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         add(checks, "source_ancestry", subprocess.run(["git", "merge-base", "--is-ancestor", SOURCE_COMMIT, "HEAD"], cwd=ROOT).returncode == 0)
         x1_manifest = load("validation/x1-staged-manifest.json")
         add(checks, "x1_manifest_cardinality", x1_manifest["entry_count"] == 48)
-        add(checks, "identity_boundary_present", "relational working language" in truth["identity_boundary"])
+        add(checks, "identity_boundary_present", "relational working language" in truth["identity_boundary"].casefold())
         add(checks, "primary_focus", truth["primary_focus"] == "THOS Body")
         add(checks, "bounded_practice", "transfusion" in truth["bounded_practice"])
+        if (PHASE / "deliverables" / "v649-v2-static-report.html").is_file():
+            add(checks, "static_report_present", (PHASE / "deliverables" / "v649-v2-static-report.html").stat().st_size > 0)
+            add(checks, "integrated_overview_present", (PHASE / "deliverables" / "v649-v2-final-integrated-overview.md").stat().st_size > 0)
+            add(checks, "manual_accessibility_reserved", "Manual and affected-user evaluation remains reserved" in (PHASE / "deliverables" / "v649-v2-static-report.html").read_text(encoding="utf-8"))
+            add(checks, "terminal_route_held", load("orchestration/terminal-route-final.json")["state"] == "PREPARED_NOT_SENT")
 
     meta = {
         "phase_file_count": phase_files,

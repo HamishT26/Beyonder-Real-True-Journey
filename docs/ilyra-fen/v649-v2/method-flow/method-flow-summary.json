@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 11,
-    "recommendations": 11,
-    "state_events": 33,
+    "methods": 13,
+    "recommendations": 13,
+    "state_events": 39,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 11,
+      "preferred": 13,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 15,
-      "pass": 14
+      "fail": 20,
+      "pass": 17
     },
-    "witnesses": 29
+    "witnesses": 37
   },
   "owner": "Ilyra Fen",
   "phase": "v649-gmut-thos-v2-x1-x2",
@@ -201,7 +201,43 @@
       ],
       "validation_witness_ids": [
         "v6492-m11-wfail",
-        "v6492-m11-wpass"
+        "v6492-m11-wpass",
+        "v6492-m11-wfail-commit-output",
+        "v6492-m11-wpass-commit-projection",
+        "v6492-m11-wfail-clean-claim"
+      ]
+    },
+    {
+      "candidate_workaround": "After a post-output wrapper timeout, inspect the append-only ledger for the exact identifier and count before deciding whether any retry is permitted.",
+      "method_id": "v6492-m12",
+      "recurrence_guard": "Never retry an append after a timeout when success output was observed; first prove whether the exact identifier exists once in durable state.",
+      "rollback": "Make no retry, retain the timeout, inspect exact durable state read-only, and proceed only if the identifier exists exactly once.",
+      "scope_boundary": "Bounded owner-local append recovery only; no scientific, authority, production, or independent-reproduction credit.",
+      "title": "Inspect durable append state after post-output timeout",
+      "trigger_preconditions": [
+        "runner emitted success output",
+        "wrapper later returned timeout"
+      ],
+      "validation_witness_ids": [
+        "v6492-m12-wfail",
+        "v6492-m12-wpass"
+      ]
+    },
+    {
+      "candidate_workaround": "Make final validation arithmetic schema-aware by including post-evidence negatives, and compare identity-boundary wording case-insensitively.",
+      "method_id": "v6492-m13",
+      "recurrence_guard": "When lifecycle schemas extend additive counts, derive the invariant from every declared component and normalize non-semantic text case before boundary matching.",
+      "rollback": "Retain the failed two-issue receipt, grant no final validation credit, update only the exact arithmetic and case-normalization checks, and rerun the unchanged validation surface once.",
+      "scope_boundary": "Bounded same-owner validator correction only; no scientific, authority, production, or independent-reproduction credit.",
+      "title": "Extend final invariants for additive lifecycle fields",
+      "trigger_preconditions": [
+        "final schema adds post-evidence negative components",
+        "identity boundary wording is semantically case-insensitive"
+      ],
+      "validation_witness_ids": [
+        "v6492-m13-wfail",
+        "v6492-m13-wfail-candidate-cycle",
+        "v6492-m13-wpass"
       ]
     }
   ],
@@ -220,7 +256,12 @@
     "v6492-m08-wfail-empty-contract",
     "v6492-m09-wfail",
     "v6492-m10-wfail",
-    "v6492-m11-wfail"
+    "v6492-m11-wfail",
+    "v6492-m11-wfail-commit-output",
+    "v6492-m11-wfail-clean-claim",
+    "v6492-m12-wfail",
+    "v6492-m13-wfail",
+    "v6492-m13-wfail-candidate-cycle"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
