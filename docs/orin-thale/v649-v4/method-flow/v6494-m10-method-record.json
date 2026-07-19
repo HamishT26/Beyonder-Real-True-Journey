@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_probe_recovery",
+  "candidate_workaround": "Run unrelated read-only checks as isolated no-profile commands with bounded timeouts.",
+  "failure_signature": "A grouped login-shell probe timed out before returning status, inventory, or help evidence.",
+  "method_id": "V6494-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_execution",
+    "x1_start_gate"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use no-profile isolated probes for bounded Windows lifecycle checks instead of grouping unrelated startup-sensitive commands.",
+  "retained_negative_ids": [
+    "V6494-X1-N10"
+  ],
+  "rollback": "Terminate the timed-out wrapper and leave repository content unchanged.",
+  "scope_boundary": "Read-only lifecycle probing only; the timeout earns no repository-state or tool-help credit.",
+  "supersedes": [],
+  "title": "Isolated no-profile lifecycle probes",
+  "trigger_preconditions": [
+    "Windows shell startup",
+    "grouped read-only checks",
+    "bounded timeout"
+  ],
+  "validation_witness_ids": []
+}

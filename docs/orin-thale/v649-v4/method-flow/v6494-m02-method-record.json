@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_method_flow_recovery",
+  "candidate_workaround": "After adding a passing witness, inspect the ledger state and request only the next legal transition.",
+  "failure_signature": "A redundant explicit validated transition was rejected because the passing witness had already auto-promoted candidate to validated.",
+  "method_id": "V6494-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "negative_retention",
+    "method_state_integrity",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect method state after every witness operation before issuing a state transition.",
+  "retained_negative_ids": [
+    "V6494-X1-N02"
+  ],
+  "rollback": "Leave the auto-promoted validated state unchanged and do not rewrite ledger history.",
+  "scope_boundary": "Method Flow lifecycle handling only; no broader phase evidence credit.",
+  "supersedes": [],
+  "title": "Method Flow auto-promotion state inspection",
+  "trigger_preconditions": [
+    "candidate method",
+    "new passing witness",
+    "subsequent promotion request"
+  ],
+  "validation_witness_ids": []
+}

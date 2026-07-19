@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_git_recovery",
+  "candidate_workaround": "Capture native git output first, verify its exit status, and split the captured line in a separate statement.",
+  "failure_signature": "An inline PowerShell split reduced the live remote hash to one character.",
+  "method_id": "V6494-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "remote_equality",
+    "x1_start_gate",
+    "history_integrity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Evaluate native commands and parse captured output in separate statements.",
+  "retained_negative_ids": [
+    "V6494-X1-N09"
+  ],
+  "rollback": "Discard the malformed equality result and leave repository state unchanged.",
+  "scope_boundary": "Read-only live-ref parsing only; no remote-equality credit until a complete hash is observed.",
+  "supersedes": [],
+  "title": "Native Git output parse separation",
+  "trigger_preconditions": [
+    "PowerShell native command",
+    "git ls-remote output",
+    "hash parsing"
+  ],
+  "validation_witness_ids": []
+}

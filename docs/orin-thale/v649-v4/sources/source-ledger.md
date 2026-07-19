@@ -1,0 +1,21 @@
+# v649-v4 source ledger
+
+- **SRC-LIVE-REQUEST** — Hamish current v649-v4 activation from Sable Rook (current, live_authority). Controls solo ownership, x1-before-x2, four-commit cap, one scoped pass, no replay, platform exclusions, privacy, authority, and terminal route.
+- **SRC-PY-FUTURE** — Python 3.12 concurrent.futures Future documentation (current, official_documentation). Supplies Future state, cancellation, callback, and exception semantics for synthetic traces only.
+- **SRC-OPE-PRIMARY** — Holland and Hollands, Operator product expansion algebra (stable, primary_research). Supports formal OPE consistency and coefficient obligations only, never empirical GMUT evidence.
+- **SRC-ET-DOCS** — Einstein Toolkit official documentation (current, official_documentation). Supplies thorn, Cactus, user-guide, and component-documentation context; this phase performs no checkout, build, or solver run.
+- **SRC-ET-TESTS** — Einstein Toolkit guidance for adding a Cactus test case (current, official_documentation). Distinguishes bounded regression tests from convergence and physics-correctness evidence; no test or convergence run occurs here.
+- **SRC-FAO-GENEBANK** — FAO practical guides for application of genebank standards (current, official_guidance). Supplies accession, viability, documentation, distribution, and conservation context; it does not authorize community seed decisions here.
+- **SRC-CBD-DSI** — Convention on Biological Diversity digital sequence information on genetic resources (current, official_authority). Supplies current DSI and multilateral benefit-sharing context; repository authors make no legal interpretation, allocation, database, beneficiary, or authority decision.
+- **SRC-RFC7592** — RFC 7592 OAuth 2.0 Dynamic Client Registration Management Protocol (stable, official_experimental_specification). Defines read, update, delete, registration-token, rotation, and deprovisioning behavior and remains Experimental.
+- **SRC-RFC7591** — RFC 7591 OAuth 2.0 Dynamic Client Registration Protocol (stable, official_standard). Provides the adjacent registration metadata contract; synthetic vectors are not production registration evidence.
+- **SRC-NETCDF-NUG** — Unidata netCDF-3 File Format Specifications (draft, official_format_specification). Defines a draft documentation surface for CDF-1, CDF-2, and CDF-5 structural grammar; bounded fixtures do not promote the page to a final standard.
+- **SRC-WCAG22** — Web Content Accessibility Guidelines 2.2 (stable, official_standard). Structural checks cover only declared obligations and cannot close manual or affected-user evaluation.
+- **SRC-W3C-ERRORS** — W3C Understanding Error Identification (current, official_guidance). Supports textual error identification; manual and assistive-technology evaluation remain reserved.
+- **SRC-W3C-G139** — W3C G139 mechanism to jump to errors (current, official_technique). Supplies an example error-summary and linking pattern, not a complete conformance method.
+- **SRC-IUPAC-LIPPMANN** — IUPAC Gold Book Lippmann equation entry (current, official_terminology). Supports the electrocapillary derivative, fixed-variable, reference, sign, and surface-excess obligations only.
+- **SRC-ICH-E9R1** — ICH E9(R1) Estimands and Sensitivity Analysis guideline (stable, official_guideline). Supports estimand and sensitivity-analysis obligations without participant or Stage 20 evidence.
+- **SRC-EMA-MISSING** — EMA guideline on missing data in confirmatory clinical trials (current, official_guideline). Supplies missingness and pattern-mixture context; no trial or effect is evaluated here.
+- **SRC-NZ-PRIVACY** — New Zealand Privacy Commissioner obligations guidance (current, official_authority). Real privacy, correction, disclosure, and remedy decisions require competent human authority and affected-person consideration.
+- **SRC-TE-MANA-RARAUNGA** — Te Mana Raraunga principles of Māori data sovereignty (stable, primary_authority_source). Māori data and concepts remain under Māori governance; software and citation confer no Māori authority.
+- **SRC-OPENAI-CODEX** — OpenAI Codex official repository (watch, official_package). CLI version status may be observed; this phase performs no desktop application update.

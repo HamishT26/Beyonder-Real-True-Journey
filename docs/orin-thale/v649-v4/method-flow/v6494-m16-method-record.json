@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_diagnostic_recovery",
+  "candidate_workaround": "Pin Python UTF-8 mode before rerunning the exact frozen-title diagnostic.",
+  "failure_signature": "The default CP1252 output stream rejected a Māori character before the targeted row printed.",
+  "method_id": "V6494-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["unicode_integrity", "failure_retention", "frozen_history"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before any diagnostic that may emit Māori or other non-CP1252 text.",
+  "retained_negative_ids": ["V6494-X1-N16"],
+  "rollback": "Discard the incomplete diagnostic output and leave repository content unchanged.",
+  "scope_boundary": "Read-only output encoding only; no cultural or language-authority credit.",
+  "supersedes": [],
+  "title": "UTF-8-pinned frozen-title diagnostic",
+  "trigger_preconditions": ["PowerShell host", "Python diagnostic", "Unicode frozen title"],
+  "validation_witness_ids": []
+}

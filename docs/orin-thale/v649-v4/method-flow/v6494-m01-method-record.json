@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_search_recovery",
+  "candidate_workaround": "Pass explicit directories to ripgrep and constrain filenames with -g patterns rather than shell wildcards.",
+  "failure_signature": "Ripgrep rejected Windows wildcard path arguments before searching.",
+  "method_id": "V6494-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "sibling_lane_mutation",
+    "private_paths",
+    "history_rewrite"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "On Windows, use rg explicit directories with -g include patterns; never pass unexpanded wildcard paths.",
+  "retained_negative_ids": [
+    "V6494-X1-N01"
+  ],
+  "rollback": "Stop the search and leave repository content unchanged.",
+  "scope_boundary": "Read-only source inspection only; no semantic or validation credit until a bounded search passes.",
+  "supersedes": [],
+  "title": "Windows ripgrep include-pattern recovery",
+  "trigger_preconditions": [
+    "Windows filesystem",
+    "multiple Python filenames selected by wildcard"
+  ],
+  "validation_witness_ids": []
+}

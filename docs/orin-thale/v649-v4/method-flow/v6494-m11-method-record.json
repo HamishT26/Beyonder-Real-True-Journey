@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_remote_recovery",
+  "candidate_workaround": "Separate local Git evidence from the live network lookup and give the latter its own bounded window.",
+  "failure_signature": "A combined local and live-remote equality probe timed out before emitting its result.",
+  "method_id": "V6494-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "remote_equality",
+    "x1_start_gate",
+    "bounded_network_use"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Isolate live network lookups from local Git checks and assign them an explicit bounded network timeout.",
+  "retained_negative_ids": [
+    "V6494-X1-N11"
+  ],
+  "rollback": "Terminate the timed-out probe and leave repository and refs unchanged.",
+  "scope_boundary": "Read-only equality evidence only; no equality credit until both split probes return complete hashes.",
+  "supersedes": [],
+  "title": "Split local and live-remote equality probes",
+  "trigger_preconditions": [
+    "four-way Git equality",
+    "live network lookup",
+    "combined-probe timeout"
+  ],
+  "validation_witness_ids": []
+}

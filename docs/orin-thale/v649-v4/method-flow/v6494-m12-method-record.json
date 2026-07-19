@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_status_recovery",
+  "candidate_workaround": "Rerun unchanged local equality criteria under a measured longer timeout reserved for large-checkout status enumeration.",
+  "failure_signature": "Full repository status enumeration exceeded the initial ten-second local-probe bound.",
+  "method_id": "V6494-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "clean_state",
+    "remote_equality",
+    "bounded_execution"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Budget status enumeration separately for inherited large checkouts and do not infer cleanliness from a timed-out probe.",
+  "retained_negative_ids": [
+    "V6494-X1-N12"
+  ],
+  "rollback": "Terminate the short probe and leave repository state unchanged.",
+  "scope_boundary": "Read-only local Git evidence only; timeout is not clean-state evidence.",
+  "supersedes": [],
+  "title": "Measured large-checkout status window",
+  "trigger_preconditions": [
+    "large inherited checkout",
+    "git status enumeration",
+    "short-bound timeout"
+  ],
+  "validation_witness_ids": []
+}
