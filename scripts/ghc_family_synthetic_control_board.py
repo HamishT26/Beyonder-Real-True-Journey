@@ -1,3 +1,6 @@
 #!/usr/bin/env python3
-from ghc_family_v648_v2_runtime import main_for
-if __name__ == "__main__": raise SystemExit(main_for("V6482-P10"))
+"""Family-current bounded runner for the v649-v2 synthetic_control surface."""
+from ghc_family_v649_v2_runtime import cli
+
+if __name__ == "__main__":
+    raise SystemExit(cli('synthetic_control'))

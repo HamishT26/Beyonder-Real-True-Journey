@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_additive",
+  "candidate_workaround": "Capture Git add diagnostics and exit code before projecting only warning count, then read staged-review receipt fields rather than streaming every advisory.",
+  "failure_signature": "Git add emitted many line-ending advisories and the compound stage-and-review command exceeded the bounded output display despite completing successfully.",
+  "method_id": "v6492-m11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "staged_blob_integrity",
+    "diagnostic_retention",
+    "failed_witness_retention",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For large Windows staging sets, capture Git diagnostics and exit status before displaying only counts; never infer staged-review success from truncated console presentation.",
+  "retained_negative_ids": [
+    "V6492-X2-N12"
+  ],
+  "rollback": "Hold the commit, retain the truncated presentation, inspect the exact review receipts read-only, and restage only after bounded diagnostic capture.",
+  "scope_boundary": "Bounded owner-local staging recovery only; exact Git index blobs remain authoritative and no independent-reproduction or broader assurance credit is earned.",
+  "supersedes": [],
+  "title": "Capture Git staging diagnostics before compact projection",
+  "trigger_preconditions": [
+    "large owner-local Windows staging set",
+    "line-ending advisories may exceed display limits"
+  ],
+  "validation_witness_ids": []
+}

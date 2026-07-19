@@ -23,7 +23,10 @@ PRIVACY_PATTERNS = {
 
 
 def scanner_definition(path: str, source_line: bytes) -> bool:
-    return path == "scripts/ghc_family_v649_v2_staged_review.py" and (
+    return path in {
+        "scripts/ghc_family_v649_v2_staged_review.py",
+        "scripts/ghc_family_v649_v2_validator.py",
+    } and (
         b"re.compile(" in source_line or b"PRIVACY_PATTERNS" in source_line
     )
 
