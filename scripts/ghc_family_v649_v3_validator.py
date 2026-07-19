@@ -72,6 +72,27 @@ def x1_blob_parity() -> tuple[int, list[str]]:
     return len(paths), mismatches
 
 
+def commit_manifest_parity(commit: str, relative: str) -> tuple[bool, dict[str, Any]]:
+    repository_path = f"docs/sable-rook/v649-v3/validation/{relative}"
+    try:
+        manifest = json.loads(git("show", f"{commit}:{repository_path}"))
+    except Exception as exc:
+        return False, {"manifest": relative, "error": type(exc).__name__}
+    entries = manifest.get("entries", [])
+    exclusions = manifest.get("self_exclusions", [])
+    declared = {row["path"] for row in entries} | set(exclusions)
+    changed = {line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", commit).splitlines() if line}
+    coverage_missing = sorted(changed - declared)
+    coverage_extra = sorted(declared - changed)
+    blob_mismatches = []
+    for row in entries:
+        observed = git("rev-parse", f"{commit}:{row['path']}", check=False)
+        if observed != row["git_blob"]:
+            blob_mismatches.append(row["path"])
+    valid = not coverage_missing and not coverage_extra and not blob_mismatches
+    return valid, {"manifest": relative, "entries": len(entries), "exclusions": len(exclusions), "changed": len(changed), "coverage_missing": coverage_missing, "coverage_extra": coverage_extra, "blob_mismatches": blob_mismatches}
+
+
 def word_cap() -> tuple[int, list[str]]:
     checked = 0
     issues: list[str] = []
@@ -144,6 +165,15 @@ def phase_checks(include_terminal: bool, expected_head: str | None, evidence_hea
         merge_count = int(git("rev-list", "--count", "--merges", f"{SOURCE}..{head}"))
         phase_commits = int(git("rev-list", "--count", f"{SOURCE}..{head}"))
         parent_count = len(git("show", "-s", "--format=%P", head).split())
+        x1_manifest_valid, x1_manifest = commit_manifest_parity(X1, "x1-staged-manifest.json")
+        evidence_manifest_valid, evidence_manifest = commit_manifest_parity(evidence_head or "", "evidence-staged-manifest.json") if evidence_head else (False, {"error": "missing_evidence_head"})
+        final_manifest_valid, final_manifest = commit_manifest_parity(head, "final-staged-manifest.json")
+        stage_union = set()
+        for commit in (X1, evidence_head or "", head):
+            if commit:
+                stage_union.update(line for line in git("diff-tree", "--no-commit-id", "--name-only", "-r", commit).splitlines() if line)
+        source_to_head = {line for line in git("diff", "--name-only", f"{SOURCE}..{head}").splitlines() if line}
+        owner_union_valid = stage_union == source_to_head and all(path.startswith("docs/sable-rook/v649-v3/") or path.startswith("scripts/ghc_family_v649_v3_") or path.startswith("scripts/build_ghc_family_v649_v3_") or path.startswith("tests/test_ghc_family_v649_v3_") for path in source_to_head)
         checks.extend(
             [
                 check_result("source_ancestral", subprocess.run(["git", "merge-base", "--is-ancestor", SOURCE, head], cwd=ROOT).returncode == 0, SOURCE),
@@ -153,6 +183,10 @@ def phase_checks(include_terminal: bool, expected_head: str | None, evidence_hea
                 check_result("zero_merges", merge_count == 0, merge_count),
                 check_result("one_final_parent", parent_count == 1, parent_count),
                 check_result("exact_head", bool(expected_head) and head == expected_head, head),
+                check_result("x1_commit_manifest_parity", x1_manifest_valid, x1_manifest),
+                check_result("evidence_commit_manifest_parity", evidence_manifest_valid, evidence_manifest),
+                check_result("final_commit_manifest_parity", final_manifest_valid, final_manifest),
+                check_result("owner_union_manifest_parity", owner_union_valid, {"stage_union": len(stage_union), "source_to_head": len(source_to_head)}),
             ]
         )
     context = {"public_file_count": public_count, "json_parse_count": json_count, "privacy_pattern_classes": pattern_count, "privacy_hits": privacy_hits, "word_documents": word_files, "x1_paths": x1_paths, "head": head, "branch": branch}
