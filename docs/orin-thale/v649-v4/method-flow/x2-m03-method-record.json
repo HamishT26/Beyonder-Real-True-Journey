@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_postflight_recovery",
+  "candidate_workaround": "Separate staged-review credit from status postflights and compare precomputed manifest and x1 path sets.",
+  "failure_signature": "A grouped wrapper timed out after its exact staged-review subprocess had already passed.",
+  "method_id": "V6494-X2-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["exact_staged_review", "x1_immutability", "failure_attribution"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not group a successful staged review with nested large-checkout Git summaries; isolate each postflight and compare precomputed path sets.",
+  "retained_negative_ids": ["V6494-X2-N03"],
+  "rollback": "Retain the successful staged-review receipt, discard the incomplete summary, and leave the index unchanged until isolated probes finish.",
+  "scope_boundary": "Evidence postflight attribution only; the timeout does not invalidate the separately completed staged review.",
+  "supersedes": [],
+  "title": "Isolated evidence postflight after review completion",
+  "trigger_preconditions": ["passed staged review", "large checkout", "nested status summary timeout"],
+  "validation_witness_ids": []
+}

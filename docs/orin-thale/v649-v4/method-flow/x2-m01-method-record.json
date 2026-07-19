@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_inventory_recovery",
+  "candidate_workaround": "Use explicit roots and ripgrep -g filename filters instead of literal wildcard path arguments.",
+  "failure_signature": "Ripgrep returned Windows path error 123 for a literal wildcard path.",
+  "method_id": "V6494-X2-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["stale_label_review", "failure_retention", "bounded_inventory"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pass shell-style wildcard path arguments to ripgrep on Windows; use explicit roots and -g includes.",
+  "retained_negative_ids": ["V6494-X2-N01"],
+  "rollback": "Discard the incomplete inventory and leave repository content unchanged.",
+  "scope_boundary": "Read-only source inventory only; partial output earns no completeness credit.",
+  "supersedes": [],
+  "title": "Windows ripgrep explicit-root x2 inventory",
+  "trigger_preconditions": ["Windows filesystem", "multiple phase Python files", "stale-token inventory"],
+  "validation_witness_ids": []
+}
