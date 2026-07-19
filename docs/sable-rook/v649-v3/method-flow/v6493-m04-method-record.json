@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_read_only_or_additive",
+  "candidate_workaround": "Read top-level keys first, then inspect prior_proposals and new_proposals explicitly.",
+  "failure_signature": "The first novelty probe assumed a proposals array that was not present.",
+  "method_id": "v6493-m04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_path",
+    "sibling_lane",
+    "host_security",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Type-guard heterogeneous JSON and never index a guessed collection key.",
+  "retained_negative_ids": [
+    "V6493-X1-N05"
+  ],
+  "rollback": "Stop the read-only probe, preserve the schema-assumption failure, and retry only after key inspection.",
+  "scope_boundary": "Bounded same-owner workflow recovery only; no scientific, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Inspect JSON keys before indexing a frozen ledger",
+  "trigger_preconditions": [
+    "heterogeneous phase ledgers",
+    "schema not yet inspected"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_local_read_only_or_additive",
+  "candidate_workaround": "Run diff hygiene separately, compute the staged-path count and deterministic SHA-256 digest in-process, report only unexpected paths, and rely on the exact staged manifest for content review.",
+  "failure_signature": "A full staged-name review exceeded the available output context and a later full status wrapper timed out while streaming the same surface.",
+  "method_id": "v6493-m06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "private_path",
+    "sibling_lane",
+    "host_security",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not stream a full staged path list when an exact manifest plus compact count, digest, and exception set provides the review evidence.",
+  "retained_negative_ids": [
+    "V6493-X1-N07",
+    "V6493-X1-N08"
+  ],
+  "rollback": "Stop the verbose wrapper, retain every failure, make no inference from truncated output, and rerun only the compact read-only review.",
+  "scope_boundary": "Bounded same-owner workflow recovery only; no scientific, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Summarize an exact staged surface without streaming its full path list",
+  "trigger_preconditions": [
+    "dozens of staged paths",
+    "bounded tool-output context",
+    "slow D-drive status traversal"
+  ],
+  "validation_witness_ids": []
+}
