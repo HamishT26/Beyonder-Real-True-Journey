@@ -1,0 +1,23 @@
+{
+  "all_retained": true,
+  "count": 2,
+  "negatives": [
+    {
+      "category": "skill_smoke_predicate_mismatch",
+      "failed": "The first 20-skill aggregate initialized and validated packages but its final smoke predicate searched SKILL.md for wording that existed only in openai.yaml, so it received zero aggregate pass credit.",
+      "negative_id": "V6495-X2-N01",
+      "passing": "The corrected aggregate validated and smoke-used all 20 phase-local skills without global installation or subagent forward testing.",
+      "recovery": "Inspect exact generated files and require complementary SKILL.md boundary text plus the protected-gate phrase in openai.yaml.",
+      "recurrence_guard": "Bind smoke predicates to exact fields in the artifact where each field is generated."
+    },
+    {
+      "category": "closeout_scanner_definition_classification",
+      "failed": "The first evidence privacy gate classified the uncommitted closeout runner's three scanner-definition literals as payload hits and refused the evidence build.",
+      "negative_id": "V6495-X2-N02",
+      "passing": "The corrected five-class scan retained all candidates, classified exact scanner definitions explicitly, and returned zero confirmed payload hits.",
+      "recovery": "Inspect the exact hit paths, confirm they are regex definitions in the bounded scanner, and add only that exact runner to scanner-definition quarantine.",
+      "recurrence_guard": "Register every scanner implementation path explicitly before scanning executable source and never quarantine content-bearing artifacts."
+    }
+  ],
+  "schema": "ghc.family.v649-v5.x2-operational-negatives.v1"
+}

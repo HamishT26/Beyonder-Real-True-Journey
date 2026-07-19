@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Inspect the exact hit paths, confirm they are regex definitions in the bounded scanner, and add only that exact runner to scanner-definition quarantine.",
+  "failure_signature": "The first evidence privacy gate classified the uncommitted closeout runner's three scanner-definition literals as payload hits and refused the evidence build.",
+  "method_id": "V6495-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy_scan_integrity",
+    "scanner_definition_quarantine",
+    "failure_retention",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Register every scanner implementation path explicitly before scanning executable source and never quarantine content-bearing artifacts.",
+  "retained_negative_ids": [
+    "V6495-X2-N02"
+  ],
+  "rollback": "Keep the evidence build failed, retain all candidate rows, and never broaden quarantine beyond exact scanner source paths.",
+  "scope_boundary": "Exact scanner-source classification only; zero hits is not complete privacy assurance.",
+  "supersedes": [],
+  "title": "Classify exact closeout scanner definitions without hiding payload hits",
+  "trigger_preconditions": [
+    "A phase-owned executable defines the same privacy patterns used by the staged scanner."
+  ],
+  "validation_witness_ids": []
+}
