@@ -1,0 +1,21 @@
+# v649-v2 source ledger
+
+- **PY-THREADING-BARRIER** [current]: [threading.Barrier](https://docs.python.org/3/library/threading.html#barrier-objects) — Barrier, wait, timeout, broken, reset, and abort semantics only; no production scheduler claim.
+- **ZIMMERMANN-1969** [stable]: [Convergence of Bogoliubov's method of renormalization in momentum space](https://doi.org/10.1007/BF01645676) — BPHZ convergence and forest obligations only; no physical or empirical claim.
+- **HERZOG-2017** [stable]: [Zimmermann's Forest Formula, Infrared Divergences and the QCD Beta Function](https://arxiv.org/abs/1711.06121) — Forest and subtraction vocabulary only; no GMUT validation.
+- **HETDEX-PDR1** [current]: [HETDEX Public Data Release 1 and Source Catalog 2](https://hetdex.org/data-results/) — Product identity and zero-row requirements only; no query, download, ingestion, or fit.
+- **HETDEX-DEXCUBE** [current]: [HETDEX dexcube public tutorial and product tooling](https://github.com/HETDEX/dexcube) — Datacube and metadata field context only; no software install or data access.
+- **NZBS-HANDBOOK** [current]: [Transfusion Medicine Handbook](https://www.nzblood.co.nz/healthcare-professionals/transfusion-medicine/transfusion-medicine-handbook) — Synthetic workflow vocabulary only; no clinical interpretation or competence claim.
+- **NZBS-HAEMOVIGILANCE** [current]: [Haemovigilance programme](https://www.nzblood.co.nz/healthcare-professionals/haemovigilance-programme) — Adverse-event issue spotting only; no patient, donor, provider, or outcome evidence.
+- **RFC-9068** [stable]: [JSON Web Token Profile for OAuth 2.0 Access Tokens](https://www.rfc-editor.org/rfc/rfc9068.html) — Synthetic structural token requirements only.
+- **RFC-9068-ERRATA** [watch]: [RFC 9068 errata](https://www.rfc-editor.org/errata/rfc9068) — One reported erratum is tracked as unresolved watch evidence; it does not rewrite the RFC or confer production assurance.
+- **HDC-CODE** [current]: [Code of Health and Disability Services Consumers' Rights](https://www.hdc.org.nz/your-rights/about-the-code/code-of-health-and-disability-services-consumers-rights/) — Rights and communication issue spotting only; no legal or clinical interpretation.
+- **NZ-PRIVACY-PRINCIPLES** [current]: [New Zealand information privacy principles](https://www.privacy.org.nz/privacy-act-2020/privacy-principles/) — Privacy issue spotting only; no legal interpretation.
+- **TE-MANA-RARAUNGA** [current]: [Te Mana Raraunga Māori Data Sovereignty Network](https://www.temanararaunga.maori.nz/) — Authority reservation only; Māori concepts remain under tangata whenua, iwi, hapū, and Māori authority.
+- **ISO-28500-2017** [stable]: [Information and documentation — WARC file format](https://www.iso.org/standard/68004.html) — Public abstract and bounded structural requirements only; no complete standard-conformance claim.
+- **WAI-ARIA-SWITCH** [current]: [WAI-ARIA switch role](https://www.w3.org/TR/wai-aria/#switch) — Structural role and state requirements only.
+- **WAI-APG-SWITCH** [current]: [Switch Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/switch/) — Illustrative structural and keyboard requirements only; manual testing remains reserved.
+- **IUPAC-GIBBS-ENERGY** [stable]: [Gibbs energy terminology](https://goldbook.iupac.org/terms/view/G02629) — Thermodynamic terminology and units only; no psyche conversion.
+- **IUPAC-ENTHALPY** [stable]: [Enthalpy terminology](https://goldbook.iupac.org/terms/view/E02141) — Thermodynamic terminology and units only; no psyche conversion.
+- **ABADIE-DIAMOND-HAINMUELLER-2010** [stable]: [Synthetic Control Methods for Comparative Case Studies](https://doi.org/10.1198/jasa.2009.ap08746) — Structural method obligations only; zero participant estimation.
+- **ABADIE-2021** [stable]: [Using Synthetic Controls: Feasibility, Data Requirements, and Methodological Aspects](https://doi.org/10.1257/jel.20191450) — Design, support, fit, and sensitivity obligations only; no effect estimation.
