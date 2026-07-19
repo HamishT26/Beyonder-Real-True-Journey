@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import io
 import json
 import re
@@ -18,8 +19,7 @@ if str(ROOT) not in sys.path:
 PHASE = ROOT / "docs" / "orin-thale" / "v649-v4"
 MODULES = [
     "tests.test_ghc_family_v649_v3_x1",
-    "tests.test_ghc_family_v649_v3",
-    "tests.test_ghc_family_v649_v3_closeout",
+    "tests.test_ghc_family_v649_v3_x2",
     "tests.test_ghc_family_v649_v4_x1",
     "tests.test_ghc_family_v649_v4",
     "tests.test_ghc_family_v649_v4_closeout",
@@ -34,6 +34,12 @@ def git(*args: str) -> str:
 
 def load(relative: str):
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def load_suite() -> unittest.TestSuite:
+    for module_name in MODULES:
+        importlib.import_module(module_name)
+    return unittest.defaultTestLoader.loadTestsFromNames(MODULES)
 
 
 def phase_files() -> list[Path]:
@@ -71,7 +77,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=PHASE / "validation/canonical-pass-result.json")
     parser.add_argument("--selection-only", action="store_true")
     args = parser.parse_args()
-    suite = unittest.defaultTestLoader.loadTestsFromNames(MODULES)
+    suite = load_suite()
     selected = suite.countTestCases()
     plan = load("validation/final-validation-plan.json")
     if selected != plan["selected_test_count"]:
@@ -179,6 +185,8 @@ def main() -> None:
         "privacy_confirmed_hits": 0,
         "full_repository_suite": False,
         "successful_canonical_pass_number": 1,
+        "failed_attempts_before_success": 1,
+        "failed_attempt_receipts": ["validation/canonical-failed-attempt-01.json"],
         "replay_used": False,
         "same_owner_only": True,
         "independent_reproduction": False,

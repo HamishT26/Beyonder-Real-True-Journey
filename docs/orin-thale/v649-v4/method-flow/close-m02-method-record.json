@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_inventory_recovery",
+  "candidate_workaround": "Use explicit directory roots and ripgrep -g filters instead of wildcard path operands.",
+  "failure_signature": "Windows passed literal wildcard path operands to ripgrep during source and test inventories.",
+  "method_id": "V6494-CLOSE-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["inventory_completeness", "failure_recurrence", "source_attribution"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use explicit Windows roots with ripgrep -g filters and retain every recurrence as a separate failed witness.",
+  "retained_negative_ids": ["V6494-CLOSE-N02", "V6494-CLOSE-N04"],
+  "rollback": "Discard literal-wildcard results and leave repository content unchanged.",
+  "scope_boundary": "Read-only file inventory only; corrected matches do not establish broader semantic completeness.",
+  "supersedes": [],
+  "title": "Explicit-root Windows ripgrep inventories",
+  "trigger_preconditions": ["Windows filesystem", "multiple source or test files", "pattern-filtered inventory"],
+  "validation_witness_ids": []
+}

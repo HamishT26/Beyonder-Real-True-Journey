@@ -3,24 +3,33 @@
 
 from __future__ import annotations
 
+import importlib
 import json
 import subprocess
+import sys
 import unittest
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 PHASE = ROOT / "docs" / "orin-thale" / "v649-v4"
 SOURCE = "e7998c7ee6fb4a5dccc9e3a09a50aecc8a10b956"
 X1_COMMIT = "9882fb936e404796cd4aeb847ff41bd3ec28b5d6"
 MODULES = [
     "tests.test_ghc_family_v649_v3_x1",
-    "tests.test_ghc_family_v649_v3",
-    "tests.test_ghc_family_v649_v3_closeout",
+    "tests.test_ghc_family_v649_v3_x2",
     "tests.test_ghc_family_v649_v4_x1",
     "tests.test_ghc_family_v649_v4",
     "tests.test_ghc_family_v649_v4_closeout",
 ]
+
+
+def load_suite() -> unittest.TestSuite:
+    for module_name in MODULES:
+        importlib.import_module(module_name)
+    return unittest.defaultTestLoader.loadTestsFromNames(MODULES)
 
 
 def git(*args: str) -> str:
@@ -214,14 +223,21 @@ def build() -> None:
     write_json("threat-model.json", {"schema": "ghc.family.v649-v4.threat-model.v1", "threats": threats, "exhaustive": False})
     write_text("threat-model.md", "# v649-v4 threat model\n\n" + "\n".join(f"- **{row['threat']}** — Control: {row['control']}. Residual: {row['residual']}." for row in threats) + "\n\nThis is not an exhaustive security, privacy, legal, cultural, accessibility, or scientific review.")
     negatives = load("x2/retained-negative-register.json")
+    closeout_negatives = load("validation/closeout-operational-negatives.json")
     gates = load("x2/gate-register.json")
-    write_json("retained-negative-register-final.json", {**negatives, "schema": "ghc.family.v649-v4.retained-negatives.final-candidate.v1", "terminal_route": "PREPARED_NOT_SENT"})
+    write_json("retained-negative-register-final.json", {
+        **negatives,
+        "schema": "ghc.family.v649-v4.retained-negatives.final-candidate.v1",
+        "closeout_operational": closeout_negatives["count"],
+        "effective_at_final_candidate": negatives["effective_at_evidence"] + closeout_negatives["count"],
+        "terminal_route": "PREPARED_NOT_SENT",
+    })
     write_json("exact-open-gate-register-final.json", {**gates, "schema": "ghc.family.v649-v4.gates.final-candidate.v1", "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
     write_json("stage20-terminal-board.json", {"schema": "ghc.family.v649-v4.stage20-board.v1", "ready": False, "verdict": "NOT_READY_FOR_STAGE_20", "reasons": ["real_implementation_and_data_absent", "participants_absent", "production_identity_absent", "authority_gates_open", "manual_accessibility_open", "independent_reproduction_open"]})
-    selected = unittest.defaultTestLoader.loadTestsFromNames(MODULES).countTestCases()
+    selected = load_suite().countTestCases()
     write_json("closeout/closeout-candidate.json", {"schema": "ghc.family.v649-v4.closeout-candidate.v1", "evidence_head": evidence_head, "x1_commit": X1_COMMIT, "outcomes": {"completed": 6, "represented": 2, "open_gap": 1, "exact_gate": 1}, "canonical_successful_pass_used": False, "terminal_route": "PREPARED_NOT_SENT", "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
     write_json("closeout/seal-candidate.json", {"schema": "ghc.family.v649-v4.seal-candidate.v1", "evidence_head": evidence_head, "expected_phase_commit_count": 3, "expected_merge_count": 0, "expected_final_parent_count": 1, "exact_final_head": "VERIFIED_EXTERNALLY_AFTER_COMMIT", "terminal_route": "PREPARED_NOT_SENT"})
-    write_json("validation/final-validation-plan.json", {"schema": "ghc.family.v649-v4.final-validation-plan.v1", "full_repository_suite": False, "canonical_successful_pass_budget": 1, "successful_passes_used": 0, "replay_budget": 0, "selected_test_count": selected, "detailed_check_count": 32, "minimal_check_count": 20, "complete_phase_json_parse": True, "five_class_privacy_scan": True, "exact_staged_review": True})
+    write_json("validation/final-validation-plan.json", {"schema": "ghc.family.v649-v4.final-validation-plan.v1", "full_repository_suite": False, "canonical_successful_pass_budget": 1, "successful_passes_used": 0, "failed_canonical_attempts_before_success": 1, "failed_attempt_receipts": ["validation/canonical-failed-attempt-01.json"], "replay_budget": 0, "selected_test_count": selected, "detailed_check_count": 32, "minimal_check_count": 20, "complete_phase_json_parse": True, "five_class_privacy_scan": True, "exact_staged_review": True})
     write_json("validation/reproduction-receipt.json", {"schema": "ghc.family.v649-v4.reproduction.v1", "canonical_same_owner_pass": "PENDING", "replay_used": False, "named_or_detached_lane_created": False, "same_owner_only": True, "independent_team_reproduction": False})
     write_json("orchestration/final-phase-state.json", {"schema": "ghc.family.v649-v4.orchestration.final-candidate.v1", "active": ["Orin Thale"], "standby": ["Eiren Kestrel", "Ilyra Fen", "Sable Rook", "Tamar Vey", "Sylven Arc"], "subagents": 0, "tasks_created": 0, "cross_platform_messages": 0, "terminal_route": "PREPARED_NOT_SENT"})
     baton = baton_text(evidence_head)

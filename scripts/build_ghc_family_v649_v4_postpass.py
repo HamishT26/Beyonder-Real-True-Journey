@@ -93,12 +93,13 @@ def build() -> None:
     write_json("closeout/closeout-candidate.json", closeout)
     method = load("method-flow/method-flow-summary.json")
     x2_method = load("method-flow/x2-method-flow-summary.json")
+    closeout_method = load("method-flow/closeout-method-flow-summary.json")
     write_json("method-flow/final-method-flow-receipt.json", {
         "schema":"ghc.family.v649-v4.method-flow.final.v1",
-        "methods":method["counts"]["methods"] + x2_method["counts"]["methods"],
-        "failed_witnesses":method["counts"]["witness_results"]["fail"] + x2_method["counts"]["witness_results"]["fail"],
-        "passing_witnesses":method["counts"]["witness_results"]["pass"] + x2_method["counts"]["witness_results"]["pass"],
-        "preferred_methods":method["counts"]["states"]["preferred"] + x2_method["counts"]["states"]["preferred"],
+        "methods":method["counts"]["methods"] + x2_method["counts"]["methods"] + closeout_method["counts"]["methods"],
+        "failed_witnesses":method["counts"]["witness_results"]["fail"] + x2_method["counts"]["witness_results"]["fail"] + closeout_method["counts"]["witness_results"]["fail"],
+        "passing_witnesses":method["counts"]["witness_results"]["pass"] + x2_method["counts"]["witness_results"]["pass"] + closeout_method["counts"]["witness_results"]["pass"],
+        "preferred_methods":method["counts"]["states"]["preferred"] + x2_method["counts"]["states"]["preferred"] + closeout_method["counts"]["states"]["preferred"],
         "failure_erased":False,
         "independent_reproduction":False,
     })

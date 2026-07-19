@@ -1,0 +1,55 @@
+{
+  "all_retained": true,
+  "count": 6,
+  "negatives": [
+    {
+      "category": "grouped_postcommit_probe_timeout",
+      "failed": "A parallel grouped wrapper for three read-only post-commit Git probes timed out before returning any result.",
+      "negative_id": "V6494-CLOSE-N01",
+      "passing": "Isolated no-login probes confirmed the exact evidence head, clean state, two phase commits, and zero divergence.",
+      "recurrence_guard": "Run large-checkout post-commit Git probes as isolated no-login commands and preserve each native exit status.",
+      "recovery": "Retain the timeout without Git-state credit, then run log, status, lineage, equality, and live-remote checks separately."
+    },
+    {
+      "category": "windows_literal_wildcard_source_inventory_recurrence",
+      "failed": "A closeout source inventory passed shell-style wildcard path operands to ripgrep on Windows and failed with path error 123.",
+      "negative_id": "V6494-CLOSE-N02",
+      "passing": "The corrected inventory used the explicit scripts root with -g filters and returned the attributable source set.",
+      "recurrence_guard": "Use explicit Windows roots with ripgrep -g filters; never rely on shell expansion of path operands.",
+      "recovery": "Discard the incomplete inventory and rerun against the explicit scripts root with filename filters."
+    },
+    {
+      "category": "generated_method_flow_filename_assumption",
+      "failed": "A read-only Method Flow inspection guessed x2-prefixed generated filenames that did not exist.",
+      "negative_id": "V6494-CLOSE-N03",
+      "passing": "An explicit rg --files inventory resolved the actual generated record and witness filenames before the bounded read.",
+      "recurrence_guard": "Inventory generated filenames explicitly before reading them; do not infer prefixes from method identifiers.",
+      "recovery": "Retain the missing-path errors, inventory the exact directory, and read only the returned filenames."
+    },
+    {
+      "category": "windows_literal_wildcard_test_inventory_recurrence",
+      "failed": "A closeout test inventory again passed a shell-style wildcard path operand to ripgrep on Windows and failed with path error 123.",
+      "negative_id": "V6494-CLOSE-N04",
+      "passing": "The corrected test inventory used the explicit tests root and -g filter and returned the relevant assertions.",
+      "recurrence_guard": "Treat every wildcard-path recurrence as a retained witness and use explicit roots plus -g filters.",
+      "recovery": "Retain the recurrence, rerun against the explicit tests root, and award completeness only to the corrected inventory."
+    },
+    {
+      "category": "closeout_test_module_resolution_fault",
+      "failed": "The first closeout build counted six unittest FailedTest placeholders because the repository root was absent from the builder import path.",
+      "negative_id": "V6494-CLOSE-N05",
+      "passing": "After binding the repository root before module loading, the closeout build discovered the full 52-test authorized selection without running it.",
+      "recurrence_guard": "Bind in-process test discovery to the repository root before loading named repository test modules and reject placeholder-only counts.",
+      "recovery": "Retain the six-placeholder receipt without test-selection credit, add the repository root to sys.path, and rerun discovery only."
+    },
+    {
+      "category": "canonical_inherited_module_selection_failure",
+      "failed": "The first canonical attempt ran 52 cases: 50 real tests passed, while two nonexistent inherited module selectors produced loader errors.",
+      "negative_id": "V6494-CLOSE-N06",
+      "passing": "A corrected preflight imported the actual inherited x1 and x2 modules explicitly and discovered 64 eligible tests with zero placeholder modules before the single successful pass.",
+      "recurrence_guard": "Explicitly import every named test module before suite construction and use the immutable inherited test-file inventory rather than inferred phase labels.",
+      "recovery": "Retain the failed attempt with zero canonical-pass credit, replace only the two nonexistent selectors with the actual inherited x2 module, and require import-complete discovery before retry."
+    }
+  ],
+  "schema": "ghc.family.v649-v4.closeout-operational-negatives.v1"
+}

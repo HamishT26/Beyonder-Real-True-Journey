@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_test_selection_recovery",
+  "candidate_workaround": "Import every named test module explicitly and select the actual inherited x1 and x2 modules from the immutable test-file inventory.",
+  "failure_signature": "A canonical attempt executed real tests but also contained two nonexistent inherited module selectors that became loader errors.",
+  "method_id": "V6494-CLOSE-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["canonical_pass_credit", "no_post_success_replay", "inherited_test_scope", "failure_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Explicitly import every named module before suite construction and reject any inferred selector absent from the exact test-file inventory.",
+  "retained_negative_ids": ["V6494-CLOSE-N06"],
+  "rollback": "Give the failed attempt zero canonical-pass credit, preserve its receipt, and keep successful_passes_used at zero.",
+  "scope_boundary": "Authorized scoped-test selection only; correction may not broaden to the full repository suite or erase the failed attempt.",
+  "supersedes": [],
+  "title": "Import-complete inherited scoped-test selection",
+  "trigger_preconditions": ["failed loader selectors", "successful pass counter still zero", "immutable inherited test inventory available"],
+  "validation_witness_ids": []
+}

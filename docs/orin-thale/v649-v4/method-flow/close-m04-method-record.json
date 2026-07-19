@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_test_discovery_recovery",
+  "candidate_workaround": "Bind the repository root in sys.path before loading named repository test modules.",
+  "failure_signature": "Named unittest loading returned one FailedTest placeholder per module instead of the repository tests.",
+  "method_id": "V6494-CLOSE-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["single_canonical_pass_budget", "test_selection_integrity", "failure_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind in-process test discovery to the repository root and reject placeholder-only module counts before consuming a pass budget.",
+  "retained_negative_ids": ["V6494-CLOSE-N05"],
+  "rollback": "Treat the provisional count as invalid, run no tests, and leave the canonical pass budget unused.",
+  "scope_boundary": "Test discovery only; a corrected count is not a test pass.",
+  "supersedes": [],
+  "title": "Repository-root-bound unittest discovery",
+  "trigger_preconditions": ["named repository test modules", "script executed from scripts directory", "canonical pass budget not yet used"],
+  "validation_witness_ids": []
+}

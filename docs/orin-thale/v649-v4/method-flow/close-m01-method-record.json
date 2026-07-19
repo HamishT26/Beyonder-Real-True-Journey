@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_postcommit_recovery",
+  "candidate_workaround": "Run each post-commit Git probe separately with login-shell initialization disabled.",
+  "failure_signature": "A grouped parallel wrapper timed out before returning any post-commit Git result.",
+  "method_id": "V6494-CLOSE-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["exact_evidence_head", "clean_state", "remote_equality", "failure_retention"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run large-checkout post-commit Git probes as isolated no-login commands and preserve each native exit status.",
+  "retained_negative_ids": ["V6494-CLOSE-N01"],
+  "rollback": "Discard the incomplete grouped result and leave repository and remote state unchanged.",
+  "scope_boundary": "Read-only post-commit attribution only; the recovery does not add test or reproduction credit.",
+  "supersedes": [],
+  "title": "Isolated no-login post-commit Git verification",
+  "trigger_preconditions": ["large inherited checkout", "post-commit verification", "grouped wrapper timeout"],
+  "validation_witness_ids": []
+}
