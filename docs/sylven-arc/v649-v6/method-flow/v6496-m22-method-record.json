@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Compose modified, staged, and git ls-files --others results at file granularity before comparing the exact manifest union.",
+  "failure_signature": "The first precommit status-parity probe parsed porcelain output that collapsed untracked directories and falsely compared 91 directory-level rows with 172 file-level manifest paths.",
+  "method_id": "V6496-M22",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "single_successful_pass",
+    "immutable_phase_evidence",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never compare a file manifest with porcelain output unless untracked-files=all is explicit; prefer exact diff and ls-files composition.",
+  "retained_negative_ids": [
+    "V6496-X2-N04"
+  ],
+  "rollback": "Give the failed attempt zero credit, preserve its receipt or signature, and reconstruct only from the immutable x1 boundary.",
+  "scope_boundary": "Bounded same-owner workflow recovery only; no independent reproduction, production, scientific, professional, legal, cultural, privacy-complete, security-complete, or authority credit.",
+  "supersedes": [],
+  "title": "Compare manifests to file-level Git status domains",
+  "trigger_preconditions": [
+    "A bounded evidence-builder or validator wrapper fails before evidence credit is assigned."
+  ],
+  "validation_witness_ids": []
+}

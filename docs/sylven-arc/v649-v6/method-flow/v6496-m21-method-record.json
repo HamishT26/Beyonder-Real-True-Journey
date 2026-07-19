@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Inspect process state and the durable receipt separately, retain the wrapper timeout, and use a longer bounded envelope for the next validator call.",
+  "failure_signature": "The direct diagnostic validation exceeded its thirty-second shell wrapper and returned exit 124 before attributable output was delivered.",
+  "method_id": "V6496-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "single_successful_pass",
+    "immutable_phase_evidence",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "A wrapper timeout receives no pass credit; inspect process and receipt state before any retry and keep the timeout as an operational negative.",
+  "retained_negative_ids": [
+    "V6496-X2-N03"
+  ],
+  "rollback": "Give the failed attempt zero credit, preserve its receipt or signature, and reconstruct only from the immutable x1 boundary.",
+  "scope_boundary": "Bounded same-owner workflow recovery only; no independent reproduction, production, scientific, professional, legal, cultural, privacy-complete, security-complete, or authority credit.",
+  "supersedes": [],
+  "title": "Separate wrapper deadlines from durable diagnostic receipts",
+  "trigger_preconditions": [
+    "A bounded evidence-builder or validator wrapper fails before evidence credit is assigned."
+  ],
+  "validation_witness_ids": []
+}

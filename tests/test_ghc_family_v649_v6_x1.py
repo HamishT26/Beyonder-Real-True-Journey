@@ -1,12 +1,25 @@
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "sylven-arc" / "v649-v6"
+X1 = "d82382737868160e1b16c9302ca8a008b6f3153e"
+
+
 def load(relative):
-    return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+    repository_path = f"docs/sylven-arc/v649-v6/{relative}"
+    payload = subprocess.run(
+        ["git", "show", f"{X1}:{repository_path}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    ).stdout
+    return json.loads(payload)
 
 
 class TestV649V6X1(unittest.TestCase):
