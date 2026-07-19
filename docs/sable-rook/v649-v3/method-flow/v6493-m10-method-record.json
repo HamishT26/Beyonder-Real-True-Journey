@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_local_read_only_or_additive",
+  "candidate_workaround": "Separate staging, exact staged review, and receipt staging; give the staged reviewer a timeout comfortably above its measured path-count runtime and report each exit independently.",
+  "failure_signature": "A combined fixed-point wrapper exited without a diagnostic, then the decomposed 159-path staged review exceeded a 30-second tool envelope even though it was near completion.",
+  "method_id": "v6493-m10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_surface",
+    "x1_immutability",
+    "privacy_scan",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For staged surfaces above 100 paths, never combine all lifecycle steps in one opaque wrapper and budget at least twice the measured exact-review runtime.",
+  "retained_negative_ids": [
+    "V6493-X2-N02",
+    "V6493-X2-N03"
+  ],
+  "rollback": "Stop the opaque or timed-out wrapper, infer no pass from partial output, preserve the failure, and retry only the exact read-only stage with a larger bound.",
+  "scope_boundary": "Bounded same-owner Git-index review recovery only; no scientific, authority, production, privacy-complete, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Decompose and time-budget exact staged reviews",
+  "trigger_preconditions": [
+    "more than 100 staged paths",
+    "exact Git-index manifest and privacy scan",
+    "slow D-drive traversal"
+  ],
+  "validation_witness_ids": []
+}

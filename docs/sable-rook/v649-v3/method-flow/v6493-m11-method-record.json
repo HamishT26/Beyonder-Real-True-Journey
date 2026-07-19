@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_owner_local_read_only_or_additive",
+  "candidate_workaround": "Run exact staged diff hygiene before manifest refresh; remove only the reported extra terminal line and verify the named file independently before the full review.",
+  "failure_signature": "The exact evidence diff check rejected one new blank line at end of the bounded runtime.",
+  "method_id": "v6493-m11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "exact_staged_surface",
+    "x1_immutability",
+    "non_destructive_cleanup",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Before regenerating a commit-local manifest, run exact staged diff hygiene and require one terminal newline with no extra blank line.",
+  "retained_negative_ids": [
+    "V6493-X2-N04"
+  ],
+  "rollback": "Stop before commit, preserve the failed diff witness, edit only the named owner-scoped line ending, and leave every sibling and x1 blob unchanged.",
+  "scope_boundary": "Bounded same-owner diff-hygiene recovery only; no scientific, authority, production, security-complete, accessibility-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Run exact end-of-file hygiene before manifest refresh",
+  "trigger_preconditions": [
+    "new owner-scoped text or Python file",
+    "exact staged diff review",
+    "commit-local manifest pending"
+  ],
+  "validation_witness_ids": []
+}
