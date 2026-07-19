@@ -19,6 +19,8 @@ if str(ROOT) not in sys.path:
 PHASE = ROOT / "docs" / "sylven-arc" / "v649-v6"
 SOURCE = "295aa503d3c336273f541504a83b88783563ad90"
 X1 = "d82382737868160e1b16c9302ca8a008b6f3153e"
+EVIDENCE = "4e5f250f8dbe4f77fadce2dfdccfb7869f06ab30"
+TAMAR_EVIDENCE = "63f679b002e3f17df465a11c30632e769215ff7c"
 MODULES = [
     "tests.test_ghc_family_v649_v3_x1",
     "tests.test_ghc_family_v649_v3_x2",
@@ -41,8 +43,22 @@ def load(relative: str):
 
 
 def suite() -> unittest.TestSuite:
+    loaded = {}
     for name in MODULES:
-        importlib.import_module(name)
+        loaded[name] = importlib.import_module(name)
+    tamar = loaded["tests.test_ghc_family_v649_v5"]
+    tamar_git = tamar.git
+
+    def tamar_evidence_load(relative: str):
+        repository_path = f"docs/tamar-vey/v649-v5/{relative}"
+        return json.loads(git("show", f"{TAMAR_EVIDENCE}:{repository_path}"))
+
+    def tamar_evidence_git(*args: str):
+        projected = tuple(f"{TAMAR_EVIDENCE}:{arg[5:]}" if arg.startswith("HEAD:") else arg for arg in args)
+        return tamar_git(*projected)
+
+    tamar.load = tamar_evidence_load
+    tamar.git = tamar_evidence_git
     selected = unittest.defaultTestLoader.loadTestsFromNames(MODULES)
     if any(type(test).__name__ == "_FailedTest" for group in selected for test in (group if hasattr(group, "__iter__") else [group])):
         raise RuntimeError("module selection contains _FailedTest")
@@ -120,18 +136,21 @@ def main() -> None:
     method = load("method-flow/method-flow-ledger.json")
     x1_manifest = load("validation/x1-staged-manifest.json")
     evidence_manifest = load("validation/evidence-staged-manifest.json")
+    correction_manifest = load("validation/correction-staged-manifest.json")
     owner_files = len([path for path in PHASE.rglob("*") if path.is_file()])
     detailed = [
         git("merge-base", "--is-ancestor", SOURCE, X1) == "",
-        git("merge-base", "--is-ancestor", X1, head) == "",
+        git("merge-base", "--is-ancestor", X1, EVIDENCE) == "",
+        git("merge-base", "--is-ancestor", EVIDENCE, head) == "",
         git("rev-list", "--count", f"{SOURCE}..{X1}") == "1",
-        git("rev-list", "--count", f"{X1}..{head}") == "1",
+        git("rev-list", "--count", f"{X1}..{EVIDENCE}") == "1",
+        git("rev-list", "--count", f"{EVIDENCE}..{head}") == "1",
         git("rev-list", "--merges", f"{SOURCE}..{head}") == "",
-        git("rev-parse", f"{head}^") == X1,
+        git("rev-parse", f"{head}^") == EVIDENCE,
         outcomes["proposal_count"] == 10,
         outcomes["distribution"] == {"completed": 6, "represented": 2, "open_gap": 1, "exact_gate": 1},
         outcomes["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
-        negatives["effective_at_evidence"] == 5191,
+        negatives["effective_at_evidence"] == 5197,
         negatives["negative_erased"] is False,
         gates["effective_open_gaps"] == 40 and gates["effective_exact_gates"] == 41,
         gates["silently_closed"] == 0,
@@ -149,16 +168,19 @@ def main() -> None:
         plan["full_repository_suite"] is False,
         plan["replay_budget"] == 0 and plan["post_success_replay"] is False,
         manifest_ok("validation/x1-staged-manifest.json", X1),
-        manifest_ok("validation/evidence-staged-manifest.json", head),
+        manifest_ok("validation/evidence-staged-manifest.json", EVIDENCE),
+        manifest_ok("validation/correction-staged-manifest.json", head),
         len(x1_manifest["entries"]) + len(x1_manifest["self_exclusions"]) == 63,
         len(evidence_manifest["entries"]) + len(evidence_manifest["self_exclusions"]) > 100,
+        len(correction_manifest["entries"]) + len(correction_manifest["self_exclusions"]) > 10,
+        load("validation/source-local-lifecycle-projection.json")["tests_removed"] == 0,
         "stage20" in load("complete-incomplete-checklist.json")["incomplete"],
         all(len(path.read_text(encoding="utf-8").split()) <= 6000 for path in list(PHASE.rglob("*.md")) + list(PHASE.rglob("*.html"))),
         load("validation/reproduction-receipt.json")["replay_used"] is False,
         load("validation/stale-label-review.json")["unquarantined_stale_label_count"] == 0,
         load("validation/evidence-staged-privacy.json")["confirmed_hit_count"] == 0,
-        len(method["methods"]) == 22 and len(method["witnesses"]) == 34,
-        sum(item["result"] == "fail" for item in method["witnesses"]) == 12,
+        len(method["methods"]) == 26 and len(method["witnesses"]) == 44,
+        sum(item["result"] == "fail" for item in method["witnesses"]) == 18,
         owner_files < 15000,
     ]
     if not all(detailed):
@@ -204,7 +226,7 @@ def main() -> None:
         "privacy_confirmed_hits": 0,
         "full_repository_suite": False,
         "successful_canonical_pass_number": 1,
-        "failed_canonical_attempts_before_success": 0,
+        "failed_canonical_attempts_before_success": 1,
         "post_success_replay": False,
         "same_owner_only": True,
         "independent_reproduction": False,

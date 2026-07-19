@@ -8,6 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "sylven-arc" / "v649-v6"
 X1 = "d82382737868160e1b16c9302ca8a008b6f3153e"
+EVIDENCE = "4e5f250f8dbe4f77fadce2dfdccfb7869f06ab30"
 
 
 def load(relative):
@@ -105,8 +106,8 @@ class TestV649V6Evidence(unittest.TestCase):
 
     def test_negatives_preserved(self):
         row = load("x2/retained-negative-register.json")
-        self.assertEqual(row["effective_at_evidence"], 5191)
-        self.assertEqual((row["inherited_effective"], row["x1_operational"], row["synthetic_executed_rejected"], row["x2_operational"]), (5109, 8, 70, 4))
+        self.assertEqual(row["effective_at_evidence"], 5197)
+        self.assertEqual((row["inherited_effective"], row["x1_operational"], row["synthetic_executed_rejected"], row["x2_operational"]), (5109, 8, 70, 10))
         self.assertFalse(row["negative_erased"])
 
     def test_gates_preserved(self):
@@ -116,22 +117,20 @@ class TestV649V6Evidence(unittest.TestCase):
 
     def test_method_flow_parity(self):
         row = load("method-flow/method-flow-ledger.json")
-        self.assertEqual((len(row["methods"]), len(row["witnesses"])), (22, 34))
-        self.assertEqual(sum(item["result"] == "fail" for item in row["witnesses"]), 12)
-        self.assertEqual(sum(item["result"] == "pass" for item in row["witnesses"]), 22)
+        self.assertEqual((len(row["methods"]), len(row["witnesses"])), (26, 44))
+        self.assertEqual(sum(item["result"] == "fail" for item in row["witnesses"]), 18)
+        self.assertEqual(sum(item["result"] == "pass" for item in row["witnesses"]), 26)
 
     def test_x1_commit_is_ancestral_and_immutable(self):
         self.assertEqual(git("merge-base", "--is-ancestor", X1, "HEAD"), "")
         manifest = load("validation/x1-staged-manifest.json")
         self.assertEqual(len(manifest["self_exclusions"]), 3)
 
-    def test_evidence_manifest_matches_index(self):
+    def test_evidence_manifest_matches_evidence_commit(self):
         manifest = load("validation/evidence-staged-manifest.json")
         self.assertGreater(manifest["entry_count"], 100)
         for entry in manifest["entries"]:
-            staged = git("ls-files", "--stage", "--", entry["path"]).split()
-            self.assertGreaterEqual(len(staged), 4, entry["path"])
-            self.assertEqual(staged[1], entry["git_blob"], entry["path"])
+            self.assertEqual(git("rev-parse", f"{EVIDENCE}:{entry['path']}"), entry["git_blob"], entry["path"])
 
     def test_overview_is_three_page_equivalent(self):
         words = len((PHASE / "integrated-overview.md").read_text(encoding="utf-8").split())

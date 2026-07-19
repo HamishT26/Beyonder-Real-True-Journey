@@ -21,8 +21,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "sylven-arc" / "v649-v6"
 SOURCE = "295aa503d3c336273f541504a83b88783563ad90"
 X1 = "d82382737868160e1b16c9302ca8a008b6f3153e"
+EVIDENCE = "4e5f250f8dbe4f77fadce2dfdccfb7869f06ab30"
 METHOD_RUNNER = Path.home() / ".codex" / "skills" / "ghc-family-method-flow-state" / "scripts" / "ghc_family_method_flow_state.py"
-FINAL_NEGATIVES = 5191
+FINAL_NEGATIVES = 5197
 FINAL_OPEN_GAPS = 40
 FINAL_EXACT_GATES = 41
 
@@ -122,7 +123,7 @@ def update_method_flow() -> dict[str, Any]:
         "passing_witnesses": sum(row["result"] == "pass" for row in payload["witnesses"]),
         "preferred_methods": sum(row["recommendation_state"] == "preferred" for row in payload["methods"]),
     }
-    if counts != {"method_count": 22, "failed_witnesses": 12, "passing_witnesses": 22, "preferred_methods": 22}:
+    if counts != {"method_count": 26, "failed_witnesses": 18, "passing_witnesses": 26, "preferred_methods": 26}:
         raise RuntimeError(f"unexpected final Method Flow counts: {counts}")
     write_json("method-flow/final-method-flow-receipt.json", {"schema": "ghc.family.v649-v6.method-flow.final.v1", **counts, "failures_erased": 0, "same_owner_only": True})
     return counts
@@ -132,20 +133,20 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--evidence-commit", required=True)
     args = parser.parse_args()
-    evidence = args.evidence_commit
-    if git("rev-parse", "HEAD") != evidence:
-        raise RuntimeError("closeout must begin at the exact evidence head")
-    if git("rev-parse", f"{evidence}^") != X1:
-        raise RuntimeError("evidence must be the direct child of the frozen x1 commit")
+    validation_head = args.evidence_commit
+    if git("rev-parse", "HEAD") != validation_head:
+        raise RuntimeError("closeout must begin at the exact validation-correction head")
+    if git("rev-parse", f"{validation_head}^") != EVIDENCE or git("rev-parse", f"{EVIDENCE}^") != X1:
+        raise RuntimeError("validation correction, evidence, and x1 must form a direct single-parent chain")
     before = changed_paths()
     expected_receipt = "docs/sylven-arc/v649-v6/validation/canonical-pass-result.json"
     if before != [expected_receipt]:
         raise RuntimeError(f"closeout requires only the canonical receipt to be uncommitted, observed={before}")
 
     result = load("validation/canonical-pass-result.json")
-    if result["evidence_head"] != evidence or result["successful_canonical_pass_number"] != 1:
-        raise RuntimeError("canonical receipt does not bind the exact evidence head and sole pass")
-    if result["failed_canonical_attempts_before_success"] != 0 or result["post_success_replay"]:
+    if result["evidence_head"] != validation_head or result["successful_canonical_pass_number"] != 1:
+        raise RuntimeError("canonical receipt does not bind the exact validation head and sole credited pass")
+    if result["failed_canonical_attempts_before_success"] != 1 or result["post_success_replay"]:
         raise RuntimeError("unexpected canonical attempt or replay state")
 
     runners = load("x2/runner-use-ledger.json")
@@ -157,7 +158,8 @@ def main() -> None:
             final_runner_items.append(row)
     write_json("runner-receipts/ghc_family_v649_v6_closeout.json", {
         "schema": "ghc.family.v649-v6.closeout-runner.v1",
-        "evidence_head": evidence,
+        "evidence_head": EVIDENCE,
+        "validation_correction_head": validation_head,
         "canonical_pass_bound": True,
         "tests_rerun": False,
         "canonical_scan_rerun": False,
@@ -179,7 +181,7 @@ def main() -> None:
         "detailed_check_count": result["detailed_checks"],
         "minimal_check_count": result["minimal_checks"],
         "successful_passes_used": 1,
-        "failed_canonical_attempts_before_success": 0,
+        "failed_canonical_attempts_before_success": 1,
         "post_success_replay": False,
     })
     method_counts = update_method_flow()
@@ -189,7 +191,7 @@ def main() -> None:
         "inherited_effective": 5109,
         "x1_operational": 8,
         "synthetic_executed_rejected": 70,
-        "x2_operational": 4,
+        "x2_operational": 10,
         "effective_final": FINAL_NEGATIVES,
         "negative_erased": False,
     })
@@ -204,7 +206,8 @@ def main() -> None:
     common = {
         "source_head": SOURCE,
         "x1_commit": X1,
-        "evidence_commit": evidence,
+        "evidence_commit": EVIDENCE,
+        "validation_correction_commit": validation_head,
         "full_repository_suite": False,
         "post_success_replay": False,
         "same_owner_only": True,
@@ -219,6 +222,14 @@ def main() -> None:
         "effective_negatives": FINAL_NEGATIVES,
         "effective_open_gaps": FINAL_OPEN_GAPS,
         "effective_exact_gates": FINAL_EXACT_GATES,
+    })
+    write_json("closeout/validation-correction-receipt.json", {
+        "schema": "ghc.family.v649-v6.validation-correction-receipt.v1",
+        **common,
+        "direct_parent": EVIDENCE,
+        "failed_canonical_attempts_retained": 1,
+        "tests_removed": 0,
+        "source_lifecycle_projections": 2,
     })
     write_json("closeout/closeout-receipt.json", {
         "schema": "ghc.family.v649-v6.closeout.v1",
@@ -238,8 +249,8 @@ def main() -> None:
     write_json("closeout/seal-receipt.json", {
         "schema": "ghc.family.v649-v6.seal.v1",
         **common,
-        "final_commit_parent_required": evidence,
-        "phase_commit_count_after_final": 3,
+        "final_commit_parent_required": validation_head,
+        "phase_commit_count_after_final": 4,
         "merge_count_required": 0,
         "final_parent_count_required": 1,
         "canonical_pass_reused_without_rerun": True,
@@ -280,7 +291,7 @@ def main() -> None:
     write_json("wellbeing-check-final.json", {
         **load("wellbeing-check-final.json"),
         "schema": "ghc.family.v649-v6.wellbeing.final.v1",
-        "phase_commits": 3,
+        "phase_commits": 4,
         "canonical_passes": 1,
         "replays": 0,
         "host_changes": 0,
@@ -357,13 +368,15 @@ def main() -> None:
         "canonical_tests_rerun": False,
         "canonical_scan_rerun": False,
         "replay_used": False,
-        "evidence_head": evidence,
+        "evidence_head": EVIDENCE,
+        "validation_correction_head": validation_head,
         "terminal_route": "PREPARED_NOT_SENT",
     })
     if scan["confirmed_hit_count"]:
         raise RuntimeError("final incremental privacy review found confirmed hits")
     print(json.dumps({
-        "evidence_head": evidence,
+        "evidence_head": EVIDENCE,
+        "validation_correction_head": validation_head,
         "final_paths": len(entries) + 3,
         "final_json_integrity": len(parsed),
         "privacy_confirmed_hits": 0,
