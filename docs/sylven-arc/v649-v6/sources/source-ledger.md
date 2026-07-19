@@ -1,0 +1,22 @@
+# v649-v6 source ledger
+
+- **SRC-LIVE-BATON** - Current v649-v6 activation and committed Tamar pointer (current, live_authority). Controls solo ownership, exact inheritance, x1-before-x2, one successful pass, no replay, privacy, authority, and terminal routing.
+- **SRC-CROSSBEAM-EPOCH** - Crossbeam epoch-based memory reclamation documentation (current, official_package_documentation). Supports bounded pin, epoch, deferred-destruction, and quiescence fixtures only; it is not production concurrency assurance.
+- **SRC-ELITZUR-PRIMARY** - Elitzur, Impossibility of spontaneously breaking local symmetries (stable, primary_research). Supports formal local-gauge-symmetry obligations only, not empirical GMUT evidence.
+- **SRC-XMM-RGS** - XMM-Newton specifications for individual SSC data products (current, official_mission_documentation). Supplies RGS spectrum and response-product requirements; no product is downloaded or analyzed.
+- **SRC-XMM-XSA** - ESA XMM-Newton Science Archive (current, official_archive). Supplies archive and product provenance context only; zero rows and zero likelihoods remain.
+- **SRC-RSSB-WHEELSETS** - RSSB Railway Wheelsets GMRT2466 Issue 5 (current, official_industry_standard). Provides wheelset inspection, recording, and maintenance context; citation confers no rail competence or release authority.
+- **SRC-RSSB-WHEELSETS-DRAFT** - RSSB RIS-2766-RST Issue 2 consultation draft (draft, official_consultation_draft). Offers traceability and maintenance-plan context only and is never flattened into current normative authority.
+- **SRC-RFC9701** - RFC 9701 JSON Web Token Response for OAuth Token Introspection (stable, official_standard). Supports synthetic introspection-JWT validation and minimization vectors only.
+- **SRC-RFC9649** - RFC 9649 WebP Image Format (stable, official_standard). Supports bounded WebP RIFF container fixtures without pixel decoding or production conformance credit.
+- **SRC-WEBP-CONTAINER** - Google WebP Container Specification (current, official_format_documentation). Supplies chunk order, VP8X, canvas, animation, metadata, and resource-bound requirements only.
+- **SRC-WCAG-FOCUS** - W3C Understanding Focus Not Obscured (Minimum) (current, official_guidance). Supports structural focus-visibility obligations while manual and affected-user evaluation stays reserved.
+- **SRC-WCAG22** - Web Content Accessibility Guidelines 2.2 (stable, official_standard). Structural checks do not establish complete accessibility conformance.
+- **SRC-TOLMAN-PRIMARY** - Tolman, On the Weight of Heat and Thermal Equilibrium in General Relativity (stable, primary_research). Supports the physical equilibrium-temperature domain only, not a psyche or agency law.
+- **SRC-TOLMAN-EHRENFEST** - Tolman and Ehrenfest, Temperature Equilibrium in a Static Gravitational Field (stable, primary_research). Supports stationary-field equilibrium obligations only and no observation or human inference.
+- **SRC-MANSKI-MTR** - Manski, Monotone Treatment Response (stable, primary_method_source). Supports structural partial-identification assumptions; this phase estimates no participant effect.
+- **SRC-MANSKI-MIV** - Manski and Pepper, More on monotone instrumental variables (stable, primary_method_source). Supports nonparametric-bound and finite-sample caution only; no participant data are used.
+- **SRC-NZ-PRIVACY** - New Zealand Privacy Commissioner obligations guidance (current, official_authority). Real privacy, correction, disclosure, and remedy decisions require competent human authority and affected-person consideration.
+- **SRC-TE-MANA-RARAUNGA** - Te Mana Raraunga principles of Maori data sovereignty (stable, primary_authority_source). Maori data and concepts remain under Maori governance; software and citation confer no Maori authority.
+- **SRC-CROSSBEAM-WATCH** - Crossbeam epoch package latest release surface (watch, official_package_watch). Version drift is watched only; no package installation or production use occurs.
+- **SRC-OPENAI-CODEX** - OpenAI Codex official release repository (watch, official_package). Version status is observed only; no desktop or CLI update occurs.

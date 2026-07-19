@@ -1,0 +1,71 @@
+{
+  "all_retained": true,
+  "count": 8,
+  "negatives": [
+    {
+      "category": "powershell_foreach_formatter_parse_fault",
+      "failed": "A startup path probe placed a formatter pipe directly after a foreach block and PowerShell rejected the empty pipe element before any child command ran.",
+      "negative_id": "V6496-X1-N01",
+      "passing": "The scalar probe confirmed both Tamar and Sylven worktrees without mutation.",
+      "recovery": "Emit scalar path results directly without a formatter pipeline.",
+      "recurrence_guard": "Do not pipe directly from a PowerShell foreach statement; assign or emit scalar rows first."
+    },
+    {
+      "category": "manifest_byte_domain_conflation",
+      "failed": "The first manifest replay compared working-tree byte receipts with raw Git object sizes and reported false mismatches despite exact object identity.",
+      "negative_id": "V6496-X1-N02",
+      "passing": "All x1, evidence, and final object paths and object identifiers matched their commit-local trees.",
+      "recovery": "Verify path-filtered Git blob identity separately from checkout-byte receipts.",
+      "recurrence_guard": "Keep raw blob, path-filtered blob, and checkout-byte domains explicit in every manifest replay."
+    },
+    {
+      "category": "mixed_line_ending_filter_replay_mismatch",
+      "failed": "A generic smudge-filter reconstruction produced 5688 bytes for one inherited mixed-line-ending file while the sealed working-tree receipt recorded 5669.",
+      "negative_id": "V6496-X1-N03",
+      "passing": "The canonical file was 5669 bytes, clean, and its path-filtered object exactly equaled the recorded and committed object.",
+      "recovery": "Use the clean canonical working-tree byte receipt for the nonreconstructable mixed-line-ending domain and require its path-filtered object to equal the commit tree.",
+      "recurrence_guard": "Never infer historical mixed checkout bytes solely from a normalized Git blob and current smudge filter."
+    },
+    {
+      "category": "narrow_source_probe_timeout",
+      "failed": "A read-only scalar source probe exceeded a ten-second wrapper budget and produced no attributable evidence.",
+      "negative_id": "V6496-X1-N04",
+      "passing": "The bounded probe returned working bytes, object identities, and clean state.",
+      "recovery": "Rerun only the scalar checks under a bounded sixty-second envelope.",
+      "recurrence_guard": "Use realistic Windows Git wrapper budgets and give timed-out attempts no credit."
+    },
+    {
+      "category": "git_object_path_separator_fault",
+      "failed": "A Git object expression used a Windows backslash and rev-parse rejected the path while an unchecked wrapper continued.",
+      "negative_id": "V6496-X1-N05",
+      "passing": "The corrected object expression returned the exact committed object and clean status.",
+      "recovery": "Use repository-relative forward slashes and check each Git child exit code.",
+      "recurrence_guard": "Normalize Git object paths to forward slashes and fail on every nonzero child exit."
+    },
+    {
+      "category": "expected_no_match_exit_misclassified",
+      "failed": "A WebP novelty search returned no matches with ripgrep exit code one and the wrapper misclassified the expected absence as a command failure.",
+      "negative_id": "V6496-X1-N06",
+      "passing": "The structured audit returned zero lexical WebP and RIFF-container hits across all 690 predecessors.",
+      "recovery": "Use explicit no-match-aware structured term counts.",
+      "recurrence_guard": "Distinguish expected search absence from execution failure before assigning evidence credit."
+    },
+    {
+      "category": "semantic_seed_collisions",
+      "failed": "Initial XMM catalogue, OAuth protected-resource metadata, and skip-link proposals collided lexically or substantively with frozen predecessors; several earlier generic seed ideas also matched inherited mechanisms.",
+      "negative_id": "V6496-X1-N07",
+      "passing": "The revised ten remained below the 0.50 lexical threshold and passed manual substantive-neighbor review against all 690 proposals.",
+      "recovery": "Withdraw every collision and replace them with RGS product semantics, RFC 9701 introspection JWTs, and Focus Not Obscured without lowering the threshold.",
+      "recurrence_guard": "A new dataset, standard number, profession, or label does not establish a distinct mechanism."
+    },
+    {
+      "category": "memory_registry_current_phase_absence",
+      "failed": "The memory registry had no exact v649-v5 or v649-v6 current-phase entry.",
+      "negative_id": "V6496-X1-N08",
+      "passing": "No continuity was inferred from memory silence; live authority and repository evidence controlled startup.",
+      "recovery": "Retain the absence and use the live verified baton, committed pointer, and exact Git proof for current truth.",
+      "recurrence_guard": "Treat absent current memory as absence, never as proof or route authority."
+    }
+  ],
+  "schema": "ghc.family.v649-v6.x1-operational-negatives.v1"
+}
