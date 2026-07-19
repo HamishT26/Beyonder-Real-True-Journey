@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Launch the bounded validator as a tracked hidden process with external output capture and monitor both process state and the receipt path.",
+  "failure_signature": "The first canonical launcher lost its app execution handle and left an idle owner-launched process with no result receipt. Read-only PID and I/O checks showed no progress, so it was terminated with zero credit.",
+  "method_id": "V6495-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "single_successful_pass",
+    "failure_retention",
+    "immutable_phase_evidence",
+    "no_replay",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "A lost app handle never implies completion; require an attributable receipt or retain and terminate the confirmed orphan.",
+  "retained_negative_ids": [
+    "V6495-X2-N04"
+  ],
+  "rollback": "Give the failed aggregate zero credit, preserve its witness, and change only the demonstrated bounded fault.",
+  "scope_boundary": "Same-owner bounded validation recovery only; no independent reproduction, production, scientific, professional, legal, cultural, privacy-complete, security-complete, or authority credit.",
+  "supersedes": [],
+  "title": "Track validator process and receipt independently of the app handle",
+  "trigger_preconditions": [
+    "A bounded successor validation crosses an immutable lifecycle or process boundary."
+  ],
+  "validation_witness_ids": []
+}

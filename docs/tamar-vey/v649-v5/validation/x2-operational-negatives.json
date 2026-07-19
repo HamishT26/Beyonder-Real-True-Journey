@@ -1,6 +1,6 @@
 {
   "all_retained": true,
-  "count": 2,
+  "count": 7,
   "negatives": [
     {
       "category": "skill_smoke_predicate_mismatch",
@@ -17,6 +17,46 @@
       "passing": "The corrected five-class scan retained all candidates, classified exact scanner definitions explicitly, and returned zero confirmed payload hits.",
       "recovery": "Inspect the exact hit paths, confirm they are regex definitions in the bounded scanner, and add only that exact runner to scanner-definition quarantine.",
       "recurrence_guard": "Register every scanner implementation path explicitly before scanning executable source and never quarantine content-bearing artifacts."
+    },
+    {
+      "category": "mutable_freeze_loader_preflight",
+      "failed": "Pre-pass lifecycle review found the v649-v5 x1 test loader reading mutable current-phase JSON, which would misclassify legitimate x2 phase and Method Flow growth. No canonical credit was awarded.",
+      "negative_id": "V6495-X2-N03",
+      "passing": "All 20 x1 tests passed inside the credited 110-test aggregate through commit-local reads.",
+      "recovery": "Bind x1 JSON reads to immutable x1 commit blobs while leaving the current document-cap scan explicit.",
+      "recurrence_guard": "Phase-freeze tests must read commit-local blobs after a phase advances."
+    },
+    {
+      "category": "validation_handle_orphan_without_receipt",
+      "failed": "The first canonical launcher lost its app execution handle and left an idle owner-launched process with no result receipt. Read-only PID and I/O checks showed no progress, so it was terminated with zero credit.",
+      "negative_id": "V6495-X2-N04",
+      "passing": "The tracked launch method surfaced bounded completion states and the final tracked launch produced exactly one credited receipt.",
+      "recovery": "Launch the bounded validator as a tracked hidden process with external output capture and monitor both process state and the receipt path.",
+      "recurrence_guard": "A lost app handle never implies completion; require an attributable receipt or retain and terminate the confirmed orphan."
+    },
+    {
+      "category": "inherited_lifecycle_state_projection",
+      "failed": "The first tracked aggregate passed 108 of 110 tests but two inherited v649-v4 pre-pass assertions read sealed post-pass booleans. The aggregate received zero credit.",
+      "negative_id": "V6495-X2-N05",
+      "passing": "The credited aggregate ran and passed all 110 tests with both inherited assertions retained.",
+      "recovery": "Project only those pre-pass values from Orin's committed single-pass plan and evidence ledger without excluding either test.",
+      "recurrence_guard": "Successor checks of lifecycle assertions must bind each assertion to its committed pre-pass or post-pass evidence state."
+    },
+    {
+      "category": "detailed_check_count_mismatch",
+      "failed": "After all 110 tests passed, the validator found 33 substantive detailed checks while the frozen contract expected 32, so it wrote no receipt.",
+      "negative_id": "V6495-X2-N06",
+      "passing": "The credited aggregate passed all 33 detailed checks and recorded the corrected count.",
+      "recovery": "Enumerate the detailed-check list structurally and correct the contract and result count to the observed 33 without removing a check.",
+      "recurrence_guard": "Count validator list elements structurally before freezing declared detailed-check totals."
+    },
+    {
+      "category": "detailed_check_overcorrection",
+      "failed": "A first count repair inserted another valid plan check, producing 34 checks against the still-frozen count of 32 and again wrote no receipt.",
+      "negative_id": "V6495-X2-N07",
+      "passing": "The credited aggregate used the unmodified 33-check evidence set and passed every check.",
+      "recovery": "Restore the unmodified 33-check list, fold the plan-count guard into an existing plan check, and change only the expected and reported total.",
+      "recurrence_guard": "Inspect exact list cardinality after a proposed correction and before consuming another aggregate attempt."
     }
   ],
   "schema": "ghc.family.v649-v5.x2-operational-negatives.v1"

@@ -9,7 +9,24 @@ PHASE = ROOT / "docs" / "orin-thale" / "v649-v4"
 
 
 def load(relative: str):
-    return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+    row = json.loads((PHASE / relative).read_text(encoding="utf-8"))
+    # These assertions describe the committed pre-pass lifecycle contract.
+    # Dedicated source records retain the exact pre-pass values after sealing.
+    if relative == "validation/final-validation-plan.json":
+        prepass = json.loads(
+            (PHASE / "validation/single-pass-validation-plan.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        row["successful_passes_used"] = prepass["successful_passes_used"]
+    elif relative == "closeout/closeout-candidate.json":
+        evidence = json.loads(
+            (PHASE / "x2/evidence-ledger.json").read_text(encoding="utf-8")
+        )
+        row["canonical_successful_pass_used"] = evidence[
+            "canonical_successful_pass_used"
+        ]
+    return row
 
 
 class TestGhcFamilyV649V4Closeout(unittest.TestCase):

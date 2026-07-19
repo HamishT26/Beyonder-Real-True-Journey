@@ -1,14 +1,24 @@
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "tamar-vey" / "v649-v5"
+X1_COMMIT = "e4d241300fd23ca09dc1889d7e84bc494a96f387"
 
 
 def load(relative):
-    return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+    payload = subprocess.run(
+        ["git", "show", f"{X1_COMMIT}:docs/tamar-vey/v649-v5/{relative}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    ).stdout
+    return json.loads(payload)
 
 
 class TestV649V5X1(unittest.TestCase):

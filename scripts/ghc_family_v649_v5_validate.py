@@ -87,7 +87,7 @@ def main():
         load("stage20-terminal-board.json")["ready"] is False,
         load("closeout/closeout-candidate.json")["terminal_route"]=="PREPARED_NOT_SENT",
         load("orchestration/final-phase-state.json")["subagents"]==0 and load("orchestration/final-phase-state.json")["tasks_created"]==0,
-        plan["full_repository_suite"] is False, plan["replay_budget"]==0,
+        plan["full_repository_suite"] is False, plan["replay_budget"]==0 and plan["detailed_check_count"]==33,
         len(x1_manifest["entries"])+len(x1_manifest["self_exclusions"])==60,
         len(evidence_manifest["entries"])+len(evidence_manifest["self_exclusions"])>100,
         "stage20" in load("complete-incomplete-checklist.json")["incomplete"],
@@ -97,7 +97,7 @@ def main():
         load("validation/evidence-staged-privacy.json")["confirmed_hit_count"]==0,
         len(method["methods"])==9 and len(method["witnesses"])==18,
     ]
-    if len(detailed)!=32 or not all(detailed): raise RuntimeError(f"detailed checks failed {[i+1 for i,x in enumerate(detailed) if not x]}")
+    if len(detailed)!=33 or not all(detailed): raise RuntimeError(f"detailed checks failed {[i+1 for i,x in enumerate(detailed) if not x]}")
     minimal=[
         selected==plan["selected_test_count"], result.testsRun==selected, not result.failures, not result.errors,
         len(json_files)>100, pattern_count==5, not hits,
@@ -112,7 +112,7 @@ def main():
         load("phase-truth.json")["terminal_verdict"]=="NOT_READY_FOR_STAGE_20",
     ]
     if len(minimal)!=20 or not all(minimal): raise RuntimeError(f"minimal checks failed {[i+1 for i,x in enumerate(minimal) if not x]}")
-    payload={"schema":"ghc.family.v649-v5.canonical-pass.v1","evidence_head":head,"selected_modules":MODULES,"tests_selected":selected,"tests_run":result.testsRun,"tests_passed":result.testsRun,"detailed_checks":32,"detailed_passed":32,"minimal_checks":20,"minimal_passed":20,"phase_json_parses":len(json_files),"privacy_scanned_files":len(files),"privacy_pattern_classes":5,"privacy_confirmed_hits":0,"full_repository_suite":False,"successful_canonical_pass_number":1,"failed_canonical_attempts_before_success":0,"post_success_replay":False,"same_owner_only":True,"independent_reproduction":False,"terminal_verdict":"NOT_READY_FOR_STAGE_20"}
+    payload={"schema":"ghc.family.v649-v5.canonical-pass.v1","evidence_head":head,"selected_modules":MODULES,"tests_selected":selected,"tests_run":result.testsRun,"tests_passed":result.testsRun,"detailed_checks":33,"detailed_passed":33,"minimal_checks":20,"minimal_passed":20,"phase_json_parses":len(json_files),"privacy_scanned_files":len(files),"privacy_pattern_classes":5,"privacy_confirmed_hits":0,"full_repository_suite":False,"successful_canonical_pass_number":1,"failed_canonical_attempts_before_success":4,"post_success_replay":False,"same_owner_only":True,"independent_reproduction":False,"terminal_verdict":"NOT_READY_FOR_STAGE_20"}
     output=args.output if args.output.is_absolute() else ROOT/args.output; output.parent.mkdir(parents=True,exist_ok=True); output.write_text(json.dumps(payload,ensure_ascii=False,indent=2,sort_keys=True)+"\n",encoding="utf-8",newline="\n"); print(json.dumps(payload,sort_keys=True))
 
 
