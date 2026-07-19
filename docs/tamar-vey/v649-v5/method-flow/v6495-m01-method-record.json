@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Split exact receipt reads and manifest checks into bounded queries.",
+  "failure_signature": "An over-broad combined receipt listing exceeded its bounded timeout before producing attributable output.",
+  "method_id": "V6495-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Query exact receipts and immutable manifests separately.",
+  "retained_negative_ids": [
+    "V6495-X1-N01"
+  ],
+  "rollback": "Give the failed attempt no credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded same-owner recovery only; no independent reproduction, production, professional, legal, cultural, or authority credit.",
+  "supersedes": [],
+  "title": "Recover combined_receipt_listing_timeout while retaining the failed witness",
+  "trigger_preconditions": [
+    "A bounded v649-v5 workflow exposes combined_receipt_listing_timeout."
+  ],
+  "validation_witness_ids": []
+}
