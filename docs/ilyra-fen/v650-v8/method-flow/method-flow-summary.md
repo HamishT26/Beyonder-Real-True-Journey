@@ -2,9 +2,9 @@
 
 - Phase: v650-v8
 - Owner: Ilyra Fen
-- Methods: 15
-- Passing witnesses: 17
-- Failed witnesses retained: 18
+- Methods: 17
+- Passing witnesses: 25
+- Failed witnesses retained: 27
 
 ## Preferred methods
 
@@ -14,7 +14,7 @@
 - Method: Split branch, live-ref, worktree, ancestry, and status checks into independently bounded probes.
 - Recurrence guard: Never combine broad branch, ref, worktree, and status discovery under one short wrapper.
 - Rollback: Give the failed operation zero pass credit, preserve its negative, and leave source, sibling, external, participant, production, and authority state unchanged.
-- Witnesses: V6508-M01-WFAIL, V6508-M01-WPASS
+- Witnesses: V6508-M01-WFAIL, V6508-M01-WPASS, V6508-M01-WFAIL2, V6508-M01-WPASS2, V6508-M01-WFAIL3, V6508-M01-WPASS3
 
 ### V6508-M02 — Recover from native output early-close failure without erasing the failed witness
 
@@ -38,7 +38,7 @@
 - Method: Materialize foreach output in an explicit array before piping or serializing it.
 - Recurrence guard: Never pipe directly from a statement-level foreach block in Windows PowerShell 5.1.
 - Rollback: Give the failed operation zero pass credit, preserve its negative, and leave source, sibling, external, participant, production, and authority state unchanged.
-- Witnesses: V6508-M04-WFAIL, V6508-M04-WPASS
+- Witnesses: V6508-M04-WFAIL, V6508-M04-WPASS, V6508-M04-WFAIL2, V6508-M04-WPASS2
 
 ### V6508-M05 — Recover from bounded search early-close failure without erasing the failed witness
 
@@ -70,7 +70,7 @@
 - Method: Read the exact current function boundaries and split the update into small uniquely anchored patches.
 - Recurrence guard: Do not combine unrelated builder changes behind one long remembered context block.
 - Rollback: Treat the rejected patch as zero change and preserve the pre-patch file unchanged.
-- Witnesses: V6508-M08-WFAIL, V6508-M08-WPASS, V6508-M08-WFAIL2, V6508-M08-WPASS2
+- Witnesses: V6508-M08-WFAIL, V6508-M08-WPASS, V6508-M08-WFAIL2, V6508-M08-WPASS2, V6508-M08-WFAIL3, V6508-M08-WPASS3, V6508-M08-WFAIL4, V6508-M08-WPASS4
 
 ### V6508-M09 — Inspect exact UTF-8 source bytes before patching rendered separators
 
@@ -118,7 +118,7 @@
 - Method: List the exact bounded source directory, select the committed source ledger by its real name, and inspect only that file.
 - Recurrence guard: Resolve generated ledger filenames from the exact phase directory before opening them.
 - Rollback: Give the failed read zero schema credit and leave repository state unchanged.
-- Witnesses: V6508-M14-WFAIL, V6508-M14-WPASS
+- Witnesses: V6508-M14-WFAIL, V6508-M14-WPASS, V6508-M14-WFAIL2, V6508-M14-WPASS2, V6508-M14-WFAIL3, V6508-M14-WPASS3
 
 ### V6508-M15 — Classify final privacy candidates by exact reviewed path
 
@@ -127,6 +127,14 @@
 - Recurrence guard: Expand privacy-definition quarantine only from exact reviewed candidate paths, never from directory-wide assumptions.
 - Rollback: Give the partial packet zero final or seal credit and retain the unchanged evidence commit as the last remote-equal anchor.
 - Witnesses: V6508-M15-WFAIL, V6508-M15-WPASS
+
+### V6508-M17 — Bind targeted repository generator imports to their exact sibling module directory
+
+- Trigger: A targeted builder-function import runs outside the script entrypoint and cannot resolve a sibling module.
+- Method: Add the exact repository scripts directory to sys.path before importing and invoke only the declared generator functions.
+- Recurrence guard: When invoking repository-local builder functions outside their script entrypoint, add their exact sibling module directory explicitly.
+- Rollback: Give the failed import zero artifact-generation credit and leave all prior files unchanged.
+- Witnesses: V6508-M17-WFAIL, V6508-M17-WPASS
 
 ## Retained boundary
 

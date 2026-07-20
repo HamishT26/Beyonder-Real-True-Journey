@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Add the exact repository scripts directory to sys.path before importing and invoke only the declared generator functions.",
+  "failure_signature": "A targeted repository-local generator import stops with ModuleNotFoundError for its sibling phase-data module before writing artifacts.",
+  "method_id": "V6508-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "bounded_write_scope", "generated_artifact_integrity", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When invoking repository-local builder functions outside their script entrypoint, add their exact sibling module directory explicitly.",
+  "retained_negative_ids": ["NEG-V6508-X2-CORRECTION-SCRIPT-IMPORT-027"],
+  "rollback": "Give the failed import zero artifact-generation credit and leave all prior files unchanged.",
+  "scope_boundary": "Owner-local targeted generated-artifact recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind targeted repository generator imports to their exact sibling module directory",
+  "trigger_preconditions": ["A targeted builder-function import runs outside the script entrypoint and cannot resolve a sibling module."],
+  "validation_witness_ids": []
+}

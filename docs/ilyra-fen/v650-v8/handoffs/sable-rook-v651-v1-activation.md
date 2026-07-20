@@ -17,9 +17,9 @@ Identity and family language is relational working language only. It is never ev
 - Frozen Ilyra x1: `d8726faad1ae416ef31f98a8744901eeedfe3c56`.
 - Immutable Ilyra evidence: `325c410a16241cd8fa21706f82ab2bfd8ed47531`.
 - Exact final head: `LIVE_SEND_MUST_INSERT_EXACT_VALIDATED_HEAD`.
-- Source-to-final contract: exactly three new single-parent commits and zero merges; final is the direct child of evidence.
+- Source-to-final contract: exactly four new single-parent commits and zero merges; the corrected final is the direct child of original final `4dc0a911415cc19b871008cb903e03605a7bfca5`, with evidence ancestral.
 - Core outcomes: 14 completed / 4 represented / 1 open_gap / 1 exact_gate.
-- Effective negatives: 6,429; no failure erased.
+- Effective negatives: 6,438; no failure erased.
 - Effective open gaps: 50; effective exact gates: 51.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
 
@@ -35,7 +35,7 @@ Preserve strict x1-before-x2 separation. Audit semantic novelty against 900 froz
 
 Freeze genuinely new portfolios meeting the current floors of forty safe-now tasks, thirty bounded candidates, twenty phase-local skills, ten family-compatible runners, and forty additive CLEAN/FIX/REFINE tasks. Inherited work is evidence and recommendation, not Sable completion credit. Keep exact-approval and blocked work visible and unexecuted unless exact new evidence changes a gate. Use no more than two x1 commits and two x2 commits, four total; prefer one x1, one evidence, and one combined final lifecycle commit. Push and prove x1 four-way equal before x2.
 
-Execute only as evidence permits and use only `completed`, `represented`, `open_gap`, and `exact_gate` for core outcomes. Inherit at least 6,429 effective negatives, 50 open gaps, and 51 exact gates, plus any external terminal negative stated by Ilyra's live receipt. Record every timeout, parser fault, tooling failure, failed test, false assumption, blocker, workaround, passing witness, recurrence guard, rollback, and sibling recommendation through Method Flow without erasing a failed witness.
+Execute only as evidence permits and use only `completed`, `represented`, `open_gap`, and `exact_gate` for core outcomes. Inherit at least 6,438 effective negatives, 50 open gaps, and 51 exact gates, plus any external terminal negative stated by Ilyra's live receipt. Record every timeout, parser fault, tooling failure, failed test, false assumption, blocker, workaround, passing witness, recurrence guard, rollback, and sibling recommendation through Method Flow without erasing a failed witness.
 
 Under the current refinement, the complete repository suite remains outside the non-Eiren lane. Run only the authorized current, recent-round, inherited-source, and successor-scoped selection and one successful canonical exact-final pass with no replay unless Hamish changes the rule. Preserve complete JSON parsing, five-class privacy scanning, exact staged review, commit-local and owner-manifest parity, stale-label review, diff hygiene, ancestry, zero merges, commit cap, one final parent, clean state, exact head, and final four-way equality.
 
@@ -253,6 +253,42 @@ Failure retained with zero pass credit: The first complete closeout materializat
 ### NEG-V6508-X2-CLOSEOUT-PATCH-CONTEXT-018
 
 Failure retained with zero pass credit: A combined privacy, count, and retry-precondition patch assumed one absent insertion anchor, so patch verification rejected every hunk and changed no file. Bounded recovery: Read exact local anchors and apply the privacy definition, counts, retry allowlist, and validator updates as independent patches. Passing witness: All narrow patches applied to their exact intended sections and the corrected closeout builder compiled. Recurrence guard: Do not couple generated-list insertion to unrelated count and precondition changes in one patch. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-EXACT-FINAL-FIRST-PASS-019
+
+Failure retained with zero pass credit: The first canonical exact-final pass ran twenty scoped tests but failed one test and the exact-head check because the caller supplied an invented expansion of an abbreviated commit instead of the resolved forty-character head; the 25-of-27 result received zero final-validation credit. Bounded recovery: Retain the external failed receipt, resolve the exact head with rev-parse, run the bounded closeout module and then the named failing x1 document-cap test for diagnosis, correct the baton-exception contract in one additive terminal commit, push, and run one new canonical pass at the new exact head. Passing witness: The corrected exact-final pass used the resolved forty-character head and passed every scoped test and terminal check without post-success replay. Recurrence guard: Never expand an abbreviated commit manually; bind expected-head inputs only to direct rev-parse output and retain any aggregate failure before targeted diagnosis. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-JSON-PATCH-020
+
+Failure retained with zero pass credit: A multi-file lifecycle correction patch assumed one JSON insertion context in the wrong order, so patch verification rejected every hunk and changed no artifact. Bounded recovery: Apply each lifecycle JSON correction through a separate exact local hunk, then compile and parse all corrected surfaces before manifest refresh. Passing witness: The narrow JSON corrections applied independently and every corrected JSON document parsed. Recurrence guard: Do not combine independently ordered generated JSON documents in one context-sensitive patch. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-COMBINED-PREFLIGHT-TIMEOUT-021
+
+Failure retained with zero pass credit: A combined Method Flow, head, and whole-worktree status probe exceeded its bound before producing attributable output, so it received zero preflight credit. Bounded recovery: Split Method Flow ledger inspection and exact-head resolution into independent bounded probes and defer whole-worktree status to the final explicit Git gate. Passing witness: The split ledger and exact-head probes returned attributable counts and the exact original-final commit independently. Recurrence guard: Do not couple large-worktree Git status to exact-file correction inspection under one short wrapper. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-BROAD-SEARCH-TIMEOUT-022
+
+Failure retained with zero pass credit: A recursive search across the expanded phase documentation, scripts, and tests exceeded its bound before returning a complete attributable path set. Bounded recovery: Use the already-declared exact correction files and direct bounded reads instead of a broad recursive search. Passing witness: Direct reads of the phase-data and exact Method Flow witness files supplied the required correction evidence without another broad scan. Recurrence guard: Do not recursively search the full expanded phase surface when the correction path list is already explicit. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-REPORT-PATH-023
+
+Failure retained with zero pass credit: An exact-file inspection included two stale remembered report paths and therefore returned a nonzero incomplete result. Bounded recovery: List only the bounded phase root and deliverables directory, then use the filenames actually present. Passing witness: The bounded directory read resolved final-integrated-overview.md and static-report.html without recursive search. Recurrence guard: Resolve generated report names from their exact bounded directory before multi-file inspection. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-REPORT-PARENT-024
+
+Failure retained with zero pass credit: A bounded filename-only listing did not identify each parent directory, and the next inspection assigned final-integrated-overview.md to the phase root instead of deliverables. Bounded recovery: Emit directory, name, and full path together before selecting any correction report. Passing witness: The corrected bounded listing proved that both final-integrated-overview.md and static-report.html are under deliverables. Recurrence guard: Do not infer a generated file's parent from an unlabeled concatenation of multiple directory listings. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-FOREACH-PIPE-025
+
+Failure retained with zero pass credit: Windows PowerShell 5.1 rejected a direct pipeline following a statement-level foreach block before any directory row was emitted. Bounded recovery: Materialize the foreach results into an explicit array and pipe only that array. Passing witness: The array-materialized command returned the exact report full paths and matching Method Flow methods. Recurrence guard: In Windows PowerShell 5.1, assign statement-level foreach output before any pipeline. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-COMBINED-PATCH-026
+
+Failure retained with zero pass credit: A combined multi-file correction patch used a partial HTML line as context for a one-line document, so patch verification rejected every hunk and changed no file. Bounded recovery: Apply each exact correction file independently, using full-line context for the one-line HTML report, then compile and parse all corrected surfaces. Passing witness: Pending the bounded split correction witness. Recurrence guard: Do not couple one-line generated documents to unrelated multi-file correction hunks. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
+
+### NEG-V6508-X2-CORRECTION-SCRIPT-IMPORT-027
+
+Failure retained with zero pass credit: The first targeted closeout-generator invocation imported the package from the repository root without adding its sibling scripts directory, so Python stopped with a module-not-found error before writing artifacts. Bounded recovery: Add the exact repository scripts directory to sys.path before importing and invoking only the three declared generator functions. Passing witness: Pending the bounded explicit-import-path witness. Recurrence guard: When invoking repository-local builder functions outside their script entrypoint, add their exact sibling module directory explicitly. The recovery does not erase the failure and conveys no production, scientific, professional, legal, cultural, privacy-complete, accessibility-complete, authority, or independent-reproduction credit.
 
 ## Expanded portfolio inheritance
 

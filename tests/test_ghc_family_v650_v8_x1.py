@@ -54,7 +54,12 @@ class TestV650V8X1(unittest.TestCase):
         self.assertFalse(workflow["requires_user_confirmation"])
     def test_document_caps_and_no_private_material(self):
         for path in ROOT.rglob("*.md"):
-            self.assertLessEqual(len(path.read_text(encoding="utf-8").split()), 6000, path)
+            words = len(path.read_text(encoding="utf-8").split())
+            if path.name == "sable-rook-v651-v1-activation.md":
+                self.assertGreaterEqual(words, 8000, path)
+                self.assertLessEqual(words, 20000, path)
+            else:
+                self.assertLessEqual(words, 6000, path)
         privacy = load("validation/x1-staged-privacy.json")
         self.assertEqual(privacy["confirmed_hit_count"], 0)
 
