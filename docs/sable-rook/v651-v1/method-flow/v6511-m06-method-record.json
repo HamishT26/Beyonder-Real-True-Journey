@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Search the directory root and let ripgrep recurse instead of passing Windows wildcard path arguments.",
+  "failure_signature": "A read-only ripgrep command passed literal Windows wildcard paths and stopped with an invalid filename or directory syntax error before reading the intended files.",
+  "method_id": "V6511-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "read_only_scope",
+    "exact_path_handling",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "On Windows, pass a real directory to ripgrep and filter results by pattern; do not assume shell wildcard expansion in path arguments.",
+  "retained_negative_ids": [
+    "V6511-X2-N06"
+  ],
+  "rollback": "Keep the failed wildcard probe with zero search credit and change no repository state until a directory-scoped query passes.",
+  "scope_boundary": "Same-owner read-only path-query recovery only; no scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use directory-scoped ripgrep on Windows",
+  "trigger_preconditions": [
+    "A recursive text search is needed across files on Windows PowerShell."
+  ],
+  "validation_witness_ids": [
+    "V6511-M06-WFAIL",
+    "V6511-M06-WPASS"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Follow the skill's exact required-reference link and read references/schema.md instead of guessing a filename.",
+  "failure_signature": "A read-only skill refresh guessed a nonexistent schema filename and returned a file-not-found error after the complete skill text had already named the correct reference.",
+  "method_id": "V6511-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "skill_instruction_fidelity",
+    "schema_integrity",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve required references from the exact link in SKILL.md; never derive or guess a schema filename from the skill title.",
+  "retained_negative_ids": [
+    "V6511-X2-N07"
+  ],
+  "rollback": "Retain the failed guessed-path read with zero schema credit and make no ledger change until the exact linked schema is read.",
+  "scope_boundary": "Same-owner skill-reference recovery only; no scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resolve skill references from exact links",
+  "trigger_preconditions": [
+    "A selected skill names a required local reference that must be read before action."
+  ],
+  "validation_witness_ids": [
+    "V6511-M07-WFAIL",
+    "V6511-M07-WPASS"
+  ]
+}

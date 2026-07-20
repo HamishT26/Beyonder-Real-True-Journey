@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Allow 120 seconds for the owner and delta Git-blob manifest rebuild, then verify coverage and hashes from the emitted receipts.",
+  "failure_signature": "A targeted final-manifest rebuild exceeded a 30-second command wrapper and was terminated before returning a completion receipt.",
+  "method_id": "V6511-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "manifest_parity",
+    "bounded_timeout",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use the measured manifest-rebuild envelope rather than the generic short wrapper, and grant credit only after exact coverage and hash parity pass.",
+  "retained_negative_ids": [
+    "V6511-X2-N12"
+  ],
+  "rollback": "Retain the timed-out attempt with zero manifest credit, inspect partial outputs, and overwrite only generated manifest receipts during one bounded recovery.",
+  "scope_boundary": "Same-owner generated-manifest recovery only; no scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Budget final Git-blob manifest rebuilds to the measured envelope",
+  "trigger_preconditions": [
+    "A source-to-final manifest rebuild hashes hundreds of Git-filtered blobs in the Windows owner lane."
+  ],
+  "validation_witness_ids": [
+    "V6511-M11-WFAIL",
+    "V6511-M11-WPASS"
+  ]
+}

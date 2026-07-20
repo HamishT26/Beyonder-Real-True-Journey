@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use non-terminating PowerShell handling around native unittest output, capture the complete stream, and decide success only from the explicit native exit code.",
+  "failure_signature": "A precommit scoped unittest wrapper used terminating PowerShell error handling, so unittest's normal stderr progress stream became a NativeCommandError before the wrapper could inspect the successful process exit code.",
+  "method_id": "V6511-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "test_credit_integrity",
+    "complete_output_capture",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For native tools that legitimately write progress to stderr under Windows PowerShell 5.1, capture output with non-terminating handling and gate solely on LASTEXITCODE plus parsed totals.",
+  "retained_negative_ids": [
+    "V6511-X2-N08"
+  ],
+  "rollback": "Retain the interrupted wrapper with zero aggregate credit and change no repository evidence until one complete exit-code-governed selection passes.",
+  "scope_boundary": "Same-owner PowerShell native-output recovery only; no scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Judge unittest by native exit code under PowerShell 5.1",
+  "trigger_preconditions": [
+    "A native test runner writes normal progress to stderr while PowerShell terminating error handling is active."
+  ],
+  "validation_witness_ids": [
+    "V6511-M08-WFAIL",
+    "V6511-M08-WPASS"
+  ]
+}

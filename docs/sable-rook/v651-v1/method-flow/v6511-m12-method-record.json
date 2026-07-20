@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pipe the complete PowerShell here-string explicitly to Python, keep the recovery probe minimal, and require a structured success value before granting review credit.",
+  "failure_signature": "An intended staged AST audit omitted the here-string pipeline, so PowerShell printed the Python source instead of executing it; the printed source also contained an unparsed bracket error.",
+  "method_id": "V6511-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "staged_review_integrity",
+    "explicit_execution",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Require an explicit pipeline or script invocation for every inline-language probe and accept only a structured result emitted by the invoked interpreter.",
+  "retained_negative_ids": [
+    "V6511-X2-N13"
+  ],
+  "rollback": "Retain the printed-but-unexecuted probe with zero review credit and change no evidence claim until a minimal explicit invocation passes.",
+  "scope_boundary": "Same-owner command-wrapper recovery only; no scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Require explicit execution for inline audit probes",
+  "trigger_preconditions": [
+    "A PowerShell here-string contains inline code intended for another interpreter."
+  ],
+  "validation_witness_ids": [
+    "V6511-M12-WFAIL",
+    "V6511-M12-WPASS"
+  ]
+}
