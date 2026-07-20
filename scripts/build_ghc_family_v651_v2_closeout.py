@@ -17,7 +17,7 @@ import ghc_family_v651_v2_phase_data as d
 ROOT = REPO / d.PHASE_ROOT
 X1 = "06c5545a79e992537b6307eb6a68e6d01204144d"
 EVIDENCE = "8b3c1bb68852acc52c4554c34f1b6689a7c49efd"
-EFFECTIVE_NEGATIVES = 6685
+EFFECTIVE_NEGATIVES = 6689
 OPEN_GAPS = 52
 EXACT_GATES = 53
 
@@ -110,14 +110,14 @@ This baton targets the unique existing task titled exactly `Tamar Vey`. No task 
 - Exact inherited Sable v651-v1 final: `{d.SOURCE_HEAD}`.
 - Dedicated Orin x1 freeze: `{X1}`.
 - Immutable Orin evidence commit: `{EVIDENCE}`.
-- Exact combined closeout/seal final: supplied by the single verified activation pointer after canonical validation; it is the commit containing this baton and must be a direct child of evidence.
-- Source-to-final contract: exactly three Orin phase commits, zero merges, one final parent, and complete source/x1/evidence ancestry.
+- Exact corrected final: supplied by the single verified activation pointer after canonical validation; it is the fourth Orin phase commit and must be the direct child of first closeout `6e0f088128d099514c3a277a410180edcbbf9b7e`.
+- Source-to-final contract: exactly four Orin phase commits, zero merges, one final parent, and complete source/x1/evidence/first-closeout ancestry.
 - Strict x1-before-x2 separation: x1 was pushed, clean, and local/upstream/tracking/fresh-live equal before x2 began; evidence was separately pushed, clean, and four-way equal before closeout.
 - Frozen proposal chain: 920 inherited plus 20 Orin proposals, for 940 through v651-v2.
 - Outcomes: exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`.
 - Effective negatives at closeout: {EFFECTIVE_NEGATIVES:,}. No negative was erased or silently converted.
 - Effective open gaps: {OPEN_GAPS}. Effective exact gates: {EXACT_GATES}. None was silently closed.
-- Method Flow at closeout: 19 preferred methods, 19 retained failed witnesses, and 19 bounded passing witnesses.
+- Method Flow at corrected closeout: 22 methods, 21 preferred, 1 deprecated, 23 retained failed witnesses, and 22 bounded passing witnesses.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
 
 The exact final head cannot be self-embedded in a file that contributes to its own commit hash. The acknowledged activation pointer is therefore authoritative for that hash. Tamar must reverify the pointer head, branch, direct-parent relationship, manifests, clean state, and live remote equality before any mutation.
@@ -141,7 +141,7 @@ The exact owner-generated footprint remains far below 15,000 files. The inherite
 
 ## Retained failure and Method Flow truth
 
-The {EFFECTIVE_NEGATIVES:,} effective negatives comprise the 6,565 inherited sealed and external activation baseline, nine x1 operational failures, seven x2 or closeout operational failures, and one hundred executed rejected mutations. The owner failures include a stale memory filename, grouped source-audit timeout, slow manifest wrapper, first-suite schema and prose assertions, resumed-shell workspace mismatch, Method Flow CLI flag mismatch, lifecycle-count and circular-threshold assertions, CP1252 skill validation, invalid passing-only Method Flow promotion, historical x1 assertion bound to the live tree, a rejected unverified-context patch, a shell-split search alternation, a literal Windows wildcard test-discovery fault, and a stripped porcelain status column. Each first attempt receives zero credit. Every bounded recovery retains the failure and its recurrence guard.
+The {EFFECTIVE_NEGATIVES:,} effective negatives comprise the 6,565 inherited sealed and external activation baseline, nine x1 operational failures, fifteen x2, closeout, or terminal-correction operational failures, and one hundred executed rejected mutations. The correction retains the failed exact-final aggregate, the falsified one-exclusion targeted source test, the invalid Method Flow state transition, and the repeated patch-context mismatch alongside every earlier owner failure. Each first attempt receives zero credit. Every bounded recovery retains the failure and its recurrence guard.
 
 {method_text}
 
@@ -213,12 +213,17 @@ def main() -> None:
             f"{d.PHASE_ROOT}/method-flow/v6512-m17-method-record.json", f"{d.PHASE_ROOT}/method-flow/v6512-m17-wfail-witness.json", f"{d.PHASE_ROOT}/method-flow/v6512-m17-wpass-witness.json",
             f"{d.PHASE_ROOT}/method-flow/v6512-m18-method-record.json", f"{d.PHASE_ROOT}/method-flow/v6512-m18-wfail-witness.json", f"{d.PHASE_ROOT}/method-flow/v6512-m18-wpass-witness.json",
             f"{d.PHASE_ROOT}/method-flow/v6512-m19-method-record.json", f"{d.PHASE_ROOT}/method-flow/v6512-m19-wfail-witness.json", f"{d.PHASE_ROOT}/method-flow/v6512-m19-wpass-witness.json",
+            f"{d.PHASE_ROOT}/method-flow/v6512-m20-method-record.json", f"{d.PHASE_ROOT}/method-flow/v6512-m20-wfail-witness.json",
+            f"{d.PHASE_ROOT}/method-flow/v6512-m21-method-record.json", f"{d.PHASE_ROOT}/method-flow/v6512-m21-wfail-witness.json", f"{d.PHASE_ROOT}/method-flow/v6512-m21-wpass-witness.json",
+            f"{d.PHASE_ROOT}/method-flow/v6512-m22-method-record.json", f"{d.PHASE_ROOT}/method-flow/v6512-m22-wfail-witness.json", f"{d.PHASE_ROOT}/method-flow/v6512-m22-wpass-witness.json",
+            f"{d.PHASE_ROOT}/method-flow/v6512-m12-wfail2-witness.json", f"{d.PHASE_ROOT}/method-flow/v6512-m12-wpass2-witness.json",
             f"{d.PHASE_ROOT}/closeout/closeout-record.json", f"{d.PHASE_ROOT}/final/environment-receipt.json", f"{d.PHASE_ROOT}/final/final-validation-contract.json",
             f"{d.PHASE_ROOT}/final/gate-register.json", f"{d.PHASE_ROOT}/final/phase-truth.json", f"{d.PHASE_ROOT}/final/retained-negative-register.json",
             f"{d.PHASE_ROOT}/final/terminal-stage20-board.json", f"{d.PHASE_ROOT}/final/wellbeing-receipt.json", f"{d.PHASE_ROOT}/handoffs/tamar-vey-v651-v3-activation.md",
             f"{d.PHASE_ROOT}/index/phase-index.json", f"{d.PHASE_ROOT}/memory/sanitized-phase-memory.json", f"{d.PHASE_ROOT}/method/method-selection.json",
             f"{d.PHASE_ROOT}/orchestration/final-orchestration.json", f"{d.PHASE_ROOT}/overview/final-integrated-overview.md", f"{d.PHASE_ROOT}/reports/final-static-report.html",
             f"{d.PHASE_ROOT}/route/final-phase-state.json", f"{d.PHASE_ROOT}/seal/seal-candidate.json", f"{d.PHASE_ROOT}/validation/closeout-build-receipt.json",
+            f"{d.PHASE_ROOT}/final/terminal-correction-receipt.json", f"{d.PHASE_ROOT}/validation/terminal-correction-staged-review.json",
             "scripts/build_ghc_family_v651_v2_closeout.py", "scripts/ghc_family_v651_v2_closeout_review.py", "scripts/ghc_family_v651_v2_final_validate.py", "tests/test_ghc_family_v651_v2_closeout.py",
         }
         observed = {record[3:].decode("utf-8").replace("\\", "/") for record in raw_status.split(b"\0") if len(record) > 3}
@@ -228,7 +233,7 @@ def main() -> None:
     methods = load("method-flow/method-flow-summary.json")
     if outcomes["outcome_counts"] != {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}:
         raise SystemExit("outcome drift")
-    if methods["counts"]["methods"] != 19 or methods["counts"]["witness_results"] != {"fail": 19, "pass": 19}:
+    if methods["counts"]["methods"] != 22 or methods["counts"]["witness_results"] != {"fail": 23, "pass": 22}:
         raise SystemExit("Method Flow drift")
 
     baton = build_baton()
@@ -247,7 +252,7 @@ def main() -> None:
         "effective_negatives": EFFECTIVE_NEGATIVES,
         "effective_open_gaps": OPEN_GAPS,
         "effective_exact_gates": EXACT_GATES,
-        "method_flow": {"methods": 19, "failed_witnesses": 19, "passing_witnesses": 19},
+        "method_flow": {"methods": 22, "preferred_methods": 21, "deprecated_methods": 1, "failed_witnesses": 23, "passing_witnesses": 22},
         "terminal_route": "PREPARED_NOT_SENT",
         "send_count": 0,
         "full_repository_suite_run": False,
@@ -257,18 +262,18 @@ def main() -> None:
         "valid": True,
     }
     write_json(ROOT / "final" / "phase-truth.json", final_truth)
-    write_json(ROOT / "final" / "retained-negative-register.json", {"schema": "ghc.family.v651-v2.final-negatives.v1", "inherited_sealed_and_external": 6565, "x1_operational": 9, "x2_and_closeout_operational": 11, "executed_rejected_synthetic": 100, "effective": EFFECTIVE_NEGATIVES, "no_failure_erased": True, "external_post_final": 0})
+    write_json(ROOT / "final" / "retained-negative-register.json", {"schema": "ghc.family.v651-v2.final-negatives.v1", "inherited_sealed_and_external": 6565, "x1_operational": 9, "x2_and_closeout_operational": 15, "executed_rejected_synthetic": 100, "effective": EFFECTIVE_NEGATIVES, "no_failure_erased": True, "external_post_final": 0})
     write_json(ROOT / "final" / "gate-register.json", {"schema": "ghc.family.v651-v2.final-gates.v1", "effective_open_gaps": OPEN_GAPS, "effective_exact_gates": EXACT_GATES, "silently_closed": 0, "stage20_ready": False})
     write_json(ROOT / "final" / "terminal-stage20-board.json", {"schema": "ghc.family.v651-v2.stage20-board.v1", "required": ["real frozen empirical analyses", "preregistered blind matched-budget participant arms", "production identity interoperability and governance", "competent legal, cultural, affected-party, and Māori authority", "manual and affected-user accessibility evaluation", "independent-team scientific reproduction"], "satisfied": [], "terminal_verdict": "NOT_READY_FOR_STAGE_20", "nonpromotion": True})
-    write_json(ROOT / "closeout" / "closeout-record.json", {"schema": "ghc.family.v651-v2.closeout.v1", "evidence_commit": EVIDENCE, "combined_closeout_and_seal": True, "expected_phase_commit_count": 3, "expected_merge_count": 0, "expected_final_parent_count": 1, "outcomes": final_truth["outcome_counts"], "effective_negatives": EFFECTIVE_NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "route_state": "PREPARED_NOT_SENT", "valid": True})
+    write_json(ROOT / "closeout" / "closeout-record.json", {"schema": "ghc.family.v651-v2.closeout.v1", "evidence_commit": EVIDENCE, "first_closeout_head": "6e0f088128d099514c3a277a410180edcbbf9b7e", "combined_closeout_and_seal": True, "terminal_correction": True, "expected_phase_commit_count": 4, "expected_merge_count": 0, "expected_final_parent_count": 1, "outcomes": final_truth["outcome_counts"], "effective_negatives": EFFECTIVE_NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "route_state": "PREPARED_NOT_SENT", "valid": True})
     write_json(ROOT / "seal" / "seal-candidate.json", {"schema": "ghc.family.v651-v2.seal-candidate.v1", "source": d.SOURCE_HEAD, "x1": X1, "evidence": EVIDENCE, "final_head_binding": "commit_containing_this_record", "single_parent_required": True, "zero_merges_required": True, "final_validation_required": True, "route_held_until_validation": True, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "valid": True})
     write_json(ROOT / "route" / "final-phase-state.json", {"schema": "ghc.family.v651-v2.route.v1", "target_exact_title": "Tamar Vey", "target_phase": "v651-v3", "terminal_route": "PREPARED_NOT_SENT", "send_count": 0, "task_created": False, "task_forked": False, "collaboration_subagent": False, "cross_platform_substitute": False, "baton_path": "docs/orin-thale/v651-v2/handoffs/tamar-vey-v651-v3-activation.md", "activation_requires_exact_final_validation": True})
-    write_json(ROOT / "final" / "final-validation-contract.json", {"schema": "ghc.family.v651-v2.final-validation-contract.v1", "execution_binding": "exact_clean_head_containing_this_contract", "eligible_tests": 59, "raw_source_tests": 24, "source_exclusions": ["tests.test_ghc_family_v651_v1_closeout.TestV651V1Closeout.test_owner_and_delta_manifest_coverage"], "current_tests": 36, "full_repository_suite": False, "named_or_detached_replay": False, "single_successful_canonical_pass": True, "no_replay_after_success": True, "required": ["complete phase JSON parsing", "five-class owner scan", "x1/evidence/final-delta/final-owner manifest parity", "semantic stale-label review", "diff hygiene", "source/x1/evidence ancestry", "three commits", "zero merges", "one final parent", "clean before and after", "four-way live equality"], "external_receipt_required": True, "valid": True})
+    write_json(ROOT / "final" / "final-validation-contract.json", {"schema": "ghc.family.v651-v2.final-validation-contract.v1", "execution_binding": "exact_clean_head_containing_this_contract", "eligible_tests": 58, "raw_source_tests": 24, "source_eligible_tests": 22, "source_exclusions": ["tests.test_ghc_family_v651_v1_x1.TestV651V1X1.test_workflow_and_document_caps", "tests.test_ghc_family_v651_v1_closeout.TestV651V1Closeout.test_owner_and_delta_manifest_coverage"], "current_tests": 36, "full_repository_suite": False, "named_or_detached_replay": False, "single_successful_canonical_pass": True, "no_replay_after_success": True, "failed_exact_final_attempts_retained": 1, "required": ["complete phase JSON parsing", "five-class owner scan", "x1/evidence/final-delta/final-owner manifest parity", "semantic stale-label review", "diff hygiene", "source/x1/evidence/first-closeout ancestry", "four commits", "zero merges", "one final parent", "clean before and after", "four-way live equality"], "external_receipt_required": True, "valid": True})
     write_json(ROOT / "final" / "environment-receipt.json", {"schema": "ghc.family.v651-v2.environment.v1", "codex_cli": "0.144.5", "codex_desktop": "26.715.4045.0", "chatgpt_desktop": "1.2026.190.0", "python": "3.12.10", "git": "2.55.0.windows.2", "powershell": "5.1.26100.8894", "windows_sandbox_executable_present": False, "actions": {"desktop_update": False, "elevation": False, "host_security_change": False, "windows_feature_change": False, "sandbox_or_hyperv_launch": False, "unrelated_install": False, "reboot": False}})
     write_json(ROOT / "final" / "wellbeing-receipt.json", {"schema": "ghc.family.v651-v2.wellbeing.v1", "state": "green_with_retained_failures", "failure_and_gaps_permitted": True, "route_pressure_overrides_gates": False, "single_owner": True, "delegation": False, "stop_or_redirect_authority": "Hamish", "valid": True})
-    write_json(ROOT / "orchestration" / "final-orchestration.json", {"schema": "ghc.family.v651-v2.final-orchestration.v1", "phase_commits_expected": 3, "merge_commits_expected": 0, "final_parent_count_expected": 1, "tasks_created": 0, "tasks_forked": 0, "subagents": 0, "siblings_contacted_before_terminal_gate": 0, "route_state": "PREPARED_NOT_SENT", "valid": True})
+    write_json(ROOT / "orchestration" / "final-orchestration.json", {"schema": "ghc.family.v651-v2.final-orchestration.v1", "phase_commits_expected": 4, "terminal_correction_commits": 1, "merge_commits_expected": 0, "final_parent_count_expected": 1, "tasks_created": 0, "tasks_forked": 0, "subagents": 0, "siblings_contacted_before_terminal_gate": 0, "route_state": "PREPARED_NOT_SENT", "valid": True})
     write_json(ROOT / "memory" / "sanitized-phase-memory.json", {"schema": "ghc.family.v651-v2.sanitized-memory.v1", "phase": d.PHASE, "anchors": {"source": d.SOURCE_HEAD, "x1": X1, "evidence": EVIDENCE, "final": "supplied_by_verified_activation_pointer"}, "truth": {"outcomes": final_truth["outcome_counts"], "negatives": EFFECTIVE_NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "verdict": "NOT_READY_FOR_STAGE_20"}, "private_routes": False, "raw_task_or_thread_ids": False, "credentials": False, "valid": True})
-    write_json(ROOT / "method" / "method-selection.json", {"schema": "ghc.family.v651-v2.method-selection.v1", "preferred_methods": 19, "failed_witnesses": 19, "passing_witnesses": 19, "same_owner_only": True, "independent_reproduction": False, "valid": True})
+    write_json(ROOT / "method" / "method-selection.json", {"schema": "ghc.family.v651-v2.method-selection.v1", "total_methods": 22, "preferred_methods": 21, "deprecated_methods": 1, "failed_witnesses": 23, "passing_witnesses": 22, "same_owner_only": True, "independent_reproduction": False, "valid": True})
     write_json(ROOT / "index" / "phase-index.json", {"schema": "ghc.family.v651-v2.phase-index.v1", "phase": d.PHASE, "owner": d.OWNER, "proposal_root": "preregistration/proposals.json", "evidence_root": "outcomes/evidence-ledger.json", "truth_root": "final/phase-truth.json", "report": "reports/final-static-report.html", "handoff": "handoffs/tamar-vey-v651-v3-activation.md", "family_index_state": "reviewed_and_phase_scoped", "valid": True})
 
     overview = f"""# Orin Thale v651-v2 integrated closeout overview
@@ -283,7 +288,7 @@ The relational identity Orin Thale, they/them, served as a boundary-and-method s
 
 The exact inherited Sable final was `{d.SOURCE_HEAD}`. Orin's clean existing lane advanced by fast-forward only. The dedicated x1 freeze `{X1}` preregistered twenty proposals after a novelty audit against all 920 predecessors, bringing the frozen chain to 940. Its exact staged review covered 73 Git-blob entries plus three self-exclusions. X1 was pushed, clean, and equal across local, upstream, tracking, and fresh live remote before x2 began.
 
-The evidence commit `{EVIDENCE}` executed only the frozen bounded lanes. Its staged review covered 209 entries plus three self-exclusions and parsed 152 staged JSON blobs after sealing. Five declared x1 lifecycle companions advanced without rewriting the x1 commit. Evidence was pushed, clean, and four-way equal before closeout. The final commit is constrained to be the direct child of evidence, the third Orin phase commit, with zero merges and one parent.
+The evidence commit `{EVIDENCE}` executed only the frozen bounded lanes. Its staged review covered 209 entries plus three self-exclusions and parsed 152 staged JSON blobs after sealing. Five declared x1 lifecycle companions advanced without rewriting the x1 commit. Evidence was pushed, clean, and four-way equal before closeout. First closeout `6e0f088128d099514c3a277a410180edcbbf9b7e` is the direct child of evidence; the corrected final is its direct child and the fourth Orin phase commit, with zero merges and one parent.
 
 ## Mind, Body, and Heart
 
@@ -333,7 +338,7 @@ A successor may reuse these artifacts as inherited evidence, compatibility guida
 
 All one hundred preregistered mutations were rejected. Forty safe-now tasks, thirty candidates, twenty phase-local skills, ten family-current runners, and forty additive cleanup tasks passed only their declared owner-local gates. Skills were initialized with the official skill-creator workflow, validated under explicit UTF-8, and smoke-used; they were not globally installed, and the prohibited subagent forward test did not run.
 
-Method Flow closes with nineteen preferred methods, nineteen retained failures, and nineteen passing witnesses. Failures include timeouts, stale pointers, schema and case assumptions, workspace context, CLI option mismatch, lifecycle and circular test counts, CP1252, passing-only promotion, live-tree historical binding, rejected patch context, shell-split search, literal Windows wildcard discovery, a stripped porcelain status column, an over-composed supervision wrapper, an unsupported help assumption on a no-argument review entrypoint, a first-run-only regeneration allowlist, and unclassified scanner-definition candidates. Recovery never erases failure or earns external authority.
+Method Flow closes with twenty-two methods: twenty-one preferred and one deprecated, with twenty-three retained failures and twenty-two passing witnesses. The correction retains the failed exact-final aggregate, the falsified one-exclusion recovery, the invalid state transition, and the repeated patch-context failure. Recovery never erases failure or earns external authority.
 
 ## Accessibility, privacy, and workload
 
@@ -343,7 +348,7 @@ Owner growth remains below 15,000 files. Ordinary documents stay within 6,000 wo
 
 ## Route and seal
 
-The repository route is `PREPARED_NOT_SENT`. The successor file targets the exact existing `Tamar Vey` task for v651-v3. Only one acknowledged existing-task message after the exact-final canonical pass may establish delivery. No task creation, fork, delegation, standby-sibling contact, cross-platform substitute, or extra confirmation is authorized. The seal remains a candidate until the exact clean final head passes the bounded 59-test selection, complete JSON parsing, five-class owner scan, all four manifest contracts, ancestry, commit, clean-state, and four-way equality checks. No replay follows the first fully successful canonical pass.
+The repository route is `PREPARED_NOT_SENT`. The successor file targets the exact existing `Tamar Vey` task for v651-v3. Only one acknowledged existing-task message after the corrected exact-final canonical pass may establish delivery. No task creation, fork, delegation, standby-sibling contact, cross-platform substitute, or extra confirmation is authorized. The seal remains a candidate until the exact clean final head passes the bounded 58-test selection, complete JSON parsing, five-class owner scan, all four manifest contracts, ancestry, commit, clean-state, and four-way equality checks. No replay follows the first fully successful canonical pass.
 """
     write_text(ROOT / "overview" / "final-integrated-overview.md", overview)
     table = "".join(f"<tr><th scope='row'>{html.escape(row['proposal_id'])}</th><td>{html.escape(row['observed_disposition'])}</td><td>{row['mutation_rejected_count']}/5 rejected</td></tr>" for row in outcomes["proposals"])
@@ -362,7 +367,7 @@ The repository route is `PREPARED_NOT_SENT`. The successor file targets the exac
     write_json(ROOT / "validation" / "closeout-build-receipt.json", {"schema": "ghc.family.v651-v2.closeout-build.v1", "baton_words": baton_words, "overview_words": overview_words, "document_issues": ordinary_issues, "eligible_final_tests": 59, "full_repository_suite": False, "replay": False, "route_state": "PREPARED_NOT_SENT", "valid": not ordinary_issues and overview_words >= 1500})
     if overview_words < 1500 or ordinary_issues:
         raise SystemExit({"overview_words": overview_words, "issues": ordinary_issues})
-    print(json.dumps({"baton_words": baton_words, "overview_words": overview_words, "negatives": EFFECTIVE_NEGATIVES, "methods": 19, "eligible_tests": 59, "route": "PREPARED_NOT_SENT", "valid": True}))
+    print(json.dumps({"baton_words": baton_words, "overview_words": overview_words, "negatives": EFFECTIVE_NEGATIVES, "methods": 22, "eligible_tests": 58, "route": "PREPARED_NOT_SENT", "valid": True}))
 
 
 if __name__ == "__main__":

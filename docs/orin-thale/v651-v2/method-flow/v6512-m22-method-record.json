@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_state_transition_recovery",
+  "candidate_workaround": "Use the schema-permitted candidate-to-deprecated transition with an explicit successor when a candidate workaround is falsified before validation.",
+  "failure_signature": "The Method Flow runner rejected an attempted candidate-to-superseded transition for M20.",
+  "method_id": "V6512-M22",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "no_false_validation",
+    "append_only_state",
+    "explicit_successor"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read the state-transition table before retiring a method: candidate methods become deprecated, while validated or preferred methods may become superseded.",
+  "retained_negative_ids": [
+    "V6512-FINAL-N14"
+  ],
+  "rollback": "Give the rejected transition zero state credit, retain M20 as candidate until the permitted deprecation event is appended, and never fabricate validation.",
+  "scope_boundary": "Owner-local Method Flow state recovery only; no final-validation, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Retire falsified candidates through the permitted deprecated state",
+  "trigger_preconditions": [
+    "A candidate workaround is falsified before it has any passing witness."
+  ],
+  "validation_witness_ids": []
+}

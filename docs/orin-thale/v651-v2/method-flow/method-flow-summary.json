@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 19,
-    "recommendations": 19,
-    "state_events": 57,
+    "methods": 22,
+    "recommendations": 21,
+    "state_events": 65,
     "states": {
       "candidate": 0,
-      "deprecated": 0,
+      "deprecated": 1,
       "observed": 0,
-      "preferred": 19,
+      "preferred": 21,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 19,
-      "pass": 19
+      "fail": 23,
+      "pass": 22
     },
-    "witnesses": 38
+    "witnesses": 45
   },
   "owner": "Orin Thale",
   "phase": "v651-v2",
@@ -198,7 +198,9 @@
       ],
       "validation_witness_ids": [
         "V6512-M12-WFAIL",
-        "V6512-M12-WPASS"
+        "V6512-M12-WPASS",
+        "V6512-M12-WFAIL2",
+        "V6512-M12-WPASS2"
       ]
     },
     {
@@ -305,6 +307,36 @@
         "V6512-M19-WFAIL",
         "V6512-M19-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Quarantine exactly the inherited x1 terminal-baton document-cap assertion and the inherited closeout owner/delta live-path assertion, then require all other 22 source tests and all 36 current tests.",
+      "method_id": "V6512-M21",
+      "recurrence_guard": "Discover source tests exactly, quarantine only named assertions proven lifecycle-bound at the successor head, and require every remaining source and current test without widening to a module exclusion.",
+      "rollback": "Give the targeted manifest test zero successor credit, retain its full failure, keep the route unsent, and stop if any of the remaining 58 tests fail the bounded preflight.",
+      "scope_boundary": "Owner-local successor test-selection recovery only; no full-suite, scientific, production, authority, accessibility-complete, or independent-reproduction credit.",
+      "title": "Quarantine exactly two inherited live-lifecycle assertions",
+      "trigger_preconditions": [
+        "Two named inherited assertions have each failed because they inspect successor lifecycle state rather than immutable source-phase state."
+      ],
+      "validation_witness_ids": [
+        "V6512-M21-WFAIL",
+        "V6512-M21-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use the schema-permitted candidate-to-deprecated transition with an explicit successor when a candidate workaround is falsified before validation.",
+      "method_id": "V6512-M22",
+      "recurrence_guard": "Read the state-transition table before retiring a method: candidate methods become deprecated, while validated or preferred methods may become superseded.",
+      "rollback": "Give the rejected transition zero state credit, retain M20 as candidate until the permitted deprecation event is appended, and never fabricate validation.",
+      "scope_boundary": "Owner-local Method Flow state recovery only; no final-validation, scientific, production, authority, or independent-reproduction credit.",
+      "title": "Retire falsified candidates through the permitted deprecated state",
+      "trigger_preconditions": [
+        "A candidate workaround is falsified before it has any passing witness."
+      ],
+      "validation_witness_ids": [
+        "V6512-M22-WFAIL",
+        "V6512-M22-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -326,7 +358,11 @@
     "V6512-M16-WFAIL",
     "V6512-M17-WFAIL",
     "V6512-M18-WFAIL",
-    "V6512-M19-WFAIL"
+    "V6512-M19-WFAIL",
+    "V6512-M20-WFAIL",
+    "V6512-M21-WFAIL",
+    "V6512-M22-WFAIL",
+    "V6512-M12-WFAIL2"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

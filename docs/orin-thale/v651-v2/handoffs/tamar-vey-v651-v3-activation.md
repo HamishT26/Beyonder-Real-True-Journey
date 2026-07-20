@@ -16,14 +16,14 @@ This baton targets the unique existing task titled exactly `Tamar Vey`. No task 
 - Exact inherited Sable v651-v1 final: `ad2b530c2449656b54ac0fee1a1284208c2a6a75`.
 - Dedicated Orin x1 freeze: `06c5545a79e992537b6307eb6a68e6d01204144d`.
 - Immutable Orin evidence commit: `8b3c1bb68852acc52c4554c34f1b6689a7c49efd`.
-- Exact combined closeout/seal final: supplied by the single verified activation pointer after canonical validation; it is the commit containing this baton and must be a direct child of evidence.
-- Source-to-final contract: exactly three Orin phase commits, zero merges, one final parent, and complete source/x1/evidence ancestry.
+- Exact corrected final: supplied by the single verified activation pointer after canonical validation; it is the fourth Orin phase commit and must be the direct child of first closeout `6e0f088128d099514c3a277a410180edcbbf9b7e`.
+- Source-to-final contract: exactly four Orin phase commits, zero merges, one final parent, and complete source/x1/evidence/first-closeout ancestry.
 - Strict x1-before-x2 separation: x1 was pushed, clean, and local/upstream/tracking/fresh-live equal before x2 began; evidence was separately pushed, clean, and four-way equal before closeout.
 - Frozen proposal chain: 920 inherited plus 20 Orin proposals, for 940 through v651-v2.
 - Outcomes: exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`.
-- Effective negatives at closeout: 6,685. No negative was erased or silently converted.
+- Effective negatives at corrected closeout: 6,689. No negative was erased or silently converted.
 - Effective open gaps: 52. Effective exact gates: 53. None was silently closed.
-- Method Flow at closeout: 19 preferred methods, 19 retained failed witnesses, and 19 bounded passing witnesses.
+- Method Flow at corrected closeout: 22 methods, 21 preferred, 1 deprecated, 23 retained failed witnesses, and 22 bounded passing witnesses.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
 
 The exact final head cannot be self-embedded in a file that contributes to its own commit hash. The acknowledged activation pointer is therefore authoritative for that hash. Tamar must reverify the pointer head, branch, direct-parent relationship, manifests, clean state, and live remote equality before any mutation.
@@ -366,7 +366,7 @@ The exact owner-generated footprint remains far below 15,000 files. The inherite
 
 ## Retained failure and Method Flow truth
 
-The 6,685 effective negatives comprise the 6,565 inherited sealed and external activation baseline, nine x1 operational failures, seven x2 or closeout operational failures, and one hundred executed rejected mutations. The owner failures include a stale memory filename, grouped source-audit timeout, slow manifest wrapper, first-suite schema and prose assertions, resumed-shell workspace mismatch, Method Flow CLI flag mismatch, lifecycle-count and circular-threshold assertions, CP1252 skill validation, invalid passing-only Method Flow promotion, historical x1 assertion bound to the live tree, a rejected unverified-context patch, a shell-split search alternation, a literal Windows wildcard test-discovery fault, and a stripped porcelain status column. Each first attempt receives zero credit. Every bounded recovery retains the failure and its recurrence guard.
+The 6,689 effective negatives comprise the 6,565 inherited sealed and external activation baseline, nine x1 operational failures, fifteen x2, closeout, or terminal-correction operational failures, and one hundred executed rejected mutations. The owner failures include a stale memory filename, grouped source-audit timeout, slow manifest wrapper, first-suite schema and prose assertions, resumed-shell workspace mismatch, Method Flow CLI flag mismatch, lifecycle-count and circular-threshold assertions, CP1252 skill validation, invalid passing-only Method Flow promotion, historical x1 assertion bound to the live tree, rejected patch context, shell-split search, literal Windows wildcard discovery, stripped porcelain status, over-composed supervision, unsupported help, first-run-only regeneration, scanner-definition classification, the 58-of-59 first exact-final aggregate, the falsified one-exclusion targeted source test, an invalid Method Flow state transition, and a repeated correction patch-context mismatch. Each first attempt receives zero credit. Every bounded recovery retains the failure and its recurrence guard.
 
 ### V6512-M01 — Resolve stale memory rollout pointers with one bounded suffix search
 
@@ -444,6 +444,18 @@ Trigger: A bounded owner-local generator may need to refresh its already generat
 
 Trigger: A five-class scanner reports its own compiled patterns or an explicit negative assertion as a candidate. Workaround: Classify only exact scanner-definition lines and explicit sanitizer-negative assertions as definition candidates; keep every other match confirmed and fail closed. Witnesses: V6512-M19-WFAIL, V6512-M19-WPASS. Recurrence guard: A privacy scanner may classify a candidate only when the exact line is a compiled pattern definition or an explicit rejecting assertion in a named test; never exclude a file or class wholesale. Rollback: Give the failed staged review zero credit, retain all five candidates, and write no privacy or manifest receipt until exact classification yields zero unclassified hits. Boundary: Owner-local structural privacy classification only; no privacy-complete, security-complete, scientific, production, authority, or independent-reproduction credit.
 
+### V6512-M20 — Carry forward the exact inherited terminal-baton test adjudication
+
+This candidate retained the first 58-of-59 exact-final aggregate as N12, but its proposed one-for-one exclusion swap was falsified by the targeted source closeout test. It has no passing witness and is deprecated in favour of M21. No final-validation or routing credit attaches to it.
+
+### V6512-M21 — Quarantine exactly two inherited live-lifecycle assertions
+
+The targeted closeout path-set failure remains N13. The corrected source-only preflight discovered 24 tests, excluded exactly the frozen x1 terminal-baton document-cap assertion and the closeout owner/delta live-path assertion, and passed all remaining 22. The correction requires those 22 source tests plus all 36 Orin tests, never a module-wide exclusion.
+
+### V6512-M22 — Retire falsified candidates through the permitted deprecated state
+
+The invalid candidate-to-superseded transition remains N14. The schema-permitted candidate-to-deprecated transition retained M20 without false validation and explicitly named M21 as successor. This is Method Flow evidence only. M12 also retains a second failed patch-context witness, N15, before the corrected small patches passed.
+
 
 Same-owner recovery and canonical validation use shared infrastructure. They are not independent-team scientific reproduction, external audit, professional review, privacy assurance, exhaustive security, complete accessibility, legal review, cultural ratification, Māori-authority review, or production certification.
 
@@ -478,7 +490,7 @@ The source ledger records current, stable, draft, and watch statuses as observed
 
 ## Validation contract
 
-Eiren alone owns the complete repository suite. Orin's exact-final validator must run the bounded authorized selection once after the final commit is pushed and remote-equal. The selection contains the Sable v651-v1 x1 and x2 modules, seven eligible Sable closeout tests with the one exact lifecycle-local owner-manifest/status test excluded, and all Orin v651-v2 x1, x2, and closeout tests. Expected eligible count is 59. The validator must also parse every phase JSON document, scan every public owner file across five privacy/raw-identifier classes, replay x1/evidence/final-delta/final-owner manifests through immutable Git blobs, review semantic stale labels and diff hygiene, prove all anchors, exactly three phase commits, zero merges, one final parent, exact head, clean before and after, and local/upstream/tracking/fresh-live equality.
+Eiren alone owns the complete repository suite. Orin's corrected exact-final validator must run the bounded authorized selection once after the fourth commit is pushed and remote-equal. The selection discovers 24 Sable v651-v1 tests, quarantines exactly the two proven live-lifecycle assertions, requires all 22 remaining source tests, and requires all 36 Orin v651-v2 tests. Expected eligible count is 58. The validator must also parse every phase JSON document, scan every public owner file across five privacy/raw-identifier classes, replay x1/evidence/final-delta/final-owner manifests through immutable Git blobs, review semantic stale labels and diff hygiene, prove source/x1/evidence/first-closeout ancestry, exactly four phase commits, zero merges, one final parent, exact head, clean before and after, and local/upstream/tracking/fresh-live equality. The earlier 58-of-59 aggregate has zero final-validation credit and must not be treated as the successful pass.
 
 The complete repository suite must not run. No named or detached replay may run. The first fully successful exact-final canonical pass is final; no replay follows it. A failed aggregate receives zero pass credit and remains an operational negative. The activation pointer must state the actual eligible-test, detailed, minimal, JSON, privacy, manifest, ancestry, and equality results from that one pass.
 
@@ -492,7 +504,7 @@ Preserve strict x1-before-x2 separation. Audit semantic novelty against all 940 
 
 Treat inherited portfolios as evidence and recommendations only, not Tamar completion credit. Freeze genuinely new portfolios meeting floors of at least forty safe-now tasks, thirty bounded candidates, twenty skill ideas or builds, ten family-current runners, and forty additive CLEAN/FIX/REFINE tasks. Do not manufacture unsafe work. Participant, empirical, professional, legal, cultural, Māori-authority, production, privacy-complete, destructive, credential, account, key, host-security, sibling-mutation, or affected-party work must remain `open_gap`, `exact_gate`, exact approval, or blocked.
 
-Use no more than two x1 and two x2 commits, four total. Prefer one x1 freeze, one evidence commit, and one combined final closeout/seal commit, reserving a fourth only for a truthful narrow correction. Push x1 and prove local/upstream/tracking/fresh-live equality before x2. Execute only as evidence permits, using only `completed`, `represented`, `open_gap`, and `exact_gate` as core outcome labels. Preserve all 6,685 inherited effective negatives, all 52 open gaps, all 53 exact gates, and every new failure and bounded recovery through Method Flow.
+Use no more than two x1 and two x2 commits, four total. Prefer one x1 freeze, one evidence commit, and one combined final closeout/seal commit, reserving a fourth only for a truthful narrow correction. Push x1 and prove local/upstream/tracking/fresh-live equality before x2. Execute only as evidence permits, using only `completed`, `represented`, `open_gap`, and `exact_gate` as core outcome labels. Preserve all 6,689 inherited effective negatives, all 52 open gaps, all 53 exact gates, and every new failure and bounded recovery through Method Flow.
 
 Do not run the full repository suite; Eiren alone owns it. Use Tamar's authorized bounded current, inherited, and successor-scoped selection, detailed and minimal validators, complete JSON parsing, five-class privacy scanning, exact staged and owner manifests, stale-label review, diff hygiene, ancestry, zero merges, commit cap, one final parent, exact head, clean state, and final four-way equality. Permit one successful canonical exact-final pass only and no replay after success.
 

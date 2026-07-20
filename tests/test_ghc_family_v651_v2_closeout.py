@@ -26,8 +26,8 @@ class V651V2CloseoutTests(unittest.TestCase):
     def test_negative_and_gate_retention(self):
         negatives = load("final/retained-negative-register.json")
         gates = load("final/gate-register.json")
-        self.assertEqual(negatives["effective"], 6685)
-        self.assertEqual((negatives["x1_operational"], negatives["x2_and_closeout_operational"], negatives["executed_rejected_synthetic"]), (9, 11, 100))
+        self.assertEqual(negatives["effective"], 6689)
+        self.assertEqual((negatives["x1_operational"], negatives["x2_and_closeout_operational"], negatives["executed_rejected_synthetic"]), (9, 15, 100))
         self.assertTrue(negatives["no_failure_erased"])
         self.assertEqual((gates["effective_open_gaps"], gates["effective_exact_gates"]), (52, 53))
         self.assertEqual(gates["silently_closed"], 0)
@@ -35,9 +35,10 @@ class V651V2CloseoutTests(unittest.TestCase):
     def test_method_flow_balanced_retention(self):
         summary = load("method-flow/method-flow-summary.json")
         validation = load("method-flow/method-flow-validation.json")
-        self.assertEqual(summary["counts"]["methods"], 19)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 19, "pass": 19})
-        self.assertEqual(summary["counts"]["states"]["preferred"], 19)
+        self.assertEqual(summary["counts"]["methods"], 22)
+        self.assertEqual(summary["counts"]["witness_results"], {"fail": 23, "pass": 22})
+        self.assertEqual(summary["counts"]["states"]["preferred"], 21)
+        self.assertEqual(summary["counts"]["states"]["deprecated"], 1)
         self.assertTrue(summary["valid"] and validation["valid"])
 
     def test_route_is_prepared_not_sent(self):
@@ -49,9 +50,9 @@ class V651V2CloseoutTests(unittest.TestCase):
 
     def test_validation_contract_is_bounded(self):
         contract = load("final/final-validation-contract.json")
-        self.assertEqual(contract["eligible_tests"], 59)
+        self.assertEqual(contract["eligible_tests"], 58)
         self.assertEqual(contract["current_tests"], 36)
-        self.assertEqual(len(contract["source_exclusions"]), 1)
+        self.assertEqual(len(contract["source_exclusions"]), 2)
         self.assertFalse(contract["full_repository_suite"])
         self.assertFalse(contract["named_or_detached_replay"])
         self.assertTrue(contract["single_successful_canonical_pass"])
@@ -93,7 +94,7 @@ class V651V2CloseoutTests(unittest.TestCase):
         closeout = load("closeout/closeout-record.json")
         seal = load("seal/seal-candidate.json")
         self.assertEqual(closeout["evidence_commit"], "8b3c1bb68852acc52c4554c34f1b6689a7c49efd")
-        self.assertEqual(closeout["expected_phase_commit_count"], 3)
+        self.assertEqual(closeout["expected_phase_commit_count"], 4)
         self.assertEqual(closeout["expected_merge_count"], 0)
         self.assertEqual(closeout["expected_final_parent_count"], 1)
         self.assertTrue(closeout["valid"] and seal["valid"])

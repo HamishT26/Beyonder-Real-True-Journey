@@ -2,9 +2,9 @@
 
 - Phase: v651-v2
 - Owner: Orin Thale
-- Methods: 19
-- Passing witnesses: 19
-- Failed witnesses retained: 19
+- Methods: 22
+- Passing witnesses: 22
+- Failed witnesses retained: 23
 
 ## Preferred methods
 
@@ -102,7 +102,7 @@
 - Method: Read the exact bounded file context before applying a narrow patch and change only the verified import and assertion lines.
 - Recurrence guard: Inspect the exact local context after compaction or regeneration before constructing multi-file patches.
 - Rollback: Retain the rejected patch with zero edit credit, inspect the exact context read-only, and apply only the corrected bounded patch.
-- Witnesses: V6512-M12-WFAIL, V6512-M12-WPASS
+- Witnesses: V6512-M12-WFAIL, V6512-M12-WPASS, V6512-M12-WFAIL2, V6512-M12-WPASS2
 
 ### V6512-M13 — Use literal separate probes for quote-bearing Windows searches
 
@@ -159,6 +159,22 @@
 - Recurrence guard: A privacy scanner may classify a candidate only when the exact line is a compiled pattern definition or an explicit rejecting assertion in a named test; never exclude a file or class wholesale.
 - Rollback: Give the failed staged review zero credit, retain all five candidates, and write no privacy or manifest receipt until exact classification yields zero unclassified hits.
 - Witnesses: V6512-M19-WFAIL, V6512-M19-WPASS
+
+### V6512-M21 — Quarantine exactly two inherited live-lifecycle assertions
+
+- Trigger: Two named inherited assertions have each failed because they inspect successor lifecycle state rather than immutable source-phase state.
+- Method: Quarantine exactly the inherited x1 terminal-baton document-cap assertion and the inherited closeout owner/delta live-path assertion, then require all other 22 source tests and all 36 current tests.
+- Recurrence guard: Discover source tests exactly, quarantine only named assertions proven lifecycle-bound at the successor head, and require every remaining source and current test without widening to a module exclusion.
+- Rollback: Give the targeted manifest test zero successor credit, retain its full failure, keep the route unsent, and stop if any of the remaining 58 tests fail the bounded preflight.
+- Witnesses: V6512-M21-WFAIL, V6512-M21-WPASS
+
+### V6512-M22 — Retire falsified candidates through the permitted deprecated state
+
+- Trigger: A candidate workaround is falsified before it has any passing witness.
+- Method: Use the schema-permitted candidate-to-deprecated transition with an explicit successor when a candidate workaround is falsified before validation.
+- Recurrence guard: Read the state-transition table before retiring a method: candidate methods become deprecated, while validated or preferred methods may become superseded.
+- Rollback: Give the rejected transition zero state credit, retain M20 as candidate until the permitted deprecation event is appended, and never fabricate validation.
+- Witnesses: V6512-M22-WFAIL, V6512-M22-WPASS
 
 ## Retained boundary
 
