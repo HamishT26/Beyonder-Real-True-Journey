@@ -18,11 +18,13 @@ BRANCH = "codex/GHC-Family/ilyra-fen-full-tools"
 SOURCE = "f47cd5145647965935f80d67751f0e09d9740540"
 X1 = "d70cbab27e64e12d634e0d9b94b73f50aa507ad1"
 EVIDENCE = "2c54ccf284f3a9faf7c3cd5809b83af46faa7594"
+CLOSEOUT = "ed23f25accb780b542315f4f97e5ba96c98e069f"
 TEST_MODULES = [
     "tests.test_ghc_family_v650_v1_x1",
     "tests.test_ghc_family_v650_v2_x1",
     "tests.test_ghc_family_v650_v2_x2",
     "tests.test_ghc_family_v650_v2_closeout",
+    "tests.test_ghc_family_v650_v2_correction",
 ]
 PRIVACY = {
     "raw_task_or_thread_identifier": re.compile(r"(?i)(source_thread_id|thread_id)\s*[:=]"),
@@ -114,7 +116,13 @@ def privacy_scan() -> dict[str, Any]:
     paths = sorted(path for path in PHASE.rglob("*") if path.is_file())
     candidates: list[dict[str, str]] = []
     confirmed: list[dict[str, str]] = []
-    definition_names = {"final-owner-privacy.json", "x1-staged-privacy.json", "evidence-staged-privacy.json"}
+    definition_names = {
+        "final-owner-privacy.json",
+        "x1-staged-privacy.json",
+        "evidence-staged-privacy.json",
+        "final-staged-privacy.json",
+        "terminal-correction-staged-privacy.json",
+    }
     for path in paths:
         try:
             text = path.read_text(encoding="utf-8")
@@ -157,8 +165,10 @@ def main() -> int:
     privacy = privacy_scan()
     x1_manifest = check_manifest("validation/x1-staged-manifest.json", X1)
     evidence_manifest = check_manifest("validation/evidence-staged-manifest.json", EVIDENCE)
-    owner_manifest = check_manifest("validation/final-owner-manifest.json", head, owner_coverage=True)
-    final_staged_manifest = check_manifest("validation/final-staged-manifest.json", head)
+    closeout_owner_manifest = check_manifest("validation/final-owner-manifest.json", CLOSEOUT, owner_coverage=True)
+    closeout_staged_manifest = check_manifest("validation/final-staged-manifest.json", CLOSEOUT)
+    correction_owner_manifest = check_manifest("validation/terminal-correction-owner-manifest.json", head, owner_coverage=True)
+    correction_staged_manifest = check_manifest("validation/terminal-correction-staged-manifest.json", head)
     detailed: list[dict[str, Any]] = []
     minimal: list[dict[str, Any]] = []
 
@@ -175,18 +185,19 @@ def main() -> int:
         "source": run("git", "merge-base", "--is-ancestor", SOURCE, head, check=False).returncode == 0,
         "x1": run("git", "merge-base", "--is-ancestor", X1, head, check=False).returncode == 0,
         "evidence": run("git", "merge-base", "--is-ancestor", EVIDENCE, head, check=False).returncode == 0,
+        "closeout": run("git", "merge-base", "--is-ancestor", CLOSEOUT, head, check=False).returncode == 0,
     }
-    truth = load("phase-truth-final.json")
+    truth = load("phase-truth-terminal-correction.json")
     outcomes = load("x2/core-outcome-ledger.json")
-    negatives = load("x2/retained-negative-register.json")
+    negatives = load("x2/retained-negative-register-terminal.json")
     gates = load("x2/gate-register.json")
-    documents = load("validation/final-document-cap-receipt.json")
-    owner_threshold = load("validation/final-owner-file-threshold.json")
+    documents = load("validation/terminal-correction-document-receipt.json")
+    owner_threshold = load("validation/terminal-correction-owner-file-threshold.json")
     privacy_receipt = load("validation/final-owner-privacy.json")
-    staged_review = load("validation/final-staged-review.json")
-    method_summary = load("method-flow/method-flow-summary-x2.json")
+    staged_review = load("validation/terminal-correction-staged-review.json")
+    method_summary = load("method-flow/method-flow-summary-terminal.json")
     workflow = load("workflow/workflow-plan-refinement.json")
-    route = load("orchestration/phase-state-closeout.json")
+    route = load("orchestration/phase-state-terminal-correction.json")
 
     detail_values = [
         ("selected tests", tests["passed"], tests),
@@ -195,26 +206,29 @@ def main() -> int:
         ("committed privacy receipt", privacy_receipt["confirmed_hit_count"] == 0, privacy_receipt["confirmed_hit_count"]),
         ("x1 commit-local manifest", x1_manifest["passed"], x1_manifest),
         ("evidence commit-local manifest", evidence_manifest["passed"], evidence_manifest),
-        ("final owner manifest", owner_manifest["passed"], owner_manifest),
-        ("final staged manifest", final_staged_manifest["passed"], final_staged_manifest),
+        ("closeout owner manifest", closeout_owner_manifest["passed"], closeout_owner_manifest),
+        ("closeout staged manifest", closeout_staged_manifest["passed"], closeout_staged_manifest),
+        ("correction owner manifest", correction_owner_manifest["passed"], correction_owner_manifest),
+        ("correction staged manifest", correction_staged_manifest["passed"], correction_staged_manifest),
         ("exact staged review", staged_review["passed"], staged_review),
         ("source ancestry", ancestry["source"], ancestry["source"]),
         ("x1 ancestry", ancestry["x1"], ancestry["x1"]),
         ("evidence ancestry", ancestry["evidence"], ancestry["evidence"]),
-        ("three phase commits", phase_commits == 3, phase_commits),
+        ("closeout ancestry", ancestry["closeout"], ancestry["closeout"]),
+        ("four phase commits", phase_commits == 4, phase_commits),
         ("zero merge commits", merge_count == 0, merge_count),
         ("single final parent", parent_count == 1, parent_count),
-        ("final directly follows evidence", git("rev-parse", "HEAD^") == EVIDENCE, git("rev-parse", "HEAD^")),
+        ("final directly follows closeout", git("rev-parse", "HEAD^") == CLOSEOUT, git("rev-parse", "HEAD^")),
         ("canonical branch", git("branch", "--show-current") == BRANCH, git("branch", "--show-current")),
         ("clean state", dirty == "", dirty),
         ("four-way equality", len({local, upstream, tracking, live}) == 1, {"local": local, "upstream": upstream, "tracking": tracking, "live": live}),
         ("outcome distribution", outcomes["distribution"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}, outcomes["distribution"]),
-        ("negative total", negatives["effective_at_evidence"] == 5690, negatives["effective_at_evidence"]),
+        ("negative total", negatives["effective_activation_total"] == 5691, negatives["effective_activation_total"]),
         ("all mutations retained", load("x2/synthetic-mutation-results.json")["rejected_count"] == 100, load("x2/synthetic-mutation-results.json")["rejected_count"]),
         ("open gaps preserved", gates["effective_open_gaps"] == 44, gates["effective_open_gaps"]),
         ("exact gates preserved", gates["effective_exact_gates"] == 45, gates["effective_exact_gates"]),
         ("no gate silently closed", gates["silently_closed"] == 0, gates["silently_closed"]),
-        ("Method Flow parity", method_summary["counts"]["witness_results"] == {"fail": 11, "pass": 11}, method_summary["counts"]),
+        ("Method Flow parity", method_summary["counts"]["witness_results"] == {"fail": 12, "pass": 12}, method_summary["counts"]),
         ("workflow valid", workflow["valid"] is True, workflow["valid"]),
         ("document cap", documents["all_under_20000"] is True, documents),
         ("baton word range", documents["baton_within_8000_20000"] is True, documents["baton_words"]),
@@ -234,18 +248,21 @@ def main() -> int:
         ("privacy", privacy["passed"]),
         ("x1 manifest", x1_manifest["passed"]),
         ("evidence manifest", evidence_manifest["passed"]),
-        ("owner manifest", owner_manifest["passed"]),
-        ("staged manifest", final_staged_manifest["passed"]),
+        ("closeout owner manifest", closeout_owner_manifest["passed"]),
+        ("closeout staged manifest", closeout_staged_manifest["passed"]),
+        ("correction owner manifest", correction_owner_manifest["passed"]),
+        ("correction staged manifest", correction_staged_manifest["passed"]),
         ("source ancestor", ancestry["source"]),
         ("x1 ancestor", ancestry["x1"]),
         ("evidence ancestor", ancestry["evidence"]),
+        ("closeout ancestor", ancestry["closeout"]),
         ("commit cap", phase_commits <= 4),
-        ("exact cadence", phase_commits == 3),
+        ("exact cadence", phase_commits == 4),
         ("zero merges", merge_count == 0),
         ("one parent", parent_count == 1),
         ("clean", dirty == ""),
         ("remote equal", len({local, upstream, tracking, live}) == 1),
-        ("negatives", negatives["effective_at_evidence"] == 5690),
+        ("negatives", negatives["effective_activation_total"] == 5691),
         ("gates", gates["effective_open_gaps"] == 44 and gates["effective_exact_gates"] == 45),
         ("not Stage 20", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"),
         ("route held before send", route["terminal_route"] == "PREPARED_NOT_SENT"),
@@ -261,12 +278,20 @@ def main() -> int:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
+        "closeout": CLOSEOUT,
         "tests": tests,
         "detailed": {"count": len(detailed), "passed_count": sum(row["passed"] for row in detailed), "checks": detailed},
         "minimal": {"count": len(minimal), "passed_count": sum(row["passed"] for row in minimal), "checks": minimal},
         "json": json_result,
         "privacy": privacy,
-        "manifests": {"x1": x1_manifest, "evidence": evidence_manifest, "owner": owner_manifest, "final_staged": final_staged_manifest},
+        "manifests": {
+            "x1": x1_manifest,
+            "evidence": evidence_manifest,
+            "closeout_owner": closeout_owner_manifest,
+            "closeout_staged": closeout_staged_manifest,
+            "correction_owner": correction_owner_manifest,
+            "correction_staged": correction_staged_manifest,
+        },
         "topology": {"phase_commits": phase_commits, "merge_commits": merge_count, "final_parent_count": parent_count, "ancestry": ancestry},
         "four_way_equal": len({local, upstream, tracking, live}) == 1,
         "clean_before_and_after": dirty == "" and git("status", "--porcelain=v1", "--untracked-files=all") == "",

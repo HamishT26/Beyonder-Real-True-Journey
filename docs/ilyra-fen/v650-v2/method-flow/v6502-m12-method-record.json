@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_validation_correction",
+  "candidate_workaround": "Add the exact committed scanner-receipt filename to the definition allowlist, preserve the failed aggregate, and exercise only the classifier before rebuilding terminal manifests.",
+  "failure_signature": "The first exact-final aggregate classified two scanner-definition strings in the final staged privacy receipt as confirmed payload hits.",
+  "method_id": "V6502-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "privacy",
+    "failure_retention",
+    "single_success_budget",
+    "terminal_route"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Enumerate every committed scanner-definition receipt explicitly and leave all unmatched files fail-closed as payload candidates.",
+  "retained_negative_ids": [
+    "NEG-V6502-VALID-001"
+  ],
+  "rollback": "Give the failed aggregate zero successful-pass credit, keep the route held, and revert only the classifier correction if its bounded witness fails.",
+  "scope_boundary": "Classifier correction only; no privacy-complete, security-complete, independent-reproduction, or authority credit.",
+  "supersedes": [],
+  "title": "Classify every committed privacy receipt as a scanner-definition surface",
+  "trigger_preconditions": [
+    "An exact-final privacy scan includes a committed scanner receipt that describes its own definition candidates."
+  ],
+  "validation_witness_ids": []
+}
