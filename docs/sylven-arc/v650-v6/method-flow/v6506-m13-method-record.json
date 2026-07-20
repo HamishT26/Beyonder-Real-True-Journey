@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Select the maximum with an explicit score key so tie handling never compares proposal dictionaries.",
+  "failure_signature": "The first local novelty preflight used max on score-and-dictionary tuples, so an equal score tried to order dictionaries and raised TypeError before a complete result.",
+  "method_id": "V6506-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Always provide a scalar key when ranking tuples whose later members are non-orderable records.",
+  "retained_negative_ids": [
+    "V6506-X1-N13"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded same-owner recovery only; no independent reproduction, production, professional, scientific, legal, cultural, or authority credit.",
+  "supersedes": [],
+  "title": "Recover preflight tuple tie comparison without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v6 workflow exposes preflight tuple tie comparison."
+  ],
+  "validation_witness_ids": []
+}

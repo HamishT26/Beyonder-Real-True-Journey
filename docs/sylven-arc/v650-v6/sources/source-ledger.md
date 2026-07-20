@@ -1,0 +1,21 @@
+# v650-v6 source ledger
+
+- **SRC-LIVE-BATON** — Verified v650-v6 activation baton (current, live_authority). Controls solo ownership, x1-before-x2, validation budget, authority gates, and routing; it is not scientific evidence.
+- **SRC-LINUX-SEQLOCK** — Linux sequence counters and sequential locks (current, official_implementation_documentation). Supports bounded consistency fixtures only; it is not production concurrency assurance.
+- **SRC-SQLITE-WAL** — SQLite Write-Ahead Logging (current, official_implementation_documentation). Supports bounded journal recovery obligations only; no production database is touched.
+- **SRC-RELATIVE-ENTROPY** — Relative Entropy and Holography (stable, primary_research). Supports typed modular-Hamiltonian and first-variation obligations only, not empirical GMUT evidence.
+- **SRC-COVARIANT-HJ** — Covariant Hamiltonian formalism for field theory: Hamilton-Jacobi equation on the space G (stable, primary_research). Supports typed covariant Hamilton-Jacobi obligations only, not a force, prediction, fit, physical state, quantum-gravity result, or theory confirmation.
+- **SRC-SWIFT-BAT** — HEASARC Swift-BAT 105-Month All-Sky Hard X-Ray Survey (current, official_data_archive). Supplies schema and provenance context only; zero rows are downloaded or analyzed.
+- **SRC-FAO-GENEBANK** — FAO Genebank Standards for Plant Genetic Resources for Food and Agriculture (stable, official_practice_standard). Supports a synthetic workflow lens only and confers no conservation, collection, access, or distribution authority.
+- **SRC-TE-MANA-RARAUNGA** — Te Mana Raraunga principles of Maori data sovereignty (current, maori_authority_context). Keeps Maori data-governance authority visible; repository software cannot exercise or substitute that authority.
+- **SRC-OIDC-CORE** — OpenID Connect Core 1.0 incorporating errata set 2 (current, official_identity_specification). Supports synthetic validation vectors only; no real keys, users, accounts, tokens, or interoperability events exist.
+- **SRC-RFC9292** — RFC 9292 Binary Representation of HTTP Messages (stable, official_standard). Supports bounded synthetic framing fixtures only.
+- **SRC-RFC9530** — RFC 9530 Digest Fields (stable, official_standard). Supports bounded digest-field fixtures, not end-to-end content authenticity.
+- **SRC-RFC1952** — RFC 1952 GZIP File Format Specification (stable, official_standard). Supports disposable synthetic member fixtures without arbitrary decompression.
+- **SRC-WAI-ARIA** — Accessible Rich Internet Applications 1.2 (stable, official_accessibility_standard). Supports structural checks only; manual and affected-user evaluation remains reserved.
+- **SRC-WCAG22** — Web Content Accessibility Guidelines 2.2 (stable, official_accessibility_standard). Supports structural obligations only, not complete accessibility conformance.
+- **SRC-IUPAC-LEGENDRE** — IUPAC Use of Legendre transforms in chemical thermodynamics (stable, official_technical_report). Supports thermodynamic definitions and natural-variable obligations only, never a psyche or agency conversion.
+- **SRC-IEEE754** — IEEE 754-2019 Floating-Point Arithmetic (stable, official_standard). Supports bounded numerical classification only; no cross-platform reproducibility guarantee is claimed.
+- **SRC-OPENTYPE** — OpenType 1.9.1 font file specification (current, official_format_specification). Supports bounded SFNT fixtures only; no untrusted font rendering occurs.
+- **SRC-RFC9535** — RFC 9535 JSONPath (stable, official_standard). Supports bounded query fixtures only; no external document retrieval occurs.
+- **SRC-FRONT-DOOR** — Causal diagrams for empirical research (stable, primary_research). Supports front-door graphical-identification assumptions only; no participant effect or Stage 20 evidence is estimated.

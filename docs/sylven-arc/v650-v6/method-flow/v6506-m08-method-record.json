@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Interpret a bounded no-match result as zero hits and verify freshness with a sorted note listing.",
+  "failure_signature": "A no-match ripgrep search returned its normal nonzero empty-result exit and the wrapper treated it as an execution failure.",
+  "method_id": "V6506-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Handle ripgrep exit one as an empty result only when stderr is empty and no match was expected.",
+  "retained_negative_ids": [
+    "V6506-X1-N08"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded same-owner recovery only; no independent reproduction, production, professional, scientific, legal, cultural, or authority credit.",
+  "supersedes": [],
+  "title": "Recover empty search exit handling without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v6 workflow exposes empty search exit handling."
+  ],
+  "validation_witness_ids": []
+}
