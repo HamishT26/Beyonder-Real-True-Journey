@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use exact known commits and bounded rev-list or rev-parse queries on the current ancestry instead of scanning every ref.",
+  "failure_signature": "Two all-ref path-history queries exceeded the command timeout and returned no useful anchor list.",
+  "method_id": "V6507-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_git_history",
+    "exact_anchor_triage"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not combine --all with large path histories when the failing tests already provide exact source, evidence, or final anchors.",
+  "retained_negative_ids": [
+    "NEG-V6507-X2-GIT-LOG-ALL-TIMEOUT-020"
+  ],
+  "rollback": "Give both timed-out history queries zero anchor credit and keep the evidence commit unchanged.",
+  "scope_boundary": "Read-only Git-history triage only; no aggregate, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Avoid all-ref path history scans during exact-anchor triage",
+  "trigger_preconditions": [
+    "A path-limited Git history query adds --all across the large shared repository during failure triage."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Supply all object identifiers through subprocess communicate semantics, consume the complete bounded batch once, and parse its framed blobs in memory.",
+  "failure_signature": "The first exact Git-index verifier closed a buffered batch input before consuming the child output and timed out without a result.",
+  "method_id": "V6507-M25",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_recovery",
+    "closeout_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Supply all object identifiers through subprocess communicate semantics, consume the complete bounded batch once, and parse its framed blobs in memory.",
+  "retained_negative_ids": [
+    "NEG-V6507-X2-INDEX-BATCH-BACKPRESSURE-TIMEOUT-026"
+  ],
+  "rollback": "Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.",
+  "scope_boundary": "Owner-local closeout workflow only; no final-commit, route, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use one communicate transaction for Git batch-object verification",
+  "trigger_preconditions": [
+    "The first exact Git-index verifier closed a buffered batch input before consuming the child output and timed out without a result."
+  ],
+  "validation_witness_ids": []
+}

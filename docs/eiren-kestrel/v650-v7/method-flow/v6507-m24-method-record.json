@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Generate the token tuple with double-quoted Python strings while retaining single quotes only inside the HTML fragments.",
+  "failure_signature": "The first closeout test source used single-quoted HTML tokens inside a single-quoted generated tuple and failed Python parsing.",
+  "method_id": "V6507-M24",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_recovery",
+    "closeout_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Generate the token tuple with double-quoted Python strings while retaining single quotes only inside the HTML fragments.",
+  "retained_negative_ids": [
+    "NEG-V6507-X2-CLOSEOUT-TEST-QUOTE-025"
+  ],
+  "rollback": "Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.",
+  "scope_boundary": "Owner-local closeout workflow only; no final-commit, route, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use nonconflicting delimiters in generated Python string fixtures",
+  "trigger_preconditions": [
+    "The first closeout test source used single-quoted HTML tokens inside a single-quoted generated tuple and failed Python parsing."
+  ],
+  "validation_witness_ids": []
+}

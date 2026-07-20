@@ -2,9 +2,9 @@
 
 - Phase: v650-v7
 - Owner: Eiren Kestrel
-- Methods: 16
-- Passing witnesses: 16
-- Failed witnesses retained: 17
+- Methods: 28
+- Passing witnesses: 28
+- Failed witnesses retained: 29
 
 ## Preferred methods
 
@@ -135,6 +135,102 @@
 - Recurrence guard: Design retry preflights around the declared partial-write surface, never a clean-start-only path set and never an unrestricted repository prefix.
 - Rollback: Give the rejected retry zero execution credit and preserve the already written owner-scoped runner files for bounded inspection.
 - Witnesses: V6507-M16-WFAIL, V6507-M16-WPASS
+
+### V6507-M17 — Project descendant-incompatible historical lifecycle assertions before aggregate recovery
+
+- Trigger: A repository-wide descendant run fails historical tests that bind mutable HEAD or a superseded pre-correction owner manifest.
+- Method: Isolate the exact failures, verify that each is a historical lifecycle projection rather than a current functional regression, then add only those exact IDs to the inherited exclusion set.
+- Recurrence guard: Keep historical phase tests immutable but project mutable-head and superseded-manifest assertions explicitly in descendant full-suite plans.
+- Rollback: Give the failed aggregate zero pass credit, retain its six assertion failures, and prohibit post-success replay.
+- Witnesses: V6507-M17-WFAIL, V6507-M17-WPASS
+
+### V6507-M18 — Replace broad source-corpus searches with exact failing-test reads
+
+- Trigger: A broad recursive search across several large phase trees is used to locate already identified failure anchors.
+- Method: Read the five exact failing test files and rerun only the one module whose failure name was truncated in the aggregate receipt.
+- Recurrence guard: Once a failed module is known, use exact files and exact test IDs rather than a multi-tree recursive search.
+- Rollback: Give the timed-out search zero classification credit and preserve the clean evidence head.
+- Witnesses: V6507-M18-WFAIL, V6507-M18-WPASS
+
+### V6507-M19 — Avoid all-ref path history scans during exact-anchor triage
+
+- Trigger: A path-limited Git history query adds --all across the large shared repository during failure triage.
+- Method: Use exact known commits and bounded rev-list or rev-parse queries on the current ancestry instead of scanning every ref.
+- Recurrence guard: Do not combine --all with large path histories when the failing tests already provide exact source, evidence, or final anchors.
+- Rollback: Give both timed-out history queries zero anchor credit and keep the evidence commit unchanged.
+- Witnesses: V6507-M19-WFAIL, V6507-M19-WPASS
+
+### V6507-M20 — Read the exact phase-data constant before final packet generation
+
+- Trigger: The first closeout build referenced a remembered PRACTICE_LENS attribute that the current phase-data module does not export.
+- Method: Inspect exported phase-data names and use the exact BOUNDED_PRACTICE constant before retrying the deterministic builder.
+- Recurrence guard: Inspect exported phase-data names and use the exact BOUNDED_PRACTICE constant before retrying the deterministic builder.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M20-WFAIL, V6507-M20-WPASS
+
+### V6507-M21 — Use direct literal-file context when a targeted text search stalls
+
+- Trigger: A single-file rg lookup unexpectedly timed out while an attributable traceback already identified the symbol family.
+- Method: Patch from the exact traceback context and use direct literal-file inspection only for a bounded confirmation.
+- Recurrence guard: Patch from the exact traceback context and use direct literal-file inspection only for a bounded confirmation.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M21-WFAIL, V6507-M21-WPASS
+
+### V6507-M22 — Split closeout source patches when one generated line mismatches
+
+- Trigger: A combined multi-hunk closeout patch was rejected because one generated validator line did not match the proposed whitespace.
+- Method: Apply small exact-context patches and verify each applied change before continuing.
+- Recurrence guard: Apply small exact-context patches and verify each applied change before continuing.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M22-WFAIL, V6507-M22-WPASS
+
+### V6507-M23 — Quarantine exact inherited privacy-scanner receipts during owner rescans
+
+- Trigger: The final owner scan treated two inherited privacy-receipt files as payload because its scanner-definition allowlist omitted them.
+- Method: Add only the exact x1 and evidence privacy-receipt paths to the scanner-definition quarantine and rerun the deterministic manifest step.
+- Recurrence guard: Add only the exact x1 and evidence privacy-receipt paths to the scanner-definition quarantine and rerun the deterministic manifest step.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M23-WFAIL, V6507-M23-WPASS
+
+### V6507-M24 — Use nonconflicting delimiters in generated Python string fixtures
+
+- Trigger: The first closeout test source used single-quoted HTML tokens inside a single-quoted generated tuple and failed Python parsing.
+- Method: Generate the token tuple with double-quoted Python strings while retaining single quotes only inside the HTML fragments.
+- Recurrence guard: Generate the token tuple with double-quoted Python strings while retaining single quotes only inside the HTML fragments.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M24-WFAIL, V6507-M24-WPASS
+
+### V6507-M25 — Use one communicate transaction for Git batch-object verification
+
+- Trigger: The first exact Git-index verifier closed a buffered batch input before consuming the child output and timed out without a result.
+- Method: Supply all object identifiers through subprocess communicate semantics, consume the complete bounded batch once, and parse its framed blobs in memory.
+- Recurrence guard: Supply all object identifiers through subprocess communicate semantics, consume the complete bounded batch once, and parse its framed blobs in memory.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M25-WFAIL, V6507-M25-WPASS
+
+### V6507-M26 — Supply both immutable suite receipts to the closeout builder
+
+- Trigger: A closeout rebuild was invoked without its required failed-suite and recovery-suite receipt arguments and stopped at argument parsing.
+- Method: Treat both external receipt paths as mandatory inputs and invoke the deterministic builder only after checking that each receipt exists.
+- Recurrence guard: Treat both external receipt paths as mandatory inputs and invoke the deterministic builder only after checking that each receipt exists.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M26-WFAIL, V6507-M26-WPASS
+
+### V6507-M27 — Derive terminal Method Flow assertions from the extended ledger
+
+- Trigger: After M25 and M26 were recorded, the closeout builder still asserted the earlier 24-method ledger size and stopped before final packet credit.
+- Method: Update the deterministic closeout and its generated tests to the exact extended ledger counts before rebuilding from the unchanged evidence head.
+- Recurrence guard: Update the deterministic closeout and its generated tests to the exact extended ledger counts before rebuilding from the unchanged evidence head.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M27-WFAIL, V6507-M27-WPASS
+
+### V6507-M28 — Keep generated preferred-state counts synchronized with Method Flow growth
+
+- Trigger: The regenerated closeout test updated method and witness counts but retained the earlier preferred-state expectation of 24.
+- Method: Update method, failed-witness, passing-witness, and preferred-state counts together whenever a retained Method Flow entry is added.
+- Recurrence guard: Update method, failed-witness, passing-witness, and preferred-state counts together whenever a retained Method Flow entry is added.
+- Rollback: Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.
+- Witnesses: V6507-M28-WFAIL, V6507-M28-WPASS
 
 ## Retained boundary
 

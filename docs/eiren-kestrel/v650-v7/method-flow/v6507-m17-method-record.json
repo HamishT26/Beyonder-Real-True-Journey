@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Isolate the exact failures, verify that each is a historical lifecycle projection rather than a current functional regression, then add only those exact IDs to the inherited exclusion set.",
+  "failure_signature": "The first canonical aggregate ran 2,191 tests and retained six failures across five historical modules.",
+  "method_id": "V6507-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "full_suite",
+    "exact_exclusions",
+    "no_post_success_replay"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep historical phase tests immutable but project mutable-head and superseded-manifest assertions explicitly in descendant full-suite plans.",
+  "retained_negative_ids": [
+    "NEG-V6507-X2-FULL-SUITE-HISTORICAL-ASSERTIONS-018"
+  ],
+  "rollback": "Give the failed aggregate zero pass credit, retain its six assertion failures, and prohibit post-success replay.",
+  "scope_boundary": "Full-suite lifecycle projection only; no erased failure, independent reproduction, production assurance, or Stage 20 credit.",
+  "supersedes": [],
+  "title": "Project descendant-incompatible historical lifecycle assertions before aggregate recovery",
+  "trigger_preconditions": [
+    "A repository-wide descendant run fails historical tests that bind mutable HEAD or a superseded pre-correction owner manifest."
+  ],
+  "validation_witness_ids": []
+}

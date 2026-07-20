@@ -1,0 +1,25 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Add only the exact x1 and evidence privacy-receipt paths to the scanner-definition quarantine and rerun the deterministic manifest step.",
+  "failure_signature": "The final owner scan treated two inherited privacy-receipt files as payload because its scanner-definition allowlist omitted them.",
+  "method_id": "V6507-M23",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_recovery",
+    "closeout_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Add only the exact x1 and evidence privacy-receipt paths to the scanner-definition quarantine and rerun the deterministic manifest step.",
+  "retained_negative_ids": [
+    "NEG-V6507-X2-PRIVACY-SCANNER-RECEIPT-024"
+  ],
+  "rollback": "Give the failed attempt zero credit, retain it, and preserve the owner lane until the bounded recovery passes.",
+  "scope_boundary": "Owner-local closeout workflow only; no final-commit, route, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Quarantine exact inherited privacy-scanner receipts during owner rescans",
+  "trigger_preconditions": [
+    "The final owner scan treated two inherited privacy-receipt files as payload because its scanner-definition allowlist omitted them."
+  ],
+  "validation_witness_ids": []
+}
