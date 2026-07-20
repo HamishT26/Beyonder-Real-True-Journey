@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read all staged Git blobs through one bounded cat-file batch session and build both manifests from that in-memory map.",
+  "failure_signature": "The first closeout manifest build exceeded its thirty-second wrapper while launching a separate Git process for each indexed blob and produced no manifest outputs.",
+  "method_id": "V6503-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "exact_staged_review",
+    "x1_immutability",
+    "privacy_scan",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Estimate process-launch complexity before exact-manifest generation and use one cat-file batch session for bounded multi-blob reads.",
+  "retained_negative_ids": [
+    "V6503-X2-N03"
+  ],
+  "rollback": "Give the timed-out build zero manifest or pass credit, retain its failure, and remove no evidence before a bounded batch implementation passes.",
+  "scope_boundary": "Same-owner bounded Git plumbing recovery only; no scientific, authority, production, privacy-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Batch exact Git-index blob reads after manifest timeout",
+  "trigger_preconditions": [
+    "An exact manifest builder exceeds its wrapper because per-blob Git process launches dominate the bounded envelope."
+  ],
+  "validation_witness_ids": []
+}

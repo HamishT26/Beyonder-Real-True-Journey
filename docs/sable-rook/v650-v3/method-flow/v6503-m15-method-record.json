@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Construct an explicit PowerShell string array and pass that array to one git add invocation before manifest generation.",
+  "failure_signature": "A multiline PowerShell command emitted quoted paths as separate expressions, invoked git add with an empty pathspec, and let a manifest build inspect the stale index.",
+  "method_id": "V6503-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "exact_staged_review",
+    "x1_immutability",
+    "manifest_fixed_point",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For multiline PowerShell staging, bind exact paths to an array, verify the staged path count, and only then run the manifest builder.",
+  "retained_negative_ids": [
+    "V6503-X2-N04"
+  ],
+  "rollback": "Give the stale-index manifest run zero final credit, retain its wrapper fault, and change no evidence claim until exact array staging passes.",
+  "scope_boundary": "Same-owner bounded shell and Git-index recovery only; no scientific, authority, production, privacy-complete, security-complete, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use an explicit PowerShell array for exact multiline staging",
+  "trigger_preconditions": [
+    "A multiline staging wrapper supplies an empty pathspec or emits intended paths without staging them."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,5 +1,5 @@
 {
-  "count": 2,
+  "count": 4,
   "entries": [
     {
       "disposition": "retained",
@@ -12,6 +12,18 @@
       "failure": "The first evidence staged review found 208 doubled-newline and EOF hygiene issues.",
       "negative_id": "V6503-X2-N02",
       "recovery": "Only the attributable newline generator, overview bytes, and runtime EOF were corrected before one staged-review retry."
+    },
+    {
+      "disposition": "retained",
+      "failure": "The first closeout manifest build exceeded its thirty-second wrapper while launching a separate Git process for each indexed blob and produced no manifest outputs.",
+      "negative_id": "V6503-X2-N03",
+      "recovery": "One cat-file batch session built the exact owner and staged manifests within the wrapper; the original timeout remains retained."
+    },
+    {
+      "disposition": "retained",
+      "failure": "A multiline PowerShell wrapper emitted intended paths instead of passing them to git add, so the manifest builder inspected a stale index.",
+      "negative_id": "V6503-X2-N04",
+      "recovery": "An explicit PowerShell path array staged exactly 31 paths before a passing fixed-point manifest build; the stale-index run remains retained with zero final credit."
     }
   ],
   "schema": "ghc.family.v650-v3.x2-operational-negatives.v1"
