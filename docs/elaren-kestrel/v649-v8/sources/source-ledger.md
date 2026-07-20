@@ -1,0 +1,23 @@
+# v649-v8 source ledger
+
+- **SRC-AWS-OUTBOX** [current]: [AWS transactional outbox pattern](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-TAKAHASHI** [stable]: [Takahashi generalized Ward identity](https://doi.org/10.1007/BF02832514) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-KRAMERS** [stable]: [Kramers quantum theory of dispersion](https://doi.org/10.1038/114310b0) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-APPCAR** [stable]: [Appelquist-Carazzone decoupling theorem](https://doi.org/10.1103/PhysRevD.11.2856) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-LOFAR** [current]: [ASTRON LOFAR Data Archive](https://science.astron.nl/telescopes/lofar/access-to-lofar-data/lofar-data-archive/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-WEBAUTHN3** [draft]: [W3C Web Authentication Level 3](https://www.w3.org/TR/webauthn-3/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-OIDC-IDA** [stable]: [OpenID Connect for Identity Assurance 1.0 Final](https://openid.net/specs/openid-connect-4-identity-assurance-1_0-final.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-VC-DI** [stable]: [W3C Verifiable Credential Data Integrity 1.0](https://www.w3.org/TR/vc-data-integrity/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-LOCAL-CONTEXTS** [current]: [Local Contexts Traditional Knowledge and Biocultural Labels](https://localcontexts.org/labels/about-the-labels/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-TE-MANA-RARAUNGA** [current]: [Te Mana Raraunga Māori Data Sovereignty Network](https://www.temanararaunga.maori.nz/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-PREMIS** [current]: [Library of Congress PREMIS Data Dictionary 3.0](https://www.loc.gov/standards/premis/v3/index.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-OCFL** [current]: [Oxford Common File Layout 1.1](https://ocfl.io/1.1/spec/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-IIIF** [stable]: [IIIF Presentation API 3.0](https://iiif.io/api/presentation/3.0/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-WCAG22** [stable]: [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-METS2** [current]: [Library of Congress METS Version 2](https://www.loc.gov/standards/mets/mets2.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-NIST-63B4** [current]: [NIST SP 800-63B-4 Authentication and Authenticator Management](https://pages.nist.gov/800-63-4/sp800-63b/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-RFC7089** [stable]: [RFC 7089 HTTP Memento](https://www.rfc-editor.org/rfc/rfc7089.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-KUBO** [stable]: [Kubo statistical-mechanical theory of irreversible processes](https://doi.org/10.1143/JPSJ.12.570) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-IEEE1788** [watch]: [IEEE 1788-2015 Interval Arithmetic](https://standards.ieee.org/ieee/1788/4431/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-EVALUES** [stable]: [Vovk and Wang e-values](https://doi.org/10.1214/20-AOS2020) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-PKWARE** [current]: [PKWARE ZIP APPNOTE](https://support.pkware.com/pkzip/appnote) — Design or protocol support only; not observation, authority, production certification, or gate closure.
