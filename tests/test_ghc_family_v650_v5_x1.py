@@ -119,9 +119,21 @@ class TamarV650V5X1Tests(unittest.TestCase):
         state = load_at_x1("method-flow/method-flow-state.json")
         negative_count = load_at_x1("retained-negative-register.json")["x1_operational"]
         self.assertEqual(len(state["methods"]), negative_count)
-        self.assertEqual(len(state["witnesses"]), negative_count * 2)
+        corrections = [
+            row for row in state["witnesses"] if "-WPASS-CORR" in row["witness_id"]
+        ]
+        self.assertEqual(len(corrections), 2)
+        self.assertEqual(len(state["witnesses"]), negative_count * 2 + len(corrections))
         self.assertEqual(state["counts"]["witness_results"]["fail"], negative_count)
-        self.assertEqual(state["counts"]["witness_results"]["pass"], negative_count)
+        self.assertEqual(
+            state["counts"]["witness_results"]["pass"],
+            negative_count + len(corrections),
+        )
+        self.assertEqual(
+            {row["witness_id"] for row in corrections},
+            {"V6505-M17-WPASS-CORR1", "V6505-M18-WPASS-CORR1"},
+        )
+        self.assertEqual({row["result"] for row in corrections}, {"pass"})
         self.assertTrue(load_at_x1("method-flow/method-flow-validation.json")["valid"])
         self.assertEqual(
             {row["recommendation_state"] for row in state["methods"]}, {"preferred"}

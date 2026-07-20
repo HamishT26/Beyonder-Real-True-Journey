@@ -2,9 +2,9 @@
 
 - Phase: v650-v5
 - Owner: Tamar Vey
-- Methods: 18
-- Passing witnesses: 18
-- Failed witnesses retained: 18
+- Methods: 22
+- Passing witnesses: 24
+- Failed witnesses retained: 22
 
 ## Preferred methods
 
@@ -142,7 +142,7 @@
 - Method: Use a bounded UTF-8 whitespace-token count for the five x1 narrative documents and reject any document above the declared cap.
 - Recurrence guard: Prefer a simple inspected whitespace-token count over nested shell and Python regex escaping for document-cap receipts.
 - Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
-- Witnesses: V6505-M17-WFAIL, V6505-M17-WPASS
+- Witnesses: V6505-M17-WFAIL, V6505-M17-WPASS, V6505-M17-WPASS-CORR1
 
 ### V6505-M18 — Recover x1_staged_count_prediction_mismatch without erasing its failed witness
 
@@ -150,7 +150,39 @@
 - Method: Regenerate the packet with every retained failure, derive final counts from the exact Git index, and update the receipt before rebuilding manifest hashes.
 - Recurrence guard: Derive staged totals after Method Flow regeneration instead of projecting them from an earlier file inventory.
 - Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
-- Witnesses: V6505-M18-WFAIL, V6505-M18-WPASS
+- Witnesses: V6505-M18-WFAIL, V6505-M18-WPASS, V6505-M18-WPASS-CORR1
+
+### V6505-M19 — Recover stale_method_flow_pass_observation without erasing its failed witness
+
+- Trigger: A bounded v650-v5 workflow exposes stale_method_flow_pass_observation.
+- Method: Preserve both historical rows, append corrected uniquely identified passing witnesses through the Method Flow runner, and classify the old rows as retained invalidated history in a stale-label receipt.
+- Recurrence guard: Do not promote or persist a pass-labelled witness until its observed field contains the completed bounded result.
+- Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M19-WFAIL, V6505-M19-WPASS
+
+### V6505-M20 — Recover method_flow_runner_path_guess without erasing its failed witness
+
+- Trigger: A bounded v650-v5 workflow exposes method_flow_runner_path_guess.
+- Method: Use the exact skill-owned runner path already declared by the x1 generator and request its help directly.
+- Recurrence guard: Read the declared runner constant instead of guessing a repository-local executable path.
+- Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M20-WFAIL, V6505-M20-WPASS
+
+### V6505-M21 — Recover method_flow_correction_witness_test_assumption without erasing its failed witness
+
+- Trigger: A bounded v650-v5 workflow exposes method_flow_correction_witness_test_assumption.
+- Method: Require one failed and one base passing witness per negative, then require exactly the two named correction witnesses and their bounded pass results separately.
+- Recurrence guard: Method Flow tests must distinguish base witness pairs from additive correction witnesses.
+- Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M21-WFAIL, V6505-M21-WPASS
+
+### V6505-M22 — Recover x1_repair_delta_count_mismatch without erasing its failed witness
+
+- Trigger: A bounded v650-v5 workflow exposes x1_repair_delta_count_mismatch.
+- Method: Retain the mismatch, use the exact staged name list as the baseline, include this new Method Flow triplet, and rebuild the repair receipt and manifest at 30 entries plus three exclusions.
+- Recurrence guard: Use the exact staged name list, not a projected generator-output delta, for lifecycle receipt totals.
+- Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M22-WFAIL, V6505-M22-WPASS
 
 ## Retained boundary
 

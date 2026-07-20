@@ -517,6 +517,38 @@ X1_OPERATIONAL_NEGATIVES = [
         "passing": "After full Method Flow regeneration the exact index contained 93 manifest entries plus three declared self-exclusions, for 96 staged paths; the staged review passed.",
         "recurrence_guard": "Derive staged totals after Method Flow regeneration instead of projecting them from an earlier file inventory.",
     },
+    {
+        "negative_id": "V6505-X1-N19",
+        "category": "stale_method_flow_pass_observation",
+        "failed": "The first committed x1 ledger preserved two pass-labelled witnesses whose observed text still said Pending because append-only witness IDs were created before their recoveries completed.",
+        "recovery": "Preserve both historical rows, append corrected uniquely identified passing witnesses through the Method Flow runner, and classify the old rows as retained invalidated history in a stale-label receipt.",
+        "passing": "Two correction witnesses were appended for the completed word-cap and exact-index recoveries; the stale-label receipt gives both historical placeholders zero current evidence credit.",
+        "recurrence_guard": "Do not promote or persist a pass-labelled witness until its observed field contains the completed bounded result.",
+    },
+    {
+        "negative_id": "V6505-X1-N20",
+        "category": "method_flow_runner_path_guess",
+        "failed": "A read-only help probe guessed a repository-local Method Flow runner path that does not exist and exited before showing the command contract.",
+        "recovery": "Use the exact skill-owned runner path already declared by the x1 generator and request its help directly.",
+        "passing": "The exact skill-owned runner returned its init, record, witness, set-state, validate, and summarize command surface.",
+        "recurrence_guard": "Read the declared runner constant instead of guessing a repository-local executable path.",
+    },
+    {
+        "negative_id": "V6505-X1-N21",
+        "category": "method_flow_correction_witness_test_assumption",
+        "failed": "The first x1 repair test run expected exactly two witnesses per negative and failed because the append-only ledger correctly retained two additional correction witnesses: 42 observed versus 40 expected.",
+        "recovery": "Require one failed and one base passing witness per negative, then require exactly the two named correction witnesses and their bounded pass results separately.",
+        "passing": "The corrected x1 suite passed all eight tests while asserting twenty-one failures, twenty-three passes, and exactly two correction witnesses.",
+        "recurrence_guard": "Method Flow tests must distinguish base witness pairs from additive correction witnesses.",
+    },
+    {
+        "negative_id": "V6505-X1-N22",
+        "category": "x1_repair_delta_count_mismatch",
+        "failed": "The first repair receipt predicted 25 manifest entries and 28 staged paths, while the exact repair index contained 27 entries and 30 paths because two regenerated phase-index artifacts were omitted from the projection.",
+        "recovery": "Retain the mismatch, use the exact staged name list as the baseline, include this new Method Flow triplet, and rebuild the repair receipt and manifest at 30 entries plus three exclusions.",
+        "passing": "The final repair review observed exactly 30 manifest entries and 33 staged paths with stable hashes and zero forbidden or privacy-confirmed paths.",
+        "recurrence_guard": "Use the exact staged name list, not a projected generator-output delta, for lifecycle receipt totals.",
+    },
 ]
 
 

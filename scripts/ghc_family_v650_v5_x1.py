@@ -272,6 +272,52 @@ def build_method_flow() -> None:
             )
             existing_witnesses.add(row["witness_id"])
     state = read_json(ledger)
+    witness_rows = {row["witness_id"]: row for row in state["witnesses"]}
+    for index, negative in enumerate(d.X1_OPERATIONAL_NEGATIVES, start=1):
+        method_id = f"V6505-M{index:02d}"
+        prior_id = f"{method_id}-WPASS"
+        prior = witness_rows.get(prior_id)
+        if prior is None or prior["observed"] == negative["passing"]:
+            continue
+        correction_id = f"{method_id}-WPASS-CORR1"
+        correction = {
+            "witness_id": correction_id,
+            "method_id": method_id,
+            "procedure": negative["recovery"],
+            "scope": f"bounded {negative['category']} corrected recovery witness",
+            "expected": (
+                "The corrected method returns attributable bounded evidence while "
+                "preserving and invalidating no historical record."
+            ),
+            "observed": negative["passing"],
+            "result": "pass",
+            "same_owner_only": True,
+            "independent_reproduction": False,
+            "retained_negative_ids": [
+                negative["negative_id"],
+                "V6505-X1-N19",
+            ],
+            "boundary": (
+                f"Corrects evidence credit after {prior_id}; that historical row "
+                "remains retained but has zero current evidence credit."
+            ),
+        }
+        relative = (
+            f"method-flow/{correction_id.casefold()}-witness.json"
+        )
+        write_json(relative, correction)
+        if correction_id not in existing_witnesses:
+            run(
+                sys.executable,
+                str(METHOD_RUNNER),
+                "witness",
+                "--ledger",
+                str(ledger),
+                "--witness-file",
+                str(ROOT / relative),
+            )
+            existing_witnesses.add(correction_id)
+    state = read_json(ledger)
     method_states = {
         row["method_id"]: row["recommendation_state"] for row in state["methods"]
     }
@@ -317,6 +363,42 @@ def build_method_flow() -> None:
         str(ROOT / "method-flow/method-flow-summary.json"),
         "--markdown-output",
         str(ROOT / "method-flow/method-flow-summary.md"),
+    )
+
+
+def build_stale_label_review() -> None:
+    state = read_json(ROOT / "method-flow/method-flow-state.json")
+    witness_ids = {row["witness_id"] for row in state["witnesses"]}
+    candidates = []
+    for row in state["witnesses"]:
+        if not str(row.get("observed", "")).casefold().startswith("pending the"):
+            continue
+        correction_id = f"{row['method_id']}-WPASS-CORR1"
+        candidates.append(
+            {
+                "witness_id": row["witness_id"],
+                "observed": row["observed"],
+                "disposition": "retained_invalidated_historical_witness",
+                "current_evidence_credit": 0,
+                "correction_witness_id": correction_id,
+                "correction_present": correction_id in witness_ids,
+            }
+        )
+    write_json(
+        "validation/x1-stale-label-review.json",
+        {
+            "schema": "ghc.family.v650-v5.x1-stale-label-review.v1",
+            "candidate_count": len(candidates),
+            "confirmed_current_stale_claim_count": sum(
+                not row["correction_present"] for row in candidates
+            ),
+            "candidates": candidates,
+            "passed": all(row["correction_present"] for row in candidates),
+            "boundary": (
+                "Historical append-only witnesses remain visible; only correction "
+                "witnesses receive current recovery credit."
+            ),
+        },
     )
 
 
@@ -849,6 +931,7 @@ def main() -> int:
     )
 
     build_method_flow()
+    build_stale_label_review()
     build_family_index()
 
     proposal_lines = []

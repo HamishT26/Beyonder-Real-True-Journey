@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Require one failed and one base passing witness per negative, then require exactly the two named correction witnesses and their bounded pass results separately.",
+  "failure_signature": "The first x1 repair test run expected exactly two witnesses per negative and failed because the append-only ledger correctly retained two additional correction witnesses: 42 observed versus 40 expected.",
+  "method_id": "V6505-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Method Flow tests must distinguish base witness pairs from additive correction witnesses.",
+  "retained_negative_ids": [
+    "V6505-X1-N21"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover method_flow_correction_witness_test_assumption without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 workflow exposes method_flow_correction_witness_test_assumption."
+  ],
+  "validation_witness_ids": []
+}
