@@ -3,7 +3,7 @@
 Phase: `v650-v7`
 Owner: Eiren Kestrel
 
-The audit inventoried 2975 surfaces, scoped 0, and produced 0 issue records. It made no destructive change.
+The audit inventoried 2987 surfaces, scoped 0, and produced 0 issue records. It made no destructive change.
 
 ## Dispositions
 

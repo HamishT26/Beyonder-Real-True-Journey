@@ -2,9 +2,9 @@
 
 - Phase: v650-v7
 - Owner: Eiren Kestrel
-- Methods: 10
-- Passing witnesses: 10
-- Failed witnesses retained: 11
+- Methods: 16
+- Passing witnesses: 16
+- Failed witnesses retained: 17
 
 ## Preferred methods
 
@@ -87,6 +87,54 @@
 - Recurrence guard: Never rely on the process default text codec for staged repository artifacts containing Maori or other Unicode text.
 - Rollback: Give the failed aggregate zero staged-review credit and preserve the exact staged content unchanged until the corrected read.
 - Witnesses: V6507-M10-WFAIL, V6507-M10-WPASS
+
+### V6507-M11 — Invoke quick_validate only with an initialized skill directory
+
+- Trigger: The skill validator is a path-only utility and does not declare a help-mode contract.
+- Method: Initialize a phase-local skill first, then pass its exact directory to quick_validate.
+- Recurrence guard: Do not assume every local script supports argparse help; inspect its usage or invoke it only with its documented positional path.
+- Rollback: Give the failed help probe zero skill-validation credit and leave every global skill untouched.
+- Witnesses: V6507-M11-WFAIL, V6507-M11-WPASS
+
+### V6507-M12 — Split repository inspection into bounded constant-time probes
+
+- Trigger: A compound inspection combines recursive Git status, file reads, and metadata collection under one short timeout.
+- Method: Run file existence and size, syntax compilation, and Git state as separate bounded probes; credit only completed probes.
+- Recurrence guard: Keep potentially recursive Git inspection separate from constant-time filesystem and syntax checks, and never treat a timed-out wrapper as a partial pass.
+- Rollback: Give the compound command zero inspection credit and leave repository content unchanged until bounded probes complete.
+- Witnesses: V6507-M12-WFAIL, V6507-M12-WPASS
+
+### V6507-M13 — Parse Git porcelain without trimming its status columns
+
+- Trigger: A helper feeds porcelain-v1 output through a generic stdout function that strips leading whitespace.
+- Method: Read NUL-delimited porcelain bytes directly and remove exactly the three-byte status prefix from each complete record.
+- Recurrence guard: Never pass column-sensitive or NUL-delimited Git output through a text helper that applies strip.
+- Rollback: Stop before x2 execution, give the failed preflight zero evidence credit, and preserve every existing path unchanged.
+- Witnesses: V6507-M13-WFAIL, V6507-M13-WPASS
+
+### V6507-M14 — Add the scripts directory before importing a standalone sibling-import module
+
+- Trigger: An inline validation probe imports a standalone script whose imports resolve relative to the scripts directory when executed directly.
+- Method: Prepend the repository scripts directory to sys.path for the bounded inline probe, then import the standalone module.
+- Recurrence guard: Match an inline probe's import search path to the script's supported direct-execution context.
+- Rollback: Give the failed probe zero parser-validation credit and leave source and repository state unchanged.
+- Witnesses: V6507-M14-WFAIL, V6507-M14-WPASS
+
+### V6507-M15 — Preflight skill interface length before official initialization
+
+- Trigger: A generated skill slug can produce a short_description shorter than the creator's 25-character lower bound.
+- Method: Construct 25-64 character interface descriptions before initialization and use the official YAML generator only to finish an initializer-created partial directory.
+- Recurrence guard: Assert every generated short_description is between 25 and 64 characters before calling init_skill.py.
+- Rollback: Give the failed initializer zero skill credit, retain the partial phase-local directory as the recovery target, and do not install anything globally.
+- Witnesses: V6507-M15-WFAIL, V6507-M15-WPASS
+
+### V6507-M16 — Permit only preregistered partial x2 artifacts during bounded retry
+
+- Trigger: A stopped x2 builder has already written owner-scoped phase runners before a later skill-initialization failure.
+- Method: Allow the exact phase-root, ghc_family_v650_v7 script namespace, evidence builder, and x2 test path while rejecting every other path.
+- Recurrence guard: Design retry preflights around the declared partial-write surface, never a clean-start-only path set and never an unrestricted repository prefix.
+- Rollback: Give the rejected retry zero execution credit and preserve the already written owner-scoped runner files for bounded inspection.
+- Witnesses: V6507-M16-WFAIL, V6507-M16-WPASS
 
 ## Retained boundary
 

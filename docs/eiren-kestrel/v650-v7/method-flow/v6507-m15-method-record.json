@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M15",
+  "title": "Preflight skill interface length before official initialization",
+  "trigger_preconditions": [
+    "A generated skill slug can produce a short_description shorter than the creator's 25-character lower bound."
+  ],
+  "failure_signature": "The official initializer created the phase-local directory and template but rejected a short description below 25 characters before writing agents/openai.yaml.",
+  "candidate_workaround": "Construct 25-64 character interface descriptions before initialization and use the official YAML generator only to finish an initializer-created partial directory.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Assert every generated short_description is between 25 and 64 characters before calling init_skill.py.",
+  "rollback": "Give the failed initializer zero skill credit, retain the partial phase-local directory as the recovery target, and do not install anything globally.",
+  "scope_boundary": "Phase-local skill metadata recovery only; no global installation, subagent forward test, production, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "phase_local_skills",
+    "official_skill_creator"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X2-SKILL-SHORT-DESCRIPTION-016"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

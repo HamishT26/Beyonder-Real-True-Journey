@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M13",
+  "title": "Parse Git porcelain without trimming its status columns",
+  "trigger_preconditions": [
+    "A helper feeds porcelain-v1 output through a generic stdout function that strips leading whitespace."
+  ],
+  "failure_signature": "The first modified path lost its initial character because global stdout trimming removed the porcelain row's leading status space.",
+  "candidate_workaround": "Read NUL-delimited porcelain bytes directly and remove exactly the three-byte status prefix from each complete record.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pass column-sensitive or NUL-delimited Git output through a text helper that applies strip.",
+  "rollback": "Stop before x2 execution, give the failed preflight zero evidence credit, and preserve every existing path unchanged.",
+  "scope_boundary": "Owner-local Git status parsing only; no evidence execution, full-suite, production, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "owner_scope",
+    "x2_preflight"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X2-PORCELAIN-STRIP-014"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

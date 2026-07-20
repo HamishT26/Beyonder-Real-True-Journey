@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M12",
+  "title": "Split repository inspection into bounded constant-time probes",
+  "trigger_preconditions": [
+    "A compound inspection combines recursive Git status, file reads, and metadata collection under one short timeout."
+  ],
+  "failure_signature": "The compound inspection timed out before returning any evidence even though each required fact could be checked independently.",
+  "candidate_workaround": "Run file existence and size, syntax compilation, and Git state as separate bounded probes; credit only completed probes.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep potentially recursive Git inspection separate from constant-time filesystem and syntax checks, and never treat a timed-out wrapper as a partial pass.",
+  "rollback": "Give the compound command zero inspection credit and leave repository content unchanged until bounded probes complete.",
+  "scope_boundary": "Owner-local workflow inspection only; no full-suite, production, scientific, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_inspection",
+    "evidence_credit"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X2-COMPOUND-INSPECTION-TIMEOUT-013"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

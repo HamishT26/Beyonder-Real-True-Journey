@@ -1,0 +1,202 @@
+{
+  "all_accepted": true,
+  "count": 2,
+  "independent_reproduction": false,
+  "results": [
+    {
+      "accepted": true,
+      "baseline_validation": {
+        "accepted": true,
+        "bounded": true,
+        "independent_reproduction": false,
+        "issues": [],
+        "same_owner_only": true
+      },
+      "boundary": "Bounded synthetic, symbolic, numerical, or structural evidence only; not production, empirical confirmation, professional authority, external audit, or independent reproduction.",
+      "canonical_fixture": {
+        "authority_action": false,
+        "decisions": 0,
+        "expected_disposition": "completed",
+        "network_actions": 0,
+        "obligations": [
+          "idempotency_key",
+          "partial_failure",
+          "reverse_compensation",
+          "retry_budget",
+          "deadline",
+          "teardown"
+        ],
+        "privacy_disclosure": false,
+        "promotion": "bounded_only",
+        "proposal_id": "V6507-P01",
+        "real_events": 0,
+        "real_rows": 0,
+        "replay_budget": 3,
+        "resource_budget": 64,
+        "scope": "bounded_synthetic_or_structural",
+        "slug": "saga-compensation",
+        "synthetic": true
+      },
+      "expected_disposition": "completed",
+      "mutation_count": 5,
+      "mutation_rejections": 5,
+      "mutations": [
+        {
+          "dimension": "missing_required_obligation",
+          "issues": [
+            "required_obligation"
+          ],
+          "mutation_id": "V6507-P01-M01",
+          "rejected": true
+        },
+        {
+          "dimension": "wrong_type_or_unit",
+          "issues": [
+            "scope_or_unit"
+          ],
+          "mutation_id": "V6507-P01-M02",
+          "rejected": true
+        },
+        {
+          "dimension": "resource_or_replay_overrun",
+          "issues": [
+            "replay_budget",
+            "resource_budget"
+          ],
+          "mutation_id": "V6507-P01-M03",
+          "rejected": true
+        },
+        {
+          "dimension": "unsupported_promotion",
+          "issues": [
+            "unsupported_promotion"
+          ],
+          "mutation_id": "V6507-P01-M04",
+          "rejected": true
+        },
+        {
+          "dimension": "authority_or_privacy_breach",
+          "issues": [
+            "authority_or_privacy"
+          ],
+          "mutation_id": "V6507-P01-M05",
+          "rejected": true
+        }
+      ],
+      "observed_outcome": "completed",
+      "proposal_id": "V6507-P01",
+      "slug": "saga-compensation",
+      "specialized_witness": {
+        "compensation": [
+          "refund",
+          "release"
+        ],
+        "external_side_effects": 0,
+        "forward": [
+          "reserve",
+          "charge",
+          "dispatch_fail"
+        ],
+        "reverse_order": true
+      }
+    },
+    {
+      "accepted": true,
+      "baseline_validation": {
+        "accepted": true,
+        "bounded": true,
+        "independent_reproduction": false,
+        "issues": [],
+        "same_owner_only": true
+      },
+      "boundary": "Bounded synthetic, symbolic, numerical, or structural evidence only; not production, empirical confirmation, professional authority, external audit, or independent reproduction.",
+      "canonical_fixture": {
+        "authority_action": false,
+        "decisions": 0,
+        "expected_disposition": "completed",
+        "network_actions": 0,
+        "obligations": [
+          "snapshot",
+          "read_set",
+          "write_set",
+          "predicate_conflict",
+          "serialization_refusal",
+          "bounded_retry"
+        ],
+        "privacy_disclosure": false,
+        "promotion": "bounded_only",
+        "proposal_id": "V6507-P02",
+        "real_events": 0,
+        "real_rows": 0,
+        "replay_budget": 3,
+        "resource_budget": 64,
+        "scope": "bounded_synthetic_or_structural",
+        "slug": "mvcc-write-skew",
+        "synthetic": true
+      },
+      "expected_disposition": "completed",
+      "mutation_count": 5,
+      "mutation_rejections": 5,
+      "mutations": [
+        {
+          "dimension": "missing_required_obligation",
+          "issues": [
+            "required_obligation"
+          ],
+          "mutation_id": "V6507-P02-M01",
+          "rejected": true
+        },
+        {
+          "dimension": "wrong_type_or_unit",
+          "issues": [
+            "scope_or_unit"
+          ],
+          "mutation_id": "V6507-P02-M02",
+          "rejected": true
+        },
+        {
+          "dimension": "resource_or_replay_overrun",
+          "issues": [
+            "replay_budget",
+            "resource_budget"
+          ],
+          "mutation_id": "V6507-P02-M03",
+          "rejected": true
+        },
+        {
+          "dimension": "unsupported_promotion",
+          "issues": [
+            "unsupported_promotion"
+          ],
+          "mutation_id": "V6507-P02-M04",
+          "rejected": true
+        },
+        {
+          "dimension": "authority_or_privacy_breach",
+          "issues": [
+            "authority_or_privacy"
+          ],
+          "mutation_id": "V6507-P02-M05",
+          "rejected": true
+        }
+      ],
+      "observed_outcome": "completed",
+      "proposal_id": "V6507-P02",
+      "slug": "mvcc-write-skew",
+      "specialized_witness": {
+        "commit_result": "serialization_refused",
+        "predicate_conflict": true,
+        "snapshot": {
+          "a": true,
+          "b": true
+        },
+        "transactions": [
+          "disable_a",
+          "disable_b"
+        ]
+      }
+    }
+  ],
+  "same_owner_only": true,
+  "schema": "ghc.family.v650-v7.runtime.v1"
+}

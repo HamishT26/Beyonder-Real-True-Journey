@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M14",
+  "title": "Add the scripts directory before importing a standalone sibling-import module",
+  "trigger_preconditions": [
+    "An inline validation probe imports a standalone script whose imports resolve relative to the scripts directory when executed directly."
+  ],
+  "failure_signature": "Package-style import from the repository root could not resolve the sibling phase-data module.",
+  "candidate_workaround": "Prepend the repository scripts directory to sys.path for the bounded inline probe, then import the standalone module.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Match an inline probe's import search path to the script's supported direct-execution context.",
+  "rollback": "Give the failed probe zero parser-validation credit and leave source and repository state unchanged.",
+  "scope_boundary": "Owner-local Python probe setup only; no x2 outcome, full-suite, production, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_probe",
+    "evidence_credit"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X2-STANDALONE-IMPORT-CONTEXT-015"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

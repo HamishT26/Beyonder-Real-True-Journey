@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M11",
+  "title": "Invoke quick_validate only with an initialized skill directory",
+  "trigger_preconditions": [
+    "The skill validator is a path-only utility and does not declare a help-mode contract."
+  ],
+  "failure_signature": "A combined help probe passed --help to quick_validate, which treated it as a path and returned SKILL.md not found.",
+  "candidate_workaround": "Initialize a phase-local skill first, then pass its exact directory to quick_validate.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not assume every local script supports argparse help; inspect its usage or invoke it only with its documented positional path.",
+  "rollback": "Give the failed help probe zero skill-validation credit and leave every global skill untouched.",
+  "scope_boundary": "Phase-local skill validation only; no global installation, full-suite, scientific, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "phase_local_skills",
+    "skill_validation"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X2-SKILL-VALIDATOR-HELP-012"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}
