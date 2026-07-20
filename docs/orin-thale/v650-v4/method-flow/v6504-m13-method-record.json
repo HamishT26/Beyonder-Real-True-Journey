@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Restrict module-reference searches to scripts and tests, then use importlib spec discovery for the exact module name.",
+  "failure_signature": "A repository-wide recursive search for the inherited correction module exceeded its bounded timeout and returned no complete search result.",
+  "method_id": "V6504-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_search",
+    "test_selection_integrity",
+    "terminal_pass_guard"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Search only relevant source roots and use import-spec inspection; never treat a timed-out broad search as absence evidence.",
+  "retained_negative_ids": [
+    "V6504-CLOSE-N02"
+  ],
+  "rollback": "Give the timed-out search zero absence or inventory credit and preserve its timeout before the bounded replacement.",
+  "scope_boundary": "Closeout source-search recovery only; no terminal-pass, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bound inherited module searches to relevant source roots",
+  "trigger_preconditions": [
+    "A module-reference search would otherwise traverse the full inherited checkout."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Resolve inherited test modules from the exact repository inventory and Python import discovery rather than inferring a filesystem filename from a module string.",
+  "failure_signature": "A closeout preflight tried to read tests/test_ghc_family_v650_v3_correction.py literally, but that file is absent even though the inherited validator names a correction module.",
+  "method_id": "V6504-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "test_selection_integrity",
+    "inherited_module_resolution",
+    "terminal_pass_guard"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use rg --files and unittest loader-error inspection before declaring an inherited module present or absent.",
+  "retained_negative_ids": [
+    "V6504-CLOSE-N01"
+  ],
+  "rollback": "Give the failed literal read zero module-inventory credit and do not broaden or silently drop the inherited selection.",
+  "scope_boundary": "Closeout test-inventory recovery only; no terminal-pass, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resolve inherited test modules from exact inventory",
+  "trigger_preconditions": [
+    "A predecessor validator names a Python module whose source filename has not been verified in the current tree."
+  ],
+  "validation_witness_ids": []
+}

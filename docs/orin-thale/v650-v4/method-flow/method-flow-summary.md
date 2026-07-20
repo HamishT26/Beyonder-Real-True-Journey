@@ -2,9 +2,9 @@
 
 - Phase: v650-v4
 - Owner: Orin Thale
-- Methods: 11
-- Passing witnesses: 11
-- Failed witnesses retained: 11
+- Methods: 14
+- Passing witnesses: 14
+- Failed witnesses retained: 14
 
 ## Preferred methods
 
@@ -95,6 +95,30 @@
 - Recurrence guard: Read exact output paths from the phase review runner or list the existing validation directory; do not assume a generic manifests directory.
 - Rollback: Give the failed directory probe zero inventory credit while preserving the already completed staged-review result separately.
 - Witnesses: V6504-M11-WFAIL, V6504-M11-WPASS
+
+### V6504-M12 — Resolve inherited test modules from exact inventory
+
+- Trigger: A predecessor validator names a Python module whose source filename has not been verified in the current tree.
+- Method: Resolve inherited test modules from the exact repository inventory and Python import discovery rather than inferring a filesystem filename from a module string.
+- Recurrence guard: Use rg --files and unittest loader-error inspection before declaring an inherited module present or absent.
+- Rollback: Give the failed literal read zero module-inventory credit and do not broaden or silently drop the inherited selection.
+- Witnesses: V6504-M12-WFAIL, V6504-M12-WPASS
+
+### V6504-M13 — Bound inherited module searches to relevant source roots
+
+- Trigger: A module-reference search would otherwise traverse the full inherited checkout.
+- Method: Restrict module-reference searches to scripts and tests, then use importlib spec discovery for the exact module name.
+- Recurrence guard: Search only relevant source roots and use import-spec inspection; never treat a timed-out broad search as absence evidence.
+- Rollback: Give the timed-out search zero absence or inventory credit and preserve its timeout before the bounded replacement.
+- Witnesses: V6504-M13-WFAIL, V6504-M13-WPASS
+
+### V6504-M14 — Isolate inherited module existence and import probes
+
+- Trigger: A grouped module-resolution diagnostic has timed out or obscured which component completed.
+- Method: Use one exact Test-Path check and one isolated importlib spec probe; do not combine them with recursive search or ledger mutations.
+- Recurrence guard: Isolate exact existence and import-spec probes so each result is attributable and bounded.
+- Rollback: Give the grouped timeout zero selection credit and retain it before isolated probes.
+- Witnesses: V6504-M14-WFAIL, V6504-M14-WPASS
 
 ## Retained boundary
 
