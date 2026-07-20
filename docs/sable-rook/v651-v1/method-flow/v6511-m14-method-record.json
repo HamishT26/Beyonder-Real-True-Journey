@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Replay every historical closeout manifest hash from the exact closeout commit blob instead of the successor correction working tree.",
+  "failure_signature": "The correction precommit selection ran 47 tests and failed one closeout-manifest test because historical manifest entries were still compared with files modified by the terminal correction.",
+  "method_id": "V6511-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "commit_blob_domain",
+    "historical_manifest_integrity",
+    "commit_cap",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When validating a historical commit-local manifest from a successor commit, resolve both coverage and content from that same immutable commit domain.",
+  "retained_negative_ids": [
+    "V6511-X2-N15"
+  ],
+  "rollback": "Retain the 47-test one-failure aggregate with zero precommit credit, change no historical manifest, and patch only the successor test's blob source.",
+  "scope_boundary": "Same-owner historical-manifest test recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Replay historical manifests from immutable commit blobs",
+  "trigger_preconditions": [
+    "A successor correction modifies paths that also appear in an earlier commit-local manifest."
+  ],
+  "validation_witness_ids": [
+    "V6511-M14-WFAIL",
+    "V6511-M14-WPASS"
+  ]
+}

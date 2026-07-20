@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Replay prospective text entries after the declared CRLF-to-LF clean-filter normalization, or use Git hash-object with the exact path, rather than hashing raw checkout bytes.",
+  "failure_signature": "The precommit manifest audit compared raw checkout bytes against prospective normalized Git-blob manifests and falsely reported hash mismatches while every other aggregate check passed.",
+  "method_id": "V6511-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "hash_domain_integrity",
+    "manifest_parity",
+    "exact_staged_review",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read each manifest entry's hash_domain and reproduce that exact domain before adjudicating a mismatch; never compare prospective Git blobs with unfiltered checkout bytes.",
+  "retained_negative_ids": [
+    "V6511-X2-N16"
+  ],
+  "rollback": "Retain the failed aggregate with zero precommit credit, change no manifest, and rerun the bounded audit only after matching the declared hash domain.",
+  "scope_boundary": "Same-owner manifest-domain recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Adjudicate manifests in their declared hash domain",
+  "trigger_preconditions": [
+    "A prospective manifest records normalized Git-blob bytes while the Windows checkout may contain CRLF text."
+  ],
+  "validation_witness_ids": [
+    "V6511-M15-WFAIL"
+  ]
+}

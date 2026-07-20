@@ -19,6 +19,7 @@ ROOT = REPO / "docs/sable-rook/v651-v1"
 SOURCE = "b8d2d25747fcda747f77e6cf788a87e95062de00"
 X1 = "1deba4184dfb6d017dff04b11e526a6e3730edb3"
 EVIDENCE = "79d6d3675763eb553dc43b64f0e83915c1739655"
+CLOSEOUT = "f6c8cd16327ef3c8f474ab94200095ec3620de3a"
 
 
 def git(*args: str) -> str:
@@ -134,12 +135,12 @@ def main() -> int:
     check("exact_head", head == args.expected_head, head)
     check("branch_namespace", branch == "codex/GHC-Family/sable-rook-full-tools", branch)
     check("clean_before", clean_before, clean_before)
-    check("direct_child_of_evidence", git("rev-parse", "HEAD^") == EVIDENCE, git("rev-parse", "HEAD^"))
-    check("three_phase_commits", int(git("rev-list", "--count", f"{SOURCE}..HEAD")) == 3, int(git("rev-list", "--count", f"{SOURCE}..HEAD")))
+    check("direct_child_of_closeout", git("rev-parse", "HEAD^") == CLOSEOUT, git("rev-parse", "HEAD^"))
+    check("four_phase_commits", int(git("rev-list", "--count", f"{SOURCE}..HEAD")) == 4, int(git("rev-list", "--count", f"{SOURCE}..HEAD")))
     check("within_four_commit_cap", int(git("rev-list", "--count", f"{SOURCE}..HEAD")) <= 4)
     check("zero_merges", int(git("rev-list", "--merges", "--count", f"{SOURCE}..HEAD")) == 0)
     check("one_final_parent", len(git("show", "-s", "--format=%P", "HEAD").split()) == 1)
-    for name, anchor in (("source", SOURCE), ("x1", X1), ("evidence", EVIDENCE)):
+    for name, anchor in (("source", SOURCE), ("x1", X1), ("evidence", EVIDENCE), ("closeout", CLOSEOUT)):
         ancestral = subprocess.run(["git", "merge-base", "--is-ancestor", anchor, "HEAD"], cwd=REPO).returncode == 0
         check(f"{name}_ancestral", ancestral)
 
@@ -166,22 +167,24 @@ def main() -> int:
 
     x1_issues, x1_entries = exact_manifest_issues("validation/x1-staged-manifest.json", SOURCE, X1)
     evidence_issues, evidence_entries = exact_manifest_issues("validation/evidence-staged-manifest.json", X1, EVIDENCE)
-    closeout_issues, closeout_entries = exact_manifest_issues("validation/closeout-staged-manifest.json", EVIDENCE, "HEAD")
+    closeout_issues, closeout_entries = exact_manifest_issues("validation/closeout-staged-manifest.json", EVIDENCE, CLOSEOUT)
+    correction_issues, correction_entries = exact_manifest_issues("validation/correction-staged-manifest.json", CLOSEOUT, "HEAD")
     owner_issues, owner_entries = exact_manifest_issues("validation/final-owner-manifest.json", SOURCE, "HEAD")
     delta_issues, delta_entries = exact_manifest_issues("validation/final-delta-manifest.json", EVIDENCE, "HEAD")
     check("x1_manifest_parity", not x1_issues, x1_entries)
     check("evidence_manifest_parity", not evidence_issues, evidence_entries)
     check("closeout_manifest_parity", not closeout_issues, closeout_entries)
+    check("correction_manifest_parity", not correction_issues, correction_entries)
     check("owner_manifest_parity", not owner_issues, owner_entries)
     check("delta_manifest_parity", not delta_issues, delta_entries)
 
-    privacy_receipts = [load("validation/x1-staged-privacy.json"), load("validation/evidence-staged-privacy.json"), load("validation/closeout-staged-privacy.json"), load("validation/final-owner-privacy.json"), load("validation/final-delta-privacy.json")]
+    privacy_receipts = [load("validation/x1-staged-privacy.json"), load("validation/evidence-staged-privacy.json"), load("validation/closeout-staged-privacy.json"), load("validation/correction-staged-privacy.json"), load("validation/final-owner-privacy.json"), load("validation/final-delta-privacy.json")]
     privacy_scanned = sum(row.get("scanned_file_count", row.get("scanned_path_count", 0)) for row in privacy_receipts)
     privacy_hits = sum(row["confirmed_hit_count"] for row in privacy_receipts)
     check("five_class_privacy_zero_confirmed", privacy_hits == 0 and all(len(row.get("pattern_classes", row.get("scan_classes", []))) == 5 for row in privacy_receipts), privacy_hits)
 
     truth = load("final/phase-truth.json")
-    check("truth_counts", truth["effective_negatives"] == 6556 and truth["effective_open_gaps"] == 51 and truth["effective_exact_gates"] == 52, [truth["effective_negatives"], truth["effective_open_gaps"], truth["effective_exact_gates"]])
+    check("truth_counts", truth["effective_negatives"] == 6563 and truth["effective_open_gaps"] == 51 and truth["effective_exact_gates"] == 52, [truth["effective_negatives"], truth["effective_open_gaps"], truth["effective_exact_gates"]])
     check("truth_distribution", truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
     check("terminal_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("route_held", load("route/final-phase-state.json")["terminal_route"] == "PREPARED_NOT_SENT")
@@ -239,8 +242,8 @@ def main() -> int:
         "minimal_checks": {"passed": minimal.get("passed", 0), "total": minimal.get("total", 0)},
         "json_parse_count": len(json_files),
         "json_issues": json_issues,
-        "manifest_entries": {"x1": x1_entries, "evidence": evidence_entries, "closeout": closeout_entries, "owner": owner_entries, "delta": delta_entries},
-        "manifest_issues": {"x1": x1_issues, "evidence": evidence_issues, "closeout": closeout_issues, "owner": owner_issues, "delta": delta_issues},
+        "manifest_entries": {"x1": x1_entries, "evidence": evidence_entries, "closeout": closeout_entries, "correction": correction_entries, "owner": owner_entries, "delta": delta_entries},
+        "manifest_issues": {"x1": x1_issues, "evidence": evidence_issues, "closeout": closeout_issues, "correction": correction_issues, "owner": owner_issues, "delta": delta_issues},
         "privacy_scanned_receipt_total": privacy_scanned,
         "privacy_confirmed_hits": privacy_hits,
         "owner_changed_paths": len(owner_paths),

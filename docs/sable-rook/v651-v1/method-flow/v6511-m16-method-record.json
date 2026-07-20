@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use count-field and prose-boundary patterns for stale-label review, and never treat arbitrary hexadecimal hash substrings as semantic count evidence.",
+  "failure_signature": "The exact staged audit used raw substring matching for prior counts and falsely flagged 6557 and 6558 inside SHA-256 values in the owner manifest after every substantive check passed.",
+  "method_id": "V6511-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "stale_label_review",
+    "manifest_integrity",
+    "exact_staged_review",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind stale numeric checks to named JSON fields, assignment syntax, or prose word boundaries; exclude opaque hashes and identifiers from semantic-count adjudication.",
+  "retained_negative_ids": [
+    "V6511-X2-N20"
+  ],
+  "rollback": "Retain the failed staged aggregate with zero staged-review credit, change no scientific or lifecycle artifact, and rerun only the stale-label subcheck with semantic patterns before rebuilding manifests.",
+  "scope_boundary": "Same-owner stale-label scanner recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Keep stale-label review out of opaque hash substrings",
+  "trigger_preconditions": [
+    "A stale-label audit scans documents that also contain opaque hexadecimal Git or SHA-256 values."
+  ],
+  "validation_witness_ids": [
+    "V6511-M16-WFAIL"
+  ]
+}

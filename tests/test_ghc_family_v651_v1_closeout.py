@@ -13,6 +13,7 @@ ROOT = REPO / "docs/sable-rook/v651-v1"
 SOURCE = "b8d2d25747fcda747f77e6cf788a87e95062de00"
 X1 = "1deba4184dfb6d017dff04b11e526a6e3730edb3"
 EVIDENCE = "79d6d3675763eb553dc43b64f0e83915c1739655"
+CLOSEOUT = "f6c8cd16327ef3c8f474ab94200095ec3620de3a"
 
 
 def load(relative):
@@ -45,9 +46,9 @@ class TestV651V1Closeout(unittest.TestCase):
     def test_negative_and_gate_retention(self):
         negatives = load("final/retained-negative-register.json")
         gates = load("final/gate-register.json")
-        self.assertEqual(negatives["effective"], 6556)
-        self.assertEqual((negatives["x1_operational_count"], negatives["x2_operational_count"], negatives["executed_rejected_synthetic"]), (5, 8, 100))
-        self.assertEqual(len(negatives["owner_operational_entries"]), 13)
+        self.assertEqual(negatives["effective"], 6563)
+        self.assertEqual((negatives["x1_operational_count"], negatives["x2_operational_count"], negatives["executed_rejected_synthetic"]), (5, 15, 100))
+        self.assertEqual(len(negatives["owner_operational_entries"]), 20)
         self.assertTrue(negatives["no_failure_erased"])
         self.assertEqual((gates["effective_open_gaps"], gates["effective_exact_gates"]), (51, 52))
         self.assertEqual(gates["silently_closed"], 0)
@@ -63,9 +64,9 @@ class TestV651V1Closeout(unittest.TestCase):
     def test_method_flow_and_environment(self):
         methods = load("method-flow/method-flow-state.json")["counts"]
         environment = load("final/environment-receipt.json")
-        self.assertEqual(methods["methods"], 12)
-        self.assertEqual(methods["witness_results"], {"fail": 13, "pass": 12})
-        self.assertEqual(methods["states"]["preferred"], 12)
+        self.assertEqual(methods["methods"], 16)
+        self.assertEqual(methods["witness_results"], {"fail": 20, "pass": 18})
+        self.assertEqual(methods["states"]["preferred"], 16)
         self.assertTrue(all(value is False for value in environment["actions"].values()))
         self.assertFalse(environment["windows_sandbox_executable_present"])
 
@@ -82,10 +83,11 @@ class TestV651V1Closeout(unittest.TestCase):
     def test_closeout_staged_manifest_and_privacy(self):
         manifest = load("validation/closeout-staged-manifest.json")
         declared = {row["path"] for row in manifest["entries"]} | set(manifest["self_exclusions"])
-        self.assertEqual(declared, status_paths())
+        observed = set(filter(None, git("diff", "--name-only", f"{EVIDENCE}..{CLOSEOUT}").splitlines()))
+        self.assertEqual(declared, observed)
         for row in manifest["entries"]:
-            raw = (REPO / row["path"]).read_bytes().replace(b"\r\n", b"\n")
-            self.assertEqual((len(raw), hashlib.sha256(raw).hexdigest()), (row["bytes"], row["sha256"]))
+            blob = subprocess.check_output(["git", "show", f"{CLOSEOUT}:{row['path']}"], cwd=REPO)
+            self.assertEqual((len(blob), hashlib.sha256(blob).hexdigest()), (row["bytes"], row["sha256"]))
         for relative in ("validation/closeout-staged-privacy.json", "validation/final-owner-privacy.json", "validation/final-delta-privacy.json"):
             self.assertEqual(load(relative)["confirmed_hit_count"], 0)
 

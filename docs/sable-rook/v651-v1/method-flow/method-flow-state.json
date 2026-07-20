@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 12,
-    "recommendations": 12,
-    "state_events": 36,
+    "methods": 16,
+    "recommendations": 16,
+    "state_events": 48,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 12,
+      "preferred": 16,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 13,
-      "pass": 12
+      "fail": 20,
+      "pass": 18
     },
-    "witnesses": 25
+    "witnesses": 38
   },
   "identity_boundary": "Relational working language only; not consciousness, personhood, continuity, employment, or authority evidence.",
   "methods": [
@@ -47,7 +47,9 @@
       ],
       "validation_witness_ids": [
         "V6511-M01-WFAIL",
-        "V6511-M01-WPASS"
+        "V6511-M01-WPASS",
+        "V6511-M01-WFAIL-02",
+        "V6511-M01-WPASS-02"
       ]
     },
     {
@@ -203,7 +205,9 @@
         "V6511-M06-WPASS",
         "V6511-M06-WFAIL",
         "V6511-M06-WPASS",
-        "V6511-M06-WFAIL-02"
+        "V6511-M06-WFAIL-02",
+        "V6511-M06-WFAIL-03",
+        "V6511-M06-WPASS-02"
       ]
     },
     {
@@ -391,6 +395,133 @@
         "V6511-M12-WPASS",
         "V6511-M12-WFAIL",
         "V6511-M12-WPASS"
+      ]
+    },
+    {
+      "approval_class": "safe_now_owner_scoped_workflow",
+      "candidate_workaround": "Treat staged paths as the precommit surface and fall back to the exact evidence-to-commit diff after commit, then validate the immutable closeout manifest against that fallback.",
+      "failure_signature": "The first closeout manifest unit test compared declared paths only with the mutable working status, which becomes empty after commit and would falsely fail at the exact final head.",
+      "method_id": "V6511-M13",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "failure_retention",
+        "precommit_postcommit_parity",
+        "manifest_integrity",
+        "commit_cap",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Design lifecycle tests with explicit precommit and postcommit evidence domains and verify both against immutable anchors before spending the exact-final pass.",
+      "retained_negative_ids": [
+        "V6511-X2-N14"
+      ],
+      "rollback": "Retain the status-only assertion with zero terminal-test credit, run no canonical pass, and use only one additive correction within the authorized cap.",
+      "scope_boundary": "Same-owner lifecycle-test recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Make manifest tests explicit across the commit boundary",
+      "trigger_preconditions": [
+        "A manifest test must pass both while files are staged and at the immutable committed head."
+      ],
+      "validation_witness_ids": [
+        "V6511-M13-WFAIL",
+        "V6511-M13-WPASS",
+        "V6511-M13-WFAIL",
+        "V6511-M13-WPASS"
+      ]
+    },
+    {
+      "approval_class": "safe_now_owner_scoped_workflow",
+      "candidate_workaround": "Replay every historical closeout manifest hash from the exact closeout commit blob instead of the successor correction working tree.",
+      "failure_signature": "The correction precommit selection ran 47 tests and failed one closeout-manifest test because historical manifest entries were still compared with files modified by the terminal correction.",
+      "method_id": "V6511-M14",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "failure_retention",
+        "commit_blob_domain",
+        "historical_manifest_integrity",
+        "commit_cap",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "When validating a historical commit-local manifest from a successor commit, resolve both coverage and content from that same immutable commit domain.",
+      "retained_negative_ids": [
+        "V6511-X2-N15"
+      ],
+      "rollback": "Retain the 47-test one-failure aggregate with zero precommit credit, change no historical manifest, and patch only the successor test's blob source.",
+      "scope_boundary": "Same-owner historical-manifest test recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Replay historical manifests from immutable commit blobs",
+      "trigger_preconditions": [
+        "A successor correction modifies paths that also appear in an earlier commit-local manifest."
+      ],
+      "validation_witness_ids": [
+        "V6511-M14-WFAIL",
+        "V6511-M14-WPASS",
+        "V6511-M14-WFAIL",
+        "V6511-M14-WPASS"
+      ]
+    },
+    {
+      "approval_class": "safe_now_owner_scoped_workflow",
+      "candidate_workaround": "Replay prospective text entries after the declared CRLF-to-LF clean-filter normalization, or use Git hash-object with the exact path, rather than hashing raw checkout bytes.",
+      "failure_signature": "The precommit manifest audit compared raw checkout bytes against prospective normalized Git-blob manifests and falsely reported hash mismatches while every other aggregate check passed.",
+      "method_id": "V6511-M15",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "failure_retention",
+        "hash_domain_integrity",
+        "manifest_parity",
+        "exact_staged_review",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Read each manifest entry's hash_domain and reproduce that exact domain before adjudicating a mismatch; never compare prospective Git blobs with unfiltered checkout bytes.",
+      "retained_negative_ids": [
+        "V6511-X2-N16"
+      ],
+      "rollback": "Retain the failed aggregate with zero precommit credit, change no manifest, and rerun the bounded audit only after matching the declared hash domain.",
+      "scope_boundary": "Same-owner manifest-domain recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Adjudicate manifests in their declared hash domain",
+      "trigger_preconditions": [
+        "A prospective manifest records normalized Git-blob bytes while the Windows checkout may contain CRLF text."
+      ],
+      "validation_witness_ids": [
+        "V6511-M15-WFAIL",
+        "V6511-M15-WFAIL",
+        "V6511-M15-WFAIL-02",
+        "V6511-M15-WPASS"
+      ]
+    },
+    {
+      "approval_class": "safe_now_owner_scoped_workflow",
+      "candidate_workaround": "Use count-field and prose-boundary patterns for stale-label review, and never treat arbitrary hexadecimal hash substrings as semantic count evidence.",
+      "failure_signature": "The exact staged audit used raw substring matching for prior counts and falsely flagged 6557 and 6558 inside SHA-256 values in the owner manifest after every substantive check passed.",
+      "method_id": "V6511-M16",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "failure_retention",
+        "stale_label_review",
+        "manifest_integrity",
+        "exact_staged_review",
+        "independent_reproduction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Bind stale numeric checks to named JSON fields, assignment syntax, or prose word boundaries; exclude opaque hashes and identifiers from semantic-count adjudication.",
+      "retained_negative_ids": [
+        "V6511-X2-N20"
+      ],
+      "rollback": "Retain the failed staged aggregate with zero staged-review credit, change no scientific or lifecycle artifact, and rerun only the stale-label subcheck with semantic patterns before rebuilding manifests.",
+      "scope_boundary": "Same-owner stale-label scanner recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Keep stale-label review out of opaque hash substrings",
+      "trigger_preconditions": [
+        "A stale-label audit scans documents that also contain opaque hexadecimal Git or SHA-256 values."
+      ],
+      "validation_witness_ids": [
+        "V6511-M16-WFAIL",
+        "V6511-M16-WFAIL",
+        "V6511-M16-WPASS"
       ]
     }
   ],
@@ -597,6 +728,73 @@
         "V6511-M12-WPASS",
         "V6511-M12-WFAIL",
         "V6511-M12-WPASS"
+      ]
+    },
+    {
+      "method": "Treat staged paths as the precommit surface and fall back to the exact evidence-to-commit diff after commit, then validate the immutable closeout manifest against that fallback.",
+      "method_id": "V6511-M13",
+      "preconditions": [
+        "A manifest test must pass both while files are staged and at the immutable committed head."
+      ],
+      "recommendation_index": 13,
+      "recurrence_guard": "Design lifecycle tests with explicit precommit and postcommit evidence domains and verify both against immutable anchors before spending the exact-final pass.",
+      "rollback": "Retain the status-only assertion with zero terminal-test credit, run no canonical pass, and use only one additive correction within the authorized cap.",
+      "scope_boundary": "Same-owner lifecycle-test recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "witness_ids": [
+        "V6511-M13-WFAIL",
+        "V6511-M13-WPASS",
+        "V6511-M13-WFAIL",
+        "V6511-M13-WPASS"
+      ]
+    },
+    {
+      "method": "Replay every historical closeout manifest hash from the exact closeout commit blob instead of the successor correction working tree.",
+      "method_id": "V6511-M14",
+      "preconditions": [
+        "A successor correction modifies paths that also appear in an earlier commit-local manifest."
+      ],
+      "recommendation_index": 14,
+      "recurrence_guard": "When validating a historical commit-local manifest from a successor commit, resolve both coverage and content from that same immutable commit domain.",
+      "rollback": "Retain the 47-test one-failure aggregate with zero precommit credit, change no historical manifest, and patch only the successor test's blob source.",
+      "scope_boundary": "Same-owner historical-manifest test recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "witness_ids": [
+        "V6511-M14-WFAIL",
+        "V6511-M14-WPASS",
+        "V6511-M14-WFAIL",
+        "V6511-M14-WPASS"
+      ]
+    },
+    {
+      "method": "Replay prospective text entries after the declared CRLF-to-LF clean-filter normalization, or use Git hash-object with the exact path, rather than hashing raw checkout bytes.",
+      "method_id": "V6511-M15",
+      "preconditions": [
+        "A prospective manifest records normalized Git-blob bytes while the Windows checkout may contain CRLF text."
+      ],
+      "recommendation_index": 15,
+      "recurrence_guard": "Read each manifest entry's hash_domain and reproduce that exact domain before adjudicating a mismatch; never compare prospective Git blobs with unfiltered checkout bytes.",
+      "rollback": "Retain the failed aggregate with zero precommit credit, change no manifest, and rerun the bounded audit only after matching the declared hash domain.",
+      "scope_boundary": "Same-owner manifest-domain recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "witness_ids": [
+        "V6511-M15-WFAIL",
+        "V6511-M15-WFAIL",
+        "V6511-M15-WFAIL-02",
+        "V6511-M15-WPASS"
+      ]
+    },
+    {
+      "method": "Use count-field and prose-boundary patterns for stale-label review, and never treat arbitrary hexadecimal hash substrings as semantic count evidence.",
+      "method_id": "V6511-M16",
+      "preconditions": [
+        "A stale-label audit scans documents that also contain opaque hexadecimal Git or SHA-256 values."
+      ],
+      "recommendation_index": 16,
+      "recurrence_guard": "Bind stale numeric checks to named JSON fields, assignment syntax, or prose word boundaries; exclude opaque hashes and identifiers from semantic-count adjudication.",
+      "rollback": "Retain the failed staged aggregate with zero staged-review credit, change no scientific or lifecycle artifact, and rerun only the stale-label subcheck with semantic patterns before rebuilding manifests.",
+      "scope_boundary": "Same-owner stale-label scanner recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+      "witness_ids": [
+        "V6511-M16-WFAIL",
+        "V6511-M16-WFAIL",
+        "V6511-M16-WPASS"
       ]
     }
   ],
@@ -888,6 +1086,102 @@
       "event_index": 36,
       "method_id": "V6511-M12",
       "reason": "Explicit inline execution passed; printed source remains retained as zero-credit failure.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 37,
+      "method_id": "V6511-M13",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 38,
+      "method_id": "V6511-M13",
+      "reason": "bounded witness passed",
+      "witness_id": "V6511-M13-WPASS"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 39,
+      "method_id": "V6511-M13",
+      "reason": "Dual-state fallback passed at the immutable closeout commit; status-only assumption remains retained.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 40,
+      "method_id": "V6511-M14",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 41,
+      "method_id": "V6511-M14",
+      "reason": "bounded witness passed",
+      "witness_id": "V6511-M14-WPASS"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 42,
+      "method_id": "V6511-M14",
+      "reason": "Immutable closeout blob replay passed; working-tree comparison failure remains retained.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 43,
+      "method_id": "V6511-M15",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 44,
+      "method_id": "V6511-M15",
+      "reason": "bounded witness passed",
+      "witness_id": "V6511-M15-WPASS"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 45,
+      "method_id": "V6511-M15",
+      "reason": "Prospective normalization resolved 28 raw-checkout mismatches while four later Method Flow mutations remained quarantined for rebuild.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 46,
+      "method_id": "V6511-M16",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 47,
+      "method_id": "V6511-M16",
+      "reason": "bounded witness passed",
+      "witness_id": "V6511-M16-WPASS"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 48,
+      "method_id": "V6511-M16",
+      "reason": "Field-aware staged review found zero stale semantic labels while excluding opaque hash substrings by construction.",
       "witness_id": null
     }
   ],
@@ -1266,6 +1560,202 @@
       "same_owner_only": true,
       "scope": "Sable v651-v1 closeout-source syntax audit",
       "witness_id": "V6511-M12-WPASS"
+    },
+    {
+      "boundary": "Read-only lifecycle-design negative caught before canonical validation; zero exact-final credit.",
+      "expected": "Use the staged path set before commit and the immutable evidence-to-final diff after commit.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M13",
+      "observed": "Code review showed the status-only assertion would compare a nonempty committed manifest with an empty clean status at the exact final head.",
+      "procedure": "Review the committed closeout test after push and before invoking the exact-final validator.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N14"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 closeout-test lifecycle contract",
+      "witness_id": "V6511-M13-WFAIL"
+    },
+    {
+      "boundary": "Passing dual-state manifest-contract witness only; no exact-final, scientific, production, or independent-reproduction credit.",
+      "expected": "Parse the corrected test and prove the immutable closeout manifest equals the evidence-to-closeout changed-path fallback.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M13",
+      "observed": "The corrected test parsed, and the immutable closeout commit exposed 55 changed paths exactly matching the manifest's 55 declared entry and exclusion paths.",
+      "procedure": "Parse the dual-state test and compare the closeout manifest blob at the immutable closeout commit with the exact evidence-to-closeout Git diff.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6511-X2-N14"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 closeout-test lifecycle contract",
+      "witness_id": "V6511-M13-WPASS"
+    },
+    {
+      "boundary": "Failed correction precommit aggregate; zero validation credit and no historical-manifest mutation.",
+      "expected": "Run 47 eligible tests with historical closeout hashes resolved from the exact closeout commit.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M14",
+      "observed": "The 47-test aggregate had one failure because historical closeout hashes were compared with successor working-tree bytes.",
+      "procedure": "Run the corrected coverage assertion while leaving its per-entry byte reads bound to the working tree.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N15"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 terminal-correction precommit selection",
+      "witness_id": "V6511-M14-WFAIL"
+    },
+    {
+      "boundary": "Passing immutable-closeout manifest test only; no full-suite, scientific, production, or independent-reproduction credit.",
+      "expected": "Pass the historical closeout manifest coverage and per-entry blob checks from the exact closeout commit domain.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M14",
+      "observed": "The targeted closeout manifest test passed once with all coverage and content resolved from the immutable closeout commit.",
+      "procedure": "Run only the corrected closeout manifest and privacy test through an in-process TestResult witness.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6511-X2-N15"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 historical closeout manifest replay",
+      "witness_id": "V6511-M14-WPASS"
+    },
+    {
+      "boundary": "Read-only diagnostic wrapper failure; zero search or validation credit and no repository mutation.",
+      "expected": "Inspect prospective Git-blob helpers using exact Windows-safe path arguments.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M06",
+      "observed": "The diagnostic appended a literal scripts/*.py path, printed partial matches, then returned a Windows path-syntax error.",
+      "procedure": "Run ripgrep across named helper files while incorrectly appending a shell-style wildcard path argument.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N17"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 prospective-blob helper inspection",
+      "witness_id": "V6511-M06-WFAIL-03"
+    },
+    {
+      "boundary": "Passing exact-file read-only inspection only; no broader validation, scientific, production, or independent-reproduction credit.",
+      "expected": "Read the prospective-byte implementations without wildcard expansion assumptions.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M06",
+      "observed": "Exact literal filenames exposed the CRLF-to-LF prospective normalization and completed without a path error.",
+      "procedure": "Read only the three named builder files with LiteralPath and select their prospective-byte definitions.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6511-X2-N17"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 prospective-blob helper inspection",
+      "witness_id": "V6511-M06-WPASS-02"
+    },
+    {
+      "boundary": "Failed precommit manifest-domain aggregate; zero precommit validation credit and no manifest mutation.",
+      "expected": "Validate 47 eligible tests, detailed and minimal checks, JSON, privacy, diff hygiene, and prospective manifests in their declared hash domains.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M15",
+      "observed": "Tests, detailed and minimal checks, 264 JSON parses, privacy receipts, coverage, and diff hygiene passed, but raw checkout hashing falsely reported prospective Git-blob mismatches.",
+      "procedure": "Run the precommit aggregate while incorrectly hashing raw checkout bytes for prospective normalized Git-blob entries.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N16"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 terminal-correction precommit aggregate",
+      "witness_id": "V6511-M15-WFAIL"
+    },
+    {
+      "boundary": "Method Flow summary console-encoding failure; zero summary credit and no scientific or terminal-validation implication.",
+      "expected": "Write and emit the Method Flow summary containing Māori text under UTF-8.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M01",
+      "observed": "The summary writer reached its console print after file generation, then raised a CP1252 UnicodeEncodeError on Māori text.",
+      "procedure": "Invoke the Method Flow summary command without pinning Python standard-stream encoding on Windows PowerShell.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N18"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 Method Flow summary emission",
+      "witness_id": "V6511-M01-WFAIL-02"
+    },
+    {
+      "boundary": "Passing UTF-8 Method Flow summary emission only; no full-suite, scientific, authority, or independent-reproduction credit.",
+      "expected": "Write and emit the complete Method Flow summary with UTF-8 standard streams.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M01",
+      "observed": "With PYTHONUTF8 and PYTHONIOENCODING pinned, the summary command emitted a complete valid JSON result containing Māori text.",
+      "procedure": "Rerun only the Method Flow summary command with UTF-8 environment variables set before process launch.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6511-X2-N18"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 Method Flow summary emission",
+      "witness_id": "V6511-M01-WPASS-02"
+    },
+    {
+      "boundary": "Premature hash-domain recovery probe; zero aggregate or manifest credit and no repository mutation.",
+      "expected": "Prove prospective normalization without confusing later Method Flow mutations with hash-domain mismatches.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M15",
+      "observed": "Normalization removed the original checkout-domain mismatches, but four Method Flow files changed after manifest generation and remained mismatched across three manifests.",
+      "procedure": "Replay every existing manifest entry after additional Method Flow writes but before rebuilding the prospective manifests.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N19"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 prospective-manifest recovery sequencing",
+      "witness_id": "V6511-M15-WFAIL-02"
+    },
+    {
+      "boundary": "Passing hash-domain method witness only; manifests still require rebuild and no aggregate, final-validation, or independent-reproduction credit is claimed.",
+      "expected": "Distinguish prospective normalization recoveries from files legitimately changed after manifest generation.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M15",
+      "observed": "Prospective CRLF-to-LF normalization resolved all 28 original checkout-domain mismatches, while exactly four later-mutated Method Flow files remained explicitly quarantined for rebuild.",
+      "procedure": "Compare raw and normalized bytes with each existing manifest entry, classify raw-only mismatches separately, and require the remaining mutation set to equal the four known Method Flow files.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6511-X2-N16",
+        "V6511-X2-N19"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 prospective-manifest hash-domain adjudication",
+      "witness_id": "V6511-M15-WPASS"
+    },
+    {
+      "boundary": "Failed stale-label subcheck; zero exact-staged-review credit despite all other passing subchecks.",
+      "expected": "Detect semantic stale counts without flagging opaque manifest hashes.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M16",
+      "observed": "All six manifests, 31 staged JSON parses, five-class privacy, diff hygiene, and ancestry passed, but raw substring matching flagged 6557 and 6558 only inside owner-manifest SHA-256 values.",
+      "procedure": "Search every staged text blob for unanchored count substrings, including opaque hash fields.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6511-X2-N20"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 exact staged stale-label review",
+      "witness_id": "V6511-M16-WFAIL"
+    },
+    {
+      "boundary": "Passing semantic stale-label witness only; no exact staged, final-validation, scientific, or independent-reproduction credit.",
+      "expected": "Find no old effective count, x2 count, prose breakdown, or history label while excluding opaque hashes by construction.",
+      "independent_reproduction": false,
+      "method_id": "V6511-M16",
+      "observed": "Four field-aware and prose-boundary patterns scanned the 41-file staged text surface with zero hits; opaque hash substrings were not treated as semantic labels.",
+      "procedure": "Replay the staged Git blobs with patterns anchored to named count fields, assignments, and exact prose rather than arbitrary digit substrings.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6511-X2-N20"
+      ],
+      "same_owner_only": true,
+      "scope": "Sable v651-v1 exact staged stale-label adjudication",
+      "witness_id": "V6511-M16-WPASS"
     }
   ]
 }

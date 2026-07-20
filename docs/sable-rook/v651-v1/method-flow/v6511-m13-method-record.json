@@ -1,0 +1,30 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Treat staged paths as the precommit surface and fall back to the exact evidence-to-commit diff after commit, then validate the immutable closeout manifest against that fallback.",
+  "failure_signature": "The first closeout manifest unit test compared declared paths only with the mutable working status, which becomes empty after commit and would falsely fail at the exact final head.",
+  "method_id": "V6511-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "precommit_postcommit_parity",
+    "manifest_integrity",
+    "commit_cap",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Design lifecycle tests with explicit precommit and postcommit evidence domains and verify both against immutable anchors before spending the exact-final pass.",
+  "retained_negative_ids": [
+    "V6511-X2-N14"
+  ],
+  "rollback": "Retain the status-only assertion with zero terminal-test credit, run no canonical pass, and use only one additive correction within the authorized cap.",
+  "scope_boundary": "Same-owner lifecycle-test recovery only; no full-suite, scientific, professional, legal, cultural, Maori-authority, production, security, accessibility, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Make manifest tests explicit across the commit boundary",
+  "trigger_preconditions": [
+    "A manifest test must pass both while files are staged and at the immutable committed head."
+  ],
+  "validation_witness_ids": [
+    "V6511-M13-WFAIL",
+    "V6511-M13-WPASS"
+  ]
+}

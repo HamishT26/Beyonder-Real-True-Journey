@@ -2,9 +2,9 @@
 
 - Phase: v651-v1
 - Owner: Sable Rook
-- Methods: 12
-- Passing witnesses: 12
-- Failed witnesses retained: 13
+- Methods: 16
+- Passing witnesses: 18
+- Failed witnesses retained: 20
 
 ## Preferred methods
 
@@ -14,7 +14,7 @@
 - Method: Set the Python standard-stream encoding to UTF-8 before emitting frozen titles that may contain Māori text.
 - Recurrence guard: Pin UTF-8 before every Unicode-emitting Python diagnostic and give partial output zero completeness credit.
 - Rollback: Retain the partial probe with zero novelty credit and change no proposal until a complete UTF-8 witness passes.
-- Witnesses: V6511-M01-WFAIL, V6511-M01-WPASS
+- Witnesses: V6511-M01-WFAIL, V6511-M01-WPASS, V6511-M01-WFAIL-02, V6511-M01-WPASS-02
 
 ### V6511-M03 — Validate Method Flow records before dependent witnesses
 
@@ -54,7 +54,7 @@
 - Method: Search the directory root and let ripgrep recurse instead of passing Windows wildcard path arguments.
 - Recurrence guard: On Windows, pass a real directory to ripgrep and filter results by pattern; do not assume shell wildcard expansion in path arguments.
 - Rollback: Keep the failed wildcard probe with zero search credit and change no repository state until a directory-scoped query passes.
-- Witnesses: V6511-M06-WFAIL, V6511-M06-WPASS, V6511-M06-WFAIL, V6511-M06-WPASS, V6511-M06-WFAIL-02
+- Witnesses: V6511-M06-WFAIL, V6511-M06-WPASS, V6511-M06-WFAIL, V6511-M06-WPASS, V6511-M06-WFAIL-02, V6511-M06-WFAIL-03, V6511-M06-WPASS-02
 
 ### V6511-M07 — Resolve skill references from exact links
 
@@ -103,6 +103,38 @@
 - Recurrence guard: Require an explicit pipeline or script invocation for every inline-language probe and accept only a structured result emitted by the invoked interpreter.
 - Rollback: Retain the printed-but-unexecuted probe with zero review credit and change no evidence claim until a minimal explicit invocation passes.
 - Witnesses: V6511-M12-WFAIL, V6511-M12-WPASS, V6511-M12-WFAIL, V6511-M12-WPASS
+
+### V6511-M13 — Make manifest tests explicit across the commit boundary
+
+- Trigger: A manifest test must pass both while files are staged and at the immutable committed head.
+- Method: Treat staged paths as the precommit surface and fall back to the exact evidence-to-commit diff after commit, then validate the immutable closeout manifest against that fallback.
+- Recurrence guard: Design lifecycle tests with explicit precommit and postcommit evidence domains and verify both against immutable anchors before spending the exact-final pass.
+- Rollback: Retain the status-only assertion with zero terminal-test credit, run no canonical pass, and use only one additive correction within the authorized cap.
+- Witnesses: V6511-M13-WFAIL, V6511-M13-WPASS, V6511-M13-WFAIL, V6511-M13-WPASS
+
+### V6511-M14 — Replay historical manifests from immutable commit blobs
+
+- Trigger: A successor correction modifies paths that also appear in an earlier commit-local manifest.
+- Method: Replay every historical closeout manifest hash from the exact closeout commit blob instead of the successor correction working tree.
+- Recurrence guard: When validating a historical commit-local manifest from a successor commit, resolve both coverage and content from that same immutable commit domain.
+- Rollback: Retain the 47-test one-failure aggregate with zero precommit credit, change no historical manifest, and patch only the successor test's blob source.
+- Witnesses: V6511-M14-WFAIL, V6511-M14-WPASS, V6511-M14-WFAIL, V6511-M14-WPASS
+
+### V6511-M15 — Adjudicate manifests in their declared hash domain
+
+- Trigger: A prospective manifest records normalized Git-blob bytes while the Windows checkout may contain CRLF text.
+- Method: Replay prospective text entries after the declared CRLF-to-LF clean-filter normalization, or use Git hash-object with the exact path, rather than hashing raw checkout bytes.
+- Recurrence guard: Read each manifest entry's hash_domain and reproduce that exact domain before adjudicating a mismatch; never compare prospective Git blobs with unfiltered checkout bytes.
+- Rollback: Retain the failed aggregate with zero precommit credit, change no manifest, and rerun the bounded audit only after matching the declared hash domain.
+- Witnesses: V6511-M15-WFAIL, V6511-M15-WFAIL, V6511-M15-WFAIL-02, V6511-M15-WPASS
+
+### V6511-M16 — Keep stale-label review out of opaque hash substrings
+
+- Trigger: A stale-label audit scans documents that also contain opaque hexadecimal Git or SHA-256 values.
+- Method: Use count-field and prose-boundary patterns for stale-label review, and never treat arbitrary hexadecimal hash substrings as semantic count evidence.
+- Recurrence guard: Bind stale numeric checks to named JSON fields, assignment syntax, or prose word boundaries; exclude opaque hashes and identifiers from semantic-count adjudication.
+- Rollback: Retain the failed staged aggregate with zero staged-review credit, change no scientific or lifecycle artifact, and rerun only the stale-label subcheck with semantic patterns before rebuilding manifests.
+- Witnesses: V6511-M16-WFAIL, V6511-M16-WFAIL, V6511-M16-WPASS
 
 ## Retained boundary
 

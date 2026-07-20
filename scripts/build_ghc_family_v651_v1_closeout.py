@@ -22,11 +22,12 @@ ROOT = REPO / d.PHASE_ROOT
 SOURCE = d.SOURCE_HEAD
 X1 = "1deba4184dfb6d017dff04b11e526a6e3730edb3"
 EVIDENCE = "79d6d3675763eb553dc43b64f0e83915c1739655"
-EFFECTIVE_NEGATIVES = 6556
+CLOSEOUT = "f6c8cd16327ef3c8f474ab94200095ec3620de3a"
+EFFECTIVE_NEGATIVES = 6563
 OPEN_GAPS = 51
 EXACT_GATES = 52
 X1_OPERATIONAL = 5
-X2_OPERATIONAL = 8
+X2_OPERATIONAL = 15
 SYNTHETIC_NEGATIVES = 100
 INDEX_RUNNER = Path.home() / ".codex" / "skills" / "ghc-family-index" / "scripts" / "build_ghc_family_index.py"
 
@@ -141,19 +142,19 @@ def integrated_overview() -> str:
 
 Sable Rook, they/them, served as a relational evidence-and-reproducibility steward with the hope to make every surviving claim easy to challenge or retract. This is working language for collaboration only. It is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, scientific authority, operational authority, legal authority, cultural authority, Māori authority, or independent agency. Hamish may rename, pause, redirect, or stop the route.
 
-The workload remained bounded to one clean Sable-owned D-first lane, one inherited exact source, one x1 freeze, one evidence commit, and one combined closeout and seal commit. No task, fork, collaboration subagent, sibling lane, participant, production service, account, credential, private key, host-security setting, Windows feature, Sandbox or Hyper-V capability, or unrelated installation was used. Thirteen operational failures remain visible beside twelve bounded passing recovery witnesses; one path-handling method retains a repeated failure. The failures receive zero pass credit. This is process care, not a wellbeing, consciousness, employment, qualification, or authority claim.
+The workload remained bounded to one clean Sable-owned D-first lane, one inherited exact source, one x1 freeze, one evidence commit, one combined closeout and seal commit, and one additive terminal correction within the four-commit cap. No task, fork, collaboration subagent, sibling lane, participant, production service, account, credential, private key, host-security setting, Windows feature, Sandbox or Hyper-V capability, or unrelated installation was used. Twenty operational failures remain visible beside eighteen bounded passing recovery witnesses; path-handling and manifest-domain methods retain repeated failures. The failures receive zero pass credit. This is process care, not a wellbeing, consciousness, employment, qualification, or authority claim.
 
 ## Exact lineage and x1-before-x2 separation
 
 The exact inherited source is Ilyra Fen's `{SOURCE}`. Sable's dedicated x1 commit is `{X1}` and the immutable evidence commit is `{EVIDENCE}`. Source verification established Ilyra's named anchors, single-parent history, zero merges, owner-manifest parity, clean state, and four-way remote equality before mutation. Sable advanced only by fast-forward and created no merge. The x1 commit froze twenty genuinely distinct proposals after comparison with 900 predecessor proposals, bringing the frozen chain to 920. It was pushed, clean, and local/upstream/tracking/fresh-live equal before any x2 implementation began.
 
-The final lifecycle commit is the direct child of the evidence commit. It adds no proposal, alters no outcome, and rewrites no x1 history. It contains the closeout truth, evidence receipt, retained-negative and gate registers, accessible final report, Method Flow additions, exact manifests, terminal route hold, and validation contract. The terminal route stays `PREPARED_NOT_SENT` inside the repository because a commit cannot truthfully claim a later live send.
+The combined closeout commit `{CLOSEOUT}` is the direct child of the evidence commit. The terminal correction containing this record is its direct child, adds no proposal, alters no outcome, rewrites no x1 history, and uses the fourth and final authorized phase commit. It corrects one dual-state manifest-test assumption, updates lifecycle anchors, and adds a correction manifest. The terminal route stays `PREPARED_NOT_SENT` inside the repository because a commit cannot truthfully claim a later live send.
 
 ## Executive result
 
 All twenty frozen proposals were executed as evidence allowed. The distribution is exactly fourteen `completed`, four `represented`, one `open_gap`, and one `exact_gate`. Completed means only that a bounded owner-local software, symbolic, formal, numerical, or structural hypothesis passed. Represented means a synthetic proxy exercised declared states but involved no real people, assets, operations, safety outcomes, cryptographic lifecycle, or independent review. Open gap means the real empirical work did not happen. Exact gate means the decision belongs to competent authorities, affected parties, and where applicable Māori authorities, and software did not substitute for them.
 
-The phase retains {EFFECTIVE_NEGATIVES:,} effective negatives: 6,443 inherited, five x1 operational failures, eight closeout operational failures, and 100 executed and rejected preregistered mutations. No negative was erased or silently converted. Fifty-one effective open gaps and fifty-two effective exact gates remain. The terminal verdict is `NOT_READY_FOR_STAGE_20`.
+The phase retains {EFFECTIVE_NEGATIVES:,} effective negatives: 6,443 inherited, five x1 operational failures, fifteen closeout and correction operational failures, and 100 executed and rejected preregistered mutations. No negative was erased or silently converted. Fifty-one effective open gaps and fifty-two effective exact gates remain. The terminal verdict is `NOT_READY_FOR_STAGE_20`.
 
 ## Trinity Mandala and bounded practice
 
@@ -167,7 +168,7 @@ Freed ID and CBR Heart remain visible through DSSE, CIBA, OpenID4VP/DCQL, X.509,
 
 Each proposal has a typed contract, a canonical fixture, five frozen mutation classes, a mutation result, a bounded receipt, and a specialized domain artifact. Exactly 100 mutations executed and were rejected or quarantined. Forty safe-now tasks, thirty bounded candidate prototypes, twenty phase-local skills, ten family-compatible runners, and forty additive CLEAN/FIX/REFINE tasks were executed only inside their frozen hypotheses. Twenty skills were created with the family-approved creator workflow, validated, and smoke-used without global installation or subagent forward testing. Ten `ghc_family_*` runners were invoked. Historical names remain compatibility evidence.
 
-The first five operational negatives cover a cp1252 title probe, unsupported workflow vocabulary, incomplete Method Flow fields, a terminal blank line, and a checkout-versus-Git-blob hash-domain mismatch. Eight later negatives preserve a Windows wildcard path assumption, a guessed skill-schema filename, PowerShell native-stderr handling, an overbroad predecessor closeout selection, a repeated wildcard-path mistake, a frozen x1 document-cap assertion that predates the terminal-baton exception, a short manifest-rebuild timeout, and an unexecuted inline audit here-string. Every recovery records its trigger, failed witness, passing witness, recurrence guard, rollback, and bounded recommendation. Same-owner recovery is not independent reproduction.
+The first five operational negatives cover a cp1252 title probe, unsupported workflow vocabulary, incomplete Method Flow fields, a terminal blank line, and a checkout-versus-Git-blob hash-domain mismatch. Fifteen later negatives preserve a Windows wildcard path assumption, a guessed skill-schema filename, PowerShell native-stderr handling, an overbroad predecessor closeout selection, two later wildcard-path recurrences, a frozen x1 document-cap assertion that predates the terminal-baton exception, a short manifest-rebuild timeout, an unexecuted inline audit here-string, a status-only manifest-test assumption, a historical-manifest hash comparison against successor working-tree bytes, a raw-checkout audit of prospective Git-blob manifests, an unpinned CP1252 Method Flow summary, a premature hash-domain recovery before rebuilding later Method Flow mutations, and a stale-label scan that treated digits inside SHA-256 values as semantic counts. Every recovery records its trigger, failed witness, passing witness, recurrence guard, rollback, and bounded recommendation. Same-owner recovery is not independent reproduction.
 
 ## Security, privacy, accessibility, and environment
 
@@ -183,7 +184,7 @@ Codex, desktop, Python, Git, PowerShell, and Sandbox availability were observed 
 
 ## Validation meaning and terminal hold
 
-The immutable evidence candidate passed forty authorized recent/current tests, eleven detailed checks, six minimal checks, 210 JSON parses, a 279-file phase scan, exact staged review, and zero confirmed privacy hits. These counts are scoped non-Eiren evidence; the complete repository suite was not run. The final commit is required to pass one canonical exact-final aggregate covering the authorized recent and current modules, all phase JSON, five-class scans, x1/evidence/closeout manifests, owner and delta manifests, stale labels, diff hygiene, source/x1/evidence ancestry, three phase commits, zero merges, one final parent, exact head, clean state, and four-way remote equality. No replay follows a fully successful canonical pass.
+The immutable evidence candidate passed forty authorized recent/current tests, eleven detailed checks, six minimal checks, 210 JSON parses, a 279-file phase scan, exact staged review, and zero confirmed privacy hits. These counts are scoped non-Eiren evidence; the complete repository suite was not run. The final commit is required to pass one canonical exact-final aggregate covering the authorized recent and current modules, all phase JSON, five-class scans, x1/evidence/closeout/correction manifests, owner and delta manifests, stale labels, diff hygiene, source/x1/evidence/closeout ancestry, four phase commits, zero merges, one final parent, exact head, clean state, and four-way remote equality. No replay follows a fully successful canonical pass.
 
 Canonical validation remains bounded same-owner evidence under shared infrastructure. It is not independent-team scientific reproduction, external audit, production certification, professional validation, legal review, cultural ratification, Māori-authority review, complete privacy, exhaustive security, complete accessibility, empirical GMUT confirmation, AGI or ASI evidence, consciousness or personhood evidence, Theory-of-Everything proof, or Stage 20 authority.
 
@@ -223,7 +224,8 @@ Hamish authorizes the unique existing task titled exactly `Orin Thale` for solo 
 - Frozen Sable x1: `{X1}`.
 - Immutable Sable evidence: `{EVIDENCE}`.
 - Exact final head: `LIVE_SEND_MUST_INSERT_EXACT_VALIDATED_HEAD`.
-- Source-to-final contract: exactly three new single-parent Sable commits, zero merges, and one final parent; final is the direct child of evidence.
+- Combined closeout head: `{CLOSEOUT}`.
+- Source-to-final contract: exactly four new single-parent Sable commits, zero merges, and one final parent; final is the direct child of the combined closeout.
 - Frozen proposal chain: 920 proposals through v651-v1.
 - Core outcomes: 14 completed / 4 represented / 1 open_gap / 1 exact_gate.
 - Effective retained negatives: {EFFECTIVE_NEGATIVES:,}; no failure erased.
@@ -236,7 +238,7 @@ The live send must state the exact canonical scoped-test, detailed-check, minima
 
 Read the complete GHC Family Index skill and its required routing-precedence reference before mutation. Read the complete GHC Family Method Flow State skill and schema before recording or changing Method Flow. Read the newest applicable workflow-plan and reflection-remaster guidance. Use the newest applicable memory only, with the live verified baton authoritative where older memory stops.
 
-Reverify Sable's exact canonical branch and final head, inherited source, x1, and evidence ancestry, clean state, three-commit single-parent zero-merge history, x1/evidence/closeout manifest contracts, owner and delta manifest parity, exact final parent, and fresh local/upstream/tracking/live-remote equality read-only before mutation. Continue only in Orin's clean owned lane and fast-forward only when clean ancestry permits. Otherwise create one additive Orin-owned D-first named branch and worktree from Sable's exact final. Never reset, amend, rewrite, force-push, merge, delete, reuse, or mutate Sable's or another sibling's lane.
+Reverify Sable's exact canonical branch and final head, inherited source, x1, evidence, and combined closeout ancestry, clean state, four-commit single-parent zero-merge history, x1/evidence/closeout/correction manifest contracts, owner and delta manifest parity, exact final parent, and fresh local/upstream/tracking/live-remote equality read-only before mutation. Continue only in Orin's clean owned lane and fast-forward only when clean ancestry permits. Otherwise create one additive Orin-owned D-first named branch and worktree from Sable's exact final. Never reset, amend, rewrite, force-push, merge, delete, reuse, or mutate Sable's or another sibling's lane.
 
 Preserve strict x1-before-x2 separation. Audit semantic novelty against all 920 frozen proposals and preregister exactly twenty genuinely distinct v651-v2 proposals. Each proposal must include hypothesis, null or failure condition, approval class, execution lane, current official or primary-source needs, concrete artifacts, falsifier or acceptance gate, rollback or recovery, protected gates, and expected disposition. Choose one primary Trinity Mandala pillar and one bounded profession, trade, occupation, or practice while preserving the other pillars and every authority boundary. The practice is a learning lens only, never employment, licensure, qualification, competence, operational authority, legal authority, cultural authority, Māori authority, or affected-party evidence.
 
@@ -414,14 +416,14 @@ def build() -> None:
         raise RuntimeError("immutable evidence outcomes changed")
 
     method_counts = load("method-flow/method-flow-state.json")["counts"]
-    if method_counts["methods"] != 12 or method_counts["witness_results"] != {"fail": 13, "pass": 12}:
+    if method_counts["methods"] != 16 or method_counts["witness_results"] != {"fail": 20, "pass": 18}:
         raise RuntimeError("Method Flow closeout counts drift")
 
     write_text("deliverables/final-integrated-overview.md", integrated_overview())
     write_text("deliverables/final-static-report.html", static_report())
     write_text("wellbeing/final-wellbeing-check.md", """# Sable Rook v651-v1 final wellbeing and workload check
 
-Work stayed inside one owner lane, three phase commits, the 15,000-owner-file threshold, and bounded software, symbolic, structural, synthetic, or reservation evidence. Seven failures remain paired with seven bounded passing recoveries; none was erased. No participant recruitment, aviation operation, production identity operation, sibling mutation, elevation, host-security weakening, Sandbox or Hyper-V activation, unrelated installation, desktop update, or reboot occurred. The route remains pausable, corrigible, and held before proof. This is workflow care, not a consciousness, personhood, continuity, employment, qualification, health, or authority claim.
+Work stayed inside one owner lane, four phase commits, the 15,000-owner-file threshold, and bounded software, symbolic, structural, synthetic, or reservation evidence. Twenty failures remain paired with eighteen bounded passing recoveries; none was erased. No participant recruitment, aviation operation, production identity operation, sibling mutation, elevation, host-security weakening, Sandbox or Hyper-V activation, unrelated installation, desktop update, or reboot occurred. The route remains pausable, corrigible, and held before proof. This is workflow care, not a consciousness, personhood, continuity, employment, qualification, health, or authority claim.
 """)
     write_text("threat-model/final-threat-model.md", """# Sable Rook v651-v1 final threat model
 
@@ -478,6 +480,48 @@ Protected assets are x1 immutability, evidence lineage, negative retention, scie
             "failure": "An intended staged AST audit omitted its interpreter pipeline and printed unparsed source instead of executing it.",
             "recovery": "An explicitly piped minimal probe parsed all three closeout source files and emitted structured success; the unexecuted source keeps zero review credit.",
         },
+        {
+            "negative_id": "V6511-X2-N14",
+            "disposition": "retained",
+            "failure": "The committed closeout manifest test used working status as its only evidence domain and would falsely fail after the status became clean.",
+            "recovery": "A dual-state assertion preserved staged status precommit and used the exact evidence-to-commit diff postcommit; the status-only assumption keeps zero terminal-test credit.",
+        },
+        {
+            "negative_id": "V6511-X2-N15",
+            "disposition": "retained",
+            "failure": "The correction precommit selection ran 47 tests and failed one because historical closeout manifest hashes were compared with successor working-tree bytes.",
+            "recovery": "The historical manifest test now resolves both coverage and content from the immutable closeout commit; the failed aggregate keeps zero validation credit.",
+        },
+        {
+            "negative_id": "V6511-X2-N16",
+            "disposition": "retained",
+            "failure": "A precommit wrapper compared raw checkout bytes with prospective normalized Git-blob manifests and falsely reported hash mismatches after all other aggregate checks passed.",
+            "recovery": "A bounded witness reproduced the declared CRLF-to-LF prospective hash domain and granted the failed aggregate zero precommit credit.",
+        },
+        {
+            "negative_id": "V6511-X2-N17",
+            "disposition": "retained",
+            "failure": "A helper inspection appended a literal scripts/*.py path and returned a Windows path-syntax error after partial output.",
+            "recovery": "Exact LiteralPath reads exposed the prospective-byte helpers without wildcard expansion; the recurrence keeps zero search credit.",
+        },
+        {
+            "negative_id": "V6511-X2-N18",
+            "disposition": "retained",
+            "failure": "The Method Flow summary writer reached console output and then raised a CP1252 UnicodeEncodeError on Māori text.",
+            "recovery": "The same summary command completed with UTF-8 standard streams pinned; the failed emission keeps zero summary credit.",
+        },
+        {
+            "negative_id": "V6511-X2-N19",
+            "disposition": "retained",
+            "failure": "A narrow hash-domain recovery probe ran before rebuilding four later-mutated Method Flow files and therefore retained twelve manifest-entry mismatches.",
+            "recovery": "The method witness separated 28 domain recoveries from the four known later mutations and reserved aggregate credit until a full rebuild.",
+        },
+        {
+            "negative_id": "V6511-X2-N20",
+            "disposition": "retained",
+            "failure": "An exact staged stale-label probe used raw digit substrings and falsely flagged 6557 and 6558 inside SHA-256 values after all substantive index checks passed.",
+            "recovery": "Field-aware and prose-boundary patterns found zero semantic stale labels while excluding opaque hashes by construction; the failed staged aggregate keeps zero review credit.",
+        },
     ]
     write_json("final/phase-truth.json", {
         "schema": "ghc.family.v651-v1.phase-truth.final.v1",
@@ -521,8 +565,8 @@ Protected assets are x1 immutability, evidence lineage, negative retention, scie
         "x2_operational_count": X2_OPERATIONAL,
         "executed_rejected_synthetic": SYNTHETIC_NEGATIVES,
         "owner_operational_entries": x1_entries + closeout_negatives,
-        "method_failed_witnesses": 13,
-        "method_passing_witnesses": 12,
+        "method_failed_witnesses": 20,
+        "method_passing_witnesses": 18,
         "no_failure_erased": True,
     })
     write_json("final/gate-register.json", {
@@ -651,7 +695,7 @@ Protected assets are x1 immutability, evidence lineage, negative retention, scie
 
     run(sys.executable, str(INDEX_RUNNER), "--repo", str(REPO), "--skill-root", str(Path.home() / ".codex" / "skills"), "--out-dir", str(ROOT / "tooling/closeout-index"), "--phase", d.PHASE, "--owner", d.OWNER)
     manifests = build_manifests()
-    print(json.dumps({"phase": d.PHASE, "state": "closeout_built_not_committed", "effective_negatives": EFFECTIVE_NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "method_failures": 13, "method_passes": 12, **manifests, "privacy_hits": 0}, ensure_ascii=False, sort_keys=True))
+    print(json.dumps({"phase": d.PHASE, "state": "closeout_built_not_committed", "effective_negatives": EFFECTIVE_NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "method_failures": 20, "method_passes": 18, **manifests, "privacy_hits": 0}, ensure_ascii=False, sort_keys=True))
 
 
 if __name__ == "__main__":
