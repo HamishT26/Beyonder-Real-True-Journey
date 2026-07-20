@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M08",
+  "title": "Assert generated workflow fields at their exact schema path",
+  "trigger_preconditions": [
+    "A test consumes generated workflow-refinement output whose nested shape has not been inspected."
+  ],
+  "failure_signature": "The second x1 test run raised KeyError for a wrongly assumed top-level confirmation_required field.",
+  "candidate_workaround": "Inspect the generated output keys and assert the confirmation flag at its exact nested path.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect generated JSON shape before asserting field placement, even when the field appears in runner console output.",
+  "rollback": "Give the failed isolated test run zero successful-pass credit and change only the incorrect assertion.",
+  "scope_boundary": "Owner-local x1 test schema integrity only; no full-suite, scientific, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "test_schema_accuracy",
+    "x1_freeze"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-WORKFLOW-TEST-SCHEMA-009"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M04",
+  "title": "Split authoritative schema reads from bounded recent-artifact searches",
+  "trigger_preconditions": [
+    "A discovery wrapper combines a repository-wide content search with an authoritative schema read."
+  ],
+  "failure_signature": "The combined repository-wide workflow search and schema read exceeded its bounded wrapper without an attributable result.",
+  "candidate_workaround": "Read the exact current schema directly, then search only the relevant recent phase roots with a separate bound.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not attach a broad historical corpus search to an authoritative small-file read.",
+  "rollback": "Give the timed-out wrapper zero evidence credit and leave repository state unchanged.",
+  "scope_boundary": "Owner-local read-only discovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_read_scope",
+    "source_authority"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-BROAD-WORKFLOW-SEARCH-TIMEOUT-005"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

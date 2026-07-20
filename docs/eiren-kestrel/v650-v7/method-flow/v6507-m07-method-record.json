@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M07",
+  "title": "Regenerate count mirrors from the complete retained-negative source",
+  "trigger_preconditions": [
+    "New Method Flow failures were recorded after the phase-data negative list was first authored."
+  ],
+  "failure_signature": "The first x1 test run found a five-item retained-negative mirror while at least seven current failures existed.",
+  "candidate_workaround": "Append every later operational negative plus this failed test to the source list, regenerate the packet, and rerun the isolated x1 tests.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Derive lifecycle count mirrors from the final pre-freeze Method Flow failure set, not an earlier hand-maintained snapshot.",
+  "rollback": "Give the failed x1 test run zero pass credit and freeze no commit until the isolated scope passes.",
+  "scope_boundary": "Owner-local x1 count integrity only; no full-suite, scientific, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "negative_count_parity",
+    "x1_freeze"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-NEGATIVE-MIRROR-TEST-008"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

@@ -1,0 +1,26 @@
+{
+  "method_id": "V6507-M10",
+  "title": "Decode staged Git text explicitly as UTF-8 on Windows",
+  "trigger_preconditions": [
+    "An inline verifier reads staged UTF-8 JSON through subprocess text mode on a legacy Windows console codec."
+  ],
+  "failure_signature": "The first exact staged review failed to decode one frozen-index byte through the default charmap codec.",
+  "candidate_workaround": "Read git show output as bytes and decode every staged text blob explicitly with UTF-8.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never rely on the process default text codec for staged repository artifacts containing Maori or other Unicode text.",
+  "rollback": "Give the failed aggregate zero staged-review credit and preserve the exact staged content unchanged until the corrected read.",
+  "scope_boundary": "Owner-local staged-text decoding only; no full-suite, scientific, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "utf8_integrity",
+    "exact_staged_review",
+    "x1_freeze"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-STAGED-UTF8-DECODE-011"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

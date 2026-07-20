@@ -1,0 +1,48 @@
+# v650-v7 source ledger
+
+- **SRC-SAGA** — `stable` — [SAGAS](https://doi.org/10.1145/38713.38742)
+  - Supports bounded compensation-order fixtures only; no distributed production assurance.
+- **SRC-SNAPSHOT-ISOLATION** — `stable` — [A Critique of ANSI SQL Isolation Levels](https://doi.org/10.1145/223784.223785)
+  - Supports bounded anomaly classification only; no database certification.
+- **SRC-TOMONAGA** — `stable` — [On a Relativistically Invariant Formulation of the Quantum Theory of Wave Fields](https://doi.org/10.1143/PTP.1.27)
+  - Supports typed hypersurface obligations only; no physical state or prediction.
+- **SRC-SCHWINGER** — `stable` — [Quantum Electrodynamics I: A Covariant Formulation](https://doi.org/10.1103/PhysRev.74.1439)
+  - Supports historical covariant formulation context only.
+- **SRC-BOGOLIUBOV** — `stable` — [Bogoliubov causality in S-matrix theory](https://doi.org/10.1016/0550-3213(70)90183-5)
+  - Supports typed local S-matrix causality obligations only.
+- **SRC-4XMM-DR14** — `current` — [ESA XMM-Newton 4XMM-DR14 catalogue](https://xmm-tools.cosmos.esa.int/external/xmm_user_support/documentation/uhb/node140.html)
+  - Supports a zero-row readiness contract only; no query or download occurs.
+- **SRC-CDC-MAHC** — `current` — [CDC 2024 Model Aquatic Health Code fifth edition](https://www.cdc.gov/model-aquatic-health-code/php/our-work/index.html)
+  - Supports synthetic workflow vocabulary only; it is guidance and confers no local legal or professional authority.
+- **SRC-RFC7662** — `stable` — [RFC 7662 OAuth 2.0 Token Introspection](https://www.rfc-editor.org/rfc/rfc7662.html)
+  - Supports synthetic vectors only; no real token, endpoint, account, or network event.
+- **SRC-RFC7800** — `stable` — [RFC 7800 Proof-of-Possession Key Semantics for JWTs](https://www.rfc-editor.org/rfc/rfc7800.html)
+  - Supports synthetic claim vectors only; no real keys or possession event.
+- **SRC-PRIVACY-NZ** — `current` — [New Zealand Privacy Commissioner privacy principles](https://www.privacy.org.nz/privacy-act-2020/privacy-principles/)
+  - Keeps privacy review and legal interpretation exact-gated.
+- **SRC-TE-MANA-RARAUNGA** — `current` — [Te Mana Raraunga principles of Maori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Maori data-governance authority visible; repository software cannot exercise it.
+- **SRC-GIT-PACK** — `current` — [Git pack format documentation](https://git-scm.com/docs/gitformat-pack)
+  - Supports disposable synthetic pack fixtures only.
+- **SRC-DWARF5** — `stable` — [DWARF Version 5 standard](https://dwarfstd.org/doc/DWARF5.pdf)
+  - Supports bounded synthetic debugging-data fixtures only.
+- **SRC-WAI-SEARCH** — `current` — [WAI-ARIA search landmark example](https://www.w3.org/WAI/ARIA/apg/patterns/landmarks/examples/search.html)
+  - Supports structural checks only; manual and affected-user evaluation remains reserved.
+- **SRC-WCAG22** — `stable` — [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural obligations only, not complete conformance.
+- **SRC-GOUY-STODOLA** — `stable` — [The Gouy-Stodola theorem and the derivation of exergy revised](https://doi.org/10.1016/j.energy.2020.119046)
+  - Supports thermodynamic definitions only, never a psyche, agency, or justice conversion.
+- **SRC-COMPLEX-STEP** — `stable` — [The Complex-Step Derivative Approximation](https://doi.org/10.1145/838250.838251)
+  - Supports bounded analytic numerical fixtures only.
+- **SRC-NEGATIVE-CONTROLS** — `stable` — [Negative Controls: A Tool for Detecting Confounding and Bias in Observational Studies](https://doi.org/10.1097/EDE.0b013e3181d61eeb)
+  - Supports design assumptions only; no participant effect is estimated.
+- **SRC-COSE-HPKE-DRAFT** — `draft` — [draft-ietf-cose-hpke-25](https://datatracker.ietf.org/doc/draft-ietf-cose-hpke/)
+  - Supports draft-aware structural fixtures only; it is not a final RFC or production profile.
+- **SRC-RFC9171** — `stable` — [RFC 9171 Bundle Protocol Version 7](https://www.rfc-editor.org/rfc/rfc9171.html)
+  - Supports disposable synthetic bundle fixtures only.
+- **SRC-RFC1035** — `stable` — [RFC 1035 Domain Names Implementation and Specification](https://www.rfc-editor.org/rfc/rfc1035.html)
+  - Supports bounded synthetic master-file fixtures only; includes do not touch host files.
+- **SRC-JSON-LINES** — `current` — [JSON Lines](https://jsonlines.org/)
+  - Supports bounded record framing fixtures only.
+- **SRC-RFC8259** — `stable` — [RFC 8259 The JavaScript Object Notation Data Interchange Format](https://www.rfc-editor.org/rfc/rfc8259.html)
+  - Supplies JSON value syntax only; no external retrieval occurs.

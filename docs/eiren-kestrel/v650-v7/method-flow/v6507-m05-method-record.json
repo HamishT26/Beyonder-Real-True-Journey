@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M05",
+  "title": "Inspect exact line context before count-sensitive source patches",
+  "trigger_preconditions": [
+    "A patch targets long generated-style list lines whose wrapping may differ from the proposed context."
+  ],
+  "failure_signature": "The task-count adjustment patch found no exact matching context and changed nothing.",
+  "candidate_workaround": "Read the exact target lines first and apply a smaller uniquely anchored replacement.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not patch long list literals from remembered wrapping; anchor against the current file text.",
+  "rollback": "Treat the rejected patch as zero change and preserve the pre-patch file unchanged.",
+  "scope_boundary": "Owner-local source editing only; no scientific, production, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "exact_portfolio_counts",
+    "diff_hygiene"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-PATCH-CONTEXT-006"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M02",
+  "title": "Inspect installed CLI subcommand help before constructing validation calls",
+  "trigger_preconditions": [
+    "A phase invokes a local skill runner whose current argument schema has not been read in the same phase."
+  ],
+  "failure_signature": "The Method Flow validate subcommand rejected unsupported report, count, and privacy-pattern arguments.",
+  "candidate_workaround": "Read the exact installed subcommand help first, then invoke only its declared arguments and inspect the generated receipt.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat remembered CLI options as unverified until the current installed --help output confirms them.",
+  "rollback": "Give the rejected validation call zero credit and retain its failure before constructing a corrected call.",
+  "scope_boundary": "Owner-local workflow validation only; no scientific, production, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "method_flow_validation",
+    "evidence_credit"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-METHOD-CLI-SCHEMA-003"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}

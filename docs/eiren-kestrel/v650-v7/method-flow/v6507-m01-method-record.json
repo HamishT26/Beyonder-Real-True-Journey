@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Accumulate each term result in an explicit array and pipe that completed array to JSON conversion after the loop.",
+  "failure_signature": "PowerShell rejected a direct pipeline following a foreach statement block with an empty-pipe-element parser error.",
+  "method_id": "V6507-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_read_scope",
+    "x1_novelty_audit",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When a PowerShell foreach statement produces structured rows, assign those rows to an array before applying a downstream pipeline.",
+  "retained_negative_ids": [
+    "NEG-V6507-X1-QUERY-PS-PARSE-001"
+  ],
+  "rollback": "Give the rejected wrapper zero novelty-audit credit and leave the repository source state unchanged.",
+  "scope_boundary": "Owner-local read-only query recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Materialize PowerShell foreach results before downstream conversion",
+  "trigger_preconditions": [
+    "A PowerShell statement-level foreach block is followed by a pipeline in the same expression."
+  ],
+  "validation_witness_ids": []
+}

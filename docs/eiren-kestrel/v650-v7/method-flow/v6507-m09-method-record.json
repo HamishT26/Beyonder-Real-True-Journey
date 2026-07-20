@@ -1,0 +1,25 @@
+{
+  "method_id": "V6507-M09",
+  "title": "Compare manifests within their declared Git-blob hash domain",
+  "trigger_preconditions": [
+    "A manifest declares path-filtered Git blobs while Windows checkout bytes may use a different line-ending domain."
+  ],
+  "failure_signature": "The first pre-commit review compared Git-blob SHA-256 values to checkout bytes and reported two tooling-index mismatches.",
+  "candidate_workaround": "Inspect object-id, exact Git-blob bytes, and checkout bytes separately; validate each field only in its declared domain.",
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never compare a Git-blob SHA-256 field directly to unnormalized checkout bytes on Windows.",
+  "rollback": "Give the failed aggregate zero pre-commit review credit and retain its mismatches before a corrected domain-aware review.",
+  "scope_boundary": "Owner-local manifest-domain verification only; no full-suite, scientific, authority, or independent-reproduction credit.",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "manifest_parity",
+    "x1_freeze"
+  ],
+  "retained_negative_ids": [
+    "NEG-V6507-X1-MANIFEST-HASH-DOMAIN-010"
+  ],
+  "supersedes": [],
+  "privacy_class": "sanitized_public"
+}
