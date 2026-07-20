@@ -1,0 +1,23 @@
+# v650-v2 source ledger
+
+- **SRC-ROARING** [current]: [Roaring portable serialization format](https://github.com/RoaringBitmap/RoaringFormatSpec) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-PAULI-VILLARS** [stable]: [Pauli-Villars invariant regularization](https://doi.org/10.1103/RevModPhys.21.434) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-NIELSEN** [stable]: [Nielsen gauge-dependence identity](https://doi.org/10.1016/0550-3213(75)90301-6) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-POLCHINSKI** [stable]: [Polchinski renormalization and effective Lagrangians](https://doi.org/10.1016/0550-3213(84)90287-6) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-DES-Y6** [watch]: [Dark Energy Survey Year 6 cosmic-shear results](https://arxiv.org/abs/2602.10065) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-FAPI2** [current]: [OpenID FAPI 2.0 Security Profile](https://openid.net/specs/fapi-security-profile-2_0.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-RFC9200** [stable]: [RFC 9200 ACE-OAuth](https://www.rfc-editor.org/rfc/rfc9200.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-OIDC-FRONT** [stable]: [OpenID Connect Front-Channel Logout 1.0](https://openid.net/specs/openid-connect-frontchannel-1_0.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-ESO-OPS** [stable]: [ESO telescope and instrument operator night-support practice](https://www.hq.eso.org/sci/libraries/SPIE2016/9910-60.pdf) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-TE-MANA** [current]: [Te Mana Raraunga Māori Data Sovereignty principles](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-NZ-HERITAGE** [current]: [Heritage New Zealand Pouhere Taonga Act 2014](https://www.legislation.govt.nz/act/public/2014/0026/latest/whole.html) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-MSGPACK** [current]: [MessagePack format specification](https://github.com/msgpack/msgpack/blob/master/spec.md) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-PARQUET** [current]: [Apache Parquet file format](https://parquet.apache.org/docs/file-format/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-SPDX3** [current]: [SPDX Specification 3.0](https://spdx.dev/use/specifications/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-MATHML** [draft]: [W3C MathML Core](https://www.w3.org/TR/mathml-core/) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-DEBYE** [stable]: [Debye theory of specific heat](https://doi.org/10.1002/andp.19123441404) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-WYNN** [stable]: [Wynn epsilon-algorithm convergence and stability](https://doi.org/10.1137/0703007) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-LEE** [stable]: [Lee sharp bounds under sample selection](https://www.princeton.edu/~davidlee/wp/resrevision8.pdf) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-NDJSON** [stable]: [NDJSON 1.0.0 specification](https://github.com/ndjson/ndjson-spec) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-HLL** [stable]: [HyperLogLog cardinality estimation](https://algo.inria.fr/flajolet/Publications/FlFuGaMe07.pdf) — Design or protocol support only; not observation, authority, production certification, or gate closure.
+- **SRC-BLAKE3** [current]: [BLAKE3 specification and reference implementation](https://github.com/BLAKE3-team/BLAKE3) — Design or protocol support only; not observation, authority, production certification, or gate closure.
