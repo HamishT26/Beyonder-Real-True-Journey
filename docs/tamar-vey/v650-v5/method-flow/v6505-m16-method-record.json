@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read the inherited validation directory inventory and use its x1-staged-manifest, x1-staged-privacy, and x1-staged-review contracts.",
+  "failure_signature": "A read-only inherited-packet comparison found the x1 validation receipt but then assumed a separate manifests directory that does not exist in the source phase.",
+  "method_id": "V6505-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inventory the exact phase-local validation directory before assuming a manifest subdirectory layout.",
+  "retained_negative_ids": [
+    "V6505-X1-N16"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover inherited_manifest_directory_assumption without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 workflow exposes inherited_manifest_directory_assumption."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run Git status, exact premature-path absence, and no-bytecode negative count as separate commands.",
+  "failure_signature": "The combined x1-only status, absence, and count wrapper had an invalid nested expression inside a PowerShell hash literal and stopped before any check ran.",
+  "method_id": "V6505-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not embed environment assignment and native command execution inside a PowerShell hash-literal value.",
+  "retained_negative_ids": [
+    "V6505-X1-N11"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover powershell_hash_literal_parser_fault without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 workflow exposes powershell_hash_literal_parser_fault."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use subprocess communicate with the complete request payload so input and output are drained concurrently, then parse every returned blob deterministically.",
+  "failure_signature": "The first read-only exact-manifest helper wrote every blob request before draining batch output, filled the child output pipe, and timed out without a result.",
+  "method_id": "V6505-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never manually write a large cat-file batch to a piped child without concurrent output draining.",
+  "retained_negative_ids": [
+    "V6505-X1-N01"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover cat_file_batch_pipe_deadlock without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 workflow exposes cat_file_batch_pipe_deadlock."
+  ],
+  "validation_witness_ids": []
+}

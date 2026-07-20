@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use Select-String with two exact file paths and the bounded patterns needed for the edit.",
+  "failure_signature": "A narrow read-only rg lookup over the two v650-v5 x1 files timed out before returning line evidence.",
+  "method_id": "V6505-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use exact-file PowerShell matching when the local rg path shows unexplained latency.",
+  "retained_negative_ids": [
+    "V6505-X1-N10"
+  ],
+  "rollback": "Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.",
+  "scope_boundary": "Bounded owner-scoped recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover narrow_rg_timeout without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 workflow exposes narrow_rg_timeout."
+  ],
+  "validation_witness_ids": []
+}
