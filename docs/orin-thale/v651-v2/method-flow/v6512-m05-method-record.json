@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workspace_recovery",
+  "candidate_workaround": "Resolve the owned worktree from the bounded worktree bank and pass its absolute path as the working directory for every repository command.",
+  "failure_signature": "A resumed shell inherited the .codex project directory, so the expected phase script was absent and Git reported that the directory was not a repository.",
+  "method_id": "V6512-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "owned_lane_only", "sibling_lane_isolation", "clean_state"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Before any staged review or mutation after a resumed turn, prove the explicit owned worktree path, branch, and head; never infer repository context from the process default directory.",
+  "retained_negative_ids": ["V6512-X1-N06"],
+  "rollback": "Give the mismatched-directory probe zero repository credit, retain the miss, and perform no staging until the owned lane is explicitly resolved.",
+  "scope_boundary": "Owner-local workspace recovery only; no sibling mutation, x2, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind resumed repository work to the explicit owned worktree",
+  "trigger_preconditions": ["A resumed shell or compacted turn may have lost its prior repository working directory."],
+  "validation_witness_ids": []
+}

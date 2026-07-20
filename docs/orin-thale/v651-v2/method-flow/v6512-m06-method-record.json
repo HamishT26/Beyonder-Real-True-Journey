@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_cli_contract_recovery",
+  "candidate_workaround": "Read the subcommand help and pass the documented --receipt path rather than assuming the summarizer and validator share an output option.",
+  "failure_signature": "The Method Flow validate subcommand rejected an unsupported --json-output option after the preceding record, witness, state, and summary operations had succeeded.",
+  "method_id": "V6512-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "method_flow_schema", "passing_witness_retention", "x1_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Interrogate each runner subcommand independently; do not infer option parity between summarize and validate.",
+  "retained_negative_ids": ["V6512-X1-N07"],
+  "rollback": "Give the rejected validation invocation zero validation credit, preserve the already successful append-only operations, and retry only the validator with its documented receipt option.",
+  "scope_boundary": "Owner-local Method Flow CLI recovery only; no x2, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind Method Flow validation to its documented receipt option",
+  "trigger_preconditions": ["A Method Flow subcommand output contract has not been independently verified."],
+  "validation_witness_ids": []
+}

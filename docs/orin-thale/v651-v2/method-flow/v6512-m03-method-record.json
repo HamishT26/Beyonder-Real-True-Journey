@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_read_only_git_blob_verification",
+  "candidate_workaround": "Resolve commit trees once and read each unique blob with one flushed request followed by its complete response.",
+  "failure_signature": "The one-process-per-blob manifest replay returned all zero-error summaries but exceeded its wrapper budget and earned zero standalone aggregate credit.",
+  "method_id": "V6512-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "immutable_blob_parity", "manifest_pathset", "transport_deadlock_refusal"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Build one ls-tree map per commit and use strict request-flush-read framing; never write all batch requests before reading.",
+  "retained_negative_ids": ["V6512-X1-N03"],
+  "rollback": "Retain the timed wrapper with zero aggregate pass credit and do not reuse a blocking batch transport.",
+  "scope_boundary": "Immutable Git-blob parity only; no full-suite, independent reproduction, production, privacy-complete, or security-complete credit.",
+  "supersedes": [],
+  "title": "Verify manifests with tree maps and one-request blob framing",
+  "trigger_preconditions": ["Hundreds of immutable Git blobs require exact byte, digest, blob-ID, and path-set comparison."],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Treat the memory registry filename as a lead, then resolve one bounded suffix match before reading the rollout summary.",
+  "failure_signature": "The registry-named rollout summary path was absent even though a differently named file with the same stable suffix remained available.",
+  "method_id": "V6512-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "memory_precedence", "bounded_search", "privacy"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use an exact filename first, then at most one suffix-scoped rg --files recovery; never broad-scan private rollout content.",
+  "retained_negative_ids": ["V6512-X1-N01"],
+  "rollback": "Give the stale pointer zero read credit, retain the miss, and stop if the bounded suffix search is not unique.",
+  "scope_boundary": "Same-owner memory lookup recovery only; no authority, identity continuity, or repository evidence credit.",
+  "supersedes": [],
+  "title": "Resolve stale memory rollout pointers with one bounded suffix search",
+  "trigger_preconditions": ["A current memory registry entry names a rollout summary that is absent at that exact path."],
+  "validation_witness_ids": []
+}
