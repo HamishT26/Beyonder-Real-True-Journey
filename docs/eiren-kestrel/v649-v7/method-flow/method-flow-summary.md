@@ -2,9 +2,9 @@
 
 - Phase: v649-gmut-thos-v7-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 15
-- Passing witnesses: 14
-- Failed witnesses retained: 15
+- Methods: 19
+- Passing witnesses: 19
+- Failed witnesses retained: 19
 
 ## Preferred methods
 
@@ -112,6 +112,14 @@
 - Rollback: Give the failed attempt zero credit, retain it, and restore the last immutable x1 state if the bounded repair fails.
 - Witnesses: V6497-M13-WFAIL, V6497-M13-WPASS
 
+### V6497-M14 — Retain and recover V6497-M14
+
+- Trigger: The v649-v7 validation lifecycle exposes this exact failure.
+- Method: Project exactly the ten demonstrated stale mutable-head lifecycle assertions as explicit exclusions, preserve the four prior exact exclusions, and rerun only because the first aggregate failed.
+- Recurrence guard: Project exactly the ten demonstrated stale mutable-head lifecycle assertions as explicit exclusions, preserve the four prior exact exclusions, and rerun only because the first aggregate failed.
+- Rollback: Give the failed attempt zero pass credit and preserve the immutable evidence head.
+- Witnesses: V6497-M14-WFAIL, V6497-M14-WPASS
+
 ### V6497-M15 — Retain and recover V6497-M15
 
 - Trigger: The v649-v7 validation lifecycle exposes this exact failure.
@@ -119,6 +127,38 @@
 - Recurrence guard: Resolve the exact class declaration from source before invoking the two historical test IDs.
 - Rollback: Give the failed attempt zero pass credit and preserve the immutable evidence head.
 - Witnesses: V6497-M15-WFAIL, V6497-M15-WPASS
+
+### V6497-M16 — Project immutable closeout assertions during final targeted validation
+
+- Trigger: Final-state construction changes closeout plan counters or Method Flow recommendation state.
+- Method: Read the corrected-suite plan and Method Flow closeout state through git show at the exact immutable closeout commit while leaving final-state tests on the final working tree.
+- Recurrence guard: Read the corrected-suite plan and Method Flow closeout state through git show at the exact immutable closeout commit while leaving final-state tests on the final working tree.
+- Rollback: Give the failed targeted wrapper zero pass credit and keep the closeout and final states distinct.
+- Witnesses: V6497-M16-WFAIL, V6497-M16-WPASS
+
+### V6497-M17 — Bound final verification searches to exact changed files
+
+- Trigger: A verification search is rooted at the repository and combines recursive globs across inherited scope.
+- Method: Read only the three exact changed verifier, builder, and test files with literal paths and bounded line ranges.
+- Recurrence guard: Read only the three exact changed verifier, builder, and test files with literal paths and bounded line ranges.
+- Rollback: Give the timed-out search zero evidence credit and retain its failure before using the bounded read.
+- Witnesses: V6497-M17-WFAIL, V6497-M17-WPASS
+
+### V6497-M18 — Make final Method Flow promotion idempotent
+
+- Trigger: A final builder is rerun after a passing witness already promoted a method to preferred.
+- Method: Read the current method state before promotion and call set-state only when the method is not already preferred.
+- Recurrence guard: Read the current method state before promotion and call set-state only when the method is not already preferred.
+- Rollback: Retain the failed builder invocation with zero build or validation credit and preserve existing artifacts.
+- Witnesses: V6497-M18-WFAIL, V6497-M18-WPASS
+
+### V6497-M19 — Give bounded owner-manifest construction a yielded runtime budget
+
+- Trigger: Owner-manifest construction performs bounded but latency-heavy Git-blob and checkout hashing on Windows.
+- Method: Run the same idempotent builder with a yielded longer command budget while preserving the sole successful repository-suite result and performing no suite replay.
+- Recurrence guard: Run the same idempotent builder with a yielded longer command budget while preserving the sole successful repository-suite result and performing no suite replay.
+- Rollback: Retain the timed-out builder invocation, grant it zero final-build credit, and preserve every already-written valid artifact for idempotent reconstruction.
+- Witnesses: V6497-M19-WFAIL, V6497-M19-WPASS
 
 ## Retained boundary
 

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read only the three exact changed verifier, builder, and test files with literal paths and bounded line ranges.",
+  "failure_signature": "A broad recursive verification search traversed inherited repository scope and timed out before returning evidence.",
+  "method_id": "V6497-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "bounded_scope",
+    "timeout_retention",
+    "evidence_credit",
+    "inherited_baseline_integrity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read only the three exact changed verifier, builder, and test files with literal paths and bounded line ranges.",
+  "retained_negative_ids": [
+    "NEG-V6497-FINAL-SEARCH-TIMEOUT-001"
+  ],
+  "rollback": "Give the timed-out search zero evidence credit and retain its failure before using the bounded read.",
+  "scope_boundary": "Same-owner read-only workflow recovery only; no repository validation or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bound final verification searches to exact changed files",
+  "trigger_preconditions": [
+    "A verification search is rooted at the repository and combines recursive globs across inherited scope."
+  ],
+  "validation_witness_ids": []
+}

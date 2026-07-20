@@ -1,16 +1,26 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs" / "eiren-kestrel" / "v649-v7"
+CLOSEOUT = "4b562d70fa930d177931160909cb5b449efc4d5f"
 
 
 def load(relative: str):
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def load_at(commit: str, relative: str):
+    result = subprocess.run(
+        ["git", "show", f"{commit}:docs/eiren-kestrel/v649-v7/{relative}"],
+        cwd=ROOT, check=True, capture_output=True, text=True, encoding="utf-8",
+    )
+    return json.loads(result.stdout)
 
 
 class V649V7CloseoutTests(unittest.TestCase):
@@ -30,7 +40,7 @@ class V649V7CloseoutTests(unittest.TestCase):
         self.assertFalse(failed["successful"])
         self.assertEqual(failed["pass_credit"], 0)
         self.assertEqual(len(failed["failed_test_ids"]), 10)
-        plan = load("validation/corrected-full-suite-plan.json")
+        plan = load_at(CLOSEOUT, "validation/corrected-full-suite-plan.json")
         self.assertEqual(plan["exact_exclusion_count"], 14)
         self.assertEqual(plan["successful_passes_used"], 0)
         self.assertFalse(plan["post_success_replay"])
@@ -47,7 +57,7 @@ class V649V7CloseoutTests(unittest.TestCase):
         self.assertEqual(route["send_count"], 0)
 
     def test_method_flow_retains_validation_failures(self):
-        ledger = load("method-flow/method-flow-ledger.json")
+        ledger = load_at(CLOSEOUT, "method-flow/method-flow-ledger.json")
         methods = {row["method_id"]: row for row in ledger["methods"]}
         self.assertIn("V6497-M14", methods)
         self.assertIn("V6497-M15", methods)

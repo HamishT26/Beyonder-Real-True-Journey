@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read the corrected-suite plan and Method Flow closeout state through git show at the exact immutable closeout commit while leaving final-state tests on the final working tree.",
+  "failure_signature": "The first final targeted phase wrapper read two closeout lifecycle assertions from the mutable final working tree and returned two failures instead of projecting the immutable closeout commit.",
+  "method_id": "V6497-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "lifecycle_projection",
+    "failure_retention",
+    "evidence_credit",
+    "single_pass_accounting"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read the corrected-suite plan and Method Flow closeout state through git show at the exact immutable closeout commit while leaving final-state tests on the final working tree.",
+  "retained_negative_ids": [
+    "NEG-V6497-FINAL-TARGET-AGG-001",
+    "NEG-V6497-FINAL-TARGET-TEST-001",
+    "NEG-V6497-FINAL-TARGET-TEST-002"
+  ],
+  "rollback": "Give the failed targeted wrapper zero pass credit and keep the closeout and final states distinct.",
+  "scope_boundary": "Same-owner lifecycle projection only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Project immutable closeout assertions during final targeted validation",
+  "trigger_preconditions": [
+    "Final-state construction changes closeout plan counters or Method Flow recommendation state."
+  ],
+  "validation_witness_ids": []
+}

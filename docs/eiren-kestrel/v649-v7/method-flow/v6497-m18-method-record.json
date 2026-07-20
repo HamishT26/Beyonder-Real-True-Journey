@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read the current method state before promotion and call set-state only when the method is not already preferred.",
+  "failure_signature": "A final-builder rerun attempted an invalid preferred-to-preferred Method Flow transition for V6497-M14 and stopped before rebuilding final artifacts.",
+  "method_id": "V6497-M18",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "idempotency",
+    "method_transition_validity",
+    "failure_retention",
+    "artifact_integrity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read the current method state before promotion and call set-state only when the method is not already preferred.",
+  "retained_negative_ids": [
+    "NEG-V6497-FINAL-BUILDER-STATE-001"
+  ],
+  "rollback": "Retain the failed builder invocation with zero build or validation credit and preserve existing artifacts.",
+  "scope_boundary": "Same-owner build-orchestration recovery only; no repository-suite or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Make final Method Flow promotion idempotent",
+  "trigger_preconditions": [
+    "A final builder is rerun after a passing witness already promoted a method to preferred."
+  ],
+  "validation_witness_ids": []
+}

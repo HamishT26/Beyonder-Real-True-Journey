@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run the same idempotent builder with a yielded longer command budget while preserving the sole successful repository-suite result and performing no suite replay.",
+  "failure_signature": "The guarded final builder exceeded a 120-second outer command budget while completing owner-scope manifest work and was stopped without final-build credit.",
+  "method_id": "V6497-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "bounded_runtime",
+    "failure_retention",
+    "manifest_integrity",
+    "no_suite_replay"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run the same idempotent builder with a yielded longer command budget while preserving the sole successful repository-suite result and performing no suite replay.",
+  "retained_negative_ids": [
+    "NEG-V6497-FINAL-BUILDER-TIMEOUT-001"
+  ],
+  "rollback": "Retain the timed-out builder invocation, grant it zero final-build credit, and preserve every already-written valid artifact for idempotent reconstruction.",
+  "scope_boundary": "Build-budget recovery only; it does not rerun tests or establish independent reproduction.",
+  "supersedes": [],
+  "title": "Give bounded owner-manifest construction a yielded runtime budget",
+  "trigger_preconditions": [
+    "Owner-manifest construction performs bounded but latency-heavy Git-blob and checkout hashing on Windows."
+  ],
+  "validation_witness_ids": []
+}
