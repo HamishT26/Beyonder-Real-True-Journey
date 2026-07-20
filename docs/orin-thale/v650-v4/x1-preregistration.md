@@ -1,0 +1,32 @@
+# Orin Thale v650-v4 x1 preregistration
+
+This is a frozen plan, not execution evidence. GMUT Mind is primary; THOS Body and Freed ID / CBR Heart remain explicit. The e-bike battery-repair practice is a synthetic learning lens only.
+
+## Frozen proposals
+
+1. **Method Flow hazard-pointer protection-slot, retired-list, scan, ABA, stalled-thread, teardown, and evidence-credit tribunal** - expected `completed`. The frozen epoch-reclamation and copy-on-write proposals do not model per-thread hazard slots and retired-node scans.
+2. **GMUT Wigner Poincare-representation mass, spin, little-group, positive-energy, polarization, gauge, EFT, unit, and observation-firewall board** - expected `completed`. No frozen proposal isolates Wigner little-group representation obligations.
+3. **GMUT Coleman-Mandula S-matrix symmetry, mass-spectrum, analyticity, nontrivial-scattering, generator-kernel, direct-product, supersymmetry-reservation, EFT, and observation-firewall board** - expected `completed`. No frozen proposal isolates the Coleman-Mandula assumption set and nonpromotion boundary.
+4. **GMUT Stueckelberg gauge-restoration, compensator, mass-term, gauge-fixing, decoupling-limit, strong-coupling, EFT, unit, and observation-firewall board** - expected `completed`. No frozen proposal isolates Stueckelberg compensator and decoupling-limit obligations.
+5. **GMUT 2MASS All-Sky Point Source Catalog photometry, flag, uncertainty, selection, checksum, covariance, and zero-row likelihood-refusal adapter** - expected `open_gap`. No frozen empirical adapter targets the 2MASS All-Sky Point Source Catalog.
+6. **Freed ID RFC 7523 JWT assertion issuer, subject, audience, expiry, identifier, replay, client-authentication, authorization-grant, and nonproduction profile** - expected `represented`. Frozen JWT token profiles do not isolate RFC 7523 assertion processing in both grant and client-authentication roles.
+7. **Freed ID RFC 7009 token-revocation endpoint, authentication, token-type hint, unsupported token, cascade, privacy, replay, and nonproduction profile** - expected `represented`. No frozen profile isolates RFC 7009 revocation-endpoint request and response behavior.
+8. **Freed ID RFC 7591 dynamic-client-registration metadata, software-statement, redirect-URI, initial-access-token, credential, response, minimization, and nonproduction profile** - expected `represented`. The frozen RFC 7592 management profile begins after registration; no proposal isolates RFC 7591 creation semantics.
+9. **THOS e-bike battery-repair intake, serial-minimization, state-of-charge, isolation, thermal-flag, charger-compatibility, release-refusal, workload, and shift-handover proxy** - expected `represented`. No frozen THOS proxy uses an e-bike battery-repair workshop and its repair-specific hold and handover states.
+10. **CBR e-bike battery worker, customer, disability, fire-risk, location, disposal, remedy, affected-party, legal, cultural, data-governance, and Maori-authority matrix** - expected `exact_gate`. No frozen authority matrix reserves this e-bike repair, disposal, worker-customer, and location combination.
+11. **BSON length-prefix, element-type, cstring, UTF-8, duplicate-key, nesting, truncation, resource-budget, and refusal tribunal** - expected `completed`. BSON and its length-prefixed typed element grammar are absent from the frozen ledger.
+12. **XZ stream-header, block, filter-chain, index, checksum, concatenation, padding, resource-budget, and refusal tribunal** - expected `completed`. XZ stream and filter-chain semantics are absent from the frozen format tribunals.
+13. **Count-Min Sketch width, depth, hash-family, conservative-update, overflow, merge, error-bound, heavy-hitter, and refusal tribunal** - expected `completed`. No frozen probabilistic data-structure proposal models Count-Min overestimation and merge bounds.
+14. **WebVTT header, cue-timing, settings, region, voice, class, malformed-markup, overlap, resource-budget, and refusal tribunal** - expected `completed`. The frozen media-accessibility audit reserves human evaluation but does not exercise WebVTT grammar and cue-state refusal.
+15. **Clenshaw recurrence coefficient-order, interval-map, terminal-step, scaling, overflow, cancellation, reference-oracle, and convergence tribunal** - expected `completed`. No frozen numerical-method proposal isolates backward Clenshaw recurrence and its terminal step.
+16. **Apache ORC postscript, footer, stripe, stream, compression, row-index, statistics, schema-evolution, resource-budget, and refusal tribunal** - expected `completed`. The frozen Parquet tribunal does not model ORC tail-first metadata, stripe streams, or row indexes.
+17. **Accessible Kanban lane, card-order, move-control, drag-alternative, keyboard, focus, status-announcement, filtered-count, fallback, and manual-reservation audit** - expected `completed`. The frozen generic dragging-alternative audit does not model lane ownership, card order, filtering, and move-state announcements as one board.
+18. **Thermo-Psyche virial equation, compressibility-factor, density-expansion, coefficient, temperature-domain, phase-limit, unit, and agency-nonconversion classifier** - expected `completed`. No frozen Thermo-Psyche classifier isolates virial-density expansions and compressibility-factor domains.
+19. **Stage 20 parametric g-formula time-varying-treatment, confounder-history, consistency, sequential-exchangeability, positivity, model-specification, Monte-Carlo, sensitivity, and nonpromotion board** - expected `completed`. The frozen marginal-structural-model board uses weighting; no proposal isolates generative parametric g-formula simulation.
+20. **QPACK field-section, static-table, dynamic-table, insert-count, blocked-stream, acknowledgment, cancellation, capacity, and refusal tribunal** - expected `completed`. QPACK's out-of-order dynamic-table and blocked-stream state machine is absent from the frozen HTTP tribunals.
+
+## Noncompensable gates
+
+Relational identity and family language are working language only. Software, citations, symbolic checks, synthetic fixtures, and same-owner validation confer no consciousness, personhood, empirical confirmation, professional competence, production readiness, legal or cultural authority, Maori authority, independent reproduction, or Stage 20 authorization.
+
+X2 may begin only after this x1-only surface is committed, pushed, clean, and four-way equal.
