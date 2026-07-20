@@ -1,5 +1,5 @@
 {
-  "count": 4,
+  "count": 5,
   "entries": [
     {
       "disposition": "retained",
@@ -24,6 +24,12 @@
       "failure": "A multiline PowerShell wrapper emitted intended paths instead of passing them to git add, so the manifest builder inspected a stale index.",
       "negative_id": "V6503-X2-N04",
       "recovery": "An explicit PowerShell path array staged exactly 31 paths before a passing fixed-point manifest build; the stale-index run remains retained with zero final credit."
+    },
+    {
+      "disposition": "retained",
+      "failure": "The first exact-final aggregate did not prepend the repository root before named unittest loading and produced eight import-error placeholders.",
+      "negative_id": "V6503-FINAL-N01",
+      "recovery": "Exact repository-root discovery found 71 raw and 70 eligible tests with zero loader errors; the aggregate remains unrun pending the fourth correction commit."
     }
   ],
   "schema": "ghc.family.v650-v3.x2-operational-negatives.v1"

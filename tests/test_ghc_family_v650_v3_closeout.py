@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/sable-rook/v650-v3"
+CLOSEOUT = "15347fc1d8434533a2516c4d5b60d5b605eee122"
 
 
 def load(relative: str):
@@ -16,7 +18,7 @@ class V650V3CloseoutTests(unittest.TestCase):
     def test_final_truth_is_bounded_and_held(self):
         truth = load("phase-truth-final.json")
         self.assertEqual(truth["outcomes"], {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(truth["effective_negatives"], 5807)
+        self.assertEqual(truth["effective_negatives"], 5808)
         self.assertEqual((truth["open_gaps"], truth["exact_gates"]), (45, 46))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertEqual(truth["terminal_route"], "PREPARED_NOT_SENT")
@@ -25,10 +27,10 @@ class V650V3CloseoutTests(unittest.TestCase):
     def test_closeout_and_seal_candidate(self):
         closeout = load("closeout/closeout-receipt.json")
         seal = load("closeout/seal-receipt.json")
-        self.assertEqual(closeout["phase_commit_plan"], 3)
+        self.assertEqual(closeout["phase_commit_plan"], 4)
         self.assertTrue(closeout["x1_before_x2"] and closeout["evidence_remote_equal_before_closeout"])
         self.assertFalse(closeout["terminal_message_sent"])
-        self.assertEqual(seal["retained_negatives"], 5807)
+        self.assertEqual(seal["retained_negatives"], 5808)
         self.assertFalse(seal["retained_negatives_erased"])
 
     def test_baton_word_range_and_privacy_boundary(self):
@@ -42,22 +44,33 @@ class V650V3CloseoutTests(unittest.TestCase):
         self.assertNotIn("C:\\Users\\", baton)
 
     def test_final_manifest_contracts(self):
-        owner = load("validation/final-owner-manifest.json")
-        staged = load("validation/final-staged-manifest.json")
-        review = load("validation/final-staged-review.json")
+        closeout_owner = load("validation/final-owner-manifest.json")
+        closeout_staged = load("validation/final-staged-manifest.json")
+        correction_owner = load("validation/correction-owner-manifest.json")
+        correction_staged = load("validation/correction-staged-manifest.json")
+        correction_review = load("validation/correction-staged-review.json")
+        historical = subprocess.run(
+            ["git", "ls-tree", "-r", "--name-only", CLOSEOUT, "--", "docs/sable-rook/v650-v3"],
+            cwd=ROOT,
+            check=True,
+            text=True,
+            stdout=subprocess.PIPE,
+        ).stdout.splitlines()
         owner_files = [path for path in PHASE.rglob("*") if path.is_file()]
-        self.assertEqual(owner["entry_count"] + len(owner["self_exclusions"]), len(owner_files))
-        self.assertEqual(staged["entry_count"] + len(staged["self_exclusions"]), review["intended_path_count"])
-        self.assertTrue(review["passed"])
-        self.assertEqual(review["x1_frozen_changes"], [])
+        self.assertEqual(closeout_owner["entry_count"] + len(closeout_owner["self_exclusions"]), len(historical))
+        self.assertEqual(closeout_staged["entry_count"] + len(closeout_staged["self_exclusions"]), 32)
+        self.assertEqual(correction_owner["entry_count"] + len(correction_owner["self_exclusions"]), len(owner_files))
+        self.assertEqual(correction_staged["entry_count"] + len(correction_staged["self_exclusions"]), correction_review["intended_path_count"])
+        self.assertTrue(correction_review["passed"])
+        self.assertEqual(correction_review["x1_frozen_changes"], [])
 
     def test_method_flow_and_negatives(self):
         validation = load("method-flow/final-method-flow-validation.json")
         summary = load("method-flow/final-method-flow-summary.json")
         self.assertTrue(validation["valid"])
-        self.assertEqual(summary["counts"]["methods"], 15)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 15, "pass": 15})
-        self.assertEqual(load("retained-negative-register-final.json")["effective_total"], 5807)
+        self.assertEqual(summary["counts"]["methods"], 16)
+        self.assertEqual(summary["counts"]["witness_results"], {"fail": 16, "pass": 16})
+        self.assertEqual(load("retained-negative-register-final.json")["effective_total"], 5808)
 
     def test_environment_and_route_remain_safe(self):
         env = load("environment/final-environment-receipt.json")
@@ -72,6 +85,8 @@ class V650V3CloseoutTests(unittest.TestCase):
         contract = load("validation/final-canonical-validation-contract.json")
         self.assertEqual(contract["raw_test_count"], 71)
         self.assertEqual(contract["eligible_test_count"], 70)
+        self.assertEqual((contract["detailed_check_count"], contract["minimal_check_count"]), (41, 25))
+        self.assertTrue(contract["first_failed_aggregate_retained"])
         self.assertFalse(contract["full_repository_suite"])
         self.assertFalse(contract["named_replay"] or contract["detached_replay"] or contract["post_success_replay"])
 

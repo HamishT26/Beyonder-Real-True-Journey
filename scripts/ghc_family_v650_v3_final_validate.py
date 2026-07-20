@@ -14,10 +14,13 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
 PHASE = REPO / "docs/sable-rook/v650-v3"
 SOURCE = "b8ece75b5be908a514bc0ea99398f92decd6de8e"
 X1 = "9cf6c85372f64d9c71d3dd207e8018b3af0931e8"
 EVIDENCE = "f449d71c8452ea0538ed71eb6d032acb86cb8968"
+CLOSEOUT = "15347fc1d8434533a2516c4d5b60d5b605eee122"
 BRANCH = "codex/GHC-Family/sable-rook-full-tools"
 EXCLUDED_TEST = "tests.test_ghc_family_v650_v2_closeout.IlyraV650V2CloseoutTests.test_manifest_coverage_contracts"
 MODULES = [
@@ -128,22 +131,25 @@ def main() -> int:
     manifests = {
         "x1": manifest_check("validation/x1-staged-manifest.json", X1, "delta"),
         "evidence": manifest_check("validation/evidence-staged-manifest.json", EVIDENCE, "delta"),
-        "owner": manifest_check("validation/final-owner-manifest.json", head, "owner"),
-        "final": manifest_check("validation/final-staged-manifest.json", head, "delta"),
+        "closeout_owner": manifest_check("validation/final-owner-manifest.json", CLOSEOUT, "owner"),
+        "closeout_delta": manifest_check("validation/final-staged-manifest.json", CLOSEOUT, "delta"),
+        "correction_owner": manifest_check("validation/correction-owner-manifest.json", head, "owner"),
+        "correction_delta": manifest_check("validation/correction-staged-manifest.json", head, "delta"),
     }
     documents = [p for p in public_files if p.suffix.lower() in {".md", ".html"}]
     word_counts = {p.relative_to(REPO).as_posix(): len(p.read_text(encoding="utf-8").split()) for p in documents}
     detailed = {
         "tests": tests["passed"], "json": not json_issues, "privacy": not privacy_hits,
         "x1_manifest": manifests["x1"]["passed"], "evidence_manifest": manifests["evidence"]["passed"],
-        "owner_manifest": manifests["owner"]["passed"], "final_manifest": manifests["final"]["passed"],
+        "closeout_owner_manifest": manifests["closeout_owner"]["passed"], "closeout_delta_manifest": manifests["closeout_delta"]["passed"],
+        "correction_owner_manifest": manifests["correction_owner"]["passed"], "correction_delta_manifest": manifests["correction_delta"]["passed"],
         "source_ancestry": ancestry[SOURCE], "x1_ancestry": ancestry[X1], "evidence_ancestry": ancestry[EVIDENCE],
-        "three_commits": phase_commits == 3, "zero_merges": merges == 0, "one_parent": len(parents) == 1,
-        "direct_evidence_parent": parents == [EVIDENCE], "expected_head": head == args.expected_head,
+        "four_commits": phase_commits == 4, "zero_merges": merges == 0, "one_parent": len(parents) == 1,
+        "direct_closeout_parent": parents == [CLOSEOUT], "expected_head": head == args.expected_head,
         "expected_branch": branch == BRANCH, "local_upstream": head == upstream,
         "tracking_equal": head == tracking, "live_equal": head == live, "clean": not status,
         "diff_hygiene": not diff_hygiene, "outcomes": load("phase-truth-final.json")["outcomes"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1},
-        "negatives": load("retained-negative-register-final.json")["effective_total"] == 5807,
+        "negatives": load("retained-negative-register-final.json")["effective_total"] == 5808,
         "gaps": load("exact-open-gate-register-final.json")["effective_open_gaps"] == 45,
         "gates": load("exact-open-gate-register-final.json")["effective_exact_gates"] == 46,
         "mutations": load("validation/synthetic-mutation-results.json")["rejected_or_quarantined"] == 100,
@@ -161,8 +167,8 @@ def main() -> int:
         "same_owner_only": load("phase-truth-final.json")["same_owner_only"] and not load("phase-truth-final.json")["independent_reproduction"],
         "no_full_suite": not load("phase-truth-final.json")["full_repository_suite"],
     }
-    minimal_keys = ["tests", "json", "privacy", "x1_manifest", "evidence_manifest", "owner_manifest", "final_manifest", "source_ancestry", "x1_ancestry", "evidence_ancestry", "three_commits", "zero_merges", "one_parent", "direct_evidence_parent", "expected_head", "expected_branch", "local_upstream", "tracking_equal", "live_equal", "clean", "diff_hygiene", "not_stage20", "route_held"]
-    passed = all(detailed.values()) and len(detailed) == 39 and len(minimal_keys) == 23
+    minimal_keys = ["tests", "json", "privacy", "x1_manifest", "evidence_manifest", "closeout_owner_manifest", "closeout_delta_manifest", "correction_owner_manifest", "correction_delta_manifest", "source_ancestry", "x1_ancestry", "evidence_ancestry", "four_commits", "zero_merges", "one_parent", "direct_closeout_parent", "expected_head", "expected_branch", "local_upstream", "tracking_equal", "live_equal", "clean", "diff_hygiene", "not_stage20", "route_held"]
+    passed = all(detailed.values()) and len(detailed) == 41 and len(minimal_keys) == 25
     receipt = {
         "schema": "ghc.family.v650-v3.external-final-validation.v1", "head": head, "branch": branch,
         "tests": tests, "detailed_checks": {"passed": sum(detailed.values()), "total": len(detailed), "checks": detailed},
@@ -173,6 +179,7 @@ def main() -> int:
         "equality": {"local": head, "upstream": upstream, "tracking": tracking, "live": live},
         "documents": {"count": len(documents), "max_words": max(word_counts.values(), default=0), "baton_words": word_counts.get("docs/sable-rook/v650-v3/handoffs/orin-thale-v650-v4-activation.md", 0)},
         "full_repository_suite": False, "same_owner_only": True, "independent_reproduction": False,
+        "prior_failed_external_aggregate_retained": True,
         "post_success_replay": False, "passed": passed, "terminal_verdict": "NOT_READY_FOR_STAGE_20",
     }
     output.parent.mkdir(parents=True, exist_ok=True)
