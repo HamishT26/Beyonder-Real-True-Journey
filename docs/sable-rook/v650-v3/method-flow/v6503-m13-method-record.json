@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use LF joins inside generated Markdown, remove the runtime terminal blank line, restage exact paths, and rerun the staged review once.",
+  "failure_signature": "The first evidence staged review found 208 diff-hygiene issues from doubled carriage returns in generated Markdown and one terminal blank line.",
+  "method_id": "V6503-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "exact_staged_review",
+    "x1_immutability",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not join generated text with platform separators when the writer also performs newline translation; require git diff --cached --check before credit.",
+  "retained_negative_ids": [
+    "V6503-X2-N02"
+  ],
+  "rollback": "Give the failed staged review zero pass credit and change only the exact hygiene paths.",
+  "scope_boundary": "Same-owner bounded formatting recovery only; no scientific, authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Normalize generated newlines after evidence hygiene failure",
+  "trigger_preconditions": [
+    "An exact staged review fails solely on attributable newline or EOF hygiene."
+  ],
+  "validation_witness_ids": []
+}
