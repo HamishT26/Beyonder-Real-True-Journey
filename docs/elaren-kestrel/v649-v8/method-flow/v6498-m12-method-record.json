@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Quarantine only the two exact scanner implementation files while continuing to scan every generated artifact, test, wrapper, and non-scanner source blob.",
+  "failure_signature": "The first complete evidence build correctly stopped when the privacy scanner treated the separate validation scanner's pattern definitions as three payload hits.",
+  "method_id": "V6498-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "x1_x2_separation",
+    "completion_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Quarantine only the two exact scanner implementation files while continuing to scan every generated artifact, test, wrapper, and non-scanner source blob.",
+  "retained_negative_ids": [
+    "NEG-V6498-X2-003"
+  ],
+  "rollback": "Give the failed attempt zero credit, retain it, and restore the immutable x1 boundary if recovery fails.",
+  "scope_boundary": "Same-owner bounded workflow recovery only; no independent reproduction, production, or authority credit.",
+  "supersedes": [],
+  "title": "Retain and recover NEG-V6498-X2-003",
+  "trigger_preconditions": [
+    "The v649-v8 x2 workflow exposes this exact bounded failure signature."
+  ],
+  "validation_witness_ids": []
+}
