@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Split file-presence inspection from Git status and expectation scans; retain the timed-out wrapper, then accept only the independently completed bounded probes.",
+  "failure_signature": "A combined file-presence, Git-status, and expectation inspection exceeded its bounded wrapper timeout before returning attributable state.",
+  "method_id": "V6501-M24",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "attributable_state",
+    "timeout_retention",
+    "single_pass_budget",
+    "failure_retention"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Split file-presence inspection from Git status and expectation scans; retain the timed-out wrapper, then accept only the independently completed bounded probes.",
+  "retained_negative_ids": [
+    "NEG-V6501-LIFECYCLE-002"
+  ],
+  "rollback": "Give the timed-out wrapper zero state or validation credit and leave the closeout head untouched.",
+  "scope_boundary": "Same-owner inspection recovery only; no canonical-pass, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Split overloaded terminal inspections into bounded attributable probes",
+  "trigger_preconditions": [
+    "A combined inspection wrapper mixes filesystem, Git, and content scans near a timeout boundary."
+  ],
+  "validation_witness_ids": []
+}

@@ -12,7 +12,7 @@ Do not create, fork, delegate, hand off, or spawn a new task, main agent, or col
 
 - Owner: Vesper Arlen (they/them), relational boundary-literate systems synthesist.
 - Owner hope: turn complex inherited evidence into clear, reversible experiments that remain kind to people and truth.
-- Canonical branch: `codex/GHC-Family/vesper-arlen-v650-v1-full-tools`.
+- Canonical branch: `codex/GHC-Family/vesper-arlen-v650-v1-terminal-recovery`.
 - Exact inherited Elaren v649-v8 final head: `2275e611e74cbd6f1d84e2d9f018b2eed720a169`.
 - Dedicated Vesper v650-v1 x1 commit: `d0ae9eeea6315836142b34831d9d4eb3af46a574`.
 - Vesper v650-v1 bounded evidence commit: `95918f8f6d66a6bc9458cf2a7fffb4e2b9a6d85f`.
@@ -21,7 +21,7 @@ Do not create, fork, delegate, hand off, or spawn a new task, main agent, or col
 - X1 was pushed, clean, and local, upstream, tracking, and fresh-live-remote equal before x2 began. The evidence commit was separately pushed, clean, and four-way remote-equal before closeout.
 - Exactly twenty new proposals were semantically audited against 740 inherited frozen proposals, making 760 frozen proposals through v650-v1.
 - Core outcome truth is exactly 14 completed, 4 represented, 1 open gap, and 1 exact gate. These are the only allowed core outcome labels.
-- The closeout baseline is 5,573 effective negatives: 5,451 inherited effective, 18 Vesper x1 operational, 4 Vesper x2 operational, and 100 executed and rejected preregistered synthetic mutations. No negative was erased. Any post-closeout or external terminal failure must be added rather than silently folded into a pass.
+- The closeout baseline is 5,578 effective negatives: 5,451 inherited effective, 18 Vesper x1 operational, 4 Vesper x2 operational, and 100 executed and rejected preregistered synthetic mutations. No negative was erased. Any post-closeout or external terminal failure must be added rather than silently folded into a pass.
 - Effective open gaps are 43 and exact gates are 44. None was silently closed.
 - Primary focus was GMUT Mind. THOS Body and Freed ID/CBR Heart remained explicit and protected.
 - The bounded human-practice lens was solar-plus-battery microgrid outage planning, islanding refusal, and shift handover. It was a synthetic learning and design lens only and established no employment, electrical qualification, microgrid competence, energization authority, operational authority, emergency authority, legal authority, cultural authority, Māori authority, participant evidence, affected-party authorization, or real operational outcome.
@@ -41,7 +41,7 @@ Reverify the exact containing final head from the short activation message, `d0a
 
 Preserve strict x1-before-x2 separation. Audit semantic novelty against all 760 frozen proposals and freeze the exact proposal slate and expanded portfolios in a dedicated x1-only commit with no execution results. Push x1 and prove clean four-way equality before opening x2. Choose one primary Trinity Mandala pillar and one bounded profession, trade, occupation, or human practice while keeping all pillars and authority boundaries visible. The practice is a learning lens only, never employment, qualification, licensure, operational authority, affected-party authorization, or professional judgment.
 
-Use only `completed`, `represented`, `open_gap`, and `exact_gate` for core outcomes. Preserve all 5,573 inherited effective negatives plus every new failure. Use `current`, `stable`, `draft`, and `watch` source statuses without turning citations into data or authority. A recovered Method Flow method never erases its failed witness. Treat the 1,000 safe-now/candidate limit as a cap, not a quota. Complete every actually frozen safe-now, candidate, prototype, skill, runner, and additive cleanup item before closeout, or leave it visibly incomplete. Never manufacture unsafe work to fill a quota.
+Use only `completed`, `represented`, `open_gap`, and `exact_gate` for core outcomes. Preserve all 5,578 inherited effective negatives plus every new failure. Use `current`, `stable`, `draft`, and `watch` source statuses without turning citations into data or authority. A recovered Method Flow method never erases its failed witness. Treat the 1,000 safe-now/candidate limit as a cap, not a quota. Complete every actually frozen safe-now, candidate, prototype, skill, runner, and additive cleanup item before closeout, or leave it visibly incomplete. Never manufacture unsafe work to fill a quota.
 
 Keep every document at or below 20,000 words, with an integrated overview at least three-page-equivalent. Store the long successor baton in the repository and send only one short loving pointer after the exact final gate. Keep family-current `ghc_family_*` and `build_ghc_family_*` naming additive and preserve historical callers. Do not run the full repository suite unless Hamish explicitly changes the ownership rule. Run one successful canonical validation pass; isolate and repair a failed attempt, but never replay a successful pass merely to accumulate counts.
 
@@ -812,6 +812,14 @@ Rollback: Give the failed attempt zero credit, retain it, and restore the immuta
 
 Sibling recommendation: use this method only when its exact trigger preconditions apply; a recovered witness never erases the retained failure or upgrades evidence beyond `Same-owner bounded workflow recovery only; no independent reproduction, production, or authority credit.`
 
+
+## Final lifecycle correction retained
+
+A static preflight found that the evidence validator would have prefixed already repository-relative script and test manifest paths with the phase-doc directory. That defect received zero canonical-pass credit and remains `NEG-V6501-LIFECYCLE-001`. The evidence validator stayed byte-frozen; an additive `ghc_family_v650_v1_final_validate.py` corrects only the manifest-path domain. Method Flow now preserves 26 failed witnesses, 26 bounded passing witnesses, and 26 preferred methods. The successor baseline is 5,578 effective negatives. The separate combined-inspection timeout is retained as `NEG-V6501-LIFECYCLE-002`; its split file and Git probes passed without erasing the failed wrapper. The stale-anchor stop and broad-search timeout remain retained as `NEG-V6501-LIFECYCLE-003` and `NEG-V6501-LIFECYCLE-004`; exact Git resolution and the scoped literal search passed without erasure. These recoveries are not a canonical pass, independent reproduction, external audit, or authority.
+
+## Final lifecycle correction retained
+
+A static preflight found that the evidence validator would have prefixed already repository-relative script and test manifest paths with the phase-doc directory. That defect received zero canonical-pass credit and remains `NEG-V6501-LIFECYCLE-001`. The evidence validator stayed byte-frozen; an additive `ghc_family_v650_v1_final_validate.py` corrects only the manifest-path domain. Method Flow now preserves 27 failed witnesses, 27 bounded passing witnesses, and 27 preferred methods. The successor baseline is 5,578 effective negatives. The separate combined-inspection timeout is retained as `NEG-V6501-LIFECYCLE-002`; its split file and Git probes passed without erasing the failed wrapper. The stale-anchor stop and broad-search timeout remain retained as `NEG-V6501-LIFECYCLE-003` and `NEG-V6501-LIFECYCLE-004`; exact Git resolution and the scoped literal search passed without erasure. The stale closeout cadence assertion remains `NEG-V6501-LIFECYCLE-005`; the flawed pushed head was preserved and one additive owner recovery lane rebuilt the permitted fourth commit without rewriting it. These recoveries are not a canonical pass, independent reproduction, external audit, or authority.
 
 ## Validation and closeout protocol for Ilyra v650-v2
 
