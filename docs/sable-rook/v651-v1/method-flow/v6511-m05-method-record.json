@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Hash prospective normalized Git-blob bytes rather than platform checkout bytes, then replay every manifest entry from the index.",
+  "failure_signature": "Exact staged parity found two family-index files whose checkout CRLF hashes differed from their normalized LF Git blobs.",
+  "method_id": "V6511-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "manifest_parity",
+    "hash_domain_declaration",
+    "exact_staged_review",
+    "failure_retention"
+  ],
+  "recurrence_guard": "Declare the manifest hash domain and normalize text exactly as Git does before sealing; verify again from index blobs.",
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6511-X1-N05"
+  ],
+  "rollback": "Retain the failed parity receipt, commit nothing, and regenerate only the manifest and dependent receipts.",
+  "scope_boundary": "Same-owner Git byte-domain recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Seal manifests in the normalized Git-blob byte domain",
+  "trigger_preconditions": [
+    "Generated text may use platform newline bytes before Git clean filtering."
+  ],
+  "validation_witness_ids": [
+    "V6511-M05-WFAIL",
+    "V6511-M05-WPASS"
+  ]
+}

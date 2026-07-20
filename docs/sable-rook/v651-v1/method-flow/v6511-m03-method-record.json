@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Validate every Method Flow input against the required record fields before invoking record, then attach witnesses only after the method exists.",
+  "failure_signature": "Method Flow record ingestion rejected a record missing recommendation_state and validation_witness_ids; the dependent witness then reported that its method did not exist.",
+  "method_id": "V6511-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "method_schema",
+    "witness_attribution",
+    "append_only_state"
+  ],
+  "recurrence_guard": "Read the exact Method Flow schema, include all required record fields, and ingest a method before any dependent witness.",
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6511-X1-N03"
+  ],
+  "rollback": "Keep the rejected input and unattached witness with zero append credit; do not hand-edit the canonical ledger.",
+  "scope_boundary": "Same-owner Method Flow serialization only; no scientific, operational, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Validate Method Flow records before dependent witnesses",
+  "trigger_preconditions": [
+    "A new method and one or more dependent witnesses must be appended to the family Method Flow ledger."
+  ],
+  "validation_witness_ids": [
+    "V6511-M03-WFAIL",
+    "V6511-M03-WPASS"
+  ]
+}

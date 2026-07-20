@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set the Python standard-stream encoding to UTF-8 before emitting frozen titles that may contain Māori text.",
+  "failure_signature": "The first semantic-title probe returned partial matches and then stopped with a cp1252 UnicodeEncodeError while printing a frozen Māori title.",
+  "method_id": "V6511-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "semantic_novelty",
+    "utf8_text_integrity",
+    "maori_authority",
+    "independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Pin UTF-8 before every Unicode-emitting Python diagnostic and give partial output zero completeness credit.",
+  "retained_negative_ids": [
+    "V6511-X1-N01"
+  ],
+  "rollback": "Retain the partial probe with zero novelty credit and change no proposal until a complete UTF-8 witness passes.",
+  "scope_boundary": "Same-owner text-output recovery only; no scientific, professional, legal, cultural, Māori-authority, production, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Pin UTF-8 before frozen-title diagnostics",
+  "trigger_preconditions": [
+    "A Python diagnostic may emit non-ASCII frozen titles under Windows PowerShell."
+  ],
+  "validation_witness_ids": []
+}

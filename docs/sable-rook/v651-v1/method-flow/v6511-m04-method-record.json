@@ -1,0 +1,29 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Review the exact staged diff, require one terminal newline, regenerate every affected manifest hash, and rerun diff hygiene.",
+  "failure_signature": "git diff --cached --check reported a new blank line at end of scripts/ghc_family_v651_v1_phase_data.py.",
+  "method_id": "V6511-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "diff_hygiene",
+    "manifest_parity",
+    "x1_immutability",
+    "failure_retention"
+  ],
+  "recurrence_guard": "Review exact end-of-file bytes before staging generated or patched source, then rebuild dependent hashes after any byte correction.",
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6511-X1-N04"
+  ],
+  "rollback": "Retain the failed staged check, commit nothing, and change only the exact terminal blank line plus dependent receipts.",
+  "scope_boundary": "Same-owner staged-byte hygiene only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Require one terminal newline before manifest sealing",
+  "trigger_preconditions": [
+    "A staged source or generated file is about to enter an immutable lifecycle commit."
+  ],
+  "validation_witness_ids": [
+    "V6511-M04-WFAIL",
+    "V6511-M04-WPASS"
+  ]
+}
