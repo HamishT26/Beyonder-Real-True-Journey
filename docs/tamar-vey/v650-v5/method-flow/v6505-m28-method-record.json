@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read git status porcelain output directly without whole-stream trimming, preserving both status columns before extracting each path.",
+  "failure_signature": "The first corrected closeout generator attempt rejected an owner-scoped path because the generic Git helper stripped the leading porcelain status column from the first line before parsing.",
+  "method_id": "V6505-M28",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "claim_boundaries",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never parse fixed-column Git porcelain output through a helper that applies whole-stream strip semantics.",
+  "retained_negative_ids": [
+    "V6505-CLOSE-N02"
+  ],
+  "rollback": "Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.",
+  "scope_boundary": "Bounded same-owner closeout recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover porcelain_prefix_trimmed_by_generic_git_helper without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 closeout exposes porcelain_prefix_trimmed_by_generic_git_helper."
+  ],
+  "validation_witness_ids": []
+}

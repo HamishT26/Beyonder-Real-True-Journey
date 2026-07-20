@@ -586,6 +586,41 @@ X2_OPERATIONAL_NEGATIVES = [
     },
 ]
 
+CLOSEOUT_OPERATIONAL_NEGATIVES = [
+    {
+        "negative_id": "V6505-CLOSE-N01",
+        "category": "boundary_literal_test_mismatch",
+        "failed": "The first closeout-only suite passed nine tests and failed one because the boundary assertion searched for the literal phrase no Stage 20 while the frozen text says or Stage 20 authorization.",
+        "recovery": "Assert the exact frozen Stage 20 authorization phrase without weakening or rewriting the relational and authority boundary.",
+        "passing": "The corrected closeout suite passed all ten tests against the unchanged frozen boundary.",
+        "recurrence_guard": "Boundary tests must assert exact stable clauses or normalized semantics rather than an invented near-synonym.",
+    },
+    {
+        "negative_id": "V6505-CLOSE-N02",
+        "category": "porcelain_prefix_trimmed_by_generic_git_helper",
+        "failed": "The first corrected closeout generator attempt rejected an owner-scoped path because the generic Git helper stripped the leading porcelain status column from the first line before parsing.",
+        "recovery": "Read git status porcelain output directly without whole-stream trimming, preserving both status columns before extracting each path.",
+        "passing": "The corrected line-preserving status parser accepted only owner-scoped v650-v5 closeout paths and rejected paths outside that boundary.",
+        "recurrence_guard": "Never parse fixed-column Git porcelain output through a helper that applies whole-stream strip semantics.",
+    },
+    {
+        "negative_id": "V6505-CLOSE-N03",
+        "category": "evidence_route_read_from_mutable_worktree",
+        "failed": "The first 62-test pre-seal selection passed sixty-one tests and failed the x2 route assertion because it read the later closeout route from the mutable worktree instead of the frozen evidence commit.",
+        "recovery": "Load the route contract through the evidence-pinned reader whenever the current worktree has advanced beyond the evidence state.",
+        "passing": "The evidence-pinned route assertion passed against HELD_UNTIL_VERIFIED_FINAL while the closeout worktree truth remained PREPARED_NOT_SENT.",
+        "recurrence_guard": "Lifecycle tests must read every phase-mutating artifact from the commit whose state they claim to validate.",
+    },
+    {
+        "negative_id": "V6505-CLOSE-N04",
+        "category": "validator_scanner_definitions_misclassified_as_payload",
+        "failed": "The first exact staged privacy review reported five confirmed candidates because it recognized scanner definitions in the review runner but not the identical definitions in the final validator.",
+        "recovery": "Classify matches as scanner definitions only for the two exact owner-scoped privacy runner paths while retaining every other staged match as a confirmed payload.",
+        "passing": "The corrected exact-index review retained all scanner-definition candidates and reported zero confirmed payload hits without broadening any public-artifact exclusion.",
+        "recurrence_guard": "Privacy scanners must enumerate exact scanner-definition files rather than infer exemptions from a broad directory or suffix class.",
+    },
+]
+
 
 def safe_tasks():
     rows = []

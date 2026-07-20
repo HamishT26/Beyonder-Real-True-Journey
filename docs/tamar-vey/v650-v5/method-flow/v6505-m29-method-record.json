@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Load the route contract through the evidence-pinned reader whenever the current worktree has advanced beyond the evidence state.",
+  "failure_signature": "The first 62-test pre-seal selection passed sixty-one tests and failed the x2 route assertion because it read the later closeout route from the mutable worktree instead of the frozen evidence commit.",
+  "method_id": "V6505-M29",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "claim_boundaries",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Lifecycle tests must read every phase-mutating artifact from the commit whose state they claim to validate.",
+  "retained_negative_ids": [
+    "V6505-CLOSE-N03"
+  ],
+  "rollback": "Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.",
+  "scope_boundary": "Bounded same-owner closeout recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover evidence_route_read_from_mutable_worktree without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 closeout exposes evidence_route_read_from_mutable_worktree."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,4 +1,5 @@
 import json
+import subprocess
 import sys
 import unittest
 from collections import Counter
@@ -17,6 +18,22 @@ ROOT = REPO / d.PHASE_ROOT
 
 def load(relative: str):
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+
+def load_at_evidence(relative: str):
+    truth = load("phase-truth.json")
+    evidence = truth.get("evidence_commit")
+    if not evidence or truth.get("state") == "X2_EVIDENCE_COMPLETE_NOT_SEALED":
+        return load(relative)
+    completed = subprocess.run(
+        ["git", "show", f"{evidence}:docs/tamar-vey/v650-v5/{relative}"],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return json.loads(completed.stdout)
 
 
 class TamarV650V5X2Tests(unittest.TestCase):
@@ -138,26 +155,26 @@ class TamarV650V5X2Tests(unittest.TestCase):
         self.assertTrue(all(not row["independent_reproduction"] for row in execution["runners"]))
 
     def test_negatives_and_gates_are_not_erased(self):
-        negatives = load("retained-negative-register.json")
+        negatives = load_at_evidence("retained-negative-register.json")
         self.assertEqual(negatives["activation_baseline"], 5925)
         self.assertEqual(negatives["x1_operational"], 22)
         self.assertEqual(negatives["executed_rejected_synthetic_mutations"], 100)
         self.assertEqual(negatives["x2_operational"], 4)
         self.assertEqual(negatives["effective_total"], 6051)
         self.assertEqual(negatives["erased"], 0)
-        gates = load("exact-open-gate-register.json")
+        gates = load_at_evidence("exact-open-gate-register.json")
         self.assertEqual(gates["effective_open_gaps"], 47)
         self.assertEqual(gates["effective_exact_gates"], 48)
         self.assertEqual(gates["silently_closed"], 0)
 
     def test_phase_truth_and_terminal_verdict(self):
-        truth = load("phase-truth.json")
+        truth = load_at_evidence("phase-truth.json")
         self.assertEqual(truth["state"], "X2_EVIDENCE_COMPLETE_NOT_SEALED")
         self.assertEqual(truth["effective_negatives"], 6051)
         self.assertTrue(truth["same_owner_repeatability"])
         self.assertFalse(truth["independent_team_reproduction"])
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
-        route = load("orchestration/terminal-route-state.json")
+        route = load_at_evidence("orchestration/terminal-route-state.json")
         self.assertEqual(route["state"], "HELD_UNTIL_VERIFIED_FINAL")
         self.assertEqual(route["messages_sent"], 0)
 

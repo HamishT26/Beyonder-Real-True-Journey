@@ -2,9 +2,9 @@
 
 - Phase: v650-v5
 - Owner: Tamar Vey
-- Methods: 26
-- Passing witnesses: 28
-- Failed witnesses retained: 26
+- Methods: 30
+- Passing witnesses: 32
+- Failed witnesses retained: 30
 
 ## Preferred methods
 
@@ -215,6 +215,38 @@
 - Recurrence guard: Keep generated accessibility-critical attributes in one canonical quoting style shared with structural tests.
 - Rollback: Give the failed attempt no evidence credit, retain it, and rely only on a bounded passing witness.
 - Witnesses: V6505-M26-WFAIL, V6505-M26-WPASS
+
+### V6505-M27 — Recover boundary_literal_test_mismatch without erasing its failed witness
+
+- Trigger: A bounded v650-v5 closeout exposes boundary_literal_test_mismatch.
+- Method: Assert the exact frozen Stage 20 authorization phrase without weakening or rewriting the relational and authority boundary.
+- Recurrence guard: Boundary tests must assert exact stable clauses or normalized semantics rather than an invented near-synonym.
+- Rollback: Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.
+- Witnesses: V6505-M27-WFAIL, V6505-M27-WPASS
+
+### V6505-M28 — Recover porcelain_prefix_trimmed_by_generic_git_helper without erasing its failed witness
+
+- Trigger: A bounded v650-v5 closeout exposes porcelain_prefix_trimmed_by_generic_git_helper.
+- Method: Read git status porcelain output directly without whole-stream trimming, preserving both status columns before extracting each path.
+- Recurrence guard: Never parse fixed-column Git porcelain output through a helper that applies whole-stream strip semantics.
+- Rollback: Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.
+- Witnesses: V6505-M28-WFAIL, V6505-M28-WPASS
+
+### V6505-M29 — Recover evidence_route_read_from_mutable_worktree without erasing its failed witness
+
+- Trigger: A bounded v650-v5 closeout exposes evidence_route_read_from_mutable_worktree.
+- Method: Load the route contract through the evidence-pinned reader whenever the current worktree has advanced beyond the evidence state.
+- Recurrence guard: Lifecycle tests must read every phase-mutating artifact from the commit whose state they claim to validate.
+- Rollback: Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.
+- Witnesses: V6505-M29-WFAIL, V6505-M29-WPASS
+
+### V6505-M30 — Recover validator_scanner_definitions_misclassified_as_payload without erasing its failed witness
+
+- Trigger: A bounded v650-v5 closeout exposes validator_scanner_definitions_misclassified_as_payload.
+- Method: Classify matches as scanner definitions only for the two exact owner-scoped privacy runner paths while retaining every other staged match as a confirmed payload.
+- Recurrence guard: Privacy scanners must enumerate exact scanner-definition files rather than infer exemptions from a broad directory or suffix class.
+- Rollback: Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.
+- Witnesses: V6505-M30-WFAIL, V6505-M30-WPASS
 
 ## Retained boundary
 

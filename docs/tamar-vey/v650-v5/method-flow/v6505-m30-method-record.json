@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Classify matches as scanner definitions only for the two exact owner-scoped privacy runner paths while retaining every other staged match as a confirmed payload.",
+  "failure_signature": "The first exact staged privacy review reported five confirmed candidates because it recognized scanner definitions in the review runner but not the identical definitions in the final validator.",
+  "method_id": "V6505-M30",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "evidence_credit",
+    "failure_retention",
+    "claim_boundaries",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Privacy scanners must enumerate exact scanner-definition files rather than infer exemptions from a broad directory or suffix class.",
+  "retained_negative_ids": [
+    "V6505-CLOSE-N04"
+  ],
+  "rollback": "Give the failed assertion no closeout credit, retain it, and rely only on the corrected bounded witness.",
+  "scope_boundary": "Bounded same-owner closeout recovery only; no independent reproduction or authority credit.",
+  "supersedes": [],
+  "title": "Recover validator_scanner_definitions_misclassified_as_payload without erasing its failed witness",
+  "trigger_preconditions": [
+    "A bounded v650-v5 closeout exposes validator_scanner_definitions_misclassified_as_payload."
+  ],
+  "validation_witness_ids": []
+}
