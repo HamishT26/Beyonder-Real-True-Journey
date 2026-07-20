@@ -2,9 +2,9 @@
 
 - Phase: v650-v8
 - Owner: Ilyra Fen
-- Methods: 9
-- Passing witnesses: 9
-- Failed witnesses retained: 9
+- Methods: 12
+- Passing witnesses: 13
+- Failed witnesses retained: 14
 
 ## Preferred methods
 
@@ -78,7 +78,31 @@
 - Method: Patch non-Unicode fields independently, then inspect exact source bytes before replacing the two rendered separator literals.
 - Recurrence guard: Do not use console-rendered mojibake as patch context for UTF-8 source.
 - Rollback: Treat the rejected patch as zero change and preserve the UTF-8 source unchanged.
-- Witnesses: V6508-M09-WFAIL, V6508-M09-WPASS
+- Witnesses: V6508-M09-WFAIL, V6508-M09-WPASS, V6508-M09-WFAIL2, V6508-M09-WFAIL3, V6508-M09-WPASS3
+
+### V6508-M10 — Invoke the skill validator only with an actual skill directory
+
+- Trigger: A helper script may not implement argparse-style help and expects a positional skill path.
+- Method: Use init_skill.py help for initialization syntax, inspect the validator entrypoint contract, and invoke quick_validate.py only with an actual phase-local skill directory.
+- Recurrence guard: Do not assume helper scripts implement argparse-style --help; inspect their entrypoint before probing.
+- Rollback: Give the rejected helper invocation zero skill-validation credit and leave phase-local skill state unchanged.
+- Witnesses: V6508-M10-WFAIL, V6508-M10-WPASS
+
+### V6508-M11 — Split Git state and source inspection into bounded probes
+
+- Trigger: A combined Windows repository-state and source-inspection wrapper approaches its time bound.
+- Method: Split repository state and exact-file code inspection into independently bounded probes and avoid coupling slow Git status to source inspection.
+- Recurrence guard: Do not combine potentially slow Windows Git status with multi-file source inspection under one short wrapper.
+- Rollback: Give the timed-out wrapper zero pass credit and leave repository, branch, remote, sibling, participant, production, and authority state unchanged.
+- Witnesses: V6508-M11-WFAIL, V6508-M11-WPASS
+
+### V6508-M12 — Use an evidence-sized bound for staged-manifest refresh
+
+- Trigger: The expanded owner staged surface cannot be hashed within a generic short inspection wrapper.
+- Method: Run the single attributable manifest refresh under an evidence-sized bounded wrapper, then independently parse its manifest and privacy receipts.
+- Recurrence guard: Size manifest-refresh bounds to the measured owner surface rather than a generic short inspection timeout.
+- Rollback: Give partial refresh output zero parity credit and preserve all previously committed x1 and sibling state unchanged.
+- Witnesses: V6508-M12-WFAIL, V6508-M12-WPASS
 
 ## Retained boundary
 

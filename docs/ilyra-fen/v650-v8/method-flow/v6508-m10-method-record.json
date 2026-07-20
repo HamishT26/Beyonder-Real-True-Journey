@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use init_skill.py help for initialization syntax, inspect the validator entrypoint contract, and invoke quick_validate.py only with an actual phase-local skill directory.",
+  "failure_signature": "The phase invoked quick_validate.py with --help, but the script treated that token as a skill path and stopped with SKILL.md not found.",
+  "method_id": "V6508-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "phase_local_skills", "tool_contract", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not assume helper scripts implement argparse-style --help; inspect their entrypoint before probing.",
+  "retained_negative_ids": ["NEG-V6508-X2-SKILL-VALIDATOR-HELP-010"],
+  "rollback": "Give the rejected helper invocation zero skill-validation credit and leave phase-local skill state unchanged.",
+  "scope_boundary": "Owner-local skill validation only; no global installation, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Invoke the skill validator only with an actual skill directory",
+  "trigger_preconditions": ["A helper script may not implement argparse-style help and expects a positional skill path."],
+  "validation_witness_ids": []
+}

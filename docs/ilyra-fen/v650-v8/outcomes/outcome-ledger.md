@@ -1,0 +1,22 @@
+# v650-v8 bounded outcome ledger
+
+- **V6508-P01** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P02** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P03** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P04** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P05** — `open_gap` — 5/5 synthetic mutations rejected
+- **V6508-P06** — `represented` — 5/5 synthetic mutations rejected
+- **V6508-P07** — `represented` — 5/5 synthetic mutations rejected
+- **V6508-P08** — `represented` — 5/5 synthetic mutations rejected
+- **V6508-P09** — `represented` — 5/5 synthetic mutations rejected
+- **V6508-P10** — `exact_gate` — 5/5 synthetic mutations rejected
+- **V6508-P11** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P12** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P13** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P14** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P15** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P16** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P17** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P18** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P19** — `completed` — 5/5 synthetic mutations rejected
+- **V6508-P20** — `completed` — 5/5 synthetic mutations rejected

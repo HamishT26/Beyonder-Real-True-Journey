@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v650-v8
 
 Owner: **Ilyra Fen**
-Generated UTC: `2026-07-20T16:48:50.040528+00:00`
+Generated UTC: `2026-07-20T17:08:18.204303+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 351 | 17 | 1353 | 17 |
+| Repository scripts | 351 | 17 | 1365 | 17 |
 | Local skills | 115 | 18 | 937 | 186 |
 
 ## Preferred current script candidates
