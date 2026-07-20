@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assert the required candidate and preferred values by key, verify the fixed state vocabulary separately, and retain zero-valued states rather than comparing the full map to a partial literal.",
+  "failure_signature": "A current-phase test compares a complete fixed-vocabulary state summary to a partial mapping and fails because valid zero-valued keys remain present.",
+  "method_id": "V6508-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "current_phase_tests", "method_state_truth", "terminal_validation", "terminal_route"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For fixed complete vocabularies, assert required keyed values and the vocabulary separately; never treat a partial expected map as the full serialized state.",
+  "retained_negative_ids": ["NEG-V6508-POST-FINAL-METHOD-STATE-ASSERTION-028"],
+  "rollback": "Give the failed aggregate zero terminal credit, leave the route held, and revert only the additive test assertion if its focused witness fails.",
+  "scope_boundary": "Owner-local test-contract correction only; no scientific, production, authority, independent-reproduction, or Stage 20 credit.",
+  "supersedes": [],
+  "title": "Assert complete Method Flow state vocabularies without partial-map equality",
+  "trigger_preconditions": ["A deterministic summary includes valid zero-valued state keys and a test expects only nonzero keys."],
+  "validation_witness_ids": []
+}

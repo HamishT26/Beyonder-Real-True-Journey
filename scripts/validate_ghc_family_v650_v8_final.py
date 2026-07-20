@@ -19,6 +19,7 @@ SOURCE = "f566d4b67bce4457cf5207f5409bbaa3427428a0"
 X1 = "d8726faad1ae416ef31f98a8744901eeedfe3c56"
 EVIDENCE = "325c410a16241cd8fa21706f82ab2bfd8ed47531"
 ORIGINAL_FINAL = "4dc0a911415cc19b871008cb903e03605a7bfca5"
+PREVIOUS_FINAL = "549e39d8020955188cdf49618a1e60ce4df205ba"
 
 
 def git(*args: str) -> str:
@@ -63,11 +64,11 @@ def main() -> int:
     check("exact_head", head == args.expected_head)
     check("branch_namespace", branch == "codex/GHC-Family/ilyra-fen-full-tools")
     check("clean_before", clean_before)
-    check("direct_child_of_original_final", git("rev-parse", "HEAD^") == ORIGINAL_FINAL)
-    check("four_phase_commits", int(git("rev-list", "--count", f"{SOURCE}..HEAD")) == 4)
+    check("direct_child_of_previous_final", git("rev-parse", "HEAD^") == PREVIOUS_FINAL)
+    check("five_phase_commits", int(git("rev-list", "--count", f"{SOURCE}..HEAD")) == 5)
     check("zero_merges", int(git("rev-list", "--merges", "--count", f"{SOURCE}..HEAD")) == 0)
     check("one_final_parent", len(git("show", "-s", "--format=%P", "HEAD").split()) == 1)
-    for name, anchor in (("source", SOURCE), ("x1", X1), ("evidence", EVIDENCE), ("original_final", ORIGINAL_FINAL)):
+    for name, anchor in (("source", SOURCE), ("x1", X1), ("evidence", EVIDENCE), ("original_final", ORIGINAL_FINAL), ("previous_final", PREVIOUS_FINAL)):
         check(f"{name}_ancestral", subprocess.run(["git", "merge-base", "--is-ancestor", anchor, "HEAD"], cwd=REPO).returncode == 0)
 
     env = os.environ.copy()
@@ -97,7 +98,7 @@ def main() -> int:
     check("delta_privacy_zero_confirmed", delta_privacy["confirmed_hit_count"] == 0 and len(delta_privacy["pattern_classes"]) == 5)
 
     truth = load("final/phase-truth.json")
-    check("truth_counts", truth["effective_negatives"] == 6438 and truth["effective_open_gaps"] == 50 and truth["effective_exact_gates"] == 51)
+    check("truth_counts", truth["effective_negatives"] == 6443 and truth["effective_open_gaps"] == 50 and truth["effective_exact_gates"] == 51)
     check("truth_distribution", truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
     check("terminal_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("route_held", load("route/final-phase-state.json")["terminal_route"] == "PREPARED_NOT_SENT")

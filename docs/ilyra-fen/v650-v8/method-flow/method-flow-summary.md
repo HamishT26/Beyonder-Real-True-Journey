@@ -2,9 +2,9 @@
 
 - Phase: v650-v8
 - Owner: Ilyra Fen
-- Methods: 17
-- Passing witnesses: 25
-- Failed witnesses retained: 27
+- Methods: 21
+- Passing witnesses: 31
+- Failed witnesses retained: 33
 
 ## Preferred methods
 
@@ -135,6 +135,38 @@
 - Recurrence guard: When invoking repository-local builder functions outside their script entrypoint, add their exact sibling module directory explicitly.
 - Rollback: Give the failed import zero artifact-generation credit and leave all prior files unchanged.
 - Witnesses: V6508-M17-WFAIL, V6508-M17-WPASS
+
+### V6508-M18 — Represent live additive commit extensions without overwriting the frozen base policy
+
+- Trigger: A live user explicitly extends an active phase commit budget after the frozen base budget was exhausted.
+- Method: Keep the runner's frozen four-commit base policy, preserve the user-authorized two-commit additive extension in explicit metadata, and retain the standard skip-after-success validation label.
+- Recurrence guard: Represent a live additive commit extension separately from a frozen base budget unless the family runner has been remastered and validated.
+- Rollback: Give the rejected plan zero execution credit, preserve its issue ledger, and keep the repository and successor route unchanged.
+- Witnesses: V6508-M18-WFAIL, V6508-M18-WPASS
+
+### V6508-M19 — Assert complete Method Flow state vocabularies without partial-map equality
+
+- Trigger: A deterministic summary includes valid zero-valued state keys and a test expects only nonzero keys.
+- Method: Assert the required candidate and preferred values by key, verify the fixed state vocabulary separately, and retain zero-valued states rather than comparing the full map to a partial literal.
+- Recurrence guard: For fixed complete vocabularies, assert required keyed values and the vocabulary separately; never treat a partial expected map as the full serialized state.
+- Rollback: Give the failed aggregate zero terminal credit, leave the route held, and revert only the additive test assertion if its focused witness fails.
+- Witnesses: V6508-M19-WFAIL, V6508-M19-WPASS, V6508-M19-WPASS2
+
+### V6508-M20 — Split uncertain path discovery from large-worktree recovery inspection
+
+- Trigger: A recovery inspection combines remembered paths, several content reads, diff output, and whole-worktree status under one short wrapper.
+- Method: Resolve a bounded directory inventory first, read only exact discovered files, and defer whole-worktree status to its own final gate.
+- Recurrence guard: Resolve exact bounded paths before content reads and keep potentially slow whole-worktree Git gates in independent attributable commands.
+- Rollback: Give the timed-out probe zero credit, preserve its negative, and leave repository, sibling, participant, production, and authority state unchanged.
+- Witnesses: V6508-M20-WFAIL, V6508-M20-WPASS, V6508-M20-WFAIL2, V6508-M20-WPASS2
+
+### V6508-M21 — Use targeted lifecycle generation after the immutable evidence-head boundary
+
+- Trigger: The canonical lane is already beyond the immutable evidence commit and only an additive recovery packet needs regeneration.
+- Method: Invoke only the closeout builder's declared targeted report, baton, test-source, and manifest functions from an additive recovery head.
+- Recurrence guard: Use the full lifecycle builder only at its declared evidence-head precondition; use reviewed targeted functions for additive post-final recovery.
+- Rollback: Give the refused full build zero credit, preserve the advanced head and immutable evidence, and revert only targeted uncommitted outputs if their bounded witness fails.
+- Witnesses: V6508-M21-WFAIL, V6508-M21-WPASS
 
 ## Retained boundary
 
