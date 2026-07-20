@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Select novelty neighbors with an explicit score key so tie resolution never compares dictionary payloads.",
+  "failure_signature": "The first novelty audit used tuple maximum selection and equal scores caused Python to compare proposal dictionaries.",
+  "method_id": "V6497-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "x1_x2_separation",
+    "caller_compatibility"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Select novelty neighbors with an explicit score key so tie resolution never compares dictionary payloads.",
+  "retained_negative_ids": [
+    "NEG-V6497-X1-009"
+  ],
+  "rollback": "Give the failed attempt zero credit; restore the last bounded state and use only attributable returned evidence.",
+  "scope_boundary": "Same-owner bounded workflow recovery only; no independent reproduction or external authority credit.",
+  "supersedes": [],
+  "title": "Retain and recover startup failure N09",
+  "trigger_preconditions": [
+    "Startup exposes N09."
+  ],
+  "validation_witness_ids": []
+}
