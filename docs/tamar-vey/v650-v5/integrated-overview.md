@@ -39,3 +39,39 @@ Eiren alone owns the complete repository suite. Tamar will not run it. X1 has it
 ## Current terminal truth
 
 The inherited effective baseline is 5,925 sealed negatives. This x1 adds 22 operational negatives without erasing any inherited failure. Forty-six open gaps and forty-seven exact gates remain inherited; the new exoplanet and book-taonga proposals are projections only until x2. The terminal route is held. No message may be sent to Sylven Arc until Tamar reaches an exact clean pushed final head inside the commit cap and the single authorized canonical pass succeeds. At x1 the only truthful verdict is `NOT_READY_FOR_STAGE_20`.
+
+## X2 bounded evidence
+
+The frozen x1 packet was remote-equal before any implementation began. X2 then executed exactly the twenty preregistered surfaces through owner-local symbolic, structural, numerical, synthetic, or zero-row fixtures. The observed distribution is fourteen `completed`, four `represented`, one `open_gap`, and one `exact_gate`. Those labels describe evidence classes, not a maturity ladder. A represented result is not a partial production approval, an open gap is not a hidden success, and an exact gate cannot be closed by adding software assertions.
+
+### Heart focus and bounded human practice
+
+Freed ID and CBR Heart remained the primary Trinity Mandala pillar. RFC 8414 metadata, RFC 8252 native-app redirects, and RFC 9278 JWK Thumbprint URIs were exercised with synthetic values only. No real key, credential, account, authorization server, native application, issuance, presentation, resolution, status, revocation, interoperability event, privacy review, independent security review, recovery decision, or trust-governance decision occurred. The book-conservation workshop remained a learning lens: synthetic traces modelled intake, condition reporting, mould isolation, reversible treatment planning, material compatibility, release refusal, workload limits, and handover. They involved no real collection object, conservator, worker, donor, institution, incident, participant, or effectiveness estimate.
+
+The conservation-treatment and taonga decision-rights matrix remains exact-gated. It reserves custodianship, condition disclosure, intervention consent, digital-surrogate decisions, return requests, tikanga, affected-party legitimacy, legal interpretation, cultural ratification, data governance, and Maori authority. Repository software cannot confer those decisions. Maori concepts, wording, and data remain under tangata whenua, iwi, hapu, and Maori authority. The matrix records absence of authority; it does not simulate consent or convert a checklist into legitimacy.
+
+### GMUT Mind
+
+The distributed-lease tribunal completed only as a bounded workflow control: monotonic fencing tokens rejected a stale holder, expiry rejected a late action, and clock uncertainty remained explicit. It authorized no external side effect. CPT, Appelquist-Carazzone, and Froissart-Martin boards completed as typed obligation sets with gauge, effective-field-theory, unit, and observation firewalls. These are research-model bookkeeping surfaces. They establish no physical force, unique prediction, likelihood, parameter constraint, stability theorem, ultraviolet completion, empirical confirmation, proof or canon, or Theory of Everything.
+
+The NASA Exoplanet Archive Planetary Systems adapter stayed an `open_gap`. Official sources supplied schema and provenance requirements only. The phase downloaded zero rows, ingested zero rows, evaluated zero likelihoods, produced zero posterior samples, emitted zero constraints, and made zero empirical GMUT claim. Readiness of a refusal contract is not readiness of a fit. Real empirical work would require a frozen analysis, real public data, selection treatment, uncertainty and covariance handling, nuisance modelling, checksum provenance, and appropriate independent review.
+
+### THOS Body and bounded engineering
+
+The Matroska, Apache Avro, FLAC, OpenEXR, and HPACK tribunals completed against small disposable fixtures. They checked selected magic values, framing obligations, state or resource budgets, and refusal boundaries. The Xor Filter and Krawczyk surfaces completed bounded deterministic witnesses. The accessible split-action audit checked distinct names, popup state, keyboard declarations, and focus return structurally. None is a production parser, exhaustive format validator, general security guarantee, accessibility certification, or deployment approval.
+
+THOS remains represented because there were no preregistered blind matched-budget real arms, real participants or operators, safety monitoring, suitable statistics, or independent review. Synthetic workshop traces cannot establish operational effectiveness, AGI or ASI, consciousness, personhood, professional competence, or public-safety outcomes. The Redlich-Kwong classifier retained physical units and phase limitations while refusing conversion into psyche, agency, autonomy, justice, consciousness, personhood, or a fundamental law of mind.
+
+### Falsification, portfolios, and recovery
+
+All one hundred preregistered mutations executed. Each proposal received five negative cases: missing obligation, wrong domain or type, unsupported promotion, exceeded resource or iteration budget, and attempted negative or gate erasure. All were rejected or quarantined and none received completion credit. Mutation rejection demonstrates only the declared guards on these fixtures; it is not exhaustive security or proof that every malformed input is rejected.
+
+Forty safe-now tasks, thirty bounded candidate prototypes, twenty phase-local skills, ten family-compatible runners, and forty additive CLEAN/FIX/REFINE tasks were executed within their frozen acceptance gates. The skills were initialized and validated through the official local skill-creator workflow, smoke-used, and left phase-local. They were not globally installed, and no subagent forward test occurred because delegation was prohibited. The runners preserve `ghc_family_*` caller naming. Portfolio completion applies only to the item-specific software or synthetic hypothesis and does not inherit authority from the profession used as a learning lens.
+
+Every startup, parser, tooling, staging, test, or count fault remains retained. Corrections did not erase the failed witnesses. Two historical pass-labelled Method Flow placeholders remain visible with zero current evidence credit; append-only correction witnesses contain the actual bounded observations. Same-owner reruns under shared infrastructure are not independent-team scientific reproduction or external audit.
+
+### Terminal disposition
+
+The terminal board remains `NOT_READY_FOR_STAGE_20`. Open empirical, participant, production-identity, privacy, security, professional, legal, cultural, Maori-authority, accessibility, independent-reproduction, proof or canon, deployment, AGI or ASI, consciousness or personhood, Theory-of-Everything, and Stage 20 gates remain explicit. Closeout may seal what was actually observed, but it cannot promote a citation into data, a synthetic fixture into a real arm, a structural profile into production cryptography, or a repository matrix into authority.
+
+Observed distribution receipt: `{"completed": 14, "exact_gate": 1, "open_gap": 1, "represented": 4}`.

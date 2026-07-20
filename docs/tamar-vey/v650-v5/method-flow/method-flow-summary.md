@@ -2,9 +2,9 @@
 
 - Phase: v650-v5
 - Owner: Tamar Vey
-- Methods: 22
-- Passing witnesses: 24
-- Failed witnesses retained: 22
+- Methods: 26
+- Passing witnesses: 28
+- Failed witnesses retained: 26
 
 ## Preferred methods
 
@@ -183,6 +183,38 @@
 - Recurrence guard: Use the exact staged name list, not a projected generator-output delta, for lifecycle receipt totals.
 - Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
 - Witnesses: V6505-M22-WFAIL, V6505-M22-WPASS
+
+### V6505-M23 — Recover proposal_evidence_class_schema_assumption without erasing its failed witness
+
+- Trigger: A bounded v650-v5 x2 workflow exposes proposal_evidence_class_schema_assumption.
+- Method: Use the frozen approval_class field in the evidence ledger, preserve first-run skill initialization truth across retry, and rerun the bounded builder without awarding the failed attempt evidence credit.
+- Recurrence guard: Inspect frozen proposal keys before projecting aggregate-ledger fields.
+- Rollback: Give the failed attempt no evidence credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M23-WFAIL, V6505-M23-WPASS
+
+### V6505-M24 — Recover identity_boundary_constant_assumption without erasing its failed witness
+
+- Trigger: A bounded v650-v5 x2 workflow exposes identity_boundary_constant_assumption.
+- Method: Use the phase's already-frozen relational BOUNDARY constant in the wellbeing receipt and rerun without crediting the incomplete attempt.
+- Recurrence guard: Inspect phase-data exports before referencing a boundary constant from an aggregate builder.
+- Rollback: Give the failed attempt no evidence credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M24-WFAIL, V6505-M24-WPASS
+
+### V6505-M25 — Recover x1_environment_receipt_not_pinned without erasing its failed witness
+
+- Trigger: A bounded v650-v5 x2 workflow exposes x1_environment_receipt_not_pinned.
+- Method: Load the environment receipt through the existing x1 commit-pinned helper, leaving the x2 receipt free to use its successor schema.
+- Recurrence guard: Every x1 invariant checked after x2 begins must use the x1 commit-pinned loader.
+- Rollback: Give the failed attempt no evidence credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M25-WFAIL, V6505-M25-WPASS
+
+### V6505-M26 — Recover static_report_quote_style_assertion without erasing its failed witness
+
+- Trigger: A bounded v650-v5 x2 workflow exposes static_report_quote_style_assertion.
+- Method: Normalize generated row-header attributes to double quotes and retain the structural scope assertion.
+- Recurrence guard: Keep generated accessibility-critical attributes in one canonical quoting style shared with structural tests.
+- Rollback: Give the failed attempt no evidence credit, retain it, and rely only on a bounded passing witness.
+- Witnesses: V6505-M26-WFAIL, V6505-M26-WPASS
 
 ## Retained boundary
 

@@ -551,6 +551,41 @@ X1_OPERATIONAL_NEGATIVES = [
     },
 ]
 
+X2_OPERATIONAL_NEGATIVES = [
+    {
+        "negative_id": "V6505-X2-N01",
+        "category": "proposal_evidence_class_schema_assumption",
+        "failed": "The first x2 packet builder completed all twenty phase-local skill builds, then failed closed before aggregate evidence artifacts because it requested a nonexistent proposal evidence_class field.",
+        "recovery": "Use the frozen approval_class field in the evidence ledger, preserve first-run skill initialization truth across retry, and rerun the bounded builder without awarding the failed attempt evidence credit.",
+        "passing": "The corrected builder used approval_class, retained all first-run skill initialization receipts, and completed the twenty-surface aggregate packet.",
+        "recurrence_guard": "Inspect frozen proposal keys before projecting aggregate-ledger fields.",
+    },
+    {
+        "negative_id": "V6505-X2-N02",
+        "category": "identity_boundary_constant_assumption",
+        "failed": "The second x2 builder passed the proposal schema correction and wrote aggregate evidence, then stopped before terminal artifacts because the wellbeing receipt referenced an undefined IDENTITY_BOUNDARY constant.",
+        "recovery": "Use the phase's already-frozen relational BOUNDARY constant in the wellbeing receipt and rerun without crediting the incomplete attempt.",
+        "passing": "The corrected wellbeing receipt reused the frozen relational boundary and the packet builder reached its terminal Method Flow update.",
+        "recurrence_guard": "Inspect phase-data exports before referencing a boundary constant from an aggregate builder.",
+    },
+    {
+        "negative_id": "V6505-X2-N03",
+        "category": "x1_environment_receipt_not_pinned",
+        "failed": "The first combined x1 and x2 evidence suite raised a key error because one x1 environment assertion read the evolving x2 file-count receipt instead of the frozen x1 commit.",
+        "recovery": "Load the environment receipt through the existing x1 commit-pinned helper, leaving the x2 receipt free to use its successor schema.",
+        "passing": "The corrected combined suite read the frozen x1 environment receipt and passed the original rotation assertions.",
+        "recurrence_guard": "Every x1 invariant checked after x2 begins must use the x1 commit-pinned loader.",
+    },
+    {
+        "negative_id": "V6505-X2-N04",
+        "category": "static_report_quote_style_assertion",
+        "failed": "The first combined suite rejected structurally valid table row headers because the report generator used single-quoted scope attributes while the test required double quotes.",
+        "recovery": "Normalize generated row-header attributes to double quotes and retain the structural scope assertion.",
+        "passing": "The normalized report exposed double-quoted row and column scope attributes and passed the structural accessibility test.",
+        "recurrence_guard": "Keep generated accessibility-critical attributes in one canonical quoting style shared with structural tests.",
+    },
+]
+
 
 def safe_tasks():
     rows = []

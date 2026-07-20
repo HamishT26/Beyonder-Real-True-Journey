@@ -140,7 +140,7 @@ class TamarV650V5X1Tests(unittest.TestCase):
         )
 
     def test_file_rotation_and_environment_boundaries(self):
-        counts = load("environment/file-count-receipt.json")
+        counts = load_at_x1("environment/file-count-receipt.json")
         self.assertGreater(counts["tracked_checkout_files_at_inherited_head"], 15000)
         self.assertEqual(counts["tamar_generated_files_before_phase"], 0)
         self.assertFalse(counts["inherited_baseline_triggers_rotation"])
