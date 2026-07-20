@@ -2,9 +2,9 @@
 
 - Phase: v651-v2
 - Owner: Orin Thale
-- Methods: 13
-- Passing witnesses: 13
-- Failed witnesses retained: 13
+- Methods: 19
+- Passing witnesses: 19
+- Failed witnesses retained: 19
 
 ## Preferred methods
 
@@ -111,6 +111,54 @@
 - Recurrence guard: On Windows, use one literal pattern per probe for quote-bearing code and never interpret partial results from a nonzero search as a complete audit.
 - Rollback: Give the nonzero alternation zero complete-search credit, retain its partial matches, and rerun only bounded literal probes.
 - Witnesses: V6512-M13-WFAIL, V6512-M13-WPASS
+
+### V6512-M14 — Enumerate exact Windows test paths before discovery
+
+- Trigger: A bounded test selection spans more than one Windows filename.
+- Method: Expand the bounded test file list with Get-ChildItem, then search each exact LiteralPath for test methods.
+- Recurrence guard: Never pass a Windows wildcard as a literal ripgrep path; enumerate the bounded files first and pass exact paths.
+- Rollback: Give the wildcard probe zero discovery credit, retain its error, and do not broaden test selection to compensate.
+- Witnesses: V6512-M14-WFAIL, V6512-M14-WPASS
+
+### V6512-M15 — Parse NUL-framed Git porcelain without stripping status columns
+
+- Trigger: Closeout begins with modified and untracked owner-scoped files that must be classified exactly.
+- Method: Read NUL-framed porcelain bytes without global stripping, preserve both status columns, and whitelist the exact closeout scaffolding paths.
+- Recurrence guard: Parse git status --porcelain=v1 -z as raw records and slice paths only after preserving the fixed three-byte XY-space prefix.
+- Rollback: Give the failed closeout build zero artifact credit, retain the parser fault, and write no closeout record until the exact observed set is proven allowed.
+- Witnesses: V6512-M15-WFAIL, V6512-M15-WPASS
+
+### V6512-M16 — Separate static measurement from compiler supervision
+
+- Trigger: A combined Windows wrapper mixes a static document check with Python compilation under a short supervision budget.
+- Method: Run the overview estimate and Python compilation as separate no-profile probes with attributable outputs and supervision budgets.
+- Recurrence guard: Keep static text measurement and compiler checks in separate no-profile invocations; a timed-out aggregate has zero component credit.
+- Rollback: Give the combined wrapper zero verification credit, retain the timeout, and do not infer that either component completed.
+- Witnesses: V6512-M16-WFAIL, V6512-M16-WPASS
+
+### V6512-M17 — Inspect phase-local CLI contracts before help probes
+
+- Trigger: A phase-local Python entrypoint has not demonstrated an argparse help surface.
+- Method: Inspect the bounded review entrypoint before invocation, then stage its required paths and run it with its actual no-argument contract.
+- Recurrence guard: Inspect a phase-local entrypoint for an argument parser before using --help; when none exists, read the bounded main contract and invoke only after its preconditions hold.
+- Rollback: Give the rejected invocation zero review credit, retain the traceback, and stage nothing outside the exact owner paths.
+- Witnesses: V6512-M17-WFAIL, V6512-M17-WPASS
+
+### V6512-M18 — Declare exact regenerable closeout outputs
+
+- Trigger: A bounded owner-local generator may need to refresh its already generated outputs before staging.
+- Method: Whitelist the exact declared closeout output paths as regenerable owner-local surfaces while retaining rejection of every undeclared path.
+- Recurrence guard: A regenerable builder must declare every exact output path in its preflight contract; never replace the list with a directory-wide wildcard.
+- Rollback: Give the rejected regeneration zero artifact credit, retain the exact unexpected-path list, and delete or mutate no prior artifact.
+- Witnesses: V6512-M18-WFAIL, V6512-M18-WPASS
+
+### V6512-M19 — Quarantine exact privacy scanner definitions without weakening payload scans
+
+- Trigger: A five-class scanner reports its own compiled patterns or an explicit negative assertion as a candidate.
+- Method: Classify only exact scanner-definition lines and explicit sanitizer-negative assertions as definition candidates; keep every other match confirmed and fail closed.
+- Recurrence guard: A privacy scanner may classify a candidate only when the exact line is a compiled pattern definition or an explicit rejecting assertion in a named test; never exclude a file or class wholesale.
+- Rollback: Give the failed staged review zero credit, retain all five candidates, and write no privacy or manifest receipt until exact classification yields zero unclassified hits.
+- Witnesses: V6512-M19-WFAIL, V6512-M19-WPASS
 
 ## Retained boundary
 

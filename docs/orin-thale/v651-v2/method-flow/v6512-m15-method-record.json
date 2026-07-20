@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_porcelain_parser_recovery",
+  "candidate_workaround": "Read NUL-framed porcelain bytes without global stripping, preserve both status columns, and whitelist the exact closeout scaffolding paths.",
+  "failure_signature": "The first closeout preflight stripped the leading status column from the first porcelain line and misclassified an allowed docs path as ocs, while also omitting new closeout scaffolding.",
+  "method_id": "V6512-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "exact_status_paths", "owner_scoped_closeout", "no_unexpected_files"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Parse git status --porcelain=v1 -z as raw records and slice paths only after preserving the fixed three-byte XY-space prefix.",
+  "retained_negative_ids": ["V6512-CLOSE-N07"],
+  "rollback": "Give the failed closeout build zero artifact credit, retain the parser fault, and write no closeout record until the exact observed set is proven allowed.",
+  "scope_boundary": "Owner-local closeout preflight recovery only; no sibling mutation, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Parse NUL-framed Git porcelain without stripping status columns",
+  "trigger_preconditions": ["Closeout begins with modified and untracked owner-scoped files that must be classified exactly."],
+  "validation_witness_ids": []
+}

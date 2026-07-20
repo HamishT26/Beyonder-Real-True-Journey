@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_cli_contract_recovery",
+  "candidate_workaround": "Inspect the bounded review entrypoint before invocation, then stage its required paths and run it with its actual no-argument contract.",
+  "failure_signature": "The closeout review script does not implement argparse; passing --help executed main and stopped at the missing-staged-path guard.",
+  "method_id": "V6512-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "exact_staged_review",
+    "no_partial_credit",
+    "owner_scoped_closeout"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect a phase-local entrypoint for an argument parser before using --help; when none exists, read the bounded main contract and invoke only after its preconditions hold.",
+  "retained_negative_ids": [
+    "V6512-CLOSE-N09"
+  ],
+  "rollback": "Give the rejected invocation zero review credit, retain the traceback, and stage nothing outside the exact owner paths.",
+  "scope_boundary": "Owner-local closeout review invocation recovery only; no manifest, seal, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Inspect phase-local CLI contracts before help probes",
+  "trigger_preconditions": [
+    "A phase-local Python entrypoint has not demonstrated an argparse help surface."
+  ],
+  "validation_witness_ids": []
+}

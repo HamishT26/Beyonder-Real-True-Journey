@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_explicit_test_discovery",
+  "candidate_workaround": "Expand the bounded test file list with Get-ChildItem, then search each exact LiteralPath for test methods.",
+  "failure_signature": "A read-only ripgrep command received an unexpanded Windows wildcard path and exited nonzero before counting source-phase tests.",
+  "method_id": "V6512-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "bounded_test_selection", "literal_windows_paths", "no_full_suite"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pass a Windows wildcard as a literal ripgrep path; enumerate the bounded files first and pass exact paths.",
+  "retained_negative_ids": ["V6512-CLOSE-N06"],
+  "rollback": "Give the wildcard probe zero discovery credit, retain its error, and do not broaden test selection to compensate.",
+  "scope_boundary": "Read-only bounded test discovery only; no full repository suite, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Enumerate exact Windows test paths before discovery",
+  "trigger_preconditions": ["A bounded test selection spans more than one Windows filename."],
+  "validation_witness_ids": []
+}

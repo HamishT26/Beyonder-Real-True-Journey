@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_privacy_classification_recovery",
+  "candidate_workaround": "Classify only exact scanner-definition lines and explicit sanitizer-negative assertions as definition candidates; keep every other match confirmed and fail closed.",
+  "failure_signature": "The first staged privacy review treated five scanner-definition and negative-assertion literals as payload hits and stopped before receipts.",
+  "method_id": "V6512-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "five_class_scanning",
+    "definition_candidate_visibility",
+    "zero_unclassified_hits"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "A privacy scanner may classify a candidate only when the exact line is a compiled pattern definition or an explicit rejecting assertion in a named test; never exclude a file or class wholesale.",
+  "retained_negative_ids": [
+    "V6512-CLOSE-N11"
+  ],
+  "rollback": "Give the failed staged review zero credit, retain all five candidates, and write no privacy or manifest receipt until exact classification yields zero unclassified hits.",
+  "scope_boundary": "Owner-local structural privacy classification only; no privacy-complete, security-complete, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Quarantine exact privacy scanner definitions without weakening payload scans",
+  "trigger_preconditions": [
+    "A five-class scanner reports its own compiled patterns or an explicit negative assertion as a candidate."
+  ],
+  "validation_witness_ids": []
+}

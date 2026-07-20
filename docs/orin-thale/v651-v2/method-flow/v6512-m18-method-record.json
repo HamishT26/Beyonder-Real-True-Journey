@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_idempotence_recovery",
+  "candidate_workaround": "Whitelist the exact declared closeout output paths as regenerable owner-local surfaces while retaining rejection of every undeclared path.",
+  "failure_signature": "The second closeout build rejected all artifacts written by the successful first build because its preflight allowed scaffolding but not its own exact output set.",
+  "method_id": "V6512-M18",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "exact_output_set",
+    "idempotent_generation",
+    "no_broad_allowlist"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "A regenerable builder must declare every exact output path in its preflight contract; never replace the list with a directory-wide wildcard.",
+  "retained_negative_ids": [
+    "V6512-CLOSE-N10"
+  ],
+  "rollback": "Give the rejected regeneration zero artifact credit, retain the exact unexpected-path list, and delete or mutate no prior artifact.",
+  "scope_boundary": "Owner-local closeout-generation idempotence only; no sibling mutation, manifest, seal, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Declare exact regenerable closeout outputs",
+  "trigger_preconditions": [
+    "A bounded owner-local generator may need to refresh its already generated outputs before staging."
+  ],
+  "validation_witness_ids": []
+}
