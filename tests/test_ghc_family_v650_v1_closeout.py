@@ -33,11 +33,11 @@ class V650V1CloseoutTests(unittest.TestCase):
     def test_truth_and_expanded_portfolios(self) -> None:
         receipt = load("closeout-receipt.json")
         self.assertEqual(receipt["outcomes"], {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(receipt["effective_negatives"], 5573)
+        self.assertEqual(receipt["effective_negatives"], 5577)
         self.assertEqual((receipt["effective_open_gaps"], receipt["effective_exact_gates"]), (43, 44))
         self.assertEqual((receipt["safe_completed"], receipt["candidate_completed"]), (40, 30))
         self.assertEqual((receipt["skills_completed"], receipt["runners_completed"], receipt["clean_refine_completed"]), (20, 10, 40))
-        self.assertEqual((receipt["method_fail_witnesses"], receipt["method_pass_witnesses"]), (22, 22))
+        self.assertEqual((receipt["method_fail_witnesses"], receipt["method_pass_witnesses"]), (26, 26))
         self.assertFalse(receipt["full_repository_suite_run"])
         self.assertEqual(receipt["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Keep the evidence validator byte-frozen, add a corrected final validator, and treat every manifest repository_path as already repository-relative across owner and evidence manifest domains.",
+  "failure_signature": "A static terminal preflight found that the evidence validator would prefix already repository-relative script and test manifest paths with the phase-doc directory, guaranteeing false mismatches.",
+  "method_id": "V6501-M23",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "manifest_domain",
+    "evidence_immutability",
+    "single_pass_budget",
+    "failure_retention"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep the evidence validator byte-frozen, add a corrected final validator, and treat every manifest repository_path as already repository-relative across owner and evidence manifest domains.",
+  "retained_negative_ids": [
+    "NEG-V6501-LIFECYCLE-001"
+  ],
+  "rollback": "Give the defective validator zero pass credit and retain the clean closeout head until an additive corrected validator exists.",
+  "scope_boundary": "Same-owner static preflight and additive recovery only; no canonical-pass, independent-reproduction, or authority credit.",
+  "supersedes": [],
+  "title": "Retain and correct repository-relative final manifest paths",
+  "trigger_preconditions": [
+    "A final manifest entry already contains a repository-relative script or test path."
+  ],
+  "validation_witness_ids": []
+}
