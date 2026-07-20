@@ -1,0 +1,22 @@
+# v651-v1 x2 outcome ledger
+
+- `V6511-P01` — `completed` — [surfaces/two-phase-commit/bounded-receipt.json](../surfaces/two-phase-commit/bounded-receipt.json).
+- `V6511-P02` — `completed` — [surfaces/dsse-envelope/bounded-receipt.json](../surfaces/dsse-envelope/bounded-receipt.json).
+- `V6511-P03` — `completed` — [surfaces/lee-wick-board/bounded-receipt.json](../surfaces/lee-wick-board/bounded-receipt.json).
+- `V6511-P04` — `completed` — [surfaces/worldline-board/bounded-receipt.json](../surfaces/worldline-board/bounded-receipt.json).
+- `V6511-P05` — `open_gap` — [surfaces/alma-zero-row/bounded-receipt.json](../surfaces/alma-zero-row/bounded-receipt.json).
+- `V6511-P06` — `represented` — [surfaces/baggage-reconciliation/bounded-receipt.json](../surfaces/baggage-reconciliation/bounded-receipt.json).
+- `V6511-P07` — `represented` — [surfaces/ground-deicing/bounded-receipt.json](../surfaces/ground-deicing/bounded-receipt.json).
+- `V6511-P08` — `represented` — [surfaces/openid-ciba/bounded-receipt.json](../surfaces/openid-ciba/bounded-receipt.json).
+- `V6511-P09` — `represented` — [surfaces/openid4vp-dcql/bounded-receipt.json](../surfaces/openid4vp-dcql/bounded-receipt.json).
+- `V6511-P10` — `exact_gate` — [surfaces/airport-authority/bounded-receipt.json](../surfaces/airport-authority/bounded-receipt.json).
+- `V6511-P11` — `completed` — [surfaces/pe-coff/bounded-receipt.json](../surfaces/pe-coff/bounded-receipt.json).
+- `V6511-P12` — `completed` — [surfaces/mach-o/bounded-receipt.json](../surfaces/mach-o/bounded-receipt.json).
+- `V6511-P13` — `completed` — [surfaces/accessible-swimlane/bounded-receipt.json](../surfaces/accessible-swimlane/bounded-receipt.json).
+- `V6511-P14` — `completed` — [surfaces/wien-nonconversion/bounded-receipt.json](../surfaces/wien-nonconversion/bounded-receipt.json).
+- `V6511-P15` — `completed` — [surfaces/gmres/bounded-receipt.json](../surfaces/gmres/bounded-receipt.json).
+- `V6511-P16` — `completed` — [surfaces/model-x-knockoff/bounded-receipt.json](../surfaces/model-x-knockoff/bounded-receipt.json).
+- `V6511-P17` — `completed` — [surfaces/openapi-3-2/bounded-receipt.json](../surfaces/openapi-3-2/bounded-receipt.json).
+- `V6511-P18` — `completed` — [surfaces/x509-path/bounded-receipt.json](../surfaces/x509-path/bounded-receipt.json).
+- `V6511-P19` — `completed` — [surfaces/uptane-2-1/bounded-receipt.json](../surfaces/uptane-2-1/bounded-receipt.json).
+- `V6511-P20` — `completed` — [surfaces/nix-derivation/bounded-receipt.json](../surfaces/nix-derivation/bounded-receipt.json).
