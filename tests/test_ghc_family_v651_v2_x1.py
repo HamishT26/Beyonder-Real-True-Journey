@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 import unittest
 from collections import Counter
@@ -59,8 +60,15 @@ class V651V2X1Tests(unittest.TestCase):
         self.assertFalse(truth["x2_started"])
         self.assertFalse(receipt["x2_artifacts_written"])
         self.assertFalse(receipt["observed_outcomes_written"])
-        self.assertFalse((ROOT / "surfaces").exists())
-        self.assertFalse((ROOT / "outcomes").exists())
+        x1 = "06c5545a79e992537b6307eb6a68e6d01204144d"
+        for relative in ("surfaces", "outcomes"):
+            result = subprocess.run(
+                ["git", "cat-file", "-e", f"{x1}:docs/orin-thale/v651-v2/{relative}"],
+                cwd=REPO,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            self.assertNotEqual(result.returncode, 0, relative)
 
     def test_portfolio_floors_are_frozen_without_credit(self):
         payload = load("portfolios/expanded-portfolio-plan.json")

@@ -2,9 +2,9 @@
 
 - Phase: v651-v2
 - Owner: Orin Thale
-- Methods: 8
-- Passing witnesses: 8
-- Failed witnesses retained: 8
+- Methods: 13
+- Passing witnesses: 13
+- Failed witnesses retained: 13
 
 ## Preferred methods
 
@@ -71,6 +71,46 @@
 - Recurrence guard: Set recovery acceptance minima from immutable pre-recovery evidence and test active lifecycle states separately from later promotion.
 - Rollback: Give the circular targeted assertion zero credit, retain M07 as candidate, and append no passing witness until a noncircular bounded check succeeds.
 - Witnesses: V6512-M08-WFAIL, V6512-M08-WPASS
+
+### V6512-M09 — Pin UTF-8 for official phase-skill validation
+
+- Trigger: An official Python skill tool reads UTF-8 package text on Windows.
+- Method: Pin PYTHONUTF8=1 for the official skill validator and keep every skill file encoded as UTF-8.
+- Recurrence guard: Set PYTHONUTF8=1 before every Windows invocation of the skill-creator validators or generators that read non-ASCII text.
+- Rollback: Give the CP1252 attempt zero skill-validation credit, retain the traceback classification, and change no skill semantics merely to fit a legacy code page.
+- Witnesses: V6512-M09-WFAIL, V6512-M09-WPASS
+
+### V6512-M10 — Run v651-v2 proposal groups before aggregate bounded validation
+
+- Trigger: The dedicated x1 freeze is pushed and four-way remote-equal, and x2 execution is authorized.
+- Method: Execute each frozen proposal group through its family-current runner, then run portfolios and aggregate current-phase validation only after every group witness passes.
+- Recurrence guard: Keep group runners small, emit one attributable witness per runner, and run the aggregate validator only after all prerequisite receipts exist.
+- Rollback: Stop at the first failing group or invalid Method Flow promotion, retain its output with zero aggregate credit, change no external state, and repair only the bounded workflow record.
+- Witnesses: V6512-M10-WPASS, V6512-M10-WFAIL
+
+### V6512-M11 — Bind historical x1 assertions to the immutable x1 commit
+
+- Trigger: A current or successor suite reuses tests that assert an earlier lifecycle state.
+- Method: Bind x1 absence assertions to the immutable x1 commit tree with read-only Git object checks instead of inspecting the live x2 worktree.
+- Recurrence guard: Every historical phase-state assertion must name and inspect its immutable commit or manifest; never infer prior state from a later live tree.
+- Rollback: Give the first 25-of-26 aggregate zero credit, retain the live-tree assumption, and change no x1 commit or x2 surface.
+- Witnesses: V6512-M11-WFAIL, V6512-M11-WPASS
+
+### V6512-M12 — Inspect exact file context before lifecycle repair patches
+
+- Trigger: A file may have been regenerated or its import and assertion context is not proven current.
+- Method: Read the exact bounded file context before applying a narrow patch and change only the verified import and assertion lines.
+- Recurrence guard: Inspect the exact local context after compaction or regeneration before constructing multi-file patches.
+- Rollback: Retain the rejected patch with zero edit credit, inspect the exact context read-only, and apply only the corrected bounded patch.
+- Witnesses: V6512-M12-WFAIL, V6512-M12-WPASS
+
+### V6512-M13 — Use literal separate probes for quote-bearing Windows searches
+
+- Trigger: A PowerShell search pattern contains alternation, embedded quotes, or shell-significant punctuation.
+- Method: Use separate literal Select-String probes for each known phrase instead of passing a quote-heavy alternation through PowerShell.
+- Recurrence guard: On Windows, use one literal pattern per probe for quote-bearing code and never interpret partial results from a nonzero search as a complete audit.
+- Rollback: Give the nonzero alternation zero complete-search credit, retain its partial matches, and rerun only bounded literal probes.
+- Witnesses: V6512-M13-WFAIL, V6512-M13-WPASS
 
 ## Retained boundary
 

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_literal_search_recovery",
+  "candidate_workaround": "Use separate literal Select-String probes for each known phrase instead of passing a quote-heavy alternation through PowerShell.",
+  "failure_signature": "A read-only ripgrep alternation returned two matches and then treated a shell-split fragment as a Windows filename, exiting nonzero.",
+  "method_id": "V6512-M13",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "literal_search", "read_only_diagnostics", "no_private_broad_scan"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "On Windows, use one literal pattern per probe for quote-bearing code and never interpret partial results from a nonzero search as a complete audit.",
+  "retained_negative_ids": ["V6512-X2-N05"],
+  "rollback": "Give the nonzero alternation zero complete-search credit, retain its partial matches, and rerun only bounded literal probes.",
+  "scope_boundary": "Owner-local read-only search recovery only; no repository, sibling, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use literal separate probes for quote-bearing Windows searches",
+  "trigger_preconditions": ["A PowerShell search pattern contains alternation, embedded quotes, or shell-significant punctuation."],
+  "validation_witness_ids": []
+}

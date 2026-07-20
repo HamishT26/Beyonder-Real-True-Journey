@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_utf8_validation_recovery",
+  "candidate_workaround": "Pin PYTHONUTF8=1 for the official skill validator and keep every skill file encoded as UTF-8.",
+  "failure_signature": "The first official quick_validate invocation inherited CP1252 and raised UnicodeDecodeError before validating the first UTF-8 skill package.",
+  "method_id": "V6512-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "utf8_integrity", "official_skill_validation", "no_global_install"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Set PYTHONUTF8=1 before every Windows invocation of the skill-creator validators or generators that read non-ASCII text.",
+  "retained_negative_ids": ["V6512-X2-N01"],
+  "rollback": "Give the CP1252 attempt zero skill-validation credit, retain the traceback classification, and change no skill semantics merely to fit a legacy code page.",
+  "scope_boundary": "Owner-local phase-skill validation recovery only; no global installation, subagent test, professional competence, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Pin UTF-8 for official phase-skill validation",
+  "trigger_preconditions": ["An official Python skill tool reads UTF-8 package text on Windows."],
+  "validation_witness_ids": []
+}

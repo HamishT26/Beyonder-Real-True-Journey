@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_group_runner_method",
+  "candidate_workaround": "Execute each frozen proposal group through its family-current runner, then run portfolios and aggregate current-phase validation only after every group witness passes.",
+  "failure_signature": "A proposal group, portfolio floor, mutation rejection, or aggregate current-phase check reports an issue or missing witness.",
+  "method_id": "V6512-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["x1_before_x2", "proposal_group_isolation", "mutation_retention", "portfolio_acceptance", "no_full_suite"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Keep group runners small, emit one attributable witness per runner, and run the aggregate validator only after all prerequisite receipts exist.",
+  "retained_negative_ids": ["V6512-X2-N02"],
+  "rollback": "Stop at the first failing group or invalid Method Flow promotion, retain its output with zero aggregate credit, change no external state, and repair only the bounded workflow record.",
+  "scope_boundary": "Owner-local proposal and portfolio orchestration only; no full repository suite, empirical, production, professional, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Run v651-v2 proposal groups before aggregate bounded validation",
+  "trigger_preconditions": ["The dedicated x1 freeze is pushed and four-way remote-equal, and x2 execution is authorized."],
+  "validation_witness_ids": []
+}

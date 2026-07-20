@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_patch_context_recovery",
+  "candidate_workaround": "Read the exact bounded file context before applying a narrow patch and change only the verified import and assertion lines.",
+  "failure_signature": "The first apply_patch request expected an import sequence that did not exist and was rejected with no file change.",
+  "method_id": "V6512-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "exact_patch_context", "owner_scoped_edits", "x1_commit_immutability"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect the exact local context after compaction or regeneration before constructing multi-file patches.",
+  "retained_negative_ids": ["V6512-X2-N04"],
+  "rollback": "Retain the rejected patch with zero edit credit, inspect the exact context read-only, and apply only the corrected bounded patch.",
+  "scope_boundary": "Owner-local patch-context recovery only; no sibling mutation, x1 rewrite, scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Inspect exact file context before lifecycle repair patches",
+  "trigger_preconditions": ["A file may have been regenerated or its import and assertion context is not proven current."],
+  "validation_witness_ids": []
+}
