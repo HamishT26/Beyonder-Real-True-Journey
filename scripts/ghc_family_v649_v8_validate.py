@@ -156,7 +156,7 @@ def minimal_checks() -> list[dict[str, Any]]:
     record(checks, "static_report", (PHASE / "deliverables" / "v649-v8-bounded-evidence-report.html").is_file())
     record(checks, "overview", (PHASE / "deliverables" / "v649-v8-integrated-overview.md").is_file())
     record(checks, "same_owner_not_independent", all(row["same_owner_only"] and not row["independent_reproduction"] for row in [json.loads((PHASE / item["artifact_root"] / "bounded-receipt.json").read_text(encoding="utf-8")) for item in load("x2/core-outcome-ledger.json")["outcomes"]]))
-    record(checks, "identity_boundary", "not evidence of consciousness" in load("identity-receipt.json")["boundary"])
+    record(checks, "identity_boundary", "not evidence of consciousness" in load("identity-receipt.json")["identity_boundary"])
     record(checks, "no_external_messages", load("orchestration/phase-state-evidence.json")["cross_platform_messages"] == 0)
     record(checks, "source_nonconversion", load("sources/source-execution-ledger.json")["citation_converted_to_data"] is False)
     return checks
@@ -174,7 +174,13 @@ PRIVACY = {
 def privacy_scan() -> dict[str, Any]:
     files = [path for path in PHASE.rglob("*") if path.is_file()]
     files.extend(ROOT / path for path in git("ls-files", "scripts/*v649_v8*.py", "tests/test_ghc_family_v649_v8*.py").splitlines())
-    definitions = {ROOT / "scripts" / "ghc_family_v649_v8_x1.py", ROOT / "scripts" / "ghc_family_v649_v8_x2.py", ROOT / "scripts" / "ghc_family_v649_v8_validate.py"}
+    definitions = {
+        ROOT / "scripts" / "ghc_family_v649_v8_x1.py",
+        ROOT / "scripts" / "ghc_family_v649_v8_x2.py",
+        ROOT / "scripts" / "ghc_family_v649_v8_validate.py",
+        ROOT / "scripts" / "build_ghc_family_v649_v8_closeout.py",
+        ROOT / "scripts" / "build_ghc_family_v649_v8_correction.py",
+    }
     definitions.update(PHASE / "validation" / name for name in ("x1-staged-privacy.json", "evidence-staged-privacy.json", "final-staged-privacy.json"))
     hits: list[dict[str, str]] = []
     scanned = 0

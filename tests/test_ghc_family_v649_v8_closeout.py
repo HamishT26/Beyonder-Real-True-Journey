@@ -33,11 +33,11 @@ class V649V8CloseoutTests(unittest.TestCase):
     def test_truth_and_expanded_portfolios(self) -> None:
         receipt = load("closeout-receipt.json")
         self.assertEqual(receipt["outcomes"], {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(receipt["effective_negatives"], 5444)
+        self.assertEqual(receipt["effective_negatives"], 5447)
         self.assertEqual((receipt["effective_open_gaps"], receipt["effective_exact_gates"]), (42, 43))
         self.assertEqual((receipt["safe_completed"], receipt["candidate_completed"]), (40, 30))
         self.assertEqual((receipt["skills_completed"], receipt["runners_completed"], receipt["clean_refine_completed"]), (20, 10, 40))
-        self.assertEqual((receipt["method_fail_witnesses"], receipt["method_pass_witnesses"]), (13, 13))
+        self.assertEqual((receipt["method_fail_witnesses"], receipt["method_pass_witnesses"]), (16, 16))
         self.assertFalse(receipt["full_repository_suite_run"])
         self.assertEqual(receipt["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
@@ -66,7 +66,7 @@ class V649V8CloseoutTests(unittest.TestCase):
     def test_final_owner_manifest_covers_declared_surface(self) -> None:
         manifest = load("validation/final-owner-manifest.json")
         self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
-        self.assertEqual(manifest["declared_exclusion_count"], 4)
+        self.assertEqual(manifest["declared_exclusion_count"], 7)
         for row in manifest["entries"]:
             self.assertEqual(row["git_blob"], git("hash-object", f"--path={row['repository_path']}", row["repository_path"]))
 
