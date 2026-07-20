@@ -2,9 +2,9 @@
 
 - Phase: v650-v8
 - Owner: Ilyra Fen
-- Methods: 12
-- Passing witnesses: 13
-- Failed witnesses retained: 14
+- Methods: 15
+- Passing witnesses: 17
+- Failed witnesses retained: 18
 
 ## Preferred methods
 
@@ -70,7 +70,7 @@
 - Method: Read the exact current function boundaries and split the update into small uniquely anchored patches.
 - Recurrence guard: Do not combine unrelated builder changes behind one long remembered context block.
 - Rollback: Treat the rejected patch as zero change and preserve the pre-patch file unchanged.
-- Witnesses: V6508-M08-WFAIL, V6508-M08-WPASS
+- Witnesses: V6508-M08-WFAIL, V6508-M08-WPASS, V6508-M08-WFAIL2, V6508-M08-WPASS2
 
 ### V6508-M09 — Inspect exact UTF-8 source bytes before patching rendered separators
 
@@ -103,6 +103,30 @@
 - Recurrence guard: Size manifest-refresh bounds to the measured owner surface rather than a generic short inspection timeout.
 - Rollback: Give partial refresh output zero parity credit and preserve all previously committed x1 and sibling state unchanged.
 - Witnesses: V6508-M12-WFAIL, V6508-M12-WPASS
+
+### V6508-M13 — Bind closeout prose to the exact frozen proposal schema
+
+- Trigger: Lifecycle prose is generated from proposal fields whose names may differ across phase schemas.
+- Method: Inspect the exact frozen proposal schema and use its current falsifier_or_acceptance_gate field in both overview and baton generation.
+- Recurrence guard: Read frozen proposal keys directly before reusing a field name from an earlier phase schema.
+- Rollback: Give the stopped build zero closeout credit and preserve the immutable evidence commit unchanged.
+- Witnesses: V6508-M13-WFAIL, V6508-M13-WPASS
+
+### V6508-M14 — Resolve the exact source-ledger path before schema inspection
+
+- Trigger: A generated phase ledger filename is remembered rather than read from the exact directory.
+- Method: List the exact bounded source directory, select the committed source ledger by its real name, and inspect only that file.
+- Recurrence guard: Resolve generated ledger filenames from the exact phase directory before opening them.
+- Rollback: Give the failed read zero schema credit and leave repository state unchanged.
+- Witnesses: V6508-M14-WFAIL, V6508-M14-WPASS
+
+### V6508-M15 — Classify final privacy candidates by exact reviewed path
+
+- Trigger: A final scan reports candidates outside its exact scanner-definition quarantine.
+- Method: Read only the generated candidate rows, quarantine exact scanner-definition or retained-policy files if justified, remove any genuine payload, and rerun all five unchanged pattern classes.
+- Recurrence guard: Expand privacy-definition quarantine only from exact reviewed candidate paths, never from directory-wide assumptions.
+- Rollback: Give the partial packet zero final or seal credit and retain the unchanged evidence commit as the last remote-equal anchor.
+- Witnesses: V6508-M15-WFAIL, V6508-M15-WPASS
 
 ## Retained boundary
 

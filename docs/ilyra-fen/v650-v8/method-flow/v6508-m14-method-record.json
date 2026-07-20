@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "List the exact bounded source directory, select the committed source ledger by its real name, and inspect only that file.",
+  "failure_signature": "A read-only source-schema probe assumed an absent generated ledger filename.",
+  "method_id": "V6508-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "bounded_read_scope", "source_schema", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve generated ledger filenames from the exact phase directory before opening them.",
+  "retained_negative_ids": ["NEG-V6508-X2-SOURCE-LEDGER-PATH-016"],
+  "rollback": "Give the failed read zero schema credit and leave repository state unchanged.",
+  "scope_boundary": "Owner-local source-schema inspection only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resolve the exact source-ledger path before schema inspection",
+  "trigger_preconditions": ["A generated phase ledger filename is remembered rather than read from the exact directory."],
+  "validation_witness_ids": []
+}
