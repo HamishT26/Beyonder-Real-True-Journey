@@ -64,9 +64,13 @@ class V649V7X1Tests(unittest.TestCase):
         self.assertFalse(negatives["negative_erased"])
 
     def test_method_flow_and_workflow(self):
-        summary = load("method-flow/method-flow-summary.json")
-        self.assertEqual(summary["counts"]["methods"], 9)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 9, "pass": 9})
+        ledger = load("method-flow/method-flow-ledger.json")
+        frozen_ids = {f"V6497-M{i:02d}" for i in range(1, 10)}
+        methods = [row for row in ledger["methods"] if row["method_id"] in frozen_ids]
+        witnesses = [row for row in ledger["witnesses"] if row["method_id"] in frozen_ids]
+        self.assertEqual(len(methods), 9)
+        self.assertEqual(sum(row["result"] == "fail" for row in witnesses), 9)
+        self.assertEqual(sum(row["result"] == "pass" for row in witnesses), 9)
         workflow = load("workflow/plan-refinement-receipt.json")
         self.assertTrue(workflow["valid"])
         self.assertEqual(workflow["assignment_count"], 90)

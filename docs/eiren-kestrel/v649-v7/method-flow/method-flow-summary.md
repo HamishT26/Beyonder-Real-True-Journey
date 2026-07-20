@@ -2,9 +2,9 @@
 
 - Phase: v649-gmut-thos-v7-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 9
-- Passing witnesses: 9
-- Failed witnesses retained: 9
+- Methods: 13
+- Passing witnesses: 13
+- Failed witnesses retained: 13
 
 ## Preferred methods
 
@@ -79,6 +79,38 @@
 - Recurrence guard: Select novelty neighbors with an explicit score key so tie resolution never compares dictionary payloads.
 - Rollback: Give the failed attempt zero credit; restore the last bounded state and use only attributable returned evidence.
 - Witnesses: V6497-M09-WFAIL, V6497-M09-WPASS
+
+### V6497-M10 — Retain and recover NEG-V6497-X2-001
+
+- Trigger: The bounded v649-v7 x2 generator exposes this exact failure signature.
+- Method: Permit exactly declared v649-v7 seed or partial-generation paths while refusing every unrelated path.
+- Recurrence guard: Permit exactly declared v649-v7 seed or partial-generation paths while refusing every unrelated path.
+- Rollback: Give the failed attempt zero credit, retain it, and restore the last immutable x1 state if the bounded repair fails.
+- Witnesses: V6497-M10-WFAIL, V6497-M10-WPASS
+
+### V6497-M11 — Retain and recover NEG-V6497-X2-002
+
+- Trigger: The bounded v649-v7 x2 generator exposes this exact failure signature.
+- Method: Emit ordinary dictionary literals in the non-format template, run the validator in isolation, and require a returned passing receipt before x2 credit.
+- Recurrence guard: Emit ordinary dictionary literals in the non-format template, run the validator in isolation, and require a returned passing receipt before x2 credit.
+- Rollback: Give the failed attempt zero credit, retain it, and restore the last immutable x1 state if the bounded repair fails.
+- Witnesses: V6497-M11-WFAIL, V6497-M11-WPASS
+
+### V6497-M12 — Retain and recover NEG-V6497-X2-003
+
+- Trigger: The bounded v649-v7 x2 generator exposes this exact failure signature.
+- Method: Check LASTEXITCODE immediately after every validation child and stop before running the next child when any test fails.
+- Recurrence guard: Check LASTEXITCODE immediately after every validation child and stop before running the next child when any test fails.
+- Rollback: Give the failed attempt zero credit, retain it, and restore the last immutable x1 state if the bounded repair fails.
+- Witnesses: V6497-M12-WFAIL, V6497-M12-WPASS
+
+### V6497-M13 — Retain and recover NEG-V6497-X2-004
+
+- Trigger: The bounded v649-v7 x2 generator exposes this exact failure signature.
+- Method: Parse status from the raw subprocess stdout without global strip and normalize each complete porcelain record independently.
+- Recurrence guard: Parse status from the raw subprocess stdout without global strip and normalize each complete porcelain record independently.
+- Rollback: Give the failed attempt zero credit, retain it, and restore the last immutable x1 state if the bounded repair fails.
+- Witnesses: V6497-M13-WFAIL, V6497-M13-WPASS
 
 ## Retained boundary
 
