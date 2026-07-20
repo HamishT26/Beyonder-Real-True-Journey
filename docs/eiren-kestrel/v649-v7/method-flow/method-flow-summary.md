@@ -2,9 +2,9 @@
 
 - Phase: v649-gmut-thos-v7-x1-x2
 - Owner: Eiren Kestrel
-- Methods: 13
-- Passing witnesses: 13
-- Failed witnesses retained: 13
+- Methods: 15
+- Passing witnesses: 14
+- Failed witnesses retained: 15
 
 ## Preferred methods
 
@@ -111,6 +111,14 @@
 - Recurrence guard: Parse status from the raw subprocess stdout without global strip and normalize each complete porcelain record independently.
 - Rollback: Give the failed attempt zero credit, retain it, and restore the last immutable x1 state if the bounded repair fails.
 - Witnesses: V6497-M13-WFAIL, V6497-M13-WPASS
+
+### V6497-M15 — Retain and recover V6497-M15
+
+- Trigger: The v649-v7 validation lifecycle exposes this exact failure.
+- Method: Resolve the exact class declaration from source before invoking the two historical test IDs.
+- Recurrence guard: Resolve the exact class declaration from source before invoking the two historical test IDs.
+- Rollback: Give the failed attempt zero pass credit and preserve the immutable evidence head.
+- Witnesses: V6497-M15-WFAIL, V6497-M15-WPASS
 
 ## Retained boundary
 
