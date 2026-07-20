@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "List the phase validation directory directly and treat manifest location as schema data rather than a conventional folder name.",
+  "failure_signature": "A post-review inventory assumed a manifests directory that this phase does not define, causing a path-not-found error after the valid staged review had completed.",
+  "method_id": "V6504-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "manifest_location_truth",
+    "staged_review_integrity",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read exact output paths from the phase review runner or list the existing validation directory; do not assume a generic manifests directory.",
+  "retained_negative_ids": [
+    "V6504-X2-N06"
+  ],
+  "rollback": "Give the failed directory probe zero inventory credit while preserving the already completed staged-review result separately.",
+  "scope_boundary": "Owner-local artifact inventory recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind manifest inventory to the phase-declared validation directory",
+  "trigger_preconditions": [
+    "A phase-local staged review writes manifests to a declared directory that differs from a generic convention."
+  ],
+  "validation_witness_ids": []
+}

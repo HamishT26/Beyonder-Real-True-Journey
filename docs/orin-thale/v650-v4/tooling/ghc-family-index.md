@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v650-v4
 
 Owner: **Orin Thale**
-Generated UTC: `2026-07-20T10:42:44.382871+00:00`
+Generated UTC: `2026-07-20T10:53:41.017816+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 351 | 17 | 1279 | 17 |
+| Repository scripts | 351 | 17 | 1291 | 17 |
 | Local skills | 115 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

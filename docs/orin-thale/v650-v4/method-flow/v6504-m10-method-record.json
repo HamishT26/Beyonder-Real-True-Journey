@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use the advertised record and witness subcommands after reading their exact help, instead of assuming add-method and add-witness aliases.",
+  "failure_signature": "A help probe assumed nonexistent add-method and add-witness subcommands; argparse rejected both choices.",
+  "method_id": "V6504-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "method_flow_append_only",
+    "runner_subcommand_integrity",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use the top-level advertised command list, then read help for record and witness before composing a mutation command.",
+  "retained_negative_ids": [
+    "V6504-X2-N05"
+  ],
+  "rollback": "Give both rejected subcommand probes zero workflow credit and retain them before using the advertised commands.",
+  "scope_boundary": "Method Flow CLI discovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Discover Method Flow mutation subcommands from current help",
+  "trigger_preconditions": [
+    "A Method Flow mutation command is being composed without current subcommand help."
+  ],
+  "validation_witness_ids": []
+}

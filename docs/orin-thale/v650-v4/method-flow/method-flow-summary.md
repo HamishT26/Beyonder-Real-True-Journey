@@ -2,9 +2,9 @@
 
 - Phase: v650-v4
 - Owner: Orin Thale
-- Methods: 5
-- Passing witnesses: 5
-- Failed witnesses retained: 5
+- Methods: 11
+- Passing witnesses: 11
+- Failed witnesses retained: 11
 
 ## Preferred methods
 
@@ -47,6 +47,54 @@
 - Recurrence guard: Batch quadratic lexical scans and require an exact candidate count in the receipt.
 - Rollback: Give the failed attempt no proof credit, retain it, and rely only on a bounded passing witness.
 - Witnesses: V6504-M05-WFAIL, V6504-M05-WPASS
+
+### V6504-M06 — Recover the skill-creator helper contract without erasing the failed probe
+
+- Trigger: A phase-local skill build needs the official initializer, metadata generator, and quick validator.
+- Method: Invoke the initializer and metadata generator with their documented arguments, then call quick_validate only with an actual initialized skill directory.
+- Recurrence guard: Do not assume sibling helper scripts expose a uniform argparse help surface; use each documented invocation contract.
+- Rollback: Give the failed probe zero validation credit, retain it, and do not modify global skills.
+- Witnesses: V6504-M06-WFAIL, V6504-M06-WPASS
+
+### V6504-M07 — Bind historical x1 assertions to immutable Git blobs
+
+- Trigger: A successor phase mutates lifecycle companions that had earlier x1 states.
+- Method: Bind lifecycle-specific x1 assertions to exact Git blobs from the immutable x1 commit while leaving successor-state assertions on the current tree.
+- Recurrence guard: Historical lifecycle assertions must name the immutable commit and path; never infer x1 state from a successor working tree.
+- Rollback: Give the failed aggregate zero pass credit, preserve its three failures, and do not broaden the test selection.
+- Witnesses: V6504-M07-WFAIL, V6504-M07-WPASS
+
+### V6504-M08 — Replace lifecycle-fragile Method Flow totals with append-only invariants
+
+- Trigger: A retained recovery appends a method after an earlier evidence-boundary count was asserted.
+- Method: Assert Method Flow schema invariants, matching fail/pass totals after recovery, required method IDs, and preferred states instead of freezing a mutable lifecycle count in a successor test.
+- Recurrence guard: Use append-only ledger invariants and required identifiers for successor tests; bind exact historical counts only to immutable commit blobs.
+- Rollback: Give the second failed aggregate zero pass credit, retain its one failure, and do not delete a method to satisfy the old assertion.
+- Witnesses: V6504-M08-WFAIL, V6504-M08-WPASS
+
+### V6504-M09 — Bind Method Flow validation to the documented ledger option
+
+- Trigger: A Method Flow validate or summarize invocation is being composed from memory rather than current help output.
+- Method: Use the runner's documented --ledger option for validate and summarize, and supply explicit receipt paths where required.
+- Recurrence guard: Read the exact subcommand help and use --ledger rather than transferring option names from another runner.
+- Rollback: Give the rejected invocation zero validation credit and retain its parser output before retrying with the documented option.
+- Witnesses: V6504-M09-WFAIL, V6504-M09-WPASS
+
+### V6504-M10 — Discover Method Flow mutation subcommands from current help
+
+- Trigger: A Method Flow mutation command is being composed without current subcommand help.
+- Method: Use the advertised record and witness subcommands after reading their exact help, instead of assuming add-method and add-witness aliases.
+- Recurrence guard: Use the top-level advertised command list, then read help for record and witness before composing a mutation command.
+- Rollback: Give both rejected subcommand probes zero workflow credit and retain them before using the advertised commands.
+- Witnesses: V6504-M10-WFAIL, V6504-M10-WPASS
+
+### V6504-M11 — Bind manifest inventory to the phase-declared validation directory
+
+- Trigger: A phase-local staged review writes manifests to a declared directory that differs from a generic convention.
+- Method: List the phase validation directory directly and treat manifest location as schema data rather than a conventional folder name.
+- Recurrence guard: Read exact output paths from the phase review runner or list the existing validation directory; do not assume a generic manifests directory.
+- Rollback: Give the failed directory probe zero inventory credit while preserving the already completed staged-review result separately.
+- Witnesses: V6504-M11-WFAIL, V6504-M11-WPASS
 
 ## Retained boundary
 

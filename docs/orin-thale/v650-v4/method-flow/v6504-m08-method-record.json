@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assert Method Flow schema invariants, matching fail/pass totals after recovery, required method IDs, and preferred states instead of freezing a mutable lifecycle count in a successor test.",
+  "failure_signature": "The second 22-test evidence aggregate passed the corrected immutable x1 checks but failed one x2 assertion that still hard-coded six Method Flow methods after the seventh retained recovery was added.",
+  "method_id": "V6504-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failed_aggregate_retention",
+    "method_flow_append_only",
+    "lifecycle_count_truth",
+    "test_scope_integrity"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use append-only ledger invariants and required identifiers for successor tests; bind exact historical counts only to immutable commit blobs.",
+  "retained_negative_ids": [
+    "V6504-X2-N03"
+  ],
+  "rollback": "Give the second failed aggregate zero pass credit, retain its one failure, and do not delete a method to satisfy the old assertion.",
+  "scope_boundary": "Method Flow lifecycle-test correction only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Replace lifecycle-fragile Method Flow totals with append-only invariants",
+  "trigger_preconditions": [
+    "A retained recovery appends a method after an earlier evidence-boundary count was asserted."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use the runner's documented --ledger option for validate and summarize, and supply explicit receipt paths where required.",
+  "failure_signature": "The first Method Flow validation retry used an unsupported --state-file option, so argparse stopped before reading the ledger.",
+  "method_id": "V6504-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "method_flow_schema",
+    "runner_argument_integrity",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Read the exact subcommand help and use --ledger rather than transferring option names from another runner.",
+  "retained_negative_ids": [
+    "V6504-X2-N04"
+  ],
+  "rollback": "Give the rejected invocation zero validation credit and retain its parser output before retrying with the documented option.",
+  "scope_boundary": "Method Flow CLI recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind Method Flow validation to the documented ledger option",
+  "trigger_preconditions": [
+    "A Method Flow validate or summarize invocation is being composed from memory rather than current help output."
+  ],
+  "validation_witness_ids": []
+}
