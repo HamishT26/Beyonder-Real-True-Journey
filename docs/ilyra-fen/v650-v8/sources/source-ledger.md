@@ -1,0 +1,56 @@
+# v650-v8 source ledger
+
+- **SRC-RAFT** - `stable` - [In Search of an Understandable Consensus Algorithm](https://www.usenix.org/conference/atc14/technical-sessions/presentation/ongaro)
+  - Supports bounded joint-consensus state fixtures only; no production distributed-system assurance.
+- **SRC-CRDT** - `stable` - [Conflict-free Replicated Data Types](https://inria.hal.science/inria-00609399)
+  - Supports bounded observed-remove set semantics only; no production replication assurance.
+- **SRC-KADANOFF-BAYM** - `stable` - [Conservation Laws and Correlation Functions](https://doi.org/10.1103/PhysRev.124.287)
+  - Supports typed nonequilibrium obligations only; no physical state, prediction, or empirical result.
+- **SRC-BETHE-SALPETER** - `stable` - [A Relativistic Equation for Bound-State Problems](https://doi.org/10.1103/PhysRev.84.1232)
+  - Supports typed four-point obligations only; no bound state, spectrum, or physical confirmation.
+- **SRC-NUSTAR-NUMASTER** - `current` - [NASA HEASARC NuSTAR Master Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/nustar/numaster.html)
+  - Supports a zero-row readiness contract only; no query, download, or ingestion occurs.
+- **SRC-NHS-HTM02** - `stable` - [NHS HTM 02-01 Medical gas pipeline systems Part A](https://www.england.nhs.uk/wp-content/uploads/2021/05/HTM_02-01_Part_A.pdf)
+  - Supplies synthetic workflow vocabulary only; it confers no New Zealand professional, facility, or legal authority.
+- **SRC-NZ-NGA-PAEREWA** - `current` - [Sector Guidance for Nga Paerewa Health and Disability Services Standard](https://www.health.govt.nz/publications/sector-guidance-for-nga-paerewa-health-and-disability-services-standard-nzs-81342021)
+  - Supports synthetic reusable-device reprocessing states only; no clinical, release, or audit authority.
+- **SRC-CDC-DISINFECTION** - `current` - [CDC Guideline for Disinfection and Sterilization in Healthcare Facilities](https://www.cdc.gov/infection-control/hcp/disinfection-sterilization/index.html)
+  - Supports bounded terminology only; no real load release, recall, or safety result.
+- **SRC-RFC8725** - `stable` - [RFC 8725 JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html)
+  - Supports synthetic validation vectors only; no real keys, tokens, accounts, or security review.
+- **SRC-RFC7517** - `stable` - [RFC 7517 JSON Web Key](https://www.rfc-editor.org/rfc/rfc7517.html)
+  - Supports synthetic JWK vectors only; no real keys, rotation, resolution, or interoperability.
+- **SRC-HIPC** - `current` - [Health Information Privacy Code 2020 as at 1 May 2026](https://www.privacy.org.nz/privacy-principles/codes-of-practice/hipc2020/)
+  - Keeps privacy compliance and legal interpretation exact-gated.
+- **SRC-HDC-CODE** - `current` - [Code of Health and Disability Services Consumers' Rights](https://www.legislation.govt.nz/regulation/public/1996/0078/latest/whole.html)
+  - Keeps consumer-rights interpretation, remedy, and authority exact-gated.
+- **SRC-TE-MANA-RARAUNGA** - `current` - [Te Mana Raraunga principles of Maori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Maori data governance under Maori authority; repository software cannot exercise it.
+- **SRC-ELF-GABI** - `stable` - [System V ABI ELF object-file format](https://gabi.xinuos.com/elf/)
+  - Supports disposable synthetic ELF fixtures only; no execution or production binary assurance.
+- **SRC-RFC9846** - `current` - [RFC 9846 The Transport Layer Security Protocol Version 1.3](https://www.rfc-editor.org/rfc/rfc9846.html)
+  - Supports bounded structural fixtures only; no cryptographic implementation or security certification.
+- **SRC-RFC8446-OBSOLETE** - `watch` - [RFC 8446 TLS 1.3 status page](https://www.rfc-editor.org/info/rfc8446)
+  - Records that RFC 8446 is obsolete and prevents stale-current promotion.
+- **SRC-WAI-DIALOG** - `current` - [WAI-ARIA Authoring Practices modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+  - Supports structural checks only; manual and affected-user evaluation remains reserved.
+- **SRC-WCAG22** - `stable` - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural obligations only, not complete accessibility conformance.
+- **SRC-IUPAC-AFFINITY** - `current` - [IUPAC Gold Book affinity of reaction](https://goldbook.iupac.org/terms/view/A00178)
+  - Supports thermodynamic definitions only, never psyche, agency, morality, or justice conversion.
+- **SRC-BROYDEN** - `stable` - [A Class of Methods for Solving Nonlinear Simultaneous Equations](https://doi.org/10.1090/S0025-5718-1965-0198670-6)
+  - Supports bounded numerical fixtures only; no general convergence or physical-model guarantee.
+- **SRC-DML** - `stable` - [Double/debiased machine learning for treatment and structural parameters](https://doi.org/10.1111/ectj.12097)
+  - Supports design obligations only; no participant effect or Stage 20 authority.
+- **SRC-GRAPHQL-2025** - `current` - [GraphQL September 2025 Edition](https://spec.graphql.org/September2025/)
+  - Supports bounded document fixtures only; no server execution or production assurance.
+- **SRC-GRAPHQL-DRAFT** - `watch` - [GraphQL working draft](https://spec.graphql.org/draft/)
+  - Tracks post-release drift without promoting draft text to a released specification.
+- **SRC-GIT-FAST-IMPORT** - `current` - [Git fast-import documentation](https://git-scm.com/docs/git-fast-import)
+  - Supports pure stream-shape fixtures only; the tribunal invokes no Git importer and updates no ref.
+- **SRC-OTLP** - `current` - [OpenTelemetry Protocol Specification 1.10.0](https://opentelemetry.io/docs/specs/otlp/)
+  - Supports synthetic trace, metric, and log envelopes only; no network export or production telemetry assurance.
+- **SRC-OTLP-PROFILES-WATCH** - `watch` - [OTLP profiles signal development status](https://opentelemetry.io/docs/specs/otlp/)
+  - Keeps the profiles signal visibly non-stable and outside completed scope.
+- **SRC-CYCLONEDX17** - `current` - [CycloneDX 1.7 specification overview](https://cyclonedx.org/specification/overview/)
+  - Supports bounded synthetic BOM fixtures only; no supply-chain truth or certification.

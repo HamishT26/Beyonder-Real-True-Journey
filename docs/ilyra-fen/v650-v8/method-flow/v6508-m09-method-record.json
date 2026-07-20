@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Patch non-Unicode fields independently, then inspect exact source bytes before replacing the two rendered separator literals.",
+  "failure_signature": "A follow-up combined patch used console-rendered mojibake for an em dash, so the verifier rejected the complete patch and applied no hunk.",
+  "method_id": "V6508-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "utf8_integrity", "exact_patch_scope", "evidence_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not use console-rendered mojibake as patch context for UTF-8 source.",
+  "retained_negative_ids": ["NEG-V6508-X1-UNICODE-PATCH-CONTEXT-009"],
+  "rollback": "Treat the rejected patch as zero change and preserve the UTF-8 source unchanged.",
+  "scope_boundary": "Owner-local UTF-8 source editing only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Inspect exact UTF-8 source bytes before patching rendered separators",
+  "trigger_preconditions": ["Console rendering differs from the UTF-8 code points stored in a source literal."],
+  "validation_witness_ids": []
+}

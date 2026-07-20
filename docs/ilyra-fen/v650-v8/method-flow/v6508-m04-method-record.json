@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Materialize foreach output in an explicit array before piping or serializing it.",
+  "failure_signature": "PowerShell 5.1 rejected a direct pipeline after a statement-level foreach block before the manifest rows were formed.",
+  "method_id": "V6508-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_read_scope",
+    "x1_source_integrity",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never pipe directly from a statement-level foreach block in Windows PowerShell 5.1.",
+  "retained_negative_ids": [
+    "NEG-V6508-X1-FOREACH-PIPE-PARSE-004"
+  ],
+  "rollback": "Give the failed operation zero pass credit, preserve its negative, and leave source, sibling, external, participant, production, and authority state unchanged.",
+  "scope_boundary": "Owner-local startup and x1 workflow recovery only; no scientific, production, professional, legal, cultural, Maori-authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Recover from PowerShell foreach pipeline parse without erasing the failed witness",
+  "trigger_preconditions": [
+    "PowerShell foreach pipeline parse"
+  ],
+  "validation_witness_ids": []
+}

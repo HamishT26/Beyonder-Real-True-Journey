@@ -1,0 +1,82 @@
+{
+  "boundary": "Counts preserve source and current workflow negatives; a later pass never converts a failure into a pass.",
+  "effective_after_x1": 6320,
+  "inherited_effective": 6311,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v650-v8.retained-negatives.x1.v1",
+  "x1_operational": [
+    {
+      "category": "combined broad Git preflight timeout",
+      "failed": "A combined branch, ref, worktree, and status preflight exceeded its bound without a complete attributable result.",
+      "negative_id": "NEG-V6508-X1-BROAD-PREFLIGHT-TIMEOUT-001",
+      "passing": "The split probes established exact source equality, ancestry, clean state, and Ilyra lane eligibility.",
+      "recovery": "Split branch, live-ref, worktree, ancestry, and status checks into independently bounded probes.",
+      "recurrence_guard": "Never combine broad branch, ref, worktree, and status discovery under one short wrapper."
+    },
+    {
+      "category": "native output early-close failure",
+      "failed": "Piping git show into an early-terminating consumer closed native output and returned nonzero before the committed baton was fully read.",
+      "negative_id": "NEG-V6508-X1-GIT-SHOW-EARLY-CLOSE-002",
+      "passing": "The committed activation baton was read completely to EOF before any mutation.",
+      "recovery": "Consume the complete immutable blob first and then slice the in-memory text for inspection.",
+      "recurrence_guard": "Do not pipe native Git blob output to an early-closing consumer when complete-read evidence is required."
+    },
+    {
+      "category": "short-bound Git diff timeout",
+      "failed": "A short-bound git diff --quiet probe timed out and earned no clean-state credit.",
+      "negative_id": "NEG-V6508-X1-DIFF-QUIET-TIMEOUT-003",
+      "passing": "Both tracked and untracked source-state probes returned clean.",
+      "recovery": "Use explicit tracked-status and untracked-count probes with a wider bounded wrapper.",
+      "recurrence_guard": "Use attributable status probes instead of a short silent diff wrapper on a large Windows worktree."
+    },
+    {
+      "category": "PowerShell foreach pipeline parse",
+      "failed": "PowerShell 5.1 rejected a direct pipeline after a statement-level foreach block before the manifest rows were formed.",
+      "negative_id": "NEG-V6508-X1-FOREACH-PIPE-PARSE-004",
+      "passing": "The explicit-array manifest inspection returned complete attributable rows.",
+      "recovery": "Materialize foreach output in an explicit array before piping or serializing it.",
+      "recurrence_guard": "Never pipe directly from a statement-level foreach block in Windows PowerShell 5.1."
+    },
+    {
+      "category": "bounded search early-close failure",
+      "failed": "A broad ripgrep stream piped to an early-closing consumer returned nonzero before the intended source set was attributable.",
+      "negative_id": "NEG-V6508-X1-RG-EARLY-CLOSE-005",
+      "passing": "Exact source and prior-proposal files supplied the required novelty and schema evidence.",
+      "recovery": "Read exact files and bounded result sets without prematurely closing the producer.",
+      "recurrence_guard": "Do not grant search credit when an early consumer termination makes producer completion ambiguous."
+    },
+    {
+      "category": "owner-manifest coverage scope error",
+      "failed": "The first owner coverage check incorrectly limited source-to-final changed paths to the predecessor documentation tree.",
+      "negative_id": "NEG-V6508-X1-OWNER-COVERAGE-SCOPE-006",
+      "passing": "The corrected full-tree check proved exact 326-path coverage with 321 entries and five exclusions.",
+      "recovery": "Compare the immutable source-to-final path set across documentation, scripts, and tests against the declared owner manifest and exclusions.",
+      "recurrence_guard": "Define owner coverage from the exact Git change set, never from one assumed subtree."
+    },
+    {
+      "category": "stale Method Flow subcommand names",
+      "failed": "The current runner rejected remembered add-method and add-witness subcommands after printing the valid command set.",
+      "negative_id": "NEG-V6508-X1-METHOD-CLI-SUBCOMMAND-007",
+      "passing": "The exact current CLI help exposed the valid record, witness, and state-transition contracts.",
+      "recovery": "Inspect the installed record, witness, and set-state help and use only those exact subcommands.",
+      "recurrence_guard": "Treat remembered local-runner subcommands as unverified until current --help confirms them."
+    },
+    {
+      "category": "broad builder patch context mismatch",
+      "failed": "A large preregistration-builder patch assumed one stale overview heading, so the patch verifier rejected the complete patch and changed no file.",
+      "negative_id": "NEG-V6508-X1-BUILDER-PATCH-CONTEXT-008",
+      "passing": "The exact-boundary patches updated only the intended predecessor path, overview, tests, and route fields.",
+      "recovery": "Read the exact current function boundaries and split the update into small uniquely anchored patches.",
+      "recurrence_guard": "Do not combine unrelated builder changes behind one long remembered context block."
+    },
+    {
+      "category": "Unicode patch-context rendering mismatch",
+      "failed": "A follow-up combined patch used console-rendered mojibake for an em dash, so the verifier rejected the complete patch and applied no hunk.",
+      "negative_id": "NEG-V6508-X1-UNICODE-PATCH-CONTEXT-009",
+      "passing": "The narrow field patches applied, and exact source-byte handling replaced only the two separator literals.",
+      "recovery": "Patch non-Unicode fields independently, then inspect exact source bytes before replacing the two rendered separator literals.",
+      "recurrence_guard": "Do not use console-rendered mojibake as patch context for UTF-8 source."
+    }
+  ],
+  "x1_operational_count": 9
+}

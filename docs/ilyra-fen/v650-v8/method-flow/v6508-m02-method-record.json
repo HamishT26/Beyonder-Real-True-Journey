@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Consume the complete immutable blob first and then slice the in-memory text for inspection.",
+  "failure_signature": "Piping git show into an early-terminating consumer closed native output and returned nonzero before the committed baton was fully read.",
+  "method_id": "V6508-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_read_scope",
+    "x1_source_integrity",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not pipe native Git blob output to an early-closing consumer when complete-read evidence is required.",
+  "retained_negative_ids": [
+    "NEG-V6508-X1-GIT-SHOW-EARLY-CLOSE-002"
+  ],
+  "rollback": "Give the failed operation zero pass credit, preserve its negative, and leave source, sibling, external, participant, production, and authority state unchanged.",
+  "scope_boundary": "Owner-local startup and x1 workflow recovery only; no scientific, production, professional, legal, cultural, Maori-authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Recover from native output early-close failure without erasing the failed witness",
+  "trigger_preconditions": [
+    "native output early-close failure"
+  ],
+  "validation_witness_ids": []
+}
