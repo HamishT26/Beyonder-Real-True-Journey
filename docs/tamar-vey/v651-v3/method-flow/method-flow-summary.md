@@ -2,9 +2,9 @@
 
 - Phase: v651-v3
 - Owner: Tamar Vey
-- Methods: 26
-- Passing witnesses: 26
-- Failed witnesses retained: 26
+- Methods: 29
+- Passing witnesses: 29
+- Failed witnesses retained: 29
 
 ## Preferred methods
 
@@ -215,6 +215,30 @@
 - Recurrence guard: Use ripgrep glob options for Windows filename filtering; do not pass unexpanded wildcard paths.
 - Rollback: Give the invalid-path wrapper zero aggregate review credit and rerun one bounded root-scoped query.
 - Witnesses: V6513-M26-WFAIL, V6513-M26-WPASS
+
+### V6513-M27 — Use scalar commit and equality probes after overlarge summaries
+
+- Trigger: A successful commit wrapper emits an overlarge file listing that truncates its supervising response.
+- Method: After an overlarge commit-summary response, read only the exact commit head and parent, then prove push and four-way equality with bounded scalar probes.
+- Recurrence guard: Do not request whole-commit file listings when exact head, parent, push, and equality scalars are sufficient.
+- Rollback: Give the truncated summary zero presentation credit; never recommit or repush until exact state is audited.
+- Witnesses: V6513-M27-WFAIL, V6513-M27-WPASS
+
+### V6513-M28 — Quarantine exact sanitizer-negative assertions without weakening payload scans
+
+- Trigger: A five-class scanner matches a forbidden literal inside an explicit negative assertion in a named validation test.
+- Method: Classify only exact assertNotIn sanitizer-negative lines in the named closeout test while leaving every other five-class match confirmed and fail-closed.
+- Recurrence guard: Quarantine only exact scanner definitions or explicit negative assertions; never exclude a file or pattern class wholesale.
+- Rollback: Give the failed staged review zero credit and write no seal manifest until the corrected exact classification returns zero confirmed hits.
+- Witnesses: V6513-M28-WFAIL, V6513-M28-WPASS
+
+### V6513-M29 — Use explicit PowerShell path arrays for stale-count review
+
+- Trigger: A Windows review must search several exact final artifact locations.
+- Method: Pass an explicit PowerShell path array to ripgrep instead of using Bash-style brace expansion.
+- Recurrence guard: Use explicit PowerShell arrays for multiple directories; never assume Bash brace syntax.
+- Rollback: Give the parser-failed probe zero review credit and perform no content change until the corrected query completes.
+- Witnesses: V6513-M29-WFAIL, V6513-M29-WPASS
 
 ## Retained boundary
 

@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_validation",
+  "candidate_workaround": "Classify only exact assertNotIn sanitizer-negative lines in the named closeout test while leaving every other five-class match confirmed and fail-closed.",
+  "failure_signature": "The first final staged scan reported two explicit sanitizer-negative assertion literals as confirmed payload hits.",
+  "method_id": "V6513-M28",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "five_class_scan", "exact_line_classification", "no_whole_file_exclusion", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Quarantine only exact scanner definitions or explicit negative assertions; never exclude a file or pattern class wholesale.",
+  "retained_negative_ids": ["V6513-CLOSE-N02"],
+  "rollback": "Give the failed staged review zero credit and write no seal manifest until the corrected exact classification returns zero confirmed hits.",
+  "scope_boundary": "Owner-local structural privacy classification only; no privacy-complete, security-complete, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Quarantine exact sanitizer-negative assertions without weakening payload scans",
+  "trigger_preconditions": ["A five-class scanner matches a forbidden literal inside an explicit negative assertion in a named validation test."],
+  "validation_witness_ids": []
+}

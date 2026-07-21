@@ -1,4 +1,5 @@
 import json
+import subprocess
 import sys
 import unittest
 from collections import Counter
@@ -13,10 +14,23 @@ import ghc_family_v651_v3_phase_data as d
 import ghc_family_v651_v3_runtime as runtime
 
 ROOT = REPO / d.PHASE_ROOT
+EVIDENCE = "449f3a29402459a66838cbf1cc8a3b110c145162"
 
 
 def load(relative: str):
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+
+def load_at_evidence(relative: str):
+    completed = subprocess.run(
+        ["git", "show", f"{EVIDENCE}:{d.PHASE_ROOT}/{relative}"],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return json.loads(completed.stdout)
 
 
 class TamarV651V3X2Tests(unittest.TestCase):
@@ -127,32 +141,32 @@ class TamarV651V3X2Tests(unittest.TestCase):
         self.assertTrue(receipt["valid"])
 
     def test_negatives_and_authority_gates_are_preserved(self):
-        negatives = load("truth/x2-retained-negative-register.json")
+        negatives = load_at_evidence("truth/x2-retained-negative-register.json")
         self.assertEqual(negatives["inherited_sealed_and_external"], 6690)
         self.assertEqual(negatives["x1_operational"], 14)
         self.assertEqual(negatives["x2_operational"], 12)
         self.assertEqual(negatives["preregistered_synthetic_rejections"], 100)
         self.assertEqual(negatives["effective_count"], 6816)
         self.assertEqual(negatives["erasures"], 0)
-        self.assertEqual(load("truth/x2-open-gap-register.json")["current_effective_count"], 53)
-        self.assertEqual(load("truth/x2-exact-gate-register.json")["current_effective_count"], 54)
+        self.assertEqual(load_at_evidence("truth/x2-open-gap-register.json")["current_effective_count"], 53)
+        self.assertEqual(load_at_evidence("truth/x2-exact-gate-register.json")["current_effective_count"], 54)
 
     def test_method_flow_retains_failures_and_passing_witnesses(self):
-        summary = load("method-flow/method-flow-summary.json")
+        summary = load_at_evidence("method-flow/method-flow-summary.json")
         self.assertTrue(summary["valid"])
         self.assertEqual(summary["counts"]["methods"], 26)
         self.assertEqual(summary["counts"]["witness_results"], {"fail": 26, "pass": 26})
         self.assertEqual(summary["counts"]["states"]["preferred"], 26)
 
     def test_truth_route_and_reproduction_boundaries_remain_closed(self):
-        truth = load("truth/evidence-phase-truth.json")
+        truth = load_at_evidence("truth/evidence-phase-truth.json")
         self.assertEqual(truth["outcomes"], {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1})
         self.assertEqual(truth["effective_negatives"], 6816)
         self.assertFalse(truth["full_repository_suite_run"])
         self.assertFalse(truth["canonical_final_pass_run"])
         self.assertFalse(truth["independent_reproduction"])
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
-        route = load("orchestration/evidence-state.json")
+        route = load_at_evidence("orchestration/evidence-state.json")
         self.assertEqual(route["route_state"], "held_until_exact_final")
         self.assertEqual(route["siblings_contacted"], 0)
 

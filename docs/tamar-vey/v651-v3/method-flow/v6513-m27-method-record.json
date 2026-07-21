@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "After an overlarge commit-summary response, read only the exact commit head and parent, then prove push and four-way equality with bounded scalar probes.",
+  "failure_signature": "The evidence commit succeeded, but a combined commit and stat summary exceeded the supervising output budget.",
+  "method_id": "V6513-M27",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "exact_commit_identity", "remote_equality", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not request whole-commit file listings when exact head, parent, push, and equality scalars are sufficient.",
+  "retained_negative_ids": ["V6513-CLOSE-N01"],
+  "rollback": "Give the truncated summary zero presentation credit; never recommit or repush until exact state is audited.",
+  "scope_boundary": "Owner-lane evidence-commit recovery only; no content, scientific, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use scalar commit and equality probes after overlarge summaries",
+  "trigger_preconditions": ["A successful commit wrapper emits an overlarge file listing that truncates its supervising response."],
+  "validation_witness_ids": []
+}
