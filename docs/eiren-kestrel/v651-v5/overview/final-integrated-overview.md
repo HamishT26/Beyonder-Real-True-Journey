@@ -2,9 +2,9 @@
 
 ## Outcome first
 
-Eiren v651-v5 closes as bounded owner-scoped evidence with fourteen `completed`, four `represented`, one `open_gap`, and one `exact_gate` outcomes. The combined closeout and seal preserves 7,080 effective negatives, 55 effective open gaps, 56 effective exact gates, 32 paired Method Flow recoveries, and `NOT_READY_FOR_STAGE_20`. Recovery erased no failure and broadened no evidence credit.
+Eiren v651-v5 closes as bounded owner-scoped evidence with fourteen `completed`, four `represented`, one `open_gap`, and one `exact_gate` outcomes. The combined closeout and seal preserves 7,086 effective negatives, 55 effective open gaps, 56 effective exact gates, 38 paired Method Flow recoveries, and `NOT_READY_FOR_STAGE_20`. Recovery erased no failure and broadened no evidence credit.
 
-The exact verified source is `d5c9a16b3efb76a138944d97211bc0a3b7bcd716`, x1 is `c2c51a9e4f1786a45d77390b1d2e75e170dde170`, and immutable x2 evidence is `4815a8471e83598df9ad9dabfeeed2a53d8eaebe`. The containing closeout commit must be the direct child of evidence, creating exactly three Eiren commits after source with zero merges and one final parent. X1 and evidence were independently pushed, clean, and four-way remote-equal before the next lifecycle began.
+The exact verified source is `d5c9a16b3efb76a138944d97211bc0a3b7bcd716`, x1 is `c2c51a9e4f1786a45d77390b1d2e75e170dde170`, immutable x2 evidence is `4815a8471e83598df9ad9dabfeeed2a53d8eaebe`, and the first combined closeout/seal is `27b34aa5d72ce4dd3c50d2423741e9c9eba77e1a`. The containing terminal-correction commit must be the direct child of that closeout, creating exactly four Eiren commits after source with zero merges and one final parent. X1 and evidence were independently pushed, clean, and four-way remote-equal before the next lifecycle began.
 
 Eiren Kestrel, she/they, is relational working language for an evidence-boundary integrator whose hope is to make each advance useful without letting confidence outrun evidence. This is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, or authority. Hamish may rename, pause, redirect, or stop the route.
 

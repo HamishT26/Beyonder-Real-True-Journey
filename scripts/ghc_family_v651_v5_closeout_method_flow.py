@@ -52,6 +52,36 @@ CLOSEOUT_OPS = [
         "summary": "The post-Index deterministic closeout rebuild rejected its own already-generated final output directories because the preflight recognized only first-run paths.",
         "recovery": "Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration.",
     },
+    {
+        "negative_id": "V6515-CLOSE-N08",
+        "summary": "The supervising closeout commit-and-push wrapper timed out after the commit completed but before the push completed.",
+        "recovery": "Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation.",
+    },
+    {
+        "negative_id": "V6515-CLOSE-N09",
+        "summary": "The first post-push four-way-equality audit used an invalid compound PowerShell expression and stopped before completing the read-only audit.",
+        "recovery": "Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output.",
+    },
+    {
+        "negative_id": "V6515-CLOSE-N10",
+        "summary": "The first exact-final validator used unittest discovery with a non-package tests directory and stopped before running any repository test.",
+        "recovery": "Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit.",
+    },
+    {
+        "negative_id": "V6515-CLOSE-N11",
+        "summary": "A diagnostic rg command passed Windows wildcard characters as literal path arguments and was rejected before searching files.",
+        "recovery": "Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash.",
+    },
+    {
+        "negative_id": "V6515-CLOSE-N12",
+        "summary": "The first correction-packet closeout test run passed nine of ten tests but retained a stale expectation of thirty-two Method Flow methods.",
+        "recovery": "Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction.",
+    },
+    {
+        "negative_id": "V6515-CLOSE-N13",
+        "summary": "A correction-stage summary wrapper repeated an invalid compound PowerShell expression while trying to capture diff-check status and produced no audit output.",
+        "recovery": "Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object.",
+    },
 ]
 
 

@@ -2,9 +2,9 @@
 
 - Phase: v651-v5
 - Owner: Eiren Kestrel
-- Methods: 32
-- Passing witnesses: 32
-- Failed witnesses retained: 32
+- Methods: 38
+- Passing witnesses: 38
+- Failed witnesses retained: 38
 
 ## Preferred methods
 
@@ -263,6 +263,54 @@
 - Recurrence guard: Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration.
 - Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
 - Witnesses: V6515-M32-WFAIL, V6515-M32-WPASS
+
+### V6515-M33 — Bounded closeout recovery 33: Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation
+
+- Trigger: The supervising closeout commit-and-push wrapper timed out after the commit completed but before the push completed.
+- Method: Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation.
+- Recurrence guard: Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M33-WFAIL, V6515-M33-WPASS
+
+### V6515-M34 — Bounded closeout recovery 34: Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output
+
+- Trigger: The first post-push four-way-equality audit used an invalid compound PowerShell expression and stopped before completing the read-only audit.
+- Method: Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output.
+- Recurrence guard: Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M34-WFAIL, V6515-M34-WPASS
+
+### V6515-M35 — Bounded closeout recovery 35: Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit
+
+- Trigger: The first exact-final validator used unittest discovery with a non-package tests directory and stopped before running any repository test.
+- Method: Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit.
+- Recurrence guard: Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M35-WFAIL, V6515-M35-WPASS
+
+### V6515-M36 — Bounded closeout recovery 36: Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash
+
+- Trigger: A diagnostic rg command passed Windows wildcard characters as literal path arguments and was rejected before searching files.
+- Method: Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash.
+- Recurrence guard: Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M36-WFAIL, V6515-M36-WPASS
+
+### V6515-M37 — Bounded closeout recovery 37: Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction
+
+- Trigger: The first correction-packet closeout test run passed nine of ten tests but retained a stale expectation of thirty-two Method Flow methods.
+- Method: Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction.
+- Recurrence guard: Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M37-WFAIL, V6515-M37-WPASS
+
+### V6515-M38 — Bounded closeout recovery 38: Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object
+
+- Trigger: A correction-stage summary wrapper repeated an invalid compound PowerShell expression while trying to capture diff-check status and produced no audit output.
+- Method: Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object.
+- Recurrence guard: Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M38-WFAIL, V6515-M38-WPASS
 
 ## Retained boundary
 

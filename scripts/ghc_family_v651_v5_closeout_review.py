@@ -13,6 +13,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 PHASE = "docs/eiren-kestrel/v651-v5"
 EVIDENCE = "4815a8471e83598df9ad9dabfeeed2a53d8eaebe"
+CLOSEOUT = "27b34aa5d72ce4dd3c50d2423741e9c9eba77e1a"
 DELTA_MANIFEST = f"{PHASE}/validation/final-delta-manifest.json"
 DELTA_PRIVACY = f"{PHASE}/validation/final-delta-privacy.json"
 OWNER_MANIFEST = f"{PHASE}/validation/final-owner-manifest.json"
@@ -123,12 +124,12 @@ def main() -> int:
     delta_scan = scan(delta_content, rows, blobs)
     owner_scan = scan(owner_content, rows, blobs)
     hygiene = run("git", "diff", "--cached", "--check", check=False)
-    passed = bool(staged) and head == EVIDENCE and not forbidden and not delta_scan["confirmed_hits"] and not owner_scan["confirmed_hits"] and hygiene.returncode == 0
+    passed = bool(staged) and head == CLOSEOUT and not forbidden and not delta_scan["confirmed_hits"] and not owner_scan["confirmed_hits"] and hygiene.returncode == 0
     write_json(DELTA_MANIFEST, {"schema": "ghc.family.v651-v5.final-delta-manifest.v1", "hash_domain": "git_index_blob", "entry_count": len(delta_entries), "entries": delta_entries, "self_exclusions": SELF_EXCLUSIONS})
     write_json(DELTA_PRIVACY, {"schema": "ghc.family.v651-v5.final-delta-privacy.v1", **delta_scan})
     write_json(OWNER_MANIFEST, {"schema": "ghc.family.v651-v5.final-owner-manifest.v1", "hash_domain": "git_index_blob", "entry_count": len(owner_entries), "entries": owner_entries, "self_exclusions": SELF_EXCLUSIONS})
     write_json(OWNER_PRIVACY, {"schema": "ghc.family.v651-v5.final-owner-privacy.v1", **owner_scan})
-    write_json(REVIEW, {"schema": "ghc.family.v651-v5.final-staged-review.v1", "head_before_commit": head, "expected_parent": EVIDENCE, "staged_path_count": len(staged), "final_delta_path_count": len(delta), "delta_manifest_entries": len(delta_entries), "owner_path_count": len(owner), "owner_manifest_entries": len(owner_entries), "self_exclusion_count": len(SELF_EXCLUSIONS), "forbidden_paths": forbidden, "delta_privacy_confirmed_hits": delta_scan["confirmed_hit_count"], "owner_privacy_confirmed_hits": owner_scan["confirmed_hit_count"], "diff_hygiene_issue_count": len(hygiene.stdout.decode("utf-8", errors="replace").splitlines()), "passed": passed})
+    write_json(REVIEW, {"schema": "ghc.family.v651-v5.final-staged-review.v1", "head_before_commit": head, "expected_parent": CLOSEOUT, "final_delta_base": EVIDENCE, "staged_path_count": len(staged), "final_delta_path_count": len(delta), "delta_manifest_entries": len(delta_entries), "owner_path_count": len(owner), "owner_manifest_entries": len(owner_entries), "self_exclusion_count": len(SELF_EXCLUSIONS), "forbidden_paths": forbidden, "delta_privacy_confirmed_hits": delta_scan["confirmed_hit_count"], "owner_privacy_confirmed_hits": owner_scan["confirmed_hit_count"], "diff_hygiene_issue_count": len(hygiene.stdout.decode("utf-8", errors="replace").splitlines()), "passed": passed})
     print(json.dumps({"staged": len(staged), "final_delta": len(delta), "delta_entries": len(delta_entries), "owner": len(owner), "owner_entries": len(owner_entries), "confirmed_hits": delta_scan["confirmed_hit_count"] + owner_scan["confirmed_hit_count"], "passed": passed}, sort_keys=True))
     return 0 if passed else 1
 
