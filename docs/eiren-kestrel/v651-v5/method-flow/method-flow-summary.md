@@ -2,9 +2,9 @@
 
 - Phase: v651-v5
 - Owner: Eiren Kestrel
-- Methods: 25
-- Passing witnesses: 25
-- Failed witnesses retained: 25
+- Methods: 32
+- Passing witnesses: 32
+- Failed witnesses retained: 32
 
 ## Preferred methods
 
@@ -207,6 +207,62 @@
 - Recurrence guard: Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim.
 - Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
 - Witnesses: V6515-M25-WFAIL, V6515-M25-WPASS
+
+### V6515-M26 — Bounded closeout recovery 26: Use one literal regular expression per file in a bounded read-only wrapper, preserve the failed parse with zero credit, and continue only after attributable output is returned
+
+- Trigger: The first post-evidence inspection wrapper had an unterminated PowerShell string and returned no file inspection output.
+- Method: Use one literal regular expression per file in a bounded read-only wrapper, preserve the failed parse with zero credit, and continue only after attributable output is returned.
+- Recurrence guard: Use one literal regular expression per file in a bounded read-only wrapper, preserve the failed parse with zero credit, and continue only after attributable output is returned.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M26-WFAIL, V6515-M26-WPASS
+
+### V6515-M27 — Bounded closeout recovery 27: Preserve the inherited template, add later Eiren-specific override functions at stable Python definition boundaries, and retain the rejected patch with zero credit
+
+- Trigger: A broad inherited-generator patch failed exact-context verification on mixed-encoding text and applied no changes.
+- Method: Preserve the inherited template, add later Eiren-specific override functions at stable Python definition boundaries, and retain the rejected patch with zero credit.
+- Recurrence guard: Preserve the inherited template, add later Eiren-specific override functions at stable Python definition boundaries, and retain the rejected patch with zero credit.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M27-WFAIL, V6515-M27-WPASS
+
+### V6515-M28 — Bounded closeout recovery 28: Patch the closeout main contract in small stable ASCII hunks, verify each hunk independently, and retain the rejected combined patch with zero credit
+
+- Trigger: A combined main-contract patch was rejected atomically when one inherited mojibake line failed exact-context verification.
+- Method: Patch the closeout main contract in small stable ASCII hunks, verify each hunk independently, and retain the rejected combined patch with zero credit.
+- Recurrence guard: Patch the closeout main contract in small stable ASCII hunks, verify each hunk independently, and retain the rejected combined patch with zero credit.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M28-WFAIL, V6515-M28-WPASS
+
+### V6515-M29 — Bounded closeout recovery 29: Add only the exact Method Flow validation path to the preflight allow-list and rerun the deterministic builder from the unchanged evidence head
+
+- Trigger: The first closeout build preflight rejected an expected Method Flow validation file that was absent from its exact allow-list.
+- Method: Add only the exact Method Flow validation path to the preflight allow-list and rerun the deterministic builder from the unchanged evidence head.
+- Recurrence guard: Add only the exact Method Flow validation path to the preflight allow-list and rerun the deterministic builder from the unchanged evidence head.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M29-WFAIL, V6515-M29-WPASS
+
+### V6515-M30 — Bounded closeout recovery 30: Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests
+
+- Trigger: The first closeout wrapper continued into tests after the native builder failed, producing nine missing-artifact errors with zero test credit.
+- Method: Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests.
+- Recurrence guard: Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M30-WFAIL, V6515-M30-WPASS
+
+### V6515-M31 — Bounded closeout recovery 31: Allow only the exact closeout-v6515-m namespace rather than a partial numeric range and rerun from the unchanged evidence head
+
+- Trigger: The second closeout preflight used a numeric m2 prefix that covered records 26 through 29 but rejected the valid record 30.
+- Method: Allow only the exact closeout-v6515-m namespace rather than a partial numeric range and rerun from the unchanged evidence head.
+- Recurrence guard: Allow only the exact closeout-v6515-m namespace rather than a partial numeric range and rerun from the unchanged evidence head.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M31-WFAIL, V6515-M31-WPASS
+
+### V6515-M32 — Bounded closeout recovery 32: Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration
+
+- Trigger: The post-Index deterministic closeout rebuild rejected its own already-generated final output directories because the preflight recognized only first-run paths.
+- Method: Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration.
+- Recurrence guard: Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M32-WFAIL, V6515-M32-WPASS
 
 ## Retained boundary
 

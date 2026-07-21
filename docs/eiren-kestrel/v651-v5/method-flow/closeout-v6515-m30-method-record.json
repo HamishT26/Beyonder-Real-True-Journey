@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests.",
+  "failure_signature": "The first closeout wrapper continued into tests after the native builder failed, producing nine missing-artifact errors with zero test credit.",
+  "method_id": "V6515-M30",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "privacy",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests.",
+  "retained_negative_ids": [
+    "V6515-CLOSE-N05"
+  ],
+  "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+  "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bounded closeout recovery 30: Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests",
+  "trigger_preconditions": [
+    "The first closeout wrapper continued into tests after the native builder failed, producing nine missing-artifact errors with zero test credit."
+  ],
+  "validation_witness_ids": []
+}
