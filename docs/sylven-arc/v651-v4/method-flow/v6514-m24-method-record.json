@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Parse raw Git porcelain output without trimming framing whitespace.",
+  "failure_signature": "The closeout preflight used a trimmed Git helper, lost the first porcelain status byte, and misclassified an allowed path; no closeout artifact was generated.",
+  "method_id": "V6514-M24",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "git_porcelain_framing",
+    "preflight_before_write",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-CLOSE-N03"
+  ],
+  "recurrence_guard": "Use raw subprocess bytes or NUL-delimited porcelain for machine parsing; never strip state columns first.",
+  "rollback": "Retain the preflight rejection, verify no closeout artifact was written, and repair only the parser.",
+  "scope_boundary": "Same-owner Git status parsing recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Raw porcelain framing for closeout preflight",
+  "trigger_preconditions": [
+    "A machine preflight parses Git porcelain state and paths."
+  ],
+  "validation_witness_ids": []
+}

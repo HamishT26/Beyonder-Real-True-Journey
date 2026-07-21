@@ -2,9 +2,9 @@
 
 - Phase: v651-v4
 - Owner: Sylven Arc
-- Methods: 21
-- Passing witnesses: 21
-- Failed witnesses retained: 21
+- Methods: 24
+- Passing witnesses: 24
+- Failed witnesses retained: 24
 
 ## Preferred methods
 
@@ -175,6 +175,30 @@
 - Recurrence guard: Set PYTHONUTF8=1 for Method Flow summarize when any retained method contains UTF-8 text.
 - Rollback: Retain the console-encoding failure, preserve the valid ledger, and do not strip or transliterate Māori text.
 - Witnesses: V6514-M21-WFAIL, V6514-M21-WPASS
+
+### V6514-M22 — Bounded predecessor-script inspection after wrapper timeout
+
+- Trigger: A read-only inspection combines multiple large predecessor files under one wrapper deadline.
+- Method: Split broad source-file inspection into bounded UTF-8 reads and verify repository state separately after any wrapper timeout.
+- Recurrence guard: Read one bounded file segment per command and audit HEAD plus clean state before continuing after a timeout.
+- Rollback: Give the timed-out inspection zero evidence credit, retain it, and stop if repository state cannot be attributed read-only.
+- Witnesses: V6514-M22-WFAIL, V6514-M22-WPASS
+
+### V6514-M23 — Exact generated-file anchor recovery after rejected patch
+
+- Trigger: A patch must change long generated text and adjacent validation constants.
+- Method: Locate exact generated-file anchors first, then apply small single-purpose patches.
+- Recurrence guard: Use fixed-string line discovery and one exact patch hunk per generated-file concern.
+- Rollback: Retain the rejected patch at zero credit and verify no file changed before retrying.
+- Witnesses: V6514-M23-WFAIL, V6514-M23-WPASS
+
+### V6514-M24 — Raw porcelain framing for closeout preflight
+
+- Trigger: A machine preflight parses Git porcelain state and paths.
+- Method: Parse raw Git porcelain output without trimming framing whitespace.
+- Recurrence guard: Use raw subprocess bytes or NUL-delimited porcelain for machine parsing; never strip state columns first.
+- Rollback: Retain the preflight rejection, verify no closeout artifact was written, and repair only the parser.
+- Witnesses: V6514-M24-WFAIL, V6514-M24-WPASS
 
 ## Retained boundary
 

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Split broad source-file inspection into bounded UTF-8 reads and verify repository state separately after any wrapper timeout.",
+  "failure_signature": "A combined read-only inspection of two large predecessor scripts exceeded its wrapper timeout and returned no attributable content.",
+  "method_id": "V6514-M22",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "bounded_runtime",
+    "repository_state",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-CLOSE-N01"
+  ],
+  "recurrence_guard": "Read one bounded file segment per command and audit HEAD plus clean state before continuing after a timeout.",
+  "rollback": "Give the timed-out inspection zero evidence credit, retain it, and stop if repository state cannot be attributed read-only.",
+  "scope_boundary": "Same-owner read-only workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bounded predecessor-script inspection after wrapper timeout",
+  "trigger_preconditions": [
+    "A read-only inspection combines multiple large predecessor files under one wrapper deadline."
+  ],
+  "validation_witness_ids": []
+}

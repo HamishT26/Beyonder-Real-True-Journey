@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 21,
-    "recommendations": 21,
-    "state_events": 63,
+    "methods": 24,
+    "recommendations": 24,
+    "state_events": 72,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 21,
+      "preferred": 24,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 21,
-      "pass": 21
+      "fail": 24,
+      "pass": 24
     },
-    "witnesses": 42
+    "witnesses": 48
   },
   "owner": "Sylven Arc",
   "phase": "v651-v4",
@@ -335,6 +335,51 @@
         "V6514-M21-WFAIL",
         "V6514-M21-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Split broad source-file inspection into bounded UTF-8 reads and verify repository state separately after any wrapper timeout.",
+      "method_id": "V6514-M22",
+      "recurrence_guard": "Read one bounded file segment per command and audit HEAD plus clean state before continuing after a timeout.",
+      "rollback": "Give the timed-out inspection zero evidence credit, retain it, and stop if repository state cannot be attributed read-only.",
+      "scope_boundary": "Same-owner read-only workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Bounded predecessor-script inspection after wrapper timeout",
+      "trigger_preconditions": [
+        "A read-only inspection combines multiple large predecessor files under one wrapper deadline."
+      ],
+      "validation_witness_ids": [
+        "V6514-M22-WFAIL",
+        "V6514-M22-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Locate exact generated-file anchors first, then apply small single-purpose patches.",
+      "method_id": "V6514-M23",
+      "recurrence_guard": "Use fixed-string line discovery and one exact patch hunk per generated-file concern.",
+      "rollback": "Retain the rejected patch at zero credit and verify no file changed before retrying.",
+      "scope_boundary": "Same-owner additive patch recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Exact generated-file anchor recovery after rejected patch",
+      "trigger_preconditions": [
+        "A patch must change long generated text and adjacent validation constants."
+      ],
+      "validation_witness_ids": [
+        "V6514-M23-WFAIL",
+        "V6514-M23-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Parse raw Git porcelain output without trimming framing whitespace.",
+      "method_id": "V6514-M24",
+      "recurrence_guard": "Use raw subprocess bytes or NUL-delimited porcelain for machine parsing; never strip state columns first.",
+      "rollback": "Retain the preflight rejection, verify no closeout artifact was written, and repair only the parser.",
+      "scope_boundary": "Same-owner Git status parsing recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Raw porcelain framing for closeout preflight",
+      "trigger_preconditions": [
+        "A machine preflight parses Git porcelain state and paths."
+      ],
+      "validation_witness_ids": [
+        "V6514-M24-WFAIL",
+        "V6514-M24-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -358,7 +403,10 @@
     "V6514-M18-WFAIL",
     "V6514-M19-WFAIL",
     "V6514-M20-WFAIL",
-    "V6514-M21-WFAIL"
+    "V6514-M21-WFAIL",
+    "V6514-M22-WFAIL",
+    "V6514-M23-WFAIL",
+    "V6514-M24-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
