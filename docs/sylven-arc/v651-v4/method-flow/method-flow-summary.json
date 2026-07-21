@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 15,
-    "recommendations": 15,
-    "state_events": 45,
+    "methods": 21,
+    "recommendations": 21,
+    "state_events": 63,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 15,
+      "preferred": 21,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 15,
-      "pass": 15
+      "fail": 21,
+      "pass": 21
     },
-    "witnesses": 30
+    "witnesses": 42
   },
   "owner": "Sylven Arc",
   "phase": "v651-v4",
@@ -245,6 +245,96 @@
         "V6514-M15-WFAIL",
         "V6514-M15-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Emit one skill name per output record with a real newline separator and assert the twenty-record count before initialization.",
+      "method_id": "V6514-M16",
+      "recurrence_guard": "Use a line-emitting separator such as chr(10), then assert exactly twenty skill names before any write.",
+      "rollback": "Give the failed enumeration zero credit and create no partial skills until the exact count is attributable.",
+      "scope_boundary": "Same-owner phase-local skill initialization only; no global installation, subagent, authority, or independent-reproduction credit.",
+      "title": "Bounded skill-name enumeration before initialization",
+      "trigger_preconditions": [
+        "A shell wrapper consumes Python-emitted skill names as separate records."
+      ],
+      "validation_witness_ids": [
+        "V6514-M16-WFAIL",
+        "V6514-M16-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Set Python UTF-8 mode explicitly before running the unchanged official quick validator.",
+      "method_id": "V6514-M17",
+      "recurrence_guard": "Set PYTHONUTF8=1 for the official validator whenever phase-local UTF-8 content is present.",
+      "rollback": "Retain the decode failure, do not strip or transliterate Māori text, and stop if explicit UTF-8 validation does not pass.",
+      "scope_boundary": "Same-owner phase-local packaging evidence only; no linguistic, cultural, Māori-authority, or independent-reproduction credit.",
+      "title": "Explicit UTF-8 envelope for official skill validation",
+      "trigger_preconditions": [
+        "The unchanged validator reads a UTF-8 SKILL.md under a Windows locale default."
+      ],
+      "validation_witness_ids": [
+        "V6514-M17-WFAIL",
+        "V6514-M17-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Validate hand-authored Method Flow inputs against the required schema fields before invoking the append-only ledger runner.",
+      "method_id": "V6514-M18",
+      "recurrence_guard": "Require retained_negative_ids on every method and witness input before ledger invocation.",
+      "rollback": "Keep the schema rejection at zero credit and confirm the ledger remained unchanged before retrying.",
+      "scope_boundary": "Same-owner Method Flow schema recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Preflight required Method Flow record fields",
+      "trigger_preconditions": [
+        "A hand-authored method or witness input is about to enter the append-only ledger."
+      ],
+      "validation_witness_ids": [
+        "V6514-M18-WFAIL",
+        "V6514-M18-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use one explicit patch file header per target file and exact UTF-8 context for multi-file Method Flow corrections.",
+      "method_id": "V6514-M19",
+      "recurrence_guard": "Give every edited file its own explicit patch header and verify exact context before applying.",
+      "rollback": "Retain the no-change patch failure and inspect exact target files before retrying.",
+      "scope_boundary": "Same-owner additive patch recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Explicit target headers for multi-file additive patches",
+      "trigger_preconditions": [
+        "One additive patch changes structurally similar fields across multiple JSON files."
+      ],
+      "validation_witness_ids": [
+        "V6514-M19-WFAIL",
+        "V6514-M19-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Preflight every witness for retained_negative_ids and independent_reproduction before appending; when a method was already recorded, resume from its first missing witness rather than duplicating it.",
+      "method_id": "V6514-M20",
+      "recurrence_guard": "Validate required witness fields before ledger invocation and inspect method state before resuming a partial sequence.",
+      "rollback": "Retain the rejected witness, preserve the already-recorded candidate method, and append only missing valid events.",
+      "scope_boundary": "Same-owner Method Flow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Resume append-only Method Flow after witness-schema rejection",
+      "trigger_preconditions": [
+        "A method record succeeded but its first witness failed schema validation."
+      ],
+      "validation_witness_ids": [
+        "V6514-M20-WFAIL",
+        "V6514-M20-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Set Python UTF-8 mode before Method Flow summarize so the file-backed summary and console receipt share one encoding envelope.",
+      "method_id": "V6514-M21",
+      "recurrence_guard": "Set PYTHONUTF8=1 for Method Flow summarize when any retained method contains UTF-8 text.",
+      "rollback": "Retain the console-encoding failure, preserve the valid ledger, and do not strip or transliterate Māori text.",
+      "scope_boundary": "Same-owner Method Flow serialization recovery only; no linguistic, cultural, Māori-authority, or independent-reproduction credit.",
+      "title": "Explicit UTF-8 Method Flow summary envelope",
+      "trigger_preconditions": [
+        "A Method Flow summary contains UTF-8 text and is printed through a Windows console encoding."
+      ],
+      "validation_witness_ids": [
+        "V6514-M21-WFAIL",
+        "V6514-M21-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -262,7 +352,13 @@
     "V6514-M12-WFAIL",
     "V6514-M13-WFAIL",
     "V6514-M14-WFAIL",
-    "V6514-M15-WFAIL"
+    "V6514-M15-WFAIL",
+    "V6514-M16-WFAIL",
+    "V6514-M17-WFAIL",
+    "V6514-M18-WFAIL",
+    "V6514-M19-WFAIL",
+    "V6514-M20-WFAIL",
+    "V6514-M21-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

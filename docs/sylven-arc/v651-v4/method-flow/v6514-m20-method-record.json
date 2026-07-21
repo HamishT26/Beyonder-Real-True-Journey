@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Preflight every witness for retained_negative_ids and independent_reproduction before appending; when a method was already recorded, resume from its first missing witness rather than duplicating it.",
+  "failure_signature": "The first M16 fail witness omitted independent_reproduction and was rejected after M16 had entered candidate state.",
+  "method_id": "V6514-M20",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "append_only_ledger",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-X2-N05"
+  ],
+  "recurrence_guard": "Validate required witness fields before ledger invocation and inspect method state before resuming a partial sequence.",
+  "rollback": "Retain the rejected witness, preserve the already-recorded candidate method, and append only missing valid events.",
+  "scope_boundary": "Same-owner Method Flow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Resume append-only Method Flow after witness-schema rejection",
+  "trigger_preconditions": [
+    "A method record succeeded but its first witness failed schema validation."
+  ],
+  "validation_witness_ids": []
+}

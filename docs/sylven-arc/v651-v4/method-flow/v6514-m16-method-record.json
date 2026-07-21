@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Emit one skill name per output record with a real newline separator and assert the twenty-record count before initialization.",
+  "failure_signature": "The first skill-name enumeration emitted one literal backslash-n record, so the twenty-skill guard stopped before initialization.",
+  "method_id": "V6514-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "privacy",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-X2-N01"
+  ],
+  "recurrence_guard": "Use a line-emitting separator such as chr(10), then assert exactly twenty skill names before any write.",
+  "rollback": "Give the failed enumeration zero credit and create no partial skills until the exact count is attributable.",
+  "scope_boundary": "Same-owner phase-local skill initialization only; no global installation, subagent, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bounded skill-name enumeration before initialization",
+  "trigger_preconditions": [
+    "A shell wrapper consumes Python-emitted skill names as separate records."
+  ],
+  "validation_witness_ids": []
+}

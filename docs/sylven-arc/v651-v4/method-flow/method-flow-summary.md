@@ -2,9 +2,9 @@
 
 - Phase: v651-v4
 - Owner: Sylven Arc
-- Methods: 15
-- Passing witnesses: 15
-- Failed witnesses retained: 15
+- Methods: 21
+- Passing witnesses: 21
+- Failed witnesses retained: 21
 
 ## Preferred methods
 
@@ -127,6 +127,54 @@
 - Recurrence guard: Preserve the immutable rows, publish a collision register with stable row evidence, require every v651-v4 identifier to remain outside the inherited identifier set, and never rewrite predecessor history.
 - Rollback: Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.
 - Witnesses: V6514-M15-WFAIL, V6514-M15-WPASS
+
+### V6514-M16 — Bounded skill-name enumeration before initialization
+
+- Trigger: A shell wrapper consumes Python-emitted skill names as separate records.
+- Method: Emit one skill name per output record with a real newline separator and assert the twenty-record count before initialization.
+- Recurrence guard: Use a line-emitting separator such as chr(10), then assert exactly twenty skill names before any write.
+- Rollback: Give the failed enumeration zero credit and create no partial skills until the exact count is attributable.
+- Witnesses: V6514-M16-WFAIL, V6514-M16-WPASS
+
+### V6514-M17 — Explicit UTF-8 envelope for official skill validation
+
+- Trigger: The unchanged validator reads a UTF-8 SKILL.md under a Windows locale default.
+- Method: Set Python UTF-8 mode explicitly before running the unchanged official quick validator.
+- Recurrence guard: Set PYTHONUTF8=1 for the official validator whenever phase-local UTF-8 content is present.
+- Rollback: Retain the decode failure, do not strip or transliterate Māori text, and stop if explicit UTF-8 validation does not pass.
+- Witnesses: V6514-M17-WFAIL, V6514-M17-WPASS
+
+### V6514-M18 — Preflight required Method Flow record fields
+
+- Trigger: A hand-authored method or witness input is about to enter the append-only ledger.
+- Method: Validate hand-authored Method Flow inputs against the required schema fields before invoking the append-only ledger runner.
+- Recurrence guard: Require retained_negative_ids on every method and witness input before ledger invocation.
+- Rollback: Keep the schema rejection at zero credit and confirm the ledger remained unchanged before retrying.
+- Witnesses: V6514-M18-WFAIL, V6514-M18-WPASS
+
+### V6514-M19 — Explicit target headers for multi-file additive patches
+
+- Trigger: One additive patch changes structurally similar fields across multiple JSON files.
+- Method: Use one explicit patch file header per target file and exact UTF-8 context for multi-file Method Flow corrections.
+- Recurrence guard: Give every edited file its own explicit patch header and verify exact context before applying.
+- Rollback: Retain the no-change patch failure and inspect exact target files before retrying.
+- Witnesses: V6514-M19-WFAIL, V6514-M19-WPASS
+
+### V6514-M20 — Resume append-only Method Flow after witness-schema rejection
+
+- Trigger: A method record succeeded but its first witness failed schema validation.
+- Method: Preflight every witness for retained_negative_ids and independent_reproduction before appending; when a method was already recorded, resume from its first missing witness rather than duplicating it.
+- Recurrence guard: Validate required witness fields before ledger invocation and inspect method state before resuming a partial sequence.
+- Rollback: Retain the rejected witness, preserve the already-recorded candidate method, and append only missing valid events.
+- Witnesses: V6514-M20-WFAIL, V6514-M20-WPASS
+
+### V6514-M21 — Explicit UTF-8 Method Flow summary envelope
+
+- Trigger: A Method Flow summary contains UTF-8 text and is printed through a Windows console encoding.
+- Method: Set Python UTF-8 mode before Method Flow summarize so the file-backed summary and console receipt share one encoding envelope.
+- Recurrence guard: Set PYTHONUTF8=1 for Method Flow summarize when any retained method contains UTF-8 text.
+- Rollback: Retain the console-encoding failure, preserve the valid ledger, and do not strip or transliterate Māori text.
+- Witnesses: V6514-M21-WFAIL, V6514-M21-WPASS
 
 ## Retained boundary
 

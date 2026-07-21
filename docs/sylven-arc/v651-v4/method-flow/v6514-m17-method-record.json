@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set Python UTF-8 mode explicitly before running the unchanged official quick validator.",
+  "failure_signature": "The first official skill quick-validation attempt used the Windows cp1252 default and raised UnicodeDecodeError on Māori text.",
+  "method_id": "V6514-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "utf8_content",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-X2-N02"
+  ],
+  "recurrence_guard": "Set PYTHONUTF8=1 for the official validator whenever phase-local UTF-8 content is present.",
+  "rollback": "Retain the decode failure, do not strip or transliterate Māori text, and stop if explicit UTF-8 validation does not pass.",
+  "scope_boundary": "Same-owner phase-local packaging evidence only; no linguistic, cultural, Māori-authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Explicit UTF-8 envelope for official skill validation",
+  "trigger_preconditions": [
+    "The unchanged validator reads a UTF-8 SKILL.md under a Windows locale default."
+  ],
+  "validation_witness_ids": []
+}

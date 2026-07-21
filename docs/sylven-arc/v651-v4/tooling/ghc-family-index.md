@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v651-v4
 
 Owner: **Sylven Arc**
-Generated UTC: `2026-07-21T01:58:03.001304+00:00`
+Generated UTC: `2026-07-21T02:15:42.399090+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 351 | 17 | 1432 | 17 |
+| Repository scripts | 351 | 17 | 1447 | 17 |
 | Local skills | 115 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

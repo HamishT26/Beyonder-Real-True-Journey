@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set Python UTF-8 mode before Method Flow summarize so the file-backed summary and console receipt share one encoding envelope.",
+  "failure_signature": "Method Flow validation passed, but the first summarize process raised UnicodeEncodeError while printing Māori text to the cp1252 console.",
+  "method_id": "V6514-M21",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "utf8_content",
+    "append_only_ledger",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-X2-N06"
+  ],
+  "recurrence_guard": "Set PYTHONUTF8=1 for Method Flow summarize when any retained method contains UTF-8 text.",
+  "rollback": "Retain the console-encoding failure, preserve the valid ledger, and do not strip or transliterate Māori text.",
+  "scope_boundary": "Same-owner Method Flow serialization recovery only; no linguistic, cultural, Māori-authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Explicit UTF-8 Method Flow summary envelope",
+  "trigger_preconditions": [
+    "A Method Flow summary contains UTF-8 text and is printed through a Windows console encoding."
+  ],
+  "validation_witness_ids": []
+}

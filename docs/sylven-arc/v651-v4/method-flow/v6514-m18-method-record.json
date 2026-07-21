@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Validate hand-authored Method Flow inputs against the required schema fields before invoking the append-only ledger runner.",
+  "failure_signature": "The first x2 Method Flow record attempt omitted retained_negative_ids and was rejected before ledger mutation.",
+  "method_id": "V6514-M18",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "append_only_ledger",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "retained_negative_ids": [
+    "V6514-X2-N03"
+  ],
+  "recurrence_guard": "Require retained_negative_ids on every method and witness input before ledger invocation.",
+  "rollback": "Keep the schema rejection at zero credit and confirm the ledger remained unchanged before retrying.",
+  "scope_boundary": "Same-owner Method Flow schema recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Preflight required Method Flow record fields",
+  "trigger_preconditions": [
+    "A hand-authored method or witness input is about to enter the append-only ledger."
+  ],
+  "validation_witness_ids": []
+}
