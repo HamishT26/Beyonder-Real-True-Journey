@@ -13,6 +13,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 PHASE = "docs/tamar-vey/v651-v3"
 EVIDENCE = "449f3a29402459a66838cbf1cc8a3b110c145162"
+FIRST_CLOSEOUT = "5b46077beb30019d5904c7d6d8fac5202c00ab82"
 DELTA_MANIFEST = f"{PHASE}/validation/final-delta-manifest.json"
 DELTA_PRIVACY = f"{PHASE}/validation/final-delta-privacy.json"
 OWNER_MANIFEST = f"{PHASE}/validation/final-owner-manifest.json"
@@ -39,6 +40,11 @@ def run(*args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
 
 def staged_paths() -> list[str]:
     raw = run("git", "diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z").stdout
+    return sorted(item.decode("utf-8") for item in raw.split(b"\0") if item)
+
+
+def final_delta_paths() -> list[str]:
+    raw = run("git", "diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z", EVIDENCE).stdout
     return sorted(item.decode("utf-8") for item in raw.split(b"\0") if item)
 
 
@@ -119,9 +125,10 @@ def write_json(relative: str, payload) -> None:
 
 def main() -> int:
     head = run("git", "rev-parse", "HEAD").stdout.decode().strip()
-    delta = staged_paths()
+    staged = staged_paths()
+    delta = final_delta_paths()
     allowed = (f"{PHASE}/", "scripts/build_ghc_family_v651_v3_", "scripts/ghc_family_v651_v3_", "tests/test_ghc_family_v651_v3_")
-    forbidden = [path for path in delta if not path.startswith(allowed)]
+    forbidden = [path for path in staged if not path.startswith(allowed)]
     rows = index_rows()
     owner = sorted(path for path in rows if path.startswith(f"{PHASE}/"))
     delta_content = [path for path in delta if path not in SELF_EXCLUSIONS]
@@ -135,13 +142,13 @@ def main() -> int:
     delta_scan = scan(delta_content, rows, blobs)
     owner_scan = scan(owner_content, rows, blobs)
     hygiene = run("git", "diff", "--cached", "--check", check=False)
-    passed = bool(delta) and head == EVIDENCE and not forbidden and not delta_scan["confirmed_hits"] and not owner_scan["confirmed_hits"] and hygiene.returncode == 0
+    passed = bool(staged) and head == FIRST_CLOSEOUT and not forbidden and not delta_scan["confirmed_hits"] and not owner_scan["confirmed_hits"] and hygiene.returncode == 0
     write_json(DELTA_MANIFEST, {"schema": "ghc.family.v651-v3.final-delta-manifest.v1", "hash_domain": "git_index_blob", "entry_count": len(delta_entries), "entries": delta_entries, "self_exclusions": SELF_EXCLUSIONS})
     write_json(DELTA_PRIVACY, {"schema": "ghc.family.v651-v3.final-delta-privacy.v1", **delta_scan})
     write_json(OWNER_MANIFEST, {"schema": "ghc.family.v651-v3.final-owner-manifest.v1", "hash_domain": "git_index_blob", "entry_count": len(owner_entries), "entries": owner_entries, "self_exclusions": SELF_EXCLUSIONS})
     write_json(OWNER_PRIVACY, {"schema": "ghc.family.v651-v3.final-owner-privacy.v1", **owner_scan})
-    write_json(REVIEW, {"schema": "ghc.family.v651-v3.final-staged-review.v1", "head_before_commit": head, "expected_parent": EVIDENCE, "staged_path_count": len(delta), "delta_manifest_entries": len(delta_entries), "owner_path_count": len(owner), "owner_manifest_entries": len(owner_entries), "self_exclusion_count": len(SELF_EXCLUSIONS), "forbidden_paths": forbidden, "delta_privacy_confirmed_hits": delta_scan["confirmed_hit_count"], "owner_privacy_confirmed_hits": owner_scan["confirmed_hit_count"], "diff_hygiene_issue_count": len(hygiene.stdout.decode("utf-8", errors="replace").splitlines()), "passed": passed})
-    print(json.dumps({"staged": len(delta), "delta_entries": len(delta_entries), "owner": len(owner), "owner_entries": len(owner_entries), "confirmed_hits": delta_scan["confirmed_hit_count"] + owner_scan["confirmed_hit_count"], "passed": passed}, sort_keys=True))
+    write_json(REVIEW, {"schema": "ghc.family.v651-v3.final-staged-review.v1", "head_before_commit": head, "expected_parent": FIRST_CLOSEOUT, "staged_path_count": len(staged), "final_delta_path_count": len(delta), "delta_manifest_entries": len(delta_entries), "owner_path_count": len(owner), "owner_manifest_entries": len(owner_entries), "self_exclusion_count": len(SELF_EXCLUSIONS), "forbidden_paths": forbidden, "delta_privacy_confirmed_hits": delta_scan["confirmed_hit_count"], "owner_privacy_confirmed_hits": owner_scan["confirmed_hit_count"], "diff_hygiene_issue_count": len(hygiene.stdout.decode("utf-8", errors="replace").splitlines()), "passed": passed})
+    print(json.dumps({"staged": len(staged), "final_delta": len(delta), "delta_entries": len(delta_entries), "owner": len(owner), "owner_entries": len(owner_entries), "confirmed_hits": delta_scan["confirmed_hit_count"] + owner_scan["confirmed_hit_count"], "passed": passed}, sort_keys=True))
     return 0 if passed else 1
 
 

@@ -2,9 +2,9 @@
 
 - Phase: v651-v3
 - Owner: Tamar Vey
-- Methods: 29
-- Passing witnesses: 29
-- Failed witnesses retained: 29
+- Methods: 33
+- Passing witnesses: 33
+- Failed witnesses retained: 34
 
 ## Preferred methods
 
@@ -239,6 +239,38 @@
 - Recurrence guard: Use explicit PowerShell arrays for multiple directories; never assume Bash brace syntax.
 - Rollback: Give the parser-failed probe zero review credit and perform no content change until the corrected query completes.
 - Witnesses: V6513-M29-WFAIL, V6513-M29-WPASS
+
+### V6513-M30 — Carry the exact Orin x1 active-method lifecycle exclusion
+
+- Trigger: The sealed Orin source retains one deprecated method that an older x1 assertion counts as required-active.
+- Method: Quarantine the exact Orin v651-v2 x1 active-method lifecycle assertion and require the source closeout replacement that validates twenty-one preferred plus one deprecated method.
+- Recurrence guard: Carry the source pointer's exact lifecycle adjudication forward; never require a deprecated falsified method to become active merely to satisfy an older x1 assertion.
+- Rollback: Give the 88-of-89 aggregate zero credit and refuse any module-wide exclusion or source-history rewrite.
+- Witnesses: V6513-M30-WFAIL, V6513-M30-WPASS
+
+### V6513-M31 — Use exact small patches after terminal-correction context drift
+
+- Trigger: A correction patch contains prose or record context that may have changed since generation.
+- Method: Inspect exact local lines after lifecycle changes, then apply small independent patches instead of one broad context-dependent correction.
+- Recurrence guard: After a sealed lifecycle transition, inspect current constants, prose, and record lines before every correction patch.
+- Rollback: Retain the rejected patch with zero edit credit and make no history rewrite; apply only verified small hunks.
+- Witnesses: V6513-M31-WFAIL, V6513-M31-WPASS
+
+### V6513-M32 — Split compound PowerShell search expressions into simple probes
+
+- Trigger: A Windows context probe combines regex alternation with nested quotes and brackets.
+- Method: Use several simple quoted ripgrep expressions instead of one compound expression with nested PowerShell quoting.
+- Recurrence guard: Split complex search expressions at shell boundaries and keep each quoted pattern syntactically independent.
+- Rollback: Give the parser-failed context probe zero credit and change no file until simple probes succeed.
+- Witnesses: V6513-M32-WFAIL, V6513-M32-WFAIL-02, V6513-M32-WPASS
+
+### V6513-M33 — Unpack validator selection tuples before counting eligible tests
+
+- Trigger: A preflight needs the eligible-test count without consuming the one canonical execution.
+- Method: Unpack the selected_tests return value into suite and counts, then inspect counts['eligible'] without executing the suite.
+- Recurrence guard: Inspect or honor the declared selected_tests tuple contract before counting eligible cases.
+- Rollback: Give the failed assertion zero selection credit and do not execute the returned suite during preflight.
+- Witnesses: V6513-M33-WFAIL, V6513-M33-WPASS
 
 ## Retained boundary
 

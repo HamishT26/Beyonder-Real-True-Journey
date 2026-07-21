@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_validation",
+  "candidate_workaround": "Unpack the selected_tests return value into suite and counts, then inspect counts['eligible'] without executing the suite.",
+  "failure_signature": "A preflight probe treated the two-item (suite, counts) return value as the test collection and asserted its length was eighty-eight.",
+  "method_id": "V6513-M33",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["single_successful_canonical_pass", "zero_test_execution", "exact_selection_count", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect or honor the declared selected_tests tuple contract before counting eligible cases.",
+  "retained_negative_ids": ["V6513-CLOSE-N07"],
+  "rollback": "Give the failed assertion zero selection credit and do not execute the returned suite during preflight.",
+  "scope_boundary": "Read-only selection-count preflight only; no test-pass, final-validation, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Unpack validator selection tuples before counting eligible tests",
+  "trigger_preconditions": ["A preflight needs the eligible-test count without consuming the one canonical execution."],
+  "validation_witness_ids": []
+}

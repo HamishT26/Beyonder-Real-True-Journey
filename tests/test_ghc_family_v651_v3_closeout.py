@@ -26,8 +26,8 @@ class TamarV651V3CloseoutTests(unittest.TestCase):
     def test_negatives_and_gates_are_preserved(self):
         negatives = load("final/retained-negative-register.json")
         self.assertEqual(negatives["evidence_effective"], 6816)
-        self.assertEqual(negatives["closeout_operational"], 3)
-        self.assertEqual(negatives["effective"], 6819)
+        self.assertEqual(negatives["closeout_operational"], 8)
+        self.assertEqual(negatives["effective"], 6824)
         self.assertTrue(negatives["no_failure_erased"])
         gates = load("final/gate-register.json")
         self.assertEqual(gates["effective_open_gaps"], 53)
@@ -37,9 +37,9 @@ class TamarV651V3CloseoutTests(unittest.TestCase):
     def test_method_flow_retains_paired_witnesses(self):
         summary = load("method-flow/method-flow-summary.json")
         self.assertTrue(summary["valid"])
-        self.assertEqual(summary["counts"]["methods"], 29)
-        self.assertEqual(summary["counts"]["states"]["preferred"], 29)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 29, "pass": 29})
+        self.assertEqual(summary["counts"]["methods"], 33)
+        self.assertEqual(summary["counts"]["states"]["preferred"], 33)
+        self.assertEqual(summary["counts"]["witness_results"], {"fail": 34, "pass": 33})
 
     def test_closeout_and_seal_bind_exact_anchors(self):
         closeout = load("closeout/closeout-record.json")
@@ -47,8 +47,8 @@ class TamarV651V3CloseoutTests(unittest.TestCase):
         self.assertEqual(closeout["source"], SOURCE)
         self.assertEqual(closeout["x1_commit"], X1)
         self.assertEqual(closeout["evidence_commit"], EVIDENCE)
-        self.assertEqual(closeout["expected_final_parent"], EVIDENCE)
-        self.assertEqual(closeout["expected_phase_commit_count"], 3)
+        self.assertEqual(closeout["expected_final_parent"], "5b46077beb30019d5904c7d6d8fac5202c00ab82")
+        self.assertEqual(closeout["expected_phase_commit_count"], 4)
         seal = load("seal/seal-candidate.json")
         self.assertEqual(seal["final_head_binding"], "commit_containing_this_record")
         self.assertTrue(seal["final_validation_required"])
@@ -56,11 +56,11 @@ class TamarV651V3CloseoutTests(unittest.TestCase):
 
     def test_final_validation_contract_is_exact_and_bounded(self):
         contract = load("final/final-validation-contract.json")
-        self.assertEqual(contract["eligible_tests"], 89)
+        self.assertEqual(contract["eligible_tests"], 88)
         self.assertEqual(contract["v651_v1_eligible"], 22)
-        self.assertEqual(contract["v651_v2_tests"], 36)
+        self.assertEqual(contract["v651_v2_eligible"], 35)
         self.assertEqual(contract["v651_v3_eligible"], 31)
-        self.assertEqual(len(contract["exclusions"]), 4)
+        self.assertEqual(len(contract["exclusions"]), 5)
         self.assertTrue(contract["single_successful_canonical_pass"])
         self.assertTrue(contract["no_replay_after_success"])
         self.assertFalse(contract["full_repository_suite"])

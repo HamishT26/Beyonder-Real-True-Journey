@@ -21,10 +21,12 @@ PHASE_ROOT = "docs/tamar-vey/v651-v3"
 SOURCE = "7706cd8d92b1911e0cb61542469707baf2ec3ac6"
 X1 = "111e53d75eaa3560b48c3573507552b9ddb5ddfc"
 EVIDENCE = "449f3a29402459a66838cbf1cc8a3b110c145162"
+FIRST_CLOSEOUT = "5b46077beb30019d5904c7d6d8fac5202c00ab82"
 BRANCH = "codex/GHC-Family/tamar-vey-full-tools"
 EXCLUDED = {
     "tests.test_ghc_family_v651_v1_x1.TestV651V1X1.test_workflow_and_document_caps",
     "tests.test_ghc_family_v651_v1_closeout.TestV651V1Closeout.test_owner_and_delta_manifest_coverage",
+    "tests.test_ghc_family_v651_v2_x1.V651V2X1Tests.test_workflow_reflection_and_method_flow",
     "tests.test_ghc_family_v651_v3_x1.V651V3X1Tests.test_x1_has_no_execution_or_observed_outcomes",
     "tests.test_ghc_family_v651_v3_x1.V651V3X1Tests.test_workflow_reflection_index_and_method_flow",
 }
@@ -117,14 +119,14 @@ def flatten(suite: unittest.TestSuite):
 def selected_tests() -> tuple[unittest.TestSuite, dict]:
     loader = unittest.defaultTestLoader
     selected = []
-    counts = {"raw_v651_v1": 0, "v651_v1_eligible": 0, "v651_v2": 0, "raw_v651_v3": 0, "v651_v3_eligible": 0}
+    counts = {"raw_v651_v1": 0, "v651_v1_eligible": 0, "raw_v651_v2": 0, "v651_v2_eligible": 0, "raw_v651_v3": 0, "v651_v3_eligible": 0}
     excluded = []
     for module_name in MODULES:
         tests = list(flatten(loader.loadTestsFromModule(importlib.import_module(module_name))))
         if "v651_v1" in module_name:
             counts["raw_v651_v1"] += len(tests)
         elif "v651_v2" in module_name:
-            counts["v651_v2"] += len(tests)
+            counts["raw_v651_v2"] += len(tests)
         else:
             counts["raw_v651_v3"] += len(tests)
         for test in tests:
@@ -134,6 +136,8 @@ def selected_tests() -> tuple[unittest.TestSuite, dict]:
             selected.append(test)
             if "v651_v1" in module_name:
                 counts["v651_v1_eligible"] += 1
+            elif "v651_v2" in module_name:
+                counts["v651_v2_eligible"] += 1
             elif "v651_v3" in module_name:
                 counts["v651_v3_eligible"] += 1
     counts["eligible"] = len(selected)
@@ -167,8 +171,8 @@ def main() -> None:
     suite, selection = selected_tests()
     stream = io.StringIO()
     result = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
-    expected_selection = {"raw_v651_v1": 24, "v651_v1_eligible": 22, "v651_v2": 36, "raw_v651_v3": 33, "v651_v3_eligible": 31, "eligible": 89, "excluded": sorted(EXCLUDED)}
-    test_valid = result.testsRun == 89 and not result.failures and not result.errors and selection == expected_selection
+    expected_selection = {"raw_v651_v1": 24, "v651_v1_eligible": 22, "raw_v651_v2": 36, "v651_v2_eligible": 35, "raw_v651_v3": 33, "v651_v3_eligible": 31, "eligible": 88, "excluded": sorted(EXCLUDED)}
+    test_valid = result.testsRun == 88 and not result.failures and not result.errors and selection == expected_selection
     if not test_valid:
         issues.append("selected_tests")
 
@@ -243,18 +247,19 @@ def main() -> None:
         "source_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", SOURCE, head], cwd=REPO).returncode == 0,
         "x1_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", X1, head], cwd=REPO).returncode == 0,
         "evidence_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", EVIDENCE, head], cwd=REPO).returncode == 0,
-        "three_phase_commits": phase_commits == 3,
+        "first_closeout_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", FIRST_CLOSEOUT, head], cwd=REPO).returncode == 0,
+        "four_phase_commits": phase_commits == 4,
         "zero_merges": merges == 0,
         "one_final_parent": parent_count == 1,
-        "final_direct_child_of_evidence": parent_count == 1 and parents[1] == EVIDENCE,
+        "final_direct_child_of_first_closeout": parent_count == 1 and parents[1] == FIRST_CLOSEOUT,
         "outcome_distribution": truth["outcome_counts"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1},
-        "negative_retention": negatives["effective"] == 6819 and negatives["no_failure_erased"],
+        "negative_retention": negatives["effective"] == 6824 and negatives["no_failure_erased"],
         "open_gap_retention": gates["effective_open_gaps"] == 53 and gates["silently_closed"] == 0,
         "exact_gate_retention": gates["effective_exact_gates"] == 54 and gates["silently_closed"] == 0,
-        "method_count": methods["counts"]["methods"] == 29,
-        "method_states": methods["counts"]["states"]["preferred"] == 29,
-        "failed_witness_count": methods["counts"]["witness_results"]["fail"] == 29,
-        "passing_witness_count": methods["counts"]["witness_results"]["pass"] == 29,
+        "method_count": methods["counts"]["methods"] == 33,
+        "method_states": methods["counts"]["states"]["preferred"] == 33,
+        "failed_witness_count": methods["counts"]["witness_results"]["fail"] == 34,
+        "passing_witness_count": methods["counts"]["witness_results"]["pass"] == 33,
         "x1_manifest": manifests[0]["valid"],
         "evidence_manifest": manifests[1]["valid"],
         "final_delta_manifest": manifests[2]["valid"],
@@ -287,7 +292,7 @@ def main() -> None:
     failed_detailed = [name for name, passed in detailed.items() if not passed]
     if failed_detailed:
         issues.extend("detailed:" + name for name in failed_detailed)
-    minimal_names = ["expected_branch", "local_equals_upstream", "local_equals_tracking", "local_equals_live", "clean_before", "source_ancestral", "x1_ancestral", "evidence_ancestral", "three_phase_commits", "zero_merges", "one_final_parent", "final_direct_child_of_evidence", "outcome_distribution", "negative_retention", "open_gap_retention", "exact_gate_retention", "final_delta_manifest", "final_owner_manifest", "complete_json_parse", "five_class_privacy_scan", "selected_tests"]
+    minimal_names = ["expected_branch", "local_equals_upstream", "local_equals_tracking", "local_equals_live", "clean_before", "source_ancestral", "x1_ancestral", "evidence_ancestral", "first_closeout_ancestral", "four_phase_commits", "zero_merges", "one_final_parent", "final_direct_child_of_first_closeout", "outcome_distribution", "negative_retention", "open_gap_retention", "exact_gate_retention", "final_delta_manifest", "final_owner_manifest", "complete_json_parse", "five_class_privacy_scan", "selected_tests"]
     minimal = {name: detailed[name] for name in minimal_names}
     clean_after = not bool(git("status", "--porcelain=v1"))
     if not clean_after:
@@ -303,7 +308,7 @@ def main() -> None:
         "privacy": {"files_scanned": len(owner_map), "pattern_classes": sorted(PATTERNS), "confirmed_hits": privacy_hits, "zero_confirmed_hits": not privacy_hits, "boundary": "Five-class scanning is not privacy-complete assurance."},
         "manifests": manifests,
         "documents": {"overview_words": overview_words, "handoff_words": handoff_words, "issues": word_issues},
-        "history": {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "phase_commits": phase_commits, "merge_commits": merges, "final_parent_count": parent_count},
+        "history": {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "first_closeout": FIRST_CLOSEOUT, "phase_commits": phase_commits, "merge_commits": merges, "final_parent_count": parent_count},
         "equality": {"local": head, "upstream": upstream, "tracking": tracking, "live": live, "all_equal": head == upstream == tracking == live},
         "clean_before": clean_before, "clean_after": clean_after, "full_repository_suite_run": False, "named_or_detached_replay_run": False, "same_owner_only": True, "independent_reproduction": False,
         "issues": issues, "valid": valid, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": "One exact-final non-Eiren canonical pass only; no replay after success and no complete-suite or independent-reproduction credit.",

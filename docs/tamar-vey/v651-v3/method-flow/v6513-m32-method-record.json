@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use several simple quoted ripgrep expressions instead of one compound expression with nested PowerShell quoting.",
+  "failure_signature": "A compound ripgrep context probe had an unterminated PowerShell quote and failed before execution.",
+  "method_id": "V6513-M32",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "read_only_context", "bounded_output", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Split complex search expressions at shell boundaries and keep each quoted pattern syntactically independent.",
+  "retained_negative_ids": ["V6513-CLOSE-N05", "V6513-CLOSE-N06"],
+  "rollback": "Give the parser-failed context probe zero credit and change no file until simple probes succeed.",
+  "scope_boundary": "Read-only patch-context discovery only; no content or broader claim credit.",
+  "supersedes": [],
+  "title": "Split compound PowerShell search expressions into simple probes",
+  "trigger_preconditions": ["A Windows context probe combines regex alternation with nested quotes and brackets."],
+  "validation_witness_ids": []
+}
