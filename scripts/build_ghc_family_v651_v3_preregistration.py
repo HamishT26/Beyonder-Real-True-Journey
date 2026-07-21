@@ -41,7 +41,6 @@ def replace_compatibility_literals() -> None:
         ("Orin's", "Tamar's"),
         ("Orin", "Tamar"),
         ("MÄori", "Māori"),
-        ("all-920", "all-940"),
     ]
     for path in sorted(ROOT.rglob("*")):
         if not path.is_file() or path.suffix.casefold() not in {".json", ".md", ".html"}:
@@ -215,6 +214,12 @@ def main() -> None:
     prior_builder.NOVELTY_THRESHOLD = 0.60
     prior_builder.main()
     replace_compatibility_literals()
+    threat_path = ROOT / "threat-model/x1-threat-model.json"
+    threat_payload = json.loads(threat_path.read_text(encoding="utf-8"))
+    for threat in threat_payload["threats"]:
+        if threat.get("control") == "all-920 comparison plus manual mechanism field":
+            threat["control"] = "all-940 comparison plus manual mechanism field"
+    write_json("threat-model/x1-threat-model.json", threat_payload)
 
     write_json(
         "provenance/source-anchor-ledger.json",

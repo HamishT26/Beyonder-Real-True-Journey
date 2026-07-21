@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Suppress the summarize command's large stdout and validate its exact file-backed JSON output.",
+  "failure_signature": "The successful summarize wrapper emitted an overlarge one-line payload that was truncated by the supervising output channel.",
+  "method_id": "V6513-M23",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "bounded_output", "exact_file_review", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat generated summary files as the evidence domain and suppress redundant whole-ledger stdout.",
+  "retained_negative_ids": ["V6513-X2-N09"],
+  "rollback": "Give the truncated stdout zero summary credit and inspect the generated JSON directly.",
+  "scope_boundary": "Owner-local Method Flow output recovery only; no independent-reproduction or broader claim credit.",
+  "supersedes": [],
+  "title": "Use file-backed Method Flow summaries instead of overlarge stdout",
+  "trigger_preconditions": ["Method Flow summarize emits a complete but overlarge one-line stdout payload."],
+  "validation_witness_ids": []
+}

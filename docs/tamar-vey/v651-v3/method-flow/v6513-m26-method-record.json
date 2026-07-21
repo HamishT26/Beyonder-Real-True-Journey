@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run ripgrep from the repository root with explicit --glob filters instead of Windows wildcard path arguments.",
+  "failure_signature": "A read-only stale-label audit produced useful phase matches but ended with invalid-path errors for wildcard script and test arguments.",
+  "method_id": "V6513-M26",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "stale_label_review", "bounded_output", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use ripgrep glob options for Windows filename filtering; do not pass unexpanded wildcard paths.",
+  "retained_negative_ids": ["V6513-X2-N12"],
+  "rollback": "Give the invalid-path wrapper zero aggregate review credit and rerun one bounded root-scoped query.",
+  "scope_boundary": "Read-only stale-label classification only; no content, scientific, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use ripgrep glob filters for Windows stale-label audits",
+  "trigger_preconditions": ["A Windows audit must include phase docs plus matching script and test filenames."],
+  "validation_witness_ids": []
+}

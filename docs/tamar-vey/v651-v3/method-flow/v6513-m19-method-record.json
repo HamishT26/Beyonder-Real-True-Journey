@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Treat a truncated acknowledgement as unresolved until the exact target file is inspected, compiled, and executed.",
+  "failure_signature": "The evidence-builder patch response exceeded the visible model context, so the patch result could not be credited from acknowledgement alone.",
+  "method_id": "V6513-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "exact_file_review", "bounded_scope", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "After a truncated patch response, verify the exact file path and syntax before any execution or credit.",
+  "retained_negative_ids": ["V6513-X2-N05"],
+  "rollback": "Give the patch acknowledgement zero credit until direct file and execution witnesses pass.",
+  "scope_boundary": "Owner-local evidence-builder recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Verify exact file state after truncated patch acknowledgement",
+  "trigger_preconditions": ["A patch response is truncated before its completion status is attributable."],
+  "validation_witness_ids": []
+}

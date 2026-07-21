@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Split broad Git and filesystem status probes into bounded single-purpose commands and inspect the minimum exact state needed.",
+  "failure_signature": "A combined file, Git status, head, and branch command timed out before returning any attributable output.",
+  "method_id": "V6513-M20",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "bounded_diagnostics", "clean_state", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not begin recovery with a whole-worktree status call when exact file, head, and branch probes suffice.",
+  "retained_negative_ids": ["V6513-X2-N06"],
+  "rollback": "Credit no state from the timed-out wrapper and rerun only bounded read-only probes.",
+  "scope_boundary": "Read-only owner-lane recovery only; no mutation or broader claim credit.",
+  "supersedes": [],
+  "title": "Decompose overbroad worktree probes after timeout",
+  "trigger_preconditions": ["A combined status wrapper exceeds its bounded execution window without attributable output."],
+  "validation_witness_ids": []
+}
