@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit.",
+  "failure_signature": "A combined artifact and Git inspection wrapper exceeded its bounded timeout before returning any usable state.",
+  "method_id": "V6515-M23",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "privacy",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit.",
+  "retained_negative_ids": [
+    "V6515-X2-N04"
+  ],
+  "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+  "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bounded x2 recovery 23: Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit",
+  "trigger_preconditions": [
+    "A combined artifact and Git inspection wrapper exceeded its bounded timeout before returning any usable state."
+  ],
+  "validation_witness_ids": []
+}

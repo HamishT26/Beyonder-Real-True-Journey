@@ -2,9 +2,9 @@
 
 - Phase: v651-v5
 - Owner: Eiren Kestrel
-- Methods: 19
-- Passing witnesses: 19
-- Failed witnesses retained: 19
+- Methods: 25
+- Passing witnesses: 25
+- Failed witnesses retained: 25
 
 ## Preferred methods
 
@@ -159,6 +159,54 @@
 - Recurrence guard: Use the checked-in document-cap receipt and x1 test as the credited witnesses, then keep the faulty ad-hoc result at zero credit.
 - Rollback: Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.
 - Witnesses: V6515-M19-WFAIL, V6515-M19-WPASS
+
+### V6515-M20 — Bounded x2 recovery 20: Use valid JavaScript orchestration that emits a PowerShell command string, and retain the failed wrapper with zero credit
+
+- Trigger: A malformed JavaScript inspection wrapper used PowerShell array syntax and failed before reading or changing files.
+- Method: Use valid JavaScript orchestration that emits a PowerShell command string, and retain the failed wrapper with zero credit.
+- Recurrence guard: Use valid JavaScript orchestration that emits a PowerShell command string, and retain the failed wrapper with zero credit.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M20-WFAIL, V6515-M20-WPASS
+
+### V6515-M21 — Bounded x2 recovery 21: Use short stable patch anchors and retain the failed patch with zero credit
+
+- Trigger: A broad x2 patch failed exact-context verification on an encoding-sensitive inherited sentence and applied no changes.
+- Method: Use short stable patch anchors and retain the failed patch with zero credit.
+- Recurrence guard: Use short stable patch anchors and retain the failed patch with zero credit.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M21-WFAIL, V6515-M21-WPASS
+
+### V6515-M22 — Bounded x2 recovery 22: Bind summary counts to the inherited constants plus the one current open gap and exact gate, then rebuild without changing evidence class
+
+- Trigger: The first evidence build wrote correct JSON gate registers but its terminal summary printed inherited 54 and 55 gate totals.
+- Method: Bind summary counts to the inherited constants plus the one current open gap and exact gate, then rebuild without changing evidence class.
+- Recurrence guard: Bind summary counts to the inherited constants plus the one current open gap and exact gate, then rebuild without changing evidence class.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M22-WFAIL, V6515-M22-WPASS
+
+### V6515-M23 — Bounded x2 recovery 23: Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit
+
+- Trigger: A combined artifact and Git inspection wrapper exceeded its bounded timeout before returning any usable state.
+- Method: Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit.
+- Recurrence guard: Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M23-WFAIL, V6515-M23-WPASS
+
+### V6515-M24 — Bounded x2 recovery 24: Update only the two stale retained-negative expectations after binding them to the additive failure ledger, then rerun the isolated x2 module
+
+- Trigger: The first isolated x2 rerun passed thirteen of fifteen tests but two assertions still expected the pre-timeout negative totals.
+- Method: Update only the two stale retained-negative expectations after binding them to the additive failure ledger, then rerun the isolated x2 module.
+- Recurrence guard: Update only the two stale retained-negative expectations after binding them to the additive failure ledger, then rerun the isolated x2 module.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M24-WFAIL, V6515-M24-WPASS
+
+### V6515-M25 — Bounded x2 recovery 25: Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim
+
+- Trigger: The second isolated x2 rerun passed fourteen of fifteen tests but a nearby effective-count assertion still held the older total.
+- Method: Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim.
+- Recurrence guard: Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M25-WFAIL, V6515-M25-WPASS
 
 ## Retained boundary
 

@@ -3,11 +3,12 @@
 Phase: `v651-v5`
 Owner: Eiren Kestrel
 
-The audit inventoried 3096 surfaces, scoped 8, and produced 1 issue records. It made no destructive change.
+The audit inventoried 3113 surfaces, scoped 25, and produced 5 issue records. It made no destructive change.
 
 ## Dispositions
 
-- `remaster_additive`: 1
+- `merge_candidate`: 1
+- `remaster_additive`: 4
 
 ## Boundary
 
