@@ -1,23 +1,714 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 38,
-    "recommendations": 38,
-    "state_events": 114,
+    "methods": 46,
+    "recommendations": 46,
+    "state_events": 136,
     "states": {
-      "candidate": 0,
+      "candidate": 1,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 38,
+      "preferred": 45,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 38,
-      "pass": 38
+      "fail": 46,
+      "pass": 45
     },
-    "witnesses": 76
+    "witnesses": 91
   },
+  "methods": [
+    {
+      "candidate_workaround": "Use SHA256.Create().ComputeHash and dispose the hasher after each bounded byte-domain verification.",
+      "method_id": "V6515-M01",
+      "recurrence_guard": "Use SHA256.Create().ComputeHash and dispose the hasher after each bounded byte-domain verification.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 01: Use SHA256.Create().ComputeHash and dispose the hasher after each bounded byte-domain verification",
+      "trigger_preconditions": [
+        "PowerShell 5.1 did not expose the static SHA256 HashData helper used by the first immutable-manifest verifier."
+      ],
+      "validation_witness_ids": [
+        "V6515-M01-WFAIL",
+        "V6515-M01-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Separate optional searches from required reads and treat the documented no-match status explicitly.",
+      "method_id": "V6515-M02",
+      "recurrence_guard": "Separate optional searches from required reads and treat the documented no-match status explicitly.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 02: Separate optional searches from required reads and treat the documented no-match status explicitly",
+      "trigger_preconditions": [
+        "An optional ripgrep manifest-name search returned its normal no-match exit code and made a combined wrapper appear failed."
+      ],
+      "validation_witness_ids": [
+        "V6515-M02-WFAIL",
+        "V6515-M02-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the manifest schema and declared phase prefix before comparing exactly the 353 source-owner paths.",
+      "method_id": "V6515-M03",
+      "recurrence_guard": "Read the manifest schema and declared phase prefix before comparing exactly the 353 source-owner paths.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 03: Read the manifest schema and declared phase prefix before comparing exactly the 353 source-owner paths",
+      "trigger_preconditions": [
+        "The first source owner-manifest probe inferred the owner scope too broadly and compared 378 paths with a 353-path phase manifest."
+      ],
+      "validation_witness_ids": [
+        "V6515-M03-WFAIL",
+        "V6515-M03-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use the immutable prior_proposals plus new_proposals arrays and assert their combined 980-row length.",
+      "method_id": "V6515-M04",
+      "recurrence_guard": "Use the immutable prior_proposals plus new_proposals arrays and assert their combined 980-row length.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 04: Use the immutable prior_proposals plus new_proposals arrays and assert their combined 980-row length",
+      "trigger_preconditions": [
+        "The first novelty-index probe assumed a generic rows key and failed before returning a count."
+      ],
+      "validation_witness_ids": [
+        "V6515-M04-WFAIL",
+        "V6515-M04-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Collect the foreach result in a variable before formatting or emitting it.",
+      "method_id": "V6515-M05",
+      "recurrence_guard": "Collect the foreach result in a variable before formatting or emitting it.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 05: Collect the foreach result in a variable before formatting or emitting it",
+      "trigger_preconditions": [
+        "A PowerShell foreach expression was piped directly into formatting and produced an empty-pipe parser error."
+      ],
+      "validation_witness_ids": [
+        "V6515-M05-WFAIL",
+        "V6515-M05-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Resolve the explicit upstream ref first and pass that literal ref to each Git command.",
+      "method_id": "V6515-M06",
+      "recurrence_guard": "Resolve the explicit upstream ref first and pass that literal ref to each Git command.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 06: Resolve the explicit upstream ref first and pass that literal ref to each Git command",
+      "trigger_preconditions": [
+        "A wrapper mangled the upstream shorthand ref expression while collecting four-way equality evidence."
+      ],
+      "validation_witness_ids": [
+        "V6515-M06-WFAIL",
+        "V6515-M06-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Discover the official or primary source through search before opening the returned safe reference.",
+      "method_id": "V6515-M07",
+      "recurrence_guard": "Discover the official or primary source through search before opening the returned safe reference.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 07: Discover the official or primary source through search before opening the returned safe reference",
+      "trigger_preconditions": [
+        "A direct open of an unprimed official documentation URL was rejected by the browsing safety boundary."
+      ],
+      "validation_witness_ids": [
+        "V6515-M07-WFAIL",
+        "V6515-M07-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run compilation as the required gate and report an optional zero-hit search independently.",
+      "method_id": "V6515-M08",
+      "recurrence_guard": "Run compilation as the required gate and report an optional zero-hit search independently.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 08: Run compilation as the required gate and report an optional zero-hit search independently",
+      "trigger_preconditions": [
+        "A combined required compile and optional stale-label scan returned exit 1 solely because the correct stale-label result was empty."
+      ],
+      "validation_witness_ids": [
+        "V6515-M08-WFAIL",
+        "V6515-M08-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use smaller exact-context patches, verify every bounded edit, and retain the failed patch with zero credit.",
+      "method_id": "V6515-M09",
+      "recurrence_guard": "Use smaller exact-context patches, verify every bounded edit, and retain the failed patch with zero credit.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 09: Use smaller exact-context patches, verify every bounded edit, and retain the failed patch with zero credit",
+      "trigger_preconditions": [
+        "A broad multi-file patch failed exact-context verification at one proposal sentence and applied no changes."
+      ],
+      "validation_witness_ids": [
+        "V6515-M09-WFAIL",
+        "V6515-M09-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run compilation, optional stale-label review, diff hygiene, and Git state as separate bounded checks.",
+      "method_id": "V6515-M10",
+      "recurrence_guard": "Run compilation, optional stale-label review, diff hygiene, and Git state as separate bounded checks.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 10: Run compilation, optional stale-label review, diff hygiene, and Git state as separate bounded checks",
+      "trigger_preconditions": [
+        "A combined post-edit compile, stale-label, and Git-state audit exceeded its wrapper before yielding attributable sub-results."
+      ],
+      "validation_witness_ids": [
+        "V6515-M10-WFAIL",
+        "V6515-M10-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Replace P18 with a manually reviewed adaptive radix tree tribunal, rerun all 980 comparisons, and do not weaken the novelty threshold.",
+      "method_id": "V6515-M11",
+      "recurrence_guard": "Replace P18 with a manually reviewed adaptive radix tree tribunal, rerun all 980 comparisons, and do not weaken the novelty threshold.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 11: Replace P18 with a manually reviewed adaptive radix tree tribunal, rerun all 980 comparisons, and do not weaken the novelty threshold",
+      "trigger_preconditions": [
+        "The first x1 generator stopped at the semantic novelty gate because proposal P18 repeated an inherited quotient-filter mechanism."
+      ],
+      "validation_witness_ids": [
+        "V6515-M11-WFAIL",
+        "V6515-M11-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use the declared family skill runners, retain the partial test at zero aggregate credit, and rerun only the isolated blocker before the complete x1 set.",
+      "method_id": "V6515-M12",
+      "recurrence_guard": "Use the declared family skill runners, retain the partial test at zero aggregate credit, and rerun only the isolated blocker before the complete x1 set.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 12: Use the declared family skill runners, retain the partial test at zero aggregate credit, and rerun only the isolated blocker before the complete x1 set",
+      "trigger_preconditions": [
+        "The first isolated x1 test run passed seven of eight tests but found that workflow, reflection, and Method Flow outputs had not yet been materialized from their planned inputs."
+      ],
+      "validation_witness_ids": [
+        "V6515-M12-WFAIL",
+        "V6515-M12-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Read each required skill independently and use only the exact runner paths named by its instructions.",
+      "method_id": "V6515-M13",
+      "recurrence_guard": "Read each required skill independently and use only the exact runner paths named by its instructions.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 13: Read each required skill independently and use only the exact runner paths named by its instructions",
+      "trigger_preconditions": [
+        "A combined repository-wide output search and two required skill reads timed out because the broad search dominated the wrapper."
+      ],
+      "validation_witness_ids": [
+        "V6515-M13-WFAIL",
+        "V6515-M13-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Inspect the already-read Method Flow script and schema directly, then invoke its documented explicit build operation.",
+      "method_id": "V6515-M14",
+      "recurrence_guard": "Inspect the already-read Method Flow script and schema directly, then invoke its documented explicit build operation.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 14: Inspect the already-read Method Flow script and schema directly, then invoke its documented explicit build operation",
+      "trigger_preconditions": [
+        "A three-runner help wrapper returned two successful help texts but the Method Flow help process exceeded its bounded timeout."
+      ],
+      "validation_witness_ids": [
+        "V6515-M14-WFAIL",
+        "V6515-M14-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use an explicit zero-hit branch for optional discovery and retain required inspections as separate commands.",
+      "method_id": "V6515-M15",
+      "recurrence_guard": "Use an explicit zero-hit branch for optional discovery and retain required inspections as separate commands.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 15: Use an explicit zero-hit branch for optional discovery and retain required inspections as separate commands",
+      "trigger_preconditions": [
+        "An optional script-name search returned the normal no-match status without its wrapper normalizing that result."
+      ],
+      "validation_witness_ids": [
+        "V6515-M15-WFAIL",
+        "V6515-M15-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Patch short stable anchors independently and verify each additive file before generation.",
+      "method_id": "V6515-M16",
+      "recurrence_guard": "Patch short stable anchors independently and verify each additive file before generation.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 16: Patch short stable anchors independently and verify each additive file before generation",
+      "trigger_preconditions": [
+        "A second broad multi-file patch failed exact-context verification on a long overview sentence and applied no changes."
+      ],
+      "validation_witness_ids": [
+        "V6515-M16-WFAIL",
+        "V6515-M16-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Resolve the installed skill engine through the portable compatibility wrapper, load its schema functions without invoking main, and retain this failed helper run.",
+      "method_id": "V6515-M17",
+      "recurrence_guard": "Resolve the installed skill engine through the portable compatibility wrapper, load its schema functions without invoking main, and retain this failed helper run.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 17: Resolve the installed skill engine through the portable compatibility wrapper, load its schema functions without invoking main, and retain this failed helper run",
+      "trigger_preconditions": [
+        "The first phase-local Method Flow helper imported the repository compatibility wrapper as a library, but that wrapper exposes only a command entrypoint."
+      ],
+      "validation_witness_ids": [
+        "V6515-M17-WFAIL",
+        "V6515-M17-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run the already-read index skill's phase-scoped builder, retain the partial test at zero credit, and rerun only the blocker before the complete x1 set.",
+      "method_id": "V6515-M18",
+      "recurrence_guard": "Run the already-read index skill's phase-scoped builder, retain the partial test at zero credit, and rerun only the blocker before the complete x1 set.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 18: Run the already-read index skill's phase-scoped builder, retain the partial test at zero credit, and rerun only the blocker before the complete x1 set",
+      "trigger_preconditions": [
+        "The isolated workflow blocker test progressed through workflow, reflection, and Method Flow but found that the planned phase-scoped GHC Family Index receipt had not yet been built."
+      ],
+      "validation_witness_ids": [
+        "V6515-M18-WFAIL",
+        "V6515-M18-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use the checked-in document-cap receipt and x1 test as the credited witnesses, then keep the faulty ad-hoc result at zero credit.",
+      "method_id": "V6515-M19",
+      "recurrence_guard": "Use the checked-in document-cap receipt and x1 test as the credited witnesses, then keep the faulty ad-hoc result at zero credit.",
+      "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded recovery method 19: Use the checked-in document-cap receipt and x1 test as the credited witnesses, then keep the faulty ad-hoc result at zero credit",
+      "trigger_preconditions": [
+        "An ad-hoc document word-count audit over-escaped its regular expression and incorrectly reported zero words."
+      ],
+      "validation_witness_ids": [
+        "V6515-M19-WFAIL",
+        "V6515-M19-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use valid JavaScript orchestration that emits a PowerShell command string, and retain the failed wrapper with zero credit.",
+      "method_id": "V6515-M20",
+      "recurrence_guard": "Use valid JavaScript orchestration that emits a PowerShell command string, and retain the failed wrapper with zero credit.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded x2 recovery 20: Use valid JavaScript orchestration that emits a PowerShell command string, and retain the failed wrapper with zero credit",
+      "trigger_preconditions": [
+        "A malformed JavaScript inspection wrapper used PowerShell array syntax and failed before reading or changing files."
+      ],
+      "validation_witness_ids": [
+        "V6515-M20-WFAIL",
+        "V6515-M20-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use short stable patch anchors and retain the failed patch with zero credit.",
+      "method_id": "V6515-M21",
+      "recurrence_guard": "Use short stable patch anchors and retain the failed patch with zero credit.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded x2 recovery 21: Use short stable patch anchors and retain the failed patch with zero credit",
+      "trigger_preconditions": [
+        "A broad x2 patch failed exact-context verification on an encoding-sensitive inherited sentence and applied no changes."
+      ],
+      "validation_witness_ids": [
+        "V6515-M21-WFAIL",
+        "V6515-M21-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind summary counts to the inherited constants plus the one current open gap and exact gate, then rebuild without changing evidence class.",
+      "method_id": "V6515-M22",
+      "recurrence_guard": "Bind summary counts to the inherited constants plus the one current open gap and exact gate, then rebuild without changing evidence class.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded x2 recovery 22: Bind summary counts to the inherited constants plus the one current open gap and exact gate, then rebuild without changing evidence class",
+      "trigger_preconditions": [
+        "The first evidence build wrote correct JSON gate registers but its terminal summary printed inherited 54 and 55 gate totals."
+      ],
+      "validation_witness_ids": [
+        "V6515-M22-WFAIL",
+        "V6515-M22-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit.",
+      "method_id": "V6515-M23",
+      "recurrence_guard": "Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded x2 recovery 23: Split direct artifact reads from a separately bounded Git audit, avoid an all-in-one broad status wrapper, and retain the timed-out attempt with zero credit",
+      "trigger_preconditions": [
+        "A combined artifact and Git inspection wrapper exceeded its bounded timeout before returning any usable state."
+      ],
+      "validation_witness_ids": [
+        "V6515-M23-WFAIL",
+        "V6515-M23-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Update only the two stale retained-negative expectations after binding them to the additive failure ledger, then rerun the isolated x2 module.",
+      "method_id": "V6515-M24",
+      "recurrence_guard": "Update only the two stale retained-negative expectations after binding them to the additive failure ledger, then rerun the isolated x2 module.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded x2 recovery 24: Update only the two stale retained-negative expectations after binding them to the additive failure ledger, then rerun the isolated x2 module",
+      "trigger_preconditions": [
+        "The first isolated x2 rerun passed thirteen of fifteen tests but two assertions still expected the pre-timeout negative totals."
+      ],
+      "validation_witness_ids": [
+        "V6515-M24-WFAIL",
+        "V6515-M24-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim.",
+      "method_id": "V6515-M25",
+      "recurrence_guard": "Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded x2 recovery 25: Inspect the complete retained-negative assertion block, update all linked exact totals together, and rerun the isolated module without broadening any evidence claim",
+      "trigger_preconditions": [
+        "The second isolated x2 rerun passed fourteen of fifteen tests but a nearby effective-count assertion still held the older total."
+      ],
+      "validation_witness_ids": [
+        "V6515-M25-WFAIL",
+        "V6515-M25-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use one literal regular expression per file in a bounded read-only wrapper, preserve the failed parse with zero credit, and continue only after attributable output is returned.",
+      "method_id": "V6515-M26",
+      "recurrence_guard": "Use one literal regular expression per file in a bounded read-only wrapper, preserve the failed parse with zero credit, and continue only after attributable output is returned.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 26: Use one literal regular expression per file in a bounded read-only wrapper, preserve the failed parse with zero credit, and continue only after attributable output is returned",
+      "trigger_preconditions": [
+        "The first post-evidence inspection wrapper had an unterminated PowerShell string and returned no file inspection output."
+      ],
+      "validation_witness_ids": [
+        "V6515-M26-WFAIL",
+        "V6515-M26-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Preserve the inherited template, add later Eiren-specific override functions at stable Python definition boundaries, and retain the rejected patch with zero credit.",
+      "method_id": "V6515-M27",
+      "recurrence_guard": "Preserve the inherited template, add later Eiren-specific override functions at stable Python definition boundaries, and retain the rejected patch with zero credit.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 27: Preserve the inherited template, add later Eiren-specific override functions at stable Python definition boundaries, and retain the rejected patch with zero credit",
+      "trigger_preconditions": [
+        "A broad inherited-generator patch failed exact-context verification on mixed-encoding text and applied no changes."
+      ],
+      "validation_witness_ids": [
+        "V6515-M27-WFAIL",
+        "V6515-M27-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Patch the closeout main contract in small stable ASCII hunks, verify each hunk independently, and retain the rejected combined patch with zero credit.",
+      "method_id": "V6515-M28",
+      "recurrence_guard": "Patch the closeout main contract in small stable ASCII hunks, verify each hunk independently, and retain the rejected combined patch with zero credit.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 28: Patch the closeout main contract in small stable ASCII hunks, verify each hunk independently, and retain the rejected combined patch with zero credit",
+      "trigger_preconditions": [
+        "A combined main-contract patch was rejected atomically when one inherited mojibake line failed exact-context verification."
+      ],
+      "validation_witness_ids": [
+        "V6515-M28-WFAIL",
+        "V6515-M28-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Add only the exact Method Flow validation path to the preflight allow-list and rerun the deterministic builder from the unchanged evidence head.",
+      "method_id": "V6515-M29",
+      "recurrence_guard": "Add only the exact Method Flow validation path to the preflight allow-list and rerun the deterministic builder from the unchanged evidence head.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 29: Add only the exact Method Flow validation path to the preflight allow-list and rerun the deterministic builder from the unchanged evidence head",
+      "trigger_preconditions": [
+        "The first closeout build preflight rejected an expected Method Flow validation file that was absent from its exact allow-list."
+      ],
+      "validation_witness_ids": [
+        "V6515-M29-WFAIL",
+        "V6515-M29-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests.",
+      "method_id": "V6515-M30",
+      "recurrence_guard": "Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 30: Run generation and tests as separate bounded commands and explicitly stop on each native exit code so a failed producer cannot cascade into consumer tests",
+      "trigger_preconditions": [
+        "The first closeout wrapper continued into tests after the native builder failed, producing nine missing-artifact errors with zero test credit."
+      ],
+      "validation_witness_ids": [
+        "V6515-M30-WFAIL",
+        "V6515-M30-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Allow only the exact closeout-v6515-m namespace rather than a partial numeric range and rerun from the unchanged evidence head.",
+      "method_id": "V6515-M31",
+      "recurrence_guard": "Allow only the exact closeout-v6515-m namespace rather than a partial numeric range and rerun from the unchanged evidence head.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 31: Allow only the exact closeout-v6515-m namespace rather than a partial numeric range and rerun from the unchanged evidence head",
+      "trigger_preconditions": [
+        "The second closeout preflight used a numeric m2 prefix that covered records 26 through 29 but rejected the valid record 30."
+      ],
+      "validation_witness_ids": [
+        "V6515-M31-WFAIL",
+        "V6515-M31-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration.",
+      "method_id": "V6515-M32",
+      "recurrence_guard": "Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 32: Allow only enumerated v651-v5 closeout, final, handoff, route, seal, validation-final, Index, and Reflection output namespaces for deterministic regeneration",
+      "trigger_preconditions": [
+        "The post-Index deterministic closeout rebuild rejected its own already-generated final output directories because the preflight recognized only first-run paths."
+      ],
+      "validation_witness_ids": [
+        "V6515-M32-WFAIL",
+        "V6515-M32-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation.",
+      "method_id": "V6515-M33",
+      "recurrence_guard": "Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 33: Inspect the exact local head, parent, clean state, upstream, and fresh live remote before retrying only the incomplete push operation",
+      "trigger_preconditions": [
+        "The supervising closeout commit-and-push wrapper timed out after the commit completed but before the push completed."
+      ],
+      "validation_witness_ids": [
+        "V6515-M33-WFAIL",
+        "V6515-M33-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output.",
+      "method_id": "V6515-M34",
+      "recurrence_guard": "Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 34: Run each ancestry command separately, capture its exit code immediately, and assemble the equality receipt only after every read-only check returns attributable output",
+      "trigger_preconditions": [
+        "The first post-push four-way-equality audit used an invalid compound PowerShell expression and stopped before completing the read-only audit."
+      ],
+      "validation_witness_ids": [
+        "V6515-M34-WFAIL",
+        "V6515-M34-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit.",
+      "method_id": "V6515-M35",
+      "recurrence_guard": "Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 35: Use the proven module-isolated repository harness, preserve exact tests.* identifiers and exact lifecycle exclusions, and give the incomplete validator attempt zero pass credit",
+      "trigger_preconditions": [
+        "The first exact-final validator used unittest discovery with a non-package tests directory and stopped before running any repository test."
+      ],
+      "validation_witness_ids": [
+        "V6515-M35-WFAIL",
+        "V6515-M35-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash.",
+      "method_id": "V6515-M36",
+      "recurrence_guard": "Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 36: Use rg include globs with -g against explicit directories and interpret an exit status of one as a bounded zero-match result rather than a tool crash",
+      "trigger_preconditions": [
+        "A diagnostic rg command passed Windows wildcard characters as literal path arguments and was rejected before searching files."
+      ],
+      "validation_witness_ids": [
+        "V6515-M36-WFAIL",
+        "V6515-M36-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction.",
+      "method_id": "V6515-M37",
+      "recurrence_guard": "Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 37: Bind the closeout test to the fully regenerated thirty-seven-method ledger and rerun only the bounded closeout module before staging the terminal correction",
+      "trigger_preconditions": [
+        "The first correction-packet closeout test run passed nine of ten tests but retained a stale expectation of thirty-two Method Flow methods."
+      ],
+      "validation_witness_ids": [
+        "V6515-M37-WFAIL",
+        "V6515-M37-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object.",
+      "method_id": "V6515-M38",
+      "recurrence_guard": "Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 38: Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object",
+      "trigger_preconditions": [
+        "A correction-stage summary wrapper repeated an invalid compound PowerShell expression while trying to capture diff-check status and produced no audit output."
+      ],
+      "validation_witness_ids": [
+        "V6515-M38-WFAIL",
+        "V6515-M38-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Add only the two exact v650-v8 lifecycle test identifiers to the immutable exclusion set, retain the failed 2,359-of-2,361 aggregate at zero credit, and run one new exact-final aggregate after the additive correction is pushed and remote-equal.",
+      "method_id": "V6515-M39",
+      "recurrence_guard": "Add only the two exact v650-v8 lifecycle test identifiers to the immutable exclusion set, retain the failed 2,359-of-2,361 aggregate at zero credit, and run one new exact-final aggregate after the additive correction is pushed and remote-equal.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 39: Add only the two exact v650-v8 lifecycle test identifiers to the immutable exclusion set, retain the failed 2,359-of-2,361 aggregate at zero credit, and run one new exact-final aggregate after the additive correction is pushed and remote-equal",
+      "trigger_preconditions": [
+        "The first complete-repository aggregate at the first correction head ran 2,361 tests and retained two failures from v650-v8 assertions that compare historical final-parent and manifest domains to the descendant global HEAD."
+      ],
+      "validation_witness_ids": [
+        "V6515-M39-WFAIL"
+      ]
+    },
+    {
+      "candidate_workaround": "Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds.",
+      "method_id": "V6515-M40",
+      "recurrence_guard": "Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 40: Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds",
+      "trigger_preconditions": [
+        "A combined skill-instruction discovery wrapper placed a foreach statement directly before a pipeline and failed PowerShell parsing before reading the requested files."
+      ],
+      "validation_witness_ids": [
+        "V6515-M40-WFAIL",
+        "V6515-M40-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks.",
+      "method_id": "V6515-M41",
+      "recurrence_guard": "Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 41: Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks",
+      "trigger_preconditions": [
+        "A read-only Git verification wrapper timed out after proving the exact heads, clean branch, four commits, zero merges, and live equality but before returning the final owner-count field."
+      ],
+      "validation_witness_ids": [
+        "V6515-M41-WFAIL",
+        "V6515-M41-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction.",
+      "method_id": "V6515-M42",
+      "recurrence_guard": "Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 42: Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction",
+      "trigger_preconditions": [
+        "A parallel artifact-inspection wrapper timed out while one broad owner-path enumeration was still producing output."
+      ],
+      "validation_witness_ids": [
+        "V6515-M42-WFAIL",
+        "V6515-M42-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches.",
+      "method_id": "V6515-M43",
+      "recurrence_guard": "Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 43: Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches",
+      "trigger_preconditions": [
+        "A read-only tooling-index search used malformed nested PowerShell quoting and failed before executing ripgrep."
+      ],
+      "validation_witness_ids": [
+        "V6515-M43-WFAIL",
+        "V6515-M43-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass.",
+      "method_id": "V6515-M44",
+      "recurrence_guard": "Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 44: Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass",
+      "trigger_preconditions": [
+        "A tooling inventory probe assumed a reflection-remaster receipt filename that was not present and ended with a missing-path error after the valid index reads."
+      ],
+      "validation_witness_ids": [
+        "V6515-M44-WFAIL",
+        "V6515-M44-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake.",
+      "method_id": "V6515-M45",
+      "recurrence_guard": "Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 45: Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake",
+      "trigger_preconditions": [
+        "A large UTF-8 template patch was rejected atomically because the console's mojibake rendering did not match the file's real em-dash text."
+      ],
+      "validation_witness_ids": [
+        "V6515-M45-WFAIL",
+        "V6515-M45-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately.",
+      "method_id": "V6515-M46",
+      "recurrence_guard": "Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 46: Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately",
+      "trigger_preconditions": [
+        "A second combined patch was rejected atomically when one inherited Maori-encoding line again failed exact-context verification."
+      ],
+      "validation_witness_ids": [
+        "V6515-M46-WFAIL",
+        "V6515-M46-WPASS"
+      ]
+    }
+  ],
   "owner": "Eiren Kestrel",
   "phase": "v651-v5",
   "preferred_methods": [
@@ -590,6 +1281,111 @@
         "V6515-M38-WFAIL",
         "V6515-M38-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds.",
+      "method_id": "V6515-M40",
+      "recurrence_guard": "Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 40: Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds",
+      "trigger_preconditions": [
+        "A combined skill-instruction discovery wrapper placed a foreach statement directly before a pipeline and failed PowerShell parsing before reading the requested files."
+      ],
+      "validation_witness_ids": [
+        "V6515-M40-WFAIL",
+        "V6515-M40-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks.",
+      "method_id": "V6515-M41",
+      "recurrence_guard": "Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 41: Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks",
+      "trigger_preconditions": [
+        "A read-only Git verification wrapper timed out after proving the exact heads, clean branch, four commits, zero merges, and live equality but before returning the final owner-count field."
+      ],
+      "validation_witness_ids": [
+        "V6515-M41-WFAIL",
+        "V6515-M41-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction.",
+      "method_id": "V6515-M42",
+      "recurrence_guard": "Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 42: Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction",
+      "trigger_preconditions": [
+        "A parallel artifact-inspection wrapper timed out while one broad owner-path enumeration was still producing output."
+      ],
+      "validation_witness_ids": [
+        "V6515-M42-WFAIL",
+        "V6515-M42-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches.",
+      "method_id": "V6515-M43",
+      "recurrence_guard": "Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 43: Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches",
+      "trigger_preconditions": [
+        "A read-only tooling-index search used malformed nested PowerShell quoting and failed before executing ripgrep."
+      ],
+      "validation_witness_ids": [
+        "V6515-M43-WFAIL",
+        "V6515-M43-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass.",
+      "method_id": "V6515-M44",
+      "recurrence_guard": "Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 44: Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass",
+      "trigger_preconditions": [
+        "A tooling inventory probe assumed a reflection-remaster receipt filename that was not present and ended with a missing-path error after the valid index reads."
+      ],
+      "validation_witness_ids": [
+        "V6515-M44-WFAIL",
+        "V6515-M44-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake.",
+      "method_id": "V6515-M45",
+      "recurrence_guard": "Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 45: Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake",
+      "trigger_preconditions": [
+        "A large UTF-8 template patch was rejected atomically because the console's mojibake rendering did not match the file's real em-dash text."
+      ],
+      "validation_witness_ids": [
+        "V6515-M45-WFAIL",
+        "V6515-M45-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately.",
+      "method_id": "V6515-M46",
+      "recurrence_guard": "Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately.",
+      "rollback": "Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.",
+      "scope_boundary": "Same-owner closeout recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+      "title": "Bounded closeout recovery 46: Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately",
+      "trigger_preconditions": [
+        "A second combined patch was rejected atomically when one inherited Maori-encoding line again failed exact-context verification."
+      ],
+      "validation_witness_ids": [
+        "V6515-M46-WFAIL",
+        "V6515-M46-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -630,7 +1426,15 @@
     "V6515-M35-WFAIL",
     "V6515-M36-WFAIL",
     "V6515-M37-WFAIL",
-    "V6515-M38-WFAIL"
+    "V6515-M38-WFAIL",
+    "V6515-M39-WFAIL",
+    "V6515-M40-WFAIL",
+    "V6515-M41-WFAIL",
+    "V6515-M42-WFAIL",
+    "V6515-M43-WFAIL",
+    "V6515-M44-WFAIL",
+    "V6515-M45-WFAIL",
+    "V6515-M46-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

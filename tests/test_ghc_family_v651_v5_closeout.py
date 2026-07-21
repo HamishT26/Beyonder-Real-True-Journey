@@ -9,6 +9,7 @@ SOURCE = "d5c9a16b3efb76a138944d97211bc0a3b7bcd716"
 X1 = "c2c51a9e4f1786a45d77390b1d2e75e170dde170"
 EVIDENCE = "4815a8471e83598df9ad9dabfeeed2a53d8eaebe"
 CLOSEOUT = "27b34aa5d72ce4dd3c50d2423741e9c9eba77e1a"
+FIRST_CORRECTION = "f9fed4dc8452c2f6555ff58c469fe66923978418"
 
 
 def load(relative: str):
@@ -28,8 +29,8 @@ class V651V5CloseoutTests(unittest.TestCase):
     def test_negatives_and_gates_are_preserved(self):
         negatives = load("final/retained-negative-register.json")
         self.assertEqual(negatives["evidence_effective"], 7073)
-        self.assertEqual(negatives["closeout_operational"], 13)
-        self.assertEqual(negatives["effective"], 7086)
+        self.assertEqual(negatives["closeout_operational"], 21)
+        self.assertEqual(negatives["effective"], 7094)
         self.assertTrue(negatives["no_failure_erased"])
         gates = load("final/gate-register.json")
         self.assertEqual(gates["effective_open_gaps"], 55)
@@ -39,9 +40,10 @@ class V651V5CloseoutTests(unittest.TestCase):
     def test_method_flow_retains_paired_witnesses(self):
         summary = load("method-flow/method-flow-summary.json")
         self.assertTrue(summary["valid"])
-        self.assertEqual(summary["counts"]["methods"], 38)
-        self.assertEqual(summary["counts"]["states"]["preferred"], 38)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 38, "pass": 38})
+        self.assertEqual(summary["counts"]["methods"], 46)
+        self.assertEqual(summary["counts"]["states"]["preferred"], 45)
+        self.assertEqual(summary["counts"]["states"]["candidate"], 1)
+        self.assertEqual(summary["counts"]["witness_results"], {"fail": 46, "pass": 45})
 
     def test_closeout_and_seal_bind_exact_anchors(self):
         closeout = load("closeout/closeout-record.json")
@@ -50,20 +52,24 @@ class V651V5CloseoutTests(unittest.TestCase):
         self.assertEqual(closeout["x1_commit"], X1)
         self.assertEqual(closeout["evidence_commit"], EVIDENCE)
         self.assertEqual(closeout["closeout_commit"], CLOSEOUT)
-        self.assertEqual(closeout["expected_final_parent"], CLOSEOUT)
-        self.assertEqual(closeout["expected_phase_commit_count"], 4)
+        self.assertEqual(closeout["first_correction_commit"], FIRST_CORRECTION)
+        self.assertEqual(closeout["expected_final_parent"], FIRST_CORRECTION)
+        self.assertEqual(closeout["expected_phase_commit_count"], 5)
+        self.assertEqual(closeout["maximum_phase_commit_count"], 6)
         seal = load("seal/combined-closeout-seal.json")
         self.assertEqual(seal["closeout"], CLOSEOUT)
         self.assertTrue(seal["terminal_correction"])
-        self.assertEqual(seal["phase_commit_count_required"], 4)
+        self.assertEqual(seal["first_correction"], FIRST_CORRECTION)
+        self.assertEqual(seal["phase_commit_count_required"], 5)
+        self.assertEqual(seal["phase_commit_cap"], 6)
         self.assertEqual(seal["final_head_binding"], "commit_containing_this_record")
         self.assertTrue(seal["final_validation_required"])
         self.assertTrue(seal["route_held_until_validation"])
 
     def test_final_validation_contract_is_exact_and_bounded(self):
         contract = load("final/final-validation-contract.json")
-        self.assertEqual(len(contract["exact_lifecycle_exclusions"]), 31)
-        self.assertTrue(contract["failed_incomplete_attempt_retained"])
+        self.assertEqual(len(contract["exact_lifecycle_exclusions"]), 33)
+        self.assertEqual(contract["failed_incomplete_attempts_retained"], 2)
         self.assertTrue(contract["single_successful_canonical_pass"])
         self.assertTrue(contract["no_replay_after_success"])
         self.assertTrue(contract["full_repository_suite"])
@@ -79,11 +85,12 @@ class V651V5CloseoutTests(unittest.TestCase):
         overview = (ROOT / "overview/final-integrated-overview.md").read_text(encoding="utf-8")
         self.assertLessEqual(len(re.findall(r"\b[\w'-]+\b", overview)), 6000)
         self.assertGreaterEqual(len(re.findall(r"\b[\w'-]+\b", overview)), 1500)
-        baton = (ROOT / "handoffs/ilyra-fen-v651-v6-activation.md").read_text(encoding="utf-8")
+        baton = (ROOT / "handoffs/eiren-kestrel-v651-v5-2-remaster.md").read_text(encoding="utf-8")
         baton_words = len(re.findall(r"\b[\w'-]+\b", baton))
-        self.assertGreaterEqual(baton_words, 8000)
-        self.assertLessEqual(baton_words, 20000)
-        self.assertIn("PREPARED_NOT_SENT", baton)
+        self.assertGreaterEqual(baton_words, 10000)
+        self.assertLessEqual(baton_words, 100000)
+        self.assertIn("ACTIVE", baton)
+        self.assertIn("PREPARED_NOT_SENT_SUPERSEDED", baton)
         self.assertTrue(load("validation/closeout-build-receipt.json")["valid"])
 
     def test_environment_was_observed_without_mutation(self):
@@ -95,9 +102,11 @@ class V651V5CloseoutTests(unittest.TestCase):
 
     def test_route_remains_prepared_and_unsent(self):
         route = load("route/final-phase-state.json")
-        self.assertEqual(route["target_exact_title"], "Ilyra Fen")
-        self.assertEqual(route["target_phase"], "v651-v6")
-        self.assertEqual(route["terminal_route"], "PREPARED_NOT_SENT")
+        self.assertEqual(route["target_exact_title"], "Eiren Kestrel")
+        self.assertEqual(route["target_phase"], "v651-v5-2-remaster")
+        self.assertEqual(route["terminal_route"], "ACTIVE")
+        self.assertEqual(route["superseded_unsent_target"], "Ilyra Fen")
+        self.assertFalse(route["cli_sibling_spawned"])
         self.assertEqual(route["send_count"], 0)
         self.assertFalse(route["task_created"])
         self.assertFalse(route["task_forked"])

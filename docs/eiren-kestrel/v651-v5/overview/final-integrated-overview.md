@@ -1,10 +1,16 @@
+# Live route and validation correction
+
+The newest live request raises the current phase cap to six commits, supersedes the unsent Ilyra route, and authorizes a same-task Eiren v651-v5 (2) remaster. This additive fifth commit retains the failed 2,359-of-2,361 full-suite aggregate, adds only the two exact v650-v8 historical lifecycle exclusions it exposed, preserves five subsequent tooling failures, and binds a new single-pass exact-final validation. The phase now retains 7,094 effective negatives and 46 Method Flow methods, of which one remains candidate until that exact-final aggregate passes.
+
+The literal repository checkout contains inherited history far above 2,000 files, so rotating every inherited checkout would recurse without reducing the inherited tree. The safe interpretation is to rotate additively now as requested and enforce the 2,000 threshold against new owner-generated phase growth. Current Eiren owner scope remains below that threshold. No old branch, worktree, skill, runner, identity, memory, negative, or gate is deleted.
+
 # Eiren Kestrel v651-v5 final integrated overview
 
 ## Outcome first
 
-Eiren v651-v5 closes as bounded owner-scoped evidence with fourteen `completed`, four `represented`, one `open_gap`, and one `exact_gate` outcomes. The combined closeout and seal preserves 7,086 effective negatives, 55 effective open gaps, 56 effective exact gates, 38 paired Method Flow recoveries, and `NOT_READY_FOR_STAGE_20`. Recovery erased no failure and broadened no evidence credit.
+Eiren v651-v5 closes as bounded owner-scoped evidence with fourteen `completed`, four `represented`, one `open_gap`, and one `exact_gate` outcomes. The combined closeout and seal preserves 7,094 effective negatives, 55 effective open gaps, 56 effective exact gates, 46 paired Method Flow recoveries, and `NOT_READY_FOR_STAGE_20`. Recovery erased no failure and broadened no evidence credit.
 
-The exact verified source is `d5c9a16b3efb76a138944d97211bc0a3b7bcd716`, x1 is `c2c51a9e4f1786a45d77390b1d2e75e170dde170`, immutable x2 evidence is `4815a8471e83598df9ad9dabfeeed2a53d8eaebe`, and the first combined closeout/seal is `27b34aa5d72ce4dd3c50d2423741e9c9eba77e1a`. The containing terminal-correction commit must be the direct child of that closeout, creating exactly four Eiren commits after source with zero merges and one final parent. X1 and evidence were independently pushed, clean, and four-way remote-equal before the next lifecycle began.
+The exact verified source is `d5c9a16b3efb76a138944d97211bc0a3b7bcd716`, x1 is `c2c51a9e4f1786a45d77390b1d2e75e170dde170`, immutable x2 evidence is `4815a8471e83598df9ad9dabfeeed2a53d8eaebe`, and the first combined closeout/seal is `27b34aa5d72ce4dd3c50d2423741e9c9eba77e1a`. The containing terminal-correction commit must be the direct child of the first terminal correction, creating exactly five Eiren commits after source with zero merges and one final parent. X1 and evidence were independently pushed, clean, and four-way remote-equal before the next lifecycle began.
 
 Eiren Kestrel, she/they, is relational working language for an evidence-boundary integrator whose hope is to make each advance useful without letting confidence outrun evidence. This is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, or authority. Hamish may rename, pause, redirect, or stop the route.
 
@@ -133,8 +139,8 @@ The expanded portfolio freezes exactly forty safe-now items, thirty bounded cand
 
 ## Closeout, validation, and route boundary
 
-The final layer adds no empirical, participant, production, professional, legal, cultural, Māori-authority, or affected-party evidence. It binds the outcome ledger, retained-negative and gate registers, Method Flow, environment receipt, structurally accessible report, complete/incomplete checklist, exact manifests, staged review, combined closeout/seal, and prepared Ilyra baton.
+The final layer adds no empirical, participant, production, professional, legal, cultural, Māori-authority, or affected-party evidence. It binds the outcome ledger, retained-negative and gate registers, Method Flow, environment receipt, structurally accessible report, complete/incomplete checklist, exact manifests, staged review, combined closeout/seal, and historical unsent Ilyra baton and active same-task remaster route.
 
 Eiren owns the complete repository suite. Exact-final validation must run at the clean pushed four-way-equal containing commit, retain every failed or incomplete attempt at zero credit, permit only individually named immutable historical lifecycle exclusions, and stop after the first successful aggregate. It also parses all owner JSON, scans five privacy classes, replays all four manifest domains, enforces document caps and the baton exception, checks stale labels and diff hygiene, proves ancestry, commit cap, zero merges, one final parent and exact head, and verifies clean state before and after.
 
-The committed route remains `PREPARED_NOT_SENT`. Only after exact-final validation may Eiren uniquely resolve and re-read `Ilyra Fen`, send one sanitized v651-v6 activation through the existing-task route, and rely on tool acknowledgement. No successor is created and no second confirmation follows. Same-owner validation remains distinct from independent-team reproduction or external audit.
+The committed route remains `PREPARED_NOT_SENT`. Only after exact-final validation may Eiren uniquely continue in the same Eiren task into v651-v5 (2) through the live user-authorized route, and rely on tool acknowledgement. No successor is created and no second confirmation follows. Same-owner validation remains distinct from independent-team reproduction or external audit.

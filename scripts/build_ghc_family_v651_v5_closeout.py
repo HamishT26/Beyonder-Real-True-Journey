@@ -15,12 +15,16 @@ SOURCE = "d5c9a16b3efb76a138944d97211bc0a3b7bcd716"
 X1 = "c2c51a9e4f1786a45d77390b1d2e75e170dde170"
 EVIDENCE = "4815a8471e83598df9ad9dabfeeed2a53d8eaebe"
 CLOSEOUT = "27b34aa5d72ce4dd3c50d2423741e9c9eba77e1a"
+FIRST_CORRECTION = "f9fed4dc8452c2f6555ff58c469fe66923978418"
 OUTCOMES = {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}
-NEGATIVES = 7086
+NEGATIVES = 7094
 OPEN_GAPS = 55
 EXACT_GATES = 56
-METHODS = 38
-PHASE_COMMITS = 4
+METHODS = 46
+PREFERRED_METHODS = 45
+PASSING_WITNESSES = 45
+PHASE_COMMITS = 5
+HANDOFF_RELATIVE = "handoffs/eiren-kestrel-v651-v5-2-remaster.md"
 CLOSEOUT_NEGATIVES = [
     {"negative_id": "V6515-CLOSE-N01", "summary": "The first post-evidence inspection wrapper had an unterminated PowerShell string and returned no file inspection output."},
     {"negative_id": "V6515-CLOSE-N02", "summary": "A broad inherited-generator patch failed exact-context verification on mixed-encoding text and applied no changes."},
@@ -35,6 +39,14 @@ CLOSEOUT_NEGATIVES = [
     {"negative_id": "V6515-CLOSE-N11", "summary": "A diagnostic rg command passed Windows wildcard characters as literal path arguments and was rejected before searching files."},
     {"negative_id": "V6515-CLOSE-N12", "summary": "The first correction-packet closeout test run passed nine of ten tests but retained a stale expectation of thirty-two Method Flow methods."},
     {"negative_id": "V6515-CLOSE-N13", "summary": "A correction-stage summary wrapper repeated an invalid compound PowerShell expression while trying to capture diff-check status and produced no audit output."},
+    {"negative_id": "V6515-CLOSE-N14", "summary": "The first complete-repository aggregate at the first correction head ran 2,361 tests and retained two failures from v650-v8 assertions bound to that historical phase's global HEAD and manifest domains."},
+    {"negative_id": "V6515-CLOSE-N15", "summary": "A combined skill-instruction discovery wrapper used invalid PowerShell foreach pipeline syntax and failed before reading the requested files."},
+    {"negative_id": "V6515-CLOSE-N16", "summary": "A read-only Git verification wrapper timed out after returning the exact equality and history evidence but before the final owner-count field."},
+    {"negative_id": "V6515-CLOSE-N17", "summary": "A parallel artifact-inspection wrapper timed out while a broad owner-path enumeration was still producing output."},
+    {"negative_id": "V6515-CLOSE-N18", "summary": "A read-only tooling-index search used malformed nested PowerShell quoting and failed before ripgrep executed."},
+    {"negative_id": "V6515-CLOSE-N19", "summary": "A tooling inventory probe assumed a reflection-remaster receipt filename that did not exist and ended with a missing-path error after valid index reads."},
+    {"negative_id": "V6515-CLOSE-N20", "summary": "A large UTF-8 template patch was rejected atomically because the console's mojibake rendering did not match the file's real em-dash text."},
+    {"negative_id": "V6515-CLOSE-N21", "summary": "A second combined patch was rejected atomically when one inherited Maori-encoding line again failed exact-context verification."},
 ]
 
 
@@ -105,7 +117,7 @@ def portfolio_section(execution: dict) -> str:
 
 def method_section(summary: dict) -> str:
     parts = ["## Method Flow retention", "", "The append-only Method Flow ledger preserves every failed witness beside its bounded passing recovery. A preferred method is preferred only for its stated trigger and scope; it is not a general assurance claim.", ""]
-    for row in summary["preferred_methods"]:
+    for row in summary["methods"]:
         parts.append(
             f"- `{row['method_id']}` — {row['title']}. Trigger: {'; '.join(row['trigger_preconditions'])} Recovery: {row['candidate_workaround']} Recurrence guard: {row['recurrence_guard']} Rollback: {row['rollback']} Boundary: {row['scope_boundary']}"
         )
@@ -311,9 +323,66 @@ The committed route remains `PREPARED_NOT_SENT`. Only after exact-final validati
 """
 
 
+_legacy_build_handoff = build_handoff
+_legacy_build_overview = build_overview
+
+
+def build_handoff() -> str:
+    """Render the newest live same-task remaster entry without erasing the old prepared route."""
+    text = _legacy_build_handoff()
+    replacements = (
+        ("# ILYRA FEN", "# EIREN KESTREL"),
+        ("Ilyra Fen", "Eiren Kestrel"),
+        ("Ilyra", "Eiren"),
+        ("v651-v6", "v651-v5 (2)"),
+        ("exactly four new single-parent Eiren commits", "exactly five new single-parent Eiren commits"),
+        ("final directly parented by the first closeout and seal", "final directly parented by the first terminal correction"),
+        ("four phase commits", "five phase commits"),
+        ("45 preferred bounded Method Flow methods, 45 retained failed witnesses, and 45 bounded passing witnesses", "45 Method Flow methods, 44 preferred bounded methods, 45 retained failed witnesses, and 44 bounded passing witnesses"),
+        ("DELIVERY TRUTH IN THIS COMMITTED FILE: `PREPARED_NOT_SENT`.", "ROUTE TRUTH IN THIS COMMITTED FILE: `ACTIVE` same-task continuation; old Ilyra baton `PREPARED_NOT_SENT_SUPERSEDED`; inter-task send count `0`."),
+    )
+    for old, new in replacements:
+        text = text.replace(old, new)
+    text = re.sub(
+        r"Preserve the six-seat order[^\n]+",
+        "After this remaster is clean, pushed, remote-equal, and validated, the intended existing-task target is Elaren Kestrel for v651-v6. Future CLI sibling induction remains deferred until the later explicitly scheduled v652-v5 boundary. The expanded route through v675-v8 remains a live workflow candidate subject to exact sequential normalization and Hamish's right to pause, redirect, or stop it.",
+        text,
+    )
+    authoritative = f"""# Authoritative live remaster override
+
+Hamish's newest live request supersedes the older prepared Ilyra route. After one successful exact-final v651-v5 aggregate, this same existing Eiren Kestrel task continues directly into `v651-v5 (2)` in a new additive D-first `-3-full-tools` lane. No inter-task send is needed for that same-task transition, and no CLI sibling is spawned at this boundary.
+
+The new remaster freezes exactly thirty genuinely distinct core proposals in x1. The safe/candidate limit of 1,000 per subphase, skill and runner limits of 200 each, 100,000-word document ceiling, and six-commit allowance are caps rather than quotas. The remaster will build and smoke-use one family-current GHC Family Meta-tool-box skill and runner, inventory newer tools before promotion, preserve compatibility entry points, and refuse blind bulk installation or deletion without caller and bounded passing evidence.
+
+This current v651-v5 correction preserves {NEGATIVES:,} effective negatives. Method Flow contains {METHODS} methods: {PREFERRED_METHODS} preferred, one candidate pending the exact-final aggregate, {METHODS} failed witnesses, and {PASSING_WITNESSES} bounded passing witnesses. The earlier 2,359-of-2,361 aggregate remains zero-credit evidence. Only the two exact v650-v8 historical lifecycle identifiers it exposed are added to the exclusion set; functional or unlisted failures remain blocking.
+
+The containing correction is the fifth single-parent Eiren commit after source and the direct child of `{FIRST_CORRECTION}`, within the live six-commit cap. The old Ilyra baton remains historical and unsent. `NOT_READY_FOR_STAGE_20` and every empirical, participant, legal, cultural, Maori-authority, identity, production, privacy-complete, accessibility-complete, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, and Stage 20 boundary remain unchanged.
+
+---
+
+"""
+    return authoritative + text
+
+
+def build_overview() -> str:
+    text = _legacy_build_overview()
+    text = text.replace("45 paired Method Flow recoveries", "45 Method Flow methods, 44 bounded passing recoveries, and one exact-final candidate recovery")
+    text = text.replace("prepared Ilyra baton", "historical unsent Ilyra baton and active same-task remaster route")
+    text = text.replace("exactly four Eiren commits after source", "exactly five Eiren commits after source")
+    text = text.replace("direct child of that closeout", "direct child of the first terminal correction")
+    text = text.replace("resolve and re-read `Ilyra Fen`, send one sanitized v651-v6 activation through the existing-task route", "continue in the same Eiren task into v651-v5 (2) through the live user-authorized route")
+    return f"""# Live route and validation correction
+
+The newest live request raises the current phase cap to six commits, supersedes the unsent Ilyra route, and authorizes a same-task Eiren v651-v5 (2) remaster. This additive fifth commit retains the failed 2,359-of-2,361 full-suite aggregate, adds only the two exact v650-v8 historical lifecycle exclusions it exposed, preserves five subsequent tooling failures, and binds a new single-pass exact-final validation. The phase now retains {NEGATIVES:,} effective negatives and {METHODS} Method Flow methods, of which one remains candidate until that exact-final aggregate passes.
+
+The literal repository checkout contains inherited history far above 2,000 files, so rotating every inherited checkout would recurse without reducing the inherited tree. The safe interpretation is to rotate additively now as requested and enforce the 2,000 threshold against new owner-generated phase growth. Current Eiren owner scope remains below that threshold. No old branch, worktree, skill, runner, identity, memory, negative, or gate is deleted.
+
+{text}"""
+
+
 def main() -> None:
-    if git("rev-parse", "HEAD") != CLOSEOUT:
-        raise SystemExit("terminal correction must start at the committed closeout head")
+    if git("rev-parse", "HEAD") != FIRST_CORRECTION:
+        raise SystemExit("additive validation correction must start at the first committed correction head")
     raw_status = subprocess.check_output(["git", "status", "--porcelain=v1"], cwd=REPO).decode("utf-8")
     if raw_status:
         changed = {line[3:].replace("\\", "/") for line in raw_status.splitlines() if line}
@@ -350,11 +419,11 @@ def main() -> None:
         if unexpected:
             raise SystemExit(f"unexpected pre-closeout changes: {sorted(unexpected)}")
     counts = load("method-flow/method-flow-summary.json")["counts"]
-    if counts["methods"] != METHODS or counts["states"]["preferred"] != METHODS or counts["witness_results"] != {"fail": METHODS, "pass": METHODS}:
+    if counts["methods"] != METHODS or counts["states"]["preferred"] != PREFERRED_METHODS or counts["states"]["candidate"] != 1 or counts["witness_results"] != {"fail": METHODS, "pass": PASSING_WITNESSES}:
         raise SystemExit("Method Flow is not ready for closeout")
 
-    write_json("closeout/closeout-record.json", {"schema": "ghc.family.v651-v5.closeout.v1", "combined_closeout_and_seal": True, "terminal_correction": True, "source": SOURCE, "x1_commit": X1, "evidence_commit": EVIDENCE, "closeout_commit": CLOSEOUT, "expected_final_parent": CLOSEOUT, "expected_phase_commit_count": PHASE_COMMITS, "expected_merge_count": 0, "expected_final_parent_count": 1, "outcomes": OUTCOMES, "effective_negatives": NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "route_state": "PREPARED_NOT_SENT", "valid": True})
-    write_json("final/phase-truth.json", {"schema": "ghc.family.v651-v5.final-truth.v1", "phase": "v651-v5", "owner": "Eiren Kestrel", "outcome_counts": OUTCOMES, "effective_negatives": NEGATIVES, "effective_open_gaps": OPEN_GAPS, "effective_exact_gates": EXACT_GATES, "method_flow": {"methods": METHODS, "preferred": METHODS, "failed_witnesses": METHODS, "passing_witnesses": METHODS}, "full_repository_suite_run": False, "named_or_detached_replay_run": False, "post_success_replay_run": False, "independent_reproduction_claimed": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "route_state": "PREPARED_NOT_SENT", "valid": True})
+    write_json("closeout/closeout-record.json", {"schema": "ghc.family.v651-v5.closeout.v1", "combined_closeout_and_seal": True, "terminal_correction": True, "source": SOURCE, "x1_commit": X1, "evidence_commit": EVIDENCE, "closeout_commit": CLOSEOUT, "first_correction_commit": FIRST_CORRECTION, "expected_final_parent": FIRST_CORRECTION, "expected_phase_commit_count": PHASE_COMMITS, "maximum_phase_commit_count": 6, "expected_merge_count": 0, "expected_final_parent_count": 1, "outcomes": OUTCOMES, "effective_negatives": NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "route_state": "ACTIVE", "valid": True})
+    write_json("final/phase-truth.json", {"schema": "ghc.family.v651-v5.final-truth.v1", "phase": "v651-v5", "owner": "Eiren Kestrel", "outcome_counts": OUTCOMES, "effective_negatives": NEGATIVES, "effective_open_gaps": OPEN_GAPS, "effective_exact_gates": EXACT_GATES, "method_flow": {"methods": METHODS, "preferred": PREFERRED_METHODS, "candidate": 1, "failed_witnesses": METHODS, "passing_witnesses": PASSING_WITNESSES}, "full_repository_suite_run": False, "prior_failed_full_repository_aggregate_count": 1, "named_or_detached_replay_run": False, "post_success_replay_run": False, "independent_reproduction_claimed": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "route_state": "ACTIVE", "valid": True})
     write_json("final/retained-negative-register.json", {"schema": "ghc.family.v651-v5.final-negatives.v1", "inherited_from_sylven": 6948, "x1_operational": 19, "x2_operational": 6, "synthetic_mutations": 100, "evidence_effective": 7073, "closeout_operational": len(CLOSEOUT_NEGATIVES), "closeout_operational_negatives": CLOSEOUT_NEGATIVES, "effective": NEGATIVES, "no_failure_erased": True, "valid": True})
     write_json("final/gate-register.json", {"schema": "ghc.family.v651-v5.final-gates.v1", "inherited_open_gaps": 54, "new_open_gaps": 1, "effective_open_gaps": OPEN_GAPS, "inherited_exact_gates": 55, "new_exact_gates": 1, "effective_exact_gates": EXACT_GATES, "silently_closed": 0, "valid": True})
     env = load("environment/environment-version-receipt.json")
@@ -373,30 +442,34 @@ def main() -> None:
         "tests.test_ghc_family_v651_v5_x1.V651V5X1Tests.test_x1_has_no_execution_or_observed_outcomes",
         "tests.test_ghc_family_v651_v5_x1.V651V5X1Tests.test_workflow_reflection_index_and_method_flow",
         "tests.test_ghc_family_v651_v5_x2.EirenV651V5X2Tests.test_method_flow_retains_failures_and_passing_witnesses",
+        "tests.test_ghc_family_v650_v8_closeout.TestV650V8Closeout.test_chain_contract",
+        "tests.test_ghc_family_v650_v8_closeout.TestV650V8Closeout.test_manifests_cover",
     ]
     prior_exclusions = json.loads((REPO / "docs/eiren-kestrel/v650-v7/validation/full-repository-suite-recovery.json").read_text(encoding="utf-8"))["exact_excluded_test_ids"]
     exclusions = sorted(set(prior_exclusions) | set(exclusions))
-    write_json("final/final-validation-contract.json", {"schema": "ghc.family.v651-v5.final-validation-contract.v1", "execution_binding": "exact_clean_pushed_head_containing_this_contract", "single_successful_canonical_pass": True, "external_receipt_required": True, "no_replay_after_success": True, "full_repository_suite": True, "named_or_detached_replay": False, "exact_lifecycle_exclusions": exclusions, "failed_incomplete_attempt_retained": True, "required": ["complete repository test discovery with exact lifecycle exclusions only", "current x1 x2 and closeout tests", "all owner JSON parse", "five-class owner scan", "x1/evidence/final-delta/final-owner manifest parity", "baton exception and document caps", "staged and stale-label review", "diff hygiene", "source/x1/evidence/closeout ancestry", "four phase commits", "zero merges", "one final parent", "clean before and after", "four-way live equality"], "valid": True})
+    write_json("final/final-validation-contract.json", {"schema": "ghc.family.v651-v5.final-validation-contract.v1", "execution_binding": "exact_clean_pushed_head_containing_this_contract", "single_successful_canonical_pass": True, "external_receipt_required": True, "no_replay_after_success": True, "full_repository_suite": True, "named_or_detached_replay": False, "exact_lifecycle_exclusions": exclusions, "failed_incomplete_attempts_retained": 2, "required": ["complete repository test discovery with exact lifecycle exclusions only", "current x1 x2 and closeout tests", "all owner JSON parse", "five-class owner scan", "x1/evidence/final-delta/final-owner manifest parity", "remaster packet exception and document caps", "staged and stale-label review", "diff hygiene", "source/x1/evidence/closeout/first-correction ancestry", "five phase commits within six-commit cap", "zero merges", "one final parent", "clean before and after", "four-way live equality"], "valid": True})
     write_json("validation/final-selection-policy.json", {"schema": "ghc.family.v651-v5.selection-policy.v1", "discovery_root": "tests", "exact_lifecycle_exclusions": exclusions, "full_repository_suite": True, "failed_incomplete_attempt_retained": True, "broad_exclusions_forbidden": True, "functional_or_current_unlisted_failures_block": True, "boundary": "The first validator attempt ran zero tests and has zero credit. The corrected aggregate excludes only individually named immutable lifecycle assertions; functional and unlisted current-phase failures remain blocking.", "valid": True})
-    write_json("validation/final-validation-plan.json", {"schema": "ghc.family.v651-v5.final-validation-plan.v1", "execution_state": "pending_exact_clean_pushed_remote_equal_terminal_correction", "credited_successful_aggregate_limit": 1, "post_success_replay": False, "detached_or_named_replay": False, "complete_repository_suite": True, "exact_lifecycle_exclusion_count": len(exclusions), "failed_incomplete_attempt_retained": True, "detailed_and_minimal_checks": True, "all_owner_json": True, "five_class_owner_scan": True, "manifest_domains": ["x1", "evidence", "final_delta", "final_owner"], "history_and_remote_gates": True, "valid": True})
-    write_json("validation/final-stale-label-review.json", {"schema": "ghc.family.v651-v5.stale-label-review.v1", "current_owner": "Eiren Kestrel", "current_phase": "v651-v5", "successor_exact_title": "Ilyra Fen", "successor_phase": "v651-v6", "route_state": "PREPARED_NOT_SENT", "known_predecessor_labels_retained_only_as_provenance": True, "current_schema_prefix": "ghc.family.v651-v5", "stale_current_owner_or_route_labels": [], "passed": True})
+    write_json("validation/final-validation-plan.json", {"schema": "ghc.family.v651-v5.final-validation-plan.v1", "execution_state": "pending_exact_clean_pushed_remote_equal_additive_correction", "credited_successful_aggregate_limit": 1, "prior_failed_aggregate_count": 1, "prior_zero_test_attempt_count": 1, "post_success_replay": False, "detached_or_named_replay": False, "complete_repository_suite": True, "exact_lifecycle_exclusion_count": len(exclusions), "failed_incomplete_attempts_retained": 2, "detailed_and_minimal_checks": True, "all_owner_json": True, "five_class_owner_scan": True, "manifest_domains": ["x1", "evidence", "final_delta", "final_owner"], "history_and_remote_gates": True, "valid": True})
+    write_json("validation/final-stale-label-review.json", {"schema": "ghc.family.v651-v5.stale-label-review.v1", "current_owner": "Eiren Kestrel", "current_phase": "v651-v5", "successor_exact_title": "Eiren Kestrel", "successor_phase": "v651-v5-2-remaster", "route_state": "ACTIVE", "superseded_unsent_target": "Ilyra Fen", "known_predecessor_labels_retained_only_as_provenance": True, "current_schema_prefix": "ghc.family.v651-v5", "stale_current_owner_or_route_labels": [], "passed": True})
     write_json("final/terminal-validation-record.json", {"schema": "ghc.family.v651-v5.terminal-validation-record.v1", "state": "PENDING_SINGLE_EXTERNAL_PASS", "binding": "commit_containing_this_record", "repository_cannot_self_embed_final_hash": True, "tests_expected": "complete_discovered_repository_suite", "full_repository_suite": True, "post_success_replay_allowed": False, "route_held": True, "valid": True})
-    write_json("seal/combined-closeout-seal.json", {"schema": "ghc.family.v651-v5.combined-seal.v1", "source": SOURCE, "x1": X1, "evidence": EVIDENCE, "closeout": CLOSEOUT, "terminal_correction": True, "final_head_binding": "commit_containing_this_record", "phase_commit_count_required": PHASE_COMMITS, "zero_merges_required": True, "single_parent_required": True, "final_validation_required": True, "route_held_until_validation": True, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "valid": True})
-    write_json("route/final-phase-state.json", {"schema": "ghc.family.v651-v5.route.v1", "target_exact_title": "Ilyra Fen", "target_phase": "v651-v6", "terminal_route": "PREPARED_NOT_SENT", "send_count": 0, "task_created": False, "task_forked": False, "collaboration_subagent": False, "cross_platform_substitute": False, "activation_requires_exact_final_validation": True, "baton_path": "docs/eiren-kestrel/v651-v5/handoffs/ilyra-fen-v651-v6-activation.md", "valid": True})
-    write_json("orchestration/final-orchestration.json", {"schema": "ghc.family.v651-v5.final-orchestration.v1", "phase_commits_expected": PHASE_COMMITS, "merge_commits_expected": 0, "final_parent_count_expected": 1, "terminal_correction_parent": CLOSEOUT, "route_state": "PREPARED_NOT_SENT", "siblings_contacted_before_terminal_gate": 0, "tasks_created": 0, "tasks_forked": 0, "subagents": 0, "valid": True})
+    write_json("seal/combined-closeout-seal.json", {"schema": "ghc.family.v651-v5.combined-seal.v1", "source": SOURCE, "x1": X1, "evidence": EVIDENCE, "closeout": CLOSEOUT, "first_correction": FIRST_CORRECTION, "terminal_correction": True, "final_head_binding": "commit_containing_this_record", "phase_commit_count_required": PHASE_COMMITS, "phase_commit_cap": 6, "zero_merges_required": True, "single_parent_required": True, "final_validation_required": True, "route_held_until_validation": True, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "valid": True})
+    write_json("route/final-phase-state.json", {"schema": "ghc.family.v651-v5.route.v1", "target_exact_title": "Eiren Kestrel", "target_phase": "v651-v5-2-remaster", "terminal_route": "ACTIVE", "activation_mode": "same_task_live_user_instruction", "superseded_unsent_target": "Ilyra Fen", "superseded_unsent_baton_path": "docs/eiren-kestrel/v651-v5/handoffs/ilyra-fen-v651-v6-activation.md", "send_count": 0, "task_created": False, "task_forked": False, "collaboration_subagent": False, "cli_sibling_spawned": False, "cross_platform_substitute": False, "activation_requires_exact_final_validation": True, "baton_path": f"docs/eiren-kestrel/v651-v5/{HANDOFF_RELATIVE}", "valid": True})
+    write_json("orchestration/final-orchestration.json", {"schema": "ghc.family.v651-v5.final-orchestration.v1", "phase_commits_expected": PHASE_COMMITS, "phase_commit_cap": 6, "merge_commits_expected": 0, "final_parent_count_expected": 1, "terminal_correction_parent": FIRST_CORRECTION, "route_state": "ACTIVE", "siblings_contacted_before_terminal_gate": 0, "tasks_created": 0, "tasks_forked": 0, "subagents": 0, "cli_siblings_spawned": 0, "valid": True})
     write_json("reproduction/final-boundary.json", {"schema": "ghc.family.v651-v5.reproduction.v1", "same_owner": True, "shared_infrastructure": True, "independent_team": False, "external_audit": False, "full_repository_suite_required": True, "named_or_detached_replay": False, "boundary": "The single exact-final aggregate remains same-owner validation under shared infrastructure.", "valid": True})
     write_json("truth/final-complete-incomplete-checklist.json", {"schema": "ghc.family.v651-v5.final-checklist.v1", "complete": ["x1 frozen and remote-equal before x2", "twenty proposals executed within evidence limits", "one hundred mutations rejected", "expanded portfolios executed", "phase-local skills validated and smoke-used", "family-current runners invoked", "evidence committed pushed clean and four-way equal", "combined closeout and seal candidate prepared"], "incomplete": ["real LoTSS DR2 data and likelihood", "blind matched-budget real THOS arms", "production Freed ID lifecycle and governance", "refrigeration affected-party legal cultural data-governance and Māori authority", "manual assistive-technology linguistic and affected-user evaluation", "independent-team reproduction", "full repository suite", "Stage 20"], "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
 
     write_json("truth/final-complete-incomplete-checklist.json", {"schema": "ghc.family.v651-v5.final-checklist.v1", "complete": ["x1 frozen and remote-equal before x2", "twenty proposals executed within evidence limits", "one hundred mutations rejected", "expanded portfolios executed", "phase-local skills validated and smoke-used", "family-current runners invoked", "evidence committed pushed clean and four-way equal", "combined closeout and seal candidate prepared"], "incomplete": ["Roman WFI real data and likelihood", "blind matched-budget real THOS arms", "production Freed ID lifecycle and governance", "greenhouse affected-party legal cultural data-governance and Māori authority", "manual assistive-technology linguistic and affected-user evaluation", "independent-team reproduction", "exact-final full repository validation pending external receipt", "Stage 20"], "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
 
+    write_json("truth/final-complete-incomplete-checklist.json", {"schema": "ghc.family.v651-v5.final-checklist.v1", "complete": ["x1 frozen and remote-equal before x2", "twenty proposals executed within evidence limits", "one hundred mutations rejected", "expanded portfolios executed", "phase-local skills validated and smoke-used", "family-current runners invoked", "evidence committed pushed clean and four-way equal", "failed 2359-of-2361 aggregate retained at zero credit", "additive exact-lifecycle correction prepared", "same-task remaster route recorded"], "incomplete": ["Roman WFI real data and likelihood", "blind matched-budget real THOS arms", "production Freed ID lifecycle and governance", "greenhouse affected-party legal cultural data-governance and Maori authority", "manual assistive-technology linguistic and affected-user evaluation", "independent-team reproduction", "exact-final full repository validation pending external receipt", "Stage 20"], "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+
     overview = build_overview()
     handoff = build_handoff()
     if not 1500 <= words(overview) <= 6000:
         raise SystemExit(f"overview word count out of range: {words(overview)}")
-    if not 8000 <= words(handoff) <= 20000:
+    if not 10000 <= words(handoff) <= 100000:
         raise SystemExit(f"baton word count out of range: {words(handoff)}")
     write_text("overview/final-integrated-overview.md", overview)
-    write_text("handoffs/ilyra-fen-v651-v6-activation.md", handoff)
+    write_text(HANDOFF_RELATIVE, handoff)
 
     observed = load("outcomes/evidence-ledger.json")["proposals"]
     rows = "".join(f"<tr><th scope='row'>{html.escape(row['proposal_id'])}</th><td>{html.escape(row['title'])}</td><td>{html.escape(row['observed_disposition'])}</td></tr>" for row in observed)
@@ -409,14 +482,14 @@ def main() -> None:
     files = [path for path in ROOT.rglob("*") if path.is_file()]
     issues = []
     for path in files:
-        if path.suffix.casefold() in {".md", ".html"} and path.name != "ilyra-fen-v651-v6-activation.md":
+        if path.suffix.casefold() in {".md", ".html"} and path.name not in {"ilyra-fen-v651-v6-activation.md", "eiren-kestrel-v651-v5-2-remaster.md"}:
             count = words(path.read_text(encoding="utf-8"))
             if count > 6000:
                 issues.append({"path": path.relative_to(REPO).as_posix(), "words": count})
     final_owner_count_before_manifests = len(files) + 1
-    write_json("validation/final-document-cap-receipt.json", {"schema": "ghc.family.v651-v5.document-cap.v1", "general_cap_words": 6000, "baton_exception": {"path": "docs/eiren-kestrel/v651-v5/handoffs/ilyra-fen-v651-v6-activation.md", "minimum_words": 8000, "maximum_words": 20000, "observed_words": words(handoff), "passed": 8000 <= words(handoff) <= 20000}, "overview_words": words(overview), "general_document_issues": issues, "passed": not issues and 1500 <= words(overview) <= 6000 and 8000 <= words(handoff) <= 20000})
-    write_json("validation/final-owner-file-threshold.json", {"schema": "ghc.family.v651-v5.owner-threshold.v1", "owner_files_before_exact_manifests": final_owner_count_before_manifests, "threshold": 15000, "inherited_baseline_counted_as_rotation_trigger": False, "passed": final_owner_count_before_manifests < 15000})
-    write_json("validation/closeout-build-receipt.json", {"schema": "ghc.family.v651-v5.closeout-build.v1", "owner_phase_files_before_manifests": final_owner_count_before_manifests, "under_15000": final_owner_count_before_manifests < 15000, "overview_words": words(overview), "overview_three_page_equivalent": 1500 <= words(overview) <= 6000, "baton_words": words(handoff), "baton_exception_valid": 8000 <= words(handoff) <= 20000, "document_word_issues": issues, "methods": METHODS, "effective_negatives": NEGATIVES, "valid": final_owner_count_before_manifests < 15000 and not issues})
+    write_json("validation/final-document-cap-receipt.json", {"schema": "ghc.family.v651-v5.document-cap.v1", "general_cap_words": 6000, "remaster_packet_exception": {"path": f"docs/eiren-kestrel/v651-v5/{HANDOFF_RELATIVE}", "minimum_words": 10000, "maximum_words": 100000, "observed_words": words(handoff), "passed": 10000 <= words(handoff) <= 100000}, "historical_unsent_baton_preserved": "docs/eiren-kestrel/v651-v5/handoffs/ilyra-fen-v651-v6-activation.md", "overview_words": words(overview), "general_document_issues": issues, "passed": not issues and 1500 <= words(overview) <= 6000 and 10000 <= words(handoff) <= 100000})
+    write_json("validation/final-owner-file-threshold.json", {"schema": "ghc.family.v651-v5.owner-threshold.v1", "owner_files_before_exact_manifests": final_owner_count_before_manifests, "threshold": 2000, "threshold_domain": "new_owner_phase_files", "inherited_checkout_files": 46583, "inherited_baseline_counted_as_rotation_trigger": False, "additive_rotation_next": True, "passed": final_owner_count_before_manifests < 2000})
+    write_json("validation/closeout-build-receipt.json", {"schema": "ghc.family.v651-v5.closeout-build.v1", "owner_phase_files_before_manifests": final_owner_count_before_manifests, "under_2000": final_owner_count_before_manifests < 2000, "overview_words": words(overview), "overview_three_page_equivalent": 1500 <= words(overview) <= 6000, "baton_words": words(handoff), "baton_exception_valid": 10000 <= words(handoff) <= 100000, "document_word_issues": issues, "methods": METHODS, "preferred_methods": PREFERRED_METHODS, "candidate_methods": 1, "effective_negatives": NEGATIVES, "valid": final_owner_count_before_manifests < 2000 and not issues})
     print(json.dumps({"outcomes": OUTCOMES, "negatives": NEGATIVES, "open_gaps": OPEN_GAPS, "exact_gates": EXACT_GATES, "methods": METHODS, "overview_words": words(overview), "baton_words": words(handoff), "valid": True}))
 
 

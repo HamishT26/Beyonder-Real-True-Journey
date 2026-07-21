@@ -2,9 +2,9 @@
 
 - Phase: v651-v5
 - Owner: Eiren Kestrel
-- Methods: 38
-- Passing witnesses: 38
-- Failed witnesses retained: 38
+- Methods: 46
+- Passing witnesses: 45
+- Failed witnesses retained: 46
 
 ## Preferred methods
 
@@ -311,6 +311,62 @@
 - Recurrence guard: Run diff hygiene as a standalone command, capture LASTEXITCODE on the following statement, and only then construct the read-only summary object.
 - Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
 - Witnesses: V6515-M38-WFAIL, V6515-M38-WPASS
+
+### V6515-M40 — Bounded closeout recovery 40: Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds
+
+- Trigger: A combined skill-instruction discovery wrapper placed a foreach statement directly before a pipeline and failed PowerShell parsing before reading the requested files.
+- Method: Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds.
+- Recurrence guard: Read each required instruction or reference through a literal bounded Get-Content call and combine results only after every read succeeds.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M40-WFAIL, V6515-M40-WPASS
+
+### V6515-M41 — Bounded closeout recovery 41: Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks
+
+- Trigger: A read-only Git verification wrapper timed out after proving the exact heads, clean branch, four commits, zero merges, and live equality but before returning the final owner-count field.
+- Method: Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks.
+- Recurrence guard: Preserve the attributable equality output, then run the remaining owner-count query separately instead of repeating the completed remote and ancestry checks.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M41-WFAIL, V6515-M41-WPASS
+
+### V6515-M42 — Bounded closeout recovery 42: Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction
+
+- Trigger: A parallel artifact-inspection wrapper timed out while one broad owner-path enumeration was still producing output.
+- Method: Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction.
+- Recurrence guard: Replace broad parallel enumeration with sequential targeted searches over the exact phase scripts, tests, and receipts needed for the correction.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M42-WFAIL, V6515-M42-WPASS
+
+### V6515-M43 — Bounded closeout recovery 43: Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches
+
+- Trigger: A read-only tooling-index search used malformed nested PowerShell quoting and failed before executing ripgrep.
+- Method: Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches.
+- Recurrence guard: Pass one literal single-quoted ripgrep pattern to PowerShell and avoid nested quote construction for bounded repository searches.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M43-WFAIL, V6515-M43-WPASS
+
+### V6515-M44 — Bounded closeout recovery 44: Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass
+
+- Trigger: A tooling inventory probe assumed a reflection-remaster receipt filename that was not present and ended with a missing-path error after the valid index reads.
+- Method: Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass.
+- Recurrence guard: Enumerate the exact reflection-remaster directory first and read only filenames proven to exist; retain earlier successful index output without treating the final missing-path error as a pass.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M44-WFAIL, V6515-M44-WPASS
+
+### V6515-M45 — Bounded closeout recovery 45: Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake
+
+- Trigger: A large UTF-8 template patch was rejected atomically because the console's mojibake rendering did not match the file's real em-dash text.
+- Method: Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake.
+- Recurrence guard: Leave the inherited renderer intact, add a later ASCII-stable authoritative renderer override, and validate the generated UTF-8 artifact rather than patching console-rendered mojibake.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M45-WFAIL, V6515-M45-WPASS
+
+### V6515-M46 — Bounded closeout recovery 46: Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately
+
+- Trigger: A second combined patch was rejected atomically when one inherited Maori-encoding line again failed exact-context verification.
+- Method: Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately.
+- Recurrence guard: Insert a later additive checklist write at an ASCII-stable function anchor and patch unrelated ASCII-only ranges separately.
+- Rollback: Give the failed attempt zero credit, retain it, and stop if the bounded recovery cannot be attributed.
+- Witnesses: V6515-M46-WFAIL, V6515-M46-WPASS
 
 ## Retained boundary
 
