@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use SHA256.Create().ComputeHash and dispose the hasher after each bounded byte-domain verification.",
+  "failure_signature": "PowerShell 5.1 did not expose the static SHA256 HashData helper used by the first immutable-manifest verifier.",
+  "method_id": "V6515-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "privacy",
+    "bounded_scope",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use SHA256.Create().ComputeHash and dispose the hasher after each bounded byte-domain verification.",
+  "retained_negative_ids": [
+    "V6515-X1-N01"
+  ],
+  "rollback": "Give the failed attempt zero pass credit, retain it, and stop if the bounded recovery is not attributable.",
+  "scope_boundary": "Same-owner workflow recovery only; no scientific, production, identity, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bounded recovery method 01: Use SHA256.Create().ComputeHash and dispose the hasher after each bounded byte-domain verification",
+  "trigger_preconditions": [
+    "PowerShell 5.1 did not expose the static SHA256 HashData helper used by the first immutable-manifest verifier."
+  ],
+  "validation_witness_ids": []
+}
