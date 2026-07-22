@@ -2,9 +2,9 @@
 
 - Phase: v651-v5-2-remaster
 - Owner: Eiren Kestrel
-- Methods: 5
-- Passing witnesses: 5
-- Failed witnesses retained: 5
+- Methods: 7
+- Passing witnesses: 7
+- Failed witnesses retained: 7
 
 ## Preferred methods
 
@@ -47,6 +47,22 @@
 - Recurrence guard: Do not hard-code a second validated transition after a passing witness.
 - Rollback: Retain the rejected transition and resume from the ledger's actual valid state without rebuilding the ledger.
 - Witnesses: V6515R-M05-WFAIL, V6515R-M05-WPASS
+
+### V6515R-M06 — Declare UTF-8 for Windows skill validation
+
+- Trigger: A Python validator reads UTF-8 GHC skill text on Windows.
+- Method: Set PYTHONUTF8=1 for the skill validator on Windows before reading UTF-8 skill documents.
+- Recurrence guard: Declare UTF-8 for Python subprocesses that read skill packages on Windows; do not strip or transliterate valid text to satisfy a legacy codec.
+- Rollback: Retain the failed validation at zero credit and stop if explicit UTF-8 still cannot read the package.
+- Witnesses: V6515R-M06-WFAIL, V6515R-M06-WPASS
+
+### V6515R-M07 — Keep a uniform explicit Boundaries section in every skill
+
+- Trigger: Generated and hand-authored skills share one structural contract.
+- Method: Give every skill package an explicit Boundaries heading even when equivalent constraints already appear under a specialized heading.
+- Recurrence guard: Validate shared structural headings across both generated and hand-authored packages before the aggregate.
+- Rollback: Retain the failed aggregate and remove only the additive heading if it introduces a contradiction.
+- Witnesses: V6515R-M07-WFAIL, V6515R-M07-WPASS
 
 ## Retained boundary
 

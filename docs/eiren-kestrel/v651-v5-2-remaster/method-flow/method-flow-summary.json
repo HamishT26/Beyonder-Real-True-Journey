@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 5,
-    "recommendations": 5,
-    "state_events": 15,
+    "methods": 7,
+    "recommendations": 7,
+    "state_events": 21,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 5,
+      "preferred": 7,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 5,
-      "pass": 5
+      "fail": 7,
+      "pass": 7
     },
-    "witnesses": 10
+    "witnesses": 14
   },
   "owner": "Eiren Kestrel",
   "phase": "v651-v5-2-remaster",
@@ -95,6 +95,36 @@
         "V6515R-M05-WFAIL",
         "V6515R-M05-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Set PYTHONUTF8=1 for the skill validator on Windows before reading UTF-8 skill documents.",
+      "method_id": "V6515R-M06",
+      "recurrence_guard": "Declare UTF-8 for Python subprocesses that read skill packages on Windows; do not strip or transliterate valid text to satisfy a legacy codec.",
+      "rollback": "Retain the failed validation at zero credit and stop if explicit UTF-8 still cannot read the package.",
+      "scope_boundary": "Windows skill-package decoding only; no broader validation or authority credit.",
+      "title": "Declare UTF-8 for Windows skill validation",
+      "trigger_preconditions": [
+        "A Python validator reads UTF-8 GHC skill text on Windows."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M06-WFAIL",
+        "V6515R-M06-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Give every skill package an explicit Boundaries heading even when equivalent constraints already appear under a specialized heading.",
+      "method_id": "V6515R-M07",
+      "recurrence_guard": "Validate shared structural headings across both generated and hand-authored packages before the aggregate.",
+      "rollback": "Retain the failed aggregate and remove only the additive heading if it introduces a contradiction.",
+      "scope_boundary": "Skill documentation structure only; no broader capability or authority credit.",
+      "title": "Keep a uniform explicit Boundaries section in every skill",
+      "trigger_preconditions": [
+        "Generated and hand-authored skills share one structural contract."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M07-WFAIL",
+        "V6515R-M07-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -102,7 +132,9 @@
     "V6515R-M02-WFAIL",
     "V6515R-M03-WFAIL",
     "V6515R-M04-WFAIL",
-    "V6515R-M05-WFAIL"
+    "V6515R-M05-WFAIL",
+    "V6515R-M06-WFAIL",
+    "V6515R-M07-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

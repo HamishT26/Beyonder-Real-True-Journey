@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Set PYTHONUTF8=1 for the skill validator on Windows before reading UTF-8 skill documents.",
+  "failure_signature": "The first validator wrapper inherited the legacy Windows text codec and raised UnicodeDecodeError on a Māori boundary term.",
+  "method_id": "V6515R-M06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "utf8_content", "no_content_downgrade"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Declare UTF-8 for Python subprocesses that read skill packages on Windows; do not strip or transliterate valid text to satisfy a legacy codec.",
+  "retained_negative_ids": ["V6515R-X2-N01"],
+  "rollback": "Retain the failed validation at zero credit and stop if explicit UTF-8 still cannot read the package.",
+  "scope_boundary": "Windows skill-package decoding only; no broader validation or authority credit.",
+  "supersedes": [],
+  "title": "Declare UTF-8 for Windows skill validation",
+  "trigger_preconditions": ["A Python validator reads UTF-8 GHC skill text on Windows."],
+  "validation_witness_ids": []
+}
