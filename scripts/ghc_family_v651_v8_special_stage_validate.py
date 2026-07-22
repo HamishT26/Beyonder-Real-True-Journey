@@ -36,9 +36,11 @@ PATTERNS = {
     ),
 }
 SCANNER_DEFINITIONS = {
+    "scripts/ghc_family_v651_v8_special_closeout_validate.py",
     "scripts/ghc_family_v651_v8_special_evidence_validate.py",
     "scripts/ghc_family_v651_v8_special_integrity.py",
     "scripts/ghc_family_v651_v8_special_stage_validate.py",
+    "scripts/ghc_family_v651_v8_special_terminal_validate.py",
 }
 
 
