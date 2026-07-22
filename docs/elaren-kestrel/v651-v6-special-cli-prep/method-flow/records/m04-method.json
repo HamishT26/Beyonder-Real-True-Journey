@@ -1,0 +1,17 @@
+{
+  "method_id": "V6516-SPECIAL-M04",
+  "title": "Measured three-page overview completion",
+  "failure_signature": "A content-complete overview remains below the declared 1,000-word three-page-equivalent floor.",
+  "trigger_preconditions": ["The exact staged document review reports an overview below 1,000 words."],
+  "candidate_workaround": "Add only missing architectural and rollback explanation, then rerun the staged document check.",
+  "recurrence_guard": "Measure the overview after final sections are generated and before commit.",
+  "rollback": "Retain the short overview result and remove any filler that does not improve the handoff.",
+  "protected_gates": ["document_completeness", "word_cap", "handoff_quality", "completion_credit"],
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "privacy_class": "sanitized_public",
+  "scope_boundary": "Overview completeness only; word count does not establish scientific or authority quality.",
+  "retained_negative_ids": ["V6516-SPECIAL-N07"],
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "supersedes": []
+}
