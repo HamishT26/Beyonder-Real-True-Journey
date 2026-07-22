@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run the native command, capture LASTEXITCODE immediately, and classify success from zero.",
+  "failure_signature": "A successful native Git probe emits no stdout and is cast to false by PowerShell boolean evaluation.",
+  "method_id": "V6517-SPECIAL-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never use stdout truthiness for merge-base or cat-file existence checks.",
+  "retained_negative_ids": [
+    "V6517-SPECIAL-X1-N01"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git history or sibling state requires rollback.",
+  "scope_boundary": "Bounded owner-local workflow recovery only.",
+  "supersedes": [],
+  "title": "Classify zero-output native commands by exit code",
+  "trigger_preconditions": [
+    "A successful native Git probe emits no stdout and is cast to false by PowerShell boolean evaluation."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Keep non-cone mode from initialization and pass new patterns through add --stdin.",
+  "failure_signature": "git sparse-checkout add rejects the initialization-only --no-cone option.",
+  "method_id": "V6517-SPECIAL-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect subcommand help before carrying mode-selection flags across sparse-checkout verbs.",
+  "retained_negative_ids": [
+    "V6517-SPECIAL-X1-N02"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git history or sibling state requires rollback.",
+  "scope_boundary": "Bounded owner-local workflow recovery only.",
+  "supersedes": [],
+  "title": "Use sparse-checkout add syntax supported by the active Git version",
+  "trigger_preconditions": [
+    "git sparse-checkout add rejects the initialization-only --no-cone option."
+  ],
+  "validation_witness_ids": []
+}

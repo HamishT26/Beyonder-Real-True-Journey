@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Assign the literal owner-worktree path at the start of the wrapper before any Git or file probe.",
+  "failure_signature": "A verification wrapper references an unset local PowerShell repository variable.",
+  "method_id": "V6517-SPECIAL-M03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Require every standalone wrapper to declare its own repository binding rather than relying on caller state.",
+  "retained_negative_ids": [
+    "V6517-SPECIAL-X1-N03"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git history or sibling state requires rollback.",
+  "scope_boundary": "Bounded owner-local workflow recovery only.",
+  "supersedes": [],
+  "title": "Bind repository paths inside every PowerShell wrapper",
+  "trigger_preconditions": [
+    "A verification wrapper references an unset local PowerShell repository variable."
+  ],
+  "validation_witness_ids": []
+}
