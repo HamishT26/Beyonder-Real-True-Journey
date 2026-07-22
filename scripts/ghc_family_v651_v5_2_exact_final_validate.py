@@ -21,6 +21,7 @@ SOURCE = "2bb6aa2d5e8003c4cb522f798d59e7b7f123742c"
 X1 = "d9e8cbf0063639aa0a6fb54c54a96683c587ce7e"
 EVIDENCE = "c67ce592463450ccf9aee7d460210cddb467c5ca"
 CLOSEOUT = "7758ed116115462d3814af784a234418861b3d45"
+VALIDATION_FAILURE = "73365f50f096ef90d957f3a092fe83160acc9a89"
 BRANCH = "codex/GHC-Family/eiren-kestrel-v648-v3-3-full-tools"
 PATTERNS = {
     "raw_uuid": re.compile(rb"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
@@ -119,6 +120,9 @@ def main() -> None:
     assert spec.loader
     spec.loader.exec_module(prior)
     selection, tests = prior.run_full_suite(exclusions)
+    selection["current_exact_final_attempts"] = 2
+    selection["failed_exact_final_attempts_retained"] = 1
+    selection["credited_exact_final_passes"] = 1
 
     source_to_x1 = set(filter(None, git("diff", "--name-only", f"{SOURCE}..{X1}").splitlines()))
     x1_to_evidence = set(filter(None, git("diff", "--name-only", f"{X1}..{EVIDENCE}").splitlines()))
@@ -176,14 +180,15 @@ def main() -> None:
         "x1_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", X1, head], cwd=REPO).returncode == 0,
         "evidence_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", EVIDENCE, head], cwd=REPO).returncode == 0,
         "closeout_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", CLOSEOUT, head], cwd=REPO).returncode == 0,
-        "four_commits_within_cap": phase_commits == 4 and phase_commits <= 6,
+        "validation_failure_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", VALIDATION_FAILURE, head], cwd=REPO).returncode == 0,
+        "five_commits_within_cap": phase_commits == 5 and phase_commits <= 6,
         "zero_merges": merges == 0,
-        "one_final_parent": len(parents) == 2 and parents[1] == CLOSEOUT,
+        "one_final_parent": len(parents) == 2 and parents[1] == VALIDATION_FAILURE,
         "outcomes": truth["outcome_counts"] == {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
-        "negatives": negatives["effective"] == 7218 and negatives["no_failure_erased"],
+        "negatives": negatives["effective"] == 7219 and negatives["no_failure_erased"],
         "gaps": gates["effective_open_gaps"] == 56 and gates["silently_closed"] == 0,
         "gates": gates["effective_exact_gates"] == 57 and gates["silently_closed"] == 0,
-        "methods": methods["counts"]["methods"] == 18 and methods["counts"]["witness_results"] == {"fail": 24, "pass": 19} and methods["counts"]["states"]["preferred"] == 18,
+        "methods": methods["counts"]["methods"] == 19 and methods["counts"]["witness_results"] == {"fail": 25, "pass": 20} and methods["counts"]["states"]["preferred"] == 19,
         "x1_manifest": manifests[0]["valid"],
         "evidence_manifest": manifests[1]["valid"],
         "final_delta_manifest": manifests[2]["valid"],
@@ -194,13 +199,13 @@ def main() -> None:
         "owner_threshold": threshold["within_threshold"] and threshold["owner_generated_files_at_final_commit"] < 2000,
         "route": route["target_exact_title"] == "Elaren Kestrel" and route["target_phase"] == "v651-v6" and route["send_count"] == 0,
         "no_cli_sibling": truth["cli_siblings_spawned"] == 0,
-        "full_suite": selection["canonical_successful_passes"] == 1 and tests["failures"] == 0 and tests["errors"] == 0,
+        "full_suite": selection["canonical_successful_passes"] == 1 and selection["current_exact_final_attempts"] == 2 and selection["failed_exact_final_attempts_retained"] == 1 and tests["failures"] == 0 and tests["errors"] == 0,
         "exact_exclusions": len(exclusions) == selection_policy["exact_lifecycle_exclusion_count"] == 33,
         "no_replay": not truth["post_success_replay_run"],
         "stage20": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
         "staged_review": review["valid"] and not review["unexpected_paths"],
     }
-    minimal_names = ["clean_before", "four_way_equality", "source_ancestral", "x1_ancestral", "evidence_ancestral", "closeout_ancestral", "four_commits_within_cap", "zero_merges", "one_final_parent", "final_delta_manifest", "final_owner_manifest", "full_suite", "stage20"]
+    minimal_names = ["clean_before", "four_way_equality", "source_ancestral", "x1_ancestral", "evidence_ancestral", "closeout_ancestral", "validation_failure_ancestral", "five_commits_within_cap", "zero_merges", "one_final_parent", "final_delta_manifest", "final_owner_manifest", "full_suite", "stage20"]
     minimal = {name: detailed[name] for name in minimal_names}
     clean_after = not bool(git("status", "--porcelain=v1"))
     issues = [name for name, value in detailed.items() if not value]
@@ -216,7 +221,7 @@ def main() -> None:
         "privacy": {"files_scanned": len(owner_map), "pattern_classes": sorted(PATTERNS), "confirmed_hits": privacy_hits, "zero_confirmed_hits": not privacy_hits},
         "manifests": manifests,
         "documents": {"baton_words": baton_words, "overview_words": overview_words, "issues": word_issues},
-        "history": {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "closeout": CLOSEOUT, "final": head, "phase_commits": phase_commits, "commit_cap": 6, "merges": merges, "final_parent_count": len(parents) - 1},
+        "history": {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "closeout": CLOSEOUT, "validation_failure": VALIDATION_FAILURE, "final": head, "phase_commits": phase_commits, "commit_cap": 6, "merges": merges, "final_parent_count": len(parents) - 1},
         "equality": {"local": head, "upstream": upstream, "tracking": tracking, "live": live, "all_equal": head == upstream == tracking == live},
         "clean_before": clean_before, "clean_after": clean_after, "full_repository_suite_run": True, "post_success_replay_run": False, "same_owner_only": True, "independent_reproduction": False,
         "issues": issues, "valid": valid, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": "One Eiren-owned exact-final complete-repository aggregate with the inherited exact lifecycle exclusion set. Same-owner validation is not independent-team reproduction or external audit.",

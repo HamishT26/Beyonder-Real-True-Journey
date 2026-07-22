@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -16,13 +17,13 @@ class EirenV651V5RemasterCloseoutTests(unittest.TestCase):
     def test_final_truth(self):
         truth = load("final/phase-truth.json")
         self.assertEqual(truth["outcome_counts"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(truth["effective_negatives"], 7218)
+        self.assertEqual(truth["effective_negatives"], 7219)
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
     def test_gates_and_failures_are_retained(self):
         negatives = load("final/retained-negative-register.json")
         self.assertTrue(negatives["no_failure_erased"])
-        self.assertEqual(negatives["effective"], 7218)
+        self.assertEqual(negatives["effective"], 7219)
         gates = load("final/gate-register.json")
         self.assertEqual(gates["effective_open_gaps"], 56)
         self.assertEqual(gates["effective_exact_gates"], 57)
@@ -78,6 +79,14 @@ class EirenV651V5RemasterCloseoutTests(unittest.TestCase):
         self.assertEqual(len(delta["self_exclusions"]), 5)
         self.assertEqual(len(owner["self_exclusions"]), 5)
         self.assertTrue(review["valid"])
+
+    def test_final_delta_manifest_is_cumulative_through_staged_correction(self):
+        evidence = "c67ce592463450ccf9aee7d460210cddb467c5ca"
+        committed = set(filter(None, subprocess.check_output(["git", "diff", "--name-only", evidence, "HEAD"], cwd=REPO, text=True, encoding="utf-8").splitlines()))
+        staged = set(filter(None, subprocess.check_output(["git", "diff", "--cached", "--name-only"], cwd=REPO, text=True, encoding="utf-8").splitlines()))
+        manifest = load("validation/final-delta-manifest.json")
+        declared = {row["path"] for row in manifest["entries"]} | set(manifest["self_exclusions"])
+        self.assertEqual(declared, committed | staged)
 
 
 if __name__ == "__main__":

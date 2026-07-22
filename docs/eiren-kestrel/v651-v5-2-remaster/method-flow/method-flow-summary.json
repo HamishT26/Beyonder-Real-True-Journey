@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 18,
-    "recommendations": 18,
-    "state_events": 54,
+    "methods": 19,
+    "recommendations": 19,
+    "state_events": 57,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 18,
+      "preferred": 19,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 24,
-      "pass": 19
+      "fail": 25,
+      "pass": 20
     },
-    "witnesses": 43
+    "witnesses": 45
   },
   "owner": "Eiren Kestrel",
   "phase": "v651-v5-2-remaster",
@@ -297,6 +297,21 @@
         "V6515R-M18-WFAIL",
         "V6515R-M18-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Build the final delta manifest from the union of evidence-to-parent changed paths and currently staged correction paths, with the five receipt self-exclusions declared once.",
+      "method_id": "V6515R-M19",
+      "recurrence_guard": "For additive lifecycle corrections, compare the final delta manifest against the entire immutable evidence-to-predicted-final path domain, not only the latest staged correction.",
+      "rollback": "Retain the 29-of-30 exact-final attempt and its 2389 passing tests at zero canonical credit; do not rerun the broad suite until the cumulative manifest passes an isolated check.",
+      "scope_boundary": "Final delta path and blob coverage only; no additional scientific, authority, or independent-reproduction credit.",
+      "title": "Use cumulative evidence-to-final manifests across corrections",
+      "trigger_preconditions": [
+        "A closeout has one or more additive terminal correction commits after the immutable evidence commit."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M19-WFAIL",
+        "V6515R-M19-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -323,7 +338,8 @@
     "V6515R-M16-WFAIL",
     "V6515R-M17-WFAIL",
     "V6515R-M02-WFAIL-TERMINAL",
-    "V6515R-M18-WFAIL"
+    "V6515R-M18-WFAIL",
+    "V6515R-M19-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

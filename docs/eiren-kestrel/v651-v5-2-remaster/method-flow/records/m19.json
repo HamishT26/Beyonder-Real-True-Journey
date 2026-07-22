@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Build the final delta manifest from the union of evidence-to-parent changed paths and currently staged correction paths, with the five receipt self-exclusions declared once.",
+  "failure_signature": "The first exact-final aggregate passed all repository tests but rejected a correction-only final delta manifest that omitted earlier closeout paths.",
+  "method_id": "V6515R-M19",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "cumulative_delta", "exact_final_validation"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "For additive lifecycle corrections, compare the final delta manifest against the entire immutable evidence-to-predicted-final path domain, not only the latest staged correction.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N18"],
+  "rollback": "Retain the 29-of-30 exact-final attempt and its 2389 passing tests at zero canonical credit; do not rerun the broad suite until the cumulative manifest passes an isolated check.",
+  "scope_boundary": "Final delta path and blob coverage only; no additional scientific, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Use cumulative evidence-to-final manifests across corrections",
+  "trigger_preconditions": ["A closeout has one or more additive terminal correction commits after the immutable evidence commit."],
+  "validation_witness_ids": []
+}

@@ -2,9 +2,9 @@
 
 - Phase: v651-v5-2-remaster
 - Owner: Eiren Kestrel
-- Methods: 18
-- Passing witnesses: 19
-- Failed witnesses retained: 24
+- Methods: 19
+- Passing witnesses: 20
+- Failed witnesses retained: 25
 
 ## Preferred methods
 
@@ -151,6 +151,14 @@
 - Recurrence guard: Bind correction-capable lifecycle tools to an explicit finite set of attributable parent heads rather than relaxing exact-head checks generally.
 - Rollback: Retain the refused correction review at zero credit and stop if the current head is neither the evidence head nor the known closeout parent.
 - Witnesses: V6515R-M18-WFAIL, V6515R-M18-WPASS
+
+### V6515R-M19 — Use cumulative evidence-to-final manifests across corrections
+
+- Trigger: A closeout has one or more additive terminal correction commits after the immutable evidence commit.
+- Method: Build the final delta manifest from the union of evidence-to-parent changed paths and currently staged correction paths, with the five receipt self-exclusions declared once.
+- Recurrence guard: For additive lifecycle corrections, compare the final delta manifest against the entire immutable evidence-to-predicted-final path domain, not only the latest staged correction.
+- Rollback: Retain the 29-of-30 exact-final attempt and its 2389 passing tests at zero canonical credit; do not rerun the broad suite until the cumulative manifest passes an isolated check.
+- Witnesses: V6515R-M19-WFAIL, V6515R-M19-WPASS
 
 ## Retained boundary
 
