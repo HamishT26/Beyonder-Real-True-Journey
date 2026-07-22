@@ -1,0 +1,11 @@
+# Elaren Kestrel v651-v6 x1 preregistration
+
+Elaren Kestrel (they/them) is relational working language for a workflow cartographer and evidence-boundary gardener. It is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, or authority. Hamish may rename, pause, redirect, or stop this route.
+
+This x1 packet freezes thirty proposals after a mechanism, artifact, falsifier, source, and gate review against 1,030 inherited frozen proposals. The primary pillar is GMUT Mind and the bounded learning practice is scientific-computing verification and reproducible numerical research engineering. THOS Body and Freed ID/CBR Heart remain explicit. Expected dispositions are hypotheses only: twenty-three completed, five represented, one open gap, and one exact gate. X1 contains no executed outcome and no x2 implementation.
+
+The numerical-verification core addresses non-normal transient growth, residual attribution, nondimensional rank, discrete adjoints, differential-algebraic constraints, event localization, asymptotic convergence, stiffness, Jacobian sparsity, work-precision tradeoffs, conservation projection, modified Hamiltonians, mixed precision, emulator domains, metamorphic invariance, model discrepancy, and backward error. The open likelihood adapter stays empty until authentic data, covariance, selections, and preregistered blinding exist.
+
+THOS proposals remain software or synthetic evidence. Freed ID proposals remain synthetic governance profiles with no real keys, issuance, resolution, status, revocation, interoperability, security/privacy review, or trust governance. CBR consequential-model ledgers do not decide a dispute, prove comprehension or fairness, or confer legal, cultural, Maori, or affected-party authority. The redress surface remains exact-gated.
+
+Four startup failures are retained at zero pass credit. Their bounded recoveries are encoded through Method Flow. The phase uses one x1 freeze before x2, at most six total commits, one successful canonical validation with no post-success replay, D-first storage, exact Git-blob manifests, five-class privacy screening, additive family-current names, and an existing-task-only terminal route. The verdict remains NOT_READY_FOR_STAGE_20.

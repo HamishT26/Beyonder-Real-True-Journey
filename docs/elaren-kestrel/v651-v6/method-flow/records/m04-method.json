@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Append records to an array and pipe only the completed array.",
+  "failure_signature": "Windows PowerShell rejects a foreach block followed immediately by a pipeline.",
+  "method_id": "V6516-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Avoid direct loop-to-pipeline syntax under Windows PowerShell 5.1.",
+  "retained_negative_ids": [
+    "V6516-X1-N04"
+  ],
+  "rollback": "Retain the parser failure; no repository state needs rollback.",
+  "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Accumulate PowerShell loop output before piping",
+  "trigger_preconditions": [
+    "Windows PowerShell rejects a foreach block followed immediately by a pipeline."
+  ],
+  "validation_witness_ids": []
+}

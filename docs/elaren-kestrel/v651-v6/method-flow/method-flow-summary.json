@@ -1,0 +1,109 @@
+{
+  "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
+  "counts": {
+    "methods": 5,
+    "recommendations": 5,
+    "state_events": 15,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 5,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 5,
+      "pass": 5
+    },
+    "witnesses": 10
+  },
+  "owner": "Elaren Kestrel",
+  "phase": "v651-v6",
+  "preferred_methods": [
+    {
+      "candidate_workaround": "Capture the complete blob once, verify size or line count, and then inspect bounded in-memory slices.",
+      "method_id": "V6516-M01",
+      "recurrence_guard": "Use buffered object reads before any presentation limiter.",
+      "rollback": "Discard only the truncated display and repeat the read without mutating Git.",
+      "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Complete buffered Git-blob read",
+      "trigger_preconditions": [
+        "A line-limited downstream consumer closes a Git content stream before the producer finishes."
+      ],
+      "validation_witness_ids": [
+        "V6516-M01-WFAIL",
+        "V6516-M01-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Capture the tree listing and apply an explicit zero-result-safe match.",
+      "method_id": "V6516-M02",
+      "recurrence_guard": "Separate tree acquisition from optional filtering.",
+      "rollback": "Give the empty filter zero evidence credit and preserve the underlying tree.",
+      "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Attribute zero-result tree filters",
+      "trigger_preconditions": [
+        "A repository tree filter returns no rows and a nonzero grep-style status."
+      ],
+      "validation_witness_ids": [
+        "V6516-M02-WFAIL",
+        "V6516-M02-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Query the tracked-file index and distinguish verified absence from execution failure.",
+      "method_id": "V6516-M03",
+      "recurrence_guard": "Use git ls-files for tracked optional control files.",
+      "rollback": "Retain the no-match command and stop if the tracked index itself cannot be read.",
+      "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Use tracked index for optional instruction discovery",
+      "trigger_preconditions": [
+        "A no-match file search is misclassified as a tool fault."
+      ],
+      "validation_witness_ids": [
+        "V6516-M03-WFAIL",
+        "V6516-M03-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Append records to an array and pipe only the completed array.",
+      "method_id": "V6516-M04",
+      "recurrence_guard": "Avoid direct loop-to-pipeline syntax under Windows PowerShell 5.1.",
+      "rollback": "Retain the parser failure; no repository state needs rollback.",
+      "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Accumulate PowerShell loop output before piping",
+      "trigger_preconditions": [
+        "Windows PowerShell rejects a foreach block followed immediately by a pipeline."
+      ],
+      "validation_witness_ids": [
+        "V6516-M04-WFAIL",
+        "V6516-M04-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Retain the authoritative failed audit and validate only immediate route structure with a marked compatibility projection.",
+      "method_id": "V6516-M05",
+      "recurrence_guard": "Never present compatibility validation as validation of newer live policy values.",
+      "rollback": "Stop route execution if the compatibility projection also fails; never silently narrow the live plan.",
+      "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+      "title": "Preserve live policy over a legacy compatibility projection",
+      "trigger_preconditions": [
+        "The installed workflow runner encodes narrower historical caps than the live activation baton."
+      ],
+      "validation_witness_ids": [
+        "V6516-M05-WFAIL",
+        "V6516-M05-WPASS"
+      ]
+    }
+  ],
+  "retained_failed_witnesses": [
+    "V6516-M01-WFAIL",
+    "V6516-M02-WFAIL",
+    "V6516-M03-WFAIL",
+    "V6516-M04-WFAIL",
+    "V6516-M05-WFAIL"
+  ],
+  "schema": "ghc.family.method-flow-state.summary.v1",
+  "valid": true
+}

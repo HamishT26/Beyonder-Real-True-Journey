@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Capture the complete blob once, verify size or line count, and then inspect bounded in-memory slices.",
+  "failure_signature": "A line-limited downstream consumer closes a Git content stream before the producer finishes.",
+  "method_id": "V6516-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use buffered object reads before any presentation limiter.",
+  "retained_negative_ids": [
+    "V6516-X1-N01"
+  ],
+  "rollback": "Discard only the truncated display and repeat the read without mutating Git.",
+  "scope_boundary": "Bounded local workflow recovery only; no scientific, production, authority, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Complete buffered Git-blob read",
+  "trigger_preconditions": [
+    "A line-limited downstream consumer closes a Git content stream before the producer finishes."
+  ],
+  "validation_witness_ids": []
+}
