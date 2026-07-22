@@ -2,9 +2,9 @@
 
 - Phase: v651-v5-2-remaster
 - Owner: Eiren Kestrel
-- Methods: 7
-- Passing witnesses: 7
-- Failed witnesses retained: 7
+- Methods: 17
+- Passing witnesses: 17
+- Failed witnesses retained: 22
 
 ## Preferred methods
 
@@ -46,7 +46,7 @@
 - Method: Read the state returned by the witness command and transition directly from validated to preferred only once.
 - Recurrence guard: Do not hard-code a second validated transition after a passing witness.
 - Rollback: Retain the rejected transition and resume from the ledger's actual valid state without rebuilding the ledger.
-- Witnesses: V6515R-M05-WFAIL, V6515R-M05-WPASS
+- Witnesses: V6515R-M05-WFAIL, V6515R-M05-WPASS, V6515R-M05-WFAIL-REPEAT-01, V6515R-M05-WFAIL-REPEAT-02, V6515R-M05-WFAIL-REPEAT-03
 
 ### V6515R-M06 — Declare UTF-8 for Windows skill validation
 
@@ -63,6 +63,86 @@
 - Recurrence guard: Validate shared structural headings across both generated and hand-authored packages before the aggregate.
 - Rollback: Retain the failed aggregate and remove only the additive heading if it introduces a contradiction.
 - Witnesses: V6515R-M07-WFAIL, V6515R-M07-WPASS
+
+### V6515R-M08 — Bind closeout builders to the current Method Flow summary schema
+
+- Trigger: A closeout builder reads a generated Method Flow summary.
+- Method: Inspect the current Method Flow summary keys and consume preferred_methods with its published field names.
+- Recurrence guard: Inspect generated JSON keys and one representative row before binding a closeout builder to the summary schema.
+- Rollback: Retain the failed builder attempt at zero credit and remove any partial closeout output before retrying; no partial files were written in this instance.
+- Witnesses: V6515R-M08-WFAIL, V6515R-M08-WPASS
+
+### V6515R-M09 — Repeat Reflection-Remaster focus arguments
+
+- Trigger: The reflection runner accepts --focus with argparse append semantics.
+- Method: Pass each reflection focus term with its own --focus argument because the runner uses an append action.
+- Recurrence guard: Inspect argparse action and confirm scoped_count is nonzero before crediting a focused reflection run.
+- Rollback: Retain the zero-scoped output at zero credit and overwrite only the additive reflection output with a correctly focused run.
+- Witnesses: V6515R-M09-WFAIL, V6515R-M09-WPASS
+
+### V6515R-M10 — Use literal-path Select-String for quote-sensitive PowerShell probes
+
+- Trigger: A short PowerShell source probe contains nested quote characters.
+- Method: Use Select-String with literal paths and separately quoted patterns when inspecting PowerShell source text.
+- Recurrence guard: Prefer literal-path PowerShell cmdlets for short source probes containing nested quote syntax.
+- Rollback: Retain the parser error at zero credit and issue no mutation before a quote-safe read succeeds.
+- Witnesses: V6515R-M10-WFAIL, V6515R-M10-WPASS
+
+### V6515R-M11 — Preserve Windows paths through raw wrapper literals
+
+- Trigger: A JavaScript wrapper sends a Windows path containing backslashes to PowerShell or the shell workdir field.
+- Method: Use raw JavaScript template literals or explicitly doubled backslashes for every Windows command and workdir path passed through an orchestration wrapper.
+- Recurrence guard: Construct Windows command and workdir strings with String.raw before dispatch and verify the resolved D-first directory read-only.
+- Rollback: Retain each wrapper rejection at zero credit and leave the staged index untouched until a raw-path probe succeeds.
+- Witnesses: V6515R-M11-WFAIL-01, V6515R-M11-WFAIL-02, V6515R-M11-WPASS
+
+### V6515R-M12 — Bind Git probes to the resolved owned worktree
+
+- Trigger: A Git command depends on repository discovery and the current wrapper directory may be outside the repository.
+- Method: Run repository-scoped Git probes from the resolved owned worktree, not from the configuration directory.
+- Recurrence guard: Resolve the owned worktree first, then bind every repository-scoped Git probe to that workdir.
+- Rollback: Retain the failed read at zero credit and perform no mutation before a worktree-bound Git probe passes.
+- Witnesses: V6515R-M12-WFAIL, V6515R-M12-WPASS
+
+### V6515R-M13 — Discover the Method Flow command surface before invocation
+
+- Trigger: A caller has not verified the current Method Flow runner subcommand names.
+- Method: Read the runner's top-level help first and invoke only its accepted record, witness, set-state, validate, and summarize surfaces.
+- Recurrence guard: Capture the accepted command list from top-level help before requesting subcommand help.
+- Rollback: Retain each parser refusal at zero credit and do not edit the ledger directly.
+- Witnesses: V6515R-M13-WFAIL-01, V6515R-M13-WFAIL-02, V6515R-M13-WPASS
+
+### V6515R-M14 — Use ripgrep glob filters for Windows filename selection
+
+- Trigger: A Windows ripgrep scan must select filename families across fixed repository directories.
+- Method: Pass fixed directories to ripgrep and express filename selection with one or more -g filters on Windows.
+- Recurrence guard: Use positional directory roots plus ripgrep glob filters instead of wildcard positional paths.
+- Rollback: Retain the refused scan at zero credit and do not infer absence until the corrected directory-scoped scan passes.
+- Witnesses: V6515R-M14-WFAIL, V6515R-M14-WPASS
+
+### V6515R-M15 — Honor staged-manifest self-exclusion before generation
+
+- Trigger: A staged-review generator declares its own output receipts as index self-exclusions.
+- Method: Before generating self-excluding staged manifests, remove only the declared receipt paths from the index and assert their staged intersection is empty.
+- Recurrence guard: Stage intended inputs, unstage only declared self-excluding outputs, assert zero staged intersections, then generate and restage the receipts.
+- Rollback: Retain the refused generator at zero credit and leave working-tree receipt content available until the exact index contract is restored.
+- Witnesses: V6515R-M15-WFAIL, V6515R-M15-WPASS
+
+### V6515R-M16 — Resolve final-review documents from declared path constants
+
+- Trigger: A final-review script adds a new repository-relative artifact read.
+- Method: Resolve phase artifacts as REPO / PHASE_ROOT / relative_path inside the final-review script.
+- Recurrence guard: Reuse only path constants declared by the script and exercise new path expressions in an isolated read before the generator.
+- Rollback: Retain the NameError at zero credit and do not stage any incomplete receipt output.
+- Witnesses: V6515R-M16-WFAIL, V6515R-M16-WPASS
+
+### V6515R-M17 — Avoid quote-dense inline Python for Windows path witnesses
+
+- Trigger: A read-only Windows witness would require nested path strings inside an inline Python argument.
+- Method: Use LiteralPath PowerShell reads for simple Windows word-count witnesses instead of quote-dense inline Python.
+- Recurrence guard: Prefer a checked-in script or LiteralPath cmdlets whenever an inline program contains nested path-string quoting.
+- Rollback: Retain the inline-program failure at zero credit and do not infer file readability from the failed expression.
+- Witnesses: V6515R-M17-WFAIL, V6515R-M17-WPASS
 
 ## Retained boundary
 

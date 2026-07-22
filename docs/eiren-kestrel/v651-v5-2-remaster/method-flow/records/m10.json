@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use Select-String with literal paths and separately quoted patterns when inspecting PowerShell source text.",
+  "failure_signature": "A nested quoted ripgrep command failed in PowerShell with a missing string terminator.",
+  "method_id": "V6515R-M10",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "read_only_probe", "quote_safety"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Prefer literal-path PowerShell cmdlets for short source probes containing nested quote syntax.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N03"],
+  "rollback": "Retain the parser error at zero credit and issue no mutation before a quote-safe read succeeds.",
+  "scope_boundary": "One read-only PowerShell source inspection only.",
+  "supersedes": [],
+  "title": "Use literal-path Select-String for quote-sensitive PowerShell probes",
+  "trigger_preconditions": ["A short PowerShell source probe contains nested quote characters."],
+  "validation_witness_ids": []
+}

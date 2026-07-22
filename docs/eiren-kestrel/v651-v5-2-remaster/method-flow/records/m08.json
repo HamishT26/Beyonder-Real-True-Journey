@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Inspect the current Method Flow summary keys and consume preferred_methods with its published field names.",
+  "failure_signature": "The first closeout builder expected a recommendations key that is not present in the current summary schema.",
+  "method_id": "V6515R-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "schema_truth", "no_partial_closeout_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect generated JSON keys and one representative row before binding a closeout builder to the summary schema.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N01"],
+  "rollback": "Retain the failed builder attempt at zero credit and remove any partial closeout output before retrying; no partial files were written in this instance.",
+  "scope_boundary": "Method Flow summary consumption only; no broader closeout or authority credit.",
+  "supersedes": [],
+  "title": "Bind closeout builders to the current Method Flow summary schema",
+  "trigger_preconditions": ["A closeout builder reads a generated Method Flow summary."],
+  "validation_witness_ids": []
+}

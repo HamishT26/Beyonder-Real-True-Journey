@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pass fixed directories to ripgrep and express filename selection with one or more -g filters on Windows.",
+  "failure_signature": "Ripgrep rejected wildcard positional path arguments that PowerShell had not expanded.",
+  "method_id": "V6515R-M14",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "stale_value_review", "windows_path_semantics"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use positional directory roots plus ripgrep glob filters instead of wildcard positional paths.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N12"],
+  "rollback": "Retain the refused scan at zero credit and do not infer absence until the corrected directory-scoped scan passes.",
+  "scope_boundary": "Read-only Windows ripgrep file selection only.",
+  "supersedes": [],
+  "title": "Use ripgrep glob filters for Windows filename selection",
+  "trigger_preconditions": ["A Windows ripgrep scan must select filename families across fixed repository directories."],
+  "validation_witness_ids": []
+}

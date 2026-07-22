@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use LiteralPath PowerShell reads for simple Windows word-count witnesses instead of quote-dense inline Python.",
+  "failure_signature": "PowerShell argument transport stripped quotes from an inline Python expression and Python treated a path token as a name.",
+  "method_id": "V6515R-M17",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "quote_safety", "read_only_witness"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Prefer a checked-in script or LiteralPath cmdlets whenever an inline program contains nested path-string quoting.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N15"],
+  "rollback": "Retain the inline-program failure at zero credit and do not infer file readability from the failed expression.",
+  "scope_boundary": "Two owner-local text-file word counts only.",
+  "supersedes": [],
+  "title": "Avoid quote-dense inline Python for Windows path witnesses",
+  "trigger_preconditions": ["A read-only Windows witness would require nested path strings inside an inline Python argument."],
+  "validation_witness_ids": []
+}

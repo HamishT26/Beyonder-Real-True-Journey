@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Before generating self-excluding staged manifests, remove only the declared receipt paths from the index and assert their staged intersection is empty.",
+  "failure_signature": "The final staged-review generator refused because all five self-excluding receipt paths were already staged.",
+  "method_id": "V6515R-M15",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "manifest_self_exclusion", "index_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Stage intended inputs, unstage only declared self-excluding outputs, assert zero staged intersections, then generate and restage the receipts.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N13"],
+  "rollback": "Retain the refused generator at zero credit and leave working-tree receipt content available until the exact index contract is restored.",
+  "scope_boundary": "Additive staged-manifest receipt generation only; no history rewrite or working-tree deletion.",
+  "supersedes": [],
+  "title": "Honor staged-manifest self-exclusion before generation",
+  "trigger_preconditions": ["A staged-review generator declares its own output receipts as index self-exclusions."],
+  "validation_witness_ids": []
+}

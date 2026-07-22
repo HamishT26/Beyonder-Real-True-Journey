@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Run repository-scoped Git probes from the resolved owned worktree, not from the configuration directory.",
+  "failure_signature": "A read-only git worktree list was invoked from a non-repository directory and returned not-a-repository.",
+  "method_id": "V6515R-M12",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "repository_context", "read_only_probe"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve the owned worktree first, then bind every repository-scoped Git probe to that workdir.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N06"],
+  "rollback": "Retain the failed read at zero credit and perform no mutation before a worktree-bound Git probe passes.",
+  "scope_boundary": "Local repository-context selection only.",
+  "supersedes": [],
+  "title": "Bind Git probes to the resolved owned worktree",
+  "trigger_preconditions": ["A Git command depends on repository discovery and the current wrapper directory may be outside the repository."],
+  "validation_witness_ids": []
+}

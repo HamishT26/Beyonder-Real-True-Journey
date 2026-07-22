@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Resolve phase artifacts as REPO / PHASE_ROOT / relative_path inside the final-review script.",
+  "failure_signature": "A dynamic word-count addition referenced an undefined PHASE name and stopped final-review generation.",
+  "method_id": "V6515R-M16",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "path_resolution", "final_review"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Reuse only path constants declared by the script and exercise new path expressions in an isolated read before the generator.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N14"],
+  "rollback": "Retain the NameError at zero credit and do not stage any incomplete receipt output.",
+  "scope_boundary": "Two repository-relative document reads in the owner-local final-review script only.",
+  "supersedes": [],
+  "title": "Resolve final-review documents from declared path constants",
+  "trigger_preconditions": ["A final-review script adds a new repository-relative artifact read."],
+  "validation_witness_ids": []
+}

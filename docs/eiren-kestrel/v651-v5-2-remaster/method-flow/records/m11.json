@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use raw JavaScript template literals or explicitly doubled backslashes for every Windows command and workdir path passed through an orchestration wrapper.",
+  "failure_signature": "Two wrapper calls interpreted ordinary JavaScript backslash escapes and rejected their malformed workdir paths before any Git command began.",
+  "method_id": "V6515R-M11",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "path_integrity", "no_unstarted_git_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Construct Windows command and workdir strings with String.raw before dispatch and verify the resolved D-first directory read-only.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N04", "V6515R-CLOSEOUT-N05"],
+  "rollback": "Retain each wrapper rejection at zero credit and leave the staged index untouched until a raw-path probe succeeds.",
+  "scope_boundary": "Windows path transport through the local orchestration wrapper only.",
+  "supersedes": [],
+  "title": "Preserve Windows paths through raw wrapper literals",
+  "trigger_preconditions": ["A JavaScript wrapper sends a Windows path containing backslashes to PowerShell or the shell workdir field."],
+  "validation_witness_ids": []
+}

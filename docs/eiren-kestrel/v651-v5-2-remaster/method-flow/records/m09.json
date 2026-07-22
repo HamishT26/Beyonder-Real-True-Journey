@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pass each reflection focus term with its own --focus argument because the runner uses an append action.",
+  "failure_signature": "A comma-joined focus value completed with zero issues but matched zero scoped surfaces.",
+  "method_id": "V6515R-M09",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "focused_reflection", "no_false_success_credit"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Inspect argparse action and confirm scoped_count is nonzero before crediting a focused reflection run.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N02"],
+  "rollback": "Retain the zero-scoped output at zero credit and overwrite only the additive reflection output with a correctly focused run.",
+  "scope_boundary": "Reflection-Remaster focus selection only; no broader tool-quality or authority credit.",
+  "supersedes": [],
+  "title": "Repeat Reflection-Remaster focus arguments",
+  "trigger_preconditions": ["The reflection runner accepts --focus with argparse append semantics."],
+  "validation_witness_ids": []
+}

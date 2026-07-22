@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 7,
-    "recommendations": 7,
-    "state_events": 21,
+    "methods": 17,
+    "recommendations": 17,
+    "state_events": 51,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 7,
+      "preferred": 17,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 7,
-      "pass": 7
+      "fail": 22,
+      "pass": 17
     },
-    "witnesses": 14
+    "witnesses": 39
   },
   "owner": "Eiren Kestrel",
   "phase": "v651-v5-2-remaster",
@@ -93,7 +93,10 @@
       ],
       "validation_witness_ids": [
         "V6515R-M05-WFAIL",
-        "V6515R-M05-WPASS"
+        "V6515R-M05-WPASS",
+        "V6515R-M05-WFAIL-REPEAT-01",
+        "V6515R-M05-WFAIL-REPEAT-02",
+        "V6515R-M05-WFAIL-REPEAT-03"
       ]
     },
     {
@@ -125,6 +128,158 @@
         "V6515R-M07-WFAIL",
         "V6515R-M07-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Inspect the current Method Flow summary keys and consume preferred_methods with its published field names.",
+      "method_id": "V6515R-M08",
+      "recurrence_guard": "Inspect generated JSON keys and one representative row before binding a closeout builder to the summary schema.",
+      "rollback": "Retain the failed builder attempt at zero credit and remove any partial closeout output before retrying; no partial files were written in this instance.",
+      "scope_boundary": "Method Flow summary consumption only; no broader closeout or authority credit.",
+      "title": "Bind closeout builders to the current Method Flow summary schema",
+      "trigger_preconditions": [
+        "A closeout builder reads a generated Method Flow summary."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M08-WFAIL",
+        "V6515R-M08-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Pass each reflection focus term with its own --focus argument because the runner uses an append action.",
+      "method_id": "V6515R-M09",
+      "recurrence_guard": "Inspect argparse action and confirm scoped_count is nonzero before crediting a focused reflection run.",
+      "rollback": "Retain the zero-scoped output at zero credit and overwrite only the additive reflection output with a correctly focused run.",
+      "scope_boundary": "Reflection-Remaster focus selection only; no broader tool-quality or authority credit.",
+      "title": "Repeat Reflection-Remaster focus arguments",
+      "trigger_preconditions": [
+        "The reflection runner accepts --focus with argparse append semantics."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M09-WFAIL",
+        "V6515R-M09-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use Select-String with literal paths and separately quoted patterns when inspecting PowerShell source text.",
+      "method_id": "V6515R-M10",
+      "recurrence_guard": "Prefer literal-path PowerShell cmdlets for short source probes containing nested quote syntax.",
+      "rollback": "Retain the parser error at zero credit and issue no mutation before a quote-safe read succeeds.",
+      "scope_boundary": "One read-only PowerShell source inspection only.",
+      "title": "Use literal-path Select-String for quote-sensitive PowerShell probes",
+      "trigger_preconditions": [
+        "A short PowerShell source probe contains nested quote characters."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M10-WFAIL",
+        "V6515R-M10-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use raw JavaScript template literals or explicitly doubled backslashes for every Windows command and workdir path passed through an orchestration wrapper.",
+      "method_id": "V6515R-M11",
+      "recurrence_guard": "Construct Windows command and workdir strings with String.raw before dispatch and verify the resolved D-first directory read-only.",
+      "rollback": "Retain each wrapper rejection at zero credit and leave the staged index untouched until a raw-path probe succeeds.",
+      "scope_boundary": "Windows path transport through the local orchestration wrapper only.",
+      "title": "Preserve Windows paths through raw wrapper literals",
+      "trigger_preconditions": [
+        "A JavaScript wrapper sends a Windows path containing backslashes to PowerShell or the shell workdir field."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M11-WFAIL-01",
+        "V6515R-M11-WFAIL-02",
+        "V6515R-M11-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Run repository-scoped Git probes from the resolved owned worktree, not from the configuration directory.",
+      "method_id": "V6515R-M12",
+      "recurrence_guard": "Resolve the owned worktree first, then bind every repository-scoped Git probe to that workdir.",
+      "rollback": "Retain the failed read at zero credit and perform no mutation before a worktree-bound Git probe passes.",
+      "scope_boundary": "Local repository-context selection only.",
+      "title": "Bind Git probes to the resolved owned worktree",
+      "trigger_preconditions": [
+        "A Git command depends on repository discovery and the current wrapper directory may be outside the repository."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M12-WFAIL",
+        "V6515R-M12-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the runner's top-level help first and invoke only its accepted record, witness, set-state, validate, and summarize surfaces.",
+      "method_id": "V6515R-M13",
+      "recurrence_guard": "Capture the accepted command list from top-level help before requesting subcommand help.",
+      "rollback": "Retain each parser refusal at zero credit and do not edit the ledger directly.",
+      "scope_boundary": "Method Flow command-surface discovery only.",
+      "title": "Discover the Method Flow command surface before invocation",
+      "trigger_preconditions": [
+        "A caller has not verified the current Method Flow runner subcommand names."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M13-WFAIL-01",
+        "V6515R-M13-WFAIL-02",
+        "V6515R-M13-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Pass fixed directories to ripgrep and express filename selection with one or more -g filters on Windows.",
+      "method_id": "V6515R-M14",
+      "recurrence_guard": "Use positional directory roots plus ripgrep glob filters instead of wildcard positional paths.",
+      "rollback": "Retain the refused scan at zero credit and do not infer absence until the corrected directory-scoped scan passes.",
+      "scope_boundary": "Read-only Windows ripgrep file selection only.",
+      "title": "Use ripgrep glob filters for Windows filename selection",
+      "trigger_preconditions": [
+        "A Windows ripgrep scan must select filename families across fixed repository directories."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M14-WFAIL",
+        "V6515R-M14-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Before generating self-excluding staged manifests, remove only the declared receipt paths from the index and assert their staged intersection is empty.",
+      "method_id": "V6515R-M15",
+      "recurrence_guard": "Stage intended inputs, unstage only declared self-excluding outputs, assert zero staged intersections, then generate and restage the receipts.",
+      "rollback": "Retain the refused generator at zero credit and leave working-tree receipt content available until the exact index contract is restored.",
+      "scope_boundary": "Additive staged-manifest receipt generation only; no history rewrite or working-tree deletion.",
+      "title": "Honor staged-manifest self-exclusion before generation",
+      "trigger_preconditions": [
+        "A staged-review generator declares its own output receipts as index self-exclusions."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M15-WFAIL",
+        "V6515R-M15-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Resolve phase artifacts as REPO / PHASE_ROOT / relative_path inside the final-review script.",
+      "method_id": "V6515R-M16",
+      "recurrence_guard": "Reuse only path constants declared by the script and exercise new path expressions in an isolated read before the generator.",
+      "rollback": "Retain the NameError at zero credit and do not stage any incomplete receipt output.",
+      "scope_boundary": "Two repository-relative document reads in the owner-local final-review script only.",
+      "title": "Resolve final-review documents from declared path constants",
+      "trigger_preconditions": [
+        "A final-review script adds a new repository-relative artifact read."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M16-WFAIL",
+        "V6515R-M16-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Use LiteralPath PowerShell reads for simple Windows word-count witnesses instead of quote-dense inline Python.",
+      "method_id": "V6515R-M17",
+      "recurrence_guard": "Prefer a checked-in script or LiteralPath cmdlets whenever an inline program contains nested path-string quoting.",
+      "rollback": "Retain the inline-program failure at zero credit and do not infer file readability from the failed expression.",
+      "scope_boundary": "Two owner-local text-file word counts only.",
+      "title": "Avoid quote-dense inline Python for Windows path witnesses",
+      "trigger_preconditions": [
+        "A read-only Windows witness would require nested path strings inside an inline Python argument."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M17-WFAIL",
+        "V6515R-M17-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -134,7 +289,22 @@
     "V6515R-M04-WFAIL",
     "V6515R-M05-WFAIL",
     "V6515R-M06-WFAIL",
-    "V6515R-M07-WFAIL"
+    "V6515R-M07-WFAIL",
+    "V6515R-M08-WFAIL",
+    "V6515R-M09-WFAIL",
+    "V6515R-M10-WFAIL",
+    "V6515R-M11-WFAIL-01",
+    "V6515R-M11-WFAIL-02",
+    "V6515R-M12-WFAIL",
+    "V6515R-M13-WFAIL-01",
+    "V6515R-M13-WFAIL-02",
+    "V6515R-M05-WFAIL-REPEAT-01",
+    "V6515R-M05-WFAIL-REPEAT-02",
+    "V6515R-M05-WFAIL-REPEAT-03",
+    "V6515R-M14-WFAIL",
+    "V6515R-M15-WFAIL",
+    "V6515R-M16-WFAIL",
+    "V6515R-M17-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
