@@ -2,9 +2,9 @@
 
 - Phase: v651-v6-special-cli-prep
 - Owner: Elaren Kestrel
-- Methods: 4
-- Passing witnesses: 4
-- Failed witnesses retained: 4
+- Methods: 6
+- Passing witnesses: 6
+- Failed witnesses retained: 6
 
 ## Preferred methods
 
@@ -39,6 +39,22 @@
 - Recurrence guard: Measure the overview after final sections are generated and before commit.
 - Rollback: Retain the short overview result and remove any filler that does not improve the handoff.
 - Witnesses: V6516-SPECIAL-M04-WFAIL, V6516-SPECIAL-M04-WPASS
+
+### V6516-SPECIAL-M05 — Windows npm shim invocation through cmd.exe
+
+- Trigger: A Python validator must verify a Windows npm-installed CLI version.
+- Method: Invoke codex through cmd.exe /d /c so Windows resolves the npm command shim correctly.
+- Recurrence guard: Use an explicit Windows command interpreter for .cmd or extensionless npm shims inside subprocess validators.
+- Rollback: Retain the crashed canonical attempt with zero credit and do not rerun the broad validator until the isolated command succeeds.
+- Witnesses: V6516-SPECIAL-M05-WFAIL, V6516-SPECIAL-M05-WPASS
+
+### V6516-SPECIAL-M06 — Immutable base-object continuity on additive successor heads
+
+- Trigger: A special continuation validates an already sealed base phase without rewriting its historical tests.
+- Method: Read the sealed truth from the exact base Git object, verify base-to-current ancestry, and run only successor-compatible scoped modules.
+- Recurrence guard: Do not execute historical HEAD-count assertions as if an additive successor were still the sealed phase head.
+- Rollback: Retain the failed historical assertion and keep the base test byte-stable.
+- Witnesses: V6516-SPECIAL-M06-WFAIL, V6516-SPECIAL-M06-WPASS
 
 ## Retained boundary
 

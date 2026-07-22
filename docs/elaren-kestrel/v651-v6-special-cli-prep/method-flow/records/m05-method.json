@@ -1,0 +1,17 @@
+{
+  "method_id": "V6516-SPECIAL-M05",
+  "title": "Windows npm shim invocation through cmd.exe",
+  "failure_signature": "Python CreateProcess receives access denied when asked to execute the extensionless Codex npm shim directly.",
+  "trigger_preconditions": ["A Python validator must verify a Windows npm-installed CLI version."],
+  "candidate_workaround": "Invoke codex through cmd.exe /d /c so Windows resolves the npm command shim correctly.",
+  "recurrence_guard": "Use an explicit Windows command interpreter for .cmd or extensionless npm shims inside subprocess validators.",
+  "rollback": "Retain the crashed canonical attempt with zero credit and do not rerun the broad validator until the isolated command succeeds.",
+  "protected_gates": ["canonical_validation", "version_truth", "single_pass_credit", "completion_credit"],
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "privacy_class": "sanitized_public",
+  "scope_boundary": "CLI version subprocess only; it does not validate other canonical checks or launch any CLI sibling.",
+  "retained_negative_ids": ["V6516-SPECIAL-N08"],
+  "validation_witness_ids": [],
+  "recommendation_state": "candidate",
+  "supersedes": []
+}

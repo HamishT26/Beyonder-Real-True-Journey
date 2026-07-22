@@ -19,11 +19,11 @@ BASE = ROOT / "docs/elaren-kestrel/v651-v6"
 PHASE = ROOT / "docs/elaren-kestrel/v651-v6-special-cli-prep"
 SOURCE = "7c4309d6b57bc4827ebd49bcb7c9dfc669c46e3d"
 BASE_FINAL = "7911fc2ff2f95d2e8723dbd396272f4a78d46a9f"
+SPECIAL_PREP_COMMIT = "f40d1e0f1a5158a8747ed57cc04a513979f5ebe7"
 BRANCH = "codex/GHC-Family/elaren-kestrel-v649-v8-full-tools"
 TEST_MODULES = [
     "tests.test_ghc_family_v651_v6_x1",
     "tests.test_ghc_family_v651_v6_x2",
-    "tests.test_ghc_family_v651_v6_closeout",
     "tests.test_ghc_family_v651_v6_special_cli_prep",
 ]
 TEXT_SUFFIXES = {".json", ".md", ".txt", ".html", ".py", ".yaml", ".yml", ".tex", ".mjs", ".cjs", ".js"}
@@ -114,9 +114,9 @@ def main() -> int:
     special_commits = int(command("git", "rev-list", "--count", f"{BASE_FINAL}..{head}"))
     merges = int(command("git", "rev-list", "--count", "--merges", f"{SOURCE}..{head}"))
     parents = command("git", "show", "-s", "--format=%P", head).split()
-    check("special_commit_budget", phase_commits <= 12 and special_commits == 1, {"source_to_head": phase_commits, "base_to_head": special_commits}, "at most twelve from source and exactly one additive special commit")
+    check("special_commit_budget", phase_commits <= 12 and special_commits == 2, {"source_to_head": phase_commits, "base_to_head": special_commits}, "at most twelve from source and exactly two additive special commits including correction")
     check("zero_merges", merges == 0, merges, "0")
-    check("single_parent_base", parents == [BASE_FINAL], parents, f"[{BASE_FINAL}]")
+    check("single_parent_correction", parents == [SPECIAL_PREP_COMMIT], parents, f"[{SPECIAL_PREP_COMMIT}]")
 
     tests = run_tests()
     check("scoped_tests", tests["successful"], tests, "all selected modules pass")
@@ -161,13 +161,13 @@ def main() -> int:
     reflection = load("reflection-remaster/special-review.json")
     meta = load("tooling/meta-tool-box-refresh.json")
     check("truth_distribution", truth.get("outcomes") == {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1}, truth.get("outcomes"), "23/5/1/1")
-    check("negative_retention", truth.get("effective_negatives") == 7336, truth.get("effective_negatives"), "7336")
+    check("negative_retention", truth.get("effective_negatives") == 7338, truth.get("effective_negatives"), "7338")
     check("gate_retention", (truth.get("effective_open_gaps"), truth.get("effective_exact_gates")) == (58, 59), [truth.get("effective_open_gaps"), truth.get("effective_exact_gates")], "58 open and 59 exact")
     check("terminal_verdict", truth.get("terminal_verdict") == "NOT_READY_FOR_STAGE_20", truth.get("terminal_verdict"), "NOT_READY_FOR_STAGE_20")
     check("proposal_count", proposals.get("proposal_count") == 30 and proposals.get("all_authorized_items_resolved_for_phase") is True, proposals.get("proposal_count"), "30 and resolved")
     check("future_seats", seats.get("seat_count") == 8 and seats.get("all_unnamed") is True and seats.get("all_unlaunched") is True, {k: seats.get(k) for k in ("seat_count", "all_unnamed", "all_unlaunched")}, "8 unnamed and unlaunched")
     check("route_dual_truth", raw_route.get("valid") is False and raw_route.get("requires_user_confirmation") is True and normalized_route.get("valid") is True, {"raw": raw_route.get("valid"), "confirmation": raw_route.get("requires_user_confirmation"), "candidate": normalized_route.get("valid")}, "raw fails, candidate structurally passes, confirmation required")
-    check("method_flow", method_validation.get("valid") is True and methods.get("counts", {}).get("witness_results") == {"fail": 4, "pass": 4} and methods.get("counts", {}).get("states", {}).get("preferred") == 4, methods.get("counts"), "four preferred methods with four fail/pass pairs")
+    check("method_flow", method_validation.get("valid") is True and methods.get("counts", {}).get("witness_results") == {"fail": 6, "pass": 6} and methods.get("counts", {}).get("states", {}).get("preferred") == 6, methods.get("counts"), "six preferred methods with six fail/pass pairs")
     check("reflection_review", reflection.get("candidate_count") == 27 and reflection.get("all_candidates_resolved_for_phase") is True and reflection.get("destructive_changes") == 0, reflection, "27 compatibility-held and zero destructive changes")
     check("meta_tool_box", meta.get("validation_valid") is True and meta.get("card_count") == 10, meta, "ten valid cards")
 
@@ -185,14 +185,14 @@ def main() -> int:
     all_tracked = command("git", "ls-tree", "-r", "--name-only", "HEAD").splitlines()
     owner_paths = [p for p in all_tracked if p.startswith("docs/elaren-kestrel/") or "ghc_family_v651_v6" in p or "build_ghc_family_v651_v6" in p]
     check("owner_generated_file_threshold", len(owner_paths) < 2000, len(owner_paths), "< 2000 owner-scoped tracked files; inherited repository baseline excluded")
-    cli_version = command("codex", "--version")
+    cli_version = command("cmd.exe", "/d", "/c", "codex", "--version")
     check("cli_version", cli_version.endswith("0.145.0"), cli_version, "codex-cli 0.145.0")
 
     clean_after_rows = command("git", "status", "--porcelain=v1").splitlines()
     check("clean_after", not clean_after_rows, clean_after_rows, "clean")
     passed = sum(1 for row in checks if row["passed"])
     minimal_names = [
-        "exact_head", "clean_before", "four_way_equality", "source_ancestry", "base_ancestry", "special_commit_budget", "zero_merges", "single_parent_base", "scoped_tests", "json_parse", "privacy_scan", "committed_manifest", "terminal_verdict", "clean_after"
+        "exact_head", "clean_before", "four_way_equality", "source_ancestry", "base_ancestry", "special_commit_budget", "zero_merges", "single_parent_correction", "scoped_tests", "json_parse", "privacy_scan", "committed_manifest", "terminal_verdict", "clean_after"
     ]
     minimal = [row for row in checks if row["name"] in minimal_names]
     receipt = {

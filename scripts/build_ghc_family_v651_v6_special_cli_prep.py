@@ -17,6 +17,7 @@ BASE = ROOT / "docs/elaren-kestrel/v651-v6"
 PHASE = ROOT / "docs/elaren-kestrel/v651-v6-special-cli-prep"
 SOURCE = "7c4309d6b57bc4827ebd49bcb7c9dfc669c46e3d"
 BASE_FINAL = "7911fc2ff2f95d2e8723dbd396272f4a78d46a9f"
+SPECIAL_PREP_COMMIT = "f40d1e0f1a5158a8747ed57cc04a513979f5ebe7"
 BRANCH = "codex/GHC-Family/elaren-kestrel-v649-v8-full-tools"
 SKILL_HOME = Path.home() / ".codex" / "skills"
 NEW_NEGATIVES = [
@@ -68,6 +69,20 @@ NEW_NEGATIVES = [
         "observed": "The first exact staged review measured the overview at 964 words, below the 1,000-word floor.",
         "credit": "zero",
         "recovery": "Add one bounded architecture-and-rollback section and rerun only the staged review.",
+    },
+    {
+        "negative_id": "V6516-SPECIAL-N08",
+        "surface": "exact-head validator CLI version subprocess",
+        "observed": "Python attempted to execute the Windows Codex shim directly and raised WinError 5 before writing a canonical receipt.",
+        "credit": "zero",
+        "recovery": "Invoke the npm shim through cmd.exe and prove that isolated version path before the corrected exact-head pass.",
+    },
+    {
+        "negative_id": "V6516-SPECIAL-N09",
+        "surface": "sealed base closeout test on additive successor head",
+        "observed": "The historical closeout test rejected source-to-HEAD commit count four because its sealed lifecycle contract permits only two or three.",
+        "credit": "zero",
+        "recovery": "Keep the sealed test unchanged and verify base continuity from its exact Git object and ancestry in the special test module.",
     },
 ]
 
@@ -169,8 +184,8 @@ def proposal_rows() -> list[dict[str, Any]]:
 
 def build() -> None:
     head = run("git", "rev-parse", "HEAD")
-    if head != BASE_FINAL:
-        raise RuntimeError(f"special builder requires sealed base {BASE_FINAL}, got {head}")
+    if head != BASE_FINAL and subprocess.run(["git", "merge-base", "--is-ancestor", BASE_FINAL, head], cwd=ROOT).returncode != 0:
+        raise RuntimeError(f"special builder requires sealed base ancestry from {BASE_FINAL}, got {head}")
     if run("git", "status", "--porcelain=v1"):
         allowed = (
             "docs/elaren-kestrel/v651-v6-special-cli-prep",
@@ -551,7 +566,8 @@ The following already reviewed base activation body remains operative wherever t
             "sealed_base": BASE_FINAL,
             "branch": BRANCH,
             "special_total_commit_cap_from_source": 12,
-            "expected_special_delta_commits": 1,
+            "initial_special_commit": SPECIAL_PREP_COMMIT,
+            "expected_special_delta_commits_after_correction": 2,
             "zero_merges_required": True,
             "single_parent_special_commit_required": True,
             "exact_final_head_recorded_externally_after_commit": True,
@@ -563,7 +579,8 @@ The following already reviewed base activation body remains operative wherever t
             "schema": "ghc.family.v651-v6-special.validation-plan.v1",
             "state": "POST_COMMIT_REQUIRED",
             "full_repository_suite": False,
-            "scoped_modules": ["tests.test_ghc_family_v651_v6_x1", "tests.test_ghc_family_v651_v6_x2", "tests.test_ghc_family_v651_v6_closeout", "tests.test_ghc_family_v651_v6_special_cli_prep"],
+            "scoped_modules": ["tests.test_ghc_family_v651_v6_x1", "tests.test_ghc_family_v651_v6_x2", "tests.test_ghc_family_v651_v6_special_cli_prep"],
+            "immutable_base_continuity": "The special module reads the sealed base truth from the exact base Git object and verifies ancestry; the historical HEAD-count closeout test remains unchanged.",
             "canonical_successful_pass_limit": 1,
             "post_success_replay": False,
             "required": ["exact head", "clean state", "JSON parsing", "privacy scan", "committed manifest", "word and owner-file caps", "ancestry", "zero merges", "four-way equality"],

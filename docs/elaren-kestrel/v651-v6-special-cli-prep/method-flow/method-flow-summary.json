@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 4,
-    "recommendations": 4,
-    "state_events": 12,
+    "methods": 6,
+    "recommendations": 6,
+    "state_events": 18,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 4,
+      "preferred": 6,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 4,
-      "pass": 4
+      "fail": 6,
+      "pass": 6
     },
-    "witnesses": 8
+    "witnesses": 12
   },
   "owner": "Elaren Kestrel",
   "phase": "v651-v6-special-cli-prep",
@@ -80,13 +80,45 @@
         "V6516-SPECIAL-M04-WFAIL",
         "V6516-SPECIAL-M04-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Invoke codex through cmd.exe /d /c so Windows resolves the npm command shim correctly.",
+      "method_id": "V6516-SPECIAL-M05",
+      "recurrence_guard": "Use an explicit Windows command interpreter for .cmd or extensionless npm shims inside subprocess validators.",
+      "rollback": "Retain the crashed canonical attempt with zero credit and do not rerun the broad validator until the isolated command succeeds.",
+      "scope_boundary": "CLI version subprocess only; it does not validate other canonical checks or launch any CLI sibling.",
+      "title": "Windows npm shim invocation through cmd.exe",
+      "trigger_preconditions": [
+        "A Python validator must verify a Windows npm-installed CLI version."
+      ],
+      "validation_witness_ids": [
+        "V6516-SPECIAL-M05-WFAIL",
+        "V6516-SPECIAL-M05-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Read the sealed truth from the exact base Git object, verify base-to-current ancestry, and run only successor-compatible scoped modules.",
+      "method_id": "V6516-SPECIAL-M06",
+      "recurrence_guard": "Do not execute historical HEAD-count assertions as if an additive successor were still the sealed phase head.",
+      "rollback": "Retain the failed historical assertion and keep the base test byte-stable.",
+      "scope_boundary": "Base continuity only; immutable receipt reading does not replay or expand the sealed canonical suite.",
+      "title": "Immutable base-object continuity on additive successor heads",
+      "trigger_preconditions": [
+        "A special continuation validates an already sealed base phase without rewriting its historical tests."
+      ],
+      "validation_witness_ids": [
+        "V6516-SPECIAL-M06-WFAIL",
+        "V6516-SPECIAL-M06-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
     "V6516-SPECIAL-M01-WFAIL",
     "V6516-SPECIAL-M02-WFAIL",
     "V6516-SPECIAL-M03-WFAIL",
-    "V6516-SPECIAL-M04-WFAIL"
+    "V6516-SPECIAL-M04-WFAIL",
+    "V6516-SPECIAL-M05-WFAIL",
+    "V6516-SPECIAL-M06-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

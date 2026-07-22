@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/elaren-kestrel/v651-v6-special-cli-prep"
+BASE_FINAL = "7911fc2ff2f95d2e8723dbd396272f4a78d46a9f"
 
 
 def load(relative: str) -> dict:
@@ -17,7 +19,7 @@ class V651V6SpecialCliPrepTests(unittest.TestCase):
     def test_truth_distribution_and_boundaries(self) -> None:
         truth = load("truth/phase-truth.json")
         self.assertEqual(truth["outcomes"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(truth["effective_negatives"], 7336)
+        self.assertEqual(truth["effective_negatives"], 7338)
         self.assertEqual((truth["effective_open_gaps"], truth["effective_exact_gates"]), (58, 59))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
@@ -51,9 +53,22 @@ class V651V6SpecialCliPrepTests(unittest.TestCase):
         summary = load("method-flow/method-flow-summary.json")
         validation = load("method-flow/method-flow-validation.json")
         self.assertTrue(validation["valid"])
-        self.assertEqual(summary["counts"]["methods"], 4)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 4, "pass": 4})
-        self.assertEqual(summary["counts"]["states"]["preferred"], 4)
+        self.assertEqual(summary["counts"]["methods"], 6)
+        self.assertEqual(summary["counts"]["witness_results"], {"fail": 6, "pass": 6})
+        self.assertEqual(summary["counts"]["states"]["preferred"], 6)
+
+    def test_sealed_base_is_verified_from_immutable_git_object(self) -> None:
+        subprocess.run(["git", "merge-base", "--is-ancestor", BASE_FINAL, "HEAD"], cwd=ROOT, check=True)
+        payload = subprocess.run(
+            ["git", "show", f"{BASE_FINAL}:docs/elaren-kestrel/v651-v6/final/phase-truth.json"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        ).stdout
+        truth = json.loads(payload)
+        self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
     def test_reflection_candidates_are_compatibility_held(self) -> None:
         review = load("reflection-remaster/special-review.json")
