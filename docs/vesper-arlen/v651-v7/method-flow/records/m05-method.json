@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Complete all covered writes before building the self-excluding manifest.",
+  "failure_signature": "A manifest snapshot precedes a later write to one of its covered artifacts.",
+  "method_id": "V6517-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Treat manifest generation as the final content-producing step before staging.",
+  "retained_negative_ids": [
+    "V6517-X1-N05"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git mutation requires rollback.",
+  "scope_boundary": "Bounded local workflow recovery only.",
+  "supersedes": [],
+  "title": "Build commit-local manifests after final artifact writes",
+  "trigger_preconditions": [
+    "A manifest snapshot precedes a later write to one of its covered artifacts."
+  ],
+  "validation_witness_ids": []
+}

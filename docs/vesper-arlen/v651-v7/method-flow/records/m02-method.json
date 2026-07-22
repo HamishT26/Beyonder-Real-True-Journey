@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Resolve roots first and pass only existing paths to rg.",
+  "failure_signature": "A multi-root search contains a not-yet-created optional owner path.",
+  "method_id": "V6517-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Separate required roots from optional roots and record verified absence explicitly.",
+  "retained_negative_ids": [
+    "V6517-X1-N02"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git mutation requires rollback.",
+  "scope_boundary": "Bounded local workflow recovery only.",
+  "supersedes": [],
+  "title": "Resolve optional search roots before enumeration",
+  "trigger_preconditions": [
+    "A multi-root search contains a not-yet-created optional owner path."
+  ],
+  "validation_witness_ids": []
+}

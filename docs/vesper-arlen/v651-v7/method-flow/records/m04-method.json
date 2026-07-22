@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use git hash-object -w with the path filter before reading the exact blob.",
+  "failure_signature": "A manifest computes a filtered blob identifier without writing it, then attempts a cat-file read.",
+  "method_id": "V6517-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind blob storage, object read, byte count, and SHA-256 in one bounded manifest step.",
+  "retained_negative_ids": [
+    "V6517-X1-N04"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git mutation requires rollback.",
+  "scope_boundary": "Bounded local workflow recovery only.",
+  "supersedes": [],
+  "title": "Store filtered manifest blobs before cat-file reads",
+  "trigger_preconditions": [
+    "A manifest computes a filtered blob identifier without writing it, then attempts a cat-file read."
+  ],
+  "validation_witness_ids": []
+}

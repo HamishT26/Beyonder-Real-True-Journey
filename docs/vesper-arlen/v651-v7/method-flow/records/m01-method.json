@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Pass the entire Git revision expression as one quoted argument.",
+  "failure_signature": "A PowerShell argument contains @{u} and can be transformed before process launch.",
+  "method_id": "V6517-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Always quote revision expressions containing PowerShell metacharacters.",
+  "retained_negative_ids": [
+    "V6517-X1-N01"
+  ],
+  "rollback": "Retain the failed read-only attempt at zero credit; no Git mutation requires rollback.",
+  "scope_boundary": "Bounded local workflow recovery only.",
+  "supersedes": [],
+  "title": "Quote PowerShell revision expressions",
+  "trigger_preconditions": [
+    "A PowerShell argument contains @{u} and can be transformed before process launch."
+  ],
+  "validation_witness_ids": []
+}
