@@ -1,16 +1,23 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / "docs/vesper-arlen/v651-v7"
+X1 = "d55689f393292cea76f8d568d69da27c8f7b3bd6"
 
 
 def load(relative: str) -> dict:
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+
+def load_x1(relative: str) -> dict:
+    text = subprocess.check_output(["git", "show", f"{X1}:docs/vesper-arlen/v651-v7/{relative}"], cwd=REPO, text=True, encoding="utf-8")
+    return json.loads(text)
 
 
 class VesperV651V7X1Tests(unittest.TestCase):
@@ -55,10 +62,11 @@ class VesperV651V7X1Tests(unittest.TestCase):
         self.assertTrue(audit["valid"])
 
     def test_x1_has_no_x2_result(self) -> None:
-        truth = load("truth/x1-phase-truth.json")
+        truth = load_x1("truth/x1-phase-truth.json")
         self.assertEqual((truth["x2_implementations"], truth["observed_core_outcomes"]), (0, 0))
-        self.assertFalse((ROOT / "outcomes/core-outcomes.json").exists())
-        self.assertFalse((ROOT / "proposals/lsm-tombstone-horizon.json").exists())
+        paths = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", X1, "docs/vesper-arlen/v651-v7"], cwd=REPO, text=True, encoding="utf-8").splitlines()
+        self.assertNotIn("docs/vesper-arlen/v651-v7/outcomes/core-outcomes.json", paths)
+        self.assertNotIn("docs/vesper-arlen/v651-v7/proposals/lsm-tombstone-horizon.json", paths)
 
     def test_portfolio_floors_and_caps(self) -> None:
         plan = load("portfolios/x1-portfolio-plan.json")
@@ -81,7 +89,7 @@ class VesperV651V7X1Tests(unittest.TestCase):
         self.assertEqual(negatives["failures_erased"], 0)
 
     def test_method_flow(self) -> None:
-        ledger = load("method-flow/method-flow-ledger.json")
+        ledger = load_x1("method-flow/method-flow-ledger.json")
         self.assertEqual(ledger["counts"]["methods"], 5)
         self.assertEqual(ledger["counts"]["witness_results"], {"fail": 5, "pass": 5})
         self.assertEqual(ledger["counts"]["states"]["preferred"], 5)

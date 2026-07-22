@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Use the official generator and validator in place; initialize only absent directories.",
+  "failure_signature": "A diagnostic retry targets an existing skill directory.",
+  "method_id": "V6517-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "failure_retention",
+    "evidence_credit",
+    "same_owner_only",
+    "no_independent_reproduction"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Check path existence before init_skill and never overwrite an existing skill directory.",
+  "retained_negative_ids": [
+    "V6517-X2-N03"
+  ],
+  "rollback": "Retain the failed owner-local attempt at zero credit and preserve every successfully created attributable file.",
+  "scope_boundary": "Bounded owner-local build recovery only; no scientific, production, or authority credit.",
+  "supersedes": [],
+  "title": "Do not reinitialize an existing partial skill",
+  "trigger_preconditions": [
+    "A diagnostic retry targets an existing skill directory."
+  ],
+  "validation_witness_ids": []
+}
