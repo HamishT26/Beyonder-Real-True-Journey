@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_terminal_recovery",
+  "candidate_workaround": "Import shared constants from the dedicated phase-data module rather than from a builder that merely aliases it internally.",
+  "failure_signature": "An exact-final validator raises AttributeError while resolving shared phase constants at module import.",
+  "method_id": "V6518-M24",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "canonical_final_credit", "exact_head", "commit_cap"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Terminal validators must import shared phase constants from their owning data module and pass an import-only witness before canonical execution.",
+  "retained_negative_ids": ["V6518-CLOSE-N09"],
+  "rollback": "Retain the failed exact-final command with zero canonical credit and make only an additive correction commit.",
+  "scope_boundary": "Validator import recovery only; import success is not canonical-final, test-suite, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Bind terminal validators to the phase-data module",
+  "trigger_preconditions": ["A final validator consumes shared phase-root or runner constants."],
+  "validation_witness_ids": []
+}

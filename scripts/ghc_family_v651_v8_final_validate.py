@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import build_ghc_family_v651_v8_preregistration as d
+import ghc_family_v651_v8_phase_data as d
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -22,6 +22,7 @@ BRANCH = "codex/GHC-Family/ilyra-fen-full-tools"
 SOURCE_HEAD = "b7361a4952063947cdc5ac5cf17300eafd1162dd"
 X1_HEAD = "842ae65572c1158926b5acd8b6fda5aad560d5c1"
 EVIDENCE_HEAD = "ca4df488738dc275163d55877110fb38b98513b7"
+ORIGINAL_FINAL_HEAD = "7c1156b67e9f7feacf896f50b063ea58d3ef8218"
 GENERIC_RUNNERS = {f"scripts/{name}" for name in d.RUNNER_IDEAS}
 
 
@@ -201,7 +202,7 @@ def validate() -> dict[str, Any]:
         "open_gap": 1,
         "exact_gate": 1,
     }
-    if truth["outcome_counts"] != expected_truth or truth["effective_negatives"] != 7744:
+    if truth["outcome_counts"] != expected_truth or truth["effective_negatives"] != 7745:
         issues.append("truth")
     if truth["effective_open_gaps"] != 60 or truth["effective_exact_gates"] != 61:
         issues.append("gates")
@@ -225,13 +226,13 @@ def validate() -> dict[str, Any]:
     final_parent = parent_row[1] if parent_count == 1 else ""
     if not all((source_ancestry, x1_ancestry, evidence_ancestry)):
         issues.append("ancestry")
-    if phase_commits != 3 or phase_commits > 6:
+    if phase_commits != 4 or phase_commits > 6:
         issues.append("commit_cap")
-    if merges or parent_count != 1 or final_parent != EVIDENCE_HEAD:
+    if merges or parent_count != 1 or final_parent != ORIGINAL_FINAL_HEAD:
         issues.append("history_shape")
 
     staged_review = committed_json("validation/final-staged-review.json")
-    actual_delta = sorted(path for path in git("diff", "--name-only", f"{EVIDENCE_HEAD}..HEAD").splitlines() if path)
+    actual_delta = sorted(path for path in git("diff", "--name-only", f"{ORIGINAL_FINAL_HEAD}..HEAD").splitlines() if path)
     if actual_delta != sorted(staged_review["delta_paths"]):
         issues.append("staged_review_parity")
     if completed("git", "diff", "--check", "HEAD^", "HEAD", check=False).returncode != 0:

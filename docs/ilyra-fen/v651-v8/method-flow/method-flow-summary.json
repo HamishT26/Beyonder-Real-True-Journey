@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 23,
-    "recommendations": 23,
-    "state_events": 69,
+    "methods": 24,
+    "recommendations": 24,
+    "state_events": 72,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 23,
+      "preferred": 24,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 24,
-      "pass": 24
+      "fail": 25,
+      "pass": 25
     },
-    "witnesses": 48
+    "witnesses": 50
   },
   "owner": "Ilyra Fen",
   "phase": "v651-v8",
@@ -367,6 +367,21 @@
         "V6518-M23-WFAIL",
         "V6518-M23-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Import shared constants from the dedicated phase-data module rather than from a builder that merely aliases it internally.",
+      "method_id": "V6518-M24",
+      "recurrence_guard": "Terminal validators must import shared phase constants from their owning data module and pass an import-only witness before canonical execution.",
+      "rollback": "Retain the failed exact-final command with zero canonical credit and make only an additive correction commit.",
+      "scope_boundary": "Validator import recovery only; import success is not canonical-final, test-suite, or independent-reproduction credit.",
+      "title": "Bind terminal validators to the phase-data module",
+      "trigger_preconditions": [
+        "A final validator consumes shared phase-root or runner constants."
+      ],
+      "validation_witness_ids": [
+        "V6518-M24-WFAIL",
+        "V6518-M24-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -393,7 +408,8 @@
     "V6518-M21-WFAIL",
     "V6518-M20-WFAIL2",
     "V6518-M22-WFAIL",
-    "V6518-M23-WFAIL"
+    "V6518-M23-WFAIL",
+    "V6518-M24-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

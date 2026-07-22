@@ -16,6 +16,7 @@ ROOT = REPO / "docs/ilyra-fen/v651-v8"
 RECEIPT = ROOT / "validation/final-candidate-validation.json"
 X1_HEAD = "842ae65572c1158926b5acd8b6fda5aad560d5c1"
 EVIDENCE_HEAD = "ca4df488738dc275163d55877110fb38b98513b7"
+ORIGINAL_FINAL_HEAD = "7c1156b67e9f7feacf896f50b063ea58d3ef8218"
 
 
 def run(*args: str) -> str:
@@ -59,7 +60,7 @@ def validate() -> dict:
     privacy = load("validation/final-privacy.json")
     words = load("final/document-word-counts.json")
     route = load("route/final-route-state.json")
-    evidence_exact = run("git", "rev-parse", "HEAD") == EVIDENCE_HEAD
+    correction_parent_exact = run("git", "rev-parse", "HEAD") == ORIGINAL_FINAL_HEAD
     issues = []
     if json_errors: issues.append("json_parse")
     if mismatches: issues.append("manifest_parity")
@@ -68,9 +69,9 @@ def validate() -> dict:
     if detailed["issues"] or minimal["issues"]: issues.append("detailed_or_minimal")
     if not words["valid"]: issues.append("document_words")
     if route["delivery_state"] != "PREPARED_NOT_SENT" or route["messages_sent"] != 0: issues.append("route")
-    if not evidence_exact: issues.append("evidence_parent")
+    if not correction_parent_exact: issues.append("correction_parent")
     if not x1_anchored: issues.append("x1_receipt")
-    return {"schema": "ghc.family.v651-v8.final-candidate-validation.v1", "anchored_x1_tests": {"passed": 7, "failed": 0, "errors": 0, "executed_again_on_descendant": False, "x1_head": X1_HEAD}, "targeted_tests": {"passed": sum(row["passed"] for row in tests), "failed": 0, "errors": 0, "selections": tests}, "detailed": {"passed": detailed["passed"], "checks": detailed["check_count"]}, "minimal": {"passed": minimal["passed"], "checks": minimal["check_count"]}, "json_parse_count_excluding_receipt": parsed, "json_errors": json_errors, "owner_paths": manifest["owner_path_count"], "manifest_entries": manifest["entry_count"], "manifest_self_exclusions": manifest["self_exclusion_count"], "manifest_mismatches": mismatches, "privacy_scanned_files": privacy["scanned_file_count"], "privacy_confirmed_hits": privacy["confirmed_hit_count"], "document_words_valid": words["valid"], "baton_words": next(row["words"] for row in words["documents"] if row["baton_exception"]), "evidence_exact_parent_candidate": evidence_exact, "full_repository_suite_run": False, "canonical_exact_final_credit": False, "same_owner_only": True, "independent_reproduction": False, "issue_count": len(issues), "issues": issues, "valid": not issues, "boundary": "Precommit closeout-candidate validation only; historical x1 credit is bound to the immutable x1 receipt and the exact committed head requires one postcommit canonical pass."}
+    return {"schema": "ghc.family.v651-v8.terminal-correction-candidate-validation.v1", "anchored_x1_tests": {"passed": 7, "failed": 0, "errors": 0, "executed_again_on_descendant": False, "x1_head": X1_HEAD}, "targeted_tests": {"passed": sum(row["passed"] for row in tests), "failed": 0, "errors": 0, "selections": tests}, "detailed": {"passed": detailed["passed"], "checks": detailed["check_count"]}, "minimal": {"passed": minimal["passed"], "checks": minimal["check_count"]}, "json_parse_count_excluding_receipt": parsed, "json_errors": json_errors, "owner_paths": manifest["owner_path_count"], "manifest_entries": manifest["entry_count"], "manifest_self_exclusions": manifest["self_exclusion_count"], "manifest_mismatches": mismatches, "privacy_scanned_files": privacy["scanned_file_count"], "privacy_confirmed_hits": privacy["confirmed_hit_count"], "document_words_valid": words["valid"], "baton_words": next(row["words"] for row in words["documents"] if row["baton_exception"]), "correction_exact_parent_candidate": correction_parent_exact, "full_repository_suite_run": False, "canonical_exact_final_credit": False, "same_owner_only": True, "independent_reproduction": False, "issue_count": len(issues), "issues": issues, "valid": not issues, "boundary": "Precommit additive terminal-correction validation only; historical x1 credit is bound to the immutable x1 receipt and a new exact committed head requires one postcommit canonical pass."}
 
 
 def diagnostic_self_test() -> dict:

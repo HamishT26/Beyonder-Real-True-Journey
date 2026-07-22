@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 23,
-    "recommendations": 23,
-    "state_events": 69,
+    "methods": 24,
+    "recommendations": 24,
+    "state_events": 72,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 23,
+      "preferred": 24,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 24,
-      "pass": 24
+      "fail": 25,
+      "pass": 25
     },
-    "witnesses": 48
+    "witnesses": 50
   },
   "identity_boundary": "Relational working language only; not consciousness, personhood, continuity, employment, or authority evidence.",
   "methods": [
@@ -690,6 +690,35 @@
         "V6518-M23-WFAIL",
         "V6518-M23-WPASS"
       ]
+    },
+    {
+      "approval_class": "safe_now_owner_scoped_terminal_recovery",
+      "candidate_workaround": "Import shared constants from the dedicated phase-data module rather than from a builder that merely aliases it internally.",
+      "failure_signature": "An exact-final validator raises AttributeError while resolving shared phase constants at module import.",
+      "method_id": "V6518-M24",
+      "privacy_class": "sanitized_owner_local_workflow",
+      "protected_gates": [
+        "failure_retention",
+        "canonical_final_credit",
+        "exact_head",
+        "commit_cap"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Terminal validators must import shared phase constants from their owning data module and pass an import-only witness before canonical execution.",
+      "retained_negative_ids": [
+        "V6518-CLOSE-N09"
+      ],
+      "rollback": "Retain the failed exact-final command with zero canonical credit and make only an additive correction commit.",
+      "scope_boundary": "Validator import recovery only; import success is not canonical-final, test-suite, or independent-reproduction credit.",
+      "supersedes": [],
+      "title": "Bind terminal validators to the phase-data module",
+      "trigger_preconditions": [
+        "A final validator consumes shared phase-root or runner constants."
+      ],
+      "validation_witness_ids": [
+        "V6518-M24-WFAIL",
+        "V6518-M24-WPASS"
+      ]
     }
   ],
   "owner": "Ilyra Fen",
@@ -1038,6 +1067,21 @@
       "witness_ids": [
         "V6518-M22-WFAIL",
         "V6518-M22-WPASS"
+      ]
+    },
+    {
+      "method": "Import shared constants from the dedicated phase-data module rather than from a builder that merely aliases it internally.",
+      "method_id": "V6518-M24",
+      "preconditions": [
+        "A final validator consumes shared phase-root or runner constants."
+      ],
+      "recommendation_index": 24,
+      "recurrence_guard": "Terminal validators must import shared phase constants from their owning data module and pass an import-only witness before canonical execution.",
+      "rollback": "Retain the failed exact-final command with zero canonical credit and make only an additive correction commit.",
+      "scope_boundary": "Validator import recovery only; import success is not canonical-final, test-suite, or independent-reproduction credit.",
+      "witness_ids": [
+        "V6518-M24-WFAIL",
+        "V6518-M24-WPASS"
       ]
     }
   ],
@@ -1593,6 +1637,30 @@
       "event_index": 69,
       "method_id": "V6518-M22",
       "reason": "Promoted only after all six isolated closeout tests passed; earlier receipt-overwrite errors remain retained.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 70,
+      "method_id": "V6518-M24",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 71,
+      "method_id": "V6518-M24",
+      "reason": "bounded witness passed",
+      "witness_id": "V6518-M24-WPASS"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 72,
+      "method_id": "V6518-M24",
+      "reason": "Promoted only after the import-only witness resolved shared constants; failed canonical attempt remains zero-credit.",
       "witness_id": null
     }
   ],
@@ -2316,6 +2384,36 @@
       "same_owner_only": true,
       "scope": "Ilyra v651-v8 closeout receipt and self-exclusion recovery",
       "witness_id": "V6518-M22-WPASS"
+    },
+    {
+      "boundary": "The import failure has zero canonical-final, test, manifest, privacy, or remote-equality credit.",
+      "expected": "Import the validator and resolve phase-root and runner constants before any canonical checks run.",
+      "independent_reproduction": false,
+      "method_id": "V6518-M24",
+      "observed": "Module import stopped with AttributeError because the preregistration builder exposes no PHASE_ROOT attribute.",
+      "procedure": "Import the preregistration builder as the phase-data source and dereference shared constants from it.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6518-CLOSE-N09"
+      ],
+      "same_owner_only": true,
+      "scope": "Ilyra v651-v8 first postcommit canonical validator attempt",
+      "witness_id": "V6518-M24-WFAIL"
+    },
+    {
+      "boundary": "The import-only witness validates constant resolution only; a new committed head and canonical pass remain required.",
+      "expected": "Import the final validator, resolve the phase root, and expose all twelve declared runner paths without executing validation.",
+      "independent_reproduction": false,
+      "method_id": "V6518-M24",
+      "observed": "The corrected validator imported cleanly, resolved the exact phase root, and exposed twelve runner paths.",
+      "procedure": "Parse and import the validator after binding it directly to the shared phase-data module.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6518-CLOSE-N09"
+      ],
+      "same_owner_only": true,
+      "scope": "Ilyra v651-v8 final-validator import recovery",
+      "witness_id": "V6518-M24-WPASS"
     }
   ]
 }

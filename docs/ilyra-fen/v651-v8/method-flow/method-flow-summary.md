@@ -2,9 +2,9 @@
 
 - Phase: v651-v8
 - Owner: Ilyra Fen
-- Methods: 23
-- Passing witnesses: 24
-- Failed witnesses retained: 24
+- Methods: 24
+- Passing witnesses: 25
+- Failed witnesses retained: 25
 
 ## Preferred methods
 
@@ -191,6 +191,14 @@
 - Recurrence guard: Do not nest multi-layer executable Python source inside a PowerShell command when a bounded in-tool self-test can express the witness.
 - Rollback: Retain the parser and shell errors with zero witness credit and make no lifecycle claim.
 - Witnesses: V6518-M23-WFAIL, V6518-M23-WPASS
+
+### V6518-M24 — Bind terminal validators to the phase-data module
+
+- Trigger: A final validator consumes shared phase-root or runner constants.
+- Method: Import shared constants from the dedicated phase-data module rather than from a builder that merely aliases it internally.
+- Recurrence guard: Terminal validators must import shared phase constants from their owning data module and pass an import-only witness before canonical execution.
+- Rollback: Retain the failed exact-final command with zero canonical credit and make only an additive correction commit.
+- Witnesses: V6518-M24-WFAIL, V6518-M24-WPASS
 
 ## Retained boundary
 
