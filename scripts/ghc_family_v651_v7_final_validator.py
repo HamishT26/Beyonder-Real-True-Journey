@@ -20,12 +20,14 @@ ROOT = "docs/vesper-arlen/v651-v7"
 SOURCE = "2500d063583194b30f01da429196522baaac7300"
 X1 = "d55689f393292cea76f8d568d69da27c8f7b3bd6"
 EVIDENCE = "78f4014c7d10d59d05f95e872ece4d52027a7a7b"
+SEAL = "12a767989aba8dc1a4c2f506561a95b1181d23a6"
 BRANCH = "codex/GHC-Family/vesper-arlen-v650-v1-terminal-recovery"
 OWNER_GLOBALS = {
     "scripts/build_ghc_family_v651_v7_preregistration.py",
     "scripts/build_ghc_family_v651_v7_evidence.py",
     "scripts/build_ghc_family_v651_v7_tools.py",
     "scripts/build_ghc_family_v651_v7_closeout.py",
+    "scripts/build_ghc_family_v651_v7_terminal_correction.py",
     "scripts/ghc_family_v651_v7_runtime.py",
     "scripts/ghc_family_v651_v7_detailed_validator.py",
     "scripts/ghc_family_v651_v7_minimal_validator.py",
@@ -132,8 +134,8 @@ def validate(expected_head: str) -> dict[str, Any]:
     live_rows = git("ls-remote", "origin", f"refs/heads/{BRANCH}").split()
     live = live_rows[0] if live_rows else ""
     divergence = git("rev-list", "--left-right", "--count", "HEAD...@{u}").split()
-    tests = run_tests()
     sys.path.insert(0, str(REPO))
+    tests = run_tests()
     from scripts.ghc_family_v651_v7_detailed_validator import validate as detailed_validate
     from scripts.ghc_family_v651_v7_minimal_validator import validate as minimal_validate
 
@@ -144,15 +146,21 @@ def validate(expected_head: str) -> dict[str, Any]:
         EVIDENCE, f"{ROOT}/validation/evidence-staged-manifest.json"
     )
     final_manifest = verify_manifest(
-        head, f"{ROOT}/validation/final-staged-manifest.json"
+        SEAL, f"{ROOT}/validation/final-staged-manifest.json"
     )
-    owner_manifest = verify_manifest(head, f"{ROOT}/validation/owner-manifest.json")
+    owner_manifest = verify_manifest(SEAL, f"{ROOT}/validation/owner-manifest.json")
+    correction_manifest = verify_manifest(
+        head, f"{ROOT}/validation/correction-staged-manifest.json"
+    )
+    corrected_owner_manifest = verify_manifest(
+        head, f"{ROOT}/validation/corrected-owner-manifest.json"
+    )
     tree = tree_map(head)
     phase_paths = sorted(path for path in tree if path.startswith(f"{ROOT}/"))
     owner_expected = sorted(
         path for path in tree if path.startswith(f"{ROOT}/") or path in OWNER_GLOBALS
     )
-    owner_payload = owner_manifest["payload"]
+    owner_payload = corrected_owner_manifest["payload"]
     owner_union = sorted(
         [row["path"] for row in owner_payload["entries"]]
         + owner_payload["self_exclusions"]
@@ -164,7 +172,17 @@ def validate(expected_head: str) -> dict[str, Any]:
     )
     final_changed = sorted(
         line
-        for line in git("diff", "--name-only", EVIDENCE, head).splitlines()
+        for line in git("diff", "--name-only", EVIDENCE, SEAL).splitlines()
+        if line
+    )
+    correction_payload = correction_manifest["payload"]
+    correction_union = sorted(
+        [row["path"] for row in correction_payload["entries"]]
+        + correction_payload["self_exclusions"]
+    )
+    correction_changed = sorted(
+        line
+        for line in git("diff", "--name-only", SEAL, head).splitlines()
         if line
     )
     evidence_payload = evidence_manifest["payload"]
@@ -195,6 +213,7 @@ def validate(expected_head: str) -> dict[str, Any]:
         "scripts/build_ghc_family_v651_v7_preregistration.py",
         "scripts/build_ghc_family_v651_v7_evidence.py",
         "scripts/build_ghc_family_v651_v7_closeout.py",
+        "scripts/build_ghc_family_v651_v7_terminal_correction.py",
         "scripts/ghc_family_v651_v7_final_validator.py",
     }
     candidates: list[dict[str, str]] = []
@@ -220,10 +239,10 @@ def validate(expected_head: str) -> dict[str, Any]:
     baton_words = len(blob(head, baton_path).decode("utf-8").split())
     overview_words = len(blob(head, overview_path).decode("utf-8").split())
     route = load_at(head, f"{ROOT}/route/terminal-route.json")
-    truth = load_at(head, f"{ROOT}/truth/final-phase-truth.json")
+    truth = load_at(head, f"{ROOT}/truth/corrected-final-phase-truth.json")
     source_ancestry = all(
         run("git", "merge-base", "--is-ancestor", anchor, head, check=False).returncode == 0
-        for anchor in (SOURCE, X1, EVIDENCE)
+        for anchor in (SOURCE, X1, EVIDENCE, SEAL)
     )
     phase_commits = int(git("rev-list", "--count", f"{SOURCE}..{head}"))
     merge_count = len(git("rev-list", "--merges", f"{SOURCE}..{head}").splitlines())
@@ -240,6 +259,7 @@ def validate(expected_head: str) -> dict[str, Any]:
     checks = {
         "exact_head": head == expected_head,
         "tests": tests["successful"],
+        "test_count": tests["tests_run"] == 69,
         "detailed": detailed["valid"],
         "minimal": minimal["valid"],
         "json": not json_failures,
@@ -248,18 +268,21 @@ def validate(expected_head: str) -> dict[str, Any]:
         "evidence_manifest": evidence_manifest["valid"],
         "final_manifest": final_manifest["valid"],
         "owner_manifest": owner_manifest["valid"],
+        "correction_manifest": correction_manifest["valid"],
+        "corrected_owner_manifest": corrected_owner_manifest["valid"],
         "evidence_path_parity": evidence_union == evidence_changed,
         "final_path_parity": final_union == final_changed,
+        "correction_path_parity": correction_union == correction_changed,
         "owner_path_parity": owner_union == owner_expected,
         "owner_threshold": len(owner_expected) < 2000,
         "document_cap": not oversized,
         "baton_contract": 10000 <= baton_words <= 100000,
         "overview_contract": 3000 <= overview_words <= 100000,
         "source_ancestry": source_ancestry,
-        "phase_commit_cap": phase_commits == 3 and phase_commits <= 6,
+        "phase_commit_cap": phase_commits == 4 and phase_commits <= 6,
         "zero_merges": merge_count == 0,
         "single_parent_history": all(count == 1 for count in parent_counts),
-        "final_parent": final_parent == EVIDENCE,
+        "final_parent": final_parent == SEAL,
         "diff_hygiene": diff_hygiene.returncode == 0,
         "clean_before": not status_before,
         "clean_after": not status_after,
@@ -278,14 +301,14 @@ def validate(expected_head: str) -> dict[str, Any]:
         ),
         "truth_boundary": (
             truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"
-            and truth["effective_negatives"] == 7454
+            and truth["effective_negatives"] == 7458
             and truth["effective_open_gaps"] == 59
             and truth["effective_exact_gates"] == 60
             and not truth["independent_reproduction"]
         ),
     }
     return {
-        "schema": "ghc.family.v651-v7.canonical-final-validation.v1",
+        "schema": "ghc.family.v651-v7.canonical-final-validation.v2",
         "owner": "Vesper Arlen",
         "phase": "v651-gmut-thos-v7-x1-x2",
         "head": head,
@@ -293,6 +316,7 @@ def validate(expected_head: str) -> dict[str, Any]:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
+        "seal": SEAL,
         "tests": tests,
         "detailed": {"passed": detailed["passed_count"], "total": detailed["check_count"]},
         "minimal": {"passed": minimal["passed_count"], "total": minimal["check_count"]},
@@ -311,6 +335,8 @@ def validate(expected_head: str) -> dict[str, Any]:
             "evidence_entries": evidence_manifest["entry_count"],
             "final_entries": final_manifest["entry_count"],
             "owner_entries": owner_manifest["entry_count"],
+            "correction_entries": correction_manifest["entry_count"],
+            "corrected_owner_entries": corrected_owner_manifest["entry_count"],
         },
         "owner_files": len(owner_expected),
         "baton_words": baton_words,

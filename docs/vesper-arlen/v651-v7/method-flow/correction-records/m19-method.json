@@ -1,0 +1,10 @@
+{
+  "candidate_workaround": "Read raw porcelain lines without global trimming, then remove exactly the two status columns and separator.",
+  "failure_signature": "A helper globally strips Git porcelain output and removes the leading status-space from the first line.",
+  "method_id": "V6517-M19",
+  "recurrence_guard": "Never apply strip to positional Git porcelain output before parsing.",
+  "rollback": "Retain the fail-closed refusal at zero credit; no generated artifact was accepted.",
+  "scope_boundary": "Owner-local status parsing recovery only; no scientific, production, independent-reproduction, or authority credit.",
+  "state": "preferred",
+  "title": "Preserve porcelain status columns before path parsing"
+}

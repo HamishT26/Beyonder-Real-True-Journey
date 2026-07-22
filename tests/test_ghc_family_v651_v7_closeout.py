@@ -15,7 +15,7 @@ def load(relative: str) -> dict:
 
 class VesperV651V7CloseoutTests(unittest.TestCase):
     def test_final_truth(self) -> None:
-        truth = load("truth/final-phase-truth.json")
+        truth = load("truth/corrected-final-phase-truth.json")
         self.assertEqual(
             truth["outcomes"],
             {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
@@ -27,7 +27,7 @@ class VesperV651V7CloseoutTests(unittest.TestCase):
                 truth["effective_exact_gates"],
                 truth["terminal_verdict"],
             ),
-            (7454, 59, 60, "NOT_READY_FOR_STAGE_20"),
+            (7458, 59, 60, "NOT_READY_FOR_STAGE_20"),
         )
         self.assertEqual(
             (
@@ -44,7 +44,7 @@ class VesperV651V7CloseoutTests(unittest.TestCase):
         self.assertFalse(truth["independent_reproduction"])
 
     def test_negative_and_gate_continuity(self) -> None:
-        negative = load("truth/final-retained-negative-register.json")
+        negative = load("truth/corrected-final-negative-register.json")
         gates = load("gates/final-gate-register.json")
         self.assertEqual(
             (
@@ -56,7 +56,7 @@ class VesperV651V7CloseoutTests(unittest.TestCase):
                 negative["effective_total"],
                 negative["failures_erased"],
             ),
-            (7338, 5, 9, 100, 2, 7454, 0),
+            (7338, 5, 9, 100, 6, 7458, 0),
         )
         self.assertEqual(
             (
@@ -128,6 +128,20 @@ class VesperV651V7CloseoutTests(unittest.TestCase):
         self.assertTrue(owner["below_threshold"])
         self.assertLess(owner["owner_file_count"], 2000)
 
+        correction = load("validation/correction-staged-manifest.json")
+        correction_review = load("validation/correction-staged-review.json")
+        corrected_owner = load("validation/corrected-owner-manifest.json")
+        self.assertEqual(
+            correction["entry_count"] + len(correction["self_exclusions"]),
+            correction_review["intended_path_count"],
+        )
+        self.assertEqual(len(correction["self_exclusions"]), 5)
+        self.assertEqual(
+            corrected_owner["entry_count"] + len(corrected_owner["self_exclusions"]),
+            corrected_owner["owner_file_count"],
+        )
+        self.assertTrue(corrected_owner["below_threshold"])
+
     def test_source_ledger_is_current_and_bounded(self) -> None:
         sources = load("sources/final-source-ledger.json")
         self.assertEqual(len(sources["sources"]), 5)
@@ -170,6 +184,33 @@ class VesperV651V7CloseoutTests(unittest.TestCase):
             (2, 2, 2, 2),
         )
         self.assertFalse(flow["failure_erased"])
+
+        correction = load("method-flow/correction-summary.json")
+        self.assertEqual(
+            (
+                correction["methods"],
+                correction["failed_witnesses"],
+                correction["passing_witnesses"],
+                correction["preferred_methods"],
+            ),
+            (4, 4, 4, 4),
+        )
+        self.assertFalse(correction["failure_erased"])
+
+    def test_failed_canonical_is_retained(self) -> None:
+        failure = load("validation/failed-canonical-receipt-summary.json")
+        self.assertEqual(failure["failed_head"], "12a767989aba8dc1a4c2f506561a95b1181d23a6")
+        self.assertEqual(
+            (
+                failure["tests_run"],
+                failure["test_errors"],
+                failure["manifest_checks_passed"],
+                failure["json_parses_passed"],
+                failure["privacy_scan_passed"],
+                failure["credit"],
+            ),
+            (3, 3, True, True, True, "zero"),
+        )
 
 
 if __name__ == "__main__":
