@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_tooling_recovery",
+  "candidate_workaround": "Move nested executable witness logic into a declared validator self-test option.",
+  "failure_signature": "PowerShell corrupts nested inline Python quoting before the intended witness can execute.",
+  "method_id": "V6518-M23",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "diagnostic_integrity", "bounded_execution"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not nest multi-layer executable Python source inside a PowerShell command when a bounded in-tool self-test can express the witness.",
+  "retained_negative_ids": ["V6518-CLOSE-N08"],
+  "rollback": "Retain the parser and shell errors with zero witness credit and make no lifecycle claim.",
+  "scope_boundary": "Validator diagnostic self-test only; no test-suite, closeout, or canonical-final credit.",
+  "supersedes": [],
+  "title": "Use in-tool self-tests for nested diagnostic witnesses",
+  "trigger_preconditions": ["A validator helper needs a synthetic nonzero child to prove error-output propagation."],
+  "validation_witness_ids": []
+}

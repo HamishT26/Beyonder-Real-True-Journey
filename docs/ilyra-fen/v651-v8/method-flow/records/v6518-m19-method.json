@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_read_only_recovery",
+  "candidate_workaround": "Materialize statement-level foreach output before piping or serialization in Windows PowerShell 5.1.",
+  "failure_signature": "PowerShell reports an empty pipe element when a statement-level foreach block is piped directly.",
+  "method_id": "V6518-M19",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "bounded_inspection", "exact_path_scope"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Assign statement-level foreach output to a variable before passing it into a pipeline.",
+  "retained_negative_ids": ["V6518-CLOSE-N03"],
+  "rollback": "Retain the parser failure with zero credit and rerun only the corrected read-only probe.",
+  "scope_boundary": "Owner-local PowerShell probe recovery only; no canonical-final or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Materialize foreach output before piping",
+  "trigger_preconditions": ["A Windows PowerShell 5.1 probe needs to serialize rows produced by statement-level foreach."],
+  "validation_witness_ids": []
+}

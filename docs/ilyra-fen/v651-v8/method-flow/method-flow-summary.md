@@ -2,9 +2,9 @@
 
 - Phase: v651-v8
 - Owner: Ilyra Fen
-- Methods: 16
-- Passing witnesses: 16
-- Failed witnesses retained: 16
+- Methods: 23
+- Passing witnesses: 24
+- Failed witnesses retained: 24
 
 ## Preferred methods
 
@@ -135,6 +135,62 @@
 - Recurrence guard: Never strip porcelain output before parsing status columns; use NUL records and exact generated-path allowlists.
 - Rollback: Retain the refused preflight, grant zero build credit, and leave all uncommitted owner-local surfaces available for inspection.
 - Witnesses: V6518-M16-WFAIL, V6518-M16-WPASS
+
+### V6518-M17 — Split large-worktree closeout startup probes
+
+- Trigger: A Windows worktree closeout preflight needs exact Git and declared-path state.
+- Method: Split Git and filesystem state inspection into independently bounded exact-purpose probes.
+- Recurrence guard: Never combine exact-head, tracked-delta, and untracked-surface inspection in one short Windows wrapper on a large worktree.
+- Rollback: Retain the timeout with zero credit and make no repository mutation before bounded probes succeed.
+- Witnesses: V6518-M17-WFAIL, V6518-M17-WPASS
+
+### V6518-M18 — Constrain closeout discovery to exact paths
+
+- Trigger: An inherited repository makes recursive discovery exceed its bounded window.
+- Method: Resolve declared files directly and scope any listing to the current phase root.
+- Recurrence guard: Prefer exact known paths and phase-root-scoped inventories over recursive repository discovery during lifecycle work.
+- Rollback: Retain the timeout and avoid widening the search or mutating any path.
+- Witnesses: V6518-M18-WFAIL, V6518-M18-WPASS
+
+### V6518-M19 — Materialize foreach output before piping
+
+- Trigger: A Windows PowerShell 5.1 probe needs to serialize rows produced by statement-level foreach.
+- Method: Materialize statement-level foreach output before piping or serialization in Windows PowerShell 5.1.
+- Recurrence guard: Assign statement-level foreach output to a variable before passing it into a pipeline.
+- Rollback: Retain the parser failure with zero credit and rerun only the corrected read-only probe.
+- Witnesses: V6518-M19-WFAIL, V6518-M19-WPASS
+
+### V6518-M20 — Expose exact child diagnostics before recovery
+
+- Trigger: A scoped validation wrapper stops on a captured child failure without printing the child result.
+- Method: Expose the exact failed child selection output before changing any test or validator.
+- Recurrence guard: Lifecycle validators must surface captured child diagnostics or direct operators to one exact isolated selection before recovery.
+- Rollback: Retain the aggregate failure with zero pass credit and change no test until its exact output is visible.
+- Witnesses: V6518-M20-WFAIL, V6518-M20-WPASS, V6518-M20-WFAIL2, V6518-M20-WPASS2
+
+### V6518-M21 — Bind x1-only assertions to the immutable x1 tree
+
+- Trigger: A final descendant needs to preserve prior x1 validation without applying x1-only absence assertions to x2 content.
+- Method: Verify historical x1-only test credit from the immutable x1 commit receipt and run descendant-compatible selections at final.
+- Recurrence guard: Bind historical absence assertions to their immutable commit and never relabel them as current descendant tests.
+- Rollback: Retain the descendant-context failure and do not weaken or rewrite the historical x1 test.
+- Witnesses: V6518-M21-WFAIL, V6518-M21-WPASS
+
+### V6518-M22 — Preserve semantic payloads across manifest self-exclusion
+
+- Trigger: A semantic lifecycle receipt is deliberately excluded from its enclosing self-referential manifest.
+- Method: Exclude a semantic receipt from self-referential manifest hashing without replacing its already-written payload.
+- Recurrence guard: A manifest self-exclusion controls hash coverage only; it must never erase or replace the semantic artifact it excludes.
+- Rollback: Retain the failed six-test selection, do not commit, and regenerate the closeout from the immutable evidence parent.
+- Witnesses: V6518-M22-WFAIL, V6518-M22-WPASS
+
+### V6518-M23 — Use in-tool self-tests for nested diagnostic witnesses
+
+- Trigger: A validator helper needs a synthetic nonzero child to prove error-output propagation.
+- Method: Move nested executable witness logic into a declared validator self-test option.
+- Recurrence guard: Do not nest multi-layer executable Python source inside a PowerShell command when a bounded in-tool self-test can express the witness.
+- Rollback: Retain the parser and shell errors with zero witness credit and make no lifecycle claim.
+- Witnesses: V6518-M23-WFAIL, V6518-M23-WPASS
 
 ## Retained boundary
 

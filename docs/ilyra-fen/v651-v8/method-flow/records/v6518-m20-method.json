@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_diagnostic_recovery",
+  "candidate_workaround": "Expose the exact failed child selection output before changing any test or validator.",
+  "failure_signature": "A checked subprocess exception hides captured stdout and stderr from the lifecycle validator.",
+  "method_id": "V6518-M20",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "test_integrity", "bounded_retry", "no_full_suite"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Lifecycle validators must surface captured child diagnostics or direct operators to one exact isolated selection before recovery.",
+  "retained_negative_ids": ["V6518-CLOSE-N04"],
+  "rollback": "Retain the aggregate failure with zero pass credit and change no test until its exact output is visible.",
+  "scope_boundary": "Diagnostic visibility only; the isolated command may still fail and earns no test-pass or canonical-final credit.",
+  "supersedes": [],
+  "title": "Expose exact child diagnostics before recovery",
+  "trigger_preconditions": ["A scoped validation wrapper stops on a captured child failure without printing the child result."],
+  "validation_witness_ids": []
+}
