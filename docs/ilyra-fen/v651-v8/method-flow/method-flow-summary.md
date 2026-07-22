@@ -2,9 +2,9 @@
 
 - Phase: v651-v8
 - Owner: Ilyra Fen
-- Methods: 14
-- Passing witnesses: 14
-- Failed witnesses retained: 14
+- Methods: 16
+- Passing witnesses: 16
+- Failed witnesses retained: 16
 
 ## Preferred methods
 
@@ -119,6 +119,22 @@
 - Recurrence guard: Trace every generated failure to its generator source and refresh all count-dependent mirrors together.
 - Rollback: Retain the failed validator run, grant it zero pass credit, and do not commit the stale generated assertion.
 - Witnesses: V6518-M14-WFAIL, V6518-M14-WPASS
+
+### V6518-M15 — Bind Method Flow summary output to the exact CLI contract
+
+- Trigger: A lifecycle builder needs to refresh Method Flow summaries through the family runner.
+- Method: Read the exact summarize subcommand help and bind the evidence builder to its documented output arguments.
+- Recurrence guard: Read exact subcommand help before composing lifecycle-runner output flags and preserve stderr on failure.
+- Rollback: Retain the failed evidence build with zero pass credit, do not commit, and leave all external and sibling state unchanged.
+- Witnesses: V6518-M15-WFAIL, V6518-M15-WPASS
+
+### V6518-M16 — Parse exact NUL-delimited status and declared runner paths
+
+- Trigger: A lifecycle builder validates an uncommitted Windows worktree with modified and generated paths.
+- Method: Parse NUL-delimited porcelain without trimming and bind the preflight to the exact declared runner path set.
+- Recurrence guard: Never strip porcelain output before parsing status columns; use NUL records and exact generated-path allowlists.
+- Rollback: Retain the refused preflight, grant zero build credit, and leave all uncommitted owner-local surfaces available for inspection.
+- Witnesses: V6518-M16-WFAIL, V6518-M16-WPASS
 
 ## Retained boundary
 

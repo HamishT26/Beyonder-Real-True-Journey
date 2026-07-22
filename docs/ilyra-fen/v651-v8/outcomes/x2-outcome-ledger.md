@@ -1,0 +1,32 @@
+# v651-v8 bounded outcomes
+
+- **V6518-P01** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P02** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P03** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P04** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P05** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P06** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P07** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P08** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P09** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P10** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P11** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P12** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P13** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P14** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P15** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P16** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P17** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P18** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P19** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P20** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P21** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P22** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P23** — `completed` — 5/5 synthetic mutations rejected
+- **V6518-P24** — `represented` — 5/5 synthetic mutations rejected
+- **V6518-P25** — `represented` — 5/5 synthetic mutations rejected
+- **V6518-P26** — `represented` — 5/5 synthetic mutations rejected
+- **V6518-P27** — `represented` — 5/5 synthetic mutations rejected
+- **V6518-P28** — `represented` — 5/5 synthetic mutations rejected
+- **V6518-P29** — `open_gap` — 5/5 synthetic mutations rejected
+- **V6518-P30** — `exact_gate` — 5/5 synthetic mutations rejected

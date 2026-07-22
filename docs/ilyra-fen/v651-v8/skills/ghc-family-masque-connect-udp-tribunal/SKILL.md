@@ -1,0 +1,16 @@
+---
+name: ghc-family-masque-connect-udp-tribunal
+description: "Apply the bounded Ilyra v651-v8 ghc-family-masque-connect-udp-tribunal workflow when validating V6518-P06 contracts, rejecting preregistered mutations, or preserving evidence and authority boundaries."
+---
+
+# ghc-family-masque-connect-udp-tribunal
+
+Use this phase-local skill only inside the declared v651-v8 same-owner evidence lane.
+
+1. Run `python scripts/ghc_family_transport_structure_tribunals.py --json doctor` and require offline ready state.
+2. Inspect `V6518-P06` with `python scripts/ghc_family_transport_structure_tribunals.py --json inspect --proposal V6518-P06`.
+3. Run the canonical fixture with `python scripts/ghc_family_transport_structure_tribunals.py --json run --proposal V6518-P06`.
+4. Run one declared rejection fixture with `python scripts/ghc_family_transport_structure_tribunals.py --json reject --proposal V6518-P06 --dimension missing_required_obligation`.
+5. Preserve failed witnesses and stop on any unsupported promotion, external side effect, future-seat activation, privacy disclosure, or authority action.
+
+Do not infer empirical confirmation, production readiness, professional competence, legal or cultural authority, Maori authority, complete accessibility, complete privacy, exhaustive security, independent reproduction, consciousness, personhood, Theory of Everything, or Stage 20 authority. This package is repository-local and must not be installed globally from this phase.
