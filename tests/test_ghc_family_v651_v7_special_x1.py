@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/vesper-arlen/v651-v7-special-cli-prep"
+X1 = "07785aa97b0aa46a4fbf0c60109a8ee8e678aacf"
 
 
 class V6517SpecialX1Tests(unittest.TestCase):
@@ -36,9 +38,20 @@ class V6517SpecialX1Tests(unittest.TestCase):
         state = self.load("orchestration/x1-phase-state.json")
         self.assertTrue(state["strict_x1_only"])
         self.assertFalse(state["x2_started"])
+        tree = set(
+            subprocess.run(
+                ["git", "ls-tree", "-r", "--name-only", X1],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            ).stdout.splitlines()
+        )
+        prefix = "docs/vesper-arlen/v651-v7-special-cli-prep/"
         forbidden = ["outcomes/core-outcomes.json", "closeout/closeout-receipt.json", "seal/seal-receipt.json"]
         for relative in forbidden:
-            self.assertFalse((PHASE / relative).exists(), relative)
+            self.assertNotIn(prefix + relative, tree, relative)
 
     def test_immediate_route_is_exact_and_future_seats_are_placeholders(self):
         request = self.load("workflow/raw-workflow-request.json")

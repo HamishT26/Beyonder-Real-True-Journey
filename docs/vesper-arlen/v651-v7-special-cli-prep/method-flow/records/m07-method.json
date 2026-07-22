@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Validate x1 contamination against the immutable x1 Git tree instead of the later x2 working tree.",
+  "failure_signature": "The combined x1/x2 test run failed because the x1 plan-only test inspected valid x2 files in the current working tree.",
+  "method_id": "V6517-SPECIAL-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "strict_x1_before_x2",
+    "immutable_anchor_validation",
+    "failure_retention",
+    "evidence_credit"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Lifecycle-specific tests must bind their file-domain assertions to the lifecycle commit they claim to validate.",
+  "retained_negative_ids": [
+    "V6517-SPECIAL-X2-N03"
+  ],
+  "rollback": "Keep the failed combined test at zero credit, patch only the stale test domain, and rerun the isolated x1 module before the broader evidence suite.",
+  "scope_boundary": "Bounded owner-local test correction only.",
+  "supersedes": [],
+  "title": "Bind x1 contamination tests to the immutable x1 Git tree",
+  "trigger_preconditions": [
+    "A plan-only x1 test runs after valid x2 artifacts exist in the current working tree."
+  ],
+  "validation_witness_ids": []
+}

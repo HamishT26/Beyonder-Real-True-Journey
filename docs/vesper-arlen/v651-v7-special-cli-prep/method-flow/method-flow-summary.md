@@ -2,9 +2,9 @@
 
 - Phase: v651-v7-special-cli-prep
 - Owner: Vesper Arlen
-- Methods: 5
-- Passing witnesses: 5
-- Failed witnesses retained: 5
+- Methods: 9
+- Passing witnesses: 10
+- Failed witnesses retained: 11
 
 ## Preferred methods
 
@@ -47,6 +47,38 @@
 - Recurrence guard: Never use a structurally valid normalization as launch or ownership authority.
 - Rollback: Retain the failed read-only attempt at zero credit; no Git history or sibling state requires rollback.
 - Witnesses: V6517-SPECIAL-M05-WFAIL, V6517-SPECIAL-M05-WPASS
+
+### V6517-SPECIAL-M06 — Gate persistent baton length before evidence publication
+
+- Trigger: A generated file-backed baton is below its authorized minimum word count.
+- Method: Measure the file-backed baton before publication, preserve the undersized build as zero-credit evidence, add substantive successor guidance, and rerun only the evidence builder.
+- Recurrence guard: Generate and count the persistent baton before the evidence commit; never treat an undersized draft as handoff-ready.
+- Rollback: Keep the partial owner-local artifacts uncommitted, correct the deterministic builder, and regenerate them in place without repeating passed CLI preflights.
+- Witnesses: V6517-SPECIAL-M06-WFAIL, V6517-SPECIAL-M06-WFAIL-2, V6517-SPECIAL-M06-WPASS
+
+### V6517-SPECIAL-M07 — Bind x1 contamination tests to the immutable x1 Git tree
+
+- Trigger: A plan-only x1 test runs after valid x2 artifacts exist in the current working tree.
+- Method: Validate x1 contamination against the immutable x1 Git tree instead of the later x2 working tree.
+- Recurrence guard: Lifecycle-specific tests must bind their file-domain assertions to the lifecycle commit they claim to validate.
+- Rollback: Keep the failed combined test at zero credit, patch only the stale test domain, and rerun the isolated x1 module before the broader evidence suite.
+- Witnesses: V6517-SPECIAL-M07-WFAIL, V6517-SPECIAL-M07-WPASS
+
+### V6517-SPECIAL-M08 — Extend sparse checkout for exact new tool paths before staging
+
+- Trigger: Git reports that intended owner-scoped files are outside the sparse-checkout definition.
+- Method: Add only the exact new family-current script paths to the existing non-cone sparse-checkout definition, then stage the same reviewed path set.
+- Recurrence guard: Before staging a new repository-local tool in a sparse lane, add its exact path to the sparse definition and remeasure the materialized surface.
+- Rollback: Retain the failed staging attempt, leave the index content inspectable, and add only the missing paths without disabling sparse checkout.
+- Witnesses: V6517-SPECIAL-M08-WFAIL, V6517-SPECIAL-M08-WPASS
+
+### V6517-SPECIAL-M09 — Separate validator import roots and scanner definitions from evidence data
+
+- Trigger: A validator passes direct tests but its script-mode loader cannot import named test modules, or scanner definitions match their own literals.
+- Method: Bind the repository root into the validator's script-mode import path, split scanner self-test literals so they are not misclassified as data hits, preserve the failed receipt, and write the corrected pass separately.
+- Recurrence guard: Validators invoked by file path must add the repository root before named test imports, and self-scanner fixtures must be classified or constructed without becoming data candidates.
+- Rollback: Leave the failed receipt immutable, patch only import and scanner-definition domains, regenerate the index manifest with both receipt exclusions, and rerun the authoritative evidence validator once.
+- Witnesses: V6517-SPECIAL-M09-WFAIL, V6517-SPECIAL-M09-WPASS, V6517-SPECIAL-M09-WFAIL-2, V6517-SPECIAL-M09-WPASS-2
 
 ## Retained boundary
 

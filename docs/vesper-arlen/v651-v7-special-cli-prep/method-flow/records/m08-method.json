@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Add only the exact new family-current script paths to the existing non-cone sparse-checkout definition, then stage the same reviewed path set.",
+  "failure_signature": "Git refused to stage seven new scripts because their paths were outside the active sparse-checkout definition.",
+  "method_id": "V6517-SPECIAL-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "sparse_lane_integrity",
+    "exact_staged_review",
+    "no_broad_materialization",
+    "failure_retention"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Before staging a new repository-local tool in a sparse lane, add its exact path to the sparse definition and remeasure the materialized surface.",
+  "retained_negative_ids": [
+    "V6517-SPECIAL-X2-N04"
+  ],
+  "rollback": "Retain the failed staging attempt, leave the index content inspectable, and add only the missing paths without disabling sparse checkout.",
+  "scope_boundary": "Bounded owner-local sparse worktree recovery only.",
+  "supersedes": [],
+  "title": "Extend sparse checkout for exact new tool paths before staging",
+  "trigger_preconditions": [
+    "Git reports that intended owner-scoped files are outside the sparse-checkout definition."
+  ],
+  "validation_witness_ids": []
+}
