@@ -1,0 +1,17 @@
+{
+  "method_id": "V6515R-M04",
+  "title": "Separate live policy overrides from legacy workflow-runner route validation",
+  "failure_signature": "The installed workflow runner rejected the live 100000-word and six-commit caps because it still encodes the older policy shape.",
+  "trigger_preconditions": ["A newer live request expands policy caps beyond the installed workflow runner's encoded values."],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Preserve the authoritative live request and failed audit, then validate only immediate route structure through a marked compatibility projection that carries the live overrides explicitly.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never present a compatibility projection as validation of the newer policy values.",
+  "rollback": "Retain the failed audit and stop route execution if the immediate ownership projection also fails.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["newest_user_request", "route_ownership", "failure_retention", "no_silent_policy_downgrade"],
+  "retained_negative_ids": ["V6515R-X1-N04"],
+  "scope_boundary": "The passing projection validates immediate route structure only, not the expanded caps."
+}

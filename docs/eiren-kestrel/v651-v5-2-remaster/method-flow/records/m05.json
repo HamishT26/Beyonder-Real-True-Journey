@@ -1,0 +1,17 @@
+{
+  "method_id": "V6515R-M05",
+  "title": "Respect Method Flow witness auto-promotion",
+  "failure_signature": "A wrapper requested validated to validated after the pass-witness command had already auto-promoted the method.",
+  "trigger_preconditions": ["The Method Flow runner records a passing witness for a candidate method."],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Read the state returned by the witness command and transition directly from validated to preferred only once.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Do not hard-code a second validated transition after a passing witness.",
+  "rollback": "Retain the rejected transition and resume from the ledger's actual valid state without rebuilding the ledger.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["append_only_ledger", "failure_retention", "valid_state_transitions"],
+  "retained_negative_ids": ["V6515R-X1-N05"],
+  "scope_boundary": "Method Flow state handling only; no broader evidence credit."
+}

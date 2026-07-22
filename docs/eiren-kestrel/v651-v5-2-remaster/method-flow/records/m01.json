@@ -1,0 +1,17 @@
+{
+  "method_id": "V6515R-M01",
+  "title": "Bound inherited-checkout verification",
+  "failure_signature": "The first combined worktree verification timed out while scanning the inherited 46607-file checkout.",
+  "trigger_preconditions": ["A newly materialized inherited worktree requires source, branch, and clean-diff verification."],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Verify branch and head directly, then use bounded staged and unstaged index-diff checks without repeating the full status scan.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Avoid full status enumeration as the first check on a newly materialized 46000-plus-file checkout.",
+  "rollback": "Retain the timeout at zero credit and stop if branch, head, or either diff domain is not attributable.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["failure_retention", "same_owner_only", "no_destructive_cleanup"],
+  "retained_negative_ids": ["V6515R-X1-N01"],
+  "scope_boundary": "Same-owner worktree verification only; no broader assurance or independent-reproduction credit."
+}

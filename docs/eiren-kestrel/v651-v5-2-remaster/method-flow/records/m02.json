@@ -1,0 +1,17 @@
+{
+  "method_id": "V6515R-M02",
+  "title": "Quote Git revision peel expressions in PowerShell",
+  "failure_signature": "An unquoted commit peel expression produced a fatal single-revision error after other bounded checks passed.",
+  "trigger_preconditions": ["PowerShell passes a Git revision containing caret and brace syntax."],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Wrap the complete revision peel expression in single quotes before passing it to git rev-parse.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Quote every revision expression containing caret, braces, colon, or shell-significant punctuation.",
+  "rollback": "Retain the fatal probe and use the already attributable plain head only if the peeled form cannot be verified.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["failure_retention", "exact_revision", "same_owner_only"],
+  "retained_negative_ids": ["V6515R-X1-N02"],
+  "scope_boundary": "Git argument quoting only; no repository mutation or authority credit."
+}

@@ -1,0 +1,17 @@
+{
+  "method_id": "V6515R-M03",
+  "title": "Derive proposal outcome totals from frozen specifications",
+  "failure_signature": "The first x1 generator declared 21 completed and 7 represented outcomes while the specifications contained 23 and 5.",
+  "trigger_preconditions": ["A proposal table and declared aggregate are authored separately."],
+  "privacy_class": "sanitized_public",
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Count expected dispositions directly from the frozen proposal table and fail before writing if the declared aggregate differs.",
+  "validation_witness_ids": [],
+  "recurrence_guard": "Never change proposal evidence labels to satisfy a preferred distribution; derive the distribution from proposal truth.",
+  "rollback": "Retain the failed generator attempt and write no packet until the aggregate matches the frozen table.",
+  "recommendation_state": "candidate",
+  "supersedes": [],
+  "protected_gates": ["truthful_outcomes", "failure_retention", "x1_only"],
+  "retained_negative_ids": ["V6515R-X1-N03"],
+  "scope_boundary": "Preregistration accounting only; no x2 or empirical credit."
+}
