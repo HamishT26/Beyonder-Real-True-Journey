@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_workflow",
+  "candidate_workaround": "Permit staged-review generation only at the exact evidence head or the exact known closeout correction parent, and reject every other head.",
+  "failure_signature": "The final-review lifecycle guard refused the known pushed closeout parent while preparing an additive terminal correction.",
+  "method_id": "V6515R-M18",
+  "privacy_class": "sanitized_public",
+  "protected_gates": ["failure_retention", "exact_head", "additive_correction"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind correction-capable lifecycle tools to an explicit finite set of attributable parent heads rather than relaxing exact-head checks generally.",
+  "retained_negative_ids": ["V6515R-CLOSEOUT-N17"],
+  "rollback": "Retain the refused correction review at zero credit and stop if the current head is neither the evidence head nor the known closeout parent.",
+  "scope_boundary": "One owner-local staged-review correction path only; no arbitrary-head validation.",
+  "supersedes": [],
+  "title": "Bind correction review to exact attributable parent heads",
+  "trigger_preconditions": ["An additive terminal correction follows a clean pushed closeout commit."],
+  "validation_witness_ids": []
+}

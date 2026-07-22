@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 17,
-    "recommendations": 17,
-    "state_events": 51,
+    "methods": 18,
+    "recommendations": 18,
+    "state_events": 54,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 17,
+      "preferred": 18,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 22,
-      "pass": 17
+      "fail": 24,
+      "pass": 19
     },
-    "witnesses": 39
+    "witnesses": 43
   },
   "owner": "Eiren Kestrel",
   "phase": "v651-v5-2-remaster",
@@ -48,7 +48,9 @@
       ],
       "validation_witness_ids": [
         "V6515R-M02-WFAIL",
-        "V6515R-M02-WPASS"
+        "V6515R-M02-WPASS",
+        "V6515R-M02-WFAIL-TERMINAL",
+        "V6515R-M02-WPASS-TERMINAL"
       ]
     },
     {
@@ -280,6 +282,21 @@
         "V6515R-M17-WFAIL",
         "V6515R-M17-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Permit staged-review generation only at the exact evidence head or the exact known closeout correction parent, and reject every other head.",
+      "method_id": "V6515R-M18",
+      "recurrence_guard": "Bind correction-capable lifecycle tools to an explicit finite set of attributable parent heads rather than relaxing exact-head checks generally.",
+      "rollback": "Retain the refused correction review at zero credit and stop if the current head is neither the evidence head nor the known closeout parent.",
+      "scope_boundary": "One owner-local staged-review correction path only; no arbitrary-head validation.",
+      "title": "Bind correction review to exact attributable parent heads",
+      "trigger_preconditions": [
+        "An additive terminal correction follows a clean pushed closeout commit."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M18-WFAIL",
+        "V6515R-M18-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -304,7 +321,9 @@
     "V6515R-M14-WFAIL",
     "V6515R-M15-WFAIL",
     "V6515R-M16-WFAIL",
-    "V6515R-M17-WFAIL"
+    "V6515R-M17-WFAIL",
+    "V6515R-M02-WFAIL-TERMINAL",
+    "V6515R-M18-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

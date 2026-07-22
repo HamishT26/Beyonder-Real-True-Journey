@@ -19,7 +19,7 @@ Exactly thirty proposals were novelty-reviewed against 1,000 inherited rows, mak
 
 The primary pillar was THOS Body through a digital-preservation archive-migration, fixity, quarantine, escalation, workload, readback, and shift-handover lens. GMUT Mind and Freed ID/CBR Heart remained explicit. The practice lens was synthetic learning and design only and established no employment, qualification, collection authority, preservation authority, legal authority, cultural authority, Māori authority, participant evidence, affected-party authorization, or real operational result.
 
-The inherited 7,094 effective negatives were preserved. Five x1 operational failures, one hundred executed-and-rejected synthetic mutations, two x2 operational failures, and fifteen closeout operational failures make 7,216 effective negatives. Every failure remains visible at zero pass credit. Fifty-six effective open gaps and fifty-seven effective exact gates remain. The terminal verdict is NOT_READY_FOR_STAGE_20.
+The inherited 7,094 effective negatives were preserved. Five x1 operational failures, one hundred executed-and-rejected synthetic mutations, two x2 operational failures, and seventeen closeout operational failures make 7,218 effective negatives. Every failure remains visible at zero pass credit. Fifty-six effective open gaps and fifty-seven effective exact gates remain. The terminal verdict is NOT_READY_FOR_STAGE_20. The fourth phase commit is an additive terminal correction after an unquoted PowerShell upstream-revision expression failed following the already successful closeout push and the first correction-review guard refused the known closeout parent; both failed wrappers receive zero credit and the quoted invariant plus exact-parent recovery remains bounded same-owner evidence.
 
 ## Proposal-by-proposal handoff
 
@@ -387,7 +387,7 @@ Ten family-current entrypoints were built and smoke-invoked. Compatibility deleg
 
 ## Method Flow inheritance
 
-Method Flow preserves 17 preferred methods, 22 failed witnesses, and 17 bounded passing witnesses. The methods cover bounded inherited-checkout verification, quoted Git revision expressions, proposal aggregate derivation, legacy workflow-policy projection, valid Method Flow state transitions, explicit UTF-8 for Windows skill validation, and uniform skill boundary headings. A passing recovery never erases its failed witness.
+Method Flow preserves 18 preferred methods, 24 failed witnesses, and 19 bounded passing witnesses. The methods cover bounded inherited-checkout verification, quoted Git revision expressions, proposal aggregate derivation, legacy workflow-policy projection, valid Method Flow state transitions, explicit UTF-8 for Windows skill validation, exact correction-parent binding, and uniform skill boundary headings. A passing recovery never erases its failed witness.
 
 ### V6515R-M01
 

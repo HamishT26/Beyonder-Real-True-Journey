@@ -16,13 +16,13 @@ class EirenV651V5RemasterCloseoutTests(unittest.TestCase):
     def test_final_truth(self):
         truth = load("final/phase-truth.json")
         self.assertEqual(truth["outcome_counts"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(truth["effective_negatives"], 7216)
+        self.assertEqual(truth["effective_negatives"], 7218)
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
     def test_gates_and_failures_are_retained(self):
         negatives = load("final/retained-negative-register.json")
         self.assertTrue(negatives["no_failure_erased"])
-        self.assertEqual(negatives["effective"], 7216)
+        self.assertEqual(negatives["effective"], 7218)
         gates = load("final/gate-register.json")
         self.assertEqual(gates["effective_open_gaps"], 56)
         self.assertEqual(gates["effective_exact_gates"], 57)

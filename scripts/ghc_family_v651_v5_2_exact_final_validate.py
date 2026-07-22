@@ -20,6 +20,7 @@ PHASE_ROOT = "docs/eiren-kestrel/v651-v5-2-remaster"
 SOURCE = "2bb6aa2d5e8003c4cb522f798d59e7b7f123742c"
 X1 = "d9e8cbf0063639aa0a6fb54c54a96683c587ce7e"
 EVIDENCE = "c67ce592463450ccf9aee7d460210cddb467c5ca"
+CLOSEOUT = "7758ed116115462d3814af784a234418861b3d45"
 BRANCH = "codex/GHC-Family/eiren-kestrel-v648-v3-3-full-tools"
 PATTERNS = {
     "raw_uuid": re.compile(rb"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b", re.I),
@@ -174,14 +175,15 @@ def main() -> None:
         "source_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", SOURCE, head], cwd=REPO).returncode == 0,
         "x1_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", X1, head], cwd=REPO).returncode == 0,
         "evidence_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", EVIDENCE, head], cwd=REPO).returncode == 0,
-        "three_commits_within_cap": phase_commits == 3 and phase_commits <= 6,
+        "closeout_ancestral": subprocess.run(["git", "merge-base", "--is-ancestor", CLOSEOUT, head], cwd=REPO).returncode == 0,
+        "four_commits_within_cap": phase_commits == 4 and phase_commits <= 6,
         "zero_merges": merges == 0,
-        "one_final_parent": len(parents) == 2 and parents[1] == EVIDENCE,
+        "one_final_parent": len(parents) == 2 and parents[1] == CLOSEOUT,
         "outcomes": truth["outcome_counts"] == {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
-        "negatives": negatives["effective"] == 7216 and negatives["no_failure_erased"],
+        "negatives": negatives["effective"] == 7218 and negatives["no_failure_erased"],
         "gaps": gates["effective_open_gaps"] == 56 and gates["silently_closed"] == 0,
         "gates": gates["effective_exact_gates"] == 57 and gates["silently_closed"] == 0,
-        "methods": methods["counts"]["methods"] == 17 and methods["counts"]["witness_results"] == {"fail": 22, "pass": 17} and methods["counts"]["states"]["preferred"] == 17,
+        "methods": methods["counts"]["methods"] == 18 and methods["counts"]["witness_results"] == {"fail": 24, "pass": 19} and methods["counts"]["states"]["preferred"] == 18,
         "x1_manifest": manifests[0]["valid"],
         "evidence_manifest": manifests[1]["valid"],
         "final_delta_manifest": manifests[2]["valid"],
@@ -198,7 +200,7 @@ def main() -> None:
         "stage20": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
         "staged_review": review["valid"] and not review["unexpected_paths"],
     }
-    minimal_names = ["clean_before", "four_way_equality", "source_ancestral", "x1_ancestral", "evidence_ancestral", "three_commits_within_cap", "zero_merges", "one_final_parent", "final_delta_manifest", "final_owner_manifest", "full_suite", "stage20"]
+    minimal_names = ["clean_before", "four_way_equality", "source_ancestral", "x1_ancestral", "evidence_ancestral", "closeout_ancestral", "four_commits_within_cap", "zero_merges", "one_final_parent", "final_delta_manifest", "final_owner_manifest", "full_suite", "stage20"]
     minimal = {name: detailed[name] for name in minimal_names}
     clean_after = not bool(git("status", "--porcelain=v1"))
     issues = [name for name, value in detailed.items() if not value]
@@ -214,7 +216,7 @@ def main() -> None:
         "privacy": {"files_scanned": len(owner_map), "pattern_classes": sorted(PATTERNS), "confirmed_hits": privacy_hits, "zero_confirmed_hits": not privacy_hits},
         "manifests": manifests,
         "documents": {"baton_words": baton_words, "overview_words": overview_words, "issues": word_issues},
-        "history": {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "final": head, "phase_commits": phase_commits, "commit_cap": 6, "merges": merges, "final_parent_count": len(parents) - 1},
+        "history": {"source": SOURCE, "x1": X1, "evidence": EVIDENCE, "closeout": CLOSEOUT, "final": head, "phase_commits": phase_commits, "commit_cap": 6, "merges": merges, "final_parent_count": len(parents) - 1},
         "equality": {"local": head, "upstream": upstream, "tracking": tracking, "live": live, "all_equal": head == upstream == tracking == live},
         "clean_before": clean_before, "clean_after": clean_after, "full_repository_suite_run": True, "post_success_replay_run": False, "same_owner_only": True, "independent_reproduction": False,
         "issues": issues, "valid": valid, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": "One Eiren-owned exact-final complete-repository aggregate with the inherited exact lifecycle exclusion set. Same-owner validation is not independent-team reproduction or external audit.",

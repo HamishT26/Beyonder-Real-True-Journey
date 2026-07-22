@@ -2,9 +2,9 @@
 
 - Phase: v651-v5-2-remaster
 - Owner: Eiren Kestrel
-- Methods: 17
-- Passing witnesses: 17
-- Failed witnesses retained: 22
+- Methods: 18
+- Passing witnesses: 19
+- Failed witnesses retained: 24
 
 ## Preferred methods
 
@@ -22,7 +22,7 @@
 - Method: Wrap the complete revision peel expression in single quotes before passing it to git rev-parse.
 - Recurrence guard: Quote every revision expression containing caret, braces, colon, or shell-significant punctuation.
 - Rollback: Retain the fatal probe and use the already attributable plain head only if the peeled form cannot be verified.
-- Witnesses: V6515R-M02-WFAIL, V6515R-M02-WPASS
+- Witnesses: V6515R-M02-WFAIL, V6515R-M02-WPASS, V6515R-M02-WFAIL-TERMINAL, V6515R-M02-WPASS-TERMINAL
 
 ### V6515R-M03 — Derive proposal outcome totals from frozen specifications
 
@@ -143,6 +143,14 @@
 - Recurrence guard: Prefer a checked-in script or LiteralPath cmdlets whenever an inline program contains nested path-string quoting.
 - Rollback: Retain the inline-program failure at zero credit and do not infer file readability from the failed expression.
 - Witnesses: V6515R-M17-WFAIL, V6515R-M17-WPASS
+
+### V6515R-M18 — Bind correction review to exact attributable parent heads
+
+- Trigger: An additive terminal correction follows a clean pushed closeout commit.
+- Method: Permit staged-review generation only at the exact evidence head or the exact known closeout correction parent, and reject every other head.
+- Recurrence guard: Bind correction-capable lifecycle tools to an explicit finite set of attributable parent heads rather than relaxing exact-head checks generally.
+- Rollback: Retain the refused correction review at zero credit and stop if the current head is neither the evidence head nor the known closeout parent.
+- Witnesses: V6515R-M18-WFAIL, V6515R-M18-WPASS
 
 ## Retained boundary
 

@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 17,
-    "recommendations": 17,
-    "state_events": 51,
+    "methods": 18,
+    "recommendations": 18,
+    "state_events": 54,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 17,
+      "preferred": 18,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 22,
-      "pass": 17
+      "fail": 24,
+      "pass": 19
     },
-    "witnesses": 39
+    "witnesses": 43
   },
   "identity_boundary": "Relational working language only; not consciousness, personhood, continuity, employment, or authority evidence.",
   "methods": [
@@ -73,7 +73,9 @@
       ],
       "validation_witness_ids": [
         "V6515R-M02-WFAIL",
-        "V6515R-M02-WPASS"
+        "V6515R-M02-WPASS",
+        "V6515R-M02-WFAIL-TERMINAL",
+        "V6515R-M02-WPASS-TERMINAL"
       ]
     },
     {
@@ -503,6 +505,34 @@
         "V6515R-M17-WFAIL",
         "V6515R-M17-WPASS"
       ]
+    },
+    {
+      "approval_class": "safe_now_owner_scoped_workflow",
+      "candidate_workaround": "Permit staged-review generation only at the exact evidence head or the exact known closeout correction parent, and reject every other head.",
+      "failure_signature": "The final-review lifecycle guard refused the known pushed closeout parent while preparing an additive terminal correction.",
+      "method_id": "V6515R-M18",
+      "privacy_class": "sanitized_public",
+      "protected_gates": [
+        "failure_retention",
+        "exact_head",
+        "additive_correction"
+      ],
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Bind correction-capable lifecycle tools to an explicit finite set of attributable parent heads rather than relaxing exact-head checks generally.",
+      "retained_negative_ids": [
+        "V6515R-CLOSEOUT-N17"
+      ],
+      "rollback": "Retain the refused correction review at zero credit and stop if the current head is neither the evidence head nor the known closeout parent.",
+      "scope_boundary": "One owner-local staged-review correction path only; no arbitrary-head validation.",
+      "supersedes": [],
+      "title": "Bind correction review to exact attributable parent heads",
+      "trigger_preconditions": [
+        "An additive terminal correction follows a clean pushed closeout commit."
+      ],
+      "validation_witness_ids": [
+        "V6515R-M18-WFAIL",
+        "V6515R-M18-WPASS"
+      ]
     }
   ],
   "owner": "Eiren Kestrel",
@@ -763,6 +793,21 @@
       "witness_ids": [
         "V6515R-M16-WFAIL",
         "V6515R-M16-WPASS"
+      ]
+    },
+    {
+      "method": "Permit staged-review generation only at the exact evidence head or the exact known closeout correction parent, and reject every other head.",
+      "method_id": "V6515R-M18",
+      "preconditions": [
+        "An additive terminal correction follows a clean pushed closeout commit."
+      ],
+      "recommendation_index": 18,
+      "recurrence_guard": "Bind correction-capable lifecycle tools to an explicit finite set of attributable parent heads rather than relaxing exact-head checks generally.",
+      "rollback": "Retain the refused correction review at zero credit and stop if the current head is neither the evidence head nor the known closeout parent.",
+      "scope_boundary": "One owner-local staged-review correction path only; no arbitrary-head validation.",
+      "witness_ids": [
+        "V6515R-M18-WFAIL",
+        "V6515R-M18-WPASS"
       ]
     }
   ],
@@ -1174,6 +1219,30 @@
       "event_index": 51,
       "method_id": "V6515R-M16",
       "reason": "Resolve final-review artifacts through REPO and PHASE_ROOT.",
+      "witness_id": null
+    },
+    {
+      "after": "candidate",
+      "before": null,
+      "event_index": 52,
+      "method_id": "V6515R-M18",
+      "reason": "method recorded with retained negative linkage",
+      "witness_id": null
+    },
+    {
+      "after": "validated",
+      "before": "candidate",
+      "event_index": 53,
+      "method_id": "V6515R-M18",
+      "reason": "bounded witness passed",
+      "witness_id": "V6515R-M18-WPASS"
+    },
+    {
+      "after": "preferred",
+      "before": "validated",
+      "event_index": 54,
+      "method_id": "V6515R-M18",
+      "reason": "Accept only the exact evidence or closeout correction parent.",
       "witness_id": null
     }
   ],
@@ -1764,6 +1833,66 @@
       "same_owner_only": true,
       "scope": "two corrected read-only document paths",
       "witness_id": "V6515R-M16-WPASS"
+    },
+    {
+      "boundary": "Zero post-push invariant credit for the failed divergence expression; the preceding commit and push remain independently attributable.",
+      "expected": "Measure zero ahead and zero behind after the pushed closeout commit.",
+      "independent_reproduction": false,
+      "method_id": "V6515R-M02",
+      "observed": "PowerShell transformed the unquoted upstream revision expression and Git rejected an unrelated token as an ambiguous revision.",
+      "procedure": "Pass HEAD...@{u} to git rev-list without quoting the complete revision expression.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6515R-CLOSEOUT-N16"
+      ],
+      "same_owner_only": true,
+      "scope": "one failed read-only post-push divergence expression",
+      "witness_id": "V6515R-M02-WFAIL-TERMINAL"
+    },
+    {
+      "boundary": "Read-only same-owner Git invariant witness only; it is not independent reproduction.",
+      "expected": "Show clean local, upstream, tracking, and fresh live equality with zero divergence, three phase commits, zero merges, and one final parent at the correction parent.",
+      "independent_reproduction": false,
+      "method_id": "V6515R-M02",
+      "observed": "The fully quoted divergence expression returned zero ahead and zero behind; all four heads equaled the pushed closeout head and the worktree was clean.",
+      "procedure": "Quote the complete HEAD...@{u} expression and rerun only the post-push invariant probe.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6515R-CLOSEOUT-N16"
+      ],
+      "same_owner_only": true,
+      "scope": "one corrected read-only post-push invariant probe",
+      "witness_id": "V6515R-M02-WPASS-TERMINAL"
+    },
+    {
+      "boundary": "Zero correction-review credit; the guard stopped before writing replacement manifests.",
+      "expected": "Build correction manifests from the exact pushed closeout parent.",
+      "independent_reproduction": false,
+      "method_id": "V6515R-M18",
+      "observed": "The guard required the evidence head and refused the exact known closeout parent.",
+      "procedure": "Invoke the evidence-only staged-review tool while HEAD is the pushed closeout parent.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6515R-CLOSEOUT-N17"
+      ],
+      "same_owner_only": true,
+      "scope": "one refused additive correction review",
+      "witness_id": "V6515R-M18-WFAIL"
+    },
+    {
+      "boundary": "Bounded correction-manifest witness only; exact-final validation remains pending at the future correction commit.",
+      "expected": "Accept only the exact closeout parent and generate zero-hit correction manifests.",
+      "independent_reproduction": false,
+      "method_id": "V6515R-M18",
+      "observed": "The narrowed guard accepted the exact closeout parent and the staged-review generator completed with exact manifests and zero confirmed privacy hits.",
+      "procedure": "Allow the evidence or exact closeout parent, assert the current head belongs to that finite set, and rerun the staged review.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6515R-CLOSEOUT-N17"
+      ],
+      "same_owner_only": true,
+      "scope": "one corrected additive staged-review preflight",
+      "witness_id": "V6515R-M18-WPASS"
     }
   ]
 }
