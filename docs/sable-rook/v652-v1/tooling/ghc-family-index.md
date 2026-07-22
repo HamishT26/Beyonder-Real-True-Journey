@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v652-v1
 
 Owner: **Sable Rook**
-Generated UTC: `2026-07-22T23:18:08.762668+00:00`
+Generated UTC: `2026-07-22T23:34:31.813388+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
@@ -9,7 +9,7 @@ This is an inventory and selection aid, not permission to execute every discover
 
 | Surface | Family current | Compatibility | Historical versioned | Other |
 | --- | ---: | ---: | ---: | ---: |
-| Repository scripts | 395 | 17 | 1548 | 17 |
+| Repository scripts | 404 | 17 | 1554 | 17 |
 | Local skills | 117 | 18 | 937 | 186 |
 
 ## Preferred current script candidates

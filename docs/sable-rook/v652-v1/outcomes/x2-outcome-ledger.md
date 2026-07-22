@@ -1,0 +1,32 @@
+# v652-v1 bounded outcomes
+
+- **V6521-P01** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P02** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P03** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P04** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P05** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P06** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P07** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P08** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P09** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P10** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P11** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P12** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P13** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P14** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P15** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P16** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P17** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P18** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P19** — `represented` — 5/5 synthetic mutations rejected
+- **V6521-P20** — `represented` — 5/5 synthetic mutations rejected
+- **V6521-P21** — `represented` — 5/5 synthetic mutations rejected
+- **V6521-P22** — `represented` — 5/5 synthetic mutations rejected
+- **V6521-P23** — `represented` — 5/5 synthetic mutations rejected
+- **V6521-P24** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P25** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P26** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P27** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P28** — `completed` — 5/5 synthetic mutations rejected
+- **V6521-P29** — `open_gap` — 5/5 synthetic mutations rejected
+- **V6521-P30** — `exact_gate` — 5/5 synthetic mutations rejected

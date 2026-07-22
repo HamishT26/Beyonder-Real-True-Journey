@@ -3,8 +3,8 @@
 - Phase: v652-v1
 - Owner: Sable Rook
 - Methods: 6
-- Passing witnesses: 6
-- Failed witnesses retained: 6
+- Passing witnesses: 7
+- Failed witnesses retained: 7
 
 ## Preferred methods
 
@@ -30,7 +30,7 @@
 - Method: Assign foreach results to an array and pipe only that array.
 - Recurrence guard: Never append a pipeline directly to statement-level foreach in Windows PowerShell 5.1.
 - Rollback: Retain the parser failure; it changed no files, branches, or external state.
-- Witnesses: V6521-M03-WFAIL, V6521-M03-WPASS
+- Witnesses: V6521-M03-WFAIL, V6521-M03-WPASS, V6521-M03-WFAIL2, V6521-M03-WPASS2
 
 ### V6521-M04 — Rewrite semantic collisions before x1 freezing
 

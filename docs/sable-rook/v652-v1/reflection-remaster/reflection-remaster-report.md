@@ -3,7 +3,7 @@
 Phase: `v652-v1`
 Owner: Sable Rook
 
-The audit inventoried 3235 surfaces, scoped 0, and produced 0 issue records. It made no destructive change.
+The audit inventoried 3250 surfaces, scoped 0, and produced 0 issue records. It made no destructive change.
 
 ## Dispositions
 
