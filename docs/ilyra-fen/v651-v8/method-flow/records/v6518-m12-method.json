@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_privacy_recovery",
+  "candidate_workaround": "Use the exact scanner-definition quarantine set recorded by the preregistered scanner.",
+  "failure_signature": "A replay uses the right patterns but omits a scanner-definition artifact from its quarantine set.",
+  "method_id": "V6518-M12",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "privacy", "scanner_definition_visibility", "x1_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind privacy replays to both the exact patterns and the exact definition-quarantine paths.",
+  "retained_negative_ids": ["V6518-X1-N12"],
+  "rollback": "Retain the false-positive replay, grant no zero-hit credit, and leave scanner definitions visible.",
+  "scope_boundary": "Five-class staged privacy replay only; zero confirmed hits is not complete privacy assurance.",
+  "supersedes": [],
+  "title": "Replay privacy patterns with an identical definition quarantine",
+  "trigger_preconditions": ["A privacy receipt or scanner source contains its own pattern-class vocabulary."],
+  "validation_witness_ids": []
+}

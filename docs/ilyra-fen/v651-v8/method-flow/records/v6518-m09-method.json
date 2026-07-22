@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_wrapper_recovery",
+  "candidate_workaround": "Run the authoritative child separately and propagate its exit status before subsequent commands.",
+  "failure_signature": "A compound PowerShell validation wrapper returns a later command's success after an earlier child failed.",
+  "method_id": "V6518-M09",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "test_attribution", "fail_closed_validation", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Check every authoritative child exit status immediately or use separate fail-fast invocations.",
+  "retained_negative_ids": ["V6518-X1-N09"],
+  "rollback": "Retain the misleading aggregate exit as a failure and grant no pass credit to the wrapper.",
+  "scope_boundary": "PowerShell validation-wrapper behavior only; not canonical final validation or independent reproduction.",
+  "supersedes": [],
+  "title": "Propagate authoritative child failures before later checks",
+  "trigger_preconditions": ["A PowerShell wrapper runs more than one authoritative validation child."],
+  "validation_witness_ids": []
+}

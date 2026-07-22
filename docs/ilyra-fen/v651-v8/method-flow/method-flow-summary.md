@@ -1,0 +1,125 @@
+# GHC Family Method Flow State
+
+- Phase: v651-v8
+- Owner: Ilyra Fen
+- Methods: 14
+- Passing witnesses: 14
+- Failed witnesses retained: 14
+
+## Preferred methods
+
+### V6518-M01 — Bind memory searches to the declared memory registry
+
+- Trigger: A phase needs prior GHC continuity and the memory root is declared separately from task metadata.
+- Method: Search the exact declared memory registry path before opening any referenced rollout record.
+- Recurrence guard: Never infer the memory registry from the current task directory.
+- Rollback: Retain the failed read-only search and make no repository or memory mutation.
+- Witnesses: V6518-M01-WFAIL, V6518-M01-WPASS
+
+### V6518-M02 — Use ordinary non-force push after a verified fast-forward
+
+- Trigger: The owned branch is clean, its old head is ancestral to the verified source, and an explicit refspec is available.
+- Method: Verify the intended head and divergence, then use an ordinary explicit-refspec push without force.
+- Recurrence guard: Apply ff-only to merge or pull, not push; ordinary push already rejects non-fast-forward updates by default.
+- Rollback: If the explicit push fails, retain local history and stop without force or reset.
+- Witnesses: V6518-M02-WFAIL, V6518-M02-WPASS
+
+### V6518-M03 — Pin UTF-8 before emitting inherited Unicode proposal titles
+
+- Trigger: A Windows Python process may emit Māori or other non-ASCII repository text.
+- Method: Set PYTHONUTF8 and PYTHONIOENCODING before process start and preserve source text unchanged.
+- Recurrence guard: Pin UTF-8 for every Unicode-emitting diagnostic; never transliterate source text to satisfy a console.
+- Rollback: Retain the failed read-only probe and change no culturally authoritative wording.
+- Witnesses: V6518-M03-WFAIL, V6518-M03-WPASS
+
+### V6518-M04 — Materialize foreach output before piping in Windows PowerShell 5.1
+
+- Trigger: A Windows PowerShell 5.1 wrapper needs to serialize rows produced by a statement-level foreach loop.
+- Method: Assign the foreach results to an array and pipe only that array.
+- Recurrence guard: Never append a pipeline directly to statement-level foreach in Windows PowerShell 5.1.
+- Rollback: Retain the parser failure; it changed no files, branches, or external state.
+- Witnesses: V6518-M04-WFAIL, V6518-M04-WPASS
+
+### V6518-M05 — Use score-only keys for lexical-neighbour selection
+
+- Trigger: A collection of scored records may contain equal numeric scores and non-orderable payload objects.
+- Method: Select the maximum candidate with an explicit key over the numeric similarity field.
+- Recurrence guard: Every max or sort over scored records must declare a numeric key and never depend on payload comparability.
+- Rollback: Retain the failed read-only probe with zero novelty credit and change no inherited proposal record.
+- Witnesses: V6518-M05-WFAIL, V6518-M05-WPASS
+
+### V6518-M06 — Avoid escaped nested expressions in diagnostic f-strings
+
+- Trigger: A generated Python diagnostic needs to render multiple dictionary fields inside a joined line.
+- Method: Assemble identifier-and-title diagnostic fragments outside nested f-string expressions.
+- Recurrence guard: Keep nested diagnostic formatting shallow and bind dictionary fields to plain local fragments before joining.
+- Rollback: Retain the parser failure with zero search credit and change no proposal record.
+- Witnesses: V6518-M06-WFAIL, V6518-M06-WPASS
+
+### V6518-M07 — Use verified Windows local time when optional IANA tzdata is absent
+
+- Trigger: A Windows Python runtime lacks the optional IANA timezone database and the host timezone has been verified.
+- Method: Use the verified Windows system-local New Zealand offset alongside UTC and record the Windows timezone name separately.
+- Recurrence guard: Do not assume Windows Python ships an IANA zone database; use a verified system-local offset or an already approved runtime.
+- Rollback: Retain the failed pre-generation builder invocation and install no package or runtime.
+- Witnesses: V6518-M07-WFAIL, V6518-M07-WPASS
+
+### V6518-M08 — Discover non-package tests by exact filename
+
+- Trigger: The repository tests directory is not an importable Python package.
+- Method: Use unittest discovery with the exact tests directory and filename.
+- Recurrence guard: Use exact discovery when the tests directory has no package initializer.
+- Rollback: Give the import failure zero test credit and change no test file to disguise the invocation error.
+- Witnesses: V6518-M08-WFAIL, V6518-M08-WPASS
+
+### V6518-M09 — Propagate authoritative child failures before later checks
+
+- Trigger: A PowerShell wrapper runs more than one authoritative validation child.
+- Method: Run the authoritative child separately and propagate its exit status before subsequent commands.
+- Recurrence guard: Check every authoritative child exit status immediately or use separate fail-fast invocations.
+- Rollback: Retain the misleading aggregate exit as a failure and grant no pass credit to the wrapper.
+- Witnesses: V6518-M09-WFAIL, V6518-M09-WPASS
+
+### V6518-M10 — Gate every commit on exact staged diff hygiene
+
+- Trigger: An additive owner-local staged file fails Git diff hygiene.
+- Method: Remove only the reported owner-local whitespace defect, restage, and rerun the unchanged diff check.
+- Recurrence guard: Run staged diff hygiene before every commit and correct only attributable owner-local defects.
+- Rollback: Retain the failed staged check, avoid committing, and leave all sibling and inherited paths unchanged.
+- Witnesses: V6518-M10-WFAIL, V6518-M10-WPASS
+
+### V6518-M11 — Self-exclude mutable count-bearing validation receipts
+
+- Trigger: A receipt is written after it reports counts over the surface covered by its enclosing manifest.
+- Method: Declare the count-bearing validation receipt as a manifest self-exclusion while preserving owner-path coverage.
+- Recurrence guard: Exclude count-bearing receipts from their enclosing manifest or make their bytes stable before sealing.
+- Rollback: Retain the stale-entry failure, do not commit, and preserve all other manifest rows unchanged.
+- Witnesses: V6518-M11-WFAIL, V6518-M11-WPASS
+
+### V6518-M13 — Use exact Method Flow subcommand argument contracts
+
+- Trigger: A Method Flow runner subcommand has a command-specific file option.
+- Method: Use the exact option declared by each Method Flow subcommand: record for methods and witness-file for witnesses.
+- Recurrence guard: Check the exact subcommand argument contract before every Method Flow runner invocation.
+- Rollback: Retain the refused invocation, grant it zero witness credit, and leave the ledger otherwise unchanged.
+- Witnesses: V6518-M13-WFAIL, V6518-M13-WPASS
+
+### V6518-M12 — Replay privacy patterns with an identical definition quarantine
+
+- Trigger: A privacy receipt or scanner source contains its own pattern-class vocabulary.
+- Method: Use the exact scanner-definition quarantine set recorded by the preregistered scanner.
+- Recurrence guard: Bind privacy replays to both the exact patterns and the exact definition-quarantine paths.
+- Rollback: Retain the false-positive replay, grant no zero-hit credit, and leave scanner definitions visible.
+- Witnesses: V6518-M12-WFAIL, V6518-M12-WPASS
+
+### V6518-M14 — Correct generated count mirrors at their source
+
+- Trigger: A regenerated test or receipt restores a count that conflicts with the authoritative append-only ledger.
+- Method: Update generator-owned assertions at the generator and every authoritative count mirror before regeneration.
+- Recurrence guard: Trace every generated failure to its generator source and refresh all count-dependent mirrors together.
+- Rollback: Retain the failed validator run, grant it zero pass credit, and do not commit the stale generated assertion.
+- Witnesses: V6518-M14-WFAIL, V6518-M14-WPASS
+
+## Retained boundary
+
+This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.

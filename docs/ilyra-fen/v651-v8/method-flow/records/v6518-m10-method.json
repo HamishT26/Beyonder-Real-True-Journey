@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_diff_recovery",
+  "candidate_workaround": "Remove only the reported owner-local whitespace defect, restage, and rerun the unchanged diff check.",
+  "failure_signature": "Git staged diff hygiene reports a new blank line at end of file.",
+  "method_id": "V6518-M10",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "diff_hygiene", "x1_integrity", "sibling_lane_isolation"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Run staged diff hygiene before every commit and correct only attributable owner-local defects.",
+  "retained_negative_ids": ["V6518-X1-N10"],
+  "rollback": "Retain the failed staged check, avoid committing, and leave all sibling and inherited paths unchanged.",
+  "scope_boundary": "Owner-local staged whitespace recovery only; no x2, canonical-final, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Gate every commit on exact staged diff hygiene",
+  "trigger_preconditions": ["An additive owner-local staged file fails Git diff hygiene."],
+  "validation_witness_ids": []
+}

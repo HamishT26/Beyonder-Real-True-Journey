@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_generator_recovery",
+  "candidate_workaround": "Update generator-owned assertions at the generator and every authoritative count mirror before regeneration.",
+  "failure_signature": "A generated targeted test reintroduces an obsolete ledger count after its direct file was corrected.",
+  "method_id": "V6518-M14",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "generated_surface_integrity", "count_parity", "x1_integrity"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Trace every generated failure to its generator source and refresh all count-dependent mirrors together.",
+  "retained_negative_ids": ["V6518-X1-N14"],
+  "rollback": "Retain the failed validator run, grant it zero pass credit, and do not commit the stale generated assertion.",
+  "scope_boundary": "Owner-local x1 generated-test recovery only; no x2, canonical-final, or independent-reproduction credit.",
+  "supersedes": [],
+  "title": "Correct generated count mirrors at their source",
+  "trigger_preconditions": ["A regenerated test or receipt restores a count that conflicts with the authoritative append-only ledger."],
+  "validation_witness_ids": []
+}

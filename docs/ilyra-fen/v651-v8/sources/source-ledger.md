@@ -1,0 +1,74 @@
+# v651-v8 source ledger
+
+- **SRC-NUCLEARITY** - `stable` - [Causal Independence and the Energy-Level Density of States in Local Quantum Field Theory](https://doi.org/10.1007/BF01454978)
+  - Supports typed nuclearity and split-property obligations only; no physical or empirical result.
+- **SRC-QUANTUM-ENERGY-INEQUALITY** - `stable` - [Lectures on quantum energy inequalities](https://arxiv.org/abs/1208.5399)
+  - Supports typed sampling, state-domain, and lower-bound obligations only.
+- **SRC-RESURGENCE** - `stable` - [Resurgence, Physics and Numbers](https://arxiv.org/abs/1411.3585)
+  - Supports formal resurgence vocabulary only; no physical summation or empirical claim.
+- **SRC-SOFT-GRAVITON** - `stable` - [Infrared photons and gravitons](https://doi.org/10.1103/PhysRev.140.B516)
+  - Supports a typed soft-factor obligation board only.
+- **SRC-QUIC-ACK-FREQUENCY** - `draft` - [QUIC Acknowledgement Frequency draft 14](https://datatracker.ietf.org/doc/draft-ietf-quic-ack-frequency/)
+  - Keeps the extension draft-gated; structural fixtures are not deployment evidence.
+- **SRC-RFC9000** - `stable` - [RFC 9000 QUIC: A UDP-Based Multiplexed and Secure Transport](https://www.rfc-editor.org/rfc/rfc9000.html)
+  - Anchors base QUIC terminology only.
+- **SRC-RFC9180** - `stable` - [RFC 9180 Hybrid Public Key Encryption](https://www.rfc-editor.org/rfc/rfc9180.html)
+  - Anchors algorithm identifiers and context separation; no real cryptography is performed.
+- **SRC-RFC9298** - `stable` - [RFC 9298 Proxying UDP in HTTP](https://www.rfc-editor.org/rfc/rfc9298.html)
+  - Supports synthetic CONNECT-UDP structure only; no proxy or network operation.
+- **SRC-RFC9297** - `stable` - [RFC 9297 HTTP Datagrams and the Capsule Protocol](https://www.rfc-editor.org/rfc/rfc9297.html)
+  - Anchors datagram and capsule structure only.
+- **SRC-WASM-COMPONENT** - `watch` - [WebAssembly Component Model documentation](https://component-model.bytecodealliance.org/)
+  - The living specification remains watch status; fixtures provide no runtime certification.
+- **SRC-AMQP10** - `stable` - [OASIS Advanced Message Queuing Protocol Version 1.0](https://www.oasis-open.org/standard/amqp/)
+  - Supports bounded AMQP structure fixtures only; no broker, transport, or interoperability certification.
+- **SRC-RFC9460** - `stable` - [RFC 9460 Service Binding and Parameter Specification via the DNS](https://www.rfc-editor.org/rfc/rfc9460.html)
+  - Supports synthetic SVCB and HTTPS record fixtures only.
+- **SRC-RFC9458** - `stable` - [RFC 9458 Oblivious HTTP](https://www.rfc-editor.org/rfc/rfc9458.html)
+  - Supports bounded OHTTP framing and context fixtures only.
+- **SRC-IVOA-VOTABLE15** - `stable` - [IVOA VOTable Format Definition 1.5](https://www.ivoa.net/documents/VOTable/20250116/REC-VOTable-1.5.html)
+  - Supports bounded VOTable structure fixtures only; no real catalogue ingestion.
+- **SRC-GIT-COMMIT-GRAPH** - `current` - [Git commit-graph format](https://git-scm.com/docs/commit-graph-format)
+  - Supports disposable graph metadata fixtures only.
+- **SRC-RFC6811** - `stable` - [RFC 6811 BGP Prefix Origin Validation](https://www.rfc-editor.org/rfc/rfc6811.html)
+  - Supports synthetic route-origin states only; no routing or operational assurance.
+- **SRC-MINHASH** - `stable` - [On the resemblance and containment of documents](https://doi.org/10.1109/SEQUEN.1997.666900)
+  - Supports deterministic similarity fixtures only; manual novelty review remains required.
+- **SRC-RFC9110** - `stable` - [RFC 9110 HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html)
+  - Anchors media type, language, validator, and representation semantics.
+- **SRC-RFC9111** - `stable` - [RFC 9111 HTTP Caching](https://www.rfc-editor.org/rfc/rfc9111.html)
+  - Anchors freshness and cache-policy status only.
+- **SRC-GIT-HASH-OBJECT** - `current` - [Git hash-object documentation](https://git-scm.com/docs/git-hash-object)
+  - Anchors Git-object hash domains; no remote mutation is implied.
+- **SRC-AHO-CORASICK** - `stable` - [Efficient string matching: an aid to bibliographic search](https://doi.org/10.1145/360825.360855)
+  - Supports bounded automaton fixtures only.
+- **SRC-WAI-BRAILLE** - `current` - [WAI-ARIA braille role description and label properties](https://www.w3.org/TR/wai-aria/#aria-brailleroledescription)
+  - Supports structural naming checks while manual braille and affected-user evaluation remains reserved.
+- **SRC-HTML-CANVAS** - `current` - [HTML canvas element and accessibility](https://html.spec.whatwg.org/multipage/canvas.html)
+  - Supports structural fallback checks only; no browser or affected-user conformance claim.
+- **SRC-WCAG22** - `stable` - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural requirements; no complete accessibility claim.
+- **SRC-GRUNEISEN** - `stable` - [Thermal expansion, compressibility and the Gruneisen relation](https://doi.org/10.1016/0038-1098(68)90075-8)
+  - Supports physical thermodynamic relation vocabulary only; psyche conversion is rejected.
+- **SRC-WINNER-CURSE** - `stable` - [Why Most Discovered True Associations Are Inflated](https://doi.org/10.1097/EDE.0b013e31818131e7)
+  - Supports structural selection and shrinkage obligations only; no participant estimate.
+- **SRC-MCP-SPEC** - `current` - [Model Context Protocol specification](https://modelcontextprotocol.io/specification/)
+  - Supports a read-only capability catalogue only; no connector installation or authority.
+- **SRC-LSM-TREE** - `stable` - [The Log-Structured Merge-Tree](https://doi.org/10.1007/s002360050048)
+  - Supports bounded compaction state fixtures only; no production storage assurance.
+- **SRC-IVOA-DATA-ORIGIN** - `current` - [IVOA Data Origin Data Model 1.2](https://www.ivoa.net/documents/DataOrigin/20260331/EN-data-origin-1.2-20260331.html)
+  - Supports synthetic astronomy lineage vocabulary only.
+- **SRC-IVOA-PROVENANCE** - `stable` - [IVOA Provenance Data Model 1.0](https://www.ivoa.net/documents/ProvenanceDM/20200411/Provenance.html)
+  - Supports synthetic provenance fields only; no observatory authority.
+- **SRC-OPENID4VP** - `current` - [OpenID for Verifiable Presentations 1.0 Final](https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html)
+  - Supports synthetic verifier-profile vectors only; no real keys, presentations, or interoperability.
+- **SRC-OPENID4VCI** - `current` - [OpenID for Verifiable Credential Issuance 1.0 Final](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0-final.html)
+  - Supports synthetic issuance-profile vectors only; no live issuance or trust governance.
+- **SRC-SIOPV2** - `watch` - [Self-Issued OpenID Provider v2 draft 13](https://openid.net/specs/openid-connect-self-issued-v2-1_0.html)
+  - Keeps the inactive implementer's draft explicitly watch-gated; supports synthetic vectors only.
+- **SRC-ASKAP-RACS-MID** - `current` - [ASKAP RACS-mid Data Release 2](https://data.csiro.au/collection/csiro%3A60981)
+  - Supports a zero-row readiness contract only; no query, download, or data ingestion occurs.
+- **SRC-NZ-PRIVACY** - `current` - [New Zealand Information Privacy Principles](https://www.privacy.org.nz/privacy-principles/)
+  - Keeps privacy compliance and legal interpretation exact-gated.
+- **SRC-TE-MANA-RARAUNGA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Māori data governance under Māori authority.

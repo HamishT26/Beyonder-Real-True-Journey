@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_additive_recovery",
+  "candidate_workaround": "Verify the intended head and divergence, then use an ordinary explicit-refspec push without force.",
+  "failure_signature": "A push wrapper requests an unsupported ff-only option after the local fast-forward already succeeded.",
+  "method_id": "V6518-M02",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "sibling_lane_isolation",
+    "privacy",
+    "same_owner_only",
+    "no_stage20_promotion"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Apply ff-only to merge or pull, not push; ordinary push already rejects non-fast-forward updates by default.",
+  "retained_negative_ids": [
+    "V6518-X1-N02"
+  ],
+  "rollback": "If the explicit push fails, retain local history and stop without force or reset.",
+  "scope_boundary": "Bounded Ilyra-owned workflow recovery only; no external or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use ordinary non-force push after a verified fast-forward",
+  "trigger_preconditions": [
+    "The owned branch is clean, its old head is ancestral to the verified source, and an explicit refspec is available."
+  ],
+  "validation_witness_ids": []
+}

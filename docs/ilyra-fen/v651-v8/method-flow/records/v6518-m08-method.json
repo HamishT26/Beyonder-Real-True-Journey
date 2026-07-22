@@ -1,0 +1,17 @@
+{
+  "approval_class": "safe_now_owner_scoped_test_recovery",
+  "candidate_workaround": "Use unittest discovery with the exact tests directory and filename.",
+  "failure_signature": "Unittest attempts to import a non-package tests directory and fails before discovery.",
+  "method_id": "V6518-M08",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": ["failure_retention", "test_attribution", "x1_integrity", "same_owner_only"],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use exact discovery when the tests directory has no package initializer.",
+  "retained_negative_ids": ["V6518-X1-N08"],
+  "rollback": "Give the import failure zero test credit and change no test file to disguise the invocation error.",
+  "scope_boundary": "Targeted x1 test invocation only; not canonical final validation or independent reproduction.",
+  "supersedes": [],
+  "title": "Discover non-package tests by exact filename",
+  "trigger_preconditions": ["The repository tests directory is not an importable Python package."],
+  "validation_witness_ids": []
+}

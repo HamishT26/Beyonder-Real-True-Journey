@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_read_only_owner_scoped_recovery",
+  "candidate_workaround": "Select the maximum candidate with an explicit key over the numeric similarity field.",
+  "failure_signature": "Tuple maximum selection falls through to incomparable payload dictionaries when numeric similarity scores tie.",
+  "method_id": "V6518-M05",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "novelty_audit_integrity",
+    "x1_source_integrity",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Every max or sort over scored records must declare a numeric key and never depend on payload comparability.",
+  "retained_negative_ids": [
+    "V6518-X1-N05"
+  ],
+  "rollback": "Retain the failed read-only probe with zero novelty credit and change no inherited proposal record.",
+  "scope_boundary": "Bounded lexical novelty inspection only; no scientific-novelty or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use score-only keys for lexical-neighbour selection",
+  "trigger_preconditions": [
+    "A collection of scored records may contain equal numeric scores and non-orderable payload objects."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now_owner_scoped_environment_recovery",
+  "candidate_workaround": "Use the verified Windows system-local New Zealand offset alongside UTC and record the Windows timezone name separately.",
+  "failure_signature": "Python raises a zone-info lookup error because the optional IANA tzdata package is absent on Windows.",
+  "method_id": "V6518-M07",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "timestamp_integrity",
+    "no_unrelated_installation",
+    "same_owner_only"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Do not assume Windows Python ships an IANA zone database; use a verified system-local offset or an already approved runtime.",
+  "retained_negative_ids": [
+    "V6518-X1-N07"
+  ],
+  "rollback": "Retain the failed pre-generation builder invocation and install no package or runtime.",
+  "scope_boundary": "Timestamp serialization recovery only; no external, scientific, or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Use verified Windows local time when optional IANA tzdata is absent",
+  "trigger_preconditions": [
+    "A Windows Python runtime lacks the optional IANA timezone database and the host timezone has been verified."
+  ],
+  "validation_witness_ids": []
+}
