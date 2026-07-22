@@ -2,9 +2,9 @@
 
 - Phase: v651-v7-special-cli-prep
 - Owner: Vesper Arlen
-- Methods: 9
-- Passing witnesses: 10
-- Failed witnesses retained: 11
+- Methods: 10
+- Passing witnesses: 11
+- Failed witnesses retained: 12
 
 ## Preferred methods
 
@@ -79,6 +79,14 @@
 - Recurrence guard: Validators invoked by file path must add the repository root before named test imports, and self-scanner fixtures must be classified or constructed without becoming data candidates.
 - Rollback: Leave the failed receipt immutable, patch only import and scanner-definition domains, regenerate the index manifest with both receipt exclusions, and rerun the authoritative evidence validator once.
 - Witnesses: V6517-SPECIAL-M09-WFAIL, V6517-SPECIAL-M09-WPASS, V6517-SPECIAL-M09-WFAIL-2, V6517-SPECIAL-M09-WPASS-2
+
+### V6517-SPECIAL-M10 — Anchor lifecycle path guards to phase-root directories
+
+- Trigger: A forbidden-lifecycle regex matches legitimate nested tooling directories whose names contain final.
+- Method: Anchor forbidden lifecycle checks to the phase-root closeout, seal, and final directories rather than matching every nested path segment containing the word final.
+- Recurrence guard: Lifecycle path guards must use a phase-root anchored directory expression and report the matched paths before stopping.
+- Rollback: Retain the failed wrapper at zero credit, change no staged content, and rerun only the anchored path classifier.
+- Witnesses: V6517-SPECIAL-M10-WFAIL, V6517-SPECIAL-M10-WPASS
 
 ## Retained boundary
 

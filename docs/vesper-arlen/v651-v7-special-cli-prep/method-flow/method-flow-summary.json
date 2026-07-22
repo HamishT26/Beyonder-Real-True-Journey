@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 9,
-    "recommendations": 9,
-    "state_events": 27,
+    "methods": 10,
+    "recommendations": 10,
+    "state_events": 30,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 9,
+      "preferred": 10,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 11,
-      "pass": 10
+      "fail": 12,
+      "pass": 11
     },
-    "witnesses": 21
+    "witnesses": 23
   },
   "owner": "Vesper Arlen",
   "phase": "v651-v7-special-cli-prep",
@@ -158,6 +158,21 @@
         "V6517-SPECIAL-M09-WFAIL-2",
         "V6517-SPECIAL-M09-WPASS-2"
       ]
+    },
+    {
+      "candidate_workaround": "Anchor forbidden lifecycle checks to the phase-root closeout, seal, and final directories rather than matching every nested path segment containing the word final.",
+      "method_id": "V6517-SPECIAL-M10",
+      "recurrence_guard": "Lifecycle path guards must use a phase-root anchored directory expression and report the matched paths before stopping.",
+      "rollback": "Retain the failed wrapper at zero credit, change no staged content, and rerun only the anchored path classifier.",
+      "scope_boundary": "Bounded owner-local staged-path classification only.",
+      "title": "Anchor lifecycle path guards to phase-root directories",
+      "trigger_preconditions": [
+        "A forbidden-lifecycle regex matches legitimate nested tooling directories whose names contain final."
+      ],
+      "validation_witness_ids": [
+        "V6517-SPECIAL-M10-WFAIL",
+        "V6517-SPECIAL-M10-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -171,7 +186,8 @@
     "V6517-SPECIAL-M07-WFAIL",
     "V6517-SPECIAL-M08-WFAIL",
     "V6517-SPECIAL-M09-WFAIL",
-    "V6517-SPECIAL-M09-WFAIL-2"
+    "V6517-SPECIAL-M09-WFAIL-2",
+    "V6517-SPECIAL-M10-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true

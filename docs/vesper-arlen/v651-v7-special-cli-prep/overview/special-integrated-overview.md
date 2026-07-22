@@ -4,7 +4,7 @@
 
 This additive special continuation prepared eight future Codex CLI seat contracts without creating, naming, or launching any seat. All eight preparation audits passed and all eight launch-mode probes refused because launch proofs remained false. One hundred preregistered synthetic request mutations were rejected. The immediate authorized continuation is Ilyra Fen v651-v8. The expanded later sixteen-seat route remains advisory where its submitted numbering conflicts.
 
-The thirty core proposals resolve as 23 completed, 5 represented, 1 open_gap, and 1 exact_gate. Effective retained negatives are 7,569: 7,458 inherited from the sealed ordinary v651-v7 phase, five x1 operational failures, six x2 operational failures, and one hundred rejected synthetic mutations. Fifty-nine open gaps and sixty exact gates remain open. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+The thirty core proposals resolve as 23 completed, 5 represented, 1 open_gap, and 1 exact_gate. Effective retained negatives are 7,570: 7,458 inherited from the sealed ordinary v651-v7 phase, five x1 operational failures, six x2 operational failures, one hundred rejected synthetic mutations, and one post-evidence wrapper failure. Fifty-nine open gaps and sixty exact gates remain open. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
 
 ## Strict lifecycle and lane
 

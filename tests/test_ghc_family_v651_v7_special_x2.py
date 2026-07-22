@@ -20,7 +20,7 @@ class V651V7SpecialX2Tests(unittest.TestCase):
     def test_core_outcomes_use_only_permitted_vocabulary(self) -> None:
         truth = load("truth/phase-truth.json")
         self.assertEqual(truth["outcomes"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(truth["effective_negatives"], 7569)
+        self.assertEqual(truth["effective_negatives"], 7570)
         self.assertEqual((truth["effective_open_gaps"], truth["effective_exact_gates"]), (59, 60))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
 
@@ -55,9 +55,9 @@ class V651V7SpecialX2Tests(unittest.TestCase):
 
     def test_method_flow_retains_two_baton_failures(self) -> None:
         summary = load("method-flow/method-flow-summary.json")
-        self.assertEqual(summary["counts"]["methods"], 9)
-        self.assertEqual(summary["counts"]["states"]["preferred"], 9)
-        self.assertEqual(summary["counts"]["witness_results"], {"fail": 11, "pass": 10})
+        self.assertEqual(summary["counts"]["methods"], 10)
+        self.assertEqual(summary["counts"]["states"]["preferred"], 10)
+        self.assertEqual(summary["counts"]["witness_results"], {"fail": 12, "pass": 11})
         self.assertIn("V6517-SPECIAL-M06-WFAIL-2", summary["retained_failed_witnesses"])
 
     def test_baton_and_pointer_pass_persistent_delivery_guard(self) -> None:
