@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Read aggregate chain counts from the frozen provenance index and proposal rows from the proposal ledger.",
+  "failure_signature": "A validator asks proposals.json for a chain-total field that is owned by frozen-chain-proposal-index.json.",
+  "method_id": "V6518-SPECIAL-M07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_rewriting_frozen_x1",
+    "single_authoritative_field_owner",
+    "retain_failed_validator_aggregate"
+  ],
+  "recommendation_state": "observed",
+  "recurrence_guard": "Resolve each count from its declared frozen authoritative artifact before writing a validator assertion.",
+  "retained_negative_ids": [
+    "V6518-SPECIAL-X2-N04"
+  ],
+  "rollback": "Leave the frozen x1 files unchanged and correct only the validator lookup.",
+  "scope_boundary": "Proposal-chain validator bookkeeping only.",
+  "supersedes": [],
+  "title": "Bind aggregate assertions to their frozen authoritative artifact",
+  "trigger_preconditions": [
+    "a validator combines row-level and aggregate proposal evidence",
+    "the fields live in separate immutable artifacts"
+  ],
+  "validation_witness_ids": []
+}

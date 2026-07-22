@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Read each subcommand help, use record and witness with their exact file options, then inspect current state before requesting a transition.",
+  "failure_signature": "Invented Method Flow subcommand aliases fail, while a passing witness can auto-promote a method to validated and make a repeated validated transition invalid.",
+  "method_id": "V6518-SPECIAL-M05",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "preserve_failed_witnesses",
+    "no_duplicate_records",
+    "no_unnecessary_replay"
+  ],
+  "recommendation_state": "observed",
+  "recurrence_guard": "Interrogate exact help and current ledger state before every Method Flow mutation.",
+  "retained_negative_ids": [
+    "V6518-SPECIAL-X2-N01",
+    "V6518-SPECIAL-X2-N02"
+  ],
+  "rollback": "Stop after a failed transition, inspect the ledger, and apply only the missing state change.",
+  "scope_boundary": "Method Flow bookkeeping correctness only.",
+  "supersedes": [],
+  "title": "Use exact Method Flow subcommands and inspect auto-transition state",
+  "trigger_preconditions": [
+    "Method Flow ledger append or promotion",
+    "runner interface or current method state is not already materialized in context"
+  ],
+  "validation_witness_ids": []
+}

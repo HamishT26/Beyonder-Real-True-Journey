@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Run the native ancestry command first, capture its exit code in a scalar, then construct the PowerShell object.",
+  "failure_signature": "A semicolon-bearing native command was embedded inside a PowerShell hash-literal expression and produced a missing-parenthesis parser error.",
+  "method_id": "V6518-SPECIAL-M04",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_destructive_retry",
+    "no_sibling_mutation",
+    "no_private_path_publication"
+  ],
+  "recommendation_state": "observed",
+  "recurrence_guard": "Do not embed native commands with statement separators inside hash-literal value expressions.",
+  "retained_negative_ids": [
+    "V6518-SPECIAL-LIFE-N01"
+  ],
+  "rollback": "Use one scalar probe per command and stop without mutation if any exit code is nonzero.",
+  "scope_boundary": "Bounded owner-local PowerShell and Git evidence only.",
+  "supersedes": [],
+  "title": "Capture native exit codes before PowerShell object construction",
+  "trigger_preconditions": [
+    "Windows PowerShell 5.1",
+    "native command success must be included in a structured receipt"
+  ],
+  "validation_witness_ids": []
+}

@@ -21,6 +21,11 @@ ALLOWED = (
     "scripts/ghc_family_v651_v8_special_stage_validate.py",
     "tests/test_ghc_family_v651_v8_special_x1.py",
 )
+ALLOWED_PREFIXES = (
+    "scripts/build_ghc_family_v651_v8_special_",
+    "scripts/ghc_family_v651_v8_special_",
+    "tests/test_ghc_family_v651_v8_special_",
+)
 PATTERNS = {
     "raw_uuid": re.compile(r"(?i)\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b"),
     "private_local_path": re.compile(r"(?i)(?:[a-z]:\\users\\|/users/|/home/)[^\s\"'<>]+"),
@@ -31,6 +36,7 @@ PATTERNS = {
     ),
 }
 SCANNER_DEFINITIONS = {
+    "scripts/ghc_family_v651_v8_special_evidence_validate.py",
     "scripts/ghc_family_v651_v8_special_integrity.py",
     "scripts/ghc_family_v651_v8_special_stage_validate.py",
 }
@@ -54,7 +60,11 @@ def main() -> int:
     if output_rel not in staged and output.exists():
         staged.append(output_rel)
         staged.sort()
-    out_of_scope = [path for path in staged if not (path.startswith(PHASE) or path in ALLOWED)]
+    out_of_scope = [
+        path
+        for path in staged
+        if not (path.startswith(PHASE) or path in ALLOWED or any(path.startswith(prefix) for prefix in ALLOWED_PREFIXES))
+    ]
     x2_markers = ("/x2-", "/evidence/", "/closeout/", "/seal/", "/final/")
     x2_in_x1 = [path for path in staged if args.mode == "x1" and any(marker in path.lower() for marker in x2_markers)]
     privacy_hits = []

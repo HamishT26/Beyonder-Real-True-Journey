@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Classify exact scanner implementation files as definition surfaces while continuing to scan every public payload file.",
+  "failure_signature": "An exact staged privacy review treats the validator's private-path regex literal as a confirmed private-path payload.",
+  "method_id": "V6518-SPECIAL-M08",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_payload_exemption",
+    "exact_definition_allowlist",
+    "zero_confirmed_hit_required"
+  ],
+  "recommendation_state": "observed",
+  "recurrence_guard": "Keep a minimal exact scanner-definition allowlist and report it separately from confirmed payload hits.",
+  "retained_negative_ids": [
+    "V6518-SPECIAL-X2-N05"
+  ],
+  "rollback": "Remove the definition exception if the file begins carrying public payload rather than scanner code.",
+  "scope_boundary": "Five-class staged privacy scanning only.",
+  "supersedes": [],
+  "title": "Separate scanner definitions from confirmed staged payload hits",
+  "trigger_preconditions": [
+    "a staged validator contains the literal patterns it applies",
+    "privacy disposition must distinguish definitions from payload"
+  ],
+  "validation_witness_ids": []
+}
