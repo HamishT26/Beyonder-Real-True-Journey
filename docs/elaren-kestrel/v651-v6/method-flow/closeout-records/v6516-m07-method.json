@@ -1,0 +1,13 @@
+{
+  "candidate_workaround": "Exclude absent lifecycle self-outputs from first-pass JSON credit, materialize them, then parse them normally on the exact second staged review.",
+  "failure_signature": "A first-pass staged review treats not-yet-written self-excluded JSON outputs as empty JSON inputs.",
+  "method_id": "V6516-M07",
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Separate path-set declaration from content credit for self-referential lifecycle receipts and require a later exact parse before commit.",
+  "retained_negative_ids": [
+    "V6516-X2-N02"
+  ],
+  "rollback": "Keep the final commit blocked and retain the invalid first review until every self-output exists and parses.",
+  "scope_boundary": "Staged-review orchestration only; no scientific, authority, privacy-complete, or independent-reproduction credit.",
+  "title": "Defer self-excluded output parsing until materialization"
+}

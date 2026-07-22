@@ -1,0 +1,13 @@
+{
+  "candidate_workaround": "Use one single-quoted alternation expression or exact LiteralPath reads for bounded Windows diagnostics.",
+  "failure_signature": "A PowerShell diagnostic embeds an unterminated double-quoted ripgrep alternation and fails before reading files.",
+  "method_id": "V6516-M08",
+  "recommendation_state": "preferred",
+  "recurrence_guard": "Avoid nesting JSON-like double quotes inside PowerShell command strings passed through an orchestration wrapper.",
+  "retained_negative_ids": [
+    "V6516-X2-N03"
+  ],
+  "rollback": "Give the parser failure zero evidence credit and rerun only the bounded read with a quote-safe expression.",
+  "scope_boundary": "Local diagnostic quoting only; no repository-content or completion claim.",
+  "title": "Single-quoted PowerShell diagnostic alternation"
+}

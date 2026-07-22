@@ -1,0 +1,91 @@
+{
+  "aggregate_with_evidence": {
+    "fail": 8,
+    "methods": 8,
+    "pass": 8,
+    "preferred": 8
+  },
+  "boundary": "Owner-scoped software, symbolic, structural, and synthetic evidence only. No empirical confirmation, participant result, production readiness, professional authority, legal or cultural ratification, Māori authority, independent reproduction, or Stage 20 credit.",
+  "counts": {
+    "fail": 2,
+    "methods": 2,
+    "pass": 2,
+    "preferred": 2
+  },
+  "methods": [
+    {
+      "candidate_workaround": "Exclude absent lifecycle self-outputs from first-pass JSON credit, materialize them, then parse them normally on the exact second staged review.",
+      "failure_signature": "A first-pass staged review treats not-yet-written self-excluded JSON outputs as empty JSON inputs.",
+      "method_id": "V6516-M07",
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Separate path-set declaration from content credit for self-referential lifecycle receipts and require a later exact parse before commit.",
+      "retained_negative_ids": [
+        "V6516-X2-N02"
+      ],
+      "rollback": "Keep the final commit blocked and retain the invalid first review until every self-output exists and parses.",
+      "scope_boundary": "Staged-review orchestration only; no scientific, authority, privacy-complete, or independent-reproduction credit.",
+      "title": "Defer self-excluded output parsing until materialization"
+    },
+    {
+      "candidate_workaround": "Use one single-quoted alternation expression or exact LiteralPath reads for bounded Windows diagnostics.",
+      "failure_signature": "A PowerShell diagnostic embeds an unterminated double-quoted ripgrep alternation and fails before reading files.",
+      "method_id": "V6516-M08",
+      "recommendation_state": "preferred",
+      "recurrence_guard": "Avoid nesting JSON-like double quotes inside PowerShell command strings passed through an orchestration wrapper.",
+      "retained_negative_ids": [
+        "V6516-X2-N03"
+      ],
+      "rollback": "Give the parser failure zero evidence credit and rerun only the bounded read with a quote-safe expression.",
+      "scope_boundary": "Local diagnostic quoting only; no repository-content or completion claim.",
+      "title": "Single-quoted PowerShell diagnostic alternation"
+    }
+  ],
+  "schema": "ghc.family.v651-v6.closeout-method-flow.v1",
+  "valid": true,
+  "witnesses": [
+    {
+      "independent_reproduction": false,
+      "method_id": "V6516-M07",
+      "observed": "The first staged review returned invalid with two JSONDecodeError rows for absent self-excluded outputs.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6516-X2-N02"
+      ],
+      "same_owner_only": true,
+      "witness_id": "V6516-M07-WFAIL"
+    },
+    {
+      "independent_reproduction": false,
+      "method_id": "V6516-M07",
+      "observed": "After self-output materialization, the exact staged review parsed every owner JSON file and returned valid.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6516-X2-N02"
+      ],
+      "same_owner_only": true,
+      "witness_id": "V6516-M07-WPASS"
+    },
+    {
+      "independent_reproduction": false,
+      "method_id": "V6516-M08",
+      "observed": "PowerShell rejected the unterminated diagnostic pattern before ripgrep read any file.",
+      "result": "fail",
+      "retained_negative_ids": [
+        "V6516-X2-N03"
+      ],
+      "same_owner_only": true,
+      "witness_id": "V6516-M08-WFAIL"
+    },
+    {
+      "independent_reproduction": false,
+      "method_id": "V6516-M08",
+      "observed": "The single-quoted bounded ripgrep expression returned the exact expected occurrences without a parser fault.",
+      "result": "pass",
+      "retained_negative_ids": [
+        "V6516-X2-N03"
+      ],
+      "same_owner_only": true,
+      "witness_id": "V6516-M08-WPASS"
+    }
+  ]
+}
