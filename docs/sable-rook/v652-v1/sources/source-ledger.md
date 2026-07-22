@@ -1,0 +1,74 @@
+# v652-v1 source ledger
+
+- **SRC-W3C-PROV** - `stable` - [PROV-O: The PROV Ontology](https://www.w3.org/TR/prov-o/)
+  - Supports typed lineage and invalidation vocabulary only.
+- **SRC-GIT-CRUFT** - `current` - [Git cruft packs](https://git-scm.com/docs/gitformat-pack#_cruft_packs)
+  - Supports disposable retention fixtures only; no canonical object deletion.
+- **SRC-OCI-DISTRIBUTION** - `current` - [OCI Distribution Specification](https://github.com/opencontainers/distribution-spec/blob/main/spec.md)
+  - Supports synthetic referrer and artifact-manifest structure only.
+- **SRC-OCI-IMAGE** - `current` - [OCI Image Format Specification](https://github.com/opencontainers/image-spec/blob/main/manifest.md)
+  - Anchors subject and artifact manifest fields only.
+- **SRC-BELINFANTE** - `stable` - [On the spin angular momentum of mesons](https://doi.org/10.1016/S0031-8914(40)90091-X)
+  - Supports formal stress-tensor improvement vocabulary only.
+- **SRC-DIRAC-BERGMANN** - `stable` - [Lectures on Quantum Mechanics](https://store.doverpublications.com/products/9780486417134)
+  - Supports formal constrained-Hamiltonian vocabulary only.
+- **SRC-NOETHER** - `stable` - [Invariant variation problems](https://arxiv.org/abs/physics/0503066)
+  - Supports Noether identity vocabulary only.
+- **SRC-HADAMARD** - `stable` - [Micro-local approach to the Hadamard condition in quantum field theory on curved space-time](https://doi.org/10.1007/BF02104546)
+  - Supports typed Hadamard-domain obligations only.
+- **SRC-GMUT-CANONICAL** - `stable` - [Canonical GMUT scalar-tensor and EFT scaffold](docs/eiren-kestrel/v641-v6/physics/equation-register-covenant.json)
+  - Repository context only; not empirical evidence or canon.
+- **SRC-WALD-GR** - `stable` - [General Relativity](https://press.uchicago.edu/ucp/books/book/chicago/G/bo5952261.html)
+  - Supports covariance and Bianchi context only.
+- **SRC-C2PA** - `current` - [C2PA Technical Specification](https://spec.c2pa.org/specifications/specifications/2.2/specs/C2PA_Specification.html)
+  - Supports bounded manifest fixtures only; no provenance completeness.
+- **SRC-SARIF** - `stable` - [Static Analysis Results Interchange Format Version 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html)
+  - Supports structural result-lineage fixtures only.
+- **SRC-REPRODUCIBLE-BUILDS** - `current` - [Reproducible Builds SOURCE_DATE_EPOCH](https://reproducible-builds.org/docs/source-date-epoch/)
+  - Supports bounded environment controls only; no independent reproduction.
+- **SRC-DEBIAN-REPOSITORY** - `current` - [Debian repository format](https://wiki.debian.org/DebianRepository/Format)
+  - Supports synthetic repository metadata fixtures only.
+- **SRC-PYPA-WHEEL** - `current` - [Binary distribution format](https://packaging.python.org/en/latest/specifications/binary-distribution-format/)
+  - Supports synthetic wheel structure only; no installation.
+- **SRC-ZIP-APPNOTE** - `current` - [APPNOTE.TXT ZIP File Format Specification](https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT)
+  - Supports disposable ZIP64 byte fixtures only.
+- **SRC-HDF5** - `current` - [HDF5 File Format Specification](https://support.hdfgroup.org/documentation/hdf5/latest/_f_m_t3.html)
+  - Supports disposable HDF5 byte fixtures only.
+- **SRC-PDF-REFERENCE** - `stable` - [PDF Reference 1.7](https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/pdfreference1.7old.pdf)
+  - Supports bounded incremental-update structure only.
+- **SRC-ELF-GABI** - `current` - [System V ABI ELF gABI](https://gabi.xinuos.com/)
+  - Supports synthetic ELF note fixtures only.
+- **SRC-MULTIFORMATS** - `current` - [Multiformats CID specification](https://github.com/multiformats/cid)
+  - Supports synthetic CID fixtures only.
+- **SRC-ISO15489** - `stable` - [ISO 15489-1 Records management](https://www.iso.org/standard/62542.html)
+  - Supplies records-management context only; no court or professional authority.
+- **SRC-NZ-COURTS** - `current` - [Courts of New Zealand](https://www.courtsofnz.govt.nz/)
+  - Keeps court procedure and authority outside the software packet.
+- **SRC-CONSORT** - `current` - [CONSORT Statement](https://www.consort-statement.org/)
+  - Supports matched-arm design vocabulary only; no participant study.
+- **SRC-RFC9773** - `stable` - [RFC 9773 ACME Renewal Information Extension](https://www.rfc-editor.org/rfc/rfc9773.html)
+  - Supports synthetic renewal-information vectors only.
+- **SRC-RFC8555** - `stable` - [RFC 8555 Automatic Certificate Management Environment](https://www.rfc-editor.org/rfc/rfc8555.html)
+  - Anchors base ACME semantics only.
+- **SRC-RFC-SCIM-CURSOR** - `stable` - [SCIM Protocol Extension for Cursor-Based Pagination](https://www.rfc-editor.org/rfc/rfc9865.html)
+  - Supports synthetic cursor-pagination vectors only; no live identity service.
+- **SRC-RFC7644** - `stable` - [RFC 7644 System for Cross-domain Identity Management Protocol](https://www.rfc-editor.org/rfc/rfc7644.html)
+  - Anchors base SCIM semantics only.
+- **SRC-FIDO-CREDENTIAL-EXCHANGE** - `draft` - [FIDO Credential Exchange Specifications](https://fidoalliance.org/specifications-overview/)
+  - Keeps credential exchange draft-gated and nonproduction.
+- **SRC-WCAG22** - `stable` - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural checks; complete conformance remains reserved.
+- **SRC-WAI-APG** - `current` - [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
+  - Supports keyboard and naming structure only.
+- **SRC-WEB-ANNOTATION** - `stable` - [Web Annotation Data Model](https://www.w3.org/TR/annotation-model/)
+  - Supports synthetic selector provenance only.
+- **SRC-WIDOM-LINE** - `stable` - [Widom line and the liquid-liquid critical point for the TIP5P model of water](https://doi.org/10.1073/pnas.0704299104)
+  - Supports crossover and response-maximum vocabulary only; psyche conversion is refused.
+- **SRC-MULTIVERSE** - `stable` - [Increasing transparency through a multiverse analysis](https://doi.org/10.1177/1745691616658637)
+  - Supports structural analysis-decision auditing only.
+- **SRC-PANSTARRS-DR2** - `current` - [Pan-STARRS1 Data Release 2](https://catalogs.mast.stsci.edu/panstarrs/)
+  - Supports a zero-row readiness contract only; no query or download occurs.
+- **SRC-NZ-PRIVACY** - `current` - [New Zealand Information Privacy Principles](https://www.privacy.org.nz/privacy-principles/)
+  - Keeps privacy compliance and legal interpretation exact-gated.
+- **SRC-TE-MANA-RARAUNGA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Māori data governance under Māori authority.

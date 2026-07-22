@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_additive_recovery",
+  "candidate_workaround": "Assign foreach results to an array and pipe only that array.",
+  "failure_signature": "A statement-level foreach block is piped directly and fails at parse time.",
+  "method_id": "V6521-M03",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "sibling_lane_isolation",
+    "privacy",
+    "same_owner_only",
+    "no_stage20_promotion"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Never append a pipeline directly to statement-level foreach in Windows PowerShell 5.1.",
+  "retained_negative_ids": [
+    "V6521-X1-N03"
+  ],
+  "rollback": "Retain the parser failure; it changed no files, branches, or external state.",
+  "scope_boundary": "Bounded Sable-owned workflow recovery only; no external or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Materialize foreach output before piping in Windows PowerShell 5.1",
+  "trigger_preconditions": [
+    "A Windows PowerShell 5.1 wrapper serializes rows from a statement-level foreach loop."
+  ],
+  "validation_witness_ids": []
+}
