@@ -1,0 +1,26 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Run bounded local revision probes first and one separate live ls-remote probe second.",
+  "failure_signature": "A combined local status, ancestry, and live-remote wrapper exceeded the bounded command timeout.",
+  "method_id": "V6518-SPECIAL-M02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_destructive_retry",
+    "no_sibling_mutation",
+    "no_private_path_publication"
+  ],
+  "recommendation_state": "observed",
+  "recurrence_guard": "Do not place ls-remote and broad worktree status in the same timed wrapper.",
+  "retained_negative_ids": [
+    "V6518-SPECIAL-X1-N02"
+  ],
+  "rollback": "Retain the previous verified receipt and stop without mutation if either bounded probe fails.",
+  "scope_boundary": "Bounded owner-local workflow evidence only.",
+  "supersedes": [],
+  "title": "Separate live-remote equality from local source verification",
+  "trigger_preconditions": [
+    "large Windows Git worktree",
+    "live-remote lookup and local checks combined"
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now",
+  "candidate_workaround": "Assign the foreach output to an array variable, then pipe the variable.",
+  "failure_signature": "Windows PowerShell 5.1 reports an empty pipe element when a statement-level foreach block is piped directly.",
+  "method_id": "V6518-SPECIAL-M01",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "no_destructive_retry",
+    "no_sibling_mutation",
+    "no_private_path_publication"
+  ],
+  "recommendation_state": "observed",
+  "recurrence_guard": "Reject wrappers containing a closing foreach block immediately followed by a pipeline token.",
+  "retained_negative_ids": [
+    "V6518-SPECIAL-X1-N01",
+    "V6518-SPECIAL-X1-N04"
+  ],
+  "rollback": "Return to separate scalar probes if the assigned-array form changes output semantics.",
+  "scope_boundary": "Bounded owner-local workflow evidence only.",
+  "supersedes": [],
+  "title": "Preassign PowerShell statement-loop output before piping",
+  "trigger_preconditions": [
+    "Windows PowerShell 5.1",
+    "statement-level foreach output must feed another pipeline"
+  ],
+  "validation_witness_ids": []
+}

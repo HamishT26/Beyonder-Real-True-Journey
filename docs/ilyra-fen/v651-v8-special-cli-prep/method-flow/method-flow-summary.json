@@ -1,0 +1,82 @@
+{
+  "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
+  "counts": {
+    "methods": 3,
+    "recommendations": 3,
+    "state_events": 9,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 3,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 4,
+      "pass": 3
+    },
+    "witnesses": 7
+  },
+  "owner": "Ilyra Fen",
+  "phase": "v651-v8-special-cli-prep",
+  "preferred_methods": [
+    {
+      "candidate_workaround": "Assign the foreach output to an array variable, then pipe the variable.",
+      "method_id": "V6518-SPECIAL-M01",
+      "recurrence_guard": "Reject wrappers containing a closing foreach block immediately followed by a pipeline token.",
+      "rollback": "Return to separate scalar probes if the assigned-array form changes output semantics.",
+      "scope_boundary": "Bounded owner-local workflow evidence only.",
+      "title": "Preassign PowerShell statement-loop output before piping",
+      "trigger_preconditions": [
+        "Windows PowerShell 5.1",
+        "statement-level foreach output must feed another pipeline"
+      ],
+      "validation_witness_ids": [
+        "V6518-SPECIAL-W01F2",
+        "V6518-SPECIAL-W01F",
+        "V6518-SPECIAL-W01P"
+      ]
+    },
+    {
+      "candidate_workaround": "Run bounded local revision probes first and one separate live ls-remote probe second.",
+      "method_id": "V6518-SPECIAL-M02",
+      "recurrence_guard": "Do not place ls-remote and broad worktree status in the same timed wrapper.",
+      "rollback": "Retain the previous verified receipt and stop without mutation if either bounded probe fails.",
+      "scope_boundary": "Bounded owner-local workflow evidence only.",
+      "title": "Separate live-remote equality from local source verification",
+      "trigger_preconditions": [
+        "large Windows Git worktree",
+        "live-remote lookup and local checks combined"
+      ],
+      "validation_witness_ids": [
+        "V6518-SPECIAL-W02F",
+        "V6518-SPECIAL-W02P"
+      ]
+    },
+    {
+      "candidate_workaround": "Check HEAD, branch, upstream, and ancestry separately; then run one dedicated status command.",
+      "method_id": "V6518-SPECIAL-M03",
+      "recurrence_guard": "Keep broad status as its own command with a dedicated timeout budget.",
+      "rollback": "Use diff, cached-diff, and bounded untracked probes only as partial evidence until full status completes.",
+      "scope_boundary": "Bounded owner-local workflow evidence only.",
+      "title": "Separate broad worktree cleanliness from ancestry arithmetic",
+      "trigger_preconditions": [
+        "large sparse-capable repository",
+        "status and ancestry combined"
+      ],
+      "validation_witness_ids": [
+        "V6518-SPECIAL-W03F",
+        "V6518-SPECIAL-W03P"
+      ]
+    }
+  ],
+  "retained_failed_witnesses": [
+    "V6518-SPECIAL-W01F2",
+    "V6518-SPECIAL-W01F",
+    "V6518-SPECIAL-W02F",
+    "V6518-SPECIAL-W03F"
+  ],
+  "schema": "ghc.family.method-flow-state.summary.v1",
+  "valid": true
+}
