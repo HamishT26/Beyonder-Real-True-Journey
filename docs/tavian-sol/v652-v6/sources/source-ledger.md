@@ -1,0 +1,70 @@
+# v652-v6 source ledger
+
+- **SRC-MS-CAB** - `current` - [Microsoft Cabinet File Format](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cab/)
+  - Supports disposable cabinet bytes only.
+- **SRC-JAVA-SERIAL** - `stable` - [Java Object Serialization Stream Protocol](https://docs.oracle.com/en/java/javase/17/docs/specs/serialization/protocol.html)
+  - Supports inert synthetic stream tokens only; no class loading or object instantiation.
+- **SRC-ANDROID-DEX** - `current` - [Android Dalvik executable format](https://source.android.com/docs/core/runtime/dex-format)
+  - Supports disposable DEX structures only.
+- **SRC-PY-MARSHAL** - `current` - [Python marshal internal object serialization](https://docs.python.org/3/library/marshal.html)
+  - Supports version-bounded inert marshal fixtures only.
+- **SRC-PEP552** - `stable` - [PEP 552 deterministic pycs](https://peps.python.org/pep-0552/)
+  - Supports pyc invalidation-header vocabulary only.
+- **SRC-MS-CFB** - `current` - [Microsoft Compound File Binary File Format](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/50708a61-81d9-49c8-ab9c-43c98a795242)
+  - Supports disposable compound-file bytes only.
+- **SRC-EXT4** - `current` - [Linux ext4 on-disk layout](https://www.kernel.org/doc/html/latest/filesystems/ext4/overview.html)
+  - Supports synthetic non-mounted file-system structures only.
+- **SRC-ECMA167** - `stable` - [ECMA-167 volume and file structure](https://ecma-international.org/publications-and-standards/standards/ecma-167/)
+  - Supports disposable volume descriptors only.
+- **SRC-QOI** - `stable` - [Quite OK Image Format 1.0](https://qoiformat.org/qoi-specification.pdf)
+  - Supports synthetic image bytes only.
+- **SRC-PDF20** - `current` - [ISO 32000-2 PDF 2.0](https://pdfa.org/resource/iso-32000-pdf/)
+  - Supports disposable non-rendered PDF structures only.
+- **SRC-BEP3** - `stable` - [BitTorrent BEP 3 and bencoding](https://www.bittorrent.org/beps/bep_0003.html)
+  - Supports nonnetwork synthetic bencoded values only.
+- **SRC-ICC1** - `current` - [ICC.1:2022 profile format](https://www.color.org/specifications/ICC.1-2022-05.pdf)
+  - Supports disposable colour-profile bytes only.
+- **SRC-ION** - `current` - [Amazon Ion binary encoding](https://amazon-ion.github.io/ion-docs/docs/binary.html)
+  - Supports synthetic Ion streams only.
+- **SRC-LOVELOCK1971** - `stable` - [The Einstein tensor and its generalizations](https://doi.org/10.1063/1.1665613)
+  - Supports formal curvature-tensor vocabulary only.
+- **SRC-GOURGOULHON31** - `stable` - [3+1 Formalism and Bases of Numerical Relativity](https://arxiv.org/abs/gr-qc/0703035)
+  - Supports formal hypersurface-projection vocabulary only.
+- **SRC-FRIEDMANN1922** - `stable` - [Über die Krümmung des Raumes](https://cds.cern.ch/record/420425/)
+  - Supports formal homogeneous-cosmology vocabulary only.
+- **SRC-OV1939** - `stable` - [On Massive Neutron Cores](https://doi.org/10.1103/PhysRev.55.374)
+  - Supports formal hydrostatic-equilibrium vocabulary only.
+- **SRC-KERRSCHILD1965** - `stable` - [Some algebraically degenerate solutions of Einstein's gravitational field equations](https://cir.nii.ac.jp/crid/1360576121806699008)
+  - Supports formal metric-ansatz vocabulary only.
+- **SRC-WCAG22-HELP** - `current` - [WCAG 2.2 Consistent Help](https://www.w3.org/WAI/WCAG22/Understanding/consistent-help)
+  - Supports structural relative-order checks across synthetic page sets; complete conformance remains reserved.
+- **SRC-RFC6350** - `stable` - [RFC 6350 vCard Format Specification](https://www.rfc-editor.org/info/rfc6350/)
+  - Supports disposable synthetic vCards only; no real contact, directory, message, account, or network exchange.
+- **SRC-PENCINA2008** - `stable` - [Evaluating the added predictive ability of a new marker](https://doi.org/10.1002/sim.2929)
+  - Supports discrimination-improvement obligations only; clinical utility remains external.
+- **SRC-NATTINO2014** - `stable` - [A new calibration test and a reappraisal of the calibration belt](https://pubmed.ncbi.nlm.nih.gov/24497413/)
+  - Supports calibration-belt obligations only.
+- **SRC-DAVIS2006** - `stable` - [The relationship between Precision-Recall and ROC curves](https://doi.org/10.1145/1143844.1143874)
+  - Supports precision-recall obligations only.
+- **SRC-VOVK2005** - `stable` - [Algorithmic Learning in a Random World](https://link.springer.com/book/10.1007/b106715)
+  - Supports conformal-prediction obligation vocabulary only.
+- **SRC-WMO-OBS** - `current` - [WMO Guide to Instruments and Methods of Observation WMO-No. 8](https://community.wmo.int/site/knowledge-hub/programmes-and-initiatives/instruments-and-methods-of-observation-programme-imop/guide-instruments-and-methods-of-observation-wmo-no-8-0)
+  - Supplies learning context only; no environmental-monitoring competence or authority.
+- **SRC-EPA-AIR-QA** - `current` - [US EPA ambient-air monitoring quality assurance guidance](https://www.epa.gov/amtic/ambient-air-monitoring-quality-assurance-guidance-documents)
+  - Supports synthetic quality-workflow vocabulary only; no operational or professional authority.
+- **SRC-SPIFFE** - `current` - [SPIFFE Identity and Verifiable Identity Document](https://spiffe.io/docs/latest/spiffe-specs/spiffe-id/)
+  - Supports synthetic identifiers and SVID metadata only; no real credentials or workloads.
+- **SRC-MACAROONS** - `stable` - [Macaroons: Cookies with Contextual Caveats for Decentralized Authorization](https://research.google/pubs/macaroons-cookies-with-contextual-caveats-for-decentralized-authorization-in-the-cloud/)
+  - Supports synthetic caveat graphs only; no real root keys or services.
+- **SRC-SAML2** - `stable` - [SAML 2.0 Assertions and Protocols](https://docs.oasis-open.org/security/saml/v2.0/saml-core-2.0-os.pdf)
+  - Supports nonnetwork synthetic artifact-resolution vectors only.
+- **SRC-SUZAKU-ARCHIVE** - `current` - [NASA HEASARC Suzaku Archive](https://heasarc.gsfc.nasa.gov/docs/suzaku/archive/suza_archivestart.html)
+  - Supports a zero-row adapter contract only; no query or download occurs.
+- **SRC-SUZAKU-MASTER** - `current` - [NASA HEASARC Suzaku Master Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/suzaku/suzamaster.html)
+  - Supplies schema and provenance context only; no observation occurs.
+- **SRC-DOC-CITIZEN-MARINE** - `current` - [DOC community marine citizen-science tools](https://www.doc.govt.nz/news/media-releases/2025-media-releases/from-laptop-to-tidepool-always-be-naturing-with-new-ways-to-safeguard-marine-life/)
+  - Supplies public programme context only; no observation, consent, privacy, legal, cultural, data-governance, affected-party, iwi, hapū, or Māori-authority decision.
+- **SRC-MAORI-DATA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Māori data decisions with Māori authority.
+- **SRC-PRIVACY-NZ** - `current` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/31/en/latest/)
+  - Keeps legal interpretation, disclosure, and remedy exact-gated.
