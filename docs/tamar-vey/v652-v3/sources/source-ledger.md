@@ -1,0 +1,70 @@
+# v652-v3 source ledger
+
+- **SRC-BIGTIFF** - `current` - [LibTIFF BigTIFF design](https://libtiff.gitlab.io/libtiff/specification/bigtiff.html)
+  - Supports synthetic version-43 and IFD8 fixtures only.
+- **SRC-GLTF** - `current` - [glTF 2.0 specification](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html)
+  - Supports disposable GLB structures only.
+- **SRC-SQUASHFS** - `current` - [SquashFS 4.0 filesystem](https://docs.kernel.org/filesystems/squashfs.html)
+  - Supports synthetic filesystem tables only; no mount occurs.
+- **SRC-RFC7252** - `stable` - [RFC 7252 Constrained Application Protocol](https://www.rfc-editor.org/rfc/rfc7252.html)
+  - Supports nonnetwork CoAP vectors only.
+- **SRC-RFC7959** - `stable` - [RFC 7959 Block-Wise Transfers in CoAP](https://www.rfc-editor.org/rfc/rfc7959.html)
+  - Supports synthetic blockwise fields only.
+- **SRC-XAR** - `watch` - [eXtensible ARchiver source](https://github.com/mackyle/xar)
+  - Supplies watched legacy XAR structures only; no installation or production claim.
+- **SRC-7ZIP** - `stable` - [7z format description](https://www.7-zip.org/7z.html)
+  - Supports synthetic archive headers only.
+- **SRC-NPY-CURRENT** - `current` - [NumPy NPY format](https://numpy.org/doc/stable/reference/generated/numpy.lib.format.html)
+  - Supports bounded NPY byte fixtures only.
+- **SRC-NPY-NEP** - `draft` - [A simple file format for NumPy arrays](https://numpy.org/neps/nep-0001-npy-format.html)
+  - Historical draft context is subordinate to current NumPy documentation.
+- **SRC-LMDB** - `stable` - [Lightning Memory-Mapped Database](https://git.openldap.org/openldap/openldap/-/tree/mdb.master/libraries/liblmdb)
+  - Supports disposable page graphs only; no live database.
+- **SRC-DDS** - `current` - [DirectDraw Surface format](https://learn.microsoft.com/en-us/windows/win32/direct3ddds/dx-graphics-dds)
+  - Supports synthetic texture envelopes only.
+- **SRC-JPEGXL** - `current` - [JPEG XL image coding system](https://jpeg.org/jpegxl/)
+  - Supports bounded container requirements only.
+- **SRC-KTX2** - `current` - [KTX file format specification 2.0](https://registry.khronos.org/KTX/specs/2.0/ktxspec.v2.html)
+  - Supports synthetic KTX2 structures only.
+- **SRC-WMO-GRIB2** - `current` - [WMO Manual on Codes Volume I.2](https://community.wmo.int/site/knowledge-hub/programmes-and-initiatives/wmo-information-system-wis/about-manual-codes-volume-i2)
+  - Supports synthetic GRIB2 sections only.
+- **SRC-QPDF-LINEAR** - `current` - [QPDF linearization](https://qpdf.readthedocs.io/en/stable/linearization.html)
+  - Supports bounded linearization fixtures only; no general PDF assurance.
+- **SRC-FERMI** - `stable` - [Fermi normal coordinates and some basic concepts in differential geometry](https://doi.org/10.1063/1.1724316)
+  - Supports formal coordinate-domain vocabulary only.
+- **SRC-SYNGE** - `stable` - [Synge's world function and the quantum spacetime](https://arxiv.org/abs/2304.01995)
+  - Supports formal bitensor vocabulary only.
+- **SRC-DEWITT** - `stable` - [Quantum theory of gravity I: the canonical theory](https://doi.org/10.1103/PhysRev.160.1113)
+  - Supports formal superspace vocabulary only.
+- **SRC-CARTAN** - `stable` - [On manifolds with an affine connection and the theory of general relativity](https://doi.org/10.1007/978-1-4612-2904-6_15)
+  - Supports Cartan connection vocabulary only.
+- **SRC-BEL-ROBINSON** - `stable` - [The Bel-Robinson tensor and its applications](https://arxiv.org/abs/gr-qc/9906087)
+  - Supports formal tensor duties only.
+- **SRC-FISHER** - `stable` - [Statistical methods for research workers](https://psychclassics.yorku.ca/Fisher/Methods/)
+  - Supports exact-test vocabulary only; no participant inference.
+- **SRC-HODGES-LEHMANN** - `stable` - [Estimates of location based on rank tests](https://doi.org/10.1214/aoms/1177704172)
+  - Supports estimator vocabulary only.
+- **SRC-WCAG22** - `stable` - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural checks; complete conformance remains reserved.
+- **SRC-WAI-APG** - `current` - [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
+  - Supports keyboard, name, state, and status structure only.
+- **SRC-POYNTING** - `stable` - [IUPAC Gold Book Poynting correction](https://goldbook.iupac.org/terms/view/P04718)
+  - Supports thermodynamic vocabulary only; agency conversion is refused.
+- **SRC-DICOMWEB** - `current` - [DICOM PS3.18 Web Services](https://dicom.nema.org/medical/dicom/current/output/html/part18.html)
+  - Supports synthetic WADO-RS envelopes only; no patient or clinical data.
+- **SRC-MFE-EDNA** - `current` - [Environmental DNA indicators for the National Objectives Framework](https://environment.govt.nz/publications/environmental-dna-indicators-for-supporting-implementation-of-the-national-objectives-framework-nof-in-the-nps-fm/)
+  - Supplies freshwater eDNA context only; no operational or authority decision.
+- **SRC-OPENSSH-CERT** - `current` - [OpenSSH certificate key protocol](https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.certkeys)
+  - Supports synthetic certificate fields only; no real key or principal.
+- **SRC-SAML-METADATA** - `stable` - [Metadata for SAML V2.0](https://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf)
+  - Supports synthetic metadata elements only.
+- **SRC-RFC5755** - `stable` - [RFC 5755 Internet Attribute Certificate Profile](https://www.rfc-editor.org/rfc/rfc5755.html)
+  - Supports synthetic attribute-certificate vectors only.
+- **SRC-HSC-PDR3** - `watch` - [Hyper Suprime-Cam Public Data Release 3](https://hsc-release.mtk.nao.ac.jp/doc/index.php/sample-page/pdr3/)
+  - Supports a zero-row readiness contract only; no query or download occurs.
+- **SRC-HSC-PDR3-DB** - `watch` - [Hyper Suprime-Cam PDR3 database](https://hsc-release.mtk.nao.ac.jp/doc/index.php/database__pdr3/)
+  - Supplies schema and provenance context only; no observation.
+- **SRC-MFE-FRESHWATER** - `current` - [Our Freshwater 2026](https://environment.govt.nz/publications/our-freshwater-2026/)
+  - Keeps environmental interpretation and Maori knowledge external to software.
+- **SRC-PRIVACY-NZ** - `current` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/0031/latest/whole.html)
+  - Keeps privacy interpretation, disclosure, and remedy exact-gated.
