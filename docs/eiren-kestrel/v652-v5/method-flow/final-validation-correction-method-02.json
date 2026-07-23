@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_validation_recovery",
+  "candidate_workaround": "The historical remaster test computes its phase-local evidence-to-HEAD delta against the current successor head, so every later sibling and phase path becomes an expected member of the old frozen manifest.",
+  "failure_signature": "The v651-v5 remaster delta-manifest test compared its frozen manifest with its evidence-to-current-HEAD path set and failed after successors added unrelated paths.",
+  "method_id": "V6525-FINAL-METHOD-02",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "production",
+    "independent_reproduction",
+    "identity",
+    "authority",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Bind historical delta-manifest assertions to their immutable final commit instead of a moving successor HEAD.",
+  "retained_negative_ids": [
+    "V6525-NEG-FINAL-02"
+  ],
+  "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+  "scope_boundary": "Owner-local exact-final validation classification only.",
+  "supersedes": [],
+  "title": "Bounded recovery for historical_delta_manifest_reads_successor_head",
+  "trigger_preconditions": [
+    "historical_delta_manifest_reads_successor_head"
+  ],
+  "validation_witness_ids": []
+}

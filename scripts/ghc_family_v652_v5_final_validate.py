@@ -26,8 +26,9 @@ SOURCE = "3a77dacd759a499ffe94cbc281a3d7b343608e2d"
 X1 = "7f347e548b64ea2a9065e129c3ec84dde000c13e"
 EVIDENCE = "611a0afef841a516dd0a5cb1e9ac2448943b42c6"
 CLOSEOUT = "516202a04e2930bfa787bcf257dafd72827cf9af"
+ROUTE_CORRECTION = "fb47648a1c136b8147d5d52f84c6615b718bd3c8"
 BRANCH = "codex/GHC-Family/eiren-kestrel-v648-v3-3-full-tools"
-EXPECTED_SCOPED_TESTS = 76
+EXPECTED_SCOPED_TESTS = 82
 
 
 def git(*args: str, binary: bool = False, check: bool = True) -> str | bytes:
@@ -105,6 +106,7 @@ def selected_tests() -> tuple[unittest.TestSuite, dict[str, Any]]:
         "test_ghc_family_v652_v5_core.py",
         "test_ghc_family_v652_v5_closeout.py",
         "test_ghc_family_v652_v5_route_correction.py",
+        "test_ghc_family_v652_v5_final_validation_correction.py",
     ]
     loader = unittest.TestLoader()
     selected = unittest.TestSuite()
@@ -258,6 +260,10 @@ def main() -> int:
     closeout_anc = subprocess.run(
         ["git", "merge-base", "--is-ancestor", CLOSEOUT, head], cwd=REPO
     ).returncode == 0
+    route_correction_anc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", ROUTE_CORRECTION, head],
+        cwd=REPO,
+    ).returncode == 0
     commit_count = int(str(git("rev-list", "--count", f"{SOURCE}..{head}")))
     merge_count = len(
         [line for line in str(git("rev-list", "--merges", f"{SOURCE}..{head}")).splitlines() if line]
@@ -265,23 +271,30 @@ def main() -> int:
     parent_line = str(git("rev-list", "--parents", "-n", "1", head)).split()
     check(
         "lifecycle_ancestry",
-        source_anc and x1_anc and evidence_anc and closeout_anc,
+        (
+            source_anc
+            and x1_anc
+            and evidence_anc
+            and closeout_anc
+            and route_correction_anc
+        ),
         {
             "source": source_anc,
             "x1": x1_anc,
             "evidence": evidence_anc,
             "closeout": closeout_anc,
+            "route_correction": route_correction_anc,
         },
     )
     check(
-        "four_phase_commits",
-        commit_count == 4,
-        {"expected": 4, "actual": commit_count},
+        "five_phase_commits",
+        commit_count == 5,
+        {"expected": 5, "actual": commit_count},
     )
     check("zero_merges", merge_count == 0, merge_count)
     check(
         "single_parent_final",
-        len(parent_line) == 2 and parent_line[1] == CLOSEOUT,
+        len(parent_line) == 2 and parent_line[1] == ROUTE_CORRECTION,
         parent_line,
     )
 
@@ -297,13 +310,17 @@ def main() -> int:
         full_suite_exclusions
     )
     full_selection.pop("failed_incomplete_validator_attempts_retained", None)
-    full_selection["v652_v5_failed_or_incomplete_attempts_retained"] = 0
+    full_selection["v652_v5_failed_or_incomplete_attempts_retained"] = 1
     full_suite_valid = (
         full_selection["canonical_successful_passes"] == 1
         and full_selection["tests_run"] == full_selection["expected_tests_run"]
         and full_test_summary["failures"] == 0
         and full_test_summary["errors"] == 0
         and full_test_summary["skipped"] == 0
+        and full_selection[
+            "v652_v5_failed_or_incomplete_attempts_retained"
+        ]
+        == 1
         and len(full_suite_exclusions)
         == validation_contract[
             "full_repository_suite_exact_lifecycle_exclusion_count"
@@ -358,7 +375,27 @@ def main() -> int:
     correction_paths = set(
         filter(
             None,
-            str(git("diff", "--name-only", CLOSEOUT, head)).splitlines(),
+            str(
+                git(
+                    "diff",
+                    "--name-only",
+                    CLOSEOUT,
+                    ROUTE_CORRECTION,
+                )
+            ).splitlines(),
+        )
+    )
+    final_validation_correction_paths = set(
+        filter(
+            None,
+            str(
+                git(
+                    "diff",
+                    "--name-only",
+                    ROUTE_CORRECTION,
+                    head,
+                )
+            ).splitlines(),
         )
     )
     owner_tree = {
@@ -404,11 +441,16 @@ def main() -> int:
         "scripts/build_ghc_family_v652_v5_evidence.py",
         "scripts/build_ghc_family_v652_v5_closeout.py",
         "scripts/build_ghc_family_v652_v5_cli_route_correction.py",
+        "scripts/build_ghc_family_v652_v5_final_validation_correction.py",
         "scripts/ghc_family_v652_v5_final_validate.py",
         f"{PHASE_ROOT}/validation/x1-staged-privacy.json",
         f"{PHASE_ROOT}/validation/evidence-staged-privacy.json",
         f"{PHASE_ROOT}/validation/closeout-staged-privacy.json",
         f"{PHASE_ROOT}/validation/route-correction-staged-privacy.json",
+        (
+            f"{PHASE_ROOT}/validation/"
+            "final-validation-correction-staged-privacy.json"
+        ),
     }
     privacy_candidates = []
     privacy_hits = []
@@ -462,10 +504,19 @@ def main() -> int:
             closeout_paths,
         ),
         manifest_check(
-            head,
+            ROUTE_CORRECTION,
             f"{PHASE_ROOT}/validation/route-correction-staged-manifest.json",
             "route-correction-staged-manifest",
             correction_paths,
+        ),
+        manifest_check(
+            head,
+            (
+                f"{PHASE_ROOT}/validation/"
+                "final-validation-correction-staged-manifest.json"
+            ),
+            "final-validation-correction-staged-manifest",
+            final_validation_correction_paths,
         ),
         manifest_check(
             head,
@@ -498,6 +549,21 @@ def main() -> int:
     route_negative = read_json_blob(
         head, f"{PHASE_ROOT}/truth/route-correction-retained-negative.json"
     )
+    final_validation_flow = read_json_blob(
+        head,
+        (
+            f"{PHASE_ROOT}/method-flow/"
+            "final-validation-correction-method-flow-ledger.json"
+        ),
+    )
+    final_validation_negative = read_json_blob(
+        head,
+        f"{PHASE_ROOT}/truth/final-validation-retained-negative.json",
+    )
+    failed_final_attempt = read_json_blob(
+        head,
+        f"{PHASE_ROOT}/validation/final-validation-failed-attempt-01.json",
+    )
     final_phase_truth = read_json_blob(
         head, f"{PHASE_ROOT}/final/final-phase-truth.json"
     )
@@ -529,12 +595,41 @@ def main() -> int:
         and route_negative["route_correction_operational"] == 6
         and route_negative["effective_final"] == 8727
         and route_negative["no_failure_erased"]
-        and not route_negative["failed_attempt_received_credit"]
-        and final_phase_truth["effective_negatives"] == 8727,
+        and not route_negative["failed_attempt_received_credit"],
         {
             "route_negative": route_negative,
             "final_effective": final_phase_truth["effective_negatives"],
         },
+    )
+    check(
+        "final_validation_negative_retention",
+        final_validation_negative["route_corrected_effective"] == 8727
+        and final_validation_negative["final_validation_operational"] == 7
+        and final_validation_negative["effective_final"] == 8734
+        and final_validation_negative["failed_aggregate_attempts"] == 1
+        and final_validation_negative["failed_tests"] == 4
+        and final_validation_negative["no_failure_erased"]
+        and not final_validation_negative["failed_attempt_received_credit"]
+        and final_phase_truth["effective_negatives"] == 8734,
+        {
+            "final_validation_negative": final_validation_negative,
+            "final_effective": final_phase_truth["effective_negatives"],
+        },
+    )
+    check(
+        "failed_exact_final_attempt_retained",
+        not failed_final_attempt["valid"]
+        and failed_final_attempt["canonical_success_credit"] == 0
+        and failed_final_attempt["full_repository_tests"]
+        == {
+            "passed": 2755,
+            "total": 2759,
+            "failures": 4,
+            "errors": 0,
+            "skipped": 0,
+        }
+        and len(failed_final_attempt["failed_test_ids"]) == 4,
+        failed_final_attempt,
     )
     check(
         "gate_retention",
@@ -557,6 +652,14 @@ def main() -> int:
         and route_flow["counts"]["witness_results"] == {"fail": 6, "pass": 6}
         and route_flow["counts"]["states"]["preferred"] == 6,
         route_flow["counts"],
+    )
+    check(
+        "final_validation_correction_method_flow",
+        final_validation_flow["counts"]["methods"] == 7
+        and final_validation_flow["counts"]["witness_results"]
+        == {"fail": 7, "pass": 7}
+        and final_validation_flow["counts"]["states"]["preferred"] == 7,
+        final_validation_flow["counts"],
     )
     check(
         "phase_local_skills",
@@ -645,6 +748,8 @@ def main() -> int:
         or path == "tests/test_ghc_family_v652_v5_core.py"
         or path == "tests/test_ghc_family_v652_v5_x1.py"
         or path == "tests/test_ghc_family_v652_v5_route_correction.py"
+        or path
+        == "tests/test_ghc_family_v652_v5_final_validation_correction.py"
     )
     check(
         "owner_growth",
@@ -692,12 +797,14 @@ def main() -> int:
         "manifest_parity",
         "negative_retention",
         "route_correction_negative_retention",
+        "final_validation_negative_retention",
+        "failed_exact_final_attempt_retained",
         "gate_retention",
         "terminal_abstention",
         "route_held",
         "superseded_ilyra_route_unsent",
         "lifecycle_ancestry",
-        "four_phase_commits",
+        "five_phase_commits",
         "zero_merges",
         "single_parent_final",
         "clean_before_after",
@@ -705,7 +812,7 @@ def main() -> int:
     }
     minimal = [row for row in checks if row["name"] in minimal_names]
     receipt = {
-        "schema": "ghc.family.v652-v5.exact-final-validation.external.v1",
+        "schema": "ghc.family.v652-v5.exact-final-validation.external.v2",
         "validated_at_utc": datetime.now(timezone.utc)
         .isoformat()
         .replace("+00:00", "Z"),

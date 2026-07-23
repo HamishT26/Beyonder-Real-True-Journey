@@ -1,0 +1,141 @@
+{
+  "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
+  "counts": {
+    "methods": 7,
+    "recommendations": 7,
+    "state_events": 21,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 7,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 7,
+      "pass": 7
+    },
+    "witnesses": 14
+  },
+  "owner": "Eiren Kestrel",
+  "phase": "v652-v5-final-validation-correction",
+  "preferred_methods": [
+    {
+      "candidate_workaround": "Retain the complete failed attempt, diagnose only its four failed modules, and permit one corrected retry before any successful pass.",
+      "method_id": "V6525-FINAL-METHOD-01",
+      "recurrence_guard": "Never convert a failed aggregate into a pass or launch a blind full suite replay without first classifying every failed test.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for exact_final_full_suite_failed_attempt",
+      "trigger_preconditions": [
+        "exact_final_full_suite_failed_attempt"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-01-F",
+        "V6525-FINAL-WITNESS-01-P"
+      ]
+    },
+    {
+      "candidate_workaround": "The historical remaster test computes its phase-local evidence-to-HEAD delta against the current successor head, so every later sibling and phase path becomes an expected member of the old frozen manifest.",
+      "method_id": "V6525-FINAL-METHOD-02",
+      "recurrence_guard": "Bind historical delta-manifest assertions to their immutable final commit instead of a moving successor HEAD.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for historical_delta_manifest_reads_successor_head",
+      "trigger_preconditions": [
+        "historical_delta_manifest_reads_successor_head"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-02-F",
+        "V6525-FINAL-WITNESS-02-P"
+      ]
+    },
+    {
+      "candidate_workaround": "The historical closeout test counts its source-to-current-HEAD commits and therefore cannot preserve its own two-or-three-commit lifecycle assertion after additive successor phases.",
+      "method_id": "V6525-FINAL-METHOD-03",
+      "recurrence_guard": "Resolve lifecycle commit-count assertions against the phase's sealed final anchor, never a moving successor HEAD.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for historical_commit_count_reads_successor_head",
+      "trigger_preconditions": [
+        "historical_commit_count_reads_successor_head"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-03-F",
+        "V6525-FINAL-WITNESS-03-P"
+      ]
+    },
+    {
+      "candidate_workaround": "The historical x1 test scans the mutable phase directory and requires later x2 outcome and seal filenames to remain absent.",
+      "method_id": "V6525-FINAL-METHOD-04",
+      "recurrence_guard": "Evaluate x1-only filename absence from the immutable x1 tree rather than a later working-tree phase directory.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for historical_x1_filename_absence_reads_x2_tree",
+      "trigger_preconditions": [
+        "historical_x1_filename_absence_reads_x2_tree"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-04-F",
+        "V6525-FINAL-WITNESS-04-P"
+      ]
+    },
+    {
+      "candidate_workaround": "The historical x1 test reads the mutable phase directory and requires the later evidence surfaces directory to remain absent.",
+      "method_id": "V6525-FINAL-METHOD-05",
+      "recurrence_guard": "Evaluate x1-only directory absence from the immutable x1 tree rather than a later working-tree phase directory.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for historical_x1_directory_absence_reads_x2_tree",
+      "trigger_preconditions": [
+        "historical_x1_directory_absence_reads_x2_tree"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-05-F",
+        "V6525-FINAL-WITNESS-05-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Make the owner-controlled compatibility test distinguish the exact route-correction v2 contract from the additive final-correction v3 contract while preserving the six-commit cap and exact scoped counts.",
+      "method_id": "V6525-FINAL-METHOD-06",
+      "recurrence_guard": "Successor-compatible tests must bind lifecycle assertions to their schema boundary instead of treating an additive final correction as a mutation of the earlier route receipt.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for route_correction_test_fixed_final_contract",
+      "trigger_preconditions": [
+        "route_correction_test_fixed_final_contract"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-06-F",
+        "V6525-FINAL-WITNESS-06-P"
+      ]
+    },
+    {
+      "candidate_workaround": "Admit that one exact owner-controlled route test in the final-validation correction allowlist while keeping every other root and predecessor path fail-closed.",
+      "method_id": "V6525-FINAL-METHOD-07",
+      "recurrence_guard": "Whenever a correction updates a predecessor compatibility assertion, declare that exact test in the correction's root-path allowlist.",
+      "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+      "scope_boundary": "Owner-local exact-final validation classification only.",
+      "title": "Bounded recovery for final_correction_allowlist_omitted_route_test",
+      "trigger_preconditions": [
+        "final_correction_allowlist_omitted_route_test"
+      ],
+      "validation_witness_ids": [
+        "V6525-FINAL-WITNESS-07-F",
+        "V6525-FINAL-WITNESS-07-P"
+      ]
+    }
+  ],
+  "retained_failed_witnesses": [
+    "V6525-FINAL-WITNESS-01-F",
+    "V6525-FINAL-WITNESS-02-F",
+    "V6525-FINAL-WITNESS-03-F",
+    "V6525-FINAL-WITNESS-04-F",
+    "V6525-FINAL-WITNESS-05-F",
+    "V6525-FINAL-WITNESS-06-F",
+    "V6525-FINAL-WITNESS-07-F"
+  ],
+  "schema": "ghc.family.method-flow-state.summary.v1",
+  "valid": true
+}

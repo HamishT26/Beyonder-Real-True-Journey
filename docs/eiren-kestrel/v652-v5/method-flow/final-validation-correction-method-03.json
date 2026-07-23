@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_validation_recovery",
+  "candidate_workaround": "The historical closeout test counts its source-to-current-HEAD commits and therefore cannot preserve its own two-or-three-commit lifecycle assertion after additive successor phases.",
+  "failure_signature": "The v651-v6 closeout test observed 38 source-to-current-HEAD commits while asserting its own phase-local count was two or three.",
+  "method_id": "V6525-FINAL-METHOD-03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "production",
+    "independent_reproduction",
+    "identity",
+    "authority",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Resolve lifecycle commit-count assertions against the phase's sealed final anchor, never a moving successor HEAD.",
+  "retained_negative_ids": [
+    "V6525-NEG-FINAL-03"
+  ],
+  "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+  "scope_boundary": "Owner-local exact-final validation classification only.",
+  "supersedes": [],
+  "title": "Bounded recovery for historical_commit_count_reads_successor_head",
+  "trigger_preconditions": [
+    "historical_commit_count_reads_successor_head"
+  ],
+  "validation_witness_ids": []
+}

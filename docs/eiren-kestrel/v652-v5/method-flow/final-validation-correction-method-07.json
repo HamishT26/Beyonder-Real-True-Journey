@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_validation_recovery",
+  "candidate_workaround": "Admit that one exact owner-controlled route test in the final-validation correction allowlist while keeping every other root and predecessor path fail-closed.",
+  "failure_signature": "The idempotent correction rebuild stopped before manifest generation because its root-path allowlist omitted the deliberately updated route-correction compatibility test.",
+  "method_id": "V6525-FINAL-METHOD-07",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "production",
+    "independent_reproduction",
+    "identity",
+    "authority",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Whenever a correction updates a predecessor compatibility assertion, declare that exact test in the correction's root-path allowlist.",
+  "retained_negative_ids": [
+    "V6525-NEG-FINAL-07"
+  ],
+  "rollback": "Stop, retain the failed validation attempt, and leave sibling state and external authority unchanged.",
+  "scope_boundary": "Owner-local exact-final validation classification only.",
+  "supersedes": [],
+  "title": "Bounded recovery for final_correction_allowlist_omitted_route_test",
+  "trigger_preconditions": [
+    "final_correction_allowlist_omitted_route_test"
+  ],
+  "validation_witness_ids": []
+}

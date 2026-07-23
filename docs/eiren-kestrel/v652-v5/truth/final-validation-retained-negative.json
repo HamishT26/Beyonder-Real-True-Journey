@@ -1,0 +1,87 @@
+{
+  "effective_final": 8734,
+  "failed_aggregate_attempts": 1,
+  "failed_attempt_received_credit": false,
+  "failed_tests": 4,
+  "final_validation_operational": 7,
+  "method_flow_counts": {
+    "methods": 7,
+    "recommendations": 7,
+    "state_events": 21,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 7,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 7,
+      "pass": 7
+    },
+    "witnesses": 14
+  },
+  "no_failure_erased": true,
+  "route_corrected_effective": 8727,
+  "rows": [
+    {
+      "category": "exact_final_full_suite_failed_attempt",
+      "guard": "Never convert a failed aggregate into a pass or launch a blind full suite replay without first classifying every failed test.",
+      "negative_id": "V6525-NEG-FINAL-01",
+      "observed": "The first exact-final full-suite attempt ran 2,759 eligible tests and failed four lifecycle-local assertions; it received zero canonical success credit.",
+      "passing": "The correction contract records one failed aggregate, four exact failed tests, zero errors, and zero successful canonical passes.",
+      "recovery": "Retain the complete failed attempt, diagnose only its four failed modules, and permit one corrected retry before any successful pass."
+    },
+    {
+      "category": "historical_delta_manifest_reads_successor_head",
+      "guard": "Bind historical delta-manifest assertions to their immutable final commit instead of a moving successor HEAD.",
+      "negative_id": "V6525-NEG-FINAL-02",
+      "observed": "The v651-v5 remaster delta-manifest test compared its frozen manifest with its evidence-to-current-HEAD path set and failed after successors added unrelated paths.",
+      "passing": "The exclusion is bound to one fully qualified historical test while the remaining module tests stay eligible.",
+      "recovery": "The historical remaster test computes its phase-local evidence-to-HEAD delta against the current successor head, so every later sibling and phase path becomes an expected member of the old frozen manifest."
+    },
+    {
+      "category": "historical_commit_count_reads_successor_head",
+      "guard": "Resolve lifecycle commit-count assertions against the phase's sealed final anchor, never a moving successor HEAD.",
+      "negative_id": "V6525-NEG-FINAL-03",
+      "observed": "The v651-v6 closeout test observed 38 source-to-current-HEAD commits while asserting its own phase-local count was two or three.",
+      "passing": "The exclusion is bound to the one commit-count assertion while all other v651-v6 closeout tests remain eligible.",
+      "recovery": "The historical closeout test counts its source-to-current-HEAD commits and therefore cannot preserve its own two-or-three-commit lifecycle assertion after additive successor phases."
+    },
+    {
+      "category": "historical_x1_filename_absence_reads_x2_tree",
+      "guard": "Evaluate x1-only filename absence from the immutable x1 tree rather than a later working-tree phase directory.",
+      "negative_id": "V6525-NEG-FINAL-04",
+      "observed": "The v651-v8 special x1 test found later x2 outcome and seal filenames in the mutable phase directory.",
+      "passing": "The exclusion is bound to the one x1 absence assertion while the remaining special x1 tests stay eligible.",
+      "recovery": "The historical x1 test scans the mutable phase directory and requires later x2 outcome and seal filenames to remain absent."
+    },
+    {
+      "category": "historical_x1_directory_absence_reads_x2_tree",
+      "guard": "Evaluate x1-only directory absence from the immutable x1 tree rather than a later working-tree phase directory.",
+      "negative_id": "V6525-NEG-FINAL-05",
+      "observed": "The v651-v8 x1 test found the later evidence surfaces directory in the mutable phase directory.",
+      "passing": "The exclusion is bound to the one x1 directory-absence assertion while the remaining v651-v8 x1 tests stay eligible.",
+      "recovery": "The historical x1 test reads the mutable phase directory and requires the later evidence surfaces directory to remain absent."
+    },
+    {
+      "category": "route_correction_test_fixed_final_contract",
+      "guard": "Successor-compatible tests must bind lifecycle assertions to their schema boundary instead of treating an additive final correction as a mutation of the earlier route receipt.",
+      "negative_id": "V6525-NEG-FINAL-06",
+      "observed": "The first targeted correction test set retained zero credit because the route-correction compatibility test still required the earlier four-commit contract after the additive final-validation correction moved the final boundary to five commits.",
+      "passing": "The targeted closeout, route-correction, and final-correction modules pass together at the corrected precommit boundary.",
+      "recovery": "Make the owner-controlled compatibility test distinguish the exact route-correction v2 contract from the additive final-correction v3 contract while preserving the six-commit cap and exact scoped counts."
+    },
+    {
+      "category": "final_correction_allowlist_omitted_route_test",
+      "guard": "Whenever a correction updates a predecessor compatibility assertion, declare that exact test in the correction's root-path allowlist.",
+      "negative_id": "V6525-NEG-FINAL-07",
+      "observed": "The idempotent correction rebuild stopped before manifest generation because its root-path allowlist omitted the deliberately updated route-correction compatibility test.",
+      "passing": "The corrected allowlist admits only the final builder, final validator, final-correction test, and route-compatibility test outside phase docs.",
+      "recovery": "Admit that one exact owner-controlled route test in the final-validation correction allowlist while keeping every other root and predecessor path fail-closed."
+    }
+  ],
+  "schema": "ghc.family.v652-v5.final-validation-retained-negative.v1",
+  "successful_canonical_passes_before_retry": 0
+}

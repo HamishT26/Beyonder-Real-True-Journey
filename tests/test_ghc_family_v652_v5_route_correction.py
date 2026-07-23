@@ -51,8 +51,17 @@ class TestEirenV652V5CliRouteCorrection(unittest.TestCase):
 
     def test_validation_contract_is_corrected(self):
         contract = load("final/final-validation-contract.json")
-        self.assertEqual(contract["expected_phase_commits"], 4)
-        self.assertEqual(contract["expected_scoped_tests"], 76)
+        if contract["schema"].endswith("v2"):
+            self.assertEqual(contract["expected_phase_commits"], 4)
+            self.assertEqual(contract["expected_scoped_tests"], 76)
+        else:
+            self.assertEqual(
+                contract["schema"],
+                "ghc.family.v652-v5.final-validation-contract.corrected.v3",
+            )
+            self.assertEqual(contract["expected_phase_commits"], 5)
+            self.assertEqual(contract["expected_scoped_tests"], 82)
+        self.assertLessEqual(contract["expected_phase_commits"], 6)
         self.assertTrue(contract["route_correction_manifest_required"])
         self.assertEqual(contract["route_state"], "PREPARED_NOT_SPAWNED")
 
