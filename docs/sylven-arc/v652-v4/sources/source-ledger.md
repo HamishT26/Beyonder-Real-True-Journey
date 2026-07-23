@@ -1,0 +1,70 @@
+# v652-v4 source ledger
+
+- **SRC-GIT-CAT-FILE** - `current` - [Git cat-file manual](https://git-scm.com/docs/git-cat-file.html)
+  - Supports disposable local object-stream fixtures only.
+- **SRC-RFC9915** - `current` - [RFC 9915 Dynamic Host Configuration Protocol for IPv6](https://www.rfc-editor.org/info/rfc9915/)
+  - Supersedes RFC 8415 and supports nonnetwork synthetic messages only.
+- **SRC-RFC9260** - `stable` - [RFC 9260 Stream Control Transmission Protocol](https://www.rfc-editor.org/info/rfc9260/)
+  - Supports nonnetwork SCTP byte fixtures only.
+- **SRC-RFC3030** - `stable` - [RFC 3030 SMTP Service Extensions for Transmission of Large and Binary MIME Messages](https://www.rfc-editor.org/info/rfc3030/)
+  - Supports nonnetwork SMTP command fixtures only.
+- **SRC-MS-BMP** - `current` - [Microsoft BMP file header and bitmap storage](https://learn.microsoft.com/en-us/windows/win32/gdi/bitmap-storage)
+  - Supports disposable bitmap bytes only.
+- **SRC-MS-ICO** - `current` - [Microsoft ICO format overview](https://learn.microsoft.com/en-us/windows/win32/wic/ico-format-overview)
+  - Supports disposable icon and cursor bytes only.
+- **SRC-ISO-13818-1** - `current` - [ISO/IEC 13818-1:2025 MPEG-2 Systems](https://www.iso.org/standard/91403.html)
+  - Supports synthetic transport-stream packets only.
+- **SRC-ODF14-PACKAGE** - `current` - [OpenDocument 1.4 Part 2 Packages](https://docs.oasis-open.org/office/OpenDocument/v1.4/part2-packages/OpenDocument-v1.4-os-part2-packages.html)
+  - Supports disposable ODF package structures only.
+- **SRC-MIDI-SMF** - `current` - [MIDI Association Standard MIDI Files](https://midi.org/standard-midi-files)
+  - Supports synthetic MIDI chunks only.
+- **SRC-EPUB33** - `current` - [EPUB 3.3](https://www.w3.org/TR/epub-33/)
+  - Supports disposable EPUB package structures only.
+- **SRC-WOFF2** - `current` - [WOFF File Format 2.0](https://www.w3.org/TR/WOFF2/)
+  - Supports synthetic font envelopes only.
+- **SRC-JVMS26** - `current` - [Java Virtual Machine Specification SE 26 class-file format](https://docs.oracle.com/en/java/javase/26/docs/specs/jvms/jvms-4.html)
+  - Supports synthetic class-file structures only.
+- **SRC-KIBBLE1961** - `stable` - [Lorentz invariance and the gravitational field](https://doi.org/10.1063/1.1703702)
+  - Supports formal Einstein-Cartan vocabulary only.
+- **SRC-DIXON1974** - `stable` - [Dynamics of extended bodies in general relativity III: equations of motion](https://doi.org/10.1098/rsta.1974.0046)
+  - Supports formal multipole-motion vocabulary only.
+- **SRC-PENROSE1963** - `stable` - [Asymptotic properties of fields and space-times](https://doi.org/10.1103/PhysRevLett.10.66)
+  - Supports formal conformal-boundary vocabulary only.
+- **SRC-LANCZOS-POTENTIAL** - `stable` - [The Lanczos potential for the Weyl curvature tensor](https://arxiv.org/abs/gr-qc/9601029)
+  - Supports formal potential and gauge vocabulary only.
+- **SRC-BROWN-YORK** - `stable` - [Quasilocal energy and conserved charges derived from the gravitational action](https://doi.org/10.1103/PhysRevD.47.1407)
+  - Supports formal quasilocal-stress vocabulary only.
+- **SRC-WAI-LISTBOX** - `current` - [WAI-ARIA Authoring Practices listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)
+  - Supports structural name, state, keyboard, and focus checks only.
+- **SRC-WCAG22** - `stable` - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural checks; complete conformance remains reserved.
+- **SRC-NIST-CAPILLARY** - `stable` - [Capillary rise between planar surfaces](https://doi.org/10.1103/PhysRevE.79.011604)
+  - Supports capillary-pressure vocabulary only; agency conversion is refused.
+- **SRC-DELONG** - `stable` - [Comparing the areas under two or more correlated ROC curves](https://doi.org/10.2307/2531595)
+  - Supports statistical obligations only; no participant inference.
+- **SRC-MCNEMAR** - `stable` - [Note on the sampling error of the difference between correlated proportions](https://doi.org/10.1007/BF02295996)
+  - Supports paired-binary obligations only.
+- **SRC-COCHRAN-Q** - `stable` - [The comparison of percentages in matched samples](https://doi.org/10.1093/biomet/37.3-4.256)
+  - Supports matched-binary obligations only.
+- **SRC-BRIER** - `stable` - [Verification of forecasts expressed in terms of probability](https://journals.ametsoc.org/view/journals/mwre/78/1/1520-0493_1950_078_0001_vofeit_2_0_co_2.xml)
+  - Supports probabilistic-score obligations only.
+- **SRC-IHO-S44** - `current` - [IHO Standards for Hydrographic Surveys Edition 6.2.0](https://iho.int/uploads/user/pubs/standards/s-44/S-44_Edition_6.2.0_adopted.pdf)
+  - Supplies requirements context only; no hydrographic competence or authority.
+- **SRC-RFC8555** - `stable` - [RFC 8555 Automatic Certificate Management Environment](https://www.rfc-editor.org/info/rfc8555/)
+  - Supports synthetic protocol vectors only; no real keys or services.
+- **SRC-RFC7030** - `stable` - [RFC 7030 Enrollment over Secure Transport](https://www.rfc-editor.org/info/rfc7030/)
+  - Supports synthetic enrollment vectors only.
+- **SRC-RFC4533** - `experimental` - [RFC 4533 LDAP Content Synchronization Operation](https://www.rfc-editor.org/info/rfc4533/)
+  - Experimental status is retained; supports synthetic vectors only.
+- **SRC-WALLABY-DATA** - `current` - [WALLABY Pilot Phase 2 Data Release](https://data.csiro.au/collection/csiro%3A63398)
+  - Supports a zero-row adapter contract only; no query or download occurs.
+- **SRC-WALLABY-PAPER** - `stable` - [WALLABY Pilot Phase II public data release](https://arxiv.org/abs/2409.13130)
+  - Supplies schema and provenance context only; no observation occurs.
+- **SRC-LINZ-HYDRO** - `current` - [LINZ hydrographic data](https://www.linz.govt.nz/products-services/data/types-linz-data/hydrographic-data)
+  - Keeps charting, disclosure, safety, and operational decisions external.
+- **SRC-MAORI-DATA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Māori data decisions with Māori authority.
+- **SRC-PRIVACY-NZ** - `current` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/31/en/latest/)
+  - Keeps legal interpretation, disclosure, and remedy exact-gated.
+- **SRC-NZGB** - `current` - [New Zealand Geographic Board](https://www.linz.govt.nz/our-work/new-zealand-geographic-board)
+  - Keeps place-name stewardship and authority decisions external.
