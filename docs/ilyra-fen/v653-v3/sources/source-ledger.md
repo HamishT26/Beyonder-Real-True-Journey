@@ -1,0 +1,40 @@
+# v653-v3 source ledger
+
+Status is phase-local: `stable`, `current`, `draft`, or `watch`.
+
+- **SRC-STUECKELBERG-PETERMANN** — `stable` — [Perturbative algebraic quantum field theory and the renormalization groups](https://arxiv.org/abs/0901.2038). Supports a finite-renormalization group contract without a physical parameter, prediction, or empirical claim.
+- **SRC-DIMREG** — `stable` — [Regularization and renormalization of gauge fields](https://doi.org/10.1016/0550-3213(72)90279-9). Supports dimension, pole, scale, and scheme bookkeeping without validating a physical model.
+- **SRC-KINOSHITA** — `stable` — [Mass singularities of Feynman amplitudes](https://doi.org/10.1063/1.1703797). Supports a degenerate-state cancellation obligation without an inclusive-rate calculation.
+- **SRC-LEE-NAUENBERG** — `stable` — [Degenerate systems and mass singularities](https://doi.org/10.1103/PhysRev.133.B1549). Supports initial and final degeneracy bookkeeping without an empirical cross section.
+- **SRC-BLOCH-NORDSIECK** — `stable` — [Note on the radiation field of the electron](https://doi.org/10.1103/PhysRev.52.54). Supports soft-emission exponentiation obligations without a measured spectrum.
+- **SRC-SYMANZIK** — `stable` — [Continuum limit and improved action in lattice theories](https://doi.org/10.1016/0550-3213(83)90468-6). Supports an irrelevant-operator and lattice-spacing ledger without continuum or numerical evidence.
+- **SRC-HAAG** — `stable` — [Haag's theorem in renormalised quantum field theories](https://arxiv.org/abs/1602.00662). Supports an interaction-picture assumption firewall without proving a new theorem.
+- **SRC-COLEMAN-WEINBERG** — `stable` — [Radiative corrections as the origin of spontaneous symmetry breaking](https://doi.org/10.1103/PhysRevD.7.1888). Supports scale, gauge, loop-order, and extremum obligations without a physical vacuum claim.
+- **SRC-PAULI-JORDAN** — `stable` — [The Quantum Theory of Fields, Volume I: Foundations](https://doi.org/10.1017/CBO9781139644167). Supports a commutator-distribution and causal-support ledger without a measured propagator.
+- **SRC-GELL-MANN-LOW** — `stable` — [Bound states in quantum field theory](https://doi.org/10.1103/PhysRev.84.350). Supports an adiabatic switching and vacuum-normalization contract without a physical S-matrix result.
+- **SRC-RENORMALON** — `stable` — [Renormalons](https://arxiv.org/abs/hep-ph/9807443). Supports Borel-plane ambiguity and power-correction bookkeeping without a resummation or observable.
+- **SRC-DE-DONDER-WEYL** — `stable` — [On field theoretic generalizations of a Poisson algebra](https://arxiv.org/abs/hep-th/9903225). Supports covariant polymomentum and multisymplectic obligations without a physical field solution.
+- **SRC-LUSCHER** — `stable` — [Volume dependence of the energy spectrum in massive quantum field theories](https://doi.org/10.1007/BF01211589). Supports finite-volume quantization and elastic-domain reservations without a lattice measurement.
+- **SRC-LEAN** — `current` — [The Lean Language Reference](https://lean-lang.org/doc/reference/latest/). Supports elaborator, kernel, declaration, and trust-boundary fixtures only.
+- **SRC-AGDA** — `current` — [Agda termination checking](https://agda.readthedocs.io/en/stable/language/termination-checking.html). Supports termination, positivity, postulate, and trust-boundary fixtures only.
+- **SRC-FSTAR** — `current` — [Proof-Oriented Programming in F*](https://fstar-lang.org/tutorial/book/intro.html). Supports effects, preconditions, postconditions, weakest-precondition, SMT, and extraction boundaries only.
+- **SRC-SPARK** — `current` — [Introduction to SPARK flow analysis](https://learn.adacore.com/courses/intro-to-spark/chapters/02_Flow_Analysis.html). Supports flow, contract, proof-level, and unproved-obligation fixtures only.
+- **SRC-CBMC** — `current` — [CBMC training material](https://model-checking.github.io/cbmc-training/). Supports bounded unwinding, assertion, and counterexample obligations only.
+- **SRC-SEAHORN** — `current` — [SeaHorn verification framework](https://seahorn.github.io/). Supports LLVM and constrained-Horn-clause boundary fixtures only.
+- **SRC-ALIVE2** — `current` — [Alive2 LLVM translation validation](https://github.com/AliveToolkit/alive2). Supports source-target refinement and counterexample obligations without compiler certification.
+- **SRC-SAW** — `current` — [Software Analysis Workbench introduction](https://saw.galois.com/intro/). Supports Cryptol, symbolic-execution, equivalence, and solver-boundary fixtures only.
+- **SRC-BOOGIE** — `current` — [Boogie intermediate verification language](https://github.com/boogie-org/boogie). Supports procedure-contract, verification-condition, and solver-result fixtures only.
+- **SRC-VIPER** — `current` — [Viper verification infrastructure](https://www.pm.inf.ethz.ch/research/viper.html). Supports permission, heap, inhale, exhale, and backend-boundary fixtures only.
+- **SRC-LIQUID-HASKELL** — `current` — [LiquidHaskell specifications](https://ucsd-progsys.github.io/liquidhaskell/specifications/). Supports refinement, measure, qualifier, termination, and solver-boundary fixtures only.
+- **SRC-ASPA-PROFILE** — `draft` — [A Profile for Autonomous System Provider Authorization](https://datatracker.ietf.org/doc/html/draft-ietf-sidrops-aspa-profile). Supports a draft-only object-profile proxy; draft status forbids production or interoperability credit.
+- **SRC-ASPA-VERIFY** — `draft` — [BGP AS_PATH Verification Based on Autonomous System Provider Authorization Objects](https://datatracker.ietf.org/doc/draft-ietf-sidrops-aspa-verification/). Supports a draft path-verification proxy with no live routing or operator evidence.
+- **SRC-ACME-STAR** — `stable` — [RFC 8739: Support for Short-Term, Automatically Renewed Certificates in ACME](https://www.rfc-editor.org/rfc/rfc8739.html). Supports a synthetic STAR lifecycle proxy without keys, accounts, issuance, or network exchange.
+- **SRC-SUIT** — `stable` — [RFC 9124: A Manifest Information Model for Firmware Updates in IoT Devices](https://www.rfc-editor.org/rfc/rfc9124.html). Supports a synthetic information-model proxy without firmware, device, signature, or deployment evidence.
+- **SRC-SEL4** — `current` — [seL4 proofs and assumptions](https://sel4.systems/Verification/assumptions.html). Supports a proof-artifact and assumption-boundary proxy without independent professional review.
+- **SRC-MISRA** — `current` — [MISRA Compliance:2020](https://www.misra.org.uk/app/uploads/2021/06/MISRA-Compliance-2020.pdf). Supports a compliance, deviation, and review-evidence proxy without professional certification.
+- **SRC-ATLAS** — `current` — [ATLAS Open Data research datasets](https://opendata.atlas.cern/docs/data/for_research/evgen_data). Supports a zero-row schema and refusal adapter only; no data are queried, downloaded, or analyzed.
+- **SRC-ATLAS-SYSTEMATICS** — `current` — [ATLAS Open Data systematics documentation](https://opendata.atlas.cern/docs/documentation/systematics). Supports nuisance and systematic-obligation fields without a likelihood or physical constraint.
+- **SRC-FAA-SOFTWARE** — `current` — [FAA airborne software and airworthiness guidance](https://www.faa.gov/aircraft/air_cert/design_approvals/air_software/software_regs). Supports explicit professional and regulatory reservation; it confers no approval or qualification.
+- **SRC-WCAG22** — `stable` — [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/). Supports structural accessibility fields while manual and affected-user evaluation remain reserved.
+- **SRC-MAORI-DATA** — `current` — [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty). Requires Māori authority and data-governance decisions to remain outside repository software.
+- **SRC-TE-TAURA-WHIRI** — `current` — [Te Taura Whiri translation guidelines](https://en.tetaurawhiri.govt.nz/translation-guidelines). Supports a language-authority reservation without claiming translator or community approval.
