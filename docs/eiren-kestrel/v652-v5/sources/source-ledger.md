@@ -1,0 +1,66 @@
+# v652-v5 source ledger
+
+- **SRC-X690** - `current` - [ITU-T X.690 ASN.1 encoding rules](https://www.itu.int/rec/T-REC-X.690/en)
+  - Supports disposable ASN.1 bytes only.
+- **SRC-AVIF12** - `current` - [AV1 Image File Format 1.2](https://aomediacodec.github.io/av1-avif/)
+  - Supports synthetic AVIF item graphs only.
+- **SRC-LZIP** - `current` - [lzip manual 1.26](https://www.nongnu.org/lzip/manual/lzip_manual.html)
+  - Supports disposable lzip members only.
+- **SRC-SPIRV** - `current` - [Khronos SPIR-V Registry](https://registry.khronos.org/SPIR-V/)
+  - Supports synthetic SPIR-V words only.
+- **SRC-LLVM-BITCODE** - `current` - [LLVM bitcode file format](https://llvm.org/docs/BitCodeFormat.html)
+  - Supports synthetic bitstreams only.
+- **SRC-FLATBUFFERS** - `current` - [FlatBuffers internals](https://flatbuffers.dev/internals/)
+  - Supports disposable FlatBuffers bytes only.
+- **SRC-THRIFT-COMPACT** - `current` - [Apache Thrift Compact Protocol](https://github.com/apache/thrift/blob/master/doc/specs/thrift-compact-protocol.md)
+  - Supports nonnetwork synthetic messages only.
+- **SRC-SHAPEFILE** - `stable` - [ESRI Shapefile Technical Description](https://www.esri.com/content/dam/esrisites/sitecore-archive/Files/Pdfs/library/whitepapers/pdfs/shapefile.pdf)
+  - Supports disposable multi-file fixtures only.
+- **SRC-GPKG14** - `current` - [OGC GeoPackage Encoding Standard 1.4](https://www.geopackage.org/spec140/)
+  - Supports disposable SQLite fixtures only.
+- **SRC-LAS14** - `stable` - [ASPRS LAS 1.4 Revision 15](https://www.asprs.org/wp-content/uploads/2019/07/LAS_1_4_r15.pdf)
+  - Supports synthetic point-record structures only.
+- **SRC-RPM** - `current` - [RPM package format v4](https://rpm-software-management.github.io/rpm/manual/format_v4.html)
+  - Supports disposable package structures only.
+- **SRC-FAT32** - `current` - [UEFI 2.11 media-access and file-system format](https://uefi.org/specs/UEFI/2.11/13_Protocols_Media_Access.html)
+  - Supports synthetic volume bytes only.
+- **SRC-REGGE1961** - `stable` - [General relativity without coordinates](https://doi.org/10.1007/BF02733251)
+  - Supports formal simplicial-gravity vocabulary only.
+- **SRC-BARBERO1995** - `stable` - [Real Ashtekar variables for Lorentzian signature space-times](https://doi.org/10.1103/PhysRevD.51.5507)
+  - Supports formal canonical-variable vocabulary only.
+- **SRC-KOMAR1959** - `stable` - [Covariant conservation laws in general relativity](https://doi.org/10.1103/PhysRev.113.934)
+  - Supports formal Killing-charge vocabulary only.
+- **SRC-PETROV-REVIEW** - `stable` - [Petrov classification of perturbed spacetimes: the Kasner example](https://arxiv.org/abs/gr-qc/0404075)
+  - Supports algebraic-classification vocabulary only.
+- **SRC-LEVI-CIVITA** - `stable` - [Sur l'écart géodésique](https://eudml.org/doc/182639)
+  - Supports formal Jacobi-field vocabulary only.
+- **SRC-WCAG22-TIME** - `stable` - [WCAG 2.2 timing adjustable](https://www.w3.org/WAI/WCAG22/Understanding/timing-adjustable.html)
+  - Supports structural timing checks; complete conformance remains reserved.
+- **SRC-WAI-DIALOG** - `current` - [WAI-ARIA Authoring Practices dialog modal pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
+  - Supports structural dialog and focus checks only.
+- **SRC-IUPAC-DIFFUSION** - `current` - [IUPAC definitions and preferred symbols for mass diffusion coefficients](https://doi.org/10.1515/pac-2024-0251)
+  - Supports physical transport vocabulary only; agency conversion is refused.
+- **SRC-HEAGERTY2000** - `stable` - [Time-dependent ROC curves for censored survival data](https://doi.org/10.1111/j.0006-341X.2000.00337.x)
+  - Supports statistical obligations only; no participant inference.
+- **SRC-MCCLISH1989** - `stable` - [Analyzing a portion of the ROC curve](https://doi.org/10.1177/0272989X8900900307)
+  - Supports partial-AUC obligations only.
+- **SRC-SPIEGELHALTER1986** - `stable` - [Probabilistic prediction in patient management and clinical trials](https://doi.org/10.1002/sim.4780050506)
+  - Supports calibration-test obligations only.
+- **SRC-PENCINA2008** - `stable` - [Evaluating the added predictive ability of a new marker](https://doi.org/10.1002/sim.2929)
+  - Supports reclassification obligations only; clinical utility remains external.
+- **SRC-WMO-OBS** - `current` - [WMO Guide to Instruments and Methods of Observation WMO-No. 8](https://wmo.int/publication-series/guide-instruments-and-methods-of-observation-wmo-no-8)
+  - Supplies learning context only; no meteorological competence or authority.
+- **SRC-OIDC-RP-LOGOUT** - `current` - [OpenID Connect RP-Initiated Logout 1.0](https://openid.net/specs/openid-connect-rpinitiated-1_0.html)
+  - Supports synthetic protocol vectors only; no real keys, accounts, or services.
+- **SRC-OIDC-SESSION** - `current` - [OpenID Connect Session Management 1.0](https://openid.net/specs/openid-connect-session-1_0.html)
+  - Supports synthetic session-state vectors only.
+- **SRC-RFC7033** - `stable` - [RFC 7033 WebFinger](https://www.rfc-editor.org/info/rfc7033/)
+  - Supports nonnetwork synthetic discovery vectors only.
+- **SRC-IXPE-ARCHIVE** - `current` - [NASA HEASARC IXPE Data Archive](https://heasarc.gsfc.nasa.gov/docs/ixpe/archive/)
+  - Supports a zero-row adapter contract only; no query or download occurs.
+- **SRC-IXPE-MASTER** - `current` - [NASA IXPE Master Catalog](https://data.nasa.gov/dataset/ixpe-master-catalog)
+  - Supplies schema and provenance context only; no observation occurs.
+- **SRC-MAORI-DATA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Keeps Māori data decisions with Māori authority.
+- **SRC-PRIVACY-NZ** - `current` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/31/en/latest/)
+  - Keeps legal interpretation, disclosure, and remedy exact-gated.
