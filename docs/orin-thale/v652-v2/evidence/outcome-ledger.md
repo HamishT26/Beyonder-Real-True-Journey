@@ -1,0 +1,62 @@
+# v652-v2 bounded outcome ledger
+
+- **V6522-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Git reachability-bitmap EWAH word, object-position, XOR flag, commit lookup, pack reverse-index, multi-pack mapping, checksum, stale-pack, and refusal tribunal
+- **V6522-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - Nix NAR magic, type, name, executable, contents length, lexicographic directory, padding, store path, hash, budget, and refusal tribunal
+- **V6522-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - RPM repository repomd revision, location, checksum, open-checksum, size, timestamp, primary, filelists, other, updateinfo, budget, and refusal tribunal
+- **V6522-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - NuGet package OPC relationships, nuspec, content-types, package signature, repository countersignature, certificate chain, timestamp, duplicate part, traversal, budget, and refusal tribunal
+- **V6522-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - PE Authenticode image hash, checksum exclusion, certificate-table exclusion, WIN_CERTIFICATE length, alignment, PKCS7, timestamp, page hash, budget, and refusal tribunal
+- **V6522-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Gibbons-Hawking-York induced metric, extrinsic curvature, unit normal, orientation, sign, joint, corner, variational principle, counterterm, EFT, and observation-firewall board
+- **V6522-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Palatini metric-affine independent connection, torsion, nonmetricity, projective symmetry, connection equation, boundary, matter coupling, EFT, unit, and observation-firewall board
+- **V6522-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Raychaudhuri congruence, expansion, shear, vorticity, affine parameter, focusing, caustic, energy-condition assumption, unit, and observation-firewall board
+- **V6522-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Bondi-Sachs null-coordinate, asymptotic expansion, mass-aspect, news-tensor, flux, BMS-frame, gauge, boundary, EFT, unit, and observation-firewall board
+- **V6522-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Isaacson two-scale expansion, wavelength hierarchy, averaging cell, gauge, effective stress, backreaction, boundary, EFT, unit, and observation-firewall board
+- **V6522-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Safetensors header length, JSON metadata, dtype, shape, data offsets, overlap, duplicate key, endian, byte budget, and refusal tribunal
+- **V6522-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Mercurial revlog index, data record, node id, linkrev, base revision, delta chain, generaldelta, censoring, sidedata, decompression budget, and refusal tribunal
+- **V6522-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - OSTree commit, dirtree, dirmeta, file object, checksum, mode, xattr, parent, timestamp, static-delta boundary, traversal budget, and refusal tribunal
+- **V6522-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - IPFS CARv2 pragma, header, data offset, size, index offset, characteristics, embedded CARv1, multicodec index, padding, checksum, budget, and refusal tribunal
+- **V6522-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - DNSSEC NSEC3 hash algorithm, flags, iterations, salt, owner hash, next hash, type bitmap, closest encloser, opt-out, iteration budget, and refusal tribunal
+- **V6522-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - BGP UPDATE withdrawn routes, path attribute flags, length, ORIGIN, AS_PATH, NEXT_HOP, MP_REACH, MP_UNREACH, duplicate attribute, NLRI, message budget, and refusal tribunal
+- **V6522-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - APNG acTL frame count, fcTL sequence, fdAT sequence, IDAT ownership, dispose, blend, frame bounds, CRC, decompression budget, and refusal tribunal
+- **V6522-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Accessible provenance graph node and edge text equivalence, reading order, keyboard navigation, focus, name, description, noncolour, zoom, table alternative, and manual-evaluation structural audit
+- **V6522-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Thermo-Psyche Kelvin equation curvature radius, surface tension, molar volume, saturation pressure, sign, convex-concave convention, domain, uncertainty, unit, and agency-nonconversion classifier
+- **V6522-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Stage 20 fragility index event flip, loss to follow-up, tie handling, binary endpoint, multiplicity, model dependence, uncertainty, interpretation, and nonpromotion board
+- **V6522-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - Stage 20 Akaike information criterion likelihood, parameter count, small-sample correction, weight, model set, selection uncertainty, averaging, causal boundary, and nonpromotion board
+- **V6522-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - WebSocket FIN, RSV, opcode, masking key, payload length, continuation, control frame, UTF-8, close code, message budget, and refusal tribunal
+- **V6522-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - Kerberos V5 AP-REQ ticket, authenticator, realm, principal, enctype, key usage, clock skew, replay cache, channel binding, authorization data, no-live-realm, and refusal profile
+- **V6522-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS archaeological collection accession, provenance uncertainty, condition check, location custody, conservation hold, correction readback, accessible notice, workload, and shift-handover proxy
+- **V6522-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS archaeological catalogue correction latency, provenance disagreement, fatigue, harm stop, skill decay, workload budget, missingness, readback, and handover proxy
+- **V6522-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID X.509 delegated credential signature algorithm, expected certificate verify, validity, private-key separation, transcript binding, rotation, compromise, privacy, and nonproduction profile
+- **V6522-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID RATS attester, verifier, relying party, evidence, endorsement, reference value, appraisal policy, trustworthiness vector, privacy, and nonproduction architecture profile
+- **V6522-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID MLS KeyPackage credential, ciphersuite, extension, lifetime, signature, Welcome, GroupInfo, tree hash, external sender, privacy, and nonproduction profile
+- **V6522-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT Zwicky Transient Facility IRSA light-curve object, exposure, filter, photometry, quality, cadence, reference image, selection, covariance, provenance, checksum, and zero-row likelihood-refusal adapter
+- **V6522-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR archaeological human remains and taonga decision-rights reservation for access, research, imaging, provenance, storage, return, repatriation, remedy, tikanga context, tangata-whenua governance, and Maori authority

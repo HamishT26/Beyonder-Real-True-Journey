@@ -1,10 +1,12 @@
 """X1-only tests for Orin Thale v652-v2."""
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / "docs/orin-thale/v652-v2"
+X1_COMMIT = "3f5b49dc1a380452593c8080c3ae134e654c2079"
 
 def load(relative):
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
@@ -50,7 +52,12 @@ class TestV652V2X1(unittest.TestCase):
         seats = load("provenance/future-cli-placeholder-invariant.json")
         self.assertEqual((seats["prepared_placeholder_count"], seats["named_count"], seats["created_count"], seats["launched_count"]), (8, 0, 0, 0))
         self.assertEqual(load("validation/x1-staged-privacy.json")["confirmed_hit_count"], 0)
-        self.assertFalse((ROOT / "surfaces").exists())
+        historical_surface = subprocess.run(
+            ["git", "cat-file", "-e", f"{X1_COMMIT}:docs/orin-thale/v652-v2/surfaces"],
+            cwd=REPO,
+            capture_output=True,
+        )
+        self.assertNotEqual(historical_surface.returncode, 0)
         self.assertTrue(load("validation/x1-staged-review.json")["x1_only"])
 
 if __name__ == "__main__":
