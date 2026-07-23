@@ -1,0 +1,36 @@
+# v653-v2 source ledger
+
+Status is phase-local: `stable`, `current`, `draft`, or `watch`.
+
+- **SRC-EINSTEIN-LANGEVIN** — `stable` — [On the semiclassical Einstein-Langevin equation](https://arxiv.org/abs/gr-qc/9811070). Supports a stochastic-source and noise-kernel ledger only, not a measured fluctuation or semiclassical-gravity confirmation.
+- **SRC-MUKHANOV-SASAKI** — `stable` — [Theory of cosmological perturbations](https://doi.org/10.1016/0370-1573(92)90044-Z). Supports gauge-invariant scalar-mode bookkeeping without a power-spectrum or cosmological inference.
+- **SRC-DELTA-N** — `stable` — [The inflationary prediction for primordial non-gaussianity](https://arxiv.org/abs/astro-ph/0504045). Supports a separate-universe derivative contract only, not inflationary or observational confirmation.
+- **SRC-KUNDT** — `stable` — [The plane-fronted gravitational waves](https://doi.org/10.1007/BF01328918). Supports nonexpanding null-congruence and chart obligations without identifying a physical spacetime.
+- **SRC-BRINKMANN-ROSEN** — `stable` — [Rosen coordinates in plane wave spacetimes](https://arxiv.org/abs/1705.09533). Supports a bounded Brinkmann-Rosen coordinate-map fixture with an explicit caustic-domain refusal.
+- **SRC-PLEBANSKI-DEMIANSKI** — `stable` — [Rotating, charged, and uniformly accelerating mass in general relativity](https://doi.org/10.1016/0003-4916(76)90240-2). Supports parameter and root-order bookkeeping without a new solution or source interpretation.
+- **SRC-MAJUMDAR** — `stable` — [A class of exact solutions of Einstein's field equations](https://doi.org/10.1103/PhysRev.72.390). Supports harmonic-potential and extremal-balance obligations only.
+- **SRC-EGUCHI-HANSON** — `stable` — [Asymptotically flat self-dual solutions to Euclidean gravity](https://doi.org/10.1007/BF00759271). Supports bolt, identification, orientation, and regularity bookkeeping without a physical instanton claim.
+- **SRC-GODEL** — `stable` — [An Example of a New Type of Cosmological Solutions of Einstein's Field Equations of Gravitation](https://doi.org/10.1103/RevModPhys.21.447). Supports a rotating-dust and chronology-reservation ledger without cosmological promotion.
+- **SRC-C-METRIC** — `stable` — [Uniformly accelerating charged mass in general relativity](https://doi.org/10.1103/PhysRevD.2.1359). Supports root, axis, deficit, and acceleration-horizon obligations only.
+- **SRC-ADIABATIC** — `stable` — [Adiabatic regularization of the energy-momentum tensor of a quantized field in homogeneous spaces](https://doi.org/10.1103/PhysRevD.9.341). Supports subtraction-order and ultraviolet bookkeeping without a renormalized observable claim.
+- **SRC-ZETA** — `stable` — [Zeta function regularization of path integrals in curved spacetime](https://doi.org/10.1007/BF01626516). Supports analytic-continuation and determinant reservations without a physical effective-action result.
+- **SRC-TRACE-ANOMALY** — `stable` — [Trace anomalies and the Hawking effect](https://doi.org/10.1016/0550-3213(77)90410-2). Supports curvature-invariant and scheme-dependence bookkeeping only.
+- **SRC-SCHWARZSCHILD-STATES** — `stable` — [Vacuum polarization in Schwarzschild spacetime](https://doi.org/10.1103/PhysRevD.21.2185). Supports bounded state-selector, horizon, flux, and asymptotic-condition fixtures without measured radiation.
+- **SRC-PENROSE-LIMIT** — `stable` — [Penrose limits and spacetime singularities](https://arxiv.org/abs/hep-th/0312029). Supports a null-geodesic scaling and profile-matrix contract without reconstruction or universality credit.
+- **SRC-MELVIN** — `stable` — [Pure magnetic and electric geons](https://doi.org/10.1103/PhysRev.139.B244). Supports a magnetic-flux-tube metric and regular-axis ledger without an astrophysical field claim.
+- **SRC-NARIAI** — `stable` — [On a new cosmological solution of Einstein's field equations of gravitation](https://doi.org/10.1023/A:1026602724948). Supports a product-spacetime and extremal-limit reservation without cosmological confirmation.
+- **SRC-DAFNY** — `current` — [Dafny Reference Manual](https://dafny.org/latest/DafnyRef/DafnyRef). Supports bounded contract and verification-condition fixtures, not deployed-software verification.
+- **SRC-WHY3** — `current` — [Why3 documentation](https://why3.org/doc/). Supports finite theories, transformations, drivers, and proof-session fixtures only.
+- **SRC-FRAMA-C** — `current` — [Frama-C publications and ACSL/WP manuals](https://frama-c.com/html/publications.html). Supports bounded ACSL and weakest-precondition fixtures without C-program assurance promotion.
+- **SRC-MAUDE** — `current` — [The Maude system manual](https://maude.cs.illinois.edu/maude1/manual/maude-manual-html/maude-manual_61.html). Supports finite equations, rewrite rules, and search fixtures only.
+- **SRC-K** — `current` — [K Framework documentation](https://kframework.org/docs/). Supports bounded configuration, rewrite, and reachability fixtures without language-implementation certification.
+- **SRC-ISABELLE** — `current` — [Isabelle documentation](https://isabelle.in.tum.de/documentation.html). Supports a finite HOL theory and explicit unproved-goal refusal only.
+- **SRC-COMPCERT** — `current` — [CompCert user and reference manuals](https://compcert.org/man/). Supports a represented semantic-preservation handover; toolchain, source language, target, and external assumptions stay explicit.
+- **SRC-SAIL** — `current` — [Sail instruction-set architecture specification language](https://github.com/rems-project/sail). Supports a represented ISA-model fixture only; hardware, generated prover model, and implementation agreement remain gated.
+- **SRC-EAT** — `current` — [RFC 9711 Entity Attestation Token](https://www.rfc-editor.org/info/rfc9711/). Supports synthetic claims, profiles, and submodules only, with no real device, key, verifier, or appraisal policy.
+- **SRC-ERS** — `stable` — [RFC 4998 Evidence Record Syntax](https://www.rfc-editor.org/info/rfc4998/). Supports synthetic archive-timestamp and renewal structures without a real archive, signature, trust, or non-repudiation decision.
+- **SRC-JWS** — `current` — [RFC 7797 JSON Web Signature Unencoded Payload Option](https://www.rfc-editor.org/info/rfc7797/). Supports synthetic header and signing-input vectors only, with no production key or interoperability event.
+- **SRC-KOA** — `current` — [Keck Observatory Archive User Guide](https://koa.ipac.caltech.edu/UserGuide/). Identifies an official archive boundary; x2 must make no query, download, ingest, calibration, fit, likelihood, posterior, or empirical claim.
+- **SRC-TE-TAURA-WHIRI** — `current` — [Te Taura Whiri best-practice translation guidelines](https://en.tetaurawhiri.govt.nz/translation-guidelines). Reserves te reo Māori translation quality, provenance, and certified-language expertise to appropriate people and authorities.
+- **SRC-WCAG22** — `current` — [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/). Supports structural accessibility reservations only; manual and affected-user evaluation remain open.
+- **SRC-MAORI-DATA** — `current` — [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty). Keeps Māori data, language, interpretation, governance, and remedy with Māori authorities.
