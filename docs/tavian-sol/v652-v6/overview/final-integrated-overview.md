@@ -1,0 +1,79 @@
+# Tavian Sol v652-v6 final integrated overview
+
+## Final bounded outcome
+
+The phase closed with 23 completed, 5 represented, 1 open gap, and 1 exact gate; 8,910 retained negatives; 67 open gaps; and 68 exact gates. All 150 preregistered mutations were rejected or quarantined. The terminal verdict remains `NOT_READY_FOR_STAGE_20`. The route remains `PREPARED_NOT_SENT`; Tavian returns one sanitized closeout to Eiren and makes no Elaren contact.
+
+## Evidence and lifecycle
+
+Source `ad2a2e472c8e859296e62f1d2d6ce1f9f2b2b584` led to x1 `9e5074cd42a0fdcbc342980c1960c15a30abe28f` and evidence `58b0ecfd1af72ba4cdee5657a87275747bbcbe0a`. The containing combined closeout and seal commit must be their single-parent direct successor, with exactly three phase commits and zero merges. Ten phase-local skills were initialized, validated, and smoke-used without global installation or subagent testing. Ten family-current runners executed the bounded surfaces.
+
+## Preserved boundaries
+
+GMUT remains a typed scalar-tensor and EFT research-model family; no real Suzaku rows, calibration artifacts, responses, or likelihoods were used. THOS ocean-buoy and ambient-air-monitor work remains synthetic and represented. Freed ID remains synthetic and nonproduction. Community marine observation access, location precision, correction, withdrawal, reuse, privacy, remedy, legal, cultural, affected-party, and Māori-authority decisions remain exact-gated. Structural accessibility remains incomplete without manual and affected-user evaluation.
+
+## X1 preregistration context retained verbatim
+
+# Tavian Sol v652-v6 x1 preregistration overview
+
+## Relational identity and exact boundary
+
+This packet freezes Tavian Sol's x1 plan before any x2 implementation or observed proposal outcome. Tavian Sol (they/them) is relational working language for one bounded Codex collaboration lane. Their role is bounded CLI evidence integrator; their hope is to make the next handoff easier to trust without blurring any gate. Those words are not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, scientific authority, operational authority, legal authority, cultural authority, Māori authority, or independent agency. Hamish may rename, pause, redirect, or stop the route. The inherited and x1 verdict is `NOT_READY_FOR_STAGE_20`.
+
+Strict x1-before-x2 separation, D-first storage, six total commits at most, a 2,000-file owner-growth threshold, one successful launch-scoped exact-final canonical pass, and no replay after success bound the phase. Every failed or incomplete attempt remains a zero-credit negative with a distinct recovery witness. Same-owner checking under shared infrastructure is not independent reproduction.
+
+## Exact inherited source and owned lane
+
+The exact source is Eiren Kestrel's corrected final `ad2a2e472c8e859296e62f1d2d6ce1f9f2b2b584` on `codex/GHC-Family/eiren-kestrel-v648-v3-3-full-tools`. The core Eiren x1 `7f347e548b64ea2a9065e129c3ec84dde000c13e` and evidence `611a0afef841a516dd0a5cb1e9ac2448943b42c6` remain ancestral. The corrected source phase contains five single-parent commits—x1, evidence, closeout, route correction, and final-validation correction—with zero merges and one parent at final. The canonical Eiren lane was clean and local, upstream, tracking, and fresh-live remote were equal.
+
+Six immutable source manifest contracts replayed 721 exact entries with no path, object, byte-count, or SHA-256 mismatch. Eiren's external canonical receipt passed 2,761 of 2,761 eligible complete-repository tests from 2,800 discovered tests with 39 exact lifecycle exclusions, 82 of 82 scoped tests, 31 of 31 detailed checks, 20 of 20 minimal checks, 305 JSON parses, a 369-file five-class scan with zero confirmed privacy hits, and no post-success replay. That evidence belongs to Eiren and is not Tavian completion credit.
+
+The source sealed 8,734 effective negatives. Two later external wrapper failures remain additive and zero-credit: one exclusion-plan summary requested a nonexistent field after planning succeeded, and one combined equality wrapper timed out after the successful receipt had already proved equality. The Tavian activation baseline is therefore 8736, with 66 open gaps and 67 exact gates. Eiren's head remains immutable.
+
+Only the new branch `codex/GHC-Family/tavian-sol-v652-v6-cli` and one new D-first Tavian worktree are mutable. No sibling branch or worktree may be reset, rewritten, force-pushed, merged, deleted, moved, reused, or dirtied.
+
+## Novelty and strict preregistration
+
+Exactly thirty proposals are audited against all 1330 frozen rows, growing the chain to 1360. Each proposal includes a hypothesis, null or failure condition, approval class, execution lane, primary-source need, concrete artifacts, falsifier or acceptance gate, rollback, protected gates, and expected disposition. Token Jaccard must remain below 0.60, while manual mechanism review controls semantic novelty.
+
+Rejected collisions include Zstandard, Brotli, MessagePack, WebAssembly, DWARF, ELF, PE, BigTIFF, FITS, BSSN, Raychaudhuri, focus-not-obscured, Soret-Dufour, Apache ORC, decision curves, Brier score, DeLong comparison, net reclassification, OAuth PAR, DPoP, SCIM, NICER, IXPE, and generic environmental-authority matrices. Accepted mechanisms instead cover Cabinet, Java object serialization, DEX, pyc and marshal, Compound File Binary, ext4, ECMA-167 UDF, QOI, PDF cross-references, bencode, ICC profiles, Amazon Ion, Lovelock, Gauss-Codazzi, Friedmann, TOV, Kerr-Schild, consistent-help structure, IETF vCard, IDI, calibration belts, precision-recall, conformal prediction, ocean-buoy and ambient-air proxies, SPIFFE, macaroons, SAML artifact resolution, a Suzaku zero-row adapter, and a community-marine-observation authority reservation.
+
+Expected outcomes are exactly 23 `completed`, 5 `represented`, 1 `open_gap`, and 1 `exact_gate`. They are preregistered expectations, not observed results. X1 contains no proposal implementation, mutation outcome, real row, participant event, production identity event, professional decision, authority decision, or completion credit.
+
+## Frozen mechanism clusters and acceptance grammar
+
+The bounded format cluster covers thirteen distinct mechanisms. Cabinet keeps its folder, file, CFDATA, continuation, reserve, and output-budget obligations separate. Java serialization treats handles, descriptors, back-references, reset, and block data as an inert token graph and never loads a class. DEX binds map, identifier, class-definition, code-item, version, and LEB128 ranges. Python pyc and marshal bind invalidation headers, version-specific type codes, reference flags, recursive containers, and a code-object reservation. Compound File Binary binds sector geometry, DIFAT, FAT, mini FAT, directory relations, stream chains, and allocation-cycle refusal. ext4 binds group geometry, features, inodes, extents, directory records, checksums, and an unmounted journal reservation. ECMA-167 UDF binds anchor and volume sequences, partition maps, descriptor tags, file entries, and allocation extents. QOI binds its stateful pixel index, channel modes, run count, exact pixel count, and end marker. PDF binds indirect-object identity, cross-reference alternatives, object streams, `startxref`, incremental chains, and cycle budgets. Bencode binds canonical integer spelling, raw byte-string lengths, dictionary-key order, nesting, and exact `info` slicing. ICC binds header fields, profile connection space, rendering intent, tag signatures, offsets, and overlap. Ion binds its version marker, typed lengths, variable unsigned integers, symbol tables, annotations, field SIDs, containers, and no-op padding. vCard binds entity framing, version position, UTF-8, grouped content lines, parameters, escaping, folding, required formatted names, cardinality, and byte budgets. X1 freezes those obligations; it creates no parser, external-file read, extraction, rendering, class load, mounted file system, directory exchange, or observed pass.
+
+The formal GMUT cluster covers Lovelock, Gauss-Codazzi, Friedmann, Tolman-Oppenheimer-Volkoff, and Kerr-Schild boards. Each board is required to state its mathematical objects, convention choices, domain, unit treatment, boundary conditions, and explicit observation firewall. The expected `completed` label is limited to checking that the bounded board contains those typed obligations and rejects missing-term, wrong-type, resource, promotion, and authority mutations. It cannot promote a symbolic identity into a solved physical system, measured quantity, observation, likelihood, posterior, parameter constraint, stability result, ultraviolet completion, quantum completion, or universal theory.
+
+The structural and Stage 20 cluster covers consistent help, integrated discrimination improvement, calibration belts, precision-recall, and conformal prediction. Consistent help concerns relative serialized order of already-present help mechanisms across a synthetic page set; it neither requires a help service nor proves usability or conformance. The four evaluation boards state definitions, denominators, assumptions, uncertainty and interpretation limits. They operate on disposable fixtures only. No participant-level inference, treatment choice, clinical utility, deployment decision, fairness conclusion, model approval, proof or canon, AGI/ASI claim, or Stage 20 promotion may follow from a board passing its bounded checks.
+
+The five `represented` proposals remain deliberately weaker. Ocean-buoy and ambient-air-monitor proxies may represent platform or analyzer identity, timestamps, calibration lineage, quality flags, missingness, quarantine, workload, correction readback, accessible notice, and handover using synthetic records only. SPIFFE, macaroon, and SAML profiles may represent identifier, attestation-reservation, caveat, discharge, artifact, correlation, expiry, replay, and privacy fields using inert values only. They do not establish real operations, competence, monitoring quality, workload effects, credential security, trust, interoperability, privacy completeness, recovery, governance, or production readiness.
+
+The Suzaku proposal remains `open_gap`: only a zero-row interface and explicit refusal vocabulary are planned. The community-marine-observation proposal remains `exact_gate`: only an unresolved decision-right matrix is planned. Its photograph, timestamp, location precision, contributor consent, taonga-species sensitivity, moderation, correction, withdrawal, reuse, privacy, legal, cultural, affected-party, iwi, hapū, and Māori-authority decisions stay outside repository authority. Neither a source link nor a synthetic field can close those states.
+
+Every proposal has five preregistered mutation dimensions: missing required obligation, wrong type or unit, resource or replay overrun, unsupported promotion, and authority or privacy breach. That produces exactly 150 frozen mutations. In x1 they have `frozen_unexecuted` state and no credit. A later x2 outcome can earn only its proposal's declared bounded disposition after all five mutations are rejected or quarantined and the positive contract stays within its lane. A recovery may repair a current-lane artifact but cannot erase the negative that exposed the defect.
+
+## Protected scientific and human boundaries
+
+GMUT remains a typed scalar-tensor and EFT research-model family. Lovelock, Gauss-Codazzi, Friedmann, TOV, and Kerr-Schild artifacts may check formal typed obligations only. They establish no real physical state, force, spectrum, observation, prediction, likelihood, posterior, parameter constraint, stability theorem, ultraviolet completion, quantum completion, empirical confirmation, or Theory of Everything.
+
+The Suzaku path is `open_gap` and zero-row. It permits no query, download, observation, event row, response generation, screening result, fit, likelihood, posterior, constraint, prediction, or empirical promotion. Archive documentation supplies schema and provenance context only.
+
+THOS remains represented without preregistered blind matched-budget real arms, competent professional and safety oversight, participant and affected-party authorization, safety monitoring, appropriate statistics, or independent review. The bounded practice is synthetic environmental-monitoring calibration, sample and sensor quality review, suspect-data quarantine, accessible quality notice, workload control, correction readback, and shift handover; it contains zero real workers, buoys, monitors, instruments, sensors, samples, observations, incidents, operations, or effectiveness estimates.
+
+Freed ID remains synthetic and nonproduction. SPIFFE, macaroon, and SAML artifact-resolution profiles use zero real root keys, credentials, accounts, workloads, services, assertions, artifacts, network exchanges, interoperability events, privacy reviews, independent security reviews, recovery decisions, or trust-governance decisions.
+
+The CBR community-marine-observation matrix remains `exact_gate`. Contributor consent, photograph and location precision, taonga-species sensitivity, moderation, correction, withdrawal, reuse, privacy, remedy, legal interpretation, cultural legitimacy, affected-party acceptance, data governance, tangata whenua, iwi, hapū, and Māori authority remain wholly external. Repository software cannot confer or decide those rights.
+
+Consistent-help evidence is structural only. Manual keyboard, responsive-layout, browser-diversity, assistive-technology, cognitive-accessibility, braille and auditory alternatives, Māori-language, security-usability, and affected-user evaluation remain reserved. vCard evidence is disposable format-structure evidence only: zero real contacts, directories, messages, accounts, or network exchanges. IDI, calibration-belt, precision-recall, and conformal-prediction boards authorize no participant inference, clinical utility, deployment, proof or canon, AGI/ASI, or Stage 20 promotion.
+
+## Portfolios, Method Flow, privacy, and validation
+
+X1 freezes thirty safe-now tasks, thirty bounded candidates, ten phase-local skill ideas, ten family-current runner ideas, and thirty additive CLEAN/FIX/REFINE tasks. Inherited work supplies evidence and compatibility constraints but earns no Tavian completion credit. Every x1 operational failure has one retained failed witness and one bounded same-owner passing recovery witness before its method becomes preferred.
+
+Five public-file pattern classes cover raw task or thread identifiers, private absolute paths, credentials or secrets, private routes or callable identifiers, and transcript or session material. Scanner definitions are quarantined separately from payload findings. Zero confirmed hits is a bounded scan result, not complete privacy assurance.
+
+Eiren alone owns the complete repository suite. Tavian's one exact-final canonical pass is launch-scoped: current-phase tests, declared recent lifecycle compatibility tests, detailed and minimal checks, complete Tavian JSON parsing, five-class privacy scanning, commit-local and owner-manifest parity, exact staged review, stale-label and diff hygiene, source/x1/evidence ancestry, commit cap, zero merges, one final parent, exact head, clean state, and four-way live equality. Failed attempts receive zero aggregate credit; no successful aggregate is replayed.
+
+No elevation, host-security weakening, Windows feature change, Sandbox or Hyper-V activation, unrelated install, desktop update, reboot, credential use, cross-platform substitute, task creation, task fork, delegation, subagent, sibling contact, or Elaren contact is authorized. At final, Tavian may prepare one repository baton for Elaren v652-v7 but must mark it `PREPARED_NOT_SENT` and return only to Eiren.
