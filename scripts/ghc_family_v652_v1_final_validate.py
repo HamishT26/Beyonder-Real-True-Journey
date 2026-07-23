@@ -20,6 +20,7 @@ BRANCH = "codex/GHC-Family/sable-rook-full-tools"
 SOURCE_HEAD = "4b31ec3d1bb4db24f48967da5c4e27a05b43e1f9"
 X1_HEAD = "0e7efd8f49dbb530d60e9d2f1b474a3de9a035c2"
 EVIDENCE_HEAD = "fddc360ee643b7b50f7c65395a39948cf0c0d535"
+CLOSEOUT_HEAD = "67ea89adf25dc958c757123501cf43f62f461e2f"
 GENERIC_RUNNERS = {
     "scripts/ghc_family_claim_lease_demoter.py",
     "scripts/ghc_family_cruft_pack_guard.py",
@@ -111,12 +112,15 @@ def privacy_scan(commit: str, paths: set[str]) -> dict:
         "scripts/build_ghc_family_v652_v1_preregistration.py",
         "scripts/build_ghc_family_v652_v1_evidence.py",
         "scripts/build_ghc_family_v652_v1_closeout.py",
+        "scripts/build_ghc_family_v652_v1_terminal_correction.py",
         "scripts/ghc_family_v652_v1_evidence_validate.py",
         "scripts/ghc_family_v652_v1_closeout_validate.py",
+        "scripts/ghc_family_v652_v1_correction_validate.py",
         "scripts/ghc_family_v652_v1_final_validate.py",
         f"{PHASE_ROOT}/validation/x1-staged-privacy.json",
         f"{PHASE_ROOT}/validation/evidence-staged-privacy.json",
         f"{PHASE_ROOT}/validation/final-staged-privacy.json",
+        f"{PHASE_ROOT}/validation/correction-staged-privacy.json",
     }
     candidates = []
     confirmed = []
@@ -146,7 +150,6 @@ def validate() -> dict:
     test_rows = []
     test_total = 0
     for pattern in (
-        "test_ghc_family_v652_v1_x1.py",
         "test_ghc_family_v652_v1_x2.py",
         "test_ghc_family_v652_v1_closeout.py",
     ):
@@ -169,12 +172,16 @@ def validate() -> dict:
 
     x1_paths = diff_paths(SOURCE_HEAD, X1_HEAD)
     evidence_paths = diff_paths(X1_HEAD, EVIDENCE_HEAD)
-    final_delta_paths = diff_paths(EVIDENCE_HEAD, head)
+    closeout_delta_paths = diff_paths(EVIDENCE_HEAD, CLOSEOUT_HEAD)
+    correction_delta_paths = diff_paths(CLOSEOUT_HEAD, head)
+    closeout_owner_paths = {path for path in diff_paths(SOURCE_HEAD, CLOSEOUT_HEAD) if is_owner_path(path)}
     owner_paths = {path for path in diff_paths(SOURCE_HEAD, head) if is_owner_path(path)}
     x1_manifest = verify_manifest("validation/x1-staged-manifest.json", X1_HEAD, x1_paths)
     evidence_manifest = verify_manifest("validation/evidence-staged-manifest.json", EVIDENCE_HEAD, evidence_paths)
-    final_manifest = verify_manifest("validation/final-owner-manifest.json", head, owner_paths)
-    delta_manifest = verify_manifest("validation/final-delta-manifest.json", head, final_delta_paths)
+    closeout_manifest = verify_manifest("validation/final-owner-manifest.json", CLOSEOUT_HEAD, closeout_owner_paths)
+    closeout_delta_manifest = verify_manifest("validation/final-delta-manifest.json", CLOSEOUT_HEAD, closeout_delta_paths)
+    correction_manifest = verify_manifest("validation/correction-owner-manifest.json", head, owner_paths)
+    correction_delta_manifest = verify_manifest("validation/correction-delta-manifest.json", head, correction_delta_paths)
     privacy = privacy_scan(head, owner_paths)
 
     truth = load("final/phase-truth.json")
@@ -192,7 +199,7 @@ def validate() -> dict:
     phase_commit_count = int(run("git", "rev-list", "--count", f"{SOURCE_HEAD}..{head}"))
     merge_count = int(run("git", "rev-list", "--merges", "--count", f"{SOURCE_HEAD}..{head}"))
     parents = run("git", "show", "-s", "--format=%P", head).split()
-    direct_parent = parents == [EVIDENCE_HEAD]
+    direct_parent = parents == [CLOSEOUT_HEAD]
     diff_hygiene = run("git", "diff", "--check", SOURCE_HEAD, head) == ""
 
     upstream_name = run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
@@ -206,25 +213,27 @@ def validate() -> dict:
     checks = {
         "clean_before": clean_before,
         "exact_branch": branch == BRANCH,
-        "scoped_tests": test_total == 22,
+        "scoped_tests": test_total == 15,
         "detailed": detailed["passed"] == detailed["check_count"] and not detailed["issues"],
         "minimal": minimal["passed"] == minimal["check_count"] and not minimal["issues"],
         "json": not json_errors,
         "x1_manifest": x1_manifest["valid"],
         "evidence_manifest": evidence_manifest["valid"],
-        "final_owner_manifest": final_manifest["valid"],
-        "final_delta_manifest": delta_manifest["valid"],
+        "closeout_owner_manifest": closeout_manifest["valid"],
+        "closeout_delta_manifest": closeout_delta_manifest["valid"],
+        "correction_owner_manifest": correction_manifest["valid"],
+        "correction_delta_manifest": correction_delta_manifest["valid"],
         "privacy": not privacy["confirmed_hits"],
-        "truth": truth["effective_negatives"] == 8018 and truth["outcome_counts"] == {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
+        "truth": truth["effective_negatives"] == 8021 and truth["outcome_counts"] == {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
         "gates": truth["effective_open_gaps"] == 62 and truth["effective_exact_gates"] == 63,
-        "method_flow": method["counts"]["methods"] == 9 and method["counts"]["witness_results"] == {"fail": 12, "pass": 12},
+        "method_flow": method["counts"]["methods"] == 12 and method["counts"]["witness_results"] == {"fail": 17, "pass": 15},
         "documents": documents["valid"] and 10000 <= baton_words <= 100000,
         "route_held": route["delivery_state"] == "PREPARED_NOT_SENT" and route["messages_sent"] == 0,
         "ancestry": all(ancestry.values()),
-        "phase_commit_count": phase_commit_count == 3,
+        "phase_commit_count": phase_commit_count == 4,
         "zero_merges": merge_count == 0,
         "one_final_parent": len(parents) == 1,
-        "direct_evidence_parent": direct_parent,
+        "direct_closeout_parent": direct_parent,
         "diff_hygiene": diff_hygiene,
         "upstream_name": upstream_name == f"origin/{BRANCH}",
         "four_way_remote_equality": remote_equal,
@@ -242,14 +251,14 @@ def validate() -> dict:
         "minimal": {"passed": minimal["passed"], "checks": minimal["check_count"]},
         "json_parse_count": json_count,
         "json_errors": json_errors,
-        "manifests": {"x1": x1_manifest, "evidence": evidence_manifest, "final_owner": final_manifest, "final_delta": delta_manifest},
+        "manifests": {"x1": x1_manifest, "evidence": evidence_manifest, "closeout_owner": closeout_manifest, "closeout_delta": closeout_delta_manifest, "correction_owner": correction_manifest, "correction_delta": correction_delta_manifest},
         "privacy": {"scanned_files": privacy["scanned_files"], "pattern_class_count": len(privacy["pattern_classes"]), "candidate_count": len(privacy["candidates"]), "confirmed_hit_count": len(privacy["confirmed_hits"]), "confirmed_hits": privacy["confirmed_hits"]},
         "baton_word_count": baton_words,
         "ancestry": ancestry,
         "phase_commit_count": phase_commit_count,
         "merge_count": merge_count,
         "final_parent_count": len(parents),
-        "direct_evidence_parent": direct_parent,
+        "direct_closeout_parent": direct_parent,
         "remote_equality": {"local": head, "upstream": upstream_head, "tracking": tracking_head, "fresh_live": live_head, "equal": remote_equal},
         "full_repository_suite_run": False,
         "successful_canonical_passes": 1 if not issues else 0,

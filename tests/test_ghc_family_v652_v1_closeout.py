@@ -18,7 +18,7 @@ class TestV652V1Closeout(unittest.TestCase):
     def test_final_truth_and_board(self):
         truth = load("final/phase-truth.json")
         self.assertEqual(truth["outcome_counts"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual((truth["effective_negatives"], truth["effective_open_gaps"], truth["effective_exact_gates"]), (8018, 62, 63))
+        self.assertEqual((truth["effective_negatives"], truth["effective_open_gaps"], truth["effective_exact_gates"]), (8021, 62, 63))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(truth["independent_reproduction_claimed"])
     def test_route_is_prepared_not_sent(self):
@@ -41,7 +41,7 @@ class TestV652V1Closeout(unittest.TestCase):
         self.assertEqual(load("validation/final-staged-privacy.json")["confirmed_hit_count"], 0)
     def test_commit_contract(self):
         cap = load("final/commit-cap-contract.json")
-        self.assertEqual(cap["planned_phase_total"], 3)
+        self.assertEqual(cap["planned_phase_total"], 4)
         self.assertLessEqual(cap["planned_phase_total"], cap["maximum"])
         self.assertEqual(cap["merge_commits_allowed"], 0)
     def test_skill_runner_and_future_seat_boundaries(self):

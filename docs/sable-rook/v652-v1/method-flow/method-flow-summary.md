@@ -2,9 +2,9 @@
 
 - Phase: v652-v1
 - Owner: Sable Rook
-- Methods: 9
-- Passing witnesses: 12
-- Failed witnesses retained: 12
+- Methods: 12
+- Passing witnesses: 15
+- Failed witnesses retained: 17
 
 ## Preferred methods
 
@@ -79,6 +79,30 @@
 - Recurrence guard: Name every append-only lifecycle exception exactly and keep all proposal, preregistration, approval, and x1 validation content immutable.
 - Rollback: Retain the failed closeout receipt; no commit, push, route send, or canonical final pass occurred.
 - Witnesses: V6521-M09-WFAIL, V6521-M09-WPASS
+
+### V6521-M10 — Bind historical self-state tests to their immutable revision
+
+- Trigger: A test asserts the absence of x2 material and is valid only at the frozen x1 commit.
+- Method: Bind historical self-state tests to their immutable commit and use exact manifest plus ancestry evidence at the advanced head.
+- Recurrence guard: Run historical self-state tests only at their immutable revision; at a successor head use exact Git-blob manifest and ancestry proof plus lifecycle-eligible tests.
+- Rollback: Retain both failed witnesses of the same blocker; no final receipt, route send, repository mutation, or successful canonical pass occurred.
+- Witnesses: V6521-M10-WFAIL1, V6521-M10-WFAIL2, V6521-M10-WPASS
+
+### V6521-M11 — Bind lifecycle-count assertions to the advanced correction head
+
+- Trigger: An authorized additive recovery increases the current phase commit count within the existing ceiling.
+- Method: Refresh advanced lifecycle-count assertions while preserving immutable historical receipts at their exact commits.
+- Recurrence guard: Update advanced-head mirrors after authorized additive recovery while leaving commit-local historical receipts unchanged.
+- Rollback: Retain the precommit stop and isolated assertion; no correction commit, route send, or successful canonical pass occurred.
+- Witnesses: V6521-M11-WFAIL1, V6521-M11-WFAIL2, V6521-M11-WPASS
+
+### V6521-M12 — Split stale bulk patches into exact live-context edits
+
+- Trigger: A generated correction file has advanced since the patch context was composed.
+- Method: Inspect live source spans and use small exact-context patches after generated files advance.
+- Recurrence guard: Read the current span before patching and split generated-file changes into minimal exact-context operations.
+- Rollback: The failed patch changed nothing; retain its error and avoid widening the next edit.
+- Witnesses: V6521-M12-WFAIL, V6521-M12-WPASS
 
 ## Retained boundary
 

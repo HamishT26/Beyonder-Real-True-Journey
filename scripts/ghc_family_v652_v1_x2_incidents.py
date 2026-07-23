@@ -73,6 +73,33 @@ INCIDENTS = [
         "passing": "The corrected validator distinguishes the eight declared lifecycle updates from unexpected x1-frozen changes and retains the original failed receipt.",
         "recurrence_guard": "Bind x1 immutability to frozen proposal and preregistration content while naming every intentionally append-only lifecycle surface exactly.",
     },
+    {
+        "negative_id": "V6521-X2-N07",
+        "method_id": "V6521-M10",
+        "category": "historical_x1_self_state_in_final_selection",
+        "failed": "The first exact-final aggregate stopped before a receipt because it ran an immutable x1 self-state test against the advanced x2 tree; an isolated diagnostic confirmed the expected surfaces-directory assertion with six of seven x1 tests passing.",
+        "recovery": "Validate the x1 commit through its exact Git-blob manifest and ancestry, and run only the eligible x2 and closeout tests on the advanced final tree.",
+        "passing": "The corrected advanced-tree diagnostic selection passed all fifteen eligible x2 and closeout tests without rerunning the successful final aggregate, which had not yet occurred.",
+        "recurrence_guard": "Bind historical self-state tests to their immutable commit and exclude them explicitly from advanced-tree selections while preserving manifest and ancestry proof.",
+    },
+    {
+        "negative_id": "V6521-X2-N08",
+        "method_id": "V6521-M11",
+        "category": "stale_correction_commit_count_assertion",
+        "failed": "The first correction precommit validator stopped when the closeout test still required three phase commits; an isolated diagnostic confirmed that single stale assertion with six of seven tests passing.",
+        "recovery": "Update the advanced lifecycle test to the additive four-commit correction contract while retaining the immutable closeout receipt and original three-commit history at its exact revision.",
+        "passing": "The corrected closeout test selection passed all seven tests against the four-commit correction candidate.",
+        "recurrence_guard": "Refresh lifecycle-count assertions whenever an authorized additive recovery commit changes the advanced-head contract, without rewriting historical commit-local receipts.",
+    },
+    {
+        "negative_id": "V6521-X2-N09",
+        "method_id": "V6521-M12",
+        "category": "bulk_patch_context_mismatch",
+        "failed": "A bulk additive correction patch failed closed because one expected builder context did not match the live source; apply_patch changed no file.",
+        "recovery": "Read the exact live spans and apply smaller path-specific patches with minimal context.",
+        "passing": "The split exact-context patches updated the correction truth, tests, validators, and failure receipts without touching unrelated files.",
+        "recurrence_guard": "After a generated file has already advanced, inspect the live span and prefer small exact patches over a multi-file patch with copied stale context.",
+    },
 ]
 
 

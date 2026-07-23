@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 9,
-    "recommendations": 9,
-    "state_events": 27,
+    "methods": 12,
+    "recommendations": 12,
+    "state_events": 36,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 9,
+      "preferred": 12,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 12,
-      "pass": 12
+      "fail": 17,
+      "pass": 15
     },
-    "witnesses": 24
+    "witnesses": 32
   },
   "owner": "Sable Rook",
   "phase": "v652-v1",
@@ -161,6 +161,53 @@
         "V6521-M09-WFAIL",
         "V6521-M09-WPASS"
       ]
+    },
+    {
+      "candidate_workaround": "Bind historical self-state tests to their immutable commit and use exact manifest plus ancestry evidence at the advanced head.",
+      "method_id": "V6521-M10",
+      "recurrence_guard": "Run historical self-state tests only at their immutable revision; at a successor head use exact Git-blob manifest and ancestry proof plus lifecycle-eligible tests.",
+      "rollback": "Retain both failed witnesses of the same blocker; no final receipt, route send, repository mutation, or successful canonical pass occurred.",
+      "scope_boundary": "Bounded exact-revision selection recovery only; no independent-reproduction or Stage 20 credit.",
+      "title": "Bind historical self-state tests to their immutable revision",
+      "trigger_preconditions": [
+        "A test asserts the absence of x2 material and is valid only at the frozen x1 commit."
+      ],
+      "validation_witness_ids": [
+        "V6521-M10-WFAIL1",
+        "V6521-M10-WFAIL2",
+        "V6521-M10-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Refresh advanced lifecycle-count assertions while preserving immutable historical receipts at their exact commits.",
+      "method_id": "V6521-M11",
+      "recurrence_guard": "Update advanced-head mirrors after authorized additive recovery while leaving commit-local historical receipts unchanged.",
+      "rollback": "Retain the precommit stop and isolated assertion; no correction commit, route send, or successful canonical pass occurred.",
+      "scope_boundary": "Bounded correction-head lifecycle recovery only; no canonical-final or independent-reproduction credit.",
+      "title": "Bind lifecycle-count assertions to the advanced correction head",
+      "trigger_preconditions": [
+        "An authorized additive recovery increases the current phase commit count within the existing ceiling."
+      ],
+      "validation_witness_ids": [
+        "V6521-M11-WFAIL1",
+        "V6521-M11-WFAIL2",
+        "V6521-M11-WPASS"
+      ]
+    },
+    {
+      "candidate_workaround": "Inspect live source spans and use small exact-context patches after generated files advance.",
+      "method_id": "V6521-M12",
+      "recurrence_guard": "Read the current span before patching and split generated-file changes into minimal exact-context operations.",
+      "rollback": "The failed patch changed nothing; retain its error and avoid widening the next edit.",
+      "scope_boundary": "Bounded owner-file editing recovery only; no canonical-final or independent-reproduction credit.",
+      "title": "Split stale bulk patches into exact live-context edits",
+      "trigger_preconditions": [
+        "A generated correction file has advanced since the patch context was composed."
+      ],
+      "validation_witness_ids": [
+        "V6521-M12-WFAIL",
+        "V6521-M12-WPASS"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -175,7 +222,12 @@
     "V6521-M03-WFAIL3",
     "V6521-M08-WFAIL1",
     "V6521-M08-WFAIL2",
-    "V6521-M09-WFAIL"
+    "V6521-M09-WFAIL",
+    "V6521-M10-WFAIL1",
+    "V6521-M10-WFAIL2",
+    "V6521-M11-WFAIL1",
+    "V6521-M11-WFAIL2",
+    "V6521-M12-WFAIL"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
