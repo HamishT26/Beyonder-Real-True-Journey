@@ -1,0 +1,30 @@
+{
+  "effective_total": 9608,
+  "evidence_effective_total": 9605,
+  "none_erased": true,
+  "post_evidence_operational": [
+    {
+      "category": "powershell_foreach_direct_pipe_parser_error",
+      "failed": "A bounded closeout inspection placed a pipeline directly after a PowerShell foreach block and failed with 'An empty pipe element is not allowed.'",
+      "negative_id": "V6532-FINAL-N01",
+      "recovery": "Materialize foreach results in an owner-local array, then pipe that array to the bounded formatter; the corrected closeout inspection completed.",
+      "recurrence_guard": "Materialize PowerShell foreach output before piping it, especially in single-line bounded probes."
+    },
+    {
+      "category": "retained_negative_register_filename_assumption",
+      "failed": "A combined read-only probe guessed a nonexistent x1 retained-negative register filename and ended with a file-not-found result.",
+      "negative_id": "V6532-FINAL-N02",
+      "recovery": "Discover retained-negative files with rg --files before reading them; the bounded discovery confirmed the existing x2 and final register paths.",
+      "recurrence_guard": "Use exact rg --files discovery before reading lifecycle filenames that have not already been confirmed."
+    },
+    {
+      "category": "stale_closeout_test_expectation_after_retained_negatives",
+      "failed": "The first scoped closeout test after adding retained final negatives failed because its expected negative and Method Flow totals were stale.",
+      "negative_id": "V6532-FINAL-N03",
+      "recovery": "Update the scoped closeout assertions to the frozen terminal totals after recording this failure, rebuild once, and rerun the bounded test.",
+      "recurrence_guard": "Freeze retained-negative and Method Flow totals before the final scoped closeout test and keep count assertions synchronized with that freeze."
+    }
+  ],
+  "post_evidence_operational_count": 3,
+  "schema": "ghc.family.v653-v2.final-retained-negatives.v1"
+}
