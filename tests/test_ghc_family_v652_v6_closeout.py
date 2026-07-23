@@ -24,6 +24,7 @@ class TestTavianV652V6Closeout(unittest.TestCase):
             negatives["inherited"] + negatives["x1_operational"]
             + negatives["x2_operational"]
             + negatives["closeout_lifecycle_operational"]
+            + negatives.get("final_validation_operational", 0)
             + negatives["synthetic_mutations"],
         )
         gaps = self.load("final/open-gap-register.json")

@@ -2,9 +2,9 @@
 
 - Phase: v652-v6
 - Owner: Tavian Sol
-- Methods: 28
-- Passing witnesses: 28
-- Failed witnesses retained: 28
+- Methods: 30
+- Passing witnesses: 30
+- Failed witnesses retained: 30
 
 ## Preferred methods
 
@@ -231,6 +231,22 @@
 - Recurrence guard: Retain the exact failed witness and use only the isolated bounded recovery before rebuilding correction artifacts.
 - Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
 - Witnesses: V6526-WITNESS-28-F, V6526-WITNESS-28-P
+
+### V6526-METHOD-29 — Bounded recovery for failed_exact_final_retry
+
+- Trigger: failed_exact_final_retry
+- Method: Make the inherited closeout test include additive final-validation negatives and compare the sealed closeout selection to 51 while the corrected launch selection remains 58.
+- Recurrence guard: Retain the exact failure and validate only the corrected bounded surface before another pushed exact-head attempt.
+- Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
+- Witnesses: V6526-WITNESS-29-F, V6526-WITNESS-29-P
+
+### V6526-METHOD-30 — Bounded recovery for stale_context_minimal_check_patch
+
+- Trigger: stale_context_minimal_check_patch
+- Method: Read the exact current literal lines, replace four-phase with five-phase, and add the retained retry check at that bounded location.
+- Recurrence guard: Retain the exact failure and validate only the corrected bounded surface before another pushed exact-head attempt.
+- Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
+- Witnesses: V6526-WITNESS-30-F, V6526-WITNESS-30-P
 
 ## Retained boundary
 
