@@ -19,13 +19,15 @@ from typing import Any
 
 sys.dont_write_bytecode = True
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
 PHASE_ROOT = "docs/tavian-sol/v652-v6"
 SOURCE = "ad2a2e472c8e859296e62f1d2d6ce1f9f2b2b584"
 X1 = "9e5074cd42a0fdcbc342980c1960c15a30abe28f"
 EVIDENCE = "58b0ecfd1af72ba4cdee5657a87275747bbcbe0a"
+CLOSEOUT = "bdb02fbe63e189700b915e18c45bc00b80e5aaeb"
 BRANCH = "codex/GHC-Family/tavian-sol-v652-v6-cli"
-EXPECTED_SCOPED_TESTS = 51
-EXPECTED_NEGATIVES = 8910
+EXPECTED_SCOPED_TESTS = 58
+EXPECTED_NEGATIVES = 8914
 EXPECTED_OPEN_GAPS = 67
 EXPECTED_EXACT_GATES = 68
 TEST_PATTERNS = [
@@ -35,6 +37,7 @@ TEST_PATTERNS = [
     "test_ghc_family_v652_v6_x1.py",
     "test_ghc_family_v652_v6_core.py",
     "test_ghc_family_v652_v6_closeout.py",
+    "test_ghc_family_v652_v6_final_validation_correction.py",
 ]
 
 
@@ -272,6 +275,7 @@ def main() -> int:
             "source": SOURCE,
             "x1": X1,
             "evidence": EVIDENCE,
+            "closeout": CLOSEOUT,
         }.items()
     }
     commit_count = int(str(git("rev-list", "--count", f"{SOURCE}..{head}")))
@@ -287,14 +291,14 @@ def main() -> int:
     parent_line = str(git("rev-list", "--parents", "-n", "1", head)).split()
     check("lifecycle_ancestry", all(ancestry.values()), ancestry)
     check(
-        "three_phase_commits",
-        commit_count == 3,
-        {"expected": 3, "actual": commit_count},
+        "four_phase_commits",
+        commit_count == 4,
+        {"expected": 4, "actual": commit_count},
     )
     check("zero_merges", merge_count == 0, merge_count)
     check(
         "single_parent_final",
-        len(parent_line) == 2 and parent_line[1] == EVIDENCE,
+        len(parent_line) == 2 and parent_line[1] == CLOSEOUT,
         parent_line,
     )
 
@@ -357,7 +361,22 @@ def main() -> int:
         filter(None, str(git("diff", "--name-only", X1, EVIDENCE)).splitlines())
     )
     closeout_paths = set(
-        filter(None, str(git("diff", "--name-only", EVIDENCE, head)).splitlines())
+        filter(
+            None,
+            str(git("diff", "--name-only", EVIDENCE, CLOSEOUT)).splitlines(),
+        )
+    )
+    correction_paths = set(
+        filter(
+            None,
+            str(git("diff", "--name-only", CLOSEOUT, head)).splitlines(),
+        )
+    )
+    closeout_owner_paths = set(
+        filter(
+            None,
+            str(git("diff", "--name-only", SOURCE, CLOSEOUT)).splitlines(),
+        )
     )
     owner_tree = {
         path: full_tree[path] for path in owner_paths if path in full_tree
@@ -403,10 +422,15 @@ def main() -> int:
         "scripts/build_ghc_family_v652_v6_preregistration.py",
         "scripts/build_ghc_family_v652_v6_evidence.py",
         "scripts/build_ghc_family_v652_v6_closeout.py",
+        "scripts/build_ghc_family_v652_v6_final_validation_correction.py",
         "scripts/ghc_family_v652_v6_final_validate.py",
         f"{PHASE_ROOT}/validation/x1-staged-privacy.json",
         f"{PHASE_ROOT}/validation/evidence-staged-privacy.json",
         f"{PHASE_ROOT}/validation/closeout-staged-privacy.json",
+        (
+            f"{PHASE_ROOT}/validation/"
+            "final-validation-correction-staged-privacy.json"
+        ),
     }
     privacy_candidates: list[dict[str, str]] = []
     privacy_hits: list[dict[str, str]] = []
@@ -454,15 +478,30 @@ def main() -> int:
             evidence_paths,
         ),
         manifest_check(
-            head,
+            CLOSEOUT,
             f"{PHASE_ROOT}/validation/closeout-staged-manifest.json",
             "closeout-staged-manifest",
             closeout_paths,
         ),
         manifest_check(
-            head,
+            CLOSEOUT,
             f"{PHASE_ROOT}/validation/final-owner-manifest.json",
             "final-owner-manifest",
+            closeout_owner_paths,
+        ),
+        manifest_check(
+            head,
+            (
+                f"{PHASE_ROOT}/validation/"
+                "final-validation-correction-staged-manifest.json"
+            ),
+            "final-validation-correction-staged-manifest",
+            correction_paths,
+        ),
+        manifest_check(
+            head,
+            f"{PHASE_ROOT}/validation/final-corrected-owner-manifest.json",
+            "final-corrected-owner-manifest",
             owner_paths,
         ),
     ]
@@ -497,6 +536,30 @@ def main() -> int:
     minimal_receipt = read_json_blob(
         head, f"{PHASE_ROOT}/validation/closeout-minimal-validation.json"
     )
+    failed_attempt = read_json_blob(
+        head, f"{PHASE_ROOT}/validation/final-validation-failed-attempt-01.json"
+    )
+    correction_failed_attempt = read_json_blob(
+        head,
+        (
+            f"{PHASE_ROOT}/validation/"
+            "final-validation-correction-failed-attempt-01.json"
+        ),
+    )
+    diagnostic_failed_attempt = read_json_blob(
+        head,
+        (
+            f"{PHASE_ROOT}/validation/"
+            "final-validation-diagnostic-failed-attempt-01.json"
+        ),
+    )
+    correction_receipt = read_json_blob(
+        head,
+        (
+            f"{PHASE_ROOT}/validation/"
+            "final-validation-correction-validation-receipt.json"
+        ),
+    )
 
     expected_outcomes = {
         "completed": 23,
@@ -526,6 +589,7 @@ def main() -> int:
         and negatives["x1_operational"] == 17
         and negatives["x2_operational"] == 2
         and negatives["closeout_lifecycle_operational"] == 5
+        and negatives["final_validation_operational"] == 4
         and negatives["synthetic_mutations"] == 150
         and negatives["no_failure_erased"]
         and negatives["failed_attempts_receive_zero_aggregate_credit"]
@@ -542,10 +606,41 @@ def main() -> int:
     )
     check(
         "method_flow",
-        flow["counts"]["methods"] == 24
-        and flow["counts"]["witness_results"] == {"fail": 24, "pass": 24}
-        and flow["counts"]["states"]["preferred"] == 24,
+        flow["counts"]["methods"] == 28
+        and flow["counts"]["witness_results"] == {"fail": 28, "pass": 28}
+        and flow["counts"]["states"]["preferred"] == 28,
         flow["counts"],
+    )
+    check(
+        "failed_exact_final_attempt_retained",
+        failed_attempt["attempted_head"] == CLOSEOUT
+        and failed_attempt["failure_stage"] == "selected_test_import"
+        and failed_attempt["tests_run"] == 0
+        and failed_attempt["canonical_success_credit"] == 0
+        and not failed_attempt["external_receipt_written"]
+        and failed_attempt["retained_negative_id"] == "V6526-FINAL-N01",
+        {
+            "canonical": failed_attempt,
+            "correction": correction_failed_attempt,
+            "diagnostic": diagnostic_failed_attempt,
+        },
+    )
+    check(
+        "failed_correction_attempts_retained",
+        correction_failed_attempt["tests_run"] == 7
+        and correction_failed_attempt["passed"] == 6
+        and correction_failed_attempt["failures"] == 1
+        and correction_failed_attempt["canonical_success_credit"] == 0
+        and correction_failed_attempt["retained_negative_id"] == "V6526-FINAL-N02"
+        and diagnostic_failed_attempt["tests_run"] == 7
+        and diagnostic_failed_attempt["passed"] == 6
+        and diagnostic_failed_attempt["failures"] == 1
+        and diagnostic_failed_attempt["canonical_success_credit"] == 0
+        and diagnostic_failed_attempt["retained_negative_id"] == "V6526-FINAL-N03",
+        {
+            "correction": correction_failed_attempt,
+            "diagnostic": diagnostic_failed_attempt,
+        },
     )
     check(
         "phase_local_skills",
@@ -563,11 +658,15 @@ def main() -> int:
         and not build_receipt["full_repository_suite"]
         and closeout_receipt["valid"]
         and not closeout_receipt["full_repository_suite"]
-        and minimal_receipt["valid"],
+        and minimal_receipt["valid"]
+        and correction_receipt["valid"]
+        and correction_receipt["correction_tests_passed"] == 7
+        and correction_receipt["correction_tests_total"] == 7,
         {
             "build": build_receipt,
             "closeout": closeout_receipt,
             "minimal": minimal_receipt,
+            "correction": correction_receipt,
         },
     )
     check(
@@ -685,7 +784,7 @@ def main() -> int:
     minimal_names = {
         "exact_head",
         "lifecycle_ancestry",
-        "three_phase_commits",
+        "four_phase_commits",
         "zero_merges",
         "single_parent_final",
         "launch_scoped_contract",
@@ -695,6 +794,8 @@ def main() -> int:
         "five_class_privacy_scan",
         "manifest_parity",
         "negative_retention",
+        "failed_exact_final_attempt_retained",
+        "failed_correction_attempts_retained",
         "gate_retention",
         "method_flow",
         "terminal_abstention",

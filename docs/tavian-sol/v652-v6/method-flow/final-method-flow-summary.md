@@ -2,9 +2,9 @@
 
 - Phase: v652-v6
 - Owner: Tavian Sol
-- Methods: 24
-- Passing witnesses: 24
-- Failed witnesses retained: 24
+- Methods: 28
+- Passing witnesses: 28
+- Failed witnesses retained: 28
 
 ## Preferred methods
 
@@ -199,6 +199,38 @@
 - Recurrence guard: Use index and object batching for manifest replays; never spawn Git once per manifest entry on this Windows checkout.
 - Rollback: Stop, retain the failed witness, and leave external and authority state unchanged.
 - Witnesses: V6526-WITNESS-24-F, V6526-WITNESS-24-P
+
+### V6526-METHOD-25 — Restore repository-root import visibility before scoped loading
+
+- Trigger: scoped_test_import_from_direct_script_entrypoint
+- Method: Insert the resolved repository root at the front of sys.path before loading test modules, then enumerate the committed launch selection.
+- Recurrence guard: Every direct-entrypoint validator that imports repository packages must bind the repository root before dynamic module loading.
+- Rollback: Stop, retain the failed attempt, remove no evidence, and leave route and external authority state unchanged.
+- Witnesses: V6526-WITNESS-25-F, V6526-WITNESS-25-P
+
+### V6526-METHOD-26 — Bounded recovery for correction_builder_preflight_review_failure
+
+- Trigger: correction_builder_preflight_review_failure
+- Method: Read raw porcelain output without stripping its first leading status column, then rebuild the correction review and manifests from closeout.
+- Recurrence guard: Retain the exact failed witness and use only the isolated bounded recovery before rebuilding correction artifacts.
+- Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
+- Witnesses: V6526-WITNESS-26-F, V6526-WITNESS-26-P
+
+### V6526-METHOD-27 — Bounded recovery for diagnostic_correction_suite_failure
+
+- Trigger: diagnostic_correction_suite_failure
+- Method: Use the reproduced truncated path to isolate the leading-column parser defect, correct it, and rerun only through the rebuilt correction preflight.
+- Recurrence guard: Retain the exact failed witness and use only the isolated bounded recovery before rebuilding correction artifacts.
+- Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
+- Witnesses: V6526-WITNESS-27-F, V6526-WITNESS-27-P
+
+### V6526-METHOD-28 — Bounded recovery for malformed_regex_source_probe
+
+- Trigger: malformed_regex_source_probe
+- Method: Search the exact code token as a fixed string, then inspect only the bounded surrounding line range.
+- Recurrence guard: Retain the exact failed witness and use only the isolated bounded recovery before rebuilding correction artifacts.
+- Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
+- Witnesses: V6526-WITNESS-28-F, V6526-WITNESS-28-P
 
 ## Retained boundary
 

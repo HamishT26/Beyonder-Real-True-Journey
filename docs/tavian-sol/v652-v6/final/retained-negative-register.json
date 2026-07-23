@@ -42,8 +42,43 @@
       "recurrence_guard": "Use index and object batching for manifest replays; never spawn Git once per manifest entry on this Windows checkout."
     }
   ],
-  "effective_count": 8910,
+  "effective_count": 8914,
   "failed_attempts_receive_zero_aggregate_credit": true,
+  "final_validation_operational": 4,
+  "final_validation_rows": [
+    {
+      "canonical_success_credit": 0,
+      "category": "missing_repository_root_for_dynamic_test_import",
+      "failed": "The first exact-final invocation stopped before tests ran because the direct script entrypoint could not import the scripts package.",
+      "negative_id": "V6526-FINAL-N01",
+      "passing": "The corrected importer loaded all seven modules and enumerated 58 tests with no loader errors; canonical credit remained unclaimed.",
+      "recovery": "Bind the resolved repository root before importing scoped modules, then enumerate the corrected committed selection."
+    },
+    {
+      "canonical_success_credit": 0,
+      "category": "correction_builder_preflight_review_failure",
+      "failed": "The first correction build reached its targeted suite but failed one of seven tests because its staged review contained a truncated first path and was invalid.",
+      "negative_id": "V6526-FINAL-N02",
+      "passing": "The rebuilt review preserved every complete path, reported no unexpected path, and the targeted correction suite passed seven of seven.",
+      "recovery": "Read raw porcelain output without stripping its first leading status column, then rebuild the correction review and manifests from closeout."
+    },
+    {
+      "canonical_success_credit": 0,
+      "category": "diagnostic_correction_suite_failure",
+      "failed": "The isolated verbose diagnostic suite reproduced the invalid-review assertion as one failure among seven tests and earned zero validation credit.",
+      "negative_id": "V6526-FINAL-N03",
+      "passing": "The corrected raw-output parser retained the leading character and the rebuilt seven-test correction preflight passed completely.",
+      "recovery": "Use the reproduced truncated path to isolate the leading-column parser defect, correct it, and rerun only through the rebuilt correction preflight."
+    },
+    {
+      "canonical_success_credit": 0,
+      "category": "malformed_regex_source_probe",
+      "failed": "A bounded source-location probe used an unbalanced regular expression for code punctuation and exited with a regex parse error.",
+      "negative_id": "V6526-FINAL-N04",
+      "passing": "The literal probe located the refresh boundary and the bounded line read exposed the exact insertion point without interpreting punctuation.",
+      "recovery": "Search the exact code token as a fixed string, then inspect only the bounded surrounding line range."
+    }
+  ],
   "inherited": 8736,
   "no_failure_erased": true,
   "schema": "ghc.family.v652-v6.retained-negatives.final.v1",
