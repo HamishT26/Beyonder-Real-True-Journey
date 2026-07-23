@@ -19,15 +19,27 @@ class TestTavianV652V6FinalValidationCorrection(unittest.TestCase):
 
     def test_negative_is_additive(self):
         row = self.load("final/retained-negative-register.json")
-        self.assertEqual(row["final_validation_operational"], 4)
-        self.assertEqual(row["effective_count"], 8914)
+        self.assertGreaterEqual(row["final_validation_operational"], 4)
+        self.assertEqual(
+            row["effective_count"],
+            row["inherited"]
+            + row["x1_operational"]
+            + row["x2_operational"]
+            + row["closeout_lifecycle_operational"]
+            + row["final_validation_operational"]
+            + row["synthetic_mutations"],
+        )
         self.assertTrue(row["no_failure_erased"])
 
     def test_method_flow_retains_both_witnesses(self):
         flow = self.load("method-flow/final-method-flow-ledger.json")
-        self.assertEqual(flow["counts"]["methods"], 28)
-        self.assertEqual(flow["counts"]["witness_results"], {"fail":28,"pass":28})
-        self.assertEqual(flow["counts"]["states"]["preferred"], 28)
+        methods = flow["counts"]["methods"]
+        self.assertGreaterEqual(methods, 28)
+        self.assertEqual(
+            flow["counts"]["witness_results"],
+            {"fail": methods, "pass": methods},
+        )
+        self.assertEqual(flow["counts"]["states"]["preferred"], methods)
 
     def test_launch_contract_not_full_repository(self):
         row = self.load("final/final-validation-contract.json")

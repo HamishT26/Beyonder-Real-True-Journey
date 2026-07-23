@@ -2,9 +2,9 @@
 
 - Phase: v652-v6
 - Owner: Tavian Sol
-- Methods: 30
-- Passing witnesses: 30
-- Failed witnesses retained: 30
+- Methods: 31
+- Passing witnesses: 31
+- Failed witnesses retained: 31
 
 ## Preferred methods
 
@@ -247,6 +247,14 @@
 - Recurrence guard: Retain the exact failure and validate only the corrected bounded surface before another pushed exact-head attempt.
 - Rollback: Stop, retain the failed witness, and leave route, sibling, and external authority state unchanged.
 - Witnesses: V6526-WITNESS-30-F, V6526-WITNESS-30-P
+
+### V6526-METHOD-31 — Keep correction tests additive across later retained failures
+
+- Trigger: failed_exact_final_retry_2
+- Method: Make the first correction test assert additive lower bounds and component parity instead of freezing intermediate negative and Method Flow totals.
+- Recurrence guard: Correction tests may freeze their own minimum baseline but must derive cumulative totals from the current retained registers.
+- Rollback: Stop, retain the failed retry, and leave route, sibling, and external authority state unchanged.
+- Witnesses: V6526-WITNESS-31-F, V6526-WITNESS-31-P
 
 ## Retained boundary
 

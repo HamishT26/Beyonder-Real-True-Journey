@@ -1,22 +1,22 @@
 {
   "boundary": "This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.",
   "counts": {
-    "methods": 30,
-    "recommendations": 30,
-    "state_events": 90,
+    "methods": 31,
+    "recommendations": 31,
+    "state_events": 93,
     "states": {
       "candidate": 0,
       "deprecated": 0,
       "observed": 0,
-      "preferred": 30,
+      "preferred": 31,
       "superseded": 0,
       "validated": 0
     },
     "witness_results": {
-      "fail": 30,
-      "pass": 30
+      "fail": 31,
+      "pass": 31
     },
-    "witnesses": 60
+    "witnesses": 62
   },
   "owner": "Tavian Sol",
   "phase": "v652-v6",
@@ -470,6 +470,21 @@
         "V6526-WITNESS-30-F",
         "V6526-WITNESS-30-P"
       ]
+    },
+    {
+      "candidate_workaround": "Make the first correction test assert additive lower bounds and component parity instead of freezing intermediate negative and Method Flow totals.",
+      "method_id": "V6526-METHOD-31",
+      "recurrence_guard": "Correction tests may freeze their own minimum baseline but must derive cumulative totals from the current retained registers.",
+      "rollback": "Stop, retain the failed retry, and leave route, sibling, and external authority state unchanged.",
+      "scope_boundary": "Owner-local test correction only; no canonical, full-repository, independent-reproduction, or route-send credit.",
+      "title": "Keep correction tests additive across later retained failures",
+      "trigger_preconditions": [
+        "failed_exact_final_retry_2"
+      ],
+      "validation_witness_ids": [
+        "V6526-WITNESS-31-F",
+        "V6526-WITNESS-31-P"
+      ]
     }
   ],
   "retained_failed_witnesses": [
@@ -502,7 +517,8 @@
     "V6526-WITNESS-27-F",
     "V6526-WITNESS-28-F",
     "V6526-WITNESS-29-F",
-    "V6526-WITNESS-30-F"
+    "V6526-WITNESS-30-F",
+    "V6526-WITNESS-31-F"
   ],
   "schema": "ghc.family.method-flow-state.summary.v1",
   "valid": true
