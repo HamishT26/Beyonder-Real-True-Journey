@@ -1,0 +1,30 @@
+{
+  "effective_total": 9268,
+  "evidence_effective_total": 9265,
+  "none_erased": true,
+  "post_evidence_operational": [
+    {
+      "category": "powershell_ancestry_capture_parse_error",
+      "failed": "The first post-evidence push-and-ancestry wrapper placed a Git command and an exit-code comparison inside one parenthesized PowerShell expression, so the wrapper failed at parse time and no command in it ran.",
+      "negative_id": "V6528-FINAL-N01",
+      "recovery": "Run each ancestry command as its own statement and capture LASTEXITCODE only after the command returns.",
+      "recurrence_guard": "Do not embed semicolon-separated native commands inside a parenthesized PowerShell value expression."
+    },
+    {
+      "category": "powershell_foreach_pipeline_parse_error",
+      "failed": "The first closeout-template inventory piped a bare foreach statement directly into ConvertTo-Json, so PowerShell rejected the empty pipeline element before reading any file.",
+      "negative_id": "V6528-FINAL-N02",
+      "recovery": "Materialize the foreach results in an explicit array and pipe that array to ConvertTo-Json.",
+      "recurrence_guard": "Wrap statement-producing foreach blocks in an array expression before applying a PowerShell pipeline."
+    },
+    {
+      "category": "prebuild_syntax_probe_wrapper_timeout",
+      "failed": "The first four-file syntax-only probe exceeded its ten-second shell wrapper and returned no usable result.",
+      "negative_id": "V6528-FINAL-N03",
+      "recovery": "Repeat the same read-only AST parse with a bounded wrapper that allows normal interpreter startup time.",
+      "recurrence_guard": "Give multi-file Python startup probes at least thirty seconds on this Windows lane and treat timeout output as zero credit."
+    }
+  ],
+  "post_evidence_operational_count": 3,
+  "schema": "ghc.family.v652-v8.final-retained-negatives.v1"
+}
