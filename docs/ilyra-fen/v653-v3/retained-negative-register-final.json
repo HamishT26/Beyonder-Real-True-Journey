@@ -1,0 +1,23 @@
+{
+  "effective_total": 9771,
+  "evidence_effective_total": 9769,
+  "none_erased": true,
+  "post_evidence_operational": [
+    {
+      "category": "final_overview_exceeded_declared_document_cap",
+      "failed": "The first closeout build generated a 6,460-word integrated overview, exceeding the declared 6,000-word document cap; the candidate received zero closeout credit.",
+      "negative_id": "V6533-FINAL-N01",
+      "recovery": "Retain every proposal and boundary while removing repeated generic sentences from each proposal card, rebuild the overview, and require a 1,500-to-6,000-word receipt before staged review.",
+      "recurrence_guard": "Measure generated overview words inside the builder and fail the candidate unless the three-page minimum and document cap both pass."
+    },
+    {
+      "category": "inline_validator_import_missing_scripts_path",
+      "failed": "A compact precommit Python probe imported the v653-v3 validator as a package without first adding the repository scripts directory to sys.path and stopped with ModuleNotFoundError; it received zero validation credit.",
+      "negative_id": "V6533-FINAL-N02",
+      "recovery": "Insert the exact repository scripts directory into sys.path before importing phase validators, or invoke the supported validator entrypoints directly, then rerun only the bounded precommit probe.",
+      "recurrence_guard": "When a repository script uses sibling absolute imports, execute it from its supported entrypoint or explicitly establish the scripts import root before importing it in an inline probe."
+    }
+  ],
+  "post_evidence_operational_count": 2,
+  "schema": "ghc.family.v653-v3.final-retained-negatives.v1"
+}
