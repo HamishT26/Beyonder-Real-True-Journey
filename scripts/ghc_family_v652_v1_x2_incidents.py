@@ -27,7 +27,52 @@ INCIDENTS = [
         "recovery": "Materialize the per-runner collision rows in an array and pipe only the completed array.",
         "passing": "The corrected bounded collision inventory returned one row per proposed family-current runner.",
         "recurrence_guard": "Apply the existing M03 array-before-pipeline rule to every statement-level foreach wrapper.",
-    }
+    },
+    {
+        "negative_id": "V6521-X2-N02",
+        "method_id": "V6521-M07",
+        "category": "combined_status_file_probe_timeout",
+        "failed": "A combined read-only branch-status and file-discovery wrapper timed out after returning the branch and two expected untracked closeout paths; it made no repository or external mutation.",
+        "recovery": "Split large-worktree discovery into exact-path probes with a bounded timeout and materialize results before serialization.",
+        "passing": "The corrected exact-path probe returned the five requested path and length rows inside the bounded timeout.",
+        "recurrence_guard": "Prefer exact literal paths over recursive discovery in the large inherited checkout and keep status and file probes independently attributable.",
+    },
+    {
+        "negative_id": "V6521-X2-N03",
+        "method_id": "V6521-M03",
+        "category": "powershell_foreach_pipeline_recurrence",
+        "failed": "The first exact-path recovery wrapper again piped directly from a statement-level foreach block and failed in the Windows PowerShell parser before any command executed.",
+        "recovery": "Accumulate exact-path rows in an array, then pipe the completed array to JSON serialization.",
+        "passing": "The corrected array-first exact-path probe returned all five requested rows and identified both absent validator files.",
+        "recurrence_guard": "Apply M03 before issuing any statement-level foreach wrapper, including recovery probes.",
+    },
+    {
+        "negative_id": "V6521-X2-N04",
+        "method_id": "V6521-M08",
+        "category": "powershell_unicode_search_literal_parser_fault",
+        "failed": "A source-audit wrapper embedded mojibake characters in a double-quoted PowerShell search pattern and failed at parse time before ripgrep launched.",
+        "recovery": "Search count-bearing fields with an ASCII-only exact pattern and inspect Unicode content separately.",
+        "passing": "The ASCII-only exact search returned every 8,013 and 8013 closeout occurrence without mutation.",
+        "recurrence_guard": "Keep shell-level diagnostic patterns ASCII-only when Unicode content can be audited by code point in the target process.",
+    },
+    {
+        "negative_id": "V6521-X2-N05",
+        "method_id": "V6521-M08",
+        "category": "powershell_unicode_python_literal_parser_recurrence",
+        "failed": "A Python source-audit wrapper repeated the Unicode shell-literal parser fault before Python launched.",
+        "recovery": "Express the Unicode audit with numeric code points in an ASCII-only Python command.",
+        "passing": "The numeric code-point audit found five em dashes, eight a-macron characters, and zero Latin a-circumflex mojibake markers in the closeout builder.",
+        "recurrence_guard": "Pass numeric Unicode code points through PowerShell rather than embedding suspect glyph sequences in nested command literals.",
+    },
+    {
+        "negative_id": "V6521-X2-N06",
+        "method_id": "V6521-M09",
+        "category": "overbroad_x1_immutability_assertion",
+        "failed": "The first staged closeout validator passed every other check but rejected eight append-only lifecycle surfaces because it treated every x1 path as immutable proposal content.",
+        "recovery": "Preserve exact x1 Git-blob manifest validation while allowlisting only the declared append-only Method Flow, reflection, and family-index lifecycle surfaces.",
+        "passing": "The corrected validator distinguishes the eight declared lifecycle updates from unexpected x1-frozen changes and retains the original failed receipt.",
+        "recurrence_guard": "Bind x1 immutability to frozen proposal and preregistration content while naming every intentionally append-only lifecycle surface exactly.",
+    },
 ]
 
 

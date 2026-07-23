@@ -1,0 +1,28 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_additive_recovery",
+  "candidate_workaround": "Keep shell diagnostics ASCII-only and inspect Unicode through numeric code points in the target process.",
+  "failure_signature": "A nested PowerShell diagnostic literal containing suspect Unicode or mojibake fails before the intended tool launches.",
+  "method_id": "V6521-M08",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "utf8_fidelity",
+    "privacy",
+    "same_owner_only",
+    "no_stage20_promotion"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Use ASCII-only shell patterns and numeric Unicode code points for nested diagnostic commands.",
+  "retained_negative_ids": [
+    "V6521-X2-N04",
+    "V6521-X2-N05"
+  ],
+  "rollback": "Retain both parser failures; neither launched its intended read-only tool or changed state.",
+  "scope_boundary": "Bounded Sable-owned source-audit recovery only; no external or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Keep nested shell diagnostics ASCII-only",
+  "trigger_preconditions": [
+    "A PowerShell wrapper must inspect Unicode or suspected mojibake in source text."
+  ],
+  "validation_witness_ids": []
+}

@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_read_only_or_owned_additive_recovery",
+  "candidate_workaround": "Split large-worktree discovery into exact literal-path probes with bounded timeouts.",
+  "failure_signature": "A combined branch-status and recursive file-discovery wrapper returns partial evidence and then times out.",
+  "method_id": "V6521-M07",
+  "privacy_class": "sanitized_owner_local_workflow",
+  "protected_gates": [
+    "failure_retention",
+    "sibling_lane_isolation",
+    "privacy",
+    "same_owner_only",
+    "no_stage20_promotion"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Prefer exact literal paths over recursive discovery in the inherited large checkout and keep status and file probes independently attributable.",
+  "retained_negative_ids": [
+    "V6521-X2-N02"
+  ],
+  "rollback": "Retain the partial timeout output; the read-only wrapper made no repository or external mutation.",
+  "scope_boundary": "Bounded Sable-owned workflow recovery only; no external or independent-reproduction claim.",
+  "supersedes": [],
+  "title": "Split large-worktree discovery into exact bounded probes",
+  "trigger_preconditions": [
+    "A read-only wrapper combines branch status with recursive file discovery in a large inherited checkout."
+  ],
+  "validation_witness_ids": []
+}
