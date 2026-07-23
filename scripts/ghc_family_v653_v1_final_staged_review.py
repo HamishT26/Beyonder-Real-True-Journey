@@ -19,7 +19,7 @@ from ghc_family_v653_v1_validation_common import (
 REVIEW = "docs/vesper-arlen/v653-v1/validation/final-staged-review.json"
 MANIFEST = "docs/vesper-arlen/v653-v1/validation/final-staged-manifest.json"
 SELF_EXCLUSIONS = {REVIEW, MANIFEST}
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "d62dc135c61fa2a7d7bbe383aa50f2d221bbe95a"
 
 
 def build() -> dict:

@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/vesper-arlen/v653-v1"
 SOURCE = "3b955da5070d8b73bbfc23acbbaac541c57cb1bc"
 X1 = "9e03d9c0cbcfb4ff22e1b5df2ae143c59a1432ac"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "d62dc135c61fa2a7d7bbe383aa50f2d221bbe95a"
 
 
 def load(relative: str):
@@ -25,9 +25,9 @@ class V653V1CloseoutTests(unittest.TestCase):
     def test_closeout_truth(self) -> None:
         closeout = load("closeout-receipt.json")
         self.assertEqual(closeout["outcomes"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual(closeout["effective_negatives"], 9435)
+        self.assertEqual(closeout["effective_negatives"], 9436)
         self.assertEqual((closeout["effective_open_gaps"], closeout["effective_exact_gates"]), (70, 71))
-        self.assertEqual((closeout["method_fail_witnesses"], closeout["method_pass_witnesses"]), (17, 17))
+        self.assertEqual((closeout["method_fail_witnesses"], closeout["method_pass_witnesses"]), (18, 18))
         self.assertEqual(closeout["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(closeout["full_repository_suite_run"])
 

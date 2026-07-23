@@ -26,7 +26,7 @@ from ghc_family_v653_v1_validation_common import (
 
 SOURCE = "3b955da5070d8b73bbfc23acbbaac541c57cb1bc"
 X1 = "9e03d9c0cbcfb4ff22e1b5df2ae143c59a1432ac"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "d62dc135c61fa2a7d7bbe383aa50f2d221bbe95a"
 TEST_MODULES = [
     "tests.test_ghc_family_v653_v1_x1",
     "tests.test_ghc_family_v653_v1_core",

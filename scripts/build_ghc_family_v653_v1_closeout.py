@@ -22,12 +22,20 @@ from ghc_family_v653_v1_validation_common import (
 
 SOURCE = "3b955da5070d8b73bbfc23acbbaac541c57cb1bc"
 X1 = "9e03d9c0cbcfb4ff22e1b5df2ae143c59a1432ac"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "d62dc135c61fa2a7d7bbe383aa50f2d221bbe95a"
 METHOD_RUNNER = (
     Path.home()
     / ".codex/skills/ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py"
 )
-FINAL_NEGATIVES: list[dict[str, str]] = []
+FINAL_NEGATIVES: list[dict[str, str]] = [
+    {
+        "negative_id": "V6531-FINAL-N01",
+        "category": "windows_rg_wildcard_recurrence",
+        "failed": "The first post-evidence stale-anchor scan again passed Windows wildcard path arguments directly to rg, which stopped with operating-system error 123 and earned zero credit.",
+        "recovery": "Search literal directory roots and select the intended filenames with repeated rg -g include patterns.",
+        "recurrence_guard": "Use rg -g for every Windows filename selection, including closeout anchor scans; never pass wildcard path arguments.",
+    }
+]
 FINAL_SELF_EXCLUSIONS = {
     "docs/vesper-arlen/v653-v1/validation/final-owner-manifest.json",
     "docs/vesper-arlen/v653-v1/validation/final-staged-manifest.json",
@@ -603,6 +611,25 @@ def build() -> None:
             "valid": True,
         },
     )
+    for lifecycle_path, schema in (
+        (
+            PHASE / "validation/final-staged-manifest.json",
+            "ghc.family.v653-v1.final-staged-manifest.v1",
+        ),
+        (
+            PHASE / "validation/final-staged-review.json",
+            "ghc.family.v653-v1.final-staged-review.v1",
+        ),
+    ):
+        write_json(
+            lifecycle_path,
+            {
+                "schema": schema,
+                "state": "UNVALIDATED_PLACEHOLDER",
+                "valid": False,
+                "boundary": "Reserved lifecycle path. Replace once with the exact final staged result before commit.",
+            },
+        )
     build_owner_manifest()
     print(
         json.dumps(
