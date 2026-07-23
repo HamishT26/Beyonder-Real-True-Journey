@@ -61,7 +61,7 @@ The packet also distinguishes absence, refusal, and reservation. A zero-row adap
 
 ## Final reconciliation
 
-The immutable evidence commit is `d185405470b9205a21d9b018bc0d3f7f44f49444`. Closeout adds no new empirical row, participant, operator, key, network event, production decision, legal interpretation, cultural decision, affected-party acceptance, or authority. It reconciles 23 completed, five represented, one open-gap, and one exact-gate outcome while retaining 8,203 effective negatives, 63 open gaps, and 64 exact gates. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+The immutable evidence commit is `d185405470b9205a21d9b018bc0d3f7f44f49444`. Closeout adds no new empirical row, participant, operator, key, network event, production decision, legal interpretation, cultural decision, affected-party acceptance, or authority. It reconciles 23 completed, five represented, one open-gap, and one exact-gate outcome while retaining 8,212 effective negatives, 63 open gaps, and 64 exact gates. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
 
 The workload discipline kept x1 and x2 separate, pushed and proved each anchor before its successor, used D-first owner storage, kept owner growth below 15,000 files, and reserved one successful exact-final canonical pass with no replay. This is workflow and pacing metadata only; it is not a claim about emotion, health, consciousness, personhood, identity continuity, employment, or authority.
 
@@ -194,3 +194,19 @@ The static report is structurally useful but reserves manual keyboard, browser, 
 ## Terminal correction
 
 The first closeout-head validator invocation stopped before running any test because its discovery mechanism required the non-package tests directory to be importable. It has zero validation credit and remains retained as `V6522-X2-N16`. The narrow additive correction loads the five exact test files by file-module spec and counted 39 tests in a dependency-only preflight without executing the canonical suite. The single successful pass remains unused until the corrected head is committed, pushed, clean, and four-way remote-equal.
+
+## Second terminal correction
+
+The first-correction aggregate passed 38 of 39 tests and failed only an inherited x1 self-state assertion that requires its own later x2 surface to be absent. It also misclassified three pattern literals in the active correction review source because that scanner definition path was missing. The aggregate has zero credit and remains retained. The second narrow correction excludes exactly that named lifecycle-local test, adds exactly that scanner-definition path, records 39 raw and 38 eligible tests, and preserves the single successful canonical pass for the second-corrected pushed head.
+
+## Second-correction postflight
+
+Three precommit tooling faults remain retained: a truncated restage response, a guessed lifecycle manifest path and schema shape, and an atomic broad-patch rejection. The recovery did not repeat the uncertain mutation. It discovered the exact manifest and proved 21 declared and staged paths, zero missing, zero extra, zero unstaged, and all four self-exclusions staged before applying exact current-byte builder hunks. These are zero-credit tooling negatives, not additional canonical validator invocations.
+
+## Final correction-two tooling postflight
+
+Two later zero-credit faults also remain: a compound worktree probe timed out amid line-ending warnings, and a quote-bearing PowerShell search failed before execution. Their bounded recoveries used one porcelain status read and one fixed-string single-quoted source search. Neither was a canonical validator invocation.
+
+## Frozen-ledger staged-review boundary
+
+The first correction-two review wrapper timed out while its child continued. That child later produced an invalid receipt because timeout-derived Method Flow evidence had changed the ledger, leaving exactly one unstaged path. Its 222 JSON parses, zero privacy hits, and six valid inherited-manifest replays remain observations, but the review has zero credit. Method Flow is now frozen at 37 methods and 74 witnesses before the final staged review; two methods remain candidates rather than being promoted without a committed bounded witness.

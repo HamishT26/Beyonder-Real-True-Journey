@@ -18,7 +18,7 @@ class TestGhcFamilyV652V2Closeout(unittest.TestCase):
         truth = load("final/phase-truth.json")
         board = load("final/terminal-stage20-board.json")
         self.assertEqual(truth["outcome_counts"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
-        self.assertEqual((truth["effective_negatives"], truth["open_gaps"], truth["exact_gates"]), (8203, 63, 64))
+        self.assertEqual((truth["effective_negatives"], truth["open_gaps"], truth["exact_gates"]), (8212, 63, 64))
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(board["ready"])
 
@@ -32,11 +32,11 @@ class TestGhcFamilyV652V2Closeout(unittest.TestCase):
     def test_method_flow_and_negative_retention(self):
         method = load("method-flow/method-flow-ledger.json")
         negatives = load("final/retained-negative-register.json")
-        self.assertEqual((method["counts"]["methods"], method["counts"]["witnesses"]), (28, 58))
-        self.assertEqual(method["counts"]["witness_results"], {"fail": 30, "pass": 28})
-        self.assertEqual(negatives["effective_at_final"], 8203)
+        self.assertEqual((method["counts"]["methods"], method["counts"]["witnesses"]), (37, 74))
+        self.assertEqual(method["counts"]["witness_results"], {"fail": 39, "pass": 35})
+        self.assertEqual(negatives["effective_at_final"], 8212)
         self.assertEqual(negatives["closeout_operational_count"], 6)
-        self.assertEqual(negatives["terminal_operational_count"], 1)
+        self.assertEqual(negatives["terminal_operational_count"], 10)
         self.assertTrue(negatives["no_failure_erased"])
 
     def test_baton_overview_and_report(self):
@@ -60,6 +60,8 @@ class TestGhcFamilyV652V2Closeout(unittest.TestCase):
         seal = load("final/seal-candidate.json")
         correction = load("final/terminal-correction-receipt.json")
         corrected_seal = load("final/corrected-seal-candidate.json")
+        correction2 = load("final/terminal-correction-2-receipt.json")
+        corrected_seal2 = load("final/corrected-seal-2-candidate.json")
         self.assertEqual(closeout["expected_phase_commits"], 3)
         self.assertEqual(closeout["expected_merges"], 0)
         self.assertEqual(seal["expected_final_parent"], "d185405470b9205a21d9b018bc0d3f7f44f49444")
@@ -68,6 +70,9 @@ class TestGhcFamilyV652V2Closeout(unittest.TestCase):
         self.assertEqual(correction["failed_invocation_tests_run"], 0)
         self.assertEqual(corrected_seal["expected_corrected_final_parent"], "0053eef587ebdc88d8bafbf09b2f214737abd539")
         self.assertTrue(correction["valid_candidate"] and corrected_seal["valid_candidate"])
+        self.assertEqual(correction2["failed_invocation_tests"], {"passed": 38, "total": 39})
+        self.assertEqual(corrected_seal2["expected_corrected_final_parent"], "19239aa3b00c8d7e32b329a2addae8391c8662a8")
+        self.assertTrue(correction2["valid_candidate"] and corrected_seal2["valid_candidate"])
 
     def test_environment_and_authority_boundaries(self):
         env = load("final/environment-version-receipt.json")
@@ -89,6 +94,10 @@ class TestGhcFamilyV652V2Closeout(unittest.TestCase):
             "validation/corrected-owner-manifest.json",
             "validation/correction-staged-privacy.json",
             "validation/correction-staged-review.json",
+            "validation/correction2-delta-manifest.json",
+            "validation/corrected2-owner-manifest.json",
+            "validation/correction2-staged-privacy.json",
+            "validation/correction2-staged-review.json",
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
 

@@ -19,13 +19,13 @@ Eight future CLI seats remain bounded placeholders only: eight prepared, zero na
 - Dedicated x1 freeze: `3f5b49dc1a380452593c8080c3ae134e654c2079`.
 - Immutable evidence commit: `d185405470b9205a21d9b018bc0d3f7f44f49444`.
 - Exact final: supplied by the one acknowledged activation message because a commit cannot self-embed its own hash.
-- Corrected source-to-final history: exactly four Orin phase commits, zero merges, one parent for final, and complete source/x1/evidence/first-closeout ancestry. Corrected final must be the direct child of first closeout `0053eef587ebdc88d8bafbf09b2f214737abd539`.
+- Second-corrected source-to-final history: exactly five Orin phase commits, zero merges, one parent for final, and complete source/x1/evidence/first-closeout/first-correction ancestry. Final must be the direct child of first correction `19239aa3b00c8d7e32b329a2addae8391c8662a8`.
 - X1 was clean, pushed, and local/upstream/tracking/fresh-live equal before x2. Evidence was separately exact-staged, committed, pushed, clean, and four-way equal before closeout.
 - Novelty audit: 1,210 inherited frozen proposals plus exactly 30 Orin proposals, for 1,240 frozen proposals through v652-v2.
 - Outcome truth: exactly 23 `completed`, 5 `represented`, 1 `open_gap`, and 1 `exact_gate`.
-- Effective negatives at corrected final: 8,203. The added terminal negative is the zero-test non-package discovery failure; no failure was erased or netted out by recovery.
+- Effective negatives at second-corrected final: 8,212. Ten terminal negatives retain both failed validator aggregates and eight precommit tooling or review faults through the frozen-ledger staged-review boundary; no failure was erased or netted out by recovery.
 - Effective open gaps: 63. Effective exact gates: 64. None was silently closed.
-- Method Flow at corrected final: 28 preferred methods, 30 retained failed witnesses, 28 bounded passing witnesses, and 58 witnesses total. Recovery erased no failure and earned no external authority or independent-reproduction credit.
+- Method Flow at second-corrected final: 37 methods, of which 35 are preferred and two remain candidates; 39 retained failed witnesses, 35 bounded passing witnesses, and 74 witnesses total. Recovery erased no failure and earned no external authority or independent-reproduction credit.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
 
 ## Primary focus, practice, and claim boundaries
@@ -533,7 +533,7 @@ Owner-generated growth remains below 15,000 files; the inherited checkout baseli
 
 ## Retained negative and Method Flow truth
 
-The 8,203 effective negatives comprise 8,022 inherited sealed and external activation negatives, 15 x1 operational negatives, 9 evidence-lifecycle operational negatives, six closeout diagnostic, precondition, partial-build, or document-contract negatives, one zero-test terminal validator discovery negative, and 150 executed rejected mutations. Every failed aggregate, timeout, parser fault, stale schema assumption, filename assumption, quoting fault, truncated response, warning-transport fault, and invalid search remains zero-credit evidence beside its recovery. A later pass never rewrites the historical result of a failed attempt.
+The 8,212 effective negatives comprise 8,022 inherited sealed and external activation negatives, 15 x1 operational negatives, 9 evidence-lifecycle operational negatives, six closeout diagnostic, precondition, partial-build, or document-contract negatives, two terminal validator aggregate negatives, eight terminal tooling or review negatives, and 150 executed rejected mutations. Every failed aggregate, timeout, parser fault, stale schema assumption, filename assumption, quoting fault, truncated response, warning-transport fault, and invalid search remains zero-credit evidence beside its recovery. A later pass never rewrites the historical result of a failed attempt.
 
 ### V6522-METHOD-01 — Derive the remote-tracking ref from the configured upstream
 
@@ -685,7 +685,7 @@ Source statuses are current or stable only as recorded for this phase and must b
 
 ## Validation contract and exact-final discipline
 
-Eiren alone owns the complete repository suite. Orin must not run it. The authorized Orin final selection contains the 15 inherited Sable v652-v1 x1/x2 tests, the 16 Orin x1/x2 tests, and the current closeout tests. The seven inherited Sable closeout tests remain excluded because they enforce Sable's own lifecycle-local final state rather than successor behavior; that exclusion may not be broadened. The first closeout-head invocation stopped before running any test because the tests directory is not a package; it has zero validation credit. The corrected loader binds the five exact files through importlib and counted 39 tests without executing them. Orin must run one dependency-justified successful canonical pass only at the corrected pushed final head, with no replay after success. Any failed aggregate receives zero credit and remains retained.
+Eiren alone owns the complete repository suite. Orin must not run it. The authorized Orin final selection contains the 15 inherited Sable v652-v1 x1/x2 tests, the 16 Orin x1/x2 tests, and the current closeout tests. The seven inherited Sable closeout tests remain excluded because they enforce Sable's own lifecycle-local final state rather than successor behavior; that exclusion may not be broadened. The first closeout-head invocation stopped before running any test because the tests directory is not a package; it has zero validation credit. The loader binds five exact files through importlib. The second preflight counted 39 raw tests and 38 eligible tests after excluding only the inherited v652-v1 x1 self-state assertion `test_document_caps_privacy_and_x1_only`; it also classified the active correction-review source as a scanner definition. Orin must run one dependency-justified successful canonical pass only at the second-corrected pushed final head, with no replay after success. Any failed aggregate receives zero credit and remains retained.
 
 The pass must include the scoped tests, detailed and minimal checks, complete phase JSON parsing, five-class privacy and raw-identifier scanning, exact x1/evidence/closeout-delta/final-owner manifest parity through immutable Git blobs, semantic stale-label review, diff hygiene, source/x1/evidence ancestry, exactly three Orin commits, zero merges, one final parent, exact branch and head, clean before and after, zero divergence, and local/upstream/tracking/fresh-live equality. Same-owner success remains same-owner evidence only.
 
@@ -699,7 +699,7 @@ Preserve strict x1-before-x2 separation. Audit semantic novelty against all 1,24
 
 Treat inherited proposals and portfolios as evidence only, never Tamar completion credit. Freeze genuinely new safe-now, bounded candidate, skill, runner, and additive CLEAN/FIX/REFINE portfolios at the floors required by the newest authorized baton. Do not manufacture unsafe work. Participant-dependent, empirical, professional, legal, cultural, Māori-authority, production, privacy-complete, destructive, credential, account, key, host-security, sibling-mutation, or affected-party work must remain `open_gap`, `exact_gate`, exact approval, or blocked.
 
-Use no more than two x1 and two x2 commits and stay within the current declared phase cap. Prefer one x1 freeze, one evidence commit, and one combined final closeout/seal commit, reserving correction capacity only for a truthful narrow defect. Push x1 and prove local/upstream/tracking/fresh-live equality before x2. Execute only as evidence permits, using only `completed`, `represented`, `open_gap`, and `exact_gate` as core outcomes. Preserve all 8,203 inherited negatives, all 63 open gaps, all 64 exact gates, and every new failure and bounded recovery through Method Flow.
+Use no more than two x1 and two x2 commits and stay within the current declared phase cap. Prefer one x1 freeze, one evidence commit, and one combined final closeout/seal commit, reserving correction capacity only for a truthful narrow defect. Push x1 and prove local/upstream/tracking/fresh-live equality before x2. Execute only as evidence permits, using only `completed`, `represented`, `open_gap`, and `exact_gate` as core outcomes. Preserve all 8,212 inherited negatives, all 63 open gaps, all 64 exact gates, and every new failure and bounded recovery through Method Flow.
 
 Do not run the full repository suite; Eiren alone owns it. Use Tamar's authorized bounded current, inherited, and successor-scoped selection, detailed and minimal validators, complete JSON parsing, five-class privacy scanning, exact staged and owner manifests, stale-label review, diff hygiene, ancestry, zero merges, commit cap, one final parent, exact head, clean state, and final four-way equality. Permit one successful canonical exact-final pass only and no replay after success.
 
@@ -720,3 +720,21 @@ Orin v652-v2 remains `NOT_READY_FOR_STAGE_20`. Its 23 completed outcomes are bou
 ## Narrow terminal correction truth
 
 The first closeout head is `0053eef587ebdc88d8bafbf09b2f214737abd539`. Its exact-final validator invocation ran zero tests and stopped at module discovery because `tests` is not a package. That invocation receives zero validation credit, consumed no successful pass, changed no repository or route state, and remains `V6522-X2-N16`. The additive correction changes only the scoped loader and its truthful lifecycle surfaces: each of the five exact test files is loaded with an importlib file-module spec, the dependency preflight counts 39 tests without running them, and the single successful canonical pass remains reserved for the corrected pushed head. Tamar must preserve both the failed invocation and the corrected witness; neither is independent reproduction or full-suite evidence.
+
+## Second narrow terminal correction truth
+
+The first-correction head is `19239aa3b00c8d7e32b329a2addae8391c8662a8`. Its aggregate ran 39 tests and passed 38. The sole failure was `test_document_caps_privacy_and_x1_only` from the inherited v652-v1 x1 module: that test asserts its own x2 surface is absent and is therefore an x1 lifecycle-local self-state assertion, not a successor behavior contract. The same aggregate reported three privacy hits, all pattern literals inside `scripts/ghc_family_v652_v2_correction_review.py`; the correction scanner itself had omitted that active scanner source from its exact definition set. The aggregate receives zero validation credit and remains `V6522-X2-N17`.
+
+The second correction excludes only that named inherited x1 self-state test, keeps every other inherited and current test, and records 39 raw with 38 eligible tests. It adds only the active correction review source to the scanner-definition set. A dependency-only preflight confirmed the exact exclusion and reclassification without running the canonical suite. No successful pass has yet occurred, no replay-after-success rule has been invoked, and the route remains `PREPARED_NOT_SENT`.
+
+## Second-correction postflight truth
+
+Three later precommit tooling faults remain visible as `V6522-X2-N18` through `V6522-X2-N20`: an index-restage response was truncated before attributable completion, a read-only probe guessed the lifecycle manifest location and exclusion shape, and a broad builder patch was rejected atomically because one hunk described intended target text rather than current source bytes. No canonical validator ran in these attempts. The recovery did not repeat the uncertain mutation; it discovered the exact lifecycle manifest, proved 21 declared and staged paths with zero missing, extra, or unstaged paths and all four self-exclusions staged, then reduced the builder change to exact current-byte hunks.
+
+## Final correction-two tooling postflight
+
+Two further zero-credit tooling faults remain `V6522-X2-N21` and `V6522-X2-N22`: a compound worktree count probe timed out amid line-ending warnings, and a quote-bearing PowerShell search failed before execution. One bounded porcelain read returned 21 tracked rows, 21 staged paths, and 15 newer unstaged regeneration changes. One fixed-string single-quoted search then bound the exact builder count lines. Neither attempt ran the canonical validator or changed route state.
+
+## Frozen-ledger staged-review boundary
+
+Three further zero-credit negatives remain `V6522-X2-N23` through `V6522-X2-N25`. The 120-second review wrapper timed out while its child continued; the initial assumption that the child had ended was false; and the child eventually returned an invalid receipt because timeout-derived Method Flow evidence had changed the ledger after its staged snapshot. The receipt still preserved 222 JSON parses, zero privacy hits, six valid prior-manifest replays, and exactly one unstaged ledger path. Method Flow is now frozen at 37 methods and 74 witnesses before the final staged review; the two review-related methods remain candidates rather than receiving premature promotion.
