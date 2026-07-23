@@ -1,0 +1,35 @@
+{
+  "effective_after_evidence": 8548,
+  "inherited_effective": 8383,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v652-v4.retained-negatives.evidence.v1",
+  "synthetic_mutations_executed_and_rejected_or_quarantined": 150,
+  "x1_operational": 12,
+  "x2_operational": 3,
+  "x2_operational_rows": [
+    {
+      "category": "skill_validator_help_assumption",
+      "failed": "A combined skill-creator help probe passed --help to quick_validate.py, which treats its argument as a skill directory and returned SKILL.md not found; no validation credit was assigned.",
+      "negative_id": "V6524-X2-N01",
+      "passing": "All ten concrete phase-local skill packages passed quick validation and were smoke-used through their mapped runner.",
+      "recovery": "Invoke quick_validate.py with each concrete phase-local skill directory after deterministic initialization and customization.",
+      "recurrence_guard": "Treat quick_validate.py as a positional path validator rather than an argparse help surface."
+    },
+    {
+      "category": "dual_import_context_assumption",
+      "failed": "The first combined current test aggregate could import the core as a scripts package but the core used only a top-level phase-data import, causing ModuleNotFoundError; the aggregate earned zero credit.",
+      "negative_id": "V6524-X2-N02",
+      "passing": "The corrected combined x1 and x2 current test aggregate passed all twenty-two tests in the repository import context.",
+      "recovery": "Support both direct runner execution and package-based unittest import with a narrow phase-data import fallback.",
+      "recurrence_guard": "Exercise family-current modules both as direct scripts and package imports."
+    },
+    {
+      "category": "family_current_runner_allowlist_assumption",
+      "failed": "The second evidence build passed all current tests and validators but the staged-review allowlist rejected nine intentionally generic family-current runner names because they do not contain the phase token; the build received no evidence-commit credit.",
+      "negative_id": "V6524-X2-N03",
+      "passing": "The exact evidence-delta allowlist accepted every frozen family-current runner and rejected no out-of-scope path.",
+      "recovery": "Allow exactly the ten runner filenames frozen in x1 plus the explicit v652-v4 builder, core, validator, and test paths, without broadening the scripts directory.",
+      "recurrence_guard": "Derive staged script allowlists from the frozen runner ledger rather than requiring phase tokens in family-current compatibility names."
+    }
+  ]
+}
