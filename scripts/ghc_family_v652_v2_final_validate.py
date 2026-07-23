@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import io
 import json
 import re
@@ -21,6 +22,7 @@ PHASE_ROOT = "docs/orin-thale/v652-v2"
 SOURCE = "f168bcb798715d61d8b0a9ec2c6646a7af09ce29"
 X1 = "3f5b49dc1a380452593c8080c3ae134e654c2079"
 EVIDENCE = "d185405470b9205a21d9b018bc0d3f7f44f49444"
+CLOSEOUT = "0053eef587ebdc88d8bafbf09b2f214737abd539"
 BRANCH = "codex/GHC-Family/orin-thale-v642-v6-full-tools"
 
 
@@ -105,8 +107,16 @@ def selected_tests() -> tuple[unittest.TestSuite, dict[str, Any]]:
     ]
     counts = {}
     loader_errors = []
-    for pattern in patterns:
-        discovered = loader.discover(str(REPO / "tests"), pattern=pattern, top_level_dir=str(REPO))
+    for index, pattern in enumerate(patterns, 1):
+        path = REPO / "tests" / pattern
+        module_name = f"ghc_family_v652_v2_selected_{index}"
+        spec = importlib.util.spec_from_file_location(module_name, path)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"cannot create module spec for {path}")
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+        discovered = loader.loadTestsFromModule(module)
         count = sum(1 for _ in flatten(discovered))
         counts[pattern] = count
         suite.addTests(discovered)
@@ -139,8 +149,10 @@ def main() -> None:
     for manifest_commit, manifest_path in (
         (X1, f"{PHASE_ROOT}/validation/x1-staged-manifest.json"),
         (EVIDENCE, f"{PHASE_ROOT}/validation/evidence-staged-manifest.json"),
-        (head, f"{PHASE_ROOT}/validation/closeout-delta-manifest.json"),
-        (head, f"{PHASE_ROOT}/validation/final-owner-manifest.json"),
+        (CLOSEOUT, f"{PHASE_ROOT}/validation/closeout-delta-manifest.json"),
+        (CLOSEOUT, f"{PHASE_ROOT}/validation/final-owner-manifest.json"),
+        (head, f"{PHASE_ROOT}/validation/correction-delta-manifest.json"),
+        (head, f"{PHASE_ROOT}/validation/corrected-owner-manifest.json"),
     ):
         manifest = load_at(manifest_commit, manifest_path)
         all_needed_oids.extend(row["git_blob"] for row in manifest["entries"])
@@ -169,6 +181,7 @@ def main() -> None:
         "scripts/ghc_family_v652_v2_evidence_validate.py", "scripts/ghc_family_v652_v2_closeout_review.py",
         "scripts/ghc_family_v652_v2_final_validate.py", f"{PHASE_ROOT}/validation/x1-staged-privacy.json",
         f"{PHASE_ROOT}/validation/evidence-staged-privacy.json", f"{PHASE_ROOT}/validation/closeout-staged-privacy.json",
+        f"{PHASE_ROOT}/validation/correction-staged-privacy.json",
     }
     privacy_candidates, privacy_hits = [], []
     for path in sorted(owner_paths):
@@ -191,12 +204,16 @@ def main() -> None:
 
     x1_paths = set(str(git("diff-tree", "--no-commit-id", "--name-only", "-r", X1)).splitlines())
     evidence_paths = set(str(git("diff-tree", "--no-commit-id", "--name-only", "-r", EVIDENCE)).splitlines())
-    closeout_paths = set(str(git("diff-tree", "--no-commit-id", "--name-only", "-r", head)).splitlines())
+    closeout_paths = set(str(git("diff-tree", "--no-commit-id", "--name-only", "-r", CLOSEOUT)).splitlines())
+    closeout_owner_paths = set(str(git("diff", "--name-only", f"{SOURCE}..{CLOSEOUT}")).splitlines())
+    correction_paths = set(str(git("diff-tree", "--no-commit-id", "--name-only", "-r", head)).splitlines())
     manifests = [
         manifest_check(X1, f"{PHASE_ROOT}/validation/x1-staged-manifest.json", x1_paths, tree_map(X1), blobs),
         manifest_check(EVIDENCE, f"{PHASE_ROOT}/validation/evidence-staged-manifest.json", evidence_paths, tree_map(EVIDENCE), blobs),
-        manifest_check(head, f"{PHASE_ROOT}/validation/closeout-delta-manifest.json", closeout_paths, full_tree, blobs),
-        manifest_check(head, f"{PHASE_ROOT}/validation/final-owner-manifest.json", owner_paths, full_tree, blobs),
+        manifest_check(CLOSEOUT, f"{PHASE_ROOT}/validation/closeout-delta-manifest.json", closeout_paths, tree_map(CLOSEOUT), blobs),
+        manifest_check(CLOSEOUT, f"{PHASE_ROOT}/validation/final-owner-manifest.json", closeout_owner_paths, tree_map(CLOSEOUT), blobs),
+        manifest_check(head, f"{PHASE_ROOT}/validation/correction-delta-manifest.json", correction_paths, full_tree, blobs),
+        manifest_check(head, f"{PHASE_ROOT}/validation/corrected-owner-manifest.json", owner_paths, full_tree, blobs),
     ]
     check("manifest_parity", all(row["valid"] for row in manifests), manifests)
 
@@ -208,12 +225,12 @@ def main() -> None:
     gates = load_at(head, f"{PHASE_ROOT}/final/exact-gate-register.json")
     route = load_at(head, f"{PHASE_ROOT}/route/terminal-route-state.json")
     seats = load_at(head, f"{PHASE_ROOT}/provenance/future-cli-placeholder-invariant.json")
-    review = load_at(head, f"{PHASE_ROOT}/validation/closeout-staged-review.json")
+    review = load_at(head, f"{PHASE_ROOT}/validation/correction-staged-review.json")
     build = load_at(head, f"{PHASE_ROOT}/validation/closeout-build-receipt.json")
 
     check("outcome_truth", outcomes["counts"] == {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1} and outcomes["proposal_count"] == 30, outcomes["counts"])
-    check("negative_retention", negatives["effective_at_closeout"] == 8202 and negatives["closeout_operational_count"] == 6 and negatives["no_failure_erased"], {"effective": negatives["effective_at_closeout"], "closeout": negatives["closeout_operational_count"]})
-    check("method_flow", method["counts"]["methods"] == 27 and method["counts"]["witnesses"] == 56 and method["counts"]["witness_results"] == {"fail": 29, "pass": 27}, method["counts"])
+    check("negative_retention", negatives["effective_at_final"] == 8203 and negatives["closeout_operational_count"] == 6 and negatives["terminal_operational_count"] == 1 and negatives["no_failure_erased"], {"effective": negatives["effective_at_final"], "closeout": negatives["closeout_operational_count"], "terminal": negatives["terminal_operational_count"]})
+    check("method_flow", method["counts"]["methods"] == 28 and method["counts"]["witnesses"] == 58 and method["counts"]["witness_results"] == {"fail": 30, "pass": 28}, method["counts"])
     check("open_and_exact_gates", (gaps["effective_count"], gaps["closed_count"], gates["effective_count"], gates["closed_count"]) == (63, 0, 64, 0), {"open": gaps["effective_count"], "exact": gates["effective_count"]})
     check("terminal_abstention", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20" and not truth["independent_reproduction_claimed"] and not truth["full_repository_suite_run"], truth["terminal_verdict"])
     check("route_held", route["state"] == "PREPARED_NOT_SENT" and route["send_count"] == 0 and route["create_or_fork_count"] == 0 and route["standby_contact_count"] == 0, route["state"])
@@ -243,10 +260,11 @@ def main() -> None:
     source_ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", SOURCE, head], cwd=REPO).returncode == 0
     x1_ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", X1, head], cwd=REPO).returncode == 0
     evidence_ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", EVIDENCE, head], cwd=REPO).returncode == 0
+    closeout_ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", CLOSEOUT, head], cwd=REPO).returncode == 0
     phase_commits = int(str(git("rev-list", "--count", f"{SOURCE}..{head}")))
     merges = str(git("rev-list", "--merges", f"{SOURCE}..{head}"))
     parents = str(git("show", "-s", "--format=%P", head)).split()
-    check("lifecycle_ancestry", source_ancestor and x1_ancestor and evidence_ancestor and phase_commits == 3 and not merges and parents == [EVIDENCE], {"source": source_ancestor, "x1": x1_ancestor, "evidence": evidence_ancestor, "phase_commits": phase_commits, "merges": merges.splitlines() if merges else [], "parents": parents})
+    check("lifecycle_ancestry", source_ancestor and x1_ancestor and evidence_ancestor and closeout_ancestor and phase_commits == 4 and not merges and parents == [CLOSEOUT], {"source": source_ancestor, "x1": x1_ancestor, "evidence": evidence_ancestor, "closeout": closeout_ancestor, "phase_commits": phase_commits, "merges": merges.splitlines() if merges else [], "parents": parents})
     check("exact_branch_and_head", str(git("branch", "--show-current")) == BRANCH and head == str(git("rev-parse", "HEAD")), {"branch": git("branch", "--show-current"), "head": head})
 
     diff_check = subprocess.run(["git", "diff", "--check", f"{EVIDENCE}..{head}"], cwd=REPO, capture_output=True)

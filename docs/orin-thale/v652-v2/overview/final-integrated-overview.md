@@ -61,7 +61,7 @@ The packet also distinguishes absence, refusal, and reservation. A zero-row adap
 
 ## Final reconciliation
 
-The immutable evidence commit is `d185405470b9205a21d9b018bc0d3f7f44f49444`. Closeout adds no new empirical row, participant, operator, key, network event, production decision, legal interpretation, cultural decision, affected-party acceptance, or authority. It reconciles 23 completed, five represented, one open-gap, and one exact-gate outcome while retaining 8,202 effective negatives, 63 open gaps, and 64 exact gates. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+The immutable evidence commit is `d185405470b9205a21d9b018bc0d3f7f44f49444`. Closeout adds no new empirical row, participant, operator, key, network event, production decision, legal interpretation, cultural decision, affected-party acceptance, or authority. It reconciles 23 completed, five represented, one open-gap, and one exact-gate outcome while retaining 8,203 effective negatives, 63 open gaps, and 64 exact gates. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
 
 The workload discipline kept x1 and x2 separate, pushed and proved each anchor before its successor, used D-first owner storage, kept owner growth below 15,000 files, and reserved one successful exact-final canonical pass with no replay. This is workflow and pacing metadata only; it is not a claim about emotion, health, consciousness, personhood, identity continuity, employment, or authority.
 
@@ -190,3 +190,7 @@ Observed `exact_gate` with 5 of 5 mutations rejected. Bounded software, symbolic
 ## Final limitations and route
 
 The static report is structurally useful but reserves manual keyboard, browser, responsive-layout, assistive-technology, cognitive, Māori-language, security-usability, and affected-user evaluation. The five-class scan is structural and not privacy completeness. Same-owner checks under shared infrastructure are not independent reproduction. No full repository suite ran because Eiren alone owns it. The route remains prepared, not sent, until the exact pushed final head passes the one canonical selection and the unique existing Tamar Vey task is re-read and acknowledges exactly one sanitized activation.
+
+## Terminal correction
+
+The first closeout-head validator invocation stopped before running any test because its discovery mechanism required the non-package tests directory to be importable. It has zero validation credit and remains retained as `V6522-X2-N16`. The narrow additive correction loads the five exact test files by file-module spec and counted 39 tests in a dependency-only preflight without executing the canonical suite. The single successful pass remains unused until the corrected head is committed, pushed, clean, and four-way remote-equal.
