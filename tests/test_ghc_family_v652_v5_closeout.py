@@ -43,9 +43,11 @@ class TestEirenV652V5Closeout(unittest.TestCase):
         self.assertGreaterEqual(words, 10000)
         self.assertLessEqual(words, 100000)
         route = self.load("route/final-route-state.json")
-        self.assertEqual(route["state"], "PREPARED_NOT_SENT")
-        self.assertEqual(route["send_count"], 0)
-        self.assertEqual(route["target_exact_title"], "Ilyra Fen")
+        self.assertEqual(route["state"], "PREPARED_NOT_SPAWNED")
+        self.assertEqual(route["spawn_count"], 0)
+        self.assertEqual(
+            route["target_kind"], "bounded_codex_collaboration_agent"
+        )
         self.assertEqual(route["target_phase"], "v652-v6")
 
     def test_overview_and_accessible_report(self):

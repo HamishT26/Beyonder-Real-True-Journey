@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_route_recovery",
+  "candidate_workaround": "Use the repository-native unittest module entrypoints already declared by the phase tests and final validator.",
+  "failure_signature": "A bounded pre-commit wrapper assumed pytest was installed and stopped with No module named pytest before running any test.",
+  "method_id": "V6525-ROUTE-METHOD-06",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "production",
+    "independent_reproduction",
+    "identity",
+    "authority",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "Probe runner availability or use the repository-declared unittest entrypoint instead of assuming an optional pytest installation.",
+  "retained_negative_ids": [
+    "V6525-NEG-ROUTE-06"
+  ],
+  "rollback": "Stop, retain the failed wrapper, and leave repository history and external state unchanged.",
+  "scope_boundary": "Owner-local route-correction tooling only.",
+  "supersedes": [],
+  "title": "Bounded recovery for unavailable_pytest_entrypoint",
+  "trigger_preconditions": [
+    "unavailable_pytest_entrypoint"
+  ],
+  "validation_witness_ids": []
+}

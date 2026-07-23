@@ -25,8 +25,9 @@ PHASE_ROOT = "docs/eiren-kestrel/v652-v5"
 SOURCE = "3a77dacd759a499ffe94cbc281a3d7b343608e2d"
 X1 = "7f347e548b64ea2a9065e129c3ec84dde000c13e"
 EVIDENCE = "611a0afef841a516dd0a5cb1e9ac2448943b42c6"
+CLOSEOUT = "516202a04e2930bfa787bcf257dafd72827cf9af"
 BRANCH = "codex/GHC-Family/eiren-kestrel-v648-v3-3-full-tools"
-EXPECTED_SCOPED_TESTS = 69
+EXPECTED_SCOPED_TESTS = 76
 
 
 def git(*args: str, binary: bool = False, check: bool = True) -> str | bytes:
@@ -103,6 +104,7 @@ def selected_tests() -> tuple[unittest.TestSuite, dict[str, Any]]:
         "test_ghc_family_v652_v5_x1.py",
         "test_ghc_family_v652_v5_core.py",
         "test_ghc_family_v652_v5_closeout.py",
+        "test_ghc_family_v652_v5_route_correction.py",
     ]
     loader = unittest.TestLoader()
     selected = unittest.TestSuite()
@@ -253,6 +255,9 @@ def main() -> int:
     evidence_anc = subprocess.run(
         ["git", "merge-base", "--is-ancestor", EVIDENCE, head], cwd=REPO
     ).returncode == 0
+    closeout_anc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", CLOSEOUT, head], cwd=REPO
+    ).returncode == 0
     commit_count = int(str(git("rev-list", "--count", f"{SOURCE}..{head}")))
     merge_count = len(
         [line for line in str(git("rev-list", "--merges", f"{SOURCE}..{head}")).splitlines() if line]
@@ -260,18 +265,23 @@ def main() -> int:
     parent_line = str(git("rev-list", "--parents", "-n", "1", head)).split()
     check(
         "lifecycle_ancestry",
-        source_anc and x1_anc and evidence_anc,
-        {"source": source_anc, "x1": x1_anc, "evidence": evidence_anc},
+        source_anc and x1_anc and evidence_anc and closeout_anc,
+        {
+            "source": source_anc,
+            "x1": x1_anc,
+            "evidence": evidence_anc,
+            "closeout": closeout_anc,
+        },
     )
     check(
-        "three_phase_commits",
-        commit_count == 3,
-        {"expected": 3, "actual": commit_count},
+        "four_phase_commits",
+        commit_count == 4,
+        {"expected": 4, "actual": commit_count},
     )
     check("zero_merges", merge_count == 0, merge_count)
     check(
         "single_parent_final",
-        len(parent_line) == 2 and parent_line[1] == EVIDENCE,
+        len(parent_line) == 2 and parent_line[1] == CLOSEOUT,
         parent_line,
     )
 
@@ -340,7 +350,16 @@ def main() -> int:
         filter(None, str(git("diff", "--name-only", X1, EVIDENCE)).splitlines())
     )
     closeout_paths = set(
-        filter(None, str(git("diff", "--name-only", EVIDENCE, head)).splitlines())
+        filter(
+            None,
+            str(git("diff", "--name-only", EVIDENCE, CLOSEOUT)).splitlines(),
+        )
+    )
+    correction_paths = set(
+        filter(
+            None,
+            str(git("diff", "--name-only", CLOSEOUT, head)).splitlines(),
+        )
     )
     owner_tree = {
         path: full_tree[path] for path in owner_paths if path in full_tree
@@ -384,10 +403,12 @@ def main() -> int:
         "scripts/build_ghc_family_v652_v5_preregistration.py",
         "scripts/build_ghc_family_v652_v5_evidence.py",
         "scripts/build_ghc_family_v652_v5_closeout.py",
+        "scripts/build_ghc_family_v652_v5_cli_route_correction.py",
         "scripts/ghc_family_v652_v5_final_validate.py",
         f"{PHASE_ROOT}/validation/x1-staged-privacy.json",
         f"{PHASE_ROOT}/validation/evidence-staged-privacy.json",
         f"{PHASE_ROOT}/validation/closeout-staged-privacy.json",
+        f"{PHASE_ROOT}/validation/route-correction-staged-privacy.json",
     }
     privacy_candidates = []
     privacy_hits = []
@@ -435,10 +456,16 @@ def main() -> int:
             evidence_paths,
         ),
         manifest_check(
-            head,
+            CLOSEOUT,
             f"{PHASE_ROOT}/validation/closeout-staged-manifest.json",
             "closeout-staged-manifest",
             closeout_paths,
+        ),
+        manifest_check(
+            head,
+            f"{PHASE_ROOT}/validation/route-correction-staged-manifest.json",
+            "route-correction-staged-manifest",
+            correction_paths,
         ),
         manifest_check(
             head,
@@ -464,7 +491,20 @@ def main() -> int:
     flow = read_json_blob(
         head, f"{PHASE_ROOT}/method-flow/final-method-flow-ledger.json"
     )
+    route_flow = read_json_blob(
+        head,
+        f"{PHASE_ROOT}/method-flow/route-correction-method-flow-ledger.json",
+    )
+    route_negative = read_json_blob(
+        head, f"{PHASE_ROOT}/truth/route-correction-retained-negative.json"
+    )
+    final_phase_truth = read_json_blob(
+        head, f"{PHASE_ROOT}/final/final-phase-truth.json"
+    )
     route = read_json_blob(head, f"{PHASE_ROOT}/route/final-route-state.json")
+    superseded_route = read_json_blob(
+        head, f"{PHASE_ROOT}/route/superseded-ilyra-route.json"
+    )
     skills = read_json_blob(head, f"{PHASE_ROOT}/skills/skill-build-receipt.json")
     check(
         "outcome_truth",
@@ -484,6 +524,19 @@ def main() -> int:
         negatives,
     )
     check(
+        "route_correction_negative_retention",
+        route_negative["sealed_closeout_effective"] == 8721
+        and route_negative["route_correction_operational"] == 6
+        and route_negative["effective_final"] == 8727
+        and route_negative["no_failure_erased"]
+        and not route_negative["failed_attempt_received_credit"]
+        and final_phase_truth["effective_negatives"] == 8727,
+        {
+            "route_negative": route_negative,
+            "final_effective": final_phase_truth["effective_negatives"],
+        },
+    )
+    check(
         "gate_retention",
         gaps["effective_count"] == 66
         and gates["effective_count"] == 67
@@ -497,6 +550,13 @@ def main() -> int:
         and flow["counts"]["witness_results"] == {"fail": 22, "pass": 22}
         and flow["counts"]["states"]["preferred"] == 22,
         flow["counts"],
+    )
+    check(
+        "route_correction_method_flow",
+        route_flow["counts"]["methods"] == 6
+        and route_flow["counts"]["witness_results"] == {"fail": 6, "pass": 6}
+        and route_flow["counts"]["states"]["preferred"] == 6,
+        route_flow["counts"],
     )
     check(
         "phase_local_skills",
@@ -514,16 +574,24 @@ def main() -> int:
     )
     check(
         "route_held",
-        route["state"] == "PREPARED_NOT_SENT"
-        and route["target_exact_title"] == "Ilyra Fen"
+        route["state"] == "PREPARED_NOT_SPAWNED"
+        and route["target_kind"] == "bounded_codex_collaboration_agent"
         and route["target_phase"] == "v652-v6"
-        and route["send_count"] == 0
-        and route["create_or_fork_count"] == 0,
+        and route["spawn_count"] == 0
+        and route["task_create_count"] == 0
+        and route["task_fork_count"] == 0,
         route,
+    )
+    check(
+        "superseded_ilyra_route_unsent",
+        superseded_route["superseded_unsent"]
+        and superseded_route["prior_send_count"] == 0
+        and superseded_route["prior_target"] == "Ilyra Fen",
+        superseded_route,
     )
 
     baton = read_blob(
-        head, f"{PHASE_ROOT}/handoffs/ilyra-fen-v652-v6-activation.md"
+        head, f"{PHASE_ROOT}/handoffs/cli-collaborator-v652-v6-induction.md"
     ).decode("utf-8")
     overview = read_blob(
         head, f"{PHASE_ROOT}/overview/final-integrated-overview.md"
@@ -576,6 +644,7 @@ def main() -> int:
         or path == "tests/test_ghc_family_v652_v5_closeout.py"
         or path == "tests/test_ghc_family_v652_v5_core.py"
         or path == "tests/test_ghc_family_v652_v5_x1.py"
+        or path == "tests/test_ghc_family_v652_v5_route_correction.py"
     )
     check(
         "owner_growth",
@@ -622,11 +691,13 @@ def main() -> int:
         "five_class_privacy_scan",
         "manifest_parity",
         "negative_retention",
+        "route_correction_negative_retention",
         "gate_retention",
         "terminal_abstention",
         "route_held",
+        "superseded_ilyra_route_unsent",
         "lifecycle_ancestry",
-        "three_phase_commits",
+        "four_phase_commits",
         "zero_merges",
         "single_parent_final",
         "clean_before_after",

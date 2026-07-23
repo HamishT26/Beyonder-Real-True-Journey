@@ -1,0 +1,27 @@
+{
+  "approval_class": "safe_now_owner_local_route_recovery",
+  "candidate_workaround": "Declare the closeout compatibility test as a route-correction path and permit only the builder's own phase artifacts during an idempotent retry from the unchanged closeout head.",
+  "failure_signature": "The second route build omitted the deliberately updated closeout compatibility test from its final correction allowlist and stopped before manifest creation.",
+  "method_id": "V6525-ROUTE-METHOD-03",
+  "privacy_class": "sanitized_public",
+  "protected_gates": [
+    "production",
+    "independent_reproduction",
+    "identity",
+    "authority",
+    "stage20"
+  ],
+  "recommendation_state": "candidate",
+  "recurrence_guard": "When a route correction changes a historical compatibility assertion, include that exact test in both starting and final path allowlists.",
+  "retained_negative_ids": [
+    "V6525-NEG-ROUTE-03"
+  ],
+  "rollback": "Stop, retain the failed wrapper, and leave repository history and external state unchanged.",
+  "scope_boundary": "Owner-local route-correction tooling only.",
+  "supersedes": [],
+  "title": "Bounded recovery for route_correction_allowlist_omission",
+  "trigger_preconditions": [
+    "route_correction_allowlist_omission"
+  ],
+  "validation_witness_ids": []
+}
