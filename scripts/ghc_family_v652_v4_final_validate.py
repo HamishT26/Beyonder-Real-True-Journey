@@ -1,0 +1,632 @@
+#!/usr/bin/env python3
+"""One-pass exact-final validator for Sylven Arc v652-v4."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib.util
+import io
+import json
+import re
+import subprocess
+import sys
+import unittest
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
+PHASE_ROOT = "docs/sylven-arc/v652-v4"
+SOURCE = "09140173409bc4198f3c9e30162b9bcef8a3895b"
+X1 = "19a442b69da03da6cfaa78d3182ce182a29eda78"
+EVIDENCE = "925be6fb40bcb12ff7fe6636f4f19dfa25ae3071"
+BRANCH = "codex/GHC-Family/sylven-arc-v642-v8-full-tools"
+EXPECTED_SCOPED_TESTS = 69
+
+
+def git(*args: str, binary: bool = False, check: bool = True) -> str | bytes:
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=REPO,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    if check and proc.returncode:
+        raise RuntimeError(proc.stderr.decode("utf-8", errors="replace"))
+    return proc.stdout if binary else proc.stdout.decode("utf-8").strip()
+
+
+def batch_blobs(oids: list[str]) -> dict[str, bytes]:
+    unique = list(dict.fromkeys(oids))
+    if not unique:
+        return {}
+    proc = subprocess.run(
+        ["git", "cat-file", "--batch"],
+        cwd=REPO,
+        input="".join(oid + "\n" for oid in unique).encode(),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    )
+    stream = io.BytesIO(proc.stdout)
+    result: dict[str, bytes] = {}
+    for expected in unique:
+        header = stream.readline().rstrip(b"\n").decode().split()
+        if len(header) != 3 or header[0] != expected or header[1] != "blob":
+            raise RuntimeError(f"unexpected blob header: {header}")
+        size = int(header[2])
+        data = stream.read(size)
+        if stream.read(1) != b"\n":
+            raise RuntimeError("missing batch frame terminator")
+        result[expected] = data
+    if stream.read():
+        raise RuntimeError("unexpected trailing batch output")
+    return result
+
+
+def tree_map(commit: str) -> dict[str, str]:
+    result = {}
+    for line in str(git("ls-tree", "-r", commit)).splitlines():
+        meta, path = line.split("\t", 1)
+        result[path] = meta.split()[2]
+    return result
+
+
+def read_blob(commit: str, path: str) -> bytes:
+    return bytes(git("show", f"{commit}:{path}", binary=True))
+
+
+def read_json_blob(commit: str, path: str) -> Any:
+    return json.loads(read_blob(commit, path).decode("utf-8"))
+
+
+def flatten(suite: unittest.TestSuite):
+    for item in suite:
+        if isinstance(item, unittest.TestSuite):
+            yield from flatten(item)
+        else:
+            yield item
+
+
+def selected_tests() -> tuple[unittest.TestSuite, dict[str, Any]]:
+    patterns = [
+        "test_ghc_family_v652_v2_x1.py",
+        "test_ghc_family_v652_v2.py",
+        "test_ghc_family_v652_v3_x1.py",
+        "test_ghc_family_v652_v3.py",
+        "test_ghc_family_v652_v3_closeout.py",
+        "test_ghc_family_v652_v4_x1.py",
+        "test_ghc_family_v652_v4_core.py",
+        "test_ghc_family_v652_v4_closeout.py",
+    ]
+    loader = unittest.TestLoader()
+    selected = unittest.TestSuite()
+    raw_counts: dict[str, int] = {}
+    eligible_counts: dict[str, int] = {}
+    exclusions: list[dict[str, str]] = []
+    loader_errors: list[str] = []
+    for index, pattern in enumerate(patterns):
+        path = REPO / "tests" / pattern
+        spec = importlib.util.spec_from_file_location(
+            f"v6524_scoped_{index}", path
+        )
+        if spec is None or spec.loader is None:
+            loader_errors.append(f"unable to load {pattern}")
+            continue
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        loaded = loader.loadTestsFromModule(module)
+        tests = list(flatten(loaded))
+        raw_counts[pattern] = len(tests)
+        eligible = []
+        for test in tests:
+            method = getattr(test, "_testMethodName", "")
+            if (
+                pattern == "test_ghc_family_v652_v2_x1.py"
+                and method == "test_placeholders_privacy_and_x1_only"
+            ):
+                exclusions.append(
+                    {
+                        "pattern": pattern,
+                        "test": method,
+                        "reason": (
+                            "Inherited x1 lifecycle-local absence assertion; all "
+                            "other inherited, current, and successor-scoped behavior remains selected."
+                        ),
+                    }
+                )
+            else:
+                eligible.append(test)
+        eligible_counts[pattern] = len(eligible)
+        selected.addTests(eligible)
+    loader_errors.extend(loader.errors)
+    return selected, {
+        "patterns": patterns,
+        "raw_counts": raw_counts,
+        "eligible_counts": eligible_counts,
+        "raw_count": sum(raw_counts.values()),
+        "eligible_count": sum(eligible_counts.values()),
+        "explicit_lifecycle_exclusions": exclusions,
+        "loader_errors": loader_errors,
+    }
+
+
+def manifest_check(
+    commit: str, path: str, expected_schema_fragment: str
+) -> dict[str, Any]:
+    manifest = read_json_blob(commit, path)
+    tree = tree_map(commit)
+    issues = []
+    oids = [row["git_blob"] for row in manifest["entries"]]
+    blobs = batch_blobs(oids)
+    for row in manifest["entries"]:
+        relative = row["path"]
+        actual_oid = tree.get(relative)
+        if actual_oid != row["git_blob"]:
+            issues.append(
+                {
+                    "path": relative,
+                    "kind": "object",
+                    "expected": row["git_blob"],
+                    "actual": actual_oid,
+                }
+            )
+            continue
+        blob = blobs[row["git_blob"]]
+        if len(blob) != row["bytes"]:
+            issues.append({"path": relative, "kind": "bytes"})
+        if hashlib.sha256(blob).hexdigest() != row["sha256"]:
+            issues.append({"path": relative, "kind": "sha256"})
+    for relative in manifest.get("self_exclusions", []):
+        if relative not in tree:
+            issues.append({"path": relative, "kind": "missing_self_exclusion"})
+    return {
+        "path": path,
+        "commit": commit,
+        "schema": manifest.get("schema"),
+        "schema_matches": expected_schema_fragment in manifest.get("schema", ""),
+        "entry_count": manifest["entry_count"],
+        "self_exclusion_count": len(manifest.get("self_exclusions", [])),
+        "issues": issues,
+        "valid": not issues
+        and expected_schema_fragment in manifest.get("schema", ""),
+    }
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--expected-head", required=True)
+    parser.add_argument("--receipt", required=True)
+    args = parser.parse_args()
+
+    checks: list[dict[str, Any]] = []
+
+    def check(name: str, condition: bool, detail: Any) -> None:
+        checks.append({"name": name, "passed": bool(condition), "detail": detail})
+
+    clean_before = not str(
+        git("status", "--porcelain=v1", "--untracked-files=all")
+    )
+    head = str(git("rev-parse", "HEAD"))
+    branch = str(git("branch", "--show-current"))
+    check(
+        "exact_head",
+        head == args.expected_head,
+        {"expected": args.expected_head, "actual": head},
+    )
+    check("branch", branch == BRANCH, {"expected": BRANCH, "actual": branch})
+    check("clean_before", clean_before, clean_before)
+
+    source_anc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", SOURCE, head], cwd=REPO
+    ).returncode == 0
+    x1_anc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", X1, head], cwd=REPO
+    ).returncode == 0
+    evidence_anc = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", EVIDENCE, head], cwd=REPO
+    ).returncode == 0
+    commit_count = int(str(git("rev-list", "--count", f"{SOURCE}..{head}")))
+    merge_count = len(
+        [line for line in str(git("rev-list", "--merges", f"{SOURCE}..{head}")).splitlines() if line]
+    )
+    parent_line = str(git("rev-list", "--parents", "-n", "1", head)).split()
+    check(
+        "lifecycle_ancestry",
+        source_anc and x1_anc and evidence_anc,
+        {"source": source_anc, "x1": x1_anc, "evidence": evidence_anc},
+    )
+    check(
+        "three_phase_commits",
+        commit_count == 3,
+        {"expected": 3, "actual": commit_count},
+    )
+    check("zero_merges", merge_count == 0, merge_count)
+    check(
+        "single_parent_final",
+        len(parent_line) == 2 and parent_line[1] == EVIDENCE,
+        parent_line,
+    )
+
+    suite, selection = selected_tests()
+    stream = io.StringIO()
+    result = unittest.TextTestRunner(stream=stream, verbosity=1).run(suite)
+    test_valid = (
+        result.wasSuccessful()
+        and result.testsRun == EXPECTED_SCOPED_TESTS
+        and selection["eligible_count"] == EXPECTED_SCOPED_TESTS
+        and not selection["loader_errors"]
+    )
+    check(
+        "scoped_test_selection",
+        test_valid,
+        {
+            **selection,
+            "tests_run": result.testsRun,
+            "failures": [str(test) for test, _trace in result.failures],
+            "errors": [str(test) for test, _trace in result.errors],
+        },
+    )
+
+    full_tree = tree_map(head)
+    owner_paths = set(str(git("diff", "--name-only", SOURCE, head)).splitlines())
+    owner_tree = {
+        path: full_tree[path] for path in owner_paths if path in full_tree
+    }
+    owner_blobs = batch_blobs(list(owner_tree.values()))
+
+    json_issues = []
+    json_count = 0
+    for path, oid in sorted(owner_tree.items()):
+        if path.startswith(PHASE_ROOT + "/") and path.endswith(".json"):
+            json_count += 1
+            try:
+                json.loads(owner_blobs[oid].decode("utf-8"))
+            except Exception as exc:  # noqa: BLE001
+                json_issues.append({"path": path, "error": str(exc)})
+    check(
+        "complete_phase_json",
+        not json_issues,
+        {"parsed": json_count, "issues": json_issues},
+    )
+
+    patterns = {
+        "raw_task_or_thread_identifier": re.compile(
+            r"(?i)(source_thread_id|thread_id)\s*[:=]"
+        ),
+        "private_absolute_local_path": re.compile(
+            r"(?i)[A-Z]:\\Users\\[^\s\"']+"
+        ),
+        "credential_or_secret": re.compile(
+            r"(?i)(api[_-]?key|client_secret|private_key|bearer\s+[A-Za-z0-9._-]{12,})"
+        ),
+        "private_route_or_callable": re.compile(
+            r"(?i)(private_route|callable_identifier|browser_send_submitted_response_active)"
+        ),
+        "transcript_or_session_stream": re.compile(
+            r"(?i)(session_stream|raw_transcript|conversation_export)"
+        ),
+    }
+    definition_paths = {
+        "scripts/build_ghc_family_v652_v4_preregistration.py",
+        "scripts/build_ghc_family_v652_v4_evidence.py",
+        "scripts/build_ghc_family_v652_v4_closeout.py",
+        "scripts/ghc_family_v652_v4_final_validate.py",
+        f"{PHASE_ROOT}/validation/x1-staged-privacy.json",
+        f"{PHASE_ROOT}/validation/evidence-staged-privacy.json",
+        f"{PHASE_ROOT}/validation/closeout-staged-privacy.json",
+    }
+    privacy_candidates = []
+    privacy_hits = []
+    for path, oid in sorted(owner_tree.items()):
+        try:
+            text = owner_blobs[oid].decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+        for name, pattern in patterns.items():
+            if pattern.search(text):
+                disposition = (
+                    "scanner_definition"
+                    if path in definition_paths
+                    else "confirmed_payload_hit"
+                )
+                row = {
+                    "path": path,
+                    "pattern_class": name,
+                    "disposition": disposition,
+                }
+                privacy_candidates.append(row)
+                if disposition == "confirmed_payload_hit":
+                    privacy_hits.append(row)
+    check(
+        "five_class_privacy_scan",
+        not privacy_hits,
+        {
+            "scanned": len(owner_paths),
+            "candidates": privacy_candidates,
+            "confirmed": privacy_hits,
+        },
+    )
+
+    manifests = [
+        manifest_check(
+            X1,
+            f"{PHASE_ROOT}/validation/x1-staged-manifest.json",
+            "x1-staged-manifest",
+        ),
+        manifest_check(
+            EVIDENCE,
+            f"{PHASE_ROOT}/validation/evidence-staged-manifest.json",
+            "evidence-staged-manifest",
+        ),
+        manifest_check(
+            head,
+            f"{PHASE_ROOT}/validation/closeout-staged-manifest.json",
+            "closeout-staged-manifest",
+        ),
+        manifest_check(
+            head,
+            f"{PHASE_ROOT}/validation/final-owner-manifest.json",
+            "final-owner-manifest",
+        ),
+    ]
+    check(
+        "manifest_parity",
+        all(row["valid"] for row in manifests),
+        manifests,
+    )
+
+    outcomes = read_json_blob(
+        head, f"{PHASE_ROOT}/evidence/proposal-outcomes.json"
+    )
+    negatives = read_json_blob(
+        head, f"{PHASE_ROOT}/final/retained-negative-register.json"
+    )
+    gaps = read_json_blob(head, f"{PHASE_ROOT}/final/open-gap-register.json")
+    gates = read_json_blob(head, f"{PHASE_ROOT}/final/exact-gate-register.json")
+    flow = read_json_blob(
+        head, f"{PHASE_ROOT}/method-flow/final-method-flow-ledger.json"
+    )
+    route = read_json_blob(head, f"{PHASE_ROOT}/route/final-route-state.json")
+    skills = read_json_blob(head, f"{PHASE_ROOT}/skills/skill-build-receipt.json")
+    check(
+        "outcome_truth",
+        outcomes["counts"]
+        == {
+            "completed": 23,
+            "represented": 5,
+            "open_gap": 1,
+            "exact_gate": 1,
+        },
+        outcomes["counts"],
+    )
+    check(
+        "negative_retention",
+        negatives["effective_count"] == 8549
+        and negatives["no_failure_erased"],
+        negatives,
+    )
+    check(
+        "gate_retention",
+        gaps["effective_count"] == 65
+        and gates["effective_count"] == 66
+        and gaps["closed_count"] == 0
+        and gates["closed_count"] == 0,
+        {"gaps": gaps, "gates": gates},
+    )
+    check(
+        "method_flow",
+        flow["counts"]["methods"] == 16
+        and flow["counts"]["witness_results"] == {"fail": 16, "pass": 16}
+        and flow["counts"]["states"]["preferred"] == 16,
+        flow["counts"],
+    )
+    check(
+        "phase_local_skills",
+        skills["skill_count"] == 10
+        and skills["validated_count"] == 10
+        and skills["smoke_used_count"] == 10
+        and not skills["globally_installed"]
+        and not skills["subagent_forward_test"],
+        skills,
+    )
+    check(
+        "terminal_abstention",
+        outcomes["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
+        outcomes["terminal_verdict"],
+    )
+    check(
+        "route_held",
+        route["state"] == "PREPARED_NOT_SENT"
+        and route["send_count"] == 0
+        and route["create_or_fork_count"] == 0,
+        route,
+    )
+
+    baton = read_blob(
+        head, f"{PHASE_ROOT}/handoffs/eiren-kestrel-v652-v5-activation.md"
+    ).decode("utf-8")
+    overview = read_blob(
+        head, f"{PHASE_ROOT}/overview/final-integrated-overview.md"
+    ).decode("utf-8")
+    report = read_blob(
+        head, f"{PHASE_ROOT}/reports/final-static-report.html"
+    ).decode("utf-8")
+    baton_words = len(re.findall(r"\b[\w'-]+\b", baton))
+    overview_words = len(re.findall(r"\b[\w'-]+\b", overview))
+    check(
+        "document_contracts",
+        10000 <= baton_words <= 100000 and overview_words >= 1500,
+        {"baton_words": baton_words, "overview_words": overview_words},
+    )
+    report_tokens = (
+        "Skip to main content",
+        "<caption>",
+        "scope='col'",
+        "tabindex='0'",
+        "NOT_READY_FOR_STAGE_20",
+    )
+    check(
+        "structural_accessibility",
+        all(token in report for token in report_tokens),
+        {"required_tokens": report_tokens},
+    )
+    stale_tokens = (
+        "HSC PDR3 likelihood readiness",
+        "freshwater eDNA authority reservation",
+        "Tamar Vey v652-v3 closeout",
+        "Sylven Arc v651-v4 closeout",
+    )
+    stale_hits = [
+        token
+        for token in stale_tokens
+        if token in baton or token in overview or token in report
+    ]
+    check("stale_label_review", not stale_hits, stale_hits)
+
+    owner_growth = sum(
+        1
+        for path in full_tree
+        if path.startswith(PHASE_ROOT + "/")
+        or (
+            path.startswith("scripts/")
+            and "v652_v4" in Path(path).name
+        )
+        or path == "tests/test_ghc_family_v652_v4_closeout.py"
+        or path == "tests/test_ghc_family_v652_v4_core.py"
+        or path == "tests/test_ghc_family_v652_v4_x1.py"
+    )
+    check(
+        "owner_growth",
+        owner_growth < 15000,
+        {"owner_generated_files": owner_growth, "threshold": 15000},
+    )
+
+    subprocess.run(
+        ["git", "fetch", "origin", BRANCH, "--quiet"], cwd=REPO, check=True
+    )
+    local = str(git("rev-parse", "HEAD"))
+    upstream = str(git("rev-parse", "@{u}"))
+    tracking = str(git("rev-parse", f"origin/{BRANCH}"))
+    live_line = str(git("ls-remote", "--heads", "origin", f"refs/heads/{BRANCH}"))
+    live = live_line.split()[0] if live_line else ""
+    divergence = str(git("rev-list", "--left-right", "--count", "HEAD...@{u}"))
+    check(
+        "four_way_live_equality",
+        local == upstream == tracking == live == head and divergence == "0\t0",
+        {
+            "local": local,
+            "upstream": upstream,
+            "tracking": tracking,
+            "live": live,
+            "divergence": divergence,
+        },
+    )
+    clean_after = not str(
+        git("status", "--porcelain=v1", "--untracked-files=all")
+    )
+    check(
+        "clean_before_after",
+        clean_before and clean_after,
+        {"before": clean_before, "after": clean_after},
+    )
+
+    valid = all(row["passed"] for row in checks)
+    passed = sum(row["passed"] for row in checks)
+    minimal_names = {
+        "exact_head",
+        "scoped_test_selection",
+        "complete_phase_json",
+        "five_class_privacy_scan",
+        "manifest_parity",
+        "negative_retention",
+        "gate_retention",
+        "terminal_abstention",
+        "route_held",
+        "lifecycle_ancestry",
+        "three_phase_commits",
+        "zero_merges",
+        "single_parent_final",
+        "clean_before_after",
+        "four_way_live_equality",
+    }
+    minimal = [row for row in checks if row["name"] in minimal_names]
+    receipt = {
+        "schema": "ghc.family.v652-v4.exact-final-validation.external.v1",
+        "validated_at_utc": datetime.now(timezone.utc)
+        .isoformat()
+        .replace("+00:00", "Z"),
+        "exact_head": head,
+        "branch": BRANCH,
+        "checks": checks,
+        "passed": passed,
+        "total": len(checks),
+        "valid": valid,
+        "scoped_tests": {
+            "passed": result.testsRun - len(result.failures) - len(result.errors),
+            "total": result.testsRun,
+            "selection": selection,
+        },
+        "minimal": {
+            "passed": sum(row["passed"] for row in minimal),
+            "total": len(minimal),
+            "valid": all(row["passed"] for row in minimal),
+        },
+        "json_parse_count": json_count,
+        "privacy_scanned_file_count": len(owner_paths),
+        "privacy_candidate_count": len(privacy_candidates),
+        "privacy_confirmed_hit_count": len(privacy_hits),
+        "manifest_entry_total": sum(row["entry_count"] for row in manifests),
+        "manifest_contracts": manifests,
+        "full_repository_suite_run": False,
+        "successful_canonical_pass_count": 1 if valid else 0,
+        "replay_after_success": False,
+        "same_owner_only": True,
+        "independent_team_reproduction": False,
+        "boundary": (
+            "Single bounded same-owner exact-head canonical pass under shared "
+            "infrastructure; not full-suite credit, independent-team reproduction, "
+            "external audit, production certification, exhaustive security, complete "
+            "privacy or accessibility, professional validation, legal or cultural "
+            "authority, Māori-authority review, empirical GMUT confirmation, "
+            "Theory-of-Everything proof, AGI/ASI evidence, consciousness/personhood "
+            "evidence, or Stage 20 authority."
+        ),
+    }
+    receipt_path = Path(args.receipt).resolve()
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_text(
+        json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    print(
+        json.dumps(
+            {
+                "head": head,
+                "tests": (
+                    f"{receipt['scoped_tests']['passed']}/"
+                    f"{receipt['scoped_tests']['total']}"
+                ),
+                "detailed": f"{passed}/{len(checks)}",
+                "minimal": (
+                    f"{receipt['minimal']['passed']}/"
+                    f"{receipt['minimal']['total']}"
+                ),
+                "json": json_count,
+                "privacy_scanned": len(owner_paths),
+                "privacy_hits": len(privacy_hits),
+                "manifest_entries": receipt["manifest_entry_total"],
+                "valid": valid,
+            },
+            sort_keys=True,
+        )
+    )
+    return 0 if valid else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
