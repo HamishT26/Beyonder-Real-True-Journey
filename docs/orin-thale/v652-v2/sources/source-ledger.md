@@ -1,0 +1,68 @@
+# v652-v2 source ledger
+
+- **SRC-GIT-BITMAP** - `current` - [Git bitmap format](https://git-scm.com/docs/bitmap-format.html)
+  - Supports disposable bitmap fixtures only; no canonical object or pack mutation.
+- **SRC-NIX-NAR** - `current` - [Nix Archive format](https://nix.dev/manual/nix/2.25/protocols/nix-archive)
+  - Supports synthetic NAR fields only; no store import.
+- **SRC-RPM-REPOMD** - `current` - [createrepo_c repomd API](https://rpm-software-management.github.io/createrepo_c/c/group__repomd.html)
+  - Supports synthetic RPM repository metadata only.
+- **SRC-NUGET-SIGN** - `current` - [NuGet repository signatures resource](https://learn.microsoft.com/en-us/nuget/api/repository-signatures-resource)
+  - Supports synthetic package and signature fixtures only; no trust decision.
+- **SRC-PE-COFF** - `current` - [PE format](https://learn.microsoft.com/en-us/windows/win32/debug/pe-format)
+  - Supports disposable PE byte fixtures only.
+- **SRC-GHY** - `stable` - [Action integrals and partition functions in quantum gravity](https://doi.org/10.1103/PhysRevD.15.2752)
+  - Supports formal boundary-term vocabulary only.
+- **SRC-PALATINI** - `stable` - [Metric-affine gravity and Palatini formalism](https://arxiv.org/abs/2105.07053)
+  - Supports formal connection-variation vocabulary only.
+- **SRC-RAYCHAUDHURI** - `stable` - [Relativistic cosmology I](https://doi.org/10.1103/PhysRev.98.1123)
+  - Supports formal congruence vocabulary only.
+- **SRC-BONDI** - `stable` - [Gravitational waves in general relativity VII](https://doi.org/10.1098/rspa.1962.0161)
+  - Supports asymptotic null-coordinate vocabulary only.
+- **SRC-SACHS** - `stable` - [Gravitational waves in general relativity VIII](https://doi.org/10.1098/rspa.1962.0206)
+  - Supports news and asymptotic-symmetry vocabulary only.
+- **SRC-ISAACSON** - `stable` - [Gravitational radiation in the limit of high frequency](https://doi.org/10.1103/PhysRev.166.1263)
+  - Supports two-scale formal obligations only.
+- **SRC-SAFETENSORS** - `current` - [Safetensors format](https://github.com/huggingface/safetensors)
+  - Supports synthetic tensor-envelope fixtures only.
+- **SRC-MERCURIAL-REVLOG** - `current` - [Mercurial revlog](https://www.mercurial-scm.org/wiki/Revlog)
+  - Supports disposable revlog fixtures only.
+- **SRC-OSTREE** - `current` - [OSTree repository formats](https://ostreedev.github.io/ostree/formats/)
+  - Supports synthetic OSTree objects only.
+- **SRC-CARV2** - `current` - [Content Addressable aRchives v2](https://ipld.io/specs/transport/car/carv2/)
+  - Supports synthetic CAR envelopes only.
+- **SRC-RFC5155** - `stable` - [RFC 5155 DNS Security Hashed Authenticated Denial of Existence](https://www.rfc-editor.org/rfc/rfc5155.html)
+  - Supports synthetic NSEC3 vectors only.
+- **SRC-RFC4271** - `stable` - [RFC 4271 Border Gateway Protocol 4](https://www.rfc-editor.org/rfc/rfc4271.html)
+  - Supports bounded UPDATE fields only; no network traffic.
+- **SRC-RFC4760** - `stable` - [RFC 4760 Multiprotocol Extensions for BGP-4](https://www.rfc-editor.org/rfc/rfc4760.html)
+  - Supports synthetic MP_REACH and MP_UNREACH fields only.
+- **SRC-PNG3** - `current` - [Portable Network Graphics Third Edition](https://www.w3.org/TR/png-3/)
+  - Supports disposable APNG chunks only.
+- **SRC-WCAG22** - `stable` - [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural checks; complete conformance remains reserved.
+- **SRC-WAI-APG** - `current` - [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
+  - Supports keyboard and naming structure only.
+- **SRC-IUPAC-KELVIN** - `stable` - [IUPAC Gold Book Kelvin equation](https://goldbook.iupac.org/terms/view/K03378)
+  - Supports thermodynamic vocabulary only; agency conversion is refused.
+- **SRC-FRAGILITY** - `stable` - [The fragility index of randomized controlled trials](https://doi.org/10.1016/j.jclinepi.2013.10.019)
+  - Supports structural sensitivity vocabulary only; no participant inference.
+- **SRC-AKAIKE** - `stable` - [A new look at the statistical model identification](https://doi.org/10.1109/TAC.1974.1100705)
+  - Supports model-selection vocabulary only.
+- **SRC-RFC6455** - `stable` - [RFC 6455 The WebSocket Protocol](https://www.rfc-editor.org/rfc/rfc6455.html)
+  - Supports disposable frame fixtures only; no network service.
+- **SRC-RFC4120** - `stable` - [RFC 4120 Kerberos Network Authentication Service V5](https://www.rfc-editor.org/rfc/rfc4120.html)
+  - Supports nonlive AP-REQ vectors only; no realm, key, account, or ticket.
+- **SRC-CIDOC-CRM** - `current` - [CIDOC Conceptual Reference Model](https://www.cidoc-crm.org/)
+  - Supplies collections-information vocabulary only; no professional or affected-party authority.
+- **SRC-RFC9345** - `stable` - [RFC 9345 Delegated Credentials for TLS and DTLS](https://www.rfc-editor.org/rfc/rfc9345.html)
+  - Supports synthetic delegated-credential vectors only.
+- **SRC-RFC9334** - `stable` - [RFC 9334 Remote ATtestation procedureS Architecture](https://www.rfc-editor.org/rfc/rfc9334.html)
+  - Supports synthetic role and appraisal-policy structure only.
+- **SRC-RFC9420** - `stable` - [RFC 9420 The Messaging Layer Security Protocol](https://www.rfc-editor.org/rfc/rfc9420.html)
+  - Supports synthetic MLS structures only; no group or key operation.
+- **SRC-ZTF** - `current` - [Zwicky Transient Facility at IRSA](https://irsa.ipac.caltech.edu/Missions/ztf.html)
+  - Supports a zero-row readiness contract only; no query or download occurs.
+- **SRC-PROTECTED-OBJECTS-NZ** - `current` - [Protected Objects Act 1975](https://www.legislation.govt.nz/act/public/1975/0041/9.0/whole.html)
+  - Keeps legal interpretation and return decisions exact-gated.
+- **SRC-HERITAGE-NZ** - `current` - [Heritage New Zealand Pouhere Taonga Act 2014](https://legislation.govt.nz/act/public/2014/26/en/latest/whole.html)
+  - Keeps archaeological, cultural, tangata-whenua, and Maori authority external.
