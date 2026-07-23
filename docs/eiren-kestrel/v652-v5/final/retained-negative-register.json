@@ -1,0 +1,29 @@
+{
+  "closeout_lifecycle_operational": 2,
+  "closeout_lifecycle_rows": [
+    {
+      "category": "sequential_manifest_blob_verifier_timeout",
+      "failed": "The first independent staged-manifest verifier used one Git process per blob and exceeded its 120-second bound before producing a result.",
+      "negative_id": "V6525-NEG-CLOSEOUT-01",
+      "passing": "The batched verifier checked 32 staged paths, 26 closeout entries plus 6 exclusions, and 293 owner entries plus 3 exclusions with zero path, object, byte-count, or SHA-256 mismatch.",
+      "recovery": "Build one stage-zero index map with git ls-files -s -z and read all required objects through one git cat-file --batch stream.",
+      "recurrence_guard": "Use the batched index/object verifier for manifests above a small bounded fixture; never return to a per-blob subprocess loop."
+    },
+    {
+      "category": "repeated_method_flow_subprocess_timeout",
+      "failed": "The first Method Flow rebuild invoked the growing ledger through repeated subprocess calls and exceeded its 180-second wrapper bound after producing files but before returning a credited completion.",
+      "negative_id": "V6525-NEG-CLOSEOUT-02",
+      "passing": "The in-process runner path rebuilt and validated both retained closeout methods, both failed witnesses, both passing witnesses, their preferred states, summaries, and closeout tests within one bounded invocation.",
+      "recovery": "Load the official Method Flow runner once in-process, apply the same record, witness, state, validation, and summary functions, and write each resulting artifact once.",
+      "recurrence_guard": "For an established large ledger, load the official runner once and avoid repeated process startup and full-ledger parse/write cycles."
+    }
+  ],
+  "effective_count": 8721,
+  "failed_attempts_receive_zero_aggregate_credit": true,
+  "inherited": 8549,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v652-v5.retained-negatives.final.v1",
+  "synthetic_mutations": 150,
+  "x1_operational": 17,
+  "x2_operational": 3
+}
