@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import unittest
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/elaren-kestrel/v652-v7"
+X1_COMMIT = "cd1ce10d7c456d55e48183652835f6c3f5866b89"
 
 
 def load(relative: str):
@@ -146,7 +148,23 @@ class V652V7X1Tests(unittest.TestCase):
         self.assertLessEqual(words, 100000)
 
     def test_no_x2_output_files(self) -> None:
-        names = [path.relative_to(PHASE).as_posix() for path in PHASE.rglob("*") if path.is_file()]
+        result = subprocess.run(
+            [
+                "git",
+                "ls-tree",
+                "-r",
+                "--name-only",
+                X1_COMMIT,
+                "--",
+                "docs/elaren-kestrel/v652-v7",
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        names = result.stdout.splitlines()
         forbidden = ("evidence-receipt", "closeout-receipt", "seal-receipt", "final-validation-record", "mutation-results")
         self.assertFalse(any(any(token in name for token in forbidden) for name in names))
 
