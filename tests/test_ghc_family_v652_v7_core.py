@@ -174,7 +174,8 @@ class V652V7CoreTests(unittest.TestCase):
         truth = load("phase-truth.json")
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(truth["independent_reproduction"])
-        self.assertEqual(truth["route_state"], "NOT_ELIGIBLE_BEFORE_FINAL_GATE")
+        expected_route = "PREPARED_NOT_SENT" if (PHASE / "closeout-receipt.json").is_file() else "NOT_ELIGIBLE_BEFORE_FINAL_GATE"
+        self.assertEqual(truth["route_state"], expected_route)
 
 
 if __name__ == "__main__":

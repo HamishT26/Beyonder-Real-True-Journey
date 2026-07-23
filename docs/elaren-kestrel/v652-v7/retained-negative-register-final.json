@@ -1,0 +1,44 @@
+{
+  "effective_total": 9098,
+  "evidence_effective_total": 9093,
+  "none_erased": true,
+  "post_evidence_operational": [
+    {
+      "category": "closeout_lifecycle_route_assertion",
+      "failed": "The first closeout-scoped run passed 58 of 60 tests; two assertions still required the evidence-stage route label after closeout preparation.",
+      "negative_id": "V6527-FINAL-N01",
+      "recovery": "Require NOT_ELIGIBLE_BEFORE_FINAL_GATE at evidence and PREPARED_NOT_SENT only when the closeout receipt exists.",
+      "recurrence_guard": "Bind route assertions to the explicit lifecycle artifact rather than one timeless label."
+    },
+    {
+      "category": "multi_file_lifecycle_patch_rejection",
+      "failed": "The first multi-file lifecycle correction patch was rejected atomically because one test hunk did not match its exact context.",
+      "negative_id": "V6527-FINAL-N02",
+      "recovery": "Split the correction into file-exact patches and verify each applied hunk before the bounded rerun.",
+      "recurrence_guard": "Inspect exact target context before composing a large multi-file patch."
+    },
+    {
+      "category": "method_flow_summary_flag_mismatch",
+      "failed": "The first final Method Flow build recorded its methods and witnesses but the summary command rejected an obsolete markdown output flag.",
+      "negative_id": "V6527-FINAL-N03",
+      "recovery": "Use the current summarize command's exact --markdown-output flag and rebuild from the immutable evidence ledger.",
+      "recurrence_guard": "Read the active runner help or a current successful invocation before composing summary flags."
+    },
+    {
+      "category": "final_staged_allowlist_compatibility_gap",
+      "failed": "The first final staged review rejected three intended lifecycle-aware updates because its allowlist covered only newly added closeout files.",
+      "negative_id": "V6527-FINAL-N04",
+      "recovery": "Add the exact detailed-validator, minimal-validator, and core-test paths while keeping every unrelated path rejected.",
+      "recurrence_guard": "Enumerate exact compatibility-update paths in the final staged allowlist before review."
+    },
+    {
+      "category": "misaddressed_multi_file_patch_hunk",
+      "failed": "A second correction patch was rejected atomically because its final closeout-test hunk was addressed to the staged-review file.",
+      "negative_id": "V6527-FINAL-N05",
+      "recovery": "Apply one file-exact patch per target and verify each result independently.",
+      "recurrence_guard": "Do not combine unrelated target files in a patch when their context labels can be confused."
+    }
+  ],
+  "post_evidence_operational_count": 5,
+  "schema": "ghc.family.v652-v7.final-retained-negatives.v1"
+}

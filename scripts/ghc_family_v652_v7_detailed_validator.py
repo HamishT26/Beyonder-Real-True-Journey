@@ -82,9 +82,11 @@ def validate() -> dict[str, Any]:
     skill = read_json(PHASE / "skills/skill-build-receipt.json")
     runner = read_json(PHASE / "runners/runner-invocation-receipt.json")
     portfolio = read_json(PHASE / "portfolios/execution-receipt.json")
-    negatives = read_json(PHASE / "retained-negative-register-x2.json")
+    final_negative_path = PHASE / "retained-negative-register-final.json"
+    negatives = read_json(final_negative_path if final_negative_path.is_file() else PHASE / "retained-negative-register-x2.json")
     gates = read_json(PHASE / "exact-open-gate-register-x2.json")
-    methods = read_json(PHASE / "method-flow/evidence-method-flow-ledger.json")
+    final_method_path = PHASE / "method-flow/final-method-flow-ledger.json"
+    methods = read_json(final_method_path if final_method_path.is_file() else PHASE / "method-flow/evidence-method-flow-ledger.json")
     truth = read_json(PHASE / "phase-truth.json")
     threshold = read_json(PHASE / "validation/owner-file-threshold-receipt.json")
     workflow = read_json(PHASE / "workflow/workflow-plan-validation.json")
@@ -100,10 +102,13 @@ def validate() -> dict[str, Any]:
     check("aggregate:skills", skill["initialized_count"] == skill["customized_count"] == skill["quick_validated_count"] == 10 and not skill["globally_installed"], skill)
     check("aggregate:runners", runner["runner_count"] == runner["invoked_count"] == runner["valid_count"] == 10, runner["valid_count"])
     check("aggregate:portfolios", portfolio["unresolved_authorized_internal_tasks"] == 0 and portfolio["safe_now"]["resolved"] == 35 and portfolio["candidate"]["resolved"] == 30, portfolio)
-    check("aggregate:negatives", negatives["effective_total"] == 9093 and negatives["none_erased"] and negatives["synthetic_mutation_count"] == 150, negatives["effective_total"])
+    expected_negatives = 9098 if final_negative_path.is_file() else 9093
+    synthetic_preserved = read_json(PHASE / "retained-negative-register-x2.json")["synthetic_mutation_count"] == 150
+    check("aggregate:negatives", negatives["effective_total"] == expected_negatives and negatives["none_erased"] and synthetic_preserved, negatives["effective_total"])
     check("aggregate:gates", gates["effective_open_gaps"] == 68 and gates["effective_exact_gates"] == 69 and gates["none_silently_closed"], gates)
-    check("aggregate:method_flow", methods["counts"]["methods"] == 26 and methods["counts"]["witness_results"] == {"fail": 26, "pass": 26}, methods["counts"])
-    check("aggregate:truth", truth["outcomes"] == dict(expected) and truth["effective_negatives"] == 9093 and truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", truth)
+    expected_methods = 31 if final_method_path.is_file() else 26
+    check("aggregate:method_flow", methods["counts"]["methods"] == expected_methods and methods["counts"]["witness_results"] == {"fail": expected_methods, "pass": expected_methods}, methods["counts"])
+    check("aggregate:truth", truth["outcomes"] == dict(expected) and truth["effective_negatives"] == expected_negatives and truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20", truth)
     check("aggregate:file_threshold", threshold["below_threshold"] and threshold["owner_generated_file_count"] < 2000, threshold)
     check("aggregate:report_accessibility", 'lang="en"' in report and "<main" in report and "prefers-reduced-motion" in report and "manual" in report.lower(), "static report")
     check("aggregate:overview_words", 1500 <= overview_words <= 100000, overview_words)
