@@ -28,6 +28,7 @@ def validate():
             "route_gated": truth["route_state"]
             in {
                 "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
+                "PREPARED_NOT_CREATED_TERMINAL_GATE_REQUIRED",
                 "NOT_ELIGIBLE_EVIDENCE_NOT_FINAL",
                 "NOT_ELIGIBLE_BEFORE_FINAL_GATE",
                 "PREPARED_NOT_SENT",

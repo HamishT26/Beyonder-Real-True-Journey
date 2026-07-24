@@ -256,6 +256,7 @@ class V653V4CoreTests(unittest.TestCase):
             {
                 "NOT_ELIGIBLE_EVIDENCE_NOT_FINAL",
                 "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
+                "PREPARED_NOT_CREATED_TERMINAL_GATE_REQUIRED",
             },
         )
 

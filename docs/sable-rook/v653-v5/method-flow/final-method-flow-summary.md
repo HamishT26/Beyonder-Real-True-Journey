@@ -1,0 +1,133 @@
+# GHC Family Method Flow State
+
+- Phase: v653-gmut-thos-v5-x1-x2
+- Owner: Sable Rook
+- Methods: 15
+- Passing witnesses: 15
+- Failed witnesses retained: 15
+
+## Preferred methods
+
+### V6535-METHOD-01 — Bounded recovery for memory_registry_relative_path_miss
+
+- Trigger: memory_registry_relative_path_miss
+- Method: Use the verified memory-root-relative literal path and limit the lookup to current Sable and exact-closeout terms.
+- Recurrence guard: Use the verified memory-root-relative literal path and limit the lookup to current Sable and exact-closeout terms.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-01-F, V6535-WITNESS-01-P
+
+### V6535-METHOD-02 — Bounded recovery for immutable_activation_pipe_closed_early
+
+- Trigger: immutable_activation_pipe_closed_early
+- Method: Materialize the immutable Git blob completely before bounded line slicing and verify first-to-last coverage.
+- Recurrence guard: Materialize the immutable Git blob completely before bounded line slicing and verify first-to-last coverage.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-02-F, V6535-WITNESS-02-P
+
+### V6535-METHOD-03 — Bounded recovery for multi_file_size_probe_timeout
+
+- Trigger: multi_file_size_probe_timeout
+- Method: Use one exact tree listing and then inspect required files in bounded, one-purpose ranges.
+- Recurrence guard: Use one exact tree listing and then inspect required files in bounded, one-purpose ranges.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-03-F, V6535-WITNESS-03-P
+
+### V6535-METHOD-04 — Bounded recovery for combined_drive_status_identity_probe_timeout
+
+- Trigger: combined_drive_status_identity_probe_timeout
+- Method: Split capacity, branch identity, remote equality, and worktree cleanliness into separate bounded probes.
+- Recurrence guard: Split capacity, branch identity, remote equality, and worktree cleanliness into separate bounded probes.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-04-F, V6535-WITNESS-04-P
+
+### V6535-METHOD-05 — Bounded recovery for powershell_hash_literal_parse_failure
+
+- Trigger: powershell_hash_literal_parse_failure
+- Method: Use separate native Git and literal-path checks, then construct summaries only after each command completes.
+- Recurrence guard: Use separate native Git and literal-path checks, then construct summaries only after each command completes.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-05-F, V6535-WITNESS-05-P
+
+### V6535-METHOD-06 — Bounded recovery for combined_new_lane_postflight_timeout
+
+- Trigger: combined_new_lane_postflight_timeout
+- Method: Split registration, exact head, upstream, status, and live-remote equality into bounded probes without retrying mutation.
+- Recurrence guard: Split registration, exact head, upstream, status, and live-remote equality into bounded probes without retrying mutation.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-06-F, V6535-WITNESS-06-P
+
+### V6535-METHOD-07 — Bounded recovery for bounded_file_inventory_pipe_nonzero
+
+- Trigger: bounded_file_inventory_pipe_nonzero
+- Method: Use an exact literal phase pattern or a materialized list before selection, and distinguish no-match from tool failure.
+- Recurrence guard: Use an exact literal phase pattern or a materialized list before selection, and distinguish no-match from tool failure.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-07-F, V6535-WITNESS-07-P
+
+### V6535-METHOD-08 — Bounded recovery for overbroad_primary_source_search_truncated
+
+- Trigger: overbroad_primary_source_search_truncated
+- Method: Use bounded exact-title or official-domain searches and retain only directly reviewed primary or official records.
+- Recurrence guard: Use bounded exact-title or official-domain searches and retain only directly reviewed primary or official records.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-08-F, V6535-WITNESS-08-P
+
+### V6535-METHOD-09 — Bounded recovery for semantic_novelty_threshold_rejected_qei_duplicate
+
+- Trigger: semantic_novelty_threshold_rejected_qei_duplicate
+- Method: Retain the failed build with zero credit, replace the duplicate with the mechanism-distinct Buchholz-Ojima-Roos local-thermal-observable contract, and rerun the unexecuted x1 build.
+- Recurrence guard: Retain the failed build with zero credit, replace the duplicate with the mechanism-distinct Buchholz-Ojima-Roos local-thermal-observable contract, and rerun the unexecuted x1 build.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-09-F, V6535-WITNESS-09-P
+
+### V6535-METHOD-10 — Bounded recovery for powershell_null_coalescing_operator_unsupported
+
+- Trigger: powershell_null_coalescing_operator_unsupported
+- Method: Read exact properties with explicit conditional checks in Windows PowerShell 5.1, then construct the bounded summary.
+- Recurrence guard: Read exact properties with explicit conditional checks in Windows PowerShell 5.1, then construct the bounded summary.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-10-F, V6535-WITNESS-10-P
+
+### V6535-METHOD-11 — Bounded recovery for x1_staged_receipt_fixed_point_stale
+
+- Trigger: x1_staged_receipt_fixed_point_stale
+- Method: Rebuild the immutable x1 packet with the failure retained, stage the exact surface, compute the self-excluding receipt fixed point with all receipt paths present, restage those receipts, and require a read-only freshness pass.
+- Recurrence guard: Rebuild the immutable x1 packet with the failure retained, stage the exact surface, compute the self-excluding receipt fixed point with all receipt paths present, restage those receipts, and require a read-only freshness pass.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6535-WITNESS-11-F, V6535-WITNESS-11-P
+
+### V6535-METHOD-12 — Bounded recovery for workflow_skill_legacy_existing_task_policy_mismatch
+
+- Trigger: workflow_skill_legacy_existing_task_policy_mismatch
+- Method: Preserve the 19-of-20 skill result and exact issue without rewriting the live authorization, then add a sanitized authorization overlay that keeps creation ineligible until the exact-final gate.
+- Recurrence guard: Never make a legacy workflow schema pass by falsifying a live authorized route; retain the mismatch and use an explicit nonactivating overlay.
+- Rollback: Stop, retain the failed witness with zero credit, and leave all external and protected-gate state unchanged.
+- Witnesses: V6535-WITNESS-12-F, V6535-WITNESS-12-P
+
+### V6535-METHOD-13 — Bounded recovery for powershell_compound_x1_blob_probe_parse_failure
+
+- Trigger: powershell_compound_x1_blob_probe_parse_failure
+- Method: Run staged, unstaged, and untracked inventories as separate native probes and rely on the already passing staged-review receipt for immutable x1-path protection.
+- Recurrence guard: Do not combine native command execution, redirection, and exit-code tests inside a PowerShell predicate; materialize each result first.
+- Rollback: Stop, retain the failed witness with zero credit, and leave all external and protected-gate state unchanged.
+- Witnesses: V6535-WITNESS-13-F, V6535-WITNESS-13-P
+
+### V6535-METHOD-14 — Bounded recovery for evidence_rebuild_rejected_staged_prebuild_paths
+
+- Trigger: evidence_rebuild_rejected_staged_prebuild_paths
+- Method: Clear only the index staging for Sable's uncommitted x2 delta, retain every worktree byte, and rerun the deterministic evidence builder from the immutable x1 commit.
+- Recurrence guard: Before a deterministic evidence rebuild, require an empty x2 staging surface while preserving the worktree and frozen x1.
+- Rollback: Stop, retain the failed witness with zero credit, and leave all external and protected-gate state unchanged.
+- Witnesses: V6535-WITNESS-14-F, V6535-WITNESS-14-P
+
+### V6535-METHOD-15 — Bounded recovery for minimal_validator_legacy_route_state
+
+- Trigger: minimal_validator_legacy_route_state
+- Method: Add exactly the declared post-evidence pre-creation state to the minimal route allowlist while retaining all earlier states and the separate closeout assertions for one authorized creation.
+- Recurrence guard: When a live authorization changes the kind of terminal action, update only the explicit lifecycle allowlist and keep exact route semantics in owner-scoped closeout tests.
+- Rollback: Retain the failed attempt with zero credit and keep the Sable-only terminal route unsent until the exact final gate.
+- Witnesses: V6535-WITNESS-15-F, V6535-WITNESS-15-P
+
+## Retained boundary
+
+This ledger records bounded workflow evidence. Same-owner validation is not independent reproduction and does not establish scientific, legal, cultural, identity, production, security, accessibility, deployment, or Stage 20 claims.
