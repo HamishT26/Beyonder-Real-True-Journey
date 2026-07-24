@@ -1,0 +1,36 @@
+# v654-v4 source ledger
+
+- **SRC-WORKSAFE-MACHINERY** - `current` - [WorkSafe New Zealand: safe use of machinery](https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/)
+  - Current machinery-risk context only; no workplace assessment, competence, or compliance finding.
+- **SRC-WORKSAFE-HAZ** - `current` - [WorkSafe New Zealand: safety data sheets and hazardous waste](https://www.worksafe.govt.nz/topic-and-industry/hazardous-substances/managing/safety-data-sheets/)
+  - SDS, labelling, spill, and waste context only; no classification, disposal, workplace, or emergency decision.
+- **SRC-CGA** - `watch` - [Consumer Guarantees Act 1993](https://www.legislation.govt.nz/act/public/1993/0091/latest/DLM312829.html)
+  - Watched legal context only; no interpretation, warranty, repair, refund, replacement, or remedy decision.
+- **SRC-PRIVACY-ACT** - `watch` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/0031/latest/contents.html)
+  - Watched legal context only; no privacy compliance, disclosure, retention, ownership, or identity decision.
+- **SRC-ISO3758** - `current` - [ISO 3758:2023 textiles care labelling code using symbols](https://www.iso.org/standard/74401.html)
+  - Catalogue-level care-label context only; no restricted standard text, treatment approval, conformity, or professional-care claim.
+- **SRC-ISO4915** - `stable` - [ISO 4915:1991 textiles stitch types classification and terminology](https://www.iso.org/standard/10932.html)
+  - Catalogue-level stitch terminology only; no seam design, sewing, product-safety, or conformance decision.
+- **SRC-ISO4916** - `stable` - [ISO 4916:1991 textiles seam types classification and terminology](https://www.iso.org/standard/10934.html)
+  - Catalogue-level seam terminology only; no seam design, sewing, product-safety, or conformance decision.
+- **SRC-ISO8559** - `current` - [ISO 8559-1:2017 clothing-size anthropometric definitions](https://www.iso.org/standard/61686.html)
+  - Catalogue-level measurement definitions only; no body measurement, sizing, fitting, population, privacy, or professional decision.
+- **SRC-ISO13934** - `stable` - [ISO 13934-1:2013 textile-fabric tensile properties](https://www.iso.org/standard/60676.html)
+  - Catalogue-level test context and typed fields only; no specimen, instrument, measurement, result, or conformance claim.
+- **SRC-ISO13935** - `stable` - [ISO 13935-1:2014 textile seam tensile properties](https://www.iso.org/ics/59.080.30/x/)
+  - Catalogue-level seam-test context and typed fields only; no specimen, instrument, measurement, result, or conformance claim.
+- **SRC-BIPM-SI** - `current` - [BIPM SI Brochure, updated 2026](https://www.bipm.org/en/publications/si-brochure/)
+  - Unit declarations only; no calibration, traceability, or measurement assurance.
+- **SRC-WCAG22** - `current` - [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Structural checks only; manual, browser, assistive-technology, Māori-language, cognitive, and affected-user evaluation remain reserved.
+- **SRC-NFC-SPECS** - `current` - [NFC Forum NDEF technical specification](https://nfc-forum.org/build/specifications/data-exchange-format-ndef-technical-specification/)
+  - Synthetic NDEF fields only; no tag writing, locking, live URI, interoperability, consent, privacy, or production identity claim.
+- **SRC-ISO20248** - `current` - [ISO/IEC 20248:2022 digital signature data structure schema](https://www.iso.org/standard/81314.html)
+  - Catalogue-level signature fields only; no real key, certificate, signature, validation, issuing authority, or conformance event.
+- **SRC-EU-ESPR** - `watch` - [Regulation (EU) 2024/1781 ecodesign and digital product passport framework](https://eur-lex.europa.eu/eli/reg/2024/1781/eng)
+  - Primary legal context only; no textile applicability, delegated-act status, legal interpretation, access-right, passport, product, or market decision.
+- **SRC-TE-MANA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Māori data decisions remain under Māori authority; no authority is delegated to the repository.
+- **SRC-LOCAL-CONTEXTS** - `current` - [Local Contexts Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/)
+  - Cultural and traditional-knowledge rights reservation only; no label is selected or applied.
