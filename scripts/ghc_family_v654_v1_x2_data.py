@@ -93,4 +93,11 @@ X2_OPERATIONAL_NEGATIVES = [
         "Retain the timeout and prove index-to-worktree equality with git diff-files --quiet plus owner-scoped untracked checks.",
         "Use plumbing-level quiet equality for large worktrees; enumerate only the owner-scoped untracked surface.",
     ),
+    _negative(
+        12,
+        "postpush_porcelain_clean_probe_timeout",
+        "After the first closeout was pushed and four-way equal, a read-only porcelain clean-state probe exceeded its time bound before returning a result.",
+        "Retain the timeout in one additive terminal correction and use tracked diff-files and diff-index equality plus owner-scoped untracked checks.",
+        "Do not use checkout-wide porcelain status as the terminal clean-state primitive on this large Windows worktree.",
+    ),
 ]

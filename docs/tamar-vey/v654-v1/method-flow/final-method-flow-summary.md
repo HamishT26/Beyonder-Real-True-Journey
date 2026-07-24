@@ -2,9 +2,9 @@
 
 - Phase: v654-v1
 - Owner: Tamar Vey
-- Methods: 31
-- Passing witnesses: 31
-- Failed witnesses retained: 31
+- Methods: 32
+- Passing witnesses: 32
+- Failed witnesses retained: 32
 
 ## Preferred methods
 
@@ -255,6 +255,14 @@
 - Recurrence guard: Use plumbing-level quiet equality for large worktrees; enumerate only the owner-scoped untracked surface.
 - Rollback: Stop, retain the failure with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
 - Witnesses: V6541-WITNESS-31-F, V6541-WITNESS-31-P
+
+### V6541-METHOD-32 — Bounded recovery for postpush_porcelain_clean_probe_timeout
+
+- Trigger: postpush_porcelain_clean_probe_timeout
+- Method: Retain the timeout in one additive terminal correction and use tracked diff-files and diff-index equality plus owner-scoped untracked checks.
+- Recurrence guard: Do not use checkout-wide porcelain status as the terminal clean-state primitive on this large Windows worktree.
+- Rollback: Stop, retain the failure with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6541-WITNESS-32-F, V6541-WITNESS-32-P
 
 ## Retained boundary
 

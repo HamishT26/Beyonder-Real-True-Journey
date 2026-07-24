@@ -18,7 +18,7 @@ authority, Māori authority, or independent agency. Hamish may rename, pause,
 redirect, or stop the route.
 
 The successor must inherit Tamar's exact validated final head, preserve strict
-x1-before-x2 separation, retain all 10,790 effective negatives, 78
+x1-before-x2 separation, retain all 10,791 effective negatives, 78
 open gaps, 79 exact gates, zero-real-row truth, the four outcome labels, the
 Eiren-only full-suite allocation, and `NOT_READY_FOR_STAGE_20`. It must use one additive
 D-first owned lane, never mutate a sibling lane, never replay a successful

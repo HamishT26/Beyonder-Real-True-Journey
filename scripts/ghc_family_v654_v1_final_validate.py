@@ -25,6 +25,7 @@ BRANCH = "codex/GHC-Family/tamar-vey-full-tools"
 SOURCE = "180a9b42330be6494e6a1ea3700e001860cffb3d"
 X1 = "e5d685fb3a4a84af32fe5914eb0f8d069c854e97"
 EVIDENCE = "136d55ba5af1f4f596da0c47d9be931a785cdb18"
+FIRST_CLOSEOUT = "10058ab90152d6a1483cddb5654925b07f878fd0"
 EXPECTED = {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1}
 TEST_MODULES = [
     "tests.test_ghc_family_v654_v1_x1",
@@ -64,6 +65,34 @@ def owner_path(path: str) -> bool:
         or path.startswith("tests/test_ghc_family_v654_v1")
         or path in RUNNERS
     )
+
+
+def clean_state() -> dict[str, Any]:
+    tracked_worktree = subprocess.run(
+        ["git", "diff-files", "--quiet"], cwd=REPO
+    ).returncode == 0
+    index_head = subprocess.run(
+        ["git", "diff-index", "--cached", "--quiet", "HEAD", "--"], cwd=REPO
+    ).returncode == 0
+    owner_untracked = [
+        row
+        for row in git(
+            "ls-files",
+            "--others",
+            "--exclude-standard",
+            "--",
+            "docs/tamar-vey/v654-v1/**",
+            "scripts/*v654_v1*",
+            "tests/*v654_v1*",
+        ).splitlines()
+        if row
+    ]
+    return {
+        "tracked_worktree_equal": tracked_worktree,
+        "index_head_equal": index_head,
+        "owner_untracked": owner_untracked,
+        "clean": tracked_worktree and index_head and not owner_untracked,
+    }
 
 
 def tree_objects(head: str) -> dict[str, str]:
@@ -339,18 +368,18 @@ def detailed_checks(blobs: dict[str, bytes]) -> list[dict[str, Any]]:
     )
     add("open_gaps", gaps["effective_open_gaps"] == 78, 78)
     add("exact_gates", gaps["effective_exact_gates"] == 79, 79)
-    add("negatives", negatives["effective_total"] == 10790, 10790)
+    add("negatives", negatives["effective_total"] == 10791, 10791)
     add(
         "methods",
-        len(methods["methods"]) == 31
+        len(methods["methods"]) == 32
         and Counter(row["recommendation_state"] for row in methods["methods"])
-        == {"preferred": 31},
+        == {"preferred": 32},
         len(methods["methods"]),
     )
     add(
         "method_witnesses",
         Counter(row["result"] for row in methods["witnesses"])
-        == {"fail": 31, "pass": 31},
+        == {"fail": 32, "pass": 32},
         len(methods["witnesses"]),
     )
     add(
@@ -410,12 +439,12 @@ def main() -> None:
 
     started = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     before_head = git("rev-parse", "HEAD")
-    before_status = git("status", "--porcelain=v1", "--untracked-files=all")
+    before_clean = clean_state()
     branch = git("branch", "--show-current")
-    if before_head != args.expected_head or before_status or branch != BRANCH:
+    if before_head != args.expected_head or not before_clean["clean"] or branch != BRANCH:
         raise RuntimeError(
             f"invalid exact-final precondition: head={before_head} "
-            f"clean={not before_status} branch={branch}"
+            f"clean={before_clean} branch={branch}"
         )
     upstream = git("rev-parse", "@{upstream}")
     tracking = git("rev-parse", f"refs/remotes/origin/{BRANCH}")
@@ -471,6 +500,7 @@ def main() -> None:
     manifest_valid = all(not row["mismatches"] for row in manifests)
 
     parent = git("rev-parse", "HEAD^")
+    closeout_parent = git("rev-parse", f"{FIRST_CLOSEOUT}^")
     evidence_parent = git("rev-parse", f"{EVIDENCE}^")
     x1_parent = git("rev-parse", f"{X1}^")
     phase_commits = int(git("rev-list", "--count", f"{SOURCE}..HEAD"))
@@ -485,7 +515,7 @@ def main() -> None:
             cwd=REPO,
         ).returncode
         == 0
-        for anchor in (SOURCE, X1, EVIDENCE)
+        for anchor in (SOURCE, X1, EVIDENCE, FIRST_CLOSEOUT)
     }
     diff_hygiene = subprocess.run(
         ["git", "diff", "--check", SOURCE, "HEAD"],
@@ -502,17 +532,17 @@ def main() -> None:
 
     minimal = [
         ("outcomes", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["outcomes"] == EXPECTED),
-        ("negative_total", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["effective_negatives"] == 10790),
+        ("negative_total", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["effective_negatives"] == 10791),
         ("open_gaps", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["effective_open_gaps"] == 78),
         ("exact_gates", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["effective_exact_gates"] == 79),
-        ("method_count", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["method_flow_methods"] == 31),
+        ("method_count", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["method_flow_methods"] == 32),
         ("zero_rows", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["real_data_rows"] == 0),
         ("no_full_suite", not load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["full_repository_suite_run"]),
         ("no_independent_reproduction", not load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["independent_team_reproduction"]),
         ("verdict", load_blob(blobs, "docs/tamar-vey/v654-v1/final/phase-truth.json")["terminal_verdict"] == "NOT_READY_FOR_STAGE_20"),
         ("task_uncreated", load_blob(blobs, "docs/tamar-vey/v654-v1/route/future-sibling-task-delivery-state.json")["task_created_count"] == 0),
-        ("direct_parents", parent == EVIDENCE and evidence_parent == X1 and x1_parent == SOURCE),
-        ("phase_commit_count", phase_commits == 3),
+        ("direct_parents", parent == FIRST_CLOSEOUT and closeout_parent == EVIDENCE and evidence_parent == X1 and x1_parent == SOURCE),
+        ("phase_commit_count", phase_commits == 4),
         ("zero_merges", not merge_rows),
         ("ancestry", all(ancestry.values())),
         ("json", not json_failures),
@@ -526,11 +556,11 @@ def main() -> None:
         {"name": name, "passed": bool(passed)} for name, passed in minimal
     ]
     after_head = git("rev-parse", "HEAD")
-    after_status = git("status", "--porcelain=v1", "--untracked-files=all")
+    after_clean = clean_state()
     exact_stable = (
         after_head == before_head == args.expected_head
-        and not before_status
-        and not after_status
+        and before_clean["clean"]
+        and after_clean["clean"]
     )
     valid = all(
         [
@@ -540,10 +570,11 @@ def main() -> None:
             not json_failures,
             privacy["confirmed_hit_count"] == 0,
             manifest_valid,
-            phase_commits == 3,
+            phase_commits == 4,
             not merge_rows,
             all(ancestry.values()),
-            parent == EVIDENCE,
+            parent == FIRST_CLOSEOUT,
+            closeout_parent == EVIDENCE,
             evidence_parent == X1,
             x1_parent == SOURCE,
             diff_hygiene.returncode == 0,
@@ -563,8 +594,10 @@ def main() -> None:
         "observed_head_before": before_head,
         "observed_head_after": after_head,
         "branch": branch,
-        "clean_before": not before_status,
-        "clean_after": not after_status,
+        "clean_before": before_clean["clean"],
+        "clean_after": after_clean["clean"],
+        "clean_state_before": before_clean,
+        "clean_state_after": after_clean,
         "local": before_head,
         "upstream": upstream,
         "tracking": tracking,
@@ -590,8 +623,10 @@ def main() -> None:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
+        "first_closeout": FIRST_CLOSEOUT,
         "final": before_head,
         "direct_parent": parent,
+        "first_closeout_parent": closeout_parent,
         "evidence_parent": evidence_parent,
         "x1_parent": x1_parent,
         "ancestry": ancestry,

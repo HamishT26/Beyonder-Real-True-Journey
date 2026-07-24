@@ -13,7 +13,7 @@ Thirty safe-now tasks, thirty bounded candidate surfaces, and thirty additive
 CLEAN/FIX/REFINE items reached only their declared owner-local acceptance gates.
 
 The terminal verdict remains `NOT_READY_FOR_STAGE_20`. The sealed candidate retains
-10,790 effective negatives, 78 effective open gaps, and 79 effective
+10,791 effective negatives, 78 effective open gaps, and 79 effective
 exact gates. It used zero real empirical rows, zero real participants or
 operators, zero account or API-key accesses, zero production identity events,
 and zero authority decisions. A successful workflow witness never erases its
@@ -112,8 +112,8 @@ acceptance.
 
 ## Method Flow and retained negatives
 
-Method Flow contains 31 preferred bounded methods, 31 retained failed
-witnesses, and 31 bounded passing witnesses. Twenty x1 failures include
+Method Flow contains 32 preferred bounded methods, 32 retained failed
+witnesses, and 32 bounded passing witnesses. Twenty x1 failures include
 timeouts, parser faults, schema and path assumptions, overbroad displays,
 Unicode-sensitive patch contexts, a redundant state transition, a workflow
 enum mismatch, and a privacy-scanner false positive. Five x2 and lifecycle
@@ -122,11 +122,12 @@ blob lookup, porcelain status trimming, an overbroad inherited test inventory,
 two bounded status-inventory timeouts, a per-entry manifest replay timeout, and
 a Windows batch-pipe deadlock timeout, and an inherited scanner-definition
 false positive, a generated-Markdown diff-hygiene failure, and a checkout-wide
-unstaged-name timeout. Each recovery is narrow, evidenced, and reusable only
-for its declared trigger. No recovery earns initial-pass credit.
+unstaged-name timeout, and a post-push porcelain clean-state timeout. Each
+recovery is narrow, evidenced, and reusable only for its declared trigger. No
+recovery earns initial-pass credit.
 
 The retained-negative total combines 10,609 inherited effective negatives,
-twenty x1 operational negatives, eleven x2 or lifecycle operational negatives,
+twenty x1 operational negatives, twelve x2 or lifecycle operational negatives,
 and 150 executed-and-rejected synthetic mutations. No negative was deleted,
 renamed into a pass, folded into an aggregate that hides it, or used to close
 an empirical or authority gate.

@@ -31,9 +31,9 @@ class TestV654V1Closeout(unittest.TestCase):
     def test_negative_and_gate_retention(self):
         negatives = load("final/retained-negative-register.json")
         gates = load("final/exact-open-gate-register.json")
-        self.assertEqual(negatives["effective_total"], 10790)
+        self.assertEqual(negatives["effective_total"], 10791)
         self.assertEqual(negatives["x1_operational_count"], 20)
-        self.assertEqual(negatives["x2_and_lifecycle_operational_count"], 11)
+        self.assertEqual(negatives["x2_and_lifecycle_operational_count"], 12)
         self.assertEqual(negatives["synthetic_mutation_negative_count"], 150)
         self.assertTrue(negatives["no_failure_erased"])
         self.assertEqual(
@@ -49,9 +49,9 @@ class TestV654V1Closeout(unittest.TestCase):
         ledger = load("method-flow/final-method-flow-ledger.json")
         states = Counter(row["recommendation_state"] for row in ledger["methods"])
         witnesses = Counter(row["result"] for row in ledger["witnesses"])
-        self.assertEqual(len(ledger["methods"]), 31)
-        self.assertEqual(states, {"preferred": 31})
-        self.assertEqual(witnesses, {"fail": 31, "pass": 31})
+        self.assertEqual(len(ledger["methods"]), 32)
+        self.assertEqual(states, {"preferred": 32})
+        self.assertEqual(witnesses, {"fail": 32, "pass": 32})
 
     def test_future_task_is_prepared_not_created(self):
         route = load("route/future-sibling-task-delivery-state.json")
@@ -73,8 +73,8 @@ class TestV654V1Closeout(unittest.TestCase):
         closeout = load("final/closeout-receipt.json")
         seal = load("final/seal-receipt.json")
         validation = load("final/final-validation-record.json")
-        self.assertEqual(closeout["state"], "COMBINED_CLOSEOUT_CANDIDATE")
-        self.assertEqual(closeout["planned_phase_commit_count"], 3)
+        self.assertEqual(closeout["state"], "TERMINAL_CORRECTION_CANDIDATE")
+        self.assertEqual(closeout["planned_phase_commit_count"], 4)
         self.assertEqual(seal["state"], "CONTENT_SEAL_CANDIDATE")
         self.assertFalse(seal["future_task_created"])
         self.assertEqual(validation["state"], "POSTCOMMIT_CANONICAL_PASS_REQUIRED")

@@ -21,6 +21,7 @@ REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / d.PHASE_ROOT
 X1 = "e5d685fb3a4a84af32fe5914eb0f8d069c854e97"
 EVIDENCE = "136d55ba5af1f4f596da0c47d9be931a785cdb18"
+FIRST_CLOSEOUT = "10058ab90152d6a1483cddb5654925b07f878fd0"
 VERDICT = "NOT_READY_FOR_STAGE_20"
 ROUTE_STATE = "PREPARED_NOT_CREATED"
 EXPECTED = {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1}
@@ -116,6 +117,7 @@ def extend_method_flow() -> dict[str, Any]:
         "V6541-X2-N09",
         "V6541-X2-N10",
         "V6541-X2-N11",
+        "V6541-X2-N12",
     ]:
         raise RuntimeError("late negative set drift")
     for offset, negative in enumerate(late_negatives, 24):
@@ -224,9 +226,9 @@ def extend_method_flow() -> dict[str, Any]:
     payload = json.loads(ledger.read_text(encoding="utf-8"))
     states = Counter(row["recommendation_state"] for row in payload["methods"])
     witnesses = Counter(row["result"] for row in payload["witnesses"])
-    if len(payload["methods"]) != 31 or states != {"preferred": 31}:
+    if len(payload["methods"]) != 32 or states != {"preferred": 32}:
         raise RuntimeError(f"method state drift: {len(payload['methods'])} {states}")
-    if witnesses != {"fail": 31, "pass": 31}:
+    if witnesses != {"fail": 32, "pass": 32}:
         raise RuntimeError(f"method witness drift: {witnesses}")
     return payload
 
@@ -355,8 +357,8 @@ acceptance.
 
 ## Method Flow and retained negatives
 
-Method Flow contains 31 preferred bounded methods, 31 retained failed
-witnesses, and 31 bounded passing witnesses. Twenty x1 failures include
+Method Flow contains 32 preferred bounded methods, 32 retained failed
+witnesses, and 32 bounded passing witnesses. Twenty x1 failures include
 timeouts, parser faults, schema and path assumptions, overbroad displays,
 Unicode-sensitive patch contexts, a redundant state transition, a workflow
 enum mismatch, and a privacy-scanner false positive. Five x2 and lifecycle
@@ -365,11 +367,12 @@ blob lookup, porcelain status trimming, an overbroad inherited test inventory,
 two bounded status-inventory timeouts, a per-entry manifest replay timeout, and
 a Windows batch-pipe deadlock timeout, and an inherited scanner-definition
 false positive, a generated-Markdown diff-hygiene failure, and a checkout-wide
-unstaged-name timeout. Each recovery is narrow, evidenced, and reusable only
-for its declared trigger. No recovery earns initial-pass credit.
+unstaged-name timeout, and a post-push porcelain clean-state timeout. Each
+recovery is narrow, evidenced, and reusable only for its declared trigger. No
+recovery earns initial-pass credit.
 
 The retained-negative total combines 10,609 inherited effective negatives,
-twenty x1 operational negatives, eleven x2 or lifecycle operational negatives,
+twenty x1 operational negatives, twelve x2 or lifecycle operational negatives,
 and 150 executed-and-rejected synthetic mutations. No negative was deleted,
 renamed into a pass, folded into an aggregate that hides it, or used to close
 an empirical or authority gate.
@@ -482,19 +485,20 @@ and fresh-live equal.</p>
 
 
 def build() -> None:
-    if git("rev-parse", "HEAD") != EVIDENCE:
-        raise RuntimeError("closeout must begin at the exact evidence commit")
+    starting_head = git("rev-parse", "HEAD")
+    if starting_head not in {EVIDENCE, FIRST_CLOSEOUT}:
+        raise RuntimeError("closeout must begin at evidence or the first closeout")
     equality = four_way()
-    if not equality["all_equal"] or equality["local"] != EVIDENCE:
-        raise RuntimeError(f"evidence is not four-way equal: {equality}")
+    if not equality["all_equal"] or equality["local"] != starting_head:
+        raise RuntimeError(f"starting head is not four-way equal: {equality}")
     outcomes = load("evidence/outcome-ledger.json")
     if outcomes["counts"] != EXPECTED or outcomes["proposal_count"] != 30:
         raise RuntimeError("outcome ledger drift")
-    if len(x2.X2_OPERATIONAL_NEGATIVES) != 11:
+    if len(x2.X2_OPERATIONAL_NEGATIVES) != 12:
         raise RuntimeError("x2/lifecycle negative count drift")
     methods = extend_method_flow()
-    negative_total = d.INHERITED_NEGATIVES + len(d.X1_OPERATIONAL_NEGATIVES) + 11 + 150
-    if negative_total != 10790:
+    negative_total = d.INHERITED_NEGATIVES + len(d.X1_OPERATIONAL_NEGATIVES) + 12 + 150
+    if negative_total != 10791:
         raise RuntimeError("negative total drift")
 
     negative_register = {
@@ -576,13 +580,13 @@ def build() -> None:
             "real_data_rows": 0,
             "inherited_effective_negatives": d.INHERITED_NEGATIVES,
             "x1_operational_negatives": len(d.X1_OPERATIONAL_NEGATIVES),
-            "x2_and_lifecycle_operational_negatives": 11,
+            "x2_and_lifecycle_operational_negatives": 12,
             "effective_negatives": negative_total,
             "effective_open_gaps": 78,
             "effective_exact_gates": 79,
             "method_flow_methods": len(methods["methods"]),
-            "method_flow_failed_witnesses": 31,
-            "method_flow_passing_witnesses": 31,
+            "method_flow_failed_witnesses": 32,
+            "method_flow_passing_witnesses": 32,
             "route_state": ROUTE_STATE,
             "future_task_created_count": 0,
             "full_repository_suite_run": False,
@@ -697,15 +701,23 @@ preclaimed in this packet.
         "final/closeout-receipt.json",
         {
             "schema": "ghc.family.v654-v1.closeout-receipt.v1",
-            "state": "COMBINED_CLOSEOUT_CANDIDATE",
+            "state": (
+                "TERMINAL_CORRECTION_CANDIDATE"
+                if starting_head == FIRST_CLOSEOUT
+                else "COMBINED_CLOSEOUT_CANDIDATE"
+            ),
             "source": d.SOURCE_HEAD,
             "x1": X1,
             "evidence": EVIDENCE,
             "source_x1_evidence_ancestral": True,
             "x1_before_x2": True,
-            "evidence_four_way_equal_before_closeout": equality["all_equal"],
+            "starting_head": starting_head,
+            "first_closeout": FIRST_CLOSEOUT,
+            "starting_head_four_way_equal": equality["all_equal"],
             "phase_commit_cap": 4,
-            "planned_phase_commit_count": 3,
+            "planned_phase_commit_count": (
+                4 if starting_head == FIRST_CLOSEOUT else 3
+            ),
             "outcomes": EXPECTED,
             "effective_negatives": negative_total,
             "effective_open_gaps": 78,
@@ -912,7 +924,7 @@ preclaimed in this packet.
                 "negatives": negative_total,
                 "open_gaps": 78,
                 "exact_gates": 79,
-                "methods": 31,
+                "methods": 32,
                 "overview_words": overview_words,
                 "route": ROUTE_STATE,
                 "verdict": VERDICT,
