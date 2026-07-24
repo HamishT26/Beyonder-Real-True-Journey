@@ -53,9 +53,17 @@
       "negative_id": "V6537-FINAL-N06",
       "recovery": "Insert the repository scripts directory into the diagnostic module path before importing the validator, without invoking its canonical main entry point.",
       "recurrence_guard": "For read-only imports of phase scripts, bind both repository root and scripts directory explicitly; reserve direct script execution for the canonical aggregate."
+    },
+    {
+      "category": "combined_live_remote_probe_operator_precedence",
+      "failed": "A combined read-only equality probe applied PowerShell splitting inside a native-command expression and reported the live hash as the scalar zero rather than the remote ref value.",
+      "negative_id": "V6537-FINAL-N07",
+      "recovery": "Capture the exact ls-remote line first, verify its exit status, then split that stored scalar and compare the first field to HEAD.",
+      "recurrence_guard": "Keep native Git invocation, exit-status inspection, and PowerShell string parsing as separate statements in terminal equality probes."
     }
   ],
   "schema": "ghc.family.v653-v7.terminal-correction.v1",
+  "second_terminal_correction": "0eb92e13d6105345635e4f9cf87626b0b2462995",
   "terminal_verdict": "NOT_READY_FOR_STAGE_20",
   "x1_blob_changed": false
 }

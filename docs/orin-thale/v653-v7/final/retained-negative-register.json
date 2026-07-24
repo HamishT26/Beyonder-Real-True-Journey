@@ -10,7 +10,7 @@
     }
   ],
   "closeout_operational_count": 1,
-  "effective_total": 10446,
+  "effective_total": 10447,
   "external_post_seal": [
     {
       "boundary": "External read-only route-preflight evidence only; it does not alter Caelen's sealed repository count.",
@@ -1120,9 +1120,16 @@
       "negative_id": "V6537-FINAL-N06",
       "recovery": "Insert the repository scripts directory into the diagnostic module path before importing the validator, without invoking its canonical main entry point.",
       "recurrence_guard": "For read-only imports of phase scripts, bind both repository root and scripts directory explicitly; reserve direct script execution for the canonical aggregate."
+    },
+    {
+      "category": "combined_live_remote_probe_operator_precedence",
+      "failed": "A combined read-only equality probe applied PowerShell splitting inside a native-command expression and reported the live hash as the scalar zero rather than the remote ref value.",
+      "negative_id": "V6537-FINAL-N07",
+      "recovery": "Capture the exact ls-remote line first, verify its exit status, then split that stored scalar and compare the first field to HEAD.",
+      "recurrence_guard": "Keep native Git invocation, exit-status inspection, and PowerShell string parsing as separate statements in terminal equality probes."
     }
   ],
-  "terminal_operational_count": 6,
+  "terminal_operational_count": 7,
   "x1_operational_count": 7,
   "x1_operational_ids": [
     "V6537-X1-N01",

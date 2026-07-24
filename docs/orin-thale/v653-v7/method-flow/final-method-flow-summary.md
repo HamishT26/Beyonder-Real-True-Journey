@@ -2,9 +2,9 @@
 
 - Phase: v653-gmut-thos-v7-x1-x2
 - Owner: Orin Thale
-- Methods: 16
-- Passing witnesses: 16
-- Failed witnesses retained: 16
+- Methods: 17
+- Passing witnesses: 17
+- Failed witnesses retained: 17
 
 ## Preferred methods
 
@@ -135,6 +135,14 @@
 - Recurrence guard: For read-only imports of phase scripts, bind both repository root and scripts directory explicitly; reserve direct script execution for the canonical aggregate.
 - Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
 - Witnesses: V6537-WITNESS-16-F, V6537-WITNESS-16-P
+
+### V6537-METHOD-17 — Bounded recovery for combined_live_remote_probe_operator_precedence
+
+- Trigger: combined_live_remote_probe_operator_precedence
+- Method: Capture the exact ls-remote line first, verify its exit status, then split that stored scalar and compare the first field to HEAD.
+- Recurrence guard: Keep native Git invocation, exit-status inspection, and PowerShell string parsing as separate statements in terminal equality probes.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-17-F, V6537-WITNESS-17-P
 
 ## Retained boundary
 

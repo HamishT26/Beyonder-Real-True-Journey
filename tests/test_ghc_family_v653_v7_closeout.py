@@ -25,7 +25,7 @@ class V653V7CloseoutTests(unittest.TestCase):
                 "exact_gate": 1,
             },
         )
-        self.assertEqual(truth["effective_negatives"], 10446)
+        self.assertEqual(truth["effective_negatives"], 10447)
         self.assertEqual(
             (truth["effective_open_gaps"], truth["effective_exact_gates"]),
             (76, 77),
@@ -50,17 +50,17 @@ class V653V7CloseoutTests(unittest.TestCase):
 
     def test_final_method_flow_preserves_parity(self) -> None:
         ledger = load("method-flow/final-method-flow-ledger.json")
-        self.assertEqual(ledger["counts"]["methods"], 16)
+        self.assertEqual(ledger["counts"]["methods"], 17)
         self.assertEqual(
             ledger["counts"]["witness_results"],
-            {"fail": 16, "pass": 16},
+            {"fail": 17, "pass": 17},
         )
-        self.assertEqual(ledger["counts"]["states"]["preferred"], 16)
+        self.assertEqual(ledger["counts"]["states"]["preferred"], 17)
 
     def test_negative_and_gate_registers(self) -> None:
         negatives = load("final/retained-negative-register.json")
         gates = load("final/exact-open-gate-register.json")
-        self.assertEqual(negatives["effective_total"], 10446)
+        self.assertEqual(negatives["effective_total"], 10447)
         self.assertTrue(negatives["none_erased"])
         self.assertEqual(gates["effective_open_gaps"], 76)
         self.assertEqual(gates["effective_exact_gates"], 77)

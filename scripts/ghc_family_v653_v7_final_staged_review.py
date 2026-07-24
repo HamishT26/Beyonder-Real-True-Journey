@@ -19,7 +19,7 @@ from ghc_family_v653_v7_validation_common import (
 )
 
 
-BASE_COMMIT = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
+BASE_COMMIT = "0eb92e13d6105345635e4f9cf87626b0b2462995"
 OWNER_MANIFEST = (
     "docs/orin-thale/v653-v7/validation/final-owner-manifest.json"
 )

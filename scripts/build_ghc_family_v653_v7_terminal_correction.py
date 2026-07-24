@@ -13,7 +13,8 @@ import ghc_family_v653_v7_phase_data as data
 REPO = closeout.REPO
 PHASE = closeout.PHASE
 CLOSEOUT = "cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b"
-CORRECTION_BASE = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
+FIRST_CORRECTION = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
+CORRECTION_BASE = "0eb92e13d6105345635e4f9cf87626b0b2462995"
 NEGATIVES = [
     {
         "negative_id": "V6537-FINAL-N01",
@@ -123,6 +124,23 @@ NEGATIVES = [
             "For read-only imports of phase scripts, bind both repository root "
             "and scripts directory explicitly; reserve direct script execution "
             "for the canonical aggregate."
+        ),
+    },
+    {
+        "negative_id": "V6537-FINAL-N07",
+        "category": "combined_live_remote_probe_operator_precedence",
+        "failed": (
+            "A combined read-only equality probe applied PowerShell splitting "
+            "inside a native-command expression and reported the live hash as "
+            "the scalar zero rather than the remote ref value."
+        ),
+        "recovery": (
+            "Capture the exact ls-remote line first, verify its exit status, "
+            "then split that stored scalar and compare the first field to HEAD."
+        ),
+        "recurrence_guard": (
+            "Keep native Git invocation, exit-status inspection, and PowerShell "
+            "string parsing as separate statements in terminal equality probes."
         ),
     },
 ]
@@ -264,12 +282,12 @@ def build() -> None:
     )
     negatives["terminal_operational_count"] = len(NEGATIVES)
     negatives["terminal_operational"] = NEGATIVES
-    negatives["effective_total"] = 10446
+    negatives["effective_total"] = 10447
     closeout.write_json("final/retained-negative-register.json", negatives)
 
     truth = closeout.read_json(PHASE / "final/phase-truth.json")
     truth["terminal_operational_negatives"] = len(NEGATIVES)
-    truth["effective_negatives"] = 10446
+    truth["effective_negatives"] = 10447
     truth["canonical_exact_final_pass_state"] = (
         "CORRECTED_POSTCOMMIT_PENDING"
     )
@@ -278,14 +296,15 @@ def build() -> None:
     closeout_receipt = closeout.read_json(
         PHASE / "final/closeout-receipt.json"
     )
-    closeout_receipt["effective_negatives"] = 10446
+    closeout_receipt["effective_negatives"] = 10447
     closeout_receipt["terminal_correction_required"] = True
     closeout.write_json("final/closeout-receipt.json", closeout_receipt)
 
     seal = closeout.read_json(PHASE / "final/seal-receipt.json")
     seal["state"] = "CONTENT_SEAL_CORRECTION_CANDIDATE"
     seal["closeout_commit"] = CLOSEOUT
-    seal["first_terminal_correction"] = CORRECTION_BASE
+    seal["first_terminal_correction"] = FIRST_CORRECTION
+    seal["second_terminal_correction"] = CORRECTION_BASE
     seal["terminal_negative_ids"] = [
         negative["negative_id"] for negative in NEGATIVES
     ]
@@ -313,7 +332,7 @@ def build() -> None:
     ]
     record["correction"] = NEGATIVES[0]["recovery"]
     record["correction_workflow_negatives"] = [
-        NEGATIVES[index]["negative_id"] for index in (1, 2, 3, 5)
+        NEGATIVES[index]["negative_id"] for index in (1, 2, 3, 5, 6)
     ]
     closeout.write_json("final/final-validation-record.json", record)
 
@@ -330,7 +349,7 @@ def build() -> None:
     final_build = closeout.read_json(
         PHASE / "validation/final-build-receipt.json"
     )
-    final_build["effective_negatives"] = 10446
+    final_build["effective_negatives"] = 10447
     final_build["terminal_correction_required"] = True
     closeout.write_json("validation/final-build-receipt.json", final_build)
 
@@ -357,12 +376,14 @@ def build() -> None:
             .replace("10,443", "10,444")
             .replace("10,444", "10,445")
             .replace("10,445", "10,446")
-            .replace("10440", "10446")
-            .replace("10441", "10446")
-            .replace("10442", "10446")
-            .replace("10443", "10446")
-            .replace("10444", "10446")
-            .replace("10445", "10446")
+            .replace("10,446", "10,447")
+            .replace("10440", "10447")
+            .replace("10441", "10447")
+            .replace("10442", "10447")
+            .replace("10443", "10447")
+            .replace("10444", "10447")
+            .replace("10445", "10447")
+            .replace("10446", "10447")
         )
         path.write_text(text, encoding="utf-8", newline="\n")
 
@@ -371,7 +392,8 @@ def build() -> None:
         {
             "schema": "ghc.family.v653-v7.terminal-correction.v1",
             "base_closeout": CLOSEOUT,
-            "first_terminal_correction": CORRECTION_BASE,
+            "first_terminal_correction": FIRST_CORRECTION,
+            "second_terminal_correction": CORRECTION_BASE,
             "negatives": NEGATIVES,
             "x1_blob_changed": False,
             "evidence_blob_changed": False,
@@ -403,7 +425,7 @@ def build() -> None:
                 "negatives": [
                     negative["negative_id"] for negative in NEGATIVES
                 ],
-                "effective_negatives": 10446,
+                "effective_negatives": 10447,
                 "methods": ledger["counts"]["methods"],
                 "canonical_pass": "PENDING_CORRECTED_COMMIT",
             },

@@ -30,7 +30,8 @@ SOURCE = "c044464ed940093d59a59686efd4faa61853f341"
 X1 = "78ece91db153275ca2857899ee125dc0673c0154"
 EVIDENCE = "888df289dd58f5717919ac1ee2c8083cd93cddfe"
 CLOSEOUT = "cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b"
-CORRECTION = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
+FIRST_CORRECTION = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
+SECOND_CORRECTION = "0eb92e13d6105345635e4f9cf87626b0b2462995"
 EXPECTED_BRANCH = "codex/GHC-Family/orin-thale-v653-v7-full-tools"
 TEST_SELECTIONS = {
     "current_orin": [
@@ -216,18 +217,23 @@ def exact_head_checks(head: str) -> dict[str, bool]:
         ).returncode
         == 0,
         "first_correction_ancestral": run(
-            ["git", "merge-base", "--is-ancestor", CORRECTION, head],
+            ["git", "merge-base", "--is-ancestor", FIRST_CORRECTION, head],
             check=False,
         ).returncode
         == 0,
-        "five_phase_commits": phase_commits == 5,
+        "second_correction_ancestral": run(
+            ["git", "merge-base", "--is-ancestor", SECOND_CORRECTION, head],
+            check=False,
+        ).returncode
+        == 0,
+        "six_phase_commits": phase_commits == 6,
         "within_eight_commit_cap": phase_commits <= 8,
         "zero_merges": merge_count == 0,
         "one_final_parent": parent_count == 1,
-        "final_direct_child_of_first_correction": git(
+        "final_direct_child_of_second_correction": git(
             "rev-parse", f"{head}^"
         )
-        == CORRECTION,
+        == SECOND_CORRECTION,
         "expected_branch": branch == EXPECTED_BRANCH,
         "exact_head_stable": git("rev-parse", "HEAD") == head,
         "clean": git("status", "--porcelain=v1") == "",
