@@ -1,0 +1,62 @@
+# v654-v3 bounded outcome ledger
+
+- **V6543-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle service intake frame identifier, presented-owner claim placeholder, condition, accessory, custody, privacy minimization, and work-start hold
+- **V6543-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle work-order symptom, inspection finding, estimate revision, consent placeholder, scope change, correction readback, and release hold
+- **V6543-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle component fastener, manufacturer-document version, torque unit, allowable range, tool status, substitution, and refusal ledger
+- **V6543-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle wheel side, spoke position, tension target, tolerance, gauge provenance, outlier, adjustment sequence, and release hold
+- **V6543-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle rim and tyre bead-seat diameter, width, hook state, pressure ceiling, tube or tubeless state, mismatch, and fitment refusal
+- **V6543-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle brake pad and rotor material, wear, thickness, contamination, bedding placeholder, replacement state, and release refusal
+- **V6543-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle hydraulic brake fluid type, component compatibility, batch, contamination, bleed state, spill state, waste route, and service hold
+- **V6543-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle cable and hose route, bend, abrasion, steering sweep, retention, interference, correction, and movement refusal
+- **V6543-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle chain pitch and wear proxy, direction, chainring and cassette relation, replacement scope, lubrication state, and run hold
+- **V6543-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle derailleur hanger alignment proxy, limit state, cable tension, gear path, overshift signal, correction, and release refusal
+- **V6543-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle crank, spindle, bottom-bracket interface, thread or press-fit state, preload, fixing torque, play, and mismatch hold
+- **V6543-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle headset and bearing stack, orientation, preload, binding, play, steering sweep, correction, and release hold
+- **V6543-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle suspension component identifier, service interval, fluid specification, pressure placeholder, travel, seal state, and competence hold
+- **V6543-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle carbon-composite fork, handlebar or seatpost surface, impact-history placeholder, clamp zone, torque history, anomaly, quarantine, and manufacturer escalation
+- **V6543-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle lamp and reflector function, mount, aim placeholder, power state, visibility note, legal-context watch, and release record
+- **V6543-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle repair-stand clamp, support point, centre-of-mass proxy, stability, torque reaction, fall zone, and stop-work board
+- **V6543-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle component part number, batch, recall-notice version, applicability, affected work order, quarantine, and release refusal
+- **V6543-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Accessible bicycle service-status timeline, work-order state, safety hold, current step, error relation, noncolour cue, zoom, and manual-evaluation reservation
+- **V6543-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle workshop queue, unresolved safety defect, dual readback, work-in-progress limit, fatigue flag, break trigger, and shift-handover board
+- **V6543-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Bicycle test-ride request, route placeholder, weather and traffic hold, equipment state, unresolved defect, authorization reservation, and return receipt
+- **V6543-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT bicycle wheel spoke-network field, rim-node displacement, pretension, graph Laplacian, boundary load, unit, and observation-firewall board
+- **V6543-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT bicycle chain discrete-link field, pitch, articulation angle, sprocket boundary, tension flux, conservation, unit, and observation-firewall board
+- **V6543-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT bicycle tyre contact-patch field, pressure, carcass stiffness, rolling-loss proxy, boundary work, unit, and observation-firewall board
+- **V6543-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS bicycle service intake, safety-critical defect, scope correction, stop-work, workload budget, readback, and shift-handover proxy
+- **V6543-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS bicycle brake and steering release, unresolved fault, independent-check placeholder, harm stop, correction latency, and handover proxy
+- **V6543-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID NFC Forum NDEF bicycle service tag, record type, payload, URI binding, write-lock state, consent, privacy, and nonproduction profile
+- **V6543-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID ISO IEC 20248 bicycle component DigSig, data element, domain-authority placeholder, signature suite, verification-state placeholder, privacy, and nonproduction profile
+- **V6543-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID EU battery-passport data carrier, product identifier, model, lifecycle field, access-right placeholder, update lineage, privacy, legal-status watch, and nonproduction profile
+- **V6543-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT real bicycle power-meter FIT record, device metadata, unit, calibration status, provenance, uncertainty, and zero-row likelihood-refusal adapter
+- **V6543-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR bicycle repair safety, ownership and theft-reporting privacy, recall, warranty, accessible notice, remedy, affected-party, legal, cultural, data-governance, and Maori-authority reservation

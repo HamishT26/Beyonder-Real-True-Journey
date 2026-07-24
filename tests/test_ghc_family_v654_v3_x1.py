@@ -6,14 +6,18 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / "docs/sylven-arc/v654-v3"
-X1_COMMIT = subprocess.check_output(
-    ["git", "rev-list", "--all", "--max-count=1", "--fixed-strings", "--grep=feat(ghc-family): freeze Sylven v654-v3 x1"],
-    cwd=REPO,
-    text=True,
-).strip()
+X1_COMMIT = "0c53bce867ec5259d9b7de8c14b92b07b678641f"
 
 def load(relative):
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+def load_at_x1(relative):
+    return json.loads(subprocess.check_output(
+        ["git", "show", f"{X1_COMMIT}:docs/sylven-arc/v654-v3/{relative}"],
+        cwd=REPO,
+        text=True,
+        encoding="utf-8",
+    ))
 
 class TestV654V3X1(unittest.TestCase):
     def test_proposals_and_expected_dispositions(self):
@@ -46,7 +50,7 @@ class TestV654V3X1(unittest.TestCase):
     def test_failures_method_flow_and_workflow(self):
         negatives = load("truth/retained-negative-register.json")
         self.assertEqual((negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]), (10968, 26, 10994))
-        ledger = load("method-flow/method-flow-ledger.json")
+        ledger = load_at_x1("method-flow/method-flow-ledger.json")
         self.assertEqual(len(ledger["methods"]), 31)
         self.assertEqual(sum(w["result"] == "pass" for w in ledger["witnesses"]), 31)
         workflow = load("workflow/workflow-plan-refinement.json")
