@@ -1,0 +1,38 @@
+# v654-v2 source ledger
+
+- **SRC-WORKSAFE-MACHINERY** - `current` - [WorkSafe New Zealand: safe use of machinery](https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/)
+  - Current guarding and machinery-risk context only; no workplace assessment, competence, or compliance finding.
+- **SRC-WORKSAFE-HAZ** - `current` - [WorkSafe New Zealand: hazardous-substance information, instruction, supervision, and training](https://www.worksafe.govt.nz/topic-and-industry/hazardous-substances/managing/information-instruction-supervision-training/)
+  - Refusal and handover context only; no workplace approval.
+- **SRC-EPA-DISPOSAL** - `current` - [New Zealand EPA disposal notice](https://www.epa.govt.nz/hazardous-substances/rules-notices-and-how-to-comply/epa-notices-rules-you-must-follow/disposal-notice/)
+  - Disposal context only; no classification or disposal decision.
+- **SRC-RMA-DISCHARGE** - `watch` - [Resource Management Act 1991 section 15](https://www.legislation.govt.nz/act/public/1991/0069/latest/DLM231977.html)
+  - Watched legal context only; no legal interpretation or discharge authorization.
+- **SRC-LOC-PAPER** - `current` - [Library of Congress: care, handling, and storage of works on paper](https://www.loc.gov/preservation/care/paper.html)
+  - Synthetic paper handling fields only; no conservation treatment decision.
+- **SRC-LOC-BOOKS** - `current` - [Library of Congress: preserving your books](https://guides.loc.gov/preserving-your-books)
+  - Synthetic book and binding care fields only; no professional conservation decision.
+- **SRC-ISO12647** - `stable` - [ISO 12647-1 graphic technology process-control parameters and measurement methods](https://www.iso.org/standard/57816.html)
+  - Typed parameters and zero-row readiness only; no conformance, measurement, or production claim.
+- **SRC-REYNOLDS** - `stable` - [Reynolds, On the theory of lubrication](https://ndlsearch.ndl.go.jp/books/R100000136-I1572543024476456448)
+  - Typed thin-film obligations only; no empirical ink-transfer model.
+- **SRC-LUCAS-WASHBURN** - `stable` - [Washburn, The dynamics of capillary flow](https://doi.org/10.1103/PhysRev.17.273)
+  - Typed capillary-flow obligations only; no paper measurement or fitted parameter.
+- **SRC-KELVIN-VOIGT** - `stable` - [A reappraisal and generalization of the Kelvin-Voigt model](https://doi.org/10.1016/j.mechrescom.2008.09.005)
+  - Typed viscoelastic obligations only; no press-packing characterization.
+- **SRC-BIPM-SI** - `current` - [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure)
+  - Unit declarations only; no calibration or measurement assurance.
+- **SRC-RFC9562** - `stable` - [RFC 9562 Universally Unique IDentifiers](https://www.rfc-editor.org/rfc/rfc9562.html)
+  - Synthetic UUID vectors only; no production identity, uniqueness guarantee, or lifecycle governance.
+- **SRC-ISBN** - `current` - [International ISBN Agency Users' Manual](https://www.isbn-international.org/index.php/content/isbn-users-manual/29)
+  - Synthetic ISBN fields only; no allocation, registrant, publication, or agency decision.
+- **SRC-DOI** - `current` - [DOI Foundation DOI Handbook](https://www.doi.org/doi-handbook/html/)
+  - Synthetic DOI metadata only; no registration, resolution, rights, or persistence claim.
+- **SRC-WCAG22** - `current` - [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Structural accessibility checks only; manual and affected-user evaluation remain reserved.
+- **SRC-NZ-COPYRIGHT** - `watch` - [Copyright Act 1994](https://www.legislation.govt.nz/act/public/1994/0143/latest/DLM345634.html)
+  - Watched legal context only; no interpretation, ownership, licence, remedy, or publishing decision.
+- **SRC-TE-MANA** - `current` - [Te Mana Raraunga principles of Maori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Maori data decisions remain under Maori authority; no authority is delegated to the repository.
+- **SRC-LOCAL-CONTEXTS** - `current` - [Local Contexts Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/)
+  - Cultural and traditional-knowledge rights reservation only; no label is applied.
