@@ -25,7 +25,7 @@ class V653V7CloseoutTests(unittest.TestCase):
                 "exact_gate": 1,
             },
         )
-        self.assertEqual(truth["effective_negatives"], 10440)
+        self.assertEqual(truth["effective_negatives"], 10444)
         self.assertEqual(
             (truth["effective_open_gaps"], truth["effective_exact_gates"]),
             (76, 77),
@@ -50,17 +50,17 @@ class V653V7CloseoutTests(unittest.TestCase):
 
     def test_final_method_flow_preserves_parity(self) -> None:
         ledger = load("method-flow/final-method-flow-ledger.json")
-        self.assertEqual(ledger["counts"]["methods"], 10)
+        self.assertEqual(ledger["counts"]["methods"], 14)
         self.assertEqual(
             ledger["counts"]["witness_results"],
-            {"fail": 10, "pass": 10},
+            {"fail": 14, "pass": 14},
         )
-        self.assertEqual(ledger["counts"]["states"]["preferred"], 10)
+        self.assertEqual(ledger["counts"]["states"]["preferred"], 14)
 
     def test_negative_and_gate_registers(self) -> None:
         negatives = load("final/retained-negative-register.json")
         gates = load("final/exact-open-gate-register.json")
-        self.assertEqual(negatives["effective_total"], 10440)
+        self.assertEqual(negatives["effective_total"], 10444)
         self.assertTrue(negatives["none_erased"])
         self.assertEqual(gates["effective_open_gaps"], 76)
         self.assertEqual(gates["effective_exact_gates"], 77)
@@ -102,9 +102,11 @@ class V653V7CloseoutTests(unittest.TestCase):
         seal = load("final/seal-receipt.json")
         record = load("final/final-validation-record.json")
         self.assertEqual(closeout["state"], "CLOSEOUT_CANDIDATE")
-        self.assertEqual(seal["state"], "CONTENT_SEAL_CANDIDATE")
         self.assertEqual(
-            record["state"], "POSTCOMMIT_CANONICAL_PASS_REQUIRED"
+            seal["state"], "CONTENT_SEAL_CORRECTION_CANDIDATE"
+        )
+        self.assertEqual(
+            record["state"], "CORRECTED_POSTCOMMIT_CANONICAL_PASS_REQUIRED"
         )
         self.assertFalse(record["successful_replay_permitted"])
 

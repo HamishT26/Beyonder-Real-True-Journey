@@ -2,9 +2,9 @@
 
 - Phase: v653-gmut-thos-v7-x1-x2
 - Owner: Orin Thale
-- Methods: 10
-- Passing witnesses: 10
-- Failed witnesses retained: 10
+- Methods: 14
+- Passing witnesses: 14
+- Failed witnesses retained: 14
 
 ## Preferred methods
 
@@ -87,6 +87,38 @@
 - Recurrence guard: Create every declared parent directory explicitly before a copy and never infer that a sibling lifecycle directory already exists.
 - Rollback: Stop, retain the failed witness with zero credit, and leave all external and protected-gate state unchanged.
 - Witnesses: V6537-WITNESS-10-F, V6537-WITNESS-10-P
+
+### V6537-METHOD-11 — Bounded recovery for ast_discovery_plain_utf8_rejected_bom
+
+- Trigger: ast_discovery_plain_utf8_rejected_bom
+- Method: Decode test modules with UTF-8-SIG for AST discovery while leaving the immutable x1 blob unchanged, then rebuild only the correction delta and run the canonical aggregate at the corrected final head.
+- Recurrence guard: Use BOM-aware source decoding for raw AST discovery whenever normal Python import already accepts the immutable module.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-11-F, V6537-WITNESS-11-P
+
+### V6537-METHOD-12 — Bounded recovery for terminal_correction_bound_to_mistyped_closeout_hash
+
+- Trigger: terminal_correction_bound_to_mistyped_closeout_hash
+- Method: Re-read the local log and live remote, bind all correction tooling to the exact immutable closeout head, and preserve the failed guard attempt with zero completion credit.
+- Recurrence guard: Populate lifecycle anchors only from fresh machine-read Git output and compare each value before invoking a correction builder.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-12-F, V6537-WITNESS-12-P
+
+### V6537-METHOD-13 — Bounded recovery for overbroad_correction_search_timeout
+
+- Trigger: overbroad_correction_search_timeout
+- Method: Split the audit into exact owner-script globs and bounded final, report, validation, and tooling directories before applying the narrow correction.
+- Recurrence guard: Prefer exact file groups and fixed lifecycle literals over broad recursive alternation searches during terminal correction.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-13-F, V6537-WITNESS-13-P
+
+### V6537-METHOD-14 — Bounded recovery for porcelain_first_row_leading_column_trimmed
+
+- Trigger: porcelain_first_row_leading_column_trimmed
+- Method: Normalize only leading status whitespace before matching the exact authorized correction paths; keep every other path fail-closed.
+- Recurrence guard: Treat porcelain status columns explicitly when a wrapper applies whole-output trimming, and retain an exact path allowlist.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-14-F, V6537-WITNESS-14-P
 
 ## Retained boundary
 

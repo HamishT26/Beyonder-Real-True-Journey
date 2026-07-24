@@ -1,10 +1,25 @@
 {
   "canonical_pass_limit": 1,
   "complete_repository_suite_run": false,
+  "correction": "Decode test modules with UTF-8-SIG for AST discovery while leaving the immutable x1 blob unchanged, then rebuild only the correction delta and run the canonical aggregate at the corrected final head.",
+  "correction_workflow_negatives": [
+    "V6537-FINAL-N02",
+    "V6537-FINAL-N03",
+    "V6537-FINAL-N04"
+  ],
   "expected_route_state": "STOP_AFTER_TRUTHFUL_CLOSEOUT",
   "expected_terminal_verdict": "NOT_READY_FOR_STAGE_20",
+  "failed_attempt_count": 1,
+  "failed_attempts": [
+    {
+      "failure": "The first exact-final aggregate stopped with zero pass credit before running any test because raw AST discovery decoded the immutable x1 test as plain UTF-8 and rejected its existing byte-order mark.",
+      "negative_id": "V6537-FINAL-N01",
+      "pass_credit": 0,
+      "tests_run": 0
+    }
+  ],
   "same_owner_only": true,
   "schema": "ghc.family.v653-v7.final-validation-record.v1",
-  "state": "POSTCOMMIT_CANONICAL_PASS_REQUIRED",
+  "state": "CORRECTED_POSTCOMMIT_CANONICAL_PASS_REQUIRED",
   "successful_replay_permitted": false
 }

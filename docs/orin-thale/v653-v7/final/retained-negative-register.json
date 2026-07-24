@@ -10,7 +10,7 @@
     }
   ],
   "closeout_operational_count": 1,
-  "effective_total": 10440,
+  "effective_total": 10444,
   "external_post_seal": [
     {
       "boundary": "External read-only route-preflight evidence only; it does not alter Caelen's sealed repository count.",
@@ -1078,6 +1078,37 @@
       "proposal_id": "V6537-P30"
     }
   ],
+  "terminal_operational": [
+    {
+      "category": "ast_discovery_plain_utf8_rejected_bom",
+      "failed": "The first exact-final aggregate stopped with zero pass credit before running any test because raw AST discovery decoded the immutable x1 test as plain UTF-8 and rejected its existing byte-order mark.",
+      "negative_id": "V6537-FINAL-N01",
+      "recovery": "Decode test modules with UTF-8-SIG for AST discovery while leaving the immutable x1 blob unchanged, then rebuild only the correction delta and run the canonical aggregate at the corrected final head.",
+      "recurrence_guard": "Use BOM-aware source decoding for raw AST discovery whenever normal Python import already accepts the immutable module."
+    },
+    {
+      "category": "terminal_correction_bound_to_mistyped_closeout_hash",
+      "failed": "The first terminal-correction builder invocation stopped before repository mutation because its exact-closeout guard contained a mistyped hash rather than the immutable closeout head.",
+      "negative_id": "V6537-FINAL-N02",
+      "recovery": "Re-read the local log and live remote, bind all correction tooling to the exact immutable closeout head, and preserve the failed guard attempt with zero completion credit.",
+      "recurrence_guard": "Populate lifecycle anchors only from fresh machine-read Git output and compare each value before invoking a correction builder."
+    },
+    {
+      "category": "overbroad_correction_search_timeout",
+      "failed": "A recursive correction audit across scripts, tests, and the full phase document tree exceeded its bounded wrapper and returned no complete review result.",
+      "negative_id": "V6537-FINAL-N03",
+      "recovery": "Split the audit into exact owner-script globs and bounded final, report, validation, and tooling directories before applying the narrow correction.",
+      "recurrence_guard": "Prefer exact file groups and fixed lifecycle literals over broad recursive alternation searches during terminal correction."
+    },
+    {
+      "category": "porcelain_first_row_leading_column_trimmed",
+      "failed": "The corrected builder's first dirty-state allowlist rejected an authorized modified validator because the shared Git helper trimmed the leading porcelain status-column space from the first row.",
+      "negative_id": "V6537-FINAL-N04",
+      "recovery": "Normalize only leading status whitespace before matching the exact authorized correction paths; keep every other path fail-closed.",
+      "recurrence_guard": "Treat porcelain status columns explicitly when a wrapper applies whole-output trimming, and retain an exact path allowlist."
+    }
+  ],
+  "terminal_operational_count": 4,
   "x1_operational_count": 7,
   "x1_operational_ids": [
     "V6537-X1-N01",

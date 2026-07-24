@@ -29,6 +29,7 @@ from ghc_family_v653_v7_validation_common import (
 SOURCE = "c044464ed940093d59a59686efd4faa61853f341"
 X1 = "78ece91db153275ca2857899ee125dc0673c0154"
 EVIDENCE = "888df289dd58f5717919ac1ee2c8083cd93cddfe"
+CLOSEOUT = "cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b"
 EXPECTED_BRANCH = "codex/GHC-Family/orin-thale-v653-v7-full-tools"
 TEST_SELECTIONS = {
     "current_orin": [
@@ -94,7 +95,9 @@ def git(*args: str) -> str:
 
 def module_test_ids(module: str) -> list[str]:
     path = REPO / (module.replace(".", "/") + ".py")
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    tree = ast.parse(
+        path.read_text(encoding="utf-8-sig"), filename=str(path)
+    )
     return sorted(
         f"{module}.{node.name}.{child.name}"
         for node in tree.body
@@ -199,11 +202,17 @@ def exact_head_checks(head: str) -> dict[str, bool]:
             check=False,
         ).returncode
         == 0,
-        "three_phase_commits": phase_commits == 3,
+        "closeout_ancestral": run(
+            ["git", "merge-base", "--is-ancestor", CLOSEOUT, head],
+            check=False,
+        ).returncode
+        == 0,
+        "four_phase_commits": phase_commits == 4,
         "within_eight_commit_cap": phase_commits <= 8,
         "zero_merges": merge_count == 0,
         "one_final_parent": parent_count == 1,
-        "final_direct_child_of_evidence": git("rev-parse", f"{head}^") == EVIDENCE,
+        "final_direct_child_of_closeout": git("rev-parse", f"{head}^")
+        == CLOSEOUT,
         "expected_branch": branch == EXPECTED_BRANCH,
         "exact_head_stable": git("rev-parse", "HEAD") == head,
         "clean": git("status", "--porcelain=v1") == "",

@@ -19,7 +19,7 @@ from ghc_family_v653_v7_validation_common import (
 )
 
 
-EVIDENCE = "888df289dd58f5717919ac1ee2c8083cd93cddfe"
+BASE_COMMIT = "cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b"
 OWNER_MANIFEST = (
     "docs/orin-thale/v653-v7/validation/final-owner-manifest.json"
 )
@@ -32,6 +32,7 @@ FINAL_REVIEW = (
 SELF_EXCLUSIONS = {OWNER_MANIFEST, FINAL_MANIFEST, FINAL_REVIEW}
 ALLOWED_TOOLS = {
     "scripts/build_ghc_family_v653_v7_closeout.py",
+    "scripts/build_ghc_family_v653_v7_terminal_correction.py",
     "scripts/ghc_family_v653_v7_final_staged_review.py",
     "scripts/ghc_family_v653_v7_final_validate.py",
     "tests/test_ghc_family_v653_v7_closeout.py",
@@ -148,7 +149,7 @@ def build() -> dict:
         PHASE / "validation/final-staged-manifest.json",
         {
             "schema": "ghc.family.v653-v7.final-staged-manifest.v1",
-            "base_commit": EVIDENCE,
+            "base_commit": BASE_COMMIT,
             "staged_path_count": len(staged),
             "entry_count": len(staged_entries),
             "entries": staged_entries,
@@ -190,7 +191,7 @@ def build() -> dict:
     )
     review = {
         "schema": "ghc.family.v653-v7.final-staged-review.v1",
-        "base_commit": EVIDENCE,
+        "base_commit": BASE_COMMIT,
         "staged_path_count": len(staged),
         "staged_manifest_entry_count": len(staged_entries),
         "owner_path_count": len(owner_all),
