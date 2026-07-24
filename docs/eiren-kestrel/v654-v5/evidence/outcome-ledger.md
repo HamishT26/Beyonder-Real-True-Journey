@@ -1,0 +1,62 @@
+# v654-v5 bounded outcome ledger
+
+- **V6545-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum object-entry identifier, depositor-claim placeholder, receipt purpose, component count, pre-existing condition, custody state, privacy minimization, and work-start hold
+- **V6545-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum accession, temporary, loan and legacy label identifier crosswalk with detached-label state, collision signal, evidence lineage, and dissociation refusal
+- **V6545-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum location-movement docket with from and to locations, route constraint, object count, carrier placeholder, two-person readback, timestamp, and unresolved-move quarantine
+- **V6545-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum condition-record comparison with observation vocabulary, image reference, previous-state lineage, uncertainty flag, change delta, reviewer placeholder, and treatment nonauthorization
+- **V6545-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum relative-humidity logger record with sensor identifier, unit, sample interval, missing sequence, hysteresis band, duration, calibration placeholder, and action refusal
+- **V6545-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum temperature excursion record with sensor clock, threshold provenance, contiguous duration, gap handling, enclosure context, acknowledgement, and setpoint-authority hold
+- **V6545-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum visible-light and ultraviolet exposure ledger with source, measurement unit, interval, cumulative dose proxy, missing-reading refusal, material-sensitivity placeholder, and display hold
+- **V6545-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum pest-trap record with trap and zone identifier, inspection interval, count, uncertain taxon placeholder, threshold source, quarantine boundary, escalation, and pesticide nonauthorization
+- **V6545-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum pollutant and sorbent record with sampler identifier, enclosure, medium lot, installation and expiry, blank placeholder, saturation signal, disposal hold, and interpretation refusal
+- **V6545-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum packing-crate record with object support relation, orientation, cushioning lot, fastener count, tamper indicator, shock signal, unpack order, and transit-release hold
+- **V6545-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum cold-storage transfer with enclosure seal, source and destination state, acclimatization interval, dew-point proxy, condensation observation, staged opening, and release refusal
+- **V6545-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum display-mount contact ledger with object zone, support geometry, load-direction proxy, barrier material, fastener relation, edge clearance, compatibility evidence gap, and installation hold
+- **V6545-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum legacy pesticide and hazardous-residue record with evidence source, safety-data-sheet placeholder, container and ventilation state, exposure boundary, isolation, specialist escalation, and handling refusal
+- **V6545-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum emergency-salvage planning board with hazard class, object vulnerability placeholder, access constraint, personal-safety supremacy, priority-authority reservation, stop condition, and no-response instruction
+- **V6545-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum incoming-loan applicability board with agreement version, object list, condition checkpoint, facility-report placeholder, insurance and indemnity reservation, return condition, and no-acceptance decision
+- **V6545-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum collection-image derivative manifest with capture purpose, source asset, colour-profile identifier, crop and redaction lineage, checksum, rights placeholder, and publication hold
+- **V6545-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum catalogue Unicode-normalization tribunal with canonical form, script-preserving display, confusable signal, identifier separation, collision refusal, and reversible source retention
+- **V6545-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum inventory snapshot publication with content-addressed entries, temporary-name reservation, atomic promotion, stale-temporary quarantine, manifest root, rollback, and partial-publication refusal
+- **V6545-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Accessible museum object-status timeline with semantic stage order, hold reason, next action, text-and-shape encoding, table fallback, reflow, focus order, and human evaluation reserve
+- **V6545-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Museum collections workload board with queued task class, object-handling dependency, environmental alert, work-in-progress ceiling, fatigue placeholder, pause checkpoint, responsibility transfer, and next-shift acknowledgement
+- **V6545-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT porous-collection microclimate field with coupled temperature and moisture state, anisotropic diffusivity proxy, enclosure boundary, source term, unit, domain, and observation-firewall board
+- **V6545-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT cumulative photon-exposure state with spectral band, irradiance proxy, exposure interval, material-response placeholder, superposition limit, unit, domain, and observation-firewall board
+- **V6545-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT museum microclimate inverse problem with sensor placement, latent boundary, structural identifiability, nonunique parameter set, prior placeholder, uncertainty, and likelihood-firewall board
+- **V6545-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS museum object entry, location movement, condition delta, custody readback, workload budget, stop-work placeholder, and shift-handover proxy
+- **V6545-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS museum environmental alert, missing sample, enclosure state, pest or pollutant hold, independent-check placeholder, harm stop, correction latency, and handover proxy
+- **V6545-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic W3C Verifiable Credential 2.0 collection-move attestation with issuer and holder placeholders, object-subject minimization, validity, proof absence, status gap, consent reserve, and nonproduction firewall
+- **V6545-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic RFC 8392 CBOR Web Token environmental-logger ticket with issuer, subject, audience, expiry, nonce, COSE placeholder, key absence, replay refusal, and offline-only firewall
+- **V6545-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic CIDOC CRM recorder-and-event mapping with record creator placeholder, event timespan, object relation, source statement, authority gap, correction provenance, export boundary, and no-interoperability claim
+- **V6545-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT real museum environmental-sensor series with device metadata, calibration and unit, enclosure context, missingness, clock provenance, uncertainty, and zero-row likelihood-refusal adapter
+- **V6545-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR museum collection provenance, title, acquisition, sacred or sensitive material, access, image rights, privacy, conservation, emergency, return, repatriation, remedy, affected-community, legal, cultural, data-governance, and Māori-authority reservation
