@@ -1,0 +1,42 @@
+# v654-v1 source ledger
+
+- **SRC-WORKSAFE-SILICA** - `current` - [WorkSafe New Zealand: silica dust in the workplace](https://www.worksafe.govt.nz/topic-and-industry/dust/silica-dust-in-the-workplace/)
+  - Supplies current hazard-control context only; no exposure assessment or compliance finding.
+- **SRC-WORKSAFE-VACUUM** - `current` - [WorkSafe New Zealand: industrial vacuums and portable extractors for hazardous dust](https://www.worksafe.govt.nz/topic-and-industry/dust/silica-dust-in-the-workplace/industrial-vacuums-and-portable-extractors-for-hazardous-dust/)
+  - Supports synthetic cleanup obligations only.
+- **SRC-WORKSAFE-HAZ** - `current` - [WorkSafe New Zealand: hazardous-substance information, instruction, supervision, and training](https://www.worksafe.govt.nz/topic-and-industry/hazardous-substances/managing/information-instruction-supervision-training/)
+  - Supports refusal and handover fields only; not workplace approval.
+- **SRC-EPA-DISPOSAL** - `current` - [New Zealand EPA disposal notice](https://www.epa.govt.nz/hazardous-substances/rules-notices-and-how-to-comply/epa-notices-rules-you-must-follow/disposal-notice/)
+  - Supplies disposal-context requirements only; no classification or disposal decision.
+- **SRC-RMA-DISCHARGE** - `watch` - [Resource Management Act 1991 section 15](https://www.legislation.govt.nz/act/public/1991/0069/latest/DLM231977.html)
+  - Watched legal context only; no legal interpretation or discharge authorization.
+- **SRC-ORTON** - `current` - [Orton Ceramic: how pyrometric cones work](https://www.ortonceramic.com/pyrometric-cones/how-cones-work)
+  - Supports synthetic heatwork and witness-cone fields only.
+- **SRC-FDA-LEAD** - `current` - [FDA pottery lead contamination compliance policy guide](https://www.fda.gov/files/inspections%2C%20compliance%2C%20enforcement%2C%20and%20criminal%20investigations/published/CPG-Sec.-545.450-Pottery-%28Ceramics%29--Import-and-Domestic---Lead-Contamination.pdf)
+  - Supplies release-refusal context only; no testing or product decision.
+- **SRC-FDA-CADMIUM** - `current` - [FDA pottery cadmium contamination compliance policy guide](https://www.fda.gov/regulatory-information/search-fda-guidance-documents/cpg-sec-545400-pottery-ceramics-import-and-domestic-cadmium-contamination)
+  - Supplies release-refusal context only; no testing or product decision.
+- **SRC-ISO6486** - `watch` - [ISO 6486-1 ceramic ware release of lead and cadmium](https://www.iso.org/standard/67561.html)
+  - Watched standards metadata only; no conformance claim.
+- **SRC-OPCUA-NODEID** - `current` - [OPC UA Part 3 NodeId](https://reference.opcfoundation.org/specs/OPC-10000-3/8.2)
+  - Supports synthetic identifier vectors only; no live OPC UA service.
+- **SRC-ISO15459** - `stable` - [ISO IEC 15459-5 unique identification for returnable transport items](https://www.iso.org/standard/54785.html)
+  - Supports structural identifier fields only; no conformance or issuing authority.
+- **SRC-IDTA-AAS** - `current` - [IDTA Asset Administration Shell specifications](https://industrialdigitaltwin.org/en/content-hub/aasspecifications)
+  - Supports synthetic AAS profile fields only; no interoperability event.
+- **SRC-MATERIALS-PROJECT** - `current` - [Materials Project API getting started](https://docs.materialsproject.org/downloading-data/using-the-api/getting-started)
+  - Defines an account and API-key dependency; x2 remains zero-query and zero-row.
+- **SRC-FOURIER** - `stable` - [Fourier, Théorie analytique de la chaleur](https://gallica.bnf.fr/ark:/12148/bpt6k1045508v)
+  - Supports historical heat-equation vocabulary only; no empirical kiln model.
+- **SRC-CAHN-HILLIARD** - `stable` - [Cahn and Hilliard, Free Energy of a Nonuniform System](https://doi.org/10.1063/1.1744102)
+  - Supports typed phase-field obligations only.
+- **SRC-ALLEN-CAHN** - `stable` - [Allen and Cahn, microscopic theory for antiphase boundary motion](https://doi.org/10.1016/0001-6160(79)90196-2)
+  - Supports typed order-parameter obligations only.
+- **SRC-BIPM-SI** - `current` - [BIPM SI Brochure](https://www.bipm.org/en/publications/si-brochure)
+  - Supports unit declarations only; no calibration or measurement assurance.
+- **SRC-WCAG22** - `current` - [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Supports structural accessibility checks only; manual and affected-user evaluation remain reserved.
+- **SRC-TE-MANA** - `current` - [Te Mana Raraunga principles of Maori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Records that Maori data decisions remain under Maori authority; it delegates no authority to the repository.
+- **SRC-LOCAL-CONTEXTS** - `current` - [Local Contexts Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/)
+  - Supports reservation of cultural and traditional-knowledge rights only; no label is applied.

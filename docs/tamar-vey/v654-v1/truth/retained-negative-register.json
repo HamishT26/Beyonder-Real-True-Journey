@@ -1,0 +1,170 @@
+{
+  "boundary": "Counts preserve inherited and current workflow negatives; a later pass never converts a failure into a pass.",
+  "effective_after_x1": 10629,
+  "inherited_effective": 10609,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v654-v1.retained-negatives.x1.v1",
+  "x1_operational": [
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first plan update returned an oversized app-layer payload and received zero planning-output credit.",
+      "negative_id": "V6541-X1-N01",
+      "recovery": "Reissue only the compact current plan state and verify the single in-progress step.",
+      "recurrence_guard": "Keep plan updates concise and omit inherited narrative.",
+      "signature": "plan_output_truncated_at_tool_boundary"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first unbounded skill read timed out before attributable EOF evidence.",
+      "negative_id": "V6541-X1-N02",
+      "recovery": "Read explicit bounded line windows through the declared final line and verify EOF.",
+      "recurrence_guard": "Use bounded line windows for long skill files.",
+      "signature": "skill_read_timed_out"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A PowerShell foreach block was piped directly and failed before execution.",
+      "negative_id": "V6541-X1-N03",
+      "recovery": "Materialize foreach output into an array before piping to JSON serialization.",
+      "recurrence_guard": "Never pipe directly from a PowerShell foreach statement.",
+      "signature": "foreach_pipeline_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A manifest summary accidentally emitted its entire entries array and the display truncated.",
+      "negative_id": "V6541-X1-N04",
+      "recovery": "Project only scalar counts, exclusions, and mismatch totals; verify blobs separately in batch.",
+      "recurrence_guard": "Never serialize entry-bearing manifests without an explicit scalar projection.",
+      "signature": "manifest_summary_emitted_entries"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined ancestry and remote wrapper timed out without an attributable aggregate result.",
+      "negative_id": "V6541-X1-N05",
+      "recovery": "Split head, parent, ancestry, status, and live-remote checks into bounded isolated probes.",
+      "recurrence_guard": "Do not combine cold Git and network checks.",
+      "signature": "combined_ancestry_wrapper_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first isolated parent probe also timed out before producing a result.",
+      "negative_id": "V6541-X1-N06",
+      "recovery": "Use git cat-file with a larger bound and parse the direct parent line.",
+      "recurrence_guard": "Prefer direct object reads for exact parent checks.",
+      "signature": "isolated_parent_probe_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A negative-register summary included all 150 mutation rows and truncated.",
+      "negative_id": "V6541-X1-N07",
+      "recovery": "Read only named scalar properties and mutation counts.",
+      "recurrence_guard": "Select scalar properties before serialization.",
+      "signature": "negative_register_summary_overbroad"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The safe fast-forward succeeded but emitted a large inherited path summary that truncated.",
+      "negative_id": "V6541-X1-N08",
+      "recovery": "Audit exact head, branch, clean state, divergence, and fresh remote separately.",
+      "recurrence_guard": "Suppress or bound diffstat-like output for large inherited fast-forwards.",
+      "signature": "fast_forward_output_overlarge"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first novelty query assumed a nonexistent rows field after correctly observing the total count.",
+      "negative_id": "V6541-X1-N09",
+      "recovery": "Use the actual prior_proposals and new_proposals arrays and verify their counts.",
+      "recurrence_guard": "Inspect exact JSON schema keys before binding a query.",
+      "signature": "frozen_corpus_rows_field_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A standards-source inventory repeated the empty-pipe PowerShell parser fault.",
+      "negative_id": "V6541-X1-N10",
+      "recovery": "Materialize the result array before serialization.",
+      "recurrence_guard": "Apply the foreach materialization guard to all inventories.",
+      "signature": "standards_query_foreach_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined standards and research-source web query returned an oversized result and received zero bounded-source-review credit.",
+      "negative_id": "V6541-X1-N11",
+      "recovery": "Use direct official URLs and one bounded targeted query at a time.",
+      "recurrence_guard": "Never combine broad source searches when direct primary URLs are available.",
+      "signature": "source_search_output_exceeded_context"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined status and negative-register probe timed out without attributable output.",
+      "negative_id": "V6541-X1-N12",
+      "recovery": "Run status/head and register projection as separate bounded probes.",
+      "recurrence_guard": "One cold subsystem per bounded probe.",
+      "signature": "combined_status_negative_probe_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A scalar probe used a nonexistent root-level negative-register path and returned nulls plus an error.",
+      "negative_id": "V6541-X1-N13",
+      "recovery": "Discover the exact final/retained-negative-register.json path before reading.",
+      "recurrence_guard": "Use rg --files before assuming lifecycle receipt locations.",
+      "signature": "negative_register_path_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A depth-limited serialization still emitted the full synthetic-mutation array.",
+      "negative_id": "V6541-X1-N14",
+      "recovery": "Project the eight named scalar fields directly and never serialize the source object.",
+      "recurrence_guard": "Treat depth as insufficient; construct a new scalar object.",
+      "signature": "negative_register_depth_projection_overbroad"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A script-size inventory piped directly from foreach and failed before execution.",
+      "negative_id": "V6541-X1-N15",
+      "recovery": "Materialize the rows, then serialize the array.",
+      "recurrence_guard": "Reuse the tested foreach materialization pattern.",
+      "signature": "script_inventory_foreach_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A repository-wide route-text search timed out before attributable results.",
+      "negative_id": "V6541-X1-N16",
+      "recovery": "Restrict the search to the exact Liora packet and closeout builder.",
+      "recurrence_guard": "Scope text searches to the smallest authoritative directory.",
+      "signature": "broad_route_search_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first large overview patch did not apply because inherited mojibake prevented exact context matching.",
+      "negative_id": "V6541-X1-N17",
+      "recovery": "Keep the failed patch as zero credit, add the new function with ASCII context, then remove the legacy block by one bounded mechanical replacement.",
+      "recurrence_guard": "Use small ASCII anchors around inherited non-ASCII content.",
+      "signature": "overview_patch_context_mismatch"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first Method Flow build attempted an explicit validated transition after the passing witness had already promoted the method and failed closed.",
+      "negative_id": "V6541-X1-N18",
+      "recovery": "Remove the redundant transition, rebuild the temporary ledger, retain the failed invocation, and promote only validated to preferred.",
+      "recurrence_guard": "Inspect runner state effects: a passing witness performs candidate-to-validated promotion automatically.",
+      "signature": "method_flow_redundant_validated_transition"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first workflow audit rejected a one-off future-task route because the runner accepts only its existing-task messaging enum; it also warned that object-shaped placeholders are not recognized.",
+      "negative_id": "V6541-X1-N19",
+      "recovery": "Represent the runner's live-phase no-contact policy with its supported enum, retain the one-off post-closeout creation authority in explicit extension fields, and use a string placeholder in the cycle.",
+      "recurrence_guard": "Model special post-closeout task creation as an explicit extension without weakening the runner's live-phase messaging guard.",
+      "signature": "workflow_runner_one_off_route_enum_mismatch"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first x1 scan treated six contextual API-key labels with no secret values as confirmed credentials and failed closed.",
+      "negative_id": "V6541-X1-N20",
+      "recovery": "Retain the failed scan, require credential assignments or bearer-shaped values rather than labels alone, and rerun every public x1 path.",
+      "recurrence_guard": "Credential scanning must distinguish a protected dependency label from an actual assigned secret while preserving bearer and assignment detection.",
+      "signature": "privacy_scanner_credential_label_false_positive"
+    }
+  ],
+  "x1_operational_count": 20
+}
