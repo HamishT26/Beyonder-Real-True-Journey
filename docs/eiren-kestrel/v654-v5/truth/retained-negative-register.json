@@ -1,0 +1,77 @@
+{
+  "boundary": "Counts preserve sealed, external, and current workflow negatives; a later pass never converts a failure into a pass.",
+  "effective_after_x1": 11330,
+  "inherited_effective": 11322,
+  "inherited_external_itemized": 0,
+  "inherited_external_record_count": 0,
+  "inherited_sealed": 11322,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v654-v5.retained-negatives.x1.v1",
+  "x1_operational": [
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first read-only full external-receipt projection exceeded the host output bound, so the truncated rendering earned no complete-read credit.",
+      "negative_id": "V6545-X1-N01",
+      "recovery": "Project only the exact receipt fields needed for the activation audit and retain the external file hash as the immutable whole-file binding.",
+      "recurrence_guard": "Use bounded schema-aware projections for large receipts instead of rendering the complete object.",
+      "signature": "external_receipt_full_projection_truncated"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first concise receipt projection assumed a nested result object and returned null fields, so it earned zero schema credit.",
+      "negative_id": "V6545-X1-N02",
+      "recovery": "Inspect the attempt object's property names, then project the fields from their actual top-level locations.",
+      "recurrence_guard": "Read receipt keys before constructing a concise projection.",
+      "signature": "external_receipt_schema_path_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first frozen-index projection assumed a proposals array and raised a null-array indexing error, so it earned zero index credit.",
+      "negative_id": "V6545-X1-N03",
+      "recovery": "Inspect the committed index keys, then combine prior_proposals and new_proposals under the declared count fields.",
+      "recurrence_guard": "Inspect an inherited index schema before indexing proposal collections.",
+      "signature": "frozen_index_schema_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined Git status and semantic-search probe exceeded its bounded timeout before yielding output, so it earned zero status or search credit.",
+      "negative_id": "V6545-X1-N04",
+      "recovery": "Recheck HEAD, branch, tracked status, and untracked paths through separate bounded scalar probes.",
+      "recurrence_guard": "Keep repository-state checks separate from content searches so a slow search cannot erase status evidence.",
+      "signature": "combined_status_search_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first exact-path removal command for newly copied untracked x2 files was rejected by the command policy before execution, so it changed no file and earned zero phase-separation credit.",
+      "negative_id": "V6545-X1-N05",
+      "recovery": "Remove only those known new untracked files through the workspace patch mechanism, then re-enumerate the x1 path set.",
+      "recurrence_guard": "Use the workspace patch mechanism for deliberate file removals when shell deletion is policy-blocked.",
+      "signature": "shell_deletion_policy_block"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first x1 packet build stopped when Workflow Plan Refinement rejected a noncanonical codex_route literal; all earlier generated files earned no completed-freeze credit.",
+      "negative_id": "V6545-X1-N06",
+      "recovery": "Keep the required canonical route literal and express the unresolved-successor constraint in additive sanitized fields.",
+      "recurrence_guard": "Inspect the workflow runner's exact messaging-boundary predicate before extending its request object.",
+      "signature": "x1_build_workflow_messaging_literal_mismatch"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The isolated Workflow Plan Refinement diagnostic correctly returned needs_refinement with one messaging-boundary error and therefore earned zero passing-validation credit.",
+      "negative_id": "V6545-X1-N07",
+      "recovery": "Correct only the rejected messaging field, preserve the open route gap, and rerun the isolated validator before rebuilding the packet.",
+      "recurrence_guard": "Treat a diagnostic reproduction of a failure as retained evidence, not as a pass.",
+      "signature": "isolated_workflow_validator_retained_failure"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A follow-up ripgrep command passed Windows wildcard paths as literal operands, produced a filename-syntax error, and earned zero issue-search credit.",
+      "negative_id": "V6545-X1-N08",
+      "recovery": "Read the bounded issue and validation files by literal path, or use ripgrep directory operands with -g filters.",
+      "recurrence_guard": "On Windows, use -g for glob selection instead of wildcard characters in path operands.",
+      "signature": "windows_rg_wildcard_path_error"
+    }
+  ],
+  "x1_operational_count": 8
+}

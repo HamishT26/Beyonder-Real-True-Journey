@@ -1,0 +1,30 @@
+# v654-v5 source ledger
+
+- **SRC-CCI-PREVENTIVE** - `current` - [Canadian Conservation Institute preventive conservation](https://www.canada.ca/en/conservation-institute/services/preventive-conservation.html)
+  - Field and control context only; no collection assessment, treatment, competence, or operational decision.
+- **SRC-CCI-AGENTS** - `current` - [Canadian Conservation Institute agents of deterioration](https://www.canada.ca/en/conservation-institute/services/agents-deterioration.html)
+  - Threat taxonomy only; no diagnosis, treatment, risk acceptance, or emergency decision.
+- **SRC-NPS-MUSEUM** - `current` - [United States National Park Service Museum Handbook Part I](https://www.nps.gov/subjects/museums/mh1.htm)
+  - Museum procedure context only; no NPS applicability, professional competence, or authority.
+- **SRC-SPECTRUM** - `current` - [Collections Trust Spectrum 5.1 procedures](https://collectionstrust.org.uk/spectrum/procedures/)
+  - Procedure and information-field context only; no institutional policy, licence interpretation, or conformance claim.
+- **SRC-ICOM-ETHICS** - `current` - [ICOM Code of Ethics for Museums, revised 2026](https://icom.museum/en/resources/standards-guidelines/code-of-ethics/)
+  - Ethics and reservation context only; no professional, legal, provenance, return, restitution, or repatriation decision.
+- **SRC-CIDOC-CRM** - `current` - [CIDOC CRM official release 7.1.3](https://cidoc-crm.org/get-last-official-release)
+  - Typed mapping vocabulary only; no catalogue truth, authority, interoperability, or ISO conformance claim.
+- **SRC-W3C-VC20** - `current` - [W3C Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model-2.0/)
+  - Synthetic field obligations only; no real issuer, holder, subject, key, proof, status, trust, or interoperability event.
+- **SRC-RFC8392** - `stable` - [RFC 8392 CBOR Web Token](https://www.rfc-editor.org/rfc/rfc8392.html)
+  - Synthetic token fields only; no real key, token, device, issuance, verification, or production event.
+- **SRC-BIPM-SI** - `current` - [BIPM SI Brochure, 9th edition version 3.02](https://www.bipm.org/en/publications/si-brochure/)
+  - Unit declarations only; no calibration, traceability, or measurement assurance.
+- **SRC-WCAG22** - `current` - [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Structural checks only; manual, browser, assistive-technology, cognitive, Māori-language, and affected-user evaluation remain reserved.
+- **SRC-PRIVACY-ACT** - `watch` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/0031/latest/contents.html)
+  - Watched legal context only; no privacy compliance, consent, disclosure, retention, or identity decision.
+- **SRC-TE-PAPA** - `current` - [Te Papa Karanga Aotearoa Repatriation Programme](https://www.tepapa.govt.nz/about/repatriation/karanga-aotearoa-repatriation-programme)
+  - Repatriation authority context only; no ancestor, taonga, provenance, return, or repatriation decision.
+- **SRC-TE-MANA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Māori data decisions remain under Māori authority; no authority is delegated to the repository.
+- **SRC-LOCAL-CONTEXTS** - `current` - [Local Contexts Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/)
+  - Cultural and traditional-knowledge rights reservation only; no label is selected or applied.
