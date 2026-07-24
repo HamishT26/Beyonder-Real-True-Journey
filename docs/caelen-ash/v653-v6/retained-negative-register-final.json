@@ -1,0 +1,30 @@
+{
+  "effective_total": 10279,
+  "evidence_effective_total": 10276,
+  "none_erased": true,
+  "post_evidence_operational": [
+    {
+      "category": "windows_rg_literal_wildcard_path_rejected",
+      "failed": "The first bounded search for Orin v652-v2 successor tests passed a wildcard as a literal Windows path to the search tool; the tool rejected the invalid path before inspecting any file, so the attempt received zero review credit.",
+      "negative_id": "V6536-FINAL-N01",
+      "recovery": "Search the tests directory with an explicit include pattern, then read the resolved exact files without relying on shell wildcard expansion.",
+      "recurrence_guard": "On Windows, pass wildcard patterns through the search tool's include option and never present a wildcard-bearing path as an already resolved filesystem target."
+    },
+    {
+      "category": "inline_validation_import_path_assumption",
+      "failed": "The first bounded precommit manifest audit imported the v653-v6 validation helper as a package, but the helper's inherited direct module import could not resolve because the scripts directory was not on sys.path; the audit stopped before any manifest result and received zero validation credit.",
+      "negative_id": "V6536-FINAL-N02",
+      "recovery": "Insert the repository scripts directory into the bounded audit's module search path before importing the existing validation helper, then rerun the same read-only checks.",
+      "recurrence_guard": "When an inherited script uses direct sibling-module imports, invoke it as a script or explicitly add its containing directory to the module search path before an inline import."
+    },
+    {
+      "category": "stale_label_scan_matched_scanner_definitions",
+      "failed": "The first closeout semantic stale-label audit scanned the exact validator file that defines the forbidden placeholder tokens and reported those scanner definitions as product hits; the audit therefore received zero stale-label credit.",
+      "negative_id": "V6536-FINAL-N03",
+      "recovery": "Exclude only the stale-token scanner-definition file from the generic placeholder search while continuing to scan every durable phase artifact and all nondefining current closeout code.",
+      "recurrence_guard": "Every literal-token scanner must distinguish its own definitions from the product corpus without excluding the artifacts the definitions are intended to test."
+    }
+  ],
+  "post_evidence_operational_count": 3,
+  "schema": "ghc.family.v653-v6.final-retained-negatives.v1"
+}
