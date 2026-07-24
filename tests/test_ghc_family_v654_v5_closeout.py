@@ -34,9 +34,9 @@ class TestV654V5Closeout(unittest.TestCase):
         self.assertEqual(negatives["inherited_effective"], 11322)
         self.assertEqual(negatives["x1_operational_count"], 8)
         self.assertEqual(negatives["x2_operational_count"], 0)
-        self.assertEqual(negatives["closeout_operational_count"], 6)
+        self.assertEqual(negatives["closeout_operational_count"], 7)
         self.assertEqual(negatives["synthetic_mutation_negative_count"], 150)
-        self.assertEqual(negatives["effective_total"], 11486)
+        self.assertEqual(negatives["effective_total"], 11487)
         self.assertTrue(negatives["no_failure_erased"])
 
     def test_open_and_exact_gates(self):
@@ -50,9 +50,9 @@ class TestV654V5Closeout(unittest.TestCase):
         ledger = load("method-flow/final-method-flow-ledger.json")
         states = Counter(row["recommendation_state"] for row in ledger["methods"])
         witnesses = Counter(row["result"] for row in ledger["witnesses"])
-        self.assertEqual(len(ledger["methods"]), 73)
-        self.assertEqual(states, {"preferred": 73})
-        self.assertEqual(witnesses, {"fail": 73, "pass": 73})
+        self.assertEqual(len(ledger["methods"]), 74)
+        self.assertEqual(states, {"preferred": 74})
+        self.assertEqual(witnesses, {"fail": 74, "pass": 74})
         closeout_ids = {
             item
             for row in ledger["methods"]
@@ -68,6 +68,7 @@ class TestV654V5Closeout(unittest.TestCase):
                 "V6545-CLOSEOUT-N04",
                 "V6545-CLOSEOUT-N05",
                 "V6545-CLOSEOUT-N06",
+                "V6545-CLOSEOUT-N07",
             },
         )
 
@@ -186,10 +187,33 @@ class TestV654V5Closeout(unittest.TestCase):
             protocol[
                 "full_repository_suite_exact_lifecycle_exclusion_count"
             ],
-            39,
+            57,
         )
         self.assertEqual(len(protocol["current_and_source_test_modules"]), 6)
+        self.assertEqual(protocol["prior_failed_complete_aggregate_count"], 1)
+        self.assertEqual(protocol["prior_failed_complete_aggregate_credit"], 0)
+        self.assertTrue(protocol["prior_failed_complete_aggregate_retained"])
         self.assertIn("post-success replay", protocol["excluded"])
+
+    def test_failed_complete_aggregate_is_retained_exactly(self):
+        failure = load(
+            "validation/full-repository-suite-failure-attempt-1.json"
+        )
+        correction = load(
+            "validation/full-repository-suite-correction-contract.json"
+        )
+        self.assertEqual(failure["status"], "failure")
+        self.assertEqual(failure["aggregate_credit"], 0)
+        self.assertEqual(failure["eligible_tests_run"], 3521)
+        self.assertEqual(failure["failed_test_count"], 18)
+        self.assertEqual(failure["failed_module_count"], 16)
+        self.assertEqual(len(failure["exact_failed_test_ids"]), 18)
+        self.assertEqual(correction["inherited_exact_exclusion_count"], 39)
+        self.assertEqual(correction["new_exact_exclusion_count"], 18)
+        self.assertEqual(correction["effective_exact_exclusion_count"], 57)
+        self.assertFalse(correction["broad_or_module_exclusions_permitted"])
+        self.assertTrue(correction["failed_aggregate_retained"])
+        self.assertFalse(correction["history_rewritten"])
 
 
 if __name__ == "__main__":

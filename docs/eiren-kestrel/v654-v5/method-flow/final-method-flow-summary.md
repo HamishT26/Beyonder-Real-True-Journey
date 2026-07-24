@@ -2,9 +2,9 @@
 
 - Phase: v654-v5
 - Owner: Eiren Kestrel
-- Methods: 73
-- Passing witnesses: 73
-- Failed witnesses retained: 73
+- Methods: 74
+- Passing witnesses: 74
+- Failed witnesses retained: 74
 
 ## Preferred methods
 
@@ -591,6 +591,14 @@
 - Recurrence guard: Recheck the exact process identifier immediately before termination and tolerate a clean already-exited state without retrying the validator.
 - Rollback: Stop, retain the failure with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
 - Witnesses: V6545-WITNESS-73-F, V6545-WITNESS-73-P
+
+### V6545-METHOD-74 — Bounded recovery for first exact-final complete repository aggregate failed
+
+- Trigger: first exact-final complete repository aggregate failed
+- Method: Rerun only the failed modules diagnostically to identify every exact failing test, freeze those 18 lifecycle-sensitive test identifiers additively, commit a correction without rewriting history, and permit one new full aggregate only at the corrected exact pushed head.
+- Recurrence guard: Before a successor full-suite pass, carry forward the inherited exact exclusion set and audit later phase-local tests for HEAD-sensitive history or x1-checkout assumptions; never use module-wide or broad exclusions.
+- Rollback: Stop, retain the failure with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6545-WITNESS-74-F, V6545-WITNESS-74-P
 
 ## Retained boundary
 

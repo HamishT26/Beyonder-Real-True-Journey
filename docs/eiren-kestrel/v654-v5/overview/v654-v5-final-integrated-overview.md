@@ -117,11 +117,11 @@ Māori concepts, Māori data, and Māori authority were not decided.
 
 ## Retained failures, gaps, and exact gates
 
-The effective negative count is **11,486**. It preserves all
+The effective negative count is **11,487**. It preserves all
 11,322 inherited effective negatives, all
 8 x1 operational failures, all
 0 x2 operational failures, all
-6 closeout operational failures, and
+7 closeout operational failures, and
 150 rejected synthetic mutations. A passing recovery never rewrites a failed
 witness as if the failure did not occur.
 
@@ -130,8 +130,8 @@ inherited gaps plus the real museum sensor-data gap. The effective exact-gate co
 is **83**: all 82 inherited gates plus the
 museum authority reservation. No inherited or current gap or gate was closed.
 
-Method Flow contains **73** preferred bounded methods,
-**73** retained failed witnesses, and **73** bounded
+Method Flow contains **74** preferred bounded methods,
+**74** retained failed witnesses, and **74** bounded
 passing witnesses. The inherited 59 method pairs remain
 inherited evidence, not Eiren completion credit. Current recovery witnesses establish only their
 declared workflow postconditions.

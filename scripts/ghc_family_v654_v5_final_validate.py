@@ -27,6 +27,7 @@ BRANCH = "codex/GHC-Family/eiren-kestrel-v654-v5-full-tools"
 SOURCE = "f1218fae5969279fc99065297af6ad358a2fb60e"
 X1 = "adb37ecf3d981bccc266505356ab596b605c39ad"
 EVIDENCE = "362e8f23d3109e86932efecf4d061923ed60117a"
+CLOSEOUT = "e44c29275c28078086f10a0a3c5480a3187eec06"
 ROUTE_STATE = "PREPARED_NOT_SENT_ROUTE_UNRESOLVED"
 EXPECTED_OUTCOMES = {
     "completed": 23,
@@ -572,6 +573,7 @@ def main() -> None:
         source_parent = git("rev-parse", f"{X1}^")
         x1_parent = source_parent
         evidence_parent = git("rev-parse", f"{EVIDENCE}^")
+        closeout_parent = git("rev-parse", f"{CLOSEOUT}^")
         final_parent = git("rev-parse", "HEAD^")
         phase_count = int(git("rev-list", "--count", f"{SOURCE}..HEAD"))
         merges = [
@@ -581,17 +583,27 @@ def main() -> None:
         ]
         check("source_to_x1", x1_parent == SOURCE, x1_parent)
         check("x1_to_evidence", evidence_parent == X1, evidence_parent)
-        check("evidence_to_final", final_parent == EVIDENCE, final_parent)
+        check(
+            "evidence_to_closeout",
+            closeout_parent == EVIDENCE,
+            closeout_parent,
+        )
+        check("closeout_to_final", final_parent == CLOSEOUT, final_parent)
         check(
             "single_parent_chain",
-            parent_count(X1) == parent_count(EVIDENCE) == parent_count(head) == 1,
+            parent_count(X1)
+            == parent_count(EVIDENCE)
+            == parent_count(CLOSEOUT)
+            == parent_count(head)
+            == 1,
             {
                 "x1": parent_count(X1),
                 "evidence": parent_count(EVIDENCE),
+                "closeout": parent_count(CLOSEOUT),
                 "final": parent_count(head),
             },
         )
-        check("phase_commit_count", phase_count == 3, phase_count)
+        check("phase_commit_count", phase_count == 4, phase_count)
         check("zero_merges", not merges, merges)
 
         source_owner = replay_manifest(
@@ -705,6 +717,16 @@ def main() -> None:
         docs = load_at(head, f"{ROOT}/validation/document-cap-final.json")
         owners = load_at(head, f"{ROOT}/validation/owner-file-threshold-final.json")
         protocol = load_at(head, f"{ROOT}/validation/final-validation-protocol.json")
+        failed_aggregate = load_at(
+            head,
+            f"{ROOT}/validation/"
+            "full-repository-suite-failure-attempt-1.json",
+        )
+        correction = load_at(
+            head,
+            f"{ROOT}/validation/"
+            "full-repository-suite-correction-contract.json",
+        )
         method_states = Counter(row["recommendation_state"] for row in method["methods"])
         witnesses = Counter(row["result"] for row in method["witnesses"])
         baton = blob_at(
@@ -715,11 +737,11 @@ def main() -> None:
         check("outcomes", truth["outcomes"] == EXPECTED_OUTCOMES, truth["outcomes"])
         check(
             "negative_retention",
-            negatives["effective_total"] == 11486
+            negatives["effective_total"] == 11487
             and negatives["inherited_effective"] == 11322
             and negatives["x1_operational_count"] == 8
             and negatives["x2_operational_count"] == 0
-            and negatives["closeout_operational_count"] == 6
+            and negatives["closeout_operational_count"] == 7
             and negatives["synthetic_mutation_negative_count"] == 150
             and negatives["no_failure_erased"],
             negatives,
@@ -738,9 +760,9 @@ def main() -> None:
         )
         check(
             "method_flow",
-            len(method["methods"]) == 73
-            and method_states == {"preferred": 73}
-            and witnesses == {"fail": 73, "pass": 73},
+            len(method["methods"]) == 74
+            and method_states == {"preferred": 74}
+            and witnesses == {"fail": 74, "pass": 74},
             {
                 "methods": len(method["methods"]),
                 "states": dict(method_states),
@@ -810,9 +832,29 @@ def main() -> None:
             and protocol[
                 "full_repository_suite_exact_lifecycle_exclusion_count"
             ]
-            == 39
+            == 57
             and protocol["current_and_source_test_modules"] == TEST_MODULES,
             protocol,
+        )
+        check(
+            "failed_aggregate_retention",
+            failed_aggregate["status"] == "failure"
+            and failed_aggregate["aggregate_credit"] == 0
+            and failed_aggregate["eligible_tests_run"] == 3521
+            and failed_aggregate["failed_test_count"] == 18
+            and failed_aggregate["failed_module_count"] == 16
+            and len(failed_aggregate["exact_failed_test_ids"]) == 18,
+            failed_aggregate,
+        )
+        check(
+            "exact_exclusion_correction",
+            correction["inherited_exact_exclusion_count"] == 39
+            and correction["new_exact_exclusion_count"] == 18
+            and correction["effective_exact_exclusion_count"] == 57
+            and not correction["broad_or_module_exclusions_permitted"]
+            and correction["failed_aggregate_retained"]
+            and not correction["history_rewritten"],
+            correction,
         )
 
         tests = run_scoped_tests()
@@ -843,7 +885,8 @@ def main() -> None:
             "zero_divergence",
             "source_to_x1",
             "x1_to_evidence",
-            "evidence_to_final",
+            "evidence_to_closeout",
+            "closeout_to_final",
             "single_parent_chain",
             "phase_commit_count",
             "zero_merges",
@@ -871,6 +914,8 @@ def main() -> None:
             "owner_file_cap",
             "terminal_truth",
             "canonical_protocol",
+            "failed_aggregate_retention",
+            "exact_exclusion_correction",
             "scoped_tests",
             "full_repository_suite",
         ]
@@ -881,7 +926,7 @@ def main() -> None:
             "clean_state",
             "four_way_equality",
             "zero_divergence",
-            "evidence_to_final",
+            "closeout_to_final",
             "phase_commit_count",
             "zero_merges",
             "x1_manifest",
@@ -900,6 +945,8 @@ def main() -> None:
             "diff_hygiene",
             "owner_file_cap",
             "terminal_truth",
+            "failed_aggregate_retention",
+            "exact_exclusion_correction",
             "scoped_tests",
             "full_repository_suite",
         ]
@@ -935,6 +982,7 @@ def main() -> None:
                 "source": SOURCE,
                 "x1": X1,
                 "evidence": EVIDENCE,
+                "closeout": CLOSEOUT,
                 "final": head,
                 "phase_commits": phase_count,
                 "merges": len(merges),

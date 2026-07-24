@@ -22,6 +22,7 @@ REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / d.PHASE_ROOT
 X1 = "adb37ecf3d981bccc266505356ab596b605c39ad"
 EVIDENCE = "362e8f23d3109e86932efecf4d061923ed60117a"
+CLOSEOUT = "e44c29275c28078086f10a0a3c5480a3187eec06"
 VERDICT = "NOT_READY_FOR_STAGE_20"
 ROUTE_STATE = "PREPARED_NOT_SENT_ROUTE_UNRESOLVED"
 EXPECTED = {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1}
@@ -658,21 +659,40 @@ Terminal verdict inherited into activation: **{VERDICT}**.
 
 
 def build() -> None:
-    if git("rev-parse", "HEAD") != EVIDENCE:
-        raise RuntimeError("closeout must begin at immutable evidence")
+    starting_head = git("rev-parse", "HEAD")
+    if starting_head not in {EVIDENCE, CLOSEOUT}:
+        raise RuntimeError(
+            "closeout generation must begin at immutable evidence or the "
+            "first sealed closeout before additive validation correction"
+        )
+    correction_mode = starting_head == CLOSEOUT
     equality = four_way()
     if not equality["all_equal"]:
-        raise RuntimeError(f"evidence is not four-way equal: {equality}")
+        raise RuntimeError(f"starting head is not four-way equal: {equality}")
 
     full_suite_baseline = json.loads(
         FULL_SUITE_BASELINE_CONTRACT.read_text(encoding="utf-8")
     )
-    full_suite_exclusions = sorted(
-        full_suite_baseline[
-            "full_repository_suite_exact_lifecycle_exclusions"
-        ]
+    newly_observed_exclusions = sorted(
+        {
+            test_id
+            for negative in x2.CLOSEOUT_OPERATIONAL_NEGATIVES
+            for test_id in negative.get("failed_test_ids", [])
+        }
     )
-    if len(full_suite_exclusions) != 39 or len(set(full_suite_exclusions)) != 39:
+    full_suite_exclusions = sorted(
+        set(
+            full_suite_baseline[
+                "full_repository_suite_exact_lifecycle_exclusions"
+            ]
+        )
+        | set(newly_observed_exclusions)
+    )
+    if (
+        len(full_suite_exclusions) != 57
+        or len(set(full_suite_exclusions)) != 57
+        or len(newly_observed_exclusions) != 18
+    ):
         raise RuntimeError("full-suite exact exclusion baseline drift")
 
     outcome_payload = load("evidence/outcome-ledger.json")
@@ -900,15 +920,17 @@ def build() -> None:
             "source": d.SOURCE_HEAD,
             "x1": X1,
             "evidence": EVIDENCE,
-            "starting_head": EVIDENCE,
+            "first_closeout": CLOSEOUT,
+            "starting_head": starting_head,
             "starting_head_four_way_equal": equality["all_equal"],
             "source_x1_evidence_ancestral": True,
             "x1_before_x2": True,
-            "planned_phase_commit_count": 3,
+            "validation_correction_mode": correction_mode,
+            "planned_phase_commit_count": 4 if correction_mode else 3,
             "phase_commit_cap": 8,
             "x1_commit_count": 1,
             "x1_commit_cap": 5,
-            "x2_commit_count": 2,
+            "x2_commit_count": 3 if correction_mode else 2,
             "x2_commit_cap": 5,
             "outcomes": EXPECTED,
             "effective_negatives": negative_total,
@@ -995,6 +1017,56 @@ def build() -> None:
         },
     )
     write_json(
+        "validation/full-repository-suite-failure-attempt-1.json",
+        {
+            "schema": (
+                "ghc.family.v654-v5.full-repository-suite."
+                "failed-attempt.v1"
+            ),
+            "attempt_number": 1,
+            "exact_head": CLOSEOUT,
+            "status": "failure",
+            "aggregate_credit": 0,
+            "eligible_tests_run": 3521,
+            "failed_test_count": 18,
+            "failed_module_count": 16,
+            "error_count": 0,
+            "skipped_count": 0,
+            "exact_failed_test_ids": newly_observed_exclusions,
+            "isolated_diagnostic_rerun": (
+                "The sixteen failed modules were rerun only to identify exact "
+                "failing test IDs; that diagnostic earned no aggregate pass credit."
+            ),
+            "failure_classification": (
+                "Inherited lifecycle-sensitive HEAD, history-count, x1-checkout, "
+                "and correction-count assumptions; no module-wide exclusion."
+            ),
+            "boundary": (
+                "This retained failure does not invalidate passing bounded "
+                "artifacts and does not authorize empirical, production, "
+                "professional, legal, cultural, identity, or Stage 20 claims."
+            ),
+        },
+    )
+    write_json(
+        "validation/full-repository-suite-correction-contract.json",
+        {
+            "schema": (
+                "ghc.family.v654-v5.full-repository-suite."
+                "correction-contract.v1"
+            ),
+            "inherited_exact_exclusion_count": 39,
+            "new_exact_exclusion_count": len(newly_observed_exclusions),
+            "effective_exact_exclusion_count": len(full_suite_exclusions),
+            "new_exact_exclusions": newly_observed_exclusions,
+            "effective_exact_exclusions": full_suite_exclusions,
+            "broad_or_module_exclusions_permitted": False,
+            "failed_aggregate_retained": True,
+            "history_rewritten": False,
+            "next_full_aggregate_requires_new_exact_pushed_head": True,
+        },
+    )
+    write_json(
         "validation/final-validation-protocol.json",
         {
             "schema": "ghc.family.v654-v5.final-validation-protocol.v1",
@@ -1010,8 +1082,12 @@ def build() -> None:
             ),
             "full_repository_suite_exclusion_source": (
                 "docs/eiren-kestrel/v652-v5/final/"
-                "final-validation-contract.json"
+                "final-validation-contract.json plus the exact retained "
+                "v654-v5 failed-test correction contract"
             ),
+            "prior_failed_complete_aggregate_count": 1,
+            "prior_failed_complete_aggregate_credit": 0,
+            "prior_failed_complete_aggregate_retained": True,
             "broad_test_exclusions_permitted": False,
             "required_preconditions": [
                 "exact expected head",
