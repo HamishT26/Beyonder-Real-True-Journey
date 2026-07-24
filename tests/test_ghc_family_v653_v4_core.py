@@ -251,9 +251,12 @@ class V653V4CoreTests(unittest.TestCase):
         truth = load("phase-truth.json")
         self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
         self.assertFalse(truth["independent_reproduction"])
-        self.assertEqual(
+        self.assertIn(
             truth["route_state"],
-            "NOT_ELIGIBLE_EVIDENCE_NOT_FINAL",
+            {
+                "NOT_ELIGIBLE_EVIDENCE_NOT_FINAL",
+                "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
+            },
         )
 
 

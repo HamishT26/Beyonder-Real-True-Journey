@@ -27,6 +27,7 @@ def validate():
             "exact_gates": gates["effective_exact_gates"] == 74,
             "route_gated": truth["route_state"]
             in {
+                "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
                 "NOT_ELIGIBLE_EVIDENCE_NOT_FINAL",
                 "NOT_ELIGIBLE_BEFORE_FINAL_GATE",
                 "PREPARED_NOT_SENT",

@@ -1,0 +1,30 @@
+{
+  "effective_total": 9945,
+  "evidence_effective_total": 9942,
+  "none_erased": true,
+  "post_evidence_operational": [
+    {
+      "category": "current_selection_route_transition_assertion_stale",
+      "failed": "The first current-phase precommit selection failed one core test because its evidence-local route assertion still required NOT_ELIGIBLE_EVIDENCE_NOT_FINAL after closeout had correctly transitioned phase truth to the terminal-gated Sable state; the 35-test aggregate received zero pass credit.",
+      "negative_id": "V6534-FINAL-N01",
+      "recovery": "Permit only the two declared lifecycle states in that core assertion: the immutable evidence state and the closeout PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED state. Keep the exact successor authorization checks in the closeout test.",
+      "recurrence_guard": "Lifecycle-spanning tests must distinguish immutable evidence state from a later terminal-gated closeout state without accepting an undeclared route transition."
+    },
+    {
+      "category": "recent_ilyra_selection_lifecycle_local_head_count",
+      "failed": "The first recent-round Ilyra selection ran all 35 tests at Auren's descendant candidate and failed the Ilyra closeout assertion that HEAD must remain two or three commits after Ilyra's source; Auren is five commits after that older source, so the aggregate received zero pass credit.",
+      "negative_id": "V6534-FINAL-N02",
+      "recovery": "Keep Ilyra's test file immutable and explicitly exclude only V653V3CloseoutTests.test_anchor_history_and_commit_cap from the descendant selection. Continue running every other recent-round test and validate Auren's ancestry and commit cap separately.",
+      "recurrence_guard": "Descendant scoped selections must declare exact lifecycle-local test exclusions by full test identifier and reason while retaining all portable behavioral assertions."
+    },
+    {
+      "category": "inherited_lyren_selection_lifecycle_local_head_count",
+      "failed": "The first inherited-source Lyren selection ran all 40 tests at Auren's descendant candidate and failed one closeout assertion that HEAD must remain two or three commits after Lyren's source; the aggregate received zero pass credit.",
+      "negative_id": "V6534-FINAL-N03",
+      "recovery": "Keep Lyren's test file immutable and explicitly exclude only V653V2CloseoutTests.test_anchor_history_and_commit_cap from the descendant selection. Continue running the remaining inherited tests and validate Auren's complete ancestry and commit cap in the current final validator.",
+      "recurrence_guard": "Apply exact full-identifier exclusions to inherited lifecycle-local HEAD-distance assertions; never exclude portable behavior or rewrite a sealed source owner's test."
+    }
+  ],
+  "post_evidence_operational_count": 3,
+  "schema": "ghc.family.v653-v4.final-retained-negatives.v1"
+}
