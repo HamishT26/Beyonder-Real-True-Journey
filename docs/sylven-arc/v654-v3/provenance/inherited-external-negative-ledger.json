@@ -1,0 +1,56 @@
+{
+  "boundary": "The sealed 10,963 and five external handoff events remain separately visible and additive; recovery erases neither.",
+  "effective_activation_baseline": 10968,
+  "itemized_external_event_count": 5,
+  "method_flow_ingested": true,
+  "records": [
+    {
+      "failed": "The source-owner routing preflight requested an unsupported task-list page size and received zero route credit.",
+      "negative_ids": [
+        "V6542-HANDOFF-N01"
+      ],
+      "recovery": "Use the supported bounded task-list schema and uniquely resolve the exact existing title.",
+      "recurrence_guard": "Inspect the live task-tool schema before supplying optional pagination fields.",
+      "signature": "unsupported_task_list_page_size"
+    },
+    {
+      "failed": "The long-range route audit found a nonsequential phase order and granted zero activation credit.",
+      "negative_ids": [
+        "V6542-HANDOFF-N02"
+      ],
+      "recovery": "Retain the issue as an open gap while using only the separately valid immediate route.",
+      "recurrence_guard": "Never infer phase ownership from a long-range route whose sequence audit fails.",
+      "signature": "long_range_route_nonsequential_phase_order"
+    },
+    {
+      "failed": "The long-range route audit found spelling or label normalization requiring confirmation and granted zero activation credit.",
+      "negative_ids": [
+        "V6542-HANDOFF-N03"
+      ],
+      "recovery": "Keep the unresolved seat and spelling drift explicit; do not invent or normalize identity.",
+      "recurrence_guard": "Require exact live authority before normalizing any relational label or seat.",
+      "signature": "long_range_route_normalization_requires_confirmation"
+    },
+    {
+      "failed": "A combined pre-delivery source probe timed out before producing a complete attributable result.",
+      "negative_ids": [
+        "V6542-HANDOFF-N04"
+      ],
+      "recovery": "Split clean-state, ancestry, manifest, and remote-equality checks into bounded scalar probes.",
+      "recurrence_guard": "Use one cold Git or filesystem subsystem per pre-delivery probe.",
+      "signature": "combined_predelivery_source_probe_timeout"
+    },
+    {
+      "failed": "A post-delivery timestamp wrapper timed out and earned no additional delivery credit.",
+      "negative_ids": [
+        "V6542-HANDOFF-N05"
+      ],
+      "recovery": "Retain the acknowledged delivery state and audit immutable evidence without resending.",
+      "recurrence_guard": "Never repeat an acknowledged one-shot delivery because a later wrapper times out.",
+      "signature": "postdelivery_timestamp_wrapper_timeout"
+    }
+  ],
+  "sanitized_record_count": 5,
+  "schema": "ghc.family.v654-v3.inherited-external-negatives.v1",
+  "sealed_negative_count": 10963
+}

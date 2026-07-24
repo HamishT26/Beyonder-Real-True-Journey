@@ -1,0 +1,213 @@
+{
+  "boundary": "Counts preserve sealed, external, and current workflow negatives; a later pass never converts a failure into a pass.",
+  "effective_after_x1": 10993,
+  "inherited_effective": 10968,
+  "inherited_external_itemized": 5,
+  "inherited_external_record_count": 5,
+  "inherited_sealed": 10963,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v654-v3.retained-negatives.x1.v1",
+  "x1_operational": [
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A PowerShell foreach statement was piped directly during skill discovery and failed before execution.",
+      "negative_id": "V6543-X1-N01",
+      "recovery": "Materialize foreach output before piping.",
+      "recurrence_guard": "Never pipe directly from a PowerShell foreach statement.",
+      "signature": "skill_discovery_foreach_pipeline_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first Method Flow schema read assumed a nonexistent method-flow-state-schema filename.",
+      "negative_id": "V6543-X1-N02",
+      "recovery": "Read the exact references/schema.md path named by the skill.",
+      "recurrence_guard": "Resolve every skill-relative reference from the complete SKILL.md before use.",
+      "signature": "method_flow_schema_filename_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined worktree inventory and receipt search exceeded its bound without complete attributable output.",
+      "negative_id": "V6543-X1-N03",
+      "recovery": "Split worktree discovery from exact receipt probes.",
+      "recurrence_guard": "Use one cold filesystem subsystem per bounded discovery command.",
+      "signature": "combined_worktree_and_receipt_search_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A narrowed multi-root receipt search still timed out before a complete result.",
+      "negative_id": "V6543-X1-N04",
+      "recovery": "Probe the exact expected receipt path and digest directly.",
+      "recurrence_guard": "Prefer exact candidate paths over recursive multi-root scans.",
+      "signature": "multi_root_receipt_search_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined source branch, history, clean-state, remote, and digest verification timed out before a complete result.",
+      "negative_id": "V6543-X1-N05",
+      "recovery": "Split immutable refs, ancestry, live remote, clean state, and digest into scalar probes.",
+      "recurrence_guard": "Keep local Git checks separate from fresh-live and filesystem hashing.",
+      "signature": "combined_source_verification_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first external receipt projection used property names not present in the committed schema.",
+      "negative_id": "V6543-X1-N06",
+      "recovery": "Inspect receipt keys before binding exact fields.",
+      "recurrence_guard": "Discover JSON schema keys before projecting evidence.",
+      "signature": "external_receipt_property_projection_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "Windows PowerShell 5.1 rejected the unsupported ConvertFrom-Json Depth parameter.",
+      "negative_id": "V6543-X1-N07",
+      "recovery": "Omit the unsupported parameter and parse the bounded document with the installed command surface.",
+      "recurrence_guard": "Preflight shell-version-specific parameters.",
+      "signature": "unsupported_convertfromjson_depth_parameter"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A small artifact-group read piped directly from foreach and failed before execution.",
+      "negative_id": "V6543-X1-N08",
+      "recovery": "Materialize the artifact group before piping.",
+      "recurrence_guard": "Never pipe directly from a PowerShell foreach statement.",
+      "signature": "artifact_group_foreach_pipeline_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first compact Method Flow projection used property names not present in the committed schema.",
+      "negative_id": "V6543-X1-N09",
+      "recovery": "Inspect a real method and witness before binding names.",
+      "recurrence_guard": "Bind Method Flow keys only after schema and instance discovery.",
+      "signature": "method_flow_property_projection_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A compact Method Flow foreach projection was piped directly and failed before execution.",
+      "negative_id": "V6543-X1-N10",
+      "recovery": "Materialize projection output before formatting.",
+      "recurrence_guard": "Never pipe directly from a PowerShell foreach statement.",
+      "signature": "method_flow_foreach_pipeline_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first frozen-chain parser assumed a proposals array instead of prior_proposals plus new_proposals.",
+      "negative_id": "V6543-X1-N11",
+      "recovery": "Inspect top-level keys and concatenate the two committed arrays.",
+      "recurrence_guard": "Discover proposal-chain schema before counting or hashing.",
+      "signature": "frozen_chain_top_level_array_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "Node execFileSync exhausted its default buffer while reading the source tree and produced no manifest credit.",
+      "negative_id": "V6543-X1-N12",
+      "recovery": "Retry the unchanged read-only command with an explicit bounded 128 MB buffer.",
+      "recurrence_guard": "Set a justified output buffer before large Git tree reads.",
+      "signature": "git_ls_tree_default_buffer_exhaustion"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined immediate and long-range route-audit read timed out before complete output.",
+      "negative_id": "V6543-X1-N13",
+      "recovery": "Read each route artifact in its own bounded scalar probe.",
+      "recurrence_guard": "Do not aggregate independent route artifacts in one cold read.",
+      "signature": "combined_route_audit_read_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A formatted full-route JSON wrapper timed out and earned no audit credit.",
+      "negative_id": "V6543-X1-N14",
+      "recovery": "Read the raw scalar audit fields separately.",
+      "recurrence_guard": "Prefer bounded scalar extraction over whole-object formatting for large route records.",
+      "signature": "full_route_json_wrapper_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A branch and path preflight embedded child exit-code expressions inside a PowerShell hash literal and failed before execution.",
+      "negative_id": "V6543-X1-N15",
+      "recovery": "Compute scalar exit codes before constructing the record.",
+      "recurrence_guard": "Never embed child-process statements inside PowerShell literal expressions.",
+      "signature": "branch_preflight_exit_code_expression_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The owned worktree-add wrapper timed out after Git had completed the additive checkout.",
+      "negative_id": "V6543-X1-N16",
+      "recovery": "Audit exact path, registration, branch, head, clean state, processes, and locks before deciding whether to retry.",
+      "recurrence_guard": "Never retry a timed-out mutating Git command before a complete state audit.",
+      "signature": "worktree_add_wrapper_timeout_after_completion"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first registration counter compared a backslash path with Git's forward-slash worktree output and falsely reported zero.",
+      "negative_id": "V6543-X1-N17",
+      "recovery": "Normalize separators and inspect the exact registration record.",
+      "recurrence_guard": "Normalize path separators before comparing Git administrative output.",
+      "signature": "worktree_registration_separator_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first novelty search piped directly from foreach and failed before execution.",
+      "negative_id": "V6543-X1-N18",
+      "recovery": "Materialize the search output before sorting or formatting.",
+      "recurrence_guard": "Never pipe directly from a PowerShell foreach statement.",
+      "signature": "novelty_search_foreach_pipeline_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A candidate novelty query omitted required whitespace in a foreach statement and failed before execution.",
+      "negative_id": "V6543-X1-N19",
+      "recovery": "Correct the syntax and rerun the unchanged read-only calculation.",
+      "recurrence_guard": "Use formatted multi-line PowerShell for nontrivial loops.",
+      "signature": "candidate_novelty_foreach_whitespace_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A keyword search omitted required whitespace in a foreach statement and failed before execution.",
+      "negative_id": "V6543-X1-N20",
+      "recovery": "Correct the syntax and rerun the unchanged read-only search.",
+      "recurrence_guard": "Use formatted multi-line PowerShell for nontrivial loops.",
+      "signature": "keyword_search_foreach_whitespace_parser_fault"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined status, full untracked-file diff, and Select-String inspection timed out before attributable output.",
+      "negative_id": "V6543-X1-N21",
+      "recovery": "Split clean-state and bounded source-range inspections into separate probes.",
+      "recurrence_guard": "Never combine potentially large untracked-file inspection with Git status.",
+      "signature": "combined_status_diff_and_selectstring_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A combined accessible-report and x1-test patch failed because one Unicode context line did not match exactly.",
+      "negative_id": "V6543-X1-N22",
+      "recovery": "Split the change into smaller exact-context patches and retain the failed attempt.",
+      "recurrence_guard": "Do not combine Unicode-sensitive and independent source edits in one patch.",
+      "signature": "large_mixed_context_patch_mismatch"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first x1 build pointed to Tamar v654-v1's 1,690-row index and stopped before generating the packet because the activation baseline requires 1,720.",
+      "negative_id": "V6543-X1-N23",
+      "recovery": "Bind the exact committed Elowen v654-v2 frozen-chain index and rerun from the unchanged x1 data.",
+      "recurrence_guard": "Resolve the immediate source-owner proposal index before building a successor freeze.",
+      "signature": "inherited_proposal_index_phase_pointer_assumption"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "A recursive frozen-index inventory over the inherited docs tree timed out without a complete result.",
+      "negative_id": "V6543-X1-N24",
+      "recovery": "Probe the exact expected Elowen phase path and verify its 1,690 plus 30 equals 1,720 counts.",
+      "recurrence_guard": "Prefer exact phase-local artifact paths over recursive repository inventories.",
+      "signature": "broad_frozen_index_inventory_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first workflow-plan request was rejected because the current runner hard-codes an existing-task route while Hamish's live terminal authority requires one new user-visible main task.",
+      "negative_id": "V6543-X1-N25",
+      "recovery": "Retain the failed audit, supply the validator's compatibility literal only for its structural check, and record the exact live new-task authority in separate controlling fields.",
+      "recurrence_guard": "Never let a compatibility literal override newer exact live route authority or trigger a premature task action.",
+      "signature": "workflow_runner_existing_task_policy_mismatch"
+    }
+  ],
+  "x1_operational_count": 25
+}

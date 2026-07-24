@@ -1,0 +1,40 @@
+# v654-v3 source ledger
+
+- **SRC-NZTA-CYCLING** - `current` - [Waka Kotahi NZ Transport Agency: cycle equipment](https://www.nzta.govt.nz/driving-skills/learn-to-drive/roadcode/new-zealand-cycling-code/equipment)
+  - Current public cycling-equipment context only; no repair, inspection, roadworthiness, or legal finding.
+- **SRC-ISO4210** - `current` - [ISO 4210-1:2023 cycles safety requirements and vocabulary](https://www.iso.org/standard/78075.html)
+  - Vocabulary and bounded field obligations only; no access to restricted text, conformity, test, or product-safety claim.
+- **SRC-ISO4210-BRAKES** - `current` - [ISO 4210-4:2023 bicycle braking test methods](https://www.iso.org/standard/78079.html)
+  - Catalogue-level braking context only; no brake test, measurement, inspection, or conformance claim.
+- **SRC-ISO5775** - `current` - [ISO 5775-1:2023 bicycle tyre designations and dimensions](https://www.iso.org/standard/80740.html)
+  - Catalogue-level tyre/rim designations only; no fitment approval or measurement assurance.
+- **SRC-ISO9633** - `stable` - [ISO 9633:2001 cycle chains characteristics and test methods](https://www.iso.org/standard/23532.html)
+  - Confirmed standard context and typed fields only; no chain test, service decision, or conformance claim.
+- **SRC-PARK-WHEEL** - `current` - [Park Tool spoke tension measurement and adjustment](https://www.parktool.com/en-us/blog/repair-help/wheel-tension-measurement)
+  - Technical context only; no endorsement, professional competence, tool calibration, or wheel release decision.
+- **SRC-WORKSAFE-MACHINERY** - `current` - [WorkSafe New Zealand: safe use of machinery](https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/)
+  - Current machinery-risk context only; no workplace assessment, competence, or compliance finding.
+- **SRC-WORKSAFE-HAZ** - `current` - [WorkSafe New Zealand: hazardous-substance information and supervision](https://www.worksafe.govt.nz/topic-and-industry/hazardous-substances/managing/information-instruction-supervision-training/)
+  - Chemical label and refusal context only; no classification, disposal, workplace, or emergency decision.
+- **SRC-CONSUMER-RECALL** - `current` - [New Zealand Consumer Protection: product recalls](https://www.consumerprotection.govt.nz/general-help/common-consumer-issues/product-recalls)
+  - Recall-notice structure and remedy context only; no applicability, remedy, supplier, or legal decision.
+- **SRC-CGA** - `watch` - [Consumer Guarantees Act 1993](https://www.legislation.govt.nz/act/public/1993/0091/latest/DLM312829.html)
+  - Watched legal context only; no interpretation, warranty, repair, refund, replacement, or remedy decision.
+- **SRC-PRIVACY-ACT** - `watch` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/0031/latest/contents.html)
+  - Watched legal context only; no privacy compliance, disclosure, retention, ownership, or identity decision.
+- **SRC-BIPM-SI** - `current` - [BIPM SI Brochure, updated 2026](https://www.bipm.org/en/publications/si-brochure)
+  - Unit declarations only; no calibration, traceability, or measurement assurance.
+- **SRC-WCAG22** - `current` - [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Structural checks only; manual, browser, assistive-technology, Maori-language, cognitive, and affected-user evaluation remain reserved.
+- **SRC-NFC-SPECS** - `current` - [NFC Forum specifications including NDEF and URI record types](https://nfc-forum.org/build/specifications)
+  - Synthetic NDEF fields only; no tag writing, locking, live URI, interoperability, consent, privacy, or production identity claim.
+- **SRC-ISO20248** - `stable` - [ISO/IEC 20248 digital signature data structure schema](https://www.iso.org/standard/67412.html)
+  - Catalogue-level signature fields only; no real key, certificate, signature, validation, issuing authority, or conformance event.
+- **SRC-EU-BATTERY** - `watch` - [Regulation (EU) 2023/1542 batteries and battery passport](https://eur-lex.europa.eu/eli/reg/2023/1542/oj)
+  - Primary legal context only; no applicability, legal interpretation, access-right, passport, product, or market decision.
+- **SRC-GARMIN-FIT** - `current` - [Garmin Flexible and Interoperable Data Transfer protocol](https://developer.garmin.com/fit/protocol/)
+  - Zero-row schema readiness only; no SDK download, device access, account, personal activity, calibration, fit, likelihood, or empirical claim.
+- **SRC-TE-MANA** - `current` - [Te Mana Raraunga principles of Maori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Maori data decisions remain under Maori authority; no authority is delegated to the repository.
+- **SRC-LOCAL-CONTEXTS** - `current` - [Local Contexts Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/)
+  - Cultural and traditional-knowledge rights reservation only; no label is selected or applied.
