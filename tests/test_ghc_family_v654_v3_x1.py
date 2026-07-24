@@ -45,10 +45,10 @@ class TestV654V3X1(unittest.TestCase):
         self.assertFalse(truth["independent_reproduction_claimed"])
     def test_failures_method_flow_and_workflow(self):
         negatives = load("truth/retained-negative-register.json")
-        self.assertEqual((negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]), (10968, 25, 10993))
+        self.assertEqual((negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]), (10968, 26, 10994))
         ledger = load("method-flow/method-flow-ledger.json")
-        self.assertEqual(len(ledger["methods"]), 30)
-        self.assertEqual(sum(w["result"] == "pass" for w in ledger["witnesses"]), 30)
+        self.assertEqual(len(ledger["methods"]), 31)
+        self.assertEqual(sum(w["result"] == "pass" for w in ledger["witnesses"]), 31)
         workflow = load("workflow/workflow-plan-refinement.json")
         self.assertTrue(workflow["valid"])
         self.assertFalse(workflow["requires_user_confirmation"])

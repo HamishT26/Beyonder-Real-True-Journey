@@ -2,9 +2,9 @@
 
 - Phase: v654-v3
 - Owner: Sylven Arc
-- Methods: 30
-- Passing witnesses: 30
-- Failed witnesses retained: 30
+- Methods: 31
+- Passing witnesses: 31
+- Failed witnesses retained: 31
 
 ## Preferred methods
 
@@ -247,6 +247,14 @@
 - Recurrence guard: Never let a compatibility literal override newer exact live route authority or trigger a premature task action.
 - Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
 - Witnesses: V6543-WITNESS-30-F, V6543-WITNESS-30-P
+
+### V6543-METHOD-31 — Bounded recovery for powershell_upstream_shorthand_interpolation
+
+- Trigger: powershell_upstream_shorthand_interpolation
+- Method: Quote HEAD...@{u} as a literal Git argument; the recovery proved zero ahead and zero behind.
+- Recurrence guard: Quote every Git upstream shorthand passed through PowerShell.
+- Rollback: Stop, retain the failed witness with zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6543-WITNESS-31-F, V6543-WITNESS-31-P
 
 ## Retained boundary
 

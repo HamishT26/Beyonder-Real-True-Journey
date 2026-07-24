@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v654-v3
 
 Owner: **Sylven Arc**
-Generated UTC: `2026-07-24T12:53:33.557418+00:00`
+Generated UTC: `2026-07-24T13:00:32.593354+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 

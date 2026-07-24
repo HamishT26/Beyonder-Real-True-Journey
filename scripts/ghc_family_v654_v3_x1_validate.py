@@ -16,7 +16,7 @@ REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / "docs/sylven-arc/v654-v3"
 ALLOWED_STATUSES = {"current", "stable", "draft", "watch"}
 EXPECTED_COUNTS = {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1}
-EXPECTED_NEGATIVES = 10993
+EXPECTED_NEGATIVES = 10994
 
 
 def load(relative: str) -> Any:
@@ -87,11 +87,11 @@ def validate(require_staged: bool) -> dict[str, Any]:
     check("portfolio_counts", portfolios["counts"] == {"safe_now": 30, "candidate": 30, "skills": 10, "runners": 10, "clean_fix_refine": 30}, portfolios["counts"])
     check("portfolio_unexecuted", all(not row["completion_credit"] for group in portfolios["portfolios"].values() for row in group), "all_false")
     check("mutations_frozen", mutations["count"] == 150 and mutations["x1_execution_count"] == 0 and all(row["execution_state"] == "frozen_unexecuted" for row in mutations["mutations"]), mutations["count"])
-    check("negative_retention", (negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]) == (10968, 25, EXPECTED_NEGATIVES) and negatives["no_failure_erased"], [negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]])
+    check("negative_retention", (negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]) == (10968, 26, EXPECTED_NEGATIVES) and negatives["no_failure_erased"], [negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]])
     method_states = Counter(row["recommendation_state"] for row in method["methods"])
     witness_results = Counter(row["result"] for row in method["witnesses"])
-    check("method_flow", len(method["methods"]) == 30 and method_states == {"preferred": 30} and witness_results == {"fail": 30, "pass": 30}, {"methods": len(method["methods"]), "states": dict(method_states), "witnesses": dict(witness_results)})
-    check("method_summary", summary["valid"] and summary["counts"]["methods"] == 30, summary["counts"])
+    check("method_flow", len(method["methods"]) == 31 and method_states == {"preferred": 31} and witness_results == {"fail": 31, "pass": 31}, {"methods": len(method["methods"]), "states": dict(method_states), "witnesses": dict(witness_results)})
+    check("method_summary", summary["valid"] and summary["counts"]["methods"] == 31, summary["counts"])
     check("workflow", workflow["valid"] and not workflow["requires_user_confirmation"], {"valid": workflow["valid"], "requires_user_confirmation": workflow["requires_user_confirmation"]})
     check("truth_boundary", truth["lifecycle"] == "x1_frozen_not_executed" and truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20" and truth["real_row_count"] == 0, truth["lifecycle"])
     check("successor_hold", route["state"] == "AUTHORIZED_CONDITIONAL_NOT_CREATED" and route["create_count"] == 0 and successor["created_count"] == 0 and successor["forked_count"] == 0 and successor["delegated_count"] == 0 and successor["contacted_count"] == 0 and successor["terminal_gate_required"], route["state"])
