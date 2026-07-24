@@ -1,0 +1,62 @@
+# v654-v2 bounded outcome ledger
+
+- **V6542-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress typecase glyph, foundry source, face, style, point size, sorts count, damage quarantine, and provenance ledger
+- **V6542-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress composition job, manuscript revision, line measure, leading, hyphenation, justification, correction, and proof-hold board
+- **V6542-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress imposition sheet, page order, signature, work-and-turn state, gripper, trim, blank-page, and refusal map
+- **V6542-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress paper stock mill, lot, grain direction, basis weight, caliper, moisture acclimation, substitution, and hold ledger
+- **V6542-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress ink batch, pigment and vehicle label, colour name, viscosity and tack proxy, contamination, substitution, and quarantine board
+- **V6542-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress roller diameter, durometer record, stripe setting, glazing status, wash state, adjustment revision, and setup refusal
+- **V6542-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress chase, quoin, furniture, lockup map, type-high gauge, loose-form signal, correction, and print-run hold
+- **V6542-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress platen or cylinder packing layer, thickness, compressibility class, crush limit, revision, pressure change, and rollback board
+- **V6542-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress makeready overlay, pressure hotspot, impression-depth proxy, delta, correction readback, rollback, and release refusal
+- **V6542-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress feed board sheet count, double-feed signal, gripper edge, registration mark, jam state, restart refusal, and receipt
+- **V6542-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress guard, interlock, power and isolation state, unexpected transition, alarm acknowledgement, competent reset, and release refusal
+- **V6542-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Print-shop ink, solvent and cleaning-agent label, safety-data link, ventilation state, ignition-source hold, spill state, and refusal board
+- **V6542-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - Print-shop noise, manual handling, repetitive task, workload budget, fatigue flag, rotation, stop-work, and handover board
+- **V6542-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - Print-shop wash-up rag, waste ink, solvent container, contamination class, segregation, discharge hold, disposal route, and receipt
+- **V6542-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress drying interval, set-off observation, rub-resistance proxy, stack height, interleaf state, uncertainty, and release refusal
+- **V6542-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress proof approval version, correction mark, readback, unresolved error, author-state placeholder, print-run hold, and audit trail
+- **V6542-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress edition, impression, print-run sequence, spoilage, overrun, cancellation, copy identifier, and lineage ledger
+- **V6542-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Hand-binding signature collation, gathering order, duplicate or missing section, sewing station, correction, quarantine, and receipt
+- **V6542-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Accessible print-production ticket heading, table header, error summary, noncolour hold, focus order, reflow, print order, and structural audit
+- **V6542-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Letterpress edition-change queue, proof-signoff latency, unresolved lockup defect, dual readback, work-in-progress limit, break trigger, and owner-transfer board
+- **V6542-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Reynolds thin-film ink field, viscosity, film gap, pressure gradient, boundary flux, conservation, unit, and observation-firewall board
+- **V6542-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Lucas-Washburn paper-capillary field, surface tension, viscosity, pore radius, contact angle, penetration, unit, and observation-firewall board
+- **V6542-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Kelvin-Voigt packing field, elastic modulus, viscosity, strain, strain rate, dissipation, unit, and observation-firewall board
+- **V6542-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS letterpress setup, loose form, feed jam, stop-work, workload budget, correction readback, and shift-handover proxy
+- **V6542-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS proof correction, binding collation, missing signature, correction latency, fatigue flag, harm stop, and handover proxy
+- **V6542-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID UUIDv7 print job, sheet, signature and copy binding, clock rollback, duplicate identifier, privacy, and nonproduction profile
+- **V6542-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID ISBN registrant element, publication element, check digit, edition and impression relation, agency reservation, privacy, and nonproduction profile
+- **V6542-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID DOI prefix, suffix, referent metadata, work-edition-manifestation relation, resolution refusal, privacy, and nonproduction profile
+- **V6542-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT real letterpress spectral reflectance, solid-ink density, paper field, provenance, uncertainty, standards access, and zero-row measurement adapter
+- **V6542-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR printing machinery and chemical safety, environmental discharge, conservation, publishing and design rights, accessibility, remedy, affected-party, legal, cultural, data-governance, and Maori-authority reservation
