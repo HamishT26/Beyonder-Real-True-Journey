@@ -13,6 +13,7 @@ import ghc_family_v653_v7_phase_data as data
 REPO = closeout.REPO
 PHASE = closeout.PHASE
 CLOSEOUT = "cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b"
+CORRECTION_BASE = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
 NEGATIVES = [
     {
         "negative_id": "V6537-FINAL-N01",
@@ -83,6 +84,45 @@ NEGATIVES = [
         "recurrence_guard": (
             "Treat porcelain status columns explicitly when a wrapper applies "
             "whole-output trimming, and retain an exact path allowlist."
+        ),
+    },
+    {
+        "negative_id": "V6537-FINAL-N05",
+        "category": "x1_tree_local_absence_assertion_in_final_selection",
+        "failed": (
+            "The first post-correction canonical aggregate ran 128 eligible "
+            "scoped tests with one failure because the successor-compatibility "
+            "group executed the immutable x1 tree-local assertion that x2 "
+            "outputs must be absent against the exact final tree."
+        ),
+        "recovery": (
+            "Exclude only the named x1 tree-local absence assertion from the "
+            "exact-final selection while retaining its passing immutable-x1 "
+            "commit witness, x1 manifest parity, and every other x1 test."
+        ),
+        "recurrence_guard": (
+            "Classify phase-local tree-state assertions at discovery time and "
+            "bind them to their immutable lifecycle commit rather than a "
+            "successor final tree."
+        ),
+    },
+    {
+        "negative_id": "V6537-FINAL-N06",
+        "category": "diagnostic_import_omitted_scripts_module_path",
+        "failed": (
+            "A read-only exclusion-discovery diagnostic imported the final "
+            "validator as a package without adding the scripts directory to "
+            "Python's module path, so a sibling validator import failed."
+        ),
+        "recovery": (
+            "Insert the repository scripts directory into the diagnostic "
+            "module path before importing the validator, without invoking its "
+            "canonical main entry point."
+        ),
+        "recurrence_guard": (
+            "For read-only imports of phase scripts, bind both repository root "
+            "and scripts directory explicitly; reserve direct script execution "
+            "for the canonical aggregate."
         ),
     },
 ]
@@ -193,21 +233,27 @@ def add_method_flow() -> dict:
 
 
 def build() -> None:
-    if closeout.git("rev-parse", "HEAD") != CLOSEOUT:
-        raise RuntimeError("terminal correction must begin at the exact closeout")
+    if closeout.git("rev-parse", "HEAD") != CORRECTION_BASE:
+        raise RuntimeError(
+            "terminal repair must begin at the exact first correction"
+        )
+    def allowed_correction_row(row: str) -> bool:
+        normalized = row.lstrip()
+        parts = normalized.split(maxsplit=1)
+        path = parts[1] if len(parts) == 2 else ""
+        return (
+            path.startswith("docs/orin-thale/v653-v7/")
+            or path.startswith("scripts/ghc_family_v653_v7_final_")
+            or path == "scripts/build_ghc_family_v653_v7_terminal_correction.py"
+            or path == "tests/test_ghc_family_v653_v7_closeout.py"
+        )
+
     unexpected = [
         row
         for row in closeout.git(
             "status", "--porcelain=v1", "--untracked-files=all"
         ).splitlines()
-        if row
-        and not (
-            row.lstrip().startswith("M scripts/ghc_family_v653_v7_final_")
-            or row.lstrip().startswith("M tests/test_ghc_family_v653_v7_closeout.py")
-            or row.lstrip().startswith(
-                "?? scripts/build_ghc_family_v653_v7_terminal_correction.py"
-            )
-        )
+        if row and not allowed_correction_row(row)
     ]
     if unexpected:
         raise RuntimeError(f"unexpected correction state: {unexpected}")
@@ -218,12 +264,12 @@ def build() -> None:
     )
     negatives["terminal_operational_count"] = len(NEGATIVES)
     negatives["terminal_operational"] = NEGATIVES
-    negatives["effective_total"] = 10444
+    negatives["effective_total"] = 10446
     closeout.write_json("final/retained-negative-register.json", negatives)
 
     truth = closeout.read_json(PHASE / "final/phase-truth.json")
     truth["terminal_operational_negatives"] = len(NEGATIVES)
-    truth["effective_negatives"] = 10444
+    truth["effective_negatives"] = 10446
     truth["canonical_exact_final_pass_state"] = (
         "CORRECTED_POSTCOMMIT_PENDING"
     )
@@ -232,13 +278,14 @@ def build() -> None:
     closeout_receipt = closeout.read_json(
         PHASE / "final/closeout-receipt.json"
     )
-    closeout_receipt["effective_negatives"] = 10444
+    closeout_receipt["effective_negatives"] = 10446
     closeout_receipt["terminal_correction_required"] = True
     closeout.write_json("final/closeout-receipt.json", closeout_receipt)
 
     seal = closeout.read_json(PHASE / "final/seal-receipt.json")
     seal["state"] = "CONTENT_SEAL_CORRECTION_CANDIDATE"
     seal["closeout_commit"] = CLOSEOUT
+    seal["first_terminal_correction"] = CORRECTION_BASE
     seal["terminal_negative_ids"] = [
         negative["negative_id"] for negative in NEGATIVES
     ]
@@ -248,18 +295,25 @@ def build() -> None:
         PHASE / "final/final-validation-record.json"
     )
     record["state"] = "CORRECTED_POSTCOMMIT_CANONICAL_PASS_REQUIRED"
-    record["failed_attempt_count"] = 1
+    record["failed_attempt_count"] = 2
     record["failed_attempts"] = [
         {
             "negative_id": NEGATIVES[0]["negative_id"],
             "tests_run": 0,
             "pass_credit": 0,
             "failure": NEGATIVES[0]["failed"],
-        }
+        },
+        {
+            "negative_id": NEGATIVES[4]["negative_id"],
+            "tests_run": 128,
+            "failures": 1,
+            "pass_credit": 0,
+            "failure": NEGATIVES[4]["failed"],
+        },
     ]
     record["correction"] = NEGATIVES[0]["recovery"]
     record["correction_workflow_negatives"] = [
-        negative["negative_id"] for negative in NEGATIVES[1:]
+        NEGATIVES[index]["negative_id"] for index in (1, 2, 3, 5)
     ]
     closeout.write_json("final/final-validation-record.json", record)
 
@@ -270,13 +324,13 @@ def build() -> None:
         negative["negative_id"] for negative in NEGATIVES
     ]
     protocol["successful_passes_completed"] = 0
-    protocol["correction_base_commit"] = CLOSEOUT
+    protocol["correction_base_commit"] = CORRECTION_BASE
     closeout.write_json("validation/final-validation-protocol.json", protocol)
 
     final_build = closeout.read_json(
         PHASE / "validation/final-build-receipt.json"
     )
-    final_build["effective_negatives"] = 10444
+    final_build["effective_negatives"] = 10446
     final_build["terminal_correction_required"] = True
     closeout.write_json("validation/final-build-receipt.json", final_build)
 
@@ -301,10 +355,14 @@ def build() -> None:
             .replace("10,441", "10,444")
             .replace("10,442", "10,444")
             .replace("10,443", "10,444")
-            .replace("10440", "10444")
-            .replace("10441", "10444")
-            .replace("10442", "10444")
-            .replace("10443", "10444")
+            .replace("10,444", "10,445")
+            .replace("10,445", "10,446")
+            .replace("10440", "10446")
+            .replace("10441", "10446")
+            .replace("10442", "10446")
+            .replace("10443", "10446")
+            .replace("10444", "10446")
+            .replace("10445", "10446")
         )
         path.write_text(text, encoding="utf-8", newline="\n")
 
@@ -313,6 +371,7 @@ def build() -> None:
         {
             "schema": "ghc.family.v653-v7.terminal-correction.v1",
             "base_closeout": CLOSEOUT,
+            "first_terminal_correction": CORRECTION_BASE,
             "negatives": NEGATIVES,
             "x1_blob_changed": False,
             "evidence_blob_changed": False,
@@ -344,7 +403,7 @@ def build() -> None:
                 "negatives": [
                     negative["negative_id"] for negative in NEGATIVES
                 ],
-                "effective_negatives": 10444,
+                "effective_negatives": 10446,
                 "methods": ledger["counts"]["methods"],
                 "canonical_pass": "PENDING_CORRECTED_COMMIT",
             },

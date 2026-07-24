@@ -30,6 +30,7 @@ SOURCE = "c044464ed940093d59a59686efd4faa61853f341"
 X1 = "78ece91db153275ca2857899ee125dc0673c0154"
 EVIDENCE = "888df289dd58f5717919ac1ee2c8083cd93cddfe"
 CLOSEOUT = "cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b"
+CORRECTION = "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a"
 EXPECTED_BRANCH = "codex/GHC-Family/orin-thale-v653-v7-full-tools"
 TEST_SELECTIONS = {
     "current_orin": [
@@ -65,6 +66,13 @@ TEST_EXCLUSIONS = {
     ): (
         "Sable lifecycle-local HEAD distance assertion; Orin validates "
         "source, x1, evidence, final ancestry and commit cap separately."
+    ),
+    (
+        "tests.test_ghc_family_v653_v7_x1."
+        "V653V7X1Tests.test_no_x2_output_files"
+    ): (
+        "Orin x1 tree-local absence assertion; its immutable x1 commit and "
+        "manifest passed before x2, while the final tree must contain x2 output."
     ),
 }
 
@@ -207,12 +215,19 @@ def exact_head_checks(head: str) -> dict[str, bool]:
             check=False,
         ).returncode
         == 0,
-        "four_phase_commits": phase_commits == 4,
+        "first_correction_ancestral": run(
+            ["git", "merge-base", "--is-ancestor", CORRECTION, head],
+            check=False,
+        ).returncode
+        == 0,
+        "five_phase_commits": phase_commits == 5,
         "within_eight_commit_cap": phase_commits <= 8,
         "zero_merges": merge_count == 0,
         "one_final_parent": parent_count == 1,
-        "final_direct_child_of_closeout": git("rev-parse", f"{head}^")
-        == CLOSEOUT,
+        "final_direct_child_of_first_correction": git(
+            "rev-parse", f"{head}^"
+        )
+        == CORRECTION,
         "expected_branch": branch == EXPECTED_BRANCH,
         "exact_head_stable": git("rev-parse", "HEAD") == head,
         "clean": git("status", "--porcelain=v1") == "",

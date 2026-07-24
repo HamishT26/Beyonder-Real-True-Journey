@@ -2,9 +2,9 @@
 
 - Phase: v653-gmut-thos-v7-x1-x2
 - Owner: Orin Thale
-- Methods: 14
-- Passing witnesses: 14
-- Failed witnesses retained: 14
+- Methods: 16
+- Passing witnesses: 16
+- Failed witnesses retained: 16
 
 ## Preferred methods
 
@@ -119,6 +119,22 @@
 - Recurrence guard: Treat porcelain status columns explicitly when a wrapper applies whole-output trimming, and retain an exact path allowlist.
 - Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
 - Witnesses: V6537-WITNESS-14-F, V6537-WITNESS-14-P
+
+### V6537-METHOD-15 — Bounded recovery for x1_tree_local_absence_assertion_in_final_selection
+
+- Trigger: x1_tree_local_absence_assertion_in_final_selection
+- Method: Exclude only the named x1 tree-local absence assertion from the exact-final selection while retaining its passing immutable-x1 commit witness, x1 manifest parity, and every other x1 test.
+- Recurrence guard: Classify phase-local tree-state assertions at discovery time and bind them to their immutable lifecycle commit rather than a successor final tree.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-15-F, V6537-WITNESS-15-P
+
+### V6537-METHOD-16 — Bounded recovery for diagnostic_import_omitted_scripts_module_path
+
+- Trigger: diagnostic_import_omitted_scripts_module_path
+- Method: Insert the repository scripts directory into the diagnostic module path before importing the validator, without invoking its canonical main entry point.
+- Recurrence guard: For read-only imports of phase scripts, bind both repository root and scripts directory explicitly; reserve direct script execution for the canonical aggregate.
+- Rollback: Stop, retain the failed attempt with zero credit, and leave immutable x1, evidence, external, and protected-gate state unchanged.
+- Witnesses: V6537-WITNESS-16-F, V6537-WITNESS-16-P
 
 ## Retained boundary
 

@@ -10,6 +10,7 @@
     "correction-delta and owner manifests"
   ],
   "evidence_blob_changed": false,
+  "first_terminal_correction": "e94f2f3c048678b6d7c87c6d4037dc8b24787c4a",
   "negatives": [
     {
       "category": "ast_discovery_plain_utf8_rejected_bom",
@@ -38,6 +39,20 @@
       "negative_id": "V6537-FINAL-N04",
       "recovery": "Normalize only leading status whitespace before matching the exact authorized correction paths; keep every other path fail-closed.",
       "recurrence_guard": "Treat porcelain status columns explicitly when a wrapper applies whole-output trimming, and retain an exact path allowlist."
+    },
+    {
+      "category": "x1_tree_local_absence_assertion_in_final_selection",
+      "failed": "The first post-correction canonical aggregate ran 128 eligible scoped tests with one failure because the successor-compatibility group executed the immutable x1 tree-local assertion that x2 outputs must be absent against the exact final tree.",
+      "negative_id": "V6537-FINAL-N05",
+      "recovery": "Exclude only the named x1 tree-local absence assertion from the exact-final selection while retaining its passing immutable-x1 commit witness, x1 manifest parity, and every other x1 test.",
+      "recurrence_guard": "Classify phase-local tree-state assertions at discovery time and bind them to their immutable lifecycle commit rather than a successor final tree."
+    },
+    {
+      "category": "diagnostic_import_omitted_scripts_module_path",
+      "failed": "A read-only exclusion-discovery diagnostic imported the final validator as a package without adding the scripts directory to Python's module path, so a sibling validator import failed.",
+      "negative_id": "V6537-FINAL-N06",
+      "recovery": "Insert the repository scripts directory into the diagnostic module path before importing the validator, without invoking its canonical main entry point.",
+      "recurrence_guard": "For read-only imports of phase scripts, bind both repository root and scripts directory explicitly; reserve direct script execution for the canonical aggregate."
     }
   ],
   "schema": "ghc.family.v653-v7.terminal-correction.v1",
