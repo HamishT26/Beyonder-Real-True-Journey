@@ -1,0 +1,62 @@
+# v654-v4 bounded outcome ledger
+
+- **V6544-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment alteration intake item identifier, presented-owner claim placeholder, condition, detachable pieces, custody, privacy minimization, and work-start hold
+- **V6544-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment alteration work order, requested change, measurement version, fitting-consent placeholder, quote revision, scope correction, readback, and release hold
+- **V6544-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment fibre-content and care-label source, symbol version, missing or conflicting mark, proposed treatment, substitution, and refusal ledger
+- **V6544-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment seam allowance, seam type, stitch type, thread ticket, sample coupon, expected load direction, mismatch, and unpick hold
+- **V6544-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment needle system, needle size and point, fabric structure, thread relation, machine state, damage signal, and substitution refusal
+- **V6544-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment interlining and adhesive identifier, substrate, heat and pressure ceiling, test coupon, residue signal, delamination risk, and fusing hold
+- **V6544-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment dye and colourfastness placeholder, hidden-area sample, cleaning-agent identity, transfer signal, treatment boundary, and alteration refusal
+- **V6544-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment zipper, button, snap or hook identifier, size, material, attachment geometry, load direction, replacement relation, and fitment refusal
+- **V6544-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment pattern piece, grainline, nap, stripe or plaid match, notch relation, mirrored state, cut authorization placeholder, and recut hold
+- **V6544-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment hem reference, intended length, floor or shoe context placeholder, balance point, drape proxy, correction delta, and release hold
+- **V6544-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment fitting body-measurement field, anatomical definition, unit, purpose, source, correction lineage, retention limit, and privacy hold
+- **V6544-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment pressing temperature and steam setting, material layer, press-cloth state, tool status, time ceiling, test coupon, and scorch refusal
+- **V6544-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - Sewing machine guard, power state, presser foot, needle and bobbin relation, jam state, maintenance placeholder, isolation, and stop-work board
+- **V6544-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment studio scissors, rotary cutter, pins and needles, condition, count, container, missing-sharp signal, cleanup, and handover hold
+- **V6544-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment spot-treatment substance, safety-data-sheet version, batch, decanted-container label, exposure and spill state, waste route, and service hold
+- **V6544-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment delicate-material or prior-repair condition, unknown fibre, embellishment, weakened area, sentiment placeholder, quarantine, and specialist escalation
+- **V6544-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - Replacement-closure bulletin applicability matrix with edition, style-lot key, evidence gap, isolation bin, escalation state, remedy reservation, and no-release decision
+- **V6544-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Inclusive alteration progress card with semantic stage order, hold explanation, recovery action, text-and-shape encoding, reflow, focus order, and human accessibility review reserve
+- **V6544-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Alteration studio capacity ledger with queued job class, blocked dependency, work-in-progress ceiling, cognitive and physical load flag, rest checkpoint, responsibility transfer, and next-shift acknowledgement
+- **V6544-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Garment fitting appointment, pinning proximity, mobility and communication need placeholder, support-person option, consent reservation, pause signal, and return receipt
+- **V6544-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT woven-textile lattice field, warp and weft node, strain proxy, boundary displacement, anisotropy tensor, unit, and observation-firewall board
+- **V6544-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT garment seam graph field, stitch node, thread edge, seam-line curvature, boundary load, rupture proxy, unit, and observation-firewall board
+- **V6544-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT garment drape shell field, panel curvature, gravity placeholder, contact boundary, bending-stiffness proxy, unit, and observation-firewall board
+- **V6544-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS garment alteration intake, measurement correction, fitting hold, scope readback, workload budget, pause, and shift-handover proxy
+- **V6544-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS garment machine, cutting, pinning and pressing hazard, unresolved fault, independent-check placeholder, harm stop, correction latency, and handover proxy
+- **V6544-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic NDEF alteration docket with MIME-or-URI record selection, minimal payload schema, unlinkable token placeholder, lifecycle expiry, write policy, opt-in boundary, and offline-only state
+- **V6544-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic ISO IEC 20248 repair provenance envelope with signed-data schema placeholder, issuer namespace reservation, algorithm declaration, absent trust anchor, verification tri-state, revocation gap, and nonproduction firewall
+- **V6544-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic ESPR textile passport planning board with delegated-act applicability watch, persistent item-key placeholder, material and repair-event schema, role-scoped disclosure reserve, update provenance, portability, and no-market-use firewall
+- **V6544-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT real textile tensile and drape record, specimen metadata, conditioning and unit, instrument calibration, provenance, uncertainty, and zero-row likelihood-refusal adapter
+- **V6544-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR garment alteration safety, ownership and body-measurement privacy, supplier notice, warranty, accessible fitting, remedy, culturally significant garment, affected-party, legal, cultural, data-governance, and Māori-authority reservation
