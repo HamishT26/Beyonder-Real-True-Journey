@@ -1,0 +1,17 @@
+# GHC Family Reflection-Remaster audit
+
+Phase: `v654-v1`
+Owner: Tamar Vey
+
+The audit inventoried 3608 surfaces, scoped 10, and produced 3 issue records. It made no destructive change.
+
+## Dispositions
+
+- `keep_current`: 1
+- `remaster_additive`: 2
+
+## Boundary
+
+Read-only sanitized audit; no file was deleted, renamed, merged, deprecated, or promoted, and no external caller absence is claimed.
+
+Every merge, deprecation, or remaster remains unpromoted until its focused compatibility witness and Method Flow gate pass.

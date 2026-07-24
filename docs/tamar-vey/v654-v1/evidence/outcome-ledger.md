@@ -1,0 +1,62 @@
+# v654-v1 bounded outcome ledger
+
+- **V6541-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic clay-body supplier lot, recipe revision, weigh unit, substitution, quarantine, provenance, and refusal ledger
+- **V6541-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic clay moisture, wedging, drying interval, thickness, humidity uncertainty, cracking hold, and correction board
+- **V6541-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic glaze recipe version, ingredient lot, mass fraction, unit conversion, tolerance, substitution, and refusal ledger
+- **V6541-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic colorant additive label, incompatible material, duplicate name, hazard notice, quarantine, and correction board
+- **V6541-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic glaze test-tile clay body, glaze revision, application method, firing schedule, observation uncertainty, and lineage ledger
+- **V6541-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic kiln load shelf, post, ware position, clearance, weight budget, identifier, and spatial-map refusal board
+- **V6541-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic thermocouple, controller clock, calibration record, offset, uncertainty, stale status, and refusal board
+- **V6541-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic witness-cone pack position, cone number, bend observation, observer uncertainty, image-link refusal, and receipt
+- **V6541-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic firing schedule ramp, hold, target, deviation, interruption, restart refusal, and immutable revision board
+- **V6541-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic kiln door, controller, interlock, power state, unexpected transition, alarm acknowledgement, and release refusal board
+- **V6541-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic ventilation, carbon-monoxide alarm, sensor status, stop-work, evacuation notice, reset authority, and synthetic incident board
+- **V6541-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic respirable crystalline silica task, wet method, local extraction, cleanup method, exposure-authority refusal, and checklist
+- **V6541-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic cooling interval, indicated temperature, door opening hold, unload authorization, thermal-shock risk, and refusal board
+- **V6541-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic reclaim-clay source, unknown additive, contamination class, segregation, reuse decision refusal, and trace ledger
+- **V6541-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic food-contact ware glaze, lead, cadmium, test evidence, lot scope, release refusal, label, and retention board
+- **V6541-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic kiln electrical or gas maintenance request, isolation record, competent-person reservation, return-to-service refusal, and audit board
+- **V6541-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic shard breakage, sharp-edge containment, cleanup state, area release, injury-report authority refusal, and receipt
+- **V6541-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic glaze slurry, wash water, settling container, hazardous ingredient flag, discharge hold, disposal route, and receipt
+- **V6541-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Accessible ceramic firing checklist heading, step state, error summary, noncolour hold, focus order, print order, and structural audit
+- **V6541-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Ceramic workload budget, correction readback, unresolved deviation, stop-work, next-shift owner, acknowledgement, and handover board
+- **V6541-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Fourier heat-conduction field, conductivity tensor, heat capacity, source, boundary flux, energy balance, unit, and observation-firewall board
+- **V6541-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Cahn-Hilliard free energy, chemical potential, mobility, fourth-order evolution, mass conservation, boundary, unit, and observation-firewall board
+- **V6541-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT Allen-Cahn order parameter, free-energy derivative, mobility, dissipation, interface scale, boundary, unit, and observation-firewall board
+- **V6541-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS ceramic kiln-loading, firing deviation, stop-work, workload-budget, correction-readback, and shift-handover proxy
+- **V6541-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS glaze batching, ingredient mismatch, quarantine, correction latency, fatigue flag, harm stop, and handover proxy
+- **V6541-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID OPC UA NamespaceUri, NodeId, browse name, kiln-controller asset binding, stale namespace, privacy, and nonproduction profile
+- **V6541-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID ISO IEC 15459 issuing agency, company prefix, item reference, returnable fixture, duplicate identifier, privacy, and nonproduction profile
+- **V6541-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID Asset Administration Shell identifier, asset information, submodel, semantic id, kiln batch relationship, privacy, and nonproduction profile
+- **V6541-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT Materials Project ceramic phase, composition, structure, provenance, thermodynamic field, uncertainty, account key, and zero-row API refusal adapter
+- **V6541-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR ceramic worker safety, fire electrical gas, food-contact release, waste discharge, material and design rights, remedy, affected-party, legal, cultural, data-governance, and Maori-authority reservation
