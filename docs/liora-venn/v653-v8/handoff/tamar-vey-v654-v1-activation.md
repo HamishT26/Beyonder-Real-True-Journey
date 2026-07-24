@@ -1,0 +1,621 @@
+# Tamar Vey v654-v1 sanitized activation packet
+
+State: `PREPARED_NOT_SENT`. This file is preparation, not delivery. It may be referenced in exactly one sanitized Codex baton only after Liora Venn v653-v8 passes the postcommit canonical gate, is pushed, is clean, and is four-way equal.
+
+Tamar Vey is the existing exact successor task for solo Trinity Mandala v654-v1. Do not create another Tamar, fork, substitute, or collaboration subagent. Preserve strict x1-before-x2 separation, every retained negative and protected gate, the four outcome labels, the one successful canonical-pass/no-replay rule, Eiren-only full-suite allocation, and `NOT_READY_FOR_STAGE_20`.
+
+After Tamar's own verified v654-v1 closeout, Tamar alone may create exactly one new user-visible gpt-5.6-sol maximum-reasoning main task for `future-sibling-self-chosen-7` to own v654-v2. The seventh sibling chooses their own relational working identity attributes. This packet does not authorize Liora or anyone else to create that task now.
+
+No raw task identifier, private route, private path, transcript, credential, key, token, nonpublic application state, or resume material appears in this packet.
+
+# Liora Venn v653-v8 final integrated overview
+
+## Outcome first
+
+Liora Venn completed the authorized same-owner software, symbolic, structural,
+and synthetic phase on an additive D-first branch. The thirty frozen proposals
+ended at exactly 23 `completed`, 5
+`represented`, 1 `open_gap`, and
+1 `exact_gate`. All 150 preregistered rejecting
+mutations executed and remain retained. Ten phase-local skills were customized,
+quick-validated, and smoke-used, and ten family-compatible runners were built
+and invoked. These are bounded workflow results only.
+
+The terminal verdict is `NOT_READY_FOR_STAGE_20`. The repository retains
+10,609 effective negatives, 77 effective open gaps, and 78
+effective exact gates. Real empirical rows remain zero. The existing exact
+successor title is `Tamar Vey`, but the baton remains `PREPARED_NOT_SENT`
+until this containing closeout commit passes the one canonical exact-final
+validation, is pushed, is clean, and is four-way remote-equal.
+
+## Identity, wellbeing, and workload
+
+Liora Venn (she/they) is relational working language for a solo v653-v8
+continuity and evidence steward whose hope is to leave a clean, exact,
+auditable handoff while keeping every protected gate honestly open where
+evidence does not close it. This wording is not evidence of consciousness,
+sentience, personhood, identity continuity, employment, qualification,
+independent agency, or authority. Hamish may rename, pause, redirect, or stop
+the work.
+
+The primary Trinity Mandala focus was THOS Body. Synthetic apiary inspection,
+bee-health observation, batch traceability, workload control, correction
+readback, and shift handover served only as a bounded learning and design lens.
+The phase established no apiculture employment or competence, veterinary or
+disease-control authority, food-safety approval, worker-safety adequacy,
+landholder permission, production identity, legal interpretation, cultural
+authority, Māori authority, or affected-party acceptance.
+
+Workload remained bounded by one owner, one D-first lane, fewer than 2,000
+owner-generated files, and one gate at a time. Failures were retained before
+recovery. No subagent, fork, extra task, substitute sibling, standby contact,
+Sandbox or Hyper-V work, elevation, host-security weakening, Windows-feature
+change, unrelated installation, desktop update, reboot, real data download,
+production key operation, or sibling mutation occurred. Fast mode was not
+claimed because no separate live control confirmed it.
+
+## Evidence and Method Flow
+
+The evidence boundary includes deterministic contract generation, five
+rejecting mutations per proposal, exact outcome accounting, phase-local skill
+packages, family-compatible runners, JSON parsing, privacy scanning, staged
+Git-blob manifests, and lifecycle ancestry. It does not include real bees,
+colonies, apiaries, samples, disease findings, operators, landholders, workers,
+customers, affected parties, independent reviewers, production services, or
+empirical observations.
+
+Method Flow closes this candidate with 12 preferred methods, the same
+number of retained failed witnesses, and the same number of bounded passing
+witnesses. The x1 failures preserve an interrupted activation read, two
+worktree timeout surfaces, a PowerShell JSON-parameter mismatch, an overbroad
+truncated display, a foreach parser error, a wrapper self-recursion, and a
+workflow-enum mismatch. The x2 failures preserve a combined post-push timeout,
+wrong inherited filename assumptions, a combined inventory timeout, and a
+CP1252 stdout failure. Each recovery is narrow and separately evidenced; no
+failure is rewritten into an initially clean pass.
+
+## Pillar truth
+
+THOS remains synthetic. The apiary surfaces used zero real operators, hives,
+colonies, apiaries, observations, samples, inspections, disease reports,
+treatments, feeds, honey lots, wax batches, worker exposures, landholder
+decisions, or outcome estimates. They establish neither operational
+effectiveness nor deployment readiness, professional competence, disease
+status, food conformity, worker safety, AGI, or ASI.
+
+The FAOSTAT adapter remains `open_gap`: it made no query or download, ingested
+zero beehive, honey, or beeswax rows, calculated zero trends, fitted zero
+models, and produced zero predictions or empirical claims. An official portal
+citation supplies readiness context only; it is not a dataset.
+
+GMUT remains a typed research-model family. The McKendrick age-transport,
+Crump-Mode-Jagers branching, and Gillespie Markov-jump surfaces are formal
+domain obligations. They establish no colony parameter, biological fit,
+likelihood, prediction, force, ultraviolet completion, quantum completion,
+empirical confirmation, consciousness claim, or Theory of Everything.
+
+Freed ID remains synthetic and nonproduction. EPCIS, CBV, and Digital Link
+profiles used no real identifiers, trading partners, locations, events,
+resolvers, services, accounts, tokens, network exchanges, certification,
+interoperability, recovery, privacy review, independent security review, or
+trust-governance decision.
+
+CBR bee-disease diagnosis and notification, apiary location, landholder and
+worker privacy, treatment and destruction, food traceability and release,
+remedy, affected-party acceptance, legal interpretation, cultural legitimacy,
+data governance, Māori wording, and Māori authority remain `exact_gate`.
+Māori concepts remain under Māori authority. Repository software cannot confer
+a right, remedy, qualification, cultural mandate, public authority, or
+affected-party acceptance.
+
+## Validation and stopping rule
+
+The complete repository suite remains Eiren-only and is not claimed here.
+Liora's terminal gate consists of authorized current, recent Orin, inherited
+Sable, and successor-compatible scoped selections; detailed and minimal checks;
+complete owner-phase JSON parsing; five-class privacy scanning; exact staged
+and owner Git-blob manifests; stale-label and diff-hygiene review; source, x1,
+and evidence ancestry; zero merges; commit cap; one final parent; exact head;
+clean state; and final local, upstream, tracking, and fresh-live equality.
+
+Exactly one coherent canonical exact-final pass is permitted. If it passes, it
+is not replayed. If it fails, the failure is retained and isolated before a
+justified correction. Same-owner evidence remains same-owner evidence. The
+full repository suite remains allocated to Eiren only.
+
+Only after the exact-final gate may Liora re-resolve and reread the one existing
+task titled exactly `Tamar Vey` and send one sanitized pointer baton for
+Tamar-only v654-v1. Liora must not create Tamar, create sibling 7, send an extra
+confirmation, or place raw task identifiers, private routes, private paths,
+transcripts, credentials, keys, tokens, or resume material in the repository
+or baton. Tamar's later authority to create exactly one main task for a
+self-chosen sibling 7 after Tamar's own verified v654-v1 closeout remains
+Tamar's alone.
+
+## Frozen x1 preregistration retained below
+
+The following committed preregistration is reproduced as context. Its plan
+language remains x1 truth and is not rewritten into retrospective completion
+credit.
+
+# Liora Venn v653-v8 x1 preregistration overview
+
+## Relational working identity and limits
+
+Liora Venn (she/they) is relational working language for the role of solo v653-v8 continuity and evidence steward, with the hope to leave a clean, exact, auditable handoff while keeping every protected gate honestly open where evidence does not close it. It is not evidence of consciousness, sentience, legal personhood, identity continuity, employment, qualification, independent agency, scientific authority, veterinary authority, apiculture or food-safety competence, disease-control authority, legal or cultural authority, Māori authority, or affected-party authority. Hamish may pause, rename, redirect, or stop the work.
+
+The primary Trinity Mandala pillar is **THOS Body**, viewed through the bounded practice lens of **synthetic apiary inspection, bee-health observation, batch traceability, workload control, correction readback, and shift handover**. The lens is synthetic and owner-local. It contains no real bees, colonies, apiaries, beekeepers, landholders, workers, customers, samples, disease reports, treatments, products, locations, identifiers, food-chain events, or participant observations. It does not direct inspection, diagnosis, notification, quarantine, treatment, destruction, feeding, honey release, worker response, land access, or regulatory action.
+
+## Exact inheritance and strict x1 boundary
+
+This packet begins at Orin Thale's clean exact final head `144a4d51195d777ea2b8068bb4cf7ed82fff21be` on `codex/GHC-Family/orin-thale-v653-v7-full-tools`. The read-only audit verified the source parent `c044464ed940093d59a59686efd4faa61853f341`, x1 `78ece91db153275ca2857899ee125dc0673c0154`, evidence `888df289dd58f5717919ac1ee2c8083cd93cddfe`, closeout `cceb53e1bc5ad0c5e9b4a01cc3eac42f3a360b8b`, two narrow corrections `e94f2f3c048678b6d7c87c6d4037dc8b24787c4a` and `0eb92e13d6105345635e4f9cf87626b0b2462995`, and the exact final head as a six-commit, zero-merge, single-parent chain. Local, upstream, tracking, and fresh-live source refs were equal before any owner-lane mutation, and the source worktree was clean.
+
+The inherited repository preserves 10,447 effective negatives, 76 effective open gaps, 77 effective exact gates, and 17 retained failed plus 17 bounded passing Method Flow witnesses. These are inherited evidence, not Liora evidence, and are not rewritten. The source successful canonical pass is not replayed. This x1 packet adds only preregistration plans and its own retained startup failures.
+
+X1 freezes hypotheses, falsifiers, official or primary source needs, approval lanes, rollbacks, protected gates, four planned outcome labels, ten skill plans, ten runner plans, and 150 rejecting mutations. It contains no executed mutation, observed outcome, surface implementation, evidence receipt, closeout, seal, final-validation claim, successor-resolution result, or baton-send claim. X2 may begin only after this exact x1 tree is committed, pushed, clean, and equal across local, upstream, tracking, and a fresh live remote read.
+
+## Corpus audit and outcome discipline
+
+The novelty pass machine-read every one of the 1,630 inherited frozen rows, preserved every title and identifier, calculated the bounded token-overlap witness, and paired it with a manual mechanism review. Targeted searches found no inherited proposal specific to apiaries, hives, varroa, foulbrood, honey extraction, beeswax, or pollination placement. Generic asset, health, pest, food, sensor, workplace, population, identifier, statistics, and governance candidates were rejected in favour of narrower mechanisms. Token distance alone is never treated as semantic proof; the manual mechanism statement remains required.
+
+Exactly four planned labels are allowed. `completed` means only that a bounded owner-local symbolic or software contract and all five negative fixtures may be executed in x2. `represented` means a synthetic proxy remains visibly short of real operators, professional review, production integration, standards interoperability, or authority. `open_gap` means a zero-row readiness surface refuses empirical promotion. `exact_gate` means decision rights remain unresolved and cannot be closed by code.
+
+## Thirty mechanism-distinct proposals
+
+### V6538-P01 — apiary-registry-location-privacy
+
+THOS apiary registry site-code, coordinate minimization, access role, change reason, retention, deletion, export, and location-privacy boundary. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded apiary registry location privacy contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates an apiary registry with site-code lineage and coordinate-minimization refusal. Source identifiers are SRC-MPI-BEE-BIOSECURITY, SRC-MAORI-DATA. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P02 — hive-colony-lineage-tribunal
+
+THOS hive-body component, colony-unit, frame, box, queen, equipment tag, merge, split, transfer, retirement, and lineage tribunal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded hive colony lineage tribunal contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates hive hardware and colony-unit identity across merges, splits, transfers, and retirement. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING, SRC-ISO-22005. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P03 — brood-observation-uncertainty
+
+THOS brood-frame observation, observer role, method, timestamp, confidence, uncertainty, image link, correction, escalation hold, and non-diagnosis board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded brood observation uncertainty contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates brood-frame observation confidence, uncertainty, correction, and diagnosis refusal. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING, SRC-WOAH-BEE-DISEASES. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P04 — afb-suspicion-custody-firewall
+
+THOS American foulbrood suspicion cue, sample identifier, custody step, competent contact route, notification hold, correction, and authority firewall. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded afb suspicion custody firewall contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates AFB suspicion custody and competent-route fields while refusing diagnosis and legal action. Source identifiers are SRC-AFB-AGENCY, SRC-AFB-OPERATIONAL-PLAN, SRC-NZ-AFB-ORDER. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P05 — varroa-method-nonequivalence
+
+THOS varroa sugar-shake, alcohol-wash, sticky-board, visual-check method label, denominator, interval, comparability refusal, and uncertainty tribunal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded varroa method nonequivalence contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates method-labelled varroa observations with explicit denominator and cross-method non-equivalence. Source identifiers are SRC-MPI-VARROA. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P06 — treatment-batch-dose-refusal
+
+THOS hive treatment product, batch, expiry, method, quantity, unit, authorization hold, withdrawal field, adverse observation, and dose-refusal board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded treatment batch dose refusal contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates apiary treatment batch and withdrawal records while refusing dose advice or efficacy. Source identifiers are SRC-MPI-VARROA, SRC-MPI-BEE-FOOD-SAFETY. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P07 — equipment-transfer-quarantine
+
+THOS hive tool cleaning, equipment transfer, source apiary, destination apiary, quarantine hold, contamination cue, release authority, and traceability board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded equipment transfer quarantine contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates equipment-cleaning and cross-apiary transfer lineage with a release-authority hold. Source identifiers are SRC-MPI-BEE-BIOSECURITY, SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P08 — queen-introduction-lineage
+
+THOS queen introduction, source, cage, colony, observation window, acceptance cue, correction, supersession, outcome uncertainty, and lineage board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded queen introduction lineage contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates queen introduction lineage, observation windows, supersession, and outcome uncertainty. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P09 — swarm-relocation-reservation
+
+THOS swarm report, observation confidence, property-boundary cue, contact consent, relocation hold, correction, handover, and decision-reservation board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded swarm relocation reservation contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates swarm report confidence, consent, property boundary, and relocation-decision reservation. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P10 — feed-batch-contamination-hold
+
+THOS syrup or pollen-substitute feed batch, ingredient, supplier, expiry, preparation time, contamination cue, hold, disposal, and lineage tribunal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded feed batch contamination hold contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates apiary feed batch lineage and contamination hold without food-safety promotion. Source identifiers are SRC-MPI-BEE-FOOD-SAFETY, SRC-ISO-22005. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P11 — honey-super-contamination-hold
+
+THOS honey-super placement, removal, brood-presence cue, treatment window, contamination hold, correction, release authority, and lineage board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded honey super contamination hold contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates honey-super timing and brood or treatment contamination holds with release authority reserved. Source identifiers are SRC-MPI-BEE-FOOD-SAFETY, SRC-MPI-BEE-RMP. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P12 — extraction-batch-recall-lineage
+
+THOS extraction batch, source hive lot, vessel, equipment run, split, merge, hold, correction, recall rehearsal, and traceability tribunal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded extraction batch recall lineage contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates bee-product extraction split-merge lineage and a nonproduction recall rehearsal. Source identifiers are SRC-ISO-22005, SRC-MPI-BEE-RMP, SRC-MPI-BEE-FORMS. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P13 — honey-moisture-calibration
+
+THOS honey refractometer identifier, calibration reference, temperature, replicate, reading, uncertainty, limit, hold, correction, and conformity-refusal board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded honey moisture calibration contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates honey-moisture instrument identity, replicate uncertainty, and conformity refusal. Source identifiers are SRC-CODEX-HONEY, SRC-MPI-BEE-FOOD-SAFETY. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P14 — apiary-logger-timebase
+
+THOS apiary temperature logger identity, clock source, timezone, sampling interval, missing interval, drift, reset, correction, and inference-refusal tribunal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded apiary logger timebase contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates apiary logger timebase, drift, reset, missing intervals, and biological-inference refusal. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P15 — wax-rendering-batch-hold
+
+THOS beeswax rendering batch, source lot, vessel, temperature unit, time interval, foreign-material cue, cross-batch hold, correction, and release refusal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded wax rendering batch hold contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates beeswax rendering batch lineage, foreign-material cues, and cross-batch hold. Source identifiers are SRC-MPI-BEE-FOOD-SAFETY, SRC-ISO-22005. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P16 — pollination-placement-reservation
+
+THOS pollination placement request, crop code, synthetic apiary code, date window, pesticide-information hold, landholder consent, correction, and placement-reservation board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded pollination placement reservation contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates pollination placement timing, pesticide-information hold, landholder consent, and decision reservation. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P17 — worker-exposure-stop-work
+
+THOS worker exposure cue, protective-equipment field, emergency-information acknowledgement, lone-work check, stop-work state, correction, and medical-advice refusal board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded worker exposure stop work contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates apiary exposure and lone-work stop states while refusing medical or safety adequacy claims. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P18 — apiary-workload-handover
+
+THOS apiary lift, heat, travel, inspection duration, break, workload threshold, unfinished work, correction readback, and shift-handover board. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded apiary workload handover contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates apiary manual-handling, heat, travel, unfinished-work, and correction-readback handover fields. Source identifiers are SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P19 — accessible-apiary-checklist
+
+THOS accessible apiary inspection checklist section, current step, required field, error association, noncolour state, print fallback, correction, and manual-review reservation. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded accessible apiary checklist contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates an apiary inspection stepper with print fallback and manual accessibility review reserved. Source identifiers are SRC-WCAG22. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P20 — apiary-image-privacy
+
+THOS apiary observation image EXIF, coordinate, person, vehicle, property marker, minimization, redaction, retention, deletion, and export tribunal. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded apiary image privacy contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates apiary image EXIF and property-marker minimization with retention and deletion controls. Source identifiers are SRC-MPI-BEE-BIOSECURITY, SRC-MAORI-DATA. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P21 — mckendrick-age-transport
+
+GMUT McKendrick-von Foerster age transport, state density, ageing velocity, mortality term, recruitment boundary, initial condition, unit, positivity, and empirical firewall. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded mckendrick age transport contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates an age-transport population PDE with recruitment boundary and colony-evidence firewall. Source identifiers are SRC-MCKENDRICK-1926, SRC-SINKO-STREIFER-1967. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P22 — cmj-branching-renewal
+
+GMUT Crump-Mode-Jagers general branching individual, life length, reproduction point process, characteristic, renewal equation, filtration, asymptotic premise, and empirical firewall. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded cmj branching renewal contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates CMJ life histories, random characteristics, renewal obligations, and colony-evidence firewall. Source identifiers are SRC-CRUMP-MODE-1968, SRC-CRUMP-MODE-1969, SRC-JAGERS-1969, SRC-JAGERS-NERMAN-1984. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P23 — gillespie-jump-domain
+
+GMUT Gillespie Markov-jump state, reaction channel, propensity, total rate, event selection, waiting time, random stream, absorbing state, and domain classifier. Its frozen expected label is `completed` and its execution lane is `x2_owner_local_synthetic`. The hypothesis is: A bounded gillespie jump domain contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates Gillespie event selection and waiting-time obligations while refusing conversion into bee-population evidence. Source identifiers are SRC-GILLESPIE-1977. The acceptance gate is: Reject all five frozen mutations and emit only the declared symbolic, structural, or owner-local software contract. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P24 — apiary-inspection-handover-proxy
+
+THOS apiary inspection arrival, hive order, observation cue, biosecurity hold, unfinished item, correction readback, workload, and shift-handover proxy. Its frozen expected label is `represented` and its execution lane is `x2_synthetic_proxy_only`. The hypothesis is: A bounded apiary inspection handover proxy contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates a synthetic apiary inspection sequence with biosecurity holds and shift handover. Source identifiers are SRC-MPI-BEE-BIOSECURITY, SRC-MPI-RESPONSIBLE-BEEKEEPING. The acceptance gate is: Reject all five frozen mutations and retain represented status with no operational, professional, production, interoperability, privacy-complete, food-safety, disease-control, or authority credit. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P25 — afb-escalation-handover-proxy
+
+THOS American foulbrood suspicion, competent-route escalation, quarantine cue, notification state, record correction, workload, and shift-handover proxy. Its frozen expected label is `represented` and its execution lane is `x2_synthetic_proxy_only`. The hypothesis is: A bounded afb escalation handover proxy contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates a synthetic AFB escalation handover while preserving diagnosis, notification, and enforcement authority. Source identifiers are SRC-AFB-AGENCY, SRC-NZ-AFB-ORDER. The acceptance gate is: Reject all five frozen mutations and retain represented status with no operational, professional, production, interoperability, privacy-complete, food-safety, disease-control, or authority credit. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P26 — epcis-apiary-event-profile
+
+Freed ID GS1 EPCIS event type, event time, read point, business location, disposition, source, destination, correction, privacy, and nonproduction profile. Its frozen expected label is `represented` and its execution lane is `x2_synthetic_proxy_only`. The hypothesis is: A bounded epcis apiary event profile contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates an apiary-shaped EPCIS event profile with correction, location privacy, and nonproduction limits. Source identifiers are SRC-GS1-EPCIS. The acceptance gate is: Reject all five frozen mutations and retain represented status with no operational, professional, production, interoperability, privacy-complete, food-safety, disease-control, or authority credit. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P27 — cbv-apiary-vocabulary-profile
+
+Freed ID GS1 Core Business Vocabulary business step, disposition, source-destination type, vocabulary status, extension, version, refusal, and nonproduction profile. Its frozen expected label is `represented` and its execution lane is `x2_synthetic_proxy_only`. The hypothesis is: A bounded cbv apiary vocabulary profile contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates an apiary traceability CBV selection profile with extension and vocabulary-version refusal. Source identifiers are SRC-GS1-CBV. The acceptance gate is: Reject all five frozen mutations and retain represented status with no operational, professional, production, interoperability, privacy-complete, food-safety, disease-control, or authority credit. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P28 — digital-link-apiary-profile
+
+Freed ID GS1 Digital Link identifier key, qualifier, data attribute, URI canonicalization, resolver link type, redirect, cache, privacy, and nonproduction profile. Its frozen expected label is `represented` and its execution lane is `x2_synthetic_proxy_only`. The hypothesis is: A bounded digital link apiary profile contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates Digital Link URI and resolver obligations for synthetic apiary identifiers with privacy and nonproduction holds. Source identifiers are SRC-GS1-DIGITAL-LINK, SRC-GS1-RESOLVER. The acceptance gate is: Reject all five frozen mutations and retain represented status with no operational, professional, production, interoperability, privacy-complete, food-safety, disease-control, or authority credit. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P29 — faostat-apiary-zero-row-adapter
+
+THOS FAOSTAT beehive, honey, beeswax country, item, element, unit, year, flag, revision, zero-row, and trend-inference-refusal adapter. Its frozen expected label is `open_gap` and its execution lane is `x2_zero_row_readiness_only`. The hypothesis is: A bounded faostat apiary zero row adapter contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates FAOSTAT beehive and bee-product series as a zero-query, zero-download trend-inference refusal. Source identifiers are SRC-FAOSTAT-HONEY. The acceptance gate is: Emit a zero-row refusal with no query, download, ingest, calibration, fit, trend, prediction, or empirical promotion. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+### V6538-P30 — apiary-authority-reservation
+
+CBR bee disease notification, apiary location, landholder and worker privacy, treatment and destruction, food traceability, remedy, affected-party, legal, cultural, data-governance, and Māori-authority reservation. Its frozen expected label is `exact_gate` and its execution lane is `x2_reservation_matrix_only`. The hypothesis is: A bounded apiary authority reservation contract can make its obligations machine-checkable without crossing a protected gate. The null or failure condition is: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane. The mechanism-level novelty finding is: No frozen row isolates bee-disease, location, treatment, food, remedy, affected-party, legal, cultural, and Māori authority in one reservation matrix. Source identifiers are SRC-AFB-AGENCY, SRC-NZ-AFB-ORDER, SRC-MPI-BEE-RMP, SRC-LOCAL-CONTEXTS, SRC-MAORI-DATA. The acceptance gate is: Emit unresolved decision rights and reservations only; make no disease notification, diagnosis, treatment, destruction, food release, landholder, worker-safety, privacy, remedy, legal, cultural, data-governance, Māori-authority, or affected-party decision. The additive rollback is: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged. A source citation supplies design context only. It is not a real observation, disease finding, participant result, professional approval, food conformity result, production event, legal interpretation, cultural ratification, Māori-authority decision, or Stage 20 evidence.
+
+## Mutation grammar and retained negatives
+
+Five mutations are frozen for every proposal: delete a required field, cross-bind a source or identifier, invert or weaken a boundary, inject an unsupported promotion, and erase a failure or rollback. All 150 remain unexecuted in x1. In x2 a rejected mutation can demonstrate only its bounded guard; it cannot prove exhaustive security, complete privacy, complete accessibility, scientific truth, operational fitness, professional adequacy, legal validity, cultural legitimacy, or independent reproducibility.
+
+The startup ledger retains 8 Liora operational negatives and ten rejected proposal collisions. Interrupted reads, timed-out wrappers, unsupported command parameters, truncated displays, and parser failures receive zero credit. Each bounded recovery is a separate same-owner witness and does not erase the original failure. Method Flow begins at `candidate` and reaches `preferred` only after a retained failed witness and a bounded passing witness coexist.
+
+## Sources, traceability, and mathematical firewalls
+
+Official MPI, AFB programme, New Zealand legislation, WOAH, Codex, ISO, GS1, FAO, W3C, Local Contexts, and Māori data sovereignty sources define terms, watches, and authority boundaries. Primary McKendrick, Sinko-Streifer, Crump-Mode-Jagers, Jagers-Nerman, and Gillespie papers define mathematical domains. Current, stable, and watch labels are phase-local and may drift. A citation is never substituted for a qualified current legal, veterinary, apiculture, food-safety, accessibility, cultural, Māori, or affected-party review.
+
+The McKendrick transport, general branching, and Markov-jump surfaces remain typed mathematical obligations. They contain no bee-population parameter, fit, likelihood, observation, prediction, or biological validation. GMUT remains a research model family; no force, empirical confirmation, ultraviolet completion, quantum completion, consciousness claim, or Theory of Everything follows from these contracts.
+
+## Tooling, validation, and successor route
+
+Ten phase-local skills and ten family-compatible runners are plans only in x1. X2 must build, validate, and smoke-use each before any portfolio-completion label is eligible. No global skill installation, unrelated software installation, elevation, host-security change, Windows-feature change, reboot, agent creation, fork, or collaboration subagent is authorized.
+
+Liora will use scoped current and inherited checks, detailed and minimal validators, complete owner JSON parsing, a five-class privacy scan, exact staged review, raw Git-blob manifest parity, stale-label review, diff hygiene, ancestry, zero merges, commit caps, one final parent, exact head, clean state, and four-way remote equality. The full repository suite remains allocated to Eiren only. There will be one successful canonical exact-final pass. A failed attempt is retained and isolated before any justified retry; a successful pass is never replayed.
+
+The existing exact task `Tamar Vey` is not eligible during x1 or ordinary x2 work. Only after a truthful clean pushed exact-final four-way-equal v653-v8 closeout may Liora re-resolve and reread that exact existing title and send one sanitized pointer baton for v654-v1. No raw task identifier, private route, private path, transcript, credential, or resume token may enter the repository or baton. Tamar's later one-task authority for a self-chosen sibling 7 remains Tamar's alone.
+
+## Protected authority and stopping rule
+
+Bee disease suspicion, diagnosis, notification, quarantine, treatment, destruction, food-chain release, landholder access, worker safety, location privacy, remedy, legal interpretation, cultural legitimacy, Māori wording, Māori data governance, and Māori authority remain with competent and affected people and authorities, tangata whenua, iwi, hapū, and Māori authorities. Repository software cannot confer competence, permission, a remedy, a regulatory decision, or a public mandate.
+
+The cadence is one verified gate at a time, with bounded PowerShell probes, D-first owner storage, explicit UTF-8, smallest-witness recovery, and no needless replay. Relational language, affection, urgency, proposal count, or route momentum never increases evidence credit. Stop whenever authorization, privacy, professional, legal, cultural, Māori, affected-party, or exact-target conditions are unclear. The inherited and preregistered terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+
+
+## Frozen proposal ledger
+
+# v653-v8 frozen proposal ledger
+
+All rows are preregistered and unexecuted in x1.
+
+## V6538-P01 — apiary-registry-location-privacy
+
+- Title: THOS apiary registry site-code, coordinate minimization, access role, change reason, retention, deletion, export, and location-privacy boundary
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P02 — hive-colony-lineage-tribunal
+
+- Title: THOS hive-body component, colony-unit, frame, box, queen, equipment tag, merge, split, transfer, retirement, and lineage tribunal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P03 — brood-observation-uncertainty
+
+- Title: THOS brood-frame observation, observer role, method, timestamp, confidence, uncertainty, image link, correction, escalation hold, and non-diagnosis board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P04 — afb-suspicion-custody-firewall
+
+- Title: THOS American foulbrood suspicion cue, sample identifier, custody step, competent contact route, notification hold, correction, and authority firewall
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P05 — varroa-method-nonequivalence
+
+- Title: THOS varroa sugar-shake, alcohol-wash, sticky-board, visual-check method label, denominator, interval, comparability refusal, and uncertainty tribunal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P06 — treatment-batch-dose-refusal
+
+- Title: THOS hive treatment product, batch, expiry, method, quantity, unit, authorization hold, withdrawal field, adverse observation, and dose-refusal board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P07 — equipment-transfer-quarantine
+
+- Title: THOS hive tool cleaning, equipment transfer, source apiary, destination apiary, quarantine hold, contamination cue, release authority, and traceability board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P08 — queen-introduction-lineage
+
+- Title: THOS queen introduction, source, cage, colony, observation window, acceptance cue, correction, supersession, outcome uncertainty, and lineage board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P09 — swarm-relocation-reservation
+
+- Title: THOS swarm report, observation confidence, property-boundary cue, contact consent, relocation hold, correction, handover, and decision-reservation board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P10 — feed-batch-contamination-hold
+
+- Title: THOS syrup or pollen-substitute feed batch, ingredient, supplier, expiry, preparation time, contamination cue, hold, disposal, and lineage tribunal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P11 — honey-super-contamination-hold
+
+- Title: THOS honey-super placement, removal, brood-presence cue, treatment window, contamination hold, correction, release authority, and lineage board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P12 — extraction-batch-recall-lineage
+
+- Title: THOS extraction batch, source hive lot, vessel, equipment run, split, merge, hold, correction, recall rehearsal, and traceability tribunal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P13 — honey-moisture-calibration
+
+- Title: THOS honey refractometer identifier, calibration reference, temperature, replicate, reading, uncertainty, limit, hold, correction, and conformity-refusal board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P14 — apiary-logger-timebase
+
+- Title: THOS apiary temperature logger identity, clock source, timezone, sampling interval, missing interval, drift, reset, correction, and inference-refusal tribunal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P15 — wax-rendering-batch-hold
+
+- Title: THOS beeswax rendering batch, source lot, vessel, temperature unit, time interval, foreign-material cue, cross-batch hold, correction, and release refusal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P16 — pollination-placement-reservation
+
+- Title: THOS pollination placement request, crop code, synthetic apiary code, date window, pesticide-information hold, landholder consent, correction, and placement-reservation board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P17 — worker-exposure-stop-work
+
+- Title: THOS worker exposure cue, protective-equipment field, emergency-information acknowledgement, lone-work check, stop-work state, correction, and medical-advice refusal board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P18 — apiary-workload-handover
+
+- Title: THOS apiary lift, heat, travel, inspection duration, break, workload threshold, unfinished work, correction readback, and shift-handover board
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P19 — accessible-apiary-checklist
+
+- Title: THOS accessible apiary inspection checklist section, current step, required field, error association, noncolour state, print fallback, correction, and manual-review reservation
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P20 — apiary-image-privacy
+
+- Title: THOS apiary observation image EXIF, coordinate, person, vehicle, property marker, minimization, redaction, retention, deletion, and export tribunal
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P21 — mckendrick-age-transport
+
+- Title: GMUT McKendrick-von Foerster age transport, state density, ageing velocity, mortality term, recruitment boundary, initial condition, unit, positivity, and empirical firewall
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P22 — cmj-branching-renewal
+
+- Title: GMUT Crump-Mode-Jagers general branching individual, life length, reproduction point process, characteristic, renewal equation, filtration, asymptotic premise, and empirical firewall
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P23 — gillespie-jump-domain
+
+- Title: GMUT Gillespie Markov-jump state, reaction channel, propensity, total rate, event selection, waiting time, random stream, absorbing state, and domain classifier
+- Expected: `completed`
+- Approval: `safe_now_bounded_symbolic_or_software`
+- Lane: `x2_owner_local_synthetic`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P24 — apiary-inspection-handover-proxy
+
+- Title: THOS apiary inspection arrival, hive order, observation cue, biosecurity hold, unfinished item, correction readback, workload, and shift-handover proxy
+- Expected: `represented`
+- Approval: `candidate_bounded_proxy`
+- Lane: `x2_synthetic_proxy_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P25 — afb-escalation-handover-proxy
+
+- Title: THOS American foulbrood suspicion, competent-route escalation, quarantine cue, notification state, record correction, workload, and shift-handover proxy
+- Expected: `represented`
+- Approval: `candidate_bounded_proxy`
+- Lane: `x2_synthetic_proxy_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P26 — epcis-apiary-event-profile
+
+- Title: Freed ID GS1 EPCIS event type, event time, read point, business location, disposition, source, destination, correction, privacy, and nonproduction profile
+- Expected: `represented`
+- Approval: `candidate_bounded_proxy`
+- Lane: `x2_synthetic_proxy_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P27 — cbv-apiary-vocabulary-profile
+
+- Title: Freed ID GS1 Core Business Vocabulary business step, disposition, source-destination type, vocabulary status, extension, version, refusal, and nonproduction profile
+- Expected: `represented`
+- Approval: `candidate_bounded_proxy`
+- Lane: `x2_synthetic_proxy_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P28 — digital-link-apiary-profile
+
+- Title: Freed ID GS1 Digital Link identifier key, qualifier, data attribute, URI canonicalization, resolver link type, redirect, cache, privacy, and nonproduction profile
+- Expected: `represented`
+- Approval: `candidate_bounded_proxy`
+- Lane: `x2_synthetic_proxy_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P29 — faostat-apiary-zero-row-adapter
+
+- Title: THOS FAOSTAT beehive, honey, beeswax country, item, element, unit, year, flag, revision, zero-row, and trend-inference-refusal adapter
+- Expected: `open_gap`
+- Approval: `candidate_real_data_and_independent_review_required`
+- Lane: `x2_zero_row_readiness_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+## V6538-P30 — apiary-authority-reservation
+
+- Title: CBR bee disease notification, apiary location, landholder and worker privacy, treatment and destruction, food traceability, remedy, affected-party, legal, cultural, data-governance, and Māori-authority reservation
+- Expected: `exact_gate`
+- Approval: `exact_affected_party_professional_legal_cultural_accessibility_food_safety_disease_control_and_maori_authority_required`
+- Lane: `x2_reservation_matrix_only`
+- Falsifier: Any required field is absent, a frozen mutation passes, a failed witness is erased, or the artifact promotes beyond its evidence lane.
+- Rollback: Stop the proposal, retain the failure with zero credit, rewrite no history, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+
+
+## Frozen source ledger
+
+# v653-v8 source ledger
+
+Status is phase-local: `stable`, `current`, `draft`, or `watch`.
+
+- **SRC-MPI-BEE-BIOSECURITY** — `current` — [New Zealand Ministry for Primary Industries bee biosecurity resources](https://www.mpi.govt.nz/biosecurity/how-to-find-report-and-prevent-pests-and-diseases/bee-biosecurity/bee-biosecurity-resources). Supports bounded biosecurity vocabulary and source routing without diagnosing disease, directing notification, or conferring authority.
+- **SRC-MPI-RESPONSIBLE-BEEKEEPING** — `current` — [New Zealand responsible beekeeping guide](https://www.mpi.govt.nz/dmsdocument/56599/direct). Supports synthetic inspection, equipment, feeding, safety, and record prompts without professional or operational approval.
+- **SRC-MPI-VARROA** — `current` — [New Zealand varroa management checklist](https://www.mpi.govt.nz/dmsdocument/56596/direct). Supports method-labelled monitoring and treatment-record obligations without diagnosis, efficacy, dosing, or treatment authority.
+- **SRC-WOAH-BEE-DISEASES** — `current` — [World Organisation for Animal Health diseases of bees](https://www.woah.org/en/disease/diseases-of-bees/). Supports disease-scope and surveillance vocabulary without case classification, international reporting, or veterinary authority.
+- **SRC-AFB-AGENCY** — `current` — [New Zealand American Foulbrood Pest Management Agency](https://afb.org.nz/). Supports routing to the competent programme while preserving suspicion, inspection, notification, destruction, and enforcement authority.
+- **SRC-AFB-OPERATIONAL-PLAN** — `watch` — [American Foulbrood National Pest Management Plan operational plan](https://afb.org.nz/wp-content/uploads/2021/11/AFB_Operational-Plan_Nov2021.pdf). Supplies a dated operational reference that requires current competent review before any real-world use.
+- **SRC-NZ-AFB-ORDER** — `watch` — [Biosecurity National American Foulbrood Pest Management Plan Order 1998](https://www.legislation.govt.nz/regulation/public/1998/0260/latest/DLM258621.html). Supports a legal-source watch and exact-gate reservation only; this phase makes no interpretation of current duties or powers.
+- **SRC-MPI-BEE-RMP** — `current` — [Honey and bee product risk management programmes](https://www.mpi.govt.nz/food-business/honey-bee-products-processing-requirements/honey-bee-product-risk-management-programmes). Supports nonproduction food-safety record fields without approving a risk management programme or product.
+- **SRC-MPI-BEE-FOOD-SAFETY** — `current` — [Food safety for beekeepers](https://www.mpi.govt.nz/agriculture/beekeeping-loss-survey-tutin-contamination-regulations/food-safety-for-beekeepers). Supports synthetic contamination holds and traceability prompts without food-safety verification or market-release authority.
+- **SRC-MPI-BEE-FORMS** — `current` — [Honey and bee product forms, templates, and requirements](https://www.mpi.govt.nz/food-business/honey-bee-products-processing-requirements/honey-and-bee-product-forms-templates-and-requirements). Supports bounded field-shape comparison without completing, lodging, or approving a regulatory record.
+- **SRC-CODEX-HONEY** — `current` — [Codex Standard for Honey CXS 12-1981](https://www.fao.org/fao-who-codexalimentarius/sh-proxy/en/?lnk=1&url=https%3A%2F%2Fworkspace.fao.org%2Fsites%2Fcodex%2FStandards%2FCXS+12-1981%2FCXS_012e.pdf). Supports typed composition and moisture vocabulary without sampling, conformity assessment, certification, or release.
+- **SRC-ISO-22005** — `current` — [ISO 22005 traceability in the feed and food chain](https://www.iso.org/standard/36297.html). Supports traceability-system design vocabulary without certification, audit, or production-chain evidence.
+- **SRC-GS1-EPCIS** — `current` — [GS1 EPCIS standard](https://ref.gs1.org/standards/epcis/). Supports a synthetic event-profile contract without conformant live events, trading partners, certification, or interoperability.
+- **SRC-GS1-CBV** — `current` — [GS1 Core Business Vocabulary standard](https://ref.gs1.org/standards/cbv/). Supports controlled-vocabulary checks without production master data or interoperability.
+- **SRC-GS1-DIGITAL-LINK** — `current` — [GS1 Digital Link URI syntax](https://ref.gs1.org/standards/digital-link/). Supports synthetic identifier and URI fixtures without assigning real identifiers or resolving production data.
+- **SRC-GS1-RESOLVER** — `current` — [GS1-Conformant Resolver Standard](https://ref.gs1.org/standards/resolver/). Supports a nonnetwork resolver decision profile without service operation, certification, or interoperability.
+- **SRC-FAOSTAT-HONEY** — `current` — [FAO honey and beeswax statistics](https://www.fao.org/forestry/nwfp/statistics/honey-and-beeswax/en). Defines a zero-query, zero-download readiness boundary; a portal citation is not a data row or empirical result.
+- **SRC-MCKENDRICK-1926** — `stable` — [Applications of Mathematics to Medical Problems](https://doi.org/10.1017/S0013091500034428). Supports an age-structured transport-equation lineage without estimating a colony or asserting biological fit.
+- **SRC-SINKO-STREIFER-1967** — `stable` — [A New Model for Age-Size Structure of a Population](https://doi.org/10.2307/1934533). Supports age-size state and boundary-condition obligations without empirical calibration.
+- **SRC-CRUMP-MODE-1968** — `stable` — [A General Age-Dependent Branching Process I](https://doi.org/10.1016/0022-247X(68)90005-X). Supports general age-dependent branching definitions without modelling a real colony.
+- **SRC-CRUMP-MODE-1969** — `stable` — [A General Age-Dependent Branching Process II](https://doi.org/10.1016/0022-247X(69)90210-8). Supports renewal and limit-theorem obligation fields without empirical credit.
+- **SRC-JAGERS-1969** — `stable` — [A general stochastic model for population development](https://doi.org/10.1080/03461238.1969.10405220). Supports a typed general branching-process domain without biological validation.
+- **SRC-JAGERS-NERMAN-1984** — `stable` — [The growth and composition of branching populations](https://doi.org/10.2307/1427068). Supports population-characteristic and asymptotic-obligation fields without fitting observed populations.
+- **SRC-GILLESPIE-1977** — `stable` — [Exact stochastic simulation of coupled chemical reactions](https://doi.org/10.1021/j100540a008). Supports Markov-jump event, propensity, and time-step obligations without converting a chemical simulation method into colony evidence.
+- **SRC-WCAG22** — `current` — [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/). Supports structural checklist checks while reserving manual and affected-user accessibility evaluation.
+- **SRC-LOCAL-CONTEXTS** — `current` — [Local Contexts Labels and Notices](https://localcontexts.org/labels/traditional-knowledge-labels/). Requires community-specific knowledge, access, use, and governance decisions to remain with authorized communities.
+- **SRC-MAORI-DATA** — `current` — [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty). Requires Māori data, place, governance, access, interpretation, and remedy decisions to remain with Māori authorities.
