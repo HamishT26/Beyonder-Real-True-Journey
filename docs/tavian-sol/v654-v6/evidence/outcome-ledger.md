@@ -1,0 +1,62 @@
+# v654-v6 bounded outcome ledger
+
+- **V6546-P01** — `completed` — 5/5 synthetic mutations rejected.
+  - Digital-preservation package inventory with object identifier, payload path, byte length, checksum algorithm, manifest root, missing-file refusal, and custody hold
+- **V6546-P02** — `completed` — 5/5 synthetic mutations rejected.
+  - BagIt package tribunal with version declaration, tag-file encoding, payload manifest, tag manifest, fetch reservation, path safety, and incomplete-bag refusal
+- **V6546-P03** — `completed` — 5/5 synthetic mutations rejected.
+  - Fixity verification ledger with algorithm status, expected and observed digest, byte length, event time, retry boundary, mismatch quarantine, and repair nonauthorization
+- **V6546-P04** — `completed` — 5/5 synthetic mutations rejected.
+  - File-format identification record with tool and signature version, media-type and registry candidates, confidence placeholder, conflicting-result lineage, and format-claim refusal
+- **V6546-P05** — `completed` — 5/5 synthetic mutations rejected.
+  - Digital-format risk register with format and version, dependency graph, rendering requirement, openness signal, obsolescence placeholder, review interval, and migration hold
+- **V6546-P06** — `completed` — 5/5 synthetic mutations rejected.
+  - Preservation migration-event lineage with source and destination identifiers, tool and container version, option set, before-and-after fixity, loss note, and publication hold
+- **V6546-P07** — `completed` — 5/5 synthetic mutations rejected.
+  - Emulation-environment manifest with emulator and firmware placeholders, peripheral graph, dependency hashes, clock mode, licence reservation, and launch refusal
+- **V6546-P08** — `completed` — 5/5 synthetic mutations rejected.
+  - Preservation-replica topology with replica identifier, storage medium, fault domain, encryption placeholder, last-sync state, independence signal, and deletion hold
+- **V6546-P09** — `completed` — 5/5 synthetic mutations rejected.
+  - Repository scrub schedule with object-set Merkle root, interval, complete-or-sampled mode, mismatch count, rerun boundary, repair authority reservation, and silent-success refusal
+- **V6546-P10** — `completed` — 5/5 synthetic mutations rejected.
+  - Write-protected media-capture record with device and interface, protection mode, source-medium identifier, imaging parameters, output fixity, anomaly log hash, and ingest hold
+- **V6546-P11** — `completed` — 5/5 synthetic mutations rejected.
+  - Preservation timestamp normalization with original lexical value, parser rule, UTC offset, precision, uncertainty, clock source, reversible rendering, and ordering refusal
+- **V6546-P12** — `completed` — 5/5 synthetic mutations rejected.
+  - Archive path-encoding tribunal with original byte representation, Unicode normalization form, case-fold signal, reserved-name collision, reversible mapping, and overwrite refusal
+- **V6546-P13** — `completed` — 5/5 synthetic mutations rejected.
+  - PREMIS and W3C PROV crosswalk with source semantic unit, target predicate, mapping version, cardinality, lossy flag, authority gap, and export refusal
+- **V6546-P14** — `completed` — 5/5 synthetic mutations rejected.
+  - Digital-object rights applicability board with source statement, licence identifier, jurisdiction placeholder, embargo interval, orphan-work gap, permitted-action reservation, and access hold
+- **V6546-P15** — `completed` — 5/5 synthetic mutations rejected.
+  - Preservation-metadata personal-data minimization ledger with field purpose, sensitivity class, retention basis placeholder, redaction lineage, disclosure boundary, and deletion nonauthorization
+- **V6546-P16** — `completed` — 5/5 synthetic mutations rejected.
+  - Encrypted preservation-container custody record with container format, cipher-suite placeholder, key absence, escrow reservation, ciphertext fixity, unlock attempts, and decryption refusal
+- **V6546-P17** — `completed` — 5/5 synthetic mutations rejected.
+  - Audiovisual preservation-derivative manifest with source bitstream, codec and container, parameter set, frame or sample count, colour and channel semantics, fixity, and quality-claim refusal
+- **V6546-P18** — `completed` — 5/5 synthetic mutations rejected.
+  - Geospatial preservation record with coordinate-reference-system identifier, axis order, coordinate epoch, extent, no-data semantics, sidecar binding, and transform hold
+- **V6546-P19** — `completed` — 5/5 synthetic mutations rejected.
+  - Database logical-dump preservation manifest with engine and version, schema hash, table and row-count ledger, collation, transaction boundary, dependency set, and restore-claim refusal
+- **V6546-P20** — `completed` — 5/5 synthetic mutations rejected.
+  - Software-source preservation package with commit-object graph, submodule and vendored dependency manifest, build-environment hash, licence map, generated-artifact boundary, and reproducibility hold
+- **V6546-P21** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT bit-rot hazard field with storage-medium state, latent-error-rate symbol, inspection interval, redundancy relation, unit and domain typing, and observation firewall
+- **V6546-P22** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT migration-loss transform with representation space, declared invariant set, tolerance symbol, non-invertibility marker, uncertainty term, and empirical-validation firewall
+- **V6546-P23** — `completed` — 5/5 synthetic mutations rejected.
+  - GMUT digital-object dependency survivability graph with runtime nodes, version constraints, missing-edge state, minimal-environment candidate, nonuniqueness, and proof firewall
+- **V6546-P24** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS digital-preservation incident triage proxy with detection source, fixity failure, quarantine state, work queue, fatigue limit, two-person readback, and shift handover
+- **V6546-P25** — `represented` — 5/5 synthetic mutations rejected.
+  - THOS preservation backlog proxy with package risk class, dependency blocker, work-in-progress ceiling, pause checkpoint, stop-work placeholder, responsibility transfer, and next-shift acknowledgement
+- **V6546-P26** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic W3C VC 2.0 preservation-exception credential with evidence graph, holder-binding gap, credential-status omission, selective-disclosure absence, revocation reserve, and offline nonproduction boundary
+- **V6546-P27** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic RFC 8392 CWT checksum-challenge envelope with COSE-type placeholder, payload-manifest root, freshness window, verifier gap, detached-key absence, and offline-only rejection
+- **V6546-P28** — `represented` — 5/5 synthetic mutations rejected.
+  - Freed ID synthetic W3C PROV preservation-agent event mapping with entity, activity, agent placeholder, qualified role, source statement, authority gap, correction lineage, and no-interoperability claim
+- **V6546-P29** — `open_gap` — 5/5 synthetic mutations rejected.
+  - GMUT real digital-repository fixity and repair event series with object identifiers, algorithm versions, storage domains, missingness, clock provenance, uncertainty, and zero-row likelihood-refusal adapter
+- **V6546-P30** — `exact_gate` — 5/5 synthetic mutations rejected.
+  - CBR Indigenous and culturally sensitive digital-collection reservation for ownership, custody, access, retention, deletion, disclosure, return, repatriation, remedy, affected-community, legal, data-governance, and Māori authority
