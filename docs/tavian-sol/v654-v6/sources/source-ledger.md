@@ -1,0 +1,28 @@
+# v654-v6 source ledger
+
+- **SRC-PREMIS** - `current` - [PREMIS Data Dictionary for Preservation Metadata version 3.0](https://www.loc.gov/standards/premis/)
+  - Preservation metadata entities and semantic units only; no repository conformance, custody truth, or professional authority.
+- **SRC-BAGIT** - `stable` - [RFC 8493 BagIt File Packaging Format version 1.0](https://www.rfc-editor.org/rfc/rfc8493.html)
+  - Package structure and path rules only; no real transfer integrity, repository acceptance, or operational assurance.
+- **SRC-NIST-SHS** - `watch` - [NIST FIPS 180-4 Secure Hash Standard](https://csrc.nist.gov/pubs/fips/180-4/upd1/final)
+  - Digest vocabulary only; revision remains watched and no cryptographic implementation, certification, security completeness, or custody decision is established.
+- **SRC-LOC-RFS** - `current` - [Library of Congress Recommended Formats Statement 2025-2026](https://www.loc.gov/preservation/resources/rfs/)
+  - Format sustainability factors only; no local collection policy, migration decision, or long-term-access guarantee.
+- **SRC-NDSA-LEVELS** - `current` - [NDSA Levels of Digital Preservation version 2.1](https://www.ndsa.org/publications/levels-of-digital-preservation/)
+  - Program-improvement context only; no repository assessment, certification, staffing decision, or professional competence.
+- **SRC-PROV-O** - `stable` - [W3C PROV-O Recommendation](https://www.w3.org/TR/prov-o/)
+  - Provenance vocabulary only; no source truth, agent authority, semantic completeness, or interoperability claim.
+- **SRC-RFC3339** - `stable` - [RFC 3339 Date and Time on the Internet](https://www.rfc-editor.org/rfc/rfc3339.html)
+  - Timestamp syntax only; no clock accuracy, ordering truth, or traceability.
+- **SRC-WCAG22** - `current` - [W3C Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/)
+  - Structural checks only; manual, browser, assistive-technology, cognitive, Māori-language, and affected-user evaluation remain reserved.
+- **SRC-W3C-VC20** - `current` - [W3C Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model-2.0/)
+  - Synthetic field obligations only; no real issuer, holder, subject, key, proof, status, trust, or interoperability event.
+- **SRC-RFC8392** - `stable` - [RFC 8392 CBOR Web Token](https://www.rfc-editor.org/rfc/rfc8392.html)
+  - Synthetic token fields only; no real key, token, device, issuance, verification, or production event.
+- **SRC-PRIVACY-ACT** - `watch` - [Privacy Act 2020](https://www.legislation.govt.nz/act/public/2020/0031/latest/contents.html)
+  - Watched legal context only; no privacy compliance, consent, disclosure, retention, deletion, or identity decision.
+- **SRC-TE-MANA** - `current` - [Te Mana Raraunga principles of Māori data sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty)
+  - Māori data decisions remain under Māori authority; no authority is delegated to the repository.
+- **SRC-LOCAL-CONTEXTS** - `current` - [Local Contexts Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/)
+  - Cultural and traditional-knowledge rights reservation only; no label is selected or applied.

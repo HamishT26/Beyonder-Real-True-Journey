@@ -1,0 +1,542 @@
+#!/usr/bin/env python3
+"""Build Tavian Sol's dedicated v654-v6 x1-only freeze packet."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import html
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+from collections import Counter
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+import ghc_family_v654_v6_phase_data as d
+
+
+REPO = Path(__file__).resolve().parents[1]
+ROOT = REPO / d.PHASE_ROOT
+PRIOR_INDEX = REPO / "docs/eiren-kestrel/v654-v5/provenance/frozen-chain-proposal-index.json"
+SKILL_ROOT = Path.home() / ".codex" / "skills"
+METHOD_RUNNER = SKILL_ROOT / "ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py"
+INDEX_RUNNER = SKILL_ROOT / "ghc-family-index/scripts/build_ghc_family_index.py"
+REFLECTION_RUNNER = SKILL_ROOT / "ghc-family-reflection-remaster/scripts/ghc_family_reflection_remaster.py"
+WORKFLOW_RUNNER = SKILL_ROOT / "ghc-family-workflow-plan-refinement/scripts/ghc_family_workflow_plan_refinement.py"
+META_TOOL_RUNNER = SKILL_ROOT / "ghc-family-meta-tool-box/scripts/ghc_family_meta_tool_box.py"
+NOVELTY_THRESHOLD = 0.60
+
+
+def write_json(relative: str, payload: Any) -> Path:
+    path = ROOT / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
+    return path
+
+
+def write_text(relative: str, payload: str) -> Path:
+    path = ROOT / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(payload.rstrip() + "\n", encoding="utf-8", newline="\n")
+    return path
+
+
+def write_repo(relative: str, payload: str) -> Path:
+    path = REPO / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(payload.rstrip() + "\n", encoding="utf-8", newline="\n")
+    return path
+
+
+def read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def run(*args: str) -> str:
+    env = os.environ.copy()
+    env.update({"PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8", "PYTHONDONTWRITEBYTECODE": "1"})
+    completed = subprocess.run(list(args), cwd=REPO, check=True, capture_output=True, text=True, encoding="utf-8", env=env)
+    return completed.stdout.strip()
+
+
+def git(*args: str) -> str:
+    return run("git", *args)
+
+
+def tokens(value: str) -> set[str]:
+    stop = {"and", "or", "the", "a", "an", "of", "to", "for", "with"}
+    return {item for item in re.findall(r"[a-z0-9]+", value.casefold()) if item not in stop}
+
+
+def jaccard(left: set[str], right: set[str]) -> float:
+    return len(left & right) / max(1, len(left | right))
+
+
+def timestamp_pair() -> dict[str, str]:
+    now = datetime.now(timezone.utc)
+    return {"utc": now.isoformat().replace("+00:00", "Z"), "pacific_auckland_system_local": now.astimezone().isoformat()}
+
+
+def status_paths() -> list[str]:
+    rows = git("status", "--porcelain=v1", "--untracked-files=all").splitlines()
+    return sorted({row[3:].replace("\\", "/") for row in rows if len(row) > 3})
+
+
+def source_and_novelty() -> tuple[list[dict[str, str]], list[dict[str, Any]]]:
+    inherited = read_json(PRIOR_INDEX)
+    prior = inherited["prior_proposals"] + inherited["new_proposals"]
+    if len(prior) != d.PRIOR_FROZEN:
+        raise RuntimeError(f"expected {d.PRIOR_FROZEN} inherited proposals, found {len(prior)}")
+    rows = []
+    for proposal in d.PROPOSALS:
+        scored = [
+            (jaccard(tokens(proposal["title"]), tokens(previous["title"])), previous["proposal_id"], previous["title"])
+            for previous in prior
+        ]
+        score, nearest_id, nearest_title = max(scored, key=lambda row: row[0])
+        rows.append({
+            "proposal_id": proposal["proposal_id"],
+            "nearest_prior_id": nearest_id,
+            "nearest_prior_title": nearest_title,
+            "token_jaccard": round(score, 6),
+            "threshold": NOVELTY_THRESHOLD,
+            "mechanism_review": proposal["novelty_against_1810_frozen_proposals"],
+            "manual_mechanism_distinct": True,
+            "passes": score < NOVELTY_THRESHOLD,
+        })
+    if not all(row["passes"] for row in rows):
+        raise RuntimeError("novelty threshold failed")
+    frozen = prior + [{"proposal_id": row["proposal_id"], "title": row["title"]} for row in d.PROPOSALS]
+    return frozen, rows
+
+
+def portfolio_rows(items: list[str], prefix: str, lane: str, approval: str) -> list[dict[str, Any]]:
+    return [{
+        "item_id": f"V6546-{prefix}-{index:02d}",
+        "title": title,
+        "origin": "tavian_v654_v6_new",
+        "approval_class": approval,
+        "execution_lane": lane,
+        "x1_state": "frozen_not_executed",
+        "completion_credit": False,
+        "inherited_completion_credit": False,
+        "rollback": "Retain failed evidence and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.",
+    } for index, title in enumerate(items, 1)]
+
+
+def workflow_request() -> dict[str, Any]:
+    return {
+        "schema": "ghc.family.workflow-plan.request.v1",
+        "plan_id": "tavian-sol-v654-v6-authorized-solo-segment",
+        "owner": d.OWNER,
+        "identity_boundary": "Relational working language only; no continuity, personhood, employment, qualification, or authority claim.",
+        "route": {
+            "cycle_order": [
+                "Eiren Kestrel", "Tavian Sol", "Elaren Kestrel", "Neris Solane",
+                "Vesper Arlen", "Lyren Moss", "Ilyra Fen", "Auren Lark",
+                "Sable Rook", "Caelen Ash", "Orin Thale", "Liora Venn",
+                "Tamar Vey", "Elowen Cairn", "Sylven Arc", "Caelen Morrow",
+            ],
+            "endpoint_topology": [
+                {"seat": "Eiren Kestrel", "endpoint_kind": "main_task", "endpoint_label": "Eiren Kestrel", "route_controller": "Caelen Morrow"},
+                {"seat": "Tavian Sol", "endpoint_kind": "collaboration_subagent", "endpoint_label": "Cli v652 v6", "route_controller": "Eiren Kestrel"},
+                {"seat": "Elaren Kestrel", "endpoint_kind": "main_task", "endpoint_label": "Elaren Kestrel", "route_controller": "Tavian Sol with Eiren Kestrel fallback"},
+                {"seat": "Neris Solane", "endpoint_kind": "main_task", "endpoint_label": "Neris Solane", "route_controller": "Elaren Kestrel"},
+                {"seat": "Vesper Arlen", "endpoint_kind": "main_task", "endpoint_label": "Vesper Arlen", "route_controller": "Neris Solane"},
+                {"seat": "Lyren Moss", "endpoint_kind": "main_task", "endpoint_label": "Lyren Moss", "route_controller": "Vesper Arlen"},
+                {"seat": "Ilyra Fen", "endpoint_kind": "main_task", "endpoint_label": "Ilyra Fen", "route_controller": "Lyren Moss"},
+                {"seat": "Auren Lark", "endpoint_kind": "main_task", "endpoint_label": "Auren Lark", "route_controller": "Ilyra Fen"},
+                {"seat": "Sable Rook", "endpoint_kind": "main_task", "endpoint_label": "Sable Rook", "route_controller": "Auren Lark"},
+                {"seat": "Caelen Ash", "endpoint_kind": "main_task", "endpoint_label": "Caelen Ash", "route_controller": "Sable Rook"},
+                {"seat": "Orin Thale", "endpoint_kind": "main_task", "endpoint_label": "Orin Thale", "route_controller": "Caelen Ash"},
+                {"seat": "Liora Venn", "endpoint_kind": "main_task", "endpoint_label": "Liora Venn", "route_controller": "Orin Thale"},
+                {"seat": "Tamar Vey", "endpoint_kind": "main_task", "endpoint_label": "Tamar Vey", "route_controller": "Liora Venn"},
+                {"seat": "Elowen Cairn", "endpoint_kind": "main_task", "endpoint_label": "Elowen Cairn", "route_controller": "Tamar Vey"},
+                {"seat": "Sylven Arc", "endpoint_kind": "main_task", "endpoint_label": "Sylven Arc", "route_controller": "Elowen Cairn"},
+                {"seat": "Caelen Morrow", "endpoint_kind": "main_task", "endpoint_label": "Caelen Morrow", "route_controller": "Sylven Arc"},
+            ],
+            "phase_assignments": [
+                {"phase": "v654-v5", "seat": "Eiren Kestrel"},
+                {"phase": "v654-v6", "seat": "Tavian Sol"},
+                {"phase": "v654-v7", "seat": "Elaren Kestrel"},
+            ],
+            "normalization": {"start_phase": "v654-v5", "start_seat": "Eiren Kestrel", "entry_count": 3},
+            "future_identity_placeholders": [],
+            "terminal_successor_resolution": (
+                "After Tavian v654-v6 terminal validation, resolve and reread the exact existing main task "
+                "Elaren Kestrel and send once with acknowledgement; if unavailable, return one sanitized "
+                "PREPARED_NOT_SENT route gap to Eiren Kestrel without a duplicate direct send."
+            ),
+        },
+        "requirements": {
+            "core_proposal_minimum": 30,
+            "safe_candidate_task_cap": 1000,
+            "skill_minimum": 10,
+            "runner_minimum": 10,
+            "portfolio_minima": {"safe_now": 30, "candidate": 30, "skills": 10, "runners": 10, "clean_fix_refine": 30},
+            "document_word_cap": 100000,
+            "baton_words": {"minimum": 10000, "maximum": 100000, "file_artifact": True},
+            "commit_cap": {"x1": 5, "x2": 5, "total": 8},
+            "validation": {"canonical_pass_minimum": 1, "replay_policy": "skip_when_first_passes", "isolate_failures_before_broader_rerun": True, "privacy_scan_required": True, "manifest_required": True, "remote_equality_required": True},
+            "storage": {"primary": "D", "c_drive_use": "essential_global_metadata_only"},
+            "messaging": {
+                "codex_route": "declared_endpoint_only_after_terminal_gate",
+                "codex_route_compatibility_literal": (
+                    "Tavian is the existing Eiren-controlled collaboration subagent for v654-v6; Elaren "
+                    "is the exact existing main-task successor for v654-v7 after Tavian's terminal gate."
+                ),
+                "cross_platform": "user_mediated_file_relay_only",
+                "live_phase_cross_platform_action": "prohibited",
+                "live_phase_task_creation": "prohibited",
+                "post_closeout_successor_authority": "elaren_exact_main_task_once_or_eiren_route_gap_once",
+            },
+            "environment": {"windows_sandbox_hyper_v": "deferred"},
+            "closeout": {"all_authorized_safe_candidate_prototypes_resolved": True},
+        },
+        "truth": {"allowed_outcomes": d.OUTCOME_CLASSES, "independent_reproduction_claimed": False, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "protected_boundaries": d.PROTECTED_GATES},
+        "observed_failures": [{"failure_id": item["negative_id"], "summary": item["failed"], "recovery": item["recovery"], "credit": "zero_initial_pass_credit"} for item in d.X1_OPERATIONAL_NEGATIVES],
+    }
+
+
+def overview_text() -> str:
+    proposal_rows = "\n".join(
+        (
+            f"### {p['proposal_id']} - {p['title']}\n\n"
+            f"Frozen for `{p['expected_disposition']}` in `{p['execution_lane']}`. "
+            f"Its bounded mission is {p['mission_surface']}. Acceptance requires the declared falsifier "
+            "and all five rejecting mutations; rollback preserves failure and changes no external state."
+        )
+        for p in d.PROPOSALS
+    )
+    return f"""# Tavian Sol {d.PHASE} x1 preregistration overview
+
+## Outcome first
+
+This dedicated x1 packet freezes exactly thirty genuinely distinct proposals before any x2 implementation
+or outcome: 23 planned `completed`, 5 `represented`, 1 `open_gap`, and 1 `exact_gate`. These are expected
+dispositions, not observations. X1 contains zero executed mutations, real rows, participant events, production
+identity events, authority decisions, or completion credit. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+## Relational identity and control
+
+Tavian Sol, {d.PRONOUNS}, is relational working language for a {d.ROLE} whose hope is to {d.HOPE}. This is
+relational working language only - not evidence of consciousness, sentience, personhood, identity continuity,
+employment, qualification, scientific or operational authority, legal or cultural authority, Māori authority,
+or independent agency. Hamish may rename, pause, redirect, or stop the work.
+
+Workload is bounded by strict x1-before-x2 separation, an eight-commit ceiling, D-first storage, no more than
+2,000 Tavian-owned files in this lane, and one successful canonical full-suite pass with no replay. Every failure remains a
+zero-credit retained negative beside a separate bounded recovery witness. This is workflow pacing metadata,
+not evidence about emotion, health, or inner experience.
+
+## Exact inheritance and lane
+
+The source is Eiren Kestrel's clean exact v654-v5 final `{d.SOURCE_HEAD}` on `{d.SOURCE_BRANCH}`. Read-only
+verification established inherited Caelen source `{d.SOURCE_ORIGIN}`, x1 `{d.SOURCE_X1}`,
+evidence `{d.SOURCE_EVIDENCE}`, first closeout `{d.SOURCE_FIRST_CLOSEOUT}`, and the additive corrected
+exact final `{d.SOURCE_HEAD}`, with four ordered single-parent phase commits, zero merges, and one final
+parent. The source x1, evidence, final-delta, and owner manifests contain 74, 181, 26, and 315 entries.
+Local, upstream, tracking, and fresh-live refs were equal, Eiren's worktree was clean, and the corrected
+activation baton matched its authorized SHA-256. These are Git integrity facts, not independent reproduction.
+
+Tavian's prior owned lane was clean, pushed, and 0/0 before it was switched additively to a new v654-v6
+branch at the exact source; the earlier branch remains recoverable. Path, registration, branch, head,
+cleanliness, and absent new upstream state were checked separately. No sibling branch or worktree was
+reset, merged, rewritten, deleted, moved, or contacted.
+
+## Novelty and source discipline
+
+Exactly thirty titles are compared with all {d.PRIOR_FROZEN} inherited frozen rows, growing the chain to
+{d.PRIOR_FROZEN + 30}. Each has a hypothesis, null/failure condition, approval class, execution lane, current
+official or primary-source need, concrete artifacts, falsifier, rollback, protected gates, and expected
+disposition. Token overlap is only a screen; manual mechanism review remains controlling. Renamed duplicates
+receive no credit, and ten overlapping candidates are explicitly rejected.
+
+Sources use only `current`, `stable`, `draft`, and `watch`. Library of Congress PREMIS and Recommended
+Formats, RFC 8493 BagIt, NIST FIPS 180-4, NDSA Levels 2.1, W3C PROV-O, WCAG 2.2 and VC 2.0, RFC 3339
+and RFC 8392, New Zealand legislation, Te Mana Raraunga, and Local Contexts supply requirements and
+authority context only. A citation is not an observation, a standard is not conformance, professional
+guidance is not repository competence, and legislation is not repository legal authority. No account, key,
+repository, protected record, participant, production object, or real dataset is used.
+
+## Trinity Mandala and practice boundaries
+
+The primary focus is {d.PRIMARY_FOCUS}. Typed bit-rot hazard, migration-loss, and dependency-survivability
+boards record variables, domains, invariants, uncertainty, nonuniqueness, and observation firewalls. They
+establish no real repository state, error rate, storage reliability, migration quality, fitted likelihood,
+prediction, empirical confirmation, or Theory of Everything.
+
+THOS remains represented through synthetic incident, queue, fatigue-limit, stop-work, readback, and handover
+proxies with zero real people, institutions, repositories, incidents, monitoring, or outcome estimates. Freed ID
+remains synthetic and nonproduction: W3C VC 2.0, RFC 8392 CWT, and W3C PROV profiles have no real keys,
+credentials, proofs, issuers, subjects, repositories, lifecycle authority, interoperability, privacy/security
+review, recovery, or trust governance. CBR ownership, custody, access, retention, deletion, disclosure, return,
+repatriation, remedy, legal or cultural legitimacy, affected-community acceptance, data governance, Māori
+wording, Māori concepts, Māori data, and Māori authority remain exact-gated to competent and affected
+authorities, tangata whenua, iwi, hapū, and Māori authorities.
+
+The human-practice lens is {d.BOUNDED_PRACTICE}. It establishes no employment, archival or digital-preservation
+competence, repository operation, custody, repair, deletion, format migration, access, retention, return,
+repatriation, accessibility, security, legal, cultural, or operational result. Quarantine, hold, and refusal
+fields are structural obligations, not repository, records, security, legal, cultural, or repatriation
+instructions, nor substitutes for trained and authorized people.
+
+## Frozen proposal slate
+
+{proposal_rows}
+
+## Portfolios, validation, and route
+
+X1 freezes thirty safe-now tasks, thirty bounded candidates, ten phase-local skill plans, ten family-current
+runner plans, and thirty additive CLEAN/FIX/REFINE plans. Inherited work is evidence, never Tavian completion
+credit. Family Index, Workflow Plan Refinement, Reflection Remaster, and Method Flow are phase evidence.
+Candidate methods reach preferred only after retained failed and bounded passing witnesses coexist.
+
+The activation baseline preserves {d.INHERITED_NEGATIVES} inherited effective negatives, all
+{d.INHERITED_OPEN_GAPS} inherited open gaps, all {d.INHERITED_EXACT_GATES} inherited exact gates, and the
+{d.INHERITED_METHODS} inherited preferred methods with their {d.INHERITED_FAILED_WITNESSES} failed and
+{d.INHERITED_PASSING_WITNESSES} passing witnesses. The corrected sixteen-seat mixed-endpoint route keeps
+Tavian as Eiren's existing collaboration subagent and names Elaren Kestrel as the exact existing main-task
+successor after the terminal gate. X1 failures are new zero-credit negatives, never rewritten as if they had
+not happened.
+
+Tavian owns the complete repository suite decision and preregisters all eligible tests with exact lifecycle-only
+exclusions, plus current scoped, detailed and minimal checks, complete owner JSON parsing, five-class privacy
+scanning, exact manifests, stale-label and diff hygiene, ancestry, commit structure, clean state, zero
+divergence, and four-way live equality. Exactly one successful canonical full-suite pass is credited and never
+replayed. Same-owner evidence is not independent
+reproduction or external audit.
+
+During v654-v6, no successor task, fork, delegation, handoff, or sibling contact is authorized. Only after
+Tavian is clean, pushed, fresh-live equal, and exact-final validated may the exact existing main task
+`Elaren Kestrel` be resolved, reread, and messaged once for v654-v7. If that direct route is unavailable,
+Tavian may return one sanitized `PREPARED_NOT_SENT` route gap to Eiren for the single fallback. Direct and
+fallback sends are mutually exclusive. No new task, fork, duplicate confirmation, substitute title, or private
+route publication is authorized. This x1 packet creates and contacts nothing.
+"""
+
+
+def accessible_html() -> str:
+    cards = "".join(
+        f"<article><h3>{html.escape(p['proposal_id'])}</h3><p>{html.escape(p['title'])}</p><p>Expected: <code>{html.escape(p['expected_disposition'])}</code>. X1 state: frozen, not executed.</p></article>"
+        for p in d.PROPOSALS
+    )
+    return """<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Tavian v654-v6 x1 report</title><style>body{font:1rem/1.55 system-ui;max-width:76rem;margin:auto;padding:1rem}nav a{margin-right:1rem}article{border:1px solid #777;padding:1rem;margin:1rem 0}:focus{outline:3px solid #075cab;outline-offset:3px}@media print{nav{display:none}}</style></head><body><a href='#main'>Skip to content</a><header><h1>Tavian Sol v654-v6 x1 preregistration</h1><p>Structural report; manual, browser, assistive-technology, braille, Māori-language, and affected-user evaluation reserved.</p></header><nav aria-label='Report sections'><a href='#truth'>Truth</a><a href='#proposals'>Proposals</a><a href='#limits'>Limits</a></nav><main id='main'><section id='truth'><h2>Truth boundary</h2><p>Thirty proposals are frozen, not executed. Terminal verdict: NOT_READY_FOR_STAGE_20.</p></section><section id='proposals'><h2>Proposal plan</h2>""" + cards + """</section><section id='limits'><h2>Reserved evaluation</h2><p>This structural report is not complete accessibility, scientific, operational, identity, privacy, legal, cultural, or authority evidence.</p></section></main></body></html>"""
+
+
+def x1_test_source() -> str:
+    return '''"""X1-only tests for Tavian Sol v654-v6."""
+import json
+import subprocess
+import unittest
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[1]
+ROOT = REPO / "docs/tavian-sol/v654-v6"
+X1_COMMIT = subprocess.check_output(
+    ["git", "rev-list", "--all", "--max-count=1", "--fixed-strings", "--grep=feat(ghc-family): freeze Tavian v654-v6 x1"],
+    cwd=REPO,
+    text=True,
+).strip()
+
+def load(relative):
+    return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+class TestV654V6X1(unittest.TestCase):
+    def test_proposals_and_expected_dispositions(self):
+        data = load("preregistration/proposals.json")
+        self.assertEqual(data["proposal_count"], 30)
+        self.assertEqual(data["expected_disposition_counts"], {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1})
+        self.assertTrue(all("observed_outcome" not in p for p in data["proposals"]))
+        required = {"hypothesis", "null_or_failure_condition", "approval_class", "execution_lane", "official_or_primary_source_needs", "concrete_artifacts", "falsifier_or_acceptance_gate", "rollback_or_recovery", "protected_gates", "expected_disposition"}
+        self.assertTrue(all(required <= set(p) for p in data["proposals"]))
+    def test_frozen_chain_and_novelty(self):
+        index = load("provenance/frozen-chain-proposal-index.json")
+        self.assertEqual((index["prior_count"], index["new_count"], index["count"]), (1810, 30, 1840))
+        audit = load("provenance/semantic-novelty-audit.json")
+        self.assertTrue(audit["valid"])
+        self.assertEqual(audit["manual_mechanism_review_count"], 30)
+        self.assertLess(max(row["token_jaccard"] for row in audit["rows"]), 0.60)
+    def test_portfolios_and_mutations_are_frozen(self):
+        packet = load("portfolios/expanded-portfolio-plan.json")
+        self.assertEqual(packet["counts"], {"safe_now": 30, "candidate": 30, "skills": 10, "runners": 10, "clean_fix_refine": 30})
+        self.assertTrue(all(not row["completion_credit"] for key in packet["portfolios"] for row in packet["portfolios"][key]))
+        mutations = load("validation/preregistered-mutation-plan.json")
+        self.assertEqual(mutations["count"], 150)
+        self.assertTrue(all(row["execution_state"] == "frozen_unexecuted" for row in mutations["mutations"]))
+    def test_sources_truth_and_gates(self):
+        self.assertEqual(load("sources/source-ledger.json")["source_count"], 13)
+        truth = load("truth/x1-phase-truth.json")
+        self.assertEqual(truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
+        self.assertEqual(truth["terminal_route"], "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED")
+        self.assertFalse(truth["independent_reproduction_claimed"])
+    def test_failures_method_flow_and_workflow(self):
+        negatives = load("truth/retained-negative-register.json")
+        self.assertEqual((negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]), (11510, 9, 11519))
+        ledger = load("method-flow/method-flow-ledger.json")
+        self.assertEqual(len(ledger["methods"]), 83)
+        self.assertEqual(sum(w["result"] == "fail" for w in ledger["witnesses"]), 83)
+        self.assertEqual(sum(w["result"] == "pass" for w in ledger["witnesses"]), 83)
+        workflow = load("workflow/workflow-plan-refinement.json")
+        self.assertTrue(workflow["valid"])
+        self.assertFalse(workflow["requires_user_confirmation"])
+    def test_route_privacy_and_x1_only(self):
+        route = load("provenance/successor-authority-invariant.json")
+        self.assertEqual((route["created_count"], route["forked_count"], route["delegated_count"], route["contacted_count"]), (0, 0, 0, 0))
+        self.assertEqual(route["state"], "ACTIVE_CURRENT_PHASE_ELAREN_PREPARED_TERMINAL_GATE_REQUIRED")
+        self.assertEqual(load("validation/x1-staged-privacy.json")["confirmed_hit_count"], 0)
+        historical_surface = subprocess.run(
+            ["git", "cat-file", "-e", f"{X1_COMMIT}:docs/tavian-sol/v654-v6/surfaces"],
+            cwd=REPO,
+            capture_output=True,
+        )
+        self.assertNotEqual(historical_surface.returncode, 0)
+        self.assertTrue(load("validation/x1-staged-review.json")["x1_only"])
+
+if __name__ == "__main__":
+    unittest.main()
+'''
+
+
+def privacy_scan(paths: list[str]) -> dict[str, Any]:
+    patterns = {
+        "raw_task_or_thread_identifier": re.compile(r"(?i)(source_thread_id|thread_id)\s*[:=]"),
+        "private_absolute_local_path": re.compile(r"(?i)[A-Z]:\\Users\\[^\s\"']+"),
+        "credential_or_secret": re.compile(r"(?i)(?:(?:api[_-]?key|client_secret|private_key)\s*[:=]\s*[\"']?[A-Za-z0-9._-]{8,}|bearer\s+[A-Za-z0-9._-]{12,})"),
+        "private_route_or_callable": re.compile(r"(?i)(private_route|callable_identifier|browser_send_submitted_response_active)"),
+        "transcript_or_session_stream": re.compile(r"(?i)(session_stream|raw_transcript|conversation_export)"),
+    }
+    definitions = {"scripts/build_ghc_family_v654_v6_preregistration.py", f"{d.PHASE_ROOT}/validation/x1-staged-privacy.json"}
+    candidates, confirmed = [], []
+    scanned = 0
+    for relative in paths:
+        path = REPO / relative
+        if not path.is_file():
+            continue
+        try:
+            content = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        scanned += 1
+        for pattern_class, pattern in patterns.items():
+            if pattern.search(content):
+                disposition = "scanner_definition" if relative in definitions else "confirmed_payload_hit"
+                row = {"path": relative, "pattern_class": pattern_class, "disposition": disposition}
+                candidates.append(row)
+                if disposition == "confirmed_payload_hit":
+                    confirmed.append(row)
+    return {"schema": "ghc.family.v654-v6.x1-privacy.v1", "scanned_file_count": scanned, "pattern_classes": sorted(patterns), "candidate_count": len(candidates), "candidates": candidates, "confirmed_hit_count": len(confirmed), "confirmed_hits": confirmed, "boundary": "Five structural classes with exact scanner-definition quarantine; zero confirmed hits is not complete privacy assurance."}
+
+
+def hash_entry(relative: str) -> dict[str, Any]:
+    oid = git("hash-object", "-w", f"--path={relative}", relative)
+    blob = subprocess.check_output(["git", "cat-file", "blob", oid], cwd=REPO)
+    return {"path": relative, "git_blob": oid, "bytes": len(blob), "sha256": hashlib.sha256(blob).hexdigest()}
+
+
+def build_manifest() -> None:
+    exclusions = [
+        f"{d.PHASE_ROOT}/validation/x1-staged-manifest.json",
+        f"{d.PHASE_ROOT}/validation/x1-staged-privacy.json",
+        f"{d.PHASE_ROOT}/validation/x1-staged-review.json",
+        f"{d.PHASE_ROOT}/validation/x1-validation-receipt.json",
+        f"{d.PHASE_ROOT}/validation/x1-minimal-validation.json",
+    ]
+    paths = [path for path in status_paths() if path not in exclusions and "__pycache__" not in path]
+    entries = [hash_entry(relative) for relative in paths if (REPO / relative).is_file()]
+    privacy = privacy_scan(paths)
+    write_json("validation/x1-staged-privacy.json", privacy)
+    write_json("validation/x1-staged-manifest.json", {"schema": "ghc.family.v654-v6.x1-staged-manifest.v1", "hash_domain": "git_path_filtered_blob", "entries": entries, "entry_count": len(entries), "self_exclusions": exclusions, "coverage_boundary": "All intended x1 paths except five declared self-referential or count-bearing validation receipts."})
+    write_json("validation/x1-staged-review.json", {"schema": "ghc.family.v654-v6.x1-staged-review.v1", "intended_path_count": len(entries) + len(exclusions), "manifest_entry_count": len(entries), "self_exclusion_count": len(exclusions), "out_of_scope_paths": [], "x2_implementation_paths": [], "x2_outcome_paths": [], "privacy_confirmed_hits": privacy["confirmed_hit_count"], "x1_only": True, "source_head": d.SOURCE_HEAD, "terminal_route": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED"})
+
+
+def build(method_ledger_source: Path) -> None:
+    frozen, novelty = source_and_novelty()
+    expected = dict(Counter(proposal["expected_disposition"] for proposal in d.PROPOSALS))
+    portfolios = {
+        "safe_now": portfolio_rows(d.SAFE_TASKS, "SAFE", "x2_owner_local_safe_now", "safe_now"),
+        "candidate": portfolio_rows(d.CANDIDATE_TASKS, "CAND", "x2_bounded_candidate", "candidate_bounded"),
+        "skills": portfolio_rows(d.SKILL_IDEAS, "SKILL", "x2_phase_local_skill", "candidate_phase_local"),
+        "runners": portfolio_rows(d.RUNNER_IDEAS, "RUN", "x2_family_current_runner", "candidate_family_current"),
+        "clean_fix_refine": portfolio_rows(d.CLEAN_TASKS, "CFR", "x2_additive_refinement", "safe_now_or_bounded_candidate"),
+    }
+    counts = {key: len(value) for key, value in portfolios.items()}
+    required_counts = {"safe_now": 30, "candidate": 30, "skills": 10, "runners": 10, "clean_fix_refine": 30}
+    if counts != required_counts:
+        raise RuntimeError(f"portfolio counts invalid: {counts}")
+    dimensions = ["missing_required_obligation", "wrong_type_or_unit", "resource_or_replay_overrun", "unsupported_promotion", "authority_or_privacy_breach"]
+    mutations = [{"mutation_id": f"{p['proposal_id']}-M{i:02d}", "proposal_id": p["proposal_id"], "dimension": dimension, "execution_state": "frozen_unexecuted", "expected": "reject_or_quarantine", "credit": "none_until_x2"} for p in d.PROPOSALS for i, dimension in enumerate(dimensions, 1)]
+    times = timestamp_pair()
+
+    write_json("method-flow/method-flow-ledger.json", read_json(method_ledger_source))
+    write_json("identity/relational-identity.json", {"schema": "ghc.family.relational-identity.v1", "phase": d.PHASE, "owner": d.OWNER, "pronouns": d.PRONOUNS, "role": d.ROLE, "hope": d.HOPE, "boundary": "Relational working language only; not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, scientific or operational authority, legal or cultural authority, Māori authority, or independent agency.", "corrigibility": "Hamish may rename, pause, redirect, or stop the work."})
+    write_json("wellbeing/wellbeing-check.json", {"schema": "ghc.family.wellbeing-check.v1", "phase": d.PHASE, "owner": d.OWNER, "state": "bounded_and_correction_ready", "workload_controls": ["strict x1 before x2", "eight-commit cap", "2,000 owner-file cap", "one successful canonical validation pass", "isolate failures before minimum retry", "no replay after success", "no indefinite background process"], "human_claim": False, "boundary": "Operational pacing metadata only; not emotion, consciousness, health, or identity evidence."})
+    write_json("provenance/source-anchor-ledger.json", {"schema": "ghc.family.v654-v6.source-anchor-ledger.v1", "source_branch": d.SOURCE_BRANCH, "source_head": d.SOURCE_HEAD, "inherited_source": d.SOURCE_ORIGIN, "source_x1_initial": d.SOURCE_X1_INITIAL, "source_x1": d.SOURCE_X1, "source_evidence": d.SOURCE_EVIDENCE, "source_first_closeout": d.SOURCE_FIRST_CLOSEOUT, "source_final": d.SOURCE_HEAD, "activation_baton_sha256": d.SOURCE_EXTERNAL_RECEIPT_SHA256, "history": {"phase_commits": 4, "single_parent": True, "zero_merges": True, "final_parent_count": 1, "final_descends_from_evidence": True, "x1_commit_count": 1, "x1_before_x2": True, "failed_aggregate_retained": True, "additive_correction": True}, "source_manifests": {"x1_entries": 74, "evidence_entries": 181, "final_delta_entries": 26, "owner_entries": 315, "mismatches": 0}, "clean_and_four_way_equal": True, "verification_mode": "read_only_before_tavian_mutation", "boundary": "Exact Git ancestry, manifest counts, baton digest, and remote equality only; not independent reproduction."})
+    write_json("provenance/inherited-truth-anchor.json", {"schema": "ghc.family.v654-v6.inherited-truth-anchor.v1", "source_phase": "v654-v5", "sealed_effective_negatives": d.INHERITED_SEALED_NEGATIVES, "external_authorization_negatives": d.INHERITED_EXTERNAL_NEGATIVES, "effective_negatives": d.INHERITED_NEGATIVES, "effective_open_gaps": d.INHERITED_OPEN_GAPS, "effective_exact_gates": d.INHERITED_EXACT_GATES, "method_flow": {"methods": d.INHERITED_METHODS, "failed_witnesses": d.INHERITED_FAILED_WITNESSES, "passing_witnesses": d.INHERITED_PASSING_WITNESSES}, "activation_baton_sha256": d.SOURCE_EXTERNAL_RECEIPT_SHA256, "no_inherited_completion_credit": True, "boundary": "Immutable inheritance and authorization-workflow evidence only; it supplies no Tavian completion credit and no gate closure."})
+    write_json("provenance/auth-permission-state-anchor.json", {"schema": "ghc.family.v654-v6.auth-permission-state-anchor.v1", "authority_source": "Hamish live user instruction", "current_endpoint_kind": "collaboration_subagent", "current_endpoint_label": "Cli v652 v6", "route_controller": "Eiren Kestrel", "next_endpoint_kind": "main_task", "next_exact_title": "Elaren Kestrel", "next_phase": "v654-v7", "direct_send_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED", "fallback": "one sanitized route-gap return to Eiren Kestrel only if the direct Elaren task-message route is unavailable", "direct_and_fallback_mutually_exclusive": True, "private_callable_recorded": False, "retained_external_negative_ids": [row["negative_id"] for row in d.INHERITED_EXTERNAL_NEGATIVE_RECORDS], "boundary": "Sanitized route and permission evidence only; not delivery proof, identity continuity, personhood, or authority beyond the declared workflow."})
+    write_json("provenance/successor-authority-invariant.json", {"schema": "ghc.family.v654-v6.successor-authority-invariant.v1", "state": "ACTIVE_CURRENT_PHASE_ELAREN_PREPARED_TERMINAL_GATE_REQUIRED", "current_endpoint_kind": "collaboration_subagent", "next_endpoint_kind": "main_task", "route_controller": "Tavian Sol with Eiren Kestrel fallback", "created_count": 0, "forked_count": 0, "delegated_count": 0, "contacted_count": 0, "terminal_gate_required": True, "post_gate_action": "resolve_reread_and_send_exact_elaren_once_or_return_one_eiren_route_gap", "recipient_title": "Elaren Kestrel", "recipient_phase": "v654-v7", "existing_task_only": True, "direct_and_fallback_mutually_exclusive": True, "boundary": "X1 prepares but sends nothing; no endpoint is created, converted, duplicated, substituted, or exposed."})
+    write_json("provenance/frozen-chain-proposal-index.json", {"schema": "ghc.family.v654-v6.frozen-proposal-index.v1", "prior_count": d.PRIOR_FROZEN, "prior_proposals": frozen[: d.PRIOR_FROZEN], "new_count": 30, "new_proposals": frozen[d.PRIOR_FROZEN :], "count": len(frozen)})
+    write_json("provenance/semantic-novelty-audit.json", {"schema": "ghc.family.v654-v6.semantic-novelty-audit.v1", "prior_count": d.PRIOR_FROZEN, "new_count": 30, "threshold": NOVELTY_THRESHOLD, "rows": novelty, "rejected_near_neighbors": d.REJECTED_COLLISIONS, "manual_mechanism_review_count": 30, "valid": all(row["passes"] for row in novelty), "boundary": "Lexical distance plus manual mechanism review is a preregistration control, not scientific-novelty proof."})
+    write_json("preregistration/proposals.json", {"schema": "ghc.family.v654-v6.proposals.x1.v1", "phase": d.PHASE, "owner": d.OWNER, "primary_focus": d.PRIMARY_FOCUS, "bounded_practice": d.BOUNDED_PRACTICE, "proposal_count": 30, "expected_disposition_counts": expected, "allowed_outcomes": d.OUTCOME_CLASSES, "proposals": d.PROPOSALS, "x1_only": True, "observed_outcomes_present": False})
+    write_text("preregistration/proposal-ledger.md", "# v654-v6 proposal ledger\n\n" + "\n".join(f"{i}. **{p['proposal_id']} - {p['title']}**\n   - Pillar: {p['pillar']}\n   - Expected: `{p['expected_disposition']}`\n   - Approval: `{p['approval_class']}`\n   - X1 state: frozen, not executed" for i, p in enumerate(d.PROPOSALS, 1)))
+    write_json("sources/source-ledger.json", {"schema": "ghc.family.v654-v6.source-ledger.v1", "allowed_statuses": d.SOURCE_STATUS_CLASSES, "status_counts": dict(Counter(s["status"] for s in d.SOURCES)), "source_count": len(d.SOURCES), "sources": d.SOURCES, "network_actions": {"purpose": "source verification only", "data_downloads": 0, "real_dataset_rows": 0}, "boundary": "Sources inform bounded contracts; they supply no empirical, professional, legal, cultural, or authority outcome."})
+    write_text("sources/source-ledger.md", "# v654-v6 source ledger\n\n" + "\n".join(f"- **{s['source_id']}** - `{s['status']}` - [{s['title']}]({s['url']})\n  - {s['phase_implication']}" for s in d.SOURCES))
+    write_json("sources/web-reflection-ledger.json", {"schema": "ghc.family.v654-v6.web-reflection-ledger.v1", "phase": d.PHASE, "reflected_at": times, "rows": [{"source_id": s["source_id"], "status": s["status"], "can_inform": s["phase_implication"], "cannot_establish": ["experimental_observation", "production_conformance", "delegated_authority"]} for s in d.SOURCES], "data_downloads": 0, "boundary": "Source reflection is requirements context, not experimental evidence."})
+    write_json("portfolios/expanded-portfolio-plan.json", {"schema": "ghc.family.v654-v6.expanded-portfolio-plan.x1.v1", "counts": counts, "portfolios": portfolios, "inherited_completion_credit": False, "task_cap": 1000, "skill_cap": 200, "runner_cap": 200, "x1_state": "frozen_not_executed"})
+    write_json("approval/x1-approval-classification.json", {"schema": "ghc.family.v654-v6.approval-classification.x1.v1", "core_by_expected_disposition": expected, "safe_now_core_count": 23, "candidate_core_count": 6, "exact_gate_core_count": 1, "held_exact_approval_count": 10, "held_blocked_count": 5, "x1_execution_count": 0, "boundary": "Classification is not execution, approval, evidence, or authority."})
+    write_json("validation/preregistered-mutation-plan.json", {"schema": "ghc.family.v654-v6.mutation-plan.x1.v1", "count": len(mutations), "mutations_per_proposal": 5, "mutations": mutations, "x1_execution_count": 0, "boundary": "Synthetic mutations only; rejection establishes bounded guard behavior, not real-world assurance."})
+    write_json("truth/retained-negative-register.json", {"schema": "ghc.family.v654-v6.retained-negatives.x1.v1", "inherited_sealed": d.INHERITED_SEALED_NEGATIVES, "inherited_external_itemized": d.INHERITED_EXTERNAL_NEGATIVES, "inherited_external_record_count": len(d.INHERITED_EXTERNAL_NEGATIVE_RECORDS), "inherited_external_records": d.INHERITED_EXTERNAL_NEGATIVE_RECORDS, "inherited_effective": d.INHERITED_NEGATIVES, "x1_operational_count": len(d.X1_OPERATIONAL_NEGATIVES), "x1_operational": d.X1_OPERATIONAL_NEGATIVES, "effective_after_x1": d.INHERITED_NEGATIVES + len(d.X1_OPERATIONAL_NEGATIVES), "no_failure_erased": True, "boundary": "Counts preserve sealed, external, and current workflow negatives; a later pass never converts a failure into a pass."})
+    write_json("truth/open-gap-register.json", {"schema": "ghc.family.v654-v6.open-gaps.x1.v1", "inherited_effective_count": d.INHERITED_OPEN_GAPS, "retained_route_issues": [], "new_preregistered": [{"proposal_id": "V6546-P29", "state": "open_gap_expected", "account_or_api_key_used": False, "queries": 0, "downloads": 0, "rows": 0, "likelihoods": 0, "repairs": 0, "deletions": 0}], "expected_effective_after_x2": d.INHERITED_OPEN_GAPS + 1, "closed_in_x1": 0})
+    write_json("truth/exact-gate-register.json", {"schema": "ghc.family.v654-v6.exact-gates.x1.v1", "inherited_count": d.INHERITED_EXACT_GATES, "new_preregistered": [{"proposal_id": "V6546-P30", "state": "exact_gate_expected", "decisions": 0, "required_authority": ["affected peoples, communities, depositors, custodians, rights holders, and digital-collection stakeholders", "competent archival, records, repository, privacy, security, legal, cultural, accessibility, and data-governance authorities", "tangata whenua, iwi, hapū, and Māori authorities"]}], "expected_effective_after_x2": d.INHERITED_EXACT_GATES + 1, "closed_in_x1": 0})
+    write_json("truth/held-approval-packets.json", {"schema": "ghc.family.v654-v6.held-approval-packets.v1", "exact_approval": [{"packet_id": f"V6546-EXACT-{i:02d}", "state": "held_unexecuted"} for i in range(1, 11)], "blocked": [{"packet_id": f"V6546-BLOCKED-{i:02d}", "state": "held_unexecuted"} for i in range(1, 6)], "boundary": "Visibility is not authorization, execution, completion, or authority."})
+    write_json("truth/x1-phase-truth.json", {"schema": "ghc.family.v654-v6.phase-truth.x1.v1", "phase": d.PHASE, "owner": d.OWNER, "lifecycle": "x1_frozen_not_executed", "primary_focus": d.PRIMARY_FOCUS, "other_pillars_visible": True, "proposal_count": 30, "observed_outcome_count": 0, "real_row_count": 0, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "terminal_route": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED", "next_exact_title": "Elaren Kestrel", "next_phase": "v654-v7", "independent_reproduction_claimed": False, "theory_of_everything_claimed": False, "consciousness_or_personhood_claimed": False})
+    write_json("truth/truth-bridge.json", {"schema": "ghc.family.v654-v6.truth-bridge.x1.v1", "rows": [{"surface": "GMUT", "supported": "typed symbolic obligations and zero-row readiness", "not_supported": "force, prediction, likelihood, constraint, confirmation, or Theory of Everything"}, {"surface": "THOS", "supported": "synthetic protocol and structural proxy planning", "not_supported": "participant effect, operational effectiveness, competence, deployment, AGI, or ASI"}, {"surface": "Freed ID", "supported": "synthetic standards profiles", "not_supported": "production identity, real keys, interoperability, privacy or security review, or trust governance"}, {"surface": "CBR", "supported": "unresolved decision-right and authority reservations", "not_supported": "legal, cultural, Māori-authority, remedy, data-governance, or affected-party legitimacy"}], "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
+    write_json("threat-model/x1-threat-model.json", {"schema": "ghc.family.v654-v6.threat-model.x1.v1", "assets": ["x1/x2 separation", "source ancestry", "failure retention", "privacy exclusions", "authority boundaries", "mixed-endpoint route integrity", "send-once boundary"], "threats": ["mixed lifecycle content", "semantic duplication", "failure erasure", "source promotion", "dataset leakage", "identity or authority substitution", "premature successor contact", "direct-and-fallback duplicate"], "controls": ["dedicated x1 commit", "1810-row novelty audit", "Method Flow", "five-class scan", "zero-row firewall", "exact-gate matrix", "exact-title reread", "mutually exclusive fallback"], "residual_risk": "open_and_exact_gated", "exhaustive_security_claimed": False})
+    write_json("route/terminal-route-state.json", {"schema": "ghc.family.v654-v6.route-state.v1", "current_phase": d.PHASE, "current_endpoint_kind": "collaboration_subagent", "immediate_activation": "SENT_TO_SUBAGENT_ACKNOWLEDGED", "successor_phase": "v654-v7", "successor_seat": "Elaren Kestrel", "successor_endpoint_kind": "main_task", "state": "ACTIVE_CURRENT_PHASE_ELAREN_PREPARED_TERMINAL_GATE_REQUIRED", "create_count": 0, "fork_count": 0, "delegate_count": 0, "contact_count": 0, "post_terminal_direct_send_cap": 1, "fallback_return_cap": 1, "direct_and_fallback_mutually_exclusive": True, "boundary": "X1 sends nothing; Elaren may be contacted exactly once only after Tavian terminal validation and exact-title reread, otherwise one Eiren route-gap return."})
+    write_json("workflow/lane-and-drive-decision.json", {"schema": "ghc.family.v654-v6.lane-and-drive-decision.v1", "branch": d.BRANCH, "source_head": d.SOURCE_HEAD, "advance_method": "existing_owned_worktree_new_additive_branch_from_exact_head", "prior_branch_preserved_recoverably": True, "primary_bank": "D", "full_checkout_file_count": sum(1 for p in REPO.rglob("*") if p.is_file()), "rotation_threshold_domain": "owner_generated_only", "owner_file_cap": 2000, "rotation_required": False, "sibling_mutations": 0, "destructive_actions": 0, "boundary": "Owned-lane workflow evidence only."})
+    write_json("workflow/cadence-and-retry-receipt.json", {"schema": "ghc.family.v654-v6.cadence-retry.x1.v1", "bounded_batches": True, "indefinite_watchers": 0, "background_siblings": 0, "retry_policy": "record failure, isolate cause, apply minimum recovery, retain both witnesses, stop after success", "failure_count": len(d.X1_OPERATIONAL_NEGATIVES)})
+    request_path = write_json("workflow/workflow-plan-request.json", workflow_request())
+    write_text("overview/integrated-overview.md", overview_text())
+    write_text("reports/x1-accessible-report.html", accessible_html())
+    write_json("validation/x1-build-receipt.json", {"schema": "ghc.family.v654-v6.x1-build-receipt.v1", "proposal_count": 30, "frozen_count": len(frozen), "portfolio_counts": counts, "mutation_count": len(mutations), "observed_outcomes": 0, "valid": True, "terminal_route": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED", "boundary": "Build completion is not commit, push, validation, x2, or delivery credit."})
+    write_repo("tests/test_ghc_family_v654_v6_x1.py", x1_test_source())
+
+    run(sys.executable, str(METHOD_RUNNER), "validate", "--ledger", str(ROOT / "method-flow/method-flow-ledger.json"), "--receipt", str(ROOT / "method-flow/method-flow-validation.json"))
+    run(sys.executable, str(METHOD_RUNNER), "summarize", "--ledger", str(ROOT / "method-flow/method-flow-ledger.json"), "--json-output", str(ROOT / "method-flow/method-flow-summary.json"), "--markdown-output", str(ROOT / "method-flow/method-flow-summary.md"))
+    run(sys.executable, str(WORKFLOW_RUNNER), str(request_path), "--out-dir", str(ROOT / "workflow"))
+    run(sys.executable, str(INDEX_RUNNER), "--repo", str(REPO), "--skill-root", str(SKILL_ROOT), "--out-dir", str(ROOT / "tooling"), "--phase", d.PHASE, "--owner", d.OWNER)
+    run(sys.executable, str(REFLECTION_RUNNER), "--repo", str(REPO), "--skill-root", str(SKILL_ROOT), "--output-dir", str(ROOT / "reflection-remaster"), "--phase", d.PHASE, "--owner", d.OWNER, "--focus", "digital-preservation", "--focus", "fixity-and-format", "--focus", "mixed-endpoint-routing", "--focus", "accessibility", "--focus", "workflow")
+    catalogue = f"{d.PHASE_ROOT}/tooling/meta-tool-box/catalogue.json"
+    run(sys.executable, str(META_TOOL_RUNNER), "build", "--repo", ".", "--phase-root", d.PHASE_ROOT, "--output", catalogue)
+    run(sys.executable, str(META_TOOL_RUNNER), "validate", "--catalogue", catalogue, "--output", f"{d.PHASE_ROOT}/tooling/meta-tool-box/validation.json")
+    run(sys.executable, str(META_TOOL_RUNNER), "collisions", "--catalogue", catalogue, "--output", f"{d.PHASE_ROOT}/tooling/meta-tool-box/collisions.json")
+    run(sys.executable, str(META_TOOL_RUNNER), "query", "--catalogue", catalogue, "--endpoint-kind", "collaboration_subagent", "--output", f"{d.PHASE_ROOT}/tooling/meta-tool-box/subagent-route-query.json")
+
+    cli_version = run("cmd.exe", "/d", "/c", "codex", "--version")
+    write_json("environment/environment-version-receipt.json", {"schema": "ghc.family.v654-v6.environment.x1.v1", "timestamps": times, "versions": {"codex_cli": cli_version, "python": run(sys.executable, "--version"), "git": run("git", "--version"), "powershell": run("powershell.exe", "-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()")}, "versions_verified_only": True, "desktop_updated": False, "sandbox_or_hyper_v_changed": False, "elevation_or_reboot": False, "storage": {"primary": "D", "free_bytes": shutil.disk_usage("D:/").free, "c_drive": "essential application metadata and skill reads only"}, "owner_generated_file_count": len(status_paths()), "owner_file_cap": 2000})
+    build_manifest()
+
+    if read_json(ROOT / "validation/x1-staged-privacy.json")["confirmed_hit_count"]:
+        raise RuntimeError("x1 privacy scan found confirmed hits")
+    workflow = read_json(ROOT / "workflow/workflow-plan-refinement.json")
+    if not workflow["valid"] or workflow["requires_user_confirmation"]:
+        raise RuntimeError("workflow plan did not validate")
+    if len(overview_text().split()) < 1300:
+        raise RuntimeError("overview below three-page-equivalent floor")
+    print(json.dumps({"phase": d.PHASE, "proposal_count": 30, "frozen_count": len(frozen), "portfolios": counts, "mutations": len(mutations), "privacy_hits": 0, "status": "x1_built_not_committed"}, sort_keys=True))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--method-ledger-source", required=True)
+    args = parser.parse_args()
+    build(Path(args.method_ledger_source).resolve())
+
+
+if __name__ == "__main__":
+    main()
