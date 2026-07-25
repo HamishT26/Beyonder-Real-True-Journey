@@ -15,6 +15,15 @@ X1_COMMIT = subprocess.check_output(
 def load(relative):
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
 
+def load_x1(relative):
+    payload = subprocess.check_output(
+        ["git", "show", f"{X1_COMMIT}:docs/tavian-sol/v654-v6/{relative}"],
+        cwd=REPO,
+        text=True,
+        encoding="utf-8",
+    )
+    return json.loads(payload)
+
 class TestV654V6X1(unittest.TestCase):
     def test_proposals_and_expected_dispositions(self):
         data = load("preregistration/proposals.json")
@@ -46,7 +55,7 @@ class TestV654V6X1(unittest.TestCase):
     def test_failures_method_flow_and_workflow(self):
         negatives = load("truth/retained-negative-register.json")
         self.assertEqual((negatives["inherited_effective"], negatives["x1_operational_count"], negatives["effective_after_x1"]), (11510, 9, 11519))
-        ledger = load("method-flow/method-flow-ledger.json")
+        ledger = load_x1("method-flow/method-flow-ledger.json")
         self.assertEqual(len(ledger["methods"]), 83)
         self.assertEqual(sum(w["result"] == "fail" for w in ledger["witnesses"]), 83)
         self.assertEqual(sum(w["result"] == "pass" for w in ledger["witnesses"]), 83)

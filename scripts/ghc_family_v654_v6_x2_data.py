@@ -71,4 +71,12 @@ X2_OPERATIONAL_NEGATIVES = [
 
 # Append only after an attributable closeout attempt fails. These rows are
 # rebuilt into Method Flow before content seal.
-CLOSEOUT_OPERATIONAL_NEGATIVES = []
+CLOSEOUT_OPERATIONAL_NEGATIVES = [
+    _closeout_negative(
+        1,
+        "first current-phase closeout test aggregate read mutable Method Flow state",
+        "The first 31-test current-phase closeout aggregate passed 30 tests but the x1 lifecycle test compared the current 89-method ledger with the frozen x1 expectation of 83, so the aggregate earned zero credit.",
+        "Make the x1 lifecycle test read the Method Flow ledger from the exact frozen x1 commit, then rebuild the closeout ledger and rerun the bounded current-phase aggregate.",
+        "Lifecycle tests for frozen phase state must read exact committed blobs rather than mutable descendant worktree paths.",
+    ),
+]
