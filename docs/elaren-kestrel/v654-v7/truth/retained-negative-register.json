@@ -1,5 +1,5 @@
 {
-  "effective_after_x1": 11887,
+  "effective_after_x1": 11889,
   "no_failure_erased": true,
   "schema": "ghc.family.v654-v7.retained-negatives.x1.v1",
   "source_effective": 11871,
@@ -131,7 +131,23 @@
       "recovery": "Use the exact staged-review receipt for staged scope and path-bounded scalar Git checks for unstaged owner changes.",
       "recurrence_guard": "Do not recompute a validated staged scope through a second aggregate Git wrapper.",
       "signature": "composite_staged_scope_count_timeout"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The dedicated x1 commit command exceeded its wrapper bound and returned no acknowledgement even though the commit completed at the intended parent and subject.",
+      "negative_id": "V6547-X1-N17",
+      "recovery": "Audit exact HEAD, parent, subject, staged state, and cleanliness before any retry; preserve the original completed commit.",
+      "recurrence_guard": "Never retry an ambiguously timed-out Git mutation before exact-state convergence.",
+      "signature": "x1_commit_wrapper_timeout_late_success"
+    },
+    {
+      "credit": "retained_negative_zero_initial_pass_credit",
+      "failed": "The first correction-focused test found that the x1 manifest still held the staged-review script's pre-correction byte count.",
+      "negative_id": "V6547-X1-N18",
+      "recovery": "Finalize the staged reviewer and negative ledger, then rebuild the complete x1 manifest before restaging.",
+      "recurrence_guard": "Build byte manifests only after every included source file is final for the lifecycle commit.",
+      "signature": "x1_manifest_stale_after_reviewer_correction"
     }
   ],
-  "x1_operational_count": 16
+  "x1_operational_count": 18
 }

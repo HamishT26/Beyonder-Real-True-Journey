@@ -2,9 +2,9 @@
 
 - Phase: v654-v7
 - Owner: Elaren Kestrel
-- Methods: 146
-- Passing witnesses: 146
-- Failed witnesses retained: 146
+- Methods: 148
+- Passing witnesses: 148
+- Failed witnesses retained: 148
 
 ## Preferred methods
 
@@ -1175,6 +1175,22 @@
 - Recurrence guard: Do not recompute a validated staged scope through a second aggregate Git wrapper.
 - Rollback: Stop, retain the failure at zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
 - Witnesses: V6547-WITNESS-X1-16-F, V6547-WITNESS-X1-16-P
+
+### V6547-METHOD-X1-17 — Bounded x1 recovery for x1_commit_wrapper_timeout_late_success
+
+- Trigger: x1_commit_wrapper_timeout_late_success
+- Method: Audit exact HEAD, parent, subject, staged state, and cleanliness before any retry; preserve the original completed commit.
+- Recurrence guard: Never retry an ambiguously timed-out Git mutation before exact-state convergence.
+- Rollback: Stop, retain the failure at zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6547-WITNESS-X1-17-F, V6547-WITNESS-X1-17-P
+
+### V6547-METHOD-X1-18 — Bounded x1 recovery for x1_manifest_stale_after_reviewer_correction
+
+- Trigger: x1_manifest_stale_after_reviewer_correction
+- Method: Finalize the staged reviewer and negative ledger, then rebuild the complete x1 manifest before restaging.
+- Recurrence guard: Build byte manifests only after every included source file is final for the lifecycle commit.
+- Rollback: Stop, retain the failure at zero credit, and leave external, sibling, participant, production, professional, legal, cultural, and authority state unchanged.
+- Witnesses: V6547-WITNESS-X1-18-F, V6547-WITNESS-X1-18-P
 
 ## Retained boundary
 

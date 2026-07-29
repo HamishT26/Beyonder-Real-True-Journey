@@ -53,7 +53,14 @@ def main() -> None:
         for path in paths
         if not path.startswith(PHASE_PREFIX) and path not in ALLOWED_EXACT
     )
-    non_additions = sorted(path for status, path in statuses if status != "A")
+    disallowed_statuses = sorted(
+        (
+            {"status": status, "path": path}
+            for status, path in statuses
+            if status not in {"A", "M"}
+        ),
+        key=lambda row: (row["path"], row["status"]),
+    )
     forbidden_paths = sorted(
         path
         for path in paths
@@ -145,7 +152,7 @@ def main() -> None:
     valid = not any(
         [
             out_of_scope,
-            non_additions,
+            disallowed_statuses,
             forbidden_paths,
             json_errors,
             confirmed,
@@ -169,7 +176,7 @@ def main() -> None:
         "privacy_definition_only_count": len(candidates) - len(confirmed),
         "privacy_confirmed_hits": confirmed,
         "out_of_scope": out_of_scope,
-        "non_additions": non_additions,
+        "disallowed_statuses": disallowed_statuses,
         "forbidden_x2_or_lifecycle_paths": forbidden_paths,
         "x1_structure_valid": structure_valid,
         "valid": valid,

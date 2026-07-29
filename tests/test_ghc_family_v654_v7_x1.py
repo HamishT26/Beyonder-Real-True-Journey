@@ -115,8 +115,8 @@ class ElarenV654V7X1Tests(unittest.TestCase):
         gaps = load("truth/open-gap-register.json")
         gates = load("truth/exact-gate-register.json")
         self.assertEqual(negatives["source_effective"], 11871)
-        self.assertEqual(negatives["x1_operational_count"], 16)
-        self.assertEqual(negatives["effective_after_x1"], 11887)
+        self.assertEqual(negatives["x1_operational_count"], 18)
+        self.assertEqual(negatives["effective_after_x1"], 11889)
         self.assertTrue(negatives["no_failure_erased"])
         self.assertEqual(gaps["inherited_count"], 86)
         self.assertEqual(gates["inherited_count"], 85)
@@ -127,9 +127,9 @@ class ElarenV654V7X1Tests(unittest.TestCase):
         ledger = load("method-flow/method-flow-ledger.json")
         validation = load("method-flow/method-flow-validation.json")
         counts = ledger["counts"]
-        self.assertEqual(counts["methods"], 146)
-        self.assertEqual(counts["witness_results"], {"fail": 146, "pass": 146})
-        self.assertEqual(len(ledger["current_phase_method_ids"]), 16)
+        self.assertEqual(counts["methods"], 148)
+        self.assertEqual(counts["witness_results"], {"fail": 148, "pass": 148})
+        self.assertEqual(len(ledger["current_phase_method_ids"]), 18)
         self.assertTrue(validation["valid"])
 
     def test_route_is_prepared_not_sent(self) -> None:

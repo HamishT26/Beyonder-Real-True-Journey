@@ -1,7 +1,7 @@
 # GHC Family Tooling Index — v654-v7
 
 Owner: **Elaren Kestrel**
-Generated UTC: `2026-07-29T08:08:24.479530+00:00`
+Generated UTC: `2026-07-29T08:19:54.670270+00:00`
 
 This is an inventory and selection aid, not permission to execute every discovered tool.
 
