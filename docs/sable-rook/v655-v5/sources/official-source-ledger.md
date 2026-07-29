@@ -1,0 +1,25 @@
+# Sable Rook v655-v5 official and primary source ledger
+
+Source status is phase-local. `draft` and `watch` rows cannot support stable or production claims.
+
+| ID | Status | Publisher | Title | Use |
+|---|---|---|---|---|
+| WORKSAFE-ARBORICULTURE | watch | WorkSafe New Zealand | [Safety and health in arboriculture](https://www.worksafe.govt.nz/topic-and-industry/forestry/health-and-safety-in-the-arboriculture-industry/safety-and-health-in-arboriculture/) | arboriculture hazard, competence, worksite, weather-stop, rescue, tool, and handover context; explicitly watch because the page says the code predates the current work-health-and-safety legislation |
+| WORKSAFE-TREES-POWER | watch | WorkSafe New Zealand | [Maintenance of trees around powerlines](https://www.worksafe.govt.nz/topic-and-industry/forestry/maintenance-of-trees-around-powerlines/) | powerline-proximity and competent-authority reservation only; no electrical, utility, pruning, access, or clearance decision |
+| NZ-HSWA-2015 | watch | New Zealand Legislation | [Health and Safety at Work Act 2015](https://www.legislation.govt.nz/act/public/2015/70/en/latest/) | workplace duty, training, unsafe-work, and competent-person reservation without legal interpretation |
+| NZ-BIOSECURITY-1993 | watch | New Zealand Legislation | [Biosecurity Act 1993](https://www.legislation.govt.nz/act/public/1993/0095/latest/DLM316745.html) | pest, organism, movement, notification, and authority reservation; no diagnosis, direction, treatment, destruction, or legal decision |
+| MPI-EXOTIC-PESTS | current | Ministry for Primary Industries | [Exotic pests and diseases in New Zealand](https://www.mpi.govt.nz/biosecurity/exotic-pests-and-diseases-in-new-zealand) | symptom-observation, reporting, and referral context only; no species, pest, disease, treatment, or biosecurity determination |
+| NZ-RMA-1991 | watch | New Zealand Legislation | [Resource Management Act 1991](https://www.legislation.govt.nz/act/public/1991/69/en/latest/) | land, environment, heritage, consent, and affected-party reservation without legal interpretation or planning authority |
+| NZ-OPC-PRIVACY-2020 | current | Office of the Privacy Commissioner New Zealand | [Privacy Act 2020 information privacy principles](https://www.privacy.org.nz/privacy-principles/) | purpose, minimization, collection, access, correction, retention, location, and identifier reservations |
+| W3C-VC-DM-20 | stable | W3C | [Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model/) | synthetic tree-asset status claim, evidence, privacy, and nonproduction credential vocabulary |
+| W3C-WCAG-22 | stable | W3C | [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/) | accessible static-report and map-alternative structure with manual, assistive-technology, Māori-language, and affected-user review reserved |
+| W3C-PROV-O | stable | W3C | [PROV-O: The PROV Ontology](https://www.w3.org/TR/prov-o/) | entity, activity, agent, revision, derivation, custody, and correction vocabulary |
+| NIST-SP811 | current | National Institute of Standards and Technology | [NIST SP 811 — Guide for the Use of the International System of Units](https://www.nist.gov/publications/guide-use-international-system-units-si) | unit and conversion discipline; not calibration, tree-risk evidence, biomechanical validation, or measurement authority |
+| RFC-8785 | stable | RFC Editor | [RFC 8785 — JSON Canonicalization Scheme](https://www.rfc-editor.org/rfc/rfc8785.html) | deterministic synthetic tree-event serialization vocabulary |
+| RFC-9530 | stable | RFC Editor | [RFC 9530 — Digest Fields](https://www.rfc-editor.org/rfc/rfc9530.html) | content and representation digest distinction and mismatch quarantine |
+| TMR-PRINCIPLES | current | Te Mana Raraunga | [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty) | Māori rights, interests, governance, jurisdiction, and authority reservation only |
+| ESO-SCIENCE-ARCHIVE | current | European Southern Observatory | [ESO Science Archive](https://www.eso.org/public/science/archive/) | official archive, raw, calibration, processed-product, provenance, selection, and zero-row adapter context; no query or download |
+| ADAMS-POSITIVITY-2006 | stable | Journal of High Energy Physics / arXiv | [Causality, analyticity and an IR obstruction to UV completion](https://arxiv.org/abs/hep-th/0602178) | forward-limit analyticity, unitarity, crossing, subtraction, and positivity obligations; no UV completion or GMUT proof |
+| KHOURY-WELTMAN-2004 | stable | Physical Review Letters / arXiv | [Chameleon fields: Awaiting surprises for tests of gravity in space](https://arxiv.org/abs/astro-ph/0309300) | effective-potential, density, effective-mass, and thin-shell obligations; no force detection, constraint, or confirmation |
+
+These sources inform schemas and boundaries only. They do not certify Sable's prototype, confer professional or governmental authority, or resolve Māori and affected-party gates.
