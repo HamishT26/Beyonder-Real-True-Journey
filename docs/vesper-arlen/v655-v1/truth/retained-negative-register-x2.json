@@ -1,0 +1,33 @@
+{
+  "effective_at_evidence": 12387,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v655-v1.retained-negatives.x2.v1",
+  "source_effective": 12224,
+  "synthetic_mutation_negative_count": 150,
+  "x1_effective": 12234,
+  "x1_operational_count": 10,
+  "x2_operational": [
+    {
+      "failed": "The first 28-test focused run reached 27 passing tests and one error because evidence-validation.json had not yet been materialized.",
+      "negative_id": "V6551-X2-N01",
+      "recovery": "Run the detailed and minimal evidence validators against the prospective evidence manifest, then rerun only the receipt-dependent test.",
+      "recurrence_guard": "Materialize validator receipts before invoking tests that read them; do not rerun an otherwise passing broad selection.",
+      "signature": "focused_tests_started_before_evidence_validator_receipts"
+    },
+    {
+      "failed": "The first exact evidence staged review exceeded its wrapper bound after completing its 159-path Git-blob audit.",
+      "negative_id": "V6551-X2-N02",
+      "recovery": "Do not rerun the same reviewed surface; verify zero Python processes and inspect the durable receipt before deciding whether any new staged surface requires a finalization review.",
+      "recurrence_guard": "Budget the Git-blob staged review separately from its wrapper and treat a durable receipt as evidence only after direct parsing.",
+      "signature": "evidence_staged_review_wrapper_timeout_late_success"
+    },
+    {
+      "failed": "The first PowerShell parse of the 34-kilobyte staged-review receipt timed out without a usable summary.",
+      "negative_id": "V6551-X2-N03",
+      "recovery": "Read the exact UTF-8 JSON with a bounded direct Python parser and extract only validity and mismatch counts.",
+      "recurrence_guard": "Use direct JSON parsing for lifecycle receipts instead of archive-backed PowerShell object conversion.",
+      "signature": "powershell_large_staged_receipt_parse_timeout"
+    }
+  ],
+  "x2_operational_count": 3
+}
