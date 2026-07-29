@@ -1,0 +1,62 @@
+# Eiren v654-v6 (2) remaster bounded outcome ledger
+
+- **V6546R2-P01** - `completed` - 5/5 synthetic mutations rejected.
+  - Trinity Mandala research-constitution ledger with evidence levels E0 through E4, claim scope, authority ceiling, falsifier, recovery, and promotion refusal
+- **V6546R2-P02** - `completed` - 5/5 synthetic mutations rejected.
+  - Omega evidence passport with source action, domain, units, degrees of freedom, conservation, stability, causality, observables, bounds, falsifier, and recovery
+- **V6546R2-P03** - `completed` - 5/5 synthetic mutations rejected.
+  - Action-first Omega derivation grammar with baseline action, additive Delta-S term, metric variation, sign convention, boundary term, and tensor-promotion hold
+- **V6546R2-P04** - `completed` - 5/5 synthetic mutations rejected.
+  - GMUT M0-to-M3 admission ladder with null baseline, minimal scalar candidate, dark-sector-only coupling, exact promotion gate, and model-selection refusal
+- **V6546R2-P05** - `completed` - 5/5 synthetic mutations rejected.
+  - Covariance and Bianchi obligation board with divergence identity, exchange current, matter-sector coupling, boundary assumptions, and conservation-claim firewall
+- **V6546R2-P06** - `completed` - 5/5 synthetic mutations rejected.
+  - Effective-field-theory dimension and power-counting tribunal with operator basis, suppression scale, coefficient units, truncation order, validity domain, and ultraviolet-completion refusal
+- **V6546R2-P07** - `completed` - 5/5 synthetic mutations rejected.
+  - Hyperbolicity stability and causal-cone checklist with principal symbol, kinetic sign, gradient sign, characteristic speed, background domain, and theorem refusal
+- **V6546R2-P08** - `completed` - 5/5 synthetic mutations rejected.
+  - Observable-bridge registry with theoretical quantity, instrument proxy, calibration dependency, selection function, uncertainty budget, likelihood placeholder, and zero-row firewall
+- **V6546R2-P09** - `completed` - 5/5 synthetic mutations rejected.
+  - Correlated-witness discount calculator with witness graph, shared-source edge, shared-infrastructure edge, dependence coefficient, effective-N bound, and independence-claim refusal
+- **V6546R2-P10** - `completed` - 5/5 synthetic mutations rejected.
+  - Sixteen-seat effective-evidence bound with mixed endpoint topology, same-owner dependence, shared-repository coupling, external-review placeholder, and replication-count refusal
+- **V6546R2-P11** - `completed` - 5/5 synthetic mutations rejected.
+  - Evidence-ancestry graph with source commit, x1 freeze, evidence commit, final seal, external receipt, parent count, merge count, and credit-propagation firewall
+- **V6546R2-P12** - `completed` - 5/5 synthetic mutations rejected.
+  - Source-dependence heatmap with inherited artifact, reused method, new mechanism, validation owner, infrastructure owner, and independence reservation
+- **V6546R2-P13** - `completed` - 5/5 synthetic mutations rejected.
+  - Claim-evidence-authority matrix with assertion, evidence level, same-owner status, affected-party status, professional review, legal review, cultural review, and maximum wording
+- **V6546R2-P14** - `completed` - 5/5 synthetic mutations rejected.
+  - THOS typed task contract with objective, inputs, outputs, invariants, authority class, privacy class, resource budget, timeout, rollback, and acceptance predicate
+- **V6546R2-P15** - `completed` - 5/5 synthetic mutations rejected.
+  - THOS deterministic reconciler state machine with desired state, observed state, idempotence key, bounded retry, stale-write refusal, compensation record, and convergence hold
+- **V6546R2-P16** - `completed` - 5/5 synthetic mutations rejected.
+  - THOS transport-boundary profile with endpoint kind, message schema, acknowledgement state, timeout, duplicate suppression, private-route exclusion, and fallback mutual exclusion
+- **V6546R2-P17** - `completed` - 5/5 synthetic mutations rejected.
+  - THOS workload-identity least-privilege board with workload name, capability set, secret absence, scope ceiling, expiry placeholder, audit event, and elevation refusal
+- **V6546R2-P18** - `completed` - 5/5 synthetic mutations rejected.
+  - THOS evaluation-plane contract with fixture provenance, metric definition, negative retention, matched-budget placeholder, blinded-arm gap, independent-review gap, and effectiveness refusal
+- **V6546R2-P19** - `completed` - 5/5 synthetic mutations rejected.
+  - Compute and environmental cost ledger with test count, elapsed-time class, storage growth, network action count, replay count, budget ceiling, and efficiency-claim refusal
+- **V6546R2-P20** - `represented` - 5/5 synthetic mutations rejected.
+  - Elaren model-constitution candidate with training-data rights, provenance tier R0 through R3, consent placeholder, opt-out gap, evaluation duty, and no-training boundary
+- **V6546R2-P21** - `represented` - 5/5 synthetic mutations rejected.
+  - Freed ID minimum standards profile with identifier method placeholder, key representation, proof suite, status mechanism, holder binding, recovery, privacy review, and interoperability gap
+- **V6546R2-P22** - `completed` - 5/5 synthetic mutations rejected.
+  - CBR non-compensable-rights operator with right class, prohibited tradeoff, emergency placeholder, appeal path, remedy reservation, and aggregate-score override refusal
+- **V6546R2-P23** - `completed` - 5/5 synthetic mutations rejected.
+  - Continuity-without-identity-substitution invariant with endpoint kind, title, controller, lineage evidence, relational-language boundary, rename authority, and personhood refusal
+- **V6546R2-P24** - `completed` - 5/5 synthetic mutations rejected.
+  - Residual-set preservation ledger with unresolved negative, open gap, exact gate, supersession link, no-erasure flag, recovery witness, and aggregate-credit refusal
+- **V6546R2-P25** - `represented` - 5/5 synthetic mutations rejected.
+  - Thermo-psyche L11-to-L16 design-principle board with recursive-gain margin, evidence-authority proportionality, witness discount, noncompensable rights, continuity invariant, residual preservation, and physical-law refusal
+- **V6546R2-P26** - `completed` - 5/5 synthetic mutations rejected.
+  - Erdos-Straus bounded identity checker with integer domain, denominator family, exact rational arithmetic, verified finite range, counterexample capture, and universal-proof refusal
+- **V6546R2-P27** - `represented` - 5/5 synthetic mutations rejected.
+  - Legacy quantum-energy transmutation, quantum-to-classical translator, and infinity-vortex claims triage with source pointer, mechanism gap, unit gap, test gap, status class, and canon refusal
+- **V6546R2-P28** - `represented` - 5/5 synthetic mutations rejected.
+  - Independent red-team and reproduction packet with frozen artifact hash, environment contract, conflict declaration, blind mutation set, replication owner gap, and same-owner-credit refusal
+- **V6546R2-P29** - `open_gap` - 5/5 synthetic mutations rejected.
+  - Real GMUT baseline and THOS matched-budget adapter with official-data source, inclusion rule, calibration split, blinded comparator, participant authorization, likelihood plan, and zero-query refusal
+- **V6546R2-P30** - `exact_gate` - 5/5 synthetic mutations rejected.
+  - CBR affected-party and Maori authority reservation for identity, training data, model deployment, benefit sharing, remedy, language, accessibility, data sovereignty, and governance
