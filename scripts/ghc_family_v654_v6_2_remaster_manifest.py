@@ -259,6 +259,8 @@ def command_privacy(args: argparse.Namespace) -> int:
     definition_paths = {
         Path(__file__).relative_to(REPO).as_posix(),
         "scripts/build_ghc_family_v654_v6_2_remaster_x1.py",
+        "scripts/ghc_family_v654_v6_2_remaster_final_validate.py",
+        "tests/test_ghc_family_v654_v6_2_remaster_closeout.py",
     }
     confirmed = [row for row in candidates if row["path"] not in definition_paths]
     payload = {
