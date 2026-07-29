@@ -1,0 +1,40 @@
+{
+  "effective_at_evidence": 12720,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v655-v3.retained-negatives.x2.v1",
+  "source_effective": 12554,
+  "synthetic_mutation_negative_count": 150,
+  "x1_effective": 12566,
+  "x1_operational_count": 12,
+  "x2_operational": [
+    {
+      "failed": "The first whole-file display of the required skill-creator instructions was truncated, so it did not prove an EOF-complete read.",
+      "negative_id": "V6553-X2-N01",
+      "recovery": "Read the exact instruction file with direct .NET line access in bounded numbered chunks through the measured final line, then read its required openai.yaml reference through EOF.",
+      "recurrence_guard": "Measure large instruction files first and use bounded numbered chunks whenever one display could exceed the tool or model context.",
+      "signature": "skill_creator_whole_file_display_truncated"
+    },
+    {
+      "failed": "One bounded instruction chunk emitted its complete requested range but crossed the initial ten-second command wrapper and received zero clean completion credit.",
+      "negative_id": "V6553-X2-N02",
+      "recovery": "Continue from the next exact line with a wider bounded timeout and confirm every remaining line plus the required reference through EOF.",
+      "recurrence_guard": "Allow an adequate bounded wrapper for direct .NET reads in this large Windows workspace and distinguish emitted text from process success.",
+      "signature": "skill_creator_bounded_chunk_wrapper_timed_out_after_output"
+    },
+    {
+      "failed": "The first x2 template audit passed wildcard path arguments directly to rg on Windows; the operating system rejected each literal path.",
+      "negative_id": "V6553-X2-N03",
+      "recovery": "Search the scripts and tests directory roots with explicit rg -g filters; the bounded recovery enumerated all stale template tokens.",
+      "recurrence_guard": "Use directory roots plus rg glob filters on Windows instead of wildcard characters in positional path arguments.",
+      "signature": "windows_rg_wildcard_path_rejected"
+    },
+    {
+      "failed": "The first otherwise successful evidence build produced a 7,135-word integrated overview, exceeding the phase document cap of 6,000 words.",
+      "negative_id": "V6553-X2-N04",
+      "recovery": "Keep every proposal, disposition, mutation count, source need, artifact class, and evidence boundary while removing repeated full preregistration sentences from the reader-facing proposal summaries.",
+      "recurrence_guard": "Enforce both the three-page minimum and 6,000-word maximum immediately after generating each phase narrative.",
+      "signature": "first_evidence_overview_exceeded_document_word_cap"
+    }
+  ],
+  "x2_operational_count": 4
+}

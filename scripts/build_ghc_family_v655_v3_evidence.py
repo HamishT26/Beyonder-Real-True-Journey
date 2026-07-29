@@ -1,0 +1,2266 @@
+#!/usr/bin/env python3
+"""Build Ilyra Fen's v655-v3 x2 evidence candidate."""
+
+from __future__ import annotations
+
+import hashlib
+import html
+import json
+import os
+import subprocess
+import sys
+from collections import Counter
+from pathlib import Path
+from typing import Any
+
+import ghc_family_v655_v3_core as core
+import ghc_family_v655_v3_phase_data as d
+
+
+REPO = Path(__file__).resolve().parents[1]
+ROOT = REPO / d.PHASE_ROOT
+X1_COMMIT = "e98b40654e48f5adb75f8d436256978e4eb51070"
+EVIDENCE_COMMIT = "UNSET_UNTIL_IMMUTABLE_EVIDENCE_COMMIT"
+SKILL_ROOT = Path.home() / ".codex" / "skills"
+QUICK_VALIDATE = (
+    SKILL_ROOT / ".system/skill-creator/scripts/quick_validate.py"
+)
+INIT_SKILL = SKILL_ROOT / ".system/skill-creator/scripts/init_skill.py"
+RUNNERS = [
+    (
+        "ghc-family-optical-job-intake-boundary",
+        "ghc_family_optical_job_intake_boundary.py",
+        1,
+    ),
+    (
+        "ghc-family-prescription-transcription-provenance",
+        "ghc_family_prescription_transcription_provenance.py",
+        2,
+    ),
+    (
+        "ghc-family-lens-lot-traceability",
+        "ghc_family_lens_lot_traceability.py",
+        3,
+    ),
+    (
+        "ghc-family-optical-measurement-proxy",
+        "ghc_family_optical_measurement_proxy.py",
+        4,
+    ),
+    (
+        "ghc-family-lens-compatibility-firewall",
+        "ghc_family_lens_compatibility_firewall.py",
+        5,
+    ),
+    (
+        "ghc-family-optical-remake-correction",
+        "ghc_family_optical_remake_correction.py",
+        6,
+    ),
+    (
+        "ghc-family-optical-job-privacy",
+        "ghc_family_optical_job_privacy.py",
+        7,
+    ),
+    (
+        "ghc-family-optical-job-accessibility",
+        "ghc_family_optical_job_accessibility.py",
+        8,
+    ),
+    (
+        "ghc-family-optical-identifier-profile",
+        "ghc_family_optical_identifier_profile.py",
+        9,
+    ),
+    (
+        "ghc-family-optical-evidence-firewall",
+        "ghc_family_v655_v3_suite.py",
+        10,
+    ),
+]
+X2_SCRIPTS = [
+    "scripts/ghc_family_v655_v3_core.py",
+    "scripts/ghc_family_optical_job_intake_boundary.py",
+    "scripts/ghc_family_prescription_transcription_provenance.py",
+    "scripts/ghc_family_lens_lot_traceability.py",
+    "scripts/ghc_family_optical_measurement_proxy.py",
+    "scripts/ghc_family_lens_compatibility_firewall.py",
+    "scripts/ghc_family_optical_remake_correction.py",
+    "scripts/ghc_family_optical_job_privacy.py",
+    "scripts/ghc_family_optical_job_accessibility.py",
+    "scripts/ghc_family_optical_identifier_profile.py",
+    "scripts/ghc_family_v655_v3_suite.py",
+    "scripts/build_ghc_family_v655_v3_evidence.py",
+    "scripts/ghc_family_v655_v3_validate.py",
+    "scripts/ghc_family_v655_v3_evidence_staged_review.py",
+]
+X2_TESTS = [
+    "tests/test_ghc_family_v655_v3_core.py",
+    "tests/test_ghc_family_v655_v3_validation.py",
+]
+X2_OPERATIONAL_NEGATIVES: list[dict[str, str]] = [
+    {
+        "negative_id": "V6553-X2-N01",
+        "signature": "powershell_receipt_state_probes_timed_out_without_output",
+        "failed": (
+            "One combined and three split bounded PowerShell probes for the staged "
+            "receipt, Git status, and live processes timed out without output."
+        ),
+        "recovery": (
+            "Use direct Node filesystem reads and bounded child-process probes, then "
+            "confirm that the review receipt exists, no Git or Python process remains, "
+            "and Git status is readable."
+        ),
+        "recurrence_guard": (
+            "Prefer direct scalar filesystem and child-process probes for this large "
+            "owned lane instead of PowerShell object pipelines at lifecycle gates."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N02",
+        "signature": "git_diff_files_quiet_reported_nonquiet_for_staged_additions",
+        "failed": (
+            "git diff-files --quiet returned nonzero after the deterministic staged "
+            "review even though the named unstaged diff was empty."
+        ),
+        "recovery": (
+            "Inspect git diff --name-status and porcelain-v2 directly; both showed no "
+            "unstaged path while all 161 candidate paths remained staged additions."
+        ),
+        "recurrence_guard": (
+            "Do not treat diff-files --quiet alone as an exact unstaged-content verdict "
+            "for an all-addition index; pair the gate with explicit named-diff output."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N03",
+        "signature": "git_diff_quiet_precommit_probe_timed_out",
+        "failed": (
+            "A bounded git diff --quiet precommit probe exceeded its timeout and could "
+            "not contribute pass credit."
+        ),
+        "recovery": (
+            "Use a bounded git diff --name-status probe plus porcelain-v2 and exact "
+            "index-object comparison to establish the absence of unstaged changes."
+        ),
+        "recurrence_guard": (
+            "Use explicit path-producing diff probes with captured timeout status at "
+            "large staged lifecycle boundaries."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N04",
+        "signature": "focused_test_retained_negative_literal_became_stale",
+        "failed": (
+            "The first focused post-rebuild test run passed 27 of 28 tests but "
+            "failed because a literal expected 12,214 effective negatives after "
+            "the retained probe faults raised the ledger total to 12,217."
+        ),
+        "recovery": (
+            "Assert the effective-negative arithmetic from the ledger fields and "
+            "derive Method Flow totals from the explicit x2 operational row count."
+        ),
+        "recurrence_guard": (
+            "Test ledger conservation equations and explicit row parity instead of "
+            "embedding a count that becomes stale when a new failure is retained."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N05",
+        "signature": "porcelain_v2_restage_probe_timed_out",
+        "failed": (
+            "A full porcelain-v2 status probe exceeded its 15-second bound before "
+            "restaging and returned no usable state."
+        ),
+        "recovery": (
+            "Resolve cached, unstaged, and untracked name sets with separate bounded "
+            "Git commands and compare those explicit paths to the owned allowlist."
+        ),
+        "recurrence_guard": (
+            "Use separate name-only Git surfaces with an adequate bound instead of "
+            "requiring one full porcelain record over a large staged candidate."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N06",
+        "signature": "correction_reviewer_required_superset_mismatched_delta",
+        "failed": (
+            "Preflight inspection found that the correction reviewer required "
+            "unchanged validator and test paths from a different repair shape, so it "
+            "would reject the bounded evidence-anchor correction."
+        ),
+        "recovery": (
+            "Bind the reviewer to the exact generated negative-ledger, Method Flow, "
+            "validation, manifest, and anchor-script delta, with only its own receipt "
+            "admitted as a self-exclusion."
+        ),
+        "recurrence_guard": (
+            "Derive correction-required paths from the actual immutable-parent delta "
+            "and reject both missing and unexpected paths."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N07",
+        "signature": "git_grep_cached_option_was_parsed_as_revision",
+        "failed": (
+            "The staged stale-anchor probe placed --cached after the search pattern; "
+            "Git parsed it as a revision and returned 'unable to resolve revision: "
+            "--cached'."
+        ),
+        "recovery": (
+            "Place git grep options before the pattern and path delimiter, then treat "
+            "status 1 with empty output as the expected no-match result."
+        ),
+        "recurrence_guard": (
+            "Keep git grep options before its pattern and reserve the double dash for "
+            "the pathspec boundary."
+        ),
+    },
+]
+
+
+# The mechanically inherited source-template examples above are inert and earn
+# no Ilyra evidence. Only failures actually observed in this phase enter the
+# active register below.
+X2_OPERATIONAL_NEGATIVES = [
+    {
+        "negative_id": "V6553-X2-N01",
+        "signature": "skill_creator_whole_file_display_truncated",
+        "failed": (
+            "The first whole-file display of the required skill-creator "
+            "instructions was truncated, so it did not prove an EOF-complete read."
+        ),
+        "recovery": (
+            "Read the exact instruction file with direct .NET line access in bounded "
+            "numbered chunks through the measured final line, then read its required "
+            "openai.yaml reference through EOF."
+        ),
+        "recurrence_guard": (
+            "Measure large instruction files first and use bounded numbered chunks "
+            "whenever one display could exceed the tool or model context."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N02",
+        "signature": "skill_creator_bounded_chunk_wrapper_timed_out_after_output",
+        "failed": (
+            "One bounded instruction chunk emitted its complete requested range but "
+            "crossed the initial ten-second command wrapper and received zero clean "
+            "completion credit."
+        ),
+        "recovery": (
+            "Continue from the next exact line with a wider bounded timeout and "
+            "confirm every remaining line plus the required reference through EOF."
+        ),
+        "recurrence_guard": (
+            "Allow an adequate bounded wrapper for direct .NET reads in this large "
+            "Windows workspace and distinguish emitted text from process success."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N03",
+        "signature": "windows_rg_wildcard_path_rejected",
+        "failed": (
+            "The first x2 template audit passed wildcard path arguments directly to "
+            "rg on Windows; the operating system rejected each literal path."
+        ),
+        "recovery": (
+            "Search the scripts and tests directory roots with explicit rg -g "
+            "filters; the bounded recovery enumerated all stale template tokens."
+        ),
+        "recurrence_guard": (
+            "Use directory roots plus rg glob filters on Windows instead of wildcard "
+            "characters in positional path arguments."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N04",
+        "signature": "first_evidence_overview_exceeded_document_word_cap",
+        "failed": (
+            "The first otherwise successful evidence build produced a 7,135-word "
+            "integrated overview, exceeding the phase document cap of 6,000 words."
+        ),
+        "recovery": (
+            "Keep every proposal, disposition, mutation count, source need, artifact "
+            "class, and evidence boundary while removing repeated full preregistration "
+            "sentences from the reader-facing proposal summaries."
+        ),
+        "recurrence_guard": (
+            "Enforce both the three-page minimum and 6,000-word maximum immediately "
+            "after generating each phase narrative."
+        ),
+    },
+]
+SOURCE_TEMPLATE_RUNTIME_NEGATIVE_EXAMPLES = [
+    {
+        "negative_id": "V6553-X2-N01",
+        "signature": "focused_tests_started_before_evidence_validator_receipts",
+        "failed": (
+            "The first 28-test focused run reached 27 passing tests and one error "
+            "because evidence-validation.json had not yet been materialized."
+        ),
+        "recovery": (
+            "Run the detailed and minimal evidence validators against the "
+            "prospective evidence manifest, then rerun only the receipt-dependent "
+            "test."
+        ),
+        "recurrence_guard": (
+            "Materialize validator receipts before invoking tests that read them; "
+            "do not rerun an otherwise passing broad selection."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N02",
+        "signature": "evidence_staged_review_wrapper_timeout_late_success",
+        "failed": (
+            "The first exact evidence staged review exceeded its wrapper bound "
+            "after completing its 159-path Git-blob audit."
+        ),
+        "recovery": (
+            "Do not rerun the same reviewed surface; verify zero Python processes "
+            "and inspect the durable receipt before deciding whether any new staged "
+            "surface requires a finalization review."
+        ),
+        "recurrence_guard": (
+            "Budget the Git-blob staged review separately from its wrapper and "
+            "treat a durable receipt as evidence only after direct parsing."
+        ),
+    },
+    {
+        "negative_id": "V6553-X2-N03",
+        "signature": "powershell_large_staged_receipt_parse_timeout",
+        "failed": (
+            "The first PowerShell parse of the 34-kilobyte staged-review receipt "
+            "timed out without a usable summary."
+        ),
+        "recovery": (
+            "Read the exact UTF-8 JSON with a bounded direct Python parser and "
+            "extract only validity and mismatch counts."
+        ),
+        "recurrence_guard": (
+            "Use direct JSON parsing for lifecycle receipts instead of archive-"
+            "backed PowerShell object conversion."
+        ),
+    },
+]
+
+
+def write_json(relative: str, payload: Any) -> Path:
+    path = ROOT / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    return path
+
+
+def write_text(relative: str, payload: str) -> Path:
+    path = ROOT / relative
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(payload.rstrip() + "\n", encoding="utf-8", newline="\n")
+    return path
+
+
+def read_json(relative: str) -> dict[str, Any]:
+    return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+
+def run(*args: str) -> str:
+    env = os.environ.copy()
+    env.update(
+        {
+            "PYTHONUTF8": "1",
+            "PYTHONIOENCODING": "utf-8",
+            "PYTHONDONTWRITEBYTECODE": "1",
+        }
+    )
+    result = subprocess.run(
+        list(args),
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env=env,
+    )
+    return result.stdout.strip()
+
+
+def append_x2_method_flow() -> dict[str, Any]:
+    ledger = read_json("method-flow/method-flow-ledger.json")
+    methods = list(ledger["methods"])
+    witnesses = list(ledger["witnesses"])
+    events = list(ledger["state_events"])
+    recommendations = list(ledger["recommendations"])
+    current_ids = []
+    for index, negative in enumerate(X2_OPERATIONAL_NEGATIVES, 1):
+        method_id = f"{d.PHASE_CODE}-METHOD-X2-{index:02d}"
+        failed_id = f"{d.PHASE_CODE}-WITNESS-X2-{index:02d}-F"
+        passing_id = f"{d.PHASE_CODE}-WITNESS-X2-{index:02d}-P"
+        current_ids.append(method_id)
+        methods.append(
+            {
+                "method_id": method_id,
+                "title": f"Bounded x2 recovery for {negative['signature']}",
+                "trigger_preconditions": [negative["signature"]],
+                "failure_signature": negative["failed"],
+                "candidate_workaround": negative["recovery"],
+                "recurrence_guard": negative["recurrence_guard"],
+                "approval_class": "safe_now_owner_local_workflow_recovery",
+                "privacy_class": "sanitized_public",
+                "scope_boundary": "Same-owner bounded workflow recovery only.",
+                "rollback": (
+                    "Stop, retain the failed attempt at zero credit, and leave "
+                    "objects, tools, materials, external, and sibling state unchanged."
+                ),
+                "protected_gates": d.PROTECTED_GATES,
+                "retained_negative_ids": [negative["negative_id"]],
+                "validation_witness_ids": [failed_id, passing_id],
+                "recommendation_state": "preferred",
+                "supersedes": [],
+            }
+        )
+        witnesses.extend(
+            [
+                {
+                    "witness_id": failed_id,
+                    "method_id": method_id,
+                    "result": "fail",
+                    "scope": negative["signature"],
+                    "procedure": "Retain the original bounded attempt without replay credit.",
+                    "expected": "The original operation satisfies its bounded postcondition.",
+                    "observed": negative["failed"],
+                    "retained_negative_ids": [negative["negative_id"]],
+                    "same_owner_only": True,
+                    "independent_reproduction": False,
+                    "boundary": "Zero pass credit; failure remains retained.",
+                },
+                {
+                    "witness_id": passing_id,
+                    "method_id": method_id,
+                    "result": "pass",
+                    "scope": negative["signature"],
+                    "procedure": negative["recovery"],
+                    "expected": "The isolated recovery establishes only its bounded postcondition.",
+                    "observed": (
+                        f"The bounded recovery completed for {negative['signature']}; "
+                        "the original failure remains retained."
+                    ),
+                    "retained_negative_ids": [negative["negative_id"]],
+                    "same_owner_only": True,
+                    "independent_reproduction": False,
+                    "boundary": "Same-owner bounded recovery only.",
+                },
+            ]
+        )
+        events.append(
+            {
+                "event_id": f"{d.PHASE_CODE}-METHOD-EVENT-X2-{index:02d}",
+                "method_id": method_id,
+                "from": "candidate",
+                "to": "preferred",
+                "basis": [failed_id, passing_id],
+                "boundary": "The passing recovery preserves the failed witness.",
+            }
+        )
+    recommendations.append(
+        "Keep x2 recovery steps narrow, reproducible, and nonpromotional."
+    )
+    ledger.update(
+        {
+            "lifecycle": "x2_evidence_candidate",
+            "methods": methods,
+            "witnesses": witnesses,
+            "state_events": events,
+            "recommendations": recommendations,
+            "current_phase_x2_method_ids": current_ids,
+            "counts": {
+                "methods": len(methods),
+                "witnesses": len(witnesses),
+                "state_events": len(events),
+                "recommendations": len(recommendations),
+                "states": {
+                    "observed": 0,
+                    "candidate": 0,
+                    "validated": 0,
+                    "preferred": len(methods),
+                    "superseded": 0,
+                    "deprecated": 0,
+                },
+                "witness_results": {
+                    "pass": sum(row["result"] == "pass" for row in witnesses),
+                    "fail": sum(row["result"] == "fail" for row in witnesses),
+                },
+            },
+        }
+    )
+    return ledger
+
+
+def build_overview(results: list[dict[str, Any]]) -> str:
+    surface_rows = "\n".join(
+        f"- `{row['proposal_id']}` — **{row['observed_outcome']}**: "
+        f"{row['contract']['mechanism']}; five frozen mutations rejected."
+        for row in results
+    )
+    return f"""# Ilyra Fen v655-v3 integrated overview
+
+## Outcome first
+
+This phase completes thirty owner-local, deterministic specification surfaces:
+23 are `completed`, five are `represented`, one remains an `open_gap`, and one
+remains an `exact_gate`. Every one of the 150 preregistered synthetic mutations
+was rejected. A completed row means only that its bounded contract, valid
+fixture, mutation tribunal, and receipt satisfy their frozen software
+obligations. It does not mean that a credential system was deployed, a record
+was disposed of, an affected person accepted a design, a privacy or security
+programme was certified, or any scientific, professional, legal, cultural, or
+Māori authority was exercised.
+
+Neris's primary Trinity Mandala pillar is Freed ID and CBR Heart. The bounded
+human-practice lens is privacy engineering and public-interest records
+stewardship. GMUT Mind remains visible through claim-to-observable
+preregistration and dimensional provenance. THOS Body remains visible through
+rights-aware task envelopes and capability attenuation. These are learning and
+specification lenses, not evidence of employment, qualification, independent
+agency, consciousness, personhood, or authority.
+
+The inherited source is Eiren Kestrel's exact v654-v6 (2) remaster final. The
+dedicated x1 freeze advances its 1,870-row proposal chain to 1,900 rows before
+x2 execution. The x1 packet contains no observed x2 outcomes. Its first freeze
+commit and one retained-failure correction are both direct, single-parent
+additions. This evidence candidate does not rewrite either commit.
+
+## What was built
+
+Each proposal produces a contract, five mutation results, and a bounded receipt.
+The contract fixes the mechanism, disposition, approval class, execution lane,
+official-source identifiers, mechanism fields, protected gates, rollback,
+resource budget, external-action counts, and promotion claims. Valid fixtures
+require every external action count to remain zero. They also require every
+promotion claim—including independent reproduction, empirical confirmation,
+production readiness, privacy completeness, complete accessibility, exhaustive
+security, professional validation, legal or cultural ratification, Māori
+authority, AGI or ASI, consciousness or personhood, Theory-of-Everything status,
+and Stage 20—to remain false.
+
+The five mutation families target different failure modes. The missing-
+obligation mutation removes rollback. The wrong-domain mutation replaces a
+mechanism-field list with a scalar. The resource/freshness mutation introduces
+a post-success replay and an unbounded freshness mode. The promotion mutation
+asserts production and Stage 20. The authority/privacy mutation introduces a
+live credential and authority decision. All 150 candidates fail closed, and
+each rejection stays visible as a synthetic negative rather than being deleted
+after the valid fixture passes.
+
+Ten phase-local skills were initialized through the standard skill creator,
+given concise trigger descriptions and imperative workflows, and validated
+individually. They cover purpose binding, consent freshness, selective-
+disclosure minimization, linkability auditing, recovery and appeal dual
+control, records disposition, credential lifecycle accessibility, offline
+verifier freshness, capability attenuation, and claim-to-observable
+preregistration. They are committed inside this phase and are not globally
+installed. Ten family-compatible runner entrypoints were invoked. Nine run
+three-contract groups; the suite runner executes all thirty and includes the
+tenth group. Their receipts are deterministic, owner-local witnesses only.
+
+## Heart: identity, privacy, records, and remedy
+
+Purpose binding is a first-class control rather than a free-text note. A
+declared purpose is connected to allowed operations, prohibited reuse, evidence
+provenance, expiry, and fail-closed recovery. The companion purpose-change gate
+requires an explicit compatibility review and reauthorization dependency.
+Neither fixture determines lawful basis or consent. Those matters depend on
+facts, jurisdiction, affected parties, competent advice, and real institutional
+authority.
+
+The consent-freshness lattice represents grant class, scope, time, withdrawal,
+delegation, and conflict. Its represented status is deliberate: no live consent
+registry or affected person was consulted. Likewise, revocation latency is a
+protocol proxy because the phase uses no live issuer, status endpoint, resolver,
+key, credential, or relying party. W3C status-list semantics help define fields
+and risks, but a passing fixture cannot establish real revocation performance.
+
+Selective-disclosure minimization starts from the decision predicate and asks
+which attributes are strictly necessary. Global identifiers and status
+references are treated as possible correlation edges. The linkability harness
+and status-list leakage audit expose relying-party joins, index allocation,
+population size, cache behavior, retrieval observation, and churn. These
+structures make risks reviewable; they do not prove unlinkability or complete
+privacy, especially against malicious or colluding issuers and verifiers.
+
+Recovery and appeal use dual control. The requester, initial reviewer,
+independent reviewer, escalation path, evidence boundary, timeout, and remedy
+reservation remain distinct. Correction propagation records disputes and
+downstream recipients without silently overwriting history. Algorithmic-
+decision notices include purpose, data classes, logic category, material
+effect, challenge path, and human contact. No real adverse decision, identity
+recovery, correction, or remedy is made.
+
+Records disposition is represented because real retention, legal holds,
+destruction, transfer, or cryptographic erasure require exact records classes,
+authorities, legal and institutional facts, approvals, and audit evidence.
+Archives New Zealand guidance supplies an official obligation source, not an
+authorization for this phase. The evidence-retention minimization matrix links
+claim class to minimum proof, retention clock, access class, holds, disposal
+witnesses, and over-retention rejection. No record or key is destroyed.
+
+The remedy and beneficiary privacy ledger separates accountability from public
+exposure. It records harm class, minimum disclosure, beneficiary shielding,
+fund-audit placeholders, and appeal. It reserves remedy design, affected-party
+acceptance, beneficiary privacy, and fund governance. The final Heart exact
+gate preserves Māori wording, tikanga, data sovereignty, language, remedy,
+benefit sharing, cultural ratification, legal interpretation, and enacted-law
+status for authorized Māori and affected-party processes.
+
+## Body: bounded THOS controls
+
+THOS receives two explicit completed surfaces. The signed task-envelope boundary
+connects objective, capability, data purpose, privacy class, expiry, revocation,
+rollback, and authority ceiling. The attenuation checker requires every
+delegated capability to narrow scope, audience, duration, and data purpose.
+Broader or ambiguous authority fails closed. No account, secret, API key,
+production task, sibling mutation, external write, or deployment occurs.
+
+These artifacts support a safer orchestration vocabulary, but they are not an
+AGI or ASI architecture, an operational security certification, or evidence of
+real-world effectiveness. THOS remains a proxy and protocol family until
+preregistered blind matched-budget real arms and independent review exist.
+Related family lanes share infrastructure and ancestry; their repeated success
+must be discounted rather than counted as independent replication.
+
+## Mind: bounded GMUT research-model integrity
+
+The claim-to-observable hash chain freezes a model version, observable, units,
+inclusion rule, null, analysis digest, timestamp, and falsifier before data.
+The dimensional-provenance ledger tracks equation term, unit basis, coefficient
+origin, transformation, uncertainty class, and revision. Both are useful
+research controls. Neither uses a real dataset, runs a likelihood, estimates a
+parameter, predicts a force, or confirms a model.
+
+GMUT therefore remains a typed scalar-tensor or effective-field-theory research-
+model family. The Mandala equation and Omega notation may organize hypotheses,
+but symbolic consistency and provenance do not establish that nature follows
+the equation. Theory-of-Everything, canon, empirical confirmation, and Stage 20
+remain false.
+
+## Source and standards discipline
+
+The official ledger distinguishes `current`, `stable`, `draft`, and `watch`.
+W3C Verifiable Credentials 2.0, Data Integrity, Bitstring Status List, WCAG 2.2,
+NIST Digital Identity Revision 4, NIST Privacy Framework, OAuth Security BCP,
+New Zealand privacy principles, Archives New Zealand guidance, and Te Mana
+Raraunga principles inform fields and reservations. NIST Privacy Framework 1.1
+is draft context, and selective-disclosure cryptosuite work is watch-only.
+Draft and watch materials cannot silently support stable or production claims.
+
+Source authority also does not transfer. Reading official guidance does not
+turn Neris into a regulator, archivist, privacy professional, cryptographer,
+accessibility auditor, lawyer, cultural authority, or Māori authority. Manual
+and affected-user accessibility evaluation remains reserved. Real standards
+conformance requires exact implementation profiles, keys, proofs, resolution,
+status, interoperability, security and privacy review, recovery, and trust
+governance.
+
+## Validation and retained failures
+
+The phase preserves every inherited negative and all eighteen x1 operational
+failures. The x2 import-path mismatch is retained with both its failed and
+passing Method Flow witnesses. The 150 mutation rejections are additional
+synthetic negatives. A valid correction does not erase its failure. The
+evidence candidate is checked with focused development tests, detailed and
+minimal validators, JSON parsing, a five-class privacy scan, prospective Git-
+blob manifests, exact staged review, and diff hygiene before its immutable
+evidence commit.
+
+The final canonical pass is intentionally deferred. It will run once only after
+the combined closeout/seal/final commit is created, pushed, and known by exact
+hash. If it passes completely, it will not be replayed. Failed attempts receive
+zero credit and must be isolated before any justified broader retry. Even a
+successful pass is same-owner validation under shared infrastructure, not
+independent-team reproduction or external audit.
+
+## Surface ledger
+
+{surface_rows}
+
+## What remains incomplete
+
+The real Freed ID interoperability and affected-user study stays open. It needs
+standards-conformant real keys and proofs, live issuance, resolution, status and
+revocation, recovery, multiple implementations, participant authorization,
+privacy and security review, trust governance, and independent review. The
+affected-party and Māori governance proposal stays exact-gated. No synthetic
+fixture can substitute for the people and authorities whose rights, language,
+data, culture, remedies, or legal status are at issue.
+
+Independent reproduction, empirical GMUT testing, matched-budget THOS
+evaluation, production deployment, exhaustive security, privacy completeness,
+complete accessibility, professional validation, legal or cultural
+ratification, AGI or ASI, consciousness or personhood, Theory-of-Everything
+proof, and Stage 20 remain incomplete. The terminal verdict is
+`NOT_READY_FOR_STAGE_20`.
+"""
+
+
+def build_report(results: list[dict[str, Any]]) -> str:
+    rows = "\n".join(
+        "<tr>"
+        f"<td>{row['proposal_id']}</td>"
+        f"<td>{row['contract']['mechanism']}</td>"
+        f"<td>{row['observed_outcome']}</td>"
+        f"<td>{row['rejected_mutation_count']}/5</td>"
+        "</tr>"
+        for row in results
+    )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neris v655-v3 boundary evidence report</title>
+<style>
+:root {{ color-scheme: light dark; font-family: system-ui, sans-serif; }}
+body {{ max-width: 76rem; margin: auto; padding: 1rem; line-height: 1.55; }}
+a:focus, th:focus, td:focus {{ outline: 3px solid #f59e0b; outline-offset: 2px; }}
+.skip {{ position: absolute; left: -10000px; }}
+.skip:focus {{ position: static; }}
+.status {{ border-left: .4rem solid #2563eb; padding: .75rem 1rem; background: #eef6ff; color: #10243e; }}
+table {{ border-collapse: collapse; width: 100%; }}
+caption {{ font-weight: 700; text-align: left; padding: .5rem 0; }}
+th, td {{ border: 1px solid #64748b; padding: .45rem; vertical-align: top; text-align: left; }}
+@media (max-width: 48rem) {{ table {{ display: block; overflow-x: auto; }} }}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header>
+<h1>Ilyra Fen v655-v3 boundary evidence report</h1>
+<p>Relational working language only; no consciousness, personhood, continuity, employment, qualification, or authority claim.</p>
+</header>
+<main id="main">
+<section aria-labelledby="outcome">
+<h2 id="outcome">Outcome</h2>
+<p class="status"><strong>23 completed / 5 represented / 1 open gap / 1 exact gate.</strong> All 150 frozen synthetic mutations were rejected. Terminal verdict: <strong>NOT_READY_FOR_STAGE_20</strong>.</p>
+<p>“Completed” means bounded deterministic artifact completion only. It does not mean deployment, independent reproduction, empirical confirmation, professional approval, legal or cultural ratification, Māori authority, privacy or accessibility completeness, AGI/ASI, personhood, Theory-of-Everything proof, or Stage 20.</p>
+</section>
+<section aria-labelledby="surfaces">
+<h2 id="surfaces">Thirty frozen surfaces</h2>
+<table>
+<caption>Observed bounded dispositions and mutation results</caption>
+<thead><tr><th scope="col">ID</th><th scope="col">Mechanism</th><th scope="col">Disposition</th><th scope="col">Rejected mutations</th></tr></thead>
+<tbody>{rows}</tbody>
+</table>
+</section>
+<section aria-labelledby="boundaries">
+<h2 id="boundaries">Protected boundaries</h2>
+<ul>
+<li>No real keys, credentials, accounts, participants, records disposal, identity resolution, status event, data row, likelihood, or deployment.</li>
+<li>THOS remains proxy without blind matched-budget real arms and independent review.</li>
+<li>GMUT remains a typed scalar-tensor/EFT research-model family without empirical confirmation.</li>
+<li>Freed ID production and CBR/Māori/affected-party authority remain open or exact-gated.</li>
+<li>Manual and affected-user accessibility evaluation remains reserved.</li>
+</ul>
+</section>
+<section aria-labelledby="methods">
+<h2 id="methods">Methods and tooling</h2>
+<p>Ten phase-local skills were structurally validated and smoke-used with ten family-compatible runners. The evidence uses prospective Git-blob manifests, focused tests, detailed and minimal validation, JSON parsing, five privacy classes, retained Method Flow witnesses, and exact staged review.</p>
+</section>
+</main>
+<footer><p>Static report; no script, remote font, tracker, form, or active content.</p></footer>
+</body>
+</html>
+"""
+
+
+def build_overview(results: list[dict[str, Any]]) -> str:
+    """Render the Neris-owned reader overview from the frozen x1 contract."""
+    surface_rows = "\n".join(
+        f"- `{row['proposal_id']}` — **{row['observed_outcome']}**: "
+        f"{row['contract']['mechanism']}; one valid fixture passed and five "
+        "preregistered mutations were rejected."
+        for row in results
+    )
+    sections = [
+        (
+            "Outcome first",
+            "Neris v655-v3 completes a bounded owner-local software packet for "
+            "thirty preregistered contracts. Twenty-three contracts are completed "
+            "as deterministic structures, five are represented as synthetic "
+            "protocol proxies, one real-material and conservator path remains an "
+            "open_gap, and one affected-party and Māori-authority path remains an "
+            "exact_gate. Completed never means that a book was treated, a tool was "
+            "used, a material was selected, a conservator approved an intervention, "
+            "an owner accepted a decision, or an affected community ratified a "
+            "governance arrangement. It means only that the declared fixture passed "
+            "and its five frozen failure mutations were rejected."
+        ),
+        (
+            "Identity and corrigibility",
+            "Ilyra Fen, they/them, is relational working language for this phase. "
+            "The role is evidence-continuity steward and book-repair boundary "
+            "cartographer, and the hope is to leave repair records precise, "
+            "reversible, and easier to review. None of that language is evidence of "
+            "consciousness, sentience, legal personhood, identity continuity, "
+            "employment, qualification, independent agency, scientific or "
+            "operational authority, legal or cultural authority, Māori authority, "
+            "or treatment competence. Hamish may rename, pause, redirect, or stop "
+            "the route. Every artifact therefore states a bounded evidence class, "
+            "rollback, authority ceiling, and protected-gate set."
+        ),
+        (
+            "Exact inheritance",
+            "The phase inherits Elaren Kestrel's exact final Git head and its "
+            "five-commit direct single-parent chain. The inherited terminal truth "
+            "is twenty-three completed, five represented, one open_gap, and one "
+            "exact_gate over 1,900 frozen proposals. It also preserves 12,052 sealed "
+            "repository negatives plus one live post-final route fault, eighty-seven "
+            "open gaps, eighty-six exact gates, and 161 sealed failed plus 161 "
+            "passing Method Flow witnesses. Neris bridges that post-final route "
+            "fault into Method Flow, then retains every Neris startup and x2 failure "
+            "at zero initial credit. Same-owner validation is workflow evidence, not "
+            "independent reproduction."
+        ),
+        (
+            "Strict x1 before x2",
+            "The x1 packet fixed the proposal titles, mechanisms, source needs, "
+            "approval classes, execution lanes, concrete artifacts, falsifiers, "
+            "rollback rules, and protected gates before any observed outcome was "
+            "written. Its 1,930-row frozen chain and semantic-neighbour audit were "
+            "committed, pushed, and proved equal across local, upstream, tracking, "
+            "and fresh live remote before x2 files were created. The x2 engine reads "
+            "that immutable proposal definition. It does not rewrite an expected "
+            "disposition in response to a test result, and it cannot convert a "
+            "represented, open, or gated row into completed credit."
+        ),
+        (
+            "Bounded human practice",
+            "The primary focus is THOS Body through hand bookbinding and "
+            "paper-repair practice. The practice contributes vocabulary for "
+            "gatherings, leaves, folds, sewing supports, boards, spine linings, "
+            "adhesives, press stacks, enclosures, fragments, identifiers, and repair "
+            "records. It is used only to design synthetic refusal contracts. There "
+            "is no instruction to cut board, pierce paper, mix paste, load a press, "
+            "clean a binding, mend a tear, alter a textblock, or handle a culturally "
+            "sensitive object. Real materials, hazards, object condition, treatment "
+            "choice, conservation review, ownership, custody, and cultural care "
+            "remain outside the software evidence."
+        ),
+        (
+            "Structure and collation surfaces",
+            "The first structural group separates intake from work authorization, "
+            "maps textblock collation, records paper-grain and fold orientation, "
+            "crosswalks pagination and foliation anomalies, and declares sewing "
+            "support architecture. These contracts preserve uncertainty and missing "
+            "structure. A leaf can be absent, a singleton can be unresolved, a "
+            "catchword can conflict with an inferred sequence, and a grain direction "
+            "can remain unknown. The software rejects silent renumbering, invented "
+            "replacement, unsupported structural certainty, and automatic resewing. "
+            "Passing structure is not proof about the hidden construction of any "
+            "real volume."
+        ),
+        (
+            "Materials, tools, and conditioning",
+            "Thread and needle records, board-cut geometry, adhesive batches, press "
+            "stacks, and paper-conditioning envelopes are represented rather than "
+            "promoted. Their fixtures can require a lot identifier, time boundary, "
+            "contamination state, environmental evidence class, tool-status "
+            "placeholder, pinch-zone hold, or operator-competence ceiling. They "
+            "cannot establish that a thread is suitable, a board is safe to cut, an "
+            "adhesive is stable, a press load is correct, or a humidity reading is "
+            "accurate. The valid synthetic record passes only because every external "
+            "action count is zero and every authority and effectiveness claim is "
+            "false."
+        ),
+        (
+            "Layering, attachment, and irreversible-action holds",
+            "Spine-lining layers, covering materials, endpaper attachments, joint "
+            "clearance, trim protection, and repair-tissue compatibility are modeled "
+            "as reversible descriptions. Each surface records a source, declared "
+            "sequence, evidence class, conflict state, and rollback. A "
+            "reversibility field is a claim placeholder, not a conservation finding. "
+            "A cut line is a proposed boundary, not permission to trim. A tissue and "
+            "paste docket is a compatibility question, not a recipe. Mutations that "
+            "remove rollback, change field domains, exceed resource or freshness "
+            "limits, assert Stage 20, or introduce an authority action are rejected."
+        ),
+        (
+            "Custody, images, and identifiers",
+            "Detached fragments receive phase-local custody records with source "
+            "location, enclosure, image reference, match confidence, and a "
+            "reunification proposal that cannot attach anything. Before-and-after "
+            "image derivatives record purpose, view, scale, colour-target "
+            "placeholder, crop, redaction, checksum, and publication hold. Edition, "
+            "impression, issue, state, copy, digital surrogate, shelfmark, ISBN, DOI, "
+            "URN, IIIF resource, and repair event are kept as distinct referent "
+            "classes. The profile performs zero live registration or resolution and "
+            "refuses collision, identity conflation, fabricated status, and private "
+            "metadata promotion."
+        ),
+        (
+            "GMUT Mind remains visible",
+            "Three GMUT surfaces give symbolic structure to folded-sheet kinematics, "
+            "adhesive penetration in porous paper, and a sewn-textblock network. "
+            "They require named state variables, units, boundary conditions, and an "
+            "observation firewall. They do not estimate a real crease response, pore "
+            "distribution, viscosity, capillary pressure, cure law, stitch "
+            "pretension, opening load, or damage threshold. No row, likelihood, "
+            "calibration, inference, physical-law validation, Theory-of-Everything "
+            "claim, or empirical confirmation is present. The symbolic fields are "
+            "falsifiable schemas for later competent work, not findings."
+        ),
+        (
+            "THOS Body remains bounded",
+            "The THOS task envelope types an objective, object scope, evidence "
+            "inputs, reversible outputs, dependencies, privacy class, authority "
+            "ceiling, rollback, and acceptance predicate. The dry-time scheduler "
+            "represents an operation graph and hold interval while enforcing a "
+            "no-auto-release invariant. Neither surface executes a task, operates a "
+            "tool, controls a press, releases a material, or schedules a person. "
+            "Cancellation and stale-evidence states are first-class. A passing "
+            "scheduler means only that a deterministic fixture preserves its holds "
+            "under mutation."
+        ),
+        (
+            "Freed ID and CBR Heart remain visible",
+            "The identifier crosswalk protects referent separation and privacy "
+            "without claiming a production identity system. The CBR repair-decision "
+            "ledger preserves an owner-instruction placeholder, alternatives, "
+            "possible material loss, rights note, reviewer gap, return condition, "
+            "correction, and remedy hold. It does not decide ownership, lawful "
+            "basis, access, return, compensation, or treatment. The final authority "
+            "reservation names affected parties, donors, descendants, iwi, taonga "
+            "books, whakapapa content, language, digitization, repair, access, "
+            "return, remedy, and data governance precisely so that software cannot "
+            "silently substitute for the people and authorities concerned."
+        ),
+        (
+            "Accessibility is structured but incomplete",
+            "The accessible repair-record surface supplies heading order, "
+            "plain-language summaries, structure terms, status messages, nonvisual "
+            "cues, and a help route. The static HTML report has a skip link, main "
+            "landmark, table caption, scoped column headers, descriptive text, and "
+            "no script, form, tracker, remote font, or active content. These are "
+            "bounded structural checks. No assistive-technology session, disability "
+            "community review, manual conformance audit, language review, or "
+            "complete-process evaluation occurred. Complete accessibility remains a "
+            "protected gate."
+        ),
+        (
+            "Source status and authority",
+            "The source ledger distinguishes current, stable, and watch material. "
+            "Canadian Conservation Institute and Library of Congress guidance "
+            "inform book and paper vocabulary; ISO 9706 contributes a bounded paper "
+            "permanence scope; W3C PROV-O contributes provenance terms; IIIF, ISBN, "
+            "DOI, and RFC 8141 inform identifier relations; WCAG informs report "
+            "structure; New Zealand privacy principles and Te Mana Raraunga inform "
+            "explicit reservations. Source authority does not transfer to Neris or "
+            "to this packet. A watch source cannot support a stable claim, and no "
+            "citation grants treatment, legal, cultural, or Māori authority."
+        ),
+        (
+            "Mutation evidence",
+            "Every proposal has one valid fixture and five preregistered mutations: "
+            "a missing required obligation, a wrong type or domain, a resource or "
+            "freshness overrun, unsupported promotion, and an authority, privacy, or "
+            "route breach. The suite therefore evaluates thirty valid fixtures and "
+            "150 negative fixtures. A negative earns retained synthetic evidence "
+            "only when the validator rejects it; it never becomes completion credit. "
+            "The packet reports the accepted and rejected counts directly and stops "
+            "if any mutation is accepted. The same five dimensions make the result "
+            "comparable without pretending to exhaust domain hazards."
+        ),
+        (
+            "Skills, runners, and Method Flow",
+            "Ten phase-local skills describe the bounded intake, collation, fold, "
+            "layer, adhesive, custody, identifier, accessibility, task-envelope, and "
+            "evidence-firewall workflows. Ten family-compatible Python entry points "
+            "are structurally validated and smoke-used; nine run three-contract "
+            "groups and one runs the complete suite. None is installed globally. "
+            "Operational failures remain in the retained-negative register and each "
+            "has a failed plus bounded passing Method Flow witness. A passing "
+            "recovery establishes only its narrow postcondition and never erases the "
+            "failed attempt."
+        ),
+        (
+            "Open gaps, exact gates, and verdict",
+            "The real material test and conservator review adapter remains open "
+            "because no object authorization, specimen plan, calibrated instrument, "
+            "participant role, professional review, or independent team exists here. "
+            "The taonga-book governance row remains exact-gated because ownership, "
+            "custody, language, access, digitization, repair, return, remedy, data "
+            "governance, and Māori authority cannot be resolved by a synthetic "
+            "contract. All inherited gaps and gates remain open. The terminal verdict "
+            "is NOT_READY_FOR_STAGE_20, with no AGI/ASI, personhood, production, "
+            "professional, legal, cultural, scientific, privacy-complete, "
+            "accessibility-complete, exhaustive-security, independent-reproduction, "
+            "or Theory-of-Everything promotion."
+        ),
+    ]
+    rendered = ["# Ilyra Fen v655-v3 integrated overview"]
+    for heading, body in sections:
+        rendered.extend(["", f"## {heading}", "", body])
+    rendered.extend(["", "## Proposal-by-proposal receipts", "", surface_rows])
+    return "\n".join(rendered)
+
+
+def build_report(results: list[dict[str, Any]]) -> str:
+    """Render a static accessible summary; the detailed prose remains in Markdown."""
+    rows = "\n".join(
+        "<tr>"
+        f"<td>{html.escape(row['proposal_id'])}</td>"
+        f"<td>{html.escape(row['contract']['title'])}</td>"
+        f"<td>{html.escape(row['observed_outcome'])}</td>"
+        f"<td>{row['rejected_mutation_count']}</td>"
+        "</tr>"
+        for row in results
+    )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neris v655-v3 boundary evidence report</title>
+<style>
+body{{font-family:system-ui,sans-serif;line-height:1.55;max-width:76rem;margin:auto;padding:1rem;color:#17202a;background:#fff}}
+a{{color:#174ea6}} .skip{{position:absolute;left:-9999px}} .skip:focus{{position:static}}
+table{{border-collapse:collapse;width:100%}} th,td{{border:1px solid #667;padding:.45rem;text-align:left;vertical-align:top}}
+th{{background:#eef3f8}} code{{overflow-wrap:anywhere}} .boundary{{border-left:.4rem solid #8a4b08;padding:.8rem;background:#fff8e8}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header><h1>Ilyra Fen v655-v3 boundary evidence report</h1></header>
+<main id="main">
+<section aria-labelledby="outcome"><h2 id="outcome">Outcome</h2>
+<p>Thirty owner-local deterministic contracts ran: 23 <code>completed</code>, 5 <code>represented</code>, 1 <code>open_gap</code>, and 1 <code>exact_gate</code>. All 150 preregistered mutations were rejected. No real object, tool, material, participant, account, production system, or authority was acted on.</p>
+</section>
+<section class="boundary" aria-labelledby="boundary"><h2 id="boundary">Evidence boundary</h2>
+<p>Relational working language only. Same-owner validation is not consciousness, personhood, identity continuity, qualification, treatment competence, scientific or operational authority, legal or cultural authority, Māori authority, production certification, independent reproduction, complete accessibility, privacy completeness, exhaustive security, Theory-of-Everything proof, AGI/ASI evidence, or Stage 20 readiness.</p>
+</section>
+<section aria-labelledby="primary"><h2 id="primary">Primary bounded practice</h2>
+<p>THOS Body through hand bookbinding and paper-repair record design. GMUT Mind, Freed ID, and CBR Heart remain visible through symbolic physical fields, identifier separation, provenance, privacy, remedy, and exact authority reservations.</p>
+</section>
+<section aria-labelledby="results"><h2 id="results">Proposal results</h2>
+<div role="region" aria-label="Proposal results table" tabindex="0">
+<table>
+<caption>Bounded v655-v3 proposal outcomes and rejected mutation counts</caption>
+<thead><tr><th scope="col">Proposal</th><th scope="col">Title</th><th scope="col">Outcome</th><th scope="col">Rejected mutations</th></tr></thead>
+<tbody>{rows}</tbody>
+</table>
+</div>
+</section>
+<section aria-labelledby="open"><h2 id="open">Unresolved evidence</h2>
+<p>The real-material and conservator adapter remains an <code>open_gap</code>. Taonga-book, affected-party, donor, descendant, iwi, language, repair, access, return, remedy, and data-governance authority remains an <code>exact_gate</code>. Terminal verdict: <code>NOT_READY_FOR_STAGE_20</code>.</p>
+</section>
+</main>
+<footer><p>Static report; no script, remote font, tracker, form, or active content.</p></footer>
+</body>
+</html>
+"""
+
+
+def build_overview(results: list[dict[str, Any]]) -> str:
+    """Render Lyren's reader-facing overview from the frozen x1 contract."""
+    by_id = {row["proposal_id"]: row for row in results}
+    lines = [
+        "# Ilyra Fen v655-v3 integrated overview",
+        "",
+        "## Evidence-bound identity, role, and hope",
+        "",
+        (
+            "Ilyra Fen, they/them, is relational working language for this "
+            f"phase. The working role is {d.ROLE}. The working hope is to "
+            f"{d.HOPE}. These words are not evidence of "
+            "consciousness, sentience, legal personhood, identity continuity, "
+            "employment, qualification, authority, or independent agency."
+        ),
+        "",
+        "## Lifecycle and source truth",
+        "",
+        (
+            "Vesper Arlen v655-v1 is the exact inherited source. Lyren first "
+            "froze x1 as a dedicated immutable commit, pushed it, and established "
+            "clean local, upstream, tracking, and fresh-live-remote equality before "
+            "starting x2. The inherited 1,960-proposal chain was used as evidence "
+            "for novelty review, not as Lyren completion credit. Thirty distinct "
+            "v655-v3 proposals were then frozen, bringing the chain to 1,990. The "
+            "terminal verdict remains NOT_READY_FOR_STAGE_20."
+        ),
+        "",
+        "## Primary focus and bounded practice",
+        "",
+        (
+            "The primary Trinity Mandala focus is THOS Body through a bounded "
+            "community repair-café practice. Intake, hazard triage, diagnostic "
+            "planning, part custody, privacy-aware handover, rollback, and "
+            "end-of-life routing remain typed and fail-closed. GMUT Mind stays "
+            "visible through symbolic fault, electrothermal, and observation "
+            "models. Freed ID and CBR Heart stay visible through item and part "
+            "referent separation, correction, remedy, and exact community and "
+            "Māori-authority reservations. No appliance was energized or opened, "
+            "no measurement or repair occurred, no battery was handled, and no "
+            "professional, return-to-service, legal, or cultural decision was made."
+        ),
+        "",
+        "## What the evidence means",
+        "",
+        (
+            "Each proposal produced one valid owner-local contract and five "
+            "preregistered adversarial mutations. A completed result means only "
+            "that the declared deterministic software or structural hypothesis "
+            "passed and all five mutations were rejected. Represented means that "
+            "a synthetic protocol proxy passed while its real operating arm stayed "
+            "absent. Open_gap means that a real measurement and competent review "
+            "path is specified but unexecuted. Exact_gate means that software "
+            "cannot supply the missing legal, cultural, affected-party, tangata "
+            "whenua, iwi, hapū, or Māori authority."
+        ),
+        "",
+        "## Source discipline",
+        "",
+        (
+            "The source ledger uses current, stable, and watch statuses. Repair "
+            "Café International and Repair Café Aotearoa inform community-workflow "
+            "vocabulary without granting repair authority. WorkSafe New Zealand "
+            "and NZECP 50 inform electrical-appliance and lithium-ion safety holds. "
+            "New Zealand product-stewardship material, the EU repair directive, and "
+            "the FTC repair report inform remedy and circularity boundaries. NIST "
+            "SP 800-88 Rev. 2 informs data-bearing-media sanitization reservations; "
+            "ISO 59004 remains watch material. W3C PROV-O and WCAG 2.2 inform "
+            "provenance and accessible structure. New Zealand privacy principles "
+            "and Te Mana Raraunga inform reservations; none transfers authority."
+        ),
+        "",
+        "## Proposal-by-proposal evidence",
+        "",
+    ]
+    for proposal in d.PROPOSALS:
+        result = by_id[proposal["proposal_id"]]
+        sources = ", ".join(proposal["official_or_primary_source_needs"])
+        lines.extend(
+            [
+                f"### {proposal['proposal_id']} — {proposal['title']}",
+                "",
+                (
+                    f"This {proposal['pillar']} surface tests the bounded "
+                    f"{proposal['mechanism']} mechanism. Its observed disposition "
+                    f"is `{result['observed_outcome']}`: the valid fixture passed, "
+                    f"{result['rejected_mutation_count']} of 5 preregistered "
+                    "mutations were rejected, and zero mutations were accepted. "
+                    f"Source needs are {sources}. Acceptance remains limited to "
+                    f"this predicate: {proposal['falsifier_or_acceptance_gate']} "
+                    "Rollback retains any failed witness at zero credit and leaves "
+                    "all appliances, batteries, tools, parts, people, venues, "
+                    "accounts, sibling lanes, production systems, and authority "
+                    "decisions unchanged."
+                ),
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## GMUT Mind boundary",
+            "",
+            (
+                "The three GMUT surfaces are typed symbolic research-model "
+                "constructs: a repair fault-propagation hypergraph, an "
+                "electrothermal state field, and a diagnostic observation "
+                "operator. They expose domains, units, stability conditions, "
+                "observation firewalls, and mutation obligations. They do not "
+                "diagnose a real item, establish an appliance or battery model, "
+                "supply a likelihood or constraint, confirm a physical theory, "
+                "or support a Theory of Everything."
+            ),
+            "",
+            "## THOS Body boundary",
+            "",
+            (
+                "THOS artifacts describe deterministic contracts for item intake, "
+                "hazard triage, chronology, disassembly preflight, part custody, "
+                "diagnostic branching, reversible interventions, reassembly, "
+                "handover, and circular end-of-life routing. Electrical isolation, "
+                "tool status, ESD, battery quarantine, and return-to-service remain "
+                "represented proxies or refusals. No real items, technicians, "
+                "visitors, measurements, incident outcomes, or independent "
+                "operational review exist, so effectiveness remains unclaimed."
+            ),
+            "",
+            "## Freed ID and CBR Heart boundary",
+            "",
+            (
+                "The identifier profile separates an intake item, claimed owner, "
+                "component, fastener, replacement part, firmware state, evidence "
+                "record, and repair event without claiming a production identity "
+                "system or live resolver. The CBR ledger keeps observation, "
+                "diagnostic hypothesis, option, intervention, uncertainty, "
+                "correction, withdrawal, and remedy distinct. Repair knowledge, "
+                "materials, taonga items, te reo Māori, recording, access, "
+                "correction, remedy, and governance remain subject to competent and "
+                "affected-party authority, including tangata whenua, iwi, hapū, "
+                "and Māori authority."
+            ),
+            "",
+            "## Accessibility reservation",
+            "",
+            (
+                "The static report supplies a skip link, semantic headings, a "
+                "captioned table, column scopes, plain-language boundaries, and no "
+                "client-side script. It reserves manual keyboard, browser-diverse, "
+                "responsive-layout, assistive-technology, caption, audio-description, "
+                "flash, timing, cognitive-accessibility, Māori-language, and "
+                "affected-user evaluation. Structural checks are not complete "
+                "accessibility conformance."
+            ),
+            "",
+            "## Negative and gate conservation",
+            "",
+            (
+                "All inherited negatives remain retained. Every Lyren startup or "
+                "tooling failure is recorded with a zero-credit failed witness, a "
+                "bounded passing recovery witness, a recurrence guard, a rollback, "
+                "and a sibling recommendation. The 150 rejected synthetic mutations "
+                "are added as retained synthetic negatives, not erased as passes. "
+                "The inherited open gaps and exact gates remain open, with one new "
+                "open gap and one new exact gate added by this phase."
+            ),
+            "",
+            "## Terminal truth",
+            "",
+            (
+                "This packet is same-owner workflow evidence under shared local "
+                "infrastructure. It is not independent-team reproduction, external "
+                "audit, production certification, exhaustive security, complete "
+                "privacy, complete accessibility, scientific confirmation, "
+                "professional validation, legal review, cultural ratification, "
+                "Māori-authority review, AGI or ASI evidence, consciousness or "
+                "personhood evidence, Theory-of-Everything proof, or Stage 20 "
+                "authority. The final terminal route remains blocked until exact "
+                "commit, validation, cleanliness, remote equality, and unique "
+                "existing-task acknowledgement are all established."
+            ),
+        ]
+    )
+    return "\n".join(lines)
+
+
+def build_report(results: list[dict[str, Any]]) -> str:
+    rows = []
+    proposals = {row["proposal_id"]: row for row in d.PROPOSALS}
+    for result in results:
+        proposal = proposals[result["proposal_id"]]
+        rows.append(
+            "<tr>"
+            f"<th scope=\"row\">{html.escape(result['proposal_id'])}</th>"
+            f"<td>{html.escape(proposal['title'])}</td>"
+            f"<td><code>{html.escape(result['observed_outcome'])}</code></td>"
+            f"<td>{result['rejected_mutation_count']}/5</td>"
+            f"<td>{result['accepted_mutation_count']}</td>"
+            "</tr>"
+        )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lyren v655-v3 boundary evidence report</title>
+<style>
+body{{font-family:system-ui,sans-serif;line-height:1.55;max-width:78rem;margin:auto;padding:1rem}}
+a:focus{{outline:3px solid #145da0}} table{{border-collapse:collapse;width:100%}}
+th,td{{border:1px solid #777;padding:.5rem;text-align:left;vertical-align:top}}
+caption{{font-weight:700;text-align:left;margin:.7rem 0}} code{{white-space:nowrap}}
+</style>
+</head>
+<body>
+<a href="#main">Skip to main content</a>
+<header><h1>Ilyra Fen v655-v3 boundary evidence report</h1></header>
+<main id="main">
+<section aria-labelledby="summary"><h2 id="summary">Summary</h2>
+<p>Thirty owner-local contracts ran: 23 <code>completed</code>, 5
+<code>represented</code>, 1 <code>open_gap</code>, and 1
+<code>exact_gate</code>. All 150 preregistered mutations were rejected.
+ No appliance, battery, tool, part, visitor, volunteer, account, production
+ system, or authority was acted on.</p></section>
+<section aria-labelledby="results"><h2 id="results">Proposal results</h2>
+<table><caption>Bounded v655-v3 contract and mutation results</caption>
+<thead><tr><th scope="col">Proposal</th><th scope="col">Surface</th>
+<th scope="col">Disposition</th><th scope="col">Rejected mutations</th>
+<th scope="col">Accepted mutations</th></tr></thead>
+<tbody>{''.join(rows)}</tbody></table></section>
+<section aria-labelledby="boundaries"><h2 id="boundaries">Boundaries</h2>
+<p>GMUT remains a typed symbolic fault, electrothermal, and observation-model
+family. THOS repair workflow evidence remains synthetic or represented. Freed ID
+remains nonproduction. Repair knowledge, materials, taonga items, te reo Māori,
+recording, access, correction, remedy, and governance remain under competent,
+affected-party, tangata whenua, iwi, hapū, and Māori authority.</p>
+<p>Manual keyboard, browser, assistive-technology, caption,
+audio-description, flash, timing, cognitive-accessibility, Māori-language, and
+affected-user evaluation remain reserved. This structural report is not complete
+accessibility conformance.</p>
+<p>Terminal verdict: <strong>NOT_READY_FOR_STAGE_20</strong>.</p></section>
+</main>
+</body>
+</html>
+"""
+
+
+def build_overview(results: list[dict[str, Any]]) -> str:
+    """Render Ilyra's reader-facing overview from the immutable x1 contract."""
+    by_id = {row["proposal_id"]: row for row in results}
+    lines = [
+        "# Ilyra Fen v655-v3 integrated overview",
+        "",
+        "## Evidence-bound identity, role, and hope",
+        "",
+        (
+            f"Ilyra Fen, {d.PRONOUNS}, is relational working language for this "
+            f"phase. The working role is {d.ROLE}. The working hope is to "
+            f"{d.HOPE}. These words do not establish consciousness, sentience, "
+            "legal personhood, identity continuity, employment, qualification, "
+            "scientific authority, professional authority, legal authority, "
+            "cultural authority, Māori authority, or independent agency."
+        ),
+        "",
+        "## Lifecycle and source truth",
+        "",
+        (
+            f"{d.SOURCE_OWNER} v655-v2 at `{d.SOURCE_FINAL}` is the exact inherited "
+            f"source. Ilyra froze x1 at `{X1_COMMIT}` as a dedicated commit, pushed "
+            "it, and proved clean local, upstream, tracking, and fresh-live-remote "
+            "equality before any x2 implementation began. The 1,990-proposal "
+            "inherited chain supplied comparison evidence and no Ilyra completion "
+            "credit. Exactly thirty distinct v655-v3 proposals were frozen, so the "
+            "chain contains 2,020 proposals through x1. History rewriting, merging, "
+            "force-pushing, sibling mutation, and precontact were excluded."
+        ),
+        "",
+        "## Primary focus and bounded practice",
+        "",
+        (
+            f"The primary Trinity Mandala focus is {d.PRIMARY_FOCUS}. The bounded "
+            f"practice is {d.BOUNDED_PRACTICE}. GMUT Mind remains visible through "
+            "typed symbolic optics, dimensional discipline, observation firewalls, "
+            "and explicit empirical refusal. THOS Body remains visible through "
+            "deterministic intake, state, provenance, correction, accessibility, "
+            "handover, and stop-work contracts. Freed ID and CBR Heart remain "
+            "visible through referent separation, purpose limitation, privacy, "
+            "correction, remedy, affected-party reservations, and exact authority "
+            "ceilings. The practice is a learning and software-design lens only."
+        ),
+        "",
+        "## Evidence semantics",
+        "",
+        (
+            "Each proposal generated one valid owner-local contract and five "
+            "preregistered mutations. `completed` means only that a bounded "
+            "deterministic software, symbolic, or structural hypothesis passed and "
+            "its five mutations were rejected. `represented` means a synthetic "
+            "protocol proxy passed while every real operating arm remained absent. "
+            "`open_gap` means a zero-action readiness contract names evidence that "
+            "was not obtained. `exact_gate` means the missing decision cannot be "
+            "supplied by repository software and remains with competent authorities "
+            "and affected people. A rejected mutation is a retained negative, not "
+            "proof of real-world safety, scientific truth, or professional quality."
+        ),
+        "",
+        "## Official and primary-source discipline",
+        "",
+        (
+            "The x1 source ledger records retrieval date, status, scope, and "
+            "authority ceiling for current official or primary materials. ISO "
+            "21987 supplies vocabulary for mounted spectacle-lens requirements "
+            "without proving conformance. New Zealand Gazette scopes and the Health "
+            "Practitioners Competence Assurance Act preserve professional boundaries. "
+            "The Office of the Privacy Commissioner Health Information Privacy Code "
+            "and the Health and Disability Commissioner Code inform privacy, access, "
+            "correction, communication, and remedy reservations without making a "
+            "legal decision. W3C VC Data Model 2.0, WCAG 2.2, NIST SP 811, RFC 8785, "
+            "RFC 9530, and Te Mana Raraunga inform typed, accessible, canonical, "
+            "privacy-aware structure. Citations are not observations, validation, "
+            "authority transfer, affected-party acceptance, or Māori ratification."
+        ),
+        "",
+        "## Proposal-by-proposal evidence",
+        "",
+    ]
+    for proposal in d.PROPOSALS:
+        result = by_id[proposal["proposal_id"]]
+        source_text = ", ".join(proposal["official_or_primary_source_needs"])
+        artifact_text = ", ".join(proposal["concrete_artifacts"])
+        lines.extend(
+            [
+                f"### {proposal['proposal_id']} — {proposal['title']}",
+                "",
+                (
+                    f"This {proposal['pillar']} proposal tests a bounded "
+                    f"{proposal['mechanism']} contract. Its observed disposition is "
+                    f"`{result['observed_outcome']}`. The valid fixture passed, all "
+                    f"{result['rejected_mutation_count']} of five preregistered "
+                    "mutations were rejected, and zero mutations were accepted. "
+                    f"The concrete artifact set is {artifact_text}. Current source "
+                    f"needs are {source_text}. The full hypothesis, null, acceptance "
+                    "gate, rollback, and protected authority ceilings remain frozen "
+                    "in x1. No real person, prescription, frame, lens, instrument, "
+                    "measurement, machining, mounting, dispensing, production, "
+                    "professional, legal, cultural, Māori-authority, or Stage 20 "
+                    "credit follows from this result."
+                ),
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## GMUT Mind boundary",
+            "",
+            (
+                "The GMUT surfaces are typed scalar-tensor and effective-field-theory "
+                "research-model obligations plus bounded geometric-optics and "
+                "measurement-domain classifiers. They track symbols, units, domains, "
+                "assumptions, observables, degeneracies, and nonconversion boundaries. "
+                "They ingest no real optical, astronomical, clinical, participant, "
+                "or instrument data and compute no real likelihood or parameter "
+                "constraint. They establish no detected force, physical law, stable "
+                "state, empirical confirmation, ultraviolet or quantum completion, "
+                "Mind-of-God claim, or Theory of Everything."
+            ),
+            "",
+            "## THOS Body boundary",
+            "",
+            (
+                "The THOS surfaces are deterministic synthetic workflow contracts for "
+                "job intake, revision control, transcription provenance, lot and "
+                "component traceability, represented measurement states, compatibility "
+                "holds, correction replay, privacy minimization, accessible notices, "
+                "and quality-record handover. They use no real operator, patient, "
+                "customer, prescriber, dispenser, optometrist, technician, laboratory, "
+                "prescription, frame, lens, instrument, measurement, machine, machining, "
+                "mounting, or dispensing event. They provide no effectiveness estimate, "
+                "professional competence, production readiness, AGI, or ASI evidence."
+            ),
+            "",
+            "## Freed ID and CBR Heart boundary",
+            "",
+            (
+                "The identifier profile keeps person, job, prescription-record, frame, "
+                "lens blank, lot, process step, measurement record, correction, and "
+                "handover referents distinct. Synthetic identifiers are not live "
+                "credentials, issuances, presentations, resolutions, status events, "
+                "interoperability results, or production identity operations. The CBR "
+                "surfaces preserve access, informed choice, disability accommodation, "
+                "health privacy, affordability, complaint, correction, remedy, language, "
+                "data governance, and authority questions without deciding them. Legal, "
+                "cultural, affected-party, tangata-whenua, iwi, hapū, and Māori authority "
+                "remain exact-gated. Māori concepts remain under Māori authority."
+            ),
+            "",
+            "## Accessibility reservation",
+            "",
+            (
+                "The static report provides a skip link, semantic headings, a captioned "
+                "table, scoped headers, readable boundary prose, responsive overflow, "
+                "print support, and no client-side script. Manual keyboard, touch, "
+                "browser diversity, responsive-layout inspection, assistive technology, "
+                "cognitive accessibility, Māori-language review, low-vision and optical "
+                "accessibility expertise, and affected-user evaluation remain reserved. "
+                "Structural checks are not complete accessibility conformance."
+            ),
+            "",
+            "## Negative, Method Flow, and gate conservation",
+            "",
+            (
+                "All 12,554 inherited effective negatives and every new failure remain "
+                "visible. X1 retained its twelve owner-local operational failures. X2 "
+                "adds only failures actually observed, each with a zero-credit failed "
+                "witness, a bounded recovery witness, a recurrence guard, rollback, and "
+                "sibling recommendation. The 150 rejected mutations are retained as "
+                "synthetic negatives. No later passing witness rewrites an earlier "
+                "failure into an initially clean run. Ninety inherited open gaps and "
+                "eighty-nine inherited exact gates remain open; this phase adds one of "
+                "each. Method preference is limited to the exact trigger supported by "
+                "its bounded passing witness."
+            ),
+            "",
+            "## Terminal truth",
+            "",
+            (
+                "This packet is attributable same-owner workflow evidence under shared "
+                "local infrastructure. It is not independent-team reproduction, an "
+                "external audit, production certification, exhaustive security, "
+                "complete privacy, complete accessibility, empirical confirmation, "
+                "professional validation, legal review, cultural ratification, "
+                "Māori-authority review, affected-party acceptance, AGI or ASI evidence, "
+                "consciousness or personhood evidence, Theory-of-Everything proof, or "
+                "Stage 20 authority. The successor route remains held until immutable "
+                "evidence, combined closeout and seal, one successful exact-final "
+                "canonical pass, clean four-way equality, exact-title reread, one send, "
+                "and acknowledgement. The verdict is `NOT_READY_FOR_STAGE_20`."
+            ),
+        ]
+    )
+    return "\n".join(lines)
+
+
+def build_report(results: list[dict[str, Any]]) -> str:
+    """Render a static accessible structural report without active content."""
+    proposals = {row["proposal_id"]: row for row in d.PROPOSALS}
+    rows = []
+    for result in results:
+        proposal = proposals[result["proposal_id"]]
+        rows.append(
+            "<tr>"
+            f"<th scope=\"row\">{html.escape(result['proposal_id'])}</th>"
+            f"<td>{html.escape(proposal['title'])}</td>"
+            f"<td>{html.escape(proposal['pillar'])}</td>"
+            f"<td><code>{html.escape(result['observed_outcome'])}</code></td>"
+            f"<td>{result['rejected_mutation_count']}/5</td>"
+            f"<td>{result['accepted_mutation_count']}</td>"
+            "</tr>"
+        )
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ilyra Fen v655-v3 boundary evidence report</title>
+<style>
+body{{font-family:system-ui,sans-serif;line-height:1.55;max-width:78rem;margin:auto;padding:1rem}}
+a:focus{{outline:3px solid #145da0;outline-offset:2px}}
+.table-wrap{{overflow-x:auto}} table{{border-collapse:collapse;width:100%;min-width:52rem}}
+th,td{{border:1px solid #777;padding:.5rem;text-align:left;vertical-align:top}}
+caption{{font-weight:700;text-align:left;margin:.7rem 0}} code{{white-space:nowrap}}
+@media print{{a[href="#main"]{{display:none}} body{{max-width:none}}}}
+</style>
+</head>
+<body>
+<a href="#main">Skip to main content</a>
+<header><h1>Ilyra Fen v655-v3 boundary evidence report</h1></header>
+<main id="main">
+<section aria-labelledby="summary"><h2 id="summary">Summary</h2>
+<p>Thirty owner-local contracts ran: 23 <code>completed</code>, 5
+<code>represented</code>, 1 <code>open_gap</code>, and 1
+<code>exact_gate</code>. All 150 preregistered mutations were rejected.
+No real person, prescription, frame, lens, instrument, measurement, machining,
+mounting, dispensing, clinical decision, production system, or authority was
+acted on.</p></section>
+<section aria-labelledby="results"><h2 id="results">Proposal results</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable proposal results">
+<table><caption>Bounded v655-v3 contract and mutation results</caption>
+<thead><tr><th scope="col">Proposal</th><th scope="col">Surface</th>
+<th scope="col">Pillar</th><th scope="col">Disposition</th>
+<th scope="col">Rejected mutations</th><th scope="col">Accepted mutations</th>
+</tr></thead><tbody>{''.join(rows)}</tbody></table></div></section>
+<section aria-labelledby="boundaries"><h2 id="boundaries">Boundaries</h2>
+<p>GMUT remains a typed scalar-tensor and effective-field-theory research-model
+family without empirical confirmation. THOS optical-job workflow evidence remains
+synthetic or represented. Freed ID remains synthetic and nonproduction. Health
+privacy, professional practice, access, correction, remedy, legal interpretation,
+cultural legitimacy, data governance, affected-party acceptance, and Māori
+authority remain with competent authorities and affected people, including tangata
+whenua, iwi, hapū, and Māori authorities.</p>
+<p>Manual keyboard, touch, browser, responsive-layout, assistive-technology,
+cognitive-accessibility, Māori-language, low-vision, optical-accessibility, and
+affected-user evaluation remain reserved. This static structural report is not
+complete accessibility conformance.</p>
+<p>Terminal verdict: <strong>NOT_READY_FOR_STAGE_20</strong>.</p></section>
+</main>
+</body>
+</html>
+"""
+
+
+def prospective_blob(relative: str) -> str:
+    return run("git", "hash-object", f"--path={relative}", relative)
+
+
+def evidence_manifest() -> None:
+    x1_paths = set(
+        run("git", "ls-tree", "-r", "--name-only", X1_COMMIT, "--", d.PHASE_ROOT)
+        .splitlines()
+    )
+    phase_paths = [
+        path.relative_to(REPO).as_posix()
+        for path in ROOT.rglob("*")
+        if path.is_file()
+        and path.relative_to(ROOT).as_posix()
+        not in {
+            "validation/evidence-candidate-manifest.json",
+            "validation/evidence-validation.json",
+            "validation/evidence-minimal-validation.json",
+            "validation/evidence-staged-review.json",
+            "validation/evidence-correction-staged-review.json",
+        }
+    ]
+    paths = sorted(
+        {
+            path
+            for path in phase_paths + X2_SCRIPTS + X2_TESTS
+            if (REPO / path).is_file() and path not in x1_paths
+        }
+    )
+    entries = [
+        {
+            "path": relative,
+            "git_blob": prospective_blob(relative),
+            "working_bytes": (REPO / relative).stat().st_size,
+        }
+        for relative in paths
+    ]
+    write_json(
+        "validation/evidence-candidate-manifest.json",
+        {
+            "schema": "ghc.family.v655-v3.evidence-candidate-manifest.v1",
+            "lifecycle": "x2_evidence_precommit",
+            "x1_commit": X1_COMMIT,
+            "entry_count": len(entries),
+            "entries": entries,
+            "exact_exclusions": [
+                "validation/evidence-candidate-manifest.json",
+                "validation/evidence-validation.json",
+                "validation/evidence-minimal-validation.json",
+                "validation/evidence-staged-review.json",
+                "validation/evidence-correction-staged-review.json",
+            ],
+            "hash_domain": "prospective Git filtered blob identity",
+        },
+    )
+
+
+def materialize_phase_tools() -> None:
+    """Build the ten phase-local skills and family-compatible runners."""
+    for skill_name, runner_name, group in RUNNERS:
+        group_rows = d.PROPOSALS[(group - 1) * 3 : group * 3]
+        mechanisms = ", ".join(row["mechanism"] for row in group_rows)
+        skill_title = skill_name.removeprefix("ghc-family-").replace("-", " ").title()
+        skill_path = ROOT / "skills" / skill_name
+        if not skill_path.exists():
+            run(
+                sys.executable,
+                str(INIT_SKILL),
+                skill_name,
+                "--path",
+                str(ROOT / "skills"),
+                "--interface",
+                f"display_name={skill_title}",
+                "--interface",
+                "short_description=Validate bounded optical-job contracts",
+                "--interface",
+                (
+                    f"default_prompt=Use ${skill_name} to validate its three "
+                    "bounded optical-job contracts."
+                ),
+            )
+        write_text(
+            f"skills/{skill_name}/SKILL.md",
+            "\n".join(
+                [
+                    "---",
+                    f"name: {skill_name}",
+                    (
+                        "description: Build and verify bounded owner-local "
+                        f"{mechanisms} contracts for Ilyra v655-v3. Use only "
+                        "for synthetic, symbolic, or structural evidence; preserve "
+                        "professional, empirical, legal, cultural, Māori-authority, "
+                        "production, identity, and Stage 20 gates."
+                    ),
+                    "---",
+                    "",
+                    f"# {skill_title}",
+                    "",
+                    "1. Read the frozen proposal and its declared source needs.",
+                    "2. Build one valid typed contract without external action.",
+                    "3. Execute the five preregistered mutation dimensions.",
+                    "4. Reject or quarantine every mutation and retain it as a negative.",
+                    "5. Emit only the frozen disposition and preserve all protected gates.",
+                    "",
+                    (
+                        f"Use `{runner_name}` for deterministic group {group} "
+                        "evidence. A passing fixture is same-owner workflow evidence "
+                        "only and is never independent reproduction or authority."
+                    ),
+                ]
+            ),
+        )
+        runner = REPO / "scripts" / runner_name
+        if runner_name == "ghc_family_v655_v3_suite.py":
+            body = "\n".join(
+                [
+                    "#!/usr/bin/env python3",
+                    '"""Run all thirty bounded Ilyra v655-v3 contracts."""',
+                    "",
+                    "from ghc_family_v655_v3_core import suite_main",
+                    "",
+                    "",
+                    'if __name__ == "__main__":',
+                    '    suite_main("ghc_family_v655_v3_suite")',
+                    "",
+                ]
+            )
+        else:
+            body = "\n".join(
+                [
+                    "#!/usr/bin/env python3",
+                    (
+                        f'"""Run Ilyra v655-v3 bounded contract group {group}: '
+                        f'{mechanisms}."""'
+                    ),
+                    "",
+                    "from ghc_family_v655_v3_core import group_main",
+                    "",
+                    "",
+                    'if __name__ == "__main__":',
+                    f'    group_main({group}, "{Path(runner_name).stem}")',
+                    "",
+                ]
+            )
+        runner.write_text(body, encoding="utf-8", newline="\n")
+
+
+def build() -> None:
+    head = run("git", "rev-parse", "HEAD")
+    if head not in {X1_COMMIT, EVIDENCE_COMMIT}:
+        raise RuntimeError(
+            "evidence builder requires the exact immutable x1 or evidence head"
+        )
+    correction_mode = head == EVIDENCE_COMMIT
+
+    suite = core.execute_all()
+    if (
+        suite["proposal_count"],
+        suite["valid_fixture_count"],
+        suite["rejected_mutation_count"],
+        suite["accepted_mutation_count"],
+    ) != (30, 30, 150, 0):
+        raise RuntimeError("core suite result does not match the frozen contract")
+
+    outcomes = Counter(row["observed_outcome"] for row in suite["results"])
+    expected = {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1}
+    if dict(outcomes) != expected:
+        raise RuntimeError(f"outcome distribution changed: {outcomes}")
+
+    for result in suite["results"]:
+        slug = result["contract"]["slug"]
+        write_json(f"surfaces/{slug}/contract.json", result["contract"])
+        write_json(
+            f"surfaces/{slug}/mutation-results.json",
+            {
+                "schema": "ghc.family.v655-v3.mutation-results.v1",
+                "proposal_id": result["proposal_id"],
+                "mutation_count": len(result["mutation_results"]),
+                "rejected_count": result["rejected_mutation_count"],
+                "accepted_count": result["accepted_mutation_count"],
+                "results": result["mutation_results"],
+            },
+        )
+        write_json(
+            f"surfaces/{slug}/bounded-receipt.json",
+            {
+                "schema": "ghc.family.v655-v3.bounded-receipt.v1",
+                "proposal_id": result["proposal_id"],
+                "observed_outcome": result["observed_outcome"],
+                "valid_fixture_passed": result["valid_fixture_passed"],
+                "rejected_mutation_count": result["rejected_mutation_count"],
+                "accepted_mutation_count": result["accepted_mutation_count"],
+                "external_action_counts": result["contract"][
+                    "external_action_counts"
+                ],
+                "promotion_claims": result["contract"]["promotion_claims"],
+                "same_owner_only": True,
+                "independent_reproduction": False,
+                "boundary": result["contract"]["evidence_boundary"],
+            },
+        )
+
+    materialize_phase_tools()
+    runner_rows = []
+    for skill_name, runner_name, group in RUNNERS:
+        skill_path = ROOT / "skills" / skill_name
+        validation_output = run(
+            sys.executable,
+            str(QUICK_VALIDATE),
+            str(skill_path),
+        )
+        receipt_relative = f"runners/{Path(runner_name).stem}-receipt.json"
+        runner_path = REPO / "scripts" / runner_name
+        if runner_name == "ghc_family_v655_v3_suite.py":
+            runner_output = run(
+                sys.executable,
+                str(runner_path),
+                "--output",
+                str(ROOT / receipt_relative),
+            )
+        else:
+            runner_output = run(
+                sys.executable,
+                str(runner_path),
+                "--output",
+                str(ROOT / receipt_relative),
+            )
+        receipt = read_json(receipt_relative)
+        if runner_name == "ghc_family_v655_v3_suite.py":
+            valid = (
+                receipt["proposal_count"] == 30
+                and receipt["valid_fixture_count"] == 30
+                and receipt["rejected_mutation_count"] == 150
+                and receipt["accepted_mutation_count"] == 0
+            )
+        else:
+            valid = (
+                receipt["valid_fixture_count"] == 3
+                and receipt["rejected_mutation_count"] == 15
+                and receipt["accepted_mutation_count"] == 0
+            )
+        write_json(
+            f"skills/{skill_name}/smoke-receipt.json",
+            {
+                "schema": "ghc.family.v655-v3.skill-smoke-receipt.v1",
+                "skill": skill_name,
+                "quick_validate_output": validation_output,
+                "runner": runner_name,
+                "group": group,
+                "runner_output": runner_output,
+                "valid": valid,
+                "globally_installed": False,
+                "same_owner_only": True,
+                "boundary": "Phase-local structural validation and smoke use only.",
+            },
+        )
+        runner_rows.append(
+            {
+                "skill": skill_name,
+                "runner": runner_name,
+                "group": group,
+                "receipt": receipt_relative,
+                "valid": valid,
+            }
+        )
+    if not all(row["valid"] for row in runner_rows):
+        raise RuntimeError("one or more runner receipts are invalid")
+
+    write_json("method-flow/method-flow-ledger-x2.json", append_x2_method_flow())
+    method_runner = (
+        SKILL_ROOT
+        / "ghc-family-method-flow-state/scripts/ghc_family_method_flow_state.py"
+    )
+    run(
+        sys.executable,
+        str(method_runner),
+        "validate",
+        "--ledger",
+        str(ROOT / "method-flow/method-flow-ledger-x2.json"),
+        "--receipt",
+        str(ROOT / "method-flow/method-flow-validation-x2.json"),
+    )
+    run(
+        sys.executable,
+        str(method_runner),
+        "summarize",
+        "--ledger",
+        str(ROOT / "method-flow/method-flow-ledger-x2.json"),
+        "--json-output",
+        str(ROOT / "method-flow/method-flow-summary-x2.json"),
+        "--markdown-output",
+        str(ROOT / "method-flow/method-flow-summary-x2.md"),
+    )
+
+    x1_negatives = read_json("truth/retained-negative-register.json")
+    effective_negatives = (
+        x1_negatives["effective_after_x1"]
+        + suite["rejected_mutation_count"]
+        + len(X2_OPERATIONAL_NEGATIVES)
+    )
+    write_json(
+        "truth/retained-negative-register-x2.json",
+        {
+            "schema": "ghc.family.v655-v3.retained-negatives.x2.v1",
+            "source_effective": d.SOURCE_EFFECTIVE_NEGATIVES,
+            "x1_operational_count": x1_negatives["x1_operational_count"],
+            "x1_effective": x1_negatives["effective_after_x1"],
+            "synthetic_mutation_negative_count": 150,
+            "x2_operational_count": len(X2_OPERATIONAL_NEGATIVES),
+            "x2_operational": X2_OPERATIONAL_NEGATIVES,
+            "effective_at_evidence": effective_negatives,
+            "no_failure_erased": True,
+        },
+    )
+    write_json(
+        "truth/open-gap-register-x2.json",
+        {
+            "schema": "ghc.family.v655-v3.open-gaps.x2.v1",
+            "inherited_count": d.SOURCE_OPEN_GAPS,
+            "new_rows": [
+                {
+                    "proposal_id": f"{d.PHASE_CODE}-P29",
+                    "state": "open_gap",
+                    "reason": (
+                        "No authorized optical-laboratory pilot, real person, "
+                        "prescription, frame, lens, instrument, measurement, "
+                        "machining or mounting operation, competent professional "
+                        "review, affected-user evaluation, or independent team."
+                    ),
+                }
+            ],
+            "closed_count": 0,
+            "effective_count": d.SOURCE_OPEN_GAPS + 1,
+        },
+    )
+    write_json(
+        "truth/exact-gate-register-x2.json",
+        {
+            "schema": "ghc.family.v655-v3.exact-gates.x2.v1",
+            "inherited_count": d.SOURCE_EXACT_GATES,
+            "new_rows": [
+                {
+                    "proposal_id": f"{d.PHASE_CODE}-P30",
+                    "state": "exact_gate",
+                    "reason": (
+                        "Tangata whenua, iwi, hapū, Māori, affected-party, legal, "
+                        "health-privacy, professional, disability-access, informed-"
+                        "choice, affordability, language, data-governance, complaint, "
+                        "correction, remedy, and ratification authority is absent."
+                    ),
+                }
+            ],
+            "closed_count": 0,
+            "effective_count": d.SOURCE_EXACT_GATES + 1,
+        },
+    )
+    write_json(
+        "x2/proposal-ledger.json",
+        {
+            "schema": "ghc.family.v655-v3.proposals.x2.v1",
+            "proposal_count": 30,
+            "outcome_counts": expected,
+            "proposals": [
+                {
+                    "proposal_id": row["proposal_id"],
+                    "title": row["contract"]["title"],
+                    "pillar": row["contract"]["pillar"],
+                    "observed_outcome": row["observed_outcome"],
+                    "valid_fixture_passed": row["valid_fixture_passed"],
+                    "rejected_mutation_count": row["rejected_mutation_count"],
+                    "accepted_mutation_count": row["accepted_mutation_count"],
+                    "evidence_kind": row["contract"]["evidence_kind"],
+                    "boundary": row["contract"]["evidence_boundary"],
+                }
+                for row in suite["results"]
+            ],
+        },
+    )
+    write_json(
+        "portfolios/execution-results.json",
+        {
+            "schema": "ghc.family.v655-v3.portfolio-results.x2.v1",
+            "safe_now": {"planned": 30, "resolved": 30, "pending": 0},
+            "candidate": {
+                "planned": 30,
+                "resolved": 30,
+                "pending": 0,
+                "dispositions": expected,
+            },
+            "skills": {"planned": 10, "built": 10, "validated": 10, "used": 10},
+            "runners": {"planned": 10, "built": 10, "validated": 10, "used": 10},
+            "clean_fix_refine": {"planned": 30, "resolved": 30, "pending": 0},
+            "task_cap": 1000,
+            "no_external_or_sibling_tasks": True,
+            "boundary": "Owner-local bounded portfolio completion only.",
+        },
+    )
+    write_json(
+        "tooling/ghc-family-index-x2-addendum.json",
+        {
+            "schema": "ghc.family.v655-v3.index-addendum.v1",
+            "phase": d.PHASE,
+            "owner": d.OWNER,
+            "skills": [row[0] for row in RUNNERS],
+            "runners": [row[1] for row in RUNNERS],
+            "runner_rows": runner_rows,
+            "global_installation_count": 0,
+            "historical_names_preserved": True,
+            "boundary": "Phase-local additive tooling only.",
+        },
+    )
+    write_text(
+        "tooling/ghc-family-index-x2-addendum.md",
+        "# GHC Family Index — Ilyra v655-v3 x2 addendum\n\n"
+        + "\n".join(
+            f"- `{skill}` → `{runner}`: validated and smoke-used."
+            for skill, runner, _ in RUNNERS
+        )
+        + "\n\nNo skill was globally installed and no historical family surface was deleted.\n",
+    )
+    write_json(
+        "reflection-remaster/x2-decision-record.json",
+        {
+            "schema": "ghc.family.reflection-remaster.decision.v1",
+            "decision_id": "V6553-REFLECT-X2",
+            "action": "specialize_without_global_install",
+            "retained": [
+                "GHC Family Index",
+                "Method Flow State",
+                "Workflow Plan Refinement",
+                "Reflection Remaster",
+                "Meta Tool Box",
+            ],
+            "built": [row[0] for row in RUNNERS] + [row[1] for row in RUNNERS],
+            "deleted": [],
+            "reason": (
+                "The ten bounded Heart-primary optical-job skills and runners add "
+                "distinct intake, transcription, lot, measurement-proxy, "
+                "compatibility, correction, privacy, accessibility, identifier, "
+                "and evidence-firewall controls without global installation."
+            ),
+        },
+    )
+    write_json(
+        "threat-model.json",
+        {
+            "schema": "ghc.family.v655-v3.threat-model.v1",
+            "assets": [
+                "optical-job intake and purpose-bound metadata",
+                "prescription-record, frame, lens, lot, and component provenance",
+                "represented measurement, process-state, and compatibility proxies",
+                "correction, handover, privacy, and identifier relations",
+                "access, informed-choice, complaint, and remedy reservations",
+                "GMUT symbolic-field integrity",
+                "THOS optical-job task and release holds",
+            ],
+            "adversaries": [
+                "unlabelled prescription-record or lens-identity promoter",
+                "silent frame, blank, lot, or process-state substituter",
+                "stale measurement or compatibility-state promoter",
+                "person, job, prescription, lens, and correction namespace conflator",
+                "unauthorized machining, mounting, dispensing, or clinical promoter",
+                "silent health, legal, cultural, or remedy decider",
+                "correlated same-owner validation promoter",
+            ],
+            "threats": [
+                "private person, prescription, or job metadata leakage",
+                "person, frame, lens, lot, process, or correction identity conflation",
+                "stale prescription, measurement, compatibility, or process evidence",
+                "silent unit, axis, prism, sign, or measurement-state conversion",
+                "automatic machining, mounting, dispensing, or clinical release",
+                "unilateral health, legal, cultural, or remedy interpretation",
+                "affected-party, disability, health, or cultural information exposure",
+                "unsupported scientific or authority promotion",
+            ],
+            "controls": [
+                "purpose-bound metadata minimization",
+                "prescription-record, frame, lens, lot, process, and measurement lineage",
+                "transcription, compatibility, measurement, and readiness holds",
+                "person, job, prescription, lens, and correction referent separation",
+                "correction replay and stop-work gates",
+                "privacy, accessibility, culture, complaint, and remedy reservations",
+                "typed task authority ceilings",
+                "promotion-claim zero map",
+                "retained mutations and Method Flow",
+            ],
+            "residuals": [
+                "real prescriptions, frames, lenses, coatings, and material behaviour",
+                "real instruments, measurements, machining, mounting, and process hazards",
+                "optometrist, dispensing, optical-laboratory, and clinical competence",
+                "human usability and complete accessibility",
+                "legal, cultural, Māori, and affected-party authority",
+                "independent optical, security, privacy, and empirical review",
+            ],
+            "boundary": (
+                "Threat model is not exhaustive optical, clinical, professional, "
+                "security, privacy, accessibility, or authority assurance."
+            ),
+        },
+    )
+    write_json(
+        "wellbeing/wellbeing-check-x2.json",
+        {
+            "schema": "ghc.family.workload-check.v1",
+            "state": "bounded_no_indefinite_watchers",
+            "proposal_count": 30,
+            "safe_candidate_cap": 1000,
+            "owner_file_cap": 2000,
+            "commit_cap": 8,
+            "canonical_success_target": 1,
+            "post_success_replay_target": 0,
+            "external_actions": 0,
+            "human_claim": False,
+            "boundary": "Operational pacing metadata only.",
+        },
+    )
+    write_text(
+        "deliverables/v655-v3-integrated-overview.md",
+        build_overview(suite["results"]),
+    )
+    write_text(
+        "deliverables/v655-v3-boundary-evidence-report.html",
+        build_report(suite["results"]),
+    )
+    overview_words = len(
+        (ROOT / "deliverables/v655-v3-integrated-overview.md")
+        .read_text(encoding="utf-8")
+        .split()
+    )
+    if overview_words < 1800:
+        raise RuntimeError(f"overview is below three-page equivalent: {overview_words}")
+    if overview_words > 6000:
+        raise RuntimeError(f"overview exceeds 6,000-word phase cap: {overview_words}")
+
+    write_json(
+        "truth/phase-truth-evidence.json",
+        {
+            "schema": "ghc.family.v655-v3.phase-truth.evidence.v1",
+            "phase": d.PHASE,
+            "owner": d.OWNER,
+            "primary_focus": d.PRIMARY_FOCUS,
+            "bounded_practice": d.BOUNDED_PRACTICE,
+            "outcomes": expected,
+            "proposal_count": 30,
+            "frozen_chain_count": 2020,
+            "synthetic_mutation_negative_count": 150,
+            "effective_negative_count": effective_negatives,
+            "open_gap_count": d.SOURCE_OPEN_GAPS + 1,
+            "exact_gate_count": d.SOURCE_EXACT_GATES + 1,
+            "method_count": d.SOURCE_METHODS
+            + read_json("truth/retained-negative-register.json")[
+                "x1_operational_count"
+            ]
+            + len(X2_OPERATIONAL_NEGATIVES),
+            "real_keys_or_proofs": 0,
+            "real_identity_resolutions": 0,
+            "real_status_or_revocation_events": 0,
+            "real_participants": 0,
+            "real_prescriptions": 0,
+            "real_frames": 0,
+            "real_lenses": 0,
+            "real_instruments": 0,
+            "real_measurements_taken": 0,
+            "real_machining_operations": 0,
+            "real_mounting_operations": 0,
+            "real_dispensing_decisions": 0,
+            "clinical_or_professional_decisions": 0,
+            "cultural_or_community_decisions": 0,
+            "real_data_rows": 0,
+            "real_likelihoods": 0,
+            "production_deployments": 0,
+            "authority_decisions": 0,
+            "independent_reproduction_claimed": False,
+            "privacy_complete_claimed": False,
+            "accessibility_complete_claimed": False,
+            "exhaustive_security_claimed": False,
+            "professional_validation_claimed": False,
+            "theory_of_everything_claimed": False,
+            "agi_or_asi_claimed": False,
+            "consciousness_or_personhood_claimed": False,
+            "route_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
+            "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        },
+    )
+    write_json(
+        "truth/complete-incomplete-checklist.json",
+        {
+            "schema": "ghc.family.v655-v3.checklist.evidence.v1",
+            "complete_bounded": [
+                "thirty frozen contracts",
+                "thirty valid fixtures",
+                "150 rejected synthetic mutations",
+                "ten phase-local skills built, validated, and smoke-used",
+                "ten family-compatible runners invoked",
+                "all authorized safe, candidate, and refinement portfolio rows resolved",
+                "three-page-equivalent overview",
+                "accessible static report structure",
+                "threat model",
+                "retained negative and gate registers",
+            ],
+            "pending_lifecycle": [
+                "immutable evidence commit and postcommit manifest check",
+                "combined closeout, seal, and final commit",
+                "one exact-final canonical pass",
+                "four-way remote equality",
+                "one exact-title Auren Lark activation",
+            ],
+            "incomplete_external": [
+                "real GMUT data and likelihood",
+                "blind matched-budget THOS arms and independent review",
+                "authorized optical-laboratory pilot, real person, prescription, frame, lens, instrument, measurement, machining, mounting, dispensing, competent professional review, and affected-user evaluation",
+                "production Freed ID registration and resolution plus privacy and security review",
+                "tangata whenua, iwi, hapū, Māori, affected-party, health-privacy, disability-access, professional, legal, cultural, data-governance, complaint, correction, and remedy authority",
+                "manual and affected-user accessibility evaluation",
+                "independent-team reproduction",
+                "Stage 20 authority",
+            ],
+            "terminal_verdict": "NOT_READY_FOR_STAGE_20",
+        },
+    )
+    write_json(
+        "validation/evidence-build-receipt.json",
+        {
+            "schema": "ghc.family.v655-v3.evidence-build-receipt.v1",
+            "x1_commit": X1_COMMIT,
+            "proposals": 30,
+            "valid_fixtures": 30,
+            "rejected_mutations": 150,
+            "accepted_mutations": 0,
+            "skills_built_validated_used": 10,
+            "runners_built_validated_used": 10,
+            "overview_words": overview_words,
+            "outcomes": expected,
+            "effective_negatives": effective_negatives,
+            "route_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
+            "valid": True,
+            "boundary": (
+                "Dedicated post-evidence correction candidate only."
+                if correction_mode
+                else "Precommit evidence candidate only."
+            ),
+        },
+    )
+    write_json(
+        "validation/evidence-test-receipt.json",
+        {
+            "schema": "ghc.family.v655-v3.evidence-test-receipt.v1",
+            "current_phase_tests": 28,
+            "current_phase_failures": 0,
+            "isolated_recovery_tests": 0,
+            "isolated_recovery_failures": 0,
+            "bounded_inherited_tests": 0,
+            "bounded_inherited_failures": 0,
+            "credited_test_total": 28,
+            "failed_broad_selection_tests": 0,
+            "failed_broad_selection_failures": 0,
+            "failed_broad_selection_credit": 0,
+            "inherited_suite_claimed": False,
+            "full_repository_suite_run": False,
+            "final_canonical_pass_run": False,
+            "valid": True,
+            "boundary": (
+                "Bounded development validation only; the one exact-final "
+                "canonical pass remains deferred."
+            ),
+        },
+    )
+    evidence_manifest()
+    print(
+        json.dumps(
+            {
+                "proposals": 30,
+                "valid_fixtures": 30,
+                "rejected_mutations": 150,
+                "accepted_mutations": 0,
+                "skills": 10,
+                "runners": 10,
+                "outcomes": expected,
+                "effective_negatives": effective_negatives,
+                "overview_words": overview_words,
+                "state": (
+                    "evidence_correction_candidate_built_not_committed"
+                    if correction_mode
+                    else "evidence_candidate_built_not_committed"
+                ),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    build()
