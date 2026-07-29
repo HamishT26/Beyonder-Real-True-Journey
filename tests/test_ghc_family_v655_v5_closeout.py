@@ -1,0 +1,268 @@
+from __future__ import annotations
+
+import json
+import subprocess
+import unittest
+from pathlib import Path
+
+
+REPO = Path(__file__).resolve().parents[1]
+PHASE = REPO / "docs/sable-rook/v655-v5"
+SOURCE = "3bad4afb99c44b6084fc5f10749737a87c29d6ec"
+X1_FREEZE = "a92d0a6c8a5d2620074c1bc505fa8345c8f90373"
+X1_FINAL = X1_FREEZE
+EVIDENCE = "ee10e567ce363e5a8bf710532c5a53d0a411defa"
+CORRECTION = EVIDENCE
+
+
+def load(relative: str) -> dict:
+    return json.loads((PHASE / relative).read_text(encoding="utf-8"))
+
+
+def git(*args: str) -> str:
+    return subprocess.run(
+        ["git", *args],
+        cwd=REPO,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    ).stdout.strip()
+
+
+class SableV655V5CloseoutTests(unittest.TestCase):
+    def test_anchor_contract_and_cap(self) -> None:
+        contract = load("lifecycle/phase-anchor-contract.json")
+        self.assertEqual(
+            (
+                contract["source"],
+                contract["x1_freeze"],
+                contract["x1_final"],
+                contract["evidence"],
+                contract["evidence_correction"],
+            ),
+            (SOURCE, X1_FREEZE, X1_FINAL, EVIDENCE, None),
+        )
+        self.assertEqual(contract["expected_phase_commits_after_final"], 3)
+        self.assertTrue(contract["x1_freeze_and_final_same_commit"])
+        self.assertEqual(contract["maximum_phase_commits"], 8)
+        self.assertTrue(contract["zero_merges_required"])
+        for anchor in (SOURCE, X1_FREEZE, X1_FINAL, EVIDENCE):
+            subprocess.run(
+                ["git", "merge-base", "--is-ancestor", anchor, "HEAD"],
+                cwd=REPO,
+                check=True,
+            )
+
+    def test_truth_and_method_flow(self) -> None:
+        closeout = load("closeout/closeout-receipt.json")
+        final_negatives = load("truth/retained-negative-register-final.json")
+        final_count = final_negatives["final_operational_count"]
+        self.assertEqual(
+            closeout["outcomes"],
+            {
+                "completed": 23,
+                "represented": 5,
+                "open_gap": 1,
+                "exact_gate": 1,
+            },
+        )
+        self.assertEqual(closeout["effective_negatives"], 13074 + final_count)
+        self.assertEqual(
+            (
+                closeout["effective_open_gaps"],
+                closeout["effective_exact_gates"],
+            ),
+            (93, 92),
+        )
+        self.assertEqual(
+            (
+                closeout["method_count"],
+                closeout["failed_witnesses"],
+                closeout["passing_witnesses"],
+            ),
+            (278 + final_count, 278 + final_count, 278 + final_count),
+        )
+        self.assertEqual(closeout["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
+
+    def test_route_is_prepared_not_sent(self) -> None:
+        route = load("orchestration/terminal-route-state.json")
+        self.assertEqual(route["state"], "PREPARED_NOT_SENT")
+        self.assertEqual(route["successor_exact_title"], "Caelen Ash")
+        self.assertEqual(route["successor_phase"], "v655-v6")
+        self.assertEqual(route["blocker"], "TERMINAL_GATE_PENDING")
+        self.assertTrue(route["hamish_successor_authorization"])
+        self.assertEqual(
+            route["authorization_class"], "authorized_with_terminal_conditions"
+        )
+        self.assertFalse(route["task_lookup_performed"])
+        self.assertFalse(route["message_sent"])
+        self.assertFalse(route["task_created"])
+        self.assertFalse(route["task_forked"])
+        self.assertFalse(route["subagent_spawned"])
+
+    def test_final_record_does_not_preclaim_own_commit(self) -> None:
+        final = load("lifecycle/final-record.json")
+        protocol = load("validation/final-validation-protocol.json")
+        seal = load("seal/seal-receipt.json")
+        self.assertIsNone(final["final_commit"])
+        self.assertEqual(final["route_state"], "PREPARED_NOT_SENT")
+        self.assertEqual(protocol["state"], "POSTCOMMIT_REQUIRED")
+        self.assertFalse(protocol["completed"])
+        self.assertFalse(protocol["preclaims_exact_final_head"])
+        self.assertFalse(protocol["preclaims_route_sent"])
+        self.assertFalse(seal["exact_final_commit_known_inside_own_tree"])
+
+    def test_baton_is_file_backed_sanitized_and_bounded(self) -> None:
+        baton = (
+            PHASE / "handoffs/caelen-ash-v655-v6-activation.md"
+        ).read_text(encoding="utf-8")
+        words = len(baton.split())
+        self.assertGreaterEqual(words, 10_000)
+        self.assertLessEqual(words, 100_000)
+        self.assertIn("PREPARED_NOT_SENT", baton)
+        self.assertIn("Caelen Ash", baton)
+        self.assertIn("TERMINAL_GATE_PENDING", baton)
+        self.assertNotIn("HAMISH_SUCCESSOR_AUTHORIZATION_ABSENT", baton)
+        self.assertNotIn("source_thread_id", baton)
+        self.assertNotIn("resume_token", baton)
+        self.assertNotIn("D:\\", baton)
+        self.assertNotIn("C:\\Users", baton)
+
+    def test_owner_manifest_has_exact_prospective_coverage(self) -> None:
+        manifest = load("validation/final-owner-manifest.json")
+        exclusions = set(manifest["self_exclusions"])
+        actual = {
+            path.relative_to(REPO).as_posix()
+            for path in PHASE.rglob("*")
+            if path.is_file()
+        }
+        entries = {row["path"] for row in manifest["entries"]}
+        self.assertEqual(entries, actual - exclusions)
+        self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
+        for row in manifest["entries"]:
+            self.assertEqual(
+                row["git_blob"],
+                git("hash-object", f"--path={row['path']}", row["path"]),
+            )
+
+    def test_document_and_file_caps(self) -> None:
+        documents = load("validation/document-word-cap.json")
+        files = load("validation/owner-file-threshold.json")
+        self.assertTrue(documents["baton_within_bounds"])
+        self.assertTrue(files["below_threshold"])
+        self.assertLess(
+            files["owner_file_count_before_lifecycle_self_exclusions"],
+            files["threshold"],
+        )
+        self.assertFalse(files["inherited_repository_baseline_counted"])
+
+    def test_evidence_boundary_is_preserved(self) -> None:
+        correction = load("validation/evidence-staged-review.json")
+        negatives = load("truth/retained-negative-register-x2.json")
+        final_negatives = load("truth/retained-negative-register-final.json")
+        self.assertTrue(correction["valid"])
+        self.assertEqual(negatives["effective_at_evidence"], 13074)
+        self.assertEqual(negatives["x2_operational_count"], 0)
+        self.assertTrue(negatives["no_failure_erased"])
+        self.assertEqual(
+            final_negatives["effective_at_final_candidate"],
+            13074 + final_negatives["final_operational_count"],
+        )
+        self.assertGreaterEqual(final_negatives["final_operational_count"], 0)
+        self.assertTrue(final_negatives["no_failure_erased"])
+
+    def test_proposal_chain_and_mutations_are_exact(self) -> None:
+        chain = load("provenance/frozen-chain-proposal-index.json")
+        novelty = load("provenance/semantic-novelty-audit.json")
+        executed = load("x2/proposal-ledger.json")
+        self.assertEqual(
+            (chain["prior_count"], chain["new_count"], chain["count"]),
+            (2050, 30, 2080),
+        )
+        self.assertTrue(novelty["valid"])
+        self.assertEqual(novelty["manual_mechanism_review_count"], 30)
+        self.assertEqual(executed["proposal_count"], 30)
+        self.assertEqual(
+            sum(row["rejected_mutation_count"] for row in executed["proposals"]),
+            150,
+        )
+        self.assertEqual(
+            sum(row["accepted_mutation_count"] for row in executed["proposals"]),
+            0,
+        )
+
+    def test_external_action_and_promotion_claims_remain_zero(self) -> None:
+        for contract_path in sorted((PHASE / "surfaces").glob("*/contract.json")):
+            contract = json.loads(contract_path.read_text(encoding="utf-8"))
+            self.assertTrue(
+                all(value == 0 for value in contract["external_action_counts"].values())
+            )
+            self.assertTrue(
+                all(value is False for value in contract["promotion_claims"].values())
+            )
+
+    def test_final_method_flow_conserves_witnesses(self) -> None:
+        evidence = load("method-flow/method-flow-ledger-x2.json")
+        final = load("method-flow/method-flow-ledger-final.json")
+        negatives = load("truth/retained-negative-register-final.json")
+        final_count = negatives["final_operational_count"]
+        self.assertGreaterEqual(final_count, 0)
+        self.assertEqual(
+            final["counts"]["methods"],
+            evidence["counts"]["methods"] + final_count,
+        )
+        self.assertEqual(
+            final["counts"]["witness_results"],
+            {
+                "fail": evidence["counts"]["witness_results"]["fail"] + final_count,
+                "pass": evidence["counts"]["witness_results"]["pass"] + final_count,
+            },
+        )
+        self.assertEqual(
+            final["counts"]["witness_results"],
+            {"fail": 278 + final_count, "pass": 278 + final_count},
+        )
+
+    def test_open_gaps_and_exact_gates_remain_open(self) -> None:
+        gaps = load("truth/open-gap-register-x2.json")
+        gates = load("truth/exact-gate-register-x2.json")
+        self.assertEqual((gaps["effective_count"], gaps["closed_count"]), (93, 0))
+        self.assertEqual((gates["effective_count"], gates["closed_count"]), (92, 0))
+        self.assertEqual(gaps["new_rows"][0]["state"], "open_gap")
+        self.assertEqual(gates["new_rows"][0]["state"], "exact_gate")
+
+    def test_accessibility_and_real_object_boundaries_remain_open(self) -> None:
+        report = (
+            PHASE / "deliverables/v655-v5-boundary-evidence-report.html"
+        ).read_text(encoding="utf-8")
+        checklist = load("truth/final-complete-incomplete-checklist.json")
+        self.assertIn('lang="en"', report)
+        self.assertIn('href="#main"', report)
+        self.assertIn("<caption>", report)
+        self.assertNotIn("<script", report.casefold())
+        joined = " ".join(checklist["incomplete_external"])
+        self.assertIn("accessibility", joined)
+        self.assertIn("Stage 20", joined)
+
+    def test_final_index_addendum_matches_phase(self) -> None:
+        addendum = load("tooling/ghc-family-index-final-addendum.json")
+        final_count = load("truth/retained-negative-register-final.json")[
+            "final_operational_count"
+        ]
+        self.assertEqual(addendum["phase"], "v655-v5")
+        self.assertEqual(addendum["owner"], "Sable Rook")
+        self.assertEqual(
+            addendum["primary_pillar"],
+            "THOS Body through bounded synthetic urban-arboriculture inventory, "
+            "inspection, protection, and work-handover assurance, with GMUT Mind "
+            "and Freed ID/CBR Heart visible and protected",
+        )
+        self.assertEqual(addendum["method_flow_pairs"], 278 + final_count)
+        self.assertTrue(addendum["workflow_continuation_validation_valid"])
+        self.assertEqual(addendum["route_blocker"], "TERMINAL_GATE_PENDING")
+        self.assertEqual(addendum["route_state"], "PREPARED_NOT_SENT")
+
+
+if __name__ == "__main__":
+    unittest.main()
