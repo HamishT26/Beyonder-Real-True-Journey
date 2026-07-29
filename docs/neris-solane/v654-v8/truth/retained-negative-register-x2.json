@@ -1,0 +1,47 @@
+{
+  "effective_at_evidence": 12219,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v654-v8.retained-negatives.x2.v1",
+  "source_effective": 12053,
+  "synthetic_mutation_negative_count": 150,
+  "x1_effective": 12064,
+  "x1_operational_count": 11,
+  "x2_operational": [
+    {
+      "failed": "One combined and three split bounded PowerShell probes for the staged receipt, Git status, and live processes timed out without output.",
+      "negative_id": "V6548-X2-N01",
+      "recovery": "Use direct Node filesystem reads and bounded child-process probes, then confirm that the review receipt exists, no Git or Python process remains, and Git status is readable.",
+      "recurrence_guard": "Prefer direct scalar filesystem and child-process probes for this large owned lane instead of PowerShell object pipelines at lifecycle gates.",
+      "signature": "powershell_receipt_state_probes_timed_out_without_output"
+    },
+    {
+      "failed": "git diff-files --quiet returned nonzero after the deterministic staged review even though the named unstaged diff was empty.",
+      "negative_id": "V6548-X2-N02",
+      "recovery": "Inspect git diff --name-status and porcelain-v2 directly; both showed no unstaged path while all 161 candidate paths remained staged additions.",
+      "recurrence_guard": "Do not treat diff-files --quiet alone as an exact unstaged-content verdict for an all-addition index; pair the gate with explicit named-diff output.",
+      "signature": "git_diff_files_quiet_reported_nonquiet_for_staged_additions"
+    },
+    {
+      "failed": "A bounded git diff --quiet precommit probe exceeded its timeout and could not contribute pass credit.",
+      "negative_id": "V6548-X2-N03",
+      "recovery": "Use a bounded git diff --name-status probe plus porcelain-v2 and exact index-object comparison to establish the absence of unstaged changes.",
+      "recurrence_guard": "Use explicit path-producing diff probes with captured timeout status at large staged lifecycle boundaries.",
+      "signature": "git_diff_quiet_precommit_probe_timed_out"
+    },
+    {
+      "failed": "The first focused post-rebuild test run passed 27 of 28 tests but failed because a literal expected 12,214 effective negatives after the retained probe faults raised the ledger total to 12,217.",
+      "negative_id": "V6548-X2-N04",
+      "recovery": "Assert the effective-negative arithmetic from the ledger fields and derive Method Flow totals from the explicit x2 operational row count.",
+      "recurrence_guard": "Test ledger conservation equations and explicit row parity instead of embedding a count that becomes stale when a new failure is retained.",
+      "signature": "focused_test_retained_negative_literal_became_stale"
+    },
+    {
+      "failed": "A full porcelain-v2 status probe exceeded its 15-second bound before restaging and returned no usable state.",
+      "negative_id": "V6548-X2-N05",
+      "recovery": "Resolve cached, unstaged, and untracked name sets with separate bounded Git commands and compare those explicit paths to the owned allowlist.",
+      "recurrence_guard": "Use separate name-only Git surfaces with an adequate bound instead of requiring one full porcelain record over a large staged candidate.",
+      "signature": "porcelain_v2_restage_probe_timed_out"
+    }
+  ],
+  "x2_operational_count": 5
+}
