@@ -72,14 +72,14 @@ class ElarenV654V7EvidenceTests(unittest.TestCase):
     def test_retained_negatives_and_method_flow(self) -> None:
         negatives = load("truth/retained-negative-register-x2.json")
         methods = load("method-flow/method-flow-ledger-x2.json")
-        self.assertEqual(negatives["effective_at_evidence"], 12047)
+        self.assertEqual(negatives["effective_at_evidence"], 12049)
         self.assertEqual(negatives["synthetic_mutation_negative_count"], 150)
-        self.assertEqual(negatives["x2_operational_count"], 8)
+        self.assertEqual(negatives["x2_operational_count"], 10)
         self.assertTrue(negatives["no_failure_erased"])
-        self.assertEqual(methods["counts"]["methods"], 156)
+        self.assertEqual(methods["counts"]["methods"], 158)
         self.assertEqual(
             methods["counts"]["witness_results"],
-            {"fail": 156, "pass": 156},
+            {"fail": 158, "pass": 158},
         )
 
     def test_gaps_and_gates_remain_open(self) -> None:

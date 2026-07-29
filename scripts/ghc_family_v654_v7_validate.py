@@ -245,7 +245,7 @@ def validate(lifecycle: str, mode: str, manifest_relative: str) -> dict[str, Any
         methods["counts"]["witness_results"]["fail"]
         == methods["counts"]["witness_results"]["pass"]
         == methods["counts"]["methods"]
-        == 156,
+        == 158,
         methods["counts"],
     )
     zero_truth = [
@@ -411,8 +411,9 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     payload = validate(args.lifecycle, args.mode, args.manifest)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
+    output = args.output if args.output.is_absolute() else PHASE / args.output
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(
         json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
         newline="\n",

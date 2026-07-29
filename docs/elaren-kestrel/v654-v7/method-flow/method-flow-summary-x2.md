@@ -2,9 +2,9 @@
 
 - Phase: v654-v7
 - Owner: Elaren Kestrel
-- Methods: 156
-- Passing witnesses: 156
-- Failed witnesses retained: 156
+- Methods: 158
+- Passing witnesses: 158
+- Failed witnesses retained: 158
 
 ## Preferred methods
 
@@ -1255,6 +1255,22 @@
 - Recurrence guard: Inspect an unfamiliar phase script for argument parsing before assuming that --help is non-executing.
 - Rollback: Stop, retain the failed import at zero credit, and leave external and sibling state unchanged.
 - Witnesses: V6547-WITNESS-X2-08-F, V6547-WITNESS-X2-08-P
+
+### V6547-METHOD-X2-09 — Bounded x2 recovery for validator_output_domain_left_root_receipts_and_stale_phase_receipts
+
+- Trigger: validator_output_domain_left_root_receipts_and_stale_phase_receipts
+- Method: Resolve every non-absolute validator output beneath the phase root, remove only the two owned root receipts, rebuild the derived evidence packet from the immutable evidence parent, and exact-review a dedicated correction commit.
+- Recurrence guard: Give validator input and output arguments one documented phase-relative path domain and test the resolved destination before lifecycle use.
+- Rollback: Stop, retain the failed import at zero credit, and leave external and sibling state unchanged.
+- Witnesses: V6547-WITNESS-X2-09-F, V6547-WITNESS-X2-09-P
+
+### V6547-METHOD-X2-10 — Bounded x2 recovery for guarded_owned_receipt_cleanup_rejected_by_command_policy
+
+- Trigger: guarded_owned_receipt_cleanup_rejected_by_command_policy
+- Method: Delete the two known generated files through an explicit file patch and leave every other repository path untouched.
+- Recurrence guard: Use patch-based deletion for known generated files rather than a scripted filesystem cleanup expression.
+- Rollback: Stop, retain the failed import at zero credit, and leave external and sibling state unchanged.
+- Witnesses: V6547-WITNESS-X2-10-F, V6547-WITNESS-X2-10-P
 
 ## Retained boundary
 

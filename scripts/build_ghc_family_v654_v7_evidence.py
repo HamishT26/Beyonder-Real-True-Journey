@@ -19,6 +19,7 @@ import ghc_family_v654_v7_phase_data as d
 REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / d.PHASE_ROOT
 X1_COMMIT = "773528bda8b863218ba4aaed0ce134fcd48abb97"
+EVIDENCE_COMMIT = "303e98c74c90c85330343f953784a79e0df5ac70"
 SKILL_ROOT = Path.home() / ".codex" / "skills"
 QUICK_VALIDATE = (
     SKILL_ROOT / ".system/skill-creator/scripts/quick_validate.py"
@@ -74,6 +75,7 @@ X2_SCRIPTS = [
     "scripts/build_ghc_family_v654_v7_evidence.py",
     "scripts/ghc_family_v654_v7_validate.py",
     "scripts/ghc_family_v654_v7_evidence_staged_review.py",
+    "scripts/ghc_family_v654_v7_evidence_correction_review.py",
 ]
 X2_TESTS = [
     "tests/test_ghc_family_v654_v7_core.py",
@@ -217,6 +219,45 @@ X2_OPERATIONAL_NEGATIVES = [
         "recurrence_guard": (
             "Inspect an unfamiliar phase script for argument parsing before assuming "
             "that --help is non-executing."
+        ),
+        "credit": "retained_negative_zero_initial_pass_credit",
+    },
+    {
+        "negative_id": "V6547-X2-N09",
+        "signature": "validator_output_domain_left_root_receipts_and_stale_phase_receipts",
+        "failed": (
+            "The successful evidence validators resolved manifest inputs from the "
+            "phase root but wrote phase-relative output arguments from the "
+            "repository root. Two untracked root receipts were produced while the "
+            "committed phase receipts retained the preceding 165-entry snapshot."
+        ),
+        "recovery": (
+            "Resolve every non-absolute validator output beneath the phase root, "
+            "remove only the two owned root receipts, rebuild the derived evidence "
+            "packet from the immutable evidence parent, and exact-review a dedicated "
+            "correction commit."
+        ),
+        "recurrence_guard": (
+            "Give validator input and output arguments one documented phase-relative "
+            "path domain and test the resolved destination before lifecycle use."
+        ),
+        "credit": "retained_negative_zero_initial_pass_credit",
+    },
+    {
+        "negative_id": "V6547-X2-N10",
+        "signature": "guarded_owned_receipt_cleanup_rejected_by_command_policy",
+        "failed": (
+            "A guarded PowerShell command intended to delete only the two owned "
+            "root-level validator receipts was rejected by command policy before "
+            "execution."
+        ),
+        "recovery": (
+            "Delete the two known generated files through an explicit file patch "
+            "and leave every other repository path untouched."
+        ),
+        "recurrence_guard": (
+            "Use patch-based deletion for known generated files rather than a "
+            "scripted filesystem cleanup expression."
         ),
         "credit": "retained_negative_zero_initial_pass_credit",
     },
@@ -672,6 +713,7 @@ def evidence_manifest() -> None:
             "validation/evidence-validation.json",
             "validation/evidence-minimal-validation.json",
             "validation/evidence-staged-review.json",
+            "validation/evidence-correction-staged-review.json",
         }
     ]
     paths = sorted(
@@ -702,6 +744,7 @@ def evidence_manifest() -> None:
                 "validation/evidence-validation.json",
                 "validation/evidence-minimal-validation.json",
                 "validation/evidence-staged-review.json",
+                "validation/evidence-correction-staged-review.json",
             ],
             "hash_domain": "prospective Git filtered blob identity",
         },
@@ -709,8 +752,12 @@ def evidence_manifest() -> None:
 
 
 def build() -> None:
-    if run("git", "rev-parse", "HEAD") != X1_COMMIT:
-        raise RuntimeError("evidence builder requires the exact immutable x1 head")
+    head = run("git", "rev-parse", "HEAD")
+    if head not in {X1_COMMIT, EVIDENCE_COMMIT}:
+        raise RuntimeError(
+            "evidence builder requires the exact immutable x1 or evidence head"
+        )
+    correction_mode = head == EVIDENCE_COMMIT
 
     suite = core.execute_all()
     if (
@@ -1172,7 +1219,11 @@ def build() -> None:
             "effective_negatives": effective_negatives,
             "route_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
             "valid": True,
-            "boundary": "Precommit evidence candidate only.",
+            "boundary": (
+                "Dedicated post-evidence correction candidate only."
+                if correction_mode
+                else "Precommit evidence candidate only."
+            ),
         },
     )
     write_json(
@@ -1212,7 +1263,11 @@ def build() -> None:
                 "outcomes": expected,
                 "effective_negatives": effective_negatives,
                 "overview_words": overview_words,
-                "state": "evidence_candidate_built_not_committed",
+                "state": (
+                    "evidence_correction_candidate_built_not_committed"
+                    if correction_mode
+                    else "evidence_candidate_built_not_committed"
+                ),
             },
             ensure_ascii=False,
             sort_keys=True,
