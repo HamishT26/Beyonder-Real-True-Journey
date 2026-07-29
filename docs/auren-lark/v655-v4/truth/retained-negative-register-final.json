@@ -1,0 +1,37 @@
+{
+  "effective_at_evidence": 12909,
+  "effective_at_final_candidate": 12913,
+  "final_operational": [
+    {
+      "failed": "The first bounded closeout stale-token audit found no matches but returned ripgrep status one as a shell failure instead of an explicit clean no-match receipt.",
+      "negative_id": "V6554-FINAL-N01",
+      "recovery": "Capture ripgrep output and status, reject only status greater than one, print the zero-hit count, and exit successfully for an empty result.",
+      "recurrence_guard": "Normalize ripgrep status one only when the captured no-match output is empty; preserve status greater than one as an operational failure.",
+      "signature": "no_match_ripgrep_status_not_normalized"
+    },
+    {
+      "failed": "The first closeout-builder wrapper exceeded five minutes and returned no direct completion output even though the original process later finished and wrote a valid durable candidate receipt.",
+      "negative_id": "V6554-FINAL-N02",
+      "recovery": "Do not launch a duplicate while process state is ambiguous. Confirm no Python process remains, parse the durable receipt, and use a wider bounded wrapper for the rebuild that retains this failure.",
+      "recurrence_guard": "Budget closeout generation, owner-manifest hashing, validation, and tests under an archive-aware ten-minute wrapper.",
+      "signature": "closeout_builder_wrapper_timed_out_after_durable_completion"
+    },
+    {
+      "failed": "The first continuation-edge projection assumed workflow-plan-refinement stored phase assignments under a route property; it returned null assignments despite a valid refinement receipt.",
+      "negative_id": "V6554-FINAL-N03",
+      "recovery": "Inspect the refinement schema properties and verify the 165 exact phase assignments from the emitted workflow-plan-request route.",
+      "recurrence_guard": "Inspect structured receipt properties before projecting nested workflow assignments from a new schema.",
+      "signature": "workflow_assignment_projection_used_nonexistent_route_property"
+    },
+    {
+      "failed": "A bundled read-only Git status, branch, HEAD, and upstream probe used a thirty-second wrapper and timed out before returning any usable output.",
+      "negative_id": "V6554-FINAL-N04",
+      "recovery": "Audit the timed-out child processes and worktree lock surface, wait for the orphaned Git processes to clear, then verify branch, HEAD, and full status through separate archive-aware bounded probes.",
+      "recurrence_guard": "Keep archive-backed Git state checks scalar and allow an archive-aware bound instead of bundling several repository walks into one wrapper.",
+      "signature": "bundled_git_state_probe_timed_out_before_output"
+    }
+  ],
+  "final_operational_count": 4,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v655-v4.retained-negatives.final.v1"
+}
