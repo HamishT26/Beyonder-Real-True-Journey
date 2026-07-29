@@ -1,0 +1,30 @@
+{
+  "effective_at_evidence_correction": 12221,
+  "effective_at_final_candidate": 12224,
+  "final_operational": [
+    {
+      "failed": "The first combined final-candidate builder exited 1 after producing a privacy-clean candidate: 14/14 closeout tests passed, while the 82-check detailed validator and 15-check minimal validator each returned valid=false.",
+      "negative_id": "V6548-FINAL-N01",
+      "recovery": "Inspect the validator's failing check identities, correct only the candidate consistency defect, and rerun the closeout candidate once.",
+      "recurrence_guard": "Persist or inspect per-check validator results whenever aggregate validity is false; do not infer the defect from test or privacy counts.",
+      "signature": "combined_closeout_candidate_validator_rejection"
+    },
+    {
+      "failed": "Seven parallel literal-path PowerShell skill reads each exceeded their ten-second bound and returned no instruction content.",
+      "negative_id": "V6548-FINAL-N02",
+      "recovery": "Read the exact files through bounded direct Node filesystem calls, verify byte counts, and emit explicit EOF markers.",
+      "recurrence_guard": "Use direct byte reads for known archive-backed or global skill files instead of short parallel PowerShell content reads.",
+      "signature": "parallel_powershell_skill_reads_timeout"
+    },
+    {
+      "failed": "The first isolated validator diagnostic stopped before Python execution because the Node REPL call referenced process.env, which is intentionally unavailable on that command surface.",
+      "negative_id": "V6548-FINAL-N03",
+      "recovery": "Invoke the bounded child process without a custom environment; the inherited tool environment is sufficient for this read-only diagnostic.",
+      "recurrence_guard": "Use the Node REPL metadata-only runtime contract and never reference the unavailable process global from model-authored code.",
+      "signature": "node_repl_process_environment_unavailable"
+    }
+  ],
+  "final_operational_count": 3,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v654-v8.retained-negatives.final.v1"
+}
