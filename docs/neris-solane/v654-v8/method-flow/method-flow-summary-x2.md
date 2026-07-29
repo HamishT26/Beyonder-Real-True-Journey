@@ -2,9 +2,9 @@
 
 - Phase: v654-v8
 - Owner: Neris Solane
-- Methods: 178
-- Passing witnesses: 178
-- Failed witnesses retained: 178
+- Methods: 180
+- Passing witnesses: 180
+- Failed witnesses retained: 180
 
 ## Preferred methods
 
@@ -1431,6 +1431,22 @@
 - Recurrence guard: Use separate name-only Git surfaces with an adequate bound instead of requiring one full porcelain record over a large staged candidate.
 - Rollback: Stop, retain the failed attempt at zero credit, and leave objects, tools, materials, external, and sibling state unchanged.
 - Witnesses: V6548-WITNESS-X2-05-F, V6548-WITNESS-X2-05-P
+
+### V6548-METHOD-X2-06 — Bounded x2 recovery for correction_reviewer_required_superset_mismatched_delta
+
+- Trigger: correction_reviewer_required_superset_mismatched_delta
+- Method: Bind the reviewer to the exact generated negative-ledger, Method Flow, validation, manifest, and anchor-script delta, with only its own receipt admitted as a self-exclusion.
+- Recurrence guard: Derive correction-required paths from the actual immutable-parent delta and reject both missing and unexpected paths.
+- Rollback: Stop, retain the failed attempt at zero credit, and leave objects, tools, materials, external, and sibling state unchanged.
+- Witnesses: V6548-WITNESS-X2-06-F, V6548-WITNESS-X2-06-P
+
+### V6548-METHOD-X2-07 — Bounded x2 recovery for git_grep_cached_option_was_parsed_as_revision
+
+- Trigger: git_grep_cached_option_was_parsed_as_revision
+- Method: Place git grep options before the pattern and path delimiter, then treat status 1 with empty output as the expected no-match result.
+- Recurrence guard: Keep git grep options before its pattern and reserve the double dash for the pathspec boundary.
+- Rollback: Stop, retain the failed attempt at zero credit, and leave objects, tools, materials, external, and sibling state unchanged.
+- Witnesses: V6548-WITNESS-X2-07-F, V6548-WITNESS-X2-07-P
 
 ## Retained boundary
 

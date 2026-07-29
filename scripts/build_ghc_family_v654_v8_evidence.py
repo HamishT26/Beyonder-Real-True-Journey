@@ -20,7 +20,7 @@ import ghc_family_v654_v8_phase_data as d
 REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / d.PHASE_ROOT
 X1_COMMIT = "f5ee8cbddd9c8c78542b69e6a127372902e1ca21"
-EVIDENCE_COMMIT = "0000000000000000000000000000000000000000"
+EVIDENCE_COMMIT = "51f95d5ea148c7a2e0e516ea8f0d7861f6807df0"
 SKILL_ROOT = Path.home() / ".codex" / "skills"
 QUICK_VALIDATE = (
     SKILL_ROOT / ".system/skill-creator/scripts/quick_validate.py"
@@ -155,6 +155,41 @@ X2_OPERATIONAL_NEGATIVES: list[dict[str, str]] = [
         "recurrence_guard": (
             "Use separate name-only Git surfaces with an adequate bound instead of "
             "requiring one full porcelain record over a large staged candidate."
+        ),
+    },
+    {
+        "negative_id": "V6548-X2-N06",
+        "signature": "correction_reviewer_required_superset_mismatched_delta",
+        "failed": (
+            "Preflight inspection found that the correction reviewer required "
+            "unchanged validator and test paths from a different repair shape, so it "
+            "would reject the bounded evidence-anchor correction."
+        ),
+        "recovery": (
+            "Bind the reviewer to the exact generated negative-ledger, Method Flow, "
+            "validation, manifest, and anchor-script delta, with only its own receipt "
+            "admitted as a self-exclusion."
+        ),
+        "recurrence_guard": (
+            "Derive correction-required paths from the actual immutable-parent delta "
+            "and reject both missing and unexpected paths."
+        ),
+    },
+    {
+        "negative_id": "V6548-X2-N07",
+        "signature": "git_grep_cached_option_was_parsed_as_revision",
+        "failed": (
+            "The staged stale-anchor probe placed --cached after the search pattern; "
+            "Git parsed it as a revision and returned 'unable to resolve revision: "
+            "--cached'."
+        ),
+        "recovery": (
+            "Place git grep options before the pattern and path delimiter, then treat "
+            "status 1 with empty output as the expected no-match result."
+        ),
+        "recurrence_guard": (
+            "Keep git grep options before its pattern and reserve the double dash for "
+            "the pathspec boundary."
         ),
     },
 ]

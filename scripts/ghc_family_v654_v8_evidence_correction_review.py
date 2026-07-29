@@ -13,7 +13,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/neris-solane/v654-v8/"
 X1 = "f5ee8cbddd9c8c78542b69e6a127372902e1ca21"
-EVIDENCE = "0000000000000000000000000000000000000000"
+EVIDENCE = "51f95d5ea148c7a2e0e516ea8f0d7861f6807df0"
 MANIFEST = PHASE_PREFIX + "validation/evidence-candidate-manifest.json"
 RECEIPT = PHASE_PREFIX + "validation/evidence-correction-staged-review.json"
 ALLOWED_NONPHASE = {
@@ -72,16 +72,20 @@ def main() -> None:
     frozen_changes = sorted(set(paths) & x1_paths)
     required = {
         "scripts/build_ghc_family_v654_v8_evidence.py",
-        "scripts/ghc_family_v654_v8_validate.py",
         "scripts/ghc_family_v654_v8_evidence_correction_review.py",
-        "tests/test_ghc_family_v654_v8_validation.py",
         PHASE_PREFIX + "truth/retained-negative-register-x2.json",
+        PHASE_PREFIX + "truth/phase-truth-evidence.json",
         PHASE_PREFIX + "method-flow/method-flow-ledger-x2.json",
+        PHASE_PREFIX + "method-flow/method-flow-summary-x2.json",
+        PHASE_PREFIX + "method-flow/method-flow-summary-x2.md",
+        PHASE_PREFIX + "method-flow/method-flow-validation-x2.json",
+        PHASE_PREFIX + "validation/evidence-build-receipt.json",
         PHASE_PREFIX + "validation/evidence-validation.json",
         PHASE_PREFIX + "validation/evidence-minimal-validation.json",
         MANIFEST,
     }
     missing_required = sorted(required - set(paths))
+    unexpected_paths = sorted(set(paths) - required - {RECEIPT})
 
     patterns = {
         "raw_uuid": re.compile(
@@ -177,6 +181,7 @@ def main() -> None:
         and not destructive
         and not frozen_changes
         and not missing_required
+        and not unexpected_paths
         and not json_errors
         and not privacy_confirmed
         and not manifest_mismatches
@@ -198,6 +203,7 @@ def main() -> None:
         "destructive_paths": destructive,
         "x1_frozen_changes": frozen_changes,
         "missing_required_paths": missing_required,
+        "unexpected_paths": unexpected_paths,
         "json_parse_count": json_count,
         "json_errors": json_errors,
         "privacy_pattern_classes": sorted(patterns),
