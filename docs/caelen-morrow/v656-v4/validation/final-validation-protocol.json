@@ -1,0 +1,30 @@
+{
+  "canonical_success_cap": 1,
+  "command": "python scripts/ghc_family_v656_v4_final_validate.py --expected-head <exact-final> --receipt <D-first-external-receipt>",
+  "detailed_checks": 82,
+  "full_repository_suite": false,
+  "minimal_checks": 15,
+  "post_success_replay": "forbidden",
+  "required": [
+    "all owner JSON parsing",
+    "five-class privacy and raw-identifier scan",
+    "x1, evidence, final-delta, and owner manifest replay",
+    "word and owner-file caps",
+    "three single-parent commits and zero merges",
+    "exact head, clean state, 0/0 divergence, and four-way equality"
+  ],
+  "run_only_after": [
+    "combined closeout and content-seal commit",
+    "clean push",
+    "local/upstream/tracking/fresh-live equality",
+    "0/0 divergence"
+  ],
+  "schema": "ghc.family.v656-v4.final-validation-protocol.v1",
+  "selected_test_modules": [
+    "tests.test_ghc_family_v656_v4_x1 minus one lifecycle-local working-head assertion",
+    "tests.test_ghc_family_v656_v4_core",
+    "tests.test_ghc_family_v656_v4_validation",
+    "tests.test_ghc_family_v656_v4_closeout"
+  ],
+  "x1_exclusion_replacement": "Exact commit-local x1 manifest replay at immutable x1."
+}

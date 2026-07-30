@@ -1,0 +1,32 @@
+{
+  "all_retained": true,
+  "effective_count": 14356,
+  "final_operational_count": 2,
+  "final_operational_negatives": [
+    {
+      "credit": 0,
+      "negative_id": "V6564-NEG-FINAL-001",
+      "observed": "The first closeout build stopped because the closeout test contained a literal D-drive archive path in a negative assertion.",
+      "recovery": "Construct the forbidden-path assertion from non-sensitive fragments, retain the failed build at zero credit, and rerun the full final scan.",
+      "recurrence_guard": "Keep literal private absolute paths out of scanner tests as well as reader-facing artifacts.",
+      "retained": true,
+      "signature": "final-privacy-scan-literal-private-path-candidate"
+    },
+    {
+      "credit": 0,
+      "negative_id": "V6564-NEG-FINAL-002",
+      "observed": "The first combined final-delta and owner-manifest staged replay timed out because its batch reader wrote every blob request before draining large Git cat-file output.",
+      "recovery": "Stop the exact stale audit process and descendants, then use a communication-safe captured batch response before parsing each blob.",
+      "recurrence_guard": "Use subprocess communication or concurrent draining for large git cat-file batches; never fill both ends of a pipe sequentially.",
+      "retained": true,
+      "signature": "manifest-batch-reader-pipe-deadlock-timeout"
+    }
+  ],
+  "mutation_count": 150,
+  "schema": "ghc.family.v656-v4.retained-negatives.final.v1",
+  "source_effective_count": 14184,
+  "source_external_count": 1,
+  "source_sealed_repository_count": 14183,
+  "x1_operational_count": 20,
+  "x2_operational_count": 0
+}
