@@ -1,0 +1,128 @@
+{
+  "effective_at_evidence": 13775,
+  "effective_at_final_candidate": 13792,
+  "final_operational": [
+    {
+      "failed": "The first post-evidence clean-state probe combined an index check with a full untracked scan and exceeded its thirty-second wrapper.",
+      "negative_id": "V6561-FINAL-N01",
+      "recovery": "Confirm no Git process or lock remains, then split tracked cleanliness, owner-scoped untracked state, history, and equality into bounded probes.",
+      "recurrence_guard": "Do not aggregate full-worktree untracked enumeration with lifecycle Git checks.",
+      "signature": "combined_post_evidence_clean_probe_timed_out"
+    },
+    {
+      "failed": "A read-only command combined Git status, exact head, and a broad closeout stale-label search under the default login shell and timed out.",
+      "negative_id": "V6561-FINAL-N02",
+      "recovery": "Audit processes and locks first, then run literal bounded probes with login-shell startup disabled.",
+      "recurrence_guard": "Keep Git state and repository-text searches in separate bounded calls.",
+      "signature": "combined_closeout_status_and_stale_label_probe_timed_out"
+    },
+    {
+      "failed": "The first read-only Git-process audit inherited login-shell startup overhead and timed out before returning output.",
+      "negative_id": "V6561-FINAL-N03",
+      "recovery": "Repeat the bounded process audit with login-shell startup disabled; the recovered probe found no Git process.",
+      "recurrence_guard": "Disable login-shell startup for short PowerShell probes.",
+      "signature": "login_shell_git_process_probe_timed_out"
+    },
+    {
+      "failed": "The first read-only Git-lock audit inherited login-shell startup overhead and timed out before returning output.",
+      "negative_id": "V6561-FINAL-N04",
+      "recovery": "Resolve the worktree Git directory and repeat the lock audit with login-shell startup disabled; the recovered probe found no lock.",
+      "recurrence_guard": "Use the resolved Git directory and disable login-shell startup for lock audits.",
+      "signature": "login_shell_git_lock_probe_timed_out"
+    },
+    {
+      "failed": "The first read-only exact-head probe inherited login-shell startup overhead and timed out before returning output.",
+      "negative_id": "V6561-FINAL-N05",
+      "recovery": "Repeat only git rev-parse HEAD with login-shell startup disabled; the recovered probe matched the immutable evidence commit.",
+      "recurrence_guard": "Keep exact-head probes scalar and disable login-shell startup.",
+      "signature": "login_shell_exact_head_probe_timed_out"
+    },
+    {
+      "failed": "The first read-only closeout stale-label search inherited login-shell startup overhead and timed out before returning output.",
+      "negative_id": "V6561-FINAL-N06",
+      "recovery": "Repeat the bounded exact-file search with login-shell startup disabled.",
+      "recurrence_guard": "Search one declared file at a time and disable login-shell startup.",
+      "signature": "login_shell_stale_label_probe_timed_out"
+    },
+    {
+      "failed": "A PowerShell display rendered valid UTF-8 wording as mojibake and the first diagnosis incorrectly classified the file content as corrupted.",
+      "negative_id": "V6561-FINAL-N07",
+      "recovery": "Search the exact Unicode spellings directly; the recovered check proved the source already contained valid UTF-8 and required no content rewrite.",
+      "recurrence_guard": "Verify exact Unicode bytes or literal spellings before diagnosing corruption.",
+      "signature": "terminal_rendering_mojibake_misclassified_as_file_corruption"
+    },
+    {
+      "failed": "A read-only search containing corrupted punctuation was misparsed by PowerShell and executed no repository mutation.",
+      "negative_id": "V6561-FINAL-N08",
+      "recovery": "Use literal ASCII-safe patterns or bounded file reads, then inspect the intended lines directly.",
+      "recurrence_guard": "Avoid passing corrupted punctuation through a quoted PowerShell pattern.",
+      "signature": "mojibake_search_pattern_power_shell_quoting_fault"
+    },
+    {
+      "failed": "A bundled read-only phase-data probe exceeded its wrapper after returning partial output.",
+      "negative_id": "V6561-FINAL-N09",
+      "recovery": "Use scalar exact-key searches over the declared phase data file.",
+      "recurrence_guard": "Prefer exact-key searches to broad bundled file reads.",
+      "signature": "phase_data_read_bundle_timed_out_after_partial_output"
+    },
+    {
+      "failed": "A read-only retained-negative register preview exceeded its wrapper after returning partial output.",
+      "negative_id": "V6561-FINAL-N10",
+      "recovery": "Query only the required effective and operational count keys.",
+      "recurrence_guard": "Read large JSON ledgers by bounded exact-key probes.",
+      "signature": "negative_register_read_timed_out_after_partial_output"
+    },
+    {
+      "failed": "A read-only phase-truth preview exceeded its wrapper after returning partial output.",
+      "negative_id": "V6561-FINAL-N11",
+      "recovery": "Query only the required focus, gate, and negative-count keys.",
+      "recurrence_guard": "Use scalar phase-truth probes during lifecycle adaptation.",
+      "signature": "phase_truth_read_timed_out_after_partial_output"
+    },
+    {
+      "failed": "A read-only Method Flow preview exceeded its wrapper after returning partial output.",
+      "negative_id": "V6561-FINAL-N12",
+      "recovery": "Query only the top-level method and witness count keys.",
+      "recurrence_guard": "Do not preview the full Method Flow ledger for count checks.",
+      "signature": "method_flow_read_timed_out_after_partial_output"
+    },
+    {
+      "failed": "A combined read-only exact-key search returned exit code one because one subpattern had no match, despite other requested facts being printed.",
+      "negative_id": "V6561-FINAL-N13",
+      "recovery": "Treat each required key as an independent bounded assertion.",
+      "recurrence_guard": "Do not combine optional and required rg matches in one gate.",
+      "signature": "combined_exact_key_search_returned_nonzero_after_useful_output"
+    },
+    {
+      "failed": "A broad uncommitted-source patch used terminal-rendered mojibake context that did not match the valid UTF-8 file and was rejected atomically.",
+      "negative_id": "V6561-FINAL-N14",
+      "recovery": "Patch ASCII-stable lifecycle fields separately and leave verified Unicode content unchanged.",
+      "recurrence_guard": "Avoid terminal-rendered Unicode in broad patch context.",
+      "signature": "broad_encoding_patch_context_mismatch"
+    },
+    {
+      "failed": "A read-only stale-label absence probe found no stale label but exposed rg's expected no-match exit code as a failed wrapper.",
+      "negative_id": "V6561-FINAL-N15",
+      "recovery": "Handle rg exit code one as an explicit NO_STALE_MATCHES success state.",
+      "recurrence_guard": "Normalize expected no-match searches before gating.",
+      "signature": "expected_no_stale_match_returned_rg_exit_one"
+    },
+    {
+      "failed": "A repository-wide read-only git diff --check exceeded its wrapper.",
+      "negative_id": "V6561-FINAL-N16",
+      "recovery": "Audit process and lock state, then check the exact four uncommitted closeout source files; the bounded hygiene check passed.",
+      "recurrence_guard": "Use exact-path diff hygiene before generation and commit-local hygiene later.",
+      "signature": "repository_wide_diff_hygiene_probe_timed_out"
+    },
+    {
+      "failed": "A follow-up read-only process probe named two already-exited Git process identifiers and returned a nonzero status.",
+      "negative_id": "V6561-FINAL-N17",
+      "recovery": "Query the current Git process set and normalize an empty result; the recovered audit reported no Git processes.",
+      "recurrence_guard": "Do not gate on stale process identifiers after a timeout.",
+      "signature": "expired_git_process_id_probe_returned_nonzero"
+    }
+  ],
+  "final_operational_count": 17,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v656-v1.retained-negatives.final.v1"
+}
