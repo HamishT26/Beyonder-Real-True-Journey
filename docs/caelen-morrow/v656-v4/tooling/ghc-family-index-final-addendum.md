@@ -1,6 +1,7 @@
-# GHC Family Index — Caelen Morrow v656-v4 final addendum
+# GHC Family Index — Caelen Morrow v656-v4 corrected final addendum
 
-The final selected surfaces are the phase-local closeout builder, one-shot
-exact-final validator, ten phase-local skills, and ten additive family-compatible
-runners. Existing family-current callers remain unchanged. The Eiren Kestrel
-route is prepared but unsent until the external terminal gate.
+The closeout candidate remains immutable evidence. A fourth single-parent
+correction commit losslessly normalizes repeated Method Flow prose so every
+final-tree document remains within the 100,000-word ceiling. The correction
+builder and one-shot validator are phase-local. Existing family-current callers
+remain unchanged, and the Eiren Kestrel route remains `PREPARED_NOT_SENT`.

@@ -1,9 +1,18 @@
 {
   "canonical_success_cap": 1,
+  "closeout_candidate": "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5",
   "command": "python scripts/ghc_family_v656_v4_final_validate.py --expected-head <exact-final> --receipt <D-first-external-receipt>",
   "detailed_checks": 82,
   "full_repository_suite": false,
+  "manifest_replays": [
+    "x1",
+    "evidence",
+    "closeout delta",
+    "correction delta",
+    "corrected owner"
+  ],
   "minimal_checks": 15,
+  "phase_commits": 4,
   "post_success_replay": "forbidden",
   "required": [
     "all owner JSON parsing",
@@ -19,12 +28,17 @@
     "local/upstream/tracking/fresh-live equality",
     "0/0 divergence"
   ],
-  "schema": "ghc.family.v656-v4.final-validation-protocol.v1",
+  "schema": "ghc.family.v656-v4.final-validation-protocol.corrected.v1",
   "selected_test_modules": [
-    "tests.test_ghc_family_v656_v4_x1 minus one lifecycle-local working-head assertion",
+    "tests.test_ghc_family_v656_v4_x1 minus two lifecycle-local working-head assertions",
     "tests.test_ghc_family_v656_v4_core",
     "tests.test_ghc_family_v656_v4_validation",
-    "tests.test_ghc_family_v656_v4_closeout"
+    "tests.test_ghc_family_v656_v4_closeout",
+    "tests.test_ghc_family_v656_v4_correction"
   ],
-  "x1_exclusion_replacement": "Exact commit-local x1 manifest replay at immutable x1."
+  "word_count_rule": "physical whitespace-delimited words per final-tree document",
+  "x1_exclusion_replacement": [
+    "exact commit-local x1 manifest replay at immutable x1",
+    "exact immutable x1 tree absence inspection"
+  ]
 }

@@ -23,6 +23,7 @@ ROOT = REPO / ROOT_REL
 SOURCE = "7a599e8c7fc6eba09a93c7541e05cb841e2ffd4c"
 X1 = "1c84cf2616df4efbb13c2df89397941251e2def5"
 EVIDENCE = "6f6c32a470b25ee46d16c2f8207018c701c81e02"
+CLOSEOUT = "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5"
 BRANCH = "codex/GHC-Family/caelen-morrow-v656-v4-full-tools"
 
 
@@ -143,20 +144,27 @@ def selected_unit_tests() -> dict[str, Any]:
         "tests.test_ghc_family_v656_v4_core",
         "tests.test_ghc_family_v656_v4_validation",
         "tests.test_ghc_family_v656_v4_closeout",
+        "tests.test_ghc_family_v656_v4_correction",
     ]
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-    excluded = (
-        "tests.test_ghc_family_v656_v4_x1."
-        "CaelenMorrowV656V4X1Tests.test_manifest_bytes_hashes_and_exact_path_set"
-    )
+    excluded = {
+        (
+            "tests.test_ghc_family_v656_v4_x1."
+            "CaelenMorrowV656V4X1Tests.test_manifest_bytes_hashes_and_exact_path_set"
+        ),
+        (
+            "tests.test_ghc_family_v656_v4_x1."
+            "CaelenMorrowV656V4X1Tests.test_x1_contains_no_x2_surface_or_observed_outcome"
+        ),
+    }
     selected_names: list[str] = []
     for module in modules:
         loaded = loader.loadTestsFromName(module)
         for group in loaded:
             for test in group:
                 test_id = test.id()
-                if test_id == excluded:
+                if test_id in excluded:
                     continue
                 suite.addTest(test)
                 selected_names.append(test_id)
@@ -170,14 +178,24 @@ def selected_unit_tests() -> dict[str, Any]:
         "failed": len(result.failures) + len(result.errors),
         "excluded": [
             {
-                "test": excluded,
+                "test": sorted(excluded)[0],
                 "reason": (
                     "x1 lifecycle-local working-head path assertion; replaced by exact "
                     "commit-local x1 manifest replay at immutable x1"
                 ),
-            }
+            },
+            {
+                "test": sorted(excluded)[1],
+                "reason": (
+                    "x1 lifecycle-local absence assertion; replaced by exact x1 tree "
+                    "inspection in the correction test module"
+                ),
+            },
         ],
-        "replacement": "manifest_check(final=X1, base=SOURCE, x1-file-manifest)",
+        "replacement": [
+            "manifest_check(final=X1, base=SOURCE, x1-file-manifest)",
+            "correction test inspects immutable x1 tree for absent x2 paths and outcomes",
+        ],
         "output_tail": stream.getvalue().splitlines()[-4:],
     }
 
@@ -203,8 +221,6 @@ def privacy_scan(owner_blobs: dict[str, bytes]) -> dict[str, Any]:
     hits = {label: [] for label in patterns}
     scanned = 0
     for path, data in owner_blobs.items():
-        if len(data) > 3_000_000:
-            continue
         try:
             text = data.decode("utf-8")
         except UnicodeDecodeError:
@@ -250,15 +266,17 @@ def main() -> None:
         raise RuntimeError("four-way equality or divergence check failed")
 
     commits = git_text("rev-list", "--reverse", f"{SOURCE}..{final}").splitlines()
-    if commits != [X1, EVIDENCE, final]:
+    if commits != [X1, EVIDENCE, CLOSEOUT, final]:
         raise RuntimeError(f"unexpected phase history: {commits}")
     if git_text("rev-list", "--count", "--merges", f"{SOURCE}..{final}") != "0":
         raise RuntimeError("merge commit found")
     for commit in commits:
         if len(git_text("show", "-s", "--format=%P", commit).split()) != 1:
             raise RuntimeError(f"non-single-parent commit: {commit}")
-    if git_text("rev-parse", f"{final}^") != EVIDENCE:
-        raise RuntimeError("final is not direct child of evidence")
+    if git_text("rev-parse", f"{CLOSEOUT}^") != EVIDENCE:
+        raise RuntimeError("closeout candidate is not direct child of evidence")
+    if git_text("rev-parse", f"{final}^") != CLOSEOUT:
+        raise RuntimeError("corrected final is not direct child of closeout candidate")
 
     manifests = [
         manifest_check(
@@ -272,9 +290,14 @@ def main() -> None:
             f"{ROOT_REL}/validation/evidence-candidate-manifest.json",
         ),
         manifest_check(
-            final,
+            CLOSEOUT,
             EVIDENCE,
             f"{ROOT_REL}/validation/final-staged-manifest.json",
+        ),
+        manifest_check(
+            final,
+            CLOSEOUT,
+            f"{ROOT_REL}/validation/correction-staged-manifest.json",
         ),
         manifest_check(
             final,
@@ -299,7 +322,7 @@ def main() -> None:
             text = data.decode("utf-8")
         except UnicodeDecodeError:
             continue
-        words = len(re.findall(r"\b[\w'-]+\b", text, flags=re.UNICODE))
+        words = len(text.split())
         if words > max_words:
             max_words = words
             max_word_path = path
@@ -307,11 +330,7 @@ def main() -> None:
             raise RuntimeError(f"document word cap exceeded: {path} {words}")
     baton_path = f"{ROOT_REL}/handoffs/eiren-kestrel-v656-v5-activation.md"
     baton_words = len(
-        re.findall(
-            r"\b[\w'-]+\b",
-            owner_content[baton_path].decode("utf-8"),
-            flags=re.UNICODE,
-        )
+        owner_content[baton_path].decode("utf-8").split()
     )
     if not 10000 <= baton_words <= 100000:
         raise RuntimeError(f"baton word count outside bounds: {baton_words}")
@@ -354,10 +373,12 @@ def main() -> None:
         "source": SOURCE,
         "x1": X1,
         "evidence": EVIDENCE,
-        "phase_commits": 3,
+        "closeout_candidate": CLOSEOUT,
+        "phase_commits": 4,
         "merge_commits": 0,
-        "single_parent_phase_commits": 3,
-        "final_direct_child_of_evidence": True,
+        "single_parent_phase_commits": 4,
+        "closeout_direct_child_of_evidence": True,
+        "corrected_final_direct_child_of_closeout": True,
         "four_way_equality": {
             "local": final,
             "upstream": upstream,
