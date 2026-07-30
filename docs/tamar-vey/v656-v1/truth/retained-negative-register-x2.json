@@ -1,0 +1,61 @@
+{
+  "effective_at_evidence": 13775,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v656-v1.retained-negatives.x2.v1",
+  "source_effective": 13592,
+  "synthetic_mutation_negative_count": 150,
+  "x1_effective": 13618,
+  "x1_operational_count": 26,
+  "x2_operational": [
+    {
+      "failed": "The first combined evidence-builder domain patch used a terminal-rendered Unicode context line that did not match and was rejected atomically.",
+      "negative_id": "V6561-X2-N01",
+      "recovery": "Split the change into exact ASCII-context hunks and patch Unicode-bearing lines only after inspecting their actual UTF-8 content.",
+      "recurrence_guard": "Keep large domain rewrites independent of terminal-rendered Unicode spellings.",
+      "signature": "combined_domain_patch_unicode_context_mismatch"
+    },
+    {
+      "failed": "The first 17-test development selection passed eight tests and then returned nine errors because the validation test scaffold still resolved the phase under Liora's owner directory; the whole attempt earned zero credit.",
+      "negative_id": "V6561-X2-N02",
+      "recovery": "Replace the stale current-phase owner prefix with Tamar's exact phase root and rerun the changed development selection.",
+      "recurrence_guard": "Audit owner-qualified phase roots after mechanical phase adaptation.",
+      "signature": "first_development_selection_used_stale_owner_path"
+    },
+    {
+      "failed": "The first detailed evidence validator stopped before checks because its phase constant still pointed to Liora's owner directory.",
+      "negative_id": "V6561-X2-N03",
+      "recovery": "Bind the validator phase path to the family-current phase-data root.",
+      "recurrence_guard": "Derive validator phase paths from phase data instead of owner literals.",
+      "signature": "first_detailed_validator_used_stale_owner_path"
+    },
+    {
+      "failed": "The parallel first minimal validator stopped at the same stale owner path and earned zero validation credit.",
+      "negative_id": "V6561-X2-N04",
+      "recovery": "Use the corrected family-current phase-data root and rerun only the changed validator.",
+      "recurrence_guard": "Keep detailed and minimal validator roots on one shared phase-data binding.",
+      "signature": "first_minimal_validator_used_stale_owner_path"
+    },
+    {
+      "failed": "The second 17-test development selection started in parallel with the detailed and minimal validators; sixteen tests passed but one errored because the detailed receipt did not yet exist, so the attempt earned zero credit.",
+      "negative_id": "V6561-X2-N05",
+      "recovery": "Materialize both changed validation receipts before launching the dependent test selection.",
+      "recurrence_guard": "Run receipt-producing validators before tests that consume those receipts.",
+      "signature": "development_tests_raced_parallel_validation_receipts"
+    },
+    {
+      "failed": "The first evidence staged review stopped before content checks because the candidate manifest lifecycle self-exclusion had not yet been staged.",
+      "negative_id": "V6561-X2-N06",
+      "recovery": "Stage the declared candidate manifest and validation receipts after the 166 manifested content paths, then rerun the changed staged review once.",
+      "recurrence_guard": "Stage lifecycle self-exclusions required as inputs before invoking their index reviewer.",
+      "signature": "first_evidence_staged_review_missing_staged_manifest"
+    },
+    {
+      "failed": "The corrected evidence staged reviewer exceeded its sixty-second wrapper, although postcondition inspection found no Python process and a valid 169-path zero-hit receipt; the wrapper attempt remains a retained timeout.",
+      "negative_id": "V6561-X2-N07",
+      "recovery": "Preserve the valid receipt as the bounded postcondition witness and batch index OID and blob reads for the changed exact-stage review.",
+      "recurrence_guard": "Use one index scan plus git cat-file --batch for large staged manifests.",
+      "signature": "evidence_staged_review_wrapper_timed_out_after_valid_receipt"
+    }
+  ],
+  "x2_operational_count": 7
+}
