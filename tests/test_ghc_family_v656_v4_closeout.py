@@ -25,6 +25,7 @@ SOURCE = d.SOURCE_FINAL
 X1 = "1c84cf2616df4efbb13c2df89397941251e2def5"
 EVIDENCE = "6f6c32a470b25ee46d16c2f8207018c701c81e02"
 CLOSEOUT = "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5"
+CORRECTION1 = "14a04ce7607a839bcbff42d6daf59a1f1f24d2ed"
 
 
 def read_json(relative: str) -> dict:
@@ -43,15 +44,16 @@ def git(*args: str) -> str:
 
 
 class CaelenMorrowV656V4CloseoutTests(unittest.TestCase):
-    def test_exact_four_commit_single_parent_history(self) -> None:
+    def test_exact_five_commit_single_parent_history(self) -> None:
         head = git("rev-parse", "HEAD")
-        self.assertEqual(git("rev-list", "--count", f"{SOURCE}..{head}"), "4")
+        self.assertEqual(git("rev-list", "--count", f"{SOURCE}..{head}"), "5")
         self.assertEqual(git("rev-list", "--count", "--merges", f"{SOURCE}..{head}"), "0")
         commits = git("rev-list", "--reverse", f"{SOURCE}..{head}").splitlines()
         self.assertEqual(commits[0], X1)
         self.assertEqual(commits[1], EVIDENCE)
         self.assertEqual(commits[2], CLOSEOUT)
-        self.assertEqual(git("rev-parse", f"{head}^"), CLOSEOUT)
+        self.assertEqual(commits[3], CORRECTION1)
+        self.assertEqual(git("rev-parse", f"{head}^"), CORRECTION1)
         for commit in commits:
             self.assertEqual(len(git("show", "-s", "--format=%P", commit).split()), 1)
 
@@ -61,16 +63,16 @@ class CaelenMorrowV656V4CloseoutTests(unittest.TestCase):
             truth["outcomes"],
             {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
         )
-        self.assertEqual(truth["effective_negatives"], 14357)
+        self.assertEqual(truth["effective_negatives"], 14358)
         self.assertEqual(truth["effective_open_gaps"], 100)
         self.assertEqual(truth["effective_exact_gates"], 99)
         self.assertEqual(truth["verdict"], "NOT_READY_FOR_STAGE_20")
 
-    def test_method_flow_is_643_pairs(self) -> None:
+    def test_method_flow_is_644_pairs(self) -> None:
         flow = read_json("method-flow/method-flow-ledger-final.json")
-        self.assertEqual(flow["counts"]["methods"], 643)
-        self.assertEqual(flow["counts"]["witness_results"]["fail"], 643)
-        self.assertEqual(flow["counts"]["witness_results"]["pass"], 643)
+        self.assertEqual(flow["counts"]["methods"], 644)
+        self.assertEqual(flow["counts"]["witness_results"]["fail"], 644)
+        self.assertEqual(flow["counts"]["witness_results"]["pass"], 644)
         self.assertTrue(read_json("method-flow/method-flow-summary-final.json")["no_failure_erased"])
 
     def test_final_gaps_and_gates_remain_open(self) -> None:

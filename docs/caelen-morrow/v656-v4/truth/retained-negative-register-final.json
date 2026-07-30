@@ -1,7 +1,7 @@
 {
   "all_retained": true,
-  "effective_count": 14357,
-  "final_operational_count": 3,
+  "effective_count": 14358,
+  "final_operational_count": 4,
   "final_operational_negatives": [
     {
       "credit": 0,
@@ -29,10 +29,20 @@
       "recurrence_guard": "Run a physical document word-cap preflight before the first pushed closeout candidate and normalize repeated ledger prose losslessly.",
       "retained": true,
       "signature": "method-flow-document-word-cap-preflight-failure"
+    },
+    {
+      "credit": 0,
+      "failed_attempt_receipt_sha256": "42ae906e32a83875aed96099db6552b77a73206fc893de1e731e29385b43f714",
+      "negative_id": "V6564-NEG-FINAL-004",
+      "observed": "The first exact-final aggregate stopped before executing tests because script launch bound the scripts directory but not the repository root; unittest returned a _FailedTest during suite flattening.",
+      "recovery": "Insert the exact repository root into Python's module search path before test discovery, retain the failed aggregate with zero success credit, and validate the corrected exact final.",
+      "recurrence_guard": "When a validator is launched by repository-relative script path, bind both the repository root and scripts directory before importing tests.",
+      "retained": true,
+      "signature": "canonical-aggregate-test-module-discovery-failure"
     }
   ],
   "mutation_count": 150,
-  "schema": "ghc.family.v656-v4.retained-negatives.corrected-final.v1",
+  "schema": "ghc.family.v656-v4.retained-negatives.aggregate-corrected-final.v1",
   "source_effective_count": 14184,
   "source_external_count": 1,
   "source_sealed_repository_count": 14183,

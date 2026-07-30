@@ -15,6 +15,7 @@ ROOT = REPO / "docs/caelen-morrow/v656-v4"
 SOURCE = "7a599e8c7fc6eba09a93c7541e05cb841e2ffd4c"
 X1 = "1c84cf2616df4efbb13c2df89397941251e2def5"
 CLOSEOUT = "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5"
+CORRECTION1 = "14a04ce7607a839bcbff42d6daf59a1f1f24d2ed"
 
 
 def git(*args: str, binary: bool = False) -> str | bytes:
@@ -62,22 +63,25 @@ class CaelenMorrowV656V4CorrectionTests(unittest.TestCase):
     def test_final_method_flow_and_negative_are_retained(self) -> None:
         flow = read_json("method-flow/method-flow-ledger-final.json")
         negatives = read_json("truth/retained-negative-register-final.json")
-        self.assertEqual(flow["counts"]["methods"], 643)
-        self.assertEqual(flow["counts"]["witness_results"]["fail"], 643)
-        self.assertEqual(flow["counts"]["witness_results"]["pass"], 643)
-        self.assertEqual(negatives["final_operational_count"], 3)
-        self.assertEqual(negatives["effective_count"], 14357)
+        self.assertEqual(flow["counts"]["methods"], 644)
+        self.assertEqual(flow["counts"]["witness_results"]["fail"], 644)
+        self.assertEqual(flow["counts"]["witness_results"]["pass"], 644)
+        self.assertEqual(negatives["final_operational_count"], 4)
+        self.assertEqual(negatives["effective_count"], 14358)
 
     def test_correction_manifest_exact(self) -> None:
         manifest = read_json("validation/correction-staged-manifest.json")
         entries = {item["path"]: item for item in manifest["entries"]}
         exclusions = {item["path"] for item in manifest["declared_exclusions"]}
         actual = set(
-            filter(None, str(git("diff", "--name-only", CLOSEOUT, "HEAD")).splitlines())
+            filter(
+                None,
+                str(git("diff", "--name-only", CLOSEOUT, CORRECTION1)).splitlines(),
+            )
         )
         self.assertEqual(set(entries) | exclusions, actual)
         for path, entry in entries.items():
-            data = bytes(git("show", f"HEAD:{path}", binary=True))
+            data = bytes(git("show", f"{CORRECTION1}:{path}", binary=True))
             self.assertEqual(len(data), entry["bytes"])
             self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"])
 

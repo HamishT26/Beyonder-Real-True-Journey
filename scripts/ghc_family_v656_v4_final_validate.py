@@ -24,6 +24,7 @@ SOURCE = "7a599e8c7fc6eba09a93c7541e05cb841e2ffd4c"
 X1 = "1c84cf2616df4efbb13c2df89397941251e2def5"
 EVIDENCE = "6f6c32a470b25ee46d16c2f8207018c701c81e02"
 CLOSEOUT = "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5"
+CORRECTION1 = "14a04ce7607a839bcbff42d6daf59a1f1f24d2ed"
 BRANCH = "codex/GHC-Family/caelen-morrow-v656-v4-full-tools"
 
 
@@ -145,6 +146,7 @@ def selected_unit_tests() -> dict[str, Any]:
         "tests.test_ghc_family_v656_v4_validation",
         "tests.test_ghc_family_v656_v4_closeout",
         "tests.test_ghc_family_v656_v4_correction",
+        "tests.test_ghc_family_v656_v4_aggregate_correction",
     ]
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
@@ -249,6 +251,8 @@ def main() -> None:
     if receipt.exists():
         raise RuntimeError("successful canonical receipt already exists; replay refused")
     receipt.parent.mkdir(parents=True, exist_ok=True)
+    if str(REPO) not in sys.path:
+        sys.path.insert(0, str(REPO))
 
     final = git_text("rev-parse", "HEAD")
     if final != args.expected_head:
@@ -266,7 +270,7 @@ def main() -> None:
         raise RuntimeError("four-way equality or divergence check failed")
 
     commits = git_text("rev-list", "--reverse", f"{SOURCE}..{final}").splitlines()
-    if commits != [X1, EVIDENCE, CLOSEOUT, final]:
+    if commits != [X1, EVIDENCE, CLOSEOUT, CORRECTION1, final]:
         raise RuntimeError(f"unexpected phase history: {commits}")
     if git_text("rev-list", "--count", "--merges", f"{SOURCE}..{final}") != "0":
         raise RuntimeError("merge commit found")
@@ -275,8 +279,10 @@ def main() -> None:
             raise RuntimeError(f"non-single-parent commit: {commit}")
     if git_text("rev-parse", f"{CLOSEOUT}^") != EVIDENCE:
         raise RuntimeError("closeout candidate is not direct child of evidence")
-    if git_text("rev-parse", f"{final}^") != CLOSEOUT:
-        raise RuntimeError("corrected final is not direct child of closeout candidate")
+    if git_text("rev-parse", f"{CORRECTION1}^") != CLOSEOUT:
+        raise RuntimeError("first correction is not direct child of closeout candidate")
+    if git_text("rev-parse", f"{final}^") != CORRECTION1:
+        raise RuntimeError("aggregate-corrected final is not direct child of first correction")
 
     manifests = [
         manifest_check(
@@ -295,9 +301,14 @@ def main() -> None:
             f"{ROOT_REL}/validation/final-staged-manifest.json",
         ),
         manifest_check(
-            final,
+            CORRECTION1,
             CLOSEOUT,
             f"{ROOT_REL}/validation/correction-staged-manifest.json",
+        ),
+        manifest_check(
+            final,
+            CORRECTION1,
+            f"{ROOT_REL}/validation/aggregate-correction-staged-manifest.json",
         ),
         manifest_check(
             final,
@@ -374,11 +385,13 @@ def main() -> None:
         "x1": X1,
         "evidence": EVIDENCE,
         "closeout_candidate": CLOSEOUT,
-        "phase_commits": 4,
+        "first_correction": CORRECTION1,
+        "phase_commits": 5,
         "merge_commits": 0,
-        "single_parent_phase_commits": 4,
+        "single_parent_phase_commits": 5,
         "closeout_direct_child_of_evidence": True,
-        "corrected_final_direct_child_of_closeout": True,
+        "first_correction_direct_child_of_closeout": True,
+        "aggregate_corrected_final_direct_child_of_first_correction": True,
         "four_way_equality": {
             "local": final,
             "upstream": upstream,
