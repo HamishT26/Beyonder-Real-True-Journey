@@ -1,0 +1,137 @@
+{
+  "effective_at_evidence": 13982,
+  "effective_at_final_candidate": 13998,
+  "final_operational": [
+    {
+      "failed": "A read-only closeout-template inventory attached a pipeline directly to a PowerShell foreach statement and failed at parse time.",
+      "negative_id": "V6562-FINAL-N01",
+      "phase_sequence_alias": "V6562-N10",
+      "recovery": "Materialize the loop rows in an array, then pipe the completed array to the formatter.",
+      "recurrence_guard": "Never attach a pipeline to an unparenthesized PowerShell foreach statement.",
+      "signature": "powershell_foreach_pipeline_parser_fault"
+    },
+    {
+      "failed": "A second read-only file-existence inventory repeated the same direct foreach-to-pipeline parser fault and earned zero credit.",
+      "negative_id": "V6562-FINAL-N02",
+      "phase_sequence_alias": "V6562-N11",
+      "recovery": "Use only the materialized-array form for the rest of the phase and retain the repeat as a distinct failed witness.",
+      "recurrence_guard": "Treat a recovered parser signature as a locked method constraint for all later PowerShell probes in the phase.",
+      "signature": "repeated_powershell_foreach_pipeline_parser_fault"
+    },
+    {
+      "failed": "The first mechanical template adaptation used a PowerShell hash whose case-insensitive keys made distinct Tamar/tamar replacements collide; the command was rejected before writing any file.",
+      "negative_id": "V6562-FINAL-N03",
+      "phase_sequence_alias": "V6562-N12",
+      "recovery": "Represent replacements as an ordered array of explicit key/value pairs and apply them sequentially.",
+      "recurrence_guard": "Do not use PowerShell hash literals when replacement keys differ only by letter case.",
+      "signature": "case_insensitive_replacement_hash_collision"
+    },
+    {
+      "failed": "A combined stale-label search containing mixed encoded punctuation failed PowerShell quote parsing before execution.",
+      "negative_id": "V6562-FINAL-N04",
+      "phase_sequence_alias": "V6562-N13",
+      "recovery": "Split the audit into bounded literal pattern groups and keep encoded punctuation out of shell expressions.",
+      "recurrence_guard": "Use single-purpose literal searches for stale labels and exact patches for encoded text.",
+      "signature": "combined_stale_label_search_quote_fault"
+    },
+    {
+      "failed": "A second combined search again included unsafe encoded-character patterns and failed at PowerShell parse time.",
+      "negative_id": "V6562-FINAL-N05",
+      "phase_sequence_alias": "V6562-N14",
+      "recovery": "Remove encoded literals from shell search expressions and inspect the known file regions directly.",
+      "recurrence_guard": "After one encoded-search parser fault, use exact file patches rather than retrying equivalent combined shell patterns.",
+      "signature": "second_encoded_search_quote_fault"
+    },
+    {
+      "failed": "The first multi-file closeout patch was atomically rejected because one prepared route-context line did not match the exact local file.",
+      "negative_id": "V6562-FINAL-N06",
+      "phase_sequence_alias": "V6562-N15",
+      "recovery": "Reread the exact local blocks and apply smaller independent patches.",
+      "recurrence_guard": "Never widen or retry a rejected patch without an exact context reread.",
+      "signature": "closeout_patch_context_rejected"
+    },
+    {
+      "failed": "A second multi-file patch was atomically rejected when a displayed mojibake form did not match the file's actual UTF-8 Māori text.",
+      "negative_id": "V6562-FINAL-N07",
+      "phase_sequence_alias": "V6562-N16",
+      "recovery": "Separate ASCII-safe structural edits, inspect UTF-8 text with escaped diagnostics, and patch the exact Unicode source.",
+      "recurrence_guard": "Do not build patch context from a console's mojibake rendering.",
+      "signature": "mojibake_context_patch_rejected"
+    },
+    {
+      "failed": "A read-only Python repr diagnostic failed while printing Māori text through the Windows cp1252 console.",
+      "negative_id": "V6562-FINAL-N08",
+      "phase_sequence_alias": "V6562-N17",
+      "recovery": "Pin PYTHONIOENCODING to UTF-8 and use ASCII-escaped diagnostics when examining uncertain console encodings.",
+      "recurrence_guard": "Set explicit UTF-8 process encoding before every later Python validation or text diagnostic.",
+      "signature": "windows_console_unicode_diagnostic_fault"
+    },
+    {
+      "failed": "A combined stale-label search, Python compile, and Git status probe exceeded its wait window and returned no attributable aggregate result.",
+      "negative_id": "V6562-FINAL-N09",
+      "phase_sequence_alias": "V6562-N18",
+      "recovery": "Verify no process or lock remains, then isolate the stale-label search, AST syntax check, and bounded Git state checks.",
+      "recurrence_guard": "Do not combine repository scans, compilation, and Git status in one timed terminal cell.",
+      "signature": "combined_stale_compile_status_timeout"
+    },
+    {
+      "failed": "The first recovered stale-label audit treated the generic word console as a superseded-practice marker and matched retained Windows console encoding failures.",
+      "negative_id": "V6562-FINAL-N10",
+      "phase_sequence_alias": "V6562-N19",
+      "recovery": "Classify the contextual hits and narrow the scanner to domain-specific superseded-practice tokens.",
+      "recurrence_guard": "Do not use a generic operational word as a stale-domain marker without context classification.",
+      "signature": "overbroad_console_stale_label_projection"
+    },
+    {
+      "failed": "The narrowed stale-label audit matched only the retained N19 failure description because that record repeated the superseded domain token.",
+      "negative_id": "V6562-FINAL-N11",
+      "phase_sequence_alias": "V6562-N20",
+      "recovery": "Preserve the failure semantics without repeating the stale token and classify retained-negative records separately from live labels.",
+      "recurrence_guard": "A stale-label scanner must distinguish retained historical failure descriptions from current executable or reader-facing labels.",
+      "signature": "stale_label_scanner_self_match"
+    },
+    {
+      "failed": "The first closeout process monitor combined Wait-Process with log-tail reads and exceeded its wrapper without returning a snapshot.",
+      "negative_id": "V6562-FINAL-N12",
+      "phase_sequence_alias": "V6562-N21",
+      "recovery": "Leave the independent builder untouched and query only exact process existence before any log read.",
+      "recurrence_guard": "Do not combine process waiting and D-drive log reads in one bounded monitor cell.",
+      "signature": "closeout_monitor_wait_log_timeout"
+    },
+    {
+      "failed": "A second closeout monitor combined a sleep with D-drive log tails and also exceeded its wrapper.",
+      "negative_id": "V6562-FINAL-N13",
+      "phase_sequence_alias": "V6562-N22",
+      "recovery": "Remove sleeps and log reads from monitoring; use a scalar process probe and inspect logs only after the process exits.",
+      "recurrence_guard": "After a monitor timeout, reduce the next monitor to one scalar state question.",
+      "signature": "closeout_sleep_log_monitor_timeout"
+    },
+    {
+      "failed": "The first final log read serialized PowerShell content objects with provider metadata instead of emitting the bounded text line.",
+      "negative_id": "V6562-FINAL-N14",
+      "phase_sequence_alias": "V6562-N23",
+      "recovery": "Read the completed log as raw text or coerce each content row to a plain string before JSON serialization.",
+      "recurrence_guard": "Never place provider-backed Get-Content objects directly inside a deep JSON diagnostic payload.",
+      "signature": "powershell_log_object_projection_expansion"
+    },
+    {
+      "failed": "The first hidden final-commit launcher split the multiword commit message into pathspecs, so Git rejected the command without creating a commit.",
+      "negative_id": "V6562-FINAL-N15",
+      "phase_sequence_alias": "V6562-N24",
+      "recovery": "Preserve the staged index, rebuild receipts with this failure retained, and invoke Git with one exact quoted argument string.",
+      "recurrence_guard": "Verify Start-Process argument boundaries for any multiword Git commit message before launching.",
+      "signature": "start_process_git_commit_message_split"
+    },
+    {
+      "failed": "A later scalar process monitor still combined a ten-second sleep with PowerShell startup and exceeded its forty-five-second wrapper.",
+      "negative_id": "V6562-FINAL-N16",
+      "phase_sequence_alias": "V6562-N25",
+      "recovery": "Remove the sleep entirely and use immediate process-existence probes.",
+      "recurrence_guard": "On this D-drive lane, process monitors must not include sleeps inside the timed shell cell.",
+      "signature": "sleep_based_scalar_monitor_timeout"
+    }
+  ],
+  "final_operational_count": 16,
+  "no_failure_erased": true,
+  "schema": "ghc.family.v656-v2.retained-negatives.final.v1"
+}
