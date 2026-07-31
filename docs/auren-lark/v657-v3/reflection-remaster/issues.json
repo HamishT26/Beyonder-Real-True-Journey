@@ -1,0 +1,150 @@
+{
+  "all_retained": true,
+  "issues": [
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N01",
+      "observed": "The first source-baton digest probe called SHA256.HashData, which is unavailable in the installed PowerShell runtime.",
+      "recovery": "Use SHA256.Create with ComputeHash over exact bytes and dispose the instance.",
+      "recurrence_guard": "Probe runtime crypto helpers before composing a digest receipt.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-sha256-hashdata-unavailable"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N02",
+      "observed": "The follow-up digest probe called Convert.ToHexString, which is also unavailable and produced no usable digest.",
+      "recovery": "Use BitConverter.ToString, remove separators, and lowercase the result.",
+      "recurrence_guard": "Prefer the verified legacy-compatible hash conversion on this Windows runtime.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-convert-tohexstring-unavailable"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N03",
+      "observed": "A manifest-size inventory piped directly from foreach and failed with an empty-pipeline-element parser error.",
+      "recovery": "Materialize all rows into an array before formatting.",
+      "recurrence_guard": "Never pipe directly from a PowerShell foreach statement.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-foreach-pipe-parser-manifest-inventory"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N04",
+      "observed": "The first manifest verifier wrote all cat-file requests before draining output and blocked without a complete receipt.",
+      "recovery": "Terminate the bounded orphan process, then use subprocess communicate to write and drain concurrently.",
+      "recurrence_guard": "Use communicate for every bounded git cat-file batch exchange.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "git-cat-file-batch-parent-write-before-read-deadlock"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N05",
+      "observed": "A recursive archive-wide search for Ilyra's external canonical digest exceeded the useful bound without a complete result.",
+      "recovery": "Stop the broad search and retain the activation-supplied external digest while independently verifying repository evidence.",
+      "recurrence_guard": "Do not traverse the whole archive for an external receipt when exact activation evidence and bounded repository checks suffice.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "archive-wide-canonical-digest-search-timeout"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N06",
+      "observed": "A branch-and-path collision receipt embedded command and conditional expressions inside a hashtable and failed before execution.",
+      "recovery": "Compute scalar values first and construct the receipt only from bound variables.",
+      "recurrence_guard": "Keep commands and control flow outside PowerShell hashtable literals.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-inline-hashtable-command-expression-parse-error"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N07",
+      "observed": "A later script-size inventory repeated the direct foreach-to-pipeline parser error and produced no rows.",
+      "recovery": "Materialize the complete row array, then pipe the array to JSON.",
+      "recurrence_guard": "Encode materialize-before-pipe directly in every multirow audit.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-foreach-pipe-parser-size-inventory-recurrence"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N08",
+      "observed": "The first candidate-domain scan hit a Māori title and Python's CP1252 stdout encoder failed after partial output.",
+      "recovery": "Set PYTHONIOENCODING to UTF-8 and rerun only the bounded read-only title scan.",
+      "recurrence_guard": "Bind UTF-8 stdout before printing repository text on Windows.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "python-cp1252-novelty-output-fault"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N09",
+      "observed": "A skill-reference read used an unescaped Windows path inside JavaScript and failed during parsing before the file was read.",
+      "recovery": "Escape backslashes or use a safely quoted literal path.",
+      "recurrence_guard": "Treat Windows paths as data and validate JavaScript string syntax before tool dispatch.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "javascript-backslash-string-literal-invalid-token"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N10",
+      "observed": "The first semantic phase-data patch depended on terminal-rendered Unicode context and was rejected without changing the file.",
+      "recovery": "Append an ASCII-anchored active override block with exact UTF-8 content.",
+      "recurrence_guard": "Use ASCII-safe patch anchors whenever inherited text crosses a rendered encoding boundary.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "phase-data-unicode-context-patch-mismatch"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N11",
+      "observed": "The first mechanical scaffold copy created fourteen untracked x2, closeout, final, validator, and receipt scripts before the x1 freeze existed.",
+      "recovery": "Verify every target is owner-created and untracked, remove only those fourteen future-layer files, and retain only the x1 builder, catalogue, phase data, and x1 test.",
+      "recurrence_guard": "Materialize lifecycle scaffolds just in time after each immutable predecessor commit.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "premature-x2-closeout-final-scaffold-materialization"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6573-X1-N12",
+      "observed": "The first bounded x1 test run addressed docs/ilyra-fen/v657-v3, so one assertion failed and nine tests errored on absent files.",
+      "recovery": "Correct the copied test fixture to docs/auren-lark/v657-v3, refresh the x1 records, and rerun only the bounded x1 suite.",
+      "recurrence_guard": "After every version rename, verify owner and version path components independently.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "x1-test-phase-owner-path-not-renamed"
+    }
+  ],
+  "schema": "ghc.family.reflection-remaster.issues.v1"
+}
