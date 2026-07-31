@@ -1,0 +1,24 @@
+# Lyren Moss v657-v1 official and primary source ledger
+
+Statuses were checked on 2026-07-31. Source presence or status does not establish implementation, conformance, professional review, legal interpretation, cultural ratification, Māori authority, or empirical confirmation.
+
+| ID | Status | Publisher | Title | Bounded use |
+|---|---|---|---|---|
+| `NIST-SSDF-11` | `stable` | National Institute of Standards and Technology | [Secure Software Development Framework (SSDF) Version 1.1](https://csrc.nist.gov/pubs/sp/800/218/final) | secure-development, provenance, vulnerability, and release vocabulary only; no conformance or security verdict |
+| `NIST-SSDF-12-DRAFT` | `draft` | National Institute of Standards and Technology | [Secure Software Development Framework (SSDF) Version 1.2 Initial Public Draft](https://csrc.nist.gov/Projects/ssdf/publications) | revision-watch vocabulary only; the draft is not treated as a final requirement |
+| `NIST-SP800-61R3` | `current` | National Institute of Standards and Technology | [Incident Response Recommendations and Considerations for Cybersecurity Risk Management](https://csrc.nist.gov/pubs/sp/800/61/r3/final) | incident, evidence, containment, recovery, communication, and handover vocabulary only |
+| `CISA-SBOM-RESOURCES` | `current` | Cybersecurity and Infrastructure Security Agency | [Software Bill of Materials Resources](https://www.cisa.gov/topics/cyber-threats-and-advisories/sbom/sbomresourceslibrary) | component-inventory and dependency-transparency vocabulary only; no completeness claim |
+| `CISA-KEV` | `current` | Cybersecurity and Infrastructure Security Agency | [Known Exploited Vulnerabilities Catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) | catalog identity and zero-row adapter readiness only; no network call or vulnerability decision |
+| `SPDX-30` | `current` | Linux Foundation SPDX Project | [SPDX Specification](https://spdx.dev/use/specifications/) | package, file, snippet, relationship, checksum, license-reference, and lifecycle vocabulary only |
+| `CYCLONEDX-17` | `current` | OWASP Foundation CycloneDX Project | [CycloneDX Specification Overview 1.7](https://cyclonedx.org/specification/overview/) | component, service, dependency, vulnerability, formulation, and attestation vocabulary only |
+| `SLSA-PROVENANCE-12` | `current` | OpenSSF SLSA Project | [SLSA Provenance 1.2](https://slsa.dev/spec/v1.2/provenance) | subject, builder, build definition, run details, and material vocabulary without production attestation |
+| `IN-TOTO-SPECS` | `current` | in-toto Project | [in-toto Specifications](https://in-toto.io/docs/specs/) | link, layout, statement, subject, predicate, material, and product vocabulary without signatures or trust |
+| `W3C-PROV-O` | `stable` | World Wide Web Consortium | [PROV-O: The PROV Ontology](https://www.w3.org/TR/prov-o/) | entity, activity, attribution, derivation, revision, invalidation, and delegation lineage |
+| `RFC-3339` | `stable` | RFC Editor | [RFC 3339: Date and Time on the Internet](https://www.rfc-editor.org/rfc/rfc3339.html) | synthetic UTC timestamps, maintenance windows, embargo clocks, expiry, and handovers |
+| `RFC-8785` | `stable` | RFC Editor | [RFC 8785: JSON Canonicalization Scheme](https://www.rfc-editor.org/rfc/rfc8785.html) | deterministic synthetic contracts, receipts, manifests, and patch cards |
+| `W3C-WCAG-22` | `current` | World Wide Web Consortium | [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/) | structural accessibility vocabulary with manual and affected-user evaluation reserved |
+| `NZ-PRIVACY-PRINCIPLES` | `current` | Office of the Privacy Commissioner New Zealand | [Privacy Act 2020 information privacy principles](https://www.privacy.org.nz/privacy-principles/) | purpose, collection, fairness, security, access, correction, retention, use, and disclosure reservations |
+| `TMR-PRINCIPLES` | `current` | Te Mana Raraunga | [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty) | authority-reservation context only; Māori data governance remains with Māori authorities |
+| `LOCAL-CONTEXTS-LABELS` | `current` | Local Contexts | [Traditional Knowledge and Biocultural Labels](https://localcontexts.org/labels/about-the-labels/) | community-defined provenance, protocol, and permission vocabulary with community authority reserved |
+| `W3C-VC-DM-20` | `current` | World Wide Web Consortium | [Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model/) | synthetic credential vocabulary only; no real issuer, holder, verifier, proof, status, or trust decision |
+| `W3C-DID-10` | `stable` | World Wide Web Consortium | [Decentralized Identifiers v1.0](https://www.w3.org/TR/did-1.0/) | synthetic identifier-document vocabulary only; no live method, resolution, key, controller, or trust claim |
