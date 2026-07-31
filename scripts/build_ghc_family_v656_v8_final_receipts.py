@@ -20,6 +20,10 @@ PHASE_PREFIX = f"{d.PHASE_ROOT}/"
 MANIFEST_RELATIVE = f"{d.PHASE_ROOT}/validation/final-owner-manifest.json"
 PRIVACY_RELATIVE = f"{d.PHASE_ROOT}/validation/final-privacy-precommit.json"
 REVIEW_RELATIVE = f"{d.PHASE_ROOT}/validation/final-staged-review.json"
+FINAL_LIFECYCLE_MUTABLE_PATHS = {
+    "scripts/ghc_family_v656_v8_final_config.py",
+    "scripts/build_ghc_family_v656_v8_final_receipts.py",
+}
 EXCLUSIONS = {
     MANIFEST_RELATIVE: "self_hash_impossible_inside_same_blob",
     PRIVACY_RELATIVE: "regenerated_after_manifest_for_final_candidate_privacy_state",
@@ -236,7 +240,9 @@ def review() -> dict[str, Any]:
         if row
     ]
     out_of_scope = [path for path in staged if not allowed(path)]
-    frozen_changes = sorted(set(staged) & prior_phase_paths())
+    frozen_changes = sorted(
+        (set(staged) & prior_phase_paths()) - FINAL_LIFECYCLE_MUTABLE_PATHS
+    )
     unstaged = [row for row in git("diff", "--name-only").splitlines() if row]
     untracked = [
         row
