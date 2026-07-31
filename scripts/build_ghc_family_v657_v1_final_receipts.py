@@ -21,6 +21,7 @@ MANIFEST_RELATIVE = f"{d.PHASE_ROOT}/validation/final-owner-manifest.json"
 PRIVACY_RELATIVE = f"{d.PHASE_ROOT}/validation/final-privacy-precommit.json"
 REVIEW_RELATIVE = f"{d.PHASE_ROOT}/validation/final-staged-review.json"
 FINAL_LIFECYCLE_MUTABLE_PATHS = {
+    "scripts/build_ghc_family_v657_v1_final.py",
     "scripts/ghc_family_v657_v1_final_config.py",
     "scripts/build_ghc_family_v657_v1_final_receipts.py",
 }
