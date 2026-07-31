@@ -1,8 +1,12 @@
-# Eiren Kestrel v656-v5 final Method Flow
+# Eiren Kestrel v656-v5 corrected final Method Flow
 
-The combined closeout candidate preserves 831 methods,
-831 retained failed witnesses, and 831
-bounded passing witnesses. It retains 5
-closeout failures and their bounded recoveries. Mutation rejection remains
-same-owner deterministic software evidence only and no failure, gap, or exact
-gate is erased.
+The corrected final preserves 835 methods, 835 retained
+failed witnesses, and 835 bounded passing witnesses. Nine closeout
+and correction failures remain explicit, including the fresh-live projection,
+encoding, stale-label, large-worktree, manifest-schema, Git-clean representation,
+and Method Flow document-cap failures.
+
+Repeated prose is stored through deterministic lossless text references. Every
+method, witness, state event, recommendation, and prose value remains
+reconstructable. Physical word counts are {'method-flow-ledger.json': 32302, 'method-flow-ledger-x2.json': 34954, 'method-flow-ledger-final.json': 35638}. No failure, gap, or
+exact gate is erased.

@@ -10,6 +10,7 @@ Eiren Kestrel, Elaren Kestrel, sibling, family, role, hope, and continuity langu
 - Exact inherited Caelen Morrow v656-v4 final/source: `c1518e6873068f6cc20ff69a30437d69404ef057`
 - Frozen Eiren x1: `e313d47c1bc6386d3dbdf1773d1d7cb4026bc7f9`
 - Immutable Eiren evidence: `f9662c901407a86cf271eef9b54467a782c99455`
+- Immutable Eiren combined closeout candidate: `3181608db19f39bb7b91be01fc62e64840a86c5e`
 - Exact Eiren final: resolve from the final document-cap correction commit after delivery prerequisites pass.
 - Full committed activation packet: this file.
 
@@ -25,10 +26,10 @@ No independent-team reproduction, external audit, production certification, exha
 
 - Frozen core proposals through Eiren: 2,320.
 - Outcomes: exactly 23 `completed` / 5 `represented` / 1 `open_gap` / 1 `exact_gate`.
-- Effective negatives: 14,545, consisting of 14,357 source-sealed repository negatives, 1 inherited external source negative, 23 Eiren x1 operational negatives, 9 Eiren x2 operational negatives, 150 retained mutation negatives, and 5 retained closeout operational negatives.
+- Effective negatives: 14,549, consisting of 14,357 source-sealed repository negatives, 1 inherited external source negative, 23 Eiren x1 operational negatives, 9 Eiren x2 operational negatives, 150 retained mutation negatives, and 5 retained closeout operational negatives.
 - Effective open gaps: 101.
 - Effective exact gates: 100.
-- Method Flow: 831 methods, 831 retained failed witnesses, and 831 bounded passing witnesses. No failure or gate was erased.
+- Method Flow: 835 methods, 835 retained failed witnesses, and 835 bounded passing witnesses. No failure or gate was erased.
 - Terminal verdict: `NOT_READY_FOR_STAGE_20`.
 
 Primary Trinity Mandala focus was GMUT Mind. THOS Body, Freed ID, and CBR Heart remained explicit and protected. The bounded human-practice lens was synthetic specialty-coffee roasting and brew-lab documentation: lot intake and provenance, roast heat and mass traces, airflow, grind particles, brewing water and extraction envelopes, sensory-language authority boundaries, machinery and food-safety reservations, packaging, workload handover, supply-chain declarations, accessibility, public-data readiness, and affected-party authority reservation.
@@ -45,7 +46,7 @@ Preserve strict x1-before-x2 separation. Audit semantic novelty against all 2,32
 
 Freeze genuinely new safe-now, candidate, phase-local skill, family-current runner, and additive CLEAN/FIX/REFINE portfolios only after novelty, safety, compatibility, relevance, and protected-gate review. Do not manufacture unsafe work to satisfy a count. Keep exact-approval and blocked packets visible and unexecuted unless exact new evidence changes a gate. Inherited proposals, tasks, skills, runners, methods, and portfolios are evidence and recommendations, never automatic Elaren completion credit.
 
-Freeze proposals and portfolios in a dedicated x1-only commit containing no x2 implementation or outcome. Push and prove clean local/upstream/tracking/fresh-live equality before x2. Execute only as evidence permits. Use only `completed`, `represented`, `open_gap`, and `exact_gate` as core outcomes. Preserve all 14,545 inherited effective negatives, all 101 open gaps, all 100 exact gates, and every new failure, timeout, parser fault, false assumption, blocker, workaround, passing witness, recurrence guard, rollback, and sibling recommendation through Method Flow.
+Freeze proposals and portfolios in a dedicated x1-only commit containing no x2 implementation or outcome. Push and prove clean local/upstream/tracking/fresh-live equality before x2. Execute only as evidence permits. Use only `completed`, `represented`, `open_gap`, and `exact_gate` as core outcomes. Preserve all 14,549 inherited effective negatives, all 101 open gaps, all 100 exact gates, and every new failure, timeout, parser fault, false assumption, blocker, workaround, passing witness, recurrence guard, rollback, and sibling recommendation through Method Flow.
 
 Preserve family-current `ghc_family_*` and `build_ghc_family_*` callers and backward compatibility. Prefer current selected family tools over stale owner/version-locked surfaces. Supersede or deactivate an older method only with additive provenance, a validated successor, retained failed witnesses, and rollback. Never delete user material, memory, identity records, negative-result records, or sibling history.
 
@@ -713,7 +714,7 @@ Preservation clause: verify current public status before any new use, reproduce 
 
 The 150 invalid fixtures covered missing required obligations, wrong types or domains, resource or freshness overruns, unsupported claim promotion, and authority, privacy, or route breaches. Each invalid fixture remains a failed witness with zero completion credit; each validator rejection remains a bounded passing witness. Rejection proves only that the frozen deterministic validator detects that frozen mutation. It does not prove exhaustive defect coverage, real measurement validity, professional competence, production security, privacy completeness, accessibility completeness, legal compliance, cultural legitimacy, Māori authority, independent reproduction, or Stage 20 readiness.
 
-Eiren's 23 x1 and 9 x2 operational failures remain retained, including discovery and Git timeouts, PowerShell parser and encoding faults, line-ending manifest mismatches, stale validation anchors, failed evidence builds, and the frozen document-cap overrun. The 5 closeout failures also remain retained, including the false fresh-live projection and the rejected mojibake rewrite. Every bounded recovery preserves the original zero-credit witness. Elaren must inherit the recurrence guards as recommendations rather than pretend the failed attempts did not happen.
+Eiren's 23 x1 and 9 x2 operational failures remain retained, including discovery and Git timeouts, PowerShell parser and encoding faults, line-ending manifest mismatches, stale validation anchors, failed evidence builds, and the frozen document-cap overrun. The 5 closeout failures also remain retained, including the false fresh-live projection and the rejected mojibake rewrite. The correction also retains the undeclared-schema assumption and the raw-working-tree versus Git-clean false mismatch at zero credit. The first correction build timeout from per-file Git clean-filter processes also remains retained at zero credit. The physical document-cap preflight remains retained because three Method Flow ledgers exceeded 100,000 words through repeated inline prose. The corrected final preserves every value through deterministic lossless text references and keeps the oversized original blobs in the immutable closeout candidate. Every bounded recovery preserves the original zero-credit witness. Elaren must inherit the recurrence guards as recommendations rather than pretend the failed attempts did not happen.
 
 ## Caps, privacy, and operational guardrails
 

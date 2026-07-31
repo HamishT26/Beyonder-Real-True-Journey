@@ -23,9 +23,8 @@ import ghc_family_v656_v5_phase_data as d
 ROOT = REPO / d.PHASE_ROOT
 SOURCE = d.SOURCE_FINAL
 X1 = "e313d47c1bc6386d3dbdf1773d1d7cb4026bc7f9"
-EVIDENCE = "6f6c32a470b25ee46d16c2f8207018c701c81e02"
-CLOSEOUT = "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5"
-CORRECTION1 = "14a04ce7607a839bcbff42d6daf59a1f1f24d2ed"
+EVIDENCE = "f9662c901407a86cf271eef9b54467a782c99455"
+CLOSEOUT = "3181608db19f39bb7b91be01fc62e64840a86c5e"
 
 
 def read_json(relative: str) -> dict:
@@ -44,16 +43,13 @@ def git(*args: str) -> str:
 
 
 class EirenKestrelV656V5CloseoutTests(unittest.TestCase):
-    def test_exact_five_commit_single_parent_history(self) -> None:
+    def test_exact_four_commit_single_parent_history(self) -> None:
         head = git("rev-parse", "HEAD")
-        self.assertEqual(git("rev-list", "--count", f"{SOURCE}..{head}"), "5")
+        self.assertEqual(git("rev-list", "--count", f"{SOURCE}..{head}"), "4")
         self.assertEqual(git("rev-list", "--count", "--merges", f"{SOURCE}..{head}"), "0")
         commits = git("rev-list", "--reverse", f"{SOURCE}..{head}").splitlines()
-        self.assertEqual(commits[0], X1)
-        self.assertEqual(commits[1], EVIDENCE)
-        self.assertEqual(commits[2], CLOSEOUT)
-        self.assertEqual(commits[3], CORRECTION1)
-        self.assertEqual(git("rev-parse", f"{head}^"), CORRECTION1)
+        self.assertEqual(commits, [X1, EVIDENCE, CLOSEOUT, head])
+        self.assertEqual(git("rev-parse", f"{head}^"), CLOSEOUT)
         for commit in commits:
             self.assertEqual(len(git("show", "-s", "--format=%P", commit).split()), 1)
 
@@ -63,24 +59,24 @@ class EirenKestrelV656V5CloseoutTests(unittest.TestCase):
             truth["outcomes"],
             {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
         )
-        self.assertEqual(truth["effective_negatives"], 14358)
-        self.assertEqual(truth["effective_open_gaps"], 100)
-        self.assertEqual(truth["effective_exact_gates"], 99)
+        self.assertEqual(truth["effective_negatives"], 14549)
+        self.assertEqual(truth["effective_open_gaps"], 101)
+        self.assertEqual(truth["effective_exact_gates"], 100)
         self.assertEqual(truth["verdict"], "NOT_READY_FOR_STAGE_20")
 
-    def test_method_flow_is_644_pairs(self) -> None:
+    def test_method_flow_is_835_pairs(self) -> None:
         flow = read_json("method-flow/method-flow-ledger-final.json")
-        self.assertEqual(flow["counts"]["methods"], 644)
-        self.assertEqual(flow["counts"]["witness_results"]["fail"], 644)
-        self.assertEqual(flow["counts"]["witness_results"]["pass"], 644)
+        self.assertEqual(flow["counts"]["methods"], 835)
+        self.assertEqual(flow["counts"]["witness_results"]["fail"], 835)
+        self.assertEqual(flow["counts"]["witness_results"]["pass"], 835)
         self.assertTrue(read_json("method-flow/method-flow-summary-final.json")["no_failure_erased"])
 
     def test_final_gaps_and_gates_remain_open(self) -> None:
-        self.assertEqual(read_json("truth/open-gap-register-final.json")["effective_count"], 100)
-        self.assertEqual(read_json("truth/exact-gate-register-final.json")["effective_count"], 99)
+        self.assertEqual(read_json("truth/open-gap-register-final.json")["effective_count"], 101)
+        self.assertEqual(read_json("truth/exact-gate-register-final.json")["effective_count"], 100)
 
     def test_baton_word_count_and_sanitization(self) -> None:
-        baton = ROOT / "handoffs/eiren-kestrel-v656-v5-activation.md"
+        baton = ROOT / "handoffs/elaren-kestrel-v656-v6-activation.md"
         text = baton.read_text(encoding="utf-8")
         words = text.split()
         self.assertGreaterEqual(len(words), 10000)
@@ -93,9 +89,9 @@ class EirenKestrelV656V5CloseoutTests(unittest.TestCase):
     def test_route_is_prepared_not_sent(self) -> None:
         route = read_json("orchestration/terminal-route-state.json")
         self.assertEqual(route["state"], "PREPARED_NOT_SENT")
-        self.assertEqual(route["successor_exact_title"], "Eiren Kestrel")
-        self.assertEqual(route["successor_phase"], "v656-v5")
-        self.assertEqual(route["successor_next_edge"], "Elaren Kestrel v656-v6")
+        self.assertEqual(route["successor_exact_title"], "Elaren Kestrel")
+        self.assertEqual(route["successor_phase"], "v656-v6")
+        self.assertEqual(route["successor_next_edge"], "Neris Solane v656-v7")
         self.assertEqual(route["contact_count"], 0)
         self.assertEqual(route["tavian_state"], "ON_STANDBY")
 

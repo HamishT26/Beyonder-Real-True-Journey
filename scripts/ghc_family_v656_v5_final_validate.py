@@ -20,11 +20,10 @@ from typing import Any
 REPO = Path(__file__).resolve().parents[1]
 ROOT_REL = "docs/eiren-kestrel/v656-v5"
 ROOT = REPO / ROOT_REL
-SOURCE = "7a599e8c7fc6eba09a93c7541e05cb841e2ffd4c"
-X1 = "1c84cf2616df4efbb13c2df89397941251e2def5"
-EVIDENCE = "6f6c32a470b25ee46d16c2f8207018c701c81e02"
-CLOSEOUT = "f5a8bcfc1480b4d600806b75a3c921bf3a132bb5"
-CORRECTION1 = "14a04ce7607a839bcbff42d6daf59a1f1f24d2ed"
+SOURCE = "c1518e6873068f6cc20ff69a30437d69404ef057"
+X1 = "e313d47c1bc6386d3dbdf1773d1d7cb4026bc7f9"
+EVIDENCE = "f9662c901407a86cf271eef9b54467a782c99455"
+CLOSEOUT = "3181608db19f39bb7b91be01fc62e64840a86c5e"
 BRANCH = "codex/GHC-Family/eiren-kestrel-v656-v5-full-tools"
 
 
@@ -146,18 +145,17 @@ def selected_unit_tests() -> dict[str, Any]:
         "tests.test_ghc_family_v656_v5_validation",
         "tests.test_ghc_family_v656_v5_closeout",
         "tests.test_ghc_family_v656_v5_correction",
-        "tests.test_ghc_family_v656_v5_aggregate_correction",
     ]
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
     excluded = {
         (
             "tests.test_ghc_family_v656_v5_x1."
-            "EirenKestrelV656V4X1Tests.test_manifest_bytes_hashes_and_exact_path_set"
+            "EirenKestrelV656V5X1Tests.test_manifest_bytes_hashes_and_exact_path_set"
         ),
         (
             "tests.test_ghc_family_v656_v5_x1."
-            "EirenKestrelV656V4X1Tests.test_x1_contains_no_x2_surface_or_observed_outcome"
+            "EirenKestrelV656V5X1Tests.test_x1_contains_no_x2_surface_or_observed_outcome"
         ),
     }
     selected_names: list[str] = []
@@ -270,7 +268,7 @@ def main() -> None:
         raise RuntimeError("four-way equality or divergence check failed")
 
     commits = git_text("rev-list", "--reverse", f"{SOURCE}..{final}").splitlines()
-    if commits != [X1, EVIDENCE, CLOSEOUT, CORRECTION1, final]:
+    if commits != [X1, EVIDENCE, CLOSEOUT, final]:
         raise RuntimeError(f"unexpected phase history: {commits}")
     if git_text("rev-list", "--count", "--merges", f"{SOURCE}..{final}") != "0":
         raise RuntimeError("merge commit found")
@@ -279,10 +277,8 @@ def main() -> None:
             raise RuntimeError(f"non-single-parent commit: {commit}")
     if git_text("rev-parse", f"{CLOSEOUT}^") != EVIDENCE:
         raise RuntimeError("closeout candidate is not direct child of evidence")
-    if git_text("rev-parse", f"{CORRECTION1}^") != CLOSEOUT:
-        raise RuntimeError("first correction is not direct child of closeout candidate")
-    if git_text("rev-parse", f"{final}^") != CORRECTION1:
-        raise RuntimeError("aggregate-corrected final is not direct child of first correction")
+    if git_text("rev-parse", f"{final}^") != CLOSEOUT:
+        raise RuntimeError("corrected final is not direct child of closeout candidate")
 
     manifests = [
         manifest_check(
@@ -301,14 +297,9 @@ def main() -> None:
             f"{ROOT_REL}/validation/final-staged-manifest.json",
         ),
         manifest_check(
-            CORRECTION1,
+            final,
             CLOSEOUT,
             f"{ROOT_REL}/validation/correction-staged-manifest.json",
-        ),
-        manifest_check(
-            final,
-            CORRECTION1,
-            f"{ROOT_REL}/validation/aggregate-correction-staged-manifest.json",
         ),
         manifest_check(
             final,
@@ -339,7 +330,7 @@ def main() -> None:
             max_word_path = path
         if words > 100000:
             raise RuntimeError(f"document word cap exceeded: {path} {words}")
-    baton_path = f"{ROOT_REL}/handoffs/eiren-kestrel-v656-v5-activation.md"
+    baton_path = f"{ROOT_REL}/handoffs/elaren-kestrel-v656-v6-activation.md"
     baton_words = len(
         owner_content[baton_path].decode("utf-8").split()
     )
@@ -368,6 +359,17 @@ def main() -> None:
         "exact_gate": 1,
     }:
         raise RuntimeError("outcome truth mismatch")
+    if (
+        outcome["effective_negatives"] != 14549
+        or outcome["effective_open_gaps"] != 101
+        or outcome["effective_exact_gates"] != 100
+    ):
+        raise RuntimeError("effective negative, gap, or gate count mismatch")
+    if (
+        method_flow["counts"]["methods"] != 835
+        or method_flow["counts"]["witness_results"] != {"fail": 835, "pass": 835}
+    ):
+        raise RuntimeError("Method Flow count mismatch")
     if outcome["verdict"] != "NOT_READY_FOR_STAGE_20":
         raise RuntimeError("terminal verdict mismatch")
 
@@ -385,13 +387,12 @@ def main() -> None:
         "x1": X1,
         "evidence": EVIDENCE,
         "closeout_candidate": CLOSEOUT,
-        "first_correction": CORRECTION1,
-        "phase_commits": 5,
+        "corrected_final": final,
+        "phase_commits": 4,
         "merge_commits": 0,
-        "single_parent_phase_commits": 5,
+        "single_parent_phase_commits": 4,
         "closeout_direct_child_of_evidence": True,
-        "first_correction_direct_child_of_closeout": True,
-        "aggregate_corrected_final_direct_child_of_first_correction": True,
+        "corrected_final_direct_child_of_closeout": True,
         "four_way_equality": {
             "local": final,
             "upstream": upstream,
