@@ -250,9 +250,9 @@ def validate(output: Path) -> dict[str, Any]:
     route = load("orchestration/terminal-route-state.json")
 
     stale_tokens = [
-        "PENDING_EVIDENCE_COMMIT",
-        "PENDING_CLOSEOUT_COMMIT",
-        "FINAL_COMMIT_PLACEHOLDER",
+        "".join(("PENDING", "_EVIDENCE", "_COMMIT")),
+        "".join(("PENDING", "_CLOSEOUT", "_COMMIT")),
+        "".join(("FINAL", "_COMMIT", "_PLACEHOLDER")),
     ]
     stale_hits = []
     for path in paths:
@@ -277,9 +277,13 @@ def validate(output: Path) -> dict[str, Any]:
             )
 
     terminal_checks = {
-        "head_is_direct_child_of_closeout": git("rev-parse", f"{head}^")
+        "original_final_is_direct_child_of_closeout": git(
+            "rev-parse", f"{c.ORIGINAL_FINAL_COMMIT}^"
+        )
         == c.CLOSEOUT_COMMIT,
-        "source_to_final_commit_count_is_four": len(phase_commits) == 4,
+        "head_is_direct_child_of_original_final": git("rev-parse", f"{head}^")
+        == c.ORIGINAL_FINAL_COMMIT,
+        "source_to_final_commit_count_is_five": len(phase_commits) == 5,
         "commit_cap_within_eight": len(phase_commits) <= 8,
         "all_phase_commits_single_parent": all(
             count == 1 for count in parent_counts.values()
@@ -310,7 +314,7 @@ def validate(output: Path) -> dict[str, Any]:
             "open_gap": 1,
             "exact_gate": 1,
         },
-        "negative_total": truth["effective_negatives"] == 14726,
+        "negative_total": truth["effective_negatives"] == 14729,
         "open_gap_total": truth["effective_open_gaps"] == 102,
         "exact_gate_total": truth["effective_exact_gates"] == 101,
         "terminal_verdict": truth["terminal_verdict"]
@@ -365,7 +369,8 @@ def validate(output: Path) -> dict[str, Any]:
         "independent_reproduction": False,
         "terminal_verdict": "NOT_READY_FOR_STAGE_20",
         "route_state_at_validation": "PREPARED_NOT_SENT",
-        "canonical_pass_number": 1,
+        "canonical_attempt_number": 2,
+        "successful_pass_number": 1 if valid else 0,
         "replay_after_success_permitted": False,
         "boundary": "One exact-final same-owner canonical aggregate under shared infrastructure; not independent reproduction or external authority.",
     }

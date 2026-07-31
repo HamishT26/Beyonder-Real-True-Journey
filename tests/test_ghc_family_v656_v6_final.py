@@ -40,7 +40,7 @@ class V656V6FinalTests(unittest.TestCase):
             check=True,
         )
         count = int(git("rev-list", "--count", f"{SOURCE}..HEAD"))
-        self.assertIn(count, {3, 4})
+        self.assertIn(count, {4, 5})
         self.assertLessEqual(count, 8)
         self.assertEqual(git("rev-list", "--count", "--merges", f"{SOURCE}..HEAD"), "0")
 
@@ -50,7 +50,7 @@ class V656V6FinalTests(unittest.TestCase):
             truth["outcome_counts"],
             {"completed": 23, "represented": 5, "open_gap": 1, "exact_gate": 1},
         )
-        self.assertEqual(truth["effective_negatives"], 14726)
+        self.assertEqual(truth["effective_negatives"], 14729)
         self.assertEqual(
             (truth["effective_open_gaps"], truth["effective_exact_gates"]),
             (102, 101),
@@ -60,12 +60,26 @@ class V656V6FinalTests(unittest.TestCase):
 
     def test_final_method_pair(self) -> None:
         flow = load("method-flow/method-flow-state-final.json")
-        self.assertEqual(flow["counts"]["current_methods"], 1)
+        self.assertEqual(flow["counts"]["current_methods"], 4)
         self.assertEqual(
-            flow["counts"]["current_witness_results"], {"fail": 1, "pass": 1}
+            flow["counts"]["current_witness_results"], {"fail": 4, "pass": 4}
         )
-        self.assertEqual(flow["counts"]["effective_methods"], 1012)
+        self.assertEqual(flow["counts"]["effective_methods"], 1015)
         self.assertTrue(flow["all_failed_witnesses_retained"])
+
+    def test_validator_rule_values_do_not_self_match_source(self) -> None:
+        source = (
+            ROOT / "scripts/ghc_family_v656_v6_final_validator.py"
+        ).read_text(encoding="utf-8")
+        values = [
+            "".join(("PENDING", "_EVIDENCE", "_COMMIT")),
+            "".join(("PENDING", "_CLOSEOUT", "_COMMIT")),
+            "".join(("FINAL", "_COMMIT", "_PLACEHOLDER")),
+        ]
+        self.assertTrue(all(value not in source for value in values))
+        failure = load("validation/canonical-aggregate-failure-01.json")
+        self.assertFalse(failure["valid"])
+        self.assertEqual(failure["success_credit"], 0)
 
     def test_terminal_route_is_unsent(self) -> None:
         route = load("orchestration/terminal-route-state.json")
@@ -85,7 +99,7 @@ class V656V6FinalTests(unittest.TestCase):
             record["record_state"],
             "CANDIDATE_TREE_REVIEWED_POSTCOMMIT_PROOF_PENDING",
         )
-        self.assertEqual(plan["state"], "POSTCOMMIT_REQUIRED")
+        self.assertEqual(plan["state"], "POSTCORRECTION_COMMIT_REQUIRED")
         self.assertFalse(plan["completed"])
         self.assertFalse(plan["route_sent"])
 

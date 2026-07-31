@@ -89,11 +89,11 @@ def replay_manifest(relative: str, commit: str) -> dict[str, Any]:
 
 
 def method_and_witnesses(
-    negative: dict[str, Any],
+    negative: dict[str, Any], ordinal: int
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    method_id = "V6566-FINAL-METHOD-01"
-    failed_id = "V6566-FINAL-WITNESS-01-F"
-    passing_id = "V6566-FINAL-WITNESS-01-P"
+    method_id = f"V6566-FINAL-METHOD-{ordinal:02d}"
+    failed_id = f"V6566-FINAL-WITNESS-{ordinal:02d}-F"
+    passing_id = f"V6566-FINAL-WITNESS-{ordinal:02d}-P"
     method = {
         "method_id": method_id,
         "title": f"Bounded recovery for {negative['slug']}",
@@ -101,10 +101,15 @@ def method_and_witnesses(
         "failure_signature": negative["failure_signature"],
         "candidate_workaround": negative["candidate_workaround"],
         "recurrence_guard": negative["recurrence_guard"],
-        "approval_class": "safe_now_owner_local_route_contract_recovery",
+        "approval_class": negative.get(
+            "approval_class", "safe_now_owner_local_route_contract_recovery"
+        ),
         "privacy_class": "sanitized_public",
         "scope_boundary": negative["scope_boundary"],
-        "rollback": "Retain the absence at zero credit and do not contact or act for the successor.",
+        "rollback": negative.get(
+            "rollback",
+            "Retain the absence at zero credit and do not contact or act for the successor.",
+        ),
         "protected_gates": d.PROTECTED_GATES,
         "retained_negative_ids": [negative["negative_id"]],
         "validation_witness_ids": [failed_id, passing_id],
@@ -117,7 +122,10 @@ def method_and_witnesses(
             "method_id": method_id,
             "result": "fail",
             "procedure": negative["fail_procedure"],
-            "expected": "An existing bounded successor-scope module is discoverable.",
+            "expected": negative.get(
+                "fail_expected",
+                "An existing bounded successor-scope module is discoverable.",
+            ),
             "observed": negative["fail_observed"],
             "retained_negative_ids": [negative["negative_id"]],
             "same_owner_only": True,
@@ -129,7 +137,10 @@ def method_and_witnesses(
             "method_id": method_id,
             "result": "pass",
             "procedure": negative["pass_procedure"],
-            "expected": "Only Elaren's prepared successor-route contract is checked.",
+            "expected": negative.get(
+                "pass_expected",
+                "Only Elaren's prepared successor-route contract is checked.",
+            ),
             "observed": negative["pass_observed"],
             "retained_negative_ids": [negative["negative_id"]],
             "same_owner_only": True,
@@ -141,8 +152,12 @@ def method_and_witnesses(
 
 
 def build() -> None:
-    if git("rev-parse", "HEAD") != c.CLOSEOUT_COMMIT:
-        raise RuntimeError("final builder requires the exact closeout head")
+    if git("rev-parse", "HEAD") != c.ORIGINAL_FINAL_COMMIT:
+        raise RuntimeError(
+            "validation-correction builder requires the exact original final candidate"
+        )
+    if git("rev-parse", f"{c.ORIGINAL_FINAL_COMMIT}^") != c.CLOSEOUT_COMMIT:
+        raise RuntimeError("original final candidate is not the direct child of closeout")
     if git("rev-parse", f"{c.CLOSEOUT_COMMIT}^") != c.EVIDENCE_COMMIT:
         raise RuntimeError("closeout is not the direct child of evidence")
     closeout_review = load("validation/closeout-staged-review.json")
@@ -156,16 +171,21 @@ def build() -> None:
         raise RuntimeError("closeout manifest replay failed")
     write_json("validation/closeout-manifest-commit-replay.json", replay)
 
-    negative = c.FINAL_PREPARATION_NEGATIVES[0]
-    method, witnesses = method_and_witnesses(negative)
-    effective_negatives = c.CLOSEOUT_EFFECTIVE_NEGATIVES + 1
-    effective_methods = c.CLOSEOUT_EFFECTIVE_METHODS + 1
+    methods = []
+    witnesses = []
+    for ordinal, negative in enumerate(c.FINAL_PREPARATION_NEGATIVES, start=1):
+        method, method_witnesses = method_and_witnesses(negative, ordinal)
+        methods.append(method)
+        witnesses.extend(method_witnesses)
+    current_count = len(c.FINAL_PREPARATION_NEGATIVES)
+    effective_negatives = c.CLOSEOUT_EFFECTIVE_NEGATIVES + current_count
+    effective_methods = c.CLOSEOUT_EFFECTIVE_METHODS + current_count
     write_json(
         "truth/retained-negative-register-final.json",
         {
             "schema": "ghc.family.v656-v6.retained-negatives.final.v1",
             "closeout_effective_count": c.CLOSEOUT_EFFECTIVE_NEGATIVES,
-            "final_preparation_count": 1,
+            "final_preparation_count": current_count,
             "final_preparation_negatives": c.FINAL_PREPARATION_NEGATIVES,
             "effective_count": effective_negatives,
             "all_retained": True,
@@ -185,11 +205,14 @@ def build() -> None:
                 "effective_fail_witnesses": c.CLOSEOUT_EFFECTIVE_METHODS,
                 "effective_pass_witnesses": c.CLOSEOUT_EFFECTIVE_METHODS,
             },
-            "current_methods": [method],
+            "current_methods": methods,
             "current_witnesses": witnesses,
             "counts": {
-                "current_methods": 1,
-                "current_witness_results": {"fail": 1, "pass": 1},
+                "current_methods": current_count,
+                "current_witness_results": {
+                    "fail": current_count,
+                    "pass": current_count,
+                },
                 "effective_methods": effective_methods,
                 "effective_witness_results": {
                     "fail": effective_methods,
@@ -212,6 +235,7 @@ def build() -> None:
             "x1_commit": c.X1_COMMIT,
             "evidence_commit": c.EVIDENCE_COMMIT,
             "closeout_commit": c.CLOSEOUT_COMMIT,
+            "original_final_commit": c.ORIGINAL_FINAL_COMMIT,
             "final_commit": None,
             "outcome_counts": outcomes,
             "effective_negatives": effective_negatives,
@@ -222,6 +246,7 @@ def build() -> None:
             "same_owner_only": True,
             "independent_reproduction": False,
             "canonical_aggregate_completed": False,
+            "failed_canonical_attempts": 1,
         },
     )
     write_json(
@@ -233,8 +258,9 @@ def build() -> None:
             "x1_commit": c.X1_COMMIT,
             "evidence_commit": c.EVIDENCE_COMMIT,
             "closeout_commit": c.CLOSEOUT_COMMIT,
+            "original_final_commit": c.ORIGINAL_FINAL_COMMIT,
             "final_commit": None,
-            "canonical_aggregate_state": "POSTCOMMIT_REQUIRED",
+            "canonical_aggregate_state": "FAILED_ZERO_CREDIT_CORRECTION_REQUIRED",
             "route_state": "PREPARED_NOT_SENT",
             "same_owner_only": True,
             "independent_reproduction": False,
@@ -259,12 +285,36 @@ def build() -> None:
         },
     )
     write_json(
+        "validation/canonical-aggregate-failure-01.json",
+        {
+            "schema": "ghc.family.v656-v6.canonical-aggregate-failure.v1",
+            "attempt": 1,
+            "exact_head": c.ORIGINAL_FINAL_COMMIT,
+            "valid": False,
+            "success_credit": 0,
+            "tests_run": 73,
+            "detailed_checks": 322,
+            "minimal_checks": 15,
+            "json_parses": 195,
+            "privacy_files": 258,
+            "privacy_hits": 0,
+            "manifest_entries": 730,
+            "failed_terminal_checks": ["stale_label_review"],
+            "self_referential_tokens": 3,
+            "external_receipt_sha256": c.FAILED_CANONICAL_RECEIPT_SHA256,
+            "retained_negative_ids": ["V6566-X2-N28"],
+            "replayed_after_success": False,
+            "boundary": "Failed same-owner aggregate retained at zero credit; no route or independent-reproduction credit.",
+        },
+    )
+    write_json(
         "validation/canonical-aggregate-plan.json",
         {
             "schema": "ghc.family.v656-v6.canonical-aggregate-plan.v1",
-            "state": "POSTCOMMIT_REQUIRED",
+            "state": "POSTCORRECTION_COMMIT_REQUIRED",
             "completed": False,
             "route_sent": False,
+            "failed_attempts_retained": 1,
             "one_successful_pass_only": True,
             "replay_after_success_forbidden": True,
             "selected_test_scopes": [
@@ -281,7 +331,7 @@ def build() -> None:
                 "x1, evidence, closeout, and final owner manifests",
                 "stale labels and diff hygiene",
                 "exact source-to-final ancestry",
-                "four phase commits, one parent each, zero merges",
+                "five phase commits, one parent each, zero merges",
                 "exact head, clean before and after, zero divergence, and four-way live equality",
             ],
             "external_receipt_required": True,
@@ -300,6 +350,7 @@ def build() -> None:
             "final_tree_ready_for_exact_staged_review": True,
             "exact_final_known_inside_own_tree": False,
             "canonical_aggregate_completed": False,
+            "failed_canonical_attempts_retained": 1,
             "route_state": "PREPARED_NOT_SENT",
             "boundary": BOUNDARY,
         },
@@ -319,7 +370,7 @@ def build() -> None:
             ],
             "pending_postcommit": [
                 "exact final hash and direct-parent proof",
-                "one canonical aggregate",
+                "one successful canonical aggregate after one retained zero-credit failure",
                 "fresh live equality and clean after-state",
                 "one acknowledged Neris activation",
             ],
@@ -340,7 +391,7 @@ def build() -> None:
 
 The final candidate preserves thirty bounded synthetic surfaces with 23 completed, 5 represented, 1 open gap, and 1 exact gate. It retains {effective_negatives:,} effective negatives, {c.OPEN_GAPS} open gaps, {c.EXACT_GATES} exact gates, and {effective_methods:,} Method Flow fail/pass pairs. THOS Body remains the primary pillar through a wetland documentation lens; GMUT Mind and Freed ID/CBR Heart remain explicit and protected.
 
-The exact final hash, canonical aggregate, live equality, and acknowledged route are intentionally absent from this containing tree. They are postcommit facts and must be recorded in an external D-first receipt and the one acknowledged Neris activation. Terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+The original final candidate is `{c.ORIGINAL_FINAL_COMMIT}`. Its first canonical aggregate failed solely on a self-referential stale-label scanner rule and earned zero credit; that receipt is retained. The corrected exact final hash, one successful canonical aggregate, live equality, and acknowledged route remain postcommit facts. Terminal verdict remains `NOT_READY_FOR_STAGE_20`.
 
 Elaren Kestrel, they/them, is relational working language only. It is not evidence of consciousness, personhood, identity continuity, employment, qualification, professional authority, or independent agency.
 """,

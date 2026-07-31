@@ -129,8 +129,10 @@ def manifest() -> dict[str, Any]:
 
 
 def build() -> dict[str, Any]:
-    if git("rev-parse", "HEAD") != c.CLOSEOUT_COMMIT:
-        raise RuntimeError("final receipts require the exact closeout head")
+    if git("rev-parse", "HEAD") != c.ORIGINAL_FINAL_COMMIT:
+        raise RuntimeError(
+            "validation-correction receipts require the exact original final candidate"
+        )
     privacy = privacy_scan()
     if not privacy["valid"]:
         raise RuntimeError(f"final privacy hits: {privacy['confirmed_hits']}")
@@ -210,8 +212,10 @@ def allowed(relative: str) -> bool:
 
 
 def review() -> dict[str, Any]:
-    if git("rev-parse", "HEAD") != c.CLOSEOUT_COMMIT:
-        raise RuntimeError("final review requires the exact closeout head")
+    if git("rev-parse", "HEAD") != c.ORIGINAL_FINAL_COMMIT:
+        raise RuntimeError(
+            "validation-correction review requires the exact original final candidate"
+        )
     staged = sorted(
         row
         for row in git(
@@ -219,7 +223,7 @@ def review() -> dict[str, Any]:
             "--cached",
             "--name-only",
             "--diff-filter=ACMR",
-            c.CLOSEOUT_COMMIT,
+            c.ORIGINAL_FINAL_COMMIT,
         ).splitlines()
         if row
     )
@@ -291,6 +295,7 @@ def review() -> dict[str, Any]:
         "schema": "ghc.family.v656-v6.final-staged-review.v1",
         "valid": valid,
         "closeout_commit": c.CLOSEOUT_COMMIT,
+        "original_final_commit": c.ORIGINAL_FINAL_COMMIT,
         "staged_path_count": len(staged),
         "reviewed_path_count": len(reviewed),
         "reviewed_name_list_sha256": name_hash,
@@ -308,7 +313,7 @@ def review() -> dict[str, Any]:
         "manifest_path_issues": path_issues,
         "same_owner_only": True,
         "independent_reproduction": False,
-        "boundary": "Exact final delta review with the review blob declared as its sole self-exclusion.",
+        "boundary": "Exact validation-correction delta review with the review blob declared as its sole self-exclusion.",
     }
     write_json("validation/final-staged-review.json", payload)
     if not valid:
