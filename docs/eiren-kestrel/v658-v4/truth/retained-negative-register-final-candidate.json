@@ -1,0 +1,34 @@
+{
+  "all_retained": true,
+  "closeout_operational_count": 2,
+  "closeout_operational_negatives": [
+    {
+      "candidate_workaround": "Treat the warning stream as non-evidence and compare the complete cached path set with the frozen expected-delta list using a bounded machine summary.",
+      "fail_observed": "Git exited successfully, but the displayed warning stream was truncated and earned zero exact-review credit.",
+      "fail_procedure": "Rely on the repeated restaging warning stream as the path inventory.",
+      "failure_signature": "The post-rebuild restaging command succeeded but again emitted a warning per generated path, so its displayed stream was truncated and could not prove the exact cached set.",
+      "negative_id": "V6584-CLOSEOUT-N01",
+      "pass_observed": "The bounded comparison returned 226 expected and 226 actual paths, zero missing, zero extra, zero deletions, zero unstaged, and zero untracked.",
+      "pass_procedure": "Compare all cached paths with the 226-path expected x2 delta and separately count deletions, unstaged paths, and untracked paths.",
+      "recurrence_guard": "Suppress repetitive line-ending warnings for large additive stages and always bind staged review to cached path data rather than console rendering.",
+      "scope_boundary": "Same-owner exact staged-set recovery only.",
+      "slug": "post-rebuild-restage-warning-stream-truncated"
+    },
+    {
+      "candidate_workaround": "Give no inventory credit to the truncated stream and verify the immutable commit ID, direct x1 parent, clean state, push acknowledgement, and fresh four-way equality through bounded Git queries.",
+      "fail_observed": "The commit completed, but its displayed per-file list was truncated and earned zero manifest or topology credit.",
+      "fail_procedure": "Use the truncated verbose commit stream as complete evidence of the evidence commit.",
+      "failure_signature": "The evidence commit succeeded, but its verbose 226-file creation list exceeded the display budget and was truncated after the commit object had been written.",
+      "negative_id": "V6584-CLOSEOUT-N02",
+      "pass_observed": "Evidence resolved to f9000a0ac35ea632070570fddd93e9ba4364a4e2 with direct x1 parent, 0/0 divergence, clean state, and exact four-way equality.",
+      "pass_procedure": "Resolve the exact commit and parent, push, then compare local, upstream, tracking, and fresh-live hashes plus divergence and clean state.",
+      "recurrence_guard": "Use quiet commit output for large additive commits and verify commit identity and topology with separate bounded commands.",
+      "scope_boundary": "Same-owner immutable-commit verification recovery only.",
+      "slug": "evidence-commit-file-list-output-truncated"
+    }
+  ],
+  "effective_count": 17176,
+  "evidence_effective_count": 17174,
+  "evidence_register": "docs/eiren-kestrel/v658-v4/truth/retained-negative-register-x2.json",
+  "schema": "ghc.family.v658-v4.retained-negatives.final-candidate.v1"
+}
