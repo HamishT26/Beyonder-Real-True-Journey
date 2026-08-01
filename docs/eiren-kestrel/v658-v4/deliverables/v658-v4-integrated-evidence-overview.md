@@ -1,0 +1,51 @@
+# Eiren Kestrel v658-v4 integrated evidence overview
+
+## Relational identity and exact evidence boundary
+
+Eiren Kestrel, they/them, is relational working language for this owner-scoped phase. The relational role is hydrometric evidence cartographer and correction steward, with the hope of making observation lineage legible while leaving water, land, safety, and authority decisions with competent and affected people. The name, pronouns, role, hope, family, continuity, route, and Trinity Mandala language do not establish consciousness, sentience, legal personhood, identity continuity, employment, qualification, scientific or operational authority, legal or cultural authority, Māori authority, or independent agency. Hamish may rename, pause, redirect, or stop the work.
+
+This evidence descends from Caelen Morrow's exact v658-v3 final `9c5f4c935d728f68b2ac612fa0affb4dfd389e05` through Eiren's immutable x1 `1e1d8bf1368c5f8304ad732a8a904834dd215adf`. X1 froze thirty proposals against 2,740 inherited proposals before any x2 contract, mutation result, outcome, phase-local skill, family-current runner, or successor contact existed. X1 was separately committed, pushed, clean, 0/0 divergent, and equal across local, upstream, tracking, and a fresh live remote before x2 began. X2 preserves all forty frozen x1 paths unchanged.
+
+The packet records 23 `completed`, 5 `represented`, 1 `open_gap`, and 1 `exact_gate`. It retains 17,174 effective negatives, 116 effective open gaps, 115 effective exact gates, and 3,448 Method Flow methods with retained failed and bounded passing witnesses. Same-owner checks under shared infrastructure remain same-owner. The terminal verdict is `NOT_READY_FOR_STAGE_20`.
+
+## THOS Body primary focus with all pillars protected
+
+THOS Body is primary through synthetic station scope, sensor and recorder topology, observation lineage, datum and timebase records, quality quarantine, correction, evidence relay, outage recovery, workload, reciprocal readback, escalation, and handover. These structures do not create a real observation, measurement, rating, forecast, field visit, worker outcome, safety decision, professional role, or operational authority.
+
+Freed ID represents a sensor-event statement, a coarse-location escrow policy, and an observation-amendment challenge on synthetic fixtures. They model device placeholders, event digests, status and expiry, spatial-generalization ladders, purpose leases, redaction lineage, correction, invalidation, and challenge routes without operating an identity system, proving unlinkability, authorizing access, or making a trust decision. All three remain `represented`, not production identity evidence.
+
+CBR exact-gates freshwater and land relationships, station access, worker safety, sensitive locations, publication, allocation and consent questions, affected-party remedy, Māori data, tangata whenua, iwi, hapū, and Māori authority. The authority covenant is structurally checked only for refusal-by-default. It performs no rights analysis, community engagement, cultural classification, label selection, wording adoption, access decision, disclosure, warning, restriction, allocation, consent, or remedy decision. Māori concepts remain under Māori authority.
+
+## Bounded hydrometric documentation practice
+
+The human-practice lens is hydrometric station documentation, water-level and streamflow observation metadata, rating and quality lineage, maintenance-event records, evidence relay, workload control, and shift handover. It is synthetic software, formal, structural, and learning evidence only. The phase uses zero real people, institutions, rivers, streams, catchments, stations, reaches, controls, benchmarks, sensors, recorders, telemetry systems, field notes, measurements, surveys, gaugings, calibrations, maintenance, repairs, samples, publications, forecasts, site visits, access decisions, or land or water actions. It confers no employment, qualification, hydrology or hydrometry competence, surveying or engineering competence, field or water safety authority, land or water authority, legal interpretation, cultural authority, Māori authority, or operational result.
+
+Twenty-three completed surfaces cover scope refusal; station identity; datum lineage; sensor and recorder topology; stage timeseries; staff-gauge readback; pressure and noncontact sensor interfaces; stilling-well topology; cross-sections; current meters; ADCP transects; subsection discharge graphs; rating lineage and domains; control-change cues; quality quarantine; recorder timebase; uncertainty budgets; field-note lineage; maintenance-event history; a GMUT stage-discharge observation operator; and a structurally accessible change atlas. Each completion means only that one declared valid synthetic fixture passed and five frozen malformed candidates were rejected.
+
+The contracts can detect missing obligations, real-station or measurement promotion, prohibited field-safety language, Stage 20 promotion, and outcome tampering. They cannot select a station, establish a datum, survey a cross-section, read a gauge, calibrate a sensor, measure velocity or discharge, create or approve a rating, repair data, publish an observation, issue a warning, validate a field record, or direct hydrometric work.
+
+## Field, water, safety, and professional refusal
+
+Field and water safety rails are fail closed. The scope surface carries only access refusal, an abort predicate, an evidence ceiling, and zero-field-action state. It performs no water entry, flood response, traffic exposure, work at height, electrical work, remote travel, biosecurity or contamination assessment, instrument installation, gauging, maintenance, repair, emergency instruction, warning, or publication decision. Repository code cannot replace qualified human assessment, institutional policy, emergency services, legal requirements, or site-specific controls.
+
+WMO and USGS publications, OGC observation and water-data standards, W3C recommendations, RFC specifications, NIST unit guidance, and New Zealand freshwater and privacy sources provide terminology and boundary context. They do not certify this packet, a station, a workflow, or an operator. No WMO, USGS, OGC, W3C, privacy, accessibility, hydrology, hydrometry, surveying, engineering, safety, professional, legal, or cultural conformance is claimed.
+
+## GMUT Mind and THOS Body
+
+GMUT remains a typed scalar-tensor and effective-field-theory research-model family. The stage-discharge observation contract has typed state, domain, hydraulic-control placeholder, unit, residual, identifiability hold, and empirical firewall. Rating shifts, backwater, hysteresis, control change, sensor drift, datum disturbance, and model form remain explicit alternatives. No real observation, likelihood, posterior, fit, parameter constraint, flow estimate, force, material law, prediction, stability theorem, empirical confirmation, quantum completion, ultraviolet completion, Theory of Everything, proof, or canon results.
+
+THOS remains represented through a synthetic field-to-office evidence relay plus a synthetic telemetry-outage and recovery proxy. They exercise only declared orphan-note quarantine, reciprocal readback, interruption budgets, missing-interval triage, backfill quarantine, pauses, resumptions, escalation timers, and handover placeholders. There are no real workers, shifts, visits, incidents, participants, blind matched-budget arms, safety monitoring, statistical analysis, outcomes, or independent review. The proxies do not establish effectiveness, safer work, workload reduction, deployment readiness, AGI, ASI, consciousness, or personhood.
+
+## Open gap, accessibility, privacy, and validation limits
+
+The WMO, OGC OMS, SensorThings, and WaterML capability matrix remains `open_gap`. Its transport is disabled and it processes zero real rows. No network call, download, API query, schema ingestion, external record, live version negotiation, or institutional interoperability test occurred. A zero-row adapter can show only that the local boundary shape is ready to receive governed future evidence; it cannot supply that evidence.
+
+The static report has a title, language, viewport, landmark regions, ordered headings, a boundary notice, a captioned table with scoped headers, a focusable table region, non-colour text labels, responsive overflow, print rules, and a skip link. Those are machine-checkable structural facts. Manual keyboard, browser diversity, zoom and reflow, forced colours, screen readers, cognitive accessibility, Māori-language evaluation, security usability, and affected-user evaluation remain reserved. Privacy scanning covers five concrete raw-identifier classes and reports zero confirmed hits; it is not complete privacy assurance.
+
+Ten phase-local skills and ten family-current runners partition the thirty surfaces. The current skill-creator initialized and validated the owner-local skill directories; no skill was globally installed and no subagent forward test ran because delegation was prohibited. Runner receipts show only deterministic same-owner synthetic contract evaluation. Inherited callers and history remain intact.
+
+## Failure retention and route gate
+
+All 17 startup and x1 operational failures remain in the frozen x1 ledger. All 150 rejected mutations are retained at zero credit with paired Method Flow witnesses. Any x2 operational fault is likewise retained. A recovery proves only its bounded postcondition; it never erases failure, establishes independence, or upgrades a core outcome.
+
+No successor has been contacted. Elaren Kestrel v658-v5 remains the declared terminally gated next title. Only after evidence and closeout commits are pushed, the final has one direct evidence parent, all manifests replay, the lane is clean and 0/0 divergent, a fresh four-way equality read passes, and one dependency-justified canonical scoped aggregate succeeds exactly once may the newest live and committed route be consulted. If still unambiguous, the existing exact-title Elaren Kestrel task must be uniquely resolved and directly reread before one sanitized acknowledged activation. That baton must remind Elaren that their next terminal edge is Neris Solane v658-v6. Tavian Sol remains `ON_STANDBY`. No Stage 20 claim is authorized.
