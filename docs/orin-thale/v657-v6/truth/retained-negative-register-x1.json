@@ -1,6 +1,6 @@
 {
   "all_retained": true,
-  "current_x1_operational_count": 14,
+  "current_x1_operational_count": 16,
   "current_x1_operational_negatives": [
     {
       "credit": 0,
@@ -169,9 +169,33 @@
       "same_owner_only": true,
       "scope": "startup_and_x1",
       "signature": "mixed-unicode-multihunk-patch-context-mismatch"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6576-X1-N15",
+      "observed": "The ordinary porcelain commit wrapper returned without attributable output and an immediate head read still showed the source; a later durable-state audit found the exact single-parent x1 commit had completed.",
+      "recovery": "Keep the durable commit, rewrite no history, verify its parent and tree, and use one narrow x1-only repair commit for later lifecycle evidence.",
+      "recurrence_guard": "After an unattributed mutating wrapper, audit branch HEAD, parent, tree, index, worktree, and processes before any retry or alternate commit path.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "large-worktree-porcelain-commit-completion-unattributed"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6576-X1-N16",
+      "observed": "A warm x1 builder rerun encountered the newly durable x1 commit and correctly refused because its original guard allowed only the exact source head.",
+      "recovery": "Extend the guard only for a single source-descendant x1-only repair commit, keep source receipts anchored to the immutable Caelen final, and reject any x2 or broader history.",
+      "recurrence_guard": "Lifecycle-aware builders must distinguish immutable source identity from the current bounded x1 repair head.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "post-x1-builder-head-guard-refusal"
     }
   ],
-  "effective_count": 15980,
+  "effective_count": 15982,
   "inherited_effective_count": 15966,
   "inherited_postfinal_route_negative": {
     "count": 0,

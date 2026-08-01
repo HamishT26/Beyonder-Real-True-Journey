@@ -102,16 +102,16 @@ class V657V6X1Tests(unittest.TestCase):
     def test_every_x1_failure_has_fail_and_pass_witnesses(self) -> None:
         negatives = load("truth/retained-negative-register-x1.json")
         flow = load("method-flow/method-flow-state-x1.json")
-        self.assertEqual(negatives["current_x1_operational_count"], 14)
+        self.assertEqual(negatives["current_x1_operational_count"], 16)
         self.assertEqual(negatives["inherited_sealed_register_count"], 15966)
         self.assertEqual(negatives["inherited_effective_count"], 15966)
         self.assertEqual(negatives["inherited_postfinal_route_negative"]["credit"], 0)
         self.assertEqual(negatives["inherited_postfinal_route_negative"]["count"], 0)
         self.assertFalse(negatives["inherited_postfinal_route_negative"]["repository_retained"])
-        self.assertEqual(flow["counts"]["current_methods"], 14)
-        self.assertEqual(flow["counts"]["current_witness_results"], {"fail": 14, "pass": 14})
+        self.assertEqual(flow["counts"]["current_methods"], 16)
+        self.assertEqual(flow["counts"]["current_witness_results"], {"fail": 16, "pass": 16})
         witness_counts = Counter(row["result"] for row in flow["witnesses"])
-        self.assertEqual(witness_counts, Counter({"fail": 14, "pass": 14}))
+        self.assertEqual(witness_counts, Counter({"fail": 16, "pass": 16}))
         retained_ids = {
             negative_id
             for row in flow["witnesses"]
