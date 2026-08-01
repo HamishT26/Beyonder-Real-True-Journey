@@ -1,0 +1,31 @@
+# Neris Solane v658-v6 official and primary source ledger
+
+Statuses were checked on 2026-08-02. Source presence does not establish implementation, conformance, professional review, legal interpretation, cultural ratification, Māori authority, or empirical confirmation.
+
+| ID | Status | Publisher | Title | Bounded use |
+|---|---|---|---|---|
+| `USGS-VHP-WHAT-WE-DO` | `current` | U.S. Geological Survey | [What We Do - Volcano Hazards Program](https://www.usgs.gov/programs/VHP/what-we-do-volcano-hazards-program) | monitoring, assessment, research, and hazard-information vocabulary only; no operational or scientific credit |
+| `USGS-VOLCANO-MONITORING` | `current` | U.S. Geological Survey Cascades Volcano Observatory | [Volcano Monitoring](https://www.usgs.gov/observatories/cvo/science/volcano-monitoring) | seismic, deformation, gas, hydrologic, thermal, visual, and satellite monitoring vocabulary only |
+| `USGS-VHP-STRATEGY` | `published` | U.S. Geological Survey | [Volcano Hazards Program Strategic Science Plan 2022-2026](https://www.usgs.gov/publications/volcano-hazards-program-strategic-science-plan-2022-2026) | multi-instrument strategy and uncertainty context only; no plan adoption or conformance claim |
+| `GEONET-VAB` | `current_watch` | GeoNet | [Volcanic Alert Bulletin](https://www.geonet.org.nz/volcano/vab) | public bulletin and alert-language boundary vocabulary only; no bulletin reproduction, alert, or advice |
+| `GEONET-HOW` | `current` | GeoNet | [How we monitor New Zealand volcanoes](https://www.geonet.org.nz/volcano/how) | Aotearoa monitoring-method vocabulary only; no real station, observation, or authority claim |
+| `GEONET-VOLCANO-DATA` | `current` | GeoNet | [Volcano monitoring data](https://www.geonet.org.nz/data/types/volcano_monitoring) | data-type and access-context vocabulary only; no download, transport, or row |
+| `GEONET-TUTORIALS` | `current_watch` | GeoNet | [Data access tutorials](https://www.geonet.org.nz/data/access/tutorials) | capability-interface vocabulary only; every external transport remains disabled |
+| `GNS-VOLCANO-MONITORING` | `current` | GNS Science | [Volcano monitoring](https://www.gns.cri.nz/our-science/natural-hazards-and-risks/volcanoes/volcano-monitoring/) | monitoring-system context only; no professional, operational, or institutional endorsement |
+| `WOVODAT` | `current_watch` | World Organization of Volcano Observatories | [WOVOdat](https://www.wovodat.org/) | volcanic-unrest database capability vocabulary only; no query, row, analysis, or interoperability |
+| `WOVODAT-DOCS` | `current_watch` | World Organization of Volcano Observatories | [WOVOdat documentation](https://www.wovodat.org/doc/) | database category and schema-context vocabulary only; no conformance claim |
+| `GVP` | `current_watch` | Smithsonian Institution | [Global Volcanism Program](https://volcano.si.edu/gvp_about.cfm) | volcano catalogue and chronology context only; no real identity, location, event, or dataset ingestion |
+| `FDSN-STATIONXML` | `current` | International Federation of Digital Seismograph Networks | [FDSN StationXML](https://docs.fdsn.org/projects/stationxml/en/latest/overview.html) | station-metadata vocabulary only; no parser or network conformance |
+| `FDSN-MSEED3` | `current` | International Federation of Digital Seismograph Networks | [FDSN miniSEED 3](https://docs.fdsn.org/projects/miniseed3) | waveform-record vocabulary only; no binary data or format conformance |
+| `FDSN-WEBSERVICES` | `current_watch` | International Federation of Digital Seismograph Networks | [FDSN Web Services](https://www.fdsn.org/webservices/) | service capability vocabulary only; network access and real rows remain disabled |
+| `OGC-OMS` | `current` | Open Geospatial Consortium | [Observations, Measurements and Samples](https://www.ogc.org/publications/standard/om/) | observation, result, sampling, feature-of-interest, and procedure vocabulary only |
+| `OGC-SENSORTHINGS` | `current` | Open Geospatial Consortium | [SensorThings API](https://www.ogc.org/standards/sensorthings/) | sensor/observation relationship vocabulary only; no API or interoperability conformance |
+| `COPERNICUS-SENTINEL1` | `current_watch` | Copernicus Data Space Ecosystem | [Sentinel-1 documentation](https://documentation.dataspace.copernicus.eu/Data/Sentinel1.html) | SAR acquisition, orbit, geometry, and product vocabulary only; no imagery or processing |
+| `W3C-PROV` | `stable` | World Wide Web Consortium | [PROV-O: The PROV Ontology](https://www.w3.org/TR/prov-o/) | entity, activity, derivation, revision, invalidation, and attribution lineage |
+| `W3C-WCAG-22` | `current` | World Wide Web Consortium | [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/) | machine-checkable structure and notice vocabulary; manual and affected-user evaluation remain reserved |
+| `W3C-VC-DM-20` | `current` | World Wide Web Consortium | [Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model-2.0/) | synthetic nonproduction artifact-envelope vocabulary only; no live identity, proof, or trust |
+| `W3C-DATA-INTEGRITY` | `current` | World Wide Web Consortium | [Verifiable Credential Data Integrity 1.0](https://www.w3.org/TR/vc-data-integrity/) | proof-configuration vocabulary only; no key, signature, verification, security, or interoperability claim |
+| `RFC-8785` | `stable` | RFC Editor | [JSON Canonicalization Scheme](https://www.rfc-editor.org/rfc/rfc8785.html) | deterministic JSON representation vocabulary only; no cryptographic assurance |
+| `NZ-PRIVACY-PRINCIPLES` | `current` | Office of the Privacy Commissioner New Zealand | [Privacy principles](https://www.privacy.org.nz/privacy-principles/) | purpose, minimization, correction, retention, use, and disclosure reservations only; no legal advice |
+| `TE-MANA-RARAUNGA` | `current` | Te Mana Raraunga | [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty) | Māori data rights, interests, governance, collective benefit, and authority reservation only |
+| `LOCAL-CONTEXTS-TK` | `current_watch` | Local Contexts | [Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/) | community-defined notice and authority-reservation context only; no label selection or application |
