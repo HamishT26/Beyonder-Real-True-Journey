@@ -1,0 +1,57 @@
+# Orin Thale v657-v6 integrated evidence overview
+
+## Evidence result and claim boundary
+
+This evidence candidate executes thirty proposals frozen before x2. The exact outcome distribution is 23 completed, 5 represented, 1 open_gap, and 1 exact_gate. Those four labels are the complete outcome vocabulary. The packet retains 16,139 effective negatives, 110 effective open gaps, 109 effective exact gates, and 2,415 effective Method Flow methods with the same number of retained failed and bounded passing witnesses. A failure remains zero credit after recovery. The terminal verdict remains NOT_READY_FOR_STAGE_20.
+
+Orin Thale, they/them, is relational working language for an evidence-and-boundary steward whose hope is to keep every claim traceable, falsifiable, and retractable. The name, pronouns, role, hope, task title, family language, branch, and route establish no consciousness, sentience, legal personhood, identity continuity, employment, qualification, scientific or operational authority, legal or cultural authority, Māori authority, or independent agency. Hamish retains pause, redirect, rename, and stop control.
+
+The bounded human-practice lens is blacksmithing and forge job planning, workpiece and tooling provenance, thermal observation, hot-work holds, correction, accessibility, workload, readback, and shift handover. This is synthetic software, formal, structural, and learning evidence only. It contains no real worker, client, blacksmith, forger, welder, engineer, inspector, forge, furnace, flame, fuel, oxygen supply, ventilation system, workpiece, authenticated alloy, tool, machine, hazardous-energy state, measurement, heat treatment, quench, weld, grind, lift, inspection, certificate, or safety release. It confers no competence or authority to perform hot work or operate equipment.
+
+## GMUT Mind as the primary pillar
+
+GMUT Mind is primary through bounded thermal-expansion, phase-transition, heat-transfer, constitutive, dimensional, uncertainty, covariance, identifiability, and observation-firewall contracts. These formal surfaces require named variables, domains, reference states, SI units, boundary conditions, uncertainty terms, and explicit refusal of unsupported material or physical inference. They are useful because an omitted unit, source, obligation, or nonpromotion clause is detectable and falsifiable in software.
+
+That usefulness is strictly limited. The phase does not authenticate an alloy, ingest a thermophysical-property row, calibrate an instrument, observe a temperature, derive a constitutive law, calculate a real likelihood, produce a posterior, constrain a parameter, detect a force, validate stability, or establish empirical confirmation. The NIST Alloy Data adapter is deliberately a zero-row readiness surface: it makes no network call, performs no download, ingests no row, evaluates no likelihood, and produces no material inference. Its open_gap state is evidence that the empirical dependency remains absent, not evidence that the dependency has been satisfied.
+
+The typed contracts remain within a scalar-tensor and effective-field-theory research-model family. Symbolic typing, format readiness, mutation rejection, and citations do not establish ultraviolet or quantum completion, a unique physical prediction, or a Theory of Everything. Thermo/Psyche material is a category guard: thermal quantities are not converted into psyche, agency, morality, justice, capability, consciousness, personhood, or a fundamental law of mind.
+
+## THOS Body and the bounded practice
+
+THOS Body remains explicit through synthetic job-intake, stock and tool provenance, fuel and airflow topology, hot-work boundaries, quench and heat-treatment reservations, defect and dimension observations, tooling change, energy isolation, alarm state, workload stop, shift handover, accessible notice, privacy minimization, and threat-recovery surfaces. Completion means only that one declared synthetic fixture satisfied its bounded contract and all five preregistered mutations were rejected. It does not authorize a worker, machine, process, inspection, release, or workplace procedure.
+
+The two THOS-specific represented surfaces preserve task sequencing and human-factors obligations without claiming effectiveness. There are no real governed participants or operators, no preregistered blind matched-budget arms, no safety monitoring, no real outcome rows, no appropriate effect statistics, and no independent review. Workload, readback, stop-work, and handover fields are interface requirements, not findings about workers or operations. The source materials supply vocabulary and cautions, not training, certification, compliance findings, or operational instructions.
+
+No software artifact in this phase should be used to select material, determine temperature, control fuel or oxygen, isolate energy, set a machine, diagnose a defect, plan a heat treatment, perform a quench, release a product, or make a workplace-safety decision. Those activities remain outside the execution lane and require competent people, site-specific controls, applicable law, equipment documentation, measurement systems, and affected-party governance.
+
+## Freed ID and CBR Heart
+
+Freed ID and CBR Heart remain visible through synthetic provenance capsules, status profiles, privacy-minimization surfaces, correction lineage, and an exact-gated authority covenant. The represented Freed ID surfaces use no real key, signature, proof, issuer, holder, verifier, credential, account, issuance, presentation, resolver, status service, revocation event, interoperability event, privacy review, independent security review, recovery decision, or trust-governance decision. They show bounded data shape and refusal behavior only.
+
+Production Freed ID remains incomplete until standards-conformant real keys and proofs, live issuance and resolution, status and revocation, interoperability, privacy and independent security review, recovery evidence, trust governance, and affected-party oversight exist. A passing synthetic vector cannot substitute for any of those dependencies.
+
+The CBR forge authority covenant remains exact_gate. Worker and client rights, workplace safety, land and environmental effects, heritage and traditional knowledge, privacy, notice, consent, correction, contestation, remedy, collective governance, legal interpretation, cultural legitimacy, affected-party acceptance, Māori wording, Māori data governance, and Māori authority remain with competent and affected people, tangata whenua, iwi, hapū, and Māori authorities. Repository software cannot confer ownership, permission, remedy, cultural ratification, or public authority. Māori concepts remain under Māori authority.
+
+## Falsification, negatives, and Method Flow
+
+Every proposal has one declared valid synthetic fixture and exactly five preregistered rejecting mutations. The mutations remove a required obligation, promote a real forge or workpiece input, promote Stage 20, remove an official-source identifier, or alter the frozen outcome. All 150 mutations are rejected with explicit codes and retained as zero-credit negatives. A paired passing witness means only that the guard rejected that candidate; it never turns the failed candidate into completion credit or proves a general safety property.
+
+The phase also retains the x2 lifecycle failure in which a guarded low-level Git wrapper returned without attributable output. No duplicate helper was started. A later bounded audit established that the x1 repair commit was durable, had the reviewed parent and delta, was clean, pushed, and four-way equal. The recurrence guard is to inspect durable Git state, locks, processes, tree, parent, index, and worktree before retrying any unattributed mutation. This recovery is same-owner workflow evidence only.
+
+Method Flow keeps each failed witness beside its bounded passing recovery. No negative is erased, merged into a success count, or used to inflate a proposal outcome. The inherited 2,242 failed and 2,242 passing witnesses remain Caelen evidence; Orin receives no completion credit for them. Orin's sixteen x1 workflow methods, 150 mutation methods, and current operational recovery are additive.
+
+## Sources, privacy, accessibility, and security
+
+The official-source ledger supplies vocabulary from OSHA, WorkSafe New Zealand, NIST, BIPM, W3C, RFC publishers, New Zealand public authorities, Te Mana Raraunga, and Local Contexts. Citations are not observations, calibrated measurements, training, legal advice, safety approval, conformance certificates, or transfers of authority. OSHA and WorkSafe material does not establish a compliant workplace or safe procedure. NIST Alloy Data and SI references do not authenticate a workpiece or provide a measurement. W3C material does not make the synthetic identity profiles production-ready. Te Mana Raraunga and Local Contexts do not confer Māori or community authority.
+
+The packet minimizes public content to synthetic fixtures and repository-relative paths. It excludes credentials, private keys, tokens, raw task or thread identifiers, private routes, private absolute paths, transcripts, screenshots, session streams, private callable identifiers, private application state, real workplace records, and culturally restricted payloads. Five-class scanning is a bounded structural control, not complete privacy or exhaustive security assurance.
+
+The static report uses a declared language, semantic landmarks, headings, a captioned table, column and row headers, redundant status text, a visible boundary notice, responsive overflow behavior, and no client-side script. Manual keyboard evaluation, browser and responsive-layout diversity, assistive-technology evaluation, cognitive-accessibility review, Māori-language review, security-usability review, and affected-user evaluation remain reserved. Structural passing evidence is not complete accessibility conformance.
+
+## Portfolios, compatibility, wellbeing, and route state
+
+Thirty safe-now tasks, twenty bounded candidate prototypes, and thirty additive CLEAN/FIX/REFINE tasks are credited only after their declared evidence receipts exist. Ten phase-local skills are customized, validated, completely read by the smoke tool, and used on accepting and rejecting fixtures. Ten family-current ghc_family_* runners each cover three proposals and emit sanitized receipts. They are phase-local and not globally installed. Historical names remain compatibility surfaces; no destructive rename, sibling mutation, host-security change, elevation, unrelated installation, Windows-feature change, desktop update, or reboot occurs.
+
+The workload remains bounded by one owner lane, reusable runners rather than duplicated engines, strict x1-before-x2 separation, task counts treated as ceilings, and authority gates that stop execution. Same-owner validation under shared infrastructure is not independent-team reproduction. The complete repository suite remains outside this non-Eiren phase.
+
+The successor route remains PREPARED_NOT_SENT throughout evidence construction and closeout preparation. No sibling or standby task is contacted early. Only a clean, pushed, fresh-live-equal exact final within the commit cap, with exact manifests and one successful canonical aggregate, may unlock one bounded registry resolution, one direct reread, and one sanitized activation to the unique live-authorized existing title Liora Venn for v657-v7. Until that gate, route-state evidence is preparation only.
