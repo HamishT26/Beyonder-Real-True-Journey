@@ -1,0 +1,27 @@
+# Caelen Ash v657-v5 integrated evidence overview
+
+## Outcome and evidence boundary
+
+Thirty x1-frozen aquarium documentation surfaces were executed as owner-local synthetic software. The observed distribution is 23 `completed`, 5 `represented`, 1 `open_gap`, and 1 `exact_gate`. The evidence candidate retains 15,964 effective negatives, 109 open gaps, 108 exact gates, and 2,240 Method Flow failed plus the same number of bounded passing witnesses. Every rejecting fixture and operational failure remains zero credit. The terminal verdict remains `NOT_READY_FOR_STAGE_20`.
+
+Caelen Ash, they/them, is relational working language only. The role is provenance-and-remedy cartographer, and the hope is to make every handoff traceable, every authority boundary visible, and every correction recoverable without mistaking simulation for service. This language establishes no consciousness, sentience, personhood, continuity, employment, qualification, authority, or independent agency.
+
+## Bounded practice and Trinity Mandala
+
+THOS Body is primary through synthetic aquarium exhibit and life-support documentation, observation envelopes, animal-welfare and biosecurity holds, accessible notices, correction, workload, readback, and shift handover. No real animal, aquarium, tank, system, sample, person, credential, or decision is present. No feeding, handling, transfer, quarantine, sampling, measurement, diagnosis, treatment, medication, euthanasia, equipment operation, electrical or chemical work, biosecurity clearance, or release occurs. The artifacts validate record shape, missingness, staleness, provenance, and refusal only.
+
+GMUT Mind remains represented. The recirculating-network and oxygen or thermal surfaces require named variables, SI units, boundaries, continuity and conservation residuals, covariance scope, stability questions, identifiability, nuisance terms, calibration quarantine, and likelihood refusal. No real flow, pressure, gas, temperature, chemistry, calibration, quality, or observation row exists. The notation creates no physical prediction, new force, likelihood, posterior, constraint, empirical confirmation, ultraviolet completion, or Theory of Everything.
+
+THOS effectiveness remains unconfirmed because there are no real governed participants or operators, preregistered blind matched-budget arms, safety monitoring, outcome statistics, or independent review. Freed ID remains synthetic and nonproduction: no real key, signature, proof, issuer, holder, verifier, issuance, presentation, resolver, status service, revocation, interoperability event, privacy review, independent security review, recovery decision, or trust-governance decision exists. CBR is exact-gated: animal-welfare, biosecurity, acquisition, trade, public access, privacy, remedy, law, culture, data governance, affected-party acceptance, Māori wording, and Māori authority remain with competent, affected, tangata whenua, iwi, hapū, and Māori authorities.
+
+## Surface evidence and retained failures
+
+The first twenty-three `completed` surfaces establish only that one declared synthetic fixture satisfied its contract and five preregistered mutations failed closed. The five `represented` surfaces preserve GMUT, THOS, and Freed ID structures without promoting them into empirical, participant, professional, or production evidence. The AZA/WOAH adapter is an `open_gap`: it made no network call, ingested no row, and performed no inference. The CBR authority covenant is an `exact_gate` and was not executed.
+
+Each proposal has exactly five retained rejecting mutations: one required obligation is removed, a real animal or aquarium-system input is promoted, Stage 20 is promoted, an official-source identifier is removed, or the outcome label is altered. All 150 are rejected with explicit error codes. A paired passing guard witness means only that the synthetic validator rejected that candidate; it never turns the failed candidate into credit or establishes a general safety property.
+
+The source ledger supplies current or stable vocabulary from official and primary publishers. AZA, WOAH, EPA, and MPI material is not an aquarium observation, accreditation, animal-welfare conclusion, veterinary or husbandry direction, biosecurity clearance, or authority transfer. BIPM and NIST material is not calibration or empirical evidence. Privacy and accessibility sources do not establish complete conformance. Te Mana Raraunga and Local Contexts do not confer Māori or community authority.
+
+Ten phase-local skills and ten family-current `ghc_family_*` runners group the thirty surfaces. Every skill is customized to the aquarium boundary, quick-validated, completely read by the smoke tool, and smoke-used on synthetic fixtures. Every runner invokes three frozen surfaces and emits a sanitized receipt. Historical names remain compatibility evidence; no global installation, destructive rename, sibling mutation, or external operation occurs.
+
+The accessible static report supplies semantic headings, a boundary notice, an outcome table, and plain-language reservations, but makes no complete WCAG claim. Same-owner validation under shared infrastructure is not independent reproduction. The successor route remains `PREPARED_NOT_SENT`; Orin Thale is not contacted during evidence construction. Only a clean, pushed, fresh-live-equal exact final within caps that passes the one authorized canonical aggregate may unlock one exact-title reread and one sanitized activation.
