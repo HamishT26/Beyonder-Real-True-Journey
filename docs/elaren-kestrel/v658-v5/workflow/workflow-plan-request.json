@@ -1,0 +1,192 @@
+{
+  "identity_boundary": "Relational working language only; no continuity or authority claim.",
+  "observed_failures": [
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N01",
+      "observed": "The first inventory wrapper placed a foreach expression directly inside a pipeline and failed before any repository probe completed.",
+      "recovery": "Materialize the foreach results into a scalar collection before piping or serializing them.",
+      "recurrence_guard": "Never place an empty or syntactically ambiguous foreach expression at a PowerShell pipeline boundary.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-empty-pipeline-parser-failure"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N02",
+      "observed": "A schema-reading batch assumed positional PowerShell arguments that were not supplied, so four requested reads failed before opening.",
+      "recovery": "Use explicit literal paths in a bounded loop and verify every selected file reaches EOF.",
+      "recurrence_guard": "Bind every batched schema path explicitly rather than relying on transport-specific positional arguments.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "schema-batch-positional-argument-omission"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N03",
+      "observed": "The first manifest verifier used python -c and Windows native argument processing stripped inner quotes, producing a syntax error.",
+      "recovery": "Pass multiline verifier source over standard input to python -.",
+      "recurrence_guard": "Use stdin for quote-rich multiline Python diagnostics on Windows.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "python-c-windows-quote-stripping"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N04",
+      "observed": "A clean-state wrapper used an invalid parenthesized PowerShell command form and failed before Git status completed.",
+      "recovery": "Capture each Git command result and exit code in scalar variables before object projection.",
+      "recurrence_guard": "Separate native command execution from PowerShell expression grouping.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-parenthesized-command-form"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N05",
+      "observed": "The first keyword audit completed its file search but failed while printing a Māori title through the CP1252 console.",
+      "recovery": "Set UTF-8 output explicitly and rerun only the read-only display layer.",
+      "recurrence_guard": "Use UTF-8 console output before rendering Unicode repository text.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "cp1252-maori-keyword-scan-output"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N06",
+      "observed": "A generic-builder search passed Unix-style path wildcards directly to rg on Windows and matched no intended files.",
+      "recovery": "Use rg -g glob filters rooted at the exact repository path.",
+      "recurrence_guard": "Use ripgrep glob arguments rather than shell-expanded Unix wildcards on Windows.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "rg-unix-wildcard-on-windows"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N07",
+      "observed": "A route-hash probe embedded a PowerShell backtick inside a JavaScript template literal and failed before hashing.",
+      "recovery": "Use literal command strings without JavaScript template interpolation and hash the exact Git blob separately.",
+      "recurrence_guard": "Keep PowerShell escape syntax out of JavaScript template delimiters.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-backtick-javascript-template-collision"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N08",
+      "observed": "A second route probe used a PowerShell revision variable form that JavaScript attempted to interpolate before execution.",
+      "recovery": "Pass the exact revision and repository-relative path as literal command arguments.",
+      "recurrence_guard": "Avoid cross-language variable sigils in nested command transport.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-revision-variable-javascript-interpolation"
+    },
+    {
+      "credit": 0,
+      "independent_reproduction": false,
+      "negative_id": "V6585-X1-N09",
+      "observed": "The first supplemental stale-label wrapper lost a nested PowerShell quote terminator before ripgrep executed and earned zero scan credit.",
+      "recovery": "Pass each stale-label token as a separate literal ripgrep -e pattern.",
+      "recurrence_guard": "Avoid one composite quoted regex when command transport spans JavaScript, PowerShell, and ripgrep.",
+      "retained": true,
+      "same_owner_only": true,
+      "scope": "startup_and_x1",
+      "signature": "powershell-rg-pattern-quote-terminator"
+    }
+  ],
+  "owner": "Elaren Kestrel",
+  "plan_id": "elaren-kestrel-v658-v5-terminally-gated-neris-route",
+  "requirements": {
+    "commit_cap": {
+      "total": 8,
+      "x1": 5,
+      "x2": 5
+    },
+    "core_proposal_minimum": 30,
+    "document_word_cap": 100000,
+    "messaging": "exact_existing_main_task_only_after_terminal_gate",
+    "owner_file_cap": 2000,
+    "runner_phase_half_cap": 200,
+    "skill_phase_half_cap": 200,
+    "storage": {
+      "c_drive_use": "essential_global_metadata_only",
+      "primary": "D"
+    },
+    "validation": {
+      "canonical_successful_passes": 1,
+      "fresh_remote_equality_required": true,
+      "isolate_failed_dependency_before_broader_rerun": true,
+      "manifest_required": true,
+      "privacy_scan_required": true,
+      "replay_policy": "skip_after_first_complete_success"
+    }
+  },
+  "route": {
+    "active_exact_title": "Elaren Kestrel",
+    "active_phase": "v658-v5",
+    "future_identity_placeholders": [],
+    "next_exact_title": "Neris Solane",
+    "next_phase": "v658-v6",
+    "phase_assignments": [
+      {
+        "phase": "v658-v4",
+        "seat": "Eiren Kestrel"
+      },
+      {
+        "phase": "v658-v5",
+        "seat": "Elaren Kestrel"
+      },
+      {
+        "phase": "v658-v6",
+        "seat": "Neris Solane"
+      }
+    ],
+    "tavian_sol_state": "ON_STANDBY"
+  },
+  "schema": "ghc.family.workflow-plan.request.v1",
+  "truth": {
+    "allowed_outcomes": [
+      "completed",
+      "represented",
+      "open_gap",
+      "exact_gate"
+    ],
+    "independent_reproduction_claimed": false,
+    "protected_boundaries": [
+      "real_people_participants_astronomers_engineers_observatories_collaborations_and_affected_parties",
+      "real_pulsars_telescopes_backends_clocks_ephemerides_toas_timing_solutions_chains_and_datasets",
+      "real_observation_download_ingestion_processing_inference_detection_publication_or_operational_decision",
+      "professional_astronomy_statistics_metrology_engineering_science_privacy_security_or_accessibility_authority",
+      "empirical_gmut_likelihood_prediction_constraint_force_flow_or_confirmation",
+      "blind_matched_budget_thos_real_arms_and_independent_review",
+      "production_identity_live_keys_signatures_proofs_issuance_resolution_status_revocation_interoperability_recovery_and_trust",
+      "privacy_complete",
+      "exhaustive_security",
+      "complete_accessibility",
+      "legal_cultural_language_data_governance_and_maori_authority",
+      "affected_party_consent_notice_contestation_remedy_collective_governance_and_acceptance",
+      "independent_team_reproduction",
+      "agi_or_asi",
+      "consciousness_or_personhood",
+      "theory_of_everything",
+      "stage20"
+    ],
+    "terminal_verdict": "NOT_READY_FOR_STAGE_20"
+  }
+}

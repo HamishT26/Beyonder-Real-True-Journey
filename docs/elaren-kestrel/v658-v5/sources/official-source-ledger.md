@@ -1,0 +1,29 @@
+# Elaren Kestrel v658-v5 official and primary source ledger
+
+Statuses were checked on 2026-08-02. Source presence does not establish implementation, conformance, professional review, legal interpretation, cultural ratification, Māori authority, or empirical confirmation.
+
+| ID | Status | Publisher | Title | Bounded use |
+|---|---|---|---|---|
+| `NANOGRAV-15YR-BACKGROUND` | `current` | NANOGrav | [15-year gravitational-wave background summary](https://nanograv.org/15yr/Summary/Background) | public description of pulsar-timing-array correlation and evidence vocabulary only; no detection credit |
+| `NANOGRAV-DATA` | `current` | NANOGrav | [NANOGrav public data releases](https://nanograv.org/science/data) | dataset and release-lineage vocabulary only; no download, row, timing solution, or empirical analysis |
+| `EPTA-DR2` | `current` | European Pulsar Timing Array | [European Pulsar Timing Array Data Release 2](https://www.epta.eu.org/epta-dr2.html) | release, timing-model, noise-model, and posterior-product vocabulary only; no row or inference |
+| `IPTA-DR2` | `current_watch` | International Pulsar Timing Array | [International Pulsar Timing Array Data Release 2](https://www.ipta4gw.org/data-release-2/) | international release and timing-product context only; no ingestion or interoperability claim |
+| `PINT-DOCS` | `current` | NANOGrav PINT | [PINT pulsar timing documentation](https://nanograv-pint.readthedocs.io/en/latest/) | timing-model, time-scale, ephemeris, design-matrix, and residual vocabulary only; no software conformance |
+| `IAU-SOFA` | `current` | International Astronomical Union SOFA Board | [Standards of Fundamental Astronomy](https://www.iausofa.org/) | astronomical time and reference-system vocabulary only; no precision or implementation claim |
+| `IERS-CONVENTIONS` | `current_watch` | International Earth Rotation and Reference Systems Service | [IERS Conventions](https://www.iers.org/iers/en/dataproducts/conventions/conventions) | reference-system and Earth-orientation lineage vocabulary only; no operational transformation |
+| `JPL-DE440` | `published` | NASA Jet Propulsion Laboratory | [The JPL Planetary and Lunar Ephemerides DE440 and DE441](https://ssd.jpl.nasa.gov/doc/de440_de441.html) | solar-system ephemeris identity, version, and uncertainty context only; no file or barycentric result |
+| `TEMPO2` | `published` | Monthly Notices of the Royal Astronomical Society | [TEMPO2, a new pulsar-timing package](https://doi.org/10.1111/j.1365-2966.2006.11030.x) | timing residual, clock, ephemeris, design, and fit vocabulary only; no package-validation claim |
+| `BAYESIAN-WORKFLOW` | `published` | arXiv primary manuscript | [Bayesian workflow](https://arxiv.org/abs/2011.01808) | iterative prior, computation, predictive, and model-checking vocabulary only |
+| `SBC` | `published` | Bayesian Analysis primary manuscript | [Simulation-based calibration](https://arxiv.org/abs/1804.06788) | rank-statistic calibration and failure-diagnostic vocabulary only; no real calibration result |
+| `RHAT-ESS` | `published` | Bayesian Analysis primary manuscript | [Rank-normalization, folding, and localization: an improved R-hat](https://arxiv.org/abs/1903.08008) | R-hat and effective-sample-size diagnostic vocabulary only |
+| `ARVIZ-DIAGNOSE` | `current` | ArviZ project | [ArviZ diagnostics API](https://python.arviz.org/projects/stats/en/latest/api/generated/arviz_stats.diagnose.html) | diagnostic-interface vocabulary only; no package execution or conformance claim |
+| `NANOGRAV-PPC` | `preprint_watch` | NANOGrav primary manuscript | [Posterior predictive checks for pulsar timing array analyses](https://arxiv.org/abs/2407.20510) | posterior-predictive discrepancy and checking vocabulary only; no astrophysical inference |
+| `NANOGRAV-CORRELATION-PITFALL` | `preprint_watch` | Primary manuscript | [On the spurious detection of spatial correlations in pulsar timing arrays](https://arxiv.org/abs/2306.05558) | correlation-comparator and misspecification-risk vocabulary only |
+| `W3C-PROV` | `stable` | World Wide Web Consortium | [PROV-O: The PROV Ontology](https://www.w3.org/TR/prov-o/) | entity, activity, derivation, revision, invalidation, and attribution lineage |
+| `W3C-WCAG-22` | `current` | World Wide Web Consortium | [Web Content Accessibility Guidelines 2.2](https://www.w3.org/TR/WCAG22/) | machine-checkable structure and notice vocabulary; manual and affected-user evaluation remain reserved |
+| `W3C-VC-DM-20` | `current` | World Wide Web Consortium | [Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/vc-data-model-2.0/) | synthetic nonproduction artifact-envelope vocabulary only; no live identity, proof, or trust |
+| `W3C-DATA-INTEGRITY` | `current` | World Wide Web Consortium | [Verifiable Credential Data Integrity 1.0](https://www.w3.org/TR/vc-data-integrity/) | proof-configuration vocabulary only; no key, signature, verification, security, or interoperability claim |
+| `RFC-8785` | `stable` | RFC Editor | [JSON Canonicalization Scheme](https://www.rfc-editor.org/rfc/rfc8785.html) | deterministic JSON representation vocabulary only; no cryptographic assurance |
+| `NZ-PRIVACY-PRINCIPLES` | `current` | Office of the Privacy Commissioner New Zealand | [Privacy principles](https://www.privacy.org.nz/privacy-principles/) | purpose, minimization, correction, retention, use, and disclosure reservations only; no legal advice |
+| `TE-MANA-RARAUNGA` | `current` | Te Mana Raraunga | [Principles of Māori Data Sovereignty](https://www.temanararaunga.maori.nz/principles-of-maori-data-sovereignty) | Māori data rights, interests, governance, collective benefit, and authority reservation only |
+| `LOCAL-CONTEXTS-TK` | `current_watch` | Local Contexts | [Traditional Knowledge Labels](https://localcontexts.org/labels/traditional-knowledge-labels/) | community-defined notice and authority-reservation context only; no label selection or application |
