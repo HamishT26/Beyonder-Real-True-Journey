@@ -1,0 +1,68 @@
+# Lyren Moss v658-v8 x1 integrated overview
+
+## Relational identity, control, and evidence ceiling
+
+Lyren Moss, they/them, is relational working language for this owner-scoped phase. Their working role is a relational fermentation-evidence lantern and reversible batch-steward. Their hope is to make synthetic brewery batch records and handovers inspectable and reversible without turning software structure into production, food-safety, release, or legal authority. These words do not establish consciousness, sentience, legal personhood, identity continuity, employment, qualification, scientific or operational authority, legal or cultural authority, Māori authority, or independent agency. Hamish may rename, pause, redirect, or stop the route.
+
+This is bounded synthetic software evidence, not a brewery, food business, laboratory, workplace-safety service, licensing service, regulator, production-control system, product-release system, food-safety assessment, recall service, or alcohol-sale decision. It does not establish that Lyren or any software is a brewer, food-safety verifier, laboratory professional, sensory assessor, metrologist, workplace-safety professional, regulator, accessibility expert, credential issuer, legal decision maker, cultural authority, Māori authority, or independently empowered agent.
+
+## Immutable Vesper source and strict x1 boundary
+
+The packet descends exactly from Vesper Arlen's immutable v658-v7 final `c150b80d8d1db9c94cb5368d4021505f213a9e01`. Read-only verification established Vesper's inherited source, x1, evidence, and final ancestry across exactly three new single-parent commits and zero merges. Final is the direct child of evidence. Vesper's source lane was clean, zero-divergent, and equal across local, upstream, tracking, and a fresh live remote. All 545 exact manifest replays completed without mismatch. Vesper's successful 68-test canonical aggregate was deliberately not replayed.
+
+The repository-sealed source preserves 2,860 frozen proposals, 17,673 effective negatives, 119 open gaps, 118 exact gates, and 3,947 Method Flow methods with failed and bounded passing witnesses. Vesper's one post-seal route-rendering failure is carried externally at zero credit, so Lyren's effective activation baseline is 17,674 negatives and 3,948 methods. Lyren's startup and x1 failures are appended separately and paired with bounded recoveries. This x1 packet contains no surface implementation, mutation outcome, empirical row, real ingredient or beverage record, production event, laboratory or sensory result, release, recall action, credential event, successor message, or task mutation. Its verdict is `NOT_READY_FOR_STAGE_20`.
+
+## THOS Body primary focus and bounded practice
+
+THOS Body is primary through a synthetic brewery batch and cellar-handover portfolio. The thirty proposals cover fictional scope; ingredient and package-lot intake; water and material storage; recipe revision; vessel and transfer topology; mash, boil, hop, cleaning, yeast, fermentation, cellar, carbonation, conditioning, filtration, packaging, labelling, sensory, laboratory, nonconformance, recall-simulation, hazard-reservation, and shift-handover records; plus bounded GMUT, Freed ID, accessibility, zero-row capability, and CBR surfaces.
+
+These mechanisms are software and mathematical checks only. There is no real person, worker, consumer, business, brewery, supplier, ingredient, beverage, batch, vessel, line, chemical, sample, measurement, laboratory result, sensory result, cleaning or production action, label approval, release, recall, sale, supply, food-safety finding, workplace-safety advice, professional judgment, or operational decision. A valid synthetic fixture cannot become empirical or professional confirmation.
+
+The completed THOS surfaces may test declared state transitions and mutation refusals. The represented THOS batch and handover surfaces may test partition, digest, checkpoint, retry, quarantine, unresolved-batch, and acknowledgement-placeholder states. They do not brew, clean, sanitize, sample, test, label, package, release, recall, sell, supply, or conduct an operational handover. They establish no real workload benefit, blind matched-budget arms, participant outcomes, deployment readiness, production reliability, or independent review.
+
+GMUT Mind remains explicit through a typed fermentation mass-balance and kinetic operator with unit, domain, identifiability, and production firewalls. GMUT remains a research-model family. This phase does not fit real fermentation data, calculate a recipe or process setpoint, estimate alcohol content, approve a batch, predict sensory or safety properties, constrain a physical parameter, confirm a prediction, establish a fundamental law, supply ultraviolet completion, or prove a Theory of Everything.
+
+Freed ID remains explicit through nonproduction batch-lineage and ingredient or package provenance envelopes. Synthetic digests, transformation lineage, amendment, expiry, revocation holds, disclosure limits, and challenge routes create no real key, signature, proof, identifier, credential, issuer, holder, live resolution, status, revocation, interoperability, recovery, privacy or security review, trust framework, or production identity.
+
+CBR Heart remains explicit through worker and consumer safety, alcohol harm, water and environmental interest, business and personal privacy, label and recall notice, contestability, remedy, affected-party governance, legal, cultural, and Māori-authority reservations. Machine-checkable structure is not complete accessibility; manual, assistive-technology, cognitive, Māori-language, and affected-user evaluation remain reserved. Legal interpretation, food or workplace-safety decisions, alcohol-sale or supply decisions, recall and label decisions, remedy allocation, cultural ratification, collective data governance, and Māori authority require competent and affected authorities and cannot be delegated by repository text.
+
+## Thirty distinct proposals and four truth labels
+
+Each proposal title is compared mechanically against all 2,860 inherited frozen titles and earlier v658-v8 titles using a disclosed token-set Jaccard screen below 0.60, followed by mechanism-level review. The core brewery, brewing, and fermentation title terms had no match in the inherited chain during the bounded domain screen. Distinct mechanisms include ingredient and package traceability, recipe revision, transfer topology, mash and boil events, cleaning state, yeast lineage, fermentation and cellar states, carbonation, conditioning, filtration, package integrity, label reservation, laboratory and sensory reservations, mock recall, hazard reservation, handover, and a typed fermentation firewall.
+
+Proposals 1 through 23 are expected only as `completed`: a bounded local validator accepts one declared fixture and rejects five preregistered mutations. Completion says only that the synthetic contract behaved as preregistered. Proposals 24 through 28 are expected only as `represented`: two THOS proxies, two nonproduction Freed ID profiles, and one accessible static atlas. Proposal 29 is an `open_gap` because MPI, FSANZ, EBC, and GS1 transport, licensed content, and real rows are disabled. Proposal 30 is an `exact_gate` because worker and consumer safety, alcohol harm, water and environmental interest, privacy, label and recall notice, remedy, legal, cultural, affected-party, and Māori-authority decisions require affected and competent parties. No fifth truth label is permitted.
+
+## Sources and nonpromotion
+
+Official and primary rails include New Zealand Food Safety plan, good-practice, and recall material; FSANZ alcoholic-beverage labelling and Code indexes; New Zealand legislation; WorkSafe exposure material; GS1 traceability; European Brewery Convention analysis context; Brewers Association draught-quality material; W3C provenance, accessibility, and verifiable-credential recommendations; RFC canonicalization; New Zealand privacy principles; Te Mana Raraunga; and Local Contexts. They provide vocabulary and boundary context only. They confer no regulatory compliance, professional competence, licensed-method access, data access, food or workplace-safety determination, label approval, production or release authority, empirical confirmation, legal advice, cultural ratification, Māori authority, privacy completeness, accessibility completeness, security assurance, or production readiness.
+
+Every failed wrapper, parser, quoting, encoding, path, and transport attempt remains a zero-credit negative. A bounded recovery proves only its recovered postcondition. It neither erases the failed witness nor turns related same-owner work into independent reproduction. Shared infrastructure, family tools, and correlated lineages are explicitly discounted.
+
+## X1 freeze, x2 gate, and terminal route
+
+This x1 commit contains sources, proposals, task portfolios, Method Flow pairs, truth baselines, threat and wellbeing records, workflow and reflection records, provenance, and validation receipts only. It contains no x2 runner, phase-local skill implementation, surface contract, mutation result, observed outcome ledger, closeout, final seal, or successor message. Local, upstream, tracking, and fresh-live equality must be proved after the dedicated x1 push before x2 begins.
+
+The active assignment is Lyren Moss v658-v8. The current activation authorizes no exact successor title or phase. Historical files cannot supply that missing live edge. No task may be resolved, reread, precontacted, created, forked, or substituted during evidence construction. After Lyren's own exact final is committed, pushed, clean, fresh-live equal, within caps, and passes one attributable canonical aggregate, a fresh exact authorization is still required before any route action. Without it, retain `OPEN_ROUTE_GAP` or `PREPARED_NOT_SENT` and stop. Tavian Sol remains `ON_STANDBY` and is not a substitute. The verdict remains `NOT_READY_FOR_STAGE_20`.
+
+
+# Lyren Moss v658-v8 x2 evidence overview
+
+## Evidence and truth labels
+
+X2 executed thirty frozen synthetic brewery contracts and no unfrozen production, food-safety, release, recall, safety, identity, legal, cultural, or authority action. Thirty declared fixtures passed and all 150 preregistered mutations were rejected. Each mutation remains a zero-credit negative with failed and bounded passing witnesses.
+
+The observed distribution is 23 completed, 5 represented, 1 open_gap, and 1 exact_gate. Completion means only that one synthetic contract accepted its fixture and rejected five mutations. Representation means only that a proxy, nonproduction identity profile, or structural accessibility surface exists. The open gap keeps all MPI, FSANZ, EBC, and GS1 transport disabled with zero rows. The exact gate executes no authority action. The effective retained-negative count is 17,852; the effective Method Flow count is 4,126.
+
+## Synthetic brewery architecture
+
+Fictional lot, water, recipe, process, vessel, transfer, mash, boil, cleaning, yeast, fermentation, cellar, carbonation, conditioning, filtration, package, label, sensory, laboratory, nonconformance, recall-simulation, hazard, and handover records preserve revisions, uncertainty, custody, conflict, quarantine, and holds. They provide no production setpoint, ingredient acceptance, potability conclusion, sanitation verification, laboratory or sensory result, legal labelling conclusion, product release, recall instruction, or workplace-safety advice.
+
+THOS Body is primary through deterministic synthetic batch state, checkpoint, bounded retry, orphan isolation, and handover placeholders. The typed GMUT Mind fermentation operator checks units, domains, unknown parameters, identifiability, and falsifiers without using a real batch or predicting a real process. Freed ID is nonproduction lineage only. CBR Heart reserves worker, consumer, alcohol-harm, water, environment, privacy, remedy, law, culture, data-governance, affected-party, and Māori-authority decisions.
+
+## Sources, limits, and route
+
+MPI, FSANZ, New Zealand legislation, WorkSafe, GS1, EBC, Brewers Association, W3C, IETF, privacy, Te Mana Raraunga, and Local Contexts materials supplied bounded vocabulary and reservation targets only. They confer no compliance, qualification, production, food-safety, product-release, workplace-safety, legal, cultural, consent, or Māori authority.
+
+Ten owner-local skills and ten family-current runners cover all thirty surfaces. Thirty safe-now task records, twenty reversible prototypes, and thirty additive cleanup receipts remain inside the Lyren packet. Manifests bind prospective Git blob identities. Five-class scanning is bounded and is not complete privacy assurance.
+
+No successor is authorized by the live v658-v8 activation. Route state therefore remains OPEN_ROUTE_GAP; no task is resolved, contacted, created, forked, delegated, or substituted. Tavian Sol remains ON_STANDBY. The verdict remains NOT_READY_FOR_STAGE_20.
