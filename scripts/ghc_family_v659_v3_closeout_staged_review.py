@@ -14,10 +14,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/sable-rook/v659-v3/"
 EVIDENCE = "04d167b799ba8b9de885e66ff8ee480bf5b219b2"
+BASE_FINAL = "91d0ee0d7c4f37dbaa13f07d191f8af4b2464f73"
 RECEIPT = PHASE_PREFIX + "validation/closeout-staged-review.json"
 DELTA_MANIFEST = PHASE_PREFIX + "validation/final-delta-manifest.json"
 OWNER_MANIFEST = PHASE_PREFIX + "final/final-owner-manifest.json"
-EXPECTED_STAGED = 25
 SCANNER_DEFINITIONS = {
     "scripts/build_ghc_family_v659_v3_closeout.py",
     "scripts/ghc_family_v659_v3_closeout_staged_review.py",
@@ -78,6 +78,7 @@ def main() -> int:
     staged = [row for row in str(git("diff", "--cached", "--name-only")).splitlines() if row]
     statuses = [row.split("\t", 1) for row in str(git("diff", "--cached", "--name-status")).splitlines() if row]
     evidence_delta = {row for row in str(git("diff", "--name-only", EVIDENCE)).splitlines() if row}
+    correction_delta = {row for row in str(git("diff", "--name-only", BASE_FINAL)).splitlines() if row}
     oid_map = index_oids()
     seeds = batch_blobs([DELTA_MANIFEST, OWNER_MANIFEST], oid_map)
     delta = json.loads(seeds[DELTA_MANIFEST].decode("utf-8"))
@@ -90,14 +91,15 @@ def main() -> int:
     blobs = batch_blobs(needed, oid_map)
 
     issues: list[str] = []
-    if len(staged) != EXPECTED_STAGED:
-        issues.append("staged_count")
-    if set(staged) != set(delta_entries) | delta_exclusions:
+    declared_final_surface = set(delta_entries) | delta_exclusions
+    if evidence_delta != declared_final_surface:
         issues.append("delta_coverage")
-    if evidence_delta != set(staged):
-        issues.append("evidence_delta")
-    if any(status != "A" for status, _path in statuses):
-        issues.append("non_addition")
+    if correction_delta != set(staged):
+        issues.append("correction_delta")
+    if set(staged) - declared_final_surface:
+        issues.append("outside_declared_final_surface")
+    if any(status not in {"A", "M"} for status, _path in statuses):
+        issues.append("destructive_or_unexpected_status")
     if RECEIPT not in delta_exclusions or RECEIPT not in owner_exclusions:
         issues.append("receipt_not_self_excluded")
 
@@ -145,10 +147,13 @@ def main() -> int:
         "schema": "ghc.family.v659-v3.closeout-staged-review.v1",
         "lifecycle": "closeout_precommit",
         "evidence_commit": EVIDENCE,
+        "correction_base": BASE_FINAL,
         "staged_path_count": len(staged),
         "reviewed_content_count": len(staged) - 1,
         "receipt_self_exclusion": RECEIPT,
-        "all_additions": all(status == "A" for status, _path in statuses),
+        "all_owner_closeout_updates": all(status in {"A", "M"} for status, _path in statuses),
+        "staged_statuses": [{"status": status, "path": path} for status, path in statuses],
+        "outside_declared_final_surface": sorted(set(staged) - declared_final_surface),
         "delta_manifest_entry_count": len(delta_entries),
         "delta_manifest_exclusion_count": len(delta_exclusions),
         "owner_manifest_entry_count": len(owner_entries),

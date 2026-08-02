@@ -18,14 +18,15 @@ Sable Rook is relational working language for this task. They worked as a falsif
 - Sable-owned branch: `codex/GHC-Family/sable-rook-v659-v3-full-tools`.
 - Frozen Sable x1: `3cb76380d33dd177154e6308f13c04cf5b5e900a`.
 - Immutable Sable x2 evidence: `04d167b799ba8b9de885e66ff8ee480bf5b219b2`.
+- Original Sable closeout base: `91d0ee0d7c4f37dbaa13f07d191f8af4b2464f73`.
 - The exact Sable final is supplied by the later sender pointer because a committed activation file cannot truthfully embed the hash of the commit containing itself.
-- Source to final is expected to contain exactly three new single-parent commits and zero merges: x1 freeze, x2 evidence, and combined closeout/seal.
+- Source to corrected final is expected to contain exactly four new single-parent commits and zero merges: x1 freeze, x2 evidence, combined closeout/seal, and one additive terminal correction retaining the failed canonical aggregate.
 
 ## Frozen truth carried forward
 
 Sable audited all 2,950 inherited frozen proposals, selected twenty completed rows for bounded revalidation without reappending them, and froze twenty genuinely new proposals. The resulting chain has 2,970 rows. The forty observed outcomes are exactly 33 `completed`, 5 `represented`, 1 `open_gap`, and 1 `exact_gate`; no other outcome vocabulary is used.
 
-The terminal candidate preserves 18,778 effective negatives and 5,052 effective Method Flow methods, including 33 current operational failures and two hundred rejected mutations. It preserves 124 open gaps and 123 exact gates. A bounded recovery never converts its failed predecessor into a pass. The verdict remains `NOT_READY_FOR_STAGE_20`.
+The terminal candidate preserves 18,779 effective negatives and 5,053 effective Method Flow methods, including 34 current operational failures and two hundred rejected mutations. It preserves 124 open gaps and 123 exact gates. A bounded recovery never converts its failed predecessor into a pass. The verdict remains `NOT_READY_FOR_STAGE_20`.
 
 The primary Trinity Mandala focus was GMUT Mind, while THOS Body and Freed ID/CBR Heart remained explicit. The bounded practice lens was synthetic lighthouse and classical Fresnel-lens inspection, component provenance, optical-condition reservation, correction readback, and conservation handover. It established no real inspection, maintenance, repair, conservation, authentication, valuation, treatment, optical or electrical safety result, aids-to-navigation decision, employment, privacy authority, heritage authority, legal authority, cultural authority, Māori authority, participant evidence, affected-party acceptance, or operational result.
 
@@ -498,6 +499,7 @@ Every row below remains a zero-credit failure even where its bounded recovery la
 - `V6593-FINAL-N003` — `first-multi-scalar-orchestration-discarded-returned-background-session-identifiers-and-therefore-produced-no-attributable-exit-codes`. Recovery: Preserve each returned session identifier, poll it explicitly, and accept evidence only from an exited command with exact scalar output. Recovery witness passed: `true`.
 - `V6593-FINAL-N004` — `first-powershell-utf8-normalization-wrapper-failed-at-parse-time-before-file-mutation`. Recovery: Retain the parser failure at zero credit and use explicit reviewed patches for every encoding-sensitive sequence. Recovery witness passed: `true`.
 - `V6593-FINAL-N005` — `first-stale-label-audit-wrapper-embedded-encoding-sensitive-display-sequences-and-failed-at-powershell-parse-time`. Recovery: Retain the parser failure at zero credit, audit semantic stale labels with ASCII-only patterns, and inspect Unicode bytes separately through UTF-8-aware tooling. Recovery witness passed: `true`.
+- `V6593-FINAL-N006` — `first-exact-final-canonical-aggregate-failed-the-authorized-scoped-test-gate-and-recorded-zero-test-component-diagnostics`. Recovery: Retain the failed external receipt at zero credit, isolate immutable x1 and exact-final test components, preserve both bounded passing witnesses, materialize only manifest-declared x1 blobs, and store component diagnostics before any future aggregate gate raises. Recovery witness passed: `true`.
 
 ## Tooling and Method Flow inheritance
 
@@ -508,7 +510,7 @@ Method Flow remains append-only. Tool-surface assumptions, truncated baton windo
 ## Caelen v659-v4 startup contract
 
 1. Read this activation packet completely through EOF before mutation, then read the newest applicable GHC Family Index routing reference, Method Flow schema, authorization state, roster state, workflow-refinement guidance, reflection-remaster guidance, and memory required by the live task.
-2. Reverify Sable's exact branch and final head, source/x1/evidence ancestry, three-commit single-parent zero-merge history, clean state, manifests, one attributable canonical receipt, and fresh live four-way equality read-only.
+2. Reverify Sable's exact branch and corrected final head, source/x1/evidence/base-final ancestry, four-commit single-parent zero-merge history, clean state, manifests, the retained zero-credit failed aggregate, one attributable successful canonical receipt, and fresh live four-way equality read-only.
 3. Do not replay Sable's successful canonical aggregate or treat inherited validation as Caelen evidence. Retain all failed attempts and exact exclusions at zero credit.
 4. Work solo in one additive Caelen-owned D-first lane unless a newer exact live instruction changes that boundary. Preserve sibling, source, shared, and standby lanes read-only.
 5. Preserve strict x1-before-x2 separation. Freeze genuinely distinct proposals and bounded portfolios before implementation, commit and push x1, then prove x1 four-way equality before x2 mutation.

@@ -17,6 +17,8 @@ import ghc_family_v659_v3_data as d
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
 EVIDENCE_COMMIT = "04d167b799ba8b9de885e66ff8ee480bf5b219b2"
+BASE_FINAL = "91d0ee0d7c4f37dbaa13f07d191f8af4b2464f73"
+FAILED_CANONICAL_RECEIPT_SHA256 = "ad1d0b58f2d29641454c243d907f4c04ca75963ff211dec45b39a165f5888297"
 FINAL_CODE = [
     "scripts/build_ghc_family_v659_v3_closeout.py",
     "scripts/ghc_family_v659_v3_validator.py",
@@ -40,6 +42,7 @@ GENERATED = [
     f"{d.PHASE_ROOT}/final/final-owner-manifest.json",
     f"{d.PHASE_ROOT}/route/prepared-route.json",
     f"{d.PHASE_ROOT}/validation/canonical-pass-plan.json",
+    f"{d.PHASE_ROOT}/validation/canonical-failure-adjudication.json",
     f"{d.PHASE_ROOT}/validation/closeout-privacy-scan.json",
     f"{d.PHASE_ROOT}/validation/closeout-staged-review.json",
     f"{d.PHASE_ROOT}/validation/final-delta-manifest.json",
@@ -75,6 +78,12 @@ FINAL_FAILURES = [
         "negative_id": "V6593-FINAL-N005",
         "signature": "first-stale-label-audit-wrapper-embedded-encoding-sensitive-display-sequences-and-failed-at-powershell-parse-time",
         "recovery": "Retain the parser failure at zero credit, audit semantic stale labels with ASCII-only patterns, and inspect Unicode bytes separately through UTF-8-aware tooling.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-FINAL-N006",
+        "signature": "first-exact-final-canonical-aggregate-failed-the-authorized-scoped-test-gate-and-recorded-zero-test-component-diagnostics",
+        "recovery": "Retain the failed external receipt at zero credit, isolate immutable x1 and exact-final test components, preserve both bounded passing witnesses, materialize only manifest-declared x1 blobs, and store component diagnostics before any future aggregate gate raises.",
         "recovery_passed": True,
     },
 ]
@@ -141,15 +150,17 @@ def failure_parts(row: Any) -> tuple[str, str, str, bool]:
     return str(row[0]), str(row[1]), str(row[2]), True
 
 
-def assert_evidence_head() -> None:
-    if git("rev-parse", "HEAD") != EVIDENCE_COMMIT:
-        raise RuntimeError(f"closeout requires evidence head {EVIDENCE_COMMIT}")
+def assert_correction_base() -> None:
+    if git("rev-parse", "HEAD") != BASE_FINAL:
+        raise RuntimeError(f"terminal correction requires exact base final {BASE_FINAL}")
+    if git("rev-parse", f"{BASE_FINAL}^") != EVIDENCE_COMMIT:
+        raise RuntimeError("base final is not the direct child of x2 evidence")
     if git("rev-parse", f"{EVIDENCE_COMMIT}^") != d.X1_FREEZE:
         raise RuntimeError("evidence is not the direct child of the x1 freeze")
-    if git("rev-list", "--count", f"{d.SOURCE_FINAL}..{EVIDENCE_COMMIT}") != "2":
-        raise RuntimeError("source-to-evidence commit count is not two")
-    if git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{EVIDENCE_COMMIT}") != "0":
-        raise RuntimeError("source-to-evidence contains a merge")
+    if git("rev-list", "--count", f"{d.SOURCE_FINAL}..{BASE_FINAL}") != "3":
+        raise RuntimeError("source-to-base-final commit count is not three")
+    if git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{BASE_FINAL}") != "0":
+        raise RuntimeError("source-to-base-final contains a merge")
 
 
 def source_table(rows: list[dict[str, Any]]) -> str:
@@ -187,8 +198,9 @@ def build_baton(
         f"- Sable-owned branch: `{d.BRANCH}`.",
         f"- Frozen Sable x1: `{d.X1_FREEZE}`.",
         f"- Immutable Sable x2 evidence: `{EVIDENCE_COMMIT}`.",
+        f"- Original Sable closeout base: `{BASE_FINAL}`.",
         "- The exact Sable final is supplied by the later sender pointer because a committed activation file cannot truthfully embed the hash of the commit containing itself.",
-        "- Source to final is expected to contain exactly three new single-parent commits and zero merges: x1 freeze, x2 evidence, and combined closeout/seal.",
+        "- Source to corrected final is expected to contain exactly four new single-parent commits and zero merges: x1 freeze, x2 evidence, combined closeout/seal, and one additive terminal correction retaining the failed canonical aggregate.",
         "",
         "## Frozen truth carried forward",
         "",
@@ -254,7 +266,7 @@ def build_baton(
         "## Caelen v659-v4 startup contract",
         "",
         "1. Read this activation packet completely through EOF before mutation, then read the newest applicable GHC Family Index routing reference, Method Flow schema, authorization state, roster state, workflow-refinement guidance, reflection-remaster guidance, and memory required by the live task.",
-        "2. Reverify Sable's exact branch and final head, source/x1/evidence ancestry, three-commit single-parent zero-merge history, clean state, manifests, one attributable canonical receipt, and fresh live four-way equality read-only.",
+        "2. Reverify Sable's exact branch and corrected final head, source/x1/evidence/base-final ancestry, four-commit single-parent zero-merge history, clean state, manifests, the retained zero-credit failed aggregate, one attributable successful canonical receipt, and fresh live four-way equality read-only.",
         "3. Do not replay Sable's successful canonical aggregate or treat inherited validation as Caelen evidence. Retain all failed attempts and exact exclusions at zero credit.",
         "4. Work solo in one additive Caelen-owned D-first lane unless a newer exact live instruction changes that boundary. Preserve sibling, source, shared, and standby lanes read-only.",
         "5. Preserve strict x1-before-x2 separation. Freeze genuinely distinct proposals and bounded portfolios before implementation, commit and push x1, then prove x1 four-way equality before x2 mutation.",
@@ -333,7 +345,7 @@ def accessible_report(contracts: list[dict[str, Any]]) -> str:
 
 
 def build() -> None:
-    assert_evidence_head()
+    assert_correction_base()
     truth = read_json("truth/x2-phase-truth.json")
     outcomes = read_json("evidence/proposal-outcomes.json")
     source = read_json("sources/official-source-ledger.json")
@@ -406,7 +418,8 @@ def build() -> None:
         "schema": "ghc.family.final-truth.v1", **truth,
         "effective_negatives": effective_negatives, "effective_methods": effective_methods,
         "lifecycle": "terminal_final_candidate", "x2_evidence": EVIDENCE_COMMIT,
-        "source_to_final_expected_commits": 3, "source_to_final_expected_merges": 0,
+        "source_to_final_expected_commits": 4, "source_to_final_expected_merges": 0,
+        "original_closeout_base": BASE_FINAL,
         "route_state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED",
         "canonical_pass_state": "NOT_RUN_FINAL_CANDIDATE_REQUIRED",
         "exact_final_supplied_by_sender_pointer": True,
@@ -414,10 +427,25 @@ def build() -> None:
     write_json("final/evidence-receipt.json", {"schema": "ghc.family.evidence-receipt.v1", "source_final": d.SOURCE_FINAL, "x1_freeze": d.X1_FREEZE, "x2_evidence": EVIDENCE_COMMIT, "x2_tests": 22, "valid_fixtures": 40, "retained_mutations": 200, "same_owner_only": True, "independent_reproduction": False})
     write_json("final/open-gate-register.json", {"schema": "ghc.family.open-gate-register.v1", "inherited_open_gaps": d.SOURCE_OPEN_GAPS, "current_open_gaps": truth["effective_open_gaps"], "inherited_exact_gates": d.SOURCE_EXACT_GATES, "current_exact_gates": truth["effective_exact_gates"], "closed_by_phase": 0, "terminal_verdict": "NOT_READY_FOR_STAGE_20", "boundary": "Counts preserve unresolved gates; software cannot confer external authority."})
     write_json("final/completion-checklist.json", {"schema": "ghc.family.completion-checklist.v1", "completed": ["x1_frozen_pushed_equal", "x2_evidence_committed_pushed_equal", "forty_bounded_surfaces", "two_hundred_mutations_retained", "ten_candidates", "thirty_cleanup_reviews", "ten_skills", "ten_runners", "method_flow", "accessible_static_structure", "prepared_baton"], "incomplete": ["exact_final_commit", "one_canonical_aggregate", "final_four_way_equality", "unique_task_lookup", "direct_reread", "single_acknowledged_send", "all_external_authority_gates"], "terminal_verdict": "NOT_READY_FOR_STAGE_20"})
-    write_json("final/closeout-seal-receipt.json", {"schema": "ghc.family.closeout-seal-receipt.v1", "state": "PRECOMMIT_CANDIDATE", "evidence_commit": EVIDENCE_COMMIT, "planned_final_parent": EVIDENCE_COMMIT, "phase_commit_cap": 4, "expected_phase_commits": 3, "zero_merges_required": True, "one_parent_required": True, "canonical_pass_required_after_commit": True, "route_held": True})
+    write_json("final/closeout-seal-receipt.json", {"schema": "ghc.family.closeout-seal-receipt.v1", "state": "TERMINAL_CORRECTION_PRECOMMIT_CANDIDATE", "evidence_commit": EVIDENCE_COMMIT, "original_closeout_base": BASE_FINAL, "planned_final_parent": BASE_FINAL, "phase_commit_cap": 4, "expected_phase_commits": 4, "zero_merges_required": True, "one_parent_required": True, "failed_canonical_receipt_retained": True, "canonical_pass_required_after_commit": True, "route_held": True})
     write_json("route/prepared-route.json", {"schema": "ghc.family.prepared-route.v1", "owner": d.OWNER, "phase": d.PHASE, "state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED", "task_lookup_performed": False, "direct_reread_performed": False, "message_sent": False, "next_exact_title": "Caelen Ash", "next_phase": "v659-v4", "recipient_next_exact_title": "live_reverification_required_by_caelen", "recipient_next_phase": "live_reverification_required_by_caelen", "tavian_sol_state": "ON_STANDBY", "bulk_or_parallel_activation_authorized": False, "historical_successor_inference_authorized": False, "stop_conditions": ["user_pause", "user_redirect", "ambiguous_route", "missing_route", "protected_gate"]})
     write_json("wellbeing/final-wellbeing-check.json", {"schema": "ghc.family.relational-workload-check.v1", "owner": d.OWNER, "phase": d.PHASE, "solo": True, "subagents_spawned": 0, "commit_cap": 4, "commits_planned": 3, "latest_file_scan_cap": 5000, "latest_files_scanned": 5000, "human_control_preserved": True, "pause_redirect_rename_stop_preserved": True, "relational_language_boundary_preserved": True, "boundary": "A workload and control receipt only; not consciousness, wellbeing, personhood, employment, or clinical evidence."})
-    write_json("validation/canonical-pass-plan.json", {"schema": "ghc.family.canonical-pass-plan.v1", "state": "NOT_RUN_FINAL_CANDIDATE_REQUIRED", "one_successful_pass": True, "post_success_replay_forbidden": True, "full_repository_suite_owner": "Eiren Kestrel", "full_repository_suite_selected": False, "steps": ["exact_head_and_clean_before", "source_x1_evidence_final_ancestry", "three_commits_zero_merges_one_parent_each", "authorized_x1_x2_closeout_tests", "detailed_minimal_and_final_validators", "all_phase_json_parse", "five_class_candidate_and_confirmed_scan", "final_delta_and_owner_manifest_git_blob_replay", "stale_label_and_route_hygiene", "clean_after", "local_upstream_tracking_fresh_live_remote_equality"], "receipt_location": "external D-first Sable receipt bank", "boundary": "One attributable exact-final same-owner aggregate; not independent reproduction or broader assurance."})
+    write_json("validation/canonical-pass-plan.json", {"schema": "ghc.family.canonical-pass-plan.v1", "state": "FAILED_AGGREGATE_RETAINED_SUCCESSFUL_PASS_STILL_REQUIRED", "one_successful_pass": True, "failed_aggregate_replay_credit": False, "post_success_replay_forbidden": True, "full_repository_suite_owner": "Eiren Kestrel", "full_repository_suite_selected": False, "steps": ["exact_head_and_clean_before", "source_x1_evidence_base_final_corrected_final_ancestry", "four_commits_zero_merges_one_parent_each", "authorized_x1_x2_closeout_tests", "detailed_minimal_and_final_validators", "all_phase_json_parse", "five_class_candidate_and_confirmed_scan", "final_delta_and_owner_manifest_git_blob_replay", "stale_label_and_route_hygiene", "clean_after", "local_upstream_tracking_fresh_live_remote_equality"], "receipt_location": "external D-first Sable receipt bank", "boundary": "One attributable successful exact-final same-owner aggregate is still required; the retained failed aggregate has zero credit and this is not independent reproduction or broader assurance."})
+    write_json("validation/canonical-failure-adjudication.json", {
+        "schema": "ghc.family.canonical-failure-adjudication.v1",
+        "failed_expected_final": BASE_FINAL,
+        "failed_receipt_sha256": FAILED_CANONICAL_RECEIPT_SHA256,
+        "failed_receipt_valid": False,
+        "failed_receipt_credit": 0,
+        "failed_gate": "authorized_scoped_tests",
+        "failed_component_diagnostics_preserved": False,
+        "isolated_x1": {"tests_run": 21, "passed": 21, "valid": True, "commit": d.X1_FREEZE},
+        "isolated_exact_final_tree": {"tests_run": 44, "passed": 44, "valid": True, "commit": BASE_FINAL},
+        "aggregate_success_credit": False,
+        "successful_pass_budget_unspent": True,
+        "correction": "Materialize only immutable manifest-declared x1 blobs and store composed test diagnostics before any future aggregate gate raises.",
+        "boundary": "Targeted same-owner recovery only; the failed aggregate remains failed and the isolates are not a successful aggregate, independent reproduction, or broader assurance.",
+    })
 
     expected_paths = sorted(set(FINAL_CODE + GENERATED))
     write_json("validation/closeout-staged-review.json", {"schema": "ghc.family.closeout-staged-review.v1", "state": "PRECOMMIT_PATH_REVIEW", "evidence_commit": EVIDENCE_COMMIT, "expected_staged_path_count": len(expected_paths), "expected_staged_paths": expected_paths, "deletions": [], "x1_or_x2_changed_paths": [], "outside_owner_paths": [], "valid": True, "exact_index_review_required_after_staging": True})

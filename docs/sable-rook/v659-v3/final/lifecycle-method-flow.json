@@ -1,6 +1,6 @@
 {
   "boundary": "Same-owner closeout recovery only; not independent reproduction or broader assurance.",
-  "method_count": 5,
+  "method_count": 6,
   "methods": [
     {
       "candidate_workaround": "Do not issue a duplicate commit; inspect the exact HEAD, subject, parent, staged count, worktree status, and any live Git process until the original command reaches a terminal state.",
@@ -91,10 +91,28 @@
         "V6593-FINAL-METHOD-005-F",
         "V6593-FINAL-METHOD-005-P"
       ]
+    },
+    {
+      "candidate_workaround": "Retain the failed external receipt at zero credit, isolate immutable x1 and exact-final test components, preserve both bounded passing witnesses, materialize only manifest-declared x1 blobs, and store component diagnostics before any future aggregate gate raises.",
+      "independent_reproduction": false,
+      "method_id": "V6593-FINAL-METHOD-006",
+      "recurrence_guard": "Retain the failed external receipt at zero credit, isolate immutable x1 and exact-final test components, preserve both bounded passing witnesses, materialize only manifest-declared x1 blobs, and store component diagnostics before any future aggregate gate raises.",
+      "retained_negative_ids": [
+        "V6593-FINAL-N006"
+      ],
+      "same_owner_only": true,
+      "title": "Bounded closeout recovery for first-exact-final-canonical-aggregate-failed-the-authorized-scoped-test-gate-and-recorded-zero-test-component-diagnostics",
+      "trigger_preconditions": [
+        "first-exact-final-canonical-aggregate-failed-the-authorized-scoped-test-gate-and-recorded-zero-test-component-diagnostics"
+      ],
+      "validation_witness_ids": [
+        "V6593-FINAL-METHOD-006-F",
+        "V6593-FINAL-METHOD-006-P"
+      ]
     }
   ],
   "schema": "ghc.family.lifecycle-method-flow.v1",
-  "witness_count": 10,
+  "witness_count": 12,
   "witnesses": [
     {
       "credit": 0,
@@ -175,6 +193,22 @@
       "result": "pass",
       "retained": true,
       "witness_id": "V6593-FINAL-METHOD-005-P"
+    },
+    {
+      "credit": 0,
+      "method_id": "V6593-FINAL-METHOD-006",
+      "observed": "first-exact-final-canonical-aggregate-failed-the-authorized-scoped-test-gate-and-recorded-zero-test-component-diagnostics",
+      "result": "fail",
+      "retained": true,
+      "witness_id": "V6593-FINAL-METHOD-006-F"
+    },
+    {
+      "credit": 1,
+      "method_id": "V6593-FINAL-METHOD-006",
+      "observed": "Retain the failed external receipt at zero credit, isolate immutable x1 and exact-final test components, preserve both bounded passing witnesses, materialize only manifest-declared x1 blobs, and store component diagnostics before any future aggregate gate raises.",
+      "result": "pass",
+      "retained": true,
+      "witness_id": "V6593-FINAL-METHOD-006-P"
     }
   ]
 }

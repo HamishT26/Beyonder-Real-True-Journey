@@ -17,6 +17,7 @@ import ghc_family_v659_v3_data as d
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = f"{d.PHASE_ROOT}/"
 EVIDENCE_COMMIT = "04d167b799ba8b9de885e66ff8ee480bf5b219b2"
+BASE_FINAL = "91d0ee0d7c4f37dbaa13f07d191f8af4b2464f73"
 
 
 def git(*args: str, text: bool = True):
@@ -58,14 +59,15 @@ def validate_final(expected_final: str) -> dict:
     check("source_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", d.SOURCE_FINAL, head], cwd=ROOT).returncode == 0)
     check("x1_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", d.X1_FREEZE, head], cwd=ROOT).returncode == 0)
     check("evidence_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", EVIDENCE_COMMIT, head], cwd=ROOT).returncode == 0)
-    check("final_parent", git("rev-parse", f"{head}^").strip() == EVIDENCE_COMMIT)
+    check("base_final_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", BASE_FINAL, head], cwd=ROOT).returncode == 0)
+    check("final_parent", git("rev-parse", f"{head}^").strip() == BASE_FINAL)
     commits = int(git("rev-list", "--count", f"{d.SOURCE_FINAL}..{head}").strip())
     merges = int(git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{head}").strip())
-    check("three_phase_commits", commits == 3, str(commits))
+    check("four_phase_commits", commits == 4, str(commits))
     check("zero_merges", merges == 0, str(merges))
     commit_rows = [row for row in git("rev-list", "--reverse", f"{d.SOURCE_FINAL}..{head}").splitlines() if row]
     one_parent = all(len(git("rev-list", "--parents", "-n", "1", row).split()) == 2 for row in commit_rows)
-    check("single_parent_history", one_parent and len(commit_rows) == 3)
+    check("single_parent_history", one_parent and len(commit_rows) == 4)
 
     manifest_paths = [
         f"{d.PHASE_ROOT}/final/final-owner-manifest.json",
@@ -138,7 +140,7 @@ def validate_final(expected_final: str) -> dict:
     check("five_class_scan", not confirmed, str(len(confirmed)))
     check("privacy_receipt", privacy["confirmed_hit_count"] == 0 and not privacy["privacy_complete"] and not privacy["security_complete"])
 
-    check("truth_counts", truth["effective_frozen"] == 2970 and truth["effective_negatives"] == 18778 and truth["effective_methods"] == 5052)
+    check("truth_counts", truth["effective_frozen"] == 2970 and truth["effective_negatives"] == 18779 and truth["effective_methods"] == 5053)
     check("truth_gates", truth["effective_open_gaps"] == 124 and truth["effective_exact_gates"] == 123)
     check("truth_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("route_held", route["next_exact_title"] == "Caelen Ash" and route["next_phase"] == "v659-v4" and not route["message_sent"])

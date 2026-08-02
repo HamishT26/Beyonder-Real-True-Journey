@@ -26,8 +26,8 @@ class SableV659V3CloseoutTests(unittest.TestCase):
         self.assertEqual("Sable Rook", truth["owner"])
         self.assertEqual("v659-v3", truth["phase"])
         self.assertEqual(2970, truth["effective_frozen"])
-        self.assertEqual(18778, truth["effective_negatives"])
-        self.assertEqual(5052, truth["effective_methods"])
+        self.assertEqual(18779, truth["effective_negatives"])
+        self.assertEqual(5053, truth["effective_methods"])
         self.assertEqual(124, truth["effective_open_gaps"])
         self.assertEqual(123, truth["effective_exact_gates"])
         self.assertEqual("NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
@@ -74,14 +74,14 @@ class SableV659V3CloseoutTests(unittest.TestCase):
 
     def test_lifecycle_preserves_all_failures(self) -> None:
         lifecycle = load("final/lifecycle-summary.json")
-        self.assertEqual(33, lifecycle["operational_failure_count"])
+        self.assertEqual(34, lifecycle["operational_failure_count"])
         self.assertEqual(200, lifecycle["retained_mutation_failure_count"])
         self.assertTrue(all(row["credit"] == 0 and row["retained"] for row in lifecycle["operational_failures"]))
 
     def test_final_method_flow_pairs_every_closeout_failure(self) -> None:
         flow = load("final/lifecycle-method-flow.json")
-        self.assertEqual(5, flow["method_count"])
-        self.assertEqual(10, flow["witness_count"])
+        self.assertEqual(6, flow["method_count"])
+        self.assertEqual(12, flow["witness_count"])
         self.assertEqual({"fail", "pass"}, {row["result"] for row in flow["witnesses"]})
 
     def test_open_gate_register_closes_nothing(self) -> None:
@@ -98,8 +98,9 @@ class SableV659V3CloseoutTests(unittest.TestCase):
 
     def test_closeout_seal_is_precommit_candidate(self) -> None:
         seal = load("final/closeout-seal-receipt.json")
-        self.assertEqual("PRECOMMIT_CANDIDATE", seal["state"])
-        self.assertEqual(EVIDENCE, seal["planned_final_parent"])
+        self.assertEqual("TERMINAL_CORRECTION_PRECOMMIT_CANDIDATE", seal["state"])
+        self.assertEqual("91d0ee0d7c4f37dbaa13f07d191f8af4b2464f73", seal["planned_final_parent"])
+        self.assertTrue(seal["failed_canonical_receipt_retained"])
         self.assertTrue(seal["canonical_pass_required_after_commit"])
         self.assertTrue(seal["route_held"])
 
@@ -130,7 +131,7 @@ class SableV659V3CloseoutTests(unittest.TestCase):
 
     def test_final_delta_manifest_replays_working_bytes(self) -> None:
         manifest = load("validation/final-delta-manifest.json")
-        self.assertEqual(20, manifest["entry_count"])
+        self.assertEqual(21, manifest["entry_count"])
         self.assertEqual(5, len(manifest["self_exclusions"]))
         for row in manifest["entries"]:
             data = clean(ROOT / row["path"])
@@ -150,8 +151,9 @@ class SableV659V3CloseoutTests(unittest.TestCase):
     def test_staged_review_names_exact_closeout_surface(self) -> None:
         review = load("validation/closeout-staged-review.json")
         self.assertTrue(review["valid"])
-        self.assertEqual(25, review["staged_path_count"])
-        self.assertTrue(review["all_additions"])
+        self.assertGreater(review["staged_path_count"], 0)
+        self.assertTrue(review["all_owner_closeout_updates"])
+        self.assertEqual([], review["outside_declared_final_surface"])
         self.assertEqual([], review["manifest_mismatches"])
 
     def test_canonical_plan_excludes_full_suite_and_replay(self) -> None:
@@ -160,6 +162,14 @@ class SableV659V3CloseoutTests(unittest.TestCase):
         self.assertFalse(plan["full_repository_suite_selected"])
         self.assertTrue(plan["one_successful_pass"])
         self.assertTrue(plan["post_success_replay_forbidden"])
+
+    def test_failed_canonical_is_retained_with_targeted_isolates(self) -> None:
+        receipt = load("validation/canonical-failure-adjudication.json")
+        self.assertFalse(receipt["failed_receipt_valid"])
+        self.assertEqual(0, receipt["failed_receipt_credit"])
+        self.assertEqual((21, 21), (receipt["isolated_x1"]["tests_run"], receipt["isolated_x1"]["passed"]))
+        self.assertEqual((44, 44), (receipt["isolated_exact_final_tree"]["tests_run"], receipt["isolated_exact_final_tree"]["passed"]))
+        self.assertTrue(receipt["successful_pass_budget_unspent"])
 
     def test_wellbeing_receipt_preserves_human_control(self) -> None:
         wellbeing = load("wellbeing/final-wellbeing-check.json")

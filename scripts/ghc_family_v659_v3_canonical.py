@@ -63,8 +63,18 @@ def remote_state(branch: str) -> dict:
 
 
 def run_x1_tests(scratch_parent: Path) -> dict:
+    manifest_path = f"{d.PHASE_ROOT}/validation/x1-content-manifest.json"
+    manifest = json.loads(git("show", f"{d.X1_FREEZE}:{manifest_path}"))
+    archive_paths = {row["path"] for row in manifest["entries"]}
+    archive_paths.update(f"{d.PHASE_ROOT}/{path}" for path in manifest["exclusions"])
+    archive_paths.update({
+        manifest_path,
+        "scripts/ghc_family_v659_v3_data.py",
+        "tests/test_ghc_family_v659_v3_x1.py",
+    })
+    exact_paths = sorted(archive_paths)
     archive = subprocess.run(
-        ["git", "archive", "--format=zip", d.X1_FREEZE], cwd=ROOT,
+        ["git", "archive", "--format=zip", d.X1_FREEZE, "--", *exact_paths], cwd=ROOT,
         check=True, capture_output=True,
     ).stdout
     with tempfile.TemporaryDirectory(
@@ -84,7 +94,8 @@ def run_x1_tests(scratch_parent: Path) -> dict:
     return {
         "module": X1_TEST_MODULE,
         "materialized_commit": d.X1_FREEZE,
-        "materialization": "direct git archive blobs in an external ephemeral D-first directory",
+        "materialization": "direct manifest-declared Git archive blobs in an external ephemeral D-first directory",
+        "materialized_path_count": len(exact_paths),
         "tests_run": tests_run,
         "successful": result.returncode == 0 and tests_run == 21,
         "return_code": result.returncode,
@@ -158,6 +169,7 @@ def main() -> int:
             "x1": x1_tests,
             "final_tree": final_tree_tests,
         }
+        receipt["tests"] = tests
         detailed = validate_phase()
         minimal = validate_minimal()
         final = validate_final(args.expected_final)
