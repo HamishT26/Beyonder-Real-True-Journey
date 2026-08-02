@@ -10,11 +10,12 @@ from collections import Counter
 from pathlib import Path
 
 import ghc_family_v659_v7_x2_data as d
+from build_ghc_family_v659_v7_closeout import FINAL_FAILURES
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
-EVIDENCE_COMMIT = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
+EVIDENCE_COMMIT = "75ac1f029fec3477d064ccacc622c5b7e914affc"
 
 
 def load(relative: str):
@@ -24,9 +25,9 @@ def load(relative: str):
 def validate_phase() -> dict:
     checks: list[dict] = []
     expected_frozen = d.PRIOR_FROZEN + d.NEW_UNIQUE_COUNT
-    closeout_failure_count = 8
-    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
-    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
+    closeout_failure_count = len(FINAL_FAILURES)
+    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 200 + closeout_failure_count
+    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 200 + closeout_failure_count
     expected_gaps = d.SOURCE_OPEN_GAPS + d.EXPECTED_DISTRIBUTION["open_gap"]
     expected_gates = d.SOURCE_EXACT_GATES + d.EXPECTED_DISTRIBUTION["exact_gate"]
 
@@ -51,7 +52,7 @@ def validate_phase() -> dict:
     delta = load("validation/final-delta-manifest.json")
     owner = load("final/final-owner-manifest.json")
     staged = load("validation/closeout-staged-review.json")
-    baton = (PHASE / "handoffs/tamar-vey-v659-v7-activation.md").read_text(encoding="utf-8")
+    baton = (PHASE / "handoffs/elowen-cairn-v659-v8-activation.md").read_text(encoding="utf-8")
 
     check("owner", truth["owner"] == "Tamar Vey")
     check("phase", truth["phase"] == "v659-v7")
@@ -62,33 +63,33 @@ def validate_phase() -> dict:
     check("exact_gates", truth["effective_exact_gates"] == expected_gates)
     check("terminal_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("x2_evidence", truth["x2_evidence"] == EVIDENCE_COMMIT)
-    check("outcome_total", outcomes["proposal_count"] == 20 and outcomes["selected_inherited_count"] == 20)
-    check("outcome_distribution", Counter(row["observed_outcome"] for row in outcomes["outcomes"]) == Counter({"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}))
-    check("valid_fixtures", truth["valid_fixtures"] == 20)
-    check("mutations", truth["retained_rejected_mutations"] == 100)
+    check("outcome_total", outcomes["proposal_count"] == 40 and outcomes["selected_inherited_count"] == 40)
+    check("outcome_distribution", Counter(row["observed_outcome"] for row in outcomes["outcomes"]) == Counter({"completed": 30, "represented": 8, "open_gap": 1, "exact_gate": 1}))
+    check("valid_fixtures", truth["valid_fixtures"] == 40)
+    check("mutations", truth["retained_rejected_mutations"] == 200)
     check("candidate_prototypes", truth["candidate_prototypes_completed"] == 10)
     check("cleanup", truth["cleanup_reviews_completed"] == 30)
     check("skills", skills["all_valid"] and skills["valid_skill_count"] == 10)
     check("runners", runners["all_built_tested_used"] and runners["valid_runner_count"] == 10 and runners["runner_count"] == 10)
     check("latest_scan", scan["selected_file_count"] == 5000 and scan["confirmed_high_risk_count"] == 0)
-    check("method_flow", method["valid"] and method["method_count"] == 109 and method["witness_count"] == 218)
+    check("method_flow", method["valid"] and method["method_count"] == 207 and method["witness_count"] == 414)
     check("meta_tool", toolbox["valid"] and toolbox["card_count"] == 20)
     check("lifecycle_failure_count", lifecycle["operational_failure_count"] == len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + closeout_failure_count)
     check("lifecycle_arithmetic", lifecycle["effective_negatives"] == expected_negatives and lifecycle["effective_methods"] == expected_methods)
     check("final_method_pair", flow["method_count"] == closeout_failure_count and flow["witness_count"] == closeout_failure_count * 2)
-    check("evidence_receipt", evidence["x2_evidence"] == EVIDENCE_COMMIT and evidence["retained_mutations"] == 100)
+    check("evidence_receipt", evidence["x2_evidence"] == EVIDENCE_COMMIT and evidence["retained_mutations"] == 200)
     check("gate_register", open_gates["current_open_gaps"] == expected_gaps and open_gates["current_exact_gates"] == expected_gates and open_gates["closed_by_phase"] == 0)
     check("checklist_route_held", "single_acknowledged_send" in checklist["incomplete"])
-    check("route_tamar", route["next_exact_title"] == "Tamar Vey" and route["next_phase"] == "v659-v7")
+    check("route_tamar", route["next_exact_title"] == "Elowen Cairn" and route["next_phase"] == "v659-v8")
     check("route_after_tamar", route["recipient_next_exact_title"] == "Elowen Cairn" and route["recipient_next_phase"] == "v659-v8")
     check("route_unsent", route["state"] == "HELD_UNTIL_TAMAR_EXACT_TERMINAL_GATE" and not route["message_sent"] and not route["task_lookup_performed"])
     check("tavian_standby", route["tavian_sol_state"] == "ON_STANDBY")
     check("baton_words", len(re.findall(r"\b[\w'-]+\b", baton, flags=re.UNICODE)) >= 10_000)
-    check("baton_prepared", "PREPARED_BY_LIORA_VENN = true" in baton and "SENT_BY_LIORA_VENN = false" in baton)
-    check("baton_route", "ACTIVATION_TARGET_EXACT_TITLE = Tamar Vey" in baton and "ACTIVATION_TARGET_PHASE = v659-v7" in baton)
+    check("baton_prepared", "PREPARED_BY_TAMAR_VEY = true" in baton and "SENT_BY_TAMAR_VEY = false" in baton)
+    check("baton_route", "ACTIVATION_TARGET_EXACT_TITLE = Elowen Cairn" in baton and "ACTIVATION_TARGET_PHASE = v659-v8" in baton)
     check("privacy", privacy["confirmed_hit_count"] == 0 and not privacy["privacy_complete"])
     check("document_cap", cap["passes"] and cap["activation_packet_words"] >= 10_000)
-    check("delta_manifest", delta["entry_count"] == len(delta["entries"]) and len(delta["self_exclusions"]) == 4)
+    check("delta_manifest", delta["entry_count"] == len(delta["entries"]) and len(delta["self_exclusions"]) == 5)
     check("owner_manifest", owner["entry_count"] > 220 and owner["below_threshold"] and len(owner["self_exclusions"]) == 3)
     check("staged_review", staged["valid"] and staged["staged_path_count"] > 0 and staged["all_owner_closeout_updates"] and not staged["outside_declared_final_surface"])
     check("accessible_report", (PHASE / "deliverables/v659-v7-accessible-static-report.html").is_file())

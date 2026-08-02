@@ -8,11 +8,12 @@ import json
 from pathlib import Path
 
 import ghc_family_v659_v7_x2_data as d
+from build_ghc_family_v659_v7_closeout import FINAL_FAILURES
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
-EVIDENCE_COMMIT = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
+EVIDENCE_COMMIT = "75ac1f029fec3477d064ccacc622c5b7e914affc"
 
 
 def load(relative: str):
@@ -24,9 +25,9 @@ def validate_minimal() -> dict:
     route = load("route/prepared-route.json")
     privacy = load("validation/closeout-privacy-scan.json")
     owner = load("final/final-owner-manifest.json")
-    closeout_failure_count = 8
-    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
-    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
+    closeout_failure_count = len(FINAL_FAILURES)
+    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 200 + closeout_failure_count
+    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 200 + closeout_failure_count
     checks = {
         "owner": truth["owner"] == "Tamar Vey",
         "phase": truth["phase"] == "v659-v7",
@@ -39,7 +40,7 @@ def validate_minimal() -> dict:
         "gaps": truth["effective_open_gaps"] == d.SOURCE_OPEN_GAPS + d.EXPECTED_DISTRIBUTION["open_gap"],
         "gates": truth["effective_exact_gates"] == d.SOURCE_EXACT_GATES + d.EXPECTED_DISTRIBUTION["exact_gate"],
         "not_ready": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
-        "route": route["next_exact_title"] == "Tamar Vey" and route["next_phase"] == "v659-v7",
+        "route": route["next_exact_title"] == "Elowen Cairn" and route["next_phase"] == "v659-v8",
         "recipient_next_reserved": route["recipient_next_exact_title"] == "Elowen Cairn" and route["recipient_next_phase"] == "v659-v8",
         "unsent": not route["message_sent"] and route["state"] == "HELD_UNTIL_TAMAR_EXACT_TERMINAL_GATE",
         "privacy_and_manifest": privacy["confirmed_hit_count"] == 0 and owner["below_threshold"],
