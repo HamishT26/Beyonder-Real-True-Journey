@@ -12,7 +12,7 @@ import ghc_family_v659_v6_x2_data as d
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
-EVIDENCE_COMMIT = "__V6596_X2_EVIDENCE_COMMIT__"
+EVIDENCE_COMMIT = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
 
 
 def load(relative: str):
