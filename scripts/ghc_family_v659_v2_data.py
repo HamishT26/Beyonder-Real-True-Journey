@@ -22,7 +22,7 @@ SOURCE_BRANCH = "codex/GHC-Family/ilyra-fen-v659-v1-full-tools"
 SOURCE_FINAL = "ab753c3449836e292d6219b478e9ed9146530c92"
 SOURCE_X1 = "3406580c1bd9c3bb525125b885216df3c414fef7"
 SOURCE_EVIDENCE = "88f4734cda8049c887ad7ba12df088e63737c929"
-X1_FREEZE = "supplied-by-post-commit-receipt"
+X1_FREEZE = "78b0cb714b8c0d0c86aaf2fd0503a9a3d4db5f01"
 PRIOR_FROZEN = 2930
 SOURCE_SEALED_NEGATIVES = 18317
 SOURCE_EXTERNAL_NEGATIVES = 6
@@ -419,4 +419,41 @@ STARTUP_FAILURES = [
     },
 ]
 
-X2_FAILURES: list[dict[str, object]] = []
+X2_FAILURES: list[dict[str, object]] = [
+    {
+        "negative_id": "V6592-X2-N001",
+        "signature": "combined-post-x1-equality-wrapper-returned-no-usable-receipt",
+        "recovery": "Retain the wrapper failure at zero credit, then split local, upstream, tracking, fresh-live, divergence, ancestry, commit-delta, and cleanliness checks into bounded literal probes.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6592-X2-N002",
+        "signature": "initial-x2-build-wrapper-returned-before-original-child-reached-terminal-state",
+        "recovery": "Do not launch a duplicate build or scan; retain the wrapper failure and monitor the exact original Python PID plus declared scan and truth paths until the original process exits.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6592-X2-N003",
+        "signature": "bounded-wait-process-wrapper-returned-no-usable-probe-output",
+        "recovery": "Retain the wait-wrapper failure, avoid replay, and use direct short PID and exact-artifact probes until the original process exits with one complete scan and truth packet.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6592-X2-N004",
+        "signature": "combined-governance-probe-assumed-nonexistent-skill-state-subdirectories",
+        "recovery": "Use the exact references/current-roster.json and references/current-state.json locations declared by the fully read roster and authorization skills, then validate them read-only.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6592-X2-N005",
+        "signature": "windows-rg-rejected-literal-wildcard-reference-paths",
+        "recovery": "Search each exact skill root with a -g '*.md' filter or read the declared reference paths literally; do not pass wildcard text as a Windows path.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6592-X2-N006",
+        "signature": "method-flow-validator-and-summary-stdout-exceeded-wrapper-output-budget",
+        "recovery": "Keep the complete on-disk receipts, update the changed-input ledger for this retained failure, suppress bulk stdout on the isolated validation and summary commands, and read only exact scalar counts.",
+        "recovery_passed": True,
+    },
+]
