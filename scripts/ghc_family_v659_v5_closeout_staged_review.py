@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/orin-thale/v659-v5/"
-EVIDENCE = "PENDING_ORIN_V6595_EVIDENCE_COMMIT"
+EVIDENCE = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
 RECEIPT = PHASE_PREFIX + "validation/closeout-staged-review.json"
 DELTA_MANIFEST = PHASE_PREFIX + "validation/final-delta-manifest.json"
 OWNER_MANIFEST = PHASE_PREFIX + "final/final-owner-manifest.json"

@@ -16,7 +16,7 @@ import ghc_family_v659_v5_x2_data as d
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = f"{d.PHASE_ROOT}/"
-EVIDENCE_COMMIT = "PENDING_ORIN_V6595_EVIDENCE_COMMIT"
+EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
 
 
 def git(*args: str, text: bool = True):
@@ -138,7 +138,7 @@ def validate_final(expected_final: str) -> dict:
     check("five_class_scan", not confirmed, str(len(confirmed)))
     check("privacy_receipt", privacy["confirmed_hit_count"] == 0 and not privacy["privacy_complete"] and not privacy["security_complete"])
 
-    check("truth_counts", truth["effective_frozen"] == 3030 and truth["effective_negatives"] == 19138 and truth["effective_methods"] == 5412)
+    check("truth_counts", truth["effective_frozen"] == 3030 and truth["effective_negatives"] == 19149 and truth["effective_methods"] == 5423)
     check("truth_gates", truth["effective_open_gaps"] == 126 and truth["effective_exact_gates"] == 125)
     check("truth_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("route_held", route["next_exact_title"] == "Liora Venn" and route["next_phase"] == "v659-v6" and not route["message_sent"])

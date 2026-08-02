@@ -12,7 +12,7 @@ import ghc_family_v659_v5_x2_data as d
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
-EVIDENCE_COMMIT = "PENDING_ORIN_V6595_EVIDENCE_COMMIT"
+EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
 
 
 def load(relative: str):
@@ -31,8 +31,8 @@ def validate_minimal() -> dict:
         "x1": truth["x1_freeze"] == d.X1_FREEZE,
         "evidence": truth["x2_evidence"] == EVIDENCE_COMMIT,
         "frozen": truth["effective_frozen"] == 3030,
-        "negatives": truth["effective_negatives"] == 19138,
-        "methods": truth["effective_methods"] == 5412,
+        "negatives": truth["effective_negatives"] == 19149,
+        "methods": truth["effective_methods"] == 5423,
         "gaps": truth["effective_open_gaps"] == 126,
         "gates": truth["effective_exact_gates"] == 125,
         "not_ready": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",

@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/orin-thale/v659-v5"
-EVIDENCE = "PENDING_ORIN_V6595_EVIDENCE_COMMIT"
+EVIDENCE = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
 
 
 def load(relative: str):
@@ -26,8 +26,8 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
         self.assertEqual("Orin Thale", truth["owner"])
         self.assertEqual("v659-v5", truth["phase"])
         self.assertEqual(3030, truth["effective_frozen"])
-        self.assertEqual(19138, truth["effective_negatives"])
-        self.assertEqual(5412, truth["effective_methods"])
+        self.assertEqual(19149, truth["effective_negatives"])
+        self.assertEqual(5423, truth["effective_methods"])
         self.assertEqual(126, truth["effective_open_gaps"])
         self.assertEqual(125, truth["effective_exact_gates"])
         self.assertEqual("NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
@@ -51,38 +51,38 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
         self.assertEqual("ON_STANDBY", route["tavian_sol_state"])
 
     def test_baton_is_long_prepared_and_unsent(self) -> None:
-        baton = (PHASE / "handoffs/successor-live-reverification-activation.md").read_text(encoding="utf-8")
+        baton = (PHASE / "handoffs/liora-venn-v659-v6-activation.md").read_text(encoding="utf-8")
         self.assertGreaterEqual(len(re.findall(r"\b[\w'-]+\b", baton, flags=re.UNICODE)), 10_000)
-        self.assertIn("PREPARED_BY_CAELEN_ASH = true", baton)
-        self.assertIn("SENT_BY_CAELEN_ASH = false", baton)
-        self.assertIn("ACTIVATION_TARGET_EXACT_TITLE = LIVE_REVERIFICATION_REQUIRED", baton)
-        self.assertIn("NEXT_AFTER_CAELEN = LIVE_REVERIFICATION_REQUIRED", baton)
+        self.assertIn("PREPARED_BY_ORIN_THALE = true", baton)
+        self.assertIn("SENT_BY_ORIN_THALE = false", baton)
+        self.assertIn("ACTIVATION_TARGET_EXACT_TITLE = Liora Venn", baton)
+        self.assertIn("ACTIVATION_TARGET_PHASE = v659-v6", baton)
         self.assertNotRegex(baton, r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b")
 
-    def test_baton_has_forty_dossiers(self) -> None:
-        baton = (PHASE / "handoffs/successor-live-reverification-activation.md").read_text(encoding="utf-8")
-        for number in range(1, 41):
+    def test_baton_has_twenty_new_orin_dossiers(self) -> None:
+        baton = (PHASE / "handoffs/liora-venn-v659-v6-activation.md").read_text(encoding="utf-8")
+        for number in range(1, 21):
             self.assertIn(f"### {number:02d}. `V6595-P{number:03d}`", baton)
 
     def test_baton_has_no_trailing_whitespace(self) -> None:
-        baton = (PHASE / "handoffs/successor-live-reverification-activation.md").read_text(encoding="utf-8")
+        baton = (PHASE / "handoffs/liora-venn-v659-v6-activation.md").read_text(encoding="utf-8")
         self.assertTrue(all(line == line.rstrip() for line in baton.splitlines()))
 
     def test_outcomes_remain_exactly_four_labels(self) -> None:
         rows = load("evidence/proposal-outcomes.json")["outcomes"]
         counts = {label: sum(row["observed_outcome"] == label for row in rows) for label in {row["observed_outcome"] for row in rows}}
-        self.assertEqual({"completed": 33, "represented": 5, "open_gap": 1, "exact_gate": 1}, counts)
+        self.assertEqual({"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}, counts)
 
     def test_lifecycle_preserves_all_failures(self) -> None:
         lifecycle = load("final/lifecycle-summary.json")
-        self.assertEqual(26, lifecycle["operational_failure_count"])
+        self.assertEqual(38, lifecycle["operational_failure_count"])
         self.assertEqual(100, lifecycle["retained_mutation_failure_count"])
         self.assertTrue(all(row["credit"] == 0 and row["retained"] for row in lifecycle["operational_failures"]))
 
     def test_final_method_flow_pairs_every_closeout_failure(self) -> None:
         flow = load("final/lifecycle-method-flow.json")
-        self.assertEqual(3, flow["method_count"])
-        self.assertEqual(6, flow["witness_count"])
+        self.assertEqual(6, flow["method_count"])
+        self.assertEqual(12, flow["witness_count"])
         self.assertEqual({"fail", "pass"}, {row["result"] for row in flow["witnesses"]})
 
     def test_open_gate_register_closes_nothing(self) -> None:
@@ -106,7 +106,7 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
 
     def test_accessible_static_report_has_table_structure(self) -> None:
         report = (PHASE / "deliverables/v659-v5-accessible-static-report.html").read_text(encoding="utf-8")
-        self.assertIn("<caption>Forty bounded proposal outcomes</caption>", report)
+        self.assertIn("<caption>Twenty bounded Orin proposal outcomes</caption>", report)
         self.assertIn('scope="col"', report)
         self.assertIn('scope="row"', report)
         self.assertIn("not complete accessibility conformance", report)
@@ -179,7 +179,7 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
 
     def test_every_phase_json_file_parses(self) -> None:
         files = list(PHASE.rglob("*.json"))
-        self.assertGreater(len(files), 250)
+        self.assertGreater(len(files), 200)
         for path in files:
             json.loads(path.read_text(encoding="utf-8"))
 

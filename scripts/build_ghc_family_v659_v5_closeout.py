@@ -16,7 +16,7 @@ import ghc_family_v659_v5_x2_data as d
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
-EVIDENCE_COMMIT = "PENDING_ORIN_V6595_EVIDENCE_COMMIT"
+EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
 BATON_PATH = f"{d.PHASE_ROOT}/handoffs/liora-venn-v659-v6-activation.md"
 FINAL_CODE = [
     "scripts/build_ghc_family_v659_v5_closeout.py",
@@ -52,6 +52,36 @@ FINAL_FAILURES = [
         "negative_id": "V6595-FINAL-N001",
         "signature": "first-inherited-closeout-inspection-batch-exceeded-the-output-budget-and-returned-a-truncated-window",
         "recovery": "Retain the truncated read at zero credit and reread the exact file in bounded numbered windows before editing.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N002",
+        "signature": "first-closeout-builder-wrote-the-baton-under-a-stale-generic-filename-then-failed-when-the-declared-liora-path-was-missing-from-manifest-materialization",
+        "recovery": "Retain the failed builder and stale generated path at zero credit, remove only that owner-local uncommitted byproduct, bind the write to the declared Liora baton path, then regenerate the complete closeout surface.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N003",
+        "signature": "first-closeout-suite-passed-thirteen-of-twenty-three-tests-with-six-stale-assertion-failures-and-four-pre-staging-or-stale-path-errors",
+        "recovery": "Retain the entire failed aggregate at zero credit, correct only Orin-specific baton, outcome, lifecycle, route, caption, and JSON-floor assertions, stage the exact final surface before requiring staged-review fields, then rerun the unchanged twenty-three-test suite.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N004",
+        "signature": "first-detailed-closeout-validator-stopped-before-scoring-because-it-still-resolved-the-obsolete-generic-successor-baton-filename",
+        "recovery": "Retain the zero-credit validator failure, bind the detailed validator to the declared Liora v659-v6 baton, regenerate dependent receipts, and rerun only the changed detailed check before the final aggregate.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N005",
+        "signature": "second-detailed-closeout-validator-passed-thirty-four-of-forty-checks-and-retained-six-stale-caelen-or-pre-final-expectations",
+        "recovery": "Retain the 34-of-40 aggregate at zero credit, bind the six checks to Orin's twenty-row outcome distribution, 113-method x2 ledger, current lifecycle counts, and exact Liora baton markers, then rerun only the changed detailed validator.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N006",
+        "signature": "first-bounded-detailed-failure-extractor-omitted-the-scripts-import-root-and-stopped-before-returning-failed-check-names",
+        "recovery": "Retain the import fault at zero credit, add only the repository scripts directory to the in-memory diagnostic import path, and project the six failed check rows without writing repository state.",
         "recovery_passed": True,
     },
 ]
@@ -442,7 +472,7 @@ def build() -> None:
         raise RuntimeError("Orin new-proposal or inherited-revalidation evidence set is incomplete")
 
     baton = build_baton(truth, contracts, source["rows"], scan)
-    write_text("handoffs/successor-live-reverification-activation.md", baton)
+    write_text("handoffs/liora-venn-v659-v6-activation.md", baton)
     write_text(
         "deliverables/v659-v5-accessible-static-report.html",
         accessible_report(contracts),
@@ -641,7 +671,7 @@ def build() -> None:
             "tavian_sol_state": "ON_STANDBY",
             "bulk_or_parallel_activation_authorized": False,
             "historical_successor_inference_authorized": False,
-            "newest_live_exact_title_required": False,
+            "newest_live_exact_title_required": True,
             "exact_title_supplied_by_live_authorization": True,
             "stop_conditions": [
                 "user_pause",

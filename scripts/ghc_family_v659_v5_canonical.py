@@ -225,7 +225,7 @@ def main() -> int:
             "remote_before": before, "remote_after": after,
             "history": {
                 "source": d.SOURCE_FINAL, "x1": d.X1_FREEZE,
-                "evidence": "PENDING_ORIN_V6595_EVIDENCE_COMMIT",
+                "evidence": "b4d56650ec4f607c29536659a3bd9998ee9c9bfc",
                 "phase_commits": int(git("rev-list", "--count", f"{d.SOURCE_FINAL}..{head}")),
                 "merge_commits": int(git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{head}")),
             },
