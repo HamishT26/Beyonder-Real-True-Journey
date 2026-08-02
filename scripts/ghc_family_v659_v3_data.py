@@ -22,7 +22,7 @@ SOURCE_BRANCH = "codex/GHC-Family/auren-lark-v659-v2-full-tools"
 SOURCE_FINAL = "465eba78f05f21716017ff9ba346a2617bc82142"
 SOURCE_X1 = "78b0cb714b8c0d0c86aaf2fd0503a9a3d4db5f01"
 SOURCE_EVIDENCE = "a74bfb1d4b9b457d5c49595b42cf24ca70ac1156"
-X1_FREEZE = "supplied-by-post-commit-receipt"
+X1_FREEZE = "3cb76380d33dd177154e6308f13c04cf5b5e900a"
 PRIOR_FROZEN = 2950
 SOURCE_SEALED_NEGATIVES = 18538
 SOURCE_EXTERNAL_NEGATIVES = 7
@@ -740,4 +740,65 @@ LEGACY_TEMPLATE_X2_FAILURES: list[dict[str, object]] = [
     },
 ]
 
-X2_FAILURES: list[dict[str, object]] = []
+X2_FAILURES: list[dict[str, object]] = [
+    {
+        "negative_id": "V6593-X2-N001",
+        "signature": "parallel-post-push-equality-wrapper-returned-no-full-cleanliness-receipt-within-its-bounded-window",
+        "recovery": "Retain the missing row at zero credit, verify no Git process remains, and run one separate exact full-status probe before declaring x1 clean.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N002",
+        "signature": "first-bulk-terminology-rewrite-used-case-insensitive-powershell-hash-keys-and-failed-before-file-mutation",
+        "recovery": "Retain the parser failure at zero credit and use an ordered pair list so upper- and lower-case replacements remain distinct.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N003",
+        "signature": "broad-current-tree-run-evaluated-the-immutable-x1-manifest-against-the-advanced-x2-data-file",
+        "recovery": "Retain the named x1 failure, exclude no eligible x2 test, and materialize the exact x1 Git archive for the later immutable-x1 selection.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N004",
+        "signature": "broad-current-tree-run-evaluated-the-x1-no-x2-surface-assertion-after-authorized-x2-materialization",
+        "recovery": "Retain the named x1 failure and bind x1 phase-separation credit only to the exact x1 commit tree in the later canonical selection.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N005",
+        "signature": "x2-manifest-hash-was-stale-after-the-current-x2-test-expectations-were-corrected",
+        "recovery": "Retain the named manifest failure, regenerate the self-excluding x2 manifest after all current code edits, and rerun only the eligible x2 selection.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N006",
+        "signature": "first-evidence-surface-inventory-summary-was-drowned-by-inherited-line-ending-diagnostics",
+        "recovery": "Retain the missing scalar at zero credit and rerun the read-only path inventory with command-local normalization disabled and stderr suppressed.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N007",
+        "signature": "first-full-evidence-index-reviewer-outlived-its-wrapper-and-returned-no-attributable-receipt",
+        "recovery": "Retain the missing receipt, wait for the exact read-only process to exit, and replace per-path Git process startup with one indexed-object map plus one drained batch reader.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N008",
+        "signature": "bounded-wait-wrapper-for-the-original-reviewer-yielded-without-a-usable-process-state-receipt",
+        "recovery": "Retain the wait failure and use short direct PID, CPU, and child-process probes until the original reviewer exits; do not launch a duplicate while it remains alive.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N009",
+        "signature": "valid-second-staged-review-pass-lost-its-combined-postflight-summary-to-line-ending-warning-noise",
+        "recovery": "Keep the valid staged-review receipt, retain the wrapper loss separately, and run receipt cleanliness and diff hygiene as warning-free scalar probes.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6593-X2-N010",
+        "signature": "first-diff-hygiene-probe-found-crlf-carriage-returns-throughout-mechanically-copied-x2-templates",
+        "recovery": "Retain the hygiene failure and normalize only the Sable-owned x2 code and test text to LF before regenerating manifests and restaging.",
+        "recovery_passed": True,
+    },
+]
