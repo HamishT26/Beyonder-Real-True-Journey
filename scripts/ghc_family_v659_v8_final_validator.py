@@ -62,7 +62,7 @@ def validate_final(expected_final: str) -> dict:
     check("final_parent", git("rev-parse", f"{head}^").strip() == EVIDENCE_COMMIT)
     commits = int(git("rev-list", "--count", f"{d.SOURCE_FINAL}..{head}").strip())
     merges = int(git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{head}").strip())
-    check("three_phase_commits", commits == 3, str(commits))
+    check("four_phase_commits", commits == 4, str(commits))
     check("zero_merges", merges == 0, str(merges))
     commit_rows = [row for row in git("rev-list", "--reverse", f"{d.SOURCE_FINAL}..{head}").splitlines() if row]
     one_parent = all(len(git("rev-list", "--parents", "-n", "1", row).split()) == 2 for row in commit_rows)

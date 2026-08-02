@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/elowen-cairn/v659-v8"
 EVIDENCE = "38c529d2aaa6387830d06102ab19ed9735d5f0af"
-CLOSEOUT = EVIDENCE
+CLOSEOUT = "703ca7f42b246ef04089dd0ff69c573f45f88891"
 
 
 def load(relative: str):
@@ -106,7 +106,7 @@ class ElowenV659V8CloseoutTests(unittest.TestCase):
         seal = load("final/closeout-seal-receipt.json")
         self.assertEqual("PRECOMMIT_CANDIDATE", seal["state"])
         self.assertEqual(CLOSEOUT, seal["planned_final_parent"])
-        self.assertEqual(3, seal["expected_phase_commits"])
+        self.assertEqual(4, seal["expected_phase_commits"])
         self.assertTrue(seal["canonical_pass_required_after_commit"])
         self.assertTrue(seal["route_held"])
 

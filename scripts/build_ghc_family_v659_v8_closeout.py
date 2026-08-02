@@ -17,10 +17,11 @@ import ghc_family_v659_v8_x2_data as d
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
 EVIDENCE_COMMIT = "38c529d2aaa6387830d06102ab19ed9735d5f0af"
-# Elowen uses one combined closeout/seal commit directly after immutable x2
-# evidence. The final hash is supplied by the later sender pointer because a
+# The first combined closeout/seal commit remains immutable. This correction is
+# built directly from it so the canonical raw-x1 loader can carry its complete
+# inherited import closure. The final hash is supplied externally because a
 # commit cannot truthfully contain its own identifier.
-CLOSEOUT_COMMIT = EVIDENCE_COMMIT
+CLOSEOUT_COMMIT = "703ca7f42b246ef04089dd0ff69c573f45f88891"
 BATON_PATH = f"{d.PHASE_ROOT}/handoffs/terminal-route-pending-live-reread.md"
 FINAL_CODE = [
     "scripts/build_ghc_family_v659_v8_closeout.py",
@@ -156,6 +157,48 @@ FINAL_FAILURES: list[dict[str, object]] = [
         },
         "recurrence_guard": "Never perform scalar arithmetic on an unbounded Select-String result; use Select-Object -First 1 or literal line windows.",
         "rollback": "The failed inspection was read-only and changed no repository state.",
+        "credit": 0,
+    },
+    {
+        "method_id": "V6598-FINAL-N006",
+        "negative_id": "V6598-FINAL-N006",
+        "category": "raw_x1_dependency_preflight",
+        "signature": "committed-canonical-raw-x1-loader-omitted-the-v659-v7-v659-v6-v659-v5-inherited-data-import-closure",
+        "recovery": "Before the one canonical invocation, add the three exact committed inherited data modules to raw-blob materialization and preserve the preflight catch at zero credit.",
+        "recovery_passed": True,
+        "failed_witness": {
+            "attempt": 1,
+            "status": "preflight_rejected_zero_credit",
+            "observed": "Static import-closure inspection showed that v659-v8 data imports v659-v7, which imports v659-v6, which imports v659-v5, while the committed loader materialized none of those dependencies.",
+        },
+        "passing_witness": {
+            "attempt": 2,
+            "status": "bounded_recovery",
+            "observed": "The correction materializes all three exact dependencies from the immutable x1 commit before executing the raw x1 tests.",
+        },
+        "recurrence_guard": "Resolve recursive imports from the exact frozen test and data modules before authorizing the canonical pass; never spend the one pass on a known-incomplete loader.",
+        "rollback": "No canonical aggregate or test was invoked before the dependency omission was corrected.",
+        "credit": 0,
+    },
+    {
+        "method_id": "V6598-FINAL-N007",
+        "negative_id": "V6598-FINAL-N007",
+        "category": "inspection_scope_bound",
+        "signature": "broad-commit-history-search-included-large-generated-proposal-index-and-truncated-the-display",
+        "recovery": "Restrict history-label inspection to the seven closeout scripts, one closeout test, and exact bounded generated files rather than the complete owner document tree.",
+        "recovery_passed": True,
+        "failed_witness": {
+            "attempt": 1,
+            "status": "failed_zero_credit",
+            "observed": "The broad read-only search traversed the large frozen-chain proposal index and exceeded the available display context.",
+        },
+        "passing_witness": {
+            "attempt": 2,
+            "status": "bounded_recovery",
+            "observed": "Subsequent commit-history inspection is constrained to exact files and bounded line windows.",
+        },
+        "recurrence_guard": "Exclude large generated ledgers from label searches unless the exact field is queried with a narrow JSON projection.",
+        "rollback": "The truncated search was read-only and changed no repository state.",
         "credit": 0,
     }
 ]
@@ -296,8 +339,8 @@ def build_baton(
         f"- Frozen Elowen x1: `{d.X1_FREEZE}`.",
         f"- Immutable Elowen x2 evidence: `{EVIDENCE_COMMIT}`.",
         "- The exact Elowen final is supplied by the later sender pointer because the commit containing this packet cannot truthfully contain its own hash.",
-        f"- Combined closeout build base: `{CLOSEOUT_COMMIT}`.",
-        "- Source to final is expected to contain exactly three new single-parent commits and zero merges: x1 freeze, x2 evidence, and combined closeout/seal.",
+        f"- Immutable first combined closeout/seal: `{CLOSEOUT_COMMIT}`.",
+        "- Source to final is expected to contain exactly four new single-parent commits and zero merges: x1 freeze, x2 evidence, combined closeout/seal, and the narrow canonical-loader correction.",
         "",
         "## Frozen truth carried forward",
         "",
@@ -378,7 +421,7 @@ def build_baton(
             "## Successor startup contract",
             "",
             "1. Read this activation packet completely through EOF before mutation, then read the newest applicable GHC Family Index routing reference, Method Flow schema, authorization state, roster state, workflow-refinement guidance, reflection-remaster guidance, and current memory required by the live task.",
-            "2. Reverify Elowen's exact branch and exact final head, source/x1/evidence/final ancestry, three-commit single-parent zero-merge history, clean state, manifests, retained failed receipts, one attributable successful canonical receipt, and fresh live four-way equality read-only.",
+            "2. Reverify Elowen's exact branch and exact final head, source/x1/evidence/first-closeout/final ancestry, four-commit single-parent zero-merge history, clean state, manifests, retained failed receipts, one attributable successful canonical receipt, and fresh live four-way equality read-only.",
             "3. Do not replay Elowen's successful canonical aggregate or treat inherited validation as successor evidence. Retain all failed attempts, scanner candidates, manifest exclusions, open gaps, and exact gates at zero credit.",
             "4. Work solo in one additive owner-controlled D-first lane unless a newer exact live instruction changes that boundary. Preserve sibling, source, shared, and standby lanes read-only.",
             "5. Preserve strict x1-before-x2 separation. Freeze genuinely distinct proposals and bounded portfolios before implementation, commit and push x1, then prove x1 four-way equality before x2 mutation.",
@@ -657,8 +700,8 @@ def build() -> None:
             "lifecycle": "terminal_final_candidate",
             "x2_evidence": EVIDENCE_COMMIT,
             "closeout_build_base": CLOSEOUT_COMMIT,
-            "first_closeout": None,
-            "source_to_final_expected_commits": 3,
+            "first_closeout": CLOSEOUT_COMMIT,
+            "source_to_final_expected_commits": 4,
             "source_to_final_expected_merges": 0,
             "route_state": "HELD_FOR_NEWEST_LIVE_ROUTE_REREAD_AFTER_EXACT_TERMINAL_GATE",
             "canonical_pass_state": "NOT_RUN_FINAL_CANDIDATE_REQUIRED",
@@ -732,11 +775,11 @@ def build() -> None:
             "schema": "ghc.family.closeout-seal-receipt.v1",
             "state": "PRECOMMIT_CANDIDATE",
             "evidence_commit": EVIDENCE_COMMIT,
-            "first_closeout": None,
+            "first_closeout": CLOSEOUT_COMMIT,
             "closeout_build_base": CLOSEOUT_COMMIT,
-            "planned_final_parent": EVIDENCE_COMMIT,
+            "planned_final_parent": CLOSEOUT_COMMIT,
             "phase_commit_cap": 4,
-            "expected_phase_commits": 3,
+            "expected_phase_commits": 4,
             "zero_merges_required": True,
             "one_parent_required": True,
             "canonical_pass_required_after_commit": True,
@@ -806,7 +849,7 @@ def build() -> None:
             "steps": [
                 "exact_head_and_clean_before",
                 "source_x1_evidence_final_ancestry",
-                "three_commits_zero_merges_one_parent_each",
+                "four_commits_zero_merges_one_parent_each",
                 "authorized_raw_blob_x1_x2_closeout_tests",
                 "detailed_minimal_and_final_validators",
                 "all_phase_json_parse",

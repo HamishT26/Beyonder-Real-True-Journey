@@ -21,14 +21,14 @@ Elowen Cairn is relational working language for this task. They/them served as w
 - Frozen Elowen x1: `045abaa3dd4486e7b4a9e5ca1404ff8297963c8d`.
 - Immutable Elowen x2 evidence: `38c529d2aaa6387830d06102ab19ed9735d5f0af`.
 - The exact Elowen final is supplied by the later sender pointer because the commit containing this packet cannot truthfully contain its own hash.
-- Combined closeout build base: `38c529d2aaa6387830d06102ab19ed9735d5f0af`.
-- Source to final is expected to contain exactly three new single-parent commits and zero merges: x1 freeze, x2 evidence, and combined closeout/seal.
+- Immutable first combined closeout/seal: `703ca7f42b246ef04089dd0ff69c573f45f88891`.
+- Source to final is expected to contain exactly four new single-parent commits and zero merges: x1 freeze, x2 evidence, combined closeout/seal, and the narrow canonical-loader correction.
 
 ## Frozen truth carried forward
 
 Elowen audited all 3,090 inherited frozen proposal rows, explicitly selected forty for bounded no-credit revalidation, and appended forty genuinely new proposals. Selected inherited rows were not reappended and received no Elowen novelty, outcome, mutation, or completion credit. The resulting chain has 3,130 rows. The forty Elowen outcomes are exactly 30 `completed`, 8 `represented`, 1 `open_gap`, and 1 `exact_gate`; no other core-outcome vocabulary is used.
 
-The direct final candidate preserves 19,776 effective negatives and 6,050 effective Method Flow methods, including 35 current operational failures and two hundred Elowen-preregistered rejected mutations. It preserves 129 open gaps and 128 exact gates. A recovery never converts its failed predecessor into a pass. The verdict remains `NOT_READY_FOR_STAGE_20`.
+The direct final candidate preserves 19,778 effective negatives and 6,052 effective Method Flow methods, including 37 current operational failures and two hundred Elowen-preregistered rejected mutations. It preserves 129 open gaps and 128 exact gates. A recovery never converts its failed predecessor into a pass. The verdict remains `NOT_READY_FOR_STAGE_20`.
 
 The primary Trinity Mandala focus was Freed ID and CBR Heart, while GMUT Mind and THOS Body remained explicit and protected. The bounded human-practice lens was synthetic cooperage intake and cask-record stewardship: component topology, custody, fill-state and environment lineage, intervention holds, accessibility, workload control, correction readback, and shift handover. It established no real title, ownership, custody, cask record, object examination, wood identification, opening, filling, pressure testing, steaming, heating, charring, tightening, cleaning, sampling, repair, movement, release, cooperage or conservation decision, food, beverage, chemical, structural, or worker-safety result, professional competence, privacy conclusion, legal or cultural authority, Māori authority, affected-party acceptance, empirical result, or production result.
 
@@ -662,6 +662,8 @@ Every row below remains a zero-credit failure even where its bounded recovery la
 - `V6598-FINAL-N003` — `first-closeout-build-used-final-failure-rows-without-the-required-negative-id-and-recovery-keys`. Recovery: Inspect the inherited failure_parts contract, add its required negative_id, recovery, and recovery_passed fields, and rerun only the failed closeout build dependency. Recovery witness passed: `true`.
 - `V6598-FINAL-N004` — `initial-successful-closeout-build-preceded-five-self-referential-manifest-and-receipt-outputs`. Recovery: Retain the initial candidate at zero terminal credit, let all declared self-referential outputs exist, then rerun only the deterministic closeout builder before staged validation. Recovery witness passed: `true`.
 - `V6598-FINAL-N005` — `bounded-line-wrapper-assumed-select-string-returned-one-hit-when-method-and-negative-identifiers-both-matched`. Recovery: Use literal fixed line windows or explicitly select the first match before scalar arithmetic, retaining the failed wrapper at zero credit. Recovery witness passed: `true`.
+- `V6598-FINAL-N006` — `committed-canonical-raw-x1-loader-omitted-the-v659-v7-v659-v6-v659-v5-inherited-data-import-closure`. Recovery: Before the one canonical invocation, add the three exact committed inherited data modules to raw-blob materialization and preserve the preflight catch at zero credit. Recovery witness passed: `true`.
+- `V6598-FINAL-N007` — `broad-commit-history-search-included-large-generated-proposal-index-and-truncated-the-display`. Recovery: Restrict history-label inspection to the seven closeout scripts, one closeout test, and exact bounded generated files rather than the complete owner document tree. Recovery witness passed: `true`.
 
 ## Tooling and Method Flow inheritance
 
@@ -672,7 +674,7 @@ Method Flow remains append-only. Tool-surface assumptions, truncated reads, asyn
 ## Successor startup contract
 
 1. Read this activation packet completely through EOF before mutation, then read the newest applicable GHC Family Index routing reference, Method Flow schema, authorization state, roster state, workflow-refinement guidance, reflection-remaster guidance, and current memory required by the live task.
-2. Reverify Elowen's exact branch and exact final head, source/x1/evidence/final ancestry, three-commit single-parent zero-merge history, clean state, manifests, retained failed receipts, one attributable successful canonical receipt, and fresh live four-way equality read-only.
+2. Reverify Elowen's exact branch and exact final head, source/x1/evidence/first-closeout/final ancestry, four-commit single-parent zero-merge history, clean state, manifests, retained failed receipts, one attributable successful canonical receipt, and fresh live four-way equality read-only.
 3. Do not replay Elowen's successful canonical aggregate or treat inherited validation as successor evidence. Retain all failed attempts, scanner candidates, manifest exclusions, open gaps, and exact gates at zero credit.
 4. Work solo in one additive owner-controlled D-first lane unless a newer exact live instruction changes that boundary. Preserve sibling, source, shared, and standby lanes read-only.
 5. Preserve strict x1-before-x2 separation. Freeze genuinely distinct proposals and bounded portfolios before implementation, commit and push x1, then prove x1 four-way equality before x2 mutation.

@@ -14,7 +14,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/elowen-cairn/v659-v8/"
 EVIDENCE = "38c529d2aaa6387830d06102ab19ed9735d5f0af"
-CLOSEOUT = EVIDENCE
+FIRST_CLOSEOUT = "703ca7f42b246ef04089dd0ff69c573f45f88891"
+CLOSEOUT = FIRST_CLOSEOUT
 RECEIPT = PHASE_PREFIX + "validation/closeout-staged-review.json"
 DELTA_MANIFEST = PHASE_PREFIX + "validation/final-delta-manifest.json"
 OWNER_MANIFEST = PHASE_PREFIX + "final/final-owner-manifest.json"
@@ -146,7 +147,7 @@ def main() -> int:
         "schema": "ghc.family.v659-v8.closeout-staged-review.v1",
         "lifecycle": "closeout_precommit",
         "evidence_commit": EVIDENCE,
-        "first_closeout": None,
+        "first_closeout": FIRST_CLOSEOUT,
         "direct_final_base": CLOSEOUT,
         "staged_path_count": len(staged),
         "reviewed_content_count": len(staged) - 1,

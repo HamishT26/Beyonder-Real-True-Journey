@@ -24,6 +24,11 @@ from ghc_family_v659_v8_validator import validate_phase
 
 ROOT = Path(__file__).resolve().parents[1]
 X1_TEST_MODULE = "tests.test_ghc_family_v659_v8_x1"
+X1_INHERITED_DATA_DEPENDENCIES = [
+    "scripts/ghc_family_v659_v7_data.py",
+    "scripts/ghc_family_v659_v6_data.py",
+    "scripts/ghc_family_v659_v5_data.py",
+]
 FINAL_TREE_TEST_MODULES = [
     "tests.test_ghc_family_v659_v8_x2",
     "tests.test_ghc_family_v659_v8_closeout",
@@ -72,6 +77,7 @@ def run_x1_tests(scratch_parent: Path) -> dict:
         manifest_path,
         "scripts/ghc_family_v659_v8_data.py",
         "tests/test_ghc_family_v659_v8_x1.py",
+        *X1_INHERITED_DATA_DEPENDENCIES,
     })
     exact_paths = sorted(materialized_paths)
     blobs: dict[str, bytes] = {}
@@ -115,6 +121,7 @@ def run_x1_tests(scratch_parent: Path) -> dict:
         "materialized_commit": d.X1_FREEZE,
         "materialization": "raw manifest-declared committed Git blobs in an external ephemeral D-first directory",
         "materialized_path_count": len(exact_paths),
+        "inherited_data_dependencies": X1_INHERITED_DATA_DEPENDENCIES,
         "manifest_entry_count": len(manifest["entries"]),
         "manifest_mismatch_count": len(manifest_mismatches),
         "tests_run": tests_run,

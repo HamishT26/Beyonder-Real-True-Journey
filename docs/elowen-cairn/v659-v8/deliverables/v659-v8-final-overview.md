@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Elowen froze x1 at `045abaa3dd4486e7b4a9e5ca1404ff8297963c8d` and sealed immutable x2 evidence at `38c529d2aaa6387830d06102ab19ed9735d5f0af`. The direct final candidate preserves 3,130 frozen proposals, 19,776 effective negatives, 6,050 effective methods, 129 open gaps, 128 exact gates, and `NOT_READY_FOR_STAGE_20`. The forty Elowen outcomes are 30 completed, 8 represented, 1 open gap, and 1 exact gate. Same-owner validation is not independent reproduction.
+Elowen froze x1 at `045abaa3dd4486e7b4a9e5ca1404ff8297963c8d` and sealed immutable x2 evidence at `38c529d2aaa6387830d06102ab19ed9735d5f0af`. The direct final candidate preserves 3,130 frozen proposals, 19,778 effective negatives, 6,052 effective methods, 129 open gaps, 128 exact gates, and `NOT_READY_FOR_STAGE_20`. The forty Elowen outcomes are 30 completed, 8 represented, 1 open gap, and 1 exact gate. Same-owner validation is not independent reproduction.
 
 ## What changed
 
