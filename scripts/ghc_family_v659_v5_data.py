@@ -1270,7 +1270,7 @@ SOURCE_FINAL = "3ce23aede614994bdec1e700a98388166bcb0334"
 SOURCE_X1 = "8f1d7f05d3e79ede4b6579a68f1e0d901eba8669"
 SOURCE_EVIDENCE = "f8b5273a21820aab0de5a462dbe99b804088efa9"
 SOURCE_CLOSEOUT_BASE = SOURCE_FINAL
-X1_FREEZE = "pending_until_x2"
+X1_FREEZE = "17058d117f4f57c0b5a8e13e9046264499fbce62"
 
 PRIOR_FROZEN = 3010
 SOURCE_SEALED_NEGATIVES = 19006
@@ -1727,7 +1727,86 @@ STARTUP_FAILURES = [
 ]
 
 PREFILLED_X1_X2_FAILURES_IGNORED = [*TEMPLATE_X2_FAILURES]
-X2_FAILURES: list[dict[str, object]] = []
+X2_FAILURES: list[dict[str, object]] = [
+    {
+        "negative_id": "V6595-X2-N001",
+        "signature": "post-x1-full-status-reported-a-stat-only-inherited-receipt-modification-after-byte-exact-restoration",
+        "recovery": "Retain the stat-cache fault, compare the working clean-filter blob with the exact HEAD blob, require equality and an empty diff, then refresh only that exact path before any x2 mutation.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N002",
+        "signature": "exact-path-update-index-really-refresh-returned-needs-update-despite-proven-clean-filter-blob-equality",
+        "recovery": "Retain the refresh warning at zero credit, make no content change, and require both exact-path and complete-worktree porcelain to return empty before x2 starts.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N003",
+        "signature": "combined-x2-builder-content-and-hardcoded-term-inspection-exceeded-the-model-context-and-was-truncated",
+        "recovery": "Retain the oversized inspection at zero credit, split inspection into bounded line windows and targeted literal searches, and patch only after each inherited assumption is attributable.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N004",
+        "signature": "first-skill-validation-pass-rejected-all-ten-initialized-packages-because-skill-creator-metadata-omitted-the-default-prompt",
+        "recovery": "Retain the 0-of-10 validation at zero credit, add an explicit default_prompt that names each exact skill while preserving the generated display metadata, then rerun the validator only against the changed packages.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N005",
+        "signature": "parallel-reflection-remaster-invocation-produced-no-output-directory-or-attributable-receipt",
+        "recovery": "Retain the missing reflection surface at zero credit, isolate the exact current runner with one bounded focus value, require an explicit zero exit and the complete four-file receipt set before continuing.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N006",
+        "signature": "method-flow-summarizer-emitted-the-complete-preferred-method-list-and-truncated-the-tool-output-after-writing-valid-artifacts",
+        "recovery": "Retain the oversized stdout at zero credit, use the written UTF-8 summary artifacts as the evidence surface, suppress repetitive stdout on the changed-ledger rerun, and project only bounded count and validity fields.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N007",
+        "signature": "first-scoped-x2-suite-passed-twenty-checks-but-failed-the-three-page-overview-floor-at-899-words",
+        "recovery": "Retain the 20-of-21 scoped run at zero credit, add substantive source-use, workload, selected-revalidation, and falsification sections to the overview, regenerate dependent receipts, and rerun only the changed scoped x2 suite.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N008",
+        "signature": "first-219-path-evidence-staging-emitted-one-line-ending-warning-per-path-and-truncated-the-wrapper-output-after-staging-succeeded",
+        "recovery": "Retain the warning flood at zero credit, preserve the same Git clean conversion, suppress only safe-CRLF advisory output with core.safecrlf=false for the changed staging pass, and require exact staged Git-blob manifest parity before credit.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N009",
+        "signature": "post-warning-ledger-regeneration-wrapper-output-was-lost-when-the-tool-result-exceeded-the-active-context-budget",
+        "recovery": "Retain the lost wrapper output at zero credit, do not rerun credited work, and inspect the completed child exit plus exact bounded on-disk receipts before continuing.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N010",
+        "signature": "combined-status-and-method-flow-projection-repeated-line-ending-warning-noise-and-expanded-the-entire-preferred-method-ledger-until-output-truncated",
+        "recovery": "Retain the recurrence at zero credit, set command-local core.safecrlf=false for read-only diff probes, select only scalar Method Flow counts, and keep every later diagnostic below its explicit output budget.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N011",
+        "signature": "broad-repository-method-flow-command-search-returned-an-oversized-truncated-result-before-the-current-phase-command-was-isolated",
+        "recovery": "Retain the broad-search fault at zero credit, limit searches to the exact v659-v5 scripts or declared runner filenames, and inspect only bounded matching lines.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N012",
+        "signature": "first-exact-x2-staged-review-stopped-on-two-unadjudicated-transcript-or-session-privacy-candidates",
+        "recovery": "Retain the failed tribunal at zero credit, rewrite boundary prose without prohibited literal terms, classify only the exact reviewed scanner function and literal pattern as a scanner definition, then regenerate and rerun the unchanged-scope staged tribunal.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-X2-N013",
+        "signature": "first-privacy-recovery-would-have-modified-the-frozen-x1-generic-staged-reviewer-and-was-stopped-by-the-unstaged-surface-check",
+        "recovery": "Retain the stopped lifecycle violation at zero credit, restore the reviewer exactly to the x1 Git blob, and remove the self-trigger from the new x2 runtime's equivalent split-literal regex construction instead.",
+        "recovery_passed": True,
+    },
+]
 
 STARTUP_FAILURES.append(
     {
