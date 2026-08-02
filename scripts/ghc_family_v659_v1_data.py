@@ -22,7 +22,7 @@ SOURCE_BRANCH = "codex/GHC-Family/lyren-moss-v658-v8-2-remaster"
 SOURCE_FINAL = "4b76b0bd3cc47c8500d04f290f5b7a79329be9b3"
 SOURCE_X1 = "3b66443f8adb6c1cc13fd9b872f46565c2b42cfe"
 SOURCE_EVIDENCE = "e08a7bb24c9fc9c442374d251b985437a88ade11"
-X1_FREEZE = "PENDING_X1_FREEZE"
+X1_FREEZE = "3406580c1bd9c3bb525125b885216df3c414fef7"
 PRIOR_FROZEN = 2910
 SOURCE_SEALED_NEGATIVES = 18078
 SOURCE_EXTERNAL_NEGATIVES = 3
@@ -381,7 +381,7 @@ STARTUP_FAILURES = [
         "negative_id": "V6591-X1-N002",
         "signature": "current-roster-active-state-unsupported-by-validator",
         "recovery": "Additively align the roster checker and schema with the sanitized acknowledged-active current-state vocabulary, preserving all historical delivery states and route meaning.",
-        "recovery_passed": False,
+        "recovery_passed": True,
     },
     {
         "negative_id": "V6591-X1-N003",
@@ -451,4 +451,89 @@ STARTUP_FAILURES = [
     },
 ]
 
-X2_FAILURES: list[dict[str, object]] = []
+X2_FAILURES: list[dict[str, object]] = [
+    {
+        "negative_id": "V6591-X2-N001",
+        "signature": "post-x1-four-way-wrapper-left-unquoted-powershell-upstream-revision",
+        "recovery": "Quote the complete HEAD...@{u} revision argument and keep the fresh live-remote lookup in a separate bounded command.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N002",
+        "signature": "powershell-get-item-values-array-coerced-to-one-combined-path",
+        "recovery": "Pass the concrete destination array directly to -LiteralPath and inspect the four copied files independently.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N003",
+        "signature": "latest-file-scan-wrapper-returned-before-original-child-completed",
+        "recovery": "Do not launch a duplicate scan; retain the wrapper failure at zero credit and monitor the exact original process and receipt path until one bounded terminal state is observable.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N004",
+        "signature": "immediate-latest-file-scan-receipt-read-raced-the-live-child",
+        "recovery": "Treat the missing receipt as an incomplete live attempt, not a failed scan result, and inspect the original process plus exact output path before reading.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N005",
+        "signature": "bounded-wait-process-wrapper-ended-without-result-while-scan-remained-live",
+        "recovery": "Preserve the wait failure, avoid replay, and use short process and artifact probes until the original scan exits and its complete receipt parses.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N006",
+        "signature": "broad-roster-validator-search-output-truncated-before-state-context",
+        "recovery": "Search one validator keyword set, then read only the exact allowed-state and validation line windows from the script and schema.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N007",
+        "signature": "first-meta-tool-collision-pass-treated-shared-boundary-boilerplate-as-forty-five-trigger-collisions",
+        "recovery": "Exclude declared boundary boilerplate from trigger similarity, recognize exact skill-runner companion names, and rerun only collision analysis while retaining the first advisory receipt at zero credit.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N008",
+        "signature": "first-meta-tool-refinement-patch-used-a-stale-owner-line-preimage",
+        "recovery": "Inspect the exact bounded function window, update the patch preimage, and apply only the generic owner, phase, runner-discovery, evidence-state, and collision refinements.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N009",
+        "signature": "family-index-x1-output-directory-suffix-assumption-was-absent",
+        "recovery": "Retain the lookup miss, locate the exact prior family-index artifacts with a bounded file list, and invoke the documented builder into a new explicit x2 output directory.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N010",
+        "signature": "method-flow-validator-and-summary-printed-complete-large-receipts-and-truncated-wrapper-output",
+        "recovery": "Keep the complete on-disk receipts, suppress bulk stdout on the bounded rerun, and read only scalar validation counts from the exact JSON files.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N011",
+        "signature": "first-x2-git-add-emitted-hundreds-of-line-ending-warnings-and-truncated-wrapper-output",
+        "recovery": "Inspect the completed index state, retain the successful add without replay credit, and use core.safecrlf=false only for the later exact restage while verifying Git-clean blob hashes directly.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N012",
+        "signature": "first-staged-cat-file-batch-wrapper-deadlocked-on-bidirectional-pipe-backpressure",
+        "recovery": "Stop only the verified owner-local verifier processes, retain the deadlock at zero credit, and use subprocess communicate semantics so batch input and large blob output drain concurrently.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N013",
+        "signature": "second-staged-verifier-required-full-owner-manifest-paths-to-all-be-in-the-x2-delta",
+        "recovery": "Verify the complete manifest against current index blobs while checking the 248-path staged delta independently; retain the 39 unchanged x1 paths as covered current content.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6591-X2-N014",
+        "signature": "first-current-index-coverage-repair-subtracted-a-list-from-a-set",
+        "recovery": "Keep missing-index paths as a set through coverage arithmetic, then emit only deterministic scalar counts from the unchanged staged packet.",
+        "recovery_passed": True,
+    },
+]
