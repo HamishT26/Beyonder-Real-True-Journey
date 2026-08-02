@@ -24,8 +24,9 @@ def load(relative: str):
 def validate_phase() -> dict:
     checks: list[dict] = []
     expected_frozen = d.PRIOR_FROZEN + d.NEW_UNIQUE_COUNT
-    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100
-    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100
+    closeout_failure_count = 8
+    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
+    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
     expected_gaps = d.SOURCE_OPEN_GAPS + d.EXPECTED_DISTRIBUTION["open_gap"]
     expected_gates = d.SOURCE_EXACT_GATES + d.EXPECTED_DISTRIBUTION["exact_gate"]
 
@@ -70,11 +71,11 @@ def validate_phase() -> dict:
     check("skills", skills["all_valid"] and skills["valid_skill_count"] == 10)
     check("runners", runners["all_built_tested_used"] and runners["valid_runner_count"] == 10 and runners["runner_count"] == 10)
     check("latest_scan", scan["selected_file_count"] == 5000 and scan["confirmed_high_risk_count"] == 0)
-    check("method_flow", method["valid"] and method["method_count"] == 113)
+    check("method_flow", method["valid"] and method["method_count"] == 109 and method["witness_count"] == 218)
     check("meta_tool", toolbox["valid"] and toolbox["card_count"] == 20)
-    check("lifecycle_failure_count", lifecycle["operational_failure_count"] == 42)
+    check("lifecycle_failure_count", lifecycle["operational_failure_count"] == len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + closeout_failure_count)
     check("lifecycle_arithmetic", lifecycle["effective_negatives"] == expected_negatives and lifecycle["effective_methods"] == expected_methods)
-    check("final_method_pair", flow["method_count"] == 10 and flow["witness_count"] == 20)
+    check("final_method_pair", flow["method_count"] == closeout_failure_count and flow["witness_count"] == closeout_failure_count * 2)
     check("evidence_receipt", evidence["x2_evidence"] == EVIDENCE_COMMIT and evidence["retained_mutations"] == 100)
     check("gate_register", open_gates["current_open_gaps"] == expected_gaps and open_gates["current_exact_gates"] == expected_gates and open_gates["closed_by_phase"] == 0)
     check("checklist_route_held", "single_acknowledged_send" in checklist["incomplete"])

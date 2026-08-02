@@ -16,8 +16,8 @@ import ghc_family_v659_v6_x2_data as d
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = f"{d.PHASE_ROOT}/"
-EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
-CLOSEOUT_COMMIT = "f08cec3c2efc4ba068ebadc2d75654f5bb76c320"
+EVIDENCE_COMMIT = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
+CLOSEOUT_COMMIT = "a058dfa9875810781bbdf38d9b52285e55c35c9e"
 
 
 def git(*args: str, text: bool = True):
@@ -76,7 +76,7 @@ def validate_final(expected_final: str) -> dict:
         f"{d.PHASE_ROOT}/route/prepared-route.json",
         f"{d.PHASE_ROOT}/validation/final-document-cap.json",
         f"{d.PHASE_ROOT}/validation/closeout-privacy-scan.json",
-        f"{d.PHASE_ROOT}/handoffs/liora-venn-v659-v6-activation.md",
+        f"{d.PHASE_ROOT}/handoffs/tamar-vey-v659-v7-activation.md",
     ]
     initial = batch_blobs(head, manifest_paths)
     owner = json.loads(initial[manifest_paths[0]])
@@ -140,13 +140,13 @@ def validate_final(expected_final: str) -> dict:
     check("five_class_scan", not confirmed, str(len(confirmed)))
     check("privacy_receipt", privacy["confirmed_hit_count"] == 0 and not privacy["privacy_complete"] and not privacy["security_complete"])
 
-    check("truth_counts", truth["effective_frozen"] == 3030 and truth["effective_negatives"] == 19153 and truth["effective_methods"] == 5427)
-    check("truth_gates", truth["effective_open_gaps"] == 126 and truth["effective_exact_gates"] == 125)
+    check("truth_counts", truth["effective_frozen"] == 3050 and truth["effective_negatives"] == 19290 and truth["effective_methods"] == 5564)
+    check("truth_gates", truth["effective_open_gaps"] == 127 and truth["effective_exact_gates"] == 126)
     check("truth_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
-    check("route_held", route["next_exact_title"] == "Liora Venn" and route["next_phase"] == "v659-v6" and not route["message_sent"])
-    check("recipient_next_reserved", route["recipient_next_exact_title"] == "Tamar Vey" and route["recipient_next_phase"] == "v659-v7")
+    check("route_held", route["next_exact_title"] == "Tamar Vey" and route["next_phase"] == "v659-v7" and not route["message_sent"])
+    check("recipient_next_reserved", route["recipient_next_exact_title"] == "Elowen Cairn" and route["recipient_next_phase"] == "v659-v8")
     check("baton_words", len(re.findall(r"\b[\w'-]+\b", baton, flags=re.UNICODE)) >= 10_000)
-    check("baton_unsent", "SENT_BY_LIORA_THALE = false" in baton and "ACTIVATION_TARGET_EXACT_TITLE = Liora Venn" in baton)
+    check("baton_unsent", "SENT_BY_LIORA_VENN = false" in baton and "ACTIVATION_TARGET_EXACT_TITLE = Tamar Vey" in baton)
     check("document_cap", cap["passes"] and cap["activation_packet_words"] >= 10_000)
     check("no_trailing_whitespace", all(line == line.rstrip() for line in baton.splitlines()))
 

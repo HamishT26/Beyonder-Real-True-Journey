@@ -21,6 +21,9 @@ import ghc_family_v659_v6_x2_data as d  # noqa: E402
 
 
 PHASE = ROOT / d.PHASE_ROOT
+EVIDENCE_COMMIT = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
+
+
 def load(relative: str) -> dict:
     return json.loads((PHASE / relative).read_text(encoding="utf-8"))
 
@@ -253,11 +256,18 @@ class LioraV659V6X2Tests(unittest.TestCase):
         self.assertFalse(privacy["security_complete"])
 
     def test_x2_manifest_replays_declared_git_clean_bytes(self) -> None:
-        manifest = load("validation/x2-content-manifest.json")
+        manifest_path = f"{d.PHASE_ROOT}/validation/x2-content-manifest.json"
+        manifest = json.loads(subprocess.run(
+            ["git", "show", f"{EVIDENCE_COMMIT}:{manifest_path}"],
+            cwd=ROOT, check=True, capture_output=True, text=True, encoding="utf-8",
+        ).stdout)
         self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
         self.assertEqual("text bytes after CRLF-to-LF Git-clean normalization", manifest["hash_domain"])
         for row in manifest["entries"]:
-            payload = (ROOT / row["path"]).read_bytes().replace(b"\r\n", b"\n")
+            payload = subprocess.run(
+                ["git", "show", f"{EVIDENCE_COMMIT}:{row['path']}"],
+                cwd=ROOT, check=True, capture_output=True,
+            ).stdout.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
             self.assertEqual(row["bytes"], len(payload), row["path"])
             self.assertEqual(row["sha256"], hashlib.sha256(payload).hexdigest(), row["path"])
 

@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/liora-venn/v659-v6"
-EVIDENCE = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
-CLOSEOUT = "f08cec3c2efc4ba068ebadc2d75654f5bb76c320"
+EVIDENCE = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
+CLOSEOUT = "a058dfa9875810781bbdf38d9b52285e55c35c9e"
 
 
 def load(relative: str):
@@ -21,16 +21,16 @@ def clean(path: Path) -> bytes:
     return path.read_bytes().replace(b"\r\n", b"\n")
 
 
-class LioraV659V5CloseoutTests(unittest.TestCase):
+class LioraV659V6CloseoutTests(unittest.TestCase):
     def test_final_truth_counts_and_verdict(self) -> None:
         truth = load("final/final-truth.json")
         self.assertEqual("Liora Venn", truth["owner"])
         self.assertEqual("v659-v6", truth["phase"])
-        self.assertEqual(3030, truth["effective_frozen"])
-        self.assertEqual(19153, truth["effective_negatives"])
-        self.assertEqual(5427, truth["effective_methods"])
-        self.assertEqual(126, truth["effective_open_gaps"])
-        self.assertEqual(125, truth["effective_exact_gates"])
+        self.assertEqual(3050, truth["effective_frozen"])
+        self.assertEqual(19290, truth["effective_negatives"])
+        self.assertEqual(5564, truth["effective_methods"])
+        self.assertEqual(127, truth["effective_open_gaps"])
+        self.assertEqual(126, truth["effective_exact_gates"])
         self.assertEqual("NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
 
     def test_evidence_anchor_is_immutable(self) -> None:
@@ -42,31 +42,31 @@ class LioraV659V5CloseoutTests(unittest.TestCase):
         self.assertEqual(20, receipt["selected_inherited_revalidations"])
         self.assertEqual(100, receipt["retained_mutations"])
 
-    def test_route_is_liora_only_and_unsent(self) -> None:
+    def test_route_is_tamar_only_and_unsent(self) -> None:
         route = load("route/prepared-route.json")
-        self.assertEqual(("Liora Venn", "v659-v6"), (route["next_exact_title"], route["next_phase"]))
-        self.assertEqual(("Tamar Vey", "v659-v7"), (route["recipient_next_exact_title"], route["recipient_next_phase"]))
+        self.assertEqual(("Tamar Vey", "v659-v7"), (route["next_exact_title"], route["next_phase"]))
+        self.assertEqual(("Elowen Cairn", "v659-v8"), (route["recipient_next_exact_title"], route["recipient_next_phase"]))
         self.assertFalse(route["task_lookup_performed"])
         self.assertFalse(route["direct_reread_performed"])
         self.assertFalse(route["message_sent"])
         self.assertEqual("ON_STANDBY", route["tavian_sol_state"])
 
     def test_baton_is_long_prepared_and_unsent(self) -> None:
-        baton = (PHASE / "handoffs/liora-venn-v659-v6-activation.md").read_text(encoding="utf-8")
+        baton = (PHASE / "handoffs/tamar-vey-v659-v7-activation.md").read_text(encoding="utf-8")
         self.assertGreaterEqual(len(re.findall(r"\b[\w'-]+\b", baton, flags=re.UNICODE)), 10_000)
-        self.assertIn("PREPARED_BY_LIORA_THALE = true", baton)
-        self.assertIn("SENT_BY_LIORA_THALE = false", baton)
-        self.assertIn("ACTIVATION_TARGET_EXACT_TITLE = Liora Venn", baton)
-        self.assertIn("ACTIVATION_TARGET_PHASE = v659-v6", baton)
+        self.assertIn("PREPARED_BY_LIORA_VENN = true", baton)
+        self.assertIn("SENT_BY_LIORA_VENN = false", baton)
+        self.assertIn("ACTIVATION_TARGET_EXACT_TITLE = Tamar Vey", baton)
+        self.assertIn("ACTIVATION_TARGET_PHASE = v659-v7", baton)
         self.assertNotRegex(baton, r"\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b")
 
     def test_baton_has_twenty_new_liora_dossiers(self) -> None:
-        baton = (PHASE / "handoffs/liora-venn-v659-v6-activation.md").read_text(encoding="utf-8")
+        baton = (PHASE / "handoffs/tamar-vey-v659-v7-activation.md").read_text(encoding="utf-8")
         for number in range(1, 21):
             self.assertIn(f"### {number:02d}. `V6596-P{number:03d}`", baton)
 
     def test_baton_has_no_trailing_whitespace(self) -> None:
-        baton = (PHASE / "handoffs/liora-venn-v659-v6-activation.md").read_text(encoding="utf-8")
+        baton = (PHASE / "handoffs/tamar-vey-v659-v7-activation.md").read_text(encoding="utf-8")
         self.assertTrue(all(line == line.rstrip() for line in baton.splitlines()))
 
     def test_outcomes_remain_exactly_four_labels(self) -> None:
@@ -76,21 +76,21 @@ class LioraV659V5CloseoutTests(unittest.TestCase):
 
     def test_lifecycle_preserves_all_failures(self) -> None:
         lifecycle = load("final/lifecycle-summary.json")
-        self.assertEqual(42, lifecycle["operational_failure_count"])
+        self.assertEqual(37, lifecycle["operational_failure_count"])
         self.assertEqual(100, lifecycle["retained_mutation_failure_count"])
         self.assertTrue(all(row["credit"] == 0 and row["retained"] for row in lifecycle["operational_failures"]))
 
     def test_final_method_flow_pairs_every_closeout_failure(self) -> None:
         flow = load("final/lifecycle-method-flow.json")
-        self.assertEqual(10, flow["method_count"])
-        self.assertEqual(20, flow["witness_count"])
+        self.assertEqual(8, flow["method_count"])
+        self.assertEqual(16, flow["witness_count"])
         self.assertEqual({"fail", "pass"}, {row["result"] for row in flow["witnesses"]})
 
     def test_open_gate_register_closes_nothing(self) -> None:
         gates = load("final/open-gate-register.json")
         self.assertEqual(0, gates["closed_by_phase"])
-        self.assertEqual(126, gates["current_open_gaps"])
-        self.assertEqual(125, gates["current_exact_gates"])
+        self.assertEqual(127, gates["current_open_gaps"])
+        self.assertEqual(126, gates["current_exact_gates"])
 
     def test_completion_checklist_keeps_terminal_work_incomplete(self) -> None:
         checklist = load("final/completion-checklist.json")

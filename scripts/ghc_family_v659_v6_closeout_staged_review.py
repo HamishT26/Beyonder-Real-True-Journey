@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/liora-venn/v659-v6/"
 EVIDENCE = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
-CLOSEOUT = EVIDENCE
+CLOSEOUT = "a058dfa9875810781bbdf38d9b52285e55c35c9e"
 RECEIPT = PHASE_PREFIX + "validation/closeout-staged-review.json"
 DELTA_MANIFEST = PHASE_PREFIX + "validation/final-delta-manifest.json"
 OWNER_MANIFEST = PHASE_PREFIX + "final/final-owner-manifest.json"

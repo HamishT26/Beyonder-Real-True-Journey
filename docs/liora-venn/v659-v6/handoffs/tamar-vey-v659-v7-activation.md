@@ -21,14 +21,14 @@ Liora Venn is relational working language for this task. She/they worked as a re
 - Frozen Liora x1: `e76bc36a5fbfcebfa342d46e01bc4ff0125938cf`.
 - Immutable Liora x2 evidence: `72f9a62167d6d946e8fea5a7337fe12691cf475f`.
 - The exact Liora final is supplied by the later sender pointer because the commit containing this packet cannot truthfully contain its own hash.
-- First closeout base: `72f9a62167d6d946e8fea5a7337fe12691cf475f`.
+- First closeout base: `a058dfa9875810781bbdf38d9b52285e55c35c9e`.
 - Source to corrected final is expected to contain exactly four new single-parent commits and zero merges: x1 freeze, x2 evidence, first closeout, and one narrow terminal correction.
 
 ## Frozen truth carried forward
 
 Liora audited all 3,030 inherited frozen proposal rows, explicitly selected twenty for bounded no-credit revalidation, and appended twenty genuinely new proposals. Selected inherited rows were not reappended and received no Liora novelty, outcome, mutation, or completion credit. The resulting chain has 3,050 rows. The twenty Liora outcomes are exactly 14 `completed`, 4 `represented`, 1 `open_gap`, and 1 `exact_gate`; no other core-outcome vocabulary is used.
 
-The direct final candidate preserves 19,287 effective negatives and 5,561 effective Method Flow methods, including 34 current operational failures and one hundred Liora-preregistered rejected mutations. It preserves 127 open gaps and 126 exact gates. A recovery never converts its failed predecessor into a pass. The verdict remains `NOT_READY_FOR_STAGE_20`.
+The direct final candidate preserves 19,290 effective negatives and 5,564 effective Method Flow methods, including 37 current operational failures and one hundred Liora-preregistered rejected mutations. It preserves 127 open gaps and 126 exact gates. A recovery never converts its failed predecessor into a pass. The verdict remains `NOT_READY_FOR_STAGE_20`.
 
 The primary Trinity Mandala focus was GMUT Mind, while THOS Body and Freed ID/CBR Heart remained explicit and protected. The bounded human-practice lens was synthetic museum musical-instrument intake, custody, condition observation, keyboard and wind-instrument care reservations, environment and uncertainty records, accessibility, workload control, correction readback, and shift handover. It established no real ownership, custody, collection record, object examination, material identification, handling, playing, tuning, sampling, disassembly, cleaning, treatment, repair, conservation decision, safety result, professional competence, privacy conclusion, legal or cultural authority, Māori authority, affected-party acceptance, empirical result, or production result.
 
@@ -382,6 +382,9 @@ Every row below remains a zero-credit failure even where its bounded recovery la
 - `V6596-FINAL-N003` — `first-closeout-patch-was-atomically-rejected-after-prior-mechanical-owner-rewrites-invalidated-its-expected-context`. Recovery: Retain the zero-write stale-context rejection at zero credit, reread the exact current lines, and apply smaller exact-context patches. Recovery witness passed: `true`.
 - `V6596-FINAL-N004` — `first-lowercase-owner-substring-rewrite-also-corrupted-two-unrelated-english-words-in-copied-closeout-text`. Recovery: Retain the overbroad mechanical rewrite at zero credit, scan the bounded new files for impossible owner-token compounds, and repair only the two attributable words before generation. Recovery witness passed: `true`.
 - `V6596-FINAL-N005` — `first-quote-heavy-combined-ripgrep-stale-domain-expression-was-malformed-by-powershell-before-search-execution`. Recovery: Retain the malformed command at zero credit and recover with separate fixed-string selectors over the five exact new closeout files. Recovery witness passed: `true`.
+- `V6596-FINAL-N006` — `first-closeout-preflight-passed-twenty-two-of-twenty-three-tests-but-the-staged-review-assertion-ran-before-the-exact-review-replaced-the-planning-receipt`. Recovery: Retain the 22-of-23 preflight at zero aggregate credit, freeze every correction byte, run the exact staged reviewer once, and rerun only the previously blocked staged-review test. Recovery witness passed: `true`.
+- `V6596-FINAL-N007` — `first-detailed-closeout-preflight-passed-thirty-nine-of-forty-checks-and-retained-a-stale-three-exclusion-delta-expectation-after-the-document-cap-became-part-of-the-correction`. Recovery: Retain the 39-of-40 preflight at zero aggregate credit, inspect only the bounded receipt dependencies, and bind the assertion to the four exact active self-exclusions before rerunning the single failed condition. Recovery witness passed: `true`.
+- `V6596-FINAL-N008` — `first-bounded-stale-domain-sweep-printed-two-hundred-thirty-nine-intentional-inherited-upholstery-revalidation-matches-and-overfilled-its-output-window`. Recovery: Retain the truncated presentation at zero credit, classify those paths as frozen selected-inherited revalidation evidence with zero Liora credit, and preserve the separately proven zero obsolete-route, identity-marker, and fast-mode claim groups. Recovery witness passed: `true`.
 
 ## Tooling and Method Flow inheritance
 

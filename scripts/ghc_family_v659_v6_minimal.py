@@ -24,8 +24,9 @@ def validate_minimal() -> dict:
     route = load("route/prepared-route.json")
     privacy = load("validation/closeout-privacy-scan.json")
     owner = load("final/final-owner-manifest.json")
-    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100
-    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100
+    closeout_failure_count = 8
+    expected_negatives = d.ACTIVATION_NEGATIVES + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
+    expected_methods = d.ACTIVATION_METHODS + len(d.STARTUP_FAILURES) + len(d.X2_FAILURES) + 100 + closeout_failure_count
     checks = {
         "owner": truth["owner"] == "Liora Venn",
         "phase": truth["phase"] == "v659-v6",

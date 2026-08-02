@@ -20,7 +20,7 @@ EVIDENCE_COMMIT = "72f9a62167d6d946e8fea5a7337fe12691cf475f"
 # The first build is anchored directly to immutable x2 evidence. After that
 # candidate is committed, this pointer is replaced with its exact hash and the
 # same builder emits the narrow terminal correction.
-CLOSEOUT_COMMIT = EVIDENCE_COMMIT
+CLOSEOUT_COMMIT = "a058dfa9875810781bbdf38d9b52285e55c35c9e"
 BATON_PATH = f"{d.PHASE_ROOT}/handoffs/tamar-vey-v659-v7-activation.md"
 FINAL_CODE = [
     "scripts/build_ghc_family_v659_v6_closeout.py",
@@ -81,6 +81,24 @@ FINAL_FAILURES = [
         "negative_id": "V6596-FINAL-N005",
         "signature": "first-quote-heavy-combined-ripgrep-stale-domain-expression-was-malformed-by-powershell-before-search-execution",
         "recovery": "Retain the malformed command at zero credit and recover with separate fixed-string selectors over the five exact new closeout files.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6596-FINAL-N006",
+        "signature": "first-closeout-preflight-passed-twenty-two-of-twenty-three-tests-but-the-staged-review-assertion-ran-before-the-exact-review-replaced-the-planning-receipt",
+        "recovery": "Retain the 22-of-23 preflight at zero aggregate credit, freeze every correction byte, run the exact staged reviewer once, and rerun only the previously blocked staged-review test.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6596-FINAL-N007",
+        "signature": "first-detailed-closeout-preflight-passed-thirty-nine-of-forty-checks-and-retained-a-stale-three-exclusion-delta-expectation-after-the-document-cap-became-part-of-the-correction",
+        "recovery": "Retain the 39-of-40 preflight at zero aggregate credit, inspect only the bounded receipt dependencies, and bind the assertion to the four exact active self-exclusions before rerunning the single failed condition.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6596-FINAL-N008",
+        "signature": "first-bounded-stale-domain-sweep-printed-two-hundred-thirty-nine-intentional-inherited-upholstery-revalidation-matches-and-overfilled-its-output-window",
+        "recovery": "Retain the truncated presentation at zero credit, classify those paths as frozen selected-inherited revalidation evidence with zero Liora credit, and preserve the separately proven zero obsolete-route, identity-marker, and fast-mode claim groups.",
         "recovery_passed": True,
     },
 ]
