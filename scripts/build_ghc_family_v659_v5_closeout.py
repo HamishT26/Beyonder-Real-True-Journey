@@ -17,6 +17,7 @@ import ghc_family_v659_v5_x2_data as d
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
 EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
+CLOSEOUT_COMMIT = "f08cec3c2efc4ba068ebadc2d75654f5bb76c320"
 BATON_PATH = f"{d.PHASE_ROOT}/handoffs/liora-venn-v659-v6-activation.md"
 FINAL_CODE = [
     "scripts/build_ghc_family_v659_v5_closeout.py",
@@ -25,6 +26,7 @@ FINAL_CODE = [
     "scripts/ghc_family_v659_v5_final_validator.py",
     "scripts/ghc_family_v659_v5_closeout_staged_review.py",
     "scripts/ghc_family_v659_v5_canonical.py",
+    "tests/test_ghc_family_v659_v5_x2.py",
     "tests/test_ghc_family_v659_v5_closeout.py",
 ]
 GENERATED = [
@@ -82,6 +84,30 @@ FINAL_FAILURES = [
         "negative_id": "V6595-FINAL-N006",
         "signature": "first-bounded-detailed-failure-extractor-omitted-the-scripts-import-root-and-stopped-before-returning-failed-check-names",
         "recovery": "Retain the import fault at zero credit, add only the repository scripts directory to the in-memory diagnostic import path, and project the six failed check rows without writing repository state.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N007",
+        "signature": "first-exact-final-canonical-aggregate-earned-zero-credit-after-x1-passed-twenty-one-tests-but-two-final-tree-loader-errors-and-a-stale-final-validator-baton-path-stopped-the-run",
+        "recovery": "Retain the complete failed canonical receipt at zero credit, add the repository root only for current final-tree imports, bind the final validator to the committed Liora baton, seal one narrow correction commit, and use a fresh external JSON receipt for the next aggregate.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N008",
+        "signature": "first-stale-baton-search-passed-literal-wildcard-paths-to-ripgrep-on-windows-and-returned-path-syntax-errors",
+        "recovery": "Retain the Windows path fault at zero credit and search exact directory roots with a v659-v5 glob filter before editing the single attributable stale reference.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N009",
+        "signature": "first-correction-staging-observed-nineteen-real-changed-paths-against-a-static-twenty-five-path-closeout-declaration",
+        "recovery": "Retain the 19-of-25 mismatch at zero credit, derive the correction allowlist and manifest exclusions from the exact first-closeout-to-working-tree delta, and give byte-identical regenerated files no correction-delta credit.",
+        "recovery_passed": True,
+    },
+    {
+        "negative_id": "V6595-FINAL-N010",
+        "signature": "first-isolated-corrected-final-tree-helper-loaded-all-forty-four-tests-with-zero-errors-but-retained-one-working-tree-bound-x2-manifest-failure",
+        "recovery": "Retain the 43-of-44 helper result at zero credit, bind x2 manifest replay to raw normalized blobs from the immutable evidence commit, and leave later closeout bytes outside the x2 evidence-credit domain.",
         "recovery_passed": True,
     },
 ]
@@ -155,9 +181,11 @@ def failure_parts(row: Any) -> tuple[str, str, str, bool]:
     return str(row[0]), str(row[1]), str(row[2]), True
 
 
-def assert_evidence_head() -> None:
-    if git("rev-parse", "HEAD") != EVIDENCE_COMMIT:
-        raise RuntimeError(f"closeout requires exact x2 evidence head {EVIDENCE_COMMIT}")
+def assert_correction_base() -> None:
+    if git("rev-parse", "HEAD") != CLOSEOUT_COMMIT:
+        raise RuntimeError(f"correction requires exact first closeout head {CLOSEOUT_COMMIT}")
+    if git("rev-parse", f"{CLOSEOUT_COMMIT}^") != EVIDENCE_COMMIT:
+        raise RuntimeError("first closeout is not the direct child of x2 evidence")
     if git("rev-parse", f"{EVIDENCE_COMMIT}^") != d.X1_FREEZE:
         raise RuntimeError("x2 evidence is not the direct child of the frozen x1")
     if git("rev-parse", f"{d.X1_FREEZE}^") != d.SOURCE_FINAL:
@@ -166,6 +194,10 @@ def assert_evidence_head() -> None:
         raise RuntimeError("source-to-evidence commit count is not two")
     if git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{EVIDENCE_COMMIT}") != "0":
         raise RuntimeError("source-to-evidence history contains a merge")
+    if git("rev-list", "--count", f"{d.SOURCE_FINAL}..{CLOSEOUT_COMMIT}") != "3":
+        raise RuntimeError("source-to-first-closeout commit count is not three")
+    if git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{CLOSEOUT_COMMIT}") != "0":
+        raise RuntimeError("source-to-first-closeout history contains a merge")
 
 
 def source_table(rows: list[dict[str, Any]]) -> str:
@@ -210,7 +242,8 @@ def build_baton(
         f"- Frozen Orin x1: `{d.X1_FREEZE}`.",
         f"- Immutable Orin x2 evidence: `{EVIDENCE_COMMIT}`.",
         "- The exact Orin final is supplied by the later sender pointer because the commit containing this packet cannot truthfully contain its own hash.",
-        "- Source to final is expected to contain exactly three new single-parent commits and zero merges: x1 freeze, x2 evidence, and direct final closeout.",
+        f"- First closeout and failed-canonical base: `{CLOSEOUT_COMMIT}`.",
+        "- Source to corrected final is expected to contain exactly four new single-parent commits and zero merges: x1 freeze, x2 evidence, first closeout, and one narrow terminal correction.",
         "",
         "## Frozen truth carried forward",
         "",
@@ -291,7 +324,7 @@ def build_baton(
             "## Successor startup contract",
             "",
             "1. Read this activation packet completely through EOF before mutation, then read the newest applicable GHC Family Index routing reference, Method Flow schema, authorization state, roster state, workflow-refinement guidance, reflection-remaster guidance, and current memory required by the live task.",
-            "2. Reverify Orin's exact branch and exact final head, source/x1/evidence/final ancestry, three-commit single-parent zero-merge history, clean state, manifests, retained failed receipts, one attributable successful canonical receipt, and fresh live four-way equality read-only.",
+            "2. Reverify Orin's exact branch and exact final head, source/x1/evidence/first-closeout/corrected-final ancestry, four-commit single-parent zero-merge history, clean state, manifests, retained failed receipts, one attributable successful canonical receipt, and fresh live four-way equality read-only.",
             "3. Do not replay Orin's successful canonical aggregate or treat inherited validation as successor evidence. Retain all failed attempts, scanner candidates, manifest exclusions, open gaps, and exact gates at zero credit.",
             "4. Work solo in one additive owner-controlled D-first lane unless a newer exact live instruction changes that boundary. Preserve sibling, source, shared, and standby lanes read-only.",
             "5. Preserve strict x1-before-x2 separation. Freeze genuinely distinct proposals and bounded portfolios before implementation, commit and push x1, then prove x1 four-way equality before x2 mutation.",
@@ -447,7 +480,7 @@ def build_overview(
 
 
 def build() -> None:
-    assert_evidence_head()
+    assert_correction_base()
     truth = read_json("truth/x2-phase-truth.json")
     outcomes = read_json("evidence/proposal-outcomes.json")
     source = read_json("sources/official-source-ledger.json")
@@ -571,7 +604,8 @@ def build() -> None:
             "effective_methods": effective_methods,
             "lifecycle": "terminal_final_candidate",
             "x2_evidence": EVIDENCE_COMMIT,
-            "source_to_final_expected_commits": 3,
+            "first_closeout": CLOSEOUT_COMMIT,
+            "source_to_final_expected_commits": 4,
             "source_to_final_expected_merges": 0,
             "route_state": "HELD_UNTIL_ORIN_EXACT_TERMINAL_GATE",
             "canonical_pass_state": "NOT_RUN_FINAL_CANDIDATE_REQUIRED",
@@ -645,9 +679,10 @@ def build() -> None:
             "schema": "ghc.family.closeout-seal-receipt.v1",
             "state": "PRECOMMIT_CANDIDATE",
             "evidence_commit": EVIDENCE_COMMIT,
-            "planned_final_parent": EVIDENCE_COMMIT,
+            "first_closeout": CLOSEOUT_COMMIT,
+            "planned_final_parent": CLOSEOUT_COMMIT,
             "phase_commit_cap": 4,
-            "expected_phase_commits": 3,
+            "expected_phase_commits": 4,
             "zero_merges_required": True,
             "one_parent_required": True,
             "canonical_pass_required_after_commit": True,
@@ -695,7 +730,7 @@ def build() -> None:
             "solo": True,
             "subagents_spawned": 0,
             "commit_cap": 4,
-            "commits_planned": 3,
+            "commits_planned": 4,
             "latest_file_scan_cap": 5000,
             "latest_files_scanned": 5000,
             "human_control_preserved": True,
@@ -716,7 +751,7 @@ def build() -> None:
             "steps": [
                 "exact_head_and_clean_before",
                 "source_x1_evidence_final_ancestry",
-                "three_commits_zero_merges_one_parent_each",
+                "four_commits_zero_merges_one_parent_each",
                 "authorized_raw_blob_x1_x2_closeout_tests",
                 "detailed_minimal_and_final_validators",
                 "all_phase_json_parse",
@@ -731,7 +766,18 @@ def build() -> None:
         },
     )
 
-    expected_paths = sorted(set(FINAL_CODE + GENERATED))
+    declared_paths = set(FINAL_CODE + GENERATED)
+    correction_delta = {
+        path
+        for path in git("diff", "--name-only", CLOSEOUT_COMMIT).splitlines()
+        if path
+    }
+    outside_declared = correction_delta - declared_paths
+    if outside_declared:
+        raise RuntimeError(
+            f"correction contains {len(outside_declared)} paths outside the declared final surface"
+        )
+    expected_paths = sorted(correction_delta)
     write_json(
         "validation/closeout-staged-review.json",
         {
@@ -770,7 +816,8 @@ def build() -> None:
         },
     )
 
-    final_delta_paths = sorted(set(expected_paths) - MANIFEST_EXCLUSIONS)
+    active_manifest_exclusions = MANIFEST_EXCLUSIONS & set(expected_paths)
+    final_delta_paths = sorted(set(expected_paths) - active_manifest_exclusions)
     write_json(
         "validation/final-delta-manifest.json",
         {
@@ -778,7 +825,7 @@ def build() -> None:
             "hash_domain": "text bytes after CRLF-to-LF Git-clean normalization",
             "entry_count": len(final_delta_paths),
             "entries": [record(path) for path in final_delta_paths],
-            "self_exclusions": sorted(MANIFEST_EXCLUSIONS),
+            "self_exclusions": sorted(active_manifest_exclusions),
         },
     )
     owner_code = [

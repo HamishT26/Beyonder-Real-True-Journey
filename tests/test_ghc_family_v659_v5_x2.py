@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import sys
 import unittest
 from collections import Counter
@@ -20,6 +21,7 @@ import ghc_family_v659_v5_x2_data as d  # noqa: E402
 
 
 PHASE = ROOT / d.PHASE_ROOT
+EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
 
 
 def load(relative: str) -> dict:
@@ -254,14 +256,28 @@ class OrinV659V5X2Tests(unittest.TestCase):
         self.assertFalse(privacy["security_complete"])
 
     def test_x2_manifest_replays_declared_git_clean_bytes(self) -> None:
-        manifest = load("validation/x2-content-manifest.json")
+        manifest_path = f"{d.PHASE_ROOT}/validation/x2-content-manifest.json"
+        manifest = json.loads(
+            subprocess.run(
+                ["git", "show", f"{EVIDENCE_COMMIT}:{manifest_path}"],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+            ).stdout
+        )
         self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
         self.assertEqual("text bytes after CRLF-to-LF Git-clean normalization", manifest["hash_domain"])
         for row in manifest["entries"]:
-            path = ROOT / row["path"]
-            self.assertTrue(path.is_file(), row["path"])
-            self.assertEqual(row["bytes"], len(path.read_bytes().replace(b"\r\n", b"\n")), row["path"])
-            self.assertEqual(row["sha256"], sha256(path), row["path"])
+            payload = subprocess.run(
+                ["git", "show", f"{EVIDENCE_COMMIT}:{row['path']}"],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+            ).stdout.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+            self.assertEqual(row["bytes"], len(payload), row["path"])
+            self.assertEqual(row["sha256"], hashlib.sha256(payload).hexdigest(), row["path"])
 
     def test_document_cap_and_x2_overview_are_bounded(self) -> None:
         cap = load("validation/x2-document-cap.json")

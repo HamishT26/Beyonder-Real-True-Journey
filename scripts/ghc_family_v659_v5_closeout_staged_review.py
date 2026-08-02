@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = "docs/orin-thale/v659-v5/"
 EVIDENCE = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
+CLOSEOUT = "f08cec3c2efc4ba068ebadc2d75654f5bb76c320"
 RECEIPT = PHASE_PREFIX + "validation/closeout-staged-review.json"
 DELTA_MANIFEST = PHASE_PREFIX + "validation/final-delta-manifest.json"
 OWNER_MANIFEST = PHASE_PREFIX + "final/final-owner-manifest.json"
@@ -76,7 +77,7 @@ def normalized(payload: bytes) -> bytes:
 def main() -> int:
     staged = [row for row in str(git("diff", "--cached", "--name-only")).splitlines() if row]
     statuses = [row.split("\t", 1) for row in str(git("diff", "--cached", "--name-status")).splitlines() if row]
-    evidence_delta = {row for row in str(git("diff", "--name-only", EVIDENCE)).splitlines() if row}
+    correction_delta = {row for row in str(git("diff", "--name-only", CLOSEOUT)).splitlines() if row}
     oid_map = index_oids()
     seeds = batch_blobs([DELTA_MANIFEST, OWNER_MANIFEST], oid_map)
     delta = json.loads(seeds[DELTA_MANIFEST].decode("utf-8"))
@@ -90,10 +91,10 @@ def main() -> int:
 
     issues: list[str] = []
     declared_final_surface = set(delta_entries) | delta_exclusions
-    if evidence_delta != declared_final_surface:
+    if correction_delta != declared_final_surface:
         issues.append("delta_coverage")
-    if evidence_delta != set(staged):
-        issues.append("staged_evidence_delta")
+    if correction_delta != set(staged):
+        issues.append("staged_correction_delta")
     if set(staged) - declared_final_surface:
         issues.append("outside_declared_final_surface")
     if any(status not in {"A", "M"} for status, _path in statuses):
@@ -145,7 +146,8 @@ def main() -> int:
         "schema": "ghc.family.v659-v5.closeout-staged-review.v1",
         "lifecycle": "closeout_precommit",
         "evidence_commit": EVIDENCE,
-        "direct_final_base": EVIDENCE,
+        "first_closeout": CLOSEOUT,
+        "direct_final_base": CLOSEOUT,
         "staged_path_count": len(staged),
         "reviewed_content_count": len(staged) - 1,
         "receipt_self_exclusion": RECEIPT,

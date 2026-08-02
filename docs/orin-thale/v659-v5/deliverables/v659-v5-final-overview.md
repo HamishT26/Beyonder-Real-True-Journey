@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Orin froze x1 at `17058d117f4f57c0b5a8e13e9046264499fbce62` and sealed immutable x2 evidence at `b4d56650ec4f607c29536659a3bd9998ee9c9bfc`. The direct final candidate preserves 3,030 frozen proposals, 19,149 effective negatives, 5,423 effective methods, 126 open gaps, 125 exact gates, and `NOT_READY_FOR_STAGE_20`. The twenty Orin outcomes are 14 completed, 4 represented, 1 open gap, and 1 exact gate. Same-owner validation is not independent reproduction.
+Orin froze x1 at `17058d117f4f57c0b5a8e13e9046264499fbce62` and sealed immutable x2 evidence at `b4d56650ec4f607c29536659a3bd9998ee9c9bfc`. The direct final candidate preserves 3,030 frozen proposals, 19,153 effective negatives, 5,427 effective methods, 126 open gaps, 125 exact gates, and `NOT_READY_FOR_STAGE_20`. The twenty Orin outcomes are 14 completed, 4 represented, 1 open gap, and 1 exact gate. Same-owner validation is not independent reproduction.
 
 ## What changed
 

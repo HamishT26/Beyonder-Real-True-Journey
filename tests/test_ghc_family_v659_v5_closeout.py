@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/orin-thale/v659-v5"
 EVIDENCE = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
+CLOSEOUT = "f08cec3c2efc4ba068ebadc2d75654f5bb76c320"
 
 
 def load(relative: str):
@@ -26,8 +27,8 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
         self.assertEqual("Orin Thale", truth["owner"])
         self.assertEqual("v659-v5", truth["phase"])
         self.assertEqual(3030, truth["effective_frozen"])
-        self.assertEqual(19149, truth["effective_negatives"])
-        self.assertEqual(5423, truth["effective_methods"])
+        self.assertEqual(19153, truth["effective_negatives"])
+        self.assertEqual(5427, truth["effective_methods"])
         self.assertEqual(126, truth["effective_open_gaps"])
         self.assertEqual(125, truth["effective_exact_gates"])
         self.assertEqual("NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
@@ -75,14 +76,14 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
 
     def test_lifecycle_preserves_all_failures(self) -> None:
         lifecycle = load("final/lifecycle-summary.json")
-        self.assertEqual(38, lifecycle["operational_failure_count"])
+        self.assertEqual(42, lifecycle["operational_failure_count"])
         self.assertEqual(100, lifecycle["retained_mutation_failure_count"])
         self.assertTrue(all(row["credit"] == 0 and row["retained"] for row in lifecycle["operational_failures"]))
 
     def test_final_method_flow_pairs_every_closeout_failure(self) -> None:
         flow = load("final/lifecycle-method-flow.json")
-        self.assertEqual(6, flow["method_count"])
-        self.assertEqual(12, flow["witness_count"])
+        self.assertEqual(10, flow["method_count"])
+        self.assertEqual(20, flow["witness_count"])
         self.assertEqual({"fail", "pass"}, {row["result"] for row in flow["witnesses"]})
 
     def test_open_gate_register_closes_nothing(self) -> None:
@@ -100,7 +101,8 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
     def test_closeout_seal_is_precommit_candidate(self) -> None:
         seal = load("final/closeout-seal-receipt.json")
         self.assertEqual("PRECOMMIT_CANDIDATE", seal["state"])
-        self.assertEqual(EVIDENCE, seal["planned_final_parent"])
+        self.assertEqual(CLOSEOUT, seal["planned_final_parent"])
+        self.assertEqual(4, seal["expected_phase_commits"])
         self.assertTrue(seal["canonical_pass_required_after_commit"])
         self.assertTrue(seal["route_held"])
 
@@ -132,7 +134,7 @@ class OrinV659V5CloseoutTests(unittest.TestCase):
     def test_final_delta_manifest_replays_working_bytes(self) -> None:
         manifest = load("validation/final-delta-manifest.json")
         self.assertEqual(manifest["entry_count"], len(manifest["entries"]))
-        self.assertEqual(5, len(manifest["self_exclusions"]))
+        self.assertEqual(4, len(manifest["self_exclusions"]))
         for row in manifest["entries"]:
             data = clean(ROOT / row["path"])
             self.assertEqual(row["bytes"], len(data), row["path"])

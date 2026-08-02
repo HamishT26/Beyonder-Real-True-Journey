@@ -125,6 +125,9 @@ def run_x1_tests(scratch_parent: Path) -> dict:
 
 
 def run_final_tree_tests() -> dict:
+    root_text = str(ROOT)
+    if root_text not in sys.path:
+        sys.path.insert(0, root_text)
     loader = unittest.defaultTestLoader
     suite = unittest.TestSuite(loader.loadTestsFromName(name) for name in FINAL_TREE_TEST_MODULES)
     stream = io.StringIO()

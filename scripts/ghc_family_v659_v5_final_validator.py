@@ -17,6 +17,7 @@ import ghc_family_v659_v5_x2_data as d
 ROOT = Path(__file__).resolve().parents[1]
 PHASE_PREFIX = f"{d.PHASE_ROOT}/"
 EVIDENCE_COMMIT = "b4d56650ec4f607c29536659a3bd9998ee9c9bfc"
+CLOSEOUT_COMMIT = "f08cec3c2efc4ba068ebadc2d75654f5bb76c320"
 
 
 def git(*args: str, text: bool = True):
@@ -58,14 +59,15 @@ def validate_final(expected_final: str) -> dict:
     check("source_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", d.SOURCE_FINAL, head], cwd=ROOT).returncode == 0)
     check("x1_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", d.X1_FREEZE, head], cwd=ROOT).returncode == 0)
     check("evidence_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", EVIDENCE_COMMIT, head], cwd=ROOT).returncode == 0)
-    check("final_parent", git("rev-parse", f"{head}^").strip() == EVIDENCE_COMMIT)
+    check("first_closeout_ancestor", subprocess.run(["git", "merge-base", "--is-ancestor", CLOSEOUT_COMMIT, head], cwd=ROOT).returncode == 0)
+    check("final_parent", git("rev-parse", f"{head}^").strip() == CLOSEOUT_COMMIT)
     commits = int(git("rev-list", "--count", f"{d.SOURCE_FINAL}..{head}").strip())
     merges = int(git("rev-list", "--merges", "--count", f"{d.SOURCE_FINAL}..{head}").strip())
-    check("three_phase_commits", commits == 3, str(commits))
+    check("four_phase_commits", commits == 4, str(commits))
     check("zero_merges", merges == 0, str(merges))
     commit_rows = [row for row in git("rev-list", "--reverse", f"{d.SOURCE_FINAL}..{head}").splitlines() if row]
     one_parent = all(len(git("rev-list", "--parents", "-n", "1", row).split()) == 2 for row in commit_rows)
-    check("single_parent_history", one_parent and len(commit_rows) == 3)
+    check("single_parent_history", one_parent and len(commit_rows) == 4)
 
     manifest_paths = [
         f"{d.PHASE_ROOT}/final/final-owner-manifest.json",
@@ -74,7 +76,7 @@ def validate_final(expected_final: str) -> dict:
         f"{d.PHASE_ROOT}/route/prepared-route.json",
         f"{d.PHASE_ROOT}/validation/final-document-cap.json",
         f"{d.PHASE_ROOT}/validation/closeout-privacy-scan.json",
-        f"{d.PHASE_ROOT}/handoffs/successor-live-reverification-activation.md",
+        f"{d.PHASE_ROOT}/handoffs/liora-venn-v659-v6-activation.md",
     ]
     initial = batch_blobs(head, manifest_paths)
     owner = json.loads(initial[manifest_paths[0]])
@@ -104,7 +106,7 @@ def validate_final(expected_final: str) -> dict:
         if len(data) != row["bytes"] or hashlib.sha256(data).hexdigest() != row["sha256"]:
             delta_mismatch.append(row["path"])
     check("delta_manifest_replay", not delta_mismatch, str(len(delta_mismatch)))
-    final_delta = {p for p in git("diff", "--name-only", EVIDENCE_COMMIT, head).splitlines() if p}
+    final_delta = {p for p in git("diff", "--name-only", CLOSEOUT_COMMIT, head).splitlines() if p}
     delta_covered = set(delta_entry_paths) | set(delta["self_exclusions"])
     check("delta_coverage", final_delta == delta_covered, f"git={len(final_delta)} declared={len(delta_covered)}")
 
@@ -138,13 +140,13 @@ def validate_final(expected_final: str) -> dict:
     check("five_class_scan", not confirmed, str(len(confirmed)))
     check("privacy_receipt", privacy["confirmed_hit_count"] == 0 and not privacy["privacy_complete"] and not privacy["security_complete"])
 
-    check("truth_counts", truth["effective_frozen"] == 3030 and truth["effective_negatives"] == 19149 and truth["effective_methods"] == 5423)
+    check("truth_counts", truth["effective_frozen"] == 3030 and truth["effective_negatives"] == 19153 and truth["effective_methods"] == 5427)
     check("truth_gates", truth["effective_open_gaps"] == 126 and truth["effective_exact_gates"] == 125)
     check("truth_verdict", truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20")
     check("route_held", route["next_exact_title"] == "Liora Venn" and route["next_phase"] == "v659-v6" and not route["message_sent"])
     check("recipient_next_reserved", route["recipient_next_exact_title"] == "Tamar Vey" and route["recipient_next_phase"] == "v659-v7")
     check("baton_words", len(re.findall(r"\b[\w'-]+\b", baton, flags=re.UNICODE)) >= 10_000)
-    check("baton_unsent", "SENT_BY_CAELEN_ASH = false" in baton and "ACTIVATION_TARGET_EXACT_TITLE = LIVE_REVERIFICATION_REQUIRED" in baton)
+    check("baton_unsent", "SENT_BY_ORIN_THALE = false" in baton and "ACTIVATION_TARGET_EXACT_TITLE = Liora Venn" in baton)
     check("document_cap", cap["passes"] and cap["activation_packet_words"] >= 10_000)
     check("no_trailing_whitespace", all(line == line.rstrip() for line in baton.splitlines()))
 
