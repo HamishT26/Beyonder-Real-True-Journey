@@ -22,6 +22,7 @@ SOURCE_BRANCH = "codex/GHC-Family/lyren-moss-v658-v8-full-tools"
 SOURCE_FINAL = "f7a75175ca667e5d824d180436a9f77f8b6bd183"
 SOURCE_X1 = "3a7cc57b4d1637b4de1836648a57419422bb517f"
 SOURCE_EVIDENCE = "88a4d48e2b98494c0861996a8f61a7ea7c696fb6"
+X1_FREEZE = "3b66443f8adb6c1cc13fd9b872f46565c2b42cfe"
 PRIOR_FROZEN = 2890
 SOURCE_SEALED_NEGATIVES = 17853
 SOURCE_EXTERNAL_NEGATIVES = 4
@@ -369,4 +370,10 @@ STARTUP_FAILURES = [
     ("V6588R2-X1-N010", "legacy-startup-builder-help-token-triggered-default-v640-write", "Remove only the three invocation-owned legacy outputs, preserve inherited bytes, and gate the legacy builder as inapplicable to the remaster lane."),
     ("V6588R2-X1-N011", "staged-byte-mojibake-regex-console-transcoding-error", "Use literal UTF-8 byte containment for mojibake sentinels and rerun the staged-byte validator from the beginning."),
     ("V6588R2-X1-N012", "staged-manifest-line-ending-drift-and-unanchored-sk-prefix", "Normalize owner-packet text to LF before manifesting and anchor credential prefixes at a non-word boundary."),
+]
+
+X2_FAILURES = [
+    ("V6588R2-X2-N013", "guessed-prior-v658-v8-evidence-builder-missing", "Enumerate the verified v658-v8 filenames and import the existing runtime through its actual public functions."),
+    ("V6588R2-X2-N014", "powershell-empty-pipe-element-recurred-during-runner-collision-probe", "Materialize foreach results before piping, preserving the recurrence as a distinct zero-credit witness."),
+    ("V6588R2-X2-N015", "x2-overview-brittle-1100-word-test-floor", "Use the evidence-backed 1,000-word three-page floor and retain the failed arbitrary threshold at zero credit."),
 ]
