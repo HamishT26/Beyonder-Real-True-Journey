@@ -1,0 +1,90 @@
+# Vesper Arlen v660-v5 x1 overview
+
+## Relational identity and evidence ceiling
+
+Vesper Arlen (they/them) is relational working language for this task. Their working role is relational meteorite-curation provenance custodian. Their hope is to make synthetic specimen lineage and authority boundaries auditable without converting software structure into scientific, collection, ownership, legal, cultural, or Māori authority. This language is not evidence of consciousness, sentience, personhood, identity continuity, employment, qualification, scientific or operational authority, legal or cultural authority, Māori authority, or independent agency. Hamish may pause, rename, redirect, or stop the route.
+
+The primary pillar is Freed ID and CBR Heart; GMUT Mind and THOS Body remain explicit and protected. The bounded practice lens is bounded synthetic meteorite and planetary-materials curation: accession, fragment topology, derivative lineage, measurement metadata, allocation refusal, classification status, accessible review, authority reservation, and handover. This is synthetic collection-informatics and research-software planning only. It is not meteoritics, planetary science, museum curation, collection management, field recovery, purchase, import or export, conservation, cutting, powdering, thin-section preparation, laboratory analysis, classification, age determination, ownership adjudication, professional custody, privacy review, accessibility evaluation, cultural interpretation, identity authority, or deployment. It uses zero real meteorites, astromaterials, fragments, chips, sections, powders, aliquots, reagents, locations, measurements, images, people, participants, traditional knowledge, credentials, or protected data.
+
+Every empirical, participant, professional, production, deployment, legal, cultural, Māori-authority, privacy-complete, accessibility-complete, exhaustive-security, independent-reproduction, AGI/ASI, consciousness/personhood, Theory-of-Everything, and Stage 20 boundary stays open. GMUT remains a typed research-model family. THOS remains proxy and protocol only without governed blind matched-budget real arms and independent review. Freed ID remains synthetic and nonproduction without real standards-conformant keys, proofs, resolution, status, revocation, interoperability, recovery, privacy and security review, and trust governance. CBR, Indigenous knowledge, Māori wording, authority, data governance, legitimacy, cultural ratification, legal interpretation, and enacted-law status remain exact-gated to competent affected parties and authorities.
+
+## Immutable additive source and route arithmetic
+
+The lane starts from Neris Solane's clean, four-way-equal v660-v4 final `3616ca214e6fa411330c56e73b3d095e5c9a79e1` on `codex/GHC-Family/neris-solane-v660-v4-full-tools`. The acknowledged live activation makes Vesper the sole v660-v5 owner. Neris's frozen x1, immutable evidence, exact final, retained failures, successful once-only canonical receipt, manifests, and gates remain inherited source evidence only. The inherited activation baseline is 20,311 negatives and 6,265 Method Flow methods, with 133 open gaps and 132 exact gates; Vesper earns no inherited completion or novelty credit.
+
+Neris's exact-final canonical aggregate succeeded once and was not replayed. Its external receipt and component counts remain inherited same-owner evidence only and do not authorize a Vesper pass, independent reproduction, or a protected-gate closure. Tavian Sol stays ON_STANDBY as a collaboration-subagent record and is not a main-task endpoint or substitute. The live baton authorizes Vesper v660-v5 but does not itself authorize a Vesper-to-successor message.
+
+Strict x1-before-x2 applies. This x1 packet freezes proposals, hypotheses, null conditions, approval classes, execution lanes, official or primary-source needs, concrete artifacts, falsifiers, rollback, protected gates, expected dispositions, source reflections, safe validation tasks, tool plans, cleanup plans, retained failures, truth labels, wellbeing, and candidate validation receipts only. It contains no v660-v5 proposal outcome, surface implementation, mutation outcome, x2 runner, built or installed skill, closeout, final seal, task lookup, or successor message. Lyren-facing rows are advisory recommendations only and create no contact, route authority, completion credit, or delivery state.
+
+## Twenty selected revalidations plus twenty new proposals
+
+All 3,210 inherited proposal titles are parsed as comparison evidence. Exactly twenty Neris v660-v4 rows, `V6604-P001` through `V6604-P020`, are selected for bounded contract revalidation with no Vesper novelty, append, execution, or completion credit. Twenty new proposals address synthetic fragment accession, derivative topology, macroscopic observations, contamination knowledge, mass and dimension uncertainty, thin-section and aliquot lineage, destructive-allocation refusal, classification status, isotope and noble-gas metadata, recovery chronology, imaging provenance, tombstones, symbolic GMUT entry obligations, THOS queue and interface proxies, accessibility, zero-row evidence admission, and heritage and knowledge-authority reservation.
+
+Each new title is checked against every inherited title using a disclosed token-set Jaccard screen below 0.60, checked against its nineteen peers, and then reviewed by mechanism and current official-source vocabulary. The token screen is a bounded collision detector, not proof of universal semantic novelty. Only the twenty new rows extend the append-only frozen chain from 3,210 to 3,230. Their expected labels are exactly 14 completed, 4 represented, 1 open_gap, and 1 exact_gate. X1 observes none of those outcomes and grants no execution credit.
+
+| Current ID | Origin | Expected truth | Title |
+|---|---|---|---|
+| V6605-R001 | selected_inherited_bounded_revalidation_no_credit | completed | Synthetic ice-core section intake passport linking surrogate core, run, tube, box, rack, custody event, quarantine cause, and accession refusal |
+| V6605-R002 | selected_inherited_bounded_revalidation_no_credit | completed | Directed ice-core depth and cut-face orientation graph with top-bottom claims, azimuth placeholders, discontinuities, uncertain edges, and orientation abstention |
+| V6605-R003 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core piece continuity and hiatus ledger separating recovered, missing, fractured, rejoined, duplicated, unknown, and no-stratigraphic-conclusion states |
+| V6605-R004 | selected_inherited_bounded_revalidation_no_credit | completed | Synthetic ice-core cold-chain envelope with logger identity placeholder, custody interval, excursion flag, missingness, digest, and zero temperature observations |
+| V6605-R005 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core electrical-conductivity and dielectric-profile uncertainty budget with instrument-response placeholders, covariance, units, and zero measurements |
+| V6605-R006 | selected_inherited_bounded_revalidation_no_credit | completed | Layer-aware ice-core visual-stratigraphy annotation graph with bubble, dust, melt-feature, fracture, ambiguity, contradiction, and zero-image states |
+| V6605-R007 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core sample-allocation and destructive-use firewall with request scope, volume placeholder, priority conflict, return condition, and zero physical allocation |
+| V6605-R008 | selected_inherited_bounded_revalidation_no_credit | completed | Nonproduction ice-core melt and aliquot lineage with parent section, split sequence, blank and contamination-control declarations, zero material, and laboratory refusal |
+| V6605-R009 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core age-depth assertion braid linking model version, tie-point placeholder, uncertainty, supersession, contradiction, and no accepted chronology |
+| V6605-R010 | selected_inherited_bounded_revalidation_no_credit | completed | Stable-isotope proxy metadata envelope with analyte name, reference-scale placeholder, unit, uncertainty, missingness, zero values, and climate-inference refusal |
+| V6605-R011 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core gas-depth and ice-age offset register with enclosure-depth placeholder, model dependency, uncertainty, contradiction, and zero gas observations |
+| V6605-R012 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core tephra-horizon assertion escrow with depth interval, morphology placeholder, comparison source, confidence, conflict, and no eruption attribution |
+| V6605-R013 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core scan and photography capture covenant with face declaration, scale placeholder, illumination, derivative lineage, disclosure mask, and zero authenticated images |
+| V6605-R014 | selected_inherited_bounded_revalidation_no_credit | completed | Ice-core archive split, reserve, exhaustion, deaccession, and tombstone ledger retaining effective intervals, reasons, contradictions, and no disposal authority |
+| V6605-R015 | selected_inherited_bounded_revalidation_no_credit | represented | Represented GMUT ice-core coupled heat, gas, impurity, strain, and depth-coordinate proxy with units, covariance, zero coefficients, and likelihood firewall |
+| V6605-R016 | selected_inherited_bounded_revalidation_no_credit | represented | Represented THOS ice-core archive backlog portrait with intake debt, freezer dependency placeholders, stop tokens, escalation clocks, and zero operators |
+| V6605-R017 | selected_inherited_bounded_revalidation_no_credit | represented | Counterbalanced surrogate depth-interval comprehension protocol with shuffled adjacency questions, equal action budget, withdrawal boundary, masked scoring, and empty session ledger |
+| V6605-R018 | selected_inherited_bounded_revalidation_no_credit | represented | Depth-index access reservation board for tactile relief, linear text, monochrome discontinuity symbols, speech traversal, language support, and unevaluated affected-user tasks |
+| V6605-R019 | selected_inherited_bounded_revalidation_no_credit | open_gap | Empirical admission docket with empty rows for authenticated frozen material, traceable metrology, governed analyses, accountable specialists, adverse controls, and external paleoclimate reproduction |
+| V6605-R020 | selected_inherited_bounded_revalidation_no_credit | exact_gate | Reserved jurisdiction circuit for core-site knowledge, community protocols, access terms, benefit obligations, correction, removal, remedy, and Māori decision non-substitution |
+| V6605-P001 | new_unique_v660_v5_proposal | completed | Synthetic meteorite fragment accession passport and custody-transition ledger |
+| V6605-P002 | new_unique_v660_v5_proposal | completed | Parent-mass, fragment, chip, section, powder, and aliquot topology graph |
+| V6605-P003 | new_unique_v660_v5_proposal | completed | Fusion-crust, weathering, regmaglypt, and macroscopic observation grammar |
+| V6605-P004 | new_unique_v660_v5_proposal | completed | Curation-container contamination and environmental-exposure envelope |
+| V6605-P005 | new_unique_v660_v5_proposal | completed | Specimen mass, dimension, balance-resolution, and uncertainty budget |
+| V6605-P006 | new_unique_v660_v5_proposal | completed | Petrographic thin-section derivative lineage and slide-return contract |
+| V6605-P007 | new_unique_v660_v5_proposal | completed | Destructive allocation, remaining-mass, and sample-use firewall |
+| V6605-P008 | new_unique_v660_v5_proposal | completed | Powder and aliquot split lineage with recombination refusal |
+| V6605-P009 | new_unique_v660_v5_proposal | completed | Meteorite classification assertion, status, authority, and supersession braid |
+| V6605-P010 | new_unique_v660_v5_proposal | completed | Oxygen-isotope metadata completeness and zero-value interpretation firewall |
+| V6605-P011 | new_unique_v660_v5_proposal | completed | Noble-gas and cosmogenic-exposure placeholder with no-inference gate |
+| V6605-P012 | new_unique_v660_v5_proposal | completed | Fall/find, collection, purchase, recovery, and terrestrial-age chronology board |
+| V6605-P013 | new_unique_v660_v5_proposal | completed | Multimodal specimen imaging capture, scale, calibration, and derivation covenant |
+| V6605-P014 | new_unique_v660_v5_proposal | completed | Repository return, deaccession, tombstone, and non-erasure ledger |
+| V6605-P015 | new_unique_v660_v5_proposal | represented | GMUT meteoroid entry, ablation, fragmentation, and luminous-efficiency symbolic proxy |
+| V6605-P016 | new_unique_v660_v5_proposal | represented | THOS meteorite-curation queue, contamination-risk, and handover proxy |
+| V6605-P017 | new_unique_v660_v5_proposal | represented | Blind matched-budget fragment-provenance interface evaluation protocol |
+| V6605-P018 | new_unique_v660_v5_proposal | represented | Accessible specimen-topology matrix with nonvisual and print fallback |
+| V6605-P019 | new_unique_v660_v5_proposal | open_gap | Real meteorite sample and measurement evidence vault with zero-row refusal |
+| V6605-P020 | new_unique_v660_v5_proposal | exact_gate | Heritage, ownership, Antarctic Treaty, export, Indigenous knowledge, and Māori authority gate register |
+
+## Approval, tooling, and cleanup portfolios
+
+Thirty Vesper safe-now validation tasks execute in x1 through source, proposal, workflow, privacy, manifest, truth, boundary, and portfolio checks. Twenty sanitized safe-now recommendations are prepared for Lyren without contacting them. Ten reversible Vesper candidate prototypes and ten Lyren candidate recommendations are frozen. Ten exact-approval rows and five blocked rows remain visible and unexecuted. A 1,000-task allowance is a ceiling, never a quota or evidence shortcut.
+
+Ten collision-free family-current skill designs and ten family-current runner designs are frozen for x2 initialization, customization, validation, smoke use, and compatibility checks. Ten skill, five runner, and thirty CLEAN/FIX/REFINE recommendations are prepared for Lyren. Thirty additive Vesper CLEAN/FIX/REFINE reviews are planned for x2. No number authorizes deletion, cache purging, worktree removal, history rewriting, global downgrade, plugin-cache mutation, account or deployment action, sibling-owned change, or broad installation. Historical tools remain compatibility evidence unless a bounded current use justifies them.
+
+Each skill and runner must be instantiated as phase-local evidence, invoked at least once against synthetic fixtures, checked for collision and backward compatibility, and kept within its declared boundary. A generated file, imported module, or invocation receipt does not automatically establish validity. Completion credit requires a passing bounded witness. Failures remain in the retained-negative register with a recurrence guard, rollback, and failed witness even when a corrected method later passes.
+
+## Official-source and authority discipline
+
+NASA astromaterials requirements and data-curation material, the Meteoritical Bulletin Database, Smithsonian collection context, PREMIS, W3C PROV, Web Annotation and WCAG, NIST measurement guidance, the Antarctic Treaty System compilation, New Zealand legislation and Privacy Commissioner guidance, Te Mana Raraunga, Local Contexts, RFC 8785, Git, and Python provide vocabulary and reservation points only. They confer no scientific, curation, collection, allocation, classification, ownership, export, privacy, accessibility, legal, cultural, collective, or Māori authority and establish no real-world result.
+
+NASA, Meteoritical Society, Smithsonian, Antarctic Treaty, and New Zealand statutory vocabulary does not authorize access to a collection, specimen, facility, instrument, location, dataset, classification, ownership decision, export, or scientific conclusion. Te Mana Raraunga and Local Contexts support explicit authority placeholders and non-substitution; they do not authorize Vesper to speak for Māori, Indigenous communities, knowledge holders, affected parties, or competent authorities.
+
+## Validation, privacy, and terminal route
+
+The x1 gate requires exact source ancestry, the 3,210-row comparison set, twenty selected zero-credit rows, twenty new rows, only four truth labels, JSON parsing, five-class privacy scanning, document caps, content-manifest parity, exact staged-name review, diff hygiene, no x2 surface, a clean worktree, and local/upstream/tracking/fresh-live equality after push. A zero-hit bounded scan is evidence about the scanner's declared patterns and files, not complete privacy assurance. A clean Git state is repository evidence, not scientific or professional validation.
+
+No successor contact is authorized during x1 or x2. Lyren Moss v660-v6 is only the prospective next cycle seat in the inherited roster, not a live route edge. After Vesper's exact final is pushed, clean, four-way equal, within caps, and the one authorized exact-final canonical aggregate completes, Vesper must reread the newest committed and live roster and authorization state. Only a current exact edge may permit one unique exact-title lookup, immediate bounded reread, and one acknowledged sanitized send. Absence, ambiguity, pause, rename, redirect, standby substitution, usage exhaustion, acknowledgement failure, or a protected gate preserves `OPEN_ROUTE_GAP` or `PREPARED_NOT_SENT` and stops without substitution.
+
+## Terminal truth
+
+The phase remains `NOT_READY_FOR_STAGE_20`. Same-owner synthetic validation under shared infrastructure is not independent reproduction. A completed contract proves only its bounded declared software behavior; a represented artifact remains a proxy; an open gap remains missing evidence; and an exact gate remains unexecuted authority-sensitive work. Detail, warmth, file count, proposal count, test count, and route continuity do not raise those evidence ceilings.
