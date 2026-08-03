@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/neris-solane/v660-v4"
 SOURCE = "425fd1e4a0a96b285064c66d736b77a23f58bfb0"
 X1 = "42124477d3610fd394830e4858feb099b585bfc1"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "3a2c56a868b1ea01766f698c127e46fea3a58e76"
 
 
 def load(relative: str):
