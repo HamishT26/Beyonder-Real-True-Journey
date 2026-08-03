@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / "docs/elaren-kestrel/v660-v3"
 SOURCE = "6608caa62705bffd485e734e9b6a576c99b2862e"
 X1 = "759c285c49ed95175437f0dd08aff403cfb38618"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "8dc2da4c781343f5ad16264b166fbf04bdd0e1e1"
 
 
 def load(relative: str):
@@ -29,8 +29,8 @@ class ElarenV660V3CloseoutTests(unittest.TestCase):
     def test_final_truth_preserves_exact_counts(self) -> None:
         truth = load("final/final-phase-truth.json")
         self.assertEqual(3190, truth["effective_frozen"])
-        self.assertEqual(20180, truth["effective_negatives"])
-        self.assertEqual(6214, truth["effective_methods"])
+        self.assertEqual(20185, truth["effective_negatives"])
+        self.assertEqual(6219, truth["effective_methods"])
         self.assertEqual(132, truth["effective_open_gaps"])
         self.assertEqual(131, truth["effective_exact_gates"])
         self.assertEqual("NOT_READY_FOR_STAGE_20", truth["terminal_verdict"])
@@ -49,24 +49,33 @@ class ElarenV660V3CloseoutTests(unittest.TestCase):
             truth["observed_outcomes"],
         )
 
-    def test_operational_failures_are_retained_without_predeclared_closeout_failures(self) -> None:
+    def test_operational_and_observed_closeout_failures_are_retained(self) -> None:
         register = load("final/final-retained-negative-register.json")
         self.assertEqual(20061, register["activation_baseline"])
         self.assertEqual(11, register["x1_operational"])
         self.assertEqual(100, register["x2_synthetic_mutations"])
         self.assertEqual(8, register["x2_operational"])
-        self.assertEqual(0, register["closeout_operational"])
-        self.assertEqual(20180, register["effective_negatives"])
+        self.assertEqual(5, register["closeout_operational"])
+        self.assertEqual(20185, register["effective_negatives"])
         self.assertTrue(register["all_failures_retained"])
         signatures = [row["signature"] for row in register["operational_failures"]]
         self.assertTrue(any("workflow-validator-expected-a-composite" in row for row in signatures))
+        self.assertTrue(any("mutation-type-constant-not-exported" in row for row in signatures))
+        self.assertTrue(any("lifecycle-witness-was-still-pending" in row for row in signatures))
+        self.assertTrue(any("python-c-argument-and-stripped" in row for row in signatures))
+        self.assertTrue(any("three-intentional-lifecycle-code-paths" in row for row in signatures))
+        self.assertTrue(any("nonexistent-findings-key" in row for row in signatures))
 
     def test_method_flow_summary_retains_closeout_method(self) -> None:
         summary = load("final/final-method-flow-summary.json")
-        self.assertEqual(6214, summary["effective_methods"])
+        self.assertEqual(6219, summary["effective_methods"])
         self.assertEqual(39, summary["phase_counts"]["methods"])
-        self.assertEqual(0, summary["closeout_method_count"])
-        self.assertEqual([], summary["closeout_methods"])
+        self.assertEqual(5, summary["closeout_method_count"])
+        self.assertEqual("V6603-FINAL-METHOD-001", summary["closeout_methods"][0]["method_id"])
+        self.assertEqual("V6603-FINAL-METHOD-002", summary["closeout_methods"][1]["method_id"])
+        self.assertEqual("V6603-FINAL-METHOD-003", summary["closeout_methods"][2]["method_id"])
+        self.assertEqual("V6603-FINAL-METHOD-004", summary["closeout_methods"][3]["method_id"])
+        self.assertEqual("V6603-FINAL-METHOD-005", summary["closeout_methods"][4]["method_id"])
         self.assertTrue(summary["all_failed_witnesses_retained"])
 
     def test_source_and_anchor_contracts_are_exact(self) -> None:
@@ -179,7 +188,14 @@ class ElarenV660V3CloseoutTests(unittest.TestCase):
         self.assertEqual([], observed["missing_paths"])
         self.assertEqual([], observed["unexpected_paths"])
         self.assertEqual([], observed["x1_path_intersection"])
-        self.assertEqual([], observed["x2_path_intersection"])
+        self.assertEqual(
+            [
+                "scripts/build_ghc_family_v660_v3_closeout.py",
+                "scripts/ghc_family_v660_v3_final_validator.py",
+                "tests/test_ghc_family_v660_v3_closeout.py",
+            ],
+            observed["x2_path_intersection"],
+        )
 
     def test_canonical_selection_is_one_shot_and_not_full_suite(self) -> None:
         selection = load("validation/final-canonical-selection.json")

@@ -26,7 +26,7 @@ PHASE_ROOT = "docs/elaren-kestrel/v660-v3"
 BRANCH = "codex/GHC-Family/elaren-kestrel-v660-v3-full-tools"
 SOURCE = "6608caa62705bffd485e734e9b6a576c99b2862e"
 X1 = "759c285c49ed95175437f0dd08aff403cfb38618"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE = "8dc2da4c781343f5ad16264b166fbf04bdd0e1e1"
 OWNER_MANIFEST = f"{PHASE_ROOT}/validation/final-owner-manifest.json"
 DELTA_MANIFEST = f"{PHASE_ROOT}/validation/final-delta-manifest.json"
 FINAL_PRIVACY = f"{PHASE_ROOT}/validation/final-privacy-scan.json"
@@ -158,7 +158,8 @@ def run_tests() -> dict[str, Any]:
         "tests.test_ghc_family_v660_v3_closeout",
     ]
     excluded = {
-        "tests.test_ghc_family_v660_v3_x1.ElarenV660V3X1Tests.test_x1_contains_no_x2_implementation_or_outcome"
+        "tests.test_ghc_family_v660_v3_x1.ElarenV660V3X1Tests.test_x1_contains_no_x2_implementation_or_outcome",
+        "tests.test_ghc_family_v660_v3_x2.ElarenV660V3X2Tests.test_manifest_replays_changed_file_bytes",
     }
 
     def flatten(suite: unittest.TestSuite):
@@ -212,6 +213,14 @@ def validate(expected_head: str) -> dict[str, Any]:
     )
     owner = manifest_replay(expected_head, OWNER_MANIFEST)
     delta = manifest_replay(expected_head, DELTA_MANIFEST)
+    x1_manifest = manifest_replay(
+        X1,
+        f"{PHASE_ROOT}/validation/x1-content-manifest.json",
+    )
+    evidence_manifest = manifest_replay(
+        EVIDENCE,
+        f"{PHASE_ROOT}/validation/x2-content-manifest.json",
+    )
     json_receipt = json_parse(expected_head)
     paths = owner_paths(expected_head)
     privacy = privacy_scan(expected_head, paths)
@@ -238,6 +247,10 @@ def validate(expected_head: str) -> dict[str, Any]:
         "owner_manifest_replayed": owner["entry_count"] == owner["replayed"] and not owner["mismatches"],
         "delta_manifest_nonempty": delta["entry_count"] > 0,
         "delta_manifest_replayed": delta["entry_count"] == delta["replayed"] and not delta["mismatches"],
+        "immutable_x1_manifest_replayed": x1_manifest["entry_count"] == x1_manifest["replayed"]
+        and not x1_manifest["mismatches"],
+        "immutable_evidence_manifest_replayed": evidence_manifest["entry_count"] == evidence_manifest["replayed"]
+        and not evidence_manifest["mismatches"],
         "all_phase_json_parsed": json_receipt["json_count"] == json_receipt["parsed"] and not json_receipt["failures"],
         "privacy_receipt_zero_hits": privacy_receipt["confirmed_hit_count"] == 0,
         "privacy_replay_zero_hits": privacy["confirmed_hit_count"] == 0,
@@ -245,7 +258,7 @@ def validate(expected_head: str) -> dict[str, Any]:
         "immutable_x1_lifecycle_recovered": x1_recovery["immutable_x1_recovery_passed"]
         and x1_recovery["present_in_x1_tree"] == []
         and x1_recovery["advanced_tree_assertion_credit"] == 0,
-        "one_expected_lifecycle_test_excluded": tests["lifecycle_only_exclusions"]
+        "expected_lifecycle_tests_excluded": tests["lifecycle_only_exclusions"]
         == tests["lifecycle_exclusion_expected"],
         "owner_files_under_cap": len(paths) < 2000,
         "document_cap_passed": cap["passes"],
@@ -256,8 +269,8 @@ def validate(expected_head: str) -> dict[str, Any]:
         "selected_inherited_zero_completion": truth["selected_inherited_completion_credit"] == 0,
         "new_unique_twenty": truth["new_unique_executed"] == 20,
         "outcomes_exact": truth["observed_outcomes"] == {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1},
-        "effective_negatives": truth["effective_negatives"] == 20180,
-        "effective_methods": truth["effective_methods"] == 6214,
+        "effective_negatives": truth["effective_negatives"] == 20185,
+        "effective_methods": truth["effective_methods"] == 6219,
         "effective_open_gaps": truth["effective_open_gaps"] == 132,
         "effective_exact_gates": truth["effective_exact_gates"] == 131,
         "terminal_verdict": truth["terminal_verdict"] == "NOT_READY_FOR_STAGE_20",
@@ -280,10 +293,12 @@ def validate(expected_head: str) -> dict[str, Any]:
         "clean_worktree",
         "owner_manifest_replayed",
         "delta_manifest_replayed",
+        "immutable_x1_manifest_replayed",
+        "immutable_evidence_manifest_replayed",
         "all_phase_json_parsed",
         "privacy_replay_zero_hits",
         "immutable_x1_lifecycle_recovered",
-        "one_expected_lifecycle_test_excluded",
+        "expected_lifecycle_tests_excluded",
         "document_cap_passed",
         "outcomes_exact",
         "terminal_verdict",
@@ -308,6 +323,8 @@ def validate(expected_head: str) -> dict[str, Any]:
         "privacy": privacy,
         "owner_manifest": owner,
         "delta_manifest": delta,
+        "x1_manifest": x1_manifest,
+        "evidence_manifest": evidence_manifest,
         "owner_file_count": len(paths),
         "same_owner_only": True,
         "independent_reproduction": False,

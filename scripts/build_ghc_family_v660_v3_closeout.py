@@ -26,13 +26,64 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
 SOURCE_FINAL = d.SOURCE_FINAL
 X1_COMMIT = d.X1_FREEZE
-EVIDENCE_COMMIT = "PENDING_EVIDENCE_COMMIT"
+EVIDENCE_COMMIT = "8dc2da4c781343f5ad16264b166fbf04bdd0e1e1"
 SUCCESSOR = "Neris Solane"
 SUCCESSOR_PHASE = "v660-v4"
 
 # Append only failures actually observed after the immutable evidence commit.
-# The evidence implementation must not predeclare future failures for credit.
-CLOSEOUT_FAILURES: list[dict[str, Any]] = []
+# The evidence implementation did not predeclare this failed witness.
+CLOSEOUT_FAILURES: list[dict[str, Any]] = [
+    {
+        "negative_id": "V6603-FINAL-N001",
+        "method_id": "V6603-FINAL-METHOD-001",
+        "signature": "first-closeout-count-check-referenced-a-mutation-type-constant-not-exported-by-the-x2-overlay",
+        "failed_witness": "V6603-FINAL-METHOD-001-F",
+        "passing_witness": "V6603-FINAL-METHOD-001-P",
+        "recovery": "Retain the AttributeError at zero credit and derive the exact mutation total from the immutable committed mutation register rather than an assumed overlay export.",
+        "recurrence_guard": "Inspect the committed register schema before selecting a cross-module count dependency; prefer the evidence record that owns the count.",
+        "rollback": "The failed preflight wrote no valid closeout packet and changed no Git history, remote, sibling, external, or authority state.",
+    },
+    {
+        "negative_id": "V6603-FINAL-N002",
+        "method_id": "V6603-FINAL-METHOD-002",
+        "signature": "pre-stage-closeout-test-expected-an-observed-staged-review-object-but-the-lifecycle-witness-was-still-pending",
+        "failed_witness": "V6603-FINAL-METHOD-002-F",
+        "passing_witness": "V6603-FINAL-METHOD-002-P",
+        "recovery": "Retain the 16-of-17 pre-stage closeout run at zero aggregate credit, stage the exact authorized final surface, and replace only the pending staged-review marker with the measured Git-index witness before rerunning the bounded closeout suite.",
+        "recurrence_guard": "Treat an exact staged-review assertion as a post-staging lifecycle check; run structural preflight tests separately until the Git index is intentionally complete.",
+        "rollback": "The failed unittest read was non-mutating and created no commit, route send, sibling change, remote change, or evidence credit.",
+    },
+    {
+        "negative_id": "V6603-FINAL-N003",
+        "method_id": "V6603-FINAL-METHOD-003",
+        "signature": "windows-powershell-reserialized-a-multiline-python-c-argument-and-stripped-embedded-string-quotes",
+        "failed_witness": "V6603-FINAL-METHOD-003-F",
+        "passing_witness": "V6603-FINAL-METHOD-003-P",
+        "recovery": "Retain the syntax error at zero credit and pipe the unchanged read-only Python measurement program over standard input, avoiding native-command argument reserialization.",
+        "recurrence_guard": "Use Python-over-stdin for quote-heavy Windows PowerShell scanners and Git-index measurement helpers.",
+        "rollback": "The failed helper exited before inspection and changed no worktree file, index entry, commit, remote, sibling lane, or route state.",
+    },
+    {
+        "negative_id": "V6603-FINAL-N004",
+        "method_id": "V6603-FINAL-METHOD-004",
+        "signature": "first-exact-final-stage-measurement-found-three-intentional-lifecycle-code-paths-in-the-x2-evidence-allowlist-instead-of-zero",
+        "failed_witness": "V6603-FINAL-METHOD-004-F",
+        "passing_witness": "V6603-FINAL-METHOD-004-P",
+        "recovery": "Retain the zero-intersection assumption at zero credit, permit exactly the closeout builder, final validator, and closeout-test lifecycle paths, and continue to replay the immutable evidence manifest from the exact evidence Git commit.",
+        "recurrence_guard": "Distinguish an immutable evidence commit from an advanced final tree; bind any permitted lifecycle-code overlap to an exact filename set rather than a broad prefix.",
+        "rollback": "If any fourth x2 path intersects the final stage, keep the final commit blocked and remove the unapproved delta.",
+    },
+    {
+        "negative_id": "V6603-FINAL-N005",
+        "method_id": "V6603-FINAL-METHOD-005",
+        "signature": "integrity-summary-wrapper-selected-a-nonexistent-findings-key-from-the-stale-label-receipt",
+        "failed_witness": "V6603-FINAL-METHOD-005-F",
+        "passing_witness": "V6603-FINAL-METHOD-005-P",
+        "recovery": "Retain the KeyError at zero credit, inspect the receipt's actual top-level keys, and use its explicit old-owner and stale-domain counters for the bounded summary.",
+        "recurrence_guard": "Inspect JSON keys before selectors when consuming phase receipts whose schemas differ across lifecycle stages.",
+        "rollback": "The failed wrapper was read-only; it created no artifact, index change, commit, remote change, route send, or evidence credit.",
+    },
+]
 
 FINAL_CODE = [
     "scripts/build_ghc_family_v660_v3_closeout.py",
@@ -410,6 +461,7 @@ def build() -> None:
     assert_base()
     x2_truth = read_json("truth/x2-phase-truth.json")
     outcomes = read_json("evidence/proposal-outcomes.json")
+    mutation_register = read_json("evidence/mutation-register.json")
     flow = read_json("method-flow/method-flow-state-x2.json")
     proposal_ledger = read_json("preregistration/proposal-ledger.json")
     sources = read_json("sources/official-source-ledger.json")
@@ -421,7 +473,7 @@ def build() -> None:
 
     expected_x2_negatives = (
         d.ACTIVATION_AFTER_X1_NEGATIVES
-        + d.NEW_UNIQUE_COUNT * len(d.MUTATION_TYPES)
+        + mutation_register["mutation_count"]
         + len(d.X2_OPERATIONAL_FAILURES)
     )
     expected_x2_methods = d.ACTIVATION_METHODS + len(flow["methods"])
