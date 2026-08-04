@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
 SOURCE_FINAL = d.SOURCE_FINAL
 X1_COMMIT = d.X1_FREEZE
-EVIDENCE_COMMIT = "pending_until_ilyra_x2_evidence_commit"
+EVIDENCE_COMMIT = "1e7c8872c7c775eb97e64c93d5cd0f2330e8802d"
 SUCCESSOR = "Auren Lark"
 SUCCESSOR_PHASE = "v660-v8"
 ROUTE_STATE = "AUTHORIZED_TERMINAL_GATED_NOT_CONTACTED"
@@ -34,7 +34,74 @@ ROUTE_AUTHORIZED = True
 
 # Append only failures actually observed after the immutable evidence commit.
 # No closeout failure is predeclared before that lifecycle begins.
-CLOSEOUT_FAILURES: list[dict[str, Any]] = []
+CLOSEOUT_FAILURES: list[dict[str, Any]] = [
+    {
+        "method_id": "V6607-CLOSEOUT-METHOD-001",
+        "negative_id": "V6607-CLOSEOUT-N001",
+        "signature": "first-pending-evidence-placeholder-search-returned-no-attributable-output-at-the-default-short-wrapper-boundary",
+        "failed_witness": "V6607-CLOSEOUT-METHOD-001-F01",
+        "passing_witness": "V6607-CLOSEOUT-METHOD-001-P01",
+        "recovery": "Retain the empty search witness at zero credit, patch only the three declared final-template constants to the immutable evidence commit, and verify those exact source lines through one bounded literal file read before building closeout.",
+        "recurrence_guard": "Use explicit 30-second session-aware wrapper metadata for every closeout placeholder search and verify only the three declared template files.",
+        "rollback": "Leave the immutable evidence commit untouched and restore only the uncommitted closeout templates from their evidence-head blobs if the exact binding cannot be verified.",
+        "recovery_passed": True,
+    },
+    {
+        "method_id": "V6607-CLOSEOUT-METHOD-002",
+        "negative_id": "V6607-CLOSEOUT-N002",
+        "signature": "first-codex-desktop-process-file-version-probe-found-the-process-but-returned-empty-file-and-product-version-fields",
+        "failed_witness": "V6607-CLOSEOUT-METHOD-002-F01",
+        "passing_witness": "V6607-CLOSEOUT-METHOD-002-P01",
+        "recovery": "Retain the blank process-version result at zero credit and query only installed package names and versions without emitting installation paths; the package inventory verified OpenAI Codex desktop 26.727.6591.0.",
+        "recurrence_guard": "Prefer the installed package version inventory when the desktop process exposes no file metadata, and emit only package name plus version.",
+        "rollback": "Keep the previously verified version field unchanged and mark desktop-version verification unresolved if no bounded package record exists.",
+        "recovery_passed": True,
+    },
+    {
+        "method_id": "V6607-CLOSEOUT-METHOD-003",
+        "negative_id": "V6607-CLOSEOUT-N003",
+        "signature": "first-closeout-builder-stopped-with-keyerror-method-id-because-the-additive-closeout-failure-rows-did-not-satisfy-the-build-baton-schema",
+        "failed_witness": "V6607-CLOSEOUT-METHOD-003-F01",
+        "passing_witness": "V6607-CLOSEOUT-METHOD-003-P01",
+        "recovery": "Retain the failed builder at zero credit, add every required method, witness, recurrence, rollback, recovery, and signature field to all closeout rows, validate the exact key set, and retry only the closeout builder.",
+        "recurrence_guard": "Validate every CLOSEOUT_FAILURES row against the exact build_baton key contract before invoking the closeout builder.",
+        "rollback": "Remove only incomplete uncommitted closeout outputs by overwriting them through the corrected deterministic builder; never alter the immutable evidence commit.",
+        "recovery_passed": True,
+    },
+    {
+        "method_id": "V6607-CLOSEOUT-METHOD-004",
+        "negative_id": "V6607-CLOSEOUT-N004",
+        "signature": "first-generated-closeout-scalar-projection-looked-for-baton-words-in-final-phase-truth-and-returned-an-empty-field",
+        "failed_witness": "V6607-CLOSEOUT-METHOD-004-F01",
+        "passing_witness": "V6607-CLOSEOUT-METHOD-004-P01",
+        "recovery": "Retain the empty projection at zero credit, enumerate the exact final-truth and final-document-cap keys, and read baton_words, overview_words, and passes from the declared document-cap receipt.",
+        "recurrence_guard": "Inspect generated JSON keys before selecting lifecycle metrics and keep document-length evidence in the document-cap domain.",
+        "rollback": "Leave generated closeout files uncommitted and treat the length gate as unresolved if the declared document-cap receipt cannot be parsed.",
+        "recovery_passed": True,
+    },
+    {
+        "method_id": "V6607-CLOSEOUT-METHOD-005",
+        "negative_id": "V6607-CLOSEOUT-N005",
+        "signature": "first-seventeen-test-closeout-selection-passed-fifteen-and-failed-the-phase-local-method-count-and-direct-source-anchor-assertions",
+        "failed_witness": "V6607-CLOSEOUT-METHOD-005-F01",
+        "passing_witness": "V6607-CLOSEOUT-METHOD-005-P01",
+        "recovery": "Retain the 15-pass and two-failure aggregate at zero clean-pass credit, correct the method assertion to compare only the phase-local x1 and x2 Method Flow rows, bind the Ilyra direct source to the exact Lyren final, and rerun only the two failed closeout tests.",
+        "recurrence_guard": "Keep direct phase source, inherited predecessor source, phase-local methods, and additive closeout methods as separately typed lifecycle fields in tests and the final validator.",
+        "rollback": "Leave the evidence commit immutable and withhold final commit credit if either isolated lifecycle assertion remains false.",
+        "recovery_passed": True,
+    },
+    {
+        "method_id": "V6607-CLOSEOUT-METHOD-006",
+        "negative_id": "V6607-CLOSEOUT-N006",
+        "signature": "first-combined-final-manifest-audit-stopped-on-a-guessed-top-level-unexpected-stale-label-count-key",
+        "failed_witness": "V6607-CLOSEOUT-METHOD-006-F01",
+        "passing_witness": "V6607-CLOSEOUT-METHOD-006-P01",
+        "recovery": "Retain the KeyError audit at zero credit, inspect the exact stale-label receipt keys, require old_owner_current_claims and stale_domain_current_claims to remain zero, and rerun the unchanged JSON, privacy, cap, owner-manifest, and delta-manifest checks.",
+        "recurrence_guard": "Inspect generated stale-label receipt keys before selecting fields and keep prior-owner provenance allowances separate from current-claim counters.",
+        "rollback": "Withhold final commit credit and leave the evidence commit untouched if either current-claim counter is nonzero or either manifest replay mismatches.",
+        "recovery_passed": True,
+    },
+]
 
 FINAL_CODE = [
     "scripts/build_ghc_family_v660_v7_closeout.py",

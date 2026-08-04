@@ -30,9 +30,9 @@ import ghc_family_v660_v7_x2_data as d  # noqa: E402
 
 PHASE_ROOT = "docs/ilyra-fen/v660-v7"
 BRANCH = "codex/GHC-Family/ilyra-fen-v660-v7-full-tools"
-SOURCE = "050fd7559df40bc08f990fc26a8636636e520a3a"
+SOURCE = "6be1e90e55854f6e0dc0faeb38621b6086f4e688"
 X1 = "ae06de953f21db197bb7a57a5a5e70cc7e97da0a"
-EVIDENCE = "pending_until_ilyra_x2_evidence_commit"
+EVIDENCE = "1e7c8872c7c775eb97e64c93d5cd0f2330e8802d"
 OWNER_MANIFEST = f"{PHASE_ROOT}/validation/final-owner-manifest.json"
 DELTA_MANIFEST = f"{PHASE_ROOT}/validation/final-delta-manifest.json"
 FINAL_PRIVACY = f"{PHASE_ROOT}/validation/final-privacy-scan.json"
