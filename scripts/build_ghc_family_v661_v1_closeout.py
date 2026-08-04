@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE = ROOT / d.PHASE_ROOT
 SOURCE_FINAL = d.SOURCE_FINAL
 X1_COMMIT = d.X1_FREEZE
-EVIDENCE_COMMIT = "PENDING_EVIDENCE_COMMIT_BINDING"
+EVIDENCE_COMMIT = "e1ee91023a0fa14e50a15f4674908e0d2f65961d"
 SUCCESSOR = "Caelen Ash"
 SUCCESSOR_PHASE = "v661-v2"
 ROUTE_STATE = "AUTHORIZED_TERMINAL_GATED_NOT_CONTACTED"
@@ -34,7 +34,19 @@ ROUTE_AUTHORIZED = True
 
 # Append only failures actually observed after the immutable evidence commit.
 # No closeout failure is predeclared before that lifecycle begins.
-CLOSEOUT_FAILURES: list[dict[str, Any]] = []
+CLOSEOUT_FAILURES: list[dict[str, Any]] = [
+    {
+        "method_id": "V6611-CLOSEOUT-METHOD-001",
+        "negative_id": "V6611-CLOSEOUT-N001",
+        "signature": "first-closeout-suite-passed-sixteen-of-seventeen-and-refused-the-pending-prestage-observation-string-before-exact-index-review",
+        "failed_witness": "V6611-CLOSEOUT-METHOD-001-F01",
+        "passing_witness": "V6611-CLOSEOUT-METHOD-001-P01",
+        "recovery": "Retain the failed aggregate at zero credit, stage only the declared final allowlist, review exact Git-index paths, JSON, privacy, manifest, and diff hygiene, replace the pending marker with the structured observation, and rerun the scoped closeout suite once.",
+        "recurrence_guard": "Treat the staged-review assertion as a post-stage lifecycle check and never count a pending precommit marker as an observed witness.",
+        "rollback": "Leave the immutable evidence commit untouched, keep the final candidate uncommitted, and withhold closeout if any exact staged path, blob, privacy, manifest, or diff check fails.",
+        "recovery_passed": True,
+    },
+]
 
 FINAL_CODE = [
     "scripts/build_ghc_family_v661_v1_closeout.py",

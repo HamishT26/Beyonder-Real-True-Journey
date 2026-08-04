@@ -22,7 +22,7 @@ import ghc_family_v661_v1_x2_data as d  # noqa: E402
 PHASE = ROOT / "docs/sable-rook/v661-v1"
 SOURCE = "acd00fcc14fe7526ae95338dcec5fa0beee31610"
 X1 = "5a94096fb5e4a9243b16088e3488ddac355c6d94"
-EVIDENCE = "PENDING_EVIDENCE_COMMIT_BINDING"
+EVIDENCE = "e1ee91023a0fa14e50a15f4674908e0d2f65961d"
 
 
 def load(relative: str):
