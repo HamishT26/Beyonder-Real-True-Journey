@@ -22,7 +22,7 @@ import ghc_family_v660_v8_x2_data as d  # noqa: E402
 PHASE = ROOT / "docs/auren-lark/v660-v8"
 SOURCE = "8edf12352101f3a78f0db738a431b3ebb64e07f5"
 X1 = "a456cadc82887ada7a963d08c04944e33d641522"
-EVIDENCE = "pending_until_x2_evidence_commit"
+EVIDENCE = "b0dc07da5bd4001fda25bb2c9e74c2b972726755"
 
 
 def load(relative: str):
