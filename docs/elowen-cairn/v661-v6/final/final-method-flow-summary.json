@@ -1,0 +1,79 @@
+{
+  "all_failed_witnesses_retained": true,
+  "boundary": "Same-owner workflow and mutation evidence only; no independent reproduction or protected-gate closure.",
+  "closeout_method_count": 4,
+  "closeout_methods": [
+    {
+      "failed_witness": "V6616-CLOSEOUT-WITNESS-F01",
+      "method_id": "V6616-CLOSEOUT-METHOD-001",
+      "negative_id": "V6616-CLOSEOUT-N001",
+      "passing_witness": "V6616-CLOSEOUT-WITNESS-P01",
+      "recovery": "Retain the timed-out read-only search at zero credit and query only exact candidate filenames from the Git index.",
+      "recovery_passed": true,
+      "recurrence_guard": "Use git ls-files or exact literal paths instead of scanning the full scripts corpus for historical closeout templates.",
+      "rollback": "The failed lookup created no file and changed no repository state; stop at the immutable evidence commit if the bounded index query cannot recover.",
+      "signature": "broad-historical-closeout-file-lookup-timed-out-before-attributable-output"
+    },
+    {
+      "failed_witness": "V6616-CLOSEOUT-WITNESS-F02",
+      "method_id": "V6616-CLOSEOUT-METHOD-002",
+      "negative_id": "V6616-CLOSEOUT-N002",
+      "passing_witness": "V6616-CLOSEOUT-WITNESS-P02",
+      "recovery": "Retain the second timeout at zero credit and replace directory enumeration with a bounded Git-index match for exact owner/version filenames.",
+      "recovery_passed": true,
+      "recurrence_guard": "Do not enumerate the large scripts or tests directories merely to locate three known historical templates.",
+      "rollback": "The failed enumeration made no mutation; preserve the evidence commit and stop if the Git-index query is unavailable.",
+      "signature": "filtered-filesystem-directory-enumeration-timed-out-before-attributable-output"
+    },
+    {
+      "failed_witness": "V6616-CLOSEOUT-WITNESS-F03",
+      "method_id": "V6616-CLOSEOUT-METHOD-003",
+      "negative_id": "V6616-CLOSEOUT-N003",
+      "passing_witness": "V6616-CLOSEOUT-WITNESS-P03",
+      "recovery": "Retain the parser rejection at zero credit and use an ASCII-safe exact search, which confirmed the copied UTF-8 source already contained correct Māori, hapū, and em-dash text.",
+      "recovery_passed": true,
+      "recurrence_guard": "Inspect actual UTF-8 content before attempting shell-level normalization and avoid embedding diagnostic replacement glyphs in PowerShell strings.",
+      "rollback": "The parser rejected the wrapper before execution, so no file changed; preserve the mechanically derived templates and continue with literal semantic patches.",
+      "signature": "first-encoding-normalization-wrapper-was-rejected-by-powershell-before-execution"
+    },
+    {
+      "failed_witness": "V6616-CLOSEOUT-WITNESS-F04",
+      "method_id": "V6616-CLOSEOUT-METHOD-004",
+      "negative_id": "V6616-CLOSEOUT-N004",
+      "passing_witness": "V6616-CLOSEOUT-WITNESS-P04",
+      "recovery": "Retain the parser rejection at zero credit, compile the three files in an isolated ASCII-only command, then run a separate ASCII-safe stale-token search.",
+      "recovery_passed": true,
+      "recurrence_guard": "Do not combine Unicode diagnostic patterns and executable validation in one PowerShell command string.",
+      "rollback": "The wrapper was rejected before execution; no repository content or test result changed.",
+      "signature": "combined-nonascii-stale-token-search-and-compilation-wrapper-was-rejected-by-powershell"
+    }
+  ],
+  "cumulative_counts": {
+    "activation_methods": 6836,
+    "effective_methods": 6903,
+    "phase_failed_witnesses": 147,
+    "phase_methods": 67,
+    "phase_passing_witnesses": 67
+  },
+  "effective_methods": 6907,
+  "phase_counts": {
+    "methods": 67,
+    "recommendations": 67,
+    "state_events": 134,
+    "states": {
+      "candidate": 0,
+      "deprecated": 0,
+      "observed": 0,
+      "preferred": 67,
+      "superseded": 0,
+      "validated": 0
+    },
+    "witness_results": {
+      "fail": 147,
+      "pass": 67
+    },
+    "witnesses": 214
+  },
+  "same_owner_only": true,
+  "schema": "ghc.family.method-flow.final-summary.v1"
+}
