@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One-shot ancestry-aware complete unittest aggregate for the Neris remaster."""
+"""One-shot ancestry-aware v661-plus phase aggregate for the Neris remaster."""
 
 from __future__ import annotations
 
@@ -22,13 +22,17 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 BRANCH = "codex/GHC-Family/neris-solane-v662-v3-2-remaster"
 PHASE_ROOT = "docs/neris-solane/v662-v3-2-remaster"
-FINAL_VALIDATION = f"{PHASE_ROOT}/validation/final-validation.json"
-FINAL_PRIVACY = f"{PHASE_ROOT}/validation/final-privacy-scan.json"
-FINAL_OWNER_MANIFEST = f"{PHASE_ROOT}/validation/final-owner-manifest.json"
-FINAL_DELTA_MANIFEST = f"{PHASE_ROOT}/validation/final-delta-manifest.json"
-FINAL_ROUTE = f"{PHASE_ROOT}/routing/route-state-final.json"
-FINAL_TRUTH = f"{PHASE_ROOT}/truth/final-truth.json"
+SCOPE_ROOT = f"{PHASE_ROOT}/scope-recovery"
+SCOPE_POLICY = f"{SCOPE_ROOT}/governance/v661-plus-validation-scope.json"
+FINAL_VALIDATION = f"{SCOPE_ROOT}/validation/scoped-validation.json"
+FINAL_PRIVACY = f"{SCOPE_ROOT}/validation/scoped-privacy-scan.json"
+FINAL_OWNER_MANIFEST = f"{SCOPE_ROOT}/validation/scoped-owner-manifest.json"
+FINAL_DELTA_MANIFEST = f"{SCOPE_ROOT}/validation/scoped-delta-manifest.json"
+FINAL_ROUTE = f"{SCOPE_ROOT}/routing/route-state-v661-plus.json"
+FINAL_TRUTH = f"{SCOPE_ROOT}/truth/scoped-final-truth.json"
 TEST_PATTERN = "test*.py"
+PHASE_FLOOR = 661
+FAMILY_PHASE_PATTERN = re.compile(r"^test_ghc_family_v(?P<version>\d+)(?:_|$)")
 BRANCH_PATTERN = re.compile(r"codex/GHC-Family/[A-Za-z0-9._/-]+")
 
 
@@ -59,6 +63,47 @@ def git_blob(revision: str, relative: str) -> bytes:
     return git("show", f"{revision}:{relative}").stdout
 
 
+def git_batch(specs: list[str]) -> list[bytes]:
+    """Read exact Git objects in one drained binary batch process."""
+    if not specs:
+        return []
+    process = subprocess.Popen(
+        ["git", "cat-file", "--batch"],
+        cwd=ROOT,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    request = b"".join(spec.encode("utf-8") + b"\n" for spec in specs)
+    stdout, stderr = process.communicate(request, timeout=600)
+    if process.returncode:
+        raise RuntimeError(f"git cat-file --batch failed: {stderr[-1000:].decode('utf-8', 'replace')}")
+    values: list[bytes] = []
+    offset = 0
+    for spec in specs:
+        newline = stdout.find(b"\n", offset)
+        if newline < 0:
+            raise RuntimeError(f"missing batch header for {spec}")
+        header = stdout[offset:newline].split()
+        if len(header) != 3 or header[1] != b"blob":
+            raise RuntimeError({"unexpected_batch_header": stdout[offset:newline].decode("utf-8", "replace"), "spec": spec})
+        size = int(header[2])
+        start = newline + 1
+        end = start + size
+        if len(stdout) < end + 1 or stdout[end : end + 1] != b"\n":
+            raise RuntimeError(f"truncated batch blob for {spec}")
+        values.append(stdout[start:end])
+        offset = end + 1
+    if offset != len(stdout):
+        raise RuntimeError("unexpected trailing Git batch output")
+    return values
+
+
+def git_blobs(revision: str, relatives: list[str]) -> dict[str, bytes]:
+    values = git_batch([f"{revision}:{relative}" for relative in relatives])
+    return dict(zip(relatives, values, strict=True))
+
+
 def committed_json(revision: str, relative: str) -> dict[str, Any]:
     return json.loads(git_blob(revision, relative).decode("utf-8"))
 
@@ -73,12 +118,34 @@ def flatten(suite: unittest.TestSuite):
 
 def current_inventory() -> dict[str, Any]:
     sys.path.insert(0, str(ROOT))
-    loader = unittest.TestLoader()
-    suite = loader.discover(str(ROOT / "tests"), pattern=TEST_PATTERN)
-    tests = list(flatten(suite))
+    test_root = ROOT / "tests"
+    selected_files: list[Path] = []
+    below_floor_files: list[Path] = []
+    unversioned_files: list[Path] = []
+    selected_versions: dict[str, int] = {}
+    for path in sorted(test_root.glob(TEST_PATTERN)):
+        match = FAMILY_PHASE_PATTERN.match(path.stem)
+        if not match:
+            unversioned_files.append(path)
+            continue
+        version = int(match.group("version"))
+        if version < PHASE_FLOOR:
+            below_floor_files.append(path)
+            continue
+        selected_files.append(path)
+        selected_versions[path.relative_to(ROOT).as_posix()] = version
+    if not selected_files:
+        raise RuntimeError("v661-plus selection is empty")
+    tests = []
+    loader_errors: list[str] = []
+    for path in selected_files:
+        loader = unittest.TestLoader()
+        suite = loader.discover(str(test_root), pattern=path.name)
+        tests.extend(flatten(suite))
+        loader_errors.extend(loader.errors)
     test_ids = [test.id() for test in tests]
-    if loader.errors:
-        raise RuntimeError({"loader_errors": loader.errors})
+    if loader_errors:
+        raise RuntimeError({"loader_errors": loader_errors})
     if len(test_ids) != len(set(test_ids)):
         raise RuntimeError("duplicate current unittest identifiers")
     by_module: dict[str, list[str]] = defaultdict(list)
@@ -91,14 +158,29 @@ def current_inventory() -> dict[str, Any]:
             raise RuntimeError(f"cannot resolve module file for {module}")
         module_paths[module] = Path(loaded.__file__).resolve().relative_to(ROOT).as_posix()
     ordered_ids = sorted(test_ids)
+    selected_paths = [path.relative_to(ROOT).as_posix() for path in selected_files]
+    below_floor_paths = [path.relative_to(ROOT).as_posix() for path in below_floor_files]
+    unversioned_paths = [path.relative_to(ROOT).as_posix() for path in unversioned_files]
+    loaded_paths = sorted(set(module_paths.values()))
+    if loaded_paths != selected_paths:
+        raise RuntimeError({"selected_file_module_mismatch": {"selected": selected_paths, "loaded": loaded_paths}})
     return {
         "test_count": len(test_ids),
         "unique_test_count": len(set(test_ids)),
         "module_count": len(by_module),
         "selection_sha256": sha256("\n".join(ordered_ids).encode("utf-8")),
+        "phase_floor": PHASE_FLOOR,
+        "selected_file_count": len(selected_paths),
+        "below_floor_file_count": len(below_floor_paths),
+        "unversioned_file_count": len(unversioned_paths),
+        "selected_test_files": selected_paths,
+        "below_floor_test_files": below_floor_paths,
+        "unversioned_test_files": unversioned_paths,
+        "selected_versions": selected_versions,
+        "selected_path_sha256": sha256("\n".join(selected_paths).encode("utf-8")),
         "by_module": {module: sorted(ids) for module, ids in sorted(by_module.items())},
         "module_paths": module_paths,
-        "loader_errors": [],
+        "loader_errors": loader_errors,
         "duplicate_ids": 0,
     }
 
@@ -115,12 +197,15 @@ def definition_commits(expected_head: str, inventory: dict[str, Any]) -> list[di
             anchors[line] = current
     if set(anchors) != test_paths:
         raise RuntimeError({"unmapped_test_paths": sorted(test_paths - set(anchors))})
+    module_items = sorted(inventory["by_module"].items())
+    ordered_paths = [inventory["module_paths"][module] for module, _ids in module_items]
+    final_blobs = git_blobs(expected_head, ordered_paths)
+    anchor_blobs = git_batch([f"{anchors[path]}:{path}" for path in ordered_paths])
     rows = []
-    for module, ids in sorted(inventory["by_module"].items()):
+    for (module, ids), anchor_blob in zip(module_items, anchor_blobs, strict=True):
         path = inventory["module_paths"][module]
         anchor = anchors[path]
-        final_blob = git_blob(expected_head, path)
-        anchor_blob = git_blob(anchor, path)
+        final_blob = final_blobs[path]
         if final_blob != anchor_blob:
             raise RuntimeError(f"definition blob mismatch for {path}")
         hints = sorted(set(BRANCH_PATTERN.findall(final_blob.decode("utf-8", "replace"))))
@@ -143,8 +228,10 @@ def definition_commits(expected_head: str, inventory: dict[str, Any]) -> list[di
 def replay_manifest(revision: str, relative: str) -> dict[str, Any]:
     manifest = committed_json(revision, relative)
     mismatches = []
+    paths = [entry["path"] for entry in manifest["entries"]]
+    blobs = git_blobs(revision, paths)
     for entry in manifest["entries"]:
-        payload = git_blob(revision, entry["path"])
+        payload = blobs[entry["path"]]
         if len(payload) != entry["bytes"] or sha256(payload) != entry["sha256"]:
             mismatches.append(entry["path"])
     return {"path": relative, "entries": manifest["entry_count"], "mismatches": mismatches, "valid": not mismatches}
@@ -177,9 +264,10 @@ def remote_equality(expected_head: str) -> dict[str, Any]:
 def json_parse(revision: str) -> dict[str, Any]:
     paths = [row for row in git_text("ls-tree", "-r", "--name-only", revision, "--", PHASE_ROOT).splitlines() if row.endswith(".json")]
     failures = []
+    blobs = git_blobs(revision, paths)
     for path in paths:
         try:
-            json.loads(git_blob(revision, path).decode("utf-8"))
+            json.loads(blobs[path].decode("utf-8"))
         except Exception as error:  # pragma: no cover - diagnostic path
             failures.append({"path": path, "error": type(error).__name__})
     return {"count": len(paths), "parsed": len(paths) - len(failures), "failures": failures, "valid": not failures}
@@ -194,6 +282,7 @@ def preflight(expected_head: str, receipt_dir: Path, scratch_root: Path) -> dict
     privacy = committed_json(expected_head, FINAL_PRIVACY)
     route = committed_json(expected_head, FINAL_ROUTE)
     truth = committed_json(expected_head, FINAL_TRUTH)
+    scope = committed_json(expected_head, SCOPE_POLICY)
     owner_manifest = replay_manifest(expected_head, FINAL_OWNER_MANIFEST)
     delta_manifest = replay_manifest(expected_head, FINAL_DELTA_MANIFEST)
     invocation_marker = receipt_dir / "canonical-invocation-marker.json"
@@ -205,6 +294,12 @@ def preflight(expected_head: str, receipt_dir: Path, scratch_root: Path) -> dict
         "four_way_remote_equality": equality["valid"],
         "loader_errors_zero": not inventory["loader_errors"],
         "duplicate_test_ids_zero": inventory["duplicate_ids"] == 0,
+        "scope_policy_v661_plus": scope["state"] == "LIVE_USER_AUTHORIZED_V661_PLUS_ONLY" and scope["phase_floor"] == "v661-v1",
+        "selected_versions_at_or_above_floor": all(version >= PHASE_FLOOR for version in inventory["selected_versions"].values()),
+        "selected_files_exactly_loaded": inventory["selected_file_count"] == inventory["module_count"],
+        "below_floor_files_excluded": not (set(inventory["selected_test_files"]) & set(inventory["below_floor_test_files"])),
+        "unversioned_files_excluded": not (set(inventory["selected_test_files"]) & set(inventory["unversioned_test_files"])),
+        "broad_attempt_retained_zero_credit": scope["interrupted_broad_attempt"]["state"] == "INTERRUPTED_BY_LIVE_SCOPE_REDIRECT_ZERO_SUCCESS_CREDIT" and scope["interrupted_broad_attempt"]["successful_invocations"] == 0,
         "all_modules_mapped": len(rows) == inventory["module_count"],
         "all_definition_blobs_equal": all(row["blob_sha256"] for row in rows),
         "owner_manifest_replays": owner_manifest["valid"],
@@ -222,14 +317,15 @@ def preflight(expected_head: str, receipt_dir: Path, scratch_root: Path) -> dict
     for row in rows:
         anchor_counts[row["definition_commit"]] += 1
     return {
-        "schema": "ghc.family.v662-v3-2-remaster.canonical-preflight.v1",
+        "schema": "ghc.family.v662-v3-2-remaster.v661-plus-canonical-preflight.v1",
         "expected_head": expected_head,
         "recorded_at_utc": utc_now(),
         "checks": checks,
         "passed": sum(checks.values()),
         "total": len(checks),
         "valid": all(checks.values()),
-        "inventory": {key: inventory[key] for key in ("test_count", "unique_test_count", "module_count", "selection_sha256", "loader_errors", "duplicate_ids")},
+        "inventory": {key: inventory[key] for key in ("test_count", "unique_test_count", "module_count", "selection_sha256", "phase_floor", "selected_file_count", "below_floor_file_count", "unversioned_file_count", "selected_path_sha256", "loader_errors", "duplicate_ids")},
+        "selection": {"selected_test_files": inventory["selected_test_files"], "below_floor_test_files": inventory["below_floor_test_files"], "unversioned_test_files": inventory["unversioned_test_files"], "selected_versions": inventory["selected_versions"]},
         "definition_anchors": len(anchor_counts),
         "largest_anchor_group": max(anchor_counts.values()),
         "module_ledger": rows,
@@ -240,7 +336,7 @@ def preflight(expected_head: str, receipt_dir: Path, scratch_root: Path) -> dict
         "json": json_parse(expected_head),
         "same_owner_only": True,
         "independent_reproduction": False,
-        "boundary": "Read-only exact-final inventory and structural preflight only; no test body ran and no complete-suite success is claimed.",
+        "boundary": "Read-only exact-final v661-plus phase inventory and whole-repository structural preflight only; no test body ran and no scoped aggregate success is claimed.",
     }
 
 
@@ -385,7 +481,7 @@ def canonical(expected_head: str, receipt_dir: Path, scratch_root: Path, workers
     }
     valid = all(component_checks.values())
     receipt = {
-        "schema": "ghc.family.v662-v3-2-remaster.exact-final-canonical-receipt.v1",
+        "schema": "ghc.family.v662-v3-2-remaster.v661-plus-exact-final-canonical-receipt.v1",
         "expected_head": expected_head,
         "invocation_count": 1,
         "successful_invocation_count": 1 if valid else 0,
@@ -411,7 +507,7 @@ def canonical(expected_head: str, receipt_dir: Path, scratch_root: Path, workers
         "accessibility_complete": False,
         "exhaustive_security": False,
         "terminal_verdict": "NOT_READY_FOR_STAGE_20",
-        "boundary": "One same-owner complete current unittest inventory executed at immutable definition commits under shared local infrastructure; not external audit, independent reproduction, empirical confirmation, professional or production validation, complete privacy or accessibility assurance, exhaustive security, authority, personhood evidence, Theory-of-Everything proof, or Stage 20 authority.",
+        "boundary": "One same-owner complete current v661-plus family phase-module inventory executed at immutable definition commits under shared local infrastructure; v641-v660 and unversioned modules were retained but not executed under Hamish's live scope. This is not an all-history suite, external audit, independent reproduction, empirical confirmation, professional or production validation, complete privacy or accessibility assurance, exhaustive security, authority, personhood evidence, Theory-of-Everything proof, or Stage 20 authority.",
     }
     name = "canonical-success.json" if valid else "canonical-failure.json"
     receipt_sha = write_receipt(receipt_dir / name, receipt)
