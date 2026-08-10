@@ -1,0 +1,22 @@
+{
+  "schema": "ghc.family.owner-lane-permission-matrix.v1",
+  "phase": "v662-v3-3-remaster",
+  "recorded_at_utc": "2026-08-10T10:01:54.0414885Z",
+  "rows": [
+    {"actor_class": "Eiren Kestrel", "target": "Eiren-owned lane", "read": "completed", "write": "completed", "big_v661_plus_checks": "completed", "worktree_repo_branch_scan": "completed", "terminal_receipt_authority": "completed"},
+    {"actor_class": "Eiren Kestrel", "target": "another sibling-owned lane", "read": "completed", "write": "exact_gate", "big_v661_plus_checks": "completed", "worktree_repo_branch_scan": "completed", "terminal_receipt_authority": "completed"},
+    {"actor_class": "non-Eiren active owner", "target": "own exact lane", "read": "completed", "write": "completed", "big_v661_plus_checks": "exact_gate", "worktree_repo_branch_scan": "exact_gate", "terminal_receipt_authority": "open_gap"},
+    {"actor_class": "non-Eiren active owner", "target": "another sibling-owned lane", "read": "represented", "write": "exact_gate", "big_v661_plus_checks": "exact_gate", "worktree_repo_branch_scan": "exact_gate", "terminal_receipt_authority": "exact_gate"},
+    {"actor_class": "Tavian Sol standby record", "target": "current main-task route", "read": "represented", "write": "exact_gate", "big_v661_plus_checks": "exact_gate", "worktree_repo_branch_scan": "exact_gate", "terminal_receipt_authority": "exact_gate"}
+  ],
+  "interpretation": {
+    "completed": "Authorized for the exact bounded actor and target; it is not a claim that every possible action was executed.",
+    "represented": "Read-only relational or compatibility representation exists; no broad scan or mutation is authorized.",
+    "open_gap": "An attributable Eiren receipt for the exact pushed owner head is absent.",
+    "exact_gate": "The action is not authorized for this actor-target pair under the current instruction."
+  },
+  "active_main_tasks": 15,
+  "standby_records": 1,
+  "tavian_state": "ON_STANDBY",
+  "boundary": "Permission representation only; not identity continuity, authority beyond the live workflow, or Stage 20 evidence."
+}
