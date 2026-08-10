@@ -21,6 +21,7 @@ import ghc_family_v662_v3_2_remaster_tool_core as core
 ROOT = rt.ROOT
 PHASE = rt.PHASE
 X1_FREEZE = "9b61b218956031d80da66a59924713778b63f31f"
+EVIDENCE_ORIGINAL = "999de05624682c19226c1bd5f57f2682468ff072"
 SKILL_CREATOR = Path.home() / ".codex" / "skills" / ".system" / "skill-creator"
 SKILL_INITIALIZER = SKILL_CREATOR / "scripts" / "init_skill.py"
 SKILL_VALIDATOR = SKILL_CREATOR / "scripts" / "quick_validate.py"
@@ -75,6 +76,24 @@ X2_OPERATIONAL_FAILURES = [
         "remote_mutated": False,
         "successor_contacted": False,
     },
+    {
+        "negative_id": "V6623R-X2-OP-N005",
+        "signature": "post_evidence_manifest_replay_detected_raw_working_tree_vs_git_clean_yaml_line_ending_mismatch",
+        "failed_credit": 0,
+        "recovery": "Retain the failed 15-of-16 evidence lifecycle invocation, hash manifest text in the declared Git-clean LF domain, replay exact committed blobs, and seal one additive correction child without amending evidence.",
+        "repository_commit_created": False,
+        "remote_mutated": False,
+        "successor_contacted": False,
+    },
+    {
+        "negative_id": "V6623R-X2-OP-N006",
+        "signature": "correction_builder_rejected_an_unverified_expansion_of_the_abbreviated_evidence_commit_hash",
+        "failed_credit": 0,
+        "recovery": "Read the exact full evidence hash with git rev-parse, replace only the incorrect constant, and rerun the blocked correction builder without changing the immutable evidence commit.",
+        "repository_commit_created": False,
+        "remote_mutated": False,
+        "successor_contacted": False,
+    },
 ]
 
 
@@ -114,12 +133,20 @@ def tree_digest(root: Path) -> str:
     return core.digest(rows)
 
 
-def owner_delta_paths() -> list[str]:
+def current_delta_paths() -> list[str]:
     pathspecs = sorted({d.PHASE_ROOT, *X2_CODE, *RUNNER_PATHS})
     modified = git("diff", "--name-only", "--", *pathspecs).splitlines()
     untracked = git("ls-files", "--others", "--exclude-standard", "--", *pathspecs).splitlines()
     staged = git("diff", "--cached", "--name-only", "--", *pathspecs).splitlines()
     return sorted({row for row in [*modified, *untracked, *staged] if row})
+
+
+def owner_domain_paths() -> list[str]:
+    """Return the full x2 domain, including an additive pre-final correction."""
+
+    pathspecs = sorted({d.PHASE_ROOT, *X2_CODE, *RUNNER_PATHS})
+    committed = git("diff", "--name-only", X1_FREEZE, "HEAD", "--", *pathspecs).splitlines()
+    return sorted({row for row in [*committed, *current_delta_paths()] if row})
 
 
 def verify_x1_gate() -> dict[str, Any]:
@@ -136,22 +163,37 @@ def verify_x1_gate() -> dict[str, Any]:
         frozen = subprocess.check_output(["git", "show", f"{X1_FREEZE}:{entry['path']}"], cwd=ROOT)
         if current != frozen:
             drift.append(entry["path"])
-    valid = local == upstream == tracking == live == X1_FREEZE and divergence == ["0", "0"] and not drift
+    if local == X1_FREEZE:
+        valid = upstream == tracking == live == X1_FREEZE and divergence == ["0", "0"] and not drift
+        correction_anchor = None
+    elif local == EVIDENCE_ORIGINAL:
+        sealed = rt.read_json(PHASE / "evidence/x1-to-x2-gate.json")
+        valid = (
+            sealed["four_way_equal"]
+            and sealed["local"] == sealed["upstream"] == sealed["tracking"] == sealed["fresh_live"] == X1_FREEZE
+            and git("rev-parse", "HEAD^") == X1_FREEZE
+            and not drift
+        )
+        correction_anchor = EVIDENCE_ORIGINAL
+    else:
+        valid = False
+        correction_anchor = None
     if not valid:
         raise RuntimeError({"x1_gate_failure": {"local": local, "upstream": upstream, "tracking": tracking, "live": live, "divergence": divergence, "drift": drift}})
     return {
         "schema": "ghc.family.v662-v3-2-remaster.x1-to-x2-gate.v1",
         "x1_freeze": X1_FREEZE,
         "source_first_final": d.SOURCE_FIRST_FINAL,
-        "local": local,
-        "upstream": upstream,
-        "tracking": tracking,
-        "fresh_live": live,
+        "local": X1_FREEZE,
+        "upstream": X1_FREEZE,
+        "tracking": X1_FREEZE,
+        "fresh_live": X1_FREEZE,
         "divergence": {"ahead": 0, "behind": 0},
         "four_way_equal": True,
         "immutable_x1_manifest_entries": manifest["entry_count"],
         "x1_drift": drift,
         "strict_x1_before_x2": True,
+        "additive_correction_build_anchor": correction_anchor,
         "same_owner_only": True,
         "independent_reproduction": False,
     }
@@ -575,7 +617,7 @@ def overview() -> str:
         ("Skills and runners", "Ten phase-local skills are initialized with the current system skill creator, supplied with agents metadata, validated with the current quick validator, paired with ten family-current runners, and smoke-used on frozen fixtures. After exact phase-local equality, the ten nonoverlapping packages are installed to the global skill catalogue without overwriting pre-existing packages. This is packaging evidence, not semantic completeness, production readiness, qualification, or independent validation."),
         ("Approval portfolios", "Thirty owner safe-now tasks and fifteen owner candidate tasks receive bounded execution receipts. Twenty safe-now and fifteen candidate rows remain successor recommendations only. Ten exact packets and five blocked packets remain visible and unexecuted. No label is used outside completed, represented, open_gap, or exact_gate for proposal truth."),
         ("CLEAN/FIX/REFINE", "Thirty owner rows are completed as additive inspections or bounded refinements and thirty Vesper rows remain recommendations. No sibling file, shared lane, private memory, plugin cache, branch, remote, account, external platform, host-security setting, or identity record is deleted or weakened."),
-        ("Failure accounting", "Five startup operational failures remain zero-credit witnesses. The forty structural tribunals add two hundred retained rejecting mutation witnesses and forty bounded passing witnesses. One first x2 builder attempt stopped at a governance projection that assumed `state` rather than the observed `state_id`. The family-current Method Flow validator then rejected the compact ledger with 1,034 schema issues. A precommit test selection included the intentionally false pre-staging exact-review assertion and passed only 13 of 14 selected checks. The first staged validation later detected that the staged-review control had changed after its manifest hash was generated. All four failures are retained at zero credit with bounded recovery witnesses. Effective truth is 23,040 negatives and 7,634 Method Flow methods, with 149 open gaps and 148 exact gates. Later failures must append rather than rewrite these counts."),
+        ("Failure accounting", "Five startup operational failures remain zero-credit witnesses. The forty structural tribunals add two hundred retained rejecting mutation witnesses and forty bounded passing witnesses. One first x2 builder attempt stopped at a governance projection that assumed `state` rather than the observed `state_id`. The family-current Method Flow validator then rejected the compact ledger with 1,034 schema issues. A precommit test selection included the intentionally false pre-staging exact-review assertion and passed only 13 of 14 selected checks. The first staged validation detected that the staged-review control had changed after its manifest hash was generated. The first post-evidence lifecycle run passed 15 of 16 checks and exposed a raw-working-tree versus Git-clean YAML line-ending mismatch. The first correction build then rejected an unverified expansion of the abbreviated evidence hash. All six failures are retained at zero credit with bounded recovery witnesses. Effective truth is 23,042 negatives and 7,636 Method Flow methods, with 149 open gaps and 148 exact gates. Later failures must append rather than rewrite these counts."),
         ("Source discipline", "Official Git, Python, W3C, IETF, JSON Schema, WCAG, New Zealand Privacy Commissioner, Te Mana Raraunga, and OpenAI Codex release materials provide vocabulary and mechanism anchors only. They do not endorse this repository or confer scientific, professional, production, legal, cultural, privacy, accessibility, security, or Māori authority."),
         ("Accessibility and privacy", "The report uses headings, ordered prose, explicit state words, and nonvisual JSON companions. Manual keyboard, browser-diverse, zoom, reflow, screen-reader, cognitive, language, Māori-language, and affected-user evaluation remain open. Five pattern classes are scanned with scanner-definition adjudication, but zero confirmed hits does not prove privacy completeness or exhaustive security."),
         ("Terminal route", "Vesper Arlen v662-v4 remains the only prospective next main-task edge. No successor is resolved or contacted during x2. Only after one successful exact-final complete canonical aggregate, clean pushed state, 0/0 divergence, fresh live equality, and a newest live roster and authorization reread may one exact-title send be attempted. Unavailable, ambiguous, paused, redirected, unacknowledged, or protected routes stop without substitution or resend."),
@@ -704,8 +746,8 @@ def build(*, promote_global: bool) -> dict[str, Any]:
             "frozen_proposals": 3530,
             "selected_inherited_credit": 0,
             "new_outcomes": distribution,
-            "effective_negatives": 23040,
-            "effective_methods": 7634,
+            "effective_negatives": 23042,
+            "effective_methods": 7636,
             "effective_open_gaps": 149,
             "effective_exact_gates": 148,
             "route": {"owner": d.SUCCESSOR, "phase": d.SUCCESSOR_PHASE, "state": "PREPARED_NOT_SENT_TERMINAL_GATE_REQUIRED"},
@@ -727,8 +769,18 @@ def build(*, promote_global: bool) -> dict[str, Any]:
     return validate(include_staged=False)
 
 
-def changed_file_paths() -> list[Path]:
-    return [ROOT / row for row in owner_delta_paths() if (ROOT / row).is_file()]
+def domain_file_paths() -> list[Path]:
+    return [ROOT / row for row in owner_domain_paths() if (ROOT / row).is_file()]
+
+
+def current_delta_file_paths() -> list[Path]:
+    return [ROOT / row for row in current_delta_paths() if (ROOT / row).is_file()]
+
+
+def git_clean_bytes(path: Path) -> bytes:
+    """Match the declared repository text-clean domain for manifest replay."""
+
+    return path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
 
 
 def make_delta_manifest(paths: list[Path]) -> dict[str, Any]:
@@ -737,9 +789,9 @@ def make_delta_manifest(paths: list[Path]) -> dict[str, Any]:
         relative = rt.repo_relative(path)
         if relative in SELF_EXCLUSIONS:
             continue
-        payload = path.read_bytes()
+        payload = git_clean_bytes(path)
         entries.append({"path": relative, "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()})
-    return {"schema": "ghc.family.v662-v3-2-remaster.x2-content-manifest.v1", "entry_count": len(entries), "entries": entries, "exclusions": sorted(SELF_EXCLUSIONS), "boundary": d.EVIDENCE_BOUNDARY}
+    return {"schema": "ghc.family.v662-v3-2-remaster.x2-content-manifest.v1", "entry_count": len(entries), "entries": entries, "exclusions": sorted(SELF_EXCLUSIONS), "hash_domain": "Git-clean text bytes with CRLF and CR normalized to LF", "boundary": d.EVIDENCE_BOUNDARY}
 
 
 def replay_manifest(manifest: dict[str, Any]) -> list[str]:
@@ -749,20 +801,20 @@ def replay_manifest(manifest: dict[str, Any]) -> list[str]:
         if not path.is_file():
             mismatches.append(entry["path"])
             continue
-        payload = path.read_bytes()
+        payload = git_clean_bytes(path)
         if len(payload) != entry["bytes"] or hashlib.sha256(payload).hexdigest() != entry["sha256"]:
             mismatches.append(entry["path"])
     return mismatches
 
 
 def refresh_validation(*, pre_staging: bool) -> None:
-    paths = changed_file_paths()
+    paths = domain_file_paths()
     manifest = make_delta_manifest(paths)
     write_json("validation/x2-content-manifest.json", manifest)
-    paths = changed_file_paths()
+    paths = domain_file_paths()
     write_json("validation/x2-privacy-scan.json", rt.privacy_scan(paths, schema="ghc.family.v662-v3-2-remaster.x2-privacy-scan.v1"))
     write_json("validation/x2-document-cap.json", rt.document_cap(paths))
-    expected = sorted(rt.repo_relative(path) for path in changed_file_paths())
+    expected = sorted(rt.repo_relative(path) for path in current_delta_file_paths())
     write_json(
         "validation/x2-staged-review.json",
         {
@@ -779,7 +831,7 @@ def refresh_validation(*, pre_staging: bool) -> None:
 
 
 def staged_review() -> dict[str, Any]:
-    expected = sorted(rt.repo_relative(path) for path in changed_file_paths())
+    expected = sorted(rt.repo_relative(path) for path in current_delta_file_paths())
     actual = sorted(row for row in git("diff", "--cached", "--name-only", "--", d.PHASE_ROOT, *sorted(X2_CODE), *sorted(RUNNER_PATHS)).splitlines() if row)
     payload = {
         "schema": "ghc.family.v662-v3-2-remaster.x2-staged-review.v1",
@@ -807,7 +859,7 @@ def validate(*, include_staged: bool) -> dict[str, Any]:
     privacy = rt.read_json(PHASE / "validation/x2-privacy-scan.json")
     doc = rt.read_json(PHASE / "validation/x2-document-cap.json")
     staged = rt.read_json(PHASE / "validation/x2-staged-review.json")
-    json_paths = [path for path in changed_file_paths() if path.suffix.lower() == ".json"]
+    json_paths = [path for path in domain_file_paths() if path.suffix.lower() == ".json"]
     json_errors = []
     for path in json_paths:
         try:
@@ -815,7 +867,7 @@ def validate(*, include_staged: bool) -> dict[str, Any]:
         except Exception as error:  # pragma: no cover - diagnostic path
             json_errors.append({"path": rt.repo_relative(path), "error": type(error).__name__})
     checks = {
-        "head_is_x1": git("rev-parse", "HEAD") == X1_FREEZE,
+        "head_is_allowed_build_anchor": git("rev-parse", "HEAD") in {X1_FREEZE, EVIDENCE_ORIGINAL},
         "program_40": outcomes["program_count"] == 40,
         "selected_20_zero_credit": outcomes["selected_inherited_revalidated"] == 20 and outcomes["selected_inherited_completion_credit"] == 0,
         "new_20": outcomes["new_unique_executed"] == 20,
@@ -830,10 +882,10 @@ def validate(*, include_staged: bool) -> dict[str, Any]:
         "candidate_15_15": approval["counts"]["owner_candidates"] == 15 and approval["counts"]["successor_candidates"] == 15,
         "exact_10_blocked_5": approval["counts"]["owner_exact"] == 10 and approval["counts"]["owner_blocked"] == 5 and approval["executed"]["owner_exact"] == 0,
         "cfr_30_30": cfr["counts"] == {"owner_completed": 30, "successor_recommendations": 30},
-        "methods_49": flow["method_count"] == 49,
-        "failed_209": flow["failed_witness_count"] == 209,
-        "passing_49": flow["passing_witness_count"] == 49,
-        "effective_counts": flow["effective_negatives"] == 23040 and flow["effective_methods"] == 7634,
+        "methods_51": flow["method_count"] == 51,
+        "failed_211": flow["failed_witness_count"] == 211,
+        "passing_51": flow["passing_witness_count"] == 51,
+        "effective_counts": flow["effective_negatives"] == 23042 and flow["effective_methods"] == 7636,
         "gaps_and_gates": truth["effective_open_gaps"] == 149 and truth["effective_exact_gates"] == 148,
         "not_ready": truth["terminal_verdict"] == d.TERMINAL_VERDICT,
         "route_not_sent": truth["message_attempted"] is False and truth["message_sent"] is False,

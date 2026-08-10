@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PHASE_ROOT = Path("docs/neris-solane/v662-v3-2-remaster")
 PHASE = ROOT / PHASE_ROOT
 X1 = "9b61b218956031d80da66a59924713778b63f31f"
+EVIDENCE_ORIGINAL = "999de05624682c19226c1bd5f57f2682468ff072"
 BRANCH = "codex/GHC-Family/neris-solane-v662-v3-2-remaster"
 OUTCOMES = {"completed": 14, "represented": 4, "open_gap": 1, "exact_gate": 1}
 
@@ -45,6 +46,7 @@ class TestV662V3RemasterX2(unittest.TestCase):
         cls.approval = read_json("evidence/approval-packet-receipts.json")
         cls.cfr = read_json("evidence/clean-fix-refine-receipts.json")
         cls.flow = read_json("method-flow/method-flow-state-x2.json")
+        cls.operational = read_json("truth/x2-operational-failures.json")
         cls.truth = read_json("truth/x2-phase-truth.json")
         cls.exact = read_json("truth/exact-and-blocked-register-x2.json")
         cls.governance = read_json("governance/live-roster-and-authorization-x2.json")
@@ -55,11 +57,12 @@ class TestV662V3RemasterX2(unittest.TestCase):
         cls.validation = read_json("validation/x2-validation.json")
 
     def test_01_evidence_is_direct_single_parent_child_of_x1(self) -> None:
-        self.assertEqual(git("rev-parse", "HEAD^"), X1)
+        self.assertEqual(git("rev-parse", "HEAD^"), EVIDENCE_ORIGINAL)
+        self.assertEqual(git("rev-parse", "HEAD^^"), X1)
         parents = git("rev-list", "--parents", "-n", "1", "HEAD").split()
         self.assertEqual(len(parents), 2)
-        self.assertEqual(parents[1], X1)
-        self.assertEqual(git("rev-list", "--count", f"{X1}..HEAD"), "1")
+        self.assertEqual(parents[1], EVIDENCE_ORIGINAL)
+        self.assertEqual(git("rev-list", "--count", f"{X1}..HEAD"), "2")
         self.assertEqual(git("rev-list", "--merges", f"{X1}..HEAD"), "")
         self.assertEqual(git("branch", "--show-current"), BRANCH)
 
@@ -101,13 +104,15 @@ class TestV662V3RemasterX2(unittest.TestCase):
         self.assertEqual(len({row["mutation_id"] for row in self.mutations["mutations"]}), 200)
 
     def test_06_method_flow_counts_and_witnesses_are_exact(self) -> None:
-        self.assertEqual(self.flow["method_count"], 49)
-        self.assertEqual(self.flow["failed_witness_count"], 209)
-        self.assertEqual(self.flow["passing_witness_count"], 49)
-        self.assertEqual(self.flow["effective_negatives"], 23040)
-        self.assertEqual(self.flow["effective_methods"], 7634)
+        self.assertEqual(self.flow["method_count"], 51)
+        self.assertEqual(self.flow["failed_witness_count"], 211)
+        self.assertEqual(self.flow["passing_witness_count"], 51)
+        self.assertEqual(self.flow["effective_negatives"], 23042)
+        self.assertEqual(self.flow["effective_methods"], 7636)
         self.assertTrue(self.flow["all_failures_retained"])
-        self.assertEqual(len({row["witness_id"] for row in self.flow["witnesses"]}), 258)
+        self.assertEqual(len({row["witness_id"] for row in self.flow["witnesses"]}), 262)
+        self.assertEqual(self.operational["failure_count"], 6)
+        self.assertTrue(self.operational["all_zero_credit"])
 
     def test_07_ten_skills_and_ten_runners_were_validated_and_used(self) -> None:
         self.assertEqual(self.tools["skills_built_validated_smoke_used"], 10)
@@ -160,8 +165,8 @@ class TestV662V3RemasterX2(unittest.TestCase):
     def test_12_terminal_truth_preserves_all_counts_and_boundaries(self) -> None:
         self.assertEqual(self.truth["frozen_proposals"], 3530)
         self.assertEqual(self.truth["new_outcomes"], OUTCOMES)
-        self.assertEqual(self.truth["effective_negatives"], 23040)
-        self.assertEqual(self.truth["effective_methods"], 7634)
+        self.assertEqual(self.truth["effective_negatives"], 23042)
+        self.assertEqual(self.truth["effective_methods"], 7636)
         self.assertEqual(self.truth["effective_open_gaps"], 149)
         self.assertEqual(self.truth["effective_exact_gates"], 148)
         self.assertEqual(self.truth["terminal_verdict"], "NOT_READY_FOR_STAGE_20")
